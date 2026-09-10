@@ -107,7 +107,7 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C57** | the inversion branch is not on the node's path at all | **listed 2026-09-09; not decided** | ⚠ **Corrected from the first reading.** 173 reported this as an adapter default — `state.get("composition_intent", "earth_like")` always handing `solve` a composition — but the audit's call-graph read is sharper: `_from_state → _solve_from_state → solve` contains **no call** to `infer_composition`, `infer_three_layer` or `_porous_rock_verdict` at all, and the only callers are `rocky_roster.py` and `test_interior.py`. **Removing the default would not route the node to the inversion; there is no route.** So the four `inferred_*` regimes are dead code on the chain's path, C45 (d)'s inversion-convention exception guards something the checker can never make the node produce, and no body file will ever change that (173 measured it: 0). The question — should a recipe be able to infer a composition — is left open, and this row exists so the next reader does not re-derive the answer from the adapter line |
 | **C58** | two of our own numbers for Mars's core-mantle boundary are 1700 K apart | **candidate, listed 2026-09-09** | C54 (b) declared Mars's core-side CMB temperature from the literature band **1900–2100 K** (Durán+ 2022, held). C20's thermal-history integrator ends the same body at **3763 K**. ⚠ **Both are ours and both are labelled**, and they disagree by roughly **1700 K** on one quantity of one body. The declaration is an observation-constrained band; the endpoint is the output of an integration whose Mars run has never been checked against Mars literature — but «the integrator is wrong» is a conclusion, not an observation, and it is not drawn here. Candidate only |
 | **C59** | Mars's core radius and moment of inertia miss the board by 8.9 % and 2.7 %, and no gate had ever checked | **listed 2026-09-10 as a recorded disagreement** | Found by the **targeted** lane, which is the part worth keeping: `check.sh` ran three answer bodies named by hand and `bodies/mars.yaml` was in neither that list nor `gate_targeted`'s copy of it, so Mars's shipped-value comparison went unrun from 2026-09-08 until the body rule ran it (169 E made the list a glob). ⚠ **A narrowing found a hole in the full lane.** The engine gives `core_radius_fraction` **0.4919** against the board's **0.5398** — a core radius of about **1667 km** against **1830 km** — and `nmoi` **0.3545** against **0.3644**, which is the same cause seen through a second quantity. ⚠ **The 1667 km is not a Mars number**: it is what `composition_intent: earth_like`'s core mass fraction of 0.325 produces, and the board's 1830 km is the layer-free family's anchor (Stähler 2021) — the family the owner chose in 174. That the engine's value falls inside the *layered* family's window (Khan 2023, 1675 ± 30 km) is **read as coincidence**: we never elected that family. Neither the board value nor the tolerance was touched; the two rows print every run and are not counted (Brief 177). What closes this is **C55** (an Fe–S material, since our iron is too dense for Mars) and a declared Martian core mass fraction — not this row. ⚠ **178 C did not move it**: the Fe–S materials exist but all four verdict cells refuse on the 10–21 GPa melting gap, so Mars stays on `fe_prem` and both rows print unchanged. 177's resolution notice has still never fired on a real change |
-| **C60** | the solve asks a core material for a surface-pressure density | **candidate, listed 2026-09-10; neither road chosen** | Found while 178 D was being built, and it is what actually blocks C55's verdict cells — ⚠ **and the first two descriptions of it, one per seat, were both right about different runs.** The audit measured a refusal at **18.9993 GPa**, a *boundary trial step* 0.7 MPa (0.0037 %) below the 19 GPa floor, in the body solve. This seat measured **0.0981 GPa** and traced it: it is a *trial central pressure* from `_shoot_pressure`'s bracket, reached through `integrate`'s `rho_c = mat_c.density(p_center, …)` on the radius-matching path — 23271 calls in that run, the next lowest at 59.0 GPa. **Neither pressure appears in any final profile.** So the shape is one thing seen twice: **a domain refusal raised during a trial is being read as a verdict about the body**, and the core material is only asked from the centre out to the CMB when the answer is actually computed. ⚠ **Removing the floor does not help** — with `p_min = 0` the same solve fails to converge at 9.808e7 Pa, since a 19 GPa-referenced BM2 has no root there. ⚠ **Mars's core-mantle boundary is 20.65 GPa, inside the fit**, so this is not physics telling us the material is wrong; it is the range the solver asks over. Two roads, neither taken: a low-pressure branch for liquid Fe–S (another fit, another paper), or a solver that asks a core material only at `P ≥ P_cmb`. ⚠ **178 D's registered premise blamed the melting gap and was wrong** — the label on the material said melting, and the message was read as the mechanism |
+| **C60** | the solve asks a core material for a surface-pressure density | **pre-registered 2026-09-10 — C60 (a); the build is Brief 181** | Found while 178 D was being built, and it is what actually blocks C55's verdict cells — ⚠ **and the first two descriptions of it, one per seat, were both right about different runs.** The audit measured a refusal at **18.9993 GPa**, a *boundary trial step* 0.7 MPa (0.0037 %) below the 19 GPa floor, in the body solve. This seat measured **0.0981 GPa** and traced it: it is a *trial central pressure* from `_shoot_pressure`'s bracket, reached through `integrate`'s `rho_c = mat_c.density(p_center, …)` on the radius-matching path — 23271 calls in that run, the next lowest at 59.0 GPa. **Neither pressure appears in any final profile.** So the shape is one thing seen twice: **a domain refusal raised during a trial is being read as a verdict about the body**, and the core material is only asked from the centre out to the CMB when the answer is actually computed. ⚠ **Removing the floor does not help** — with `p_min = 0` the same solve fails to converge at 9.808e7 Pa, since a 19 GPa-referenced BM2 has no root there. ⚠ **Mars's core-mantle boundary is 20.65 GPa, inside the fit**, so this is not physics telling us the material is wrong; it is the range the solver asks over. Two roads were listed — a low-pressure branch for liquid Fe–S (another fit, another paper), or a solver that asks a core material only at `P ≥ P_cmb` — and **C60 (a) takes a third**: a trial is not a verdict, so the boundary step is read against its own width and the shooting bracket's lower end is raised to the core material's floor. **No fit gains a range and no equation changes.** ⚠ **178 D's registered premise blamed the melting gap and was wrong** — the label on the material said melting, and the message was read as the mechanism |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -5296,6 +5296,112 @@ next reader gets the mechanism instead of the story I told.
 
 ⚠ **The rule this cost:** *read the mechanism, not the message.* An engine's refusal string is written by whoever set the label, and a label can be wrong while the print is faithful — so a refusal is evidence about **which branch fired**, and the branch is what has to be looked at before the sentence is copied into a record. This seat copied the sentence. The melting-gap constant stays exactly where
 it belongs — on the melting curve, which is a different question asked at a different place.
+
+### C60 (a) 2026-09-10 — two trial sites, one principle, pre-registered before the build
+
+⚠ **Committed before the code.** C60 is the row saying a domain refusal raised **during a trial** is being
+read as a **verdict about the body**. Brief 181 closes it. This section registers the rules, the decision
+lines and the predictions first, because the brief's own predecessor — C55 (c) — got its premise wrong by
+describing a mechanism it had not looked at.
+
+**Baseline `1c87ef6e`.** Both sites were measured with the audit seat's instrument
+`~/Desktop/NearStars-artifacts/2026-09-08-c47-step4/audit/audit_boundary_step.py`, sha256
+`66f770b2374673b4…`, **3463 B**, hashed by this seat rather than copied from the relay (it replaces the
+`9897f5bd…` · 2821 B version, which had no `--shoot` mode). It spies on `Material.phase_at` and
+`Material.density` and prints the call sequence.
+
+#### Site ① — the boundary trial step
+
+An RK4 step evaluates four points, and the last of them sits a full step beyond where the step starts.
+Measured, Mars-scale (`p_center` 45.9 GPa, cmf 0.325):
+
+| material | core calls | lowest call | the step it belongs to | past the boundary |
+|---|---|---|---|---|
+| `fe_prem` | 4208 | **15.1531 GPa** (index 4204) | 15.2070 / 15.1801 / 15.1801 / 15.1531 — width ≈ 0.0539 GPa | 0.0535 GPa below the 15.2066 transition, and it **succeeds** |
+| `fe_s_13wt_19gpa` | 4051 | **18.9993 GPa** | 19.0447 / 19.0220 / 19.0220 / 18.9993 — width ≈ 0.0454 | **0.0007 GPa = 0.7 MPa** below the 19 GPa floor, **1.5 %** of the step |
+| `fe_s_19wt_19gpa` | 4199 | **18.9893 GPa** | 19.0313 / 19.0103 / 19.0103 / 18.9893 — width ≈ 0.0420 | 0.0107 GPa, **25 %** of the step |
+
+The middle two evaluations are the same point, so **the difference of two consecutive recorded calls can
+be 0** and is not a usable scale. The scale registered is the **step's own**, the Euler estimate that
+`engine/interior.py@«dp = dr / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])»` is the corrected form of.
+
+**Rule.** A substep that leaves the current material's domain by **no more than that step's width** is
+**boundary reached**, and the in-step bisection this file already runs for `p_floor` finds the fraction.
+Past that width it is a refusal and it is named. ⚠ `fe_prem` survives today only because its lowest phase
+floor is 0 — it walks the same overshoot, it just has nothing to hit.
+
+#### Site ② — the shooting bracket's trial central pressure
+
+`engine/interior.py@«x1 = math.log(max(lo, hi * 1e-3))»` opens the bracket's lower end at a thousandth of
+the upper one, and `integrate`'s first act is
+`engine/interior.py@«rho_c = mat_c.density(p_center, t, t_pot)»` — the **innermost** material, asked at
+that trial pressure. With `hi` near 98.1 GPa the trial is **0.0981 GPa**. Measured (`--shoot`):
+`fe_s_13wt_19gpa` refuses there at index 46004, the three preceding calls being `silicate` at 0.0013 GPa —
+the previous trial finishing; `fe_prem` walks the same path down to **0.0001 GPa** and lives.
+
+⚠ **Site ①'s rule cannot cover this**, and registering that before building matters because 181's first
+framing had one rule for both: 0.0981 GPa is about **19 GPa** below the floor, not a step's width. Under
+the `dp` rule it would be judged a real refusal and the shot would die.
+
+**Rule.** The bracket's lower end gets **a third name of its own** — `shoot_lo` — taken from the
+**innermost** material's lowest `Phase.p_min`. A central pressure is the body's maximum pressure, so a
+trial below the core material's floor **cannot be a solution**; excluding it removes non-solutions from
+the search rather than physics from the model. ⚠ **`p_floor` is not reused for this.** `p_floor` is the
+integration-*stop* convention read off the **outermost** material (1 bar for `h_he`, 0 for a condensed
+body); attaching it to a core material would cut the body off at its own floor. And if the **converged**
+central pressure lands below that floor, that is a real refusal, named with `under_reason` (178 E) — a
+body too small for this fit.
+
+#### Site ③ — the bracket built in 178 D has no consumer
+
+`engine/core_state.py@«t_melt_cmb = material.t_melt(p_cmb)»` asks for a single value, and
+`engine/eos.py@«def iron_fes_phase_verdict»` is called from tests only. So the 10–21 GPa bracket exists and
+nothing reads it. 181 wires it: what `core_state` receives at Mars's **20.65 GPa** core-mantle boundary
+must be the **bracket verdict** — liquid / solid / cannot-say against both ends — and not the old
+"this melting-curve name has no branch" refusal. The single value still answers at and above 21 GPa.
+
+⚠ **`t_melt`'s return type does not change**, and that is a decision rather than a convenience. Widening it
+to *value-or-band* would rewrite eight consumers to serve one, and 178 D registered that **the consumer
+compares against both ends** — not that `t_melt` hands back a band. So the band gets **its own accessor**
+(`t_melt_band`), `core_state` is the only caller, and the other seven consumers keep today's path and
+today's numbers. The regression line that holds this: **the seven other `t_melt` consumers return
+bit-identical values.**
+
+#### The four decision lines
+
+- **ⓐ `fe_prem`'s boundary-overshooting step is still taken.** The reading changes; the integration path
+  does not. **And its shoot-path trial sequence is unchanged too** — the same trial central pressures, in
+  the same order, in the same number. That second half is the half that site ② could break.
+- **ⓑ `fe_s_13wt_19gpa` walks centre-to-CMB with its lowest core call above 19 GPa.**
+- **ⓒ A planted material with `p_min = 30 GPa` still refuses by name**, and the sentence names the floor.
+  Neither rule may turn a real domain limit into silence.
+- ⚠ **`fe_s_19wt_19gpa`'s 25 % is inside the condition, not near its edge.** Its overshoot is 0.0107 GPa
+  against a step 0.0420 GPa wide — the largest of the three measured, and still a quarter of one step. The
+  rule is registered as *within one step's width*, so 25 % passes and **1.5 % passing is not what makes it
+  work**; a rule that only covered the 0.7 MPa case would leave the 19 wt% material refusing.
+- **ⓓ The existing 11 materials' grids stay byte-identical and the seven bodies bit-identical.**
+
+#### Predicted, before running
+
+1. **Mars's two `fe_s` materials solve.**
+2. ⚠ **Every body that is not Mars is bit-identical** — `fe_prem`, Earth, Pandora, all of them. **This is
+   the regression that matters most**, because site ② edits a line whose own comment says it was left
+   alone so that anchors stay bit-identical. The mechanism that should make this structural rather than
+   hopeful: `shoot_lo` is a `max` against the existing lower end, and every material but the two Fe–S ones
+   has `p_min = 0`, so the expression returns exactly what it returns today.
+3. **C55's four verdict cells carry numbers for the first time**, compared against 1820–1870 km and
+   5.7–6.3 g cm⁻³. ⚠ Evaluable is not passing — the core mass fraction is still `earth_like`'s 0.325 and
+   still undeclared.
+4. **Wired through site ③, `core_state` reads `liquid` at 20.65 GPa** (2000 K is above even the 1473 K
+   high end).
+5. **C59's two recorded-disagreement rows move.** Direction only — and a row does not close because it
+   moved; a person closes it.
+
+⚠ **Material domains and solver physics do not change.** No fit gains a range, no equation is rewritten.
+What changes is **which pressures the solver asks about**. If a body's answer moves for any reason other
+than Mars gaining a core material, that is a failure of this brief and not a result of it.
+
+**Re-run after 181:** the same instrument, the same two commands, both modes, printed next to this table.
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
