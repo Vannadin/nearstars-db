@@ -38,6 +38,14 @@ exec 3>&2                     # step() 이 자식의 stderr 를 여기로 빼낸
 GATE_POOL="${GATE_POOL:-2}"
 _pool_dir=""
 _pool_seq=0
+# ⚠ **띄운 수와 거둔 수를 부모의 기억에 센다** (브리프 184 B). 디스크에만 세면 스풀이 사라질 때
+#   세는 근거도 함께 사라진다 — gate229 가 정확히 그렇게 **초록으로 거짓 통과**했다: 풀 디렉터리가
+#   실행 중에 지워져 자식들이 종료 파일을 쓸 곳을 잃고, flush 가 아무것도 못 읽고, 배리어가 그냥
+#   통과해 71 단계 중 **52 개가 판정에 안 든 채** rc=0 이 나왔다. 169 E 와 같은 계열의 결함이다 —
+#   «안 돈 단계» 가 «통과한 단계» 와 구별되지 않는 자리.
+_pool_launched=0
+_pool_drained=0
+_pool_names=""
 
 _pool_eligible() {            # _pool_eligible <이름>
   case "$1" in
@@ -46,21 +54,44 @@ _pool_eligible() {            # _pool_eligible <이름>
   esac
 }
 
+_pool_alive() {               # 스풀이 살아 있고 쓸 수 있는가 — 아니면 이름 대고 실패한다
+  [ -n "$_pool_dir" ] || return 1
+  if [ -d "$_pool_dir" ] && touch "$_pool_dir/.probe" 2>/dev/null; then
+    rm -f "$_pool_dir/.probe"; return 0
+  fi
+  echo "  [FAIL] pool_dir — 풀 스풀 «${_pool_dir}» 이 없거나 쓸 수 없다. 이 상태에서는 풀 단계의"
+  echo "         판정이 로그에 도착하지 못하고 게이트가 **거짓 초록**이 된다 (gate229)."
+  fail=1
+  return 1
+}
+
 _pool_drain() {               # 끝난 단계의 로그를 **완료 순서**로 붙이고 rc 를 센다
-  local d f n
+  local f n
   [ -n "$_pool_dir" ] || return 0
+  [ -d "$_pool_dir" ] || return 0
   for f in $(ls -1tr "$_pool_dir"/*.done 2>/dev/null); do
     n="${f%.done}"
     cat "$n.log" 2>/dev/null
     if [ "$(cat "$n.rc" 2>/dev/null || echo 1)" != "0" ]; then fail=1; fi
     rm -f "$f" "$n.log" "$n.rc"
+    _pool_drained=$((_pool_drained + 1))
   done
 }
 
-step_flush() {                # 배리어 — 풀을 비우고 로그를 정리한다
+step_flush() {                # 배리어 — 풀을 비우고, **띄운 수와 거둔 수가 같은지 센다**
   [ -n "$_pool_dir" ] || return 0
   wait
   _pool_drain
+  # ⚠ **이 셈이 없으면 «안 돈 단계» 가 «통과» 로 읽힌다.** 배리어가 통과하는 조건은 «자식이 다
+  #   끝났다» 이지 «판정이 다 도착했다» 가 아니다 — 그 둘이 갈리는 순간이 gate229 였다.
+  if [ "$_pool_drained" -ne "$_pool_launched" ]; then
+    echo "  [FAIL] pool_incomplete — $((_pool_launched - _pool_drained)) 단계가 끝을 못 알렸다 (띄움 $_pool_launched · 거둠 $_pool_drained)."
+    echo "         띄운 이름:$_pool_names"
+    echo "         ⚠ 두 수는 **서로 다른 출처**에서 센다 — 띄움은 부모의 기억, 거둠은 자식이 남긴"
+    echo "         종료 파일이다. 같은 로그를 두 번 grep 하면 로그가 비는 그 경우를 못 잡는다."
+    echo "         판정이 없는 단계는 **통과가 아니다**. 스풀이 사라졌거나 자식이 죽었다."
+    fail=1
+  fi
 }
 
 step() {                      # step <이름> <명령...>
@@ -74,12 +105,24 @@ step() {                      # step <이름> <명령...>
   #   그 둘을 한 파일에 섞으면 실패한 단계의 오류 문장이 통계 스무 줄에 묻힌다.
   local name=$1; shift
   if [ -n "$_pool_dir" ] && _pool_eligible "$name"; then
+    if ! _pool_alive; then                     # 스풀이 죽었다 — 이 단계를 직렬로 돌려 판정을 지킨다
+      _pool_dir=""
+    fi
+  fi
+  if [ -n "$_pool_dir" ] && _pool_eligible "$name"; then
     while [ "$(jobs -rp | wc -l)" -ge "$GATE_POOL" ]; do sleep 0.2; _pool_drain; done
     _pool_seq=$((_pool_seq + 1))
+    _pool_launched=$((_pool_launched + 1))
+    _pool_names="$_pool_names $name"
     local _base
     _base=$(printf "%s/%04d" "$_pool_dir" "$_pool_seq")
     echo "  [STEP] $name — $(date "+%H:%M:%S") 시작 (풀)"
     (
+      # ⚠ 스풀이 사라지면 **조용히 나간다** — 판정은 부모의 셈(`pool_incomplete`)이 하고, 자식이
+      #   쉘 오류를 스무 줄 토하면 진짜 실패 문장이 그 속에 묻힌다.
+      [ -d "$_pool_dir" ] || exit 0
+      exec 2>/dev/null        # ⚠ 검사와 첫 쓰기 사이에 스풀이 사라지는 **경합**이 남는다. 그
+                              #   리다이렉션 실패는 쉘이 토하는 소음이고, 판정은 부모의 셈이 한다.
       _s0=$SECONDS; _k0=$(date "+%H:%M:%S")
       _st=$(mktemp "${TMPDIR:-/tmp}/gate-step.XXXXXX")
       PYTHONDONTWRITEBYTECODE=1 /usr/bin/time -l bash -c '"$@" 2>&1' _ "$@" \
@@ -91,6 +134,7 @@ step() {                      # step <이름> <명령...>
         echo "  [TIME] $name — $_k0 → $(date "+%H:%M:%S") · $((SECONDS - _s0)) s · RSS $(awk '/maximum resident set size/ {printf "%.0f", $1/1048576}' "$_st") MB"
       } > "$_base.log"
       rm -f "$_st" "$_base.out"
+      [ -d "$_pool_dir" ] || exit 0
       echo "$_rc" > "$_base.rc"
       : > "$_base.done"
     ) &
@@ -257,7 +301,7 @@ head_sha=$(git rev-parse --short HEAD)
 if [ "$lane_req" = "targeted" ]; then
   base_sha=$(git rev-parse --verify -q --short "$base_ref" 2>/dev/null || true)
   if [ -z "$base_sha" ]; then
-    gap="(base «$base_ref» 를 찾을 수 없다)"
+    gap="(base «${base_ref}» 를 찾을 수 없다)"
   elif [ "$base_sha" = "$head_sha" ]; then
     gap="(base 가 대상 sha 자신이다)"
   elif ! git merge-base --is-ancestor "$base_sha" "$head_sha"; then
