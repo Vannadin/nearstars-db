@@ -41,18 +41,20 @@ def _plant_floor(p_min: float) -> str:
     return name
 
 
-def _shoot_gap(cmf: float, material: str):
-    """화성 질량으로 쏘아 본다. 거절하면 그 `PhaseGap`, 풀리면 None."""
+def _shoot_gap(cmf: float, material: str, mass_kg: float = 0.1074 * 5.97219e24):
+    """쏘아 본다. 거절하면 그 `PhaseGap`, 풀리면 None.
+
+    ⚠ `shoot` 을 부른다. `_shoot_pressure` 를 직접 부르면 «답이 적합 밖이면 거절» 하는 자리를
+    건너뛰어, 엔진이 안 내놓을 수를 시험만 통과시키게 된다 (C60 (c))."""
     try:
-        interior._shoot_pressure(mass_kg=0.1074 * 5.97219e24, cmf=cmf, imf=0.0,
-                                 core_material=material, t_pot=1600.0)
+        interior.shoot(mass_kg, cmf, 0.0, material, potential_temperature=1600.0)
     except eos.PhaseGap as gap:
         return gap
     return None
 
 
-def _shoot_ok(cmf: float, material: str) -> bool:
-    return _shoot_gap(cmf, material) is None
+def _shoot_ok(cmf: float, material: str, mass_kg: float = 0.1074 * 5.97219e24) -> bool:
+    return _shoot_gap(cmf, material, mass_kg) is None
 
 
 def row(ok, text):
@@ -266,26 +268,37 @@ row(isinstance(eos.MATERIALS["fe_prem"].t_melt(_p), float)
     "⚠ 소비자 **열 자리**(호출 열하나)가 쓰는 `t_melt` 는 오늘과 같은 값·같은 형을 준다 — 밴드는 별도 접근자로만")
 
 _MARS_KG = 0.1074 * 5.97219e24
-row(_shoot_ok(0.24, "fe_s_13wt_19gpa") and _shoot_ok(0.24, "fe_s_19wt_19gpa"),
-    "ⓑ cmf 0.24 에서 Fe–S 두 재질이 중심에서 CMB 까지 걸어 나온다 — 사격 아래끝을 재질 바닥으로 "
-    "올리고 걸음 안의 스침을 경계로 읽은 뒤에")
+row(all(_shoot_ok(c, "fe_s_13wt_19gpa") for c in (0.24, 0.27, 0.29, 0.295, 0.30, 0.303)),
+    "ⓑ cmf 0.24–0.303 에서 Fe–S 가 중심에서 CMB 까지 걸어 나온다 — 걸음 **안**의 자리는 바닥 값으로 "
+    "읽고, 판정은 **프로파일에 적히는 것**에 대고 한다 (181 B)")
+_cut_ok = _shoot_ok(0.303, "fe_s_13wt_19gpa")
+_cut_gap = _shoot_gap(0.305, "fe_s_13wt_19gpa")
+row(_cut_ok and _cut_gap is not None,
+    "⚠ 자르는 자리가 **CMB 가 19 GPa 를 지나는 지점**이다 — 0.303 은 P_cmb 19.0005 GPa 로 풀리고 "
+    "0.305 부터 거절한다. 클램프 자리가 아니라 경계 자리다 (C60 (c) 의 정정)")
 _gap325 = _shoot_gap(0.325, "fe_s_13wt_19gpa")
-row(_gap325 is not None and _gap325.pressure_pa < 19.0 * eos.GPA,
-    f"⚠ **등록된 예측이 선언된 조성에서는 안 맞는다**: earth_like 의 cmf 0.325 는 여전히 거절한다 "
-    f"(@ {_gap325.pressure_pa / eos.GPA:.4f} GPa) — 핵 바닥이 적합의 기준 아래로 내려간다. "
-    "재질의 바닥이 핵질량비를 고르는 것이고, 그 칸은 여전히 오너 대기다")
+row(_gap325 is not None and "수렴한 답" in _gap325.reason,
+    f"⚠ earth_like 의 cmf 0.325 는 거절한다 — **핵이 제 질량 몫을 채우고도 기록된 경계가** "
+    f"{_gap325.pressure_pa / eos.GPA:.4f} GPa 로 적합의 기준 아래다. 잘림 검사만으로는 못 잡는 자리이고, "
+    "«바닥이 핵질량비를 고른다» 는 181 의 결론은 **철회됐다** (그건 클램프였다)")
+row(all(_shoot_ok(c, "fe_s_13wt_19gpa", mass_kg=0.5 * 5.97219e24)
+        for c in (0.20, 0.30, 0.40)),
+    "⚠ 질량 축 — 0.5 M⊕ 는 cmf 0.20·0.30·0.40 이 전부 풀린다 (P_cmb 86.9–72.5 GPa). 바닥 근처가 "
+    "아닌 천체에서는 이 규칙이 한 번도 발화하지 않는다")
 _planted = _plant_floor(30.0 * eos.GPA)
 _gap30 = _shoot_gap(0.325, _planted)
-row(_gap30 is not None and "이 적합의 기준 아래(30.0000 GPa)" in _gap30.reason,
+row(_gap30 is not None and "30.0000 GPa" in _gap30.reason,
     f"ⓒ 심은 `p_min` 30 GPa 재질은 여전히 이름을 대고 거절한다: «{_gap30.reason[:52]}…»")
 
 print("\n기록 — 178 D 의 정정을 181 이 다시 정정한다")
 print("      178 D 는 «괄호로는 아무 칸도 안 열린다, 막는 것은 압력 바닥이다» 로 끝났고 그것은 맞았다.")
-print("      181 이 그 바닥을 다뤘고, 칸에 처음으로 수가 들어왔다 — 다만 **창은 넷 다 밖이다**")
-print("      (cmf 0.24: 13 wt% R 1698.6 km · rho 7.499 · 19 wt% R 1736.8 · rho 7.015, 창은")
-print("      1820–1870 km · 5.7–6.3). 밀도가 창 **위**로 벗어나는 방향은 Huang+ 2023 자신이 적은")
-print("      «19 GPa 에서 이 결손을 메우려면 이원계는 S 가 최소 20 wt% 필요» 와 같은 방향이다.")
-print("      tools/c55_cells.py 가 이 표를 낸다.")
+print("      181 이 그 바닥을 다뤘고, 칸에 처음으로 수가 들어왔다. 181 B 가 그 표를 **밴드로** 다시 쟀다 —")
+print("      cmf 0.30·0.303 에서 13 wt% 의 핵 반지름 1828.0·1834.0 km 는 **창 안**(1820–1870)이고,")
+print("      밀도 7.52 는 창(5.7–6.3) **밖**이다. ⚠ 축이 하나였다면 이 재질이 화성 핵을 맞춘다고")
+print("      읽혔을 자리다 — C55 가 두 축을 다 들고 다니기로 한 이유가 이것이다.")
+print("      밀도가 창 위로 벗어나는 방향은 Huang+ 2023 자신이 적은 «19 GPa 에서 이 결손을 메우려면")
+print("      이원계는 S 가 최소 20 wt% 필요» 와 같고, 핵 밀도는 핵 크기가 아니라 재질이 정하므로")
+print("      어느 cmf 에서도 가까워지지 않는다. tools/c55_cells.py 가 이 표를 낸다.")
 
 print("\n기록 — 두 앵커를 서로에게 외삽하면 2.9 % 벌어진다 (판정 아님, 179 측정)")
 a19, a35 = eos.huang_fes_phase(eos.HUANG_S4_CS, "19GPa"), eos.huang_fes_phase(eos.HUANG_S4_CS, "35GPa")

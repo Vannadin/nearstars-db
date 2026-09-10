@@ -124,14 +124,18 @@ class Structure:
                  "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples", "rock_samples",
                  "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached",
                  "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void", "crust_blocked",
-                 "r_grad_base", "r_grad_top")
+                 "r_grad_base", "r_grad_top", "floor_truncated")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
                  p_silicate_max=0.0, t_center=0.0, t_cmb=0.0, t_surface=0.0,
                  ice_samples=(), rock_samples=(), p_surface=0.0, r_ocean_base=None, r_ocean_top=None,
                  surface_reached=True, ice_x_reached=False, r_crust_base=None,
-                 p_crust_base=None, crust_void=0.0, r_grad_base=None, r_grad_top=None):
+                 p_crust_base=None, crust_void=0.0, r_grad_base=None, r_grad_top=None,
+                 floor_truncated=None):
+        # 어느 층이 **자기 적합의 바닥**에 걸려 질량 몫을 못 채우고 끝났는가 — 그 재료와 압력
+        # (C60 (c), 브리프 181 B). 시행에서는 값이고(질량이 모자란 괄호 점), **답에서는 거절**이다.
+        self.floor_truncated = floor_truncated
         self.radius_m = radius_m
         self.mass_kg = mass_kg
         self.moi = moi
@@ -690,6 +694,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     m_above_lab = m if p > P_LAB_MAX else 0.0
 
     steps = 0
+    floor_truncated = None       # (재료 이름, 바닥 압력) — 아래 걸음 고리가 채운다
     while p > p_stop and steps < MAX_STEPS:
         steps += 1
         prev_layer = layer
@@ -788,7 +793,26 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         if grad:
             last_grad = grad
 
-        boundary_clamp = 0.0     # k1 뒤에 정해진다 (아래 주석). 여기서 0 이라 k1 은 예전 경로다.
+        _lo_mat = getattr(mat, "shoot_lo", 0.0)
+        # **걸음 안의 자리가 재료 자신의 적합 바닥을 넘어서는 것은 거절이 아니다 — 넘은 폭이
+        # 한 걸음 안일 때만** (C60 (a)·(c), 브리프 181·181 B). RK4 의 뒤 세 자리는 출발점보다
+        # 최대 한 걸음 아래이고, 그 자리는 딛고 버리는 자리다. 그러니 **넘은 폭 ≤ 이 걸음의 폭**
+        # 이면 «경계에 닿았다» 로 읽고 바닥의 값을 쓴다. 그보다 더 아래면 걸음이 설명하지 못하는
+        # 거리이므로 재료가 예전처럼 이름을 대며 거절한다.
+        # ⚠ 판정은 **넘은 폭**에 대고 한다. 181 은 이것을 출발점 p 에 대고 했는데(«p − 바닥 ≤
+        # 걸음»), k3 의 기울기가 k1 보다 가파른 걸음에서 그 둘이 어긋나 2340 Pa 짜리 초과가
+        # 클램프 없이 거절로 나갔다 — 감사석이 잡은 자리다.
+        dp_step = 0.0            # k1 뒤에 정해진다. 여기서 0 이라 k1 은 예전 경로다
+
+        def _at_floor(pp_eval: float) -> float:
+            """걸음 **안**의 자리가 이 층 재료의 적합 바닥 아래면 바닥의 값으로 읽는다.
+
+            위 `p_stop` 클램프(`max(pp, p_stop)`)와 **같은 규율**이고, 다른 점은 그것이 적분이
+            멈추는 압력(가장 바깥 재료)이고 이것이 적합의 바닥(이 층의 재료)이라는 것뿐이다.
+            걸음 안의 자리는 최종 프로파일에 안 들어간다 — 들어가는 것은 걸음의 **끝**이고,
+            그 끝이 바닥 아래로 가면 위에서 걸음을 바닥에서 자른다(`floor_truncated`).
+            그래서 프로파일에 기록되는 압력은 결코 바닥 아래가 아니다."""
+            return _lo_mat if (_lo_mat and pp_eval < _lo_mat) else pp_eval
 
         def deriv(rr, mm, pp):
             if rr <= 0.0:
@@ -806,7 +830,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                 # 고르므로, 이 반 걸음만 IF97 로 잇는다. 오늘까지 이 갈래는 거절이었으니 앵커는 비트 그대로다.
                 rr_rho = COLUMN_STEAM.density(pp, t)
             else:
-                rr_rho = (mat.density(max(pp, p_stop, boundary_clamp), t, t_pot) if pp > 0.0
+                rr_rho = (mat.density(_at_floor(max(pp, p_stop)), t, t_pot) if pp > 0.0
                           else mat.rho0)
             phi = porosity_at(mat, pp, phi0, p_cap)
             rr_rho *= 1.0 - phi
@@ -816,14 +840,33 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                     4.0 * math.pi * rr * rr * phi)
 
         k1 = deriv(r, m, p)
-        # **걸음 안의 자리가 재료 자신의 적합 바닥을 스치는 것은 거절이 아니다** (C60 (a), 브리프 181).
-        # RK4 의 뒤 세 자리는 출발점보다 최대 한 걸음 아래이고, 그 한 걸음은 바깥으로 한 번 딛으면
-        # 버려지는 자리다 — 최종 프로파일에 안 들어간다. 그러니 **바닥이 이 걸음 안에 들어왔을 때만**
-        # (p − 바닥 ≤ 걸음 폭) 그 자리를 바닥의 값으로 둔다. 위 `p_stop` 클램프와 같은 규율이고,
-        # 다른 점은 그것이 적분 정지 압력(가장 바깥)이고 이것이 적합 바닥(이 층의 재료)이라는 것뿐이다.
-        # 바닥이 걸음보다 멀리 아래면 클램프는 0 이고 재료가 예전처럼 이름을 대며 거절한다.
-        _lo_mat = getattr(mat, "shoot_lo", 0.0)
-        boundary_clamp = _lo_mat if (_lo_mat and p - _lo_mat <= abs(dr * k1[1])) else 0.0
+        dp_step = abs(dr * k1[1])        # 이 걸음의 폭(오일러 추정) — 위 규칙의 척도다
+
+        # **바닥이 이 걸음 안에 들어왔고 이 층은 이 걸음 안에 안 끝난다 — 그러면 여기서 끝난다**
+        # (C60 (c), 브리프 181 B). 뒤 세 자리를 바닥 한참 아래에서 재고 나서 판정하면 그 자리
+        # 하나가 «넘은 폭 > 걸음» 으로 거절해, 어차피 바닥에서 잘릴 걸음을 끝내지도 못한다.
+        # 그래서 k1 의 어림으로 두 가지를 먼저 묻는다: 바닥이 한 걸음 안인가, 층 경계가 이 걸음
+        # 안인가. 층 경계가 먼저면 아래 보간이 이긴다 — 그때는 이 층이 제 몫을 **채우고** 끝나는
+        # 것이라 잘림이 아니다. 잘림이면 표시를 달고 나가고, 그 표시를 단 **답**은 `shoot` 이
+        # 이름을 대며 거절한다 (시행은 값, 답은 거절).
+        if _lo_mat and p - _lo_mat <= dp_step:
+            m_b_now = stack[layer][0] * mass_kg if layer < len(stack) - 1 else None
+            dm1 = dr * k1[0]
+            if m_b_now is None or dm1 <= 0.0 or m + dm1 < m_b_now:
+                frac = (p - _lo_mat) / dp_step if dp_step > 0.0 else 0.0
+                frac = min(max(frac, 0.0), 1.0)
+                r += dr * frac
+                m += dm1 * frac
+                moi += dr * k1[2] * frac
+                v_pore += dr * k1[3] * frac
+                t = t * (_lo_mat / p) ** grad if grad else t + dtdp * (_lo_mat - p)
+                p = _lo_mat
+                p_surface = p
+                t_surface = t
+                share = stack[layer][0] * mass_kg
+                floor_truncated = (mat.name, p, m / share if share > 0.0 else 0.0)
+                break
+
         k2 = deriv(r + dr / 2, m + dr / 2 * k1[0], p + dr / 2 * k1[1])
         k3 = deriv(r + dr / 2, m + dr / 2 * k2[0], p + dr / 2 * k2[1])
         k4 = deriv(r + dr, m + dr * k3[0], p + dr * k3[1])
@@ -948,6 +991,31 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                     crossed = False
                 phase_crossed = True
 
+        # **이 층이 자기 적합의 바닥에 걸렸다** (C60 (c), 브리프 181 B). 위의 층 경계 보간이
+        # 이미 걸음을 잘랐는데도 걸음 끝이 바닥 아래면, 이 재료는 질량 몫을 채우기 전에 값을
+        # 낼 압력을 다 써 버린 것이다. 예전에는 여기서 다음 걸음의 첫 밀도 호출이 이름을 대며
+        # 거절했고, 그 거절이 **사격의 시험값**에서 나면 바디에 대한 판정처럼 새어 나갔다
+        # (181 이 사격 아래끝만 고쳐서 이 자리로 옮겨 왔을 뿐이라는 것이 감사석 측정이다).
+        # 그래서 바닥에서 멈추고 **그 사실을 값으로** 들고 나간다 — 표면 넘김과 같은 규칙,
+        # 같은 선형 보간이다. 겉질량이 목표에 못 미치므로 괄호는 이 점을 아래끝으로 쓴다.
+        # ⚠ 답이 이 표시를 달고 나가면 `shoot` 이 이름을 대며 거절한다. 시행은 값, 답은 거절.
+        if _lo_mat and not crossed and p + dp < _lo_mat:
+            # 두 번째 그물 — 위 k1 어림이 «층이 이 걸음 안에 끝난다» 고 봤는데 네 자리를 다 재고
+            # 나니 아니었던 걸음이 여기 온다. 같은 규칙, 같은 표시.
+            frac = (p - _lo_mat) / (-dp) if dp != 0 else 0.0
+            frac = min(max(frac, 0.0), 1.0)
+            r += h * frac
+            m += dm * frac
+            moi += di * frac
+            v_pore += dv * frac
+            t = t * (_lo_mat / p) ** grad if grad else t + dtdp * dp * frac
+            p = _lo_mat
+            p_surface = p
+            t_surface = t
+            share = stack[layer][0] * mass_kg
+            floor_truncated = (mat.name, p, m / share if share > 0.0 else 0.0)
+            break
+
         if p > P_LAB_MAX:
             m_above_lab += dm
         r += h
@@ -994,7 +1062,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                              t_surface=t, ice_samples=ice_samples, rock_samples=rock_samples,
                              p_surface=p,
                              surface_reached=False, r_crust_base=r_crust_base,
-                             p_crust_base=p_crust_base, crust_void=crust_void)
+                             p_crust_base=p_crust_base, crust_void=crust_void,
+                             floor_truncated=floor_truncated)
         raise GridExceeded(
             f"{MAX_STEPS} 걸음(중심 격자 dr 의 {MAX_STEPS / STEPS:.0f} 배 반지름, 여기서는 "
             f"{r / EARTH_RADIUS_M:.1f} R⊕) 안에 표면에 닿지 못했다 — 중심압 "
@@ -1021,7 +1090,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                      r_ocean_top=r_ocean_top, ice_x_reached=ice_x_stepped,
                      r_crust_base=r_crust_base, p_crust_base=p_crust_base,
                      r_grad_base=r_grad_base, r_grad_top=r_grad_top,
-                     crust_void=crust_void)
+                     crust_void=crust_void, floor_truncated=floor_truncated,
+                     surface_reached=floor_truncated is None)
 
 
 def porosity_at(mat, p_pa: float, phi0: float,
@@ -1600,7 +1670,41 @@ def shoot(mass_kg: float, cmf: float, imf: float,
             "1 bar 에서 출발한 단열선이 이 질량이 묶을 수 있는 것보다 뜨겁다는 뜻이다 — 실제 "
             "서브넵튠은 복사층이 깊은 단열선을 더 차게 두는데 이 레시피에는 복사층이 없으므로, "
             "선언을 낮추거나(복사-대류 경계의 온도) 그 층이 들어와야 한다.")
+    _refuse_if_below_floor(st, core_material)
     return st, converged and _surface_temperature_met(st, t_pot)
+
+
+def _refuse_if_below_floor(st, core_material: str) -> None:
+    """**시행은 값, 답은 거절** (C60 (c), 브리프 181 B).
+
+    어떤 층이 자기 적합의 바닥에 걸려 질량 몫을 못 채우고 끝난 구조는 사격의 **괄호 점**
+    으로는 쓸 만하다 — 겉질량이 목표에 못 미친다는 사실이 아래끝을 올려 주기 때문이다.
+    그러나 그것이 **답** 으로 나가면 선언한 조성이 아닌 천체를 답이라고 말하는 것이다.
+    그래서 여기서, 사격이 끝난 자리에서 이름과 압력을 들고 거절한다."""
+    if st.floor_truncated is None:
+        # 잘리지 않았어도 **기록된 경계**가 바닥 아래일 수 있다 — 층이 제 질량 몫을 채운 걸음이
+        # 하필 바닥을 건너는 걸음이면, 그 걸음은 «채우고 끝났다» 로 처리되어 잘림이 아니다.
+        # 그래도 프로파일에 적히는 핵-맨틀 경계 압력이 이 적합 밖이므로 답으로 내보내지 않는다.
+        core = MATERIALS.get(core_material)
+        lo = getattr(core, "shoot_lo", 0.0) if core is not None else 0.0
+        if not lo or st.p_cmb is None or st.p_cmb >= lo:
+            return
+        raise PhaseGap(
+            core_material, st.p_cmb,
+            f"수렴한 답의 핵-맨틀 경계가 {st.p_cmb / 1e9:.4f} GPa 로 이 적합의 기준 "
+            f"({lo / 1e9:.4f} GPa) 아래다 — 핵이 제 질량 몫을 채우기는 하지만 그 마지막 걸음이 "
+            f"바닥을 건넌다. 시험값이 아니라 **수렴한 답**이 그렇다.")
+    name, p_floor_pa, filled = st.floor_truncated
+    mat = MATERIALS.get(name)
+    reason = (mat.under_reason.format(p_gpa=p_floor_pa / 1e9, min_gpa=p_floor_pa / 1e9)
+              if mat is not None and hasattr(mat, "under_reason")
+              else f"{p_floor_pa / 1e9:.4f} GPa 는 이 적합의 기준이다")
+    raise PhaseGap(
+        name, p_floor_pa,
+        f"{reason} — 이 조성에서는 '{name}' 층이 제 질량 몫의 {filled * 100:.1f} % 만 채운 채 "
+        f"{p_floor_pa / 1e9:.4f} GPa 에 닿는다. 시험값이 아니라 **수렴한 답**이 그렇다. "
+        f"⚠ 여기 적힌 압력은 그 층이 멈춘 자리(적합의 바닥)이지 핵-맨틀 경계가 아니다 — "
+        f"경계는 이 적합이 값을 내지 않는 아래쪽에 있어서 이 레시피가 재지 못한다.")
 
 
 def _surface_temperature_met(st, t_pot: float) -> bool:

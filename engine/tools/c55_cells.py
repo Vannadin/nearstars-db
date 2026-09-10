@@ -33,9 +33,11 @@ DECLARED_CMF = interior.COMPOSITIONS["earth_like"][0]
 def cell(material: str, cmf: float) -> str:
     """한 칸. 풀리면 두 수와 창 판정, 안 풀리면 거절의 첫 문장."""
     try:
-        st, ok = interior._shoot_pressure(
-            mass_kg=MARS_MASS_EARTH * M_EARTH, cmf=cmf, imf=0.0,
-            core_material=material, t_pot=T_POT)
+        # ⚠ `shoot` 로 부른다. `_shoot_pressure` 를 직접 부르면 «답이 적합 밖이면 거절» 하는
+        # 자리(C60 (c))를 건너뛰어, 엔진이 안 내놓을 수를 이 표만 인쇄하게 된다.
+        st, ok = interior.shoot(
+            MARS_MASS_EARTH * M_EARTH, cmf, 0.0, material,
+            potential_temperature=T_POT)
     except eos.PhaseGap as gap:
         return (f"거절 @ {gap.pressure_pa / 1e9:.4f} GPa · "
                 f"{gap.reason.splitlines()[0][:88]}")
