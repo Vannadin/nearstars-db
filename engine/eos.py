@@ -2847,6 +2847,17 @@ H_HE = HydrogenHelium()
 #   풀지는 아직 고르지 않았다. 화성 CMB 는 이 엔진에서 **20.65 GPa** 라 19 GPa 앵커가 «가까운 쪽»
 #   이라는 **사실만** 적고 고르지 않는다 — 그래서 앵커를 **재질 이름에 박는다**. 증거에 재질
 #   이름이 실리면 앵커도 함께 실리고, 두 앵커가 2.9 % 벌어지는 이상 그 라벨은 값의 일부다.
+#: ⚠ **이 재질이 낮은 압력에서 거절하는 이유는 융해가 아니라 밀도 적합의 기준이다** (브리프 178 D
+#: 에서 잡혔다). 178 C 는 여기에 `IRON_FES_GAP_REASON`(10–21 GPa 융해 공백)을 달았고, 그래서 솔버가
+#: 19 GPa 아래에서 멈출 때 **융해 이야기를 인쇄했다** — 기록에도 그렇게 적혔다. 실제 기작은 다르다:
+#: Huang 의 적합은 19 GPa 에 기준을 둔 BM2 이고, 그 아래에는 근거가 없다. 두 사실 다 참이지만
+#: **이 자리에서 발화하는 것은 후자**이고, 라벨이 앞의 것을 말하면 기작을 잘못 읽게 만든다.
+FE_S_BELOW_REF_REASON = (
+    "{p_gpa:.4f} GPa 는 이 액체 Fe–S 적합의 **기준압 19 GPa 아래**다 (Huang+ 2023 은 19·35 GPa 의 "
+    "두 앵커에 대해 적합했고 그 사이·아래를 인쇄하지 않는다). 영압으로 옮기는 것은 우리 산수이므로 "
+    "하지 않는다 — 이 아래에서는 이 재질이 값을 내지 않는다. ⚠ 융해 공백(10–21 GPa, "
+    "`IRON_FES_GAP_REASON`)은 **다른 사실**이고 다른 자리에서 발화한다")
+
 FE_S_MOLAR_MASS = (55.845, 32.06)          # (M_Fe, M_S) g/mol — 교과서 값
 FE_S_BAND_WT = (0.13, 0.19)                # 오너 결정 2026-09-10
 
@@ -2860,10 +2871,10 @@ def fe_s_mole_fraction(w_s: float) -> float:
 
 FE_S_13WT = Material("fe_s_13wt_19gpa", "액체 Fe–S 핵 · 13 wt% S (밴드 아래끝, 19 GPa 기준)",
                      (huang_fes_phase(fe_s_mole_fraction(0.13), "19GPa"),),
-                     gap_reason=IRON_FES_GAP_REASON)
+                     gap_reason=FE_S_BELOW_REF_REASON)
 FE_S_19WT = Material("fe_s_19wt_19gpa", "액체 Fe–S 핵 · 19 wt% S (밴드 위끝, 19 GPa 기준)",
                      (huang_fes_phase(fe_s_mole_fraction(0.19), "19GPa"),),
-                     gap_reason=IRON_FES_GAP_REASON)
+                     gap_reason=FE_S_BELOW_REF_REASON)
 
 MATERIALS: dict[str, Material | HotWater | HydrogenHelium | LiquidWater | DenseLiquidWater | Ammonia] = {
     m.name: m for m in (FE_PREM, FE_EPS, FE_S_13WT, FE_S_19WT, SILICATE, SILICATE_CHONDRITIC, ANTIGORITE, H2O, H_HE, H2O_HOT, H2O_LIQUID,

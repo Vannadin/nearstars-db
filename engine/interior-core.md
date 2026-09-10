@@ -5247,10 +5247,13 @@ The low end is **body** (Andrault's own table); the high end stays **abstract on
 21 GPa, Li 2001's 1223–1473 K band). The engine's grade vocabulary attaches to values, so **each end
 carries its own grade** and the band is labelled *mixed-grade* in prose — no new grade name is created.
 
-⚠ **One caveat travels with the low end.** Two of the three charges (15 and 20.6 GPa) had 2 at% Si added
-*"in order to provide more reducing conditions"*, which the paper treats as the same Fe–S system. Recorded
-here because a reader comparing our floor against a pure Fe–S experiment should know which charges it came
-from.
+⚠ **One caveat travels with the low end, and it sits exactly on the ends.** The two charges with 2 at% Si
+added *"in order to provide more reducing conditions"* are the **15 and 20.6 GPa** points — that is, **both
+ends of the bracket's low side**, while the only Si-free charge (18.5 GPa) falls *inside* the window. So
+the width the floor spans is carried entirely by Si-bearing runs, and the sentence the abstract is famous
+for — *1023 K at 15 GPa to 1123 K at 20.6 GPa* — is that same pair. The paper treats them as the same
+Fe–S system; this file records which charges the ends came from, because "two of three" would have
+concealed that the two are the ends.
 
 #### Predicted, before running
 
@@ -5263,6 +5266,33 @@ from.
    a curve no other material names.
 5. ⚠ **A cell may become evaluable and still fail its window.** The core mass fraction is still
    `earth_like`'s 0.325 and still undeclared — that is C55's test of the *material*, not of the body.
+
+#### Correction 178 D — the four cells do not refuse for the reason I wrote down
+
+⚠ **C55 (b) says the cells refuse on the 10–21 GPa melting gap. That is wrong, and it was wrong because
+I read the engine's message instead of the mechanism.** The message *was* the melting gap — because 178 C
+attached `IRON_FES_GAP_REASON` to the material as its `gap_reason`, and `Material.phase_at` prints that
+string whenever a pressure falls below a phase's floor. The label was mine, the print was faithful, and
+the sentence it produced described a different fact.
+
+**What actually happens.** `Material.phase_at` refuses at **0.0981 GPa** — the solver asks this material
+for a density at essentially surface pressure — and the Fe–S fit is referenced at **19 GPa**, with nothing
+printed below it. Removing the floor does not help: with `p_min = 0` the same solve fails with
+*"P = 9.808e+07 Pa 에서 밀도가 수렴하지 않는다"*, because a 19 GPa-referenced BM2 has no root down there.
+
+⚠ **So extending the melting bound would not have unblocked a single cell**, and 178 D's premise —
+registered in C55 (c) — is wrong on that point. The melting gap is real and the bracket is still worth
+building; **it is simply not what is in the way.**
+
+**What is in the way** is that the structure solve evaluates the core material across the whole pressure
+range it walks, including near the surface, while this material is only defined from 19 GPa up. Closing
+that needs either a low-pressure branch for liquid Fe–S — *another* fit, another paper — or a solver that
+never asks a core material for a surface-pressure density. **Neither is decided here**, and naming which
+one it is comes before choosing.
+
+**Repaired now:** the material's `gap_reason` says the pressure floor rather than the melting gap, so the
+next reader gets the mechanism instead of the story I told. The melting-gap constant stays exactly where
+it belongs — on the melting curve, which is a different question asked at a different place.
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
