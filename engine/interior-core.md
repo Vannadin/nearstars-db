@@ -5919,7 +5919,7 @@ make the sentence lie. *That is Brief 38 E's shape, found in the test that exist
 are identical (only the note this seat corrected differs), and the contract check goes from 1399 lookups
 to 1405 — the six the inversion path adds.
 
-### C45 (f) 2026-09-10 — a contract's required input given a default by its caller, sixteen times, counted by nothing
+### C45 (f) 2026-09-10 — a contract's required input given a default by its caller, nineteen times, counted by nothing
 
 ⚠ **Measured while closing 182 B, not designed for.** `engine/check_contracts.py@«def ast_lookup_defaults(node: str) -> dict[str, object]:»`
 collects defaults from **two layers**, and says so itself (171 B): the adapter's `state.get(k, d)`, and
@@ -5939,7 +5939,7 @@ nineteen pairs**, reproduced here with the audit seat's `audit_c45f.py` (sha256 
 | `composition` | `'earth_like'` | **two** — `interior_layers`, `mass_radius_relation` |
 | `body_class` | `'rocky'` / `'giant'` | `dynamo_rocky`, `dynamo_giant` |
 | `is_satellite` | `False` | `body_class` |
-| ten more (`tidal_heating` `False`, `envelope_z_rock_fraction` `1.0`, `serpentinisation` `0.0`, `differentiation_front` `1.0`, `crust_rock_fraction` `0.0`, `crust_porosity` `False`, `boundary_temperature_jump` `0.0`, `mantle_rock_fraction` `0.0`, `ammonia_mass_fraction` `0.0`) | as printed | `interior_layers` |
+| nine more (`tidal_heating` `False`, `envelope_z_rock_fraction` `1.0`, `serpentinisation` `0.0`, `differentiation_front` `1.0`, `crust_rock_fraction` `0.0`, `crust_porosity` `False`, `boundary_temperature_jump` `0.0`, `mantle_rock_fraction` `0.0`, `ammonia_mass_fraction` `0.0`) | as printed | `interior_layers` |
 
 ⚠ **The split between the two layers matters for the repair, not for the count.** Only **6** of the 19 come
 from an adapter's `state.get(k, literal)`; all 19 are reachable through a module's signature defaults, so
@@ -6064,10 +6064,12 @@ range, not ours*, and it is the only printed recipe that uses Table S5 for a mul
 
   ⚠ **Today that column's answer is *yes*, and the radius axis alone shows it**: `fe_s_13wt_19gpa` reaches
   **0.375 %** on the radius at cmf 0.29, two steps inside its own cut at 0.31, while `fe_s_19wt_19gpa`
-  manages only **2.675 %** at 0.26, immediately under its cut at 0.27. **The lighter material is the better
-  one on that axis and the floor takes the difference away.** *So a multi-component material must be read
-  in the same column* — a lighter core lowers P_cmb, which pushes more of the sweep under the reference,
-  and an optimum sitting on the cut is the floor's number rather than the material's.
+  manages only **2.675 %** at 0.26, immediately under its cut at 0.27. ⚠ **And the direction is the opposite of the tempting
+  one**: the material that does better on the radius is the **denser** one (13 wt% S → ρ 7.499, P_cmb
+  20.04 GPa) while the lighter 19 wt% (ρ 7.015, P_cmb 19.34) is the one the floor cuts sooner, because a
+  lighter core lowers the boundary pressure toward the 19 GPa reference. **So the floor punishes exactly
+  the direction the density window wants**, and a multi-component material — lighter still — must be read
+  in the same column: an optimum sitting on the cut is the floor's number rather than the material's.
 
   **The line that can fail:** *does some single cmf put the radius inside 3 % and `nmoi` inside 1 % at the
   same time?* **Today none does** — at 0.26 the radius is inside (2.68 %) and `nmoi` is not (1.99 %); at
