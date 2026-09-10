@@ -190,11 +190,14 @@ row(repr(eos.MATERIALS["fe_prem"].phases[0].density(136.0e9)) == "9916.936982956
 #   그래서 **이름으로 갈라** 본다 — 새 재질만 기준압을 갖고, 나머지는 전부 0 이어야 한다.
 newref = sorted(k for k, m in eos.MATERIALS.items()
                 if any(ph2.p_ref for ph2 in getattr(m, "phases", ())))
-row(newref == ["fe_s_13wt_19gpa", "fe_s_19wt_19gpa"],
-    f"기준압을 가진 재질은 Fe–S 두 끝뿐이다: {newref}")
-row(all(ph2.p_ref == 0.0 for k, m in eos.MATERIALS.items() if not k.startswith("fe_s_")
-        for ph2 in getattr(m, "phases", ())),
-    "그 둘 말고는 모든 상의 `p_ref` 가 0 이다 — 새 필드가 옛 경로를 지나가지 않는다")
+# ⚠ **기준선이 183 에서 움직였다**: 상자의 여덟 모서리도 같은 19 GPa 기준이라 이제 열이다.
+#   이름으로 가르는 규칙은 그대로 — 기준압을 갖는 것은 «Huang 앵커에 놓인 액체 핵» 뿐이다.
+_REFD = sorted(["fe_s_13wt_19gpa", "fe_s_19wt_19gpa"] + list(eos.CORE_BOX_MATERIALS))
+row(newref == _REFD,
+    f"기준압을 갖는 재질은 Huang 앵커의 액체 핵 {len(_REFD)} 뿐이다 (178 C 의 둘 + 183 의 여덟)")
+row(all(ph2.p_ref == 0.0 for k, m in eos.MATERIALS.items()
+        if k not in set(_REFD) for ph2 in getattr(m, "phases", ())),
+    "그 열 말고는 모든 상의 `p_ref` 가 0 이다 — 새 필드가 옛 경로를 지나가지 않는다")
 
 print("\n⑧ 융해곡선이 **분기까지** 있는가 — 라벨만 있으면 순수 철로 떨어진다 (브리프 178 C′)")
 # ⚠ 178 C 는 `melt="iron_fes_eutectic"` 라벨을 붙였고 `MELT_CURVE_JOIN` 에도 등재했지만,
@@ -311,6 +314,45 @@ _planted = _plant_floor(30.0 * eos.GPA)
 _gap30 = _shoot_gap(0.325, _planted)
 row(_gap30 is not None and "30.0000 GPa" in _gap30.reason,
     f"ⓒ 심은 `p_min` 30 GPa 재질은 여전히 이름을 대고 거절한다: «{_gap30.reason[:52]}…»")
+
+print("\n⑫ 다원계 상자 — 인쇄된 도함수로 여덟 끝점을 우리가 다시 계산한다 (C55 2단계, 브리프 183)")
+#: 병렬석 P21 §1 의 표. **받아쓴 것이 아니라 대조 상대**다 — 아래 행은 우리 코드가 낸다.
+P21 = ((13, 1, 0.5, 6.737, 93.8, 7.454, 179.7), (13, 1, 1.4, 6.681, 96.2, 7.386, 186.2),
+       (13, 4, 0.5, 6.382, 72.4, 7.147, 172.7), (13, 4, 1.4, 6.339, 75.2, 7.091, 179.0),
+       (19, 1, 0.5, 6.244, 67.7, 7.045, 162.2), (19, 1, 1.4, 6.206, 71.0, 6.991, 169.1),
+       (19, 4, 0.5, 5.934, 49.1, 6.774, 156.8), (19, 4, 1.4, 5.906, 52.6, 6.730, 163.4))
+_off = []
+for _S, _O, _C, _r19, _k19, _r35, _k35 in P21:
+    _x = eos.core_mole_fractions({"S": _S / 100, "O": _O / 100, "C": _C / 100})
+    _got = (eos.huang_core_density(_x, "19GPa"), eos.huang_core_k_t_gpa(_x, "19GPa"),
+            eos.huang_core_density(_x, "35GPa"), eos.huang_core_k_t_gpa(_x, "35GPa"))
+    if not (abs(_got[0] - _r19) < 6e-4 and abs(_got[2] - _r35) < 6e-4
+            and abs(_got[1] - _k19) < 6e-2 and abs(_got[3] - _k35) < 6e-2):
+        _off.append(f"S{_S}O{_O}C{_C}")
+row(not _off, f"ⓑ 여덟 끝점이 인쇄 자릿수까지 재현된다 (두 좌석, 같은 도함수, 불일치 {len(_off)})")
+row(abs(eos.huang_core_density(eos.core_mole_fractions({"S": 0.19, "O": 0.01, "C": 0.014}), "19GPa")
+        - 6.2056) < 5e-4,
+    "⚠ 경계 행 19/1/1.4 = 6.2056 — 창 위끝 6.2 를 **0.0056** 넘는다. 인쇄 도함수의 유효자리 아래라 "
+    "«밖» 이 아니라 **경계**로 기록한다 (사전등록 ⓒ)")
+#: ⚠ `len(MATERIALS)` 로 세지 않는다 — 위 ⓒ 행이 심은 가짜 재질이 그 표에 들어가 있어서 수가
+#: 시험 순서에 달린다. 세는 것은 **상자 자신**이고, 기존 열셋은 이름으로 확인한다.
+_BASE13 = ("fe_prem", "fe_eps", "fe_s_13wt_19gpa", "fe_s_19wt_19gpa", "silicate",
+           "silicate_chondritic", "antigorite", "h2o", "h_he", "h2o_hot", "h2o_liquid",
+           "h2o_liquid_dense", "nh3")
+row(len(eos.CORE_BOX_MATERIALS) == 8 and all(n in eos.MATERIALS for n in _BASE13)
+    and not (set(_BASE13) & set(eos.CORE_BOX_MATERIALS)),
+    f"상자의 여덟 모서리가 **기존 열셋 옆에** 등재됐다 — 겹치는 이름 0")
+_box = eos.MATERIALS["fe_s19_o4_c5permil_19gpa"]
+row(_box.has_thermal and _box.phases[0].t_ref == 2100.0,
+    f"⚠ ⓓ **열 상수를 든다** — `has_thermal` 이 참이고 `t_ref` 가 앵커의 2100 K 다. α 만 붙이고 "
+    "`t_ref` 를 비우는 것이 C56 이 기록한 함정이고, 둘을 **함께** 적는 것이 그 함정을 피하는 길이다")
+row(bool(_box.melt_free_phases()) and _box.t_melt(25.0 * eos.GPA) is None,
+    "⚠ ⓓ **녹는곡선은 없다** — Fe–Fe₃S 공정선은 이원계의 것이고 다원계 인쇄 곡선은 보유 집합에 "
+    "없다. 이름만 달지 않으므로 `melt_free_phases()` 가 이 상을 들고, 소비처가 그 이름으로 거절한다")
+row(eos.MATERIALS["fe_s_13wt_19gpa"].has_thermal is False
+    and eos.MATERIALS["fe_s_19wt_19gpa"].has_thermal is False,
+    "ⓐ 이원계 두 재질은 **손대지 않았다** — 여전히 `has_thermal = False` 이고 열세 재질의 격자가 "
+    "바이트동일이다 (새 열 상수는 새 빌더에만 붙는다)")
 
 print("\n기록 — 178 D 의 정정을 181 이 다시 정정한다")
 print("      178 D 는 «괄호로는 아무 칸도 안 열린다, 막는 것은 압력 바닥이다» 로 끝났고 그것은 맞았다.")

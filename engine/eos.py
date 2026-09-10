@@ -1615,6 +1615,14 @@ HUANG_FE_ANCHORS = {                     # (P [Pa], T [K]) → (ρ_Fe [g/cm³], 
 #: Table S5 의 S 열: (a, b) 로 ∂ρ/∂c = a·c + b [g/cm³], ∂K_T/∂c = a·c + b [GPa]
 HUANG_S_DRHO = {"19GPa": (-3.505, -5.362), "35GPa": (-1.201, -4.870)}
 HUANG_S_DKT = {"19GPa": (-410.0, -228.0), "35GPa": (-286.0, -148.0)}
+#: Table S5 의 **상수** 열 — O 와 C 는 c 에 선형이 아니라 상수다 ("except for S because of its
+#: non-linear behavior"). 그래서 적분이 x_i 에 비례한다: ∫₀^x b dc = b·x. (C55 2단계, 브리프 183)
+HUANG_X_DRHO = {"19GPa": {"O": -5.128, "C": -2.663}, "35GPa": {"O": -4.426, "C": -2.870}}
+HUANG_X_DKT = {"19GPa": {"O": -298.0, "C": 14.0}, "35GPa": {"O": -110.0, "C": 151.0}}
+#: Table 1 의 **순수 액체 Fe** 열 상수: (α [1/K], C_V [J kg⁻¹ K⁻¹], 인쇄된 γ).
+#: ⚠ **조성 도함수가 인쇄되지 않은 양들이다** — Table S5 는 ρ 와 K_T 만 준다. 혼합에 그대로
+#:   쓰는 것은 «도함수를 0 으로 둔다» 는 **우리 가정**이고, 재질의 라벨이 그렇게 말한다.
+HUANG_FE_THERMAL = {"19GPa": (6.99e-5, 494.0, 2.74), "35GPa": (5.31e-5, 496.0, 2.66)}
 #: Table S4 의 독립 앵커 — Fe₈₄S₂₄ (108원자 셀, c_S = 24/108), 19 GPa · 2100 K
 HUANG_S4_CS = 24.0 / 108.0
 HUANG_S4_RHO_NSP = 6.72
@@ -1642,6 +1650,88 @@ def huang_fes_k_t_gpa(c_s: float, anchor: str = "19GPa") -> float:
         raise ValueError(f"c_S 는 몰분율이다 (0–1): {c_s}")
     a, b = HUANG_S_DKT[anchor]
     return HUANG_FE_ANCHORS[anchor][3] + b * c_s + a * c_s * c_s / 2.0
+
+
+#: 원자량 — IUPAC 2021 관례값 (교과서). 환산은 우리 산수이므로 규칙을 여기 한 번만 적는다.
+CORE_MOLAR_MASS = {"Fe": 55.845, "S": 32.06, "O": 15.999, "C": 12.011}
+
+
+def core_mole_fractions(weights: dict[str, float]) -> dict[str, float]:
+    """핵 조성의 **무게분율 → 원자 몰분율**. Fe 가 잔량이다 (C55 2단계, 브리프 183).
+
+    x_i = (w_i/M_i) / Σ_j (w_j/M_j). ⚠ **이것은 우리 산수다** — 오너의 밴드는 wt% 로 선언됐고
+    Huang 의 도함수는 몰분율에 대한 것이라(Table S5 캡션 "c_X, in mole fraction") 중간에 이
+    환산이 반드시 들어간다. 규칙을 한 자리에만 두는 이유는 두 자리에 두면 갈리기 때문이다."""
+    unknown = sorted(set(weights) - set(CORE_MOLAR_MASS) - {"Fe"})
+    if unknown:
+        raise ValueError(f"원자량을 모르는 원소: {unknown}")
+    w_light = sum(weights.get(k, 0.0) for k in weights if k != "Fe")
+    if not 0.0 <= w_light < 1.0:
+        raise ValueError(f"가벼운 원소의 무게분율 합이 0–1 밖이다: {w_light}")
+    moles = {"Fe": (1.0 - w_light) / CORE_MOLAR_MASS["Fe"]}
+    for k, w in weights.items():
+        if k == "Fe":
+            continue
+        moles[k] = w / CORE_MOLAR_MASS[k]
+    total = sum(moles.values())
+    return {k: v / total for k, v in moles.items()}
+
+
+def huang_core_density(x: dict[str, float], anchor: str = "19GPa") -> float:
+    """다원계 액체 핵의 밀도 [g/cm³] — Khan+ 2023 식 (1) 을 Huang 의 도함수로.
+
+    ρ_mix = ρ_Fe + Σ_i ∫₀^{x_i} (∂ρ/∂c_i) dc_i. S 만 c 에 선형이라 2차로 적분되고 (기존
+    `huang_fes_density` 와 **같은 식**), O·C 는 상수라 x 에 비례한다. ⚠ **이상혼합은 Khan 이
+    자기 구간에 대해 적은 가정이지 우리 것이 아니다** ("liquid Fe-O alloys mix ideally")."""
+    if anchor not in HUANG_FE_ANCHORS:
+        raise ValueError(f"앵커는 {sorted(HUANG_FE_ANCHORS)} 중 하나다: {anchor}")
+    rho = huang_fes_density(x.get("S", 0.0), anchor)
+    for k, b in HUANG_X_DRHO[anchor].items():
+        rho += b * x.get(k, 0.0)
+    return rho
+
+
+def huang_core_k_t_gpa(x: dict[str, float], anchor: str = "19GPa") -> float:
+    """같은 적분을 K_T 에 [GPa]."""
+    if anchor not in HUANG_FE_ANCHORS:
+        raise ValueError(f"앵커는 {sorted(HUANG_FE_ANCHORS)} 중 하나다: {anchor}")
+    k_t = huang_fes_k_t_gpa(x.get("S", 0.0), anchor)
+    for k, b in HUANG_X_DKT[anchor].items():
+        k_t += b * x.get(k, 0.0)
+    return k_t
+
+
+def huang_core_phase(x: dict[str, float], anchor: str = "19GPa") -> "Phase":
+    """다원계 액체 핵의 `Phase` — 고압 기준 BM2, **열 상수까지** (C55 2단계, 브리프 183).
+
+    ⚠ **여기는 `alpha_k` 를 붙이고 `huang_fes_phase` 는 안 붙인다.** 그 함수의 주석이 적어 둔
+    함정은 «α 를 붙이면서 `t_ref` 를 안 적는 것» 이다 — 그러면 `delta_t` 가 절대영도부터 데운다.
+    앵커의 온도(2100·2400 K)를 `t_ref` 로 **함께** 적으면 그 함정이 없고, 그것이 이 빌더가 하는
+    일이다. 기존 두 재질은 손대지 않는다 (183 판정선 ⓐ: 열세 재질 바이트동일).
+
+    ⚠ **α·C_V 에는 조성 도함수가 인쇄되지 않았다** — Table S5 는 ρ 와 K_T 만 준다. 그래서 이
+    상은 앵커의 순수 Fe 값을 그대로 들고, **그 «도함수 0» 이 우리 가정이라는 것을 라벨이 말한다.**
+    K_T 는 혼합의 것을 쓰므로 `alpha_k = α_Fe × K_T,mix` 다.
+
+    ⚠ **녹는곡선은 없다.** Fe–Fe₃S 공정선은 이원계의 것이고 Fe–S–O–C 의 인쇄된 곡선은 보유
+    집합에 없다 — 이름만 달아 두면 178 C′ 가 잡은 모양이 되므로 `melt` 를 비워 둔다. 결과는
+    `melt_free_phases()` 가 이 상을 이름 대어 들고, 소비처가 그 이름으로 거절하는 것이다."""
+    p_ref, t_ref, _rho, _kt = HUANG_FE_ANCHORS[anchor]
+    alpha, c_v, _gamma = HUANG_FE_THERMAL[anchor]
+    rho = huang_core_density(x, anchor) * 1e3           # g/cm³ → kg/m³
+    k_t = huang_core_k_t_gpa(x, anchor) * GPA
+    tag = "".join(f"{k}{x.get(k, 0.0):.4f}" for k in ("S", "O", "C") if x.get(k, 0.0) > 0.0)
+    return Phase(
+        name=f"fe_core_{anchor}_{tag}", form="bm2_ref",
+        rho0=rho, k0=k_t, k0p=4.0,
+        p_max=MORI_FES_P_MAX, p_min=p_ref, p_ref=p_ref,
+        alpha_k=alpha * k_t, t_ref=t_ref, t_ref_kind="isotherm", c_v_ref=c_v,
+        ref=f"Huang+ 2023 (2023GeoRL..5002271H) Table 1 + SI Table S5, {anchor} 기준 · "
+            f"혼합은 Khan+ 2023 식 (1)–(2) 의 이상혼합 · α·C_V 는 **순수 Fe 앵커값**"
+            f"(조성 도함수 미인쇄 — 0 으로 둔 것은 우리 가정)",
+        join="Fe–S–O–C 액체", fit_state="liquid",
+        join_note="녹는곡선 없음 — Fe–Fe₃S 공정선은 **이원계**의 것이고 다원계의 인쇄된 곡선은 "
+                  "보유 집합에 없다. 이름만 달지 않는다 (178 C′)")
 
 
 def huang_fes_phase(c_s: float, anchor: str = "19GPa") -> "Phase":
@@ -2980,7 +3070,37 @@ FE_S_19WT = Material("fe_s_19wt_19gpa", "액체 Fe–S 핵 · 19 wt% S (밴드 �
                      gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
                      under_reason=FE_S_BELOW_REF_REASON)
 
+# ── 다원계 액체 핵: 오너 상자의 여덟 끝점 (C55 2단계, 브리프 183) ────────────────────────
+# 오너 결정 2026-09-10: S 13–19 wt% · O 1–4 wt% · C 0.5–1.4 wt% · **H 미선언**(문헌이 여섯 배로
+# 갈리고 밀도를 지배한다 — 별도 결정 항목) · Fe 는 잔량 · **Ni 는 선언되지 않아 뺀다**(Huang 이
+# 도함수 −0.182 / −0.018 을 인쇄하므로 오너가 넣기로 하면 그때 붙는다).
+# ⚠ **점이 아니라 상자의 끝점 여덟이다.** 밴드 안의 한 점을 고르는 것은 오너의 일이고, 여기서
+#   여덟을 다 등재하는 이유는 «어느 끝이 창에 드는가» 가 곧 이 브리프의 판정이기 때문이다.
+CORE_BOX_WT = {"S": (0.13, 0.19), "O": (0.01, 0.04), "C": (0.005, 0.014)}
+
+
+def _core_box_materials() -> dict[str, Material]:
+    """상자의 여덟 모서리를 재질로 만든다. 이름에 조성이 **wt% 로** 들어간다."""
+    out: dict[str, Material] = {}
+    for w_s in CORE_BOX_WT["S"]:
+        for w_o in CORE_BOX_WT["O"]:
+            for w_c in CORE_BOX_WT["C"]:
+                x = core_mole_fractions({"S": w_s, "O": w_o, "C": w_c})
+                name = (f"fe_s{w_s * 100:.0f}_o{w_o * 100:.0f}"
+                        f"_c{w_c * 1000:.0f}permil_19gpa")
+                label = (f"액체 Fe–S–O–C 핵 · S {w_s * 100:.0f} · O {w_o * 100:.0f} · "
+                         f"C {w_c * 100:.1f} wt% (19 GPa 기준)")
+                out[name] = Material(
+                    name, label, (huang_core_phase(x, "19GPa"),),
+                    gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
+                    under_reason=FE_S_BELOW_REF_REASON)
+    return out
+
+
+CORE_BOX_MATERIALS = _core_box_materials()
+
 MATERIALS: dict[str, Material | HotWater | HydrogenHelium | LiquidWater | DenseLiquidWater | Ammonia] = {
     m.name: m for m in (FE_PREM, FE_EPS, FE_S_13WT, FE_S_19WT, SILICATE, SILICATE_CHONDRITIC, ANTIGORITE, H2O, H_HE, H2O_HOT, H2O_LIQUID,
                         H2O_LIQUID_DENSE, NH3)
 }
+MATERIALS.update(CORE_BOX_MATERIALS)
