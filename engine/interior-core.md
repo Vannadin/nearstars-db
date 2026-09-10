@@ -60,7 +60,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C12 | a ternary anchor from a diffusion table | closed 2026-08-31, recorded | — |
 | C13 | fuzzy core vs the moment-of-inertia deficit | closed 2026-09-01 as a named refusal | — |
 | **C14** | `internal_heat_nontidal → dynamo_rocky via geotherm` | **open** (`status: gap`) | needs thermal evolution, not decay history alone; C20's integrator is the supplier to wire |
-| **C15** | `heat_transport_mode → dynamo_rocky via cmb_heat_flux` | **open** (`status: gap`) | the supplier exists (Brief 60); what is missing is the consumer wiring through φ and core entropy |
+| **C15** | `heat_transport_mode → dynamo_rocky via cmb_heat_flux` | **open** (`status: gap`) | the supplier exists (Brief 60); what is missing is the consumer wiring through φ and core entropy ⚠ **Pre-registered 2026-09-11 as C15 (a)** — and the pre-registration's own finding is that this row is **three** gap edges, not one: φ (value exists, no verdict can be drawn), `cmb_heat_flux` and `geotherm` (value exists, consumer does not read it). The item C15 (a) scopes is only the first — *whether a quantity that cannot decide may enter a gate that must decide.* ⚠ **The sign of ΔE is set by which horn is declared**: 3760 K gives **+27 MW/K** and 3770 K **−78** on the same profile, because the three inner-core terms switch on and off with it — ten kelvin, 105 MW/K. Nothing built |
 | **C16** | `tidal_locking → dynamo_rocky via rossby` | **open**, one reason of three retired 2026-09-06 | DO11 read: `q_conv` resolved (super-adiabatic excess per CMB area), **`ν` and the Table 8 4–5× remain** — the paper's own ν is the mantle's, a decoy. The gate is now **reached** on a provisional `locked`; the real value is **C36**, which the owner set as the next item |
 | **C17** | `ocean_fraction →` three consumers | **open** (`status: gap`) | three consumers, no supplier; nothing emits an ocean fraction |
 | C18 | `body_class → dynamo_rocky via sub_neptune` | closed 2026-09-04 as a named refusal (corrected the same night) | the existence question it spawned is C23 |
@@ -111,6 +111,7 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C61** | a step that was never tallied reads as a step that passed | **built 2026-09-10 (184 B) — the tally is part of the gate's own rc** | The third of the 169 E / C60 family: *"did not run" and "passed" were not distinguishable to the gate's own count.* gate229 printed **`[STEP]` 71 · `[TIME]` 19 · rc=0** with **52 steps never judged**, because the pool's spool directory was deleted mid-run and the children had nowhere to write their status. Hardened four ways: the spool is probed for existence **and writability** before each launch and a failure **demotes that step to serial** rather than skipping it; launches are counted in the parent's memory against completions read from the children's **exit-status files**, ⚠ *two independent sources, because a count taken twice from the same log cannot catch the log itself going missing*; `pool_incomplete` names every launched step and sets `fail=1`; and children exit quietly when the spool is gone so the real sentence is not buried. Proved by injection in an isolated harness, which is also where the `«$var»` brace defect and the attribution-losing `step_flush` guard were found |
 | **C62** | `tidal_response` does not exist, and the two bodies that need k₂ declare it fitted to our own output | **pre-registered 2026-09-10 before the build (C62 (a)); nothing built** | P28 moved into this file verbatim (parallel seat, sha256 `92b95059014d03db…`, 9211 B). A layered viscoelastic propagator (Beuthe 2015 eqs 13–18) with three rheologies (Bagheri+ 2022 §2.3–2.7) emitted as a **band**, k₂·h₂·Q. ⚠ **The engine has no shear modulus anywhere today**, so μ is a gap the node names rather than a quantity it fills — C58 (a)'s shape, one layer out. ⚠ **A liquid core is the membrane limit and says so** (Beuthe eq. 27); Saito 1974's general liquid-layer condition is paywalled and **not held**, and every output carries that label. Owner-pending: the liquid-layer treatment · μ declared per layer or printed per material · whether a body ever elects a rheology · whether this node's k₂/Q ever replaces the **declared** value C39 unified. **The standing default for the first build is emitter-only**, so C39's seam is kept and no shipped τ moves |
 | **C63** | the cold φ(P) slot has no law over our own pressure range | **closed 2026-09-10 as a named refusal — no code, no constant, no board changed** | The seven compaction papers held on 09-10 do not print a cold, unsintered φ(P) law over 1–764 MPa (P29, sha256 `8884e29ae2832870…`, 16563 B). Four saturate **at or below 1 MPa** — where our rock law begins; two are φ(P, T, t) rate laws needing a thermal history; one is shock. ⚠ **And five of the seven close a 100–170 km body's pores by ²⁶Al heating above ≈ 700 K**, while our three `voids_expected` indicators fire on mass, grain-fracture pressure and a declared tidal bool — *"tidal" appears 0 times in all seven*. So the indicator set is indexed on a different cause than the literature uses at this body scale. Dante's centre is **317 MPa**, above every cold law held and above the 150 MPa lab range of the law we ship. Owner-pending (a)–(e), none urgent |
+| **C64** | one value key, two producers — and the engine's two read paths answer differently | **listed 2026-09-11; widened by measurement from one key to six** | Found while writing C15 (a). `entropy_history_verdict` is a **literal refusal** in `core_entropy` (*"needs C20"* — C20 was built 2026-09-04) and a **computed verdict** in `core_history`, and `engine/test_core_entropy.py@«2: the history verdict must refuse by name»` pins the literal. ⚠ **The family signature is one sentence: there was a check, and the check agreed.** The contract layer says it too — both `Returns` lists carry the key and `check_contracts` compares each node only against **its own**, so nothing counts a key claimed twice; the contract prose even asserts the literal, so a repair moves **three** places and each needs a name. Audit-seat census: **168** contract `Returns` keys, **six** claimed by two nodes (`dipole_moment`·`b_eq`·`b_pol` — the dynamo pair, expected harmless by class exclusivity but **counted, not argued**; `entropy_history_verdict`; `has_inner_core_solved`; `radius`). ⚠ **Direction must be read from `graph.order`'s execution order, not `chain.yaml`'s declaration order** — the two disagree, and for `radius` they disagree *oppositely*: `interior_layers` runs first, so `state.get` returns it and `resolved` (emit, evidence, board comparison) returns `mass_radius_relation`. **`radius` leaves this item as C65 if the run-side count says it is live.** Open: how many roster bodies have both claimants applicable in the same run |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -6328,7 +6329,12 @@ hcp thermal set; making it liquid would put it wrong **in the other direction**.
   `core_gamma(material, P, T)`. It returns the material's γ(P, T) when that material's
   `thermal_source_state` check is **green**, and when the check is **red** it returns the **declared
   constant 1.5** — labelled *"hcp-solid in origin, standing in while no liquid set is adopted"* — which is
-  **printed and counted every run** and carries a `recorded_disagreement` holding **both** numbers.
+  **printed and counted every run** and **emits both numbers as values** — `core_gamma_used` and
+  `core_gamma_material`, with `core_gamma_fallback` as the counter. ⚠ *An earlier draft of this line said
+  the pair travels in a `recorded_disagreement`; that is a **spec field** read from a body file
+  (`engine/run.py@«recorded = spec.get("recorded_disagreement")»`, 177's board comparisons) and **not a
+  `Result` field** — `payload.Result` has ten, and that is not one of them. A node cannot put its
+  disagreement there.*
   ⚠ **The constant literal lives only inside that function**, and **which materials the function answers
   for is a property of the material, not a list of names** — `role='core'`, carried by the twelve core
   materials. *A name list is the hole that bit first*: written as `CORE_MATERIALS = (…)` it omitted the two
@@ -6441,6 +6447,12 @@ hcp thermal set; making it liquid would put it wrong **in the other direction**.
   | `audit/c58_thermal_mismatch_167ac9ee.txt` | `c76441233760ed6b` | 3458 |
   | `audit/thermal_5e7f6993.json` | `e07977cfd77fd8ed` | 13823 |
 
+  ⚠ **Measured after the build, by the audit seat (2026-09-10): all four hold.** The material grids are
+  **byte-identical**, **no existing key moved**, and `core_state` gained **exactly three keys** —
+  `core_gamma_used`, `core_gamma_material`, `core_gamma_fallback` — whose printing, counting and
+  both-distances lines were confirmed from run output rather than from this file. The post-build
+  fingerprint is `audit/thermal_eec846df.json`, sha256 `74595510730d816c…`, **14287 B**.
+
   ⚠ **`thermal_<sha>.json` is compared with its `seconds` field excluded** — wall-clock timings differ
   between runs of identical physics, and comparing them would turn every re-run into a false difference.
   *(The thermal node's output has not moved since `3a4f6b37`, so that baseline is a resting state.)*
@@ -6462,6 +6474,71 @@ hcp thermal set; making it liquid would put it wrong **in the other direction**.
   than about which number is true.*
 - ~~Whether `K_CORE` closes here~~ → **closed: moved to C49** (owner, 2026-09-10), and its three consumer
   sites go with it.
+
+### C58 (a) amended 2026-09-11 — the owner's decisions, and one design constraint they hit
+
+⚠ **Committed before the code, again.** 180 B built the fallback; 180 C is the build that **moves
+answers**, so these amendments are registered first and the seven-body table below is the output.
+
+#### ① The liquid thermal set is a pressure split **inside one phase**, not a second phase
+
+**Owner decision (2026-09-11), candidate (iv):** at or below **35 GPa** the set is Huang+ 2023 Table 1's
+two measured points (19 and 35 GPa) with the valid interval **declared**; above it, Dorogokupets+ 2017's
+liquid set (eqs 6–17) carrying the grade label *"disagrees with the low-pressure measurements by 40 %"*.
+⚠ **The discontinuity at the boundary is reported as a number**, not smoothed.
+
+⚠ **And it may not be built as two phases.** `engine/core_state.py@«if len(material.phases) != 1:»`
+makes `k0_flip_gpa` answer `None` when a material has more than one phase — *"cannot compute, and says
+so"*. Splitting `fe_prem` into a ≤35 GPa phase and a >35 GPa phase would therefore turn a **number into a
+refusal** for every body: Earth's flip point **194.005586674557 GPa** would silently become `None`.
+*(Audit seat's finding, reproduced here: `interior.solve(1.0, earth_like, cmf 0.325)` → p_c
+**358.458095 GPa**, p_cmb **135.275636 GPa**, then `k0_flip_gpa(fe_prem, …, 3760.0)`.)* So the split lives
+**in the thermal set inside the single phase**, and `thermal_label` returns a **per-interval** label —
+`ok` inside 19–35 GPa, and the graded label above it.
+
+⚠ **One more thing that number shows, and it changes what the baseline means.** At the **structure's own**
+`T_cmb` (2526.2085 K on the same run) `k0_flip_gpa` **already returns `None`** — the sign does not change
+inside the multiplier range. The 194.0056 figure exists **only at the declared horn 3760 K**. *So the ⓓ
+baseline must say which temperature each cell was taken at, or a `None` will be read as this brief's
+damage when it is today's answer.*
+
+#### ② The low-pressure Fe–S slot stays empty, by decision
+
+**Owner decision:** candidate (c) — **leave it empty** and wait for Balog+ 2003, which the owner will
+fetch. **Code changed by this decision: none.** The refusal below 19 GPa keeps naming itself, and no
+extrapolation is added to cover the gap.
+
+#### ⓐ amended — four sites, and the constant becomes a fallback only for "the material cannot say"
+
+The 180 B text reads *"three sites, not four — the structure integrator is left on its own path"*. With
+① decided, **the integrator joins**: all four consumers take the material's γ(P, T). The declared
+constant **1.5** survives **only** as the named fallback for a material that cannot give a value at the
+asked (P, T) — not for a material whose set is merely graded. ⚠ *So the verdict set changes meaning:
+`composition-substitute` and the graded high-pressure label now **deliver the material's own γ**, and only
+`no-thermal-set` and a domain refusal reach the constant.* That is a widening of what moves, and it is
+why ⓓ below is a table of values rather than a bit-identity claim.
+
+#### ⓓ amended — the table of what moves, and a rule for a movement that is not a number
+
+**The output of 180 C is the seven-body table**: `core_temperature`, `conductor_phase` and
+`center_margin` for all seven bodies that reach `core_state`, before and after, with **every changed
+value named**. Plus the thermal-history fingerprint, since the integrator joins.
+
+⚠ **New rule, from ①'s constraint:** a value that changes from **a number to `None`**, or from `None` to
+a number, **counts as a movement and gets named** — the same as a number that moves. *A refusal is an
+answer, and a silently vanished number is the worst kind of movement because a diff of two tables reads
+it as an empty cell.*
+
+| pre-listed cell | expected | value today, and where it came from |
+|---|---|---|
+| Earth `k0_flip` at the **declared** 3760 K | **unchanged** | **194.005586674557 GPa** — this file's run, pressures above |
+| Earth `k0_flip` at the **structure's** T_cmb 2526.2085 K | **unchanged** | **`None`** today — no sign change in the multiplier range |
+| the seven bodies' `core_temperature` · `conductor_phase` · `center_margin` | ⚠ **expected to move** | filled at build time, each change named |
+| the thermal-history fingerprint | ⚠ **expected to move** | `audit/thermal_eec846df.json` `74595510730d816c…` · 14287 B is the before |
+
+**What would falsify each line:** a `k0_flip` differing from the two cells above; a body whose
+`conductor_phase` changes without appearing in the named list; a fingerprint that does **not** move
+(which would mean the integrator did not in fact join).
 
 ### C61 — a step that was never tallied reads as a step that passed — **listed 2026-09-10, hardened the same day**
 
@@ -6677,6 +6754,265 @@ fitted range covers **a quarter of Dante's pressure column** (34.0 % of that bod
 every candidate in the held set is either saturated three decades too low or needs a thermal history the
 node does not receive. **Carry 2012 and Consolmagno+ 2008 stay unheld**, so indicator 1 stays
 second-hand. The next move belongs to the owner, or to a paper we do not have.
+
+### C15 (a) 2026-09-10 — wiring core entropy into the rocky dynamo ladder — **pre-registration draft, before any build**
+
+⚠ **Nothing built, nothing decided.** C15's row has read `open (status: gap)` since Brief 44: *"the
+supplier exists (Brief 60); what is missing is the consumer wiring through φ and core entropy"*. This
+draft says what the consumer wiring would have to be, what today's numbers actually are, and **which
+three of its questions a seat may not answer.** *Written before the build so that the answer cannot be
+chosen after seeing it.*
+
+#### The item is three edges, not one
+
+`engine/chain.yaml` carries **three** gap edges into `dynamo_rocky`, and they are three different kinds
+of gap. The pre-registration names all three, because a build that closes one and leaves the other two
+unmentioned will read afterwards as though C15 were finished.
+
+| edge | kind | status today |
+|---|---|---|
+| `core_entropy_production → dynamo_rocky` (`influences`, sign non-monotonic) | ⚠ **value exists, no verdict can be drawn** — φ is emitted and its band crosses zero | the edge C15 owns |
+| `heat_transport_mode → dynamo_rocky` **via `cmb_heat_flux`** (`selects`) | value exists, **consumer does not read it** — `cmb_heat_flux` has emitted `q_cmb` since Brief 60, `tidal_heating` has supplied the §6.2 mode label since C30 | untouched by this draft |
+| `internal_heat_nontidal → dynamo_rocky` **via `geotherm`** (`requires`) | value exists, **consumer does not read it** — C20's `core_thermal_history` emits `core_cmb_temperature_present` and `q_cmb_present` | untouched by this draft |
+
+**So the honest scope line is:** C15 (a) is about *whether a quantity that cannot decide may enter a
+gate that must decide.* The other two edges are about a consumer that never asks, which is a wiring
+brief and not this one.
+
+#### What the ladder's gate is today, read from the code
+
+`dynamo_rocky.ladder` decides "alive" from **three labels and no formula** — `conductor_phase` from
+`core_state` (`liquid` / `solid` / `undecided`), with a **declared** `dynamo_alive` standing in *only*
+while `conductor_phase` is undecided (C29 (c), owner). It reads neither φ, nor `q_cmb`, nor any
+temperature. ⚠ **That is the whole of the alive gate**, so "wiring entropy" means, concretely, adding a
+fourth thing to a three-label gate that currently has no numeric input at all.
+
+#### What φ actually is today — measured for this file
+
+`python3 engine/test_core_entropy.py` (2026-09-10, this file's run):
+
+| path | T_c | ΔE | band (8 corners) | corners positive | H = 0 corner |
+|---|---|---|---|---|---|
+| the engine's own Earth, on C14's solved T_c | **3770 K** | **−78 MW/K** | **−181 … +172** | **4/8** | **−85** |
+| the same profile at the owner's declared horn | 3760 K | **+27** | (E_L 69 · E_g 170 · E_H −56) | — | — |
+| the same profile at 4000 K, inner core gone | 4000 K | **−162** | (E_L = E_g = E_H = 0) | — | — |
+
+Terms on the first row: E_R 6 + E_s 78 + E_L 29 + E_H −24 + E_g 73 − E_k **242**. Integration width
+against a 4× finer step: **1.2 MW/K** — two orders below the declared band, which is the useful part of
+that number.
+
+⚠ **The sign of ΔE is set by which horn is declared, not by the entropy budget.** 3760 K gives **+27**
+and 3770 K gives **−78**: ten kelvin of declaration, 105 MW/K of answer, because the inner-core terms
+(E_L, E_g, E_H — all three carry dR_i/dt) switch on and off with it. *A quantity this sensitive to a
+declaration cannot be the thing that overrules a label.* And the threshold cannot help: the paper's own
+required excess is *"probably ∼100 MW K⁻¹, but could lie anywhere within the range 0.1–1000"* (§5.2), so
+**the band and the threshold overlap in both directions.**
+
+#### ⚠ Two defects found while writing this draft — moved out of C15's scope
+
+Both are recorded as a **separate candidate (C64)**, not as part of this item: `c64-entropy-verdict-key-draft.md`
+in this directory. *The reason they are not folded in here is that C15's scope is one edge, and a
+pre-registration that also carries a repair is a pre-registration that can be satisfied by the repair.*
+⚠ **One of them touches this brief's own inputs**, though, so it is named in (d) below: `core_entropy`
+emits a history verdict as a **literal refusal** naming a dependency that has since been built.
+
+#### The decision lines — candidates recorded, none chosen
+
+- **ⓐ How may a band that straddles zero enter a gate that must decide?** Candidates: **(i)** it may
+  not — φ stays a printed side-channel with a count, the ladder unchanged (today's behaviour, and the
+  node says so in its own notes: *"the threshold cannot decide, so it has no standing to overwrite the
+  ladder"*); **(ii)** φ becomes a **fourth label** that can only move `liquid` → `undecided`, never
+  `undecided` → `liquid` — i.e. it may withdraw a verdict but not grant one; **(iii)** φ gates only when
+  **all eight corners share a sign**, and prints `cannot-say (band straddles zero)` otherwise;
+  **(iv)** φ replaces the phase label where both exist. ⚠ **(iv) moves shipped verdicts** and is the one
+  a seat may not take.
+- **ⓑ Which temperature the budget is taken at** — C58's shape in a second place. Today it is the
+  **declared** horn where one exists and C14's solved T_c otherwise, and the two differ by 105 MW/K on
+  Earth. Candidates: keep the declaration-wins rule and print both; take C20's present-day endpoint
+  (which is a third number again); refuse when the two disagree by more than the band's width.
+- **ⓒ Whether `q_cmb` is wired in the same brief** — the second gap edge. Candidates: one brief for both
+  (φ and Q_C-vs-Q_k are the paper's own pair, printed side by side); φ alone now and `q_cmb` later; neither
+  until ⓐ is decided.
+
+#### Registered before running — each line in a form a run can contradict
+
+⚠ **Written this way on the audit seat's criterion (2026-09-11): a registered line that no test can
+disagree with is not a line.** C58 (a)'s ⓓ was first written as *"this brief changes answers"*, which
+nothing could refuse; inverted to bit-identity it became measurable. Each line below therefore names the
+field or file a run would read to contradict it.
+
+1. **Under ⓐ(i) — the side-channel candidate — every roster body whose `dynamo_rocky` is applicable
+   returns a bit-identical result**, the whole `values` dict and not the alive label alone.
+   *Contradicted by:* one differing key on one body. ⚠ **The comparison set is stated up front**: bodies
+   where the node is out of domain are excluded, and **how many were excluded is printed**, so an empty
+   comparison cannot pass as agreement.
+1b. ⚠ **Under ⓐ(ii) and ⓐ(iii) the verdict is designed to move, so bit-identity is the wrong line and is
+   not registered for them.** What is registered instead is the **direction**: **no body moves toward a
+   dynamo.** Not one goes `undecided → liquid`, or dead → alive, because of ΔE; movement is
+   withdrawal-only. Every body that moves is **named**, with its **corner count** (`x/8`) and its band
+   printed beside it, and **how many moved is a printed integer**. *Contradicted by:* one body gaining a
+   dynamo it did not have, or a withdrawal that appears with no name and no corner count. *(The audit
+   seat found that lines 1 and «must not» 1 as first written forbade what (ii) and (iii) are for: this
+   brief's own measurement puts Earth at **4/8 corners positive**, so under (ii) Earth is a withdrawal
+   candidate on day one.)*
+2. **Both numbers appear as values, not prose** — the entropy label and the phase label — plus a third
+   value naming **which one the verdict came from**. *Contradicted by:* a run where the verdict differs
+   from both, or where the naming field is absent while both are present. *(C58 (a)'s lesson: prose can
+   be grepped but only a value can be counted.)*
+3. **The straddle fallback is a printed integer.** How many bodies got `cannot-say (band straddles
+   zero)` is a value in the result, as `core_gamma_fallback` is. *Contradicted by:* a run where a body
+   takes that branch and the counter does not move.
+4. **A body with no solved T_c still refuses by name**, and the refusal string does not contain a dynamo
+   verdict. *Contradicted by:* the refusal turning into "no dynamo", or into a silent `False`.
+5. **An outcome outside 1–4 is registered as its own kind before it is reported**, not folded into one
+   of the four.
+
+#### What this brief must not do — each stated as a property, not an intention
+
+1. ⚠ **ΔE may never *grant* a dynamo — only withdraw one.** *The property:* in any run, no body's
+   alive label becomes more alive (`undecided → liquid`, dead → alive) as a consequence of ΔE, whatever
+   the band does; a **withdrawal** is permitted, and only under ⓐ(ii)/(iii). *Contradicted by:* a body
+   that gains an alive label when only ΔE changes. ⚠ *An earlier draft of this line said the label must
+   be derivable from `conductor_phase` alone — that forbade (ii) and (iii) outright, i.e. it forbade the
+   thing they exist to do. The asymmetry is the point: a quantity whose threshold spans four orders of
+   magnitude may take a verdict away, because that direction only ever loses information, and may not
+   hand one out.*
+2. ⚠ **The temperature the budget is taken at is printed, and it equals the declaration where one
+   exists.** *The property:* a value field carries the temperature used and a second one carries where it
+   came from. *Contradicted by:* a body with a declared core-side T_cmb whose printed budget temperature
+   is not that number. *(The 105 MW/K between 3760 K and 3770 K is what picking silently would decide.)*
+3. ⚠ **`entropy_history_verdict` is byte-identical across this brief's commit.** C64 owns that repair.
+   *Contradicted by:* the key's value differing before and after — and **the check already exists**:
+   `engine/test_core_entropy.py@«2: the history verdict must refuse by name»` pins the exact string, so
+   this line needs no new test and must not build one. *(That the pinning test is itself C64's problem
+   does not change what it does here: while C64 is open, it is this line's check.)*
+4. ⚠ **The row does not close, and the two other edges stay named.** *The property:* `chain.yaml` still
+   carries `status: gap` on `heat_transport_mode → dynamo_rocky` and `internal_heat_nontidal →
+   dynamo_rocky`, and C15's row text names both. *Contradicted by:* a row reading "closed" while either
+   edge is untouched.
+
+#### Owner decisions this surfaces (none taken)
+
+| # | decision | candidates | label |
+|---|---|---|---|
+| (a) | how φ may enter the alive gate | (i) side-channel only · (ii) may withdraw a verdict, never grant one · (iii) gate only when all eight corners share a sign · (iv) φ replaces the phase label | ⚠ **owner pending** — (iv) moves shipped verdicts |
+| (b) | which core temperature the budget is taken at | declaration wins and print both · C20's present-day endpoint · refuse when the two disagree beyond the band | ⚠ **owner pending** — 105 MW/K on Earth between two numbers ten kelvin apart |
+| (c) | whether `q_cmb` is wired in the same brief | both together (the paper's own pair) · φ first · neither until (a) | ⚠ **owner pending** |
+| (d) | what happens to `entropy_history_verdict`'s literal | C15 asks C20 · C15 stops emitting the key · leave and count it | ⚠ **owner pending** — a defect this draft found, not a design choice; recorded as **C64** and outside C15's scope |
+
+**Size (estimate):** no new physics. One label path in `dynamo_rocky`'s alive gate, one printed count,
+one note line, and the before/after table over the roster — plus whichever of (a)–(d) the owner elects.
+
+### C64 — one key, two producers, and the two read paths answer differently — **listed 2026-09-11**
+
+⚠ **The verdict line, written so that a run can contradict it.** `entropy_history_verdict` is emitted by
+**two nodes**, and **the two ways the engine reads a value give different answers for it in the same
+run** — `state.get(...)` returns the **first** applicable node's value, `state.resolved` the **last**.
+*The measurable form is the condition, not the claim*: it holds **exactly when both nodes are
+applicable in the same run**, and it is falsified by a roster body where one of them is out of domain.
+
+| where | what it emits | how it gets there |
+|---|---|---|
+| `engine/core_entropy.py@«"entropy_history_verdict": "cannot-say (needs C20)",»` | a **literal** refusal | C15's node says *"I cannot answer until C20 exists"* |
+| `engine/core_history.py@«"entropy_history_verdict": (ws["verdict"]»` | a **computed** verdict (`NOT_CONVERGED` when the sweep did not converge) | C20's node, built 2026-09-04 |
+| `engine/state.py@«if r.applicable and key in r.values:»` | the **first** match wins | `_find` iterates `self.results.values()` and returns on the first hit |
+| `engine/state.py@«out.update(r.values)»` | the **last** writer wins | `resolved` merges every applicable node's values in order — **and emit, the evidence dump and the board comparison read this one** |
+
+#### The conditions, measured before the claim (2026-09-11)
+
+1. ⚠ **The declaration branch is dead, so it is not part of the claim.** `state.py@«"""조회 한 번의 순수한 부분 — 기록하지 않는다. 선언된 입력이 먼저, 그 다음 도출값."""»`
+   makes `_find` check declared inputs **before** any node's values — so a declared key would beat both
+   nodes on that path while `resolved` still returned the last node. **No body declares this key**
+   (`engine/bodies/*.yaml`, 0 files), and it is a verdict key, so none is expected to. *Measured, and it
+   removes a branch from the claim rather than adding one.*
+2. **`applicable` is therefore the only live condition.** `resolved` skips a node that is out of domain,
+   and `_find` skips it too — so on a body where only one of the two nodes applies, **both paths agree**,
+   and that agreement is not evidence against this item. **The one thing to count is: how many roster
+   bodies have both nodes applicable in the same run.** If that number is zero today, the item is a
+   latent defect rather than a live one, and the row must say which.
+3. ⚠ **No consumer reads either key today**, which is why this survived. It becomes a wrong answer the
+   moment one does, and *which* wrong answer depends on the door it comes in by.
+
+#### ⚠ The contract layer says it too, and nothing counts that
+
+Both contracts in **one document** list the same key in their `Returns`:
+`docs/reference/internal-heat-luminosity-methodology.md@«`has_inner_core_solved` [—] · `entropy_history_verdict` [—]»`
+(`core_entropy_production`) and
+`docs/reference/internal-heat-luminosity-methodology.md@«`delta_e_present_hi` [W/K] · `entropy_history_verdict` [—]»`
+(`core_thermal_history`). `check_contracts` compares **each node against its own** `Returns`, so both
+pass — **there is no check that counts one key claimed by two nodes.** *That is a new shape in the C45
+family, and it is cheaper than the output-side check: comparing contracts needs no body to run, so it
+fires at registration time rather than on the first body that happens to exercise both nodes.*
+
+⚠ **And the contract prose asserts the literal**:
+`docs/reference/internal-heat-luminosity-methodology.md@«is **always** `cannot-say (needs C20)`»`. So a
+repair moves **three** places, not one — the code, the test that pins the string
+(`engine/test_core_entropy.py@«2: the history verdict must refuse by name»`), and the contract line. **Each
+is a baseline movement and each needs its own name**; fixing the code alone would leave the contract
+stating the opposite of the code.
+
+#### The scope, widened by measurement — six keys, not one
+
+⚠ **The audit seat ran the contract-side count this draft asked for** (document scan, no run, using
+`check_contracts`'s own parser, 2026-09-11): **168** keys are listed across the contracts' `Returns`, and
+**six** are claimed by **two nodes**.
+
+| key | the two claimants | live? |
+|---|---|---|
+| `dipole_moment` · `b_eq` · `b_pol` | `dynamo_giant` / `dynamo_rocky` | ⚠ *claimed harmless by body-class exclusivity* — the two ladders refuse each other's classes, so the pair should never both apply. **Not asserted here: it is one row of the count below**, which settles it by measurement instead of by argument |
+| `entropy_history_verdict` | `core_entropy_production` / `core_thermal_history` | **this item** |
+| `has_inner_core_solved` | `core_energy_balance` / `core_entropy_production` | live candidate — both are rocky-core nodes, so both applying is the expected case |
+| `radius` | `interior_layers` / `mass_radius_relation` | ⚠ **pre-listed, and split out as C65 if the count says it is live** — *the whole engine reads `radius`*, unlike a verdict key nothing consumes |
+
+**So the one line to count is widened**: for **each of the six**, how many roster bodies have **both**
+claimants applicable in the same run, and where that number is non-zero, **what the two values are**.
+*That is one run of the roster, not six.*
+
+⚠ **And the direction must be read from the execution order, not from `chain.yaml`'s declaration
+order** — this seat measured both and they disagree. `run.solve` walks `graph.order(g)`, a topological
+sort, and `state.results` fills in **that** order; `chain.yaml`'s mapping order is a different sequence.
+For `radius` the two answers are opposite:
+
+| pair | declaration order in `chain.yaml` | **execution order** (`graph.order`) | so `state.get` returns | and `resolved` returns |
+|---|---|---|---|---|
+| `radius` | `mass_radius_relation` 13 · `interior_layers` 14 | ⚠ **`interior_layers` #25 · `mass_radius_relation` #27** | `interior_layers` | `mass_radius_relation` |
+| `entropy_history_verdict` | `core_thermal_history` 21 · `core_entropy_production` 22 | `core_thermal_history` #37 · `core_entropy_production` #43 | `core_history`'s computed verdict | `core_entropy`'s literal |
+| `has_inner_core_solved` | — | `core_energy_balance` #35 · `core_entropy_production` #43 | `core_energy_balance` | `core_entropy_production` |
+
+*The `entropy_history_verdict` direction happens to be the same either way; `radius`'s is reversed.*
+⚠ **A relayed ordinal is not the order** — the numbers 12/13 and 20/21 that reached this seat were
+declaration positions, one-based off by one from this file's own count, and using them would have printed
+the `radius` disagreement backwards. **So an ordinal must name which order it is**, wherever it is
+printed: `chain.yaml`'s declaration position and `graph.order`'s execution position are different
+sequences and only the second decides who wins a key. ⚠ *The audit seat reproduced the cause in its own
+tool: it read `g.get("order") or list(g["nodes"])`, and `graph.load()` returns no `order` key at all — so
+the `or` was an **unnamed fallback** that silently handed back the declaration order, and the number was
+printed as though it came from the real thing. That is C58's own shape inside the tool built to audit
+C58.*
+
+#### Why this is a family member, not a typo
+
+C45 (f) is *a contract key given a literal call-site default, counted by nothing*. C61 is *a step never
+tallied reading as a step that passed*. This is the third form, and the family's signature is one
+sentence: **there was a check, and the check agreed.** The test asserts the refusal, the contract asserts
+the refusal, and the refusal's own reason — *"needs C20"* — expired on 2026-09-04 when C20 was built.
+
+#### Candidates, none chosen
+
+| # | candidate | what it moves |
+|---|---|---|
+| (i) | C15's node **asks C20** for the verdict | a new dependency edge; C15's node stops being self-contained and gains a refusal for "C20 not run" |
+| (ii) | C15's node **stops emitting the key** it cannot compute | one key leaves a values dict — a contract change, `check_contracts` re-run, and the pinned test renamed |
+| (iii) | keep the literal, **name it and count it** | cheapest, and C58 (a)'s shape: the string stays, a counter says how many nodes refuse on a dependency that exists |
+
+⚠ **Measured, and it is a class**: six keys, four pairs (above). The contract-side count came first
+because it is a document scan; the run-side count — both claimants applicable on the same body — is the
+one still open, and it is scheduled after the next gate END. ⚠ **`radius` leaves this item if it is
+live**: it becomes **C65**, because a key the whole engine reads is a different item from a verdict key
+nothing consumes, and C64 must not grow into it (directing seat, 2026-09-11).
+
+**Size:** (iii) is a few lines plus a counter; (i) and (ii) are contract changes. No physics moves in any
+of the three.
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
