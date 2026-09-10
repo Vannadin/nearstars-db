@@ -508,7 +508,7 @@ row(eos.iron_fes_eutectic_bracket(20.65 * eos.GPA) == (1023.0, 1423.0)
 row(eos.iron_fes_phase_verdict(2000.0, 20.65 * eos.GPA) == "liquid"
     and eos.iron_fes_phase_verdict(1909.95, 20.65 * eos.GPA) == "liquid",
     "⚠ **판정은 안 뒤집힌다** — 화성의 두 경계 온도(선언 2000 K · 구조 1909.95 K)는 두 천장 모두 "
-    "위라 전후 `liquid` 다. 뒤집히는 띠는 (1348, 1473) K 이고 로스터에 그 띠의 천체가 없다")
+    "위라 전후 `liquid` 다. 뒤집히는 띠는 (1423, 1473) K · 폭 50 K 이고 로스터에 그 띠의 천체가 없다")
 # ⚠ **거절이 나오는 자리는 10 GPa 아래다** — 21 GPa 위는 단일 곡선이 답하므로 거기서는
 # 거절이 아니라 판정이 나온다. 첫 판이 30 GPa 로 물어 이 줄이 헛돌았다.
 _msg = eos.iron_fes_phase_verdict(1500.0, 5.0 * eos.GPA)
