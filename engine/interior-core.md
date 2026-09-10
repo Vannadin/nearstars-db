@@ -6776,9 +6776,9 @@ the two mechanisms are different** — one is the repair, the other is the unifi
 | mars (`core_thermal_history`) | `t_m` at 3.7 Ga, declared H | 1668.00 | **1668.79** | ⚠ **+0.79 K, and it eats headroom**: criterion B's distance to Herzberg's 1673.15 K upper edge goes **5.15 → 4.36 K**. C20 already recorded that band as *"a 5 K error anywhere in the trajectory flips this"*, so this movement is **toward the edge** and is named for that reason, not for its size |
 | pandora | `core_gamma_material` | 0.2944463614060906 | 1.2125984260169187 | the graded set |
 | **sub-Neptune `GJ 1214 b`** (test body) | `converged` · `radius` | **True** · **2.7674024618153776** | **True** · **2.7791897274983373** | ⚠ **Two sentences, both true.** *The answer came back* — 180 C's first cut lost it to a wall refusal (14682 K · 2.65 R⊕ · 246 K), and reverting the join returned it. *And the agreement got slightly worse*: against the published **2.733** the distance goes **+1.26 % → +1.69 %** (the radius itself moved **+0.43 %**). **Recovering an answer is not the same as improving it**, and the label on the γ that produced it is still `graded-disagreement` |
-| **water-rich rocky, `imf 0.3`** | `converged` · `radius` | **True** · **1.258513071917607** | **True** · **1.25852361765906** | recovered (**+0.00084 %**), ⚠ **but only with the extended pass budget** — under 180 C's wiring, and under the revert alone, it did not converge. *So the budget really was short; it was not the only thing short* |
+| **water-rich rocky, `imf 0.3`** | `converged` · `radius` | **True** · **1.258513071917607** | **True** · **1.25852361765906** | recovered (**+0.00084 %**), ⚠ **but only with the extended pass budget** — under 180 C's wiring, and under the revert alone, it did not converge. *So the budget really was short; it was not the only thing short.* ⚠ **Whether that +0.00084 % comes from the extra passes or from the γ change is not separated by this run** and is left to the audit seat's split runs |
 | **water-rich rocky, `imf 0.1`** | `converged` · `radius` | **True** · **1.1312792111770278** | ⚠ **a named refusal** | *"the surface-temperature condition did not close inside the budget — last deviation **3.09 %** (tolerance 0.1 %), **28** passes, **1** extension"*. ⚠ **The cause is the graded set, not the unification and not the liquid set in general**: this body's core runs **p_cmb 132 · p_c 354 GPa**, entirely above 35 GPa, so **Huang's measured set never reaches it** and Dorogokupets answers — 1.1267 against the old 0.2735, **4.1×**, which steepens the core adiabat until the proportional update oscillates about a root it cannot reach. ⚠ **And the same set is refused by `core_state` (graded → fallback 1.5) while the integrator spends it.** The value that would have been shipped is the **last trial**, which moves when the budget moves (+0.0033 % when passes were added), so it is not shipped. Tracked as **C69** |
-| **water-rich rocky, `imf 0.0`** (control) | `converged` · `radius` | True · **1.0029682364205592** | True · **1.0029682364205592** | ⚠ **bit-identical** — the control that says the pass-budget extension is trial machinery and does not move a converged answer |
+| **water-rich rocky, `imf 0.0`** (control) | `converged` · `radius` · `core_temperature` | True · **1.0029682364205592** · 2671.0924780458163 | True · **1.0029682364205592** · **3169.5267230925806** | ⚠ **The radius is bit-identical and the core temperature is not** — +498.4 K, the same graded-set movement as Earth (this body *is* Earth's mass and core fraction). ⚠ *And the bit-identical radius is **not** evidence that the pass-budget extension leaves answers alone*: `fe_prem` is referenced to an adiabat at `t_ref` 1600 K, so at `t_pot` 1600 K the C56 identity makes `delta_t` exactly zero and this composition's radius is insensitive to the core temperature. **The control shows less than it looks like it shows.** What the extension does to a converged answer is measured by **separated runs** — extension-only against ⓐ′-only — which the audit seat is running |
 | **alpha_centauri_a_b · dante_fixture · luhman_16_a · luhman_16_b** | — | — | — | **no key moved** |
 
 ⚠ **Earth's and Pandora's movement is the integrator taking the named fallback where it used to take an
@@ -6839,6 +6839,245 @@ difference in the seventh digit, from re-typing a console line instead of passin
 *That is yesterday's 0.8722/0.8723 in a different cell, one day later, in a number this brief
 pre-registered.* Both trees were measured with the same rounded literals, so the «unchanged» verdict
 stands; the full-precision figure is the one printed here.
+
+### 185 (a) 2026-09-11 — the Fe–S bracket's upper edge is not a eutectic, and it is not even inside the window — pre-registration draft
+
+⚠ **Written before the code.** Li, Fei, Mao, Hirose & Shieh 2001 (*EPSL* **193**, 509,
+[`2001E&PSL.193..509L`](https://ui.adsabs.harvard.edu/abs/2001E&PSL.193..509L)) is now **held in full**
+(owner, 2026-09-11), so row 10 of P16's source table leaves **abstract grade for primary**. Source:
+`P16-fe-s-melting-10-21gpa.md` at its **final version**, sha256 `f2164f6a2328d4a6…`, **53887 B**, hashed
+at citation time. ⚠ *The file moved four times while this brief was written — Amendment 5
+(`a8b0b95e0f4fc4bf…`) is what it was first written against, 6 fixed the 7 GPa attribution, 7 restored the
+disagreement against its right partner, and the last one closed the thread. The version cited is the
+final one and the numbers below were re-read from it; the earlier hashes are listed so that a reader who
+finds one of them knows where it sits in the sequence.*
+
+#### Two defects in one constant, and they point the same way
+
+`engine/eos.py@«IRON_FES_WINDOW_HIGH_POINTS = (»` held `((21.0 GPa, 1348.0), (25.0 GPa, 1473.0))` **before this brief** and fed
+`IRON_FES_BRACKET_K = (1023.0, 1473.0)`, which `iron_fes_eutectic_bracket` returns for **every** pressure
+in 10–21 GPa — Mars's 20.65 GPa included. *(The anchor above points at the constant as it stands after the
+repair; the pair it used to hold is quoted here because the citation cannot point at a line that no longer
+exists — the same rot this ledger hit twice yesterday.)*
+
+1. ⚠ **1473 K is not a eutectic temperature at any pressure.** It is the **upper end of Li's
+   experimental range**, and Table 1 shows what happened there: at 8.5, 10, 14 and 25 GPa the 1473 K runs
+   have **liquid present** (S_liquid measured). A temperature at which the sample was partly molten is a
+   **ceiling on** the eutectic, not the eutectic. *What the body actually brackets at 25 GPa is
+   `1373 < T_eut ≤ 1423 K`* — no liquid at 1223 and 1373 K, liquid at 1423 K.
+2. ⚠ **And it is worse than "the point is outside the window" — the upper edge is not an in-window value
+   at all** (audit seat's measurement, 2026-09-11). The window is tested as `lo <= p < hi`, so it is
+   **[10, 21)**, and **both** old high points lie outside it: 21 GPa is the exclusive upper bound and
+   25 GPa is far beyond. The only printed points **inside** are the three lower-lineage eutectics —
+   15 GPa/**1023**, 18.5/**1073**, 20.6/**1123**. So the constant's own comment, *"the lowest and highest
+   printed values **inside the window**"*, was false at the top: the highest in-window value is **1123 K**
+   and the edge read **1473 K**, **350 K above it**. The bracket was **450 K wide where the in-window data
+   support 100 K**, and the whole excess came from outside the window.
+
+*Neither defect needs the new paper to be seen — the second is arithmetic on the constant's own comment.
+The paper is what makes the first one certain.*
+
+⚠ **And the first defect is verified against the PDF, not the transcription** (this seat, 2026-09-11):
+`docs/phase3/_papers/2001E_PSL.193..509L.pdf`, sha256 `7f55355a05ac17a7e2d742a9…`, 384349 B. Table 1's own
+columns read P = 7 · 8.5 · 8.5 · 10 · 10 · 14 · 20 · 25 · 25 · 25 · 25 GPa against T = 1223 · 1473 ·
+1473 · 1473 · 1473 · 1473 · 1273 · 1223 · 1373 · 1423 · 1473 K, with S_liquid printed for every row
+except the two marked *"No liquid. Sulfur-bearing solid iron coexists with Fe₃S"* — which are exactly
+25 GPa at **1223 and 1373 K**, while 1423 K has liquid at 23.1 at.%. *So «1373 < T_eut ≤ 1423 K at
+25 GPa» is the table's, and P16's transcription is exact.*
+
+#### What Li 2001 adds inside the window — three ceilings, one of them informative
+
+| P | T | what it is | effect on the bracket |
+|---|---|---|---|
+| 10 GPa | 1473 K, liquid present | ceiling | loose — far above the lower lineage |
+| 14 GPa | 1473 K, liquid present | ceiling | loose |
+| **20 GPa** | **1273 K, liquid present** | ceiling | ⚠ **the informative one** — it puts T_eut at 20 GPa **at or below 1273 K**, between Andrault's 20.6 GPa/1123 K (lower lineage) and Fei 2000's 21 GPa/1348 K (upper, still quoted second-hand) |
+
+⚠ **It narrows the 21 GPa disagreement from above without resolving it.** 1273 K is a ceiling, not a
+determination, so the two lineages still disagree by ~225 K and this brief does **not** choose between
+them — that is P16 §4's owner-pending line and it stays open.
+
+#### ⚠ The 7 GPa "disagreement" does not exist — the two numbers were at different pressures
+
+An earlier version of this draft recorded a **~40 K disagreement** at 7 GPa between Li's liquid-at-1223 K
+and *"Fei 1997's eutectic ≈ 1261 K"*. **There is no disagreement.** Both seats went to the PDF
+(`1997Sci...275.1621F.pdf`, sha256 `cb3ea81deb87a6e0…`) and Fei prints the eutectic as a **line**:
+*"The eutectic T linearly decreased with increasing P, from **988 °C at 1 bar** to **860 °C at 14 GPa**"*
+(p. 1621). So **1261 K (988 °C) is the 1 bar value**, not a 7 GPa value; reading the line at 7 GPa gives
+924 °C = **1197 K**, which is **26 K below** Li's ≤ 1223 K ceiling. *The two papers agree, and the
+ceiling did its job.*
+
+⚠ **Recording a disagreement that does not exist would have been worse than missing one** — the next
+person would have tried to resolve it. What actually went wrong is one thing: **the number travelled
+without its condition.**
+
+⚠ **But the ~40 K disagreement at 7 GPa is real — its partner is Buono & Walker 2015, not Fei** (audit
+seat, 2026-09-11; verified in P16 row 7 by this seat). That paper's abstract, held at result grade, reads
+*"The Fe-FeS system maintains a eutectic temperature of **990 ± 10 °C to at least 8 GPa** if starting
+materials and pressure media are rigorously dehydrated. **Literature reports of pressure-induced freezing
+point depression of the eutectic for the Fe-FeS system are not confirmed.**"* — i.e. **1263 ± 10 K at
+7 GPa** against Li's ceiling **≤ 1223 K**. So the withdrawal above must be **an attribution fix, not a
+withdrawal of the disagreement**: the number was compared to the wrong paper, and the right paper
+disagrees by about the amount originally claimed.
+
+⚠ **The lineage split is not our inference — it is a printed table.** Buono & Walker 2011
+(`2011GeCoA..75.2072B`, **held in full**, sha256 `8cf466cc5d1a7c82…`) prints, under *"Eutectic data:
+6 GPa"*, **five** sources at **one** pressure: this study **1263 ± 25**, Morard+ 2007 **1140 ± 170**,
+Fei+ 1997 **1206**, Ryzhenko & Kennedy 1973 **1263 ± 15**, Usselman 1975 **1259 ± 12** — a spread of
+**123 K** in a single table (verified in the PDF by this seat). *So "the literature disagrees in this
+window" is a quotation, not a reading* — and with five rows the shape is sharper still: **three cluster
+at 1259–1263, Fei sits alone at 1206, and Morard is 1140 ± 170.**
+
+⚠ *P16's transcription of that table listed **four** rows, dropping Usselman 1975 — and this brief
+carried that count until the number was checked against the PDF. The audit seat recorded the miss as its
+own (it had relayed our own document as if it were the paper); P16 now carries an erratum. **The spread,
+123 K, and Fei's 1206 K are unchanged**, and the method check below is now against the paper rather than
+against our transcription of it.*
+
+⚠ **And that table validates the method used above.** Reading Fei's own line at 6 GPa gives
+988 − 128·(6/14) = 933.14 °C = **1206.29 K**, and B&W 2011 prints Fei's 6 GPa value as **1206 K** —
+agreement to **0.29 K**. *The same arithmetic at 7 GPa gives 1197.15 K, so the number this brief uses is
+produced by a method the literature checks at the neighbouring pressure.* That is what licenses calling
+the 7 GPa figure «our arithmetic on the paper's own word "linearly"» rather than an invention.
+
+⚠ **And B&W contradicts the falling half of the slope argument itself.** This draft uses *"Fei falls to
+14 GPa, Li rises to 25 GPa, so the sign turns inside the window"* as a reason for a bracket; B&W prints
+that the reported depression **is not confirmed**, with a condition — *"if rigorously dehydrated"* —
+which is the same place as the hydrogen-contamination reading `eos.py` already cites B&W for. ⚠ *The two
+B&W papers do different jobs here and both are cited: **2011** supplies the composition polynomial and
+the 6 GPa comparison table (held in full), **2015** supplies the flat-to-8-GPa eutectic and the
+dehydration condition (abstract only). Neither is the bracket's edge; they are why the edge is a bracket.* **The
+verdict does not change** (7 GPa is outside the 10–21 GPa window, and Mars is `liquid` under every
+candidate); what changes is that the reason for a bracket rather than a curve gets **one layer
+thicker**. *That is the same failure as reading a paper's introduction value as its result,
+and as comparing `fe_prem`'s γ at 136 GPa against a mixture at 20 GPa — three times in two days, always
+the number arriving without the condition attached.*
+
+⚠ **And Fei's line stops at 14 GPa.** The same paper says Fe₃S₂ changes the system from *"a simple binary
+eutectic system to a binary system with an intermediate compound that melted incongruently"*, so it
+**cannot be extrapolated to 20 GPa**. Fei is not a comparison in the window's upper half — which is
+itself an argument for a bracket rather than a curve. Only the printed endpoints are kept
+(`IRON_FES_FEI_LINE_C`).
+
+#### The repair, and the decision it needs
+
+**Every point in the two tuples gets a label** — `eutectic` · `liquid-present ceiling` ·
+`experimental range` — so that a point can no longer enter the bracket without saying what it is. That
+part is not a decision.
+
+⚠ **The decision is which value the upper edge takes**, and the candidates are:
+| # | candidate | the bracket at Mars's 20.65 GPa |
+|---|---|---|
+| (i) | drop the 25 GPa point; the edge is Fei 2000's **21 GPa / 1348 K** (still second-hand) | (1023, **1348**) |
+| (ii) | adopt Li's **20 GPa / ≤ 1273 K** ceiling as the edge — the only in-window primary-grade upper constraint, ⚠ **and a reversal run** (Table 1's ᵃ: heated higher, then cooled), so the label travels with the number | (1023, **1273**) |
+| (iii) | keep two edges and print both — «second-hand 1348 · primary ceiling 1273» | two bands, consumer compares against both |
+| (iv) | ⚠ **the 25 GPa point stays but becomes the table's own tighter number, 1423 K** (audit seat, 2026-09-11): MO535 has liquid at **1423 K** and LO140 none at **1373 K**, so the same table brackets that pressure to **50 K** — 1473 K (LO95) was *the looser of two ceilings in one table*. It is out of window either way, so it does not set the edge; it is **recorded** where it belongs | unchanged — but the discarded 1473 K is replaced by a **narrower printed value**, so «do not throw a printed number away» is satisfied rather than bent |
+
+⚠ **A fourth option exists and is worse, and saying why is part of the decision.** *"Use the in-window
+maximum, 1123 K"* looks like the honest reading of the comment — but all three in-window points are
+**lower-lineage** eutectics, so adopting their maximum as the ceiling **chooses the lower lineage**, which
+is the one thing this bracket exists not to do. The ~225 K disagreement is owner-pending; a ceiling that
+resolves it silently is worse than a ceiling that borrows the window's edge.
+
+⚠ **Using 1348 K therefore spends one assumption, and it is named**: that the eutectic curve **rises with
+pressure**, so a value at the window's edge bounds the window's interior. The sources' figures point that
+way and the curve is **kinked**, not straight — so it is written down as an assumption rather than left
+implicit.
+
+**The band whose verdict moves, and whether anyone is in it.** `iron_fes_phase_verdict` says `liquid`
+only above the upper edge, so lowering 1473 → 1348 turns **(1348, 1473) K** from `cannot-say` into
+`liquid`; under the 1123 option the band would be **(1123, 1473) K**. ⚠ **No roster body is in either
+band**: not one body declares an Fe–S core (both declare `fe_prem`), and Mars's core-side temperatures —
+**1909.95 K** structure, **2000 K** declared — are above every candidate ceiling, so the verdict is
+`liquid` before and after. *Contradicted by:* any body's Fe–S verdict changing, which would stop the
+brief.
+
+⚠ **Decided (directing seat, 2026-09-11; owner review pending, revert = one tuple): the upper edge is
+the labelled out-of-window point, 25 GPa / 1423 K** — candidate (iv) promoted from "recorded" to "the
+edge". It is the **narrower** of the two ceilings the same table prints, it is **primary grade**, and — the
+reason that settles it — ⚠ **1423 K is the narrowest primary-grade ceiling that still contains the
+1348 K of the upper lineage.** Sort the candidates: in-window maximum **1123** · Li's in-window ceiling
+**1273** · the 21 GPa lineage **1348** (second-hand) · Li's 25 GPa **1423** (primary, with 1373 as its
+own lower side) · the experimental range's top **1473** (not a eutectic at all). The bracket's second job
+survives only while the upper edge sits **above 1348**, so 1123 and 1273 would **silently reject the
+upper lineage** rather than decline to choose — and above 1348 there is exactly **one** primary-grade
+printed value. *So the slack — the window's own eutectic runs about 1133–1273 K — exists to contain
+1348, and that is the answer to "why not narrower".* ⚠ *The sign of the slope also flips inside this
+window: Fei falls from 988 °C at 1 bar to 860 °C (1133 K) at 14 GPa, while Li rises from ≤ 1273 K at
+20 GPa to (1373, 1423] at 25 GPa — the turn sits where Fe₃S₂ and Fe₃S become stable, which is why this
+interval is a bracket and not a curve.* (i)'s 1348 K stays in the
+code as the recorded alternative; (ii)'s 1273 K stays as the in-window primary ceiling, printed
+alongside. The bracket becomes **(1023, 1423)** at Mars's 20.65 GPa, the verdict-flip band narrows to
+**(1423, 1473) K**, and Mars is `liquid` on both sides of the change.
+
+*(The paragraph below is the earlier draft's reasoning for (iii); it is kept because the decision above
+rests on the same principle — do not throw a printed number away — and because the revert path is this
+paragraph's option.)*
+
+**This seat's earlier default: (iii)**, because it is the only one that does not throw
+away a printed number, and because the item's whole shape is *"the sources disagree, so return a bracket
+rather than a curve"* — collapsing two upper constraints into one repeats at the top edge the mistake the
+bracket exists to avoid at the bottom. ⚠ **Labelled as the seat's default, owner review pending, revert =
+one tuple.**
+
+#### Registered before running
+
+1. **Mars's printed band moves.** `cmb_melt_bracket_high` goes from **1473** to whichever candidate
+   lands; `cmb_melt_bracket_low` stays **1023**. *Contradicted by:* the low edge moving, or the high edge
+   not moving.
+2. ⚠ **The verdict must not flip, and this is the check that says so.** Mars's core-side boundary
+   temperature is **1909.95 K** (structure) / **2000 K** (declared), both **above every candidate
+   ceiling**, so `iron_fes_phase_verdict` stays `liquid`. *Contradicted by:* any body's verdict changing;
+   if one does, the brief stops and reports rather than shipping it.
+3. **`test_fe_s.py@«20.65 GPa (화성 CMB) → 괄호»`'s pinned `(1023.0, 1473.0)` is a registered baseline
+   and it moves** — the new value is named in the ledger, and the test is re-pinned in the same commit as
+   the code, never before it.
+4. **Row 10's grade goes `abstract` → `primary`** in P16's provenance, and the ledger says which sentence
+   that grade now rests on (Table 1, not the abstract's range).
+5. An outcome outside 1–4 is registered as its own kind before it is reported.
+
+#### Two rules this brief adopts about its own new constants
+
+1. ⚠ **A constant that was never committed was not "removed".** The disagreement above briefly had a
+   constant, `IRON_FES_7GPA_DISAGREEMENT_K`, written during 185 and taken out in review. It **never
+   shipped** — `61374a86` has neither a definition nor a reader for it — so **no baseline moved**, and the
+   ledger says «born and withdrawn», not «deleted». *Saying «deleted» would send the next reader looking
+   through the history for a constant that was never there — the same shape as citing a hash for a version
+   that no longer exists, twice today.*
+2. ⚠ **Every new record-only constant gets a reader in the same commit.** Today's value-trace counted
+   **seven** constants nothing reads, and three are from this family — printed values kept "for the
+   record". So `IRON_FES_OUT_OF_WINDOW_BRACKETS` and `IRON_FES_FEI_LINE_C` are **read by the
+   out-of-window refusal**: `iron_fes_phase_verdict`'s *"cannot-say"* string now carries the 25 GPa
+   printed bracket and the pressure range Fei's line actually covers. ⚠ **No verdict changes** — only
+   what the refusal says. *A refusal that names what does exist nearby is a different thing from one that
+   implies nothing does.*
+
+#### What this brief must not do
+
+1. ⚠ **No interpolation between points.** The sources draw this interval as a **kinked** line (Fe₃S₂
+   stable near 14 GPa, Fe₃S near 21 GPa); a straight line through them would be our arithmetic on top of
+   a shape the papers deny. *Contradicted by:* `iron_fes_eutectic_bracket(p)` returning a value that
+   **varies with p** inside the window.
+2. ⚠ **It must not choose between the two lineages.** The ~225 K disagreement is owner-pending and stays
+   so; this brief only stops a **non-eutectic** number from acting as the ceiling. *Contradicted by:* the
+   bracket becoming a **scalar** instead of a 2-tuple — that is what choosing looks like in code.
+
+   ⚠ **And narrowing is not choosing, but it can stop showing** (audit seat, 2026-09-11). The 225 K is
+   **1348 − 1123**: the gap between the out-of-window 21 GPa point and the highest in-window point. The
+   bracket has been doing **two jobs** — enclosing the in-window printed values *and* carrying the
+   lineage disagreement — and fixing the first can silently drop the second. So the decision table above
+   carries that consequence explicitly: **(ii) at 1273 or the in-window 1123 leaves the 225 K with no
+   home in the bracket, and then it needs a named one** (its own constant or label); **(i)/(iii)/(iv)
+   keep the upper edge above the lower lineage, so the bracket still spans the disagreement.** *This
+   seat's default (iii) keeps it — 1023 to 1348 contains both lineages, which is the property the bracket
+   was built for.*
+3. ⚠ **It must not use the paper's actual subject.** S in solid iron (0.09–0.26 at.% at 7–14 GPa rising
+   to 0.8–1.4 at.% at 25 GPa) is a quantity the engine **has no slot for**; it goes on the coverage map,
+   not into a constant. *Contradicted by:* any constant carrying an at.% value appearing in the code.
+4. ⚠ **It must not touch `iron_fes_eutectic_t_melt`** (the single value above 21 GPa) — different
+   pressure range, different sources, and the 25 GPa point's removal does not change what that function
+   answers. *Contradicted by:* that function's output differing before and after on a grid above 21 GPa
+   (bit-identity is the check).
 
 ### C61 — a step that was never tallied reads as a step that passed — **listed 2026-09-10, hardened the same day**
 

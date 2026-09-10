@@ -242,7 +242,7 @@ except eos.PhaseGap as e:
     row("분기가 없다" in str(e), f"분기 없는 이름 → 이름 대며 거절: «{str(e)[:66]}…»")
 
 print("\n⑨ 10–21 GPa 는 곡선이 아니라 **괄호**다 (브리프 178 D)")
-row(eos.iron_fes_eutectic_bracket(20.65 * eos.GPA) == (1023.0, 1473.0),
+row(eos.iron_fes_eutectic_bracket(20.65 * eos.GPA) == (1023.0, 1423.0),
     f"20.65 GPa (화성 CMB) → 괄호 {eos.iron_fes_eutectic_bracket(20.65 * eos.GPA)} K — "
     "창 안 인쇄값의 최저·최고이고 압력으로 보간하지 않는다")
 row(eos.iron_fes_eutectic_bracket(25.0 * eos.GPA) is None
@@ -254,10 +254,12 @@ row(eos.iron_fes_phase_verdict(900.0, 15.0 * eos.GPA) == "solid",
     "양끝 아래면 solid")
 row(eos.iron_fes_phase_verdict(1100.0, 15.0 * eos.GPA).startswith("cannot-say"),
     "⚠ 괄호를 걸치면 **cannot-say** — 걸침을 한쪽으로 밀지 않는 것이 이 괄호의 존재 이유다")
-grades = {g for _p, _t, g in eos.IRON_FES_WINDOW_LOW_POINTS}
-row(grades == {"본문 · Si 2 at% 장입", "본문 · Si 없음"},
-    f"하한 세 점이 장입까지 구별해 등급을 든다: {sorted(grades)}")
-row([g for _p, _t, g in eos.IRON_FES_WINDOW_LOW_POINTS][1] == "본문 · Si 없음",
+# ⚠ 점 튜플이 (P, T, **종류**, 출처) 넷이 됐다 (브리프 185) — 종류가 필드가 아니었을 때
+# «실험 범위 상단» 이 공정 천장으로 들어와 창의 상한을 세웠다.
+sources = {r[3] for r in eos.IRON_FES_WINDOW_LOW_POINTS}
+row(sources == {"Andrault+ 2009 본문 · Si 2 at% 장입", "Andrault+ 2009 본문 · Si 없음"},
+    f"하한 세 점이 장입까지 구별해 출처를 든다: {sorted(sources)}")
+row("Si 없음" in eos.IRON_FES_WINDOW_LOW_POINTS[1][3],
     "⚠ Si 없는 점은 **가운데**(18.5 GPa) 하나뿐이다 — 괄호의 양끝은 둘 다 Si 장입이다")
 
 print("\n⑩ 하한 미만 거절이 자기 문구를 갖는다 (브리프 178 E)")
@@ -276,7 +278,9 @@ row(eos.MATERIALS["fe_prem"].shoot_lo == 0.0
     and eos.MATERIALS["fe_s_13wt_19gpa"].shoot_lo == 19.0 * eos.GPA,
     f"`shoot_lo` 는 가장 안쪽 상의 바닥이다 — fe_prem 0 · fe_s "
     f"{eos.MATERIALS['fe_s_13wt_19gpa'].shoot_lo / eos.GPA:.0f} GPa")
-row(eos.MATERIALS["fe_s_13wt_19gpa"].t_melt_band(20.65 * eos.GPA) == (1023.0, 1473.0)
+# ⚠ **기준선 이동** (브리프 185): 창의 상한이 1473 → 1423 K 로 내려왔다 — 1473 은 어느 압력의
+# 공정도 아닌 실험 범위 상단이었고 창 밖(25 GPa) 점이었다. 이 줄은 그 폭을 그대로 받는다.
+row(eos.MATERIALS["fe_s_13wt_19gpa"].t_melt_band(20.65 * eos.GPA) == (1023.0, 1423.0)
     and eos.MATERIALS["fe_s_13wt_19gpa"].t_melt_band(30.0 * eos.GPA) is None
     and eos.MATERIALS["fe_prem"].t_melt_band(100.0 * eos.GPA) is None,
     "`t_melt_band` 는 창 안에서만 폭을 주고 나머지는 None — `t_melt` 의 반환형은 안 넓혔다")
@@ -480,6 +484,37 @@ row(all(_ph.density(_pg * eos.GPA, 3000.0, 1600.0)
         for _pg in (5.0, 20.0, 34.9, 35.0, 60.0, 135.0, 360.0)),
     "⚠ **밀도 경로는 세트를 읽지 않는다** (결정 (A)) — 세트를 지운 사본과 밀도가 비트까지 같다. "
     "부분 수리라는 뜻이고, 그 사실은 `thermal_label` 의 둘째 칸이 매 실행 말한다")
+
+print("\n⑮ 창의 천장 — 점마다 «무엇인가» 를 들고, 공정이 아닌 수는 천장이 된다 (브리프 185)")
+row(all(len(r) == 4 for r in eos.IRON_FES_WINDOW_LOW_POINTS + eos.IRON_FES_WINDOW_HIGH_POINTS
+        + eos.IRON_FES_LIQUID_CEILINGS),
+    "모든 점이 (P, T, 종류, 출처) 넷을 든다 — 종류가 필드가 아니었을 때 «실험 범위 상단» 이 "
+    "공정 천장으로 들어와 창의 상한을 세웠다")
+_kinds = {r[2] for r in eos.IRON_FES_WINDOW_LOW_POINTS + eos.IRON_FES_WINDOW_HIGH_POINTS}
+row(_kinds == {eos.EUT_KIND_EUTECTIC},
+    f"괄호를 세우는 점은 공정 판정뿐 — 종류 {sorted(_kinds)}")
+row(all(r[2] == eos.EUT_KIND_CEILING for r in eos.IRON_FES_LIQUID_CEILINGS),
+    "Li+ 2001 의 셋은 전부 «천장» — 그 온도에 액체가 있었으니 공정은 그 아래다")
+row(eos.IRON_FES_BRACKET_K == (1023.0, 1423.0),
+    f"⚠ **기준선 이동**: 괄호가 {eos.IRON_FES_BRACKET_K} K 다. 180 C 까지는 (1023, 1473) 이었고 "
+    "1473 은 (a) 어느 압력의 공정도 아닌 **실험 범위 상단**이며 (b) 창 [10, 21) **밖**(25 GPa)의 "
+    "점이었다 — 상수 자신의 주석이 «창 안 인쇄값의 최저·최고» 라고 적고 있었다")
+row(all(q >= 21.0 * eos.GPA for q, *_ in eos.IRON_FES_WINDOW_HIGH_POINTS),
+    "⚠ 상한을 세우는 점은 여전히 창의 경계(21 GPa) 위다 — 그것은 «공정선이 압력에 단조증가한다» 는 "
+    "**가정 하나**이고, 대안(창 안 최고 1123 K)은 하한 계열을 고르는 것이라 더 나쁘다")
+row(eos.iron_fes_eutectic_bracket(20.65 * eos.GPA) == (1023.0, 1423.0)
+    and eos.iron_fes_eutectic_bracket(25.0 * eos.GPA) is None,
+    "화성 CMB(20.65 GPa)는 새 괄호를 받고, 25 GPa 는 여전히 창 밖이다")
+row(eos.iron_fes_phase_verdict(2000.0, 20.65 * eos.GPA) == "liquid"
+    and eos.iron_fes_phase_verdict(1909.95, 20.65 * eos.GPA) == "liquid",
+    "⚠ **판정은 안 뒤집힌다** — 화성의 두 경계 온도(선언 2000 K · 구조 1909.95 K)는 두 천장 모두 "
+    "위라 전후 `liquid` 다. 뒤집히는 띠는 (1348, 1473) K 이고 로스터에 그 띠의 천체가 없다")
+# ⚠ **거절이 나오는 자리는 10 GPa 아래다** — 21 GPa 위는 단일 곡선이 답하므로 거기서는
+# 거절이 아니라 판정이 나온다. 첫 판이 30 GPa 로 물어 이 줄이 헛돌았다.
+_msg = eos.iron_fes_phase_verdict(1500.0, 5.0 * eos.GPA)
+row("1373" in _msg and "14 GPa" in _msg,
+    "⚠ 창 밖 거절이 **인쇄된 것을 들고 나간다** — 25 GPa 괄호와 Fei 선형선의 실제 범위를 문장에 "
+    "싣는다. 그러지 않으면 그 두 상수가 «저장만» 이 되고, 거절을 읽는 사람은 자료가 없다고 읽는다")
 
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)
