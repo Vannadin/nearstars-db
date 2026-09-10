@@ -23,7 +23,12 @@ def row(ok, text):
 
 print("키 — 표의 키 집합은 eos 가 실제로 내는 상과 같다 (상을 추가하면 행이 없어 실패, 안 내는 상의 행도 실패)")
 emitted = set(pt.emitted_phase_keys())
-row(len(emitted) == 17, f"방출 상 {len(emitted)}개: {' · '.join(pt.PHASE_KEYS)}")
+# ⚠ **17 → 19, 브리프 178 C (2026-09-10).** 황 밴드의 양끝이 재질로 등록되면서 상이 둘 늘었다 —
+# `fe_s_19GPa_c0.2065`(13 wt%)와 `fe_s_19GPa_c0.2901`(19 wt%). 이 수는 «새 상이 조용히 들어오지
+# 못하게» 있는 것이고, 실제로 그 일을 했다: 게이트가 rc=1 로 멈추고 **어느 단계인지 이름을 찍었다**
+# (169 E 의 표식이 처음으로 값을 한 자리다). 두 상의 표 칸은 비어 있고, 그건 «발표된 값이 없다» 로
+# 합법이다 — 값을 지어 채우지 않는다.
+row(len(emitted) == 19, f"방출 상 {len(emitted)}개: {' · '.join(pt.PHASE_KEYS)}")
 for axis, table in pt.AXES.items():
     row(set(table) == emitted, f"{axis}: 키 집합 == 방출 상 ({len(table)})")
 

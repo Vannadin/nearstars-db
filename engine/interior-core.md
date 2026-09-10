@@ -5229,6 +5229,29 @@ is our arithmetic and the sources draw a **kink**, not a line: Fe₃S₂ stabili
 21 GPa, and Chen 2008 draws inflections at both. And it must not **elect** a lineage; if a curve is ever
 chosen it is registered as *piecewise*, because a single segment across this window erases that kink.
 
+#### Amendment — Andrault's body is held, and the two ends now carry different grades
+
+⚠ **P16 grew after the section above was written.** Cited then at sha256 `ea4055ff27e7c986…` / 17952 B; it
+is now `adbe3d80444a5841…` / **23542 B** with an Amendment 1 that installs Andrault+ 2009's body text.
+*That is the hash rule earning its place on its first use* — the earlier citation was true when made and
+can be shown to be.
+
+**The low end is no longer abstract-only.** Andrault's Table 1 prints, as results, three in-window
+triples of (P, T_Sol, X_eut): **(15 GPa, 1023 K, 20 ± 2 wt%)**, **(18.5 GPa, 1073 K, 14.5 ± 0.5)**,
+**(20.6 GPa, 1123 K, 16 ± 0.5)**. `T_Sol` is *"complete recrystallization"* and `T_Liq` is complete
+melting, so **the eutectic floor is `T_Sol`** and the liquidus values (1373 / 1523 / 1423 K) are a
+different quantity — the bracket's low end takes `T_Sol`.
+
+⚠ **The two ends do not have the same grade, and the band says so rather than inventing a word for it.**
+The low end is **body** (Andrault's own table); the high end stays **abstract only** (Fei 2000's 1348 K at
+21 GPa, Li 2001's 1223–1473 K band). The engine's grade vocabulary attaches to values, so **each end
+carries its own grade** and the band is labelled *mixed-grade* in prose — no new grade name is created.
+
+⚠ **One caveat travels with the low end.** Two of the three charges (15 and 20.6 GPa) had 2 at% Si added
+*"in order to provide more reducing conditions"*, which the paper treats as the same Fe–S system. Recorded
+here because a reader comparing our floor against a pure Fe–S experiment should know which charges it came
+from.
+
 #### Predicted, before running
 
 1. **Mars's core top reads liquid at both ends.** Its declared `T_c` is **2000 K**, above even the high
