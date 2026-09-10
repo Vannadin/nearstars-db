@@ -260,8 +260,11 @@ def solve(core_pressure: float,
         return out_of_domain(
             RECIPE, VERSION,
             f"핵 재료 '{core_material}' 에 발표된 융해곡선이 없다. 곡선이 있는 것은 "
-            "철(fe_prem · fe_eps)과 규산염(브리프 36 사슬)이고, antigorite 는 고온 "
-            "운명이 융해가 아니라 탈수·분해라 비어 있는 것 자체가 판정이다.",
+            "철(fe_prem · fe_eps)과 규산염(브리프 36 사슬), 그리고 **이원계 Fe–S**"
+            "(Fe–Fe₃S 공정선 — 21 GPa 위는 단일값, 10–21 GPa 는 괄호, 브리프 178 C·D)다. "
+            "antigorite 는 고온 운명이 융해가 아니라 탈수·분해라 비어 있는 것 자체가 판정이다. "
+            "⚠ **다원계 액체 핵(Fe–S–O–C)에는 곡선이 없다** — 공정선은 이원계의 것이고 "
+            "다원계의 인쇄된 곡선은 보유 집합에 없다 (브리프 183). 빌려 쓰지 않는다.",
             inputs=inputs, refs=REFS)
 
     p_cmb, p_c = cmb_pressure * 1e9, core_pressure * 1e9

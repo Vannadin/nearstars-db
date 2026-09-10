@@ -471,7 +471,13 @@ class Material:
         h = p * 1e-4
         rho = self.density(p, t, t_pot)
         p_hi = min(p + h, self.p_max)
-        p_lo = max(p - h, 1.0)
+        # ⚠ **아래쪽도 같은 이유로 막는다** (C60 (d), 브리프 183 B). 위 주석이 상한에 대해 적은
+        #   것과 같은 말이다 — 차분의 발판은 **시험 걸음**이고, 그것이 재질의 도메인 밖으로
+        #   내려가 만든 거절은 이 압력에 대한 판정이 아니다. 기준압이 0 이 아닌 재질(Huang 앵커의
+        #   액체 핵 열)이 들어오기 전에는 이 자리가 안 밟혔고, 들어오자 **정확히 기준압에서**
+        #   `grad_ad` 와 `k_t` 가 거절했다: 19.0000–19.0019 GPa 가 PhaseGap, 19.0020 부터 값.
+        #   바닥에서는 한쪽 차분이 된다. 바닥이 0 인 재질에는 이 항이 걸리지 않는다.
+        p_lo = max(p - h, 1.0, self.shoot_lo)
         if p_hi <= p_lo:
             return 0.0
         d_hi = self.density(p_hi, t, t_pot)
