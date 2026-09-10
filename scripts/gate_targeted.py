@@ -153,6 +153,22 @@ def main() -> int:
                 if body in mods[name].read_text(encoding="utf-8"):
                     items.add(rel_name(mods, name))
             continue
+        if p.startswith("engine/") and p.endswith(".json"):
+            # **굳힌 앵커 파일** — 그것을 읽는 시험이 그것의 시험이다 (브리프 169 G). 파일 이름을
+            # 본문에 들고 있는 `test_*.py` 를 찾는다: `ice_giant_anchor.json` 은 `test_ice_giant.py`
+            # 가 열고 굳힌다. ⚠ 앵커가 바뀌는 커밋은 **코드가 바뀐 커밋이 아니다** — 그래서
+            # answer 실행을 켜지 않는다. 앵커만 바뀌었으면 그 앵커를 읽는 시험 하나면 된다.
+            # ⚠ 아무 시험도 그 이름을 안 들고 있으면 구멍이다. 데이터 파일이 무엇의 앵커인지
+            #   말할 수 없으면 좁히지 않는다.
+            base_name = Path(p).name
+            readers = [name for name in sorted(tests)
+                       if base_name in mods[name].read_text(encoding="utf-8")]
+            if not readers:
+                gap.append(p)
+                continue
+            for name in readers:
+                items.add(rel_name(mods, name))
+            continue
         if p.endswith(".py") and (p.startswith("engine/") or p.startswith("engine/tools/")):
             stem = Path(p).stem
             if stem not in mods:                 # 지워진 파일 — 무엇이 그것에 기대는지 말할 수 없다

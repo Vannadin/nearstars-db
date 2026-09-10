@@ -496,6 +496,11 @@ step "test_transitional_lid.py" bash -c 'cd engine && python3 test_transitional_
 # ⚠ 게이트가 검사하는 것은 **재현 여섯 행**이고 판정은 [판정] 줄로 인쇄만 한다 — 판정을 붉게 두면
 # 다음 좌석이 그 붉음을 배경으로 읽는다 (c47_step4.py 와 같은 형식). ~0 s.
 step "tools/c51_regimes.py" bash -c 'cd engine && python3 tools/c51_regimes.py'
+# C55 판정 칸 (브리프 181 B). 선언된 조성(earth_like)에서 Fe–S 두 재질이 무엇을 내는지 인쇄한다 —
+# 오늘은 둘 다 거절이고 그 거절이 **이름을 대는지**가 여기서 도는 이유다. 인자를 주면 cmf 밴드를 훑는다.
+# ⚠ 도구는 `shoot` 으로 부른다 (C60 (c)) — `_shoot_pressure` 를 직접 부르면 «답이 적합 밖이면 거절»
+#   하는 층 아래에서 인쇄해, 엔진이 안 내놓을 수를 표만 내놓는다. ~2 s.
+step "tools/c55_cells.py" bash -c 'cd engine && python3 tools/c55_cells.py' 
 # 페이로드 등급 계약 (2026-09-04 오너 결정). authored 는 두 표지(gap:, consistent-with:) 없이는 생성되지 않는다.
 step "test_payload.py" bash -c 'cd engine && python3 test_payload.py'
 # 상 곁표 (2026-09-04, 오너 채택 패턴). 키 집합 = eos 가 내는 상, 채운 칸은 등급·출처, authored 는 두 표지, 채움/전체를 출력한다.
