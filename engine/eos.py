@@ -115,6 +115,13 @@ class Phase:
     t_ref: float = 0.0        # K. 이 적합이 놓인 기준의 온도
     t_ref_kind: str = "isotherm"   # "isotherm" | "adiabat" — 아래 delta_t 를 보라
     c_v_ref: float = 0.0      # J kg⁻¹ K⁻¹. 정적비열. 아래 상수 절에 출처가 있다
+    # ── 열 매개변수의 **출처**를 산문이 아니라 필드로 (C58, 브리프 180 B) ────────────────
+    # ⚠ 출처 상이 `ref` 라는 **산문** 안에만 있으면 «적합은 액체라 적고 열은 고체에서 온» 재질을
+    #   코드가 판정할 수 없다 — C56 이 기록한 함정이고 `fe_prem` 이 오늘 그 자리다. 그래서 상과
+    #   조성을 **필드로** 든다. 기본값은 빈 문자열이고 그것은 «선언 안 됨» 이라 **검사가 실패한다** —
+    #   «0 을 조용히 배달하지 마라» 와 같은 규칙이다 (오너 결정 (가), 2026-09-10).
+    thermal_source_state: str = ""        # "liquid" | "solid" | "table" | "" (미선언)
+    thermal_source_composition: str = ""  # 예: "pure-Fe-hcp" · "pure-Fe-liquid" · "peridotite"
     # ── 녹는곡선 ───────────────────────────────────────────────────────
     # melt 가 빈 문자열이면 **이 상에는 발표된 녹는곡선이 없다** 는 뜻이고, 그러면
     # 이 상에서는 고체·액체를 판정하지 않는다. alpha_k = 0 과 같은 규율이다.
@@ -201,6 +208,32 @@ class Phase:
     def has_thermal(self) -> bool:
         """이 상에 발표된 열 상수가 있는가. 없으면 등온으로 남는다."""
         return self.alpha_k > 0.0 and self.c_v_ref > 0.0
+
+    def thermal_label(self, fit_composition: str = "") -> str:
+        """열 매개변수의 출처가 이 적합과 맞는가 — **네 답 중 하나** (C58, 브리프 180 B).
+
+        `ok` · `undeclared` · `phase-mismatch` · `composition-substitute`.
+
+        ⚠ **상이 어긋나면 빨강이다** — 액체 적합에 고체의 열 매개변수를 얹은 것은 값을 신뢰할 수
+        없다는 뜻이고, 그 재질의 γ 는 소비처가 쓰지 않는다 (`core_gamma` 가 이름 붙인 폴백으로 간다).
+        ⚠ **조성만 어긋나면 채택은 되되 등급이 내려간다** — 액체 합금의 인쇄 열 세트가 보유 문헌에
+        없으므로 순수 액체 철은 «없음» 보다 나은 **이름 붙은 대체**다. 조용히 통과하지만 않으면 된다.
+        """
+        if not self.has_thermal:
+            # ⚠ **여기서 `ok` 를 돌려주면 «초록 판정으로 γ = 0» 이 배달된다** (감사 지적, 180 B).
+            #   `core_gamma` 의 `own` 은 열 상수가 없으면 0.0 이고, γ = 0 은 평평한 단열선이다 —
+            #   이 브리프가 §1b 에서 금지한 «0 을 조용히 배달하지 마라» 가 한 층 위에서 그대로
+            #   재현되는 자리였다. 자기 판정을 주고 **폴백으로 보낸다**: 그러면 이원계도 1.5 를
+            #   받고 카운트에 잡히며, «인쇄된 c_p 가 이 계열에 하나뿐» 이라는 사실이 판정에 뜬다.
+            return "no-thermal-set"
+        if not self.thermal_source_state:
+            return "undeclared"
+        if self.fit_state and self.thermal_source_state != self.fit_state:
+            return "phase-mismatch"
+        if (fit_composition and self.thermal_source_composition
+                and fit_composition != self.thermal_source_composition):
+            return "composition-substitute"
+        return "ok"
 
     def delta_t(self, t: float, t_pot: float = 0.0) -> float:
         """이 상의 **기준** 에서 얼마나 뜨거운가. 열압력이 먹는 것이 이 차분이다.
@@ -337,6 +370,12 @@ class Material:
     name: str
     label_ko: str
     phases: tuple[Phase, ...]
+    fit_composition: str = ""  # 밀도 적합이 어느 조성의 것인가 (C58, 180 B). 열 출처와 대조된다
+    # ⚠ **이름 목록이 아니라 속성이다** (일반화 규칙, 180 B). `CORE_MATERIALS = (…)` 로 두었더니
+    #   178 C 가 등재한 이원계 Fe–S 둘이 목록에서 빠져 «핵 재질이 아니다» 로 거절됐다 — 재질을
+    #   더할 때마다 사람이 목록을 기억해야 하는 자리가 곧 구멍이다. 재질이 자기 역할을 들고 있으면
+    #   새 핵 재질은 생성 시점에 그것을 선언하고, 목록을 고칠 일이 없다.
+    role: str = ""            # "core" | "" — `core_gamma` 가 이 속성으로 판별한다
     gap_reason: str = ""      # 상 사이 빈 구간에 붙일 설명
     over_reason: str = ("{p_gpa:.1f} GPa 는 근거 있는 상의 상한({max_gpa:.1f} GPa) 위다")
     # ⚠ **아래쪽에도 자기 문구가 있어야 한다** (브리프 178 E). 예전에는 하한 미만 거절이 `gap_reason`
@@ -1732,6 +1771,7 @@ def huang_core_phase(x: dict[str, float], anchor: str = "19GPa") -> "Phase":
         rho0=rho, k0=k_t, k0p=4.0,
         p_max=MORI_FES_P_MAX, p_min=p_ref, p_ref=p_ref,
         alpha_k=alpha * k_t, t_ref=t_ref, t_ref_kind="isotherm", c_v_ref=c_v,
+        thermal_source_state="liquid", thermal_source_composition="pure-Fe-liquid",
         ref=f"Huang+ 2023 (2023GeoRL..5002271H) Table 1 + SI Table S5, {anchor} 기준 · "
             f"혼합은 Khan+ 2023 식 (1)–(2) 의 이상혼합 · α·C_V 는 **순수 Fe 앵커값**"
             f"(조성 도함수 미인쇄 — 0 으로 둔 것은 우리 가정)",
@@ -2164,6 +2204,7 @@ FE_PREM = Material(
     "fe_prem", "철 핵 (PREM 외핵 외삽)",
     (Phase("fe_prem", "bm2", 7050.0, 201.0 * GPA, 4.0, 12e3 * GPA,
            "Zeng+ 2016 §II (arXiv:1512.08827) — PREM 외핵 BM2 적합",
+           thermal_source_state="solid", thermal_source_composition="pure-Fe-hcp",
            alpha_k=IRON_ALPHA_K, alpha_k_dt=IRON_ALPHA_K_DT, c_v_ref=CV_IRON,
            t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat",
            # PREM 외핵 적합이라 가벼운 원소가 이미 들어 있는 재료다. 녹는점도 같은
@@ -2176,16 +2217,19 @@ FE_PREM = Material(
            join_note="밀도는 합금(PREM 외핵 액체), 곡선은 순철 — 그 차이를 melt_scale = "
                      f"{IRON_LIGHT_ELEMENT_FACTOR} 이 잇는다 (브리프 38, 라벨된 관례). 일곱 다리 중 "
                      "측정이 뒤에 있는 유일한 다리: Sinmyo+ 2019 ICB 검산 −0.12 σ (브리프 38 §0)"),),
+    fit_composition="PREM-alloy", role="core",
 )
 FE_EPS = Material(
     "fe_eps", "순수 ε-철",
     (Phase("fe_eps", "vinet", 8300.0, 156.2 * GPA, 6.08, 2.09e4 * GPA,
            "Seager+ 2007 Table 1 (arXiv:0707.2895) — Fe(ε) Vinet, Anderson+ 2001",
+           thermal_source_state="solid", thermal_source_composition="pure-Fe-hcp",
            alpha_k=IRON_ALPHA_K, alpha_k_dt=IRON_ALPHA_K_DT, c_v_ref=CV_IRON,
            t_ref=LAB_ISOTHERM_T,
            # 실험실 순철이므로 내림이 없다. 순철 곡선 그대로다.
            melt="iron", melt_ref=IRON_MELT_REF_LOW,
            join="Fe (pure)", fit_state="solid"),),
+    fit_composition="pure-Fe-hcp", role="core",
 )
 
 # ── 규산염 ──────────────────────────────────────────────────────────────
@@ -2464,6 +2508,7 @@ SILICATE = Material(
     "silicate", "규산염 맨틀",
     (Phase("mgsio3_en", "bme3", 3220.0, 125.0 * GPA, 5.0, SILICATE_EN_TO_PREM,
            "Seager+ 2007 Table 1 (arXiv:0707.2895) — MgSiO₃ enstatite BME",
+           thermal_source_state="solid", thermal_source_composition="MgSiO3",
            alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
            t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat",
            melt="silicate", melt_ref=SILICATE_MELT_REF + " + Deng+ 2023 + Fei+ 2021 — "
@@ -2472,7 +2517,8 @@ SILICATE = Material(
            join_note="밀도는 MgSiO₃ enstatite 단성분 적합, 곡선은 맨틀 암석 솔리더스(20 GPa 아래는 Monteux 가 조성 하나만 인쇄해 변종이 갈리지 않는다; 이 재료의 변종은 peridotitic) — 이 재료가 맨틀 암석의 대리라는 선언을 여기 적는다 (브리프 36). 이 상은 23.83 GPa 아래라 140 GPa 이음매를 보지 않는다"),
      Phase("mgsio3_prem", "bm2", 3980.0, 206.0 * GPA, 4.0, SILICATE_PREM_TO_PV,
            "Zeng+ 2016 §II (arXiv:1512.08827) — PREM 하부맨틀 BM2 적합",
-           p_min=SILICATE_EN_TO_PREM, alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
+           p_min=SILICATE_EN_TO_PREM, thermal_source_state="solid", thermal_source_composition="MgSiO3",
+           alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
            t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat",
            melt="silicate", melt_ref=SILICATE_MELT_REF + " + Deng+ 2023 + Fei+ 2021 — "
            "500 GPa 위는 곡선 밖 (silicate_melt_refusal)",
@@ -2483,6 +2529,7 @@ SILICATE = Material(
            "Karki+ 2000 의 DFT 계산. 실물은 MgO + SiO₂ 다 (Umemoto+ 2017, "
            "arXiv:1708.04767) — 조성이 이 압력대에서 밀도를 거의 안 정한다는 것이 근거",
            p_min=SILICATE_PREM_TO_PV, k0pp=-0.016 / GPA,
+           thermal_source_state="solid", thermal_source_composition="MgSiO3",
            alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
            t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat",
            melt="silicate", melt_ref="이 상의 압력대(3.5–13.5 TPa)는 전부 곡선 상한 "
@@ -2767,6 +2814,7 @@ ANTIGORITE = Material(
            # 사문석의 고온 운명은 일치 융해가 아니라 탈수·분해라서, 규산염 녹는곡선
            # 여섯 후보 어느 것도 이 상에 적용되지 않는다. 탈수 경계 곡선은 별도
            # 근거가 필요한 다른 물건이고 여기서 찾지 않았다.
+           thermal_source_state="solid", thermal_source_composition="antigorite",
            alpha_k=ANTIGORITE_ALPHA_K, c_v_ref=HP98_ATG_CP_298, t_ref=298.15,
            join="Mg3Si2O5(OH)4 antigorite (Hilairet+ 2006)", fit_state="solid"),),
     over_reason=("사문석화된 암석층의 바닥이 {p_gpa:.1f} GPa 로 antigorite 실험 상한({max_gpa:.0f} GPa) "
@@ -2777,6 +2825,7 @@ H2O = Material(
     "h2o", "물얼음",
     (Phase("ice_ih", "bm2", ICE_IH_RHO0, ICE_IH_KT, 4.0, ICE_IH_TO_III,
            "IAPWS-06 / Feistel & Wagner 2006 Table 6 검증값",
+           thermal_source_state="solid", thermal_source_composition="H2O-ice",
            alpha_k=ICE_IH_ALPHA_K, c_v_ref=ICE_IH_CV, t_ref=273.152519,
            melt="water", melt_ref=IAPWS_MELT_REF + " 식 (1)",
            join="H2O", fit_state="solid"),
@@ -2784,6 +2833,7 @@ H2O = Material(
            "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
            "얼음 III 을 P=0, T=251.15 K 에서 평가한 ρ·K_T·K′",
            p_min=ICE_IH_TO_III,
+           thermal_source_state="solid", thermal_source_composition="H2O-ice",
            alpha_k=ICE_III_ALPHA_K, c_v_ref=ICE_III_CV, t_ref=ICE_III_REF_T,
            melt="water", melt_ref=IAPWS_MELT_REF + " 식 (2)",
            join="H2O", fit_state="solid"),
@@ -2791,6 +2841,7 @@ H2O = Material(
            "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
            "얼음 V 를 P=0, T=256.43 K 에서 평가한 ρ·K_T·K′",
            p_min=ICE_III_TO_V,
+           thermal_source_state="solid", thermal_source_composition="H2O-ice",
            alpha_k=ICE_V_ALPHA_K, c_v_ref=ICE_V_CV, t_ref=ICE_V_REF_T,
            melt="water", melt_ref=IAPWS_MELT_REF + " 식 (3)",
            join="H2O", fit_state="solid"),
@@ -2798,6 +2849,7 @@ H2O = Material(
            "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
            "얼음 VI 를 P=0, T=272.73 K 에서 평가한 ρ·K_T·K′",
            p_min=ICE_V_TO_VI,
+           thermal_source_state="solid", thermal_source_composition="H2O-ice",
            alpha_k=ICE_VI_ALPHA_K, c_v_ref=ICE_VI_CV, t_ref=ICE_VI_REF_T,
            melt="water", melt_ref=IAPWS_MELT_REF + " 식 (4)",
            join="H2O", fit_state="solid"),
@@ -2808,6 +2860,7 @@ H2O = Material(
            p_min=ICE_VI_TO_VII, melt="water",
            melt_ref=IAPWS_MELT_REF + " 식 (5) — 355–715 K (2.216–20.6 GPa); 그 위는 "
                     + REINHARDT_MELT_REF,
+           thermal_source_state="solid", thermal_source_composition="H2O-ice",
            alpha_k=ICE_VII_ALPHA_K, c_v_ref=ICE_VII_CV, t_ref=ICE_VII_X_REF_T,
            t_max=ICE_VII_X_T_MAX, join="H2O", fit_state="solid"),
      Phase("ice_x", "vinet", ICE_X_RHO0, ICE_X_K0, ICE_X_K0P, ICE_X_P_MAX,
@@ -2816,6 +2869,7 @@ H2O = Material(
            "최악 1.475 % — 이 사다리에서 제일 넓은 오차폭이고, 읽은 게 아니라 적합한 "
            "유일한 얼음 상이다",
            p_min=ICE_VII_TO_X,
+           thermal_source_state="solid", thermal_source_composition="H2O-ice",
            alpha_k=ICE_X_ALPHA_K, c_v_ref=ICE_X_CV, t_ref=ICE_VII_X_REF_T,
            t_max=ICE_VII_X_T_MAX,
            # 녹는곡선이 52.4 GPa 까지 온다 (Reinhardt+ 2022). 그 위는 water_t_melt 가 None 을
@@ -3060,6 +3114,53 @@ FE_S_MOLAR_MASS = (55.845, 32.06)          # (M_Fe, M_S) g/mol — 교과서 값
 FE_S_BAND_WT = (0.13, 0.19)                # 오너 결정 2026-09-10
 
 
+#: 핵 단열선의 **선언 상수** — hcp 고체 기원 (Alfè+ 2002 가 280–340 GPa 에서 1.51–1.52 를 적는다).
+#: ⚠ 이 리터럴은 **`core_gamma` 안에만** 산다 (C58, 브리프 180 B). 네 자리에 흩어져 있던 것이 서로를
+#: 모르던 자리이고, 그중 하나가 화성의 «액체 핵» 판정을 떠받치고 있었다.
+CORE_GAMMA_FALLBACK = 1.5
+
+
+class CoreGammaMisuse(Exception):
+    """`core_gamma` 를 **핵 재질이 아닌 층**에 불렀다 — 이름 대고 멈춘다 (180 B).
+
+    ⚠ 폴백 1.5 는 **철의** 수다. 수소-헬륨 외피에 그것을 돌려주면 그 층의 γ(≈0.24)보다 **3.2 배**
+    큰 수를 조용히 쓰게 된다. «없는 값 대신 남의 값» 은 이 엔진이 반복해 잡은 모양이라, 여기서는
+    돌려주지 않고 부른 자리를 이름 댄다."""
+
+
+
+
+def core_gamma(material, p: float, t: float, t_pot: float = 0.0) -> tuple[float, str, float]:
+    """핵 단열선의 γ — **네 소비처가 읽는 한 함수** (C58, 브리프 180 B).
+
+    돌려주는 것은 `(γ, 판정, 재질의 γ)` 셋이다. 판정이 `ok` 면 첫째가 **재질의 γ(P,T)** 이고,
+    아니면 **이름 붙은 폴백** `CORE_GAMMA_FALLBACK` 이다 — 그리고 셋째가 «그때 재질은 무엇을
+    말했나» 를 늘 들고 온다. 소비처가 그 둘을 나란히 인쇄할 수 있어야 폴백이 **조용해지지 않는다.**
+
+    ⚠ **오늘 `fe_prem` 은 빨강이다** (`phase-mismatch`: 액체 적합에 고체 열 매개변수). 그래서 이
+    함수는 1.5 를 돌려주고, 재질 자신의 γ 는 화성 CMB 에서 **0.3524** 다 — 뒤집힘점 0.8722 아래라
+    배선하면 중심이 언다. **지금 화성 핵을 액체로 붙들고 있는 것이 이 폴백이다.** 그 사실을
+    소비처가 매 실행 인쇄한다."""
+    name = getattr(material, "name", "")
+    if getattr(material, "role", "") != "core":
+        raise CoreGammaMisuse(
+            f"'{name}' 는 핵 재질이 아니다. `core_gamma` 의 폴백은 **철의** 수(1.5)이고, 다른 층에 "
+            f"그것을 돌려주면 남의 값을 조용히 쓰게 된다 — 이 층의 γ 가 필요하면 재질에게 "
+            f"`grad_ad`/`gruneisen` 으로 직접 물어라.")
+    ph = material.phase_at(p)
+    verdict = ph.thermal_label(getattr(material, "fit_composition", ""))
+    rho = material.density(p, t, 0.0)
+    # ⚠ **`alpha_k` 를 그대로 쓰면 기준 등온선의 γ 가 나온다** (감사 지적, 180 B 안에서).
+    #   (∂P/∂T)_V 는 `alpha_k + alpha_k_dt·ΔT` 이고, 금속은 그 2차 항이 크다 — `fe_eps` 는
+    #   300 K 에서 0.2976 이지만 화성 CMB(2000 K)에서 **0.6275** 다. 첫 판이 0.2994 를 «핵의 γ»
+    #   라고 인쇄했고 그것은 **어느 소비처도 묻지 않는 온도의 값**이었다. 이 파일이 이미 들고
+    #   있는 항등식(`gruneisen`)을 부른다 — 새 산수를 여기서 만들지 않는다.
+    own = material.gruneisen(p, rho, t, t_pot) if (ph.has_thermal and rho > 0.0) else 0.0
+    if verdict in ("ok", "composition-substitute"):
+        return own, verdict, own
+    return CORE_GAMMA_FALLBACK, verdict, own
+
+
 def fe_s_mole_fraction(w_s: float) -> float:
     """S 무게분율 → 몰분율. **교과서 화학량론**이고 다른 규칙은 쓰지 않는다."""
     m_fe, m_s = FE_S_MOLAR_MASS
@@ -3070,11 +3171,11 @@ def fe_s_mole_fraction(w_s: float) -> float:
 FE_S_13WT = Material("fe_s_13wt_19gpa", "액체 Fe–S 핵 · 13 wt% S (밴드 아래끝, 19 GPa 기준)",
                      (huang_fes_phase(fe_s_mole_fraction(0.13), "19GPa"),),
                      gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
-                     under_reason=FE_S_BELOW_REF_REASON)
+                     under_reason=FE_S_BELOW_REF_REASON, role="core")
 FE_S_19WT = Material("fe_s_19wt_19gpa", "액체 Fe–S 핵 · 19 wt% S (밴드 위끝, 19 GPa 기준)",
                      (huang_fes_phase(fe_s_mole_fraction(0.19), "19GPa"),),
                      gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
-                     under_reason=FE_S_BELOW_REF_REASON)
+                     under_reason=FE_S_BELOW_REF_REASON, role="core")
 
 # ── 다원계 액체 핵: 오너 상자의 여덟 끝점 (C55 2단계, 브리프 183) ────────────────────────
 # 오너 결정 2026-09-10: S 13–19 wt% · O 1–4 wt% · C 0.5–1.4 wt% · **H 미선언**(문헌이 여섯 배로
@@ -3098,6 +3199,7 @@ def _core_box_materials() -> dict[str, Material]:
                          f"C {w_c * 100:.1f} wt% (19 GPa 기준)")
                 out[name] = Material(
                     name, label, (huang_core_phase(x, "19GPa"),),
+                    fit_composition="Fe-S-O-C", role="core",
                     gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
                     under_reason=FE_S_BELOW_REF_REASON)
     return out

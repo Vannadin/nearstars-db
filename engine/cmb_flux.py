@@ -36,7 +36,7 @@ import math
 from domain import Domain
 
 import mantle_flux as mf
-from eos import MATERIALS
+from eos import CORE_GAMMA_FALLBACK, MATERIALS, core_gamma
 from payload import Result, out_of_domain
 
 RECIPE = "internal-heat-luminosity-methodology"
@@ -67,7 +67,10 @@ K_B = KAPPA_B * mf.RHO_M * mf.C_PM   # 5.76 W/(m·K), derived as k_t was
 # ── Nimmo+ 2004 Table 1 — the core's thermal conductivity, DECLARED ──────────────
 K_CORE = 50.0                     # W/(m·K), ± 20 (eq. 25)
 K_CORE_RANGE = (30.0, 70.0)
-GAMMA = 1.5                       # core_state.GAMMA_CORE — solid value, liquid 1.51–1.52
+# ⚠ **세 번째 사본이었다** (C58, 180 B). 같은 1.5 가 `core_state`·`core_energy` 와 여기
+#   셋에 각각 적혀 있어서, 셋이 «구성상 일치» 했고 그래서 함께 틀려도 아무 검사가 울지
+#   않았다. 계산은 `eos.core_gamma` 한 함수가 하고, 이 이름은 인쇄용으로만 남는다.
+GAMMA = CORE_GAMMA_FALLBACK       # 인쇄용 이름 — 계산은 core_gamma 가 한다
 G_NEWTON = 6.674e-11
 M_EARTH_KG = 5.972e24
 R_EARTH_M = 6.371e6
@@ -114,7 +117,7 @@ def adiabatic_flow(material_name: str, p_cmb: float, t_c: float, r_cmb: float, m
     h = 1.0e-3 * p_cmb
     drho_dp = (mat.density(p_cmb + h, t_c, 0.0) - mat.density(p_cmb - h, t_c, 0.0)) / (2.0 * h)
     g_cmb = G_NEWTON * m_core / r_cmb ** 2
-    dt_dr = -GAMMA * t_c / rho * drho_dp * rho * g_cmb          # K/m, negative outward
+    dt_dr = -core_gamma(mat, p_cmb, t_c)[0] * t_c / rho * drho_dp * rho * g_cmb   # K/m, negative outward
     return {"rho_cmb": rho, "g_cmb": g_cmb, "dt_dr_ad": dt_dr,
             "q_ad_w": 4.0 * math.pi * r_cmb ** 2 * k * abs(dt_dr)}
 

@@ -33,7 +33,7 @@ import math
 
 import cmb_flux as cf
 import core_state as cs
-from eos import MATERIALS, PhaseGap
+from eos import MATERIALS, PhaseGap, core_gamma
 from domain import DomainRefusal
 from payload import Result, out_of_domain
 
@@ -67,7 +67,10 @@ ALPHA_C = 1.35e-5                 # 1/K, ± 0.15, Table 1 (used only through the
 L_H = 750.0e3                     # J/kg, Table 1
 BETA_C = 1.1                      # —, ± 0.1, Table 1 (eq. 21)
 CHI = 0.042                       # wt fraction, Table 2 χ₀ 4.2 (+1.5 −1.7)
-GAMMA = cs.GAMMA_CORE
+# ⚠ **한 함수에서 읽는다** (C58, 180 B). 예전에는 `cs.GAMMA_CORE` 를 모듈 적재 때 베껴
+#   두어, 재질이 무엇이든 같은 수를 썼다 — 그 사본이 `core_state`·`cmb_flux` 와 «구성상
+#   일치» 를 만들었고, 그래서 셋이 함께 틀려도 아무 검사가 울지 않았다.
+GAMMA = cs.GAMMA_CORE          # 민감도 인쇄용 이름. 계산은 아래 `core_gamma` 가 한다
 G = cf.G_NEWTON
 STEPS = 400
 
@@ -92,9 +95,11 @@ def core_profile(material_name: str, p_cmb: float, t_c: float, r_cmb: float, m_c
     # residual is returned as the profile's own closure number (pre-registered check), not hidden.
     r_min = 0.02 * r_cmb
 
+    _gamma = core_gamma(mat, p_cmb, t_c)[0]
+
     def state(p_, t_guess):
         rho_ = mat.density(p_, t_guess, 0.0)
-        t_ = t_c * (rho_ / rho_cmb) ** GAMMA
+        t_ = t_c * (rho_ / rho_cmb) ** _gamma
         return mat.density(p_, t_, 0.0), t_              # one re-evaluation at the adiabat's own T
 
     def slope(r_, p_, m_, t_guess):

@@ -363,6 +363,45 @@ row(abs(eos.MATERIALS["fe_s19_o4_c5permil_19gpa"].k_t(19.0 * eos.GPA, 2100.0, 0.
 row(eos.MATERIALS["fe_prem"].phases[0].density(136.0e9) == 9916.93698295698,
     "그 클램프는 바닥이 0 인 재질에 안 걸린다 — fe_prem 은 비트 동일")
 
+print("\n⑬ 핵 γ 는 한 함수에서 오고, 그 함수는 조용해지지 않는다 (C58, 브리프 180 B)")
+#: ⚠ 수로 세지 않는다 — 위 ⓒ 행이 심은 `planted_30gpa` 가 `fe_prem` 의 복사본이라 `role` 까지
+#: 물려받는다. 세는 것은 **이름 집합**이고, 그러면 시험 순서가 이 행을 흔들지 못한다.
+_CORE_NAMES = {"fe_prem", "fe_eps", "fe_s_13wt_19gpa", "fe_s_19wt_19gpa"} | set(eos.CORE_BOX_MATERIALS)
+row(len(_CORE_NAMES) == 12
+    and all(getattr(eos.MATERIALS[_n], "role", "") == "core" for _n in _CORE_NAMES),
+    "`role='core'` 재질 12 — 철 둘 · 이원계 둘 · 상자 여덟. ⚠ **이름 목록이 아니라 속성이다**: "
+    "`CORE_MATERIALS = (…)` 였을 때 178 C 의 이원계 둘이 빠져 «핵 재질이 아니다» 로 거절됐다")
+_g, _v, _own = eos.core_gamma(eos.MATERIALS["fe_prem"], 20.649 * eos.GPA, 2000.0)
+row(_g == eos.CORE_GAMMA_FALLBACK and _v == "phase-mismatch" and abs(_own - 0.3524) < 5e-4,
+    f"fe_prem: 판정 `{_v}` → 폴백 {_g} 을 쓰고 재질의 γ {_own:.4f} 를 **함께 들고 온다**. "
+    "⚠ 지금 화성 핵을 액체로 붙들고 있는 것이 그 폴백이다")
+_g2, _v2, _own2 = eos.core_gamma(eos.MATERIALS["fe_s_19wt_19gpa"], 25.0 * eos.GPA, 2000.0)
+row(_v2 == "no-thermal-set" and _g2 == eos.CORE_GAMMA_FALLBACK,
+    "⚠ 이원계는 열 상수가 없으니 `no-thermal-set` 이고 **폴백으로 간다** — 그 자리가 `ok` 였을 때는 "
+    "**초록 판정으로 γ = 0** 을 배달했고, 그것은 §1b 가 금지한 모양이 한 층 위에서 재현된 것이다")
+_g3, _v3, _own3 = eos.core_gamma(eos.MATERIALS["fe_s19_o4_c5permil_19gpa"], 25.0 * eos.GPA, 2000.0)
+row(_v3 == "composition-substitute" and _g3 == _own3 > 0.0,
+    f"상자 재질은 `{_v3}` — 상은 맞고 조성만 대체이므로 **자기 γ {_g3:.4f} 를 쓰되 등급이 내려간다**")
+for _bad in ("silicate", "h_he", "h2o"):
+    try:
+        eos.core_gamma(eos.MATERIALS[_bad], 5.0 * eos.GPA, 1900.0)
+        row(False, f"{_bad} 가 핵 γ 를 받았다")
+    except eos.CoreGammaMisuse:
+        pass
+row(True, "⚠ 비핵 층(silicate·h_he·h2o)은 이름 대며 멈춘다 — 폴백 1.5 는 **철의** 수이고 h_he 의 "
+          "γ 와 3.2 배 차이라, 돌려주면 그 층에서만 답이 조용히 튄다")
+try:
+    import core_state as _cs
+    _r = _cs.solve(core_pressure=60.0, cmb_pressure=25.0, core_temperature=1961.0,
+                   cmb_temperature=1910.0, core_material="fe_s_19wt_19gpa",
+                   core_cmb_temperature=2400.0, body_class="rocky")
+    row(_r.applicable and _r.values.get("core_gamma_fallback") == 1,
+        "⚠ **p_cmb 25 GPa 의 이원계 핵**(괄호 창 위라 선언 갈래로 내려간다)이 예외가 아니라 값을 "
+        f"낸다 — `{_r.regime}` · 폴백 카운트 {_r.values.get('core_gamma_fallback')}. `_adiabat` 이 "
+        "`core_gamma` 를 try 없이 부르던 자리이고, 그 천체가 노드를 터뜨렸다")
+except Exception as _e:
+    row(False, f"p_cmb 25 GPa 이원계에서 {type(_e).__name__}: {str(_e)[:70]}")
+
 print("\n기록 — 178 D 의 정정을 181 이 다시 정정한다")
 print("      178 D 는 «괄호로는 아무 칸도 안 열린다, 막는 것은 압력 바닥이다» 로 끝났고 그것은 맞았다.")
 print("      181 이 그 바닥을 다뤘고, 칸에 처음으로 수가 들어왔다. 181 B 가 그 표를 **밴드로** 다시 쟀다 —")

@@ -36,7 +36,8 @@ from dataclasses import replace as _dc_replace
 
 import eos
 from eos import (IRON_LIGHT_ELEMENT_FACTOR, IRON_MELT_MAX, IRON_MELT_SPLICE,
-                 MATERIALS, PhaseGap, iron_fes_phase_verdict, iron_t_melt)
+                 CORE_GAMMA_FALLBACK, MATERIALS, CoreGammaMisuse, PhaseGap, core_gamma,
+                 iron_fes_phase_verdict, iron_t_melt)
 from payload import Result, out_of_domain
 from registry import recipe
 
@@ -72,7 +73,10 @@ REFS = (
 # 그건 밀도를 맞추려고 고른 **열압력** 상수이지 γ 의 출처가 아니고, 핵 압력대에서 0.22 를
 # 낸다. 한 재료에 두 개의 γ 가 있는 셈이라 표류의 씨앗이고, 그래서 어느 쪽이 어느 질문에
 # 쓰이는지를 여기와 eos.py 양쪽에 적어 둔다: 밀도는 αK₀, 핵의 단열선은 이 γ 다.
-GAMMA_CORE = 1.5
+# ⚠ **리터럴은 여기 없다** (C58, 브리프 180 B). 이 값의 단일 출처는 `eos.CORE_GAMMA_FALLBACK`
+#   이고, 그것을 읽는 것은 `eos.core_gamma` 한 함수다 — 네 자리에 흩어져 서로를 모르던 것이
+#   이 이름 하나로 모인다. 이 이름은 민감도 인쇄(아래 `gamma_flip`)가 계속 쓴다.
+GAMMA_CORE = CORE_GAMMA_FALLBACK
 GAMMA_RANGE_PA = (100e9, 340e9)     # 그 논문이 γ 를 확인한 압력 구간
 # 같은 논문의 **액체** 값 (위 주석의 두 번째 인용, 새 출처 없음): 액체 Hugoniot 에서
 # "1.51 to 1.52 as p goes from 280 to 340 GPa". GAMMA_CORE = 1.5 는 h.c.p. **고체** 의
@@ -189,11 +193,71 @@ _NOT_ASKED_WHY = {
 }
 
 
+def _gamma_values(material, p_cmb: float, t: float) -> dict:
+    """폴백을 **세고 나란히 적을 수 있게** 값으로 낸다 (C58, 브리프 180 B, 판정선 ②③).
+
+    ⚠ 인쇄만으로는 «몇 천체가 폴백을 쓰는가» 를 셀 수 없다 — 산문은 grep 할 수 있지만 세는 것은
+    값이어야 한다. `core_gamma_fallback` 이 그 카운터이고, 나머지 둘이 recorded_disagreement 의
+    두 수(쓴 값·재질이 말한 값)다. 기준선: 로스터에서 `fe_prem` 을 쓰는 천체 수 — 오늘 일곱 중
+    다섯이 `core_state` 에 닿고 그중 `core_cmb_temperature` 를 **선언한 것은 지구·화성 둘**이다."""
+    try:
+        used, verdict, own = core_gamma(material, p_cmb, t)
+    except CoreGammaMisuse:
+        # ⚠ **핵 재질이 아닌 것이 핵 노드에 온다** — `test_core_state` 가 `silicate` 로 실제로
+        #   그렇게 부른다. 그때 철의 γ 를 돌려주는 것도, 터지는 것도 답이 아니다: 값을 비우고
+        #   그 사실을 `notes` 가 이름 대며 말한다.
+        return {"core_gamma_used": None, "core_gamma_material": None,
+                "core_gamma_fallback": None}
+    return {"core_gamma_used": used, "core_gamma_material": own,
+            "core_gamma_fallback": 1 if verdict not in ("ok", "composition-substitute") else 0}
+
+
+_GAMMA_UNITS = {"core_gamma_used": "dimensionless", "core_gamma_material": "dimensionless",
+                "core_gamma_fallback": ""}
+
+
+def _gamma_note(material, p_c: float, p_cmb: float, t_mantle: float,
+                declared) -> str:
+    """어느 γ 를 썼는지, 재질은 무엇을 말했는지, 뒤집힘점에서 얼마나 먼지 — **매 실행 한 줄**.
+
+    ⚠ **폴백이 조용하면 안 된다** (C58, 브리프 180 B). `fe_prem` 은 라벨 검사가 빨갛고
+    (`phase-mismatch`: 액체 적합에 고체 열 매개변수) 그래서 소비처 셋이 선언 상수를 쓴다 —
+    **지금 화성 핵을 액체로 붙들고 있는 것이 그 상수**이고, 재질 자신의 γ 를 쓰면 중심이 언다.
+    그 사실이 판정 옆에 인쇄되지 않으면 다음 사람은 판정만 읽는다."""
+    try:
+        used, verdict, own = core_gamma(material, p_cmb, t_mantle)
+    except CoreGammaMisuse as misuse:
+        return (f"⚠ **핵 단열선의 γ 가 없다** — '{material.name}' 은 핵 재질이 아니다. "
+                f"{str(misuse).split('—')[0].strip()} 이 노드가 그 재질을 받은 것 자체가 "
+                "선언의 문제이고, 여기서 철의 수를 빌려 쓰지 않는다 (C58, 브리프 180 B).")
+    if verdict == "ok":
+        return (f"핵 단열선의 γ = {used:.4f} — 재질 '{material.name}' 이 (P, T) 에서 낸 값이고 "
+                f"열 매개변수의 출처 라벨이 이 적합과 맞다 (`{verdict}`).")
+    t_top = float(declared) if declared else t_mantle
+    flip = gamma_flip(material, p_c, p_cmb, t_top) if declared else None
+    dist = ""
+    if flip:
+        dist = (f" 뒤집힘점 γ = {flip:.4f} 에서 선언값은 {(used / flip - 1) * 100:+.2f} %, "
+                f"재질값은 {(own / flip - 1) * 100:+.2f} % 다 — "
+                f"{'재질값을 쓰면 중심이 언다' if own < flip < used else '두 값이 같은 쪽에 있다'}.")
+    return (f"⚠ **핵 단열선의 γ 는 선언 상수 {used:.4f} 다** — 재질 '{material.name}' 의 열 "
+            f"매개변수 출처 라벨이 이 적합과 어긋나(`{verdict}`) 그 재질의 γ({own:.4f})를 쓰지 "
+            f"않았다. 상수는 h.c.p. **고체** 기원이고, 액체 열 세트가 채택될 때까지의 **이름 "
+            f"붙은 대체**다 (C58).{dist} 두 수를 나란히 적는 것이 이 줄의 목적이다.")
+
+
 def _adiabat(material, p_pa: float, p_cmb: float, t_cmb: float,
              rho_cmb: float) -> float:
     """핵 쪽 경계 온도에서 올린 단열선의 온도 [K]. T ∝ ρ^γ 다."""
     rho = material.density(p_pa, t_cmb, 0.0)
-    return t_cmb * (rho / rho_cmb) ** GAMMA_CORE
+    try:
+        gam = core_gamma(material, p_pa, t_cmb)[0]
+    except CoreGammaMisuse as misuse:
+        # ⚠ **값 대신 문장이다** (감사 지적, 180 B). 이 자리가 `try` 없이 부르고 있어서, 핵 재질이
+        #   아닌 것이 선언 갈래로 내려오면 노드가 **잡히지 않은 예외**로 터졌다 — 이름 붙은 거절과
+        #   추적역 사이의 차이가 이 세 줄이다.
+        raise PhaseGap(getattr(material, "name", "?"), p_pa, str(misuse)) from misuse
+    return t_cmb * (rho / rho_cmb) ** gam
 
 
 def _cross(f, lo: float, hi: float) -> float:
@@ -321,7 +385,7 @@ def solve(core_pressure: float,
         return Result(
             recipe=RECIPE, version=VERSION, regime="melt_bracket", reason=reason,
             grade=grade, inputs=inputs, refs=REFS,
-            values={"conductor_phase": phase,
+            values={**_gamma_values(material, p_cmb, cmb_temperature), "conductor_phase": phase,
                     "cmb_melt_temperature": None,
                     "center_melt_temperature": None,
                     "cmb_melt_bracket_low": band[0],
@@ -335,7 +399,7 @@ def solve(core_pressure: float,
                     "k0_flip": None,
                     "melt_splice_disagreement": melt_splice_disagreement(p_c),
                     "margin_condition": MARGIN_BRACKETED},
-            units={"conductor_phase": "", "cmb_melt_temperature": "K",
+            units={**_GAMMA_UNITS, "conductor_phase": "", "cmb_melt_temperature": "K",
                    "center_melt_temperature": "K",
                    "cmb_melt_bracket_low": "K", "cmb_melt_bracket_high": "K",
                    "core_cmb_temperature_used": "K",
@@ -355,7 +419,7 @@ def solve(core_pressure: float,
                 "폭에는 없다. 판정은 양끝 비교로 나오고, 그것이 이 갈래가 내는 전부다."))
 
     depressed = abs(material.phases[0].melt_scale - 1.0) > 1e-12
-    notes = [
+    notes = [_gamma_note(material, p_c, p_cmb, cmb_temperature, core_cmb_temperature), 
         f"융해곡선: {material.phases[0].melt_ref}. 핵-맨틀 경계 "
         f"{cmb_pressure:.1f} GPa 에서 {t_melt_cmb:.0f} K, 중심 {core_pressure:.1f} GPa "
         f"에서 {t_melt_c:.0f} K."]
@@ -410,7 +474,7 @@ def solve(core_pressure: float,
         return Result(
             recipe=RECIPE, version=VERSION, regime="lower_bound", reason=reason,
             grade=grade, inputs=inputs, refs=REFS,
-            values={"conductor_phase": phase,
+            values={**_gamma_values(material, p_cmb, cmb_temperature), "conductor_phase": phase,
                     "cmb_melt_temperature": t_melt_cmb,
                     "center_melt_temperature": t_melt_c,
                     "core_cmb_temperature_used": cmb_temperature,
@@ -426,7 +490,7 @@ def solve(core_pressure: float,
                     "k0_flip": None,
                     "melt_splice_disagreement": melt_splice_disagreement(p_c),
                     "margin_condition": MARGIN_NOT_COMPUTABLE},
-            units={"conductor_phase": "", "cmb_melt_temperature": "K",
+            units={**_GAMMA_UNITS, "conductor_phase": "", "cmb_melt_temperature": "K",
                    "center_melt_temperature": "K",
                    "core_cmb_temperature_used": "K",
                    "core_center_temperature_used": "K",
@@ -545,7 +609,7 @@ def solve(core_pressure: float,
         recipe=RECIPE, version=VERSION, regime="declared_core_adiabat", reason=reason,
         grade="judgment" if phase == CONDUCTOR_UNDECIDED else "analog",
         inputs=inputs, refs=REFS,
-        values={"conductor_phase": phase,
+        values={**_gamma_values(material, p_cmb, cmb_temperature), "conductor_phase": phase,
                 "cmb_melt_temperature": t_melt_cmb,
                 "center_melt_temperature": t_melt_c,
                 "core_cmb_temperature_used": t_cmb_core,
@@ -559,7 +623,7 @@ def solve(core_pressure: float,
                 "k0_flip": k_flip,
                 "melt_splice_disagreement": splice,
                 "margin_condition": condition},
-        units={"conductor_phase": "", "cmb_melt_temperature": "K",
+        units={**_GAMMA_UNITS, "conductor_phase": "", "cmb_melt_temperature": "K",
                "center_melt_temperature": "K",
                "core_cmb_temperature_used": "K",
                "core_center_temperature_used": "K",

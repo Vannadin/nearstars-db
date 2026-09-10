@@ -17,7 +17,7 @@
 `center_melt_temperature` [K] · `core_cmb_temperature_used` [K] ·
 `core_center_temperature_used` [K] · `icb_pressure` [GPa] ·
 `center_margin` [K] · `cmb_margin` [K] · `center_margin_fraction` [—] · `gamma_flip` [—] ·
-`gamma_flip_in_alfe_range` [—] · `k0_flip` [GPa] · `melt_splice_disagreement` [—] · `margin_condition` [—]
+`gamma_flip_in_alfe_range` [—] · `k0_flip` [GPa] · `melt_splice_disagreement` [—] · `margin_condition` [—] · `core_gamma_used` [—] · `core_gamma_material` [—] · `core_gamma_fallback` [—]
 **Needs** — `core_pressure` [GPa] · `cmb_pressure` [GPa] · `core_temperature` [K] ·
 `cmb_temperature` [K] · `core_material` [—] · `core_cmb_temperature` [K] ·
 `body_class` [—]

@@ -6026,7 +6026,7 @@ range, not ours*, and it is the only printed recipe that uses Table S5 for a mul
   ⚠ **Where a zero actually bites was measured, and it is not where it was first supposed.** Three things
   had to be separated:
 
-  1. **`core_state` never asks the material for `grad_ad`.** Its `engine/core_state.py@«return t_cmb * (rho / rho_cmb) ** GAMMA_CORE»`
+  1. **`core_state` never asks the material for `grad_ad`.** Its adiabat (`engine/core_state.py@«return t_cmb * (rho / rho_cmb) ** gam»`, which read `** GAMMA_CORE` until 180 B wired it)
      raises the core adiabat with the **module constant** γ = 1.5 and a density ratio. ⚠ *So the material
      holds the slot and the consumer does not ask* — C58's shape exactly, and another instance of C45 (f).
   2. **At Mars the Fe–S materials do not reach that branch at all.** With P_cmb near 19–20 GPa they take
@@ -6276,7 +6276,7 @@ name is a decision line, not a detail.
 | `engine/core_energy.py@«ALPHA_C = 1.35e-5»` | core thermal expansion | ✅ from `Phase.alpha_k / k_t` |
 | `engine/core_energy.py@«L_H = 750.0e3»` | latent heat of inner-core freezing | ❌ no printed per-material value → stays a declaration |
 | `engine/core_state.py@«GAMMA_CORE = 1.5 는 h.c.p. **고체** 의»` | the core adiabat's γ | ✅ derivable from `Phase` constants — and the comment itself says it is the **solid** value |
-| `engine/cmb_flux.py@«GAMMA = 1.5»` | **a second copy** of that value | ✅ same |
+| `engine/cmb_flux.py@«GAMMA = CORE_GAMMA_FALLBACK       # 인쇄용 이름 — 계산은 core_gamma 가 한다»` | was **a second copy** of the literal; 180 B left the name for printing and moved the calculation into the one function | ✅ wired |
 | `engine/core_energy.py@«GAMMA = cs.GAMMA_CORE»` | a third reference | — |
 | `engine/core_state.py@«GAMMA_LIQUID_RANGE = (1.51, 1.52)»` | the **liquid** γ band | ✅ — ⚠ a different value from the 1.5 above, and which one a consumer reads varies |
 | `engine/core_state.py@«GAMMA_SPAN = (min(GAMMA_CORE, GAMMA_LIQUID_RANGE[0]), GAMMA_LIQUID_RANGE[1])»` | **mixes those two into one span** | ⚠ one solid value and one liquid band inside a single interval |
@@ -6320,9 +6320,78 @@ hcp thermal set; making it liquid would put it wrong **in the other direction**.
 
 #### 4. The decision lines
 
-- **ⓐ One core, one γ — and γ is a function, not a number.** For Mars and Earth, `core_state` (**all three
-  of `GAMMA_CORE`, `GAMMA_LIQUID_RANGE` and `GAMMA_SPAN`**), `core_energy`, `cmb_flux` and the structure
-  integrator all read **the material's γ(P, T)**. Today four constants coexist instead.
+- **ⓐ Four sites, one function — and where the function cannot be trusted, a named fallback.** All four
+  consumers (`core_state`, `core_energy`, `cmb_flux`, the structure integrator) read **one function**,
+  `core_gamma(material, P, T)`. It returns the material's γ(P, T) when that material's
+  `thermal_source_state` check is **green**, and when the check is **red** it returns the **declared
+  constant 1.5** — labelled *"hcp-solid in origin, standing in while no liquid set is adopted"* — which is
+  **printed and counted every run** and carries a `recorded_disagreement` holding **both** numbers.
+  ⚠ **The constant literal lives only inside that function**, and **which materials the function answers
+  for is a property of the material, not a list of names** — `role='core'`, carried by the twelve core
+  materials. *A name list is the hole that bit first*: written as `CORE_MATERIALS = (…)` it omitted the two
+  binary Fe–S materials 178 C had registered, so the function refused them as "not a core material" — and
+  `_adiabat` called it without a guard, so a body whose boundary sits **above the 10–21 GPa bracket window**
+  went down the declared branch and **crashed the node with an uncaught exception**. Mars did not crash only
+  because its 20.65 GPa falls inside the window. Both are repaired: the role decides, and `_adiabat` turns
+  a misuse into a named refusal. ⚠ **Candidate, outside 180 B's scope**: `role` defaults to the empty
+  string, so a new core material that **fails to declare it** is still a human's job to remember — the
+  hole is moved to where the author is already typing, not closed. The check that closes it is *"a
+  material the core node accepts must carry `role='core'"*, and it is not built here.
+
+  ⚠ **And a material with no thermal set must not come back green.** `thermal_label` answered `ok` when
+  `has_thermal` was false — *"nothing to ask about the source"* — while `core_gamma` computed its γ as
+  **0.0**, so the binaries would have delivered **a green verdict carrying γ = 0**, i.e. a flat adiabat.
+  *That is §1b's "do not deliver a zero silently", reappearing one layer up.* The verdict is now
+  `no-thermal-set` and it routes to the fallback, so those materials get 1.5, get counted, and the fact that
+  this family has exactly one printed `c_p` shows up in the verdict.
+
+  ⚠ *Why a fallback rather than unification or refusal.* Wiring the material's own γ today would flip
+  Mars's centre to solid: `fe_prem`'s γ is **0.3524** at Mars's core-mantle boundary and **0.2732** at
+  Earth's, against a flip point of **0.8722** — a `center_margin` of about **−85 K**, contradicting
+  Durán 2022 and Stähler 2021's *"entirely liquid"* and the owner's 174 decision. ⚠ **So the module
+  constant is what holds Mars's core liquid today, and the material's own γ would freeze it** — and the
+  reason that γ is 0.3524 is that the thermal parameters are the **solid** set, which is the very mismatch
+  this brief names. *Four sites disagreeing is therefore not untidiness: one of them is holding up a
+  shipped verdict.* And refusing outright would take `core_state` away from every body using `fe_prem`,
+  Earth included, breaking the dynamo chain over a label — not a decision this brief may make.
+  ⚠ **Unifying three of the four is worse than either**, because `core_energy` and `cmb_flux` import their
+  γ from `core_state` and so agree with it by construction today; moving three onto a value we have just
+  judged untrustworthy would replace one disagreement with a three-against-one.
+
+  ⚠ **Three sites, not four.** `core_state`, `core_energy` and `cmb_flux` read the function; **the
+  structure integrator is left on its own path for now**, because routing it through the fallback would
+  move the core rise from **+51 K** to about **+237 K**, and that shifts the lower-bound input
+  `core_state` receives for the **five bodies with no declared T_cmb** by roughly **+186 K** — enough to
+  flip a phase verdict, with the owner away. *The reason is time, not design*: the day the label turns
+  green all four move together.
+
+  **Today's result: every `fe_prem` body gets 1.5 at all three wired sites — no verdict flips, no new
+  disagreement, and the fallback is visible.** ⚠ *The unification is not a no-op in general, though*:
+  `fe_eps`'s check is **green**, so it now receives **its own γ at the caller's (P, T)** — **0.6275** at
+  Mars's boundary (20.649 GPa · 2000 K) and **0.7653** at Earth's (136 GPa · 3760 K), against the constant
+  **1.5**: a factor of **2.4** and **2.0** below it. The only reason nothing moves is that **no roster body
+  uses `fe_eps`**.
+
+  ⚠ **An earlier report of this line printed the flip point as 0.8723 and explained a 4.7e-5 shift in it
+  as this wiring's effect. Both were artefacts of a hand-run that fed `gamma_flip` pressures rounded to two
+  decimals** — 45.90 / 20.65 GPa instead of 45.90016599537648 / 20.648606564786558 GPa. `gamma_flip` is a
+  closed form over `density` and `t_melt` and never reaches `core_gamma`, so **this wiring cannot move it**
+  (audit seat, 2026-09-10; reproduced here from run output). *Numbers that go into print are read off the
+  run, not retyped from a rounded console line.*
+
+  ⚠ **And an earlier draft of this line said 0.2994, "a fifth of the constant" — that was the γ at the
+  material's 300 K reference isotherm, a temperature no consumer asks about.** The cause was in the code,
+  not the prose: `core_gamma` read `Phase.alpha_k` directly instead of the file's own identity
+  `gruneisen`, so it dropped the `alpha_k_dt·ΔT` term that dominates in a metal — at 19 GPa `fe_eps` runs
+  **0.2976 → 0.6518** from 300 K to 2100 K. *A γ printed without its (P, T) is the same defect the
+  stage-2 check line was given a mandatory condition column for.* The Fe–S family is
+  `composition-substitute`, adopted with a named grade, and **no body declares one today** either.
+
+- **ⓑ The centre-minus-boundary temperature is the same number at the three wired consumers**, the
+  fallback's number while the check is red. ⚠ **And the fourth gap stays open, reported as a number, not
+  as a failure**: the structure integrator gives **+50.98 K** where `core_state` gives **+236.75 K** at the
+  same boundary anchor (1909.9501 K, Mars at cmf 0.24) — **4.64×**. *That is a registered open state, and
+  it closes on the day the label turns green and the integrator joins as the fourth.*
 - **ⓐ′ The adopted set is checked on three quantities, not one.** ⚠ *Checking only C_V would let the very
   quantity that drives the adiabat through unchecked* — and it already disagrees: **Dorogokupets+ 2017's
   liquid γ₀ is 2.033** where **Huang prints γ = 2.74**, **35 % apart**. So the check line is:
@@ -6346,9 +6415,6 @@ hcp thermal set; making it liquid would put it wrong **in the other direction**.
   ⚠ **Miss any one of the three and the set is not adopted** — the miss is named, and the result goes to
   the owner as *"the two sources disagree on γ."* **Adopting it anyway is forbidden**, because that would
   be electing a number under cover of a check that passed on a different quantity.
-- **ⓑ The centre-minus-boundary temperature is the same at every consumer.** Today, anchored at one
-  boundary temperature (1909.9501 K, Mars at cmf 0.24), the structure integrator gives **50.98 K** and
-  `core_state` **236.75 K** — **4.64×**.
 - **ⓒ A label check, and the owner chose how.** The source phase of a thermal parameter lives only in
   `Phase.ref`, which is prose, so "source phase ≠ `fit_state`" cannot be judged by code. ⚠ **The decision
   is (a): this brief adds `Phase.thermal_source_state`** (`'liquid' | 'solid' | 'table'`, **no default —
@@ -6356,8 +6422,13 @@ hcp thermal set; making it liquid would put it wrong **in the other direction**.
   person reads the `ref` is not accepted**, for the same reason as "do not deliver a zero silently": *a
   source phase must not sit quietly in prose either.* Today `fe_prem` is exactly that case —
   `fit_state = liquid`, t_ref 1600 K, thermal parameters from Isaak & Anderson's **hcp solid**.
-- **ⓓ Every value that moves is reported by name**, in a table of which of the seven bodies moved and by
-  how much. **Bit-identity is not claimed** — this brief changes answers. **The four comparison baselines,
+- **ⓓ ⚠ No value moves, and that is what gets verified.** Wiring three consumers onto a fallback they
+  already held, with the integrator untouched and no roster body using `fe_eps`, changes nothing — so the
+  claim is **bit-identity against the four baselines**, not a table of movements. *An earlier draft of this
+  line said the opposite ("this brief changes answers"); with the integrator held back it would have had
+  nothing to report and no way to fail.* **The seven-body table is the output of the day the label turns
+  green and all four move together** — that is the only moment values actually move, and it must then
+  cover `core_temperature`, `conductor_phase` and `center_margin` for all seven. **The four comparison baselines,
   each hashed at citing time by this seat:**
 
   | file | sha256[:16] | bytes |
