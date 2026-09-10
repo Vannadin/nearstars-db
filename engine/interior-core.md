@@ -108,6 +108,9 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C58** | two of our own numbers for Mars's core-mantle boundary are 1700 K apart | **redesigned and pre-registered 2026-09-10 as C58 (a): layer 1 asks the material, not the body; `K_CORE` moved to C49; build is 180 B** | C54 (b) declared Mars's core-side CMB temperature from the literature band **1900–2100 K** (Durán+ 2022, held). C20's thermal-history integrator ends the same body at **3763 K**. ⚠ **Both are ours and both are labelled**, and they disagree by roughly **1700 K** on one quantity of one body. The declaration is an observation-constrained band; the endpoint is the output of an integration whose Mars run has never been checked against Mars literature — but «the integrator is wrong» is a conclusion, not an observation, and it is not drawn here. Candidate only ⚠ **Four gammas coexist for one core, listed 2026-09-10 and not touched.** The paper's printed **2.74** is stored and read by nothing; the value **derived** from the stored constants — **1.17 to 2.04** across the eight stage-2 corners — is what drives `grad_ad` in the structure integrator; `core_state`'s `GAMMA_LIQUID_RANGE` holds a **liquid** band **1.51–1.52** and its `GAMMA_SPAN` folds that together with the constant below into one interval; and `core_state`'s core adiabat (`engine/core_state.py@«핵 쪽 경계 온도에서 올린 단열선의 온도 [K]. T ∝ ρ^γ 다.»`) raises the temperature with a **third**, the module constant **γ = 1.5**, and a density ratio — it never asks the material, although every material implements the quantity. ⚠ **None of the four knows about the other three.** That is the same shape as the module `C_P`, in a second place, and it is C45 (f)'s shape as well. **Out of 183's scope; the code is not touched here.** ⚠ **And the two pictures of the same core disagree by a factor of 4.64**, independently of any material's thermal flags. **Anchored at the same boundary temperature** (the structure's own T_cmb, 1909.9501 K) at Mars's declared cmf: the structure integrator raises the centre by **50.98 K**, `core_state`'s adiabat by **236.75 K**. ⚠ *An earlier figure of "five times" here compared the structure's rise against a rise measured from the declared 2000 K — two anchors, so not a ratio.* ⚠ *Neither picture reaches Mars's output when an Fe–S core is used*, because the `melt_bracket` branch writes `t_top` straight through — so this is a disagreement the shipped numbers do not currently show. Audit file `audit/c58_thermal_mismatch_167ac9ee.txt`, sha256 `c76441233760ed6b…`, **3458 B**, hashed here; the two figures above are this seat's own reproduction. |
 | **C59** | Mars's core radius and moment of inertia miss the board by 8.9 % and 2.7 %, and no gate had ever checked | **listed 2026-09-10 as a recorded disagreement** | Found by the **targeted** lane, which is the part worth keeping: `check.sh` ran three answer bodies named by hand and `bodies/mars.yaml` was in neither that list nor `gate_targeted`'s copy of it, so Mars's shipped-value comparison went unrun from 2026-09-08 until the body rule ran it (169 E made the list a glob). ⚠ **A narrowing found a hole in the full lane.** The engine gives `core_radius_fraction` **0.4919** against the board's **0.5398** — a core radius of about **1667 km** against **1830 km** — and `nmoi` **0.3545** against **0.3644**, which is the same cause seen through a second quantity. ⚠ **Corrected 2026-09-10 (C59 (a)): the 1667 km is what Mars's *declared* `core_mass_fraction: 0.24` produces, not the preset's 0.325** — a declaration wins over a preset, and 0.325 would give 1842 km, inside the board's window. The board's 1830 km is the layer-free family's anchor (Stähler 2021) — the family the owner chose in 174. That the engine's value falls inside the *layered* family's window (Khan 2023, 1675 ± 30 km) is **read as coincidence**: we never elected that family. Neither the board value nor the tolerance was touched; the two rows print every run and are not counted (Brief 177). What closes this is **C55** (an Fe–S material, since our iron is too dense for Mars) and a declared Martian core mass fraction — not this row. ⚠ **178 C did not move it**: the Fe–S materials exist but all four verdict cells refuse on the 10–21 GPa melting gap, so Mars stays on `fe_prem` and both rows print unchanged. 177's resolution notice has still never fired on a real change |
 | **C60** | the solve asks a core material for a surface-pressure density | **built 2026-09-10 in two passes (C60 (a) · (b) · (c)); ⚠ the first pass's conclusion is retracted in (c)** | Found while 178 D was being built, and it is what actually blocks C55's verdict cells — ⚠ **and the first two descriptions of it, one per seat, were both right about different runs.** The audit measured a refusal at **18.9993 GPa**, a *boundary trial step* 0.7 MPa (0.0037 %) below the 19 GPa floor, in the body solve. This seat measured **0.0981 GPa** and traced it: it is a *trial central pressure* from `_shoot_pressure`'s bracket, reached through `integrate`'s `rho_c = mat_c.density(p_center, …)` on the radius-matching path — 23271 calls in that run, the next lowest at 59.0 GPa. **Neither pressure appears in any final profile.** So the shape is one thing seen twice: **a domain refusal raised during a trial is being read as a verdict about the body**, and the core material is only asked from the centre out to the CMB when the answer is actually computed. ⚠ **Removing the floor does not help** — with `p_min = 0` the same solve fails to converge at 9.808e7 Pa, since a 19 GPa-referenced BM2 has no root there. ⚠ **Mars's core-mantle boundary is 20.65 GPa, inside the fit**, so this is not physics telling us the material is wrong; it is the range the solver asks over. Two roads were listed — a low-pressure branch for liquid Fe–S (another fit, another paper), or a solver that asks a core material only at `P ≥ P_cmb` — and **C60 (a) takes a third**: a trial is not a verdict, so the boundary step is read against its own width and the shooting bracket's lower end is raised to the core material's floor. **No fit gains a range and no equation changes.** ⚠ **178 D's registered premise blamed the melting gap and was wrong** — the label on the material said melting, and the message was read as the mechanism |
+| **C61** | a step that was never tallied reads as a step that passed | **built 2026-09-10 (184 B) — the tally is part of the gate's own rc** | The third of the 169 E / C60 family: *"did not run" and "passed" were not distinguishable to the gate's own count.* gate229 printed **`[STEP]` 71 · `[TIME]` 19 · rc=0** with **52 steps never judged**, because the pool's spool directory was deleted mid-run and the children had nowhere to write their status. Hardened four ways: the spool is probed for existence **and writability** before each launch and a failure **demotes that step to serial** rather than skipping it; launches are counted in the parent's memory against completions read from the children's **exit-status files**, ⚠ *two independent sources, because a count taken twice from the same log cannot catch the log itself going missing*; `pool_incomplete` names every launched step and sets `fail=1`; and children exit quietly when the spool is gone so the real sentence is not buried. Proved by injection in an isolated harness, which is also where the `«$var»` brace defect and the attribution-losing `step_flush` guard were found |
+| **C62** | `tidal_response` does not exist, and the two bodies that need k₂ declare it fitted to our own output | **pre-registered 2026-09-10 before the build (C62 (a)); nothing built** | P28 moved into this file verbatim (parallel seat, sha256 `92b95059014d03db…`, 9211 B). A layered viscoelastic propagator (Beuthe 2015 eqs 13–18) with three rheologies (Bagheri+ 2022 §2.3–2.7) emitted as a **band**, k₂·h₂·Q. ⚠ **The engine has no shear modulus anywhere today**, so μ is a gap the node names rather than a quantity it fills — C58 (a)'s shape, one layer out. ⚠ **A liquid core is the membrane limit and says so** (Beuthe eq. 27); Saito 1974's general liquid-layer condition is paywalled and **not held**, and every output carries that label. Owner-pending: the liquid-layer treatment · μ declared per layer or printed per material · whether a body ever elects a rheology · whether this node's k₂/Q ever replaces the **declared** value C39 unified. **The standing default for the first build is emitter-only**, so C39's seam is kept and no shipped τ moves |
+| **C63** | the cold φ(P) slot has no law over our own pressure range | **closed 2026-09-10 as a named refusal — no code, no constant, no board changed** | The seven compaction papers held on 09-10 do not print a cold, unsintered φ(P) law over 1–764 MPa (P29, sha256 `8884e29ae2832870…`, 16563 B). Four saturate **at or below 1 MPa** — where our rock law begins; two are φ(P, T, t) rate laws needing a thermal history; one is shock. ⚠ **And five of the seven close a 100–170 km body's pores by ²⁶Al heating above ≈ 700 K**, while our three `voids_expected` indicators fire on mass, grain-fracture pressure and a declared tidal bool — *"tidal" appears 0 times in all seven*. So the indicator set is indexed on a different cause than the literature uses at this body scale. Dante's centre is **317 MPa**, above every cold law held and above the 150 MPa lab range of the law we ship. Owner-pending (a)–(e), none urgent |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -6496,6 +6499,184 @@ a harness whose green depends on nobody tidying is not a harness.)*
 
 ⚠ **The rule this bought, beyond the code**: gate scratch and spool directories are cleaned **only after
 `GATE END`**, and **never for a live pid** — by any seat.
+
+### C62 (a) 2026-09-10 — `tidal_response`, a layered viscoelastic Love-number node (k₂, h₂, Q as a rheology band) — pre-registered before the build
+
+⚠ **Committed before the code.** The text below is P28 (parallel seat, 2026-09-10 evening) moved into
+the ledger **verbatim**: `P28-tidal-response-prereg.md`, sha256 `92b95059014d03db…`, **9211 B** in the
+shared folder `~/Desktop/NearStars-artifacts/2026-09-09-c20-entropy-band/`, hashed here. Two things are
+added and nothing is removed — the **owner-pending labels** in §"Owner decisions" at the end, and this
+header. *The pre-registration is the parallel seat's; the labels are what a seat may write, and the
+elections are not.*
+
+⚠ **Nothing reads k₂ today**
+(P28's own "non-consumers, the useful half"), so the node is an emitter and no shipped verdict can move
+when it lands. That is why it may be registered while the owner is away — and also why nothing in it
+may be *elected* while the owner is away.
+
+⚠ **This section is committed before the change.** P24/P27 established that the minimal set closes *at the equation level* inside held papers —
+the propagator system (Beuthe 2015 eqs 13–18, the Takeuchi & Saito 1972 eq. 82 form), the rheologies (Bagheri+ 2022 §2.3–2.7), and four parameter
+tables — with one named limit: the liquid-layer (core/ocean) condition and the static-limit degeneracy (Saito 1974, paywalled, not held) exist in
+the held set only as Beuthe's membrane limit (eq. 27, k°_n + 1 = h°_n). **Nothing chosen here.** Sources carry bibcode, ADS link, grade.
+
+#### The blast radius, counted before the design
+
+| where | what exists today | what the node adds |
+|---|---|---|
+| `engine/interior*.py` (layer stack: radii, ρ(r), P(r), T(r) per material) | the structure the propagator integrates over | read-only consumer: ρ_r, g_r, μ, K (or ν) per layer |
+| `engine/eos.py` materials | ρ, K_T, K_S from the EoS; **no shear modulus μ anywhere** | ⚠ μ per layer must be **declared** (or taken from a printed source per material) — a gap, not a computation |
+| `engine/dynamo_rocky.py`, `core_state.py`, `mantle_flux.py` | unrelated (no k₂ reader today) | no change |
+| `engine/bodies/*.yaml` | no `tidal_response` block | new block: rheology choice, μ per layer, forcing frequency (orbital period), liquid-layer flag |
+| Phase-4 boards / SPEC | no k₂ row | out of scope (owner facet choice, as C53 (d)) |
+
+**Non-consumers, the useful half:** nothing reads k₂ today; the node is a pure emitter until a consumer (tidal heating, Q for orbital evolution)
+is wired — that wiring is not this item.
+
+#### Inputs (declared per body, or derived from the interior solve)
+
+```yaml
+tidal_response:
+  rheology: maxwell | andrade | sundberg_cooper       # emit all three as a band by default
+  forcing_period_s: ...                                # orbital (synchronous) or eccentricity tide period — declared
+  layers:                                              # from the interior solve; μ and rheology parameters declared per layer
+    - name: core   ; state: liquid ; mu_pa: 0     ; treatment: membrane_limit   # ⚠ labelled limit (Beuthe eq. 27), not Saito 1974
+    - name: mantle ; state: solid  ; mu_pa: ...   ; eta_pa_s: ... ; andrade_alpha: ... ; andrade_zeta: ...
+    - name: crust  ; ...
+  grade: declared | analog
+  source: [bibcodes]
+```
+
+Printed parameter sets the owner can point a declaration at (candidates, not chosen):
+
+| set | values | source (grade) |
+|---|---|---|
+| Henning 2009 Table 2 "Baseline Material Parameters" | M = M_B = 5 × 10¹⁰ Pa; δJ = 4 × 10⁻¹² Pa⁻¹; η_set = 10²² Pa s; η_B,set = 2 × 10²⁰ Pa s; E* = E*_B = 300 kJ mol⁻¹; T_sol 1600 K, T_liq 2000 K, T_brkdwn 1800 K; η = η_solid e^(−40χ) (eq. 21) | Henning, O'Connell & Sasselov 2009 [`2009ApJ...707.1000H`](https://ui.adsabs.harvard.edu/abs/2009ApJ...707.1000H) (held) — assumed baseline |
+| Beuthe 2015 Table 7 | μ_m 40 GPa, K_m 10²⁰ Pa (SatStress), μ_E 3.5 GPa, ν_E 0.33, η_top 10⁷ η_crit, η_bot 10/1/0.1 η_crit; η_crit Europa 1.71 × 10¹⁴ Pa s, Titan 7.67 × 10¹⁴ Pa s | Beuthe 2015 [`2015Icar..258..239B`](https://ui.adsabs.harvard.edu/abs/2015Icar..258..239B) (held) — assumed, icy shells |
+| Renaud & Henning 2018 | Andrade / Sundberg–Cooper complex compliances and parameter ranges (α, ζ) for Io-like silicates | [`2018ApJ...857...98R`](https://ui.adsabs.harvard.edu/abs/2018ApJ...857...98R) (held) — assumed/scanned |
+| Bagheri 2019 | Mars: five rheologies fitted to k₂, MoI, mean density; "Maxwell is only capable of fitting data for unrealistically low viscosities" | [`2019JGRE..124.2703B`](https://ui.adsabs.harvard.edu/abs/2019JGRE..124.2703B) (held) — result |
+| Bagheri 2022 §2 | Maxwell (§2.3), Burgers / extended Burgers (§2.4), **Andrade (§2.5, eq. 18: J(t) = J_U + β t^α + t/η)**, Sundberg–Cooper (§2.6), power law (§2.7); homogeneous-body quality function §4.4 eqs 58–59 | [`2022AdGeo..63..231B`](https://ui.adsabs.harvard.edu/abs/2022AdGeo..63..231B) (held) — formalism |
+
+#### The equations the build implements (all held; nothing from blogs or unsourced notes)
+
+- Propagator: **Beuthe 2015 eqs (13)–(18)** — y₁′ … y₆′ for degree n, frequency ω, with (ρ_r, g_r, μ, ν, χ) per layer; three regular solutions at the
+  centre; surface conditions on y₂, y₄ (no radial stress) and y₆ (potential gradient); Love numbers from the surface values (eq. 7 form: h = g y₁(R),
+  l = g y₃(R), k = y₅(R) − 1). Viscoelasticity enters by the correspondence principle: μ → μ̃(ω) = 1/J̃(ω).
+- Rheology: the complex compliance J̃(ω) of Bagheri 2022 §2.3 (Maxwell), §2.5 (Andrade), §2.6 (Sundberg–Cooper); Q from Im/Re of k̃₂ (Bagheri §4.3).
+- ⚠ **Liquid layer = membrane/fluid limit only** (Beuthe eq. 27, k°_n + 1 = h°_n; μ → 0 for the fluid layer). The general liquid-layer interface
+  condition and the ω → 0 degeneracy (Saito 1974) are **not in the held set** — every result carries the label «fluid core treated in the membrane
+  limit (Beuthe 2015 eq. 27); Saito 1974 not held».
+
+#### Outputs
+
+k₂, h₂ (and l₂), phase lag → Q, **as a band over the three rheologies** {Maxwell, Andrade, Sundberg–Cooper} at the declared forcing period, plus the
+per-rheology values. A body without declared μ or rheology parameters is **refused by name**; a body with a liquid layer emits with the membrane
+label.
+
+#### Reproduction anchors (printed; pass lines = the papers' own error bars)
+
+| # | anchor | printed value | source (grade) | pass line |
+|---|---|---|---|---|
+| T1 | Beuthe 2015 Titan/Europa membrane cases | "h₂ = 1.27 (Model L) or h₂ = 1.35 (Models M and D)" (App. C, eq. C.3 context); relation k°₂ + 1 = h°₂ for a fluid top layer | Beuthe 2015 (held, result) | reproduce h₂ to the printed 2 decimals for the stated model |
+| T2 | Henning 2009 baseline body | the Table 2 body under Maxwell/SAS/Burgers: reported heat rates and Q in Table 1/Fig. 4 (values figure-read) | Henning 2009 (held) | qualitative order-of-magnitude agreement per rheology (figure grade) |
+| T3 | Mars k₂ | **0.169 ± 0.006**, Q **95 ± 10** (Khan 2018 Table; Bagheri 2019); 0.1697 ± 0.0027 (Konopliv 2016 via Bagheri 2022); 0.174 ± 0.008 (Konopliv 2020 via Drilleau 2022); Phobos-based Q = 92 ± 11 (Bagheri 2022 §5) | held (result) | inside the quoted ± for the elected solution family (P20 §1) |
+| T4 | Moon k₂ | **0.02416 ± 0.00022** (GRAIL, Konopliv 2013/2014 via Bagheri 2022 §5.3); monthly Q = 38 (Williams & Boggs 2015 via Bagheri) | Bagheri 2022 (held, second-hand) | inside ± |
+| T5 | Earth | solid-Earth semi-diurnal **Q = 280 ± 70** (Ray et al. via Bagheri 2022); k₂ itself not printed in the held set (IERS value not held) | Bagheri 2022 (held, second-hand) | Q inside ±; k₂ anchor **absent until a printed source is held** |
+| T6 | Mercury / Venus | k₂ 0.451 ± 0.014 (Mazarico), 0.464 ± 0.023 (Verma & Margot 2016), 0.569 ± 0.025 (Genova+ 2019), h₂ 1.55 ± 0.65 (Bertone 2021), h₂ 1.02 ± 0.04 (prediction); Venus k₂ 0.295 ± 0.066 (Konopliv & Yoder 1996) | Bagheri 2022 §5 (held, second-hand) | inside ± where a model is declared |
+
+#### Expected results, registered before running
+
+1. With Henning's Table 2 baseline on a homogeneous silicate body, the three-rheology band on k₂ is narrow (elastic limit) and the band on Q spans
+   orders of magnitude at low temperature — the *direction* Henning 2009 and Renaud & Henning 2018 report; no number registered.
+2. Mars with the elected interior (P11/P12/P14 declarations) and a fluid core in the membrane limit: k₂ inside 0.163–0.182 only for some
+   (μ, η, rheology) declarations — the band is the result; Bagheri 2019's statement that Maxwell needs "unrealistically low viscosities" is expected
+   to reappear.
+3. Any body without a declared μ is refused by name; any body with a fluid layer carries the membrane label in every output.
+4. An outcome outside 1–3 is written down as its own kind afterwards and registered then.
+
+#### What this brief must not do
+
+1. ⚠ **No unsourced deceleration/despinning formulae** (no blog-derived constant-Q or CTL shortcuts; Bagheri 2022 §4.4–4.5 and Efroimsky 2012
+   CeMDA are the printed sources for anything frequency-dependent).
+2. ⚠ **The fluid core is the membrane limit and says so** — it must not be presented as Saito's general liquid-layer solution.
+3. ⚠ **It must not invent μ per material.** μ is declared per layer with a printed source, or the body is refused.
+4. ⚠ **It must not pick the rheology.** All three are emitted; the owner elects, if at all, as a facet.
+5. ⚠ **It must not couple to tidal heating or orbital evolution** — emitter only.
+
+**Size (estimate):** one propagator (six ODEs, three regular solutions, 3×3 surface solve), three complex-compliance functions, one body block,
+tests T1/T3/T4/T5 with printed ± and the membrane label asserted by name.
+
+#### Owner decisions this surfaces (none taken) — the labels this seat adds
+
+| # | decision | candidates recorded | label |
+|---|---|---|---|
+| (a) | **the liquid-layer condition**: is the membrane limit the shipped treatment, or does the node refuse a fluid layer until Saito 1974 is held | (i) emit in Beuthe 2015 eq. 27's membrane limit with the label on every output (P28's registered behaviour); (ii) refuse a body with a fluid layer by name until the general condition is held; (iii) hold the item until Saito 1974 (`1974RSPTA.275...41S`, paywalled, **not held**) is acquired | ⚠ **owner pending** |
+| (b) | **the shear modulus per layer**: declared per body with a printed source, or taken per material from a printed table | (i) declared per layer in `bodies/*.yaml`, no default, a body without it refused by name (P28's registered behaviour); (ii) a per-material printed μ in `eos.py` beside K_T, with the same verdict machinery C58 (a) built for γ; (iii) both — material printed value as the fallback, declaration wins, and the choice is printed | ⚠ **owner pending** |
+| (c) | **the rheology**: does a body ever elect one, or is the three-rheology band the only output | (i) band only, forever (P28's registered behaviour); (ii) an optional declared election, band still printed; (iii) a class default per body class | ⚠ **owner pending** — and P28 §"must not do" 4 forbids a seat from choosing |
+| (d) | whether k₂/Q from this node ever replaces the **declared** `k₂/Q` that C39 unified, and on which bodies | **(i) is the standing default for the first build — the node emits and does not replace a declaration, so C39's seam is kept** (directing seat, 2026-09-10); (ii) the node's band becomes a third source below a declaration; (iii) the node replaces the class band for bodies whose μ is declared | ⚠ **owner pending** — the default is what the build does meanwhile, not the election; reopening this seam moves shipped τ values |
+
+⚠ **(d) is the one that can move a shipped number**, and it is the reason this item stays an emitter in
+its first build: Dante declares `k₂/Q = 0.0155` (`Q/k₂ = 64.5`, **below** the class band's floor) and
+Hades `1e-3` (the band's top), and C40 already records that both are **fitted to our own output** with no
+width anywhere. A node that computes k₂ from structure would hand those two bodies a first independent
+number — which is exactly why the swap is an owner decision and not a wiring detail.
+
+⚠ **Not fabricated here, and not an owner decision either**: the engine has **no shear modulus anywhere
+today** (P28's blast-radius row for `eos.py`). Until (b) is decided, μ is a gap the node names, not a
+quantity it fills — the same shape as C58 (a)'s γ, where the material was asked and answered *"my thermal
+set is for another state"*. **A μ invented per material would be C40's fitted value with no seat.**
+
+### C63 2026-09-10 — the cold φ(P) slot stays empty, and that is the answer — **a named refusal, no code changed**
+
+⚠ **Nothing moved.** `engine/porosity.py` keeps every constant it had, `voids_expected` keeps its three
+indicators, and the Dante fixture keeps `φ₀ = 0.3890625` bit for bit. **The output of this stage is a
+refusal with a name**, and the name is: *the seven compaction papers held on 2026-09-10 do not print a
+cold, unsintered φ(P) law over our slot's range — 1 MPa to 764 MPa — so there is no basis in this set for
+moving `P_LAB_MAX` or the rock law.* Source: `P29-porosity-compaction-prereg.md` (parallel seat), sha256
+`8884e29ae2832870…`, **16563 B**, in `~/Desktop/NearStars-artifacts/2026-09-09-c20-entropy-band/`, hashed
+here. ⚠ *The relay quoted this file as `c999b544…`. The file on disk hashes to the value above, its mtime
+is 16:37, and the directing seat confirmed (2026-09-10) that `c999b544…` is the version **before** the
+parallel seat replaced its roster sentence this evening. The disk version is what this line is written
+against, and it is the one cited.*
+
+**Why it is a refusal and not a gap.** The seven do carry compaction laws, and each one is a law about a
+different thing:
+
+- **Four cover a pressure range that ends below our floor.** Weidling+ 2009, Güttler+ 2010, Henke+ 2012
+  eq. 15 and Kataoka+ 2013 are dust- and fluffy-aggregate laws that are already **saturated at 1 MPa** —
+  Henke 0.420 and Güttler 0.423 at 10⁶ Pa, flat above; Kataoka's form reaches ρ = ρ₀ at **0.47 MPa**. Our
+  rock law's floor *begins* where theirs end.
+- **Two are rate laws, not φ(P).** Gail+ 2015 and Henke+ 2016 close pore space by **temperature and
+  time** — hot pressing validated at 16.6–29.1 MPa and 1433–1624 K — so they need a thermal history and
+  return φ(P, T, t). ⚠ **That is a different quantity from the one the slot holds**, and substituting it
+  would be C58 (a)'s mismatch again: the right form asked at the wrong state.
+- **One is shock, not lithostatic.** Bland+ 2014 prints 16 iSALE runs at 0.75–3 km s⁻¹ and no φ(P) law at
+  all. Its one usable line is a **citation**, not a measurement: *"~1 MPa at the centre of a 100-km radius
+  asteroid"*.
+- **The law the code already uses is not in the seven.** Bierson+ 2019 is held as text only, its
+  b-coefficients are fitted over **30–80 MPa** (Yasui & Arakawa) and Durham+ 2005's 150 MPa is where
+  `P_LAB_MAX` comes from — and **Dante's centre is 317 MPa**, above every cold law in the held set and
+  above the lab range of the one we ship.
+
+⚠ **And five of the seven name the mechanism our three indicators do not have.** Henke 2012/2016, Gail
+2015 and Bland close the pore space of a 100–170 km body by **²⁶Al radiogenic heating above ≈ 700 K**, not
+by lithostatic pressure. Our `voids_expected` fires on mass, grain-fracture pressure and a declared tidal
+bool — *"tidal" appears 0 times in all seven papers*. So the indicator set is not merely coarse; **it is
+indexed on a different cause than the one the literature uses at this body scale.** That is a finding, and
+it is recorded as owner-pending candidate (d), not built.
+
+**Owner-pending, none taken** (P29's own table, relabelled): (a) a second cold rock law as an option or as
+documented contrast · (b) `P_LAB_MAX` one scalar or per-law (150 / 30–80 / 1 / 764 MPa) · (c) which φ₀
+family the rock inversion axis may land in (0.60 · 0.36–0.44 · 0.248 · free, today 0.389) · (d) ²⁶Al
+sintering as a fourth declared-bool indicator · (e) the Dante/Hades radius question, **already pending and
+unchanged**. ⚠ **None is urgent**, and (d) is a candidate only — no printed body-independent form for it
+exists in the held set.
+
+**What this refusal costs, stated plainly.** The inferred-porosity axis keeps running on one law whose
+fitted range covers **a quarter of Dante's pressure column** (34.0 % of that body's mass sits above the
+150 MPa cap). ⚠ *That is not a defect this stage may repair* — repairing it means electing a law, and
+every candidate in the held set is either saturated three decades too low or needs a thermal history the
+node does not receive. **Carry 2012 and Consolmagno+ 2008 stay unheld**, so indicator 1 stays
+second-hand. The next move belongs to the owner, or to a paper we do not have.
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
