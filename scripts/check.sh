@@ -25,6 +25,10 @@ step() {                      # step <이름> <명령...>
   local name=$1; shift
   local _t0=$SECONDS _c0 _tf _rss
   _c0=$(date "+%H:%M:%S")
+  # ⚠ **시작선을 먼저 찍는다** (183 D). `[TIME]` 은 단계가 **끝난 뒤** 나오므로, 실행 중인
+  #   단계는 로그에 없다 — 그래서 «가장 긴 단계가 가장 늦게 보인다». 32 분 중 «미상» 이
+  #   컸던 이유의 일부가 그것이고, 지켜보는 사람이 «지금 어디» 를 알 수 없었다.
+  echo "  [STEP] $name — $_c0 시작"
   _tf=$(mktemp "${TMPDIR:-/tmp}/gate-step.XXXXXX")
   /usr/bin/time -l bash -c '"$@" 2>&3' _ "$@" 2>"$_tf" \
     || { echo "  [FAIL] $name — 비0 종료 (이 단계가 fail=1 을 세웠다)"; fail=1; }

@@ -105,7 +105,7 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C55** | the engine has two irons and Mars's core is between them | **stages 1 and 2 built 2026-09-10; the multi-component core closes ~70 % of the density gap and the 19 GPa floor cuts the corners that would close the rest (C55 (f))** | Opened by C50 (b) row 5's owner-pending cell: Mars cannot declare a `core_material` because neither of our two irons covers it. The printed Martian core density is **5.7–6.65 g/cm³** (S 13–19 wt%), while `fe_prem` sits at 7.6–8.2 and `fe_eps` at 9.0–9.6 — ⚠ **the body is outside both, so declaring either would be asserting a density we know is wrong**, which is why the cell stayed empty rather than taking the default. The owner's decision is to **build a third material, Fe–S**. Source order for the equation of state, held first: Huang 2023 (AIMD) → Xu 2021 (liquid Fe–S mixing) → Morard 2018 → Nishida 2020 → Sanloup 2000; the melting bound stays Mori 2017 with its **declared 10–21 GPa gap**. No number is elected here and nothing is built **at listing time**. **The pre-registration is the section below** (drafted as P13, moved in 2026-09-10 with its anchors resolved). ⚠ **Since then, stage 1 is built**: Huang's printed mixing reproduces its own independent anchor to 0.07 % (178 B), a high-pressure-referenced BM2 gives it a `Phase` without moving any existing material (179), and the sulphur band's **two ends are registered** with the pressure anchor in their names (178 C). ⚠ **The four verdict cells all refuse**, on the 10–21 GPa Fe–S melting gap that predates this item, and **Mars is deliberately not wired** — declaring the material would replace the answers it has with a refusal. Unblocking needs a melting bound in that interval, which is a literature question, not a modelling choice. ⚠ Two owner cells stay open — the sulphur band, and binary Fe–S versus multi-component — and **both candidate EOS anchorings need supplementary tables we do not hold** (B24 Huang Table S5, B25 Xu Table S1). ⚠ **The verdict target does not wait for them**: Durán 2022's printed core radius 1820–1870 km and density 6–6.2 g cm⁻³ anchor the cell today, and **radius and density are two independent axes that each separate the two mantle families** — layer-free 1790–1870 km and 5.7–6.3 g cm⁻³ against layered 1630–1705 km and 6.5–6.75, with gaps of about 120 km and 0.2 g cm⁻³. ⚠ *An earlier version of this row said density could not discriminate; that was built on a density for Khan 2023 which the paper argues against rather than reports, and the retraction is in the section's third amendment* |
 | **C56** | `fe_prem` looks temperature-blind, and it is the reference that makes it so | **checked 2026-09-09 — not a defect; recorded so the next reader does not re-open it** | Observed: `fe_prem.density(p, T, 0.0)` returns the same number at 300 K and at 2100 K while `fe_eps` moves. ⚠ **Measured and explained rather than filed as a bug.** The two phases carry different reference kinds — `fe_eps` is `isotherm` at 300 K (laboratory ε-iron), `fe_prem` is **`adiabat` at 1600 K**, because PREM is a fit to *the hot real Earth* and its geotherm is already inside the effective ρ₀. So `Phase.delta_t` returns `t · (1 − t_ref/t_pot)`: it is **keyed on the declared potential temperature, not on T**, and it is exactly 0 whenever `t_pot` equals 1600 K — an identity, not a tolerance, and the stated reason Earth does not move. Measured at 136 GPa: `t_pot` 1600 gives ΔT 0.0 K at both 2100 K and 4000 K (ρ 9916.9370 either way), `t_pot` 2000 gives 420.0 / 800.0 K (ρ 9908.4176 / 9898.9401), `t_pot` 3040 gives 994.7 / 1894.7 K (ρ 9893.4281 / 9862.1307). ⚠ The call that raised the question passed `t_pot = 0.0`, which the same function reads as «no declared potential temperature» and returns 0 by design — heating a PREM fit from a 300 K baseline would heat Earth twice, which `eos.py` names as the trap it is avoiding. No brief; no change |
 | **C57** | the inversion branch is not on the node's path at all | **built 2026-09-10 (C57 (a) pre-registration + C57 (b) results): the inversion is on the node path and the silent `earth_like` fill is gone; prediction 1 stays untested for want of a body that inverts** | ⚠ **Corrected from the first reading.** 173 reported this as an adapter default — `state.get("composition_intent", "earth_like")` always handing `solve` a composition — but the audit's call-graph read is sharper: `_from_state → _solve_from_state → solve` contains **no call** to `infer_composition`, `infer_three_layer` or `_porous_rock_verdict` at all, and the only callers are `rocky_roster.py` and `test_interior.py`. **Removing the default would not route the node to the inversion; there is no route.** So the four `inferred_*` regimes are dead code on the chain's path, C45 (d)'s inversion-convention exception guards something the checker can never make the node produce, and no body file will ever change that (173 measured it: 0). The question — should a recipe be able to infer a composition — is left open, and this row exists so the next reader does not re-derive the answer from the adapter line |
-| **C58** | two of our own numbers for Mars's core-mantle boundary are 1700 K apart | **candidate, listed 2026-09-09** | C54 (b) declared Mars's core-side CMB temperature from the literature band **1900–2100 K** (Durán+ 2022, held). C20's thermal-history integrator ends the same body at **3763 K**. ⚠ **Both are ours and both are labelled**, and they disagree by roughly **1700 K** on one quantity of one body. The declaration is an observation-constrained band; the endpoint is the output of an integration whose Mars run has never been checked against Mars literature — but «the integrator is wrong» is a conclusion, not an observation, and it is not drawn here. Candidate only ⚠ **Three gammas coexist for one core, listed 2026-09-10 and not touched.** The paper's printed **2.74** is stored and read by nothing; the value **derived** from the stored constants — **1.17 to 2.04** across the eight stage-2 corners — is what drives `grad_ad` in the structure integrator; and `core_state`'s core adiabat (`engine/core_state.py@«핵 쪽 경계 온도에서 올린 단열선의 온도 [K]. T ∝ ρ^γ 다.»`) raises the temperature with a **third**, the module constant **γ = 1.5**, and a density ratio — it never asks the material, although every material implements the quantity. ⚠ **None of the three knows about the other two.** That is the same shape as the module `C_P`, in a second place, and it is C45 (f)'s shape as well. **Out of 183's scope; the code is not touched here.** ⚠ **And the two pictures of the same core disagree by a factor of 4.64**, independently of any material's thermal flags. **Anchored at the same boundary temperature** (the structure's own T_cmb, 1909.9501 K) at Mars's declared cmf: the structure integrator raises the centre by **50.98 K**, `core_state`'s adiabat by **236.75 K**. ⚠ *An earlier figure of "five times" here compared the structure's rise against a rise measured from the declared 2000 K — two anchors, so not a ratio.* ⚠ *Neither picture reaches Mars's output when an Fe–S core is used*, because the `melt_bracket` branch writes `t_top` straight through — so this is a disagreement the shipped numbers do not currently show. Audit file `audit/c58_thermal_mismatch_167ac9ee.txt`, sha256 `c76441233760ed6b…`, **3458 B**, hashed here; the two figures above are this seat's own reproduction. |
+| **C58** | two of our own numbers for Mars's core-mantle boundary are 1700 K apart | **redesigned and pre-registered 2026-09-10 as C58 (a): layer 1 asks the material, not the body; `K_CORE` moved to C49; build is 180 B** | C54 (b) declared Mars's core-side CMB temperature from the literature band **1900–2100 K** (Durán+ 2022, held). C20's thermal-history integrator ends the same body at **3763 K**. ⚠ **Both are ours and both are labelled**, and they disagree by roughly **1700 K** on one quantity of one body. The declaration is an observation-constrained band; the endpoint is the output of an integration whose Mars run has never been checked against Mars literature — but «the integrator is wrong» is a conclusion, not an observation, and it is not drawn here. Candidate only ⚠ **Three gammas coexist for one core, listed 2026-09-10 and not touched.** The paper's printed **2.74** is stored and read by nothing; the value **derived** from the stored constants — **1.17 to 2.04** across the eight stage-2 corners — is what drives `grad_ad` in the structure integrator; and `core_state`'s core adiabat (`engine/core_state.py@«핵 쪽 경계 온도에서 올린 단열선의 온도 [K]. T ∝ ρ^γ 다.»`) raises the temperature with a **third**, the module constant **γ = 1.5**, and a density ratio — it never asks the material, although every material implements the quantity. ⚠ **None of the three knows about the other two.** That is the same shape as the module `C_P`, in a second place, and it is C45 (f)'s shape as well. **Out of 183's scope; the code is not touched here.** ⚠ **And the two pictures of the same core disagree by a factor of 4.64**, independently of any material's thermal flags. **Anchored at the same boundary temperature** (the structure's own T_cmb, 1909.9501 K) at Mars's declared cmf: the structure integrator raises the centre by **50.98 K**, `core_state`'s adiabat by **236.75 K**. ⚠ *An earlier figure of "five times" here compared the structure's rise against a rise measured from the declared 2000 K — two anchors, so not a ratio.* ⚠ *Neither picture reaches Mars's output when an Fe–S core is used*, because the `melt_bracket` branch writes `t_top` straight through — so this is a disagreement the shipped numbers do not currently show. Audit file `audit/c58_thermal_mismatch_167ac9ee.txt`, sha256 `c76441233760ed6b…`, **3458 B**, hashed here; the two figures above are this seat's own reproduction. |
 | **C59** | Mars's core radius and moment of inertia miss the board by 8.9 % and 2.7 %, and no gate had ever checked | **listed 2026-09-10 as a recorded disagreement** | Found by the **targeted** lane, which is the part worth keeping: `check.sh` ran three answer bodies named by hand and `bodies/mars.yaml` was in neither that list nor `gate_targeted`'s copy of it, so Mars's shipped-value comparison went unrun from 2026-09-08 until the body rule ran it (169 E made the list a glob). ⚠ **A narrowing found a hole in the full lane.** The engine gives `core_radius_fraction` **0.4919** against the board's **0.5398** — a core radius of about **1667 km** against **1830 km** — and `nmoi` **0.3545** against **0.3644**, which is the same cause seen through a second quantity. ⚠ **Corrected 2026-09-10 (C59 (a)): the 1667 km is what Mars's *declared* `core_mass_fraction: 0.24` produces, not the preset's 0.325** — a declaration wins over a preset, and 0.325 would give 1842 km, inside the board's window. The board's 1830 km is the layer-free family's anchor (Stähler 2021) — the family the owner chose in 174. That the engine's value falls inside the *layered* family's window (Khan 2023, 1675 ± 30 km) is **read as coincidence**: we never elected that family. Neither the board value nor the tolerance was touched; the two rows print every run and are not counted (Brief 177). What closes this is **C55** (an Fe–S material, since our iron is too dense for Mars) and a declared Martian core mass fraction — not this row. ⚠ **178 C did not move it**: the Fe–S materials exist but all four verdict cells refuse on the 10–21 GPa melting gap, so Mars stays on `fe_prem` and both rows print unchanged. 177's resolution notice has still never fired on a real change |
 | **C60** | the solve asks a core material for a surface-pressure density | **built 2026-09-10 in two passes (C60 (a) · (b) · (c)); ⚠ the first pass's conclusion is retracted in (c)** | Found while 178 D was being built, and it is what actually blocks C55's verdict cells — ⚠ **and the first two descriptions of it, one per seat, were both right about different runs.** The audit measured a refusal at **18.9993 GPa**, a *boundary trial step* 0.7 MPa (0.0037 %) below the 19 GPa floor, in the body solve. This seat measured **0.0981 GPa** and traced it: it is a *trial central pressure* from `_shoot_pressure`'s bracket, reached through `integrate`'s `rho_c = mat_c.density(p_center, …)` on the radius-matching path — 23271 calls in that run, the next lowest at 59.0 GPa. **Neither pressure appears in any final profile.** So the shape is one thing seen twice: **a domain refusal raised during a trial is being read as a verdict about the body**, and the core material is only asked from the centre out to the CMB when the answer is actually computed. ⚠ **Removing the floor does not help** — with `p_min = 0` the same solve fails to converge at 9.808e7 Pa, since a 19 GPa-referenced BM2 has no root there. ⚠ **Mars's core-mantle boundary is 20.65 GPa, inside the fit**, so this is not physics telling us the material is wrong; it is the range the solver asks over. Two roads were listed — a low-pressure branch for liquid Fe–S (another fit, another paper), or a solver that asks a core material only at `P ≥ P_cmb` — and **C60 (a) takes a third**: a trial is not a verdict, so the boundary step is read against its own width and the shooting bracket's lower end is raised to the core material's floor. **No fit gains a range and no equation changes.** ⚠ **178 D's registered premise blamed the melting gap and was wrong** — the label on the material said melting, and the message was read as the mechanism |
 
@@ -6217,6 +6217,150 @@ not fire where the floor is zero — eleven materials — but the **two Fe–S b
 floor**, and their `k_t` at exactly 19.0 GPa changed from `PhaseGap` to a number: **100.1707 GPa** (13 wt%)
 and **72.6177** (19 wt%). **That is the intended repair, not a side effect**, and `fe_prem`'s ρ(136 GPa) is
 pinned unchanged in `test_fe_s`.
+
+### C58 (a) 2026-09-10 — layer 1 is not "constants → declarations" but "constants → what the material returns at (P, T)" — pre-registered before the build
+
+⚠ **Committed before the code.** Reviewed as a scratch draft first (`C58-prereg-draft.md`, sha256
+`1c2e474e872ee3b3…`, 11292 B, passed by the audit seat) and moved here **with every number unchanged**;
+the language is English because that is what this file is, and the `file:line` pointers of the draft are
+**phrase anchors** here because line-number citations are not reproducible. Sources: P17 v4.1
+(`4103e440…`, 19957 B), P25, P26, P27.
+
+#### What changes about the design
+
+C58's first plan (P17 v1–v3) lifted the constants baked into the thermal-history integrator into
+**per-body declarations**. ⚠ **That was wrong one level up** — those values belong to the **material**, and
+`eos.py` already holds the slot. **All twenty-one materials implement `c_p` and `grad_ad`.**
+
+⚠ **Which tables actually print those quantities has to be said narrowly**: **Chabrier, Mazevet &
+Soubiran 2019** is held and `hhe_table.py` bakes it with s, c_p and ∇_ad. **The AQUA table is not held**,
+and **the Militzer-family papers are behind a paywall and not held** — the code cites those names as the
+*source of a curve*, which is not the same as holding a table.
+
+**Layer 1 = a consumer hands the material a (P, T) and gets `c_p`, `∇_ad`, `α` back.** What stays a
+declaration is only what a material cannot give: initial temperatures, the surface temperature, the
+viscosity law, a `Ra_c` override.
+
+#### 1. Does the material already return it — all twenty-one, measured
+
+| material | c_p [J/kg/K] | ∇_ad | at (P, T) | state |
+|---|---|---|---|---|
+| `fe_prem` | 448.1 | **0.0245** | 19 GPa · 2100 K | ✅ ⚠ **solid hcp parameters** — §3 |
+| `fe_eps` | 453.2 | 0.0500 | 19 GPa · 2100 K | ✅ ⚠ **and that is correct**: `fit_state = solid`, t_ref 300 K |
+| `silicate` · `silicate_chondritic` | 1372 | 0.1239 | 19 GPa · 2100 K | ✅ |
+| `h_he` | 10519 | 0.2756 | 19 GPa · 2100 K | ✅ (the baked Chabrier+ 2019 table) |
+| `h2o_hot` | 5615.4296 | 0.1119 | 19 GPa · 2100 K | ✅ |
+| `h2o_liquid_dense` | 3571.1368 | 0.1679 | 19 GPa · 2100 K | ✅ |
+| `nh3` | 5271.5831 | 0.1230 | 19 GPa · 2100 K | ✅ |
+| `antigorite` · `h2o` · `h2o_liquid` | refuse | refuse | 19 GPa · 2100 K — **outside their domain** | ⚠ the draft's first pass wrote ✅ here: **a table without its conditions cannot be checked, and so it was wrong** |
+| the eight box corners | 578.9–641.8 | 0.3096–0.3866 | anchor 19 GPa · 2100 K | ✅ (183 put α and γ in) |
+| the same eight | 561.2–619.5 | 0.3101–0.3615 | Mars's CMB, 20.65 GPa | ✅ |
+| **`fe_s_13wt_19gpa` · `fe_s_19wt_19gpa`** | **0.0** | **0.0** | **all 30 in-domain cells** | ❌ below |
+
+⚠ **The two binaries do not "fail to return" — they are never asked, and they return 0.** Call `c_p` or
+`grad_ad` and a number comes back: **0.0**, at every one of the 30 in-domain cells. It is not a refusal and
+not an absence — **a zero is delivered to the consumer.** `has_thermal = False` carries that fact and
+**no consumer asks it.** ⚠ *That is C45 (f)'s shape*: a value the contract calls required, filled by a
+number the code chose, counted by nothing. **So the registered line is not "fill it" — it is "do not
+deliver a zero silently."**
+
+⚠ The only printed `c_p` in this family is P26's l-FeS end member, **711 J kg⁻¹ K⁻¹** (the same number as
+Xu's 62.5 J K⁻¹ mol⁻¹ converted), and **its composition is different** — filling from it or refusing by
+name is a decision line, not a detail.
+
+#### 2. The consumers — every place a constant stands in
+
+| site | constant | can the material give it? |
+|---|---|---|
+| `engine/core_energy.py@«C_P = 840.0»` | core heat capacity (Nimmo+ 2004 Table 1) | ✅ `Material.c_p` — ⚠ **1.88× apart**, §3 |
+| `engine/core_energy.py@«ALPHA_C = 1.35e-5»` | core thermal expansion | ✅ from `Phase.alpha_k / k_t` |
+| `engine/core_energy.py@«L_H = 750.0e3»` | latent heat of inner-core freezing | ❌ no printed per-material value → stays a declaration |
+| `engine/core_state.py@«GAMMA_CORE = 1.5 는 h.c.p. **고체** 의»` | the core adiabat's γ | ✅ derivable from `Phase` constants — and the comment itself says it is the **solid** value |
+| `engine/cmb_flux.py@«GAMMA = 1.5»` | **a second copy** of that value | ✅ same |
+| `engine/core_energy.py@«GAMMA = cs.GAMMA_CORE»` | a third reference | — |
+| `engine/core_state.py@«GAMMA_LIQUID_RANGE = (1.51, 1.52)»` | the **liquid** γ band | ✅ — ⚠ a different value from the 1.5 above, and which one a consumer reads varies |
+| `engine/core_state.py@«GAMMA_SPAN = (min(GAMMA_CORE, GAMMA_LIQUID_RANGE[0]), GAMMA_LIQUID_RANGE[1])»` | **mixes those two into one span** | ⚠ one solid value and one liquid band inside a single interval |
+| `engine/cmb_flux.py@«K_CORE = 50.0»` | core thermal conductivity | ⚠ **outside C58 — moved to C49** (owner, 2026-09-10) |
+| `engine/core_entropy.py@«K_RANGE = cf.K_CORE_RANGE»` · `engine/core_history.py@«K_CORNERS = cf.K_CORE_RANGE»` | two copies of that band | ⚠ **moved to C49**, which takes this consumer list |
+| `engine/mantle_flux.py@«C_PM = 1200.0»` | **mantle** heat capacity (eq. 32) | ✅ `silicate.c_p` |
+| `engine/mantle_budget.py@«C_P_J_KG_K = 1250.0»` | **a second number** for that quantity | ✅ same |
+| `silicate.c_p(19 GPa, 2100 K)` = **1372** | **a third number** for it | — |
+| `engine/mantle_flux.py@«RHO_M = 4800.0»` vs `engine/stagnant_lid.py@«RHO_MANTLE_KG_M3 = 4000.0»` | two mantle densities | ⚠ recorded in one line |
+| the structure integrator (`_adiabatic_dtdp`) | **uses the material's own** | ✅ already the right place |
+
+⚠ **There are four γ, not three, and none of the four knows about the other three**: the printed **2.74**
+is stored and **read by nothing**; the value **derived** from the stored constants, **1.17–2.04** across the
+eight corners, drives `grad_ad`; the module constant **1.5** is what `core_state` uses, and its own comment
+says that is the h.c.p. **solid**; and the **liquid** band **1.51–1.52** sits beside it, with `GAMMA_SPAN`
+folding the third and fourth into one interval. **The resolution criterion: for one core, the consumers
+read one γ.** Which value is chosen is the owner's; what this brief closes is that four coexist.
+
+⚠ **And the same shape is in the mantle** — three numbers for one heat capacity (1200, 1250, the material's
+1372) and two for the density (4800, 4000). **Repairing only the core leaves the identical defect one layer
+across.**
+
+#### 3. `fe_prem`'s thermal parameters are a solid's
+
+`Material.c_p` already implements c_p = c_v(1 + αγT) correctly, but `fe_prem` carries `alpha_k`
+**1.21 MPa/K** (Isaak & Anderson 2003, **hcp solid**) and `c_v_ref` **446.6** (Dulong–Petit). At
+19 GPa / 2100 K that gives **αγT = 0.00341**, where Huang's **liquid** printed values give **0.4022**
+(P25, reproduced here).
+
+⚠ So the answer to "840 versus 447.5" is narrower than "different quantities" — **neither is liquid iron's
+c_p.** 840 is a constant Nimmo *assumed* in order to reproduce Gubbins 2003's adiabat (P25 quotes §3.3
+verbatim); 447.5 is a **solid lattice** c_v. Huang prints liquid C_V 494/496, which converts to
+c_p ≈ 693/664 (our arithmetic).
+
+**Layer 1 replaces `fe_prem`'s thermal parameters with liquid printed values.** ⚠ **`fe_eps` is not
+touched** — it is `fit_state = solid`, t_ref 300 K, Seager's Fe(ε), and P27 likewise assigns Dorogokupets's
+hcp thermal set; making it liquid would put it wrong **in the other direction**.
+
+⚠ **This moves answers.** Earth's and Mars's core temperatures and the verdicts hanging off them change, so
+**naming every value that moves is this brief's output.** If they move quietly, the brief has failed.
+
+#### 4. The decision lines
+
+- **ⓐ One core, one γ — and γ is a function, not a number.** For Mars and Earth, `core_state` (**all three
+  of `GAMMA_CORE`, `GAMMA_LIQUID_RANGE` and `GAMMA_SPAN`**), `core_energy`, `cmb_flux` and the structure
+  integrator all read **the material's γ(P, T)**. Today four constants coexist instead.
+- **ⓐ′ The adopted thermal set reproduces Huang's two points inside their printed uncertainty.**
+  **C_V 494 ± 16** J kg⁻¹ K⁻¹ at 19 GPa/2100 K and **496 ± 24** at 35 GPa/2400 K, from Dorogokupets+ 2017's
+  liquid set. ⚠ **The residual is reported as a number either way** — reproducing it adopts the set,
+  missing it names the miss and does not adopt.
+- **ⓑ The centre-minus-boundary temperature is the same at every consumer.** Today, anchored at one
+  boundary temperature (1909.9501 K, Mars at cmf 0.24), the structure integrator gives **50.98 K** and
+  `core_state` **236.75 K** — **4.64×**.
+- **ⓒ A label check, and the owner chose how.** The source phase of a thermal parameter lives only in
+  `Phase.ref`, which is prose, so "source phase ≠ `fit_state`" cannot be judged by code. ⚠ **The decision
+  is (a): this brief adds `Phase.thermal_source_state`** (`'liquid' | 'solid' | 'table'`, **no default —
+  an undeclared value fails the check**) and the check compares it with `fit_state`. **A check where a
+  person reads the `ref` is not accepted**, for the same reason as "do not deliver a zero silently": *a
+  source phase must not sit quietly in prose either.* Today `fe_prem` is exactly that case —
+  `fit_state = liquid`, t_ref 1600 K, thermal parameters from Isaak & Anderson's **hcp solid**.
+- **ⓓ Every value that moves is reported by name**, in a table of which of the seven bodies moved and by
+  how much. **Bit-identity is not claimed** — this brief changes answers. Comparison baselines, hashed at
+  citing time by this seat: `audit/eos_thermal_05da70ad.json` (`1cf7dbed15230301…`, 288194 B),
+  `audit/c58_thermal_table_05da70ad.txt` (`0b7fe36525aa9c69…`, 1974 B),
+  `audit/c58_thermal_mismatch_167ac9ee.txt` (`c76441233760ed6b…`, 3458 B), and the thermal-node fingerprint
+  the audit seat re-takes after the gate.
+- **ⓔ Only what a material cannot give stays a declaration**: `L_H`, initial temperatures, T_s, the
+  viscosity law, `Ra_c`. If that list shrinks, the reason is written down.
+
+#### 5. The owner's decisions, and the one thing they dissolve
+
+- **The source for liquid `fe_prem`'s c_p, α and γ is Dorogokupets+ 2017's Table 1 liquid thermal set**
+  (their eqs 6–17, held in P27's text layer). **Huang 2023's Table 1 is the check line, not the source**:
+  its two points — **C_V 494 ± 16** at 19 GPa/2100 K and **496 ± 24** at 35 GPa/2400 K — must be reproduced
+  **inside the printed uncertainty** for the set to be adopted. ⚠ *If they are not reproduced, the set is
+  **not** adopted and the miss is reported by name* — the check is not decoration.
+- ⚠ **"Printed γ versus derived γ" is not a conflict, and the owner's decision dissolves it: γ is one
+  function.** It is computed from the paper's γ₀ and its printed rate of change as a function of (P, T),
+  so there is nothing to elect. **What remains is that four sites must read that one function** —
+  `core_state`'s three (`GAMMA_CORE`, `GAMMA_LIQUID_RANGE`, `GAMMA_SPAN`) plus `core_energy`, `cmb_flux`
+  and the structure integrator. *That is decision line ⓐ, and it is now a statement about wiring rather
+  than about which number is true.*
+- ~~Whether `K_CORE` closes here~~ → **closed: moved to C49** (owner, 2026-09-10), and its three consumer
+  sites go with it.
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
