@@ -13,6 +13,51 @@ fail=0
 #   그 수로는 아무 것도 못 지킨다. 이 커밋은 그 목록을 74 항목·같은 순서로 유지한다.
 exec 3>&2                     # step() 이 자식의 stderr 를 여기로 빼낸다 (아래 주석)
 
+# ── 병렬 풀 (브리프 184) ──────────────────────────────────────────────────────────────────
+# 첫 계측(gate226): 71 단계 합 **2681 s = 45 분**, 최대 RSS **57 MB**. 시간은 직렬 합이 원인이고
+# 메모리는 문제가 아니다 — 그래서 단계를 동시에 돌린다. 논리 코어 15 에 대해 기본 8 을 쓴다.
+#
+# ⚠ **호출부를 하나도 안 고친다.** 풀에 들어갈 자격은 `step()` 이 **이름으로** 판정한다 —
+#   `test_…` 와 `run.py …` 만 들어가고 나머지는 직렬로 남는다. 그러면 격리 검사·베이스 결정·
+#   12b 계약/인용 블록·집계가 저절로 순서를 지킨다. 자격을 call-site 에 적으면 571 줄에 흩어진
+#   `step` 마다 사람이 판단해야 하고, 그 판단이 한 번 틀리면 순서 의존이 조용히 깨진다.
+#
+# ⚠ **배경 서브셸의 `fail=1` 은 부모로 오지 않는다.** 그래서 자식은 **종료 코드를 파일로** 남기고,
+#   `step_flush` 가 그것을 읽어 부모의 `fail` 을 센다. 이 경로가 실제로 무는지는 격리 하네스에서
+#   실패를 주입해 증명했다 (커밋 메시지).
+#
+# ⚠ **`__pycache__` 경합을 먼저 막는다.** 게이트는 `PYTHONDONTWRITEBYTECODE` 를 켜지 않으므로,
+#   같은 디렉토리에서 파이썬 여럿이 바이트코드를 동시에 쓰면 경합한다. 풀 단계에만 켠다.
+#
+# bash 3.2 라 `wait -n` 이 없다 — `jobs -rp` 폴링으로 자리를 기다린다.
+GATE_POOL="${GATE_POOL:-8}"
+_pool_dir=""
+_pool_seq=0
+
+_pool_eligible() {            # _pool_eligible <이름>
+  case "$1" in
+    test_*|run.py*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+_pool_drain() {               # 끝난 단계의 로그를 **완료 순서**로 붙이고 rc 를 센다
+  local d f n
+  [ -n "$_pool_dir" ] || return 0
+  for f in $(ls -1tr "$_pool_dir"/*.done 2>/dev/null); do
+    n="${f%.done}"
+    cat "$n.log" 2>/dev/null
+    if [ "$(cat "$n.rc" 2>/dev/null || echo 1)" != "0" ]; then fail=1; fi
+    rm -f "$f" "$n.log" "$n.rc"
+  done
+}
+
+step_flush() {                # 배리어 — 풀을 비우고 로그를 정리한다
+  [ -n "$_pool_dir" ] || return 0
+  wait
+  _pool_drain
+}
+
 step() {                      # step <이름> <명령...>
   # ⚠ **벽시계를 상시로 찍는다** (브리프 183 C). 게이트가 32 분인데 그중 어느 단계가 얼마인지
   #   말할 수 없었다 — 로그에 시간이 하나도 없어서 «미상 24 분» 이 어디 있는지 셀 수가 없다.
@@ -23,6 +68,29 @@ step() {                      # step <이름> <명령...>
   #   나가므로, 자식의 stderr 는 fd 3(진짜 stderr)으로 따로 빼서 진단 출력을 잃지 않는다 —
   #   그 둘을 한 파일에 섞으면 실패한 단계의 오류 문장이 통계 스무 줄에 묻힌다.
   local name=$1; shift
+  if [ -n "$_pool_dir" ] && _pool_eligible "$name"; then
+    while [ "$(jobs -rp | wc -l)" -ge "$GATE_POOL" ]; do sleep 0.2; _pool_drain; done
+    _pool_seq=$((_pool_seq + 1))
+    local _base
+    _base=$(printf "%s/%04d" "$_pool_dir" "$_pool_seq")
+    echo "  [STEP] $name — $(date "+%H:%M:%S") 시작 (풀)"
+    (
+      _s0=$SECONDS; _k0=$(date "+%H:%M:%S")
+      _st=$(mktemp "${TMPDIR:-/tmp}/gate-step.XXXXXX")
+      PYTHONDONTWRITEBYTECODE=1 /usr/bin/time -l bash -c '"$@" 2>&1' _ "$@" \
+        >"$_base.out" 2>"$_st"
+      _rc=$?
+      {
+        cat "$_base.out"
+        [ "$_rc" = "0" ] || echo "  [FAIL] $name — 비0 종료 (이 단계가 fail=1 을 세웠다)"
+        echo "  [TIME] $name — $_k0 → $(date "+%H:%M:%S") · $((SECONDS - _s0)) s · RSS $(awk '/maximum resident set size/ {printf "%.0f", $1/1048576}' "$_st") MB"
+      } > "$_base.log"
+      rm -f "$_st" "$_base.out"
+      echo "$_rc" > "$_base.rc"
+      : > "$_base.done"
+    ) &
+    return 0
+  fi
   local _t0=$SECONDS _c0 _tf _rss
   _c0=$(date "+%H:%M:%S")
   # ⚠ **시작선을 먼저 찍는다** (183 D). `[TIME]` 은 단계가 **끝난 뒤** 나오므로, 실행 중인
@@ -231,6 +299,13 @@ else
 fi
 script_field=" script=${self_hash%"${self_hash#???????}"} matches_tree=$matches_tree"
 echo "GATE START sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field$script_field"
+# ── 풀을 연다 (브리프 184). `GATE_POOL=1` 이면 예전과 같은 완전 직렬이다 (되돌릴 손잡이). ──
+if [ "$GATE_POOL" -gt 1 ] 2>/dev/null; then
+  _pool_dir=$(mktemp -d "${TMPDIR:-/tmp}/gate-pool.XXXXXX")
+  trap 'rm -rf "$_pool_dir"' EXIT
+fi
+# ⚠ **어느 단계가 풀이었는지 로그에서 셀 수 있어야 한다** — 규칙을 여기 한 줄로 찍는다.
+echo "GATE POOL size=${GATE_POOL} rule=\"이름이 test_* 또는 run.py* 인 단계만 풀, 나머지는 직렬\" dir=${_pool_dir:-none}"
 
 echo "── 1. 스키마 검증 (db/systems/*.json + curated) ──"
 step "scripts/pipeline/validate.py" bash -c 'python3 scripts/pipeline/validate.py'
@@ -548,6 +623,8 @@ step "test_dynamo_rocky.py" bash -c 'cd engine && python3 test_dynamo_rocky.py'
 step "dynamo_table" python3 engine/dynamo_table.py --check
 
 fi   # lane
+
+step_flush                    # ⚠ **집계 앞의 배리어** — 이 줄이 없으면 아직 도는 단계의 실패가 rc 에 안 든다
 
 echo ""
 if [ $fail -eq 0 ]; then

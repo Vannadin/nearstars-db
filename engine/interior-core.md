@@ -6323,10 +6323,29 @@ hcp thermal set; making it liquid would put it wrong **in the other direction**.
 - **ⓐ One core, one γ — and γ is a function, not a number.** For Mars and Earth, `core_state` (**all three
   of `GAMMA_CORE`, `GAMMA_LIQUID_RANGE` and `GAMMA_SPAN`**), `core_energy`, `cmb_flux` and the structure
   integrator all read **the material's γ(P, T)**. Today four constants coexist instead.
-- **ⓐ′ The adopted thermal set reproduces Huang's two points inside their printed uncertainty.**
-  **C_V 494 ± 16** J kg⁻¹ K⁻¹ at 19 GPa/2100 K and **496 ± 24** at 35 GPa/2400 K, from Dorogokupets+ 2017's
-  liquid set. ⚠ **The residual is reported as a number either way** — reproducing it adopts the set,
-  missing it names the miss and does not adopt.
+- **ⓐ′ The adopted set is checked on three quantities, not one.** ⚠ *Checking only C_V would let the very
+  quantity that drives the adiabat through unchecked* — and it already disagrees: **Dorogokupets+ 2017's
+  liquid γ₀ is 2.033** where **Huang prints γ = 2.74**, **35 % apart**. So the check line is:
+
+  | quantity | condition — **mandatory column** | Huang's printed target | what the candidate set must be evaluated to give |
+  |---|---|---|---|
+  | C_V | 19 GPa · 2100 K | **494 ± 16** J kg⁻¹ K⁻¹ | Dorogokupets+ 2017 **Table 1 liquid set**, eqs 6–17, at that (P, T) |
+  | C_V | 35 GPa · 2400 K | **496 ± 24** | same |
+  | α | 19 GPa · 2100 K | **6.99 × 10⁻⁵ K⁻¹** — ⚠ *no uncertainty printed → report the reproduction error only* | ⚠ **not** the set's 1 bar recommended **92 × 10⁻⁶** — eqs 6–17 **raised to 19 GPa** |
+  | α | 35 GPa · 2400 K | **5.31 × 10⁻⁵** — same | same, raised to 35 GPa |
+  | γ | 19 GPa · 2100 K | **2.74** — ⚠ *no uncertainty printed → report the error only* | the **Table 1 fit set** γ₀ **2.033** with β **1.168** and γ_∞ **0**, evaluated at that (P, T) |
+  | γ | 35 GPa · 2400 K | **2.66** — same | same |
+
+  ⚠ **The candidate set prints γ₀ twice and only one of them is ours.** Table 1's fit parameter is
+  **2.033**, and the 1 bar *recommended* value is **1.735**; we take **the Table 1 fit set**, because it
+  comes as one piece with the equations that use it — **the 1 bar value is a cross-reference column, never
+  an input.** ⚠ *The same trap sits on α*: putting the set's 1 bar 92 × 10⁻⁶ beside Huang's 19 GPa
+  6.99 × 10⁻⁵ would compare two different conditions, which is why the condition column is mandatory.
+  Transcription source: P27 (`f4b9809a7976ae35…`, 14910 B, hashed here).
+
+  ⚠ **Miss any one of the three and the set is not adopted** — the miss is named, and the result goes to
+  the owner as *"the two sources disagree on γ."* **Adopting it anyway is forbidden**, because that would
+  be electing a number under cover of a check that passed on a different quantity.
 - **ⓑ The centre-minus-boundary temperature is the same at every consumer.** Today, anchored at one
   boundary temperature (1909.9501 K, Mars at cmf 0.24), the structure integrator gives **50.98 K** and
   `core_state` **236.75 K** — **4.64×**.
@@ -6338,11 +6357,19 @@ hcp thermal set; making it liquid would put it wrong **in the other direction**.
   source phase must not sit quietly in prose either.* Today `fe_prem` is exactly that case —
   `fit_state = liquid`, t_ref 1600 K, thermal parameters from Isaak & Anderson's **hcp solid**.
 - **ⓓ Every value that moves is reported by name**, in a table of which of the seven bodies moved and by
-  how much. **Bit-identity is not claimed** — this brief changes answers. Comparison baselines, hashed at
-  citing time by this seat: `audit/eos_thermal_05da70ad.json` (`1cf7dbed15230301…`, 288194 B),
-  `audit/c58_thermal_table_05da70ad.txt` (`0b7fe36525aa9c69…`, 1974 B),
-  `audit/c58_thermal_mismatch_167ac9ee.txt` (`c76441233760ed6b…`, 3458 B), and the thermal-node fingerprint
-  the audit seat re-takes after the gate.
+  how much. **Bit-identity is not claimed** — this brief changes answers. **The four comparison baselines,
+  each hashed at citing time by this seat:**
+
+  | file | sha256[:16] | bytes |
+  |---|---|---|
+  | `audit/eos_thermal_05da70ad.json` | `1cf7dbed15230301` | 288194 |
+  | `audit/c58_thermal_table_05da70ad.txt` | `0b7fe36525aa9c69` | 1974 |
+  | `audit/c58_thermal_mismatch_167ac9ee.txt` | `c76441233760ed6b` | 3458 |
+  | `audit/thermal_5e7f6993.json` | `e07977cfd77fd8ed` | 13823 |
+
+  ⚠ **`thermal_<sha>.json` is compared with its `seconds` field excluded** — wall-clock timings differ
+  between runs of identical physics, and comparing them would turn every re-run into a false difference.
+  *(The thermal node's output has not moved since `3a4f6b37`, so that baseline is a resting state.)*
 - **ⓔ Only what a material cannot give stays a declaration**: `L_H`, initial temperatures, T_s, the
   viscosity law, `Ra_c`. If that list shrinks, the reason is written down.
 
