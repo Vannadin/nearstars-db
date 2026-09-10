@@ -3471,7 +3471,61 @@ def _from_state(state):
         notes=res.notes + tuple(v["notes"]))
 
 
+#: 역산이 걸을 수 있는 클래스. 얼음·금속·규산염의 배합으로 반지름을 맞추는 축이므로
+#: 기체 외피가 지배하는 천체에는 뜻이 없다 — 그 천체들은 조성을 **선언**해야 한다.
+INFERABLE_CLASSES = ("rocky", "moon", None)
+
+
+def _infer_from_state(state):
+    """조성이 하나도 선언되지 않았다 — **채우지 말고 역산하거나 이름 대고 거절한다** (C57, 182 B).
+
+    ⚠ 여기 있던 것은 `state.get("composition_intent", "earth_like")` 라는 **호출부 리터럴**
+    이었다. 계약(`interior-structure-methodology.md`)은 `composition` 을 `Needs` 에 적어 필수라
+    하는데 호출부가 조용히 채웠고, 그래서 아무도 선언하지 않은 핵질량비 0.325 가 증거에 이름을
+    달고 앉았다 (`dante_fixture`, 반지름 455.7 km) — 그리고 조성을 안 적은 **가스자이언트**가
+    암석 경로로 내려가 «`fe_prem` 의 12000 GPa 천장» 을 이름 대며 거절했다. 그 거절은 철에
+    대한 문장이고 사실은 선언이 없다는 문장이다 (C37 의 모양).
+
+    ⚠ **선언이 하나라도 있으면 이 함수는 안 불린다** — 선언한 바디의 답은 비트까지 그대로다."""
+    mass = state["mass_earth"]
+    radius = state.get("radius_earth")
+    body_class = state.get("body_class")
+    inputs = {"mass_earth": mass, "radius_earth": radius, "body_class": body_class,
+              "composition": None, "core_mass_fraction": None,
+              "ice_mass_fraction": state.get("ice_mass_fraction"),
+              "tidal_heating": bool(state.get("tidal_heating", False))}
+    if body_class not in INFERABLE_CLASSES:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"조성이 선언되지 않았다 — `composition_intent` 도 `core_mass_fraction` 도 없다. "
+            f"예전에는 이 자리가 조용히 `earth_like`(핵질량비 0.325)로 채워졌고, 그래서 이 "
+            f"천체는 자기 조성이 아니라 지구의 조성으로 풀렸다. 역산으로 대신할 수도 없다: "
+            f"이 레시피의 역산은 금속·규산염·얼음의 배합으로 반지름을 맞추는 것이라 "
+            f"'{body_class}' 에는 뜻이 없다. **선언이 필요하다.**",
+            inputs=inputs, refs=REFS)
+    if not radius or radius <= 0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            "조성이 선언되지 않았고 역산할 반지름도 없다 — `composition_intent`·"
+            "`core_mass_fraction`·`radius_earth` 중 하나는 있어야 한다. 예전에는 이 자리가 "
+            "조용히 `earth_like` 로 채워졌다.",
+            inputs=inputs, refs=REFS)
+    # 얼음 축을 열지 말지는 **선언**이다. `ice_mass_fraction: 0.0` 은 «얼음 없음» 이라는
+    # 선언이지 «모른다» 가 아니다 — 그 구분이 없으면 규산염 화산체에 얼음을 붙인다.
+    imf = state.get("ice_mass_fraction")
+    return infer_composition(mass, radius, ice_allowed=(imf is None or imf > 0.0),
+                             tidal_heating=bool(state.get("tidal_heating", False)))
+
+
 def _solve_from_state(state):
+    # ⚠ **이미 자기 물리를 이름 대는 거절이 있으면 그것이 이긴다** (182 B, 첫 판에서 잡힌 회귀).
+    #   갈색왜성은 `solve` 이 «중수소가 탄다 …» 로 거절한다 — 조성 미선언보다 그쪽이 더 좁고
+    #   더 물리적인 문장이라, 조성 갈래를 앞에 두면 좋은 거절을 일반적인 거절로 덮는다.
+    #   루만 16 둘이 첫 실행에서 실제로 그렇게 나빠졌다.
+    if (state.get("body_class") not in FLUID_CLASSES
+            and state.get("composition_intent") is None
+            and state.get("core_mass_fraction") is None):
+        return _infer_from_state(state)
     return solve(
         mass_earth=state["mass_earth"],
         core_mass_fraction=state.get("core_mass_fraction"),
@@ -3479,6 +3533,9 @@ def _solve_from_state(state):
         gas_mass_fraction=state.get("gas_mass_fraction"),
         # Z 는 **선언** 이다. 강착과 진화가 정하는 값이고 이 레시피에 그 둘이 없다.
         envelope_z=state.get("envelope_z", 0.0),
+        # ⚠ 여기 오는 것은 **선언이 있는 바디뿐**이다 (위 갈래). 핵질량비만 선언한 바디는
+        # 재료를 고를 이름이 필요하고, 그 자리의 `earth_like` 는 «지구식 철» 이라는 뜻이지
+        # 핵질량비 0.325 가 아니다 — 선언된 분율이 프리셋을 이긴다.
         composition=state.get("composition_intent", "earth_like"),
         radius_earth=state.get("radius_earth"),
         differentiated=state.get("differentiated", True),

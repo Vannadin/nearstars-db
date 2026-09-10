@@ -342,8 +342,12 @@ def main() -> int:
     #: ⚠ **수가 아니라 집합으로 박는다** — «고유 9» 는 하나가 빠지고 하나가 들어와도 통과한다.
     EXEMPT = {"body_class": {"gas_mass_fraction", "semi_major_axis_au"},
               "dynamo_rocky": {"dynamo_regime", "ice_mass_fraction"},
+              # ⚠ `ice_allowed` 는 182 B 가 더한 것이고 **선언이 아니라 도출**이다 —
+              #   `ice_mass_fraction` 을 진술로 읽은 것(명시된 0.0 = 얼음 없음, 부재 = 모름).
+              #   역산이 노드 경로에 들어오면서 처음으로 계약 대상이 됐다 (C57).
               "interior_layers": {"differentiated", "envelope_z", "gas_mass_fraction",
-                                  "ice_mass_fraction", "initial_porosity", "porosity_cap"},
+                                  "ice_allowed", "ice_mass_fraction", "initial_porosity",
+                                  "porosity_cap"},
               "internal_heat_nontidal": {"ice_mass_fraction"},
               "tidal_locking": {"permanent_quadrupole"}}
     _got, _dyn = {}, {}
@@ -367,8 +371,14 @@ def main() -> int:
             _drift.append(f"+{_node}.{_k}")
         for _k in sorted(_want - _have):
             _drift.append(f"-{_node}.{_k}")
+    # ⚠ **수를 리터럴로 적지 않는다** (브리프 38 E 의 모양, 182 B 에서 실제로 낡았다). `ice_allowed`
+    #   하나가 들어오자 인쇄된 «고유 9 · 슬롯 12» 가 조용히 거짓이 됐다 — 비교는 집합이라 통과하는데
+    #   문장만 틀린 자리다. 이제 집합에서 센다.
+    _uniq = len({_k for _ks in EXEMPT.values() for _k in _ks})
+    _slots = sum(len(_ks) for _ks in EXEMPT.values())
+    _exempt_shape = f"고유 {_uniq} · 슬롯 {_slots}"
     ok(not _drift,
-       f"계약 파서의 Declared-optional 이 등록된 집합과 같아야 한다 (고유 9 · 슬롯 12) — 차이: "
+       f"계약 파서의 Declared-optional 이 등록된 집합과 같아야 한다 ({_exempt_shape}) — 차이: "
        f"{' '.join(_drift)}")
 
     # ⚠ **그 비교가 실제로 무는지 여기서 시험한다** (170 F ①). 170 E 는 «심어 봤더니 잡혔다» 를
@@ -434,7 +444,8 @@ def main() -> int:
     print("  [PASS] 인용 체커 자기검증 — 고유 1회 통과 · 삭제된 구절 썩음 · 2회 매치 애매 · 남의 계약 블록 착지 · "
           "빈 줄 착지 · 줄번호는 미이행 카운트 · RECIPE 자기문서 해석 · 대문자 파일명 · bodies 스캔 · "
           "비-.md 대상 · 접힌 인용 · 문서명만 계수 · YAML 파싱 실패 FAIL · 키 상실 FAIL · 주석 안 인용 · 하드랩 앵커 · "
-          "알 수 없는 형식 FAIL · 자기 인용 · 모호한 문서 이름 FAIL · 계약 면제 고유 9·슬롯 12 · composition_intent 는 need")
+          "알 수 없는 형식 FAIL · 자기 인용 · 모호한 문서 이름 FAIL · 계약 면제 " + _exempt_shape
+          + " · composition_intent 는 need")
     return 0
 
 
