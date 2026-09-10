@@ -106,7 +106,7 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C56** | `fe_prem` looks temperature-blind, and it is the reference that makes it so | **checked 2026-09-09 — not a defect; recorded so the next reader does not re-open it** | Observed: `fe_prem.density(p, T, 0.0)` returns the same number at 300 K and at 2100 K while `fe_eps` moves. ⚠ **Measured and explained rather than filed as a bug.** The two phases carry different reference kinds — `fe_eps` is `isotherm` at 300 K (laboratory ε-iron), `fe_prem` is **`adiabat` at 1600 K**, because PREM is a fit to *the hot real Earth* and its geotherm is already inside the effective ρ₀. So `Phase.delta_t` returns `t · (1 − t_ref/t_pot)`: it is **keyed on the declared potential temperature, not on T**, and it is exactly 0 whenever `t_pot` equals 1600 K — an identity, not a tolerance, and the stated reason Earth does not move. Measured at 136 GPa: `t_pot` 1600 gives ΔT 0.0 K at both 2100 K and 4000 K (ρ 9916.9370 either way), `t_pot` 2000 gives 420.0 / 800.0 K (ρ 9908.4176 / 9898.9401), `t_pot` 3040 gives 994.7 / 1894.7 K (ρ 9893.4281 / 9862.1307). ⚠ The call that raised the question passed `t_pot = 0.0`, which the same function reads as «no declared potential temperature» and returns 0 by design — heating a PREM fit from a 300 K baseline would heat Earth twice, which `eos.py` names as the trap it is avoiding. No brief; no change |
 | **C57** | the inversion branch is not on the node's path at all | **listed 2026-09-09; not decided** | ⚠ **Corrected from the first reading.** 173 reported this as an adapter default — `state.get("composition_intent", "earth_like")` always handing `solve` a composition — but the audit's call-graph read is sharper: `_from_state → _solve_from_state → solve` contains **no call** to `infer_composition`, `infer_three_layer` or `_porous_rock_verdict` at all, and the only callers are `rocky_roster.py` and `test_interior.py`. **Removing the default would not route the node to the inversion; there is no route.** So the four `inferred_*` regimes are dead code on the chain's path, C45 (d)'s inversion-convention exception guards something the checker can never make the node produce, and no body file will ever change that (173 measured it: 0). The question — should a recipe be able to infer a composition — is left open, and this row exists so the next reader does not re-derive the answer from the adapter line |
 | **C58** | two of our own numbers for Mars's core-mantle boundary are 1700 K apart | **candidate, listed 2026-09-09** | C54 (b) declared Mars's core-side CMB temperature from the literature band **1900–2100 K** (Durán+ 2022, held). C20's thermal-history integrator ends the same body at **3763 K**. ⚠ **Both are ours and both are labelled**, and they disagree by roughly **1700 K** on one quantity of one body. The declaration is an observation-constrained band; the endpoint is the output of an integration whose Mars run has never been checked against Mars literature — but «the integrator is wrong» is a conclusion, not an observation, and it is not drawn here. Candidate only |
-| **C59** | Mars's core radius and moment of inertia miss the board by 8.9 % and 2.7 %, and no gate had ever checked | **listed 2026-09-10 as a recorded disagreement** | Found by the **targeted** lane, which is the part worth keeping: `check.sh` ran three answer bodies named by hand and `bodies/mars.yaml` was in neither that list nor `gate_targeted`'s copy of it, so Mars's shipped-value comparison went unrun from 2026-09-08 until the body rule ran it (169 E made the list a glob). ⚠ **A narrowing found a hole in the full lane.** The engine gives `core_radius_fraction` **0.4919** against the board's **0.5398** — a core radius of about **1667 km** against **1830 km** — and `nmoi` **0.3545** against **0.3644**, which is the same cause seen through a second quantity. ⚠ **The 1667 km is not a Mars number**: it is what `composition_intent: earth_like`'s core mass fraction of 0.325 produces, and the board's 1830 km is the layer-free family's anchor (Stähler 2021) — the family the owner chose in 174. That the engine's value falls inside the *layered* family's window (Khan 2023, 1675 ± 30 km) is **read as coincidence**: we never elected that family. Neither the board value nor the tolerance was touched; the two rows print every run and are not counted (Brief 177). What closes this is **C55** (an Fe–S material, since our iron is too dense for Mars) and a declared Martian core mass fraction — not this row. ⚠ **178 C did not move it**: the Fe–S materials exist but all four verdict cells refuse on the 10–21 GPa melting gap, so Mars stays on `fe_prem` and both rows print unchanged. 177's resolution notice has still never fired on a real change |
+| **C59** | Mars's core radius and moment of inertia miss the board by 8.9 % and 2.7 %, and no gate had ever checked | **listed 2026-09-10 as a recorded disagreement** | Found by the **targeted** lane, which is the part worth keeping: `check.sh` ran three answer bodies named by hand and `bodies/mars.yaml` was in neither that list nor `gate_targeted`'s copy of it, so Mars's shipped-value comparison went unrun from 2026-09-08 until the body rule ran it (169 E made the list a glob). ⚠ **A narrowing found a hole in the full lane.** The engine gives `core_radius_fraction` **0.4919** against the board's **0.5398** — a core radius of about **1667 km** against **1830 km** — and `nmoi` **0.3545** against **0.3644**, which is the same cause seen through a second quantity. ⚠ **Corrected 2026-09-10 (C59 (a)): the 1667 km is what Mars's *declared* `core_mass_fraction: 0.24` produces, not the preset's 0.325** — a declaration wins over a preset, and 0.325 would give 1842 km, inside the board's window. The board's 1830 km is the layer-free family's anchor (Stähler 2021) — the family the owner chose in 174. That the engine's value falls inside the *layered* family's window (Khan 2023, 1675 ± 30 km) is **read as coincidence**: we never elected that family. Neither the board value nor the tolerance was touched; the two rows print every run and are not counted (Brief 177). What closes this is **C55** (an Fe–S material, since our iron is too dense for Mars) and a declared Martian core mass fraction — not this row. ⚠ **178 C did not move it**: the Fe–S materials exist but all four verdict cells refuse on the 10–21 GPa melting gap, so Mars stays on `fe_prem` and both rows print unchanged. 177's resolution notice has still never fired on a real change |
 | **C60** | the solve asks a core material for a surface-pressure density | **built 2026-09-10 in two passes (C60 (a) · (b) · (c)); ⚠ the first pass's conclusion is retracted in (c)** | Found while 178 D was being built, and it is what actually blocks C55's verdict cells — ⚠ **and the first two descriptions of it, one per seat, were both right about different runs.** The audit measured a refusal at **18.9993 GPa**, a *boundary trial step* 0.7 MPa (0.0037 %) below the 19 GPa floor, in the body solve. This seat measured **0.0981 GPa** and traced it: it is a *trial central pressure* from `_shoot_pressure`'s bracket, reached through `integrate`'s `rho_c = mat_c.density(p_center, …)` on the radius-matching path — 23271 calls in that run, the next lowest at 59.0 GPa. **Neither pressure appears in any final profile.** So the shape is one thing seen twice: **a domain refusal raised during a trial is being read as a verdict about the body**, and the core material is only asked from the centre out to the CMB when the answer is actually computed. ⚠ **Removing the floor does not help** — with `p_min = 0` the same solve fails to converge at 9.808e7 Pa, since a 19 GPa-referenced BM2 has no root there. ⚠ **Mars's core-mantle boundary is 20.65 GPa, inside the fit**, so this is not physics telling us the material is wrong; it is the range the solver asks over. Two roads were listed — a low-pressure branch for liquid Fe–S (another fit, another paper), or a solver that asks a core material only at `P ≥ P_cmb` — and **C60 (a) takes a third**: a trial is not a verdict, so the boundary step is read against its own width and the shooting bracket's lower end is raised to the core material's floor. **No fit gains a range and no equation changes.** ⚠ **178 D's registered premise blamed the melting gap and was wrong** — the label on the material said melting, and the message was read as the mechanism |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
@@ -5697,6 +5697,102 @@ Si."* ⚠ That is **far above the owner's 13–19 wt% band**, and the paper says
 that composition *"the liquidus phase … is either (Fe,Ni)₃₋ₓS₂ … because the S or Si content in the core is
 richer than the eutectic composition (S = 16 wt% …) at the Martian CMB."* Recorded as a printed value from
 a different modelling family, **not as a candidate for the band**, and not averaged with anything.
+
+### C59 (a) 2026-09-10 — Mars never used `earth_like`'s 0.325, and three records said it did
+
+⚠ **A correction, found while reading for C57 and verified here before being written down.** `mars.yaml`
+declares **`core_mass_fraction: 0.24`** eight lines above the note that says the engine ignores it, and
+`interior.solve` prefers a declaration over a preset. The state the node receives carries 0.24 — checked
+with a spy on `_solve_from_state` — and `solve(0.1074, core_mass_fraction=0.24)` reproduces the shipped
+run's `core_radius_fraction` **0.4919 exactly**. At 0.325 the engine gives **0.5542 = 1842 km**, which is
+*inside* the board's 1820–1870 km window and 12 km from its 1830.
+
+**Three records were wrong and are repaired here**: `mars.yaml`'s own recorded-disagreement note, C60 (b)
+and (c)'s description of "the composition Mars declares", and `tools/c55_cells.py`, whose "declared
+composition" row printed the preset's 0.325 — **a composition Mars does not solve with**. The tool now
+reads the declaration out of the body file, and falls back to the preset only when there is none.
+
+⚠ **What is retracted is the cause, not the observation.** The engine's 1666.5 km still lands inside the
+layered family's windows (Khan 2023 1645–1705 km, Samuel 2023 1630–1670), and we still never elected that
+family, so **that reading stays "coincidence"**. What was wrong was attributing the number to a preset.
+
+#### C59 is not about which preset was picked
+
+**It is a statement about the density profile.** At Mars's mass and radius this engine needs a core mass
+fraction near **0.325** to reproduce the observed **1830 km** core, while the declared value is **0.24** —
+and the pair (0.24 ↔ 1830 km) is what `test_interior.py`'s `ANCHORS` table carries in one row, sourced
+"Konopliv+ 2011 · InSight". ⚠ *So the anchor table states a pair this engine cannot produce*, and that is
+the disagreement C59 actually names.
+
+⚠ **And the two axes move in opposite directions**, which is the finding that matters for C57:
+
+| cmf | core radius fraction (want 0.5398) | `nmoi` (want 0.3644) |
+|---|---|---|
+| **0.24** (declared) | 0.4919 — **8.88 %** off | 0.3545 — **2.71 %** off |
+| **0.325** (`earth_like`) | 0.5542 — **2.65 %** off | 0.3450 — **5.32 %** off |
+
+**No single core mass fraction satisfies both.** Enlarging the core fixes the radius and breaks the moment
+of inertia, and the reverse. *An inversion that optimises one axis will make the other worse*, and that is
+registered here before C57 is built rather than discovered afterwards.
+
+#### Mars's declared composition does solve with Fe–S
+
+Because 0.24 is below the 0.302 cut C60 (c) measured, **both band-end materials solve at the composition
+Mars actually declares** — the opposite of what C60 (b) recorded, which was about 0.325:
+
+| core material | R_core | fraction (want 0.5398) | `nmoi` (want 0.3644) |
+|---|---|---|---|
+| `fe_prem` (today) | 1666.5 km | 0.4919 — 8.88 % | 0.3545 — 2.71 % |
+| `fe_s_13wt_19gpa` | 1698.6 km | 0.5001 — 7.36 % | 0.3566 — 2.14 % |
+| **`fe_s_19wt_19gpa`** | **1736.7 km** | **0.5097 — 5.57 %** | **0.3593 — 1.40 %** |
+
+⚠ **Both of C59's recorded rows move in the right direction and the moment-of-inertia gap roughly halves**
+— and neither closes. ⚠ *C60 (b) registered prediction 5 as "could not be evaluated"; it could, and the
+reason it was not is the same 0.325 error.* **Mars is still not wired**: which material Mars declares is
+C55's owner cell, and this section changes no body input.
+
+#### Two smaller corrections
+
+⚠ **The 19 GPa crossing is at cmf 0.3030, not 0.306.** Measured on the consuming path: P_cmb is 19.08772
+at 0.298, 19.05273 at 0.300, 19.01760 at 0.302 — a slope of **−17.53 GPa per unit cmf**, crossing 19 GPa
+at **0.3030**. So 181 B's cut (converges to 0.302, refuses from 0.303) sits **on** the physical crossing
+rather than short of it, and the "solvable but refused" band the earlier number implied does not exist.
+
+⚠ **`mars.yaml`'s 0.24 is sourced, but one step short.** Its comment cites `test_interior.py`'s `ANCHORS`
+row rather than Konopliv+ 2011 itself — *our own table is base material, not evidence* — so it is recorded
+here as a citation to be walked one step further back, not as an unsourced number.
+
+⚠ **The item count in 169 G's commit message (37) was the derivation's output, not the gate's**; the gate
+counts 43–44 items for the same commit. And the `tools/*.py` rule was never blanket: measured, a changed
+`tools/make_water_table.py` yields `gap` and the lane falls back to full, so no writer tool can be run by
+a narrowed lane. **Nothing was rolled back because nothing needed to be.**
+
+#### Where the silent default actually bites — measured, not assumed
+
+Of the seven roster bodies, **the three that reach the rocky path all declare their own core mass
+fraction** (Earth 0.325, Mars 0.24, Pandora 0.325). The four that declare neither a fraction nor an intent
+are `alpha_centauri_a_b`, `dante_fixture` and the two Luhman 16 components — and only there does
+`_solve_from_state`'s literal `"earth_like"` decide anything.
+
+⚠ **And it decides more than a refusal.** `dante_fixture` **produces an answer**: `interior_layers` returns
+a radius of 455.7 km with `inputs["core_mass_fraction"] = 0.325` and `composition = earth_like` in its own
+evidence — *a number nobody declared, carried under a name*. ⚠ `alpha_centauri_a_b` is a **giant** of
+120 M⊕ with no composition declared at all, and the same default sends it down the rocky path to refuse
+that *"this mass needs a central pressure above `fe_prem`'s ceiling (12000 GPa)"* — **a refusal that names
+iron where the fact is that nobody declared a composition for a gas giant.** That is C37's shape again.
+
+⚠ **The two consumers of the same silence do not agree.** `interior_layers` fills it with `earth_like`;
+`dynamo_rocky` never asks — its printed refusal for the fixture is `cannot-say (conductor_phase
+undecided)`, which is about temperature. The fixture's own comment claimed `dynamo_rocky` *"refuses by
+name because there is no composition preset (C28)"*; **it does not**, and that comment is repaired here.
+
+#### A rule this seat's own mistake bought
+
+⚠ **In a shared worktree, never `git reset --hard`, `git checkout -- .`, or `git stash`.** This seat ran a
+`reset --hard` to measure the lane's behaviour and **destroyed another seat's uncommitted edits to
+`SESSION-HANDOFF.md`** — unstaged changes are not in the object store and were not recoverable. The
+measurement did not need the shared tree at all; a scratch clone was already sitting in `$TMPDIR`.
+**Measurements that need a commit are made in a scratch clone.**
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 

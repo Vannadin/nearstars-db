@@ -15,6 +15,7 @@
 import math
 import os
 import sys
+from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
@@ -27,7 +28,23 @@ T_POT = 1600.0                    # 맨틀 포텐셜 온도 — 사격의 온도
 MATERIALS = ("fe_s_13wt_19gpa", "fe_s_19wt_19gpa")
 R_WINDOW_KM = (1820.0, 1870.0)
 RHO_WINDOW = (5.7, 6.3)
-DECLARED_CMF = interior.COMPOSITIONS["earth_like"][0]
+def _declared_cmf() -> float:
+    """⚠ **화성이 실제로 푸는 핵질량비는 프리셋의 것이 아니다** (브리프 182 A).
+
+    `mars.yaml` 이 `core_mass_fraction` 을 직접 선언하고 `interior.solve` 는 선언을 프리셋보다
+    앞세운다. 프리셋 값(earth_like 0.325)을 «선언된 조성» 이라 부르면 이 표가 **화성이 안 푸는
+    조성**을 화성의 것으로 인쇄한다 — 그 라벨이 실제로 틀린 채 하루를 돌았다."""
+    import yaml
+    doc = yaml.safe_load((Path(__file__).resolve().parent.parent
+                          / "bodies" / "mars.yaml").read_text(encoding="utf-8"))
+    got = (doc.get("inputs") or {}).get("core_mass_fraction")
+    if got is None:                       # 선언이 없으면 그때는 프리셋이 답이다
+        preset = (doc.get("inputs") or {}).get("composition_intent", "earth_like")
+        return interior.COMPOSITIONS[preset][0]
+    return float(got)
+
+
+DECLARED_CMF = _declared_cmf()
 
 
 PROBE = "_c55_probe"          # 아래 `consumer_cell` 이 잠깐 등록했다 지우는 조성 이름
@@ -82,7 +99,7 @@ def main(argv: list[str]) -> int:
     print(f"창: 핵 반지름 {R_WINDOW_KM[0]:.0f}–{R_WINDOW_KM[1]:.0f} km · "
           f"핵 밀도 {RHO_WINDOW[0]}–{RHO_WINDOW[1]} g/cm3 (균질 맨틀 계열)")
     for cmf in cmfs:
-        tag = " ← 선언된 composition_intent: earth_like" if cmf == DECLARED_CMF else ""
+        tag = " ← mars.yaml 이 선언한 핵질량비" if cmf == DECLARED_CMF else ""
         print(f"\ncmf = {cmf:.3f}{tag}")
         for m in MATERIALS:
             print(f"  {m:18} 사격층 {cell(m, cmf)}")
