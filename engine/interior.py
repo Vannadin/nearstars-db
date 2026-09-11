@@ -423,7 +423,11 @@ def _integrator_gamma_values(core_material: str, st) -> dict:
         return {"integrator_core_gamma_verdict": None, "integrator_red_gamma_used": None}
     try:
         ph = mat.phase_at(st.p_cmb)
-        verdict, _density_side = ph.thermal_label(getattr(mat, "fit_composition", ""), st.p_cmb)
+        # ⚠ **세트가 P·T 로 묶여 있으면 P·T 로 물어야 한다** (지휘석 규칙, 브리프 187): 압력만
+        #   넘기면 온도 축이 접히고, 그 접기가 C74 의 J 가 거절한 바로 그 모양이다. 이 자리는
+        #   CMB 온도를 이미 들고 있으므로 넘긴다 — 「온도 모름」은 통과가 아니라 등급이다.
+        verdict, _density_side = ph.thermal_label(getattr(mat, "fit_composition", ""),
+                                                  st.p_cmb, st.t_cmb or None)
     except PhaseGap:
         return {"integrator_core_gamma_verdict": None, "integrator_red_gamma_used": None}
     # ⚠ **이름이 행위를 말한다** (지휘석·감사 2026-09-11): `integrator_red_gamma_used` 는 «라벨이

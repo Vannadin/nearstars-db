@@ -624,6 +624,10 @@ step "test_rheology.py" bash -c 'cd engine && python3 test_rheology.py'
 step "test_fe_s.py" bash -c 'cd engine && exec python3 test_fe_s.py'
 # 밀도 적합 ↔ 녹는곡선의 조성·물질상 선언 (Brief 41). 다른 조인을 말없이 잇는 상이 생기면 여기서 잡힌다.
 step "test_eos_joins.py" bash -c 'cd engine && python3 test_eos_joins.py'
+# hcp 철 열 세트 (브리프 187). 저자의 Table S3 재현(보유 SI 에서 시험 시점에 읽는다) · g 와 g(1−g)
+# 부호 · 두 축 등급 · 적분기와 핵 노드의 γ 일치 · **두 재질의 호출 표면이 두 구간 다에서 유한**
+# (C76: 깨끗한 트리에서 `fe_prem.c_p` 가 던지고 있었는데 천체 기준선이 전부 초록이었다). ~1 s.
+step "test_fe_hcp.py" bash -c 'cd engine && python3 test_fe_hcp.py'
 # 방사성 예산 (Brief 44). 초안 표의 폐합 세 건·캡션 오독 11.59 TW·과거 방향 3.67 이 앵커다.
 step "test_radiogenic.py" bash -c 'cd engine && python3 test_radiogenic.py'
 # 함의 열류 일관성 (Brief 46). Table 2 전사 폐합(42 TW ← 1614 K)과 ζ 양방향 민감도, 판정 라벨이 앵커다.

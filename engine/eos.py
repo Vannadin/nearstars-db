@@ -126,10 +126,22 @@ class ThermalSet:
     t_ref_kind: str = "isotherm"
     c_v_ref: float = 0.0              # J kg⁻¹ K⁻¹
     evaluator: str = ""               # 비면 위 상수, 아니면 THERMAL_EVALUATORS 의 이름
-    grade_note: str = ""              # 있으면 판정이 `graded-disagreement` 로 나간다
+    grade_note: str = ""              # 있으면 판정이 `graded-<grade_kind>` 로 나간다
+    grade_kind: str = "disagreement"  # 등급의 **종류**. 이름이 배달 규칙을 정한다 (브리프 187)
+    t_max: float = 0.0                # K. 논문이 인쇄한 온도 상한. 0 이면 «상한 없음»
 
     def covers(self, p: float) -> bool:
         return self.p_min <= p < self.p_max
+
+    def covers_t(self, t: float | None) -> bool:
+        """온도 축도 범위 안인가 — **인쇄된 범위는 축이 둘이다** (감사석, 브리프 187).
+
+        ⚠ `t_max` 를 든 세트에 **온도 없이** 물으면 `False` 다. 압력만 보고 «측정 구간» 이라고
+        답하면 350 GPa · 9000 K 가 측정으로 읽히는데, 논문은 그 점을 보증하지 않는다 — C74 의
+        J 와 같은 모양(축 하나만 접으면 짝은 아무것에도 대조되지 않는다)이라 같은 답을 쓴다."""
+        if self.t_max <= 0.0:
+            return True
+        return t is not None and t <= self.t_max
 
 
 #: `ThermalSet.evaluator` 가 가리키는 함수들. (P, T) → dict(dpdt_v, c_v, gruneisen, …).
@@ -137,6 +149,7 @@ class ThermalSet:
 #: 무엇보다 **어느 논문의 세트인지가 이름으로 인쇄되어야** 하기 때문이다.
 THERMAL_EVALUATORS = {
     "dorogokupets2017_liquid_fe": fe_liquid.thermal_at,
+    "dorogokupets2017_hcp_fe": fe_liquid.thermal_at_hcp,
 }
 
 
@@ -288,7 +301,8 @@ class Phase:
             return 0.0 if t_pot <= 0.0 else t * (1.0 - ts.t_ref / t_pot)
         return t - ts.t_ref
 
-    def thermal_label(self, fit_composition: str = "", p: float | None = None) -> tuple[str, str]:
+    def thermal_label(self, fit_composition: str = "", p: float | None = None,
+                      t: float | None = None) -> tuple[str, str]:
         """열 매개변수의 출처가 이 적합과 맞는가 — **네 답 중 하나** (C58, 브리프 180 B).
 
         `ok` · `undeclared` · `phase-mismatch` · `composition-substitute`.
@@ -305,11 +319,15 @@ class Phase:
             return density_cell, density_cell
         gamma_cell = self._verdict(ts.alpha_k > 0.0 or bool(ts.evaluator),
                                    ts.source_state, ts.source_composition,
-                                   fit_composition, ts.grade_note)
+                                   fit_composition, ts.grade_note, ts.grade_kind)
+        # ⚠ **온도 축을 넘었으면 등급이 내려간다 — 압력만 맞아도 아니다** (브리프 187, 감사석).
+        if gamma_cell == "ok" and not ts.covers_t(t):
+            gamma_cell = "graded-extrapolation"
         return gamma_cell, density_cell
 
     def _verdict(self, has_set: bool, source_state: str, source_composition: str,
-                 fit_composition: str, grade_note: str) -> str:
+                 fit_composition: str, grade_note: str,
+                 grade_kind: str = "disagreement") -> str:
         """한 세트의 판정 — 여섯 답 중 하나. 상 자신의 상수와 구간 세트가 같은 규칙을 돈다."""
         if not has_set:
             # ⚠ **여기서 `ok` 를 돌려주면 «초록 판정으로 γ = 0» 이 배달된다** (감사 지적, 180 B).
@@ -325,7 +343,7 @@ class Phase:
         if grade_note:
             # ⚠ 상·조성이 맞아도 **다른 논문의 실측과 어긋나는** 세트는 초록이 아니다. 값은 배달하되
             #   등급을 내리고 이름을 남긴다 (오너 결정 ①, 2026-09-11: 35 GPa 위 Dorogokupets).
-            return "graded-disagreement"
+            return f"graded-{grade_kind}"
         if (fit_composition and source_composition
                 and fit_composition != source_composition):
             return "composition-substitute"
@@ -652,10 +670,25 @@ class Material:
             return 0.0
         rho = self.density(p, t, t_pot)
         k_t = self.k_t(p, t, t_pot)
+        # ⚠ **평가자 세트는 상수가 없다 — `c_v_ref` 가 0 이다** (브리프 187 에서 실측). 예전에는
+        #   그 0 이 `gamma = dpdt / (rho * c_v)` 로 그대로 들어가 `ZeroDivisionError` 가 났다:
+        #   `fe_prem` 은 35 GPa 위에서 **이미** 그랬고, 아무 천체도 이 메서드를 안 불러 조용했다.
+        #   세트가 식을 들고 있으면 c_V 와 γ 를 그 식에게 묻는다 — 상수 세트의 경로는 그대로다.
+        ts = ph.gamma_set_at(p)
+        if ts is not None and ts.evaluator:
+            ev = THERMAL_EVALUATORS[ts.evaluator](p, t)
+            c_v, gamma = ev["c_v"], ev["gruneisen"]
+            k_t_ev = ev.get("k_t", k_t)
+            if c_v <= 0.0 or k_t_ev <= 0.0:
+                return c_v + self._latent_cp(ph, p, t)
+            alpha = ev["dpdt_v"] / k_t_ev
+            return c_v * (1.0 + alpha * gamma * t) + self._latent_cp(ph, p, t)
         if k_t <= 0.0 or rho <= 0.0:
             return ph.c_v_at(p) + self._latent_cp(ph, p, t)
         dpdt = ph.dpdt_v(t, t_pot, p)
         c_v = ph.c_v_at(p)
+        if c_v <= 0.0:
+            return self._latent_cp(ph, p, t)
         gamma = dpdt / (rho * c_v)
         alpha = dpdt / k_t
         return c_v * (1.0 + alpha * gamma * t) + self._latent_cp(ph, p, t)
@@ -1590,6 +1623,13 @@ IRON_ALPHA_K = 0.00121 * GPA         # Pa/K. Isaak & Anderson 2003, 같은 절
 IRON_ALPHA_K_DT = 7.8e-7 * GPA       # Pa/K². 전자 여기 항, 같은 절
 EARTH_POTENTIAL_T = 1600.0           # K. Unterborn+ 2019 §2 의 지구형 맨틀 포텐셜 온도
 LAB_ISOTHERM_T = 300.0               # K. 실험실 압축 자료의 관례적 기준 온도
+# Dorogokupets+ 2017 이 자기 적합의 범위로 인쇄한 압력 — 제목 «Equations of State of Iron to
+# 350 GPa and 6000 K» 과 적합 절 «EoSs for solid and liquid Fe to 350 GPa». 이 위는 외삽이고,
+# `fe_eps` 의 둘째 구간이 그 사실을 등급으로 들고 나간다 (브리프 187).
+DOROGOKUPETS_FIT_P_MAX = 350.0 * GPA
+# ⚠ **인쇄된 범위는 축이 둘이다** (감사석, 브리프 187): 제목·인용 안내·상평형 절이 모두
+# «350 GPa and 6000 K» 라고 적는다. 압력만 잡으면 350 GPa · 9000 K 가 «측정» 으로 읽힌다.
+DOROGOKUPETS_FIT_T_MAX = 6000.0      # K
 
 # 정적비열. **두 가지 다른 출처에서 왔고 섞으면 안 된다.**
 #
@@ -2448,7 +2488,11 @@ def _fe_prem_gamma_sets() -> tuple[ThermalSet, ...]:
 
     **35 GPa 위**: Dorogokupets+ 2017 액체 세트를 식으로 평가한다 (`fe_liquid`). ⚠ 그 세트는
     Huang 의 저압 실측과 **40 % 규모로 어긋나므로** 등급 라벨을 달고 나가고, 판정은
-    `graded-disagreement` 다 — 값은 배달하되 초록이 아니다.
+    `graded-disagreement` 다. ⚠ **그 판정은 값을 배달하지 않는다** — 이 줄은 2026-09-11 결정 (2)
+    이전의 규칙(«배달하되 초록이 아니다»)을 그대로 들고 있었고, 그 사이 `core_gamma` 는 등급 세트를
+    폴백으로 보내도록 바뀌었다 (감사석, 브리프 187). 지금의 규칙은 세 줄이다: `ok` 와
+    `composition-substitute` 는 배달, `graded-extrapolation` 도 배달(브리프 187), 그 밖은 이름 붙은
+    폴백.
 
     ⚠ **19 GPa 아래에는 세트가 없다.** 액체 열 세트가 없는 구간이라 상 자신의 (고체) 상수로
     떨어지고, 그러면 판정이 `phase-mismatch` 라 `core_gamma` 의 **이름 붙은 폴백**이 잡는다 —
@@ -2491,6 +2535,38 @@ FE_PREM = Material(
                      "측정이 뒤에 있는 유일한 다리: Sinmyo+ 2019 ICB 검산 −0.12 σ (브리프 38 §0)"),),
     fit_composition="PREM-alloy", role="core",
 )
+def _fe_eps_gamma_sets() -> tuple[ThermalSet, ...]:
+    """`fe_eps` 의 γ·c_p 구간 세트 — Dorogokupets+ 2017 Table 1 의 **hcp (ε)** 열 (브리프 187).
+
+    상도 조성도 이 적합과 같다 (고체 · 순수 ε-철) — `fe_prem` 이 액체 적합에 고체 상수를 얹고
+    있는 것과 달리, 여기서는 **논문 하나가 같은 상의 열 매개변수를 인쇄한다.** 그래서 판정은
+    등급이 내려갈 이유가 없고, 내려가는 자리는 압력뿐이다.
+
+    ⚠ **두 구간이고, 위쪽은 상수로 떨어지지 않는다** (지휘석 결정, 2026-09-11, 오너의 `fe_prem`
+    선례 ①): 논문이 인쇄한 적합 범위는 제목과 적합 절이 말하는 **350 GPa 까지**이므로 그 아래는
+    «measured», 그 위는 **같은 세트를 외삽**하되 그 사실을 등급으로 달고 나간다. 예전 상수
+    (Dulong-Petit C_V · 선형 α) 로 돌아가지 않는 이유는 단순하다 — **논문이 자기 외삽보다도 덜
+    보증하는 수**이기 때문이다. 되돌리기는 둘째 구간을 지우는 것 하나다."""
+    return (
+        ThermalSet(p_min=0.0, p_max=DOROGOKUPETS_FIT_P_MAX, ref=fe_liquid.HCP.ref,
+                   source_state="solid", source_composition="pure-Fe-hcp",
+                   evaluator="dorogokupets2017_hcp_fe",
+                   t_ref=fe_liquid.HCP.t_ref, t_ref_kind="isotherm",
+                   t_max=DOROGOKUPETS_FIT_T_MAX),
+        ThermalSet(p_min=DOROGOKUPETS_FIT_P_MAX, p_max=float("inf"), ref=fe_liquid.HCP.ref,
+                   source_state="solid", source_composition="pure-Fe-hcp",
+                   evaluator="dorogokupets2017_hcp_fe",
+                   t_ref=fe_liquid.HCP.t_ref, t_ref_kind="isotherm",
+                   t_max=DOROGOKUPETS_FIT_T_MAX, grade_kind="extrapolation",
+                   grade_note="beyond the paper's printed fit range 0–350 GPa — Dorogokupets+ 2017 "
+                              "fits «to 350 GPa and 6000 K»; the set is evaluated above it, not "
+                              "replaced. ⚠ The paper itself reports that near 360 GPa / 6000 K iron "
+                              "acquires a substantial local magnetic moment, and the hcp column "
+                              "carries no magnetic term (T_C and B₀ are printed for bcc only), so "
+                              "the extrapolation is not merely numerical"),
+    )
+
+
 FE_EPS = Material(
     "fe_eps", "순수 ε-철",
     (Phase("fe_eps", "vinet", 8300.0, 156.2 * GPA, 6.08, 2.09e4 * GPA,
@@ -2500,7 +2576,8 @@ FE_EPS = Material(
            t_ref=LAB_ISOTHERM_T,
            # 실험실 순철이므로 내림이 없다. 순철 곡선 그대로다.
            melt="iron", melt_ref=IRON_MELT_REF_LOW,
-           join="Fe (pure)", fit_state="solid"),),
+           join="Fe (pure)", fit_state="solid",
+           gamma_sets=_fe_eps_gamma_sets()),),
     fit_composition="pure-Fe-hcp", role="core",
 )
 
@@ -3452,7 +3529,7 @@ def core_gamma(material, p: float, t: float, t_pot: float = 0.0,
             f"그것을 돌려주면 남의 값을 조용히 쓰게 된다 — 이 층의 γ 가 필요하면 재질에게 "
             f"`grad_ad`/`gruneisen` 으로 직접 물어라.")
     ph = material.phase_at(p)
-    verdict, density_verdict = ph.thermal_label(getattr(material, "fit_composition", ""), p)
+    verdict, density_verdict = ph.thermal_label(getattr(material, "fit_composition", ""), p, t)
     # ⚠ **ρ 는 호출부가 줄 수 있다** (브리프 180 C). γ ∝ 1/ρ 이므로 적분기가 자기 자리의 밀도를
     #   들고 있는데 여기서 냉각 밀도를 다시 재면 **같은 지점에서 두 γ** 가 생긴다 — 적분기가 네 번째
     #   소비처로 합류하는 이 브리프에서 그 불일치가 처음 실제로 문제가 된다. 기본값은 예전과 같다.
@@ -3471,7 +3548,11 @@ def core_gamma(material, p: float, t: float, t_pot: float = 0.0,
     #   지구의 문헌 검사 셋을 빨갛게 만들었다: Sinmyo+ 2019 대비 10.95 %, 내핵 경계 −27 %,
     #   그리고 `k0_flip` 이 194.0 GPa 에서 **None** 으로 사라졌다. 실측이 있는 구간(19–35 GPa,
     #   화성)에서만 수리하고, 등급 구간은 «재질이 말한 값» 칸으로 남긴다 — 되돌리기는 이 줄이다.
-    if verdict in ("ok", "composition-substitute"):
+    # ⚠ **`graded-extrapolation` 은 배달한다 — `graded-disagreement` 와 규칙이 다르다** (지휘석
+    #   결정, 브리프 187). 어긋남은 «대조가 가능한 자리에서 틀렸다» 이고, 외삽은 «대조할 자리가
+    #   없다» 다. 후자에서 폴백으로 가면 논문의 외삽 대신 **논문이 더 덜 보증하는 수**(Dulong-Petit
+    #   상수)를 쓰게 된다. 그래서 값을 내고 자기 카운터로 센다. 되돌리기는 이 한 줄이다.
+    if verdict in ("ok", "composition-substitute", "graded-extrapolation"):
         return own, verdict, own, density_verdict
     return CORE_GAMMA_FALLBACK, verdict, own, density_verdict
 
