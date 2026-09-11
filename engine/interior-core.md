@@ -121,6 +121,8 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C71** | the non-convergence warning is prose, so no consumer can read it | **listed 2026-09-11 — candidate, narrowed by measurement** | `interior.solve` returns a full `values` dict when the shooting loop ends unconverged, and the only warning is a sentence in `engine/payload.py@«line += " ⚠ 미수렴 1차 통과값"»` — **`evidence()` prose, not a value**. ⚠ **And `converged` is structurally out of reach**: it is a `Result` field, `state._find` looks only at declared `inputs` and each result's `values`, and **no computing node touches `state.results`** (only `check_contracts` does). So the five consumers of `radius` cannot see it — **0 of 5, by construction rather than by oversight**. Sampled: the audit seat's clone without 180 D's budget extension returns **R 1.130250786008135** with `converged False` for the water-rich body `imf 0.1`, a radius that is not a solution sitting in the value slot. ⚠ *This is C58 (a)'s registered line — «prose can be grepped but only a value can be counted» — one layer down, in the object every node returns.* Repair shape: emit it as a **value** the way `core_gamma_fallback` is emitted. Verdict-line candidate: does `interior_layers`'s result carry the non-convergence as a value, and can all five consumers read it |
 | **C72** | the ice giants come out larger than their published radii, and nothing ever printed the gap | **listed 2026-09-11 — a registered baseline, not a verdict** | Audit seat's anchor run on `c2a6a324` (`anchor-baseline-c2a6a324.txt`, sha256 `6747d42f2757c5d4`): Uranus **+5.48 %** (4.1989 against 3.9808) and Neptune **+8.94 %** (4.2101 against 3.8646), with GJ 1214 b converging too. ⚠ **The reason nobody had seen it is the shape of the check, not the size of the number**: the anchor tests assert bit-identity against the previous run, so a deviation that is stable is invisible to them — it has been the same wrong number every time, and a test that asks «did this move» answers no. *Registered as a baseline so the next change to the ice-giant path has something to move against.* Not a verdict: what the gap is made of — envelope thermal state, the gas mass fraction, the published radius's own definition — is not measured here |
 | **C73** | `chain.yaml`'s `outputs` lags the contract `Returns` by forty keys, and the three layers do not read each other | **listed 2026-09-11 — candidate; the repair is a brief of its own** | Audit seat's census (`c62_outputs_vs_returns.py`, sha256 `2b299bed1210c77e`; output `b38698ac478e4c56`): **forty** keys are in a contract `Returns` and in the code's `values` but **not** in the graph's `outputs` — `interior_layers` 7, `core_state` 9, `tidal_locking` 8 and more; 180 C's nine `core_gamma_*` and two `integrator_*` are among them. ⚠ **And the count has one in the other direction** — `tidal_locking.t_lock` is in `outputs` and not in `Returns` — so it is not «the graph is behind», it is **three layers that do not look at each other**. The practical bite is that a `via:` edge on such a key fails `check_via`, so the next node that wants one becomes the first consumer of an undeclared value. *C62 (b) added exactly the one it needed (`crust_thickness`) and left the other thirty-nine* — closing all forty, plus a «`Returns` ⊆ `outputs`» rule in the checker, is a separate brief |
+| **C74** | the silicate slot answers from a fit, and a fit cannot be asked «what if this mantle has more iron» | **listed 2026-09-11 — open, owner-pending A–I (P34) and licence Q1–Q6 (P30 §6) and Q7 (P30 §8)** | P34 (parallel seat, sha256 `10034d9c085a6dde`, 19376 B) folded with what P30 §6 and §8 have settled since. Today's mantle is **two fitted `Phase` objects**, and a fit cannot be asked what a different chemistry would do — the item is an assemblage **computed** from declared chemical ratios (BurnMan `equilibrate` over `SLB_2022`), which is owner decision (c) ② of P30 §5. ⚠ **Nothing is installed**: the pin `burnman==2.1.0` is text in this file and in no requirements file, because P34's prohibition 6 ties the install to owner row F and F is open. ⚠ **Two decisions inside the transcription item are taken and two source readings were corrected.** The stability and reaction tables are *«Summary of phase equilibria data»*, so the refusal is «outside the data coverage» and never «outside the valid range»; a species carries several rows and each row is a **P×T box**, so **J** covers a body only when its (P, T) lies inside at least one row's box and **forbids separate unions of the P and T intervals** — 9 GPa · 1200 K can sit in the P-union and the T-envelope while sitting in no row; the reactions table (**A5** in 2022, **C5** in 2024, never C4, which is stability) carries **K**, which attributes a row's box to every participating species under a `reaction-row attribution` label. ⚠ *No table value is transcribed here or in the section — only paper, table and printed page* — because check ⑧'s transcription does not exist yet, so the only coverage sentence this material may print is «coverage not transcribed yet». ⚠ **Decision C is the eleven author-not-recommended species `SLB_2022.py` ships** (of seventeen in the held `HeFESTo_parameters_010121-README.md`, `c645fbf93a5b1ba3`) — not «four spin transitions», which was four of the eleven — and it carries three named candidates, **C1** include all · **C2** exclude by default with a declared opt-in · **C3** exclude with no opt-in, default **C2** pending owner ⑥-2. ⚠ **I and Q7 are one decision**: the cached (P, T) grid candidate builds a derived artefact of a dataset whose README forbids redistributing modified data, and whether a derived grid is that is a reading the README does not make |
+| **C75** | `check_md_tables.py` does not count cells per row, so a ragged table passes | **listed 2026-09-11 — candidate, tooling** | Found by hand, not by the checker: the C74 owner-decisions table's **C** row carried two cells in a three-column table (one column separator missing), and `check_md_tables.py` returned rc 0 over 827 files — it checks tables glued to prose, not cell counts, so the row would have rendered with its three candidates crammed into the *decision* column and the *candidates* column empty. ⚠ **The repair is not «add a cell-count rule»**: before widening the check, **measure how many existing tables are ragged**, because a rule that lands on a corpus nobody counted turns a green gate red for reasons unrelated to the change that tripped it. *Same shape as C61 and C70 — a check whose silence was read as agreement* |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -10987,6 +10989,201 @@ registration was right about the mechanism — the remaining cells were waiting 
 wrong about the timing, because the decisions came the same day. ⚠ **Zero does not mean every question is
 answered**: the check asks whether *any* sample body supplies a key, and Mars still declares no
 `core_material` at all. Its cell is empty because Earth and Pandora fill it.
+
+### C74 — the silicate slot answers from a fit, and a fit cannot be asked «what if this mantle has more iron» — **listed 2026-09-11 — open, owner-pending A–I (P34) and licence Q1–Q6 (P30 §6) and Q7 (P30 §8)**
+
+This folds P34 (parallel seat, `~/Desktop/NearStars-artifacts/2026-09-09-c20-entropy-band/P34-silicate-slot-prereg-draft.md`,
+sha256 `10034d9c085a6dde`, 19376 B — folded from the `6b8fe8a871a5bbc3` state, 11487 B, plus that
+file's Amendments 1–3) together with what P30 §6 and §8 have established since. The work seat's
+fold is `2026-09-11-interior-state/drafts/C74-silicate-slot-ledger-draft.md`, sha256 `b021b9ae72975150`,
+15008 B. ⚠ **The pinning is one-directional by the audit seat's ruling**: this section pins P34 by hash,
+and P34 names this draft by path only, so neither document can falsify the other by being edited. ⚠ *«One document at two times» is read from the two dated
+amendment blocks and the byte arithmetic, not from a byte diff* — no copy of the 11487 B state survives
+on disk (parallel seat, 2026-09-11), so nothing here rests on having compared them.
+
+⚠ **A number, not yet an item.** C74 is listed so the material can be cited and argued against; it
+becomes a registered item when the owner has answered A–I or marked them deferred. *That condition is
+P34's own, and this section does not relax it.*
+
+⚠ **No value is transcribed.** Every number that will be compared is named by where it lives.
+
+⚠ **Nothing is installed.** The pin `burnman==2.1.0` is text in this ledger and in no requirements file.
+P34's prohibition 6 ties the install to owner decision F, and F is open.
+
+⚠ **Three papers that P34 treated as pending are held**: `2022GeoJI.228.1119S.pdf`,
+`2024GeoJI.237.1699S.pdf` and `2011GeoJI.184.1180S.pdf`. Everything about the tables below is read from
+those PDFs directly, and the **provenance rows were corrected 2026-09-11** — `P30-data/PROVENANCE.txt`
+(`ebcb4d8e7a0647d2`, 3493 B) now carries a row per paper with its path and sha256, measured here.
+⚠ *An earlier version of this material flagged that file as still saying «OUP 403, owner request B»,
+and that flag was false against the file*: the 09-10 statuses were already marked superseded, so the
+draft had quoted the superseded notice as if it were live. *What the refresh fixed was narrower — one
+prose line instead of three rows, no path per paper, a truncated sha (parallel seat's account of the
+`849f6b2e1b7052ca` state, which no longer exists on disk to be re-read).* Recorded rather than deleted,
+because a ledger that keeps a defect nobody had is worse than one that keeps none.
+
+#### What the owner has already decided (P30 §5, 2026-09-10) — inputs, not open
+
+| # | decision |
+|---|---|
+| (a) | BurnMan is a **runtime dependency of the engine, not an offline grid generator**, pinned `burnman==2.1.0` (GPL-2.0-or-later). ⚠ *That clause is what decision I's cached-grid candidate has to answer to, and the licence sentence that has to accompany the pin is still open — see F and Q7 below.* |
+| (b) | the parameter base is **S&LB 2022** (`burnman.minerals.SLB_2022`) — not 2011, not 2024 |
+| (c) | ① the body file declares **chemical ratios** (Mg/Si, iron content, C/O and the like; **exact keys pre-registered at build time**); ② the mineral assemblage is **computed by a sourced rule** — **S&LB 2022 phase boundaries + BurnMan equilibrium**, *whether `burnman.equilibrate` or similar exists in 2.1.0 and runs with the SLB_2022 `Solution`s is to be verified at build time* — and hard-coding an Earth-reference assemblage and perturbing it is **forbidden**; ③ a body whose mineral fractions are known directly may **declare them and override** ②. Composition travels as a **node contract**; no module-global state |
+
+⚠ **(c) ② is the whole point of the item.** The engine already has a silicate answer — two fitted
+`Phase` objects. What it does not have is an answer that *changes when the chemistry changes*. A fit
+cannot be asked «what if this mantle has more iron»; an assemblage can.
+
+#### The two checks that moved since P34 was written
+
+**Check ① — the first-call convergence check, and it is a stop condition.** Rebuild BurnMan's own
+`example_equilibrate.py` assemblage with the **SLB_2022** counterparts and run it at the example's own
+(P, T) constraints. Converges → the programme proceeds. Fails or throws → **named refusal**, «SLB_2022
+assemblage does not equilibrate in BurnMan 2.1.0 at the example conditions», and the programme stops at
+owner row A's fallback. ⚠ *No tolerance is loosened past the function's defaults without recording it* —
+a check that can be made to pass by widening it is not a check. **The reason this is first is P30 §7:
+`equilibrate` is shipped with SLB_2011 examples and is untested with SLB_2022 in BurnMan's own
+repository**, so the risk is not in our code at all.
+
+**Check ⑦ — not a pair of numbers, and not even a «window».** P34 wrote «read the dataset's stated
+P–T range». **Neither paper states one.** What they print is measured below, read from the held PDFs
+rather than from our own transcription of them — *an earlier version of this material repeated P30's
+summary and got four things wrong about the tables, which is the rule about our documents being base
+material and not evidence, arriving on schedule.*
+
+| what P30's summary said | what the PDF prints |
+|---|---|
+| 2022 Table A4 has *Species · P_min · P_max · T_min · T_max* | **Species · N · P_min(GPa) · P_max(GPa) · T_min(K) · T_max(K) · Ref.** |
+| 2024 Table C4 has *N · P_min · P_max · T_min · T_max · Ref.* — a different shape | **the same seven columns.** The two tables have identical structure, and a sampled species row was checked to agree between them — *the row itself is not transcribed here* |
+| «per species and per reaction» = the 2022 table and the 2024 table | **both granularities live in each paper**: A4 *stability* (per species) and A5 *reactions* (per reaction). The transcription target is **two tables**, not one |
+| a species has a window | **a species has a set of rows**, each row one P×T box — a common silicate end-member carries a double-figure `N` spread over several rows in A4. *The values are not transcribed here: that is check ⑦'s own item* |
+
+**Where the material lives, since no value may be printed until it is transcribed.** 2022
+(`2022GeoJI.228.1119S.pdf`): **Table A4** *«Summary of phase equilibria data: stability»*, printed pages
+1145–1146, columns *Species · N · P_min (GPa) · P_max (GPa) · T_min (K) · T_max (K) · Ref.*; **Table A5**
+*«Summary of phase equilibrium data: reactions»*, printed page 1146. 2024 (`2024GeoJI.237.1699S.pdf`):
+**Table C4**, printed pages 1731–1732, and **Table C5** *reactions*, printed page 1733. Until the
+transcription exists with its own hash, **the only sentence this material may print about coverage is
+«coverage not transcribed yet».**
+
+⚠ **So the transcription item had a decision inside it, and it is now taken.** **J: a species' coverage
+is the union over P×T boxes — a body's (P, T) is covered only if it lies inside at least one table row's
+box, and separate unions of the P intervals and the T intervals are forbidden** (directing seat,
+2026-09-11). ⚠ **The reason is the audit seat's counter-example**: 9 GPa · 1200 K can sit inside the
+union of a species' P intervals **and** inside its T envelope while sitting inside **no row** — the two
+axes are folded independently, so the pair is never checked against any single measurement. Under the
+box rule that body gets the **«outside the data coverage»** refusal instead. *The refusal is the point —
+an axis-wise union and an envelope are both shapes that hide the question.*
+
+⚠ **And the stability table's own title is the sentence this material must print.** A4's is *"Summary
+of phase equilibria data"* — *A5's prints the singular, "Summary of phase equilibrium data", and 2024's
+C5 is back to the plural* — **the P–T coverage of the experiments the parameters were fitted against**, not a
+declared range of validity. So the refusal is «outside the data coverage», never «outside the valid
+range». *Those read differently to the next person, and only one of them is what the paper says.*
+
+⚠ **And the reactions table carried a second decision of the same kind, also now taken.** Its rows are
+**reactions**, not species — **A5 in the 2022 paper, C5 in the 2024 one; never C4, which is the
+stability table**. *No reaction row is transcribed here either.* **K: a reaction row's box goes to every
+species in the reaction**, products and reactants alike, and each such box carries a
+**`reaction-row attribution`** label so a coverage claim can always be traced back to whether it came
+from a stability row or a reaction row (directing seat, 2026-09-11).
+
+**So the transcription item is not «copy two tables».** It is **two tables and two rules** — the P×T box
+union within a species (J), attribution to all participants across the reactions table (K) — and both
+are decisions the transcription must carry, not conventions it may assume.
+
+⚠ **A caveat sits on decision C, and its source is held.** *An earlier version of this material had to
+say «reported, source not held»: the two sentences C and Q7 rest on existed in two of our own documents
+and nowhere else — not in `SLB_2022.py`, not in `P30-data/`, not in our repository.* The parallel seat
+fetched both READMEs on 2026-09-11 and they sit beside the other `P30-data/` files:
+`HeFESTo_parameters_010121-README.md` (sha256 `c645fbf93a5b1ba3`, 1471 B) and
+`HeFESTo_Parameters_010123-README.md` (`6eb0d60dee14215f`, 1188 B). Read in the held file, verbatim:
+
+> *"Parameter files of the following species have not yet been discussed in the published literature and
+> are not recommended as they are still being optimized: crst, enm, fapv, fea, fee, feg, flpv, hem,
+> hepv, hlpv, hmag, hppv, lppv, mag, mgl, sil, wuls"*
+
+⚠ **Counted rather than assumed: `SLB_2022.py` ships eleven of those seventeen** — `crst`, `fapv`,
+`flpv`, `hem`, `hepv`, `hlpv`, `hmag`, `hppv`, `lppv`, `mag`, `wuls` — eleven of its **77** top-level
+classes, measured against the held file; the audit seat's count and this seat's agree. ⚠ *«77» is
+`^class` lines*, which decompose as **62 `Mineral` + 15 `Solution`* — worth writing because the same
+number counted as «species» would be 62. *The four low-spin end-members are a subset, not the story*:
+the other seven are cristobalite, three Fe-perovskites and three iron oxides, and **spin has nothing to
+do with them**. An earlier version of this material called this «a caveat on the spin decision», which
+was the smaller half of it.
+
+⚠ **The list is in the 010121 README only** — the 010123 (2024) one does not carry that paragraph at
+all. *Decision (b) chose the 2022 base, so the caveat applies at full strength to exactly the set this
+item will use*; had (b) gone the other way the sentence would not exist, which is worth knowing before
+anyone revisits (b). ⚠ *And that is not «2024 is cleaner»*: `SLB_2024.py` ships **twelve** of the
+seventeen out of its 92 top-level classes (**74 `Mineral` + 15 `Solution` + 2 `RelaxedSolution` + 1
+`SLB3` helper**, so 91 are species and one is not) — dropping **both** `crst` and `flpv` and adding
+`fea`, `fee`, `feg` (11 − 2 + 3 = 12; `flpv` does not appear anywhere in that file, grep 0) — with **no
+README paragraph saying anything about them** — so the right label for the 2024 set is **«unknown»**,
+not «recommended». ⚠ *The two files do not share one decomposition*: 2022 has no `RelaxedSolution` and
+no SLB3-derived class at all, so reading the 2022 count through the 2024 breakdown is wrong.
+
+#### Owner decisions this item needs
+
+⚠ **A–I carry candidates and nothing is chosen. J and K carry a directing-seat default for owner
+review**, and the rejected alternative is written beside each so the choice stays visible.
+
+| # | decision | candidates |
+|---|---|---|
+| A | a rocky body **without** `mantle_chemistry` | refuse by name · fall back to today's `silicate` fit with the label «fit, no chemistry declared» · a `Declared-optional` default chemistry (Earth's) carrying the transfer label |
+| B | the chemistry keys | `mg_si` + `fe_number` (+ optional `al_si`, `ca_si`, `na_si`) · `feo_wt` instead of `fe_number` · a full oxide wt % vector. ⚠ *P30 §8 narrows this*: the 2022 base is six oxides (SiO₂ MgO FeO CaO Al₂O₃ Na₂O), so `fe_number` addresses it; the 2024 set is the one that adds **Fe₂O₃ (ferric iron, with spin states), Cr₂O₃ and native-iron phases**, and a single `fe_number` cannot address its Fe³⁺/Fe²⁺ split — (b) chose 2022 |
+| C *(re-framed 2026-09-11)* | **the eleven author-not-recommended species that `SLB_2022.py` ships** — `crst`, `fapv`, `flpv`, `hem`, `hepv`, `hlpv`, `hmag`, `hppv`, `lppv`, `mag`, `wuls` | **C1** include all of them, leaving the eleven open to `equilibrate` · **C2** exclude them by default under the label `author-not-recommended species excluded`, with a body's **declared mineral fractions** able to bring a named one in — this is P34's «declaration-only per body» and it is what owner clause (c) ③ already allows · **C3** exclude with no opt-in at all. **Directing-seat default: C2**, labelled a default pending owner ⑥-2. ⚠ *This was written as «spin transitions», and that framed four of the eleven*; the other seven are cristobalite, three Fe-perovskites and three iron oxides, and spin is irrelevant to them. Source held: `P30-data/HeFESTo_parameters_010121-README.md`, sha256 `c645fbf93a5b1ba3` |
+| D | the composite averaging scheme | Voigt–Reuss–Hill · Reuss · Voigt |
+| E | melting | stays a separate slot (today's Monteux/Deng/Fei chain) — S&LB 2022 has no melt phases; confirm rather than decide |
+| F | the `NOTICE` sentence | a REBOUND-style row · a fuller GPL note · defer until P30 §6's questions are answered |
+| G | the first target body | Earth as a contrast · Mars first |
+| H | what happens to `silicate_chondritic` | keep it for crust and serpentinisation mixes · retire it once the chondritic chemistry is declared |
+| I | the cost ceiling | one `equilibrate` per integration step · a per-body (P, T) grid cached **in memory for the run only**. ⚠ *I is now entangled with Q7 — see below* |
+| **J** *(default set, owner review)* | how a species' coverage folds from its several stability rows (A4 in 2022, C4 in 2024) | **union over P×T boxes** — chosen: a body's (P, T) is covered only if it lies inside at least one row's box, and **separate unions of the P intervals and the T intervals are forbidden**. *Rejected: the min–max envelope, and equally the axis-wise union — 9 GPa · 1200 K can sit in a species' P-union and in its T envelope while sitting in no row, so both shapes report a fill where no measurement is.* Alternatives recorded, not chosen |
+| **K** *(default set, owner review)* | how a reaction row's box is attributed (**A5** in 2022, **C5** in 2024 — never C4, which is stability) | **every species in the reaction** — chosen, with a `reaction-row attribution` label on each box so any coverage claim can be traced to a stability row or a reaction row. *Alternatives recorded: reactants only · no attribution at all* |
+
+#### The licence row, and the question that is new
+
+**The default the repo already has.** `NOTICE` §2 carries a GPL-3.0 library used exactly this way —
+*"REBOUND — GPL-3.0. Used as a library (not vendored) by the stability sandbox under
+`phase3/stability-sim/`; simulations are run against an installed copy."* **That precedent is the
+proposed default for BurnMan**: import-only, installed by the user, no BurnMan file in the repo or in a
+release. *It is proposed because the repo already made this call once and nothing about BurnMan's shape
+differs — not because the licence text settles it.*
+
+⚠ **Q7 is new and it is not the same question.** P30 §6 asked six questions about GPL-2.0 and
+import-only use. §8 added a seventh, and it comes from the **parameter repository's** README, not from
+BurnMan's licence: *"We grant the right to download and use this data, but do not grant the right to
+redistribute modified versions of the data in any form."* ⚠ **Held in both READMEs, verbatim** — the
+same clause appears in 010121 and 010123, so it does not depend on which parameter set is chosen. Our
+engine would redistribute nothing. But **a cached c_p/α grid derived from those parameters** — which is
+exactly what owner decision **I**'s second candidate builds — is «modified data» or «output» depending
+on a reading the README does not make.
+
+⚠ *So I and Q7 cannot be answered separately.* Choosing the cached grid without answering Q7 would put
+a derived artefact of a no-redistribution dataset inside the run, and the in-memory-only clause is the
+reason the candidate was written that way in the first place. **Recorded as a pair, owner pending.**
+
+#### What this item must not do
+
+1. ⚠ **No hard-coded Earth assemblage**, not even as a default — (c) ② is explicit.
+2. ⚠ **No module-global composition or cached mineralogy shared across bodies.** The material is built
+   from the node contract, per call.
+3. ⚠ **No value typed from S&LB 2022 or from BurnMan's files into our code.** BurnMan reads its own
+   package. *The one exception under discussion is Table A4's coverage, and that is check ⑦'s own item
+   with its own hash.*
+4. ⚠ **No change to `ENVELOPE_Z_MATERIAL`, to the core materials, to melting, or to the C58 module
+   constants.** The giant-planet Z proxy uses the silicate fit as a proxy, not as a mantle.
+5. ⚠ **No tuning toward PREM.** Check ② reports a per-depth-bin contrast; it does not fit.
+6. ⚠ **No install in the shared worktree before the licence row exists** (F), and now also before Q7 is
+   answered if I chooses the cached grid.
+
+#### Status
+
+Open. ⚠ **A number, not a registered item** — the condition for becoming one is P34's: the owner answers
+A–I or marks them deferred. *Two of the nine now carry printed caveats that did not exist when P34 was
+written (C's «not recommended» list, I's entanglement with Q7), which is the reason to re-present them
+rather than to carry the old table forward.*
+
 
 ## What closing all of these does not do
 
