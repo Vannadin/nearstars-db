@@ -16,6 +16,7 @@ Arrhenius 쪽에만 인쇄하므로 (θ, Ra_i, Nu) 세 쌍이 안 나온다. Tab
 이 엔진이 가진 **유일한** 행별 앵커다.
 """
 from __future__ import annotations
+import convergence
 
 import math
 
@@ -71,6 +72,12 @@ def nu_preasymptotic(theta: float, ra_i: float, n: int = 1, a_rh: float | None =
     rhs = nu_asymptotic(theta, ra_i, n)
     c = 2.0 * (1.0 - a_rh / theta)          # 대괄호 안 = 1 − c/Nu
     lo, hi = max(c, 0.0) + 1e-9, 1.0e4
+    # ⚠ **기준 가지가 없는 이분법** — 상태 `None`, 묻는 것은 진입 괄호뿐이다
+    #   (브리프 189 Amendment 2).
+    convergence.note("stagnant_lid.nu_asymptotic_bisect", None,
+                     bracket_valid=convergence.bracket_valid(
+                         lo * max(1.0 - c / lo, 0.0) ** expo - rhs,
+                         hi * max(1.0 - c / hi, 0.0) ** expo - rhs))
     for _ in range(200):                     # 좌변은 Nu 에 단조증가 — 이분법
         mid = 0.5 * (lo + hi)
         if mid * max(1.0 - c / mid, 0.0) ** expo < rhs:
@@ -215,6 +222,12 @@ def nu_stability(theta: float, ra_i: float, d_eta: float = 1.0, z_d: float = Z_D
     """eq. 43 — `Ra_l(δ) = Ra_crit(n)` 를 δ 로 풀고 `Nu = δ⁻¹`. n = 1 전용."""
     target = ra_crit(1)
     lo, hi = 1e-6, 0.999
+    # ⚠ **기준 가지가 없는 이분법** — 상태 `None`, 묻는 것은 진입 괄호뿐이다
+    #   (브리프 189 Amendment 2).
+    convergence.note("stagnant_lid.ra_local_bisect", None,
+                     bracket_valid=convergence.bracket_valid(
+                         ra_i * _ra_local_max(lo, theta, d_eta, z_d, dt_rho) - target,
+                         ra_i * _ra_local_max(hi, theta, d_eta, z_d, dt_rho) - target))
     for _ in range(90):
         mid = 0.5 * (lo + hi)
         if ra_i * _ra_local_max(mid, theta, d_eta, z_d, dt_rho) < target:
@@ -236,6 +249,12 @@ def nu_full(theta: float, ra_i: float, d_eta: float = 1.0, z_d: float = Z_D_TABL
         a_rh = A_RH_LINEAR_EXP[1]
     c = 2.0 * (1.0 - a_rh / theta)
     lo, hi = max(c, 0.0) + 1e-9, 1.0e4
+    # ⚠ **기준 가지가 없는 이분법** — 상태 `None`, 묻는 것은 진입 괄호뿐이다
+    #   (브리프 189 Amendment 2).
+    convergence.note("stagnant_lid.nu_table2_bisect", None,
+                     bracket_valid=convergence.bracket_valid(
+                         lo * max(1.0 - c / lo, 0.0) ** 0.5 - rhs,
+                         hi * max(1.0 - c / hi, 0.0) ** 0.5 - rhs))
     for _ in range(200):
         mid = 0.5 * (lo + hi)
         if mid * max(1.0 - c / mid, 0.0) ** 0.5 < rhs:
@@ -357,6 +376,9 @@ def fit_b_eq30(alpha: float = ALPHA_IN_RA) -> float:
     그 차는 두 식의 차이이고 적합의 잘못이 아니다 (C47 (k) 커밋 3). 09-07 의 이분법(기하평균,
     400회)을 그대로 옮긴 것이다."""
     lo, hi = 1e-40, 1e40
+    # ⚠ **기준 가지가 없는 이분법** — 상태 `None`, 묻는 것은 진입 괄호뿐이다
+    #   (브리프 189 Amendment 2).
+    convergence.note("stagnant_lid.b_grain_bisect", None, bracket_checked=False)
     for _ in range(400):
         mid = math.sqrt(lo * hi)
         nu = nu_asymptotic(theta_fk(B_FIT_EARTH_DT_K, B_FIT_EARTH_TI_K),
@@ -399,9 +421,13 @@ def nu_eq56(theta: float, ra_i: float, d_eta: float, z_thickness: float,
     for i in range(EQ56_MAX_ITER):
         nu = nu_full(theta, ra_i, d_eta, 1.0 - z, dt_rho)
         if nu * z <= 1.0 + EQ56_REL_TOL:
+            # ⚠ 이 자리는 C47 (k) 부터 `converged` 를 돌려주고 있었다 — 189 는 그 모양을
+            #   나머지에 퍼뜨리고, 여기서는 기록에 한 줄 더 남길 뿐이다.
+            convergence.note("stagnant_lid.eq56_fixed_point", True)
             return {"nu": nu, "z_thickness": z, "iters": i, "fired": z != z_thickness,
                     "converged": True}
         z = 1.0 / nu
+    convergence.note("stagnant_lid.eq56_fixed_point", False)
     return {"nu": nu_full(theta, ra_i, d_eta, 1.0 - z, dt_rho), "z_thickness": z,
             "iters": EQ56_MAX_ITER, "fired": True, "converged": False}
 

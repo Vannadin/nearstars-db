@@ -37,6 +37,7 @@ N_POINTS = 93
 N_FLAGGED = 5
 
 import math
+import convergence
 
 # 등온선 온도 [K].
 T_K = (500, 700, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 10000)
@@ -271,6 +272,10 @@ def density(p_pa, t_k):
         raise ValueError(f"{p_pa / 1e9:.2f} GPa at {t_k:.0f} K is outside {SOURCE} "
                          f"({p_lo / 1e9:.3f}-{p_hi / 1e9:.1f} GPa at this temperature)")
     a, b = math.log(lo), math.log(hi)
+    # ⚠ **기준 가지가 없다 — 예순 번을 다 돌고 중점을 돌려준다** (브리프 189 Amendment 2),
+    #   그래서 상태는 `None` 이다. 괄호는 **위의 범위 검사가 이미 보장한다** — `p_pa` 가
+    #   `p_lo`–`p_hi` 밖이면 거기서 이름 대며 거절하므로, 여기서 평가를 한 번 더 하지 않는다.
+    convergence.note("ammonia_table.density_bisect", None, bracket_valid=True)
     for _ in range(60):
         m = 0.5 * (a + b)
         if pressure(math.exp(m), t_k) < p_pa:

@@ -23,6 +23,7 @@ Table 1 — 를 축자 전사해 기계 잔차(~1e-14)까지 푼다. 전사는 P
 채워 넣은 값(α)은 채워 넣었다고 말한다.
 """
 from __future__ import annotations
+import convergence
 
 import math
 
@@ -129,6 +130,7 @@ def _newton(p, A, T0g, d0g):
         return None
     for _ in range(120):
         if abs(r[0]) < 1e-10 * HD and abs(r[1]) < 1e-8:
+            convergence.note("tidal_transport.newton_2d", True)
             return T_i, d
         hT = max(1e-7 * abs(T_i), 1e-5)
         hd = max(1e-7 * abs(d), 1e-4)
@@ -156,7 +158,11 @@ def _newton(p, A, T0g, d0g):
                 break
             lam *= 0.5
         if not stepped:
+            # ⚠ 선탐색이 1e-8 아래로 반감하고도 못 내려갔다 — 이 `None` 이 호출부가 읽는 신호다
+            #   (브리프 189: `stepped` 는 지역 변수이고, 밖에서 보이는 것은 이 반환이다).
+            convergence.note("tidal_transport.newton_2d", False)
             return None
+    convergence.note("tidal_transport.newton_2d", False)
     return None
 
 

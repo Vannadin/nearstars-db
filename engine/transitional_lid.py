@@ -39,6 +39,7 @@ records rather than a choice we made silently.
   (`engine/interior-core.md@«it is four choices of the same declaration»`).
 """
 from __future__ import annotations
+import convergence
 
 import math
 import sys
@@ -126,11 +127,14 @@ def close_t_i(l_prime: float, mu_l: float, mu_i: float, damage_l: float, damage_
         if abs(f_mid) < tol or hi - lo < tol:
             dl = delta_l(l_prime, mu_l, damage_l, ra, mid, m, p)
             dm = delta_m(mu_i, damage_i, ra, mid, m, p)
+            convergence.note("transitional_lid.eq59_bisect", True)
             return {"t_i": mid, "delta_l": dl, "delta_m": dm, "nu": mid / dl, "iterations": i + 1}
         if f_lo * f_mid <= 0.0:
             hi, f_hi = mid, f_mid
         else:
             lo, f_lo = mid, f_mid
+    # ⚠ 이 자리는 **이미** 이름 대며 거절한다 (C71 의 보고자 다섯 중 하나). 세는 칸만 더한다.
+    convergence.note("transitional_lid.eq59_bisect", False)
     return {"refused": f"eq. (59) did not converge in {max_iter} bisections"}
 
 

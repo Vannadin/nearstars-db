@@ -30,6 +30,7 @@ conducting liquid-iron core" 라고 적는 그 '액체' 가 이 노드의 출력
   `envelope_z` 와 같은 종류이고, 답이 거기 기대는 만큼 등급이 내려간다.
 """
 from __future__ import annotations
+import convergence
 
 import math
 from dataclasses import replace as _dc_replace
@@ -319,6 +320,10 @@ def _adiabat(material, p_pa: float, p_cmb: float, t_cmb: float,
 def _cross(f, lo: float, hi: float) -> float:
     """f 의 부호가 바뀌는 자리를 이분법으로 찾는다. 단조라 뿌리가 하나다."""
     f_lo = f(lo)
+    # ⚠ **기준 가지가 없다 — 정해진 횟수를 다 돌고 중점을 돌려준다** (브리프 189 Amendment 2).
+    #   그래서 상태는 `None` 이고, 묻는 것은 진입 괄호의 부호다.
+    convergence.note("core_state.bisect", None,
+                     bracket_valid=convergence.bracket_valid(f_lo, f(hi)))
     for _ in range(80):
         mid = 0.5 * (lo + hi)
         if (f(mid) > 0.0) == (f_lo > 0.0):

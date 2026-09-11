@@ -1645,6 +1645,7 @@ def shoot(mass_kg: float, cmf: float, imf: float,
             try:
                 got, ok = _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, **kw)
                 got.crust_blocked = crust_hit
+                convergence.note("interior._t_bracket_tries", True)
                 return got, ok, t_now
             except PhaseGap as gap:
                 if not gap.temperature_k:
@@ -1655,6 +1656,9 @@ def shoot(mass_kg: float, cmf: float, imf: float,
                 if gap.material == CRUST_NAME and not gap.too_cold:
                     crust_hit = True
                 t_now = t_now * 1.6 if gap.too_cold else t_now / 1.6
+        # ⚠ **열두 번을 다 쓰고도 벽을 못 벗어났다** (C71, 브리프 189). 아래 한 번이 더 돌고 그
+        #   결과가 답의 자리로 나가는데, 그 «다 썼다» 는 지금까지 어디에도 안 적혔다. 값은 그대로다.
+        convergence.note("interior._t_bracket_tries", False)
         got, ok = _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, **kw)
         got.crust_blocked = crust_hit
         return got, ok, t_now

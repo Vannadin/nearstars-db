@@ -3092,8 +3092,11 @@ ICE_X_RHO0 = 1644.294888           # kg/m³
 ICE_X_K0 = 22.286772 * GPA         # Pa
 ICE_X_K0P = 6.750653
 ICE_VII_TO_X = 37.4 * GPA          # Zeng & Sasselov 2013 §III.3.2 — 두 EOS 의 교점
-# ── ice_x 의 천장은 셋이고 전부 다른 수다 (브리프 34 표기; 수와 출처는 interior-core.md C6
-# 행과 superionic-ceiling-context-notes.md 가 정본, 여기서는 가리키기만 한다) ──
+# ── ice_x 의 천장은 셋이고 전부 다른 수다 (브리프 34 표기; 수와 출처는
+# superionic-ceiling-context-notes.md 가 정본, 여기서는 가리키기만 한다) ──
+# ⚠ 2026-09-11 에 포인터를 고쳤다: 예전에는 «interior-core.md C6 행» 을 함께 가리켰는데,
+#   C6 는 «material ceilings — standing watch» 이고 거기 걸린 셋은 γ = 1.5 · 평가되지 않은
+#   «Rm > 40» · 0.06 다극 계수로 **이 천장과 무관하다** (병렬석 실측).
 #   데이터   ≈355 GPa — French & Redmer 2015 자신의 최고 시뮬레이션 밀도(4.25 g/cc, 300 K); 위는 외삽
 #   안정성   ≈520 GPa — French+ 2016 Fig. 4 에서 얼음 영역이 닫히는 곳. 그 경계의 얼음 쪽
 #            퍼텐셜이 ref.[30] = French & Redmer 2015 = VII_X_French = **ice_x 가 적합된 그것** —

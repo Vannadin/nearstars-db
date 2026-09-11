@@ -24,6 +24,7 @@ F_e (16) · 전자 유도량 블록 (17) 이고, 기준 온도에서 빼는 형�
 from __future__ import annotations
 
 import math
+import convergence
 from dataclasses import dataclass
 
 R_GAS = 8.314462618          # J/(mol·K)
@@ -166,6 +167,7 @@ def volume_at(p: float, t: float, col: Column = LIQUID) -> float:
     for _ in range(40):
         f = pressure(v, t, col) - p
         if abs(f) < 1.0:                      # 1 Pa. P 는 GPa 규모라 상대오차 1e-11 이하다
+            convergence.note("fe_liquid.volume_newton", True)
             return v
         h = v * 1e-6
         dfdv = (pressure(v + h, t, col) - pressure(v - h, t, col)) / (2.0 * h)
@@ -176,8 +178,16 @@ def volume_at(p: float, t: float, col: Column = LIQUID) -> float:
         if not (0.2 * col.v0 < v_new < 1.5 * col.v0):  # 창을 벗어나면 Newton 을 믿지 않는다
             break
         if abs(step) < v * 1e-12:
+            convergence.note("fe_liquid.volume_newton", True)
             return v_new
         v = v_new
+    # ⚠ Newton 이 기준으로 못 나갔다 — 창 밖으로 튀었거나 도함수가 죽었거나 예산을 다 썼다.
+    #   아래 이분법은 **그 실패의 안전망**이고, 기준 가지가 없어 상태가 `None` 이다 (브리프 189).
+    convergence.note("fe_liquid.volume_newton", False)
+    convergence.note("fe_liquid.volume_bisect", None,
+                     bracket_valid=convergence.bracket_valid(
+                         pressure(0.2 * col.v0, t, col) - p,
+                         pressure(1.5 * col.v0, t, col) - p))
     lo, hi = 0.2 * col.v0, 1.5 * col.v0
     for _ in range(80):
         mid = 0.5 * (lo + hi)

@@ -33,6 +33,7 @@ to 9 significant digits.
 where for region 2 every γ-derivative is the ideal + residual sum (γ°_π = 1/π, γ°_πτ = 0).
 """
 from __future__ import annotations
+import convergence
 
 R = 461.526                 # J/kg/K — R7-97 eq. (1)
 T_MAX_K = 1073.15           # region 2 upper edge (above it: region 5, not transcribed)
@@ -233,8 +234,10 @@ def _r3_density(p_pa: float, t_k: float) -> float:
         step = rho - f / dp_drho if dp_drho > 0.0 else 0.5 * (lo + hi)
         rho_new = step if lo < step < hi else 0.5 * (lo + hi)
         if abs(rho_new - rho) < 1e-12 * rho:
+            convergence.note("steam_if97.density", True)
             return rho_new
         rho = rho_new
+    convergence.note("steam_if97.density", False)
     return rho
 
 

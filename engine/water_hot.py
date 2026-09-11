@@ -41,6 +41,7 @@ below 50,000K" 라고 적는다. Scheibe+ 2019 가 천왕성·해왕성 모형�
 from __future__ import annotations
 
 import math
+import convergence
 
 from fermi import f_half, f_three_half, inverse_f_half
 
@@ -241,6 +242,7 @@ def density(p: float, t: float) -> float:
         y = math.log(pressure(rho, t) / p)
         if abs(y) < 1e-12:
             _LAST_DENSITY = (p, t, rho)
+            convergence.note("water_hot.density", True, bracket_checked=False)
             return rho
         if y < 0.0:
             x0, y0 = x, y
@@ -253,8 +255,13 @@ def density(p: float, t: float) -> float:
             nxt = 0.5 * (x0 + x1)
         if abs(nxt - x) <= 1e-14 * abs(x):
             _LAST_DENSITY = (p, t, math.exp(nxt))
+            convergence.note("water_hot.density", True, bracket_checked=False)
             return math.exp(nxt)
         x = nxt
+    # ⚠ `_LAST_DENSITY` 가 :232–236 에서 따뜻한 출발로 읽히고 여기서 쓰인다 — 부호 검사를 붙이면
+    #   **다음 호출의 답**이 움직이고, 그 실패는 호출 순서를 따라다니어 재현되지 않는다. 그래서
+    #   확인하지 않았다는 사실만 남긴다 (브리프 189 Amendment 2, 감사석 실측).
     out = math.exp(0.5 * (x0 + x1))
     _LAST_DENSITY = (p, t, out)
+    convergence.note("water_hot.density", False, bracket_checked=False)
     return out

@@ -41,6 +41,7 @@ scripts/check.sh 는 시스템 파이썬에 의존성 없이 돈다.
 """
 from __future__ import annotations
 
+import convergence
 import math
 
 # 표가 덮는 구간과 격자. 양 끝은 급수가 받는다.
@@ -296,6 +297,7 @@ def inverse_f_half(value: float) -> float:
             lo = eta
         if abs(f) <= tol:
             _LAST_INVERSE = (value, eta)
+            convergence.note("fermi.inverse", True, bracket_checked=False)
             return eta
         if cell is not None:
             slope = _hermite_on(_LN_M12, _D_M12, cell)
@@ -309,7 +311,12 @@ def inverse_f_half(value: float) -> float:
             nxt = 0.5 * (lo + hi)
         if abs(nxt - eta) <= 1e-14 * max(abs(eta), 1.0):
             _LAST_INVERSE = (value, nxt)
+            convergence.note("fermi.inverse", True, bracket_checked=False)
             return nxt
         eta = nxt
+    # ⚠ **괄호 부호 검사를 안 붙인다** (브리프 189 Amendment 2): 이 함수의 평가 경로에
+    #   `_LAST_INVERSE` 가 있다 — 진입에서 따뜻한 출발로 읽고 종료마다 쓴다. 추가 평가 한 번이
+    #   **다음 호출의 답**을 바꾸므로, 확인 못 한 사실을 `bracket_checked=False` 로 남긴다.
     _LAST_INVERSE = (value, eta)
+    convergence.note("fermi.inverse", False, bracket_checked=False)
     return eta

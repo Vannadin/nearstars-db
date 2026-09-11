@@ -28,6 +28,7 @@ L_h 750 kJ/kg; β_c 1.1 ± 0.1; χ 4.2 wt %. **Nothing here is fed back into `co
 reported beside the declared lower bound (C14's scope; feeding back moves anchors and is a separate decision).
 """
 from __future__ import annotations
+import convergence
 
 import math
 
@@ -230,6 +231,12 @@ def find_root(t_m_base: float, material_name: str, p_cmb: float, r_cmb: float, m
     if (f_lo > 0.0) == (f_hi > 0.0):
         return None
     hi = t_hi
+    # ⚠ **기준 가지가 없다 — 정해진 횟수를 다 돌고 중점을 돌려준다** (브리프 189 Amendment 2).
+    #   그래서 상태는 `None` 이고, 묻는 것은 진입 괄호의 부호다.
+    convergence.note("core_energy.balance_bisect", None,
+                     bracket_valid=convergence.bracket_valid(
+                         f_lo, balance(hi, t_m_base, material_name, p_cmb, r_cmb,
+                                       m_core, dtc_dt, h)[0]))
     for _ in range(50):
         mid = 0.5 * (lo + hi)
         f_mid = balance(mid, t_m_base, material_name, p_cmb, r_cmb, m_core, dtc_dt, h)[0]
