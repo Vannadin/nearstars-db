@@ -49,6 +49,15 @@ def _banner_layers() -> dict[str, str]:
     return out
 
 
+#: 한 이름을 두 노드가 내는 자리 — 2026-09-11 감사석 센서스에서 시작해, C62 (b) 가
+#: `k2_over_q` 를 하나로 줄였다(그 이름은 `k2q_class_table` 만 낸다, 조석 노드는
+#: `k2_over_q_emitted` 를 낸다). 줄어드는 것은 통과, 느는 것은 FAIL 이다.
+DUPLICATE_PRODUCER_KEYS = {
+    "mass", "radius", "p_rot", "present", "nmoi",
+    "has_inner_core_solved", "b_pol", "b_eq", "dipole_moment",
+}
+
+
 def check(g: dict) -> int:
     nodes, edges = g["nodes"], g["edges"]
     kinds = set(g["kinds"])
@@ -106,6 +115,27 @@ def check(g: dict) -> int:
         if nd.get("kind") == "computed" and not nd.get("recipe"):
             if nd.get("status") not in ("missing", "gap"):
                 warnings.append(f"node '{name}': computed 인데 recipe 가 없다")
+
+    # ⚠ **한 이름을 두 노드가 내는 자리를 센다** (C62 (b) 의 J8, 2026-09-11). C64 가
+    #   보인 모양이 그것이다 — `state.get` 은 위상순서의 처음을, `state.resolved` 는
+    #   마지막을 돌려주므로, 노드를 옮기는 것만으로 소비자가 받는 값이 바뀐다.
+    #   C68 이 «누가 주인인가» 규칙을 지을 때까지 이 줄은 **판정하지 않고 센다**.
+    # ⚠ 수가 아니라 **집합**으로 박는다. 오늘 아침 면제 목록에서 배운 자리다 — 하나가
+    #   빠지고 하나가 들어오면 수는 그대로다. 새 이름이 들어오면 FAIL 이고, 빠지는 것은
+    #   고쳐진 것이므로 통과하되 무엇이 빠졌는지 인쇄한다.
+    producers: dict[str, list[str]] = {}
+    for name, nd in nodes.items():
+        for key in nd.get("outputs") or []:
+            producers.setdefault(key, []).append(name)
+    dup = {k: sorted(v) for k, v in producers.items() if len(v) > 1}
+    added = sorted(set(dup) - DUPLICATE_PRODUCER_KEYS)
+    gone = sorted(DUPLICATE_PRODUCER_KEYS - set(dup))
+    if added:
+        errors.append("새 중복 생산 키: " + ", ".join(
+            f"{k} ({' / '.join(dup[k])})" for k in added) +
+            " — 한 이름을 두 노드가 내면 소비자가 받는 값을 위상순서가 정한다 (C64/C68)")
+    print(f"  [INFO] 중복 생산 키 {len(dup)}개 (등록 {len(DUPLICATE_PRODUCER_KEYS)})"
+          + (f" · 사라진 것: {', '.join(gone)}" if gone else ""))
 
     for w in warnings:
         print(f"  [WARN] {w}")

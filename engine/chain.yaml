@@ -170,8 +170,8 @@ nodes:
     recipe: interior-structure-methodology
     outputs: [nmoi, core_radius_fraction, core_radius, radius, core_pressure,
               core_temperature, cmb_temperature, cmb_pressure, ice_column_state,
-              ocean_thickness, ice_shell_thickness, bulk_porosity, voids_expected,
-              figure_relaxation]
+              ocean_thickness, ice_shell_thickness, crust_thickness, bulk_porosity,
+              voids_expected, figure_relaxation]
     note: >
       질량과 조성에서 층 구조를 푼다. 정수압 평형·질량보존·상태방정식을 함께
       적분하므로 층 밀도가 입력이 아니라 결과다 — 그래서 반지름과 중심압도 같이
@@ -228,11 +228,18 @@ nodes:
     layer: "2층. 허브"
     domain: tidal
     kind: computed
-    status: missing
-    outputs: [k2_over_q, layer_q]
+    recipe: tidal-response-methodology
+    outputs: [k2, h2, l2, q, k2_band, h2_band, l2_band, q_band, k2_over_q_emitted,
+              layer_q, rheology_members_emitted, liquid_layer_treatment, static_limit,
+              tidal_composition_preset_used, tidal_composition_preset_name,
+              g_surface_identity, homogeneous_nmoi]
     note: >
-      층 유동학에서 조석 Love 수와 소산을 낸다. k2q_class_table 이 이 자리를
-      대신하고 있다. 바다 유무와 두께가 자릿수로 움직인다.
+      층 유동학에서 조석 Love 수와 소산을 낸다 (C62 (b), 2026-09-11). 액체 핵은
+      Saito 1974 §2.3 식 (17)–(20) 으로 중심부터 올리고, 고체층은 Beuthe 2015 식
+      (13)–(18), 표면은 식 (5)(7) 이다. 세 레올로지를 **밴드로** 내고 고르지 않는다.
+      ⚠ **배출만이다** — 내는 이름이 `k2_over_q_emitted` 라, `k2q_class_table` 이
+      `k2_over_q` 로 `tidal_heating` 에 가는 C39 이음매는 그대로다. 바다 유무와
+      두께가 자릿수로 움직인다.
   xuv_history:
     layer: "2층. 허브"
     domain: space_env
@@ -616,6 +623,11 @@ edges:
   - {from: tidal_locking, to: tidal_heating, kind: selects, ref: "tidal-locking-timescale-methodology.md@«- [tidal-heating-methodology](tidal-heating-methodology.md): the sibling that **assumes the lock»"}
   - {from: orbit_elements, to: tidal_heating, kind: requires, via: [a, e, n], ref: "tidal-heating-methodology.md@«Ė  ∝  (k₂/Q) · R⁵ · e² · M_p^(3/2) · a^(−15/2)»", note: "ref was :61 (shifted by b29b556e's contract block, 2026-09-04)"}
   - {from: interior_layers, to: tidal_heating, kind: requires, via: radius, ref: "mass-radius-relation-methodology.md@«- [tidal-heating-methodology](tidal-heating-methodology.md): the tidal-heating rate goes as»"}
+  - {from: interior_layers, to: tidal_response, kind: requires, via: radius, ref: "tidal-response-methodology.md@«## Contract — `tidal_response`»", note: "C62 (b). 층 사상의 바깥 끝이자 표면 조건(Beuthe 식 5)이 서는 자리."}
+  - {from: interior_layers, to: tidal_response, kind: requires, via: core_radius, ref: "tidal-response-methodology.md@«## Contract — `tidal_response`»", note: "C62 (b). 핵-맨틀 경계 — Saito 식 (20) 의 세 출발 벡터가 여기서 만들어진다."}
+  - {from: interior_layers, to: tidal_response, kind: requires, via: ocean_thickness, ref: "tidal-response-methodology.md@«## Contract — `tidal_response`»", note: "C62 (b). 바다 구간 [r_ocean_base, r_ocean_top] 을 여기서 짓는다. ⚠ 단위가 km 라 R⊕ 인 두 반지름과 한 자리에서 변환한다."}
+  - {from: interior_layers, to: tidal_response, kind: requires, via: ice_shell_thickness, ref: "tidal-response-methodology.md@«## Contract — `tidal_response`»", note: "C62 (b). 얼음 껍질 바닥 = R − 이 두께. ⚠ imf > 0 인데 이 경계가 없으면 이름 붙은 거절이다(전부 언 기둥)."}
+  - {from: interior_layers, to: tidal_response, kind: requires, via: crust_thickness, ref: "tidal-response-methodology.md@«## Contract — `tidal_response`»", note: "C62 (b). 지각 바닥 = R − 이 두께. ⚠ 맨틀 위쪽은 «존재하는 상위 경계 중 최소» 라, 바다 천체에서 이것이 없어도 맨틀이 표면까지 안 올라간다."}
   - {from: resonance_architecture, to: tidal_heating, kind: requires, via: forced_e, status: gap, ref: "tidal-heating-methodology.md@«Practical rule: **if you are claiming sustained tidal heating, name the resonance»", note: "ref was :182 (shifted by b29b556e's contract block, 2026-09-04)"}
   - {from: cassini_state, to: tidal_heating, kind: requires, via: obliquity, ref: "moon-energy-budget-methodology.md@«- [`cassini-state-obliquity-methodology.md`](cassini-state-obliquity-methodology.md) —»"}
   - {from: ocean_depth, to: tidal_heating, kind: requires, via: d_ocean, status: gap, ref: "moon-energy-budget-methodology.md@«- The channel that remains is set by **ocean thickness**, which for an invented world is an art parameter.»"}

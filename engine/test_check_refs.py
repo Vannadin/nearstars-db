@@ -358,6 +358,13 @@ def main() -> int:
               #   커밋 전 로컬 검사에 이 시험이 빠져 있었고, 면제 목록이 **넓어지는** 쪽이라
               #   계약 대조·앵커·표 셋 다 조용했다. 넓어지는 것을 잡는 그물은 여기 하나뿐이다.
               "mass_radius_relation": {"composition", "composition_intent"},
+              # ⚠ C62 (b) 가 더한 여섯 (2026-09-11). 두께 셋은 없으면 그 층이 없는 것이고,
+              #   분율 둘과 `composition_intent` 는 C28/C65 의 «선언 > 프리셋 > 이름 붙은
+              #   거절» 길이다. 이 줄을 같이 안 옮기면 gate240 과 같은 모양으로 떨어진다 —
+              #   면제 목록이 **넓어지는** 쪽은 다른 검사가 전부 조용하다.
+              "tidal_response": {"composition_intent", "core_mass_fraction",
+                                 "crust_thickness", "ice_mass_fraction",
+                                 "ice_shell_thickness", "ocean_thickness"},
               "tidal_locking": {"permanent_quadrupole"}}
     _got, _dyn = {}, {}
     for _node in sorted(_reg.registered()):

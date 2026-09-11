@@ -72,3 +72,4 @@ def load_all() -> None:
     import dynamo_rocky  # noqa: F401
     import tidal_heating # noqa: F401  — C30, tidal_heating + heat_transport_mode (2026-09-04)
     import tidal_locking # noqa: F401  — C36, the despin verdict (2026-09-06)
+    import tidal_response # noqa: F401  — C62, Love numbers as a rheology band (2026-09-11)
