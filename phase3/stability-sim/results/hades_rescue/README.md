@@ -63,6 +63,7 @@ palettes with `scripts/plot_rescue_scan.py`; the light version is `rescue_scan_l
 | 186,000 | +25.7% | ejected | 9.999 | 9:4 Dante (2.3%) · 3:2 Pandora (5.1%) | — |
 | 188,000 | +27.0% | ejected | 9.999 | 9:4 Dante (0.7%) · 3:2 Pandora (3.6%) | — |
 | 190,000 | +28.4% | ejected | 9.999 | 9:4 Dante (0.9%) · 3:2 Pandora (2.0%) | — |
+
 The two inner survivors (126,000 and 134,000 km) eject **Dante** instead and let Hades'
 eccentricity run to 0.55 / 0.38 — trading one ejection for another. That left 150,000 km
 (+1.4%, e_max 0.096) as the only clean candidate, so it went through a robustness
@@ -74,6 +75,7 @@ battery: half the timestep, and three other initial mean anomalies.
 | a=150,000 · ma0 | ejected | 9.999 |
 | a=150,000 · ma215 | **BOUND** | 0.131 |
 | a=150,000 · ma75 | **BOUND** | 0.137 |
+
 **150,000 km fails.** Surviving three of four phases means the candidate sits on the edge
 of the chaotic zone, not inside a stable island — it cannot be shipped as canon.
 

@@ -265,7 +265,7 @@ consensus is that **negative (exotic) energy is still required** — it is settl
 
 Same energy integral, three choices of `(R_eff, Δ)`, spanning ~60 orders of magnitude:
 
-| Model | `(R_eff, Δ)` | `|E|/c²` at `β_s = 10c` | Status |
+| Model | `(R_eff, Δ)` | `\|E\|/c²` at `β_s = 10c` | Status |
 |-------|--------------|--------------------------|--------|
 | **Classic Alcubierre / Pfenning-Ford** | `100 m`, `10 ℓ_P` | ~10¹² universe-masses *(prototype estimate)* | "physically unattainable" [[PF97]](#PF97) |
 | **Optimized (illustrative toy)** | `10⁻¹⁵ m`, `1 m` | ~grams–kg *(toy, not a published value)* | published reductions are **solar-mass-class** [[VdB99]](#VdB99) → **~10⁻⁴ M_⊙** [[FH21]](#FH21) |

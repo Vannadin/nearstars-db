@@ -83,12 +83,12 @@ Every ref below was printed verbatim. This is a printed-fact comparison, not a d
 | `:725` core_entropy_production | `rocky:60` | "1. **Dynamo-alive gate** — the magnetic Reynolds number must exceed the critical" — no φ and no MW/K anywhere near it; the doc's only `MW/K` is `rocky:183` |
 | `:684` composition_intent via layer_fractions | `rocky:109` | "solver per body. We instead anchor on the **moments RM22 tabulate** (Solar System" |
 | `:682`/`:683` tidal_locking | `rocky:69` | "2. **Regime gate (local Rossby number)** — `Ro_ℓ < 0.12` → **dipolar** (strong," — **this one lands** |
-| `:656` mass_or_radius → giant | `scaling:29` | "| stellar | M > 70 M_J | declines — not a dynamo of this kind | — |" |
+| `:656` mass_or_radius → giant | `scaling:29` | "\| stellar \| M > 70 M_J \| declines — not a dynamo of this kind \| — \|" |
 | `:657` body_age → giant | `scaling:83` | the `B_dip^pol` formula — **lands** |
 | `:658` star_physical via luminosity | `scaling:34` | **a blank line** |
 | `:660` body_class → giant | `scaling:82` | **a blank line** |
 | `:661` tidal_locking → giant | `scaling:33` | "reason attached, so a body that cannot be derived says why rather than being extrapolated." |
-| `:662`/`:667` body_class → rocky | `scaling:97` | "| 1 M_J young end | 1.00 | 0.003 | 101 G | ~100 G | ✓ |" — a validation-table row |
+| `:662`/`:667` body_class → rocky | `scaling:97` | "\| 1 M_J young end \| 1.00 \| 0.003 \| 101 G \| ~100 G \| ✓ \|" — a validation-table row |
 
 Also, the brief's own pointers do not land either: `rocky:22-25` is the contract block (Returns
 + Needs), not "core_radius·conductor_phase"; `rocky:60` is the `Rm > 40` gate, not an entropy

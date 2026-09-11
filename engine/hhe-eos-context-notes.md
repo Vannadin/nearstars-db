@@ -90,7 +90,7 @@ outside it** — the same move `t_max` makes for ice VII.
 The obvious economy — keep every second node and interpolate — does not survive
 measurement. Against the distributed values over the same rectangle:
 
-| grid | nodes | worst |Δρ|/ρ | rms |
+| grid | nodes | worst \|Δρ\|/ρ | rms |
 |---|---|---|---|
 | native, 0.05 dex | 49 × 161 | 2.1×10⁻⁴ | 1.8×10⁻⁵ |
 | every 2nd, 0.10 dex | 25 × 81 | 3.2×10⁻¹ | 1.9×10⁻² |

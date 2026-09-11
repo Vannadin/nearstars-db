@@ -869,8 +869,8 @@ from the same representation. On top of it, each phase's constants are re-read a
 reference states and compared with what is baked into the code, and each phase's rebuilt
 density curve is compared against the representation across its window:
 
-| phase | reference state | ρ₀ (kg/m³) | K₀ (GPa) | K₀′ | window | curve reproduced to |
-|---|---|---|---|---|---|---|
+| phase | reference state | ρ₀ (kg/m³) | K₀ (GPa) | K₀′ | window | αK_T (GPa/K) | T_ref | curve reproduced to |
+|---|---|---|---|---|---|---|---|---|
 | `ice_iii` | P = 0, T = 251.15 K | 1126.3840 | 7.8349 | 6.7097 | 209.5 to 355.0 MPa | 0.002048 | 251.15 K | 0.006 %  |
 | `ice_v` | P = 0, T = 256.43 K | 1207.8419 | 10.6368 | 6.7460 | 355.0 to 618.4 MPa | 0.002369 | 256.43 K | 0.014 %  |
 | `ice_vi` | P = 0, T = 272.73 K | 1263.3858 | 10.3686 | 7.8219 | 618.4 MPa to 2.216 GPa | 0.003740 | 272.73 K | 0.118 %  |
