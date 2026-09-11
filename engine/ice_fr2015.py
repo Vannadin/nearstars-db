@@ -57,18 +57,21 @@ FIT_RHO_MIN, FIT_RHO_MAX = 1.6, 4.25          # g/cm³
 FIT_T_MIN, FIT_T_MAX = 295.0, 2000.0          # K
 
 
-def _debye(z: float) -> float:
-    """식 (12) 의 D(z) = 3/z³ ∫₀^z x³/(eˣ−1) dx — 가우스-르장드르 32점.
+#: 가우스-르장드르 32점의 마디와 무게 — **한 번만 만든다**.
+#: ⚠ 첫 판은 이것을 `_debye` 안에서 매 호출 다시 풀었다(마디마다 뉴턴 60회). 값은 같지만
+#:   한 호출이 0.3 ms 였고, 적분기가 걸음마다 묻는 자리에서 그것이 천왕성 한 판을 분 단위로
+#:   밀어 올렸다 (지휘석 실측: 기준선 2:22 대 9 분 넘김). 마디는 z 에 무관하므로 캐시가 맞다.
+_GL_NODES: list[tuple[float, float]] = []
 
-    ⚠ 적분을 급수로 바꾸지 않는다: 논문이 적분으로 인쇄했고, 32점은 z ≤ 30 에서
-    상대오차 1e-12 아래다 (모듈 시험이 그 수를 낸다)."""
-    if z <= 0.0:
-        return 1.0
-    n = 32
-    total = 0.0
-    for k in range(n):                      # 단순 Gauss-Legendre (재귀 없는 Newton 으로 마디)
-        x0 = math.cos(math.pi * (k + 0.75) / (n + 0.5))
-        x = x0
+
+def _gl_nodes(n: int = 32) -> list[tuple[float, float]]:
+    """[-1, 1] 의 가우스-르장드르 마디·무게. 첫 호출에서 만들고 이후는 그대로 쓴다."""
+    global _GL_NODES
+    if _GL_NODES:
+        return _GL_NODES
+    out = []
+    for k in range(n):
+        x = math.cos(math.pi * (k + 0.75) / (n + 0.5))
         for _ in range(60):
             p0, p1 = 1.0, 0.0
             for j in range(n):
@@ -78,10 +81,22 @@ def _debye(z: float) -> float:
             x += dx
             if abs(dx) < 1e-15:
                 break
-        w = 2.0 / ((1.0 - x * x) * dp * dp)
+        out.append((x, 2.0 / ((1.0 - x * x) * dp * dp)))
+    _GL_NODES = out
+    return out
+
+
+def _debye(z: float) -> float:
+    """식 (12) 의 D(z) = 3/z³ ∫₀^z x³/(eˣ−1) dx — 가우스-르장드르 32점.
+
+    ⚠ 적분을 급수로 바꾸지 않는다: 논문이 적분으로 인쇄했고, 32점은 z ≤ 30 에서
+    상대오차 1e-12 아래다 (모듈 시험이 그 수를 낸다)."""
+    if z <= 0.0:
+        return 1.0
+    total = 0.0
+    for x, w in _gl_nodes():
         t = 0.5 * z * (x + 1.0)
-        wt = 0.5 * z * w
-        total += wt * (t ** 3 / (math.expm1(t)) if t > 0 else 0.0)
+        total += 0.5 * z * w * (t ** 3 / math.expm1(t) if t > 0 else 0.0)
     return 3.0 * total / z ** 3
 
 
@@ -181,18 +196,32 @@ def gruneisen(rho: float, t: float, column: str = "HSE") -> float:
     return 0.0 if cv <= 0.0 else dp_dt(rho, t, column) / (rho * cv)
 
 
+#: (열, P, T) → 결과. 적분기가 같은 자리를 여러 번 묻는다 (K_S 와 γ, 그리고 걸음의 반 칸 차분).
+#: ⚠ **순수 메모 캐시다** — 키가 입력뿐이라 따뜻한 출발 전역과 달리 추가 호출이 다음 답을 흔들지
+#:   않는다 (브리프 189 Amendment 2 가 그 둘을 갈라 둔 자리).
+_CACHE: dict[tuple[str, float, float], dict] = {}
+_CACHE_MAX = 4096
+
+
 def thermal_at(p_pa: float, t: float, column: str = "HSE") -> dict:
     """(P, T) → (∂P/∂T)_V · c_V · γ · K_T · ρ — `eos.ThermalSet` 이 읽는 모양.
 
     ⚠ 논문의 좌표는 (ρ, T) 다. (P, T) 로 물으면 **밀도를 먼저 뒤집어야** 하고, 그 뒤집기는
     같은 퍼텐셜을 쓴다 — 그래서 이 함수는 단조 구간에서만 답하고 밖에서는 거절한다."""
+    key = (column, p_pa, t)
+    hit = _CACHE.get(key)
+    if hit is not None:
+        return hit
     rho = density_at(p_pa / 1e9, t, column)
     cv = c_v(rho, t, column)
-    return {"dpdt_v": dp_dt(rho, t, column) * 1e9,
+    out = {"dpdt_v": dp_dt(rho, t, column) * 1e9,
             "c_v": cv * 1e6,
             "gruneisen": gruneisen(rho, t, column),
             "k_t": k_t(rho, t, column) * 1e9,
             "density": rho * 1e3}
+    if len(_CACHE) < _CACHE_MAX:
+        _CACHE[key] = out
+    return out
 
 
 def density_at(p_gpa: float, t: float, column: str = "HSE") -> float:
