@@ -192,8 +192,15 @@ def gruneisen(rho: float, t: float, column: str = "HSE") -> float:
     ⚠ **단위 환산이 딱 떨어진다**: (∂P/∂T) [GPa/K] = 10⁹ Pa/K 이고 ρ c_V 는
     (g/cm³ = 10³ kg/m³) × (kJ/(g·K) = 10⁶ J/(kg·K)) = 10⁹ J/(m³·K) 라, 두 10⁹ 이 상쇄된다 —
     곱할 상수가 없다. 첫 판은 여기에 1e3 을 곱해 γ ≈ 560 을 냈고, 얼음의 γ 는 1 언저리다."""
-    cv = c_v(rho, t, column)
-    return 0.0 if cv <= 0.0 else dp_dt(rho, t, column) / (rho * cv)
+    return gruneisen_from(rho, c_v(rho, t, column), dp_dt(rho, t, column))
+
+
+def gruneisen_from(rho: float, cv: float, dpdt: float) -> float:
+    """이미 가진 c_V 와 (∂P/∂T)_V 로 γ 를 만든다 — 같은 항등식, 재계산 없음 (브리프 190 B (b)).
+
+    ⚠ 예전에는 `gruneisen` 이 c_V 와 (∂P/∂T)_V 를 **다시** 계산했다: 호출자가 방금 같은 (ρ, T)
+    에서 둘 다 구했는데도 `free_energy` 를 일곱 번 더 불렀다. 산수는 한 글자도 안 바뀐다."""
+    return 0.0 if cv <= 0.0 else dpdt / (rho * cv)
 
 
 #: (열, P, T) → 결과. 적분기가 같은 자리를 여러 번 묻는다 (K_S 와 γ, 그리고 걸음의 반 칸 차분).
@@ -207,16 +214,17 @@ def thermal_at(p_pa: float, t: float, column: str = "HSE") -> dict:
     """(P, T) → (∂P/∂T)_V · c_V · γ · K_T · ρ — `eos.ThermalSet` 이 읽는 모양.
 
     ⚠ 논문의 좌표는 (ρ, T) 다. (P, T) 로 물으면 **밀도를 먼저 뒤집어야** 하고, 그 뒤집기는
-    같은 퍼텐셜을 쓴다 — 그래서 이 함수는 단조 구간에서만 답하고 밖에서는 거절한다."""
+    같은 퍼텐셜을 쓴다. ⚠ **밖에서는 거절하지 않는다 — C82**: 요청 압력이 ρ 괄호 [1.6, 4.25] 가 그 온도에서 덮는 구간 밖이면 역산이 ρ_min 또는 ρ_max 로 **포화하고 그대로 돌려준다**. 유일한 흔적은 `bracket_invalid` 목록이다. 이 독스트링은 2026-09-12 까지 «거절한다» 고 적혀 있었고, 거절은 지어진 적이 없다."""
     key = (column, p_pa, t)
     hit = _CACHE.get(key)
     if hit is not None:
         return hit
     rho = density_at(p_pa / 1e9, t, column)
     cv = c_v(rho, t, column)
-    out = {"dpdt_v": dp_dt(rho, t, column) * 1e9,
+    dpdt = dp_dt(rho, t, column)
+    out = {"dpdt_v": dpdt * 1e9,
             "c_v": cv * 1e6,
-            "gruneisen": gruneisen(rho, t, column),
+            "gruneisen": gruneisen_from(rho, cv, dpdt),
             "k_t": k_t(rho, t, column) * 1e9,
             "density": rho * 1e3}
     if len(_CACHE) < _CACHE_MAX:
@@ -227,18 +235,39 @@ def thermal_at(p_pa: float, t: float, column: str = "HSE") -> dict:
 def density_at(p_gpa: float, t: float, column: str = "HSE") -> float:
     """P(ρ) 를 뒤집는다 — 적합 격자 안에서 p 는 ρ 에 단조증가한다.
 
-    ⚠ 기준 가지가 있는 이분법이다 (C71/189): 구간이 자기 허용오차 안으로 닫히면 `True`,
-    예산을 다 쓰면 `False` 를 기록한다."""
+    ⚠ **기준 가지가 없다** (C71/189): 아래 고리는 «허용오차를 만났다» 로 멈추지 않는다 — 더 좁힐
+    것이 없어서 멈춘다. 유효한 괄호에서는 그 일이 **항상** 일어나므로 «기준으로 나갔는가» 는 늘
+    참이고, 항상 참인 깃발은 없는 것만 못하다. 그래서 상태는 `None` 이고, 이 자리가 말하는 유일한
+    사실은 **진입 괄호의 부호**다."""
     lo, hi = FIT_RHO_MIN, FIT_RHO_MAX
     f_lo, f_hi = pressure(lo, t, column) - p_gpa, pressure(hi, t, column) - p_gpa
-    convergence.note("ice_fr2015.density_at", None,
-                     bracket_valid=convergence.bracket_valid(f_lo, f_hi))
+    bracket_ok = convergence.bracket_valid(f_lo, f_hi)
+    convergence.note("ice_fr2015.density_at", None, bracket_valid=bracket_ok)
+    # ⚠ **죽은 걸음을 멈춘다 — 답은 비트까지 같다** (브리프 190 B (d)). 배정색이 한 걸음을 돌고도
+    #   `(lo, hi)` 가 그대로면 그 다음 걸음들은 **같은 계산을 반복**한다: 고정점이므로 80 회를 마저
+    #   돌아도 돌려줄 수가 바뀌지 않는다. 배정색 자체는 한 글자도 안 바꾼다 — 반복이 멈추는
+    #   자리만 이름을 얻는다.
+    # ⚠ **멈춰도 상태는 `None` 이다** (감사석, 2026-09-12): 괄호가 2.65 g/cm³ 이고 1.6–4.25 근처의
+    #   한 ulp 가 약 4.4e-16 이라 고정점은 **53 걸음쯤**에 닿는다 — 80 은 한 번도 안 쓰인다. 그래서
+    #   «기준으로 나갔는가» 는 6 736 번 전부 참이고, 그런 깃발은 `convergence.py` 가 이름 대어
+    #   금지한 것이다. 이 자리의 신호는 위의 부호 검사 하나로 충분하다.
+    # ⚠ **비트 동일성은 `pressure` 가 순수 함수라는 전제 위에 선다** (감사석): 이 모듈에는
+    #   따뜻한 출발 전역이 없다 — `_gl_nodes` 는 한 번 만들고 읽기만 하고, `_CACHE` 는 `pressure`
+    #   위층의 `thermal_at` 에 있다. `water_hot._LAST_DENSITY` 같은 전역이 평가 경로에 있으면
+    #   **같은 코드가 비트 동일하지 않다**.
     for _ in range(80):
         mid = 0.5 * (lo + hi)
         if pressure(mid, t, column) < p_gpa:
-            lo = mid
+            lo_next, hi_next = mid, hi
         else:
-            hi = mid
+            lo_next, hi_next = lo, mid
+        if lo_next == lo and hi_next == hi:
+            break
+        lo, hi = lo_next, hi_next
+    # ⚠ **고정점에 닿았다는 것은 «괄호를 좁혔다» 이지 «뿌리를 감쌌다» 가 아니다** (감사석,
+    #   2026-09-12). 요청 압력이 괄호 밖이면 한쪽 끝만 계속 움직이다가 **똑같이** 고정점에 닿는다 —
+    #   멈춘 자리는 그래서 수렴의 증거가 못 된다. 클램프를 가려내는 사실은 위의 부호 검사 하나뿐이고,
+    #   `bracket_invalid` 목록이 그것을 들고 있다 — C82 가 그 목록의 첫 손님이다.
     return 0.5 * (lo + hi)
 
 
