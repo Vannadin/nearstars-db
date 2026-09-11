@@ -51,9 +51,6 @@ Mauk & Fox 2010 Kennel–Petschek implementation
   and validated against their printed intermediates. Cited in
   `docs/reference/planetary-magnetosphere-geometry-methodology.md`.
 
-REBOUND — https://github.com/hannorein/rebound
-  GPL-3.0. Used as a library (not vendored) by the stability sandbox under
-  `phase3/stability-sim/`; simulations are run against an installed copy.
 
 ================================================================
 3. MODS DESCRIBED OR TARGETED (no code reproduced)
@@ -127,7 +124,35 @@ three.js — https://github.com/mrdoob/three.js
   rather than vendored.
 
 ================================================================
-5. DATA SOURCES AND LITERATURE SERVICES
+5. ENGINE RUNTIME DEPENDENCIES (used as libraries, not vendored,
+   run against an installed copy)
+================================================================
+
+Nothing below is shipped in this repository or in any release of it. The engine
+imports these at run time from an installed copy; the versions are pinned in
+`engine/requirements.txt`.
+
+REBOUND — https://github.com/hannorein/rebound
+  GPL-3.0. Used by the stability sandbox under
+  `phase3/stability-sim/`; simulations are run against an installed copy.
+
+BurnMan — https://github.com/geodynamics/burnman
+  GPL-2.0-or-later. Used by the silicate slot; pinned to 2.1.0, so no BurnMan
+  file is in this repository or in any release of it. Mantle c_p, alpha and gamma are
+  computed at runtime; no value is copied into engine code.
+  The mineral parameters BurnMan ships (Stixrude & Lithgow-Bertelloni 2022,
+  HeFESTo_parameters_010121) are the authors' published data, distributed by
+  BurnMan and not redistributed by this project.
+
+SeaFreeze — https://github.com/Bjournaux/SeaFreeze
+  GPL-3.0. Used by the water-ice ladder; pinned 1.1.0 in
+  `engine/requirements.txt`. The gate runs on system python and skips its
+  comparison there.
+  The Gibbs-energy splines it ships are the authors' published representations,
+  distributed by SeaFreeze and not redistributed by this project.
+
+================================================================
+6. DATA SOURCES AND LITERATURE SERVICES
 ================================================================
 
 Measurement values in `db/` are factual data aggregated from public

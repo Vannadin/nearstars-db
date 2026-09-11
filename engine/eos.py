@@ -45,6 +45,7 @@ import math
 
 import convergence
 import fe_liquid
+import ice_fr2015
 import hhe_table
 import ice_melt_table
 import water_hot
@@ -151,6 +152,7 @@ class ThermalSet:
 THERMAL_EVALUATORS = {
     "dorogokupets2017_liquid_fe": fe_liquid.thermal_at,
     "dorogokupets2017_hcp_fe": fe_liquid.thermal_at_hcp,
+    "french_redmer2015_ice_hse": ice_fr2015.thermal_at_hse,
 }
 
 
@@ -1635,6 +1637,12 @@ DOROGOKUPETS_FIT_P_MAX = 350.0 * GPA
 # ⚠ **인쇄된 범위는 축이 둘이다** (감사석, 브리프 187): 제목·인용 안내·상평형 절이 모두
 # «350 GPa and 6000 K» 라고 적는다. 압력만 잡으면 350 GPa · 9000 K 가 «측정» 으로 읽힌다.
 DOROGOKUPETS_FIT_T_MAX = 6000.0      # K
+# French & Redmer 2015 의 적합 격자를 압력으로 옮긴 끝 (p3 의 ρ 1.6–4.25 g/cm³ · T 295–2000 K).
+# ⚠ 이 수는 **퍼텐셜 자신으로** 환산한 것이다 — 논문이 압력 창을 인쇄하지 않으므로, 격자의 모서리를
+#   식 (6) 으로 평가했다 (브리프 190).
+FR2015_FIT_P_MIN = 3.23 * GPA
+FR2015_FIT_P_MAX = 353.8 * GPA
+FR2015_FIT_T_MAX = 2000.0            # K
 
 # 정적비열. **두 가지 다른 출처에서 왔고 섞으면 안 된다.**
 #
@@ -2552,6 +2560,43 @@ FE_PREM = Material(
                      "측정이 뒤에 있는 유일한 다리: Sinmyo+ 2019 ICB 검산 −0.12 σ (브리프 38 §0)"),),
     fit_composition="PREM-alloy", role="core",
 )
+def _ice_vii_x_gamma_sets() -> tuple[ThermalSet, ...]:
+    """얼음 VII·X 의 γ·c_p 세트 — French & Redmer 2015 의 **인쇄된 퍼텐셜**을 미분한다 (브리프 190).
+
+    ⚠ **논문이 인쇄한 것은 성질이 아니라 자유에너지**다 (식 (6) = (9)+(11)+(15)), 그래서 등급은
+    «printed potential, our derivative» 이고 값은 우리 미분이다. 저자가 §VI (p9) 에서 권하는 열은
+    **HSE** 다: *"For standard applications we recommend using the electronic ground-state
+    parametrization derived with the HSE XC functional (second row in Table I)"*.
+
+    ⚠ **오늘의 상수는 다른 열이다.** 이 두 칸의 `alpha_k`·`c_v_ref` 는 SeaFreeze 의
+    `VII_X_French` 스플라인을 300 K 에서 평가한 값이고, 그 스플라인은 **PBE** 열이다 (실측:
+    같은 상태에서 PBE 30.000 GPa · K_T 102.65 대 스플라인 30.000 · 102.60, HSE 는 30.324).
+    그래서 190 은 열을 **의도적으로 바꾼다** — 검사한 상태에서 압력 기준 약 1 % 다. 되돌리기는
+    평가자 이름 하나다.
+
+    ⚠ **창은 상 안정 영역이 아니라 적합 격자다** (Amendment 1): p3 이 인쇄한 92 회 MD 격자는
+    ρ 1.6–4.25 g/cm³ · T 295–2000 K 이고, 그것을 압력으로 옮기면 3.23–353.8 GPa 다. 그 밖은
+    거절이 아니라 등급이다 — 저자가 p1 에서 «well behaved in extrapolation» 이라고 적었고, 그
+    문장의 앞 절(«valid in the entire stability region»)은 **상** 이야기라 창의 근거가 아니다."""
+    return (
+        ThermalSet(p_min=FR2015_FIT_P_MIN, p_max=FR2015_FIT_P_MAX, ref=ice_fr2015.REF,
+                   source_state="solid", source_composition="H2O-ice",
+                   evaluator="french_redmer2015_ice_hse",
+                   t_ref=ICE_VII_X_REF_T, t_ref_kind="isotherm",
+                   t_max=FR2015_FIT_T_MAX),
+        ThermalSet(p_min=FR2015_FIT_P_MAX, p_max=float("inf"), ref=ice_fr2015.REF,
+                   source_state="solid", source_composition="H2O-ice",
+                   evaluator="french_redmer2015_ice_hse",
+                   t_ref=ICE_VII_X_REF_T, t_ref_kind="isotherm",
+                   t_max=FR2015_FIT_T_MAX, grade_kind="extrapolation",
+                   grade_note="HSE parametrization of Eq. (9); Eqs. (11), (13), (15) have no XC "
+                              "variants. Beyond the fit grid — French & Redmer 2015 fit 92 MD points over "
+                              "rho 1.6-4.25 g/cm3 and T 295-2000 K (p3); the authors state on p1 "
+                              "that the potential is «well behaved in extrapolation», so the set "
+                              "is evaluated above it rather than replaced"),
+    )
+
+
 def _fe_eps_gamma_sets() -> tuple[ThermalSet, ...]:
     """`fe_eps` 의 γ·c_p 구간 세트 — Dorogokupets+ 2017 Table 1 의 **hcp (ε)** 열 (브리프 187).
 
@@ -3231,7 +3276,8 @@ H2O = Material(
                     + REINHARDT_MELT_REF,
            thermal_source_state="solid", thermal_source_composition="H2O-ice",
            alpha_k=ICE_VII_ALPHA_K, c_v_ref=ICE_VII_CV, t_ref=ICE_VII_X_REF_T,
-           t_max=ICE_VII_X_T_MAX, join="H2O", fit_state="solid"),
+           t_max=ICE_VII_X_T_MAX, join="H2O", fit_state="solid",
+           gamma_sets=_ice_vii_x_gamma_sets()),
      Phase("ice_x", "vinet", ICE_X_RHO0, ICE_X_K0, ICE_X_K0P, ICE_X_P_MAX,
            "SeaFreeze v1.1.0 의 VII_X_French (French & Redmer 2015, "
            "2015PhRvB..91a4308F) 300 K 등온선에 맞춘 Vinet 적합. 37.4 GPa–1 TPa 에서 "
@@ -3244,7 +3290,8 @@ H2O = Material(
            # 녹는곡선이 52.4 GPa 까지 온다 (Reinhardt+ 2022). 그 위는 water_t_melt 가 None 을
            # 돌려주고 소비처가 undecided 로 적는다 — 곡선이 어디서 끝나는지를 판정문이 수로 말한다.
            melt="water", melt_ref=REINHARDT_MELT_REF,
-           join="H2O", fit_state="solid"),),
+           join="H2O", fit_state="solid",
+           gamma_sets=_ice_vii_x_gamma_sets()),),
     over_reason=("얼음 기둥 바닥이 {p_gpa:.0f} GPa 로 근거 구간의 상한"
                  "({max_gpa:.0f} GPa) 위다. 그 상한은 SeaFreeze v1.1.0 이 싣는 "
                  "French & Redmer 2015 표현의 매듭 구간이 끝나는 자리다. 그 위에 "
