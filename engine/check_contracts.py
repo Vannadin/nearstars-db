@@ -291,6 +291,83 @@ def sample_bodies() -> list[BodyState]:
     return out
 
 
+#: C73 — 계약 `Returns` 에 있는데 `chain.yaml` 의 `outputs` 에 없는 키, 그리고 그 반대 (브리프 194).
+#: ⚠ **수가 아니라 집합으로 박는다** — 하나가 빠지고 하나가 들어오면 수는 그대로다. 중복 생산자
+#: 집합(`chain.DUPLICATE_PRODUCER_KEYS`)이 같은 이유로 집합인 자리이고, C75 가 «수만 세면 못 잡는
+#: 자리» 로 이미 한 번 물린 모양이다.
+C73_MISSING_FROM_OUTPUTS = {
+    "core_state.core_gamma_center", "core_state.core_gamma_cmb",
+    "core_state.core_gamma_density_path", "core_state.core_gamma_fallback",
+    "core_state.core_gamma_material", "core_state.core_gamma_partial_repair",
+    "core_state.core_gamma_split", "core_state.core_gamma_verdict",
+    "core_state.core_gamma_verdict_center",
+    "dynamo_giant.b_dyn", "dynamo_giant.b_dyn_max", "dynamo_giant.b_dyn_min",
+    "dynamo_giant.b_eq_max", "dynamo_giant.b_eq_min",
+    "heat_transport_mode.regime_candidates", "heat_transport_mode.regime_excluded",
+    "heat_transport_mode.regime_flux_cannot_decide", "heat_transport_mode.regime_ladder_bound",
+    "heat_transport_mode.regime_ladder_cell", "heat_transport_mode.regime_ladder_rung",
+    "interior_layers.integrator_core_gamma_verdict", "interior_layers.integrator_red_gamma_used",
+    "interior_layers.maxwell_time_mantle_top", "interior_layers.relaxation_threshold_max",
+    "interior_layers.silicate_melt_fraction_max", "interior_layers.silicate_melt_state",
+    "internal_heat_nontidal.l_int_total",
+    "internal_heat_nontidal.mantle_temperature_floor_total_max",
+    "internal_heat_nontidal.mantle_temperature_floor_total_min",
+    "internal_heat_nontidal.mantle_temperature_floor_total_verdict",
+    "internal_heat_nontidal.t_int_total",
+    "tidal_locking.orbital_period_h", "tidal_locking.q_over_k2_max",
+    "tidal_locking.q_over_k2_min", "tidal_locking.q_over_k2_source",
+    "tidal_locking.rotation_state", "tidal_locking.t_lock_width_source",
+    "tidal_locking.t_lock_yr_max", "tidal_locking.t_lock_yr_min",
+}
+C73_MISSING_FROM_RETURNS = {"tidal_locking.t_lock"}
+
+
+def c73_outputs_vs_returns(g: dict) -> None:
+    """C73 — 그래프의 `outputs` 와 계약의 `Returns` 가 얼마나 벌어져 있는가 (브리프 194).
+
+    ⚠ **보고만 한다.** 오늘의 간극은 39 + 1 이고, 이 검사는 그 집합이 그대로인지만 말한다. 0 이 된
+    날 FAIL 로 뒤집는 것은 **다른 커밋**이다 — 빨간 검사와 그 수리를 한 커밋에 넣으면 어느 쪽이
+    무엇을 했는지 안 보인다 (C75 · 193 과 같은 규율).
+
+    ⚠ **진리 원천은 계약이다.** `Returns` 는 `check_contracts` 가 코드와 대조하는 반면 `chain.yaml`
+    의 `outputs` 는 오늘 아무와도 대조되지 않는다. 그리고 방향이 그렇게 말한다 — 39 대 1 이다.
+    그렇다고 `outputs` 를 계약에서 **생성**하지는 않는다: 그러면 «노드가 그래프가 신경 쓰는 것보다
+    많이 돌려준다» 를 말할 자리가 사라진다.
+    """
+    miss_out: set[str] = set()
+    miss_ret: set[str] = set()
+    for node in sorted(registry.registered()):
+        nd = g["nodes"].get(node) or {}
+        slug = nd.get("recipe")
+        if not slug:
+            continue
+        doc = DOCS / f"{slug}.md"
+        if not doc.exists():
+            continue
+        declared = parse_contract(doc, node)
+        if not declared:
+            continue
+        # ⚠ 키는 소문자 `returns` 다 — 대문자로 물으면 **빈 집합**이 돌아오고, 그러면 한쪽
+        #   방향이 0 이 되고 반대쪽이 `outputs` 전부가 된다 (내가 한 번 그렇게 찍었다).
+        returns = set(declared.get("returns") or ())
+        outputs = set(nd.get("outputs") or [])
+        miss_out |= {f"{node}.{k}" for k in returns - outputs}
+        miss_ret |= {f"{node}.{k}" for k in outputs - returns}
+
+    for label, got, base in (("Returns 에 있고 outputs 에 없음", miss_out, C73_MISSING_FROM_OUTPUTS),
+                             ("outputs 에 있고 Returns 에 없음", miss_ret, C73_MISSING_FROM_RETURNS)):
+        added = sorted(got - base)
+        gone = sorted(base - got)
+        line = f"  [기록 · C73] {label} {len(got)}개 (기준선 {len(base)})"
+        if added:
+            line += " · 새로 생긴 것: " + ", ".join(added)
+        if gone:
+            line += " · 사라진 것: " + ", ".join(gone)
+        print(line + ("" if (added or gone) else " — 집합이 그대로다"))
+    print(f"  [기록 · C73 합계] 간극 {len(miss_out)} + {len(miss_ret)} — 판정하지 않는다 (194). "
+          f"⚠ 이 키들은 **선언될 수 없는** 상태다: 그래프가 모르는 이름에는 소비자 엣지를 못 그린다")
+
+
 def c68_merge_rule(g: dict, bodies: list[BodyState]) -> None:
     """C68 — 한 이름을 두 노드가 낼 때, 그 이름에 주인이 있는가 (브리프 193).
 
@@ -580,6 +657,7 @@ def main() -> int:
           f"{'변화 없음' if got3 == CLASS3_BASELINE else '⚠ 기준선과 다르다'}")
 
     c68_merge_rule(g, bodies)
+    c73_outputs_vs_returns(g)
 
     total = sum(1 for d in g["nodes"].values() if d.get("kind") == "computed")
     for f in fails:
