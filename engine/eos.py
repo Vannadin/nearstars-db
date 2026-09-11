@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import math
 
+import convergence
 import fe_liquid
 import hhe_table
 import ice_melt_table
@@ -486,6 +487,7 @@ class Phase:
         for _ in range(60):
             f = self.pressure(rho) - p
             if abs(f) <= 1e-9 * max(p, 1.0):
+                convergence.note("eos.density_newton", True)
                 return rho
             h = rho * 1e-7
             dfd = (self.pressure(rho + h) - self.pressure(rho - h)) / (2.0 * h)
@@ -496,8 +498,11 @@ class Phase:
             if nxt <= self.rho0 * 0.5:
                 nxt = 0.5 * (rho + self.rho0 * 0.5)
             if abs(nxt - rho) <= 1e-12 * rho:
+                convergence.note("eos.density_newton", True)
                 return nxt
             rho = nxt
+        # ⚠ 이 자리는 **이미** 이름 대며 거절한다 (C71 의 보고자 셋 중 하나). 세는 칸만 추가한다.
+        convergence.note("eos.density_newton", False)
         raise ValueError(f"{self.name}: P={p:.3e} Pa 에서 밀도가 수렴하지 않는다")
 
 
@@ -2277,6 +2282,12 @@ def _vii_disputed_bounds(p: float) -> tuple[float, float]:
     봉투 밖은 후보 전원이 같은 답을 내므로 판정하고, 안은 거절한다."""
     lo_t, hi_t = IAPWS_VII_RANGE
     lo, hi = lo_t, hi_t
+    # ⚠ **기준 가지가 없다 — 예순 번을 다 돈다** (브리프 189 Amendment 2), 그래서 상태는 `None` 이고
+    #   묻는 것은 괄호다: 이 압력이 두 끝의 녹는압 사이에 있는가. `iapws_p_melt` 는 순수 함수라
+    #   따뜻한 출발 전역이 없다 — 부호 검사가 다음 호출의 답을 흔들지 않는다.
+    convergence.note("eos.ice_vii_melt_bisect", None,
+                     bracket_valid=convergence.bracket_valid(
+                         iapws_p_melt("ice_vii", lo) - p, iapws_p_melt("ice_vii", hi) - p))
     for _ in range(60):
         mid = 0.5 * (lo + hi)
         if iapws_p_melt("ice_vii", mid) < p:
@@ -2344,6 +2355,12 @@ def water_t_melt(p: float) -> float | None:
               IAPWS_MELT[name][4:6])
     # Ih 은 압력이 오르면 녹는점이 **내려간다**. 두 방향을 한 코드로 다루려고 부호를 뽑는다.
     rising = iapws_p_melt(name, hi) > iapws_p_melt(name, lo)
+    # ⚠ 같은 모양이다 — 기준 가지 없음, `None`, 괄호만 묻는다. 두 끝의 녹는압이 목표 압력을
+    #   사이에 두는가이고, 내려가는 분기(얼음 Ih)는 부호가 뒤집히므로 `rising` 을 곱해 맞춘다.
+    _f_lo = (iapws_p_melt(name, lo) - p) * (1.0 if rising else -1.0)
+    _f_hi = (iapws_p_melt(name, hi) - p) * (1.0 if rising else -1.0)
+    convergence.note("eos.water_melt_bisect", None,
+                     bracket_valid=convergence.bracket_valid(_f_lo, _f_hi))
     for _ in range(80):
         mid = 0.5 * (lo + hi)
         if (iapws_p_melt(name, mid) < p) == rising:

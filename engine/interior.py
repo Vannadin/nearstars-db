@@ -29,6 +29,7 @@
 """
 from __future__ import annotations
 
+import convergence
 import math
 
 import water_hot
@@ -437,6 +438,19 @@ def _integrator_gamma_values(core_material: str, st) -> dict:
     #   답을 세는 것이 지금의 사실이고, 이름이 그것을 숨기지 않아야 한다.
     return {"integrator_core_gamma_verdict": verdict,
             "integrator_red_gamma_used": 0 if verdict in ("ok", "composition-substitute") else 1}
+
+
+def _convergence_values() -> dict:
+    """이 풀이의 수렴 기록을 값 셋으로 (C71, 브리프 189).
+
+    ⚠ **`converged` 는 세 값이다**: `True` · `False` · `None`. `None` 은 «이 풀이에서 기준 가지를
+    가진 자리가 하나도 안 돌았다» 이고, 통과와 같은 칸에 인쇄되면 안 된다."""
+    tr = convergence.current()
+    if tr is None:
+        return {"converged": None, "unconverged_solvers": [], "bracket_invalid": []}
+    return {"converged": tr.converged,
+            "unconverged_solvers": tr.unconverged_sites,
+            "bracket_invalid": tr.bracket_invalid_sites}
 
 
 def _core_or_own_gamma(mat, p: float, rho: float, t: float, t_pot: float) -> float:
@@ -946,6 +960,10 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             if not mat.in_domain(p + dp, t_end):
                 if p + dp > floor * FLOOR_EXTRAPOLATION_MAX:
                     mat.check_temperature(p + dp, t_end)     # 위와 같다. 걸음 안의 자리
+                # ⚠ **기준 가지가 없다 — 정해진 횟수를 다 돈다** (브리프 189 Amendment 2).
+                #   그래서 상태는 `None` 이고, 대신 «괄호가 유효했다» 를 남긴다: 이 자리는
+                #   걸음 끝이 정의역 **밖**일 때만 들어오므로 두 끝의 판정이 다르다.
+                convergence.note("interior.domain_fraction", None, bracket_valid=True)
                 lo_f, hi_f = 0.0, 1.0
                 for _ in range(50):
                     mid = 0.5 * (lo_f + hi_f)
@@ -1030,6 +1048,9 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         if INTERPOLATE_LAYERS and in_column and p + dp > p_stop:
             t_end = t + dtdp * dp
             if liquid_at(p + dp, t_end) != liquid:
+                # ⚠ 같은 모양이다 — 기준 가지 없음, 괄호는 진입 조건이 보장한다 (상이 뒤집힌
+                #   걸음에서만 들어온다).
+                convergence.note("interior.phase_fraction", None, bracket_valid=True)
                 lo_f, hi_f = 0.0, 1.0
                 for _ in range(50):
                     mid = 0.5 * (lo_f + hi_f)
@@ -1106,7 +1127,13 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             note_switch(layer - 1)
             apply_jump(layer - 1)
 
+    if not (steps >= MAX_STEPS and p > p_stop):
+        convergence.note("interior.integrate_max_steps", True)
     if steps >= MAX_STEPS and p > p_stop:
+        # ⚠ **격자를 다 쓰고 표면에 못 닿았다 — 그 사실이 값으로 나간 적이 없다** (C71, 브리프 189).
+        #   아래 두 갈래 중 하나는 구조를 돌려주고 하나는 이름 대며 거절하는데, 돌려주는 쪽이
+        #   조용했다. 값은 그대로, 기록만 남는다.
+        convergence.note("interior.integrate_max_steps", False)
         if m > mass_kg * (1.0 + SHOOT_TOL):
             # 표면에 닿기 전에 목표 질량을 이미 넘겼다. 사격이 이 시험값에서 알아야 하는 것은
             # "질량이 넘친다" 뿐이므로 여기서 멈춰 그 사실을 들고 나간다 — 예전에는 예외를
@@ -1215,8 +1242,13 @@ def _narrow_bracket(good: float, bad: float, at, mass_kg: float):
     돌려주는 것은 (압력, 그 압력의 구조) 이고, 구조의 겉질량이 목표에 못 미치면
     호출자가 그것을 진짜 거절의 근거로 쓴다."""
     best_p, best_st = good, at(good)
+    # ⚠ **기준 가지로 나갔는가, 예산을 소진했는가** (C71, 브리프 189). 값은 그대로다 —
+    #   기록만 남는다. 이 자리의 «닫혔다» 는 두 break 중 하나로 나간 것이고, 스물넷을 다 쓰고
+    #   떨어진 것은 «좁히지 못했다» 다.
+    closed = False
     for _ in range(NARROW_ITERS):
         if bad / good < NARROW_RATIO:
+            closed = True
             break                        # 깨지는 자리를 충분히 좁혔다
         mid = math.sqrt(good * bad)      # 로그 중점. 압력이 자릿수로 움직인다
         try:
@@ -1226,7 +1258,9 @@ def _narrow_bracket(good: float, bad: float, at, mass_kg: float):
             continue
         good, best_p, best_st = mid, mid, st
         if st.mass_kg >= mass_kg:
+            closed = True
             break                        # 괄호가 잡혔다. 정밀도는 할선법의 일이다
+    convergence.note("interior._narrow_bracket", closed)
     return best_p, best_st
 
 
@@ -1311,12 +1345,18 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         for _ in range(SHOOT_LO_TRIES):
             p1 = p_try(x1)
             try:
-                return at(p1), x1
+                got = at(p1)
             except PhaseGap as g:
                 gap = g
                 lo = p1              # 이 아래에는 해가 없다. 괄호에서 뺀다
                 x1 = 0.5 * (x1 + math.log(hi))
+                continue
+            convergence.note("interior._shoot_lo_tries", True)
+            return got, x1
         assert gap is not None
+        # ⚠ 예산을 다 쓰고 이름 붙은 `PhaseGap` 으로 나간다 — 거절은 있지만 «소진» 은 그 자체로
+        #   기록되지 않았다 (C71, 브리프 189). 값은 그대로, 기록만 남는다.
+        convergence.note("interior._shoot_lo_tries", False)
         raise gap
 
     def at(p: float):
@@ -1469,6 +1509,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     last_short = None            # 질량이 모자란 마지막 구조 (외피 없는 암석)
     for _ in range(SHOOT_ITERS):
         if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
+            convergence.note("interior._shoot_pressure", True)
             return st, True
         if st.mass_kg < mass_kg:
             lo = math.exp(x1)
@@ -1495,6 +1536,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             # 없음, 위로 던짐)에 밀려 2000 K 대의 시험을 돌고 그 적분이 하나하나 비쌌던 것이다
             # (antigorite-thermal-context-notes.md). 이 보호는 그 조사 중 발견한 별개의 빈틈이고, 수렴하는
             # 앵커는 여기 오지 않는다.
+            convergence.note("interior._shoot_pressure", False)
             return st, False
         x0, y0 = x1, y1
         x1 = x2
@@ -1505,6 +1547,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     crust_porosity, envelope_z_profile,
                     ammonia_mass_fraction=ammonia_mass_fraction)
         y1 = math.log(st.mass_kg / mass_kg)
+    convergence.note("interior._shoot_pressure", False)
     return st, False
 
 
@@ -2280,6 +2323,7 @@ SUB_NEPTUNE_CLASSES = ("sub_neptune",)
 ICE_GIANT_CLASSES = ("ice_giant",)
 
 
+@convergence.traced
 def solve(mass_earth: float,
           core_mass_fraction: float | None = None,
           ice_mass_fraction: float | None = None,
@@ -2949,8 +2993,16 @@ def solve(mass_earth: float,
                 #   조용해지지 않는 것**이 그 결정의 조건이다. 핵 노드 셋의 `core_gamma_fallback` 과
                 #   짝이고, 둘이 다른 답을 세는 것이 지금의 사실이다 — 넷이 함께 움직이는 것은
                 #   액체 세트가 채택되는 날이다.
-                **_integrator_gamma_values(core_material, st)},
-        units={"nmoi": "dimensionless",
+                **_integrator_gamma_values(core_material, st),
+                # ⚠ **미수렴을 값으로 낸다** (C71, 브리프 189). 예전에는 `converged` 가
+                #   `Result` 의 칸이라 `state._find` 가 못 읽었고 (선언 입력 → 각 결과의 `values`),
+                #   남는 흔적은 `payload` 의 산문 한 줄뿐이었다. 세 값이 나간다: 판정(`None` 은
+                #   «기준 가지를 가진 자리가 없었다»), 안 닫힌 자리 이름, 진입 괄호가 깨진 자리.
+                **_convergence_values()},
+        units={"converged": "",
+               "unconverged_solvers": "",
+               "bracket_invalid": "",
+               "nmoi": "dimensionless",
                "core_temperature": "K",
                "cmb_temperature": "K",
                "cmb_pressure": "GPa",
@@ -3078,6 +3130,7 @@ def _porous_rock_verdict(mass_earth: float, radius_earth: float,
     # 봉투 안이다. 반지름을 재현하는 φ₀ 를 보수적 읽기로 되읽는다.
     lo, hi = 0.0, PHI0_NOMINAL
     best, phi = top_cap, PHI0_NOMINAL
+    closed = False
     for _ in range(40):
         mid = 0.5 * (lo + hi)
         res = at(mid, P_LAB_MAX)
@@ -3086,6 +3139,7 @@ def _porous_rock_verdict(mass_earth: float, radius_earth: float,
         best, phi = res, mid
         got = res.values["radius"]
         if abs(got - radius_earth) / radius_earth < INFER_TOL:
+            closed = True
             break
         if got < radius_earth:
             lo = mid
@@ -3102,6 +3156,7 @@ def _porous_rock_verdict(mass_earth: float, radius_earth: float,
     #   **`porosity_cap` 은 다르다**: 그것은 역산된 축이 아니라 솔버가 고른 **모듈 상수**이고, 조회
     #   이름 아래 증거에 앉으면 «값은 없고 이름은 있다» 가 된다. 그래서 예전의 한 줄
     #   `inputs["porosity_cap"] = P_LAB_MAX` 만 빠졌고, 그 수는 아래 노트가 나른다.
+    convergence.note("interior._infer_porosity_bisection", closed)
     inputs["initial_porosity"] = phi
     notes = [f"역산이다 — 초기공극 φ₀ = {phi:.3f} 가 선언된 반지름을 재현한다 "
              f"(공극 상한은 실험 상한 P_LAB_MAX = {P_LAB_MAX:.3g} Pa 를 썼다). "
@@ -3289,6 +3344,7 @@ def infer_composition(mass_earth: float, radius_earth: float,
     lo, hi = bracket
     grows = axis == "ice_mass_fraction"
     x, best = lo, at(lo)
+    closed = False
     for _ in range(40):
         mid = 0.5 * (lo + hi)
         res = at(mid)
@@ -3297,11 +3353,13 @@ def infer_composition(mass_earth: float, radius_earth: float,
         best, x = res, mid
         got = res.values["radius"]
         if abs(got - radius_earth) / radius_earth < INFER_TOL:
+            closed = True
             break
         if (got < radius_earth) == grows:
             lo = mid
         else:
             hi = mid
+    convergence.note("interior._infer_axis_bisection", closed)
     inputs[axis] = x
     v = dict(best.values)
     notes = list(best.notes)
@@ -3377,6 +3435,7 @@ def _solve_ice_for_radius(mass_earth: float, radius_earth: float, cmf: float,
     f_hi = r_hi.values["radius"] - radius_earth
     best = None
     side = 0
+    closed = False
     for _ in range(_INFER_ITERS):
         x = hi - f_hi * (hi - lo) / (f_hi - f_lo)
         res = at(x)
@@ -3385,6 +3444,7 @@ def _solve_ice_for_radius(mass_earth: float, radius_earth: float, cmf: float,
         f = res.values["radius"] - radius_earth
         best = (x, res)
         if abs(f) / radius_earth < INFER_TOL:
+            closed = True
             break
         if f < 0.0:
             lo, f_lo = x, f
@@ -3396,6 +3456,7 @@ def _solve_ice_for_radius(mass_earth: float, radius_earth: float, cmf: float,
             if side == 1:
                 f_lo *= 0.5
             side = 1
+    convergence.note("interior._infer_regula_falsi", closed)
     return best
 
 
@@ -3493,6 +3554,7 @@ def infer_three_layer(mass_earth: float, radius_earth: float,
     x0, y0 = a["core_mass_fraction"], a["nmoi"] - nmoi
     x1, y1 = b["core_mass_fraction"], b["nmoi"] - nmoi
     best = None
+    closed = False
     for _ in range(6):
         x = x1 - y1 * (x1 - x0) / (y1 - y0) if y1 != y0 else 0.5 * (x0 + x1)
         got = _solve_ice_for_radius(mass_earth, radius_earth, x,
@@ -3503,8 +3565,10 @@ def infer_three_layer(mass_earth: float, radius_earth: float,
         y = res.values["nmoi"] - nmoi
         best = (x, imf, res)
         if abs(y) / nmoi < THREE_LAYER_NMOI_TOL:
+            closed = True
             break
         x0, y0, x1, y1 = x1, y1, x, y
+    convergence.note("interior._three_layer_secant", closed)
     if best is None:
         return out_of_domain(
             RECIPE, VERSION, "띠 안인데 C/MR² 로 좁히는 할선이 풀리는 점을 못 찾았다",

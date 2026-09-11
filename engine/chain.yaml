@@ -171,7 +171,8 @@ nodes:
     outputs: [nmoi, core_radius_fraction, core_radius, radius, core_pressure,
               core_temperature, cmb_temperature, cmb_pressure, ice_column_state,
               ocean_thickness, ice_shell_thickness, crust_thickness, bulk_porosity,
-              voids_expected, figure_relaxation]
+              voids_expected, figure_relaxation, converged, unconverged_solvers,
+              bracket_invalid]
     note: >
       질량과 조성에서 층 구조를 푼다. 정수압 평형·질량보존·상태방정식을 함께
       적분하므로 층 밀도가 입력이 아니라 결과다 — 그래서 반지름과 중심압도 같이
