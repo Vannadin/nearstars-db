@@ -307,7 +307,7 @@ nodes:
     # 판정에는 **배선하지 않는다**(사다리를 덮어쓸 자격 없음). 3 Gyr 진술(평균·최소 ΔE)은 이력 양이라 C20 없이는 거절.
     outputs: [entropy_production, entropy_production_min, entropy_production_max, entropy_production_h0,
               e_r, e_s, e_l, e_g, e_h, e_k, entropy_positive_present, entropy_band_straddles_zero,
-              entropy_corners_positive, has_inner_core_solved, entropy_history_verdict, entropy_integration_width]
+              entropy_corners_positive, has_inner_core_solved, entropy_integration_width]
 
   # ── 클래스 표 상수 — 도출값이 아니라 조회값 ─────────────────────
   # 세 문서가 공통으로 인정한다. per-body 기록이 아니라 클래스별 표에서
@@ -723,7 +723,7 @@ edges:
   - {from: body_age, to: core_thermal_history, kind: requires, via: t_body, ref: "internal-heat-luminosity-methodology.md@«## Contract — `core_thermal_history`»", note: "적분 구간 = 계의 나이 (오너 조건 1)."}
   - {from: internal_heat_nontidal, to: core_thermal_history, kind: requires, via: mantle_radiogenic_power, ref: "internal-heat-luminosity-methodology.md@«## Contract — `core_thermal_history`»", note: "장수명 방사성 열 H_m M_m(t) = 현재 맨틀 몫 × history_factor(t). 단수명 펄스(C21)는 아니다."}
   - {from: body_class, to: core_thermal_history, kind: selects, ref: "internal-heat-luminosity-methodology.md@«## Contract — `core_thermal_history`»", note: "암석체만."}
-  - {from: core_thermal_history, to: core_entropy_production, kind: influences, sign: non-monotonic, ref: "internal-heat-luminosity-methodology.md@«## Contract — `core_entropy_production`»", note: "C20 이 entropy_history_verdict 를 낸다. C15 의 같은 이름 출력은 아직 'cannot-say (needs C20)' 고정 — 소비 배선은 별도 결정."}
+  - {from: core_thermal_history, to: core_entropy_production, kind: influences, sign: non-monotonic, ref: "internal-heat-luminosity-methodology.md@«## Contract — `core_entropy_production`»", note: "C20 이 entropy_history_verdict 를 낸다. C15 는 2026-09-11(C64)부터 같은 이름 키를 아예 내지 않는다 — 예전의 'cannot-say (needs C20)' 고정 리터럴은 값이 아니라 notes 의 이름 붙은 거절로 남았다. 소비 배선은 여전히 별도 결정."}
   - {from: core_entropy_production, to: dynamo_rocky, kind: influences, sign: non-monotonic, status: gap, ref: "rocky-planet-dynamo-methodology.md@«C14-solved T_c falls ~90 K; the C15 entropy band moves (−69 → −68 → −82 MW/K) but still straddles zero, so the»", note: "ref was :60 (the Rm > 40 gate), now :183, the doc's only MW/K line. 2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): no printed Need, no code consumer (hook never fired); φ is emitted on Earth (−69 MW/K, band −264…+238, analog) and its band straddles zero. Gap of kind: value exists, no verdict can be drawn. C15 는 φ 를 내기까지. 문턱이 판정을 못 내므로(0.1–1000 MW/K) 사다리 교체는 별도 오너 결정 — 배선하지 않는다. 논문도 Q_C 대 Q_k 와 φ 를 나란히 둔다."}
   - {from: interior_layers, to: core_state, kind: requires, via: core_pressure, ref: "interior-structure-methodology.md"}
   - {from: interior_layers, to: core_state, kind: requires, via: core_temperature, ref: "interior-structure-methodology.md"}

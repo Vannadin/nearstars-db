@@ -135,12 +135,15 @@ GPa). 엔진 자신의 지구에서 풀린 T_c 는 3978 K 이고 거기서는 �
 **Returns** — `entropy_production` [W/K] · `entropy_production_min` [W/K] · `entropy_production_max` [W/K] ·
 `entropy_production_h0` [W/K] · `e_r` [W/K] · `e_s` [W/K] · `e_l` [W/K] · `e_g` [W/K] · `e_h` [W/K] · `e_k` [W/K] ·
 `entropy_positive_present` [—] · `entropy_band_straddles_zero` [—] · `entropy_corners_positive` [—] ·
-`has_inner_core_solved` [—] · `entropy_history_verdict` [—] · `entropy_integration_width` [W/K]
+`has_inner_core_solved` [—] · `entropy_integration_width` [W/K]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
 `core_cmb_temperature_solved` [K] · `core_material` [—] · `body_class` [—] · `k_core_w_m_k` [W/(m K)] · `core_h_w_per_kg` [W/kg] ·
 `dtc_dt_k_per_gyr` [K/Gyr]
-**갈리는 축** — `body_class`: 암석체만. 풀린 핵 쪽 온도가 없으면(C14 거절) 이름을 대며 거절합니다. `entropy_history_verdict`
-는 **항상** `cannot-say (needs C20)` 입니다.
+**갈리는 축** — `body_class`: 암석체만. 풀린 핵 쪽 온도가 없으면(C14 거절) 이름을 대며 거절합니다.
+⚠ **이 레시피는 `entropy_history_verdict` 를 내지 않습니다** (C64, 2026-09-11). 그 판정을 계산하지 않기 때문이고,
+예전에 내보내던 리터럴 «cannot-say (needs C20)» 는 **C20 이 지어진 2026-09-04 부터 낡은 문장**이었습니다. 같은
+이름으로 **계산된** 판정을 내는 것은 `core_thermal_history` 입니다. 거절 자체는 값이 아니라 `notes` 의 이름 붙은
+문장으로 남습니다.
 **등급** — **analog**. C14 와 같은 지구 보정 모형, 같은 선언 밴드(k 50 ± 20, H 0–1.5 pW/kg, dT_c/dt 33–126 K/Gyr), 같은 γ.
 E_H 의 괄호 순서는 인쇄값 −134 MW/K 에 대한 폐합으로, E_s 의 1/T_c 인자는 인쇄값 64 에 대한 폐합으로 확정했습니다 — 둘 다
 *읽어서가 아니라 되짚어서* 알아낸 것입니다.

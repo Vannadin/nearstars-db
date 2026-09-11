@@ -225,6 +225,10 @@ def _from_state(state):
         return res
     return replace(
         res,
+        # ⚠ **조회한 것은 `inputs` 에 적는다.** 계약 검사는 문서의 Needs·Declared-optional 을 이
+        #   dict 와 대조하므로, 어댑터가 읽고도 안 적으면 «문서가 적었는데 코드가 안 쓴다» 로 걸린다 —
+        #   실제로 걸렸다. 읽은 사실 자체가 계약의 일부다.
+        inputs={**res.inputs, "composition_intent": declared},
         values={**res.values, "composition_preset_used": 0 if declared else 1},
         units={**res.units, "composition_preset_used": ""},
     )

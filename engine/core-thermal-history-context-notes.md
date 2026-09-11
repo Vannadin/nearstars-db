@@ -94,7 +94,7 @@ integration therefore has a strong prior.
 test in ⑤.** An unconverged integration will happily never nucleate.
 
 ##### ③ ΔE_min over the last 3.1 Gyr — *the actual consumer*
-C15 emits `entropy_history_verdict = "cannot-say (needs C20)"` on every result. Nimmo's three criteria
+C15 emits `entropy_history_verdict = "cannot-say (needs C20)"` on every result. ⚠ **No longer true as of 2026-09-11 (C64)**: C15 stopped returning that key at all, and the refusal moved into `notes` as a named sentence — the paragraph below is kept as it was written on 2026-09-04. Nimmo's three criteria
 are mean ΔE, minimum ΔE, and the present value; **the discriminating one is ΔE_min**. Present-day
 C15 gives **ΔE −69 MW/K, band −264…+238, 4 of 8 corners positive**.
 
@@ -304,8 +304,8 @@ toward the present, and the corner that stays positive is the one with low condu
 model needs the CMB heat flux to have *"varied by less than a factor of 2 over 4.5 Gyr"*. Recorded, not acted on.
 
 **Anchors**: none traverse `core_history.py`; `test_ice_giant.py --fast` 모두 통과; no `--refresh`.
-**What C20 does not do**: feed `entropy_history_verdict` into C15 (that node's string stays `cannot-say (needs C20)`
-until a wiring decision); supply `t_form`; include the short-lived pulse (C21).
+**What C20 does not do**: feed `entropy_history_verdict` into C15 (that node's string stayed `cannot-say (needs C20)`
+until a wiring decision — ⚠ on 2026-09-11 C64 removed the key from C15 instead, so there is no string to replace); supply `t_form`; include the short-lived pulse (C21).
 
 ## 5. After the first run — observation, diagnostics, and what closed (2026-09-04 afternoon; directing seat's review, everything re-read here)
 

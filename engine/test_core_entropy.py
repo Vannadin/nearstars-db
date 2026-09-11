@@ -13,7 +13,10 @@
    structural facts asserted, the numbers printed — no expectation was written.
 3. Branches: no inner core → E_L = E_g = E_H = 0 exactly; an inner core → all three non-zero (same profile,
    two T_c). The H = 0 corner is emitted.
-4. Labels — the history verdict is always `cannot-say (needs C20)`; no solved T_c → refuse by name; giant → out.
+4. Labels — ⚠ the history verdict is **not returned at all** (C64, 2026-09-11: this node does not
+   compute it; the literal `cannot-say (needs C20)` it used to emit went stale the day C20 was built,
+   and `core_thermal_history` emits the computed one under the same name); no solved T_c → refuse by
+   name; giant → out.
 """
 from __future__ import annotations
 
@@ -97,7 +100,16 @@ def main() -> int:
     if res.applicable:
         v = res.values
         ok(v["entropy_production_min"] <= v["entropy_production"] <= v["entropy_production_max"], "2: the band must bracket the nominal")
-        ok(v["entropy_history_verdict"] == "cannot-say (needs C20)", "2: the history verdict must refuse by name")
+        # ⚠ **기준선 이동** (C64, 2026-09-11): 이 줄은 리터럴 «cannot-say (needs C20)» 를 고정하고
+        #   있었다. 그 문장은 **C20 이 지어진 2026-09-04 부터 낡았고**, 같은 키를 `core_history` 가
+        #   계산된 값으로 내고 있어서 한 키에 두 답이 있었다. 이제 이 노드는 **그 키를 내지 않는다** —
+        #   못 내는 것은 안 낸다. 고정할 것이 값에서 사라졌으므로, 대신 «없다» 와 «거절이 산문에
+        #   남아 있다» 를 고정한다. ⚠ 이 시험이 그 리터럴을 붙들고 있던 검사였다는 것이 C64 의
+        #   문장이다: 알아챌 검사가 붙들고 있었다.
+        ok("entropy_history_verdict" not in v,
+           "2: 이 노드는 이력 판정을 **내지 않는다** (C64 — 계산하지 않는 값을 리터럴로 내던 자리)")
+        ok(any("3 Gyr" in n for n in res.notes),
+           "2b: 못 낸다는 사실은 notes 의 이름 붙은 거절로 남는다")
         ok(abs(v["e_l"]) + abs(v["e_g"]) + abs(v["e_h"]) == 0.0 if not v["has_inner_core_solved"] else True,
            "2: without an inner core E_L, E_g, E_H must be exactly 0")
         # 2026-09-04: two layers, two convergence orders — the profile is RK4, the integrals on it are O(h) and
@@ -109,7 +121,7 @@ def main() -> int:
               f"(밴드 {v['entropy_production_min'] / mw:+.0f} … {v['entropy_production_max'] / mw:+.0f}, 양수 모서리 {v['entropy_corners_positive']}/8, "
               f"H=0 {v['entropy_production_h0'] / mw:+.0f}) = E_R {v['e_r'] / mw:.0f} + E_s {v['e_s'] / mw:.0f} + E_L {v['e_l'] / mw:.0f} "
               f"+ E_H {v['e_h'] / mw:.0f} + E_g {v['e_g'] / mw:.0f} − E_k {v['e_k'] / mw:.0f} · 내핵 {'있음' if v['has_inner_core_solved'] else '없음'} · "
-              f"0 가로지름 {v['entropy_band_straddles_zero']} · 적분 폭(4×) {v['entropy_integration_width'] / mw:.1f} MW/K · 이력 {v['entropy_history_verdict']}")
+              f"0 가로지름 {v['entropy_band_straddles_zero']} · 적분 폭(4×) {v['entropy_integration_width'] / mw:.1f} MW/K")
 
     # ── 3. both branches on one profile ──────────────────────────────────────
     print("\n분기 — 내핵 없음(E_L = E_g = E_H = 0) / 내핵 있음, 같은 프로파일의 두 T_c")

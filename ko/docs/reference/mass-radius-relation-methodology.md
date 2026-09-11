@@ -49,8 +49,9 @@
 
 **Returns** — `radius_mr_screen` [R_earth] · `density` [g/cm3] · `composition_preset_used` [—]
 
-⚠ **`radius_mr_screen` is a screening estimate, not this body's solution** (C65, 2026-09-11). This recipe reaches its radius by calling **the same structure integrator** with **mass and a composition preset only** — so it is *not* an independent check on `interior_layers`, it is that node's solver run without the body's declarations — no declared ice or gas mass fraction, no potential temperature, no porosity — so it answers *"what would a body of this mass and composition be"*, not *"what is this body"*. The number a consumer should read is **`interior_layers`'s `radius`**, which is the same solver run with everything the body declares. The two used to share the name `radius` and differed by **1.87 %** on Mars and **12.51 %** on the Dante fixture.
-**Needs** — `mass_earth` [M_earth] · `composition` [—]
+⚠ **`radius_mr_screen` 은 선별용 추정이지 이 천체의 해가 아니다** (C65, 2026-09-11). 이 레시피는 반지름을 **같은 구조 적분기**에 **질량과 조성 프리셋만** 넘겨 얻는다 — 선언된 얼음·가스 질량분율도, 포텐셜 온도도, 공극률도 안 들어간다. 그러니 «이 질량과 조성의 천체라면 어떤가» 에 답하는 것이고 «이 천체는 무엇인가» 가 아니다. **독립 검증이 아니라 그 노드의 풀이를 선언 없이 돌린 값**이다. 소비처가 읽어야 하는 것은 **`interior_layers` 의 `radius`** 이고, 그것은 같은 적분기를 천체가 선언한 전부로 돌린 값이다. 둘은 예전에 `radius` 라는 한 이름을 썼고 화성에서 **1.87 %**, 단테 픽스처에서 **12.51 %** 어긋났다.
+**Needs** — `mass_earth` [M_earth]
+**Declared-optional** — 이 레시피가 기본값을 선언하는 입력. 없는 것이 구멍이 아니라 정상 상태다. `composition_intent` [—] (없으면 프리셋 **`earth_like`**, 그리고 실행이 그것을 말한다 — `composition_preset_used` 가 1) · `composition` [—] (함수 매개변수가 같은 기본값을 든다). ⚠ **`composition` 을 Needs 에서 일부러 뺐다** (C65 후속, 2026-09-11): C45 (f) 가 세는 것은 *계약의 `Needs` 를 호출부 리터럴이 메우는 쌍* 이고 이것이 그중 하나였다 — 문서는 필수라 적고 `def assign(..., composition="earth_like")` 가 그것을 채우고 있었다. **선언된 기본값은 구멍이 아니고, 필수라 적으면서 기본값을 주는 것이 그것을 안 보이게 한 원인**이다. ⚠ *이 줄이 어댑터가 실제로 조회하는 것이다* — 코드는 `composition_intent` 를 읽는데 계약은 `composition` 만 적고 있어서, 조회와 계약이 어긋나고 기본값이 그것을 세는 검사에 안 보였다 (C65 후속, C45 (f)).
 **갈리는 축** — 질량(8 M⊕ 이하 암석 / 초과 휘발성 / 0.1 M_J 이상 축퇴), 암석 반지름이
 밸리(1.5~1.8 R⊕)에 걸리는지, 그리고 조성.
 **등급** — 조성 전부와 밀도 게이트까지 calibrated 입니다. 반지름이 배율표가 아니라
