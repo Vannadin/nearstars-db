@@ -349,6 +349,15 @@ def main() -> int:
                                   "ice_allowed", "ice_mass_fraction", "initial_porosity",
                                   "porosity_cap"},
               "internal_heat_nontidal": {"ice_mass_fraction"},
+              # ⚠ 둘 다 **C65 후속이 2026-09-11 에 더한 것**이고, 더한 이유가 서로 다르다.
+              #   `composition_intent` 는 어댑터가 실제로 조회하는 키인데 계약이 이름조차 적지
+              #   않고 있었다. `composition` 은 계약이 **Needs 라 적었는데** 호출부가 리터럴로
+              #   메우고 있던 쌍이라(C45 (f) 가 세는 바로 그 모양) Needs 에서 뺐다 — 선언된
+              #   기본값은 구멍이 아니고, 필수라 적으면서 기본값을 주는 것이 그것을 안 보이게
+              #   한 원인이다. ⚠ 그리고 이 집합을 같이 안 고쳐 gate240 이 rc=1 로 떨어졌다:
+              #   커밋 전 로컬 검사에 이 시험이 빠져 있었고, 면제 목록이 **넓어지는** 쪽이라
+              #   계약 대조·앵커·표 셋 다 조용했다. 넓어지는 것을 잡는 그물은 여기 하나뿐이다.
+              "mass_radius_relation": {"composition", "composition_intent"},
               "tidal_locking": {"permanent_quadrupole"}}
     _got, _dyn = {}, {}
     for _node in sorted(_reg.registered()):
