@@ -291,6 +291,66 @@ def sample_bodies() -> list[BodyState]:
     return out
 
 
+def c68_merge_rule(g: dict, bodies: list[BodyState]) -> None:
+    """C68 — 한 이름을 두 노드가 낼 때, 그 이름에 주인이 있는가 (브리프 193).
+
+    ⚠ **판정하지 않고 보고한다.** 이 검사는 세 상태로 가르되 어느 것도 FAIL 로 세우지 않는다 —
+    빨간 검사와 그 수리를 한 커밋에 넣으면 어느 쪽이 무엇을 했는지 안 보인다 (193 §4).
+
+    세 상태. **주인 선언** 은 계약이 한 생산자를 그 키의 주인으로 적은 경우이고, 오늘 그런 선언은
+    트리에 하나도 없다. **클래스 배타** 는 두 생산자가 한 바디에서 함께 돌지 않는 경우인데,
+    ⚠ *이름이 배타적으로 보이는 것은 근거가 아니다* — 표본 위에서 **겹침 0 을 재서** 통과시킨다.
+    나머지는 보고한다.
+
+    순위는 `graph.order(g)` 에서 읽는다. `state.get` 은 **적용되는** 첫 생산자를 돌려주므로 순위는
+    «누가 이길 수 있는가» 만 정하고, 그 순위가 실제로 쓰이는지는 적용 여부가 정한다 — 그래서 두
+    수를 같이 인쇄한다 (193 Amendment 1).
+    """
+    flat = [n for unit in graph.order(g) for n in unit]
+    rank = {n: i + 1 for i, n in enumerate(flat)}
+    producers: dict[str, list[str]] = {}
+    for name, nd in g["nodes"].items():
+        for key in nd.get("outputs") or []:
+            producers.setdefault(key, []).append(name)
+    dup = {k: sorted(v, key=lambda n: rank.get(n, 10 ** 6)) for k, v in producers.items()
+           if len(v) > 1}
+
+    print(f"  [기록 · C68] 실행 단위 {len(graph.order(g))}개를 펼친 {len(flat)} 노드 순서에서 읽는다 "
+          f"— 중복 생산 키 {len(dup)}개")
+    counts = {"주인 선언": 0, "클래스 배타": 0, "잴 수 없음": 0, "보고": 0}
+    for key in sorted(dup):
+        prods = dup[key]
+        applied: dict[str, set[str]] = {}
+        for n in prods:
+            applied[n] = {b.name for b in bodies
+                          if (b.results.get(n) is not None and b.results[n].applicable)}
+        overlap = set.intersection(*applied.values()) if applied else set()
+        owner = None                      # 계약에 주인을 적는 자리는 아직 없다 — 있으면 여기서 읽는다
+        silent = [n for n in prods if not applied[n]]
+        if owner is not None:
+            state = "주인 선언"
+        elif silent:
+            # ⚠ **안 돈 생산자는 배타의 증거가 아니다.** 이 하네스는 레시피가 등록된 노드만 푸는데
+            #   (오늘 15 / 계산 노드 35), 그러면 한 번도 답을 안 낸 생산자와 «다른 바디에서만
+            #   도는» 생산자가 **똑같이 겹침 0** 으로 보인다. 앞의 것은 측정이 아니라 부재다.
+            state = "잴 수 없음"
+        elif not overlap:
+            state = "클래스 배타"
+        else:
+            state = "보고"
+        counts[state] += 1
+        ranks = " · ".join(f"{n} @{rank.get(n, '?')} ({len(applied[n])})" for n in prods)
+        line = (f"  [기록 · C68] {key} — {state} · 생산자 {ranks} · 겹침 {len(overlap)}")
+        if overlap:
+            line += f" ({', '.join(sorted(overlap))})"
+        if silent:
+            line += f" · 표본에서 안 돈 생산자 {', '.join(silent)}"
+        print(line + (f" · 주인 {owner}" if owner else " · 주인 선언 없음"))
+    print(f"  [기록 · C68 합계] 주인 선언 {counts['주인 선언']} · 클래스 배타 {counts['클래스 배타']} "
+          f"· 잴 수 없음 {counts['잴 수 없음']} · 보고 {counts['보고']} — 판정하지 않는다 (193). "
+          f"괄호 안 수는 그 생산자가 답을 낸 표본 수이고, 0 이면 그 키는 재지 못한 것이다")
+
+
 def main() -> int:
     registry.load_all()
     g = graph.load()
@@ -518,6 +578,8 @@ def main() -> int:
     print(f"  [클래스 ③ 합계] {n3_nodes} 노드 · 고유 키 {n3_keys} · 쌍 {n3_pairs} "
           f"(기준선 {CLASS3_BASELINE[0]} · {CLASS3_BASELINE[1]} · {CLASS3_BASELINE[2]}, C50) — "
           f"{'변화 없음' if got3 == CLASS3_BASELINE else '⚠ 기준선과 다르다'}")
+
+    c68_merge_rule(g, bodies)
 
     total = sum(1 for d in g["nodes"].values() if d.get("kind") == "computed")
     for f in fails:
