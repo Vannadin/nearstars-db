@@ -1,11 +1,11 @@
 {
  "python": "3.9.6",
- "path_fingerprint": "599684df3e9fa137",
+ "path_fingerprint": "53fcf0f2577f857e",
  "frozen_at": "2026-09-11",
  "steps": 1500,
  "bodies": {
   "Uranus": {
-   "seconds": 22.3,
+   "seconds": 24.4,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -30,7 +30,10 @@
     "bulk_porosity": "0.0",
     "voids_expected": false,
     "integrator_core_gamma_verdict": null,
-    "integrator_red_gamma_used": null
+    "integrator_red_gamma_used": null,
+    "converged": true,
+    "unconverged_solvers": [],
+    "bracket_invalid": []
    },
    "standalone": {
     "p_center_pa": "1220043504319.1865",
@@ -45,7 +48,7 @@
    "standalone_reproduces_solve": true
   },
   "Neptune": {
-   "seconds": 51.6,
+   "seconds": 58.0,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -70,7 +73,10 @@
     "bulk_porosity": "0.0",
     "voids_expected": false,
     "integrator_core_gamma_verdict": null,
-    "integrator_red_gamma_used": null
+    "integrator_red_gamma_used": null,
+    "converged": true,
+    "unconverged_solvers": [],
+    "bracket_invalid": []
    },
    "standalone": {
     "p_center_pa": "1533207948855.248",
