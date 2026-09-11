@@ -52,6 +52,9 @@ docs/phase3/_papers
 scripts/refs/.cache/
 
 .venv/
+# engine 의 venv 는 이름이 둘이다 — .venv (대조용) 와 .venv-burnman (BurnMan 전용).
+# 위의 `.venv/` 는 이름이 정확히 `.venv` 인 디렉터리만 잡으므로 둘째는 안 걸린다.
+engine/.venv*/
 
 # Obsidian auto-generated canvas files (created when user accidentally
 # clicks "new canvas"; not part of the wiki layer)

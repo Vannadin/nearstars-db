@@ -55,7 +55,14 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SKIP_DIRS = {".git", "_papers", "node_modules", ".venv", ".archive"}
+SKIP_DIRS = {".git", "_papers", "node_modules", ".archive"}
+# ⚠ **a venv is matched by prefix** (191, 2026-09-12): the set held the exact string
+#   `.venv`, which does not reach `engine/.venv-burnman`. Markdown **does** sit under that venv —
+#   six files, `pyparsing/ai/best_practices.md` and five `LICENSE.md` — and they were scanned and
+#   happened not to break a rule. That is luck, not absence: the scan counted 833 files where the
+#   pre-venv gate counted 827. `.gitignore` speaks to git, not to scanners.
+SKIP_PREFIXES = (".venv",)
+VENV_KEY = ".venv*"      # 접두로 걸린 것들을 세는 한 칸 — 이름이 여럿이라 항목 하나로 묶는다
 
 #: 이 아래 길이의 동일 절은 사례별 절차 틀이다. 재보고 정한 값이지 어림이 아니다 — 정상 반복의
 #: 최댓값이 6줄, 실제 결함의 최솟값이 23줄이라 그 사이면 어디든 같은 답을 낸다.
@@ -108,6 +115,9 @@ def _present_dirs() -> set[str]:
             if d in SKIP_DIRS:
                 found.add(d)
                 dirs.remove(d)          # 안으로는 안 들어간다. 있다는 것만 안다.
+            elif d.startswith(SKIP_PREFIXES):
+                found.add(VENV_KEY)     # 이름이 여럿이라 한 칸에 모아 센다 (.venv · .venv-burnman …)
+                dirs.remove(d)
     return found
 
 
@@ -121,11 +131,15 @@ def main() -> int:
     #: 누가 스킵 줄을 지워도 출력이 안 변해서 지워도 되는 줄 알게 된다 — 그러다 심링크가 실제
     #: 디렉터리로 바뀌는 날 741개가 쏟아진다.
     skipped: dict[str, int] = {d: 0 for d in SKIP_DIRS}
+    skipped[VENV_KEY] = 0
     present = _present_dirs()
     for path in sorted(ROOT.rglob("*.md")):
         hit = [p for p in path.parts if p in SKIP_DIRS]
         if hit:
             skipped[hit[0]] += 1
+            continue
+        if any(p.startswith(SKIP_PREFIXES) for p in path.parts):
+            skipped[VENV_KEY] += 1
             continue
         scanned += 1
         rel = path.relative_to(ROOT).as_posix()

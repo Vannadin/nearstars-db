@@ -37,7 +37,13 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SKIP_DIRS = {".git", "_papers", "node_modules", ".venv", ".archive"}
+SKIP_DIRS = {".git", "_papers", "node_modules", ".archive"}
+# ⚠ **a venv is matched by prefix** (191, 2026-09-12): the set held the exact string
+#   `.venv`, which does not reach `engine/.venv-burnman`. Markdown **does** sit under that venv —
+#   six files, `pyparsing/ai/best_practices.md` and five `LICENSE.md` — and they were scanned and
+#   happened not to break a rule. That is luck, not absence: the scan counted 833 files where the
+#   pre-venv gate counted 827. `.gitignore` speaks to git, not to scanners.
+SKIP_PREFIXES = (".venv",)
 DELIM = re.compile(r"^\s*\|?[\s:|-]*-[\s:|-]*\|?\s*$")
 # GFM 는 백슬래시로 이스케이프한 `\|` 만 셀 구분자로 보지 않는다 — 코드 스팬 안의 파이프도 셀을 끊는다
 UNESCAPED_PIPE = re.compile(r"(?<!\\)\|")
@@ -130,7 +136,7 @@ def main() -> int:
     exempted_ragged = 0
     scanned = 0
     for path in sorted(ROOT.rglob("*.md")):
-        if any(p in SKIP_DIRS for p in path.parts):
+        if any(p in SKIP_DIRS or p.startswith(SKIP_PREFIXES) for p in path.parts):
             continue
         scanned += 1
         rel = path.relative_to(ROOT).as_posix()

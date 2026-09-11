@@ -135,14 +135,31 @@ def own_doc(path: Path) -> str | None:
 BASENAMES: dict[str, list[Path]] = {}
 
 
+# `ko/` holds a translation of the same document, not a different file, so a mirror is not a second
+# meaning; caches and archives are not citable targets at all.
+# ⚠ **A venv is matched by prefix, not by name** (191, 2026-09-12). The set used to hold the exact
+# string `.venv`, so `engine/.venv-burnman` — a second venv built the day BurnMan was installed — was
+# walked, and its `burnman/tools/eos.py` collided with `engine/eos.py`: **18 citations turned
+# ambiguous in a tree where nothing citable had changed**. `.gitignore` speaks to git, not to
+# scanners, so every tree walker needs its own skip.
+SKIP_DIRS = {".git", "ko", ".archive", "_papers", "node_modules"}
+SKIP_PREFIXES = (".venv",)
+
+
+def skipped(q: Path) -> bool:
+    """Is this path inside a directory no citation can mean?"""
+    return bool(SKIP_DIRS & set(q.parts)) or any(
+        part.startswith(SKIP_PREFIXES) for part in q.parts
+    )
+
+
 def sharing_the_name(bare: str) -> list[Path]:
     """Every file in the repo with this base name."""
     if not BASENAMES:
         # `ko/` holds a translation of the same document, not a different file, so a mirror is not a
         # second meaning; caches and archives are not citable targets at all.
-        skip = {".git", "ko", ".archive", "_papers", "node_modules", ".venv"}
         for q in ROOT.rglob("*"):
-            if q.is_file() and not (skip & set(q.parts)):
+            if q.is_file() and not skipped(q):
                 BASENAMES.setdefault(q.name, []).append(q)
     return BASENAMES.get(bare, [])
 
@@ -171,7 +188,9 @@ def target_of(doc: str, citing: Path) -> Path | None:
             return cand
     bare = Path(doc).name
     if bare == doc:                       # a bare name: look for exactly one file with it
-        found = [q for q in ROOT.rglob(bare) if ".git" not in q.parts and q.is_file()]
+        # ⚠ the same skip as `sharing_the_name` — this site used to filter `.git` alone, so the two
+        #   walks disagreed about what the repository contains (191).
+        found = [q for q in ROOT.rglob(bare) if q.is_file() and not skipped(q)]
         if len(found) == 1:
             return found[0]
     return None
