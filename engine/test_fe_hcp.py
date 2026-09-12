@@ -211,6 +211,42 @@ def main() -> int:
         if floor_only.covers_t(t_k) is not want:
             fails.append(f"J5B: 하한만 선언한 세트에 {label} 물었더니 {floor_only.covers_t(t_k)!r} "
                          f"— 등록된 것은 {want!r} (이른 반환이 바닥을 건너뛴다)")
+    # ── J5C — 세 경우가 서로 다르게 인쇄된다 (C84, 브리프 198 B) ─────────────────────────
+    # ⚠ **«바닥 없음» · «물어진 적 없음(분모 0)» · «아래 n / 전체 N» 은 다른 사실이다.** 오늘 이
+    #   구분을 세 번 놓쳤다 — 세지 않은 0, 부재인 0, 분모 없는 수. 카운터가 셋을 같은 모양으로
+    #   찍으면 다음 사람이 «물어봤는데 아래가 없었다» 로 읽는다.
+    eos.VERDICT_ASKINGS.clear()
+    eos.seed_verdict_askings(eos.MATERIALS)
+    seeded = dict(eos.VERDICT_ASKINGS)
+    # 셋째 경우 — **바닥을 선언했는데 아무도 안 물은** 세트는 «분모 0» 인 칸을 든다. 생산 경로에서
+    # `thermal_label` 은 핵 전용이라 얼음 세트가 실제로 그 상태이고, 칸이 없으면 «바닥 없음» 과
+    # 구별되지 않는다 (감사석, 198 B).
+    if not seeded or any(v != {"asked": 0, "below": 0} for v in seeded.values()):
+        fails.append(f"J5C: 바닥을 선언한 세트의 빈 칸이 없다/비어 있지 않다 — {seeded!r}")
+    if any(k[0].startswith("fe_") for k in seeded):
+        fails.append(f"J5C: 바닥 없는 Fe 세트에 칸이 생겼다 — {sorted(seeded)!r}")
+    ice = [p_ for p_ in eos.MATERIALS["h2o"].phases if p_.name == "ice_vii"][0]
+    floorless = eos.MATERIALS["fe_eps"].phases[0]
+    floorless.thermal_label(eos.MATERIALS["fe_eps"].fit_composition, 100.0 * GPA, 3000.0)
+    if any(cell["asked"] for cell in eos.VERDICT_ASKINGS.values()):
+        fails.append(f"J5C: 바닥 없는 세트를 물었는데 어딘가 세졌다 — {eos.VERDICT_ASKINGS!r}")
+    ice.thermal_label("H2O-ice", 50.0 * GPA, 500.0)
+    ice.thermal_label("H2O-ice", 50.0 * GPA, 100.0)
+    # 얼음은 상마다 **두** 세트(격자 안·격자 위)라 물어진 것은 50 GPa 를 덮는 첫 세트 하나다.
+    in_grid = [v for k, v in eos.VERDICT_ASKINGS.items()
+               if k[0] == "ice_vii" and k[1] < 50.0 * GPA <= 353.8 * GPA]
+    if len(in_grid) != 1 or in_grid[0] != {"asked": 2, "below": 1}:
+        fails.append(f"J5C: 격자 안 세트의 칸이 {in_grid!r} — 등록된 것은 asked 2 · below 1")
+    above = [v for k, v in eos.VERDICT_ASKINGS.items()
+             if k[0] == "ice_vii" and k[1] >= 353.8 * GPA]
+    if len(above) != 1 or above[0] != {"asked": 0, "below": 0}:
+        fails.append(f"J5C: 안 물어진 격자 위 세트의 칸이 {above!r} — 분모 0 이어야 한다")
+    below_only, _d = ice.thermal_label("H2O-ice", 50.0 * GPA, 100.0)
+    if below_only != "graded-extrapolation":
+        fails.append(f"J5C: 바닥 아래인데 판정이 {below_only!r} — 등급이어야 한다")
+    eos.VERDICT_ASKINGS.clear()
+    eos.seed_verdict_askings(eos.MATERIALS)
+
     unbounded = eos.ThermalSet(p_min=0.0, p_max=1e30, ref=ph.gamma_sets[0].ref,
                                source_state=ph.gamma_sets[0].source_state,
                                source_composition=ph.gamma_sets[0].source_composition)
@@ -321,7 +357,8 @@ def main() -> int:
               "(합성 열로 g>1 까지) · J3 10–600 GPa 연속·유한 · J3R 저자의 Table S3 세 행 재현 "
               "(0.0001·100·328.9 GPa, 값은 보유 SI 에서 시험 시점에 읽는다) · J4 적분기와 핵 "
               "노드가 같은 γ (graded-extrapolation 배달) · J5 축 둘 다 보는 등급 · J5B 하한만 선언한 "
-              "세트가 그 아래를 등급으로 낸다 (C84) · 온도 없으면 "
+              "세트가 그 아래를 등급으로 낸다 (C84) · J5B/J5C 카운터가 «바닥 없음»·«분모 0»·«n/N» 을 "
+              "갈라 든다 · 온도 없으면 "
               "등급 · J6 fe_prem 판정 불변 · J8 두 재질의 호출 표면(c_p·grad_ad·k_t)이 두 "
               "구간 다에서 유한 · J7 은 인쇄만 (정의 미인쇄)")
     return 1 if fails else 0

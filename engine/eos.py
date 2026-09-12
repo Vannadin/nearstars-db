@@ -102,6 +102,41 @@ class ThermalSetAmbiguous(Exception):
     막은 것과 같은 모양이라, 여기서는 이름을 대고 거절한다."""
 
 
+#: 판정 질의 카운터 — «바닥 아래로 물어진 적이 있는가» (C84, 브리프 198 B). 키는 **런타임 객체**다:
+#: `_ice_vii_x_gamma_sets()` 가 `ice_vii` 와 `ice_x` 에 각각 불려 얼음 세트는 둘씩 존재하고,
+#: 출처로 키를 잡으면 그 둘이 한 칸에 뭉친다 (198 Amendment 1 의 여섯 대 여덟).
+#: ⚠ **세는 것은 «질의» 이지 «바디» 가 아니다** — `thermal_label` 이 불릴 때마다 오른다.
+#: ⚠ **세 경우를 갈라 인쇄한다**: 바닥을 **선언하지 않은** 세트는 칸 자체가 없고(0 이 아니다),
+#:   선언했는데 아무도 안 물은 세트는 **분모 0**이며, 물어진 세트만 `아래 / 전체` 를 든다.
+#:   오늘 «없음과 0» 을 세 번 혼동했고, 그 구분이 이 딕셔너리의 존재 이유다.
+VERDICT_ASKINGS: dict[tuple[str, float, float], dict[str, int]] = {}
+
+
+def _count_asking(phase_name: str, ts: "ThermalSet", t: float | None) -> None:
+    """바닥을 **선언한** 세트의 칸에 질의와 «바닥 아래» 를 센다 — 칸은 미리 만들어져 있다.
+
+    ⚠ **칸을 여기서 만들면 세 경우가 둘이 된다** (감사석, 2026-09-12). 이 함수는 물어봐야 불리고,
+    생산 경로에서 `thermal_label` 은 **핵 전용**이라 얼음 세트는 한 번도 안 불린다. 칸을 이 안에서
+    만들면 «바닥을 선언했는데 아무도 안 물었다» 가 «바닥이 없다» 와 **같은 출력**(칸 없음)이 된다 —
+    이 딕셔너리가 존재하는 이유가 바로 그 구분이다. 그래서 칸은 표를 세울 때 미리 만든다."""
+    cell = VERDICT_ASKINGS.get((phase_name, ts.p_min, ts.t_min))
+    if cell is None:
+        return                        # 바닥 없음 — 칸이 아예 없다 (0 이 아니라 부재다)
+    cell["asked"] += 1
+    if t is not None and t < ts.t_min:
+        cell["below"] += 1
+
+
+def seed_verdict_askings(materials: dict) -> None:
+    """바닥을 선언한 **모든 런타임 세트**에 빈 칸을 만든다 — 안 물어지면 «분모 0» 으로 인쇄된다."""
+    for mat in materials.values():
+        for ph in getattr(mat, "phases", ()) or ():
+            for ts in (getattr(ph, "gamma_sets", None) or ()):
+                if ts.t_min > 0.0:
+                    VERDICT_ASKINGS.setdefault((ph.name, ts.p_min, ts.t_min),
+                                               {"asked": 0, "below": 0})
+
+
 @dataclass(frozen=True)
 class ThermalSet:
     """γ·c_p 를 공급하는 **한 압력 구간**의 열 세트 (C58, 브리프 180 C, 결정 (A)).
@@ -339,6 +374,7 @@ class Phase:
                                    ts.source_state, ts.source_composition,
                                    fit_composition, ts.grade_note, ts.grade_kind)
         # ⚠ **온도 축을 넘었으면 등급이 내려간다 — 압력만 맞아도 아니다** (브리프 187, 감사석).
+        _count_asking(self.name, ts, t)
         if gamma_cell == "ok" and not ts.covers_t(t):
             gamma_cell = "graded-extrapolation"
         return gamma_cell, density_cell
@@ -1652,12 +1688,23 @@ DOROGOKUPETS_FIT_P_MAX = 350.0 * GPA
 # ⚠ **인쇄된 범위는 축이 둘이다** (감사석, 브리프 187): 제목·인용 안내·상평형 절이 모두
 # «350 GPa and 6000 K» 라고 적는다. 압력만 잡으면 350 GPa · 9000 K 가 «측정» 으로 읽힌다.
 DOROGOKUPETS_FIT_T_MAX = 6000.0      # K
+# ⚠ **이 논문에는 온도 **아래** 끝이 없다** (브리프 198 B, 보유본을 읽고): 제목과 인용 안내가
+#   «Iron **to** 350 GPa and 6000 K», 적합 절이 «EoSs for solid and liquid Fe **to** 350 GPa» 로
+#   위 끝만 적는다. 본문의 `T₀ = 298.15 K` 는 **기준 등온선**(«reference isotherm T₀ = 298.15 K»)
+#   이지 적합의 하한이 아니다. 그래서 `fe_eps` 두 세트와 35 GPa 위 액체 `fe_prem` 세트는 **바닥을
+#   선언하지 않는다** — 없는 수를 지어내는 대신 출처가 침묵한다는 사실을 여기 적는다.
 # French & Redmer 2015 의 적합 격자를 압력으로 옮긴 끝 (p3 의 ρ 1.6–4.25 g/cm³ · T 295–2000 K).
 # ⚠ 이 수는 **퍼텐셜 자신으로** 환산한 것이다 — 논문이 압력 창을 인쇄하지 않으므로, 격자의 모서리를
 #   식 (6) 으로 평가했다 (브리프 190).
 FR2015_FIT_P_MIN = 3.23 * GPA
 FR2015_FIT_P_MAX = 353.8 * GPA
 FR2015_FIT_T_MAX = 2000.0            # K
+# ⚠ **바닥은 같은 문장에서 온다 — 그리고 사본을 하나 더 만들지 않는다** (C84, 브리프 198 B).
+#   French & Redmer 2015 은 격자를 한 문장으로 인쇄한다: «the densities were varied between 1.6 and
+#   4.25 g/cm3, and the temperatures were **chosen from 295 up to 2000 K**». 위 끝은 이미 위 상수로
+#   옮겨져 있고, 아래 끝은 `ice_fr2015.FIT_T_MIN` 에 이미 있다 — 그래서 세트는 그 이름을 **참조**한다.
+#   ⚠ 위 `FR2015_FIT_T_MAX` 자체가 `ice_fr2015.FIT_T_MAX` 의 **둘째 사본**이다. 바닥까지 리터럴로
+#   적으면 그 실수를 한 번 더 저지르는 것이라, 바닥은 리터럴로 안 적는다.
 
 # 정적비열. **두 가지 다른 출처에서 왔고 섞으면 안 된다.**
 #
@@ -2598,12 +2645,13 @@ def _ice_vii_x_gamma_sets() -> tuple[ThermalSet, ...]:
                    source_state="solid", source_composition="H2O-ice",
                    evaluator="french_redmer2015_ice_hse",
                    t_ref=ICE_VII_X_REF_T, t_ref_kind="isotherm",
-                   t_max=FR2015_FIT_T_MAX),
+                   t_min=ice_fr2015.FIT_T_MIN, t_max=FR2015_FIT_T_MAX),
         ThermalSet(p_min=FR2015_FIT_P_MAX, p_max=float("inf"), ref=ice_fr2015.REF,
                    source_state="solid", source_composition="H2O-ice",
                    evaluator="french_redmer2015_ice_hse",
                    t_ref=ICE_VII_X_REF_T, t_ref_kind="isotherm",
-                   t_max=FR2015_FIT_T_MAX, grade_kind="extrapolation",
+                   t_min=ice_fr2015.FIT_T_MIN, t_max=FR2015_FIT_T_MAX,
+                   grade_kind="extrapolation",
                    grade_note="HSE parametrization of Eq. (9); Eqs. (11), (13), (15) have no XC "
                               "variants. Beyond the fit grid — French & Redmer 2015 fit 92 MD points over "
                               "rho 1.6-4.25 g/cm3 and T 295-2000 K (p3); the authors state on p1 "
@@ -3690,3 +3738,5 @@ MATERIALS: dict[str, Material | HotWater | HydrogenHelium | LiquidWater | DenseL
                         H2O_LIQUID_DENSE, NH3)
 }
 MATERIALS.update(CORE_BOX_MATERIALS)
+# 바닥을 선언한 세트마다 빈 칸을 세운다 — «선언했으나 안 물어짐» 이 «선언 안 함» 과 갈린다.
+seed_verdict_askings(MATERIALS)
