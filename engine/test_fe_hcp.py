@@ -195,6 +195,28 @@ def main() -> int:
     if got_no_t != "graded-extrapolation":
         fails.append(f"J5: 온도 없이 물었는데 {got_no_t!r} 다 — 「온도 모름」은 통과가 아니라 등급이다")
 
+    # ── J5B — 바닥만 선언한 세트가 그 아래를 등급으로 낸다 (C84, 브리프 198) ───────────────
+    # ⚠ **이 검사가 지키는 것은 이른 반환이다.** `covers_t` 의 예전 판은 `t_max` 가 없으면 `t` 를
+    #   보지도 않고 참을 냈다. 거기에 하한만 더하면 «하한만 선언한 세트» 는 여전히 무경계로 남고,
+    #   그 모양이 바로 액체 철 두 세트다 — 198 B 가 바닥을 선언할 가장 유력한 자리다. 그래서 축을
+    #   **하나만** 든 세트를 여기서 직접 만들어 묻는다. 출하 세트는 198 에서 아무도 바닥을 선언하지
+    #   않으므로(그래서 값이 안 움직인다) 이 경우는 합성으로만 존재한다.
+    floor_only = eos.ThermalSet(p_min=0.0, p_max=1e30, t_min=1000.0,
+                                ref=ph.gamma_sets[0].ref,
+                                source_state=ph.gamma_sets[0].source_state,
+                                source_composition=ph.gamma_sets[0].source_composition)
+    checks = ((None, False, "온도 없이"), (500.0, False, "바닥 아래"),
+              (5000.0, True, "바닥 위"))
+    for t_k, want, label in checks:
+        if floor_only.covers_t(t_k) is not want:
+            fails.append(f"J5B: 하한만 선언한 세트에 {label} 물었더니 {floor_only.covers_t(t_k)!r} "
+                         f"— 등록된 것은 {want!r} (이른 반환이 바닥을 건너뛴다)")
+    unbounded = eos.ThermalSet(p_min=0.0, p_max=1e30, ref=ph.gamma_sets[0].ref,
+                               source_state=ph.gamma_sets[0].source_state,
+                               source_composition=ph.gamma_sets[0].source_composition)
+    if not all(unbounded.covers_t(x) for x in (None, 1.0, 1e9)):
+        fails.append("J5B: 두 끝이 다 비었는데 무경계가 아니다 — 198 은 기존 거동을 안 바꾼다")
+
     # ── J6 ────────────────────────────────────────────────────────────────
     prem = eos.MATERIALS["fe_prem"]
     for p_gpa, t_k, want in ((25.0, 2100.0, "composition-substitute"),
@@ -298,7 +320,8 @@ def main() -> int:
         print("  [PASS] hcp 열 세트 — J1 두 열의 V₀ 복원(부동소수) · J2 g 와 g(1−g) 부호 규칙 "
               "(합성 열로 g>1 까지) · J3 10–600 GPa 연속·유한 · J3R 저자의 Table S3 세 행 재현 "
               "(0.0001·100·328.9 GPa, 값은 보유 SI 에서 시험 시점에 읽는다) · J4 적분기와 핵 "
-              "노드가 같은 γ (graded-extrapolation 배달) · J5 축 둘 다 보는 등급, 온도 없으면 "
+              "노드가 같은 γ (graded-extrapolation 배달) · J5 축 둘 다 보는 등급 · J5B 하한만 선언한 "
+              "세트가 그 아래를 등급으로 낸다 (C84) · 온도 없으면 "
               "등급 · J6 fe_prem 판정 불변 · J8 두 재질의 호출 표면(c_p·grad_ad·k_t)이 두 "
               "구간 다에서 유한 · J7 은 인쇄만 (정의 미인쇄)")
     return 1 if fails else 0

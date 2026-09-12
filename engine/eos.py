@@ -131,6 +131,10 @@ class ThermalSet:
     grade_note: str = ""              # 있으면 판정이 `graded-<grade_kind>` 로 나간다
     grade_kind: str = "disagreement"  # 등급의 **종류**. 이름이 배달 규칙을 정한다 (브리프 187)
     t_max: float = 0.0                # K. 논문이 인쇄한 온도 상한. 0 이면 «상한 없음»
+    #: K. 논문이 인쇄한 온도 **하한**. 0 이면 «하한 없음» — `t_max` 와 같은 규약이다 (C84, 198).
+    #: ⚠ **198 은 이 칸을 어느 세트에도 채우지 않는다.** 선언은 198 B 이고, 선언하는 순간 판정 수가
+    #:   움직이므로 그것은 따로 잴 항목이다. 여기서 바뀌는 것은 **구조**뿐이다.
+    t_min: float = 0.0
 
     def covers(self, p: float) -> bool:
         return self.p_min <= p < self.p_max
@@ -140,10 +144,21 @@ class ThermalSet:
 
         ⚠ `t_max` 를 든 세트에 **온도 없이** 물으면 `False` 다. 압력만 보고 «측정 구간» 이라고
         답하면 350 GPa · 9000 K 가 측정으로 읽히는데, 논문은 그 점을 보증하지 않는다 — C74 의
-        J 와 같은 모양(축 하나만 접으면 짝은 아무것에도 대조되지 않는다)이라 같은 답을 쓴다."""
-        if self.t_max <= 0.0:
+        J 와 같은 모양(축 하나만 접으면 짝은 아무것에도 대조되지 않는다)이라 같은 답을 쓴다.
+
+        ⚠ **축이 둘이 되면 이른 반환이 덫이다** (감사석, 2026-09-12). 예전 판은 `t_max <= 0` 이면
+        `t` 를 **보지도 않고** 참을 냈다. 거기에 «마지막 줄에 `and t >= t_min` 을 더한다» 로 고치면,
+        **`t_min` 만 선언하고 `t_max` 는 안 선언한 세트**가 여전히 완전히 무경계로 남는다 — 바닥이
+        한 번도 발화하지 않는다. 그리고 그 모양이 바로 액체 철 두 세트, 즉 오늘 온도 경계가 없고
+        198 B 에서 바닥을 선언할 가능성이 가장 큰 쌍이다. 그래서 무경계는 **두 끝이 다 0 일 때만**
+        이다."""
+        if self.t_max <= 0.0 and self.t_min <= 0.0:
             return True
-        return t is not None and t <= self.t_max
+        if t is None:
+            return False
+        if self.t_max > 0.0 and t > self.t_max:
+            return False
+        return not (self.t_min > 0.0 and t < self.t_min)
 
 
 #: `ThermalSet.evaluator` 가 가리키는 함수들. (P, T) → dict(dpdt_v, c_v, gruneisen, …).
