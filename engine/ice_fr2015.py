@@ -232,43 +232,88 @@ def thermal_at(p_pa: float, t: float, column: str = "HSE") -> dict:
     return out
 
 
-def density_at(p_gpa: float, t: float, column: str = "HSE") -> float:
-    """P(ρ) 를 뒤집는다 — 적합 격자 안에서 p 는 ρ 에 단조증가한다.
+#: 세컨트의 정지 기준 — ρ 에 대한 **상대** 폭이다 (197 §3 (5)). 이 값에서 실제로 잰 수는
+#: 인버전당 `free_energy` **약 24 회**(반복 8.868 × 2 + 진입 가드 4)이고, 앵커가 요청한 8 009
+#: 상태에서 밀도가 움직인 최악이 **1.382e-9** 다 (격자 안 1.018e-9).
+#: ⚠ 예전 초안의 **28.5 회 · 9.77e-10** 은 **표본 격자**에서 나온 수이고 여기에 대체된다 — 그
+#:   표본은 엔진이 실제로 요청하는 상태를 담지 못했다.
+DENSITY_TOL = 1e-10
 
-    ⚠ **기준 가지가 없다** (C71/189): 아래 고리는 «허용오차를 만났다» 로 멈추지 않는다 — 더 좁힐
-    것이 없어서 멈춘다. 유효한 괄호에서는 그 일이 **항상** 일어나므로 «기준으로 나갔는가» 는 늘
-    참이고, 항상 참인 깃발은 없는 것만 못하다. 그래서 상태는 `None` 이고, 이 자리가 말하는 유일한
-    사실은 **진입 괄호의 부호**다."""
+#: 세기만 하는 칸. ⚠ **평가 경로는 이것을 읽지 않는다** — 값을 만드는 식 어디에도 안 들어가므로
+#: 비트 동일성의 전제를 건드리지 않는다. 수용 실행이 「대체가 몇 번 걸렸나」를 인쇄하려고 둔다
+#: (감사석, 197): 비용이 밴드를 넘으면 이 수가 원인을 댄다.
+STATS = {"inversions": 0, "clamped": 0, "iterations": 0, "fallback": 0, "exhausted": 0}
+#: ⚠ `exhausted` 는 **예산을 다 쓰고도 기준을 못 만난** 인버전이다 (감사석, 197). 190 B 의
+#:   반대 자리다 — 거기서는 깃발이 늘 참이라 뜻이 없었고, 여기서는 **진짜 실패가 가능한데**
+#:   세지 않으면 안 보인다. 나중에 밴드가 깨지면 이 수가 먼저 설명할 것이다.
+
+#: 클램프로 나간 (P, T) 를 모으는 자리 — **기본은 꺼져 있다**. 수용 실행만 켠다 (감사석, 197):
+#: 생성기로 만드는 상태는 구성상 전부 괄호 **안**이라 클램프 경로를 한 번도 안 밟는다. 그 경로에서
+#: 두 구현이 갈릴 자유가 가장 큰데 비교가 두 상태뿐이면, 안 본 쪽을 «같다» 로 읽게 된다.
+#: ⚠ 켜면 리스트가 무한히 자라므로 배포 경로에서는 꺼 둔다 — 값은 이 목록을 읽지 않는다.
+RECORD_CLAMPS = False
+CLAMPED_STATES: list[tuple[float, float, str]] = []
+
+
+def density_at(p_gpa: float, t: float, column: str = "HSE") -> float:
+    """P(ρ) 를 뒤집는다 — 적합 격자 안에서 p 는 ρ 에 단조증가한다 (브리프 197).
+
+    **보호된 세컨트.** 걸음마다 `pressure` 한 번(= `free_energy` 2 회)이고, 괄호를 놓지 않는다:
+    세컨트 걸음이 `(a, b)` 밖으로 나가면 그 걸음은 **이분** 한 걸음으로 바뀐다. 그래서 최악이
+    오늘의 거동이고, 반환값은 언제나 적합 창 `[FIT_RHO_MIN, FIT_RHO_MAX]` 안이다.
+
+    ⚠ **괄호 밖은 명시적 가드가 받는다** (197 §3 (4)). 예전에는 «한쪽 벽을 향해 80 번 반으로
+    접는» 성질이 우연히 벽값을 돌려줬다 — 세컨트에는 그런 성질이 없으므로, 목표 압력이 창 밖이면
+    **반복 전에** 벽값을 돌려준다. 등록된 시연 두 상태가 그대로 서야 한다 (C82, M2 의 몫):
+    `density_at(3.30, 2000.0)` = 1.6 · `density_at(345.0, 295.0)` = 4.25 — ⚠ 인자는 **GPa** 다.
+
+    ⚠ **이 자리는 여전히 `None` 을 적는다.** 이제 진짜 기준(상대 1e-10)이 생겼지만, 상태를
+    `True`/`False` 로 바꾸면 `interior_layers` 의 `converged`·`unconverged_solvers` 가 함께
+    움직여 **197 이 등록한 밴드(ρ) 밖의 값이 바뀐다**. 그래서 기준이 생겼다는 사실은 원장에
+    후속 항목으로 적고, 이 항목에서는 신호를 안 바꾼다 — 이 자리가 말하는 사실은 여전히
+    **진입 괄호의 부호**다.
+
+    ⚠ **비트 동일성의 전제는 그대로다**: `pressure` 는 순수하고, `_gl_nodes` 는 읽기만 하며,
+    `_CACHE` 는 `pressure` 위층의 `thermal_at` 에 있다. 아래 `STATS` 는 **세기만 하고 평가
+    경로가 읽지 않는다** — 값을 만드는 어떤 식도 이 딕셔너리를 보지 않는다."""
     lo, hi = FIT_RHO_MIN, FIT_RHO_MAX
     f_lo, f_hi = pressure(lo, t, column) - p_gpa, pressure(hi, t, column) - p_gpa
     bracket_ok = convergence.bracket_valid(f_lo, f_hi)
     convergence.note("ice_fr2015.density_at", None, bracket_valid=bracket_ok)
-    # ⚠ **죽은 걸음을 멈춘다 — 답은 비트까지 같다** (브리프 190 B (d)). 배정색이 한 걸음을 돌고도
-    #   `(lo, hi)` 가 그대로면 그 다음 걸음들은 **같은 계산을 반복**한다: 고정점이므로 80 회를 마저
-    #   돌아도 돌려줄 수가 바뀌지 않는다. 배정색 자체는 한 글자도 안 바꾼다 — 반복이 멈추는
-    #   자리만 이름을 얻는다.
-    # ⚠ **멈춰도 상태는 `None` 이다** (감사석, 2026-09-12): 괄호가 2.65 g/cm³ 이고 1.6–4.25 근처의
-    #   한 ulp 가 약 4.4e-16 이라 고정점은 **53 걸음쯤**에 닿는다 — 80 은 한 번도 안 쓰인다. 그래서
-    #   «기준으로 나갔는가» 는 6 736 번 전부 참이고, 그런 깃발은 `convergence.py` 가 이름 대어
-    #   금지한 것이다. 이 자리의 신호는 위의 부호 검사 하나로 충분하다.
-    # ⚠ **비트 동일성은 `pressure` 가 순수 함수라는 전제 위에 선다** (감사석): 이 모듈에는
-    #   따뜻한 출발 전역이 없다 — `_gl_nodes` 는 한 번 만들고 읽기만 하고, `_CACHE` 는 `pressure`
-    #   위층의 `thermal_at` 에 있다. `water_hot._LAST_DENSITY` 같은 전역이 평가 경로에 있으면
-    #   **같은 코드가 비트 동일하지 않다**.
-    for _ in range(80):
-        mid = 0.5 * (lo + hi)
-        if pressure(mid, t, column) < p_gpa:
-            lo_next, hi_next = mid, hi
+    STATS["inversions"] += 1
+    # 괄호 밖 — 벽값을 그대로 돌려준다 (오늘과 같은 수, 이제는 우연이 아니라 분기).
+    if f_lo > 0.0 or f_hi < 0.0:
+        STATS["clamped"] += 1
+        if RECORD_CLAMPS:
+            CLAMPED_STATES.append((p_gpa, t, column))
+        return lo if f_lo > 0.0 else hi
+    # 양 끝이 세컨트의 첫 쌍이다 — 가드가 이미 값을 냈으므로 초기화는 공짜다.
+    a, b = lo, hi                     # 부호가 갈리는 괄호 — 보호 장치로만 쓴다
+    fa = f_lo
+    x0, f0, x1, f1 = lo, f_lo, hi, f_hi
+    fell_back = False
+    for _ in range(60):
+        # ⚠ **정지 기준은 괄호 폭이 아니라 걸음 크기다.** 세컨트는 한쪽 끝을 붙잡아 두는 일이
+        #   잦아서 괄호는 느리게 줄고, 괄호로 재면 기준이 안 걸려 60 회를 다 돈다 (첫 판이 그랬다).
+        x2 = x1 - f1 * (x1 - x0) / (f1 - f0) if f1 != f0 else 0.5 * (a + b)
+        if not (a < x2 < b):          # 괄호를 벗어난 걸음은 이분 한 걸음으로 바꾼다
+            x2 = 0.5 * (a + b)
+            fell_back = True
+        f2 = pressure(x2, t, column) - p_gpa
+        STATS["iterations"] += 1
+        if (fa < 0.0) != (f2 < 0.0):
+            b = x2
         else:
-            lo_next, hi_next = lo, mid
-        if lo_next == lo and hi_next == hi:
+            a, fa = x2, f2
+        done = f2 == 0.0 or abs(x2 - x1) <= DENSITY_TOL * abs(x2)
+        x0, f0, x1, f1 = x1, f1, x2, f2
+        if done:
             break
-        lo, hi = lo_next, hi_next
-    # ⚠ **고정점에 닿았다는 것은 «괄호를 좁혔다» 이지 «뿌리를 감쌌다» 가 아니다** (감사석,
-    #   2026-09-12). 요청 압력이 괄호 밖이면 한쪽 끝만 계속 움직이다가 **똑같이** 고정점에 닿는다 —
-    #   멈춘 자리는 그래서 수렴의 증거가 못 된다. 클램프를 가려내는 사실은 위의 부호 검사 하나뿐이고,
-    #   `bracket_invalid` 목록이 그것을 들고 있다 — C82 가 그 목록의 첫 손님이다.
-    return 0.5 * (lo + hi)
+    else:
+        STATS["exhausted"] += 1       # 예산을 다 썼다 — 돌려주는 값은 수렴한 값이 아니다
+    if fell_back:
+        STATS["fallback"] += 1
+    return x1
 
 
 def thermal_at_hse(p_pa: float, t: float) -> dict:
