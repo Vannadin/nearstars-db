@@ -659,23 +659,23 @@ echo "── 12b. 계약 · 인용 앵커 · 밴드 (문서가 깨뜨릴 수 있
 #   부하가 늘었다 — 지금 레시피 14 · 계산 노드 35 를 표본 천체마다 돈다. 조정하지 않고 후보 원인만 적는다.
 # chain.yaml 의 via 가 공급자 outputs 에 있는가 (Brief 43). 허용목록(도출 8) · status:gap 밖의 via 는 실패다.
 step "check_via" python3 engine/check_via.py --gate
-step "check_contracts.py" bash -c 'cd engine && python3 check_contracts.py'
+step "check_contracts.py" bash -c 'cd engine && exec python3 check_contracts.py'
 # 인용 앵커 (C33). 앵커 구절이 대상 문서에서 정확히 1회 매치돼야 한다 — 0회는 썩음, 2회 이상은 애매.
 # 줄번호 인용은 아직 실패시키지 않고 미이행으로 센다(배치 이행 중). 체커 자기검증은 test_check_refs.py.
 # 밴드 규칙 (C32). 세 상태 · 출처 없는 폭 거절 · 묶음 불가분 · 선택지 요건이 앵커다.
-step "test_bands.py" bash -c 'cd engine && python3 test_bands.py'
-step "test_albedo_table.py" bash -c 'cd engine && python3 test_albedo_table.py'
-step "test_greenhouse_cases.py" bash -c 'cd engine && python3 test_greenhouse_cases.py'
-step "test_sub_neptune_dynamo.py" bash -c 'cd engine && python3 test_sub_neptune_dynamo.py'
-step "test_stellar_wind.py" bash -c 'cd engine && python3 test_stellar_wind.py'
+step "test_bands.py" bash -c 'cd engine && exec python3 test_bands.py'
+step "test_albedo_table.py" bash -c 'cd engine && exec python3 test_albedo_table.py'
+step "test_greenhouse_cases.py" bash -c 'cd engine && exec python3 test_greenhouse_cases.py'
+step "test_sub_neptune_dynamo.py" bash -c 'cd engine && exec python3 test_sub_neptune_dynamo.py'
+step "test_stellar_wind.py" bash -c 'cd engine && exec python3 test_stellar_wind.py'
 # 임시값 가드레일 다섯. ⑤ 는 레시피가 도착하면 FAIL — 그 발화를 시험이 오늘 증명한다.
-step "test_tidal_locking.py" bash -c 'cd engine && python3 test_tidal_locking.py'
-step "test_provisional.py" bash -c 'cd engine && python3 test_provisional.py'
+step "test_tidal_locking.py" bash -c 'cd engine && exec python3 test_tidal_locking.py'
+step "test_provisional.py" bash -c 'cd engine && exec python3 test_provisional.py'
 # 전이 기록 (Brief 153). 다른 천체의 값은 기록 없이 못 들어오고, state 인데 derived 면(3040 K 모양) 거절.
-step "test_transfers.py" bash -c 'cd engine && python3 test_transfers.py'
+step "test_transfers.py" bash -c 'cd engine && exec python3 test_transfers.py'
 # 정의역·방향 (Brief 155, C48). 법칙의 정의역은 callee 가 지켜 소비자가 우회 못 하고, 한계의 방향은 필드에서 부호가 난다.
-step "test_domain.py" bash -c 'cd engine && python3 test_domain.py'
-step "test_check_refs.py" bash -c 'cd engine && python3 test_check_refs.py'
+step "test_domain.py" bash -c 'cd engine && exec python3 test_domain.py'
+step "test_check_refs.py" bash -c 'cd engine && exec python3 test_check_refs.py'
 step "engine/check_refs.py" bash -c 'python3 engine/check_refs.py'
 # 논문 인용 규약 (C33 (b), 브리프 165). ⚠ **판정 아님 — 세기만 한다**: bibcode 없는 절의 "저자+연도"
 # 인용 수를 인쇄하고 기준선(28 절 · 128 건)과 비교한다. 0 이 되면 FAIL 로 승격. 비용 ~0.1 s.
@@ -717,8 +717,8 @@ echo "── 13. 엔진 그래프 + 역류 층 ──"
 step "engine/chain.py" bash -c 'python3 engine/chain.py check'
 python3 engine/backflow.py check 2>&1 | grep -v "^  \[WARN\]" || true
 step "engine/backflow.py" bash -c 'python3 engine/backflow.py check >/dev/null 2>&1'
-step "test_backflow.py" bash -c 'cd engine && python3 test_backflow.py'
-step "test_dynamo.py" bash -c 'cd engine && python3 test_dynamo.py'
+step "test_backflow.py" bash -c 'cd engine && exec python3 test_backflow.py'
+step "test_dynamo.py" bash -c 'cd engine && exec python3 test_dynamo.py'
 # ⚠ **바디 목록은 고정 셋이 아니라 디렉토리다** (169 E). 예전에는 셋(alpha·pandora·earth)을 손으로
 #   적어 두었고, 그래서 `bodies/mars.yaml` 의 출하값 대조가 **09-08 이후 한 번도 안 돌았다** —
 #   표적 층의 바디 규칙이 화성을 처음 돌렸을 때 8.9 % 어긋남이 그대로 있었다(C59). 왜 셋이었는지는
@@ -732,94 +732,94 @@ for _b in engine/bodies/*.yaml; do
   if grep -q '^expected:' "$_b"; then _kind="출하값 대조"; else _kind="연기 시험"; fi
   step "run.py bodies/$_name ($_kind)" bash -c 'cd engine && exec python3 run.py "bodies/$1"' _ "$_name"
 done
-step "test_mass_radius.py" bash -c 'cd engine && python3 test_mass_radius.py'
-step "test_fermi.py" bash -c 'cd engine && python3 test_fermi.py'
-step "test_water_hot.py" bash -c 'cd engine && python3 test_water_hot.py'
-step "test_ammonia.py" bash -c 'cd engine && python3 test_ammonia.py'
-step "test_water2.py" bash -c 'cd engine && python3 test_water2.py'
+step "test_mass_radius.py" bash -c 'cd engine && exec python3 test_mass_radius.py'
+step "test_fermi.py" bash -c 'cd engine && exec python3 test_fermi.py'
+step "test_water_hot.py" bash -c 'cd engine && exec python3 test_water_hot.py'
+step "test_ammonia.py" bash -c 'cd engine && exec python3 test_ammonia.py'
+step "test_water2.py" bash -c 'cd engine && exec python3 test_water2.py'
 # ⚠ ANSWER 시험 — 게이트에서 가장 긴 단일 구간(약 459 초, 전체의 31 %)이고, 그 시간이 사는 곳이다.
 # 이 시험만이 엔진을 **현실**과 대조한다. 자기 헤더가 그렇게 적는다 — 앵커는 전부 측정값이고
 # (반지름은 측지, C/MR² 는 중력장·세차), "우리 출력으로 우리를 시험하면 아무것도 검증되지 않는다".
 # 다른 시험들은 배선이 도는지 본다. 이것은 답이 맞는지 본다.
 # ⇒ 층을 나눌 때 **"느린 시험"으로 분류해 빼면 안 된다.** 뺄 수 있는 유일한 경우는 코드가 하나도
 #    안 바뀐 커밋이고, 그 판단은 사람이 아니라 바뀐 경로 목록이 한다 (12b 위 주석 참조).
-step "test_interior.py" bash -c 'cd engine && python3 test_interior.py'
+step "test_interior.py" bash -c 'cd engine && exec python3 test_interior.py'
 # 얼음거대행성 앵커. 천왕성·해왕성을 실제로 풀어(각 ~50 초) 굳힌 값과 비트까지 대조하고,
 # 격자 위상·격자 수렴도 본다. 답을 바꾸는 작업은 --refresh 로 다시 굳혀 diff 에 남긴다.
-step "test_ice_giant.py" bash -c 'cd engine && python3 test_ice_giant.py'
-step "test_core_state.py" bash -c 'cd engine && python3 test_core_state.py'
-step "test_body_class.py" bash -c 'cd engine && python3 test_body_class.py'
-step "test_porosity.py" bash -c 'cd engine && python3 test_porosity.py'
-step "test_giant.py" bash -c 'cd engine && python3 test_giant.py'
-step "test_mixture.py" bash -c 'cd engine && python3 test_mixture.py'
-step "test_rocky_roster.py" bash -c 'cd engine && python3 test_rocky_roster.py'
+step "test_ice_giant.py" bash -c 'cd engine && exec python3 test_ice_giant.py'
+step "test_core_state.py" bash -c 'cd engine && exec python3 test_core_state.py'
+step "test_body_class.py" bash -c 'cd engine && exec python3 test_body_class.py'
+step "test_porosity.py" bash -c 'cd engine && exec python3 test_porosity.py'
+step "test_giant.py" bash -c 'cd engine && exec python3 test_giant.py'
+step "test_mixture.py" bash -c 'cd engine && exec python3 test_mixture.py'
+step "test_rocky_roster.py" bash -c 'cd engine && exec python3 test_rocky_roster.py'
 # 조석 수송 축 (Brief 35). 이오 재현 실패가 측정 불변량으로 고정되어 있다 —
 # 이 테스트가 울리면 실패 서사 자체가 바뀐 것이니 멈추고 추적한다.
-step "test_tidal_transport.py" bash -c 'cd engine && python3 test_tidal_transport.py'
+step "test_tidal_transport.py" bash -c 'cd engine && exec python3 test_tidal_transport.py'
 # 규산염 녹는곡선 사슬 (Brief 36). 전사 검산과 이음매 계단이 측정 불변량이다.
-step "test_silicate_melt.py" bash -c 'cd engine && python3 test_silicate_melt.py'
+step "test_silicate_melt.py" bash -c 'cd engine && exec python3 test_silicate_melt.py'
 # 도형 완화 판정 (Brief 39). 전사 검산·문턱 가족의 불감성·라벨·지구 판정이 앵커다.
-step "test_rheology.py" bash -c 'cd engine && python3 test_rheology.py'
+step "test_rheology.py" bash -c 'cd engine && exec python3 test_rheology.py'
 # 액체 Fe–S 부피 규칙 전사 (C55 1단계, 브리프 178 B). Xu+ 2021 의 K₀(X_S)·K′(X_S) 끝점과 지수 혼합,
 # 그리고 ⚠ **ρ₀ 가 인쇄되지 않아 재질을 짓지 않는다는 거절**이 앵커다 — R4–R6 은 SI 도착 전까지
 # 거절이 기대 결과다. Mori 공백(19 GPa → None)도 여기서 지킨다. ~0 s.
 step "test_fe_s.py" bash -c 'cd engine && exec python3 test_fe_s.py'
 # 밀도 적합 ↔ 녹는곡선의 조성·물질상 선언 (Brief 41). 다른 조인을 말없이 잇는 상이 생기면 여기서 잡힌다.
-step "test_eos_joins.py" bash -c 'cd engine && python3 test_eos_joins.py'
+step "test_eos_joins.py" bash -c 'cd engine && exec python3 test_eos_joins.py'
 # hcp 철 열 세트 (브리프 187). 저자의 Table S3 재현(보유 SI 에서 시험 시점에 읽는다) · g 와 g(1−g)
 # 부호 · 두 축 등급 · 적분기와 핵 노드의 γ 일치 · **두 재질의 호출 표면이 두 구간 다에서 유한**
 # (C76: 깨끗한 트리에서 `fe_prem.c_p` 가 던지고 있었는데 천체 기준선이 전부 초록이었다). ~1 s.
-step "test_fe_hcp.py" bash -c 'cd engine && python3 test_fe_hcp.py'
+step "test_fe_hcp.py" bash -c 'cd engine && exec python3 test_fe_hcp.py'
 # 방사성 예산 (Brief 44). 초안 표의 폐합 세 건·캡션 오독 11.59 TW·과거 방향 3.67 이 앵커다.
-step "test_radiogenic.py" bash -c 'cd engine && python3 test_radiogenic.py'
+step "test_radiogenic.py" bash -c 'cd engine && exec python3 test_radiogenic.py'
 # 함의 열류 일관성 (Brief 46). Table 2 전사 폐합(42 TW ← 1614 K)과 ζ 양방향 민감도, 판정 라벨이 앵커다.
-step "test_mantle_flux.py" bash -c 'cd engine && python3 test_mantle_flux.py'
+step "test_mantle_flux.py" bash -c 'cd engine && exec python3 test_mantle_flux.py'
 echo "── CMB 열류 (Nimmo 식 37–39 폐합 · 단열 열류 · 거절 라벨) ──"
-step "test_cmb_flux.py" bash -c 'cd engine && python3 test_cmb_flux.py'
+step "test_cmb_flux.py" bash -c 'cd engine && exec python3 test_cmb_flux.py'
 # 핵 에너지 수지 (C14). Nimmo 해석 핵으로 Table 4 성분별 재현·근 4152 K, 엔진 지구는 보고, 내핵 두 분기, 거절 라벨이 앵커다.
-step "test_core_energy.py" bash -c 'cd engine && python3 test_core_energy.py'
+step "test_core_energy.py" bash -c 'cd engine && exec python3 test_core_energy.py'
 # 핵 엔트로피 생성 φ (C15). Nimmo 해석 핵으로 Table 4 의 여섯 엔트로피 항 성분별 재현, 엔진 지구는 밴드로 보고, 내핵 두 분기, 3 Gyr 거절 라벨이 앵커다.
-step "test_core_entropy.py" bash -c 'cd engine && python3 test_core_entropy.py'
+step "test_core_entropy.py" bash -c 'cd engine && exec python3 test_core_entropy.py'
 # 열진화 적분기 (C20). 지구 단일 실행(h = min(4 Myr, 0.1·τ) — Nimmo 의 4 Myr 은 상한, 브리프 157)이 사전등록 분기 ①②④③ 을 그 순서로 읽는다; 수렴 스윕은 온디맨드(--sweep, ~400 s).
-step "test_core_history.py" bash -c 'cd engine && python3 test_core_history.py'
+step "test_core_history.py" bash -c 'cd engine && exec python3 test_core_history.py'
 # 정체뚜껑 맨틀 수지 (C51 1단계). Foley 2018 식 (1)–(4) 전사가 논문 인쇄 도출값(μ_r, Pe)을 재현하고, «cancel out» 이
 # 항등식임을 재고, 식 (2) 는 없는 입력을 이름 대며 거절한다. 판정 칸 셋은 여기서 읽지 않는다 (커밋 D). ~0 s.
-step "test_mantle_budget.py" bash -c 'cd engine && python3 test_mantle_budget.py'
+step "test_mantle_budget.py" bash -c 'cd engine && exec python3 test_mantle_budget.py'
 # 전이 영역 스케일링 (C51 커밋 C). F&B 2014 Table 1 세 행·식 (54)(58)(59)(60) 전사. 폐합이 위·아래 열류를 맞추고,
 # 논문 자기 반올림의 값어치와 (m,p) 세 행의 벌어짐을 재고, 바디 경로는 비차원 입력 일곱을 대며 거절한다. ~0 s.
-step "test_transitional_lid.py" bash -c 'cd engine && python3 test_transitional_lid.py'
+step "test_transitional_lid.py" bash -c 'cd engine && exec python3 test_transitional_lid.py'
 # C51 세 영역 평가 (커밋 D). 각 법칙을 자기 앵커에만 대조하고 등록된 판정 칸 셋을 찍는다.
 # ⚠ 게이트가 검사하는 것은 **재현 여섯 행**이고 판정은 [판정] 줄로 인쇄만 한다 — 판정을 붉게 두면
 # 다음 좌석이 그 붉음을 배경으로 읽는다 (c47_step4.py 와 같은 형식). ~0 s.
-step "tools/c51_regimes.py" bash -c 'cd engine && python3 tools/c51_regimes.py'
+step "tools/c51_regimes.py" bash -c 'cd engine && exec python3 tools/c51_regimes.py'
 # C55 판정 칸 (브리프 181 B). 선언된 조성(earth_like)에서 Fe–S 두 재질이 무엇을 내는지 인쇄한다 —
 # 오늘은 둘 다 거절이고 그 거절이 **이름을 대는지**가 여기서 도는 이유다. 인자를 주면 cmf 밴드를 훑는다.
 # ⚠ 도구는 `shoot` 으로 부른다 (C60 (c)) — `_shoot_pressure` 를 직접 부르면 «답이 적합 밖이면 거절»
 #   하는 층 아래에서 인쇄해, 엔진이 안 내놓을 수를 표만 내놓는다. ~2 s.
-step "tools/c55_cells.py" bash -c 'cd engine && python3 tools/c55_cells.py' 
+step "tools/c55_cells.py" bash -c 'cd engine && exec python3 tools/c55_cells.py' 
 # 페이로드 등급 계약 (2026-09-04 오너 결정). authored 는 두 표지(gap:, consistent-with:) 없이는 생성되지 않는다.
-step "test_payload.py" bash -c 'cd engine && python3 test_payload.py'
+step "test_payload.py" bash -c 'cd engine && exec python3 test_payload.py'
 # 상 곁표 (2026-09-04, 오너 채택 패턴). 키 집합 = eos 가 내는 상, 채운 칸은 등급·출처, authored 는 두 표지, 채움/전체를 출력한다.
-step "test_phase_tables.py" bash -c 'cd engine && python3 test_phase_tables.py'
+step "test_phase_tables.py" bash -c 'cd engine && exec python3 test_phase_tables.py'
 # 조석 가열 (C30). 이오 밴드 재현·판도라 보드 45 W/m² 재현(0.75 %)·×Io 규약 R⁵·§6.1/§6.2 라벨 표·거절 넷이 앵커다.
-step "test_tidal_heating.py" bash -c 'cd engine && python3 test_tidal_heating.py'
+step "test_tidal_heating.py" bash -c 'cd engine && exec python3 test_tidal_heating.py'
 # 정체뚜껑 스케일링 (C47 (f), brief 148 단계 1). Korenaga 2009 Table 2 Δη=1 10행 eq. 29 대조가 앵커다
 # — 이 엔진이 가진 유일한 행별 앵커이고, 절대 스케일에는 앵커가 없다(C47 (c)·(e)).
-step "test_stagnant_lid.py" bash -c 'cd engine && python3 test_stagnant_lid.py'
+step "test_stagnant_lid.py" bash -c 'cd engine && exec python3 test_stagnant_lid.py'
 # C47 4단계 방향 시험 (브리프 162). 기본 모드가 **현재 커밋의 기대표**를 검사한다 — 09-07 앵커는
 # `--anchors` 로만 요구하며 커밋 1 에서만 통과한다. 판정은 C47 (k) 커밋 6 에 있고 여기서는 회귀만 막는다.
 # ⚠ 게이트 시간에 ~62 s 를 더한다 (eq. 56 고정점이 1500 °C 행에서 120여 회 반복).
-step "tools/c47_step4.py" bash -c 'cd engine && python3 tools/c47_step4.py --quiet'
+step "tools/c47_step4.py" bash -c 'cd engine && exec python3 tools/c47_step4.py --quiet'
 # C24 (2026-09-04). 물 기둥의 IF97 후보(마지막)·두 이음매 ≤ 0.05 %·얼음 0 양성 대조·물 많은 암석체 0.1/0.3.
-step "test_water_column_steam.py" bash -c 'cd engine && python3 test_water_column_steam.py'
+step "test_water_column_steam.py" bash -c 'cd engine && exec python3 test_water_column_steam.py'
 # 판구조 영역 밴드 (C53, 브리프 168 B). 세 로스터 바디의 파생 불리언이 168 B 전 값과 비트 동일하고,
 # contested → DEAD_LID(필드 0) · transitional → UNDECIDED_LID(dead 아님) 를 **상수 동일성**으로 걸고,
 # episodic·heat_pipe 는 이름을 대며 거절한다. 어휘 밖 값·등급·모양도 거절한다. 사다리의 도메인 게이트가
 # 판구조 거절보다 먼저라는 C28 불변식도 여기서 지킨다 (168 C). ⚠ **~12 s** — 그중 8.5 s 가 판도라를
 # 실제로 풀어 B_eq 41.37252479971432 을 자릿수까지 대조하는 값이다 (지구는 같은 검사를 71 s 에 산다).
-step "test_tectonic_regime.py" bash -c 'cd engine && python3 test_tectonic_regime.py'
+step "test_tectonic_regime.py" bash -c 'cd engine && exec python3 test_tectonic_regime.py'
 # 암석 다이나모 사다리 (Brief 47). 문서 표 재현·RM22 Table 8 차이·게이트 라벨·격자 미선출이 앵커다.
-step "test_dynamo_rocky.py" bash -c 'cd engine && python3 test_dynamo_rocky.py'
+step "test_dynamo_rocky.py" bash -c 'cd engine && exec python3 test_dynamo_rocky.py'
 step "dynamo_table" python3 engine/dynamo_table.py --check
 
 fi   # lane
