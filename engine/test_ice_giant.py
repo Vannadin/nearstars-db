@@ -160,8 +160,14 @@ def _radius_at_steps(name: str, p_center_pa: float, t_center: float, steps: int)
 # ── 경로 지문 (--fast) ──────────────────────────────────────────────────
 
 # 굳힌 수렴점으로 가는 길을 정하는 것들. `--fast` 가 적분 한 번으로 못 보는 바깥 고리다.
+# ⚠ **이 튜플은 이름을 지키지 몸통을 지키지 않는다** (C87; 190 C 가 그것을 값으로 보여줬다).
+#   `integrate` 가 세는 래퍼가 되면서 적분 몸통 4 662 바이트가 `_integrate_raw` 로 옮겨갔고, 그
+#   순간 이 지문은 **래퍼 82 바이트**를 해시하게 됐다 — 몸통의 어떤 변경도 PASS 로 지나갔을 것이다.
+#   `integrate.__wrapped__` 는 `getsource`·`signature` 만 되돌리고 여기는 못 돌린다(이 자리가
+#   `__code__` 를 직접 읽는다). 그래서 **두 이름을 다 싣는다** — 래퍼가 바뀌어도, 몸통이 바뀌어도
+#   지문이 움직인다. ⚠ 다음에 어떤 함수를 래퍼로 감싸면 **그 몸통의 새 이름도 여기 와야 한다.**
 PATH_FUNCTIONS = ("solve", "shoot", "_shoot_pressure", "_narrow_bracket",
-                  "_surface_temperature_met", "_stack", "integrate")
+                  "_surface_temperature_met", "_stack", "integrate", "_integrate_raw")
 PATH_CONSTANTS = ("STEPS", "INTERPOLATE_LAYERS", "MAX_STEPS", "SHOOT_ITERS", "SHOOT_TOL",
                   "T_PASSES", "T_TOL", "T_SURFACE_TOL", "T_BRACKET_TRIES", "NARROW_ITERS",
                   "NARROW_RATIO", "FLUID_CLASSES", "ICE_GIANT_CLASSES")
