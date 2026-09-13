@@ -1356,18 +1356,22 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     # **핵 재료의 적합 바닥도 아래끝이다** (C60 (a), 브리프 181). 중심압은 천체의 최대 압력이라
     # 가장 안쪽 재료의 바닥보다 낮은 시험 중심압은 해가 될 수 없다. 이걸 안 걸면 할선의 둘째
     # 점(hi × 10⁻³)이 그 바닥 한참 아래로 떨어지고, `integrate` 가 첫 줄에서 중심 밀도를 물으며
-    # 죽는다 — 화성 규모에서 0.0981 GPa, 19 GPa 바닥보다 19 GPa 아래다. 그 거절은 이 천체에
-    # 대한 판정이 아니라 **버려질 시험값** 이다. `p_floor` 와 다른 이름인 이유는 eos 의
-    # `shoot_lo` 주석에 있다. `max` 라서 바닥이 0 인 재료(오늘의 11 중 9)는 예전 값 그대로다.
+    # 죽는다 — 화성 규모에서 0.0981 GPa 이고, Fe–S 두 벌의 바닥(P33 B 뒤로 1.5 GPa)보다
+    # 1.4 GPa 아래다. 그 거절은 이 천체에 대한 판정이 아니라 **버려질 시험값** 이다.
+    # `p_floor` 와 다른 이름인 이유는 eos 의 `shoot_lo` 주석에 있다. `max` 라서 바닥이 0 인
+    # 재료는 예전 값 그대로다 — ⚠ **세어 보니 오늘은 재질 21 중 11 이다** (2026-09-13 실측;
+    # 옛 주석의 «11 중 9» 는 재질이 11 이던 날의 수였고, 그날 이후 갱신되지 않았다).
     lo = max(1.0e2, p_stop, getattr(stack[0][1], "shoot_lo", 0.0))
     hi = min(3.0 * G / (8.0 * math.pi) * mass_kg ** 2 / r0 ** 4 * 4.0, p_ceiling)
 
     def p_try(x: float) -> float:
         """로그 좌표의 시험점을 압력으로 되돌린다. **아래끝 밑으로는 안 내려간다.**
 
-        `exp(log(x))` 는 x 를 그대로 돌려주지 않는다 — 19 GPa 가 18.9999 GPa 로 돌아온다.
-        아래끝이 그냥 숫자였을 때는 상관없었지만 이제 그것이 **재료의 적합 바닥** 이라
-        (C60 (a)) 한 자리 밑이 곧 거절이다. 아래끝이 100 Pa 인 천체에서는 시험점이 늘
+        `exp(log(x))` 는 x 를 그대로 돌려주지 않는다 — ⚠ **방향도 한쪽이 아니다**: 실측으로
+        19 GPa 는 19000000000.000015 로 **위로**, 오늘의 Fe–S 바닥 1.5 GPa 는
+        1499999999.9999979 로 **아래로** 돌아온다 (2026-09-13, P33 B). 아래끝이 그냥
+        숫자였을 때는 상관없었지만 이제 그것이 **재료의 적합 바닥** 이라 (C60 (a)) 한 자리
+        밑이 곧 거절이고, 아래로 돌아오는 쪽에서 이 `max` 가 실제로 일한다. 아래끝이 100 Pa 인 천체에서는 시험점이 늘
         그보다 자릿수로 위라 이 `max` 가 한 번도 걸리지 않는다 — 앵커는 비트 그대로다."""
         return max(math.exp(x), lo)
 
@@ -1380,8 +1384,9 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         한다 — 버려질 시험값을 물리인 척 내보내지 않는다.
 
         정적 바닥(`shoot_lo`)이 «이 재료가 값을 내는 압력» 을 말한다면, 이 고리는 «이 **천체**
-        가 그 재료로 풀리는 압력» 을 말한다. 둘은 다르다: 19 GPa 기준 Fe–S 는 19 GPa 에서
-        값을 내지만, 화성 질량의 핵이 그 위에 담기려면 중심압이 40 GPa 대여야 한다.
+        가 그 재료로 풀리는 압력» 을 말한다. 둘은 다르다 — 19 GPa 기준 Fe–S 는 자기 바닥
+        (P33 B 뒤로 1.5 GPa, 그 전에는 19 GPa)에서 값을 내지만, 화성 질량의 핵이 그 위에
+        담기려면 중심압이 40 GPa 대여야 한다.
 
         ⚠ **괄호를 다 올려도 거절하면 그때는 진짜 거절** 이고, 마지막 거절을 그대로 올려
         보낸다 — 이름과 압력이 붙어 있는 그 문장이 답이다."""
@@ -2895,12 +2900,19 @@ def solve(mass_earth: float,
     core_ph = None
     if cmf > 0.0:
         _cm = eos.MATERIALS.get(core_material)
-        # ⚠ **이 줄은 «선언을 든 재질은 상이 하나» 에 기대고 있다** (감사석, 2026-09-13 — 오늘 세어
-        #   확인: `p_graded_above` 를 단 재질은 `fe_s_13wt_19gpa`·`fe_s_19wt_19gpa` 둘뿐이고 각각 상이 하나다).
-        #   다상 재질이 나중에 **뒤쪽 상**에 그 선언을 달면 이 줄은 **엉뚝한 상을 읽는다**. 일반형은
-        #   `phase_at(st.p_center)` 이지만 그것은 `PhaseGap` 을 던질 수 있어 라벨 자리에서 풀이를 깨뜨린다 —
-        #   그래서 지금 바꾸지 않고 **기대는 조건을 여기 적어 둔다**.
-        core_ph = _cm.phases[0] if _cm is not None and getattr(_cm, "phases", ()) else None
+        # ⚠ **이 줄은 «선언을 든 재질은 상이 하나» 에 기대고 있었다** (감사석, 2026-09-13 — 그날 세어
+        #   확인: `p_graded_above` 를 단 재질은 `fe_s_13wt_19gpa`·`fe_s_19wt_19gpa` 둘뿐이고 각각 상이 하나였다).
+        #   그때 적어 둔 예고는 «다상 재질이 **뒤쪽 상**에 그 선언을 달면 이 줄은 **엉뚱한 상을 읽는다**» 였고,
+        #   ⚠ **P33 B (2026-09-13) 가 바로 그 경우다** — 두 재질 앞에 Balog 저압 상이 붙어 `phases[0]` 은
+        #   이제 선언을 안 든 상이고, 그대로 두면 Fe–S 핵의 등급 라벨이 **말없이 사라진다**.
+        #   그래서 **중심압을 담는 상**을 고른다. 담는 상이 없으면 `p_min` 이 중심압 아래인 마지막 상을
+        #   쓴다 — `phase_at(st.p_center)` 은 `PhaseGap` 을 던질 수 있어 라벨 자리에서 풀이를 깨뜨린다.
+        if _cm is not None and getattr(_cm, "phases", ()):
+            _phs = _cm.phases
+            core_ph = next((ph for ph in _phs if ph.p_min <= st.p_center <= ph.p_max), None)
+            if core_ph is None:
+                _below = [ph for ph in _phs if ph.p_min <= st.p_center]
+                core_ph = _below[-1] if _below else _phs[0]
     core_reach, core_reach_why = (
         core_ph.density_reach(st.p_center) if core_ph is not None
         and getattr(core_ph, "p_graded_above", 0.0) else ("ok", ""))

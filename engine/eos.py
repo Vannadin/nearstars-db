@@ -273,6 +273,10 @@ class Phase:
     #   얼음이 적합 격자 위에서 하는 것과 같은 모양이다 (190 · 190 C) — 거절도, 침묵도 아니다.
     #   ⚠ 선언이 없으면(`p_graded_above = 0`) 아무 일도 안 일어난다 — 다른 상은 안 바뀐다.
     p_graded_above: float = 0.0   # Pa. 이 위에서 답은 나오되 `graded-extrapolation` 이다
+    # ⚠ **모형 구간은 등급이 다른 사실이다** (P33 B): 외삽은 «대조할 자리가 없다» 고,
+    #   모형은 «이 조성·이 구간에 측정이 없어 두 앵커로 지은 값» 이다. 한 낱말로 합치지 않는다.
+    model_reason: str = ""       # 비면 모형 구간이 없다 — 다른 상은 이 필드를 안 읽는다
+    p_model_measured_max: float = 0.0   # Pa. 모형 구간 안에서 «측정이 받치는 아래 밴드» 의 위 끝
     p_measured_max: float = 0.0   # Pa. 등급 구간 안에서 «측정 범위 안» 과 «둘 다의 외삽» 의 경계
     graded_reason: str = ""       # 그 등급이 **무엇의** 외삽인지 — 셀과 함께 인쇄한다
     # ── 온도 천장 ──────────────────────────────────────────────────────
@@ -360,6 +364,21 @@ class Phase:
         if ts.t_ref_kind == "adiabat":
             return 0.0 if t_pot <= 0.0 else t * (1.0 - ts.t_ref / t_pot)
         return t - ts.t_ref
+
+    def model_reach(self, p: float) -> tuple[str, str]:
+        """이 압력이 **모형 구간** 인가 — `ok` 또는 `model` (P33 B).
+
+        ⚠ **거절도 외삽도 아니다.** 측정이 없는 조성·구간을 두 앵커로 지은 값이고, 등급은 `model`
+        이며 그 옆에 **조성 거리**와 **저압 앵커가 점이 아니라 적합이라는 사실**이 함께 실린다."""
+        if not self.model_reason or p > self.p_max:
+            return "ok", ""
+        FE_S_MODEL_ASKS["model"] += 1
+        beyond = bool(self.p_model_measured_max and p > self.p_model_measured_max)
+        if beyond:
+            FE_S_MODEL_ASKS["beyond_measured"] += 1
+        band = ("측정 구간(1.5–17.5 GPa) 위, 적합 자신의 사거리"
+                if beyond else "측정이 받치는 구간 안")
+        return "model", self.model_reason.format(p_gpa=p / 1e9, band=band)
 
     def density_reach(self, p: float) -> tuple[str, str]:
         """이 압력에서 밀도 적합이 어디까지 와 있는가 — `ok` 또는 `graded-extrapolation` (196 B).
@@ -718,6 +737,7 @@ class Material:
         # ⚠ **세기만 한다** (196 B) — 반환값은 이 줄 앞뒤로 한 비트도 안 움직인다.
         #   선언이 없는 상은 `density_reach` 가 곧바로 `ok` 를 돌려주고 카운터도 안 는다.
         ph.density_reach(p)
+        ph.model_reach(p)          # P33 B — 모형 구간도 같은 자리에서 센다
         return ph.density(p, t, t_pot)
 
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
@@ -2621,8 +2641,9 @@ def _fe_prem_gamma_sets() -> tuple[ThermalSet, ...]:
 
     ⚠ **19 GPa 아래에는 세트가 없다.** 액체 열 세트가 없는 구간이라 상 자신의 (고체) 상수로
     떨어지고, 그러면 판정이 `phase-mismatch` 라 `core_gamma` 의 **이름 붙은 폴백**이 잡는다 —
-    없는 구간을 외삽으로 덮지 않는 것이 이 브리프의 규율이고, ② 의 «저압 Fe–S 는 비워 둔다» 와
-    같은 결정이다."""
+    없는 구간을 외삽으로 덮지 않는 것이 이 브리프의 규율이다. ⚠ **2026-09-13 (P33 B) 에 바뀐 것은
+    이 문장이 아니라 그 옆의 결정 참조다** — ② 의 «저압 Fe–S 는 비워 둔다» 는 ⑦ 로 갈음됐고, ⑦ 이
+    연 것은 **밀도뿐**이다(Balog 적합, 모형 등급). 열 세트는 그대로 없다."""
     alpha, c_v, _printed_gamma = HUANG_FE_THERMAL["19GPa"]
     _p, t_anchor, _rho, k_t_gpa = HUANG_FE_ANCHORS["19GPa"]
     return (
@@ -3626,10 +3647,12 @@ H_HE = HydrogenHelium()
 #: Huang 의 적합은 19 GPa 에 기준을 둔 BM2 이고, 그 아래에는 근거가 없다. 두 사실 다 참이지만
 #: **이 자리에서 발화하는 것은 후자**이고, 라벨이 앞의 것을 말하면 기작을 잘못 읽게 만든다.
 FE_S_BELOW_REF_REASON = (
-    "{p_gpa:.4f} GPa 는 이 액체 Fe–S 적합의 **기준압 19 GPa 아래**다 (Huang+ 2023 은 19·35 GPa 의 "
-    "두 앵커에 대해 적합했고 그 사이·아래를 인쇄하지 않는다). 영압으로 옮기는 것은 우리 산수이므로 "
-    "하지 않는다 — 이 아래에서는 이 재질이 값을 내지 않는다. ⚠ 융해 공백(10–21 GPa, "
-    "`IRON_FES_GAP_REASON`)은 **다른 사실**이고 다른 자리에서 발화한다")
+    "{p_gpa:.4f} GPa 는 이 액체 Fe–S 가 답할 수 있는 아래 끝(1.5 GPa) **밑**이다 — Balog+ 2003 의 "
+    "측정자료 적합이 1.5–17.5 GPa 에 놓여 있고, 그 아래로 끌고 가는 것은 우리 산수이므로 하지 않는다. "
+    "⚠ **2026-09-13 (P33 B) 에 이 문장의 압력이 19 → 1.5 GPa 로 내려갔다** — 그 사이 구간은 이제 "
+    "거절이 아니라 **모형 등급**으로 답한다(측정이 없는 조성·구간을 두 앵커로 지은 값). 규칙은 "
+    "안 바뀌었다 — **아래 끝 밑에서는 값을 내지 않는다**, 그 아래 끝이 옮겨졌을 뿐이다. "
+    "⚠ 융해 공백(10–21 GPa, `IRON_FES_GAP_REASON`)은 **다른 사실**이고 다른 자리에서 발화한다")
 
 #: 밀도 적합이 «등급 구간» 에서 몇 번 답했는가 (196 B). ⚠ **세기만 한다** — 값을 만드는 식
 #: 어디에도 안 들어가고, 소비처가 풀이 앞뒤로 차이를 읽어 라벨을 붙인다 (190 C 와 같은 모양).
@@ -3729,6 +3752,77 @@ def core_gamma(material, p: float, t: float, t_pot: float = 0.0,
     return CORE_GAMMA_FALLBACK, verdict, own, density_verdict
 
 
+# ── 저압 액체 Fe–S: 측정 앵커 하나와 조성 기울기 하나 (P33 B, 오너 결정 ①) ──────────────
+# 출처: Balog, Secco, Rubie, Frost 2003, JGR Solid Earth 108(B2) 2124 (2003JGRB..108.2124B,
+# 캐시에 PDF + 쪽 붙은 추출 텍스트). ⚠ **이 논문에는 (P, T, ρ) 측정점 표가 없다** — 측정 밀도는
+# 그림 5·7·8 에만 있고, 인쇄된 것은 적합의 매개변수다. 그래서 오너가 ① 을 골랐다: **측정자료만
+# 적합한 3차 Birch–Murnaghan 을 앵커로**, 표 2 의 넷은 검증선으로.
+# ⚠ 포인터(줄번호가 아니라 구절) — 본문 §[22]:
+#   «density values obtained between 1.5 and 17.5 GPa at all three temperature levels considered,
+#    1773 K, 1923 K, and 2123 K. The third-order Birch-Murnaghan EOS revealed K0T = 64.3 GPa,
+#    K00T = 4.7, and 5.5 g/cm3 for the density of the Fe-10 wt % S at 1 atm.»
+# ⚠ **ρ₀ 5.5 는 세 마디로 적어야 한다**: 측정 아님 · 가정도 아님 · **그 측정-전용 적합이 1 atm 으로
+#   낸 값**. 논문 초록이 스스로 «revealed the need for a well-determined melt density value at 1 atm»
+#   이라고 적어, 측정값의 부재를 인쇄한다. (표 2 의 셋에서는 같은 수가 **입력**이고 각주가
+#   «For a 1 atm density value of 5.5 g cm3» 라고 말한다 — 그건 검증선 쪽 사실이지 앵커 쪽이 아니다.)
+BALOG_FES_REF = ("Balog+ 2003 (2003JGRB..108.2124B) §[22] — 측정자료만 적합한 3차 "
+                 "Birch–Murnaghan; ρ₀ 는 그 적합이 1 atm 으로 낸 값이고 측정값이 아니다")
+BALOG_FES_WT_S = 0.10                    # 이 논문이 다루는 **단 하나의 조성** (제목에 있다)
+BALOG_FES_K0_PA = 64.3 * GPA             # 인쇄값
+BALOG_FES_K0P = 4.7                      # 인쇄값
+BALOG_FES_RHO0 = 5.5e3                   # kg/m³. 인쇄값 — **적합의 1 atm 출력**
+BALOG_FES_P_MIN = 1.5 * GPA              # 인쇄된 적합 구간의 아래 끝
+BALOG_FES_P_MEASURED_MAX = 17.5 * GPA    # 그 구간의 위 끝. 여기부터 19 GPa 까지는 적합 자신의 사거리
+#: 모형이 몇 번 답했는가 — 세기만 하고 평가 경로가 안 읽는다 (190 C · 196 B 와 같은 모양).
+FE_S_MODEL_ASKS = {"model": 0, "beyond_measured": 0}
+
+FE_S_MODEL_GRADE_NOTE = (
+    "액체 Fe–S 저압 창의 밀도는 **모형**이다 (P33 B). {p_gpa:.4g} GPa · S {w_pct:.1f} wt% — {band}. "
+    "⚠ 아래 둘이 등급과 **함께** 달려 다니며, 한 낱말이 두 거리를 못 나른다. "
+    "① 조성 앵커는 **10 wt%** 단 하나고, 이 칸은 그것에서 **Δc = {dc_pct:+.1f} wt%** 만큼 밖이다 — "
+    "압력은 보간이지만 조성은 외삽이다. ② 저압 앵커는 **점이 아니라 적합**이고, 그 1 atm 밀도는 "
+    "그 적합 자신의 출력이며 **측정된 값은 존재하지 않는다**(논문 초록이 그 부재를 적는다). "
+    "조성 기울기는 Huang+ 2023 SI Table S5 의 인쇄된 ∂ρ/∂c 를 19 GPa 앵커에서 읽은 것이다")
+
+
+def balog_fes_rho0(w_s: float) -> float:
+    """S {w_s} wt% 에서 저압 모형의 1 atm 밀도 [kg/m³] — **구간선형, 조성축에서만** (오너 (d)).
+
+    ⚠ **두 앵커가 하는 일이 다르다**: 아래쪽(Balog)은 **10 wt% 한 조성의 압력 거동**을 주고,
+    위쪽(Huang SI Table S5)은 **조성 기울기**를 준다. 19 GPa 아래에서 답할 수 있는 것은 Balog 뿐이라
+    그 곡선을 조성축으로 **한 번 평행이동**한다 — 압력에 따라 기울기를 바꾸지 않는다(그럴 근거가
+    인쇄돼 있지 않다). ⚠ 기울기는 몰분율 기준이라 **연쇄율로 wt% 로 옮긴다** — 그 산수는 우리 것이고
+    여기 적는다. 원 도함수도, Balog 의 세 수도 우리가 지어낸 것이 아니다."""
+    if not 0.0 <= w_s <= 1.0:
+        raise ValueError(f"w_S 는 무게분율이다 (0–1): {w_s}")
+    a, b = HUANG_S_DRHO["19GPa"]                      # ∂ρ/∂c = a·c + b  [g/cm³], c 는 몰분율
+    c0 = fe_s_mole_fraction(BALOG_FES_WT_S)
+    c1 = fe_s_mole_fraction(w_s)
+    # ∫ (a·x + b) dx 를 c0 → c1 로 — huang_fes_density 가 쓰는 것과 같은 닫힌 형이다.
+    drho = (b * (c1 - c0) + a * (c1 * c1 - c0 * c0) / 2.0) * 1e3   # g/cm³ → kg/m³
+    return BALOG_FES_RHO0 + drho
+
+
+def balog_fes_phase(w_s: float) -> "Phase":
+    """19 GPa 아래 액체 Fe–S 의 `Phase` — 3차 BM, 조성만 평행이동한 것 (P33 B).
+
+    ⚠ **열 항이 없다.** α·γ·c_v 를 안 붙인다 — 이 브리프는 열 세트를 공급하지 않고, `core_gamma` 는
+    오늘과 같은 **이름 붙은 폴백**으로 답한다(180 B). C56 의 함정을 여기서 다시 열지 않는다."""
+    return Phase(
+        name=f"fe_s_balog_w{w_s:.4f}", form="bme3",
+        rho0=balog_fes_rho0(w_s), k0=BALOG_FES_K0_PA, k0p=BALOG_FES_K0P,
+        p_min=BALOG_FES_P_MIN, p_max=HUANG_FE_ANCHORS["19GPa"][0],
+        ref=BALOG_FES_REF,
+        melt="iron_fes_eutectic", melt_ref="Mori+ 2017 Fe–Fe₃S 공정 (바운드)",
+        join="Fe–S 액체 (Balog 10 wt% 적합을 조성축으로 옮긴 모형)", fit_state="liquid",
+        # ⚠ 조성 두 칸은 **상을 지을 때** 채운다 — 상이 자기 wt% 를 알고, 호출부는 압력만 준다.
+        model_reason=(FE_S_MODEL_GRADE_NOTE
+                      .replace("{w_pct:.1f}", f"{w_s * 100.0:.1f}")
+                      .replace("{dc_pct:+.1f}", f"{(w_s - BALOG_FES_WT_S) * 100.0:+.1f}")),
+        p_model_measured_max=BALOG_FES_P_MEASURED_MAX,
+        join_note="밀도는 **모형**이고 조성 앵커가 10 wt% 단 하나다 — P33 B, 등급 model")
+
+
 def fe_s_mole_fraction(w_s: float) -> float:
     """S 무게분율 → 몰분율. **교과서 화학량론**이고 다른 규칙은 쓰지 않는다."""
     m_fe, m_s = FE_S_MOLAR_MASS
@@ -3737,11 +3831,13 @@ def fe_s_mole_fraction(w_s: float) -> float:
 
 
 FE_S_13WT = Material("fe_s_13wt_19gpa", "액체 Fe–S 핵 · 13 wt% S (밴드 아래끝, 19 GPa 기준)",
-                     (huang_fes_phase(fe_s_mole_fraction(0.13), "19GPa"),),
+                     (balog_fes_phase(0.13),
+                      huang_fes_phase(fe_s_mole_fraction(0.13), "19GPa")),
                      gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
                      under_reason=FE_S_BELOW_REF_REASON, role="core")
 FE_S_19WT = Material("fe_s_19wt_19gpa", "액체 Fe–S 핵 · 19 wt% S (밴드 위끝, 19 GPa 기준)",
-                     (huang_fes_phase(fe_s_mole_fraction(0.19), "19GPa"),),
+                     (balog_fes_phase(0.19),
+                      huang_fes_phase(fe_s_mole_fraction(0.19), "19GPa")),
                      gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
                      under_reason=FE_S_BELOW_REF_REASON, role="core")
 

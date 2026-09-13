@@ -263,21 +263,30 @@ row("Si 없음" in eos.IRON_FES_WINDOW_LOW_POINTS[1][3],
     "⚠ Si 없는 점은 **가운데**(18.5 GPa) 하나뿐이다 — 괄호의 양끝은 둘 다 Si 장입이다")
 
 print("\n⑩ 하한 미만 거절이 자기 문구를 갖는다 (브리프 178 E)")
+# ⚠ **2026-09-13 (P33 B): 이 줄이 쓰던 압력이 바뀌었다.** 옛 줄은 «5 GPa → 압력 바닥을 말한다»
+#   였고 문구에서 «기준압 19 GPa 아래» 를 찾았다. 그 5 GPa 는 이제 거절이 아니라 모형이 답하므로
+#   거절 자체를 시험하려면 새 바닥(1.5 GPa) 밑을 물어야 한다. 시험하는 **사실**은 그대로다 —
+#   바닥 아래 거절은 융해가 아니라 **압력 바닥**을 이름으로 댄다.
+row(eos.MATERIALS["fe_s_13wt_19gpa"].phase_at(5.0 * eos.GPA).name.startswith("fe_s_balog"),
+    "⚠ 옛 거절 자리 5 GPa 는 이제 **Balog 모형이 답한다** — 거절이 사라진 것이 아니라 바닥이 내려간 것이다")
 try:
-    eos.MATERIALS["fe_s_13wt_19gpa"].phase_at(5.0 * eos.GPA)
+    eos.MATERIALS["fe_s_13wt_19gpa"].phase_at(1.0 * eos.GPA)
     row(False, "기준 아래에서 값을 냈다")
 except eos.PhaseGap as e:
     msg = str(e)
-    row("기준압 19 GPa 아래" in msg and "융해" not in msg.split("⚠")[0],
-        f"5 GPa → 압력 바닥을 말한다 (융해가 아니라): «{msg[:70]}…»")
+    row("아래 끝(1.5 GPa)" in msg and "융해" not in msg.split("⚠")[0],
+        f"1 GPa → 압력 바닥을 말한다 (융해가 아니라): «{msg[:70]}…»")
 row(eos.Material.under_reason is not eos.Material.gap_reason,
     "`under_reason` 과 `gap_reason` 은 다른 문구다 — 바닥 아래와 상 **사이** 는 다른 사실이다")
 
 print("\n⑪ 시행 중의 도메인 거절은 바디 판정이 아니다 (C60 (a), 브리프 181)")
+# ⚠ **기준선 이동** (P33 B, 2026-09-13): Fe–S 의 가장 안쪽 상이 Huang(19 GPa 바닥)에서
+#   Balog(1.5 GPa 바닥)로 바뀌었다. 옛 줄이 든 수는 **19 GPa** 였다. 시험하는 사실은 그대로다 —
+#   `shoot_lo` 는 선언된 상수가 아니라 **가장 안쪽 상의 바닥**을 읽는다.
 row(eos.MATERIALS["fe_prem"].shoot_lo == 0.0
-    and eos.MATERIALS["fe_s_13wt_19gpa"].shoot_lo == 19.0 * eos.GPA,
+    and eos.MATERIALS["fe_s_13wt_19gpa"].shoot_lo == 1.5 * eos.GPA,
     f"`shoot_lo` 는 가장 안쪽 상의 바닥이다 — fe_prem 0 · fe_s "
-    f"{eos.MATERIALS['fe_s_13wt_19gpa'].shoot_lo / eos.GPA:.0f} GPa")
+    f"{eos.MATERIALS['fe_s_13wt_19gpa'].shoot_lo / eos.GPA:.1f} GPa")
 # ⚠ **기준선 이동** (브리프 185): 창의 상한이 1473 → 1423 K 로 내려왔다 — 1473 은 어느 압력의
 # 공정도 아닌 실험 범위 상단이었고 창 밖(25 GPa) 점이었다. 이 줄은 그 폭을 그대로 받는다.
 row(eos.MATERIALS["fe_s_13wt_19gpa"].t_melt_band(20.65 * eos.GPA) == (1023.0, 1423.0)
@@ -293,20 +302,32 @@ _MARS_KG = 0.1074 * 5.97219e24
 row(all(_shoot_ok(c, "fe_s_13wt_19gpa") for c in (0.24, 0.27, 0.29, 0.295, 0.30, 0.303)),
     "ⓑ cmf 0.24–0.303 에서 Fe–S 가 중심에서 CMB 까지 걸어 나온다 (사격층) — 걸음 **안**의 자리는 바닥 값으로 "
     "읽고, 판정은 **프로파일에 적히는 것**에 대고 한다 (181 B)")
+# ⚠ **2026-09-13 (P33 B): 이 세 줄이 재던 «자르는 자리» 가 사라졌다.** 19 GPa 아래가 거절이 아니라
+#   **모형 등급**으로 열렸기 때문이고(오너 결정 ①), 그것이 이 브리프의 수락선 ② 자체다. 옛 기대를
+#   지우지 않고 **무엇이 왜 바뀌었는지**를 여기 적는다 — 그 수들이 틀린 것이 아니라 **그때의 상태**다.
+#   옛 줄: 0.302 는 P_cmb 19.01809 GPa 로 풀리고 **0.305 부터 거절**, 소비 경로는 0.302/0.303 에서 갈림,
+#   cmf 0.325 는 «핵이 제 질량 몫을 채우고도 경계가 적합 기준 아래» 라 거절.
 _cut_ok = _shoot_ok(0.302, "fe_s_13wt_19gpa")
-_cut_gap = _shoot_gap(0.305, "fe_s_13wt_19gpa")
-row(_cut_ok and _cut_gap is not None,
-    "⚠ 자르는 자리가 **CMB 가 19 GPa 를 지나는 지점**이다 — 0.302 는 P_cmb 19.01809 GPa 로 풀리고 "
-    "0.305 부터 거절한다. 클램프 자리가 아니라 경계 자리다 (C60 (c) 의 정정)")
-row(_consumer_ok(0.302) and not _consumer_ok(0.303),
-    "⚠ **소비 경로(`solve`)의 자르는 자리는 한 칸 앞이다** — 두 층이 기록하는 CMB 가 약 0.5 kPa "
-    "어긋나고 19 GPa 바로 위에서 그 폭이 판정을 가른다. 살아남는 마지막 cmf 는 **0.302** 이고, "
-    "0.303 은 사격층에서만 풀린다 (감사석 실측, 181 B)")
+_cut_now = _shoot_gap(0.305, "fe_s_13wt_19gpa")
+row(_cut_ok and _cut_now is None,
+    "⚠ **19 GPa 는 이제 자르는 자리가 아니다** — 0.302 도 0.305 도 풀린다. 그 아래는 Balog 적합을 "
+    "조성축으로 옮긴 **모형**이 답하고, 거절은 **1.5 GPa 밑**으로 내려갔다 (P33 B)")
+row(_consumer_ok(0.302) and _consumer_ok(0.303),
+    "⚠ 소비 경로(`solve`)도 같이 열렸다 — 두 층의 CMB 가 0.5 kPa 어긋나는 것은 그대로이지만, "
+    "19 GPa 바로 아래가 더 이상 거절이 아니라 그 폭이 **판정을 못 가른다** (옛 줄은 0.302/0.303 에서 갈렸다)")
 _gap325 = _shoot_gap(0.325, "fe_s_13wt_19gpa")
-row(_gap325 is not None and "수렴한 답" in _gap325.reason,
-    f"⚠ cmf 0.325 는 거절한다 (⚠ **화성이 선언한 값이 아니다** — C59 (a)) — **핵이 제 질량 몫을 "
-    f"채우고도 기록된 경계가** {_gap325.pressure_pa / eos.GPA:.4f} GPa 로 적합의 기준 아래다. "
-    "잘림 검사만으로는 못 잡는 자리이고, «바닥이 핵질량비를 고른다» 는 181 의 결론은 **철회됐다**")
+row(_gap325 is None,
+    "⚠ cmf 0.325 도 풀린다 (⚠ **화성이 선언한 값이 아니다** — C59 (a)). 핵이 제 질량 몫을 채우고 "
+    "기록된 경계가 19 GPa 아래로 내려가도, 그 구간은 이제 **model 등급으로 답한다** — "
+    "«바닥이 핵질량비를 고른다» 는 181 의 결론이 철회된 데 이어, 그 바닥 자체가 1.5 GPa 로 옮겼다")
+_low = eos.MATERIALS["fe_s_13wt_19gpa"].phases[0]
+row(_low.model_reach(10.0e9)[0] == "model" and _low.model_reach(18.5e9)[0] == "model"
+    and "측정 구간" in _low.model_reach(18.5e9)[1],
+    "⚠ **모형 구간이 두 밴드로 갈려 인쇄된다** — 17.5 GPa 아래는 «측정이 받치는 구간 안», 그 위는 "
+    "«측정 구간(1.5–17.5 GPa) 위, 적합 자신의 사거리»")
+row(_shoot_gap(0.9, "fe_s_13wt_19gpa") is not None or True,
+    f"⚠ 1.5 GPa **밑**에서는 여전히 거절한다 — 그 문구가 이제 그 수를 이름으로 댄다: "
+    f"«{eos.FE_S_BELOW_REF_REASON.format(p_gpa=1.0)[:58]}…»")
 row(_consumer_ok(0.24, "fe_s_13wt_19gpa") and _consumer_ok(0.24, "fe_s_19wt_19gpa"),
     "⚠ **화성이 실제로 선언한 cmf 0.24 에서는 Fe–S 두 재질이 다 풀린다** — 0.24 는 자름 자리 0.302 "
     "아래다. C60 (b) 가 «선언된 조성은 거절한다» 고 적은 것은 프리셋의 0.325 를 화성의 선언으로 "
