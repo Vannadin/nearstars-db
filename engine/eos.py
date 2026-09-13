@@ -268,6 +268,13 @@ class Phase:
     join: str = ""
     fit_state: str = ""
     join_note: str = ""
+    # ── 압력 도달의 등급 (브리프 196 B) ───────────────────────────────────
+    # ⚠ **`p_max` 는 «여기서 거절한다» 이고, 이 셋은 «여기 위는 값을 내되 등급이 내려간다» 다.**
+    #   얼음이 적합 격자 위에서 하는 것과 같은 모양이다 (190 · 190 C) — 거절도, 침묵도 아니다.
+    #   ⚠ 선언이 없으면(`p_graded_above = 0`) 아무 일도 안 일어난다 — 다른 상은 안 바뀐다.
+    p_graded_above: float = 0.0   # Pa. 이 위에서 답은 나오되 `graded-extrapolation` 이다
+    p_measured_max: float = 0.0   # Pa. 등급 구간 안에서 «측정 범위 안» 과 «둘 다의 외삽» 의 경계
+    graded_reason: str = ""       # 그 등급이 **무엇의** 외삽인지 — 셀과 함께 인쇄한다
     # ── 온도 천장 ──────────────────────────────────────────────────────
     # p_max 와 **같은 종류** 다. 적합이 어디까지 유효한가를 말하지, 물질이 어디서
     # 상을 바꾸는가를 말하지 않는다. 0 이면 선언된 천장이 없다는 뜻이다.
@@ -353,6 +360,22 @@ class Phase:
         if ts.t_ref_kind == "adiabat":
             return 0.0 if t_pot <= 0.0 else t * (1.0 - ts.t_ref / t_pot)
         return t - ts.t_ref
+
+    def density_reach(self, p: float) -> tuple[str, str]:
+        """이 압력에서 밀도 적합이 어디까지 와 있는가 — `ok` 또는 `graded-extrapolation` (196 B).
+
+        ⚠ **거절이 아니다.** 값은 그대로 나오고 등급이 내려간다. 그 이유 문자열은 상이 들고 있고,
+        측정 범위 경계(`p_measured_max`)가 선언돼 있으면 **그 위와 아래를 다르게 적는다** — 「한
+        논문의 외삽」과 「둘 다의 외삽」은 다른 말이라서다."""
+        if self.p_graded_above <= 0.0 or p <= self.p_graded_above:
+            return "ok", ""
+        DENSITY_REACH["graded"] += 1
+        if self.p_measured_max and p > self.p_measured_max:
+            DENSITY_REACH["beyond_measured"] += 1
+            return "graded-extrapolation", self.graded_reason.format(
+                band="둘 다의 외삽", p_gpa=p / 1e9)
+        return "graded-extrapolation", self.graded_reason.format(
+            band="측정 범위 안에서 적합의 외삽", p_gpa=p / 1e9)
 
     def thermal_label(self, fit_composition: str = "", p: float | None = None,
                       t: float | None = None) -> tuple[str, str]:
@@ -691,7 +714,11 @@ class Material:
 
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         self.check_temperature(p, t)
-        return self.phase_at(p).density(p, t, t_pot)
+        ph = self.phase_at(p)
+        # ⚠ **세기만 한다** (196 B) — 반환값은 이 줄 앞뒤로 한 비트도 안 움직인다.
+        #   선언이 없는 상은 `density_reach` 가 곧바로 `ok` 를 돌려주고 카운터도 안 는다.
+        ph.density_reach(p)
+        return ph.density(p, t, t_pot)
 
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
         return self.phase_at(p).gruneisen(rho, t, t_pot, p)
@@ -2046,6 +2073,17 @@ def huang_fes_phase(c_s: float, anchor: str = "19GPa") -> "Phase":
         #   `t_ref` 로 적고 α 를 붙이면 `delta_t` 가 **절대영도부터 데우는 모양**이 된다 — C56 이
         #   기록한 바로 그 함정이다. 열은 앵커 안에 이미 들어 있고, 밖에서 또 얹지 않는다.
         melt="iron_fes_eutectic", melt_ref="Mori+ 2017 Fe–Fe₃S 공정 (바운드)",
+        # ⚠ **두 앵커(19·35 GPa) 위에서는 값을 내되 등급이 내려간다** (196 B). 예전엔 19 GPa 부터
+        #   `MORI_FES_P_MAX` 까지 **라벨 없이** 답했다 — 그 사이가 적합이 놓인 구간이 아니었다.
+        p_graded_above=HUANG_FE_ANCHORS["35GPa"][0],
+        p_measured_max=MORI_FES_P_MEASURED_MAX,
+        graded_reason=(
+            "{p_gpa:.4g} GPa 는 이 액체 Fe–S 적합의 **두 앵커(19·35 GPa) 위**다 — {band}. "
+            "⚠ 천장 350 GPa 는 이 밀도 적합의 수가 아니라 **Mori+ 2017 자신의 외삽 사용처**에서 온 수고"
+            "(«~4100 K at the ICB»), 그 논문의 **측정 상한은 254 GPa** 다(제목이 그렇게 적힌다: "
+            "«Melting experiments on Fe-Fe3S system to 254 GPa»). 그래서 35–254 GPa 는 **Huang 적합의 외삽이도 "
+            "Mori 측정 범위 안**이고, 254–350 GPa 는 **둘 다의 외삽**이다. ⚠ 적합을 다시 앵커하지 않고, "
+            "이 문장을 안 인쇄할 거라면 천장은 254 GPa 로 내려야 한다"),
         join="Fe–S 액체", fit_state="liquid",
         join_note=f"밀도 적합은 c_S = {c_s:.4f} 의 액체 Fe–S, 융해는 Fe–Fe₃S 공정 바운드 — "
                   f"조성이 다르고 후자는 바닥이다 (21 GPa 아래는 IRON_FES_GAP_REASON)")
@@ -3592,6 +3630,10 @@ FE_S_BELOW_REF_REASON = (
     "두 앵커에 대해 적합했고 그 사이·아래를 인쇄하지 않는다). 영압으로 옮기는 것은 우리 산수이므로 "
     "하지 않는다 — 이 아래에서는 이 재질이 값을 내지 않는다. ⚠ 융해 공백(10–21 GPa, "
     "`IRON_FES_GAP_REASON`)은 **다른 사실**이고 다른 자리에서 발화한다")
+
+#: 밀도 적합이 «등급 구간» 에서 몇 번 답했는가 (196 B). ⚠ **세기만 한다** — 값을 만드는 식
+#: 어디에도 안 들어가고, 소비처가 풀이 앞뒤로 차이를 읽어 라벨을 붙인다 (190 C 와 같은 모양).
+DENSITY_REACH = {"graded": 0, "beyond_measured": 0}
 
 FE_S_MOLAR_MASS = (55.845, 32.06)          # (M_Fe, M_S) g/mol — 교과서 값
 FE_S_BAND_WT = (0.13, 0.19)                # 오너 결정 2026-09-10

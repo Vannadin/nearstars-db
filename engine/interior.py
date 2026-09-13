@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import convergence
 import ice_fr2015          # 190 C: 적합 격자 이탈 카운터를 풀이 전후로 읽는다
+import eos                 # 196 B: 밀도 적합의 압력 도달 카운터를 풀이 전후로 읽는다
 import math
 
 import water_hot
@@ -2710,6 +2711,9 @@ def solve(mass_earth: float,
     #   2026-09-13): 버려진 시도의 수는 이 천체에 대한 진술이 아니라서 등급의 주석이 실을 것이
     #   아니고, 답 쪽 수보다 두세 자릿수 커서 읽는 눈을 먼저 가져간다. 그 수가 필요한 자리는
     #   검증 출력이고, 거기에는 `ice_fr2015.STATS` 를 풀이 앞뒤로 집는 스크립트가 이미 있다.
+    # ⚠ **밀도 적합이 자기 앵커 위에서 답했는가도 같은 모양으로 읽는다** (브리프 196 B).
+    #   `eos.DENSITY_REACH` 는 세기만 하고 평가 경로가 안 읽으므로 이 읽기가 값을 못 움직인다.
+    _reach0 = (eos.DENSITY_REACH["graded"], eos.DENSITY_REACH["beyond_measured"])
     _ICE_GRID_DELTA.clear()
     try:
         st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
@@ -2883,6 +2887,29 @@ def solve(mass_earth: float,
     # 풀이가 끝난 자리에서 차이를 본다 — 어느 축을 벗어났는지까지 이름이 남는다 (190 C).
     # ⚠ **답의 델타** — 사격기가 돌려준 그 구조의 적분에서만 (190 C). 탐색 전체의 수는 아래 따로.
     ice_extrap_rho, ice_below_t = _ICE_GRID_DELTA.get(id(st), (0, 0))
+    # ⚠ **압력 도달의 등급도 답 옆에 적힌다** (196 B). 얼음과 달리 이것은 **풀이 전체**의 차이다 —
+    #   밀도는 사격 시도마다 같은 압력을 다시 묻고, 그 수를 구조에 매달면 «답이 어디까지 갔나» 가
+    #   아니라 «몇 번 물었나» 가 된다. 등급은 **답의 중심압**이 앵커 위인가로 갈린다.
+    reach_graded = eos.DENSITY_REACH["graded"] - _reach0[0]
+    reach_beyond = eos.DENSITY_REACH["beyond_measured"] - _reach0[1]
+    core_ph = None
+    if cmf > 0.0:
+        _cm = eos.MATERIALS.get(core_material)
+        # ⚠ **이 줄은 «선언을 든 재질은 상이 하나» 에 기대고 있다** (감사석, 2026-09-13 — 오늘 세어
+        #   확인: `p_graded_above` 를 단 재질은 `fe_s_13wt_19gpa`·`fe_s_19wt_19gpa` 둘뿐이고 각각 상이 하나다).
+        #   다상 재질이 나중에 **뒤쪽 상**에 그 선언을 달면 이 줄은 **엉뚝한 상을 읽는다**. 일반형은
+        #   `phase_at(st.p_center)` 이지만 그것은 `PhaseGap` 을 던질 수 있어 라벨 자리에서 풀이를 깨뜨린다 —
+        #   그래서 지금 바꾸지 않고 **기대는 조건을 여기 적어 둔다**.
+        core_ph = _cm.phases[0] if _cm is not None and getattr(_cm, "phases", ()) else None
+    core_reach, core_reach_why = (
+        core_ph.density_reach(st.p_center) if core_ph is not None
+        and getattr(core_ph, "p_graded_above", 0.0) else ("ok", ""))
+    if core_reach != "ok":
+        notes.append(
+            "**핵의 밀도 적합이 자기 앵커 위에서 답했다** — " + core_reach_why +
+            f". ⚠ 이 풀이에서 그 구간의 질의는 {reach_graded} 회이고 그중 측정 상한 위가 "
+            f"{reach_beyond} 회다 — **버려진 사격 시도를 포함한 수**이고, 등급을 지는 것은 "
+            "그 수가 아니라 **답의 중심압**이다. 등급을 analog 로 내린다.")
     if ice_extrap_rho or ice_below_t:
         edges = []
         if ice_extrap_rho:
@@ -3044,7 +3071,8 @@ def solve(mass_earth: float,
                             or not differentiated or giant_declared
                             or silicate_extrapolated or thermal_moves
                             or thermal_unchecked or ice_x_reached
-                            or ice_extrap_rho or ice_below_t)
+                            or ice_extrap_rho or ice_below_t
+                            or core_reach != "ok")
                else "calibrated"),
         inputs=inputs,
         cycles=(1, 3, 7),

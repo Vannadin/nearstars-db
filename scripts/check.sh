@@ -696,7 +696,7 @@ if [ "$lane" = "targeted" ]; then
       run:*) step "run.py ${tt#run:}" bash -c 'cd engine && exec python3 run.py "$1"' _ "${tt#run:}" ;;
       # ⚠ 13 블록에는 `test_*.py` 가 아닌 게이트 단계가 셋 있다 (169 D ②). 그 셋을 부를 어휘가
       #   없으면 `engine/backflow.py` 를 고친 커밋이 자기를 검사하는 단계 없이 초록으로 지나간다.
-      gate:backflow) step "backflow" bash -c 'python3 engine/backflow.py check >/dev/null 2>&1' ;;
+      gate:backflow) step "backflow" bash -c 'exec python3 engine/backflow.py check >/dev/null 2>&1' ;;
       gate:chain) step "engine/chain.py check" bash -c 'python3 engine/chain.py check' ;;
       gate:dynamo_table) step "dynamo_table" python3 engine/dynamo_table.py --check ;;
       # ⚠ full 층이 `--quiet` 로 부르는 시험은 표적 층도 그렇게 불러야 한다 — 다른 인자는 다른 검사다.
@@ -716,7 +716,7 @@ echo "── 13. 엔진 그래프 + 역류 층 ──"
 # 노드에서 나왔고 무엇이 그걸 먹는지. 후자가 없어서 Proxima pause_nose 사고가 났다.
 step "engine/chain.py" bash -c 'python3 engine/chain.py check'
 python3 engine/backflow.py check 2>&1 | grep -v "^  \[WARN\]" || true
-step "engine/backflow.py" bash -c 'python3 engine/backflow.py check >/dev/null 2>&1'
+step "engine/backflow.py" bash -c 'exec python3 engine/backflow.py check >/dev/null 2>&1'
 step "test_backflow.py" bash -c 'cd engine && exec python3 test_backflow.py'
 step "test_dynamo.py" bash -c 'cd engine && exec python3 test_dynamo.py'
 # ⚠ **바디 목록은 고정 셋이 아니라 디렉토리다** (169 E). 예전에는 셋(alpha·pandora·earth)을 손으로
