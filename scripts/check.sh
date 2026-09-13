@@ -187,6 +187,37 @@ step_flush() {                # 배리어 — 풀을 비우고, **띄운 수와 
   fi
 }
 
+# ⚠ **`/usr/bin/time -l` 이 재는 것을 이미 다 재고 있었고, 우리는 한 칸만 쓰고 버렸다** (C89).
+#   222 → 565 → 222 초를 가를 수 있었던 수가 세 번 측정되고 세 번 지워졌다. 아래 아홉 칸을
+#   `[TIME]` 밑에 둘째 줄로 찍는다. ⚠ **`[TIME]` 줄은 자리·순서·공백까지 안 건드린다** — 그 줄을
+#   정규식으로 읽는 사람과 임시 스크립트가 있고, 그건 grep 으로 셀 수 없다.
+# ⚠ **관용구가 둘이다.** 키워드 줄은 값이 `$1` 이지만, **첫 줄은 `0.00 real 0.00 user 0.00 sys` 로
+#   측정 셋이 나란히** 있어 자리로 읽어야 한다 (`$3`·`$5`). 그리고 `involuntary context switches` 는
+#   `voluntary context switches` 를 부분문자열로 품으므로 **`involuntary` 로 매치한다** — 안 그러면
+#   먼저 오는 줄을 문다. 첫 줄은 `/real/` 이 아니라 **`NR==1`** 로 잡는다: 오늘 출력에 그 substring 을
+#   가진 줄이 하나뿐인 것은 운이고, 우리가 정하는 형식이 아니다.
+# ⚠ **`cycles` 는 기록만 하고 해석하지 않는다** — 이 하드웨어에서 `cycles elapsed` 가
+#   `instructions retired` 보다 **작게** 찍힌다 (실측: 760 597 002 명령 대 149 890 067 사이클, 5.1 명령/사이클).
+#   어느 코어도 그런 IPC 를 내지 않으므로 이 칸은 평범한 사이클 수가 아니다 — **둘로 IPC 를 나누지 말 것**.
+# ⚠ **`blkin`/`blkout` 의 0 은 «입출력이 없었다»가 아니라 «블록 연산이 세어지지 않았다» 이다** —
+#   `pf`/`pr` 과 같은 모양이다. 그 칸이 «대기를 이름으로 재는» 것은 **0 이 아닐 때뿐**이다.
+# ⚠ **없는 칸은 조용히 빼지 않고 `—` 로 찍는다** — 「측정 안 됨」과 「0」을 로그에서 갈라야 한다.
+_cost_fields() {              # _cost_fields <time -l 통계 파일>
+  awk 'NR==1 {u=$3; s=$5}
+       /involuntary context switches/ {ics=$1}
+       /page faults/ {pf=$1}
+       /page reclaims/ {pr=$1}
+       /instructions retired/ {ins=$1}
+       /cycles elapsed/ {cyc=$1}
+       /block input operations/ {bi=$1}
+       /block output operations/ {bo=$1}
+       END {printf "user %s · sys %s · invcsw %s · pf %s · pr %s · instr %s · cycles %s · blkin %s · blkout %s",
+                   (u == "" ? "—" : u), (s == "" ? "—" : s), (ics == "" ? "—" : ics),
+                   (pf == "" ? "—" : pf), (pr == "" ? "—" : pr), (ins == "" ? "—" : ins),
+                   (cyc == "" ? "—" : cyc), (bi == "" ? "—" : bi), (bo == "" ? "—" : bo)}' "$1"
+}
+
+
 step() {                      # step <이름> <명령...>
   # ⚠ **벽시계를 상시로 찍는다** (브리프 183 C). 게이트가 32 분인데 그중 어느 단계가 얼마인지
   #   말할 수 없었다 — 로그에 시간이 하나도 없어서 «미상 24 분» 이 어디 있는지 셀 수가 없다.
@@ -225,6 +256,7 @@ step() {                      # step <이름> <명령...>
         cat "$_base.out"
         [ "$_rc" = "0" ] || echo "  [FAIL] $name — 비0 종료 (이 단계가 fail=1 을 세웠다)"
         echo "  [TIME] $name — $_k0 → $(date "+%H:%M:%S") · $((SECONDS - _s0)) s · RSS $(awk '/maximum resident set size/ {printf "%.0f", $1/1048576}' "$_st") MB"
+        echo "  [COST] $name — $(_cost_fields "$_st")"
       } > "$_base.log"
       rm -f "$_st" "$_base.out"
       [ -d "$_pool_dir" ] || exit 0
@@ -247,8 +279,12 @@ step() {                      # step <이름> <명령...>
   /usr/bin/time -l bash -c '"$@" 2>&3' _ "$@" 2>"$_tf" \
     || { echo "  [FAIL] $name — 비0 종료 (이 단계가 fail=1 을 세웠다)"; fail=1; }
   _rss=$(awk '/maximum resident set size/ {printf "%.0f", $1/1048576}' "$_tf")
+  # ⚠ 직렬 경로는 삭제가 `[TIME]` **앞**이라, 풀 쪽 모양을 그대로 붙이면 **이미 지워진 파일을**
+  #   읽는다. `_rss` 처럼 먼저 변수로 잡는다 (C89).
+  _cost=$(_cost_fields "$_tf")
   rm -f "$_tf"
   echo "  [TIME] $name — $_c0 → $(date "+%H:%M:%S") · $((SECONDS - _t0)) s · RSS ${_rss:-?} MB"
+  echo "  [COST] $name — $_cost"
 }
 # 게이트 자신만 찍는 시작/종료선. 테스트 파일들이 찍는 "모두 통과" 와 겹칠 수 없는 형식이고,
 # 종료선 없이는 "무엇이 언제 무슨 트리 위에서 끝났는지" 를 말할 수 없다 (2026-09-04, 두 좌석에서 같은 오독).
