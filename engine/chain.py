@@ -52,9 +52,13 @@ def _banner_layers() -> dict[str, str]:
 #: 한 이름을 두 노드가 내는 자리 — 2026-09-11 감사석 센서스에서 시작해, C62 (b) 가
 #: `k2_over_q` 를 하나로 줄였다(그 이름은 `k2q_class_table` 만 낸다, 조석 노드는
 #: `k2_over_q_emitted` 를 낸다). 줄어드는 것은 통과, 느는 것은 FAIL 이다.
+#: ⚠ **2026-09-13 (C68 B-2): `has_inner_core_solved` 가 빠졌다** — 그 이름은 `347f77d2` 에서
+#:   **둘로 갈렸고**(답 사실 `has_inner_core` · 실행 사실 `inner_core_branch_taken`), 어느 노드도
+#:   그 이름을 안 낸다. ⚠ 그 커밋은 이 집합을 일부러 안 건드렸다 — 이 검사가 «사라진 것» 을
+#:   **인쇄하게 하기 위해서**이고, 그 줄은 두 번 만들 수 없다. 이제 목록과 현실이 같다.
 DUPLICATE_PRODUCER_KEYS = {
     "mass", "radius", "p_rot", "present", "nmoi",
-    "has_inner_core_solved", "b_pol", "b_eq", "dipole_moment",
+    "b_pol", "b_eq", "dipole_moment",
 }
 
 
