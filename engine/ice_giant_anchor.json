@@ -1,11 +1,32 @@
 {
  "python": "3.9.6",
  "path_fingerprint": "471a27fd0793ca5e",
- "frozen_at": "2026-09-13",
+ "frozen_at": "2026-09-14",
  "steps": 1500,
+ "inputs": {
+  "ammonia_table.py": "47fbe39e25e453c5",
+  "chain.yaml": "b25b94963227abbd",
+  "convergence.py": "71d9731ebe94ed66",
+  "eos.py": "0ab08acdc1d6f632",
+  "fe_liquid.py": "d2d38be02270b585",
+  "fermi.py": "7bb499bb4eab88b1",
+  "hhe_table.py": "4e8c1b003e69b834",
+  "ice_fr2015.py": "ff4bfefe8553a1a7",
+  "ice_melt_table.py": "edf7d6476c3ae64f",
+  "interior.py": "acbca08fdbb8ed2f",
+  "payload.py": "d064510a77507cbc",
+  "porosity.py": "ca33b581de6e49bc",
+  "registry.py": "7031b25acd49c432",
+  "rheology.py": "84b57ff4bc38ca16",
+  "steam_if97.py": "6e1d779f9a269cb8",
+  "test_ice_giant.py": "88d47fbebcd1b725",
+  "water2_table.py": "ed9cb409c82b299e",
+  "water_hot.py": "9483e265a5186644",
+  "water_table.py": "c98e33cfab54b7ec"
+ },
  "bodies": {
   "Uranus": {
-   "seconds": 26.7,
+   "seconds": 27.2,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -50,7 +71,7 @@
    "standalone_reproduces_solve": true
   },
   "Neptune": {
-   "seconds": 62.5,
+   "seconds": 63.3,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,

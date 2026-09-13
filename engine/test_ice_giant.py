@@ -52,9 +52,11 @@
 """
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
 import platform
+import re
 import sys
 import time
 from pathlib import Path
@@ -157,6 +159,126 @@ def _radius_at_steps(name: str, p_center_pa: float, t_center: float, steps: int)
         interior.STEPS = base
 
 
+# ── 입력 방아쇠 (C88 C+D, 2026-09-14) ───────────────────────────────────
+
+# ⚠ **굳힌 값이 낡는 것은 «누가 다시 굳히기를 기억했는가» 에 달려 있었다.** 지문은 경로 함수의
+#   **몸통**이 바뀌면 움직이지만, 상태방정식 표나 데이터 파일이 바뀌어도 가만히 있는다 —
+#   실제로 이 파일이 마지막으로 굳은 뒤 `eos.py` 가 **두 번** 바뀌는 동안 앵커는 안 움직였다.
+#   그래서 이제 **풀이가 읽는 파일이 바뀌면** 다시 굳히라고 말한다.
+#
+# ⚠ **이 목록 자체가 그물이고, 그물이 둘이다** (사전등록 §2, 병렬석 실측).
+#   **A** `test_ice_giant` 에서 `import` 로 닿는 **전이 폐포 36 모듈** — `dynamo`·`tidal_response`
+#   처럼 레지스트리를 통해 import 만 되고 **평가되지 않는** 것까지 들어와 **과다 발화**한다.
+#   **B** 풀이 자신의 사슬 **17 모듈** — 여기에 등록한 것이 이쪽이다. ⚠ **함수 안에서 늦게
+#   import 하는 자리가 있으면 과소 발화한다**; 이 파일 자신이 그런 자리를 하나 갖고 있다.
+#   *선택이지 사실이 아니므로 여기 적는다 — 첫 놓친 재굳힘은 «규칙이 실패했다» 가 아니라
+#   «그물이 틀렸다» 로 진단돼야 한다.*
+# 씨앗 둘에서 시작해 **`engine/` 안의 import 를 전이로 걷는다** (C88 개정 1). 목록도 깊이도 수도
+# **도구가 실행 시점에 만든다** — 손으로 고른 목록은 한 홉 앞에서 멈췄고, 그때 빠진 것이 `fermi` 였다.
+CHAIN_SEEDS = ("test_ice_giant", "interior")
+
+# ⚠ **`registry` 는 목록에 남되 펼치지 않는다.** 그 아래로 노드 모듈 열여덟이 달려 있는데
+#   (직접 열셋 + `bands`·`domain`·`mantle_flux`·`provisional`·`tectonic_regime`), **앵커는
+#   `interior.solve` 를 직접 부르지 노드 그래프를 걷지 않는다.** 넣으면 과대 발화하고 «입력이
+#   바뀌었다» 가 뜻을 잃는다. 펼치면 36 이 되고, 그 수도 함께 인쇄한다.
+NO_EXPAND = ("registry",)
+
+_DATA_SUFFIXES = (".json", ".csv", ".dat", ".txt", ".tsv", ".yaml")
+
+
+def chain_modules() -> dict:
+    """`engine/` 안의 import 폐포 — `{모듈 이름: 깊이}`. **걸어서 만들고, 세어서 인쇄한다.**
+
+    ⚠ 손으로 고른 사슬은 `water_hot` 에서 멈췄고 그 한 홉 뒤의 `fermi` 를 놓쳤다 — `fermi.py` 는
+    굳힌 표(`FD_M12`)를 들고 있어 **그 표가 바뀌면 앵커가 움직인다**. 걸으면 그런 파일이
+    **측정으로** 들어온다 (감사석이 찾은 구멍, 2026-09-14)."""
+    here = Path(__file__).resolve().parent
+    depth = {name: 0 for name in CHAIN_SEEDS}
+    queue = [(name, 0) for name in CHAIN_SEEDS]
+    while queue:
+        name, d = queue.pop(0)
+        mod = here / f"{name}.py"
+        if not mod.exists() or name in NO_EXPAND and d > 0:
+            continue
+        if name in NO_EXPAND:
+            continue
+        tree = ast.parse(mod.read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            names = []
+            if isinstance(node, ast.Import):
+                names = [a.name.split(".")[0] for a in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
+                names = [node.module.split(".")[0]]
+            for n in names:
+                if not (here / f"{n}.py").exists():      # 표준 라이브러리·외부 패키지는 뺀다
+                    continue
+                if n not in depth or depth[n] > d + 1:
+                    depth[n] = d + 1
+                    queue.append((n, d + 1))
+    return depth
+
+
+def excluded_modules() -> dict:
+    """`registry` 를 펼치면 더 붙는 모듈 — **세어서 인쇄한다**. 감시 목록에는 안 들어간다.
+
+    ⚠ **직접 import 를 세고 «팬아웃» 이라 부르면 모자란다** — `registry` 가 직접 여는 것 아래로
+    `bands`·`domain`·`mantle_flux`·`provisional`·`tectonic_regime` 이 더 딸려 온다. 그래서 이 함수도
+    **전이로** 걷는다 (병렬석 실측, 2026-09-14)."""
+    here = Path(__file__).resolve().parent
+    watched = set(chain_modules())
+    seen, queue = set(), ["registry"]
+    while queue:
+        name = queue.pop(0)
+        mod = here / f"{name}.py"
+        if not mod.exists():
+            continue
+        for node in ast.walk(ast.parse(mod.read_text(encoding="utf-8"))):
+            names = []
+            if isinstance(node, ast.Import):
+                names = [a.name.split(".")[0] for a in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
+                names = [node.module.split(".")[0]]
+            for n in names:
+                if (here / f"{n}.py").exists() and n not in watched and n not in seen:
+                    seen.add(n)
+                    queue.append(n)
+    return {n: 1 for n in sorted(seen)}
+
+
+def trigger_files() -> list[Path]:
+    """다시 굳혀야 하는지 보는 **파일 목록**. 길이는 리터럴이 아니라 여기서 세어 나온다.
+
+    폐포 모듈 + 그 모듈들이 이름으로 여는 데이터 파일 + 앵커 파일 자신(손으로 고친 것도
+    잡힌다). ⚠ **주석이 아니라 도구가 인쇄한다** — 목록이 코드와 갈리지 않게."""
+    here = Path(__file__).resolve().parent
+    out: list[Path] = []
+    for name in sorted(chain_modules()):
+        mod = here / f"{name}.py"
+        if not mod.exists():
+            continue
+        out.append(mod)
+        src = mod.read_text(encoding="utf-8")
+        for lit in re.findall(r"[\"']([\w.\-]+(?:%s))[\"']" % "|".join(
+                x.replace(".", r"\.") for x in _DATA_SUFFIXES), src):
+            cand = here / lit
+            if cand.exists() and cand not in out:
+                out.append(cand)
+    if ANCHOR_FILE not in out:
+        out.append(ANCHOR_FILE)
+    return sorted(set(out), key=lambda q: q.name)
+
+
+def input_digests() -> dict:
+    """방아쇠 파일마다 sha256 앞 16 자리. 앵커 파일 자신은 값이 아니라 **존재**만 센다 —
+    자기 해시를 자기 안에 적을 수 없기 때문이고, 그 자리는 `frozen_at` 이 지킨다."""
+    out = {}
+    for f in trigger_files():
+        if f == ANCHOR_FILE:
+            continue
+        out[f.name] = hashlib.sha256(f.read_bytes()).hexdigest()[:16]
+    return out
+
+
 # ── 경로 지문 (--fast) ──────────────────────────────────────────────────
 
 # 굳힌 수렴점으로 가는 길을 정하는 것들. `--fast` 가 적분 한 번으로 못 보는 바깥 고리다.
@@ -226,8 +348,12 @@ def _record(name: str, res, seconds: float) -> dict:
 
 
 def refresh() -> int:
+    digests = input_digests()
     out = {"python": platform.python_version(), "path_fingerprint": path_fingerprint(),
-           "frozen_at": time.strftime("%Y-%m-%d"), "steps": interior.STEPS, "bodies": {}}
+           "frozen_at": time.strftime("%Y-%m-%d"), "steps": interior.STEPS,
+           "inputs": digests, "bodies": {}}
+    print(f"입력 방아쇠 {len(digests)} 해시 · 폐포 {len(chain_modules())} 모듈 "
+          f"(`registry` 는 안 펼침) + 데이터 + 앵커")
     for name, _m, r_pub, _mc, _mh, _t in ICE_GIANTS:
         print(f"{name} — 전체 풀이 …", flush=True)
         t0 = time.perf_counter()
@@ -331,6 +457,66 @@ def _fingerprint(frozen: dict, fails: list[str], full: bool) -> None:
           f"{', '.join(PATH_FUNCTIONS)} + 상수 {len(PATH_CONSTANTS)}개")
 
 
+def _inputs(frozen: dict, fails: list[str]) -> None:
+    """굳힌 뒤에 **풀이가 읽는 파일**이 바뀌었는가 (C88 C, 2026-09-14).
+
+    지문과 다른 질문이다. 지문은 «경로 함수의 몸통이 바뀌었나», 이쪽은 «입력이 바뀌었나» 다.
+    한쪽만 있으면 표가 바뀌어도(또는 함수가 바뀌어도) 앵커가 조용히 낡는다 — 실제로 그랬다."""
+    now = input_digests()
+    then = frozen.get("inputs")
+    files = trigger_files()
+    if then is None:
+        fails.append("굳힌 파일에 `inputs` 가 없다 — C88 이전 판이다. `--refresh` 로 다시 굳혀라")
+        print(f"  [FAIL] 입력 방아쇠 {len(files)} 파일 — 굳힌 쪽에 해시가 없다")
+        return
+    moved = sorted(k for k in now if now[k] != then.get(k))
+    gone = sorted(k for k in then if k not in now)
+    added = sorted(k for k in now if k not in then)
+    ok = not (moved or gone or added)
+    if not ok:
+        parts = []
+        if moved:
+            parts.append("바뀐 파일 " + ", ".join(f"{k} {then[k]} → {now[k]}" for k in moved))
+        if added:
+            parts.append("새로 들어온 파일 " + ", ".join(added))
+        if gone:
+            parts.append("사라진 파일 " + ", ".join(gone))
+        fails.append("굳힌 뒤로 풀이가 읽는 파일이 움직였다 — " + " · ".join(parts)
+                     + ". **이 커밋에서 `--refresh`** 로 다시 굳혀 diff 에 남겨라")
+    depth = chain_modules()
+    by_depth = {}
+    for name, d in depth.items():
+        by_depth.setdefault(d, []).append(name)
+    print(f"  [{'PASS' if ok else 'FAIL'}] 입력 방아쇠 {len(files)} 파일 · 해시 {len(now)} 개 "
+          f"{'그대로' if ok else '중 ' + str(len(moved) + len(added) + len(gone)) + ' 개 움직임'} — "
+          f"폐포 {len(depth)} 모듈 + 데이터 {len(files) - len(depth) - 1} + 앵커 자신")
+    for d in sorted(by_depth):
+        print(f"      깊이 {d} ({len(by_depth[d])}) — {' · '.join(sorted(by_depth[d]))}")
+    excl = excluded_modules()
+    print(f"      씨앗 {' · '.join(CHAIN_SEEDS)} — ⚠ **깊이는 씨앗에 대한 수다** (뿌리를 안 적은 "
+          f"깊이는 단위 없는 길이와 같다)")
+    print(f"      ⚠ `registry` 는 펼치지 않는다 — 그 아래 노드 모듈 {len(excl)} 개는 앵커 풀이가 "
+          f"밟지 않는다 (펼치면 {len(chain_modules()) + len(excl)}): {' · '.join(excl)}")
+
+
+def _value_keys(rec: dict) -> tuple[str, ...]:
+    """이 몸체가 굳혀 놓은 **값 키 전부**. 4 개가 아니라 굳힌 파일이 가진 만큼이다 (C88 D).
+
+    ⚠ 수를 여기서 **세지, 적지 않는다** — `BIT_KEYS` 넷은 여전히 이름으로 남아 있고(그 넷이
+    움직이면 문장이 다르게 나간다), 나머지는 이 함수가 굳힌 파일에서 읽어 온다."""
+    return tuple(rec.get("values", {}))
+
+
+def _frozen_form(x):
+    """굳히기가 쓴 것과 **같은 규칙**으로 값을 문자열로 만든다.
+
+    ⚠ `_record` 는 float 만 `repr` 로 적고 나머지(문자열·불리언·리스트)는 **날것으로** 적는다.
+    비교하는 쪽이 전부 `repr` 로 감싸면 float 아닌 키가 **항상 다르게** 보인다 — 넓힌 비교를
+    켠 첫 실행에서 그 모양으로 여덟 키가 가짜로 움직였다. *넓힌 비교의 첫 위험은 실패가 아니라
+    **거짓 발화**이고, 그 자리가 여기다.*"""
+    return repr(x) if isinstance(x, float) else x
+
+
 def _fast(frozen: dict, fails: list[str]) -> None:
     """적분 한 번 + 경로 지문. 전체 풀이 없이 적분기·상태방정식의 변화를 잡는다."""
     _fingerprint(frozen, fails, full=False)
@@ -408,11 +594,30 @@ def _live(frozen: dict, fails: list[str]) -> None:
             print(f"  [FAIL] {name} 거절됨 ({dt:.0f} s)")
             continue
         v = res.values
-        moved = [k for k in BIT_KEYS if repr(v[k]) != rec["values"][k]]
-        if moved:
+        keys = _value_keys(rec)
+        moved = [k for k in keys if k in v and _frozen_form(v[k]) != rec["values"][k]]
+        missing = [k for k in keys if k not in v]
+        extra_moved = [k for k in moved if k not in BIT_KEYS]
+        if moved or missing:
             fails.append(f"{name}: 전체 풀이가 굳힌 값과 다르다 — "
                          + ", ".join(f"{k} {rec['values'][k]} → {v[k]!r}" for k in moved)
+                         + (f" · 답에 없는 키 {', '.join(missing)}" if missing else "")
                          + ". 의도한 변화면 `--refresh` 로 다시 굳혀 diff 에 남겨라")
+        # ⚠ **넓힌 비교가 무엇을 벌었는지 인쇄한다** (수락선 ⑥). 넷만 보던 때라면 «그대로» 로
+        #   지나갔을 재굳힘에서 나머지가 몇 개 움직였는가 — **0 이면 0 이라고 적는다.**
+        print(f"  [기록 · C88] {name} — 비교한 키 {len(keys)} 개 (그중 이름으로 박힌 것 "
+              f"{len(BIT_KEYS)}), 움직인 키 {len(moved)} · 그중 넷 밖 {len(extra_moved)}"
+              + (f" ({', '.join(extra_moved)})" if extra_moved else ""))
+        # 단독 구조도 굳힌 대로인가 — 굳히기가 쓴 것과 **같은 함수로 다시 지어** 사전째 견준다.
+        sa = rec.get("standalone") or {}
+        st_now = _structure_record(_standalone(name, float(sa["p_center_pa"]),
+                                               float(sa["t_center"]))) if sa else {}
+        sa_moved = sorted(k for k, x in st_now.items() if sa.get(k) != x)
+        if sa_moved:
+            fails.append(f"{name}: 단독 구조가 굳힌 값과 다르다 — {', '.join(sa_moved)}")
+        print(f"  [기록 · C88] {name} — 단독 구조 키 "
+              f"{len(rec.get('standalone', {})) - 2} 개 중 움직인 것 {len(sa_moved)} · "
+              f"`standalone_reproduces_solve` {rec.get('standalone_reproduces_solve')}")
         if not res.converged:
             fails.append(f"{name}: converged=False")
         r_pub = rec["r_published_earth"]
@@ -501,6 +706,10 @@ def main() -> int:
     frozen = json.loads(ANCHOR_FILE.read_text(encoding="utf-8"))
     print("얼음거대행성 앵커 — 천왕성·해왕성이 굳힌 값을 비트까지 다시 내는가")
     print(f"  굳힌 날 {frozen['frozen_at']} · python {frozen['python']} · {frozen.get('steps')} 걸음")
+    secs = {n: r.get("seconds") for n, r in frozen["bodies"].items()}
+    print("  굳힐 때 초 — " + " · ".join(f"{n} {v}" for n, v in secs.items())
+          + " (수락선 ⑤: 넓힌 비교의 값이 이 수로 매겨진다)")
+    _inputs(frozen, fails)
     if "--fast" in sys.argv:
         _fast(frozen, fails)
     else:
