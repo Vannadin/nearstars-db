@@ -54,6 +54,14 @@ REF = ("French & Redmer 2015 Phys. Rev. B 91, 014308 (2015PhRvB..91a4308F), "
 
 #: 적합 격자 — p3 이 인쇄한 그대로. 창의 근거는 이것이고 상 안정 영역이 아니다.
 FIT_RHO_MIN, FIT_RHO_MAX = 1.6, 4.25          # g/cm³
+#: 역산이 실제로 훑는 상한 — **적합 격자 위쪽으로 넓힌 끝** (M2 = (a), 브리프 190 C).
+#: ⚠ **수의 이유는 퍼텐셜과 엔진의 선언에서 온다, 둥글어서가 아니다**: `eos.ICE_X_P_MAX` 가
+#:   1000 GPa 에서 이름 대며 거절하므로 괄호는 **딱 거기까지** 닿으면 된다. 그 압력에 해당하는
+#:   밀도는 295 K 에서 5.7088, 2000 K 에서 5.6899 g/cm³ 라(실측), 둘을 다 덮는 **5.75** 로 둔다.
+#: ⚠ **아래로는 안 넓힌다**: P(ρ) 가 2000 K 에서 ρ ≈ 1.2 g/cm³ 아래로 **단조가 아니다**(실측:
+#:   0.50 → 18.54 GPa, 0.80 → 14.33, 1.00 → 14.19). 단조가 깨진 구간에서는 이분도 세컨트도 뿌리를
+#:   보장 못 하므로, 아래 끝은 격자 바닥에 그대로 둔다.
+EXTRAP_RHO_MAX = 5.75                         # g/cm³
 FIT_T_MIN, FIT_T_MAX = 295.0, 2000.0          # K
 
 
@@ -215,9 +223,17 @@ def thermal_at(p_pa: float, t: float, column: str = "HSE") -> dict:
 
     ⚠ 논문의 좌표는 (ρ, T) 다. (P, T) 로 물으면 **밀도를 먼저 뒤집어야** 하고, 그 뒤집기는
     같은 퍼텐셜을 쓴다. ⚠ **밖에서는 거절하지 않는다 — C82**: 요청 압력이 ρ 괄호 [1.6, 4.25] 가 그 온도에서 덮는 구간 밖이면 역산이 ρ_min 또는 ρ_max 로 **포화하고 그대로 돌려준다**. 유일한 흔적은 `bracket_invalid` 목록이다. 이 독스트링은 2026-09-12 까지 «거절한다» 고 적혀 있었고, 거절은 지어진 적이 없다."""
+    # ⚠ **격자 이탈은 «질의» 로 센다 — 메모 **위**에서** (브리프 190 C). 카운터가 캐시 아래 있으면
+    #   미스만 보이고, 앞선(버려진) 시도가 채운 캐시에 맞는 순간 이긴 시도의 요청이 **안 보인다**.
+    #   그러면 답이 격자를 벗어났는데 델타가 0 으로 읽힌다. T 는 매 질의마다 상수 비교이고, ρ 는
+    #   역산이 이미 아는 사실이라 **메모 값에 실어** 두고 적중에도 센다.
+    if t < FIT_T_MIN:
+        STATS["below_t_min"] += 1
     key = (column, p_pa, t)
     hit = _CACHE.get(key)
     if hit is not None:
+        if hit["outside_rho_grid"]:
+            STATS["extrapolated_rho"] += 1
         return hit
     rho = density_at(p_pa / 1e9, t, column)
     cv = c_v(rho, t, column)
@@ -226,7 +242,11 @@ def thermal_at(p_pa: float, t: float, column: str = "HSE") -> dict:
             "c_v": cv * 1e6,
             "gruneisen": gruneisen_from(rho, cv, dpdt),
             "k_t": k_t(rho, t, column) * 1e9,
-            "density": rho * 1e3}
+            "density": rho * 1e3,
+            # ⚠ 이 비트는 **메모와 함께 산다** — 적중에서도 세려면 값에 붙어 있어야 한다 (190 C).
+            "outside_rho_grid": rho > FIT_RHO_MAX}
+    if out["outside_rho_grid"]:
+        STATS["extrapolated_rho"] += 1
     if len(_CACHE) < _CACHE_MAX:
         _CACHE[key] = out
     return out
@@ -242,7 +262,20 @@ DENSITY_TOL = 1e-10
 #: 세기만 하는 칸. ⚠ **평가 경로는 이것을 읽지 않는다** — 값을 만드는 식 어디에도 안 들어가므로
 #: 비트 동일성의 전제를 건드리지 않는다. 수용 실행이 「대체가 몇 번 걸렸나」를 인쇄하려고 둔다
 #: (감사석, 197): 비용이 밴드를 넘으면 이 수가 원인을 댄다.
-STATS = {"inversions": 0, "clamped": 0, "iterations": 0, "fallback": 0, "exhausted": 0}
+STATS = {"inversions": 0, "clamped": 0, "iterations": 0, "fallback": 0, "exhausted": 0,
+         "extrapolated_rho": 0, "below_t_min": 0}
+#: ⚠ **이 칸들은 두 갈래이고, 어느 갈래인지가 수의 뜻을 정한다** (브리프 190 C).
+#:   · **인버전 갈래** — `inversions` · `clamped` · `iterations` · `fallback` · `exhausted` 는
+#:     `density_at` 안에서, 즉 **메모 아래에서** 오른다. 맞은 요청은 여기까지 오지 않으므로 이 수들은
+#:     «뒤집기를 몇 번 했나» 다. ⚠ `inversions` 는 진입 가드 **앞**에서 오르므로 클램프로 나간 요청도
+#:     한 번의 인버전으로 센다 — 괄호를 넓히면 클램프가 반복으로 바뀌고, 그래서 `iterations` 는 늘어도
+#:     `inversions` 는 안 움직인다 (실측: 천왕성 앵커 4 057 · 4 057, 클램프 275 → 3).
+#:   · **질의 갈래** — `extrapolated_rho` 와 `below_t_min` 은 `thermal_at` 안에서, 즉 **메모 위에서**
+#:     오른다. 적중도 세므로 이 수들은 «격자 밖을 몇 번 물었나» 다. 등급이 읽는 것이 이 갈래이고,
+#:     그 이유는 `thermal_at` 의 주석에 있다.
+#:   ⚠ **두 갈래의 수를 서로 환산하지 말 것**: 얼음 경로의 메모 적중률이 64.6 % 라 같은 사건을 세도
+#:   질의 쪽이 더 크게 읽힌다 (실측: 카운터를 메모 위로 올렸을 때 같은 풀이에서 271 → 542 ·
+#:   1 721 → 3 442). 둘 다 `interior` 가 차이를 읽어 쓰고, 값을 만드는 식은 이 딕셔너리를 안 읽는다.
 #: ⚠ `exhausted` 는 **예산을 다 쓰고도 기준을 못 만난** 인버전이다 (감사석, 197). 190 B 의
 #:   반대 자리다 — 거기서는 깃발이 늘 참이라 뜻이 없었고, 여기서는 **진짜 실패가 가능한데**
 #:   세지 않으면 안 보인다. 나중에 밴드가 깨지면 이 수가 먼저 설명할 것이다.
@@ -260,12 +293,17 @@ def density_at(p_gpa: float, t: float, column: str = "HSE") -> float:
 
     **보호된 세컨트.** 걸음마다 `pressure` 한 번(= `free_energy` 2 회)이고, 괄호를 놓지 않는다:
     세컨트 걸음이 `(a, b)` 밖으로 나가면 그 걸음은 **이분** 한 걸음으로 바뀐다. 그래서 최악이
-    오늘의 거동이고, 반환값은 언제나 적합 창 `[FIT_RHO_MIN, FIT_RHO_MAX]` 안이다.
+    오늘의 거동이고, 반환값은 **언제나 탐색 괄호 `[FIT_RHO_MIN, EXTRAP_RHO_MAX]` 안**이다 — 197 이
+    세운 성질은 그대로이고 괄호만 움직였다 (190 C). ⚠ **두 상한은 다른 것을 뜻한다**:
+    `EXTRAP_RHO_MAX` 는 이 함수가 훑는 끝이고, `FIT_RHO_MAX` 는 **논문의 격자**가 끝나는 자리다.
+    그 위의 반환값은 벽값이 아니라 **외삽**이고, `thermal_at` 이 그것을 세어 등급에 싣는다.
 
     ⚠ **괄호 밖은 명시적 가드가 받는다** (197 §3 (4)). 예전에는 «한쪽 벽을 향해 80 번 반으로
     접는» 성질이 우연히 벽값을 돌려줬다 — 세컨트에는 그런 성질이 없으므로, 목표 압력이 창 밖이면
     **반복 전에** 벽값을 돌려준다. 등록된 시연 두 상태가 그대로 서야 한다 (C82, M2 의 몫):
-    `density_at(3.30, 2000.0)` = 1.6 · `density_at(345.0, 295.0)` = 4.25 — ⚠ 인자는 **GPa** 다.
+    `density_at(3.30, 2000.0)` = 1.6 — ⚠ 인자는 **GPa** 다. ⚠ **위쪽 짝은 190 C 가 클램프에서
+    빼냈다**: `density_at(345.0, 295.0)` 는 벽값 4.25 가 아니라 **4.259294311056466** 을 돌려준다
+    (실측). 그 상태는 C82 의 쐐기 안이고, 이제 뒤집혀 나온다 — **아래쪽 짝만 여전히 클램프다.**
 
     ⚠ **이 자리는 여전히 `None` 을 적는다.** 이제 진짜 기준(상대 1e-10)이 생겼지만, 상태를
     `True`/`False` 로 바꾸면 `interior_layers` 의 `converged`·`unconverged_solvers` 가 함께
@@ -276,11 +314,13 @@ def density_at(p_gpa: float, t: float, column: str = "HSE") -> float:
     ⚠ **비트 동일성의 전제는 그대로다**: `pressure` 는 순수하고, `_gl_nodes` 는 읽기만 하며,
     `_CACHE` 는 `pressure` 위층의 `thermal_at` 에 있다. 아래 `STATS` 는 **세기만 하고 평가
     경로가 읽지 않는다** — 값을 만드는 어떤 식도 이 딕셔너리를 보지 않는다."""
-    lo, hi = FIT_RHO_MIN, FIT_RHO_MAX
+    lo, hi = FIT_RHO_MIN, EXTRAP_RHO_MAX
     f_lo, f_hi = pressure(lo, t, column) - p_gpa, pressure(hi, t, column) - p_gpa
     bracket_ok = convergence.bracket_valid(f_lo, f_hi)
     convergence.note("ice_fr2015.density_at", None, bracket_valid=bracket_ok)
     STATS["inversions"] += 1
+    # ⚠ **격자 이탈은 여기서 세지 않는다** (190 C): 이 함수는 메모 **아래**라 미스만 본다. 세는
+    #   자리는 `thermal_at` 이고, 그 이유는 거기 주석에 있다.
     # 괄호 밖 — 벽값을 그대로 돌려준다 (오늘과 같은 수, 이제는 우연이 아니라 분기).
     if f_lo > 0.0 or f_hi < 0.0:
         STATS["clamped"] += 1

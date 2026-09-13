@@ -30,6 +30,7 @@
 from __future__ import annotations
 
 import convergence
+import ice_fr2015          # 190 C: 적합 격자 이탈 카운터를 풀이 전후로 읽는다
 import math
 
 import water_hot
@@ -539,7 +540,37 @@ def _carries_silicate(mat) -> bool:
     return any(m.name.startswith("silicate") for m, w in getattr(mat, "parts", ()) if w > 0.0)
 
 
-def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
+#: 돌려주는 구조마다 «그 적분이 격자를 몇 번 벗어났나» 를 들고 있는 자리 (브리프 190 C).
+#: ⚠ **등급은 답에 대한 진술이므로, 버려진 사격 시도의 델타는 여기 안 남는다** — 스냅샷을 적분
+#:   **호출마다** 뜨고, 사격기가 실제로 돌려주는 구조의 것만 읽는다. 풀이 전후로 한 번 뜨면
+#:   시도 전부가 더해져 «가는 길에 어디를 지났나» 가 되고, 그건 등급이 말할 것이 아니다.
+#: ⚠ 키는 `id(구조)` 다 — `Structure` 는 `__slots__` 라 필드를 붙일 수 없다. 같은 풀이 안에서만
+#:   읽고 다음 풀이 시작 때 비우므로 id 재사용이 답을 섞지 않는다.
+_ICE_GRID_DELTA: dict[int, tuple[int, int]] = {}
+
+
+def integrate(*args, **kw):
+    """적분 한 번 — 그리고 그 호출 동안의 격자 이탈 수를 그 구조에 매달아 둔다 (브리프 190 C).
+
+    ⚠ **세는 자리를 호출부에 두지 않는다** (감사석, 2026-09-13): «모든 호출부가 세는 판을 쓴다» 를
+    시험으로 지키면 정규식이 못 보는 모양(줄 나눔·별칭·다른 모듈)에서 **조용히** 새고, 오늘 그
+    시험은 자기 래퍼 줄에 걸려 거짓 양성부터 냈다. 이름을 이쪽에 두면 **세지 않는 호출을 적을 수가
+    없다** — 기존 호출부는 철자를 그대로 두고, 새 호출부도 저절로 세어진다.
+
+    ⚠ **`id()` 로 키를 잡는 것이 여기서는 안전하고, 그 조건은 하나다** (감사석, 2026-09-12):
+    `id` 는 **살아 있는** 객체 사이에서만 유일하다. 여기서는 그 구조가 살아 있는 동안 적고 살아
+    있는 동안 읽으므로 남의 칸을 맞을 수 없다 — **단, 읽는 구조가 적힌 그 객체여야 한다**.
+    `integrate` 와 읽기 사이에서 누가 구조를 복사·피클·재구성하면 이 표는 **조용히 다른 시도의
+    델타**를 돌려준다. 그래서 «더 안전해 보이는» 것으로 바꾸기 전에 이 문장을 먼저 읽을 것.
+    ⚠ 버려진 시도의 칸은 남으므로 `solve` 가 매 풀이 **시작에 비운다**."""
+    before = (ice_fr2015.STATS["extrapolated_rho"], ice_fr2015.STATS["below_t_min"])
+    structure = _integrate_raw(*args, **kw)
+    _ICE_GRID_DELTA[id(structure)] = (ice_fr2015.STATS["extrapolated_rho"] - before[0],
+                                      ice_fr2015.STATS["below_t_min"] - before[1])
+    return structure
+
+
+def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
               core_material: str, phi0: float = 0.0,
               p_cap: float | None = None, gmf: float = 0.0,
               envelope_z: float = 0.0, envelope_z_rock_fraction: float = 1.0,
@@ -2658,6 +2689,15 @@ def solve(mass_earth: float,
             "물 선언이 있으면 예외다 — envelope_z_rock_fraction < 1).",
             inputs=inputs, refs=REFS)
 
+    # ⚠ **얼음 평가기가 적합 격자를 벗어났는지는 적분 한 번의 카운터 차이로 읽는다** (M2 = (a),
+    #   브리프 190 C). 그 차이는 `integrate` 가 호출마다 적고, 여기서는 **답의 구조** 것만 읽는다.
+    #   버려진 사격 시도의 칸이 남아 있으므로 풀이 시작에 비운다. ⚠ *델타가 정확한 것은 그 호출
+    #   창 안에서 다른 것이 같은 칸을 올리지 않을 때뿐이고, 오늘 풀이는 단일 스레드다* — 그것이
+    #   기대고 있는 조건이라 여기 적는다. ⚠ **탐색 전체의 수는 여기서 읽지 않는다** (감사석,
+    #   2026-09-13): 버려진 시도의 수는 이 천체에 대한 진술이 아니라서 등급의 주석이 실을 것이
+    #   아니고, 답 쪽 수보다 두세 자릿수 커서 읽는 눈을 먼저 가져간다. 그 수가 필요한 자리는
+    #   검증 출력이고, 거기에는 `ice_fr2015.STATS` 를 풀이 앞뒤로 집는 스크립트가 이미 있다.
+    _ICE_GRID_DELTA.clear()
     try:
         st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
                               initial_porosity, porosity_cap, gmf,
@@ -2827,6 +2867,26 @@ def solve(mass_earth: float,
     # 0.118 % 와 자릿수가 다르다. 게다가 그 표현 자체가 제일원리 계산이지 측정이 아니다.
     # mgsio3_pv 가 3.5 TPa 위에서 등급을 내리는 것과 같은 종류의 자리다.
     ice_x_reached = st.ice_x_reached
+    # 풀이가 끝난 자리에서 차이를 본다 — 어느 축을 벗어났는지까지 이름이 남는다 (190 C).
+    # ⚠ **답의 델타** — 사격기가 돌려준 그 구조의 적분에서만 (190 C). 탐색 전체의 수는 아래 따로.
+    ice_extrap_rho, ice_below_t = _ICE_GRID_DELTA.get(id(st), (0, 0))
+    if ice_extrap_rho or ice_below_t:
+        edges = []
+        if ice_extrap_rho:
+            edges.append(f"밀도 격자 위({ice_fr2015.FIT_RHO_MAX} g/cm³ 초과) {ice_extrap_rho} 회")
+        if ice_below_t:
+            edges.append(f"온도 격자 아래({ice_fr2015.FIT_T_MIN:.0f} K 미만) {ice_below_t} 회")
+        notes.append(
+            "**얼음 기둥이 적합 격자를 벗어난 자리에서 답했다** — " + " · ".join(edges) +
+            ". French & Redmer 2015 의 격자는 ρ "
+            f"{ice_fr2015.FIT_RHO_MIN}–{ice_fr2015.FIT_RHO_MAX} g/cm³ · T "
+            f"{ice_fr2015.FIT_T_MIN:.0f}–{ice_fr2015.FIT_T_MAX:.0f} K 이고, 그 밖에서도 "
+            "퍼텐셜을 평가해 값을 낸다 — 저자가 «well behaved in extrapolation» 이라 적었기 "
+            "때문이다. ⚠ 그래서 이 답은 **거절이 아니라 외삽**이고, 등급이 그 사실을 진다 "
+            "(M2 = (a), 브리프 190 C). ⚠ 아래쪽 밀도 끝은 여전히 벽값으로 고정한다 — "
+            "2000 K 에서 ρ ≲ 1.2 g/cm³ 아래로 P(ρ) 가 단조가 아니라 뿌리가 둘이거나 없다. "
+            "⚠ **여기 적힌 수는 답을 낸 그 적분의 것만**이다 — 사격기가 버린 시도들이 무엇을 "
+            "물었는지는 이 천체에 대한 진술이 아니라서 등급이 지지 않는다.")
     if ice_x_reached:
         # 순수 얼음 천체는 층 경계가 없어 p_ice_base 가 비어 있다. 그 기둥의 바닥은 중심이다.
         p_ice_base = st.p_ice_base if st.p_ice_base is not None else st.p_center
@@ -2970,7 +3030,8 @@ def solve(mass_earth: float,
                             or serpentinisation > 0 or crust_mass > 0.0
                             or not differentiated or giant_declared
                             or silicate_extrapolated or thermal_moves
-                            or thermal_unchecked or ice_x_reached)
+                            or thermal_unchecked or ice_x_reached
+                            or ice_extrap_rho or ice_below_t)
                else "calibrated"),
         inputs=inputs,
         cycles=(1, 3, 7),

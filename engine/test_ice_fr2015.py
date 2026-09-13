@@ -18,6 +18,8 @@ J6  `density_at` 가 압력을 되돌린다 (왕복 1e-6 상대).
 """
 from __future__ import annotations
 
+from pathlib import Path
+
 import sys
 
 import eos
@@ -26,9 +28,29 @@ import ice_fr2015 as F
 GPA = 1e9
 
 
+def _j7_every_integrate_counted(fails: list[str]) -> None:
+    """J7 — 적분 한 번마다 그 구조의 격자 이탈 수가 남는가 (브리프 190 C).
+
+    ⚠ **소스를 정규식으로 훑지 않는다** (감사석, 2026-09-13). «모든 호출부가 세는 판을 쓴다» 를
+    글자로 지키면 줄 나눔·별칭·다른 모듈에서 조용히 새고, 같은 이름의 다른 함수(`core_history`
+    에도 `integrate` 가 있다)를 세다가 엉뚱한 이유로 실패한다. 그래서 **행동**을 본다: 공개
+    이름으로 한 번 부르고, 돌아온 구조에 자기 칸이 생겼는지 확인한다. 세지 않는 호출은 이제
+    **적을 수가 없다** — `integrate` 자신이 세는 자리다."""
+    import interior
+    interior._ICE_GRID_DELTA.clear()
+    st = interior.integrate(300e9, 1.0 * interior.EARTH_MASS_KG, 0.3, 0.0, "fe_prem",
+                            t_center=3000.0, t_pot=1600.0)
+    if id(st) not in interior._ICE_GRID_DELTA:
+        fails.append("J7: `integrate` 가 돌려준 구조에 격자 이탈 칸이 없다 — "
+                     "세는 자리가 공개 이름에서 빠졌다")
+    if interior._integrate_raw is interior.integrate:
+        fails.append("J7: `integrate` 가 세지 않는 원본 그대로다")
+
+
 def main() -> int:
     fails: list[str] = []
     notes: list[str] = []
+    _j7_every_integrate_counted(fails)
 
     # ── J1 ────────────────────────────────────────────────────────────────
     # D(z) → 1 − 3z/8 (z → 0) 이고, 큰 z 에서는 π⁴/(5z³).
@@ -104,6 +126,7 @@ def main() -> int:
         print(n)
     if not fails:
         print("  [PASS] 얼음 VII·X 열 세트 — J1 D(z) 양 끝 · J3 적합 격자 안팎의 등급 · "
+              "J7 적분 한 번마다 그 구조의 격자 이탈 수가 남는다 (190 C) · "
               "J4 격자 안에서 유한·양수 · J6 압력 왕복 1e-6 · J2 는 venv 에서만, J5 는 인쇄만")
     return 1 if fails else 0
 
