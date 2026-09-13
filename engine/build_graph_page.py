@@ -11,6 +11,25 @@ is: a hand-drawn copy drifts from the source the first time the source changes.
 Node ids in chain.yaml are English because they are contract keys. The Korean
 display labels live here, not there — chain.yaml carries the physics contract,
 the builder carries presentation.
+
+⚠ **이 스크립트가 읽고 쓰는 것 전부** (C86, 2026-09-14 — 선언만 추가하고 **논리는 안 바꿨다**).
+`HERE = Path(__file__).resolve().parent`, 즉 `engine/` 이 기준이다.
+
+| 무엇 | 경로 | 스크립트 옆인가 |
+|---|---|---|
+| 그래프 (읽기) | `engine/chain.yaml` | 옆 |
+| 배선 (읽기) | `engine/bindings.yaml` | 옆 |
+| Phase 4 보드 (읽기) | `phase4/*.yaml` — `HERE.parent / "phase4"` | ⚠ **아니다, `engine/` 밖이다** |
+| 페이지 (쓰기) | `engine/chain-explorer.html` | 옆 |
+
+⚠ **셋째 줄이 이 선언이 필요한 이유이고, 이유는 «죽어서» 가 아니다.** `git archive <sha> engine`
+만 풀어 돌리면 이 스크립트는 **안 죽는다** — **exit 0** 으로 페이지를 쓰고, `phase4/` 가 없으니
+출하값 칸이 **조용히 0** 이 된다 (이 sha 에서 `"n": 0` 이 179 개, 전체 트리에서는 9 인 자리가 0).
+⚠ **크래시가 아니라 더 조용한 그래프가 실패 모양이다.** 죽는 도구는 없는 입력의 이름이라도
+대지만, 이쪽은 아무 말도 안 하고 틀린 페이지를 남긴다 — 그래서 이 표가 여기 있다.
+*(앞서 «`engine/` 만 풀면 `bindings.yaml` 없음으로 죽는다» 고 적힌 진술은 두 실행을 하나로 합친
+것이었고 **철회됐다** — 죽은 것은 파일 넷만 뽑아낸 다른 시도였다. 작업석과 감사석이 2026-09-14 에
+각각 재서 같은 답을 얻었다.)*
 """
 from __future__ import annotations
 
