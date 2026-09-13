@@ -1211,6 +1211,19 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                      surface_reached=floor_truncated is None)
 
 
+# ⚠ **이름 뒤에서 몸통을 빼내면 «이름으로 키를 잡는 감시» 가 눈이 먼다** (C87; 게이트 `86dfbc11` 의
+#   실패 둘이 같은 개명 하나에서 나왔다). `integrate` 가 세는 래퍼가 되면서 4 662 바이트가 여기
+#   `_integrate_raw` 로 옮겨갔고, 그 이름을 들여다보던 감시가 래퍼를 읽게 됐다 — `test_interior.py` 의
+#   암모니아 도달 행이 `inspect.getsource(interior.integrate)` 에서 `with_ices` 를 못 찾아 **정적 절반이
+#   False** 가 됐다. `inspect.getsourcelines` 와 `inspect.signature` 는 둘 다 `__wrapped__` 를 따라가므로,
+#   이 한 줄이 소스·서명 질의를 **몸통으로 되돌린다** — 시험은 한 글자도 안 고친다.
+# ⚠ **`functools.wraps` 를 쓰지 않는 이유**: 그것은 `__doc__`·`__name__` 까지 덮어써서 래퍼가 자기
+#   독스트링(세는 자리가 왜 여기인지)을 잃는다. 여기서 필요한 것은 «몸통은 저기다» 한 가지뿐이다.
+# ⚠ **이것으로 낫지 않는 감시가 있다**: `test_ice_giant.py` 의 경로 지문은 `__code__` 를 **직접** 읽으므로
+#   풀어도 닿지 않는다 — 그쪽은 `PATH_FUNCTIONS` 가 이 이름을 담아야 하고, 그 편집은 별도 커밋이다.
+integrate.__wrapped__ = _integrate_raw
+
+
 def porosity_at(mat, p_pa: float, phi0: float,
                 p_cap: float | None = None) -> float:
     """이 재료가 이 압력에서 들고 있는 공극률. 법칙이 없는 재료는 0."""
