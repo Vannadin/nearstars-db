@@ -135,7 +135,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
               "e_g": base["e_g"], "e_h": base["e_h"], "e_k": base["e_k"],
               "entropy_positive_present": positive, "entropy_band_straddles_zero": straddles,
               "entropy_corners_positive": sum(1 for v in corners.values() if v > 0.0),
-              "has_inner_core_solved": bool(ic),
+              "inner_core_branch_taken": bool(ic),
               # ⚠ **`entropy_history_verdict` 를 여기서 내지 않는다** (C64, 2026-09-11). 이 노드는 그
               #   판정을 계산하지 않는다 — 리터럴 «cannot-say (needs C20)» 를 값으로 내고 있었고, 그
               #   문장은 **C20 이 지어진 2026-09-04 부터 낡아 있었다**. 게다가 `core_history` 가 같은
@@ -146,7 +146,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
                                 "entropy_production_h0", "e_r", "e_s", "e_l", "e_g", "e_h", "e_k",
                                 "entropy_integration_width")}
     units.update({"entropy_positive_present": "", "entropy_band_straddles_zero": "", "entropy_corners_positive": "",
-                  "has_inner_core_solved": ""})
+                  "inner_core_branch_taken": ""})
     notes = (
         f"**현재 시점 핵 엔트로피 생성 φ = ΔE = {de / mw:+.0f} MW/K** (풀린 T_c {t_c:.0f} K 위; C14) = E_R {base['e_r'] / mw:.0f} "
         f"+ E_s {base['e_s'] / mw:.0f} + E_L {base['e_l'] / mw:.0f} + E_H {base['e_h'] / mw:.0f} + E_g {base['e_g'] / mw:.0f} "

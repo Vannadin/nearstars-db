@@ -178,7 +178,7 @@ def main() -> int:
         print(f"  [{'PASS' if not fails else 'FAIL'}] T_c 풀림 {v['core_cmb_temperature_solved']:.0f} K "
               f"(밴드 {v['core_cmb_temperature_solved_min']:.0f}–{v['core_cmb_temperature_solved_max']:.0f}; 선언 {v['core_cmb_temperature_declared']:.0f}, "
               f"차 {v['core_cmb_solved_minus_declared']:+.0f} K) · Q_C {v['q_cmb_solved'] / tw:.2f} = s {v['q_s'] / tw:.2f} + L {v['q_l'] / tw:.2f} + g {v['q_g'] / tw:.2f} + R {v['q_r'] / tw:.2f} TW · "
-              f"내핵 {'있음' if v['has_inner_core_solved'] else '없음'} · 프로파일 중심압 {v['core_center_pressure_solved']:.0f} GPa, 질량 잔차 {v['core_profile_mass_residual']:+.4f} · 잔차 {v['balance_residual']:.1e}")
+              f"내핵 {'있음' if v['has_inner_core'] else '없음'} · 프로파일 중심압 {v['core_center_pressure_solved']:.0f} GPa, 질량 잔차 {v['core_profile_mass_residual']:+.4f} · 잔차 {v['balance_residual']:.1e}")
     # ── 3. both branches of the inner-core question on the same profile ────
     print("\n분기 ⑤ — 내핵 없음(Q_L = Q_g = 0)과 내핵 있음, 같은 프로파일의 두 T_c 에서")
     _, _, cold = ce.balance(3300.0, t_m_base, "fe_prem", p_cmb_pa, r_cmb, m_core)

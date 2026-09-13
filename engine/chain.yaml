@@ -288,7 +288,7 @@ nodes:
     # **되먹이지 않는다** — 풀린 T_c 는 보고이지 core_state 의 입력이 아니다(앵커 이동은 별도 결정). φ·다이나모는 C15.
     outputs: [core_cmb_temperature_solved, core_cmb_temperature_solved_min, core_cmb_temperature_solved_max,
               core_cmb_temperature_declared, core_cmb_solved_minus_declared, q_cmb_solved, q_s, q_l, q_g, q_r,
-              icb_radius_solved, icb_pressure_solved, c_r_km_per_k, has_inner_core_solved,
+              icb_radius_solved, icb_pressure_solved, c_r_km_per_k, has_inner_core,
               core_profile_mass_residual, core_center_pressure_solved, balance_residual, band_corners_with_root]
 
   core_thermal_history:
@@ -315,7 +315,7 @@ nodes:
     # 판정에는 **배선하지 않는다**(사다리를 덮어쓸 자격 없음). 3 Gyr 진술(평균·최소 ΔE)은 이력 양이라 C20 없이는 거절.
     outputs: [entropy_production, entropy_production_min, entropy_production_max, entropy_production_h0,
               e_r, e_s, e_l, e_g, e_h, e_k, entropy_positive_present, entropy_band_straddles_zero,
-              entropy_corners_positive, has_inner_core_solved, entropy_integration_width]
+              entropy_corners_positive, inner_core_branch_taken, entropy_integration_width]
 
   # ── 클래스 표 상수 — 도출값이 아니라 조회값 ─────────────────────
   # 세 문서가 공통으로 인정한다. per-body 기록이 아니라 클래스별 표에서

@@ -7860,7 +7860,7 @@ applicable in the same run**, and it is falsified by a roster body where one of 
 #### ⚠ The contract layer says it too, and nothing counts that
 
 Both contracts in **one document** list the same key in their `Returns`:
-`docs/reference/internal-heat-luminosity-methodology.md@«`has_inner_core_solved` [—] · `entropy_integration_width` [W/K]»`
+`docs/reference/internal-heat-luminosity-methodology.md@«`inner_core_branch_taken` [—] · `entropy_integration_width` [W/K]»`
 (`core_entropy_production`) and
 `docs/reference/internal-heat-luminosity-methodology.md@«`delta_e_present_hi` [W/K] · `entropy_history_verdict` [—]»`
 (`core_thermal_history`). `check_contracts` compares **each node against its own** `Returns`, so both
@@ -7885,7 +7885,7 @@ stating the opposite of the code.
 |---|---|---|
 | `dipole_moment` · `b_eq` · `b_pol` | `dynamo_giant` / `dynamo_rocky` | ⚠ *claimed harmless by body-class exclusivity* — the two ladders refuse each other's classes, so the pair should never both apply. **Not asserted here: it is one row of the count below**, which settles it by measurement instead of by argument |
 | `entropy_history_verdict` | `core_entropy_production` / `core_thermal_history` | **this item** |
-| `has_inner_core_solved` | `core_energy_balance` / `core_entropy_production` | live candidate — both are rocky-core nodes, so both applying is the expected case |
+| `has_inner_core_solved` | `core_energy_balance` / `core_entropy_production` | **split 2026-09-13 (C68 B) — no longer live**: the answer fact is `has_inner_core` (`core_energy_balance`) and the execution fact is `inner_core_branch_taken` (`core_entropy_production`), so no node emits this name. *Was: live candidate — both are rocky-core nodes, so both applying is the expected case.* |
 | `radius` | `interior_layers` / `mass_radius_relation` | ⚠ **pre-listed, and split out as C65 if the count says it is live** — *the whole engine reads `radius`*, unlike a verdict key nothing consumes |
 
 **So the one line to count is widened**: for **each of the six**, how many roster bodies have **both**
@@ -7901,7 +7901,7 @@ For `radius` the two answers are opposite:
 |---|---|---|---|---|
 | `radius` | `mass_radius_relation` 13 · `interior_layers` 14 | ⚠ **`interior_layers` #25 · `mass_radius_relation` #27** | `interior_layers` | `mass_radius_relation` |
 | `entropy_history_verdict` | `core_thermal_history` 21 · `core_entropy_production` 22 | `core_thermal_history` #37 · `core_entropy_production` #43 | `core_history`'s computed verdict | `core_entropy`'s literal |
-| `has_inner_core_solved` | — | `core_energy_balance` #35 · `core_entropy_production` #43 | `core_energy_balance` | `core_entropy_production` |
+| `has_inner_core_solved` *(split 2026-09-13, C68 B — the row records the state before the split)* | — | `core_energy_balance` #35 · `core_entropy_production` #43 | `core_energy_balance` | `core_entropy_production` |
 
 *The `entropy_history_verdict` direction happens to be the same either way; `radius`'s is reversed.*
 ⚠ **A relayed ordinal is not the order** — the numbers 12/13 and 20/21 that reached this seat were

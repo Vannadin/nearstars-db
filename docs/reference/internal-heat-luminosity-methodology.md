@@ -119,7 +119,7 @@ solution is the core energy-balance closure (Brief 62 B, `engine/cmb-heat-flux-c
 
 **Returns** — `core_cmb_temperature_solved` [K] · `core_cmb_temperature_solved_min` [K] · `core_cmb_temperature_solved_max` [K] ·
 `core_cmb_temperature_declared` [K] · `core_cmb_solved_minus_declared` [K] · `q_cmb_solved` [W] · `q_s` [W] · `q_l` [W] · `q_g` [W] ·
-`q_r` [W] · `icb_radius_solved` [km] · `icb_pressure_solved` [GPa] · `c_r_km_per_k` [km/K] · `has_inner_core_solved` [—] ·
+`q_r` [W] · `icb_radius_solved` [km] · `icb_pressure_solved` [GPa] · `c_r_km_per_k` [km/K] · `has_inner_core` [—] ·
 `core_profile_mass_residual` [—] · `core_center_pressure_solved` [GPa] · `balance_residual` [—] · `band_corners_with_root` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
 `cmb_temperature` [K] · `core_cmb_temperature` [K] · `core_material` [—] · `body_class` [—] · `dtc_dt_k_per_gyr` [K/Gyr] · `core_h_w_per_kg` [W/kg]
@@ -153,7 +153,7 @@ reported, not tuned. `engine/core-energy-balance-context-notes.md`.
 **Returns** — `entropy_production` [W/K] · `entropy_production_min` [W/K] · `entropy_production_max` [W/K] ·
 `entropy_production_h0` [W/K] · `e_r` [W/K] · `e_s` [W/K] · `e_l` [W/K] · `e_g` [W/K] · `e_h` [W/K] · `e_k` [W/K] ·
 `entropy_positive_present` [—] · `entropy_band_straddles_zero` [—] · `entropy_corners_positive` [—] ·
-`has_inner_core_solved` [—] · `entropy_integration_width` [W/K]
+`inner_core_branch_taken` [—] · `entropy_integration_width` [W/K]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
 `core_cmb_temperature_solved` [K] · `core_cmb_temperature` [K] · `core_material` [—] · `body_class` [—] ·
 `k_core_w_m_k` [W/(m K)] · `core_h_w_per_kg` [W/kg] · `dtc_dt_k_per_gyr` [K/Gyr]

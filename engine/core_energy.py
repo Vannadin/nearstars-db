@@ -288,13 +288,13 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
               "core_cmb_temperature_declared": declared, "core_cmb_solved_minus_declared": t_root - declared,
               "q_cmb_solved": bl["q_c_w"], "q_s": terms["q_s"], "q_l": terms["q_l"], "q_g": terms["q_g"], "q_r": terms["q_r"],
               "icb_radius_solved": (ic["r_i"] / 1e3) if ic else 0.0, "icb_pressure_solved": (ic["p_i"] / 1e9) if ic else 0.0,
-              "c_r_km_per_k": (ic["c_r"] / 1e3) if ic else 0.0, "has_inner_core_solved": bool(ic),
+              "c_r_km_per_k": (ic["c_r"] / 1e3) if ic else 0.0, "has_inner_core": bool(ic),
               "core_profile_mass_residual": prof["m_center_residual"], "core_center_pressure_solved": prof["p_center"] / 1e9,
               "balance_residual": f0 / max(bl["q_c_w"], 1.0), "band_corners_with_root": len(band)}
     units = {"core_cmb_temperature_solved": "K", "core_cmb_temperature_solved_min": "K", "core_cmb_temperature_solved_max": "K",
              "core_cmb_temperature_declared": "K", "core_cmb_solved_minus_declared": "K", "q_cmb_solved": "W",
              "q_s": "W", "q_l": "W", "q_g": "W", "q_r": "W", "icb_radius_solved": "km", "icb_pressure_solved": "GPa",
-             "c_r_km_per_k": "km/K", "has_inner_core_solved": "", "core_profile_mass_residual": "",
+             "c_r_km_per_k": "km/K", "has_inner_core": "", "core_profile_mass_residual": "",
              "core_center_pressure_solved": "GPa", "balance_residual": "", "band_corners_with_root": ""}
     tw = 1e12
     notes = (

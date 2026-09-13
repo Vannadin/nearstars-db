@@ -110,7 +110,7 @@ def main() -> int:
            "2: 이 노드는 이력 판정을 **내지 않는다** (C64 — 계산하지 않는 값을 리터럴로 내던 자리)")
         ok(any("3 Gyr" in n for n in res.notes),
            "2b: 못 낸다는 사실은 notes 의 이름 붙은 거절로 남는다")
-        ok(abs(v["e_l"]) + abs(v["e_g"]) + abs(v["e_h"]) == 0.0 if not v["has_inner_core_solved"] else True,
+        ok(abs(v["e_l"]) + abs(v["e_g"]) + abs(v["e_h"]) == 0.0 if not v["inner_core_branch_taken"] else True,
            "2: without an inner core E_L, E_g, E_H must be exactly 0")
         # 2026-09-04: two layers, two convergence orders — the profile is RK4, the integrals on it are O(h) and
         # E_R, E_s cancel one digit. Measured: ΔE moves 2.7 MW/K from 400 to 1600 steps (5 % of |ΔE|, two orders
@@ -120,7 +120,7 @@ def main() -> int:
         print(f"  [{'PASS' if not fails else 'FAIL'}] T_c {t_solved:.0f} K · ΔE {v['entropy_production'] / mw:+.0f} MW/K "
               f"(밴드 {v['entropy_production_min'] / mw:+.0f} … {v['entropy_production_max'] / mw:+.0f}, 양수 모서리 {v['entropy_corners_positive']}/8, "
               f"H=0 {v['entropy_production_h0'] / mw:+.0f}) = E_R {v['e_r'] / mw:.0f} + E_s {v['e_s'] / mw:.0f} + E_L {v['e_l'] / mw:.0f} "
-              f"+ E_H {v['e_h'] / mw:.0f} + E_g {v['e_g'] / mw:.0f} − E_k {v['e_k'] / mw:.0f} · 내핵 {'있음' if v['has_inner_core_solved'] else '없음'} · "
+              f"+ E_H {v['e_h'] / mw:.0f} + E_g {v['e_g'] / mw:.0f} − E_k {v['e_k'] / mw:.0f} · 내핵 {'있음' if v['inner_core_branch_taken'] else '없음'} · "
               f"0 가로지름 {v['entropy_band_straddles_zero']} · 적분 폭(4×) {v['entropy_integration_width'] / mw:.1f} MW/K")
 
     # ── 3. both branches on one profile ──────────────────────────────────────
