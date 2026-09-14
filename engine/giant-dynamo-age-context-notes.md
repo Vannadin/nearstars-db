@@ -6,8 +6,7 @@
 ## 1. What the edge says, and what the code says
 
 `chain.yaml@«from: t_eq_stellar, to: day_night_contrast»`: `body_age → dynamo_giant, kind: requires, via: cooling_luminosity, status: gap, ref:
-`planetary-dynamo-scaling.md`:34 (the 2026-09-03 line; that line is blank today, and the
-edge's ref is now a phrase anchor), note (2026-09-03): *"the graph was more optimistic than the module —
+**retired — target gone**: the 2026-09-03 ref was line 34 of `planetary-dynamo-scaling.md`, that line is blank today, and the edge's ref is now a phrase anchor, note (2026-09-03): *"the graph was more optimistic than the module —
 `dynamo.py` writes that it refuses to supply L(M, age) from an unverified cooling track and the brown-dwarf
 branch returns out_of_domain. The code is right and this mark was missing."*
 

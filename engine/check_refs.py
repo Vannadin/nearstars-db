@@ -60,8 +60,42 @@ FILE = r"[A-Za-z0-9_./-]+\.(?:md|yaml|yml|py|json|tex|sh)"
 ANCHOR = re.compile(rf"({FILE})@«([^»]*)»")
 SELF_ANCHOR = re.compile(r"(?<![a-z0-9-])doc @«([^»]*)»")
 # ② and a line-number citation into any of them counts as unmigrated, not only into a .md
-LINE_REF = re.compile(rf"({FILE}):([0-9]+(?:[-–][0-9]+)?)")
-SELF_LINE = re.compile(r"(?<![a-z0-9-])doc :([0-9]+(?:[-–][0-9]+)?)")
+# ③ ⚠ **붙어 있지 않아도 같은 인용이다** (C94). `` `eos.py`:448 `` 은 잡히는데
+#    `` `eos.py` `:448` `` 은 안 잡혔다 — **규칙이 서식 선택 하나로 꺼졌다.** 그래서 이름과 콜론
+#    사이에 백틱·공백을 조금 허용한다. ⚠ 벌어진 틈은 **세 칸까지**다: 더 넓히면 한 줄에 멀리 떨어진
+#    파일 이름과 남의 숫자가 한 인용으로 붙는다. 숫자를 요구하므로 `module.py::symbol` 은 그대로
+#    인용이 아니다.
+GAP = r"`?[ \t]{0,3}`?"
+# ⚠ **이름과 `@` 사이에 백틱이 끼면 앵커가 통째로 안 보인다** (C94). `` `x.py`@«…» `` 는 `ANCHOR`
+#    에도 `LINE_REF` 에도 안 맞아 **어느 통에도 안 들어간다** — 「썩었다」가 아니라 「없다」로 지나간다.
+#    이 레포에서 두 번째로 잡힌 결함이고(`engine/tools/README.md` 가 406 → 406 을 기록한다),
+#    그때 잡은 방법은 총계 비교였지 `[PASS]` 줄 읽기가 아니었다. 그래서 이번엔 **검사로** 만든다.
+MALFORMED_ANCHOR = re.compile(rf"`({FILE})`@«([^»]*)»")
+# ⚠ 예시를 못 쓰는 규칙은 문서화될 수 없다. 이중 백틱 인라인 span 안의 것은 **FAIL 로 세지 않되
+#    조용히 넘기지도 않는다** — 건수와 자리를 인쇄하고, 늘어나면 그것이 판정이다.
+CODE_SPAN = re.compile(r"``.+?``")
+LINE_REF = re.compile(rf"({FILE}){GAP}:([0-9]+(?:[-–][0-9]+)?)")
+SELF_LINE = re.compile(rf"(?<![a-z0-9-])doc{GAP}:([0-9]+(?:[-–][0-9]+)?)")
+# 두 그물을 **따로** 세기 위한 붙은 꼴 전용 판 — 넓힌 쪽이 어느 그물을 얼마나 넓혔는지 인쇄한다.
+LINE_REF_ATTACHED = re.compile(rf"({FILE}):([0-9]+(?:[-–][0-9]+)?)")
+SELF_LINE_ATTACHED = re.compile(r"(?<![a-z0-9-])doc :([0-9]+(?:[-–][0-9]+)?)")
+
+
+def split_form_census() -> dict:
+    """네 칸을 따로 센다 — `LINE_REF` 붙은 꼴·갈라 쓴 꼴 · `SELF_LINE` 붙은 꼴·갈라 쓴 꼴.
+
+    ⚠ **한 수로 합치면 어느 그물이 넓어졌는지가 사라진다** (사전등록 C94 개정 1). 두 그물은 다르게
+    틀린다 — 하나는 남의 문서를, 하나는 자기가 적힌 쪽을 가리킨다. ⚠ **0 이 나오면 분모를 함께
+    인쇄한다**: 「0」은 없음과 안 본 것을 구별하지 못한다."""
+    n = {"line_attached": 0, "line_split": 0, "self_attached": 0, "self_split": 0, "files": 0}
+    for path in files():
+        n["files"] += 1
+        body = text(path)
+        n["line_attached"] += len(LINE_REF_ATTACHED.findall(body))
+        n["line_split"] += len(LINE_REF.findall(body)) - len(LINE_REF_ATTACHED.findall(body))
+        n["self_attached"] += len(SELF_LINE_ATTACHED.findall(body))
+        n["self_split"] += len(SELF_LINE.findall(body)) - len(SELF_LINE_ATTACHED.findall(body))
+    return n
 RECIPE_DECL = re.compile(r'^RECIPE = "([a-z0-9-]+)"', re.M)
 # chain.yaml writes each edge as a one-line flow mapping, so the endpoints sit on the citing line itself
 EDGE = re.compile(r"from: ([a-z_]+), to: ([a-z_]+)")
@@ -364,6 +398,9 @@ def main() -> int:
     note_rot: list[str] = []            # an anchor or form inside a preserved note that no longer resolves
     note_dead: list[str] = []           # rule 3 in a preserved note: dead, but a note records what was
     unmigrated: list[tuple] = []
+    preserved_self: list[str] = []   # 보존 노트의 `doc :N` — 세되 고치지 않는다
+    malformed: list[str] = []        # 이름과 @ 사이에 백틱이 낀 앵커 — 보이지 않는 인용
+    malformed_span: list[str] = []   # 그중 이중 백틱 예시 안의 것 — 세되 실패로 올리지 않는다
     ok = 0
 
     # Wiring, code, and any note that does NOT declare itself a preserved record: all held to the same
@@ -457,6 +494,13 @@ def main() -> int:
                     else:
                         whole += 1
                         unaimed.append(f"{where0}: {m.group(1)} — cites the whole document")
+            spans = [(m.start(), m.end()) for m in CODE_SPAN.finditer(line)]
+            for m in MALFORMED_ANCHOR.finditer(line):
+                row = f"{where0}: `{m.group(1)}`@«{m.group(2)[:40]}»"
+                if any(a <= m.start() < b for a, b in spans):
+                    malformed_span.append(row)
+                else:
+                    malformed.append(row)
             classified = {m.start() for m in ANCHOR.finditer(line)}
             classified |= {m.start() for m in LINE_REF.finditer(line)}
             for m in POINTER.finditer(line):
@@ -486,6 +530,12 @@ def main() -> int:
                 unmigrated.append((where0, m.group(1), m.group(2), path,
                                    queue.pop(0)[0] if queue else ends))
             for m in SELF_LINE.finditer(line):
+                # ⚠ **`LINE_REF` 와 대칭이어야 한다** (C94): 보존 노트의 인용은 기록의 일부라
+                #   이행 대상이 아니다. 이 가지에만 면제가 없어, 보존 노트가 `doc :N` 하나로
+                #   빨갛게 떴다 — 같은 규칙이 그물마다 다르게 걸리면 규칙이 아니라 우연이다.
+                if is_preserved(path):
+                    preserved_self.append(f"{where0}: doc :{m.group(1)}")
+                    continue
                 if mine:
                     unmigrated.append((where0, mine, m.group(1), path, ends))
                 else:
@@ -536,6 +586,38 @@ def main() -> int:
           f"문서 전체 인용 {whole}건 · 레포 밖 인용 {external}건 · 보존 노트 인용 {preserved}건 · "
           f"인용문 안 인용 {quoted_n}건 · 미이행 줄번호 {len(unmigrated) - external - preserved - quoted_n}건 · "
           f"문서 {len(list(DOCS.glob('*.md')))}종")
+    # ⚠ 위 「문서 N종」은 `docs/reference/*.md` 만 센다 — 아래 스윕의 분모가 아니다 (C94 개정 1).
+    print(f"  malformed 앵커 {len(malformed)}건 · malformed-in-code-span {len(malformed_span)}건"
+          + ("" if not malformed_span else " — " + " · ".join(malformed_span)))
+    if malformed:
+        for u in malformed:
+            print(f"  [FAIL] 이름과 @ 사이에 백틱이 낀 앵커 — {u}")
+        print(f"[FAIL] 안 보이는 앵커 {len(malformed)}건 — 백틱은 인용 **전체**를 감싼다 "
+              f"(`<file>@«구절»` 꼴). 이 꼴은 어느 통에도 안 들어가 초록으로 지나간다")
+        return 1
+    if preserved_self:
+        print(f"  보존 노트의 `doc :N` {len(preserved_self)}건 — 기록이라 이행 대상이 아니다: "
+              + " · ".join(preserved_self))
+    # ⚠ 스윕이 **무엇을 열었는지**를 같은 줄에 밝힌다 — 「0」은 없음과 안 본 것을 구별 못 한다.
+    import collections as _col
+    _ext = _col.Counter(q.suffix for q in files())
+    print(f"  이 스윕이 연 확장자 — " + " · ".join(f"{k} {v}" for k, v in sorted(_ext.items()))
+          + f" · 이름으로 건너뛴 것 {' · '.join(sorted(SKIP))}"
+          + " · ⚠ `engine/tools/*.md` 는 SCAN 밖이라 안 열린다")
+    # ⚠ 이름 없는 이어 붙은 줄번호 — 이 항목이 닫는 구멍이 **아니다**. 세어서 이름만 붙여 둔다.
+    _BARE = re.compile(r",\s*`?:([0-9]+(?:[-–][0-9]+)?)")
+    _bare_n = _bare_f = 0
+    for q in files():
+        k = len(_BARE.findall(text(q)))
+        if k:
+            _bare_n += k
+            _bare_f += 1
+    print(f"  이름 없는 이어 붙인 줄번호 {_bare_n}건 · {_bare_f}파일 — 이 검사가 닫는 구멍이 아니다 "
+          "(앞에 파일 이름이 없어 어느 그물에도 안 걸린다)")
+    _c = split_form_census()
+    print(f"  갈라 쓴 꼴 스윕 — `LINE_REF` 붙은 꼴 {_c['line_attached']}건 · 갈라 쓴 꼴 "
+          f"{_c['line_split']}건 · `SELF_LINE` 붙은 꼴 {_c['self_attached']}건 · 갈라 쓴 꼴 "
+          f"{_c['self_split']}건 · **이 스윕이 연 파일 {_c['files']}개**")
     for label, rows in (("썩은 앵커", rotten), ("애매한 앵커", ambiguous_a),
                         ("계약 주인 불일치", mismatched), ("있을 수 없는 착지", dead),
                         ("알 수 없는 인용 형식", unknown), ("모호한 문서 이름", ambig)):

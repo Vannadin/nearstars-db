@@ -55,7 +55,7 @@ def _j8_seam_by_temperature(fails: list[str], notes: list[str]) -> None:
     **틈도 겹침도 없어야** 하고, 그 「없음」을 **T 격자에서 실제로 밟아 본다** — 예전에는 둘이
     같은 상수를 읽어서 공짜로 맞았다.
 
-    ⚠ **`t=None` 은 여기서 시험하지 않는다** — 그 경로의 답은 `engine/test_fe_hcp.py`@«「온도 모름」은 통과가 아니라 등급이다» 가 고정한
+    ⚠ **`t=None` 은 여기서 시험하지 않는다** — 그 경로의 답은 `engine/test_fe_hcp.py@«「온도 모름」은 통과가 아니라 등급이다»` 가 고정한
     C58·180 B 의 «온도 없이 물었을 때의 답» 이고, 이 시험의 주제가 아니다."""
     import eos as E
     ph = E.MATERIALS["h2o"].phase_at(100.0 * E.GPA)
