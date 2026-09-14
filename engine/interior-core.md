@@ -7460,7 +7460,7 @@ construction.*
 **Temperature is threaded, not defaulted.** `gamma_set_at(p, t)` and `c_v_at(p, t)` take it; the six
 callers pass what they hold, and `c_v_at`'s only two callers sit inside `c_p` (`:792`, `:794`) — no
 caller outside the file moved. ⚠ **Callers passing `t=None`: 0.** The one caller that *omits* it is
-`test_fe_hcp.py:194`, the pinned «asked without a temperature» test whose answer C58 and 180 B named;
+`engine/test_fe_hcp.py`@«「온도 모름」은 통과가 아니라 등급이다», the pinned «asked without a temperature» test whose answer C58 and 180 B named;
 with `t=None` the bound is the declared constant and the docstring says so **in the same sentence as
 the two errors**, so a reader meets the over- and under-statement where the number is used.
 
