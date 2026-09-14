@@ -666,6 +666,12 @@ step "check_contracts.py" bash -c 'cd engine && exec python3 check_contracts.py'
 #   맞추려고 이 단계를 `test_` 로 개명하면 **C87 이 이름 붙인 그 모양**(이름에 맞추려 대상을 바꾸기)이
 #   된다. 재생성은 실측 0.57–0.72 s 라 직렬 바닥에 얹어도 값이 안 나간다 (C86-2 등록문, 레인 ⓒ).
 step "check_graph_page" bash -c 'exec python3 engine/tools/check_graph_page.py'
+# PALEOS 를 우리 상자 밖의 둘째 의견으로만 읽는가 (C96, 2026-09-15). `26e44e36` 이 시험을 들여놓고
+# 아무 단계도 그것을 돌리지 않았다 — C86 의 모양이 한 항목 뒤에 다시 난 자리다.
+# ⚠ **표 셋은 레포 밖**(`docs/phase3/_papers/`, 추적 안 됨)이라, 없는 기계에서는 시험 자신이
+#   「n of 3 found」를 세어 SKIP 하고 rc=0 으로 빠진다. 판단이 시험 안에 있어야 게이트에서든
+#   손으로든 같게 행동한다. 실측 0.008 s, 상한 60 s.
+step "test_paleos" bash -c 'exec python3 engine/test_paleos.py'
 # 인용 앵커 (C33). 앵커 구절이 대상 문서에서 정확히 1회 매치돼야 한다 — 0회는 썩음, 2회 이상은 애매.
 # 줄번호 인용은 아직 실패시키지 않고 미이행으로 센다(배치 이행 중). 체커 자기검증은 test_check_refs.py.
 # 밴드 규칙 (C32). 세 상태 · 출처 없는 폭 거절 · 묶음 불가분 · 선택지 요건이 앵커다.

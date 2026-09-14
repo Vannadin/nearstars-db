@@ -46,6 +46,17 @@ _BEFORE = {name: eos.MATERIALS[name].density(p, t, 0.0) for name, p, t in _CONTR
 
 import paleos                                                         # noqa: E402
 
+# ⚠ **표 셋은 레포 밖에 산다** — `docs/phase3/_papers/` 의 추적되지 않는 파일이고, 그 기계에
+#   없으면 이 시험은 물어볼 대상이 없다. **그때는 실패가 아니라 이름 붙인 SKIP 이다** (C96, ⓒ).
+#   ⚠ **분모를 함께 찍는다** — 「0 of 3」과 「3 of 3 인데 못 읽음」은 다른 사건이고, 분모가 없으면
+#   둘이 같은 줄로 인쇄된다. 판단은 이 파일이 한다: 게이트가 따로 세면 같은 규칙이 두 자리에
+#   앉고, 시험을 혼자 돌릴 때는 아무도 안 세게 된다.
+_found = [n for n in paleos.TABLES.values() if (paleos.PAPERS / n).is_file()]
+if len(_found) < len(paleos.TABLES):
+    print(f"  [SKIP] SKIP — PALEOS tables: {len(_found)} of {len(paleos.TABLES)} found "
+          f"({paleos.PAPERS}/*.dat) — 물어볼 표가 없다, 실패가 아니다")
+    raise SystemExit(0)
+
 fails: list[str] = []
 
 
