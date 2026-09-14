@@ -660,6 +660,12 @@ echo "── 12b. 계약 · 인용 앵커 · 밴드 (문서가 깨뜨릴 수 있
 # chain.yaml 의 via 가 공급자 outputs 에 있는가 (Brief 43). 허용목록(도출 8) · status:gap 밖의 via 는 실패다.
 step "check_via" python3 engine/check_via.py --gate
 step "check_contracts.py" bash -c 'cd engine && exec python3 check_contracts.py'
+# 커밋된 의존 사슬 페이지가 그 커밋의 chain.yaml 과 같은가 (C86-2, 2026-09-14). 다시 만들어 바이트로
+# 견준다 — 기존 검사 셋이 `.html` 을 구조적으로 건너뛰어, 페이지가 일곱 커밋을 조용히 낡았었다.
+# ⚠ **풀이 아니라 직렬이다.** `_pool_eligible` 이 이름(`test_*`·`run.py*`)으로 가르는데, 그 규칙에
+#   맞추려고 이 단계를 `test_` 로 개명하면 **C87 이 이름 붙인 그 모양**(이름에 맞추려 대상을 바꾸기)이
+#   된다. 재생성은 실측 0.57–0.72 s 라 직렬 바닥에 얹어도 값이 안 나간다 (C86-2 등록문, 레인 ⓒ).
+step "check_graph_page" bash -c 'exec python3 engine/tools/check_graph_page.py'
 # 인용 앵커 (C33). 앵커 구절이 대상 문서에서 정확히 1회 매치돼야 한다 — 0회는 썩음, 2회 이상은 애매.
 # 줄번호 인용은 아직 실패시키지 않고 미이행으로 센다(배치 이행 중). 체커 자기검증은 test_check_refs.py.
 # 밴드 규칙 (C32). 세 상태 · 출처 없는 폭 거절 · 묶음 불가분 · 선택지 요건이 앵커다.

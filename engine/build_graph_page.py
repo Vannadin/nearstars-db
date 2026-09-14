@@ -43,6 +43,28 @@ HERE = Path(__file__).resolve().parent
 CHAIN = HERE / "chain.yaml"
 OUT = HERE / "chain-explorer.html"
 
+# ⚠ **선언된 입력은 여기 한 곳에만 적는다** (C86-2, 2026-09-14). 위 표가 설명하는 것이 이 튜플이고,
+#   이 스크립트를 검사하는 쪽(`engine/tools/check_graph_page.py`)도 **이 값을 읽어서** 임시 나무를
+#   채운다. 같은 목록을 두 파일에 적으면 하나가 조용히 낡는다 — C90 의 손 목록이 그렇게 낡았고,
+#   그때 검사는 «다르다» 가 아니라 «맞다» 를 찍는다. 레포 뿌리 기준 경로다.
+INPUTS = ("engine/chain.yaml", "engine/bindings.yaml", "phase4/*.yaml")
+
+
+def input_paths() -> list[Path]:
+    """선언된 입력을 **구체 파일로 펼쳐** 돌려준다 — 패턴이 아니라 경로다.
+
+    ⚠ **펼치는 쪽도 하나여야 한다** (지휘석, 2026-09-14). 모듈이 `phase4/*.yaml` 을 **패턴 그대로**
+    인쇄하고 셸이 그것을 펼치면, 주인은 하나인데 **해석하는 쪽이 둘**이 된다 — 같은 목록이 두 번
+    읽히는 그 결함이 한 칸 옆으로 옮겨갈 뿐이다. 그래서 glob 은 여기 파이썬에서만 돈다.
+    ⚠ **이 함수가 돌려주는 것은 오늘 이 레포에서 9 개다** — `chain.yaml` · `bindings.yaml` ·
+    `phase4/*.yaml` 일곱. **복사되는 파일은 10 개**이고, 그 차이가 이 스크립트 자신이다 — 목록에
+    안 들어가고 **복사하는 쪽이 언제나 함께 가져간다.** *두 수를 한 문장에 겹쳐 적지 않는다.*"""
+    root = HERE.parent
+    out: list[Path] = []
+    for spec in INPUTS:
+        out.extend(sorted(root.glob(spec)))
+    return out
+
 LABELS = {
     "star_physical": "별의 성질", "star_metallicity": "별 금속함량",
     "system_age": "계 나이", "body_age": "천체 나이",
@@ -126,7 +148,20 @@ def backflow() -> dict:
     fields = binds["fields"]
 
     rows: dict[str, int] = {}
-    for board in sorted((HERE.parent / "phase4").glob("*.yaml")):
+    # ⚠ **없는 입력에 대고 0 을 쓰지 않는다** (C86-2, 2026-09-14). `phase4/` 는 이 스크립트 **옆이
+    #   아니라** 레포 뿌리 아래에 있고, `engine/` 만 풀어 돌리면 이 glob 이 **빈 목록**을 준다 —
+    #   루프가 0 회 돌고, 출하값 칸이 전부 0 인 페이지가 **rc=0 으로** 나온다 (실측: `"n": 0` 이
+    #   179 개). 위의 두 읽기는 없으면 `FileNotFoundError` 로 시끄럽게 죽는데, **조용한 것은 이
+    #   자리 하나**다. 그래서 여기서 **세고, 0 이면 이름을 대며 거절한다.**
+    missing = [spec for spec in INPUTS if not sorted(HERE.parent.glob(spec))]
+    if missing:
+        raise SystemExit(
+            "거절: 선언된 입력을 못 읽었다 — "
+            + " · ".join(f"{HERE.parent / spec}" for spec in missing)
+            + f". 펼쳐진 입력은 {len(input_paths())} 개다. "
+            "이 입력이 없으면 출하값 칸이 조용히 0 이 된 페이지가 나온다 (C86-2).")
+    boards = sorted((HERE.parent / "phase4").glob("*.yaml"))
+    for board in boards:
         doc = yaml.safe_load(board.read_text(encoding="utf-8")) or {}
         for row in doc.get("decisions") or []:
             for f in row.get("fields") or []:
