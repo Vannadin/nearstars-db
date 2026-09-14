@@ -47,10 +47,45 @@ def _j7_every_integrate_counted(fails: list[str]) -> None:
         fails.append("J7: `integrate` 가 세지 않는 원본 그대로다")
 
 
+def _j8_seam_by_temperature(fails: list[str], notes: list[str]) -> None:
+    """J8 — **세트의 이음매가 T 마다 정확히 한 번**이다 (C82-2, 2026-09-14).
+
+    얼음 열 세트는 둘이고 경계가 상수였다. 이제 위끝은 **그 T 에서의 적합 사거리**
+    `P(FIT_RHO_MAX, T)` 이고, 위 구간은 **그 자리에서** 시작한다. 둘이 같은 함수를 읽으니
+    **틈도 겹침도 없어야** 하고, 그 「없음」을 **T 격자에서 실제로 밟아 본다** — 예전에는 둘이
+    같은 상수를 읽어서 공짜로 맞았다.
+
+    ⚠ **`t=None` 은 여기서 시험하지 않는다** — 그 경로의 답은 `test_fe_hcp.py:194` 가 고정한
+    C58·180 B 의 «온도 없이 물었을 때의 답» 이고, 이 시험의 주제가 아니다."""
+    import eos as E
+    ph = E.MATERIALS["h2o"].phase_at(100.0 * E.GPA)
+    sets = [ts for ts in ph.gamma_sets if getattr(ts, "p_edge", "")]
+    if len(sets) != 2:
+        fails.append(f"J8 `p_edge` 를 단 얼음 세트가 {len(sets)} 개다 — 둘이어야 한다")
+        return
+    grid_t = [295.0, 400.0, 700.0, 1200.0, 1800.0, 2000.0, 2500.0]
+    checked = 0
+    for t in grid_t:
+        edge = E.P_EDGE_EVALUATORS["fr2015_rho_edge"](t)
+        probes = [edge * 0.5, edge - 1.0e6, edge, edge + 1.0e6, edge * 1.5]
+        for q in probes:
+            hit = [ts for ts in ph.gamma_sets if ts.covers(q, t)]
+            checked += 1
+            if len(hit) != 1:
+                fails.append(f"J8 T {t:.0f} K · P {q / E.GPA:.4f} GPa 를 {len(hit)} 개 세트가 "
+                             "덮는다 — 하나여야 한다 (틈이거나 겹침이다)")
+    notes.append(f"  [기록 · C82-2] J8 이음매 — T 격자 {len(grid_t)} × 점 5 = {checked} 칸에서 "
+                 f"덮는 세트가 언제나 하나. 위끝은 T 마다 다르다: "
+                 f"{E.P_EDGE_EVALUATORS['fr2015_rho_edge'](295.0) / E.GPA:.4f} GPa @ 295 K · "
+                 f"{E.P_EDGE_EVALUATORS['fr2015_rho_edge'](2000.0) / E.GPA:.4f} GPa @ 2000 K "
+                 f"(선언 상수 {E.FR2015_FIT_P_MAX / E.GPA:.4f} 는 그 어느 끝도 아니다)")
+
+
 def main() -> int:
     fails: list[str] = []
     notes: list[str] = []
     _j7_every_integrate_counted(fails)
+    _j8_seam_by_temperature(fails, notes)
 
     # ── J1 ────────────────────────────────────────────────────────────────
     # D(z) → 1 − 3z/8 (z → 0) 이고, 큰 z 에서는 π⁴/(5z³).

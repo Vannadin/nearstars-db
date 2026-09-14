@@ -170,9 +170,32 @@ class ThermalSet:
     #: ⚠ **198 은 이 칸을 어느 세트에도 채우지 않는다.** 선언은 198 B 이고, 선언하는 순간 판정 수가
     #:   움직이므로 그것은 따로 잴 항목이다. 여기서 바뀌는 것은 **구조**뿐이다.
     t_min: float = 0.0
+    #: 위끝(또는 아래끝)을 T 에서 계산하는 함수의 **이름**. 함수를 필드로 들지 않는 이유는
+    #: `THERMAL_EVALUATORS` 와 같다 — frozen dataclass 의 해시·표현을 지저분하게 만들지 않고,
+    #: **어느 적합의 사거리인지가 이름으로 인쇄**되게 하기 위해서다.
+    p_edge: str = ""
 
-    def covers(self, p: float) -> bool:
-        return self.p_min <= p < self.p_max
+    def covers(self, p: float, t: float | None = None) -> bool:
+        """이 압력(과 온도)이 이 세트의 구간 안인가.
+
+        ⚠ **위끝이 상수가 아니라 적합의 사거리인 세트가 있다** (C82-2, 2026-09-14). 얼음은
+        ρ 격자의 끝(`FIT_RHO_MAX`)까지만 적합이고, **그 ρ 가 어느 압력인지는 T 에 달렸다** —
+        295 K 에서 **342.1843 GPa**, 2000 K 에서 **353.8167 GPa**. 선언된 353.8 GPa 하나로는
+        아래에서 11.6 GPa 넘겨 말하고 위에서 0.0167 GPa 모자라게 말한다.
+
+        ⚠ **T 를 안 주고 물으면 인쇄된 선언값 `FR2015_FIT_P_MAX` 를 쓴다.** 그 수는 **띠의 어느
+        끝도 아니다** — 2000 K 아래에서는 적합의 사거리를 **넘겨 말하고**(295 K 에서 **+11.6157
+        GPa**), 그 위에서는 **모자라게 말한다**(**−0.0167 GPa**). 그래도 그 자리를 남기는 것은
+        C58·180 B 가 이름 붙인 «온도 없이 물었을 때의 답» 이기 때문이고, `test_fe_hcp.py:194` 가
+        그 답을 고정하고 있다. *조용한 폴백이 아니라 **이미 이름이 있는 경로**다.*"""
+        lo, hi = self.p_min, self.p_max
+        if self.p_edge and t is not None:
+            edge = P_EDGE_EVALUATORS[self.p_edge](t)
+            if hi == float("inf"):
+                lo = edge          # 위 구간은 **띠가 끝나는 곳**에서 시작한다
+            else:
+                hi = edge          # 띠의 위끝은 그 T 에서의 사거리다
+        return lo <= p < hi
 
     def covers_t(self, t: float | None) -> bool:
         """온도 축도 범위 안인가 — **인쇄된 범위는 축이 둘이다** (감사석, 브리프 187).
@@ -199,6 +222,19 @@ class ThermalSet:
 #: `ThermalSet.evaluator` 가 가리키는 함수들. (P, T) → dict(dpdt_v, c_v, gruneisen, …).
 #: 이름으로 두는 이유는 `Phase` 가 frozen dataclass 라 함수를 필드로 들면 해시·표현이 지저분해지고,
 #: 무엇보다 **어느 논문의 세트인지가 이름으로 인쇄되어야** 하기 때문이다.
+#: 세트 경계를 T 에서 계산하는 함수들. ⚠ **호출 수를 센다** — 경계가 상수에서 함수가 되면
+#: 질의마다 `pressure(4.25, T)` 가 돌고, 그 비용은 게이트 전에 알아야 한다 (190 B 의 교훈).
+P_EDGE_CALLS = {"fr2015_rho_edge": 0}
+
+
+def _fr2015_rho_edge(t: float) -> float:
+    """FR2015 얼음 적합이 **그 T 에서** 닿는 압력 [Pa] — ρ 격자 끝(`FIT_RHO_MAX`)의 압력이다."""
+    P_EDGE_CALLS["fr2015_rho_edge"] += 1
+    return ice_fr2015.pressure(ice_fr2015.FIT_RHO_MAX, t) * GPA
+
+
+P_EDGE_EVALUATORS = {"fr2015_rho_edge": _fr2015_rho_edge}
+
 THERMAL_EVALUATORS = {
     "dorogokupets2017_liquid_fe": fe_liquid.thermal_at,
     "dorogokupets2017_hcp_fe": fe_liquid.thermal_at_hcp,
@@ -340,7 +376,7 @@ class Phase:
         """이 상에 발표된 열 상수가 있는가. 없으면 등온으로 남는다."""
         return self.alpha_k > 0.0 and self.c_v_ref > 0.0
 
-    def gamma_set_at(self, p: float | None) -> "ThermalSet | None":
+    def gamma_set_at(self, p: float | None, t: float | None = None) -> "ThermalSet | None":
         """이 압력의 γ·c_p 세트. 세트가 없으면 `None` — 그때는 상 자신의 상수를 쓴다.
 
         ⚠ **세트를 들고 있는데 압력을 안 받았으면 이름을 대고 거절한다** (`ThermalSetAmbiguous`).
@@ -353,7 +389,7 @@ class Phase:
                 f"{self.name}: γ·c_p 세트가 {len(self.gamma_sets)} 구간인데 압력 없이 물었다 — "
                 "어느 구간의 값인지 정할 수 없다 (C58, 브리프 180 C)")
         for ts in self.gamma_sets:
-            if ts.covers(p):
+            if ts.covers(p, t):
                 return ts
         return None
 
@@ -409,7 +445,7 @@ class Phase:
         """
         density_cell = self._verdict(self.has_thermal, self.thermal_source_state,
                                      self.thermal_source_composition, fit_composition, "")
-        ts = self.gamma_set_at(p)
+        ts = self.gamma_set_at(p, t)
         if ts is None:
             return density_cell, density_cell
         gamma_cell = self._verdict(ts.alpha_k > 0.0 or bool(ts.evaluator),
@@ -484,16 +520,19 @@ class Phase:
 
         ⚠ **압력을 주면 구간 세트가 이긴다** (C58 (a) 결정 (A)) — γ·c_p 를 계산하는 자리는 이
         값을 세트에서 받고, 밀도 경로(`thermal_pressure`)는 상 자신의 상수를 계속 쓴다."""
-        ts = self.gamma_set_at(p)
+        ts = self.gamma_set_at(p, t)
         if ts is None:
             return self.alpha_k + self.alpha_k_dt * self.delta_t(t, t_pot)
         if ts.evaluator:
             return THERMAL_EVALUATORS[ts.evaluator](p, t)["dpdt_v"]
         return ts.alpha_k + ts.alpha_k_dt * self._set_delta_t(ts, t, t_pot)
 
-    def c_v_at(self, p: float | None = None) -> float:
-        """이 압력에서 쓰는 정적비열 [J kg⁻¹ K⁻¹]. 세트가 있으면 세트의 것이다."""
-        ts = self.gamma_set_at(p)
+    def c_v_at(self, p: float | None = None, t: float | None = None) -> float:
+        """이 압력·온도에서 쓰는 정적비열 [J kg⁻¹ K⁻¹]. 세트가 있으면 세트의 것이다.
+
+        ⚠ **`t` 가 붙은 이유는 세트의 경계가 T 에 달렸기 때문이다** (C82-2). 호출자는 `c_p` 안의
+        두 자리(`:792`·`:794`)뿐이고 둘 다 `t` 를 들고 있다 — 바깥 호출자는 없다."""
+        ts = self.gamma_set_at(p, t)
         return self.c_v_ref if ts is None else ts.c_v_ref
 
     def gruneisen(self, rho: float, t: float, t_pot: float = 0.0,
@@ -504,7 +543,7 @@ class Phase:
         c_V 로 닫힌다. 이 항등식이 맞는지는 얼음 III·V·VI 에서 확인된다 — SeaFreeze 가
         자기 γ 를 따로 들고 있고, 여기 식으로 계산한 값과 소수 넷째 자리까지 같다.
         test_interior.py 가 그 대조를 돌린다."""
-        ts = self.gamma_set_at(p)
+        ts = self.gamma_set_at(p, t)
         if ts is not None:
             if ts.evaluator:
                 return THERMAL_EVALUATORS[ts.evaluator](p, t)["gruneisen"]
@@ -779,7 +818,7 @@ class Material:
         #   그 0 이 `gamma = dpdt / (rho * c_v)` 로 그대로 들어가 `ZeroDivisionError` 가 났다:
         #   `fe_prem` 은 35 GPa 위에서 **이미** 그랬고, 아무 천체도 이 메서드를 안 불러 조용했다.
         #   세트가 식을 들고 있으면 c_V 와 γ 를 그 식에게 묻는다 — 상수 세트의 경로는 그대로다.
-        ts = ph.gamma_set_at(p)
+        ts = ph.gamma_set_at(p, t)
         if ts is not None and ts.evaluator:
             ev = THERMAL_EVALUATORS[ts.evaluator](p, t)
             c_v, gamma = ev["c_v"], ev["gruneisen"]
@@ -789,9 +828,9 @@ class Material:
             alpha = ev["dpdt_v"] / k_t_ev
             return c_v * (1.0 + alpha * gamma * t) + self._latent_cp(ph, p, t)
         if k_t <= 0.0 or rho <= 0.0:
-            return ph.c_v_at(p) + self._latent_cp(ph, p, t)
+            return ph.c_v_at(p, t) + self._latent_cp(ph, p, t)
         dpdt = ph.dpdt_v(t, t_pot, p)
-        c_v = ph.c_v_at(p)
+        c_v = ph.c_v_at(p, t)
         if c_v <= 0.0:
             return self._latent_cp(ph, p, t)
         gamma = dpdt / (rho * c_v)
@@ -1744,6 +1783,12 @@ DOROGOKUPETS_FIT_T_MAX = 6000.0      # K
 # ⚠ 이 수는 **퍼텐셜 자신으로** 환산한 것이다 — 논문이 압력 창을 인쇄하지 않으므로, 격자의 모서리를
 #   식 (6) 으로 평가했다 (브리프 190).
 FR2015_FIT_P_MIN = 3.23 * GPA
+# ⚠ **이 수는 적합의 정의역이 아니라 인쇄된 선언값이다** (C82-2, 2026-09-14). 실제 사거리는
+# ρ 격자 끝(`ice_fr2015.FIT_RHO_MAX` = 4.25 g/cm³)의 압력이고 **T 에 달렸다** — **342.1843 GPa
+# @ 295 K · 353.8167 GPa @ 2000 K**. 353.8 은 **띠의 어느 끝도 아니어서**, 2000 K 아래에서는
+# 사거리를 **넘겨 말하고**(295 K 에서 +11.6157 GPa) 그 위에서는 **모자라게 말한다**(−0.0167 GPa).
+# 세트의 경계는 이제 `ThermalSet.p_edge` 가 T 에서 계산하고, 이 상수는 **T 없이 물을 때의
+# 답**(C58·180 B 가 이름 붙인 그 경로, `test_fe_hcp.py:194` 가 고정)으로만 남는다.
 FR2015_FIT_P_MAX = 353.8 * GPA
 FR2015_FIT_T_MAX = 2000.0            # K
 # ⚠ **바닥은 같은 문장에서 온다 — 그리고 사본을 하나 더 만들지 않는다** (C84, 브리프 198 B).
@@ -2700,12 +2745,14 @@ def _ice_vii_x_gamma_sets() -> tuple[ThermalSet, ...]:
     거절이 아니라 등급이다 — 저자가 p1 에서 «well behaved in extrapolation» 이라고 적었고, 그
     문장의 앞 절(«valid in the entire stability region»)은 **상** 이야기라 창의 근거가 아니다."""
     return (
-        ThermalSet(p_min=FR2015_FIT_P_MIN, p_max=FR2015_FIT_P_MAX, ref=ice_fr2015.REF,
+        ThermalSet(p_min=FR2015_FIT_P_MIN, p_max=FR2015_FIT_P_MAX, p_edge="fr2015_rho_edge",
+                   ref=ice_fr2015.REF,
                    source_state="solid", source_composition="H2O-ice",
                    evaluator="french_redmer2015_ice_hse",
                    t_ref=ICE_VII_X_REF_T, t_ref_kind="isotherm",
                    t_min=ice_fr2015.FIT_T_MIN, t_max=FR2015_FIT_T_MAX),
-        ThermalSet(p_min=FR2015_FIT_P_MAX, p_max=float("inf"), ref=ice_fr2015.REF,
+        ThermalSet(p_min=FR2015_FIT_P_MAX, p_max=float("inf"), p_edge="fr2015_rho_edge",
+                   ref=ice_fr2015.REF,
                    source_state="solid", source_composition="H2O-ice",
                    evaluator="french_redmer2015_ice_hse",
                    t_ref=ICE_VII_X_REF_T, t_ref_kind="isotherm",
@@ -3735,7 +3782,7 @@ def core_gamma(material, p: float, t: float, t_pot: float = 0.0,
     #   300 K 에서 0.2976 이지만 화성 CMB(2000 K)에서 **0.6275** 다. 첫 판이 0.2994 를 «핵의 γ»
     #   라고 인쇄했고 그것은 **어느 소비처도 묻지 않는 온도의 값**이었다. 이 파일이 이미 들고
     #   있는 항등식(`gruneisen`)을 부른다 — 새 산수를 여기서 만들지 않는다.
-    has_set = ph.gamma_set_at(p) is not None or ph.has_thermal
+    has_set = ph.gamma_set_at(p, t) is not None or ph.has_thermal
     own = material.gruneisen(p, rho, t, t_pot) if (has_set and rho > 0.0) else 0.0
     # ⚠ **`graded-disagreement` 는 값을 배달하지 않는다 — 후보로만 인쇄된다** (2026-09-11, 실측
     #   뒤 결정 (2); 오너 검토 대기). 처음에는 «등급이 내려간 값도 값» 으로 배달했는데, 재 보니

@@ -7441,6 +7441,53 @@ C61's accounting, and `587842b3`'s C80 incident, which carries both numbers in o
 would turn true records into false ones.* The gate now prints **73**, and that number lives only in the
 print.
 
+### C82-2 2026-09-14 — the ice set's ceiling is the fit's reach at the asked temperature
+
+**Built against `45f91076b7c329d1` (544 lines, amendments 1–8), owner's order item ㄷ.** The two
+FR2015 thermal sets met at a constant, **`FR2015_FIT_P_MAX` = 353.8 GPa**. The fit's actual reach is
+the pressure of its ρ-grid edge (`FIT_RHO_MAX` = 4.25 g/cm³), and **that pressure depends on
+temperature**: measured at this sha, **342.1843 GPa at 295 K** and **353.8167 GPa at 2000 K**. ⚠ **The
+declared number is neither end of the band** — it over-states the reach below 2000 K by **+11.6157
+GPa** and under-states it above by **−0.0167 GPa**. *A wedge that inverts at the top; the declaration
+is wrong in both directions.*
+
+**`ThermalSet` gained `p_edge`**, the *name* of the function that computes its boundary at a
+temperature, and `covers(p, t)` uses it: the in-band set's ceiling and the graded set's floor are now
+**one call to the same function**, so the seam cannot gap or overlap. ⚠ *It could not before either —
+but only because both sides read the same constant, which is agreement by coincidence rather than by
+construction.*
+
+**Temperature is threaded, not defaulted.** `gamma_set_at(p, t)` and `c_v_at(p, t)` take it; the six
+callers pass what they hold, and `c_v_at`'s only two callers sit inside `c_p` (`:792`, `:794`) — no
+caller outside the file moved. ⚠ **Callers passing `t=None`: 0.** The one caller that *omits* it is
+`test_fe_hcp.py:194`, the pinned «asked without a temperature» test whose answer C58 and 180 B named;
+with `t=None` the bound is the declared constant and the docstring says so **in the same sentence as
+the two errors**, so a reader meets the over- and under-statement where the number is used.
+
+**What it costs, measured before the gate** (190 B's lesson): `p_edge` is evaluated **30 520** times
+for Uranus and **6 938** for Neptune, **0** for all six roster bodies — ⚠ **all eight counts come from
+one run**, the counter reset between bodies, so the anchors' large numbers are the roster zeros' own
+control rather than a separate execution's. In the anchor that shows as
+**27.2 → 28.1 s** and **63.3 → 65.6 s**.
+
+**J8, a new pinned test**: over a 7-point temperature grid × 5 probes around the moving edge —
+**35 cells** — exactly one set covers each pressure, and the note prints both edges beside the
+declared constant.
+
+⚠ **C88's trigger fired, by design, and the anchor's diff is three lines**: `eos.py`'s digest, and the
+two `seconds`. **Every one of the 21 value keys per body, both `standalone` blocks, `grade` and
+`regime` are byte-identical** — *the wedge was a declaration defect, not a value defect, and this is
+the measurement that says so rather than the expectation.*
+
+**Where the wedge is actually asked** (measured, not assumed): the six roster bodies never consult an
+ice thermal set at all — **0** ice thermal calls, **0** `covers` queries. The only answers inside the
+wedge belong to the two anchors, **348** of them (**Uranus 308 · Neptune 40**), against controls of
+**20 958** and **4 756** ice thermal calls. *Two earlier tables were withdrawn before this one: the
+first hooked `ice_fr2015.density_at`, which `eos` never calls because it binds
+`thermal_at_hse` by value at import, and printed 0 everywhere; the second counted every material's
+sets and gave Earth 47 442 wedge hits while that body's ice thermal calls were 0.* ⚠ **The control
+printed in the same run is what separated «none» from «not measured».**
+
 ### C65 — two nodes emit `radius`, and the winner is decided by nothing anyone declared — **pre-registration draft, 2026-09-11**
 
 ⚠ **Split out of C64 by the directing seat** because a key the whole engine reads is a different item
