@@ -183,6 +183,14 @@ citation policy is in `docs/reference/data-sources.md`.
     https://pubs.usgs.gov/ds/1035/
     Mineral reflectance behind the surface-color work. (The lab's own pages
     block automated access; the Data Series release is the citable copy.)
+  PALEOS equation-of-state tables, v1.2.1 —
+    https://doi.org/10.5281/zenodo.20084812
+    "PALEOS: Thermodynamic Equation of State Tables for Fe, MgSiO3, and H2O at
+    Planetary Interior Conditions", published 2026-05-08.
+    Licensed CC-BY-4.0. Three tables are used — iron, MgSiO3 and water — and
+    they are read only outside the pressure range our own fits are grounded
+    in, printed as a named second opinion beside our value and never in place
+    of it. The PALEOS source code is BSD-3-Clause and is not vendored here.
 
 Fictional bodies adapted for gameplay variety (the Alpha Centauri A b moon
 system among them) are flagged as fiction in the database and on every
