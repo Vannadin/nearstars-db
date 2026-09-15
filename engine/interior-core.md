@@ -11699,16 +11699,34 @@ reason the candidate was written that way in the first place. **Recorded as a pa
 
 #### An isodensity measurement cell (2026-09-14)
 
-⚠ **Our three silicate phases carry no thermal set, and the isodensity curves show exactly that.**
-`mgsio3_en` · `mgsio3_prem` · `mgsio3_pv` all have `thermal=None`, and a curve of constant ρ through
-them is flat in temperature: at ρ = 6 g/cm³ our pressure is **192.774 GPa at 500 · 1000 · 1500 ·
-2000 K alike — +0.000 %**. ⚠ **PALEOS's table over the same four temperatures is not flat** —
-196.204 → 199.555 → 203.362 → **207.452 GPa**, **+5.733 %** from 500 K to 2000 K.
+⚠ **정정됨 — superseded 2026-09-15, 아래 문단이 대신한다. 원문은 지우지 않고 남긴다.**
 
-⚠ **The 0.000 % is not agreement; it is the absence of a temperature term.** *A reader who sees two
-curves and one of them straight will read «our silicate is temperature-insensitive», and the truth is
-that nothing in it was asked.* **That is the gap decision (c) above exists to close** — the
-assemblage path is what would give these three a thermal answer at all.
+> ⚠ **Our three silicate phases carry no thermal set, and the isodensity curves show exactly that.**
+> `mgsio3_en` · `mgsio3_prem` · `mgsio3_pv` all have `thermal=None`, and a curve of constant ρ through
+> them is flat in temperature: at ρ = 6 g/cm³ our pressure is **192.774 GPa at 500 · 1000 · 1500 ·
+> 2000 K alike — +0.000 %**. ⚠ **PALEOS's table over the same four temperatures is not flat** —
+> 196.204 → 199.555 → 203.362 → **207.452 GPa**, **+5.733 %** from 500 K to 2000 K.
+>
+> ⚠ **The 0.000 % is not agreement; it is the absence of a temperature term.** *A reader who sees two
+> curves and one of them straight will read «our silicate is temperature-insensitive», and the truth is
+> that nothing in it was asked.* **That is the gap decision (c) above exists to close** — the
+> assemblage path is what would give these three a thermal answer at all.
+
+⚠ **The thermal term is there; what was missing is a declared potential temperature.** All three
+phases carry `alpha_k` = **6.92e6 Pa/K** (Anderson & Goto 1989 in the form Seager+ 2007 §IV.2.2 uses),
+`t_ref` = **1600 K** and ⚠ **`t_ref_kind = "adiabat"`**, so `delta_t` is `t · (1 − t_ref / t_pot)` and
+returns **0 whenever `t_pot` is not declared** — and 0 again when `t_pot` equals `t_ref`. **The probe
+passed `t_pot = 0`.** The flat column was the argument, not the physics.
+
+Re-measured with `t_pot` printed beside every figure (script `e3f0169b`, CSV `e50b6571`, isodensity
+pressure spread 500 → 2000 K at ρ = 6 g/cm³): **`t_pot` 1600 → +0.000 % · 2000 → +1.073 % · 2500 →
++1.926 %**. ⚠ **PALEOS's +5.733 % stands unchanged** — ours moves, and at the hottest declaration it
+still moves less than a third as far. ⚠ **PALEOS has no `t_pot` axis at all**, so that column is one
+**we** fill, and the CSV's ruler cell now says so on every row.
+
+⚠ **The 1600 column reproduces the earlier CSV exactly** — 74.249 · 192.774 · 361.927 GPa at ρ 5 · 6 ·
+7 — so the old table is not wrong, it is **a table that did not print its ruler**. *That is the
+difference this correction is about, and it is why the superseded text is kept rather than deleted.*
 
 The numbers come from the isodensity script `66eb7fd8` and CSV `git af04bd2c` (111 lines), with all
 four controls passing — the band edges 342.1843 · 353.8167 GPa, 104 data rows split 40 ice + 32 iron
