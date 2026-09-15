@@ -1,7 +1,7 @@
 {
  "python": "3.9.6",
  "path_fingerprint": "471a27fd0793ca5e",
- "frozen_at": "2026-09-15",
+ "frozen_at": "2026-09-16",
  "steps": 1500,
  "inputs": {
   "ammonia_table.py": "47fbe39e25e453c5",
@@ -19,14 +19,34 @@
   "registry.py": "7031b25acd49c432",
   "rheology.py": "84b57ff4bc38ca16",
   "steam_if97.py": "6e1d779f9a269cb8",
-  "test_ice_giant.py": "88d47fbebcd1b725",
+  "test_ice_giant.py": "a23ebb865c533aed",
   "water2_table.py": "ed9cb409c82b299e",
   "water_hot.py": "9483e265a5186644",
   "water_table.py": "c98e33cfab54b7ec"
  },
+ "inputs_code": {
+  "ammonia_table.py": "20a5bf4e8b8da01d",
+  "convergence.py": "4b384530eb0f80ad",
+  "eos.py": "0539cdaa4c82f507",
+  "fe_liquid.py": "92c84ddb372d348e",
+  "fermi.py": "4130a6b8c48977f5",
+  "hhe_table.py": "eeaede52d8c20a41",
+  "ice_fr2015.py": "bd9796e141166399",
+  "ice_melt_table.py": "ccb88c5bb86ee1d0",
+  "interior.py": "c8ca6eacb56d9a2d",
+  "payload.py": "8c121d729475aca9",
+  "porosity.py": "143b86cfd0290cb7",
+  "registry.py": "682dd2911edad8b3",
+  "rheology.py": "e4825d85960d7156",
+  "steam_if97.py": "b9d9efa9320a2935",
+  "test_ice_giant.py": "87f87ef1e06aada1",
+  "water2_table.py": "5c981e7c8d14cb0a",
+  "water_hot.py": "57c2997d8c28907a",
+  "water_table.py": "67d03da57c2a801b"
+ },
  "bodies": {
   "Uranus": {
-   "seconds": 26.4,
+   "seconds": 27.2,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -71,7 +91,7 @@
    "standalone_reproduces_solve": true
   },
   "Neptune": {
-   "seconds": 61.4,
+   "seconds": 63.0,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,

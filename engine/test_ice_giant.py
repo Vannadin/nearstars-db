@@ -279,6 +279,29 @@ def input_digests() -> dict:
     return out
 
 
+def code_digests() -> dict:
+    """파이썬 방아쇠 파일마다 **코드 객체**의 sha256 앞 16 자리 (C100, 2026-09-16).
+
+    바이트 자와 다른 질문이다. 바이트는 «파일이 바뀌었나», 이쪽은 «파일이 **하는 일**이
+    바뀌었나» 다. 주석·docstring·빈 줄만 고친 커밋은 바이트가 움직이고 이 자는 안 움직인다.
+
+    ⚠ **파일의 바이트를 `compile` 한다. 모듈을 import 하지 않는다** — import 는 **작업 트리의
+    지금 상태**가 아니라 이미 메모리에 올라온 판을 돌려줄 수 있고, 그러면 이 자가 재는 대상이
+    커밋이 아니게 된다 (사전등록 bd8d64d5 §5 의 함정).
+
+    ⚠ **파이썬이 아닌 감시 파일은 여기 없다.** `chain.yaml` 처럼 코드 객체가 없는 파일에
+    «그대로» 를 적으면 없는 성질을 있다고 적는 것이다 — 그 파일은 바이트 자 하나로만 지킨다.
+    없는 키는 `_inputs` 가 «비-파이썬» 으로 읽는다."""
+    out = {}
+    for f in trigger_files():
+        if f == ANCHOR_FILE or f.suffix != ".py":
+            continue
+        h = hashlib.sha256()
+        _feed_code(h, compile(f.read_bytes(), f.name, "exec"))
+        out[f.name] = h.hexdigest()[:16]
+    return out
+
+
 # ── 경로 지문 (--fast) ──────────────────────────────────────────────────
 
 # 굳힌 수렴점으로 가는 길을 정하는 것들. `--fast` 가 적분 한 번으로 못 보는 바깥 고리다.
@@ -349,11 +372,13 @@ def _record(name: str, res, seconds: float) -> dict:
 
 def refresh() -> int:
     digests = input_digests()
+    codes = code_digests()
     out = {"python": platform.python_version(), "path_fingerprint": path_fingerprint(),
            "frozen_at": time.strftime("%Y-%m-%d"), "steps": interior.STEPS,
-           "inputs": digests, "bodies": {}}
-    print(f"입력 방아쇠 {len(digests)} 해시 · 폐포 {len(chain_modules())} 모듈 "
-          f"(`registry` 는 안 펼침) + 데이터 + 앵커")
+           "inputs": digests, "inputs_code": codes, "bodies": {}}
+    print(f"입력 방아쇠 {len(digests)} 해시 · 코드 자 {len(codes)} 개 "
+          f"(비-파이썬 {len(digests) - len(codes)} 개는 바이트 자만) · "
+          f"폐포 {len(chain_modules())} 모듈 (`registry` 는 안 펼침) + 데이터 + 앵커")
     for name, _m, r_pub, _mc, _mh, _t in ICE_GIANTS:
         print(f"{name} — 전체 풀이 …", flush=True)
         t0 = time.perf_counter()
@@ -469,26 +494,46 @@ def _inputs(frozen: dict, fails: list[str]) -> None:
         fails.append("굳힌 파일에 `inputs` 가 없다 — C88 이전 판이다. `--refresh` 로 다시 굳혀라")
         print(f"  [FAIL] 입력 방아쇠 {len(files)} 파일 — 굳힌 쪽에 해시가 없다")
         return
+    now_code = code_digests()
+    then_code = frozen.get("inputs_code")
+    if then_code is None:
+        fails.append("굳힌 파일에 `inputs_code` 가 없다 — C100 이전 판이다. "
+                     "`--refresh` 로 다시 굳혀라")
+        print(f"  [FAIL] 입력 방아쇠 {len(files)} 파일 — 굳힌 쪽에 코드 자가 없다")
+        return
     moved = sorted(k for k in now if now[k] != then.get(k))
     gone = sorted(k for k in then if k not in now)
     added = sorted(k for k in now if k not in then)
-    ok = not (moved or gone or added)
+    # ⚠ **바이트가 움직인 파일을 둘로 가른다** (C100, 오너 결정 ⓑ). 코드 객체까지 움직였으면
+    #   풀이가 하는 일이 바뀐 것이니 FAIL 이다. 바이트만 움직였으면 주석·docstring·빈 줄이
+    #   바뀐 것이고, 그 사실을 **인쇄하되** 판정은 바꾸지 않는다.
+    #   ⚠ 코드 자가 없는 파일(`chain.yaml` 같은 비-파이썬)은 가르지 않는다 — 바이트가
+    #   움직이면 FAIL 이고, 그것이 이 파일들에 대해 우리가 가진 유일한 질문이다.
+    code_moved = sorted(k for k in moved
+                        if k not in now_code or now_code[k] != then_code.get(k))
+    bytes_only = [k for k in moved if k not in code_moved]
+    ok = not (code_moved or gone or added)
     if not ok:
         parts = []
-        if moved:
-            parts.append("바뀐 파일 " + ", ".join(f"{k} {then[k]} → {now[k]}" for k in moved))
+        if code_moved:
+            parts.append("바뀐 파일 " + ", ".join(f"{k} {then[k]} → {now[k]}" for k in code_moved))
         if added:
             parts.append("새로 들어온 파일 " + ", ".join(added))
         if gone:
             parts.append("사라진 파일 " + ", ".join(gone))
         fails.append("굳힌 뒤로 풀이가 읽는 파일이 움직였다 — " + " · ".join(parts)
                      + ". **이 커밋에서 `--refresh`** 로 다시 굳혀 diff 에 남겨라")
+    for k in bytes_only:
+        print(f"      문서만 바뀜 — {k} 바이트 {then[k]} → {now[k]} · "
+              f"코드 {then_code.get(k)} 그대로 (판정 안 바꿈)")
     depth = chain_modules()
     by_depth = {}
     for name, d in depth.items():
         by_depth.setdefault(d, []).append(name)
-    print(f"  [{'PASS' if ok else 'FAIL'}] 입력 방아쇠 {len(files)} 파일 · 해시 {len(now)} 개 "
-          f"{'그대로' if ok else '중 ' + str(len(moved) + len(added) + len(gone)) + ' 개 움직임'} — "
+    print(f"  [{'PASS' if ok else 'FAIL'}] 입력 방아쇠 {len(files)} 파일 · 바이트 자 {len(now)} 개 "
+          f"· 코드 자 {len(now_code)} 개 "
+          f"{'그대로' if ok else '중 ' + str(len(code_moved) + len(added) + len(gone)) + ' 개 움직임'}"
+          f"{'' if not bytes_only else f' (문서만 바뀐 파일 {len(bytes_only)} 개는 판정 밖)'} — "
           f"폐포 {len(depth)} 모듈 + 데이터 {len(files) - len(depth) - 1} + 앵커 자신")
     for d in sorted(by_depth):
         print(f"      깊이 {d} ({len(by_depth[d])}) — {' · '.join(sorted(by_depth[d]))}")
