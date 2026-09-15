@@ -183,6 +183,21 @@ CHAIN_SEEDS = ("test_ice_giant", "interior")
 #   바뀌었다» 가 뜻을 잃는다. 펼치면 36 이 되고, 그 수도 함께 인쇄한다.
 NO_EXPAND = ("registry",)
 
+# ⚠ **경로 지문은 호출을 따라가지 않는다** (C70, 2026-09-16). 감시하는 함수가 **부르는** 함수의
+#   몸통이 바뀌면 지문은 가만히 있는다. 사슬 폐포를 걷는 위 그물도 그 함수들이 사는 파일을
+#   `registry` 아래라는 이유로 안 열었다 — 그래서 **닿지만 안 보는** 함수가 231 개였다.
+#   그중 80 개가 바이트 자 밖에 있었고, 그 80 이 사는 18 파일 가운데 **import 폐포 안에 있는
+#   열셋**이 여기 이름으로 들어온다. 나머지 다섯은 이름이 겹쳤을 뿐이라 안 넣는다.
+# ⚠ **이 목록은 파일 자를 넓히지, 지문을 넓히지 않는다.** `PATH_FUNCTIONS` 는 그대로다 —
+#   좁은 자는 좁은 채로 두고 파일 쪽을 넓히는 것이 이 항목의 모양이다.
+# ⚠ **넓힌 값은 C100 의 코드 객체 자가 있어서 감당된다.** 이 열셋이 주석만 고쳐도 자를 당기지만,
+#   그때는 FAIL 이 아니라 «문서만 바뀜» 한 줄이다. 그 기제가 되돌려지면 이 항목의 값이 달라진다.
+REACHED_BUT_UNWATCHED = (
+    "core_state", "core_energy", "body_class", "tidal_locking", "core_history",
+    "mantle_flux", "radiogenic", "tidal_heating", "cmb_flux", "domain",
+    "core_entropy", "bands", "tidal_response",
+)
+
 _DATA_SUFFIXES = (".json", ".csv", ".dat", ".txt", ".tsv", ".yaml")
 
 
@@ -252,7 +267,7 @@ def trigger_files() -> list[Path]:
     잡힌다). ⚠ **주석이 아니라 도구가 인쇄한다** — 목록이 코드와 갈리지 않게."""
     here = Path(__file__).resolve().parent
     out: list[Path] = []
-    for name in sorted(chain_modules()):
+    for name in sorted(set(chain_modules()) | set(REACHED_BUT_UNWATCHED)):
         mod = here / f"{name}.py"
         if not mod.exists():
             continue
@@ -509,14 +524,29 @@ def _inputs(frozen: dict, fails: list[str]) -> None:
     #   바뀐 것이고, 그 사실을 **인쇄하되** 판정은 바꾸지 않는다.
     #   ⚠ 코드 자가 없는 파일(`chain.yaml` 같은 비-파이썬)은 가르지 않는다 — 바이트가
     #   움직이면 FAIL 이고, 그것이 이 파일들에 대해 우리가 가진 유일한 질문이다.
-    code_moved = sorted(k for k in moved
-                        if k not in now_code or now_code[k] != then_code.get(k))
-    bytes_only = [k for k in moved if k not in code_moved]
-    ok = not (code_moved or gone or added)
+    # ⚠ **세 바구니로 가른다** (C70 이 문구를 고침). 예전에는 둘이었고, 비-파이썬이 코드 자
+    #   바구니에 들어가 판정줄이 «코드 자 N 개 중 1 개 움직임» 이라고 적었다 — `chain.yaml` 은
+    #   코드 자 분모 안에 있지도 않은데. 수와 판정은 맞았고 **문장이 집합을 잘못 배당했다**.
+    # ⚠ **새로 들어온 이름은 «움직였다» 가 아니다.** `moved` 는 `then.get(k)` 로 재므로 굳힌
+    #   쪽에 없는 키까지 담는다. C88 이후 감시 목록에 파일이 **더해진 적이 없어서** 이 자리는
+    #   한 번도 안 밟혔고, C70 이 열셋을 더하자 `KeyError: 'bands.py'` 로 터졌다. 더해진 이름은
+    #   `added` 한 바구니로만 간다.
+    moved = [k for k in moved if k not in added]
+    code_moved = sorted(k for k in moved if k in now_code and now_code[k] != then_code.get(k))
+    nonpy_moved = sorted(k for k in moved if k not in now_code)
+    bytes_only = [k for k in moved if k not in code_moved and k not in nonpy_moved]
+    ok = not (code_moved or nonpy_moved or gone or added)
     if not ok:
         parts = []
         if code_moved:
-            parts.append("바뀐 파일 " + ", ".join(f"{k} {then[k]} → {now[k]}" for k in code_moved))
+            # ⚠ **코드가 움직였다고 적으면서 바이트 자를 인쇄하지 않는다.** 두 자를 다 적는다 —
+            #   한 자만 적으면 다음 좌석이 그 수를 다른 자의 값과 대조하다 안 맞는다.
+            parts.append("코드가 바뀐 파일 "
+                         + ", ".join(f"{k} 코드 {then_code.get(k)} → {now_code[k]} "
+                                     f"(바이트 {then[k]} → {now[k]})" for k in code_moved))
+        if nonpy_moved:
+            parts.append("바이트가 바뀐 비-파이썬 파일 "
+                         + ", ".join(f"{k} {then[k]} → {now[k]}" for k in nonpy_moved))
         if added:
             parts.append("새로 들어온 파일 " + ", ".join(added))
         if gone:
@@ -527,14 +557,30 @@ def _inputs(frozen: dict, fails: list[str]) -> None:
         print(f"      문서만 바뀜 — {k} 바이트 {then[k]} → {now[k]} · "
               f"코드 {then_code.get(k)} 그대로 (판정 안 바꿈)")
     depth = chain_modules()
+    extra_mods = sorted(set(REACHED_BUT_UNWATCHED) - set(depth))
     by_depth = {}
     for name, d in depth.items():
         by_depth.setdefault(d, []).append(name)
+    moved_note = "그대로"
+    if not ok:
+        bits = []
+        if code_moved:
+            bits.append(f"코드 자 {len(code_moved)} 개 움직임")
+        if nonpy_moved:
+            bits.append(f"비-파이썬 바이트 자 {len(nonpy_moved)} 개 움직임")
+        if added:
+            bits.append(f"새 파일 {len(added)} 개")
+        if gone:
+            bits.append(f"사라진 파일 {len(gone)} 개")
+        moved_note = " · ".join(bits)
     print(f"  [{'PASS' if ok else 'FAIL'}] 입력 방아쇠 {len(files)} 파일 · 바이트 자 {len(now)} 개 "
-          f"· 코드 자 {len(now_code)} 개 "
-          f"{'그대로' if ok else '중 ' + str(len(code_moved) + len(added) + len(gone)) + ' 개 움직임'}"
+          f"· 코드 자 {len(now_code)} 개 — {moved_note}"
           f"{'' if not bytes_only else f' (문서만 바뀐 파일 {len(bytes_only)} 개는 판정 밖)'} — "
-          f"폐포 {len(depth)} 모듈 + 데이터 {len(files) - len(depth) - 1} + 앵커 자신")
+          # ⚠ **세 몫을 이름으로 나눈다.** 예전에는 폐포와 앵커를 뺀 나머지를 전부 「데이터」
+          #   라고 적었는데, C70 이 닿지만 안 보던 모듈 열셋을 더하자 그 칸이 «데이터 14» 라고
+          #   거짓말을 했다 — 그중 열셋은 `.py` 다. 빼서 만든 수는 이름을 못 가진다.
+          f"폐포 {len(depth)} 모듈 + 이름으로 더한 모듈 {len(extra_mods)} + "
+          f"데이터 {len(files) - len(depth) - len(extra_mods) - 1} + 앵커 자신")
     for d in sorted(by_depth):
         print(f"      깊이 {d} ({len(by_depth[d])}) — {' · '.join(sorted(by_depth[d]))}")
     excl = excluded_modules()
