@@ -2047,7 +2047,7 @@ spatial integration (shooting, already built) and from C14's root-find (no integ
 1. *"행성의 생성 시기는 모천체의 생성시기로"* — the integration's t = 0 is pinned to the **star's / system's
    age**, not a per-body declaration; one declaration fewer. ⚠ **This conflicts with the graph as it stands**:
    `chain.yaml@«body_age:»` `body_age` is `kind: measured`, `domain: given`, layer 0, with the note *"천체 자신의 나이.
-   항성 나이와 다르고, 거대행성 냉각광도의 실입력이다"*, and `system_age` (`t_sys`, `:85`) is a separate node
+   항성 나이와 다르고, 거대행성 냉각광도의 실입력이다"*, and `system_age` (`t_sys`, `chain.yaml@«system_age:»`) is a separate node
    (`:666`: *"항성풍의 나이는 항성의 나이 = 계의 나이"*). **Resolving the `body_age` / `system_age` relation is a
    prerequisite of starting C20** — recorded here as a fact, nothing in `chain.yaml` changed.
    *Correction, same evening: it is the note that is out of step with the roster, not the owner's condition
@@ -2153,7 +2153,7 @@ opposite for 10–100 km objects, a class the roster may want."* The owner's jud
   scanned"* ("we consider values in the range"), **not an observed distribution** — the order-of-magnitude
   variation it motivates is cited to nine papers (`2014ApJ...789...86A` … `2018PrPNP.102....1L`) that are
   **not held**. Also printed and usable by the dominance measurement: planetesimal radii scanned [1, 100] km
-  with *"r_plts ≳ 30–50 km"* expected (`:88`, `:112`); ²⁶Al half-life **≈ 0.72 Myr** (`:86`) against Monteux's
+  with *"r_plts ≳ 30–50 km"* expected (`Al26_desiccation.tex:88`, `Al26_desiccation.tex:112`); ²⁶Al half-life **≈ 0.72 Myr** (`:86`) against Monteux's
   quoted **0.73 My** — two printed values, both carried with their source, the choice made in the measurement
   brief; initial water-to-rock ratio `f_H2O,init = 0.3` (`:172` ff.). Data availability: *"available from the
   corresponding author upon reasonable request"* (`:219`) — no deposit; not needed, the ranges and anchors are
@@ -3286,8 +3286,8 @@ comment says the source relaxes it to 1400–1900 K.
 
 **(c) The dynamo declared on — owner decision 2026-09-04.** Rather than author a core-side CMB temperature for Pandora, the
 owner declares what the board already states: `phase4/alpha_centauri.yaml@«- { name: magnetic_field, value: "75 µT (~1.8× Earth; the upper bound of the rocky-dynamo M+ lad»` "75 µT … a tidally driven iron-core dynamo",
-`:2139` "Radiogenic plus weak tidal heating … enough to drive volcanism, continental drift and a dynamo", `:2259` "fast
-continental drift". `bodies/pandora.yaml` gains `dynamo_alive: true` and `stagnant_lid: false` (grade declared, sources beside
+and, in that same board file, "Radiogenic plus weak tidal heating … enough to drive volcanism, continental drift and a
+dynamo" and "fast continental drift". `bodies/pandora.yaml` gains `dynamo_alive: true` and `stagnant_lid: false` (grade declared, sources beside
 each). `dynamo_rocky.ladder` honours `dynamo_alive` **only while `conductor_phase` is undecided**; a computed liquid or solid
 core is never overridden — the declaration is then ignored and the note says "declaration ignored: core_state decided …".
 Grade stays judgment. Priority rule, read from the code: `BodyState.__getitem__` (`state.py@«def __getitem__(self, key: str) -> Any:»`) returns a declared
@@ -7502,7 +7502,7 @@ but only because both sides read the same constant, which is agreement by coinci
 construction.*
 
 **Temperature is threaded, not defaulted.** `gamma_set_at(p, t)` and `c_v_at(p, t)` take it; the six
-callers pass what they hold, and `c_v_at`'s only two callers sit inside `c_p` (`:792`, `:794`) — no
+callers pass what they hold, and `c_v_at`'s only two callers sit inside `c_p` itself — no
 caller outside the file moved. ⚠ **Callers passing `t=None`: 0.** The one caller that *omits* it is
 `engine/test_fe_hcp.py@«「온도 모름」은 통과가 아니라 등급이다»`, the pinned «asked without a temperature» test whose answer C58 and 180 B named;
 with `t=None` the bound is the declared constant and the docstring says so **in the same sentence as

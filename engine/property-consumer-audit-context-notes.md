@@ -57,8 +57,7 @@ reproduction that makes the consistency verdict trustworthy. Same shape for K&M'
 **So the refusal is the directing seat's reading, confirmed on the numbers.**
 
 **The nearest future consumer, and why it is the worst place to start.** The one node that
-*would* want a physical k is the CMB heat flux (`chain.yaml@«day_night_contrast:»` `cmb_heat_flux`, `:418`
-`geotherm`, both gap) — and Gaidos+ 2010 eq. 14 (now cached, read 여기, extraction line 398)
+*would* want a physical k is the CMB heat flux (`chain.yaml@«day_night_contrast:»` `cmb_heat_flux` and `geotherm`, both gap) — and Gaidos+ 2010 eq. 14 (now cached, read 여기, extraction line 398)
 shows what it needs: `Q_K ≈ 4π R_c² k α_c g_c T_c / c_p`, the **iron** conductivity, which no
 survey touched and which Gaidos themselves span 28–29 vs ~100 W/(m·K) (lines 972-989). The
 mantle-side flux would want the lower-mantle k at ~136 GPa / ~4000 K — outside the Manthilake

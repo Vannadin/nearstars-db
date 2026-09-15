@@ -40,6 +40,6 @@ pick the material, and make every result say which phase it got and why.
 - [x] `test_ice_giant.py --refresh` in the landing commit (path functions touched)
 
 ## Landing
-- [x] domain rows (:1060 superionic, :1078 dispatch, :1080 hot water) + Korean mirror
+- [x] domain rows (superionic, dispatch, hot water) + Korean mirror
 - [x] `interior-core.md` C3 closed, dated
 - [x] report to `nearstars-cb`

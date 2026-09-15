@@ -312,6 +312,39 @@ def main() -> int:
         ok(rc == 0 and "해석 성공 1" in buf.getvalue(),
            f"wrap: an anchor spanning the document's hard wrap must resolve, got rc={rc}\n{buf.getvalue()}")
 
+        # C97's detector: a bare `:NNNN` continuing a citation before it. Three properties are
+        # asserted together, because each one alone passes for the wrong reason.
+        #   - the code-span exemption FIRES: one continuation inside ``…`` and one outside count as 1.
+        #   - the comma may sit at the end of a line: an implementation that sweeps line by line
+        #     misses that pair and reports 1 where the count is 2 (the 79-against-81 fault).
+        #   - a preserved note is exempt in this form too, as it is for a line number and an anchor.
+        # ⚠ The assertion reads the census line, which prints on every run. The FAIL rows below it
+        #   sit after the line-number verdict, and these fixtures carry line numbers of their own.
+        for name, body, want_fail, want_n in (
+                ("span.md",
+                 "A citation synthetic-methodology.md:3, `:5` outside and "
+                 "``synthetic-methodology.md:3, `:5``` inside\n", True, 1),
+                ("wrap.md", "A citation synthetic-methodology.md:3,\n`:5` continues on the next line\n",
+                 True, 1),
+                ("twoline.md", "synthetic-methodology.md:3, `:5` here and synthetic-methodology.md:3,\n"
+                               "`:5` there\n", True, 2),
+                ("clean.md", "A citation synthetic-methodology.md@«The unique sentence lives here»\n",
+                 False, 0),
+                ("kept2.md", "<!-- Preserved verbatim from the parallel seat's scratch, 2026-09-05 -->\n"
+                             "A record citing synthetic-methodology.md:3, `:5`\n", False, 0)):
+            (root / "engine" / name).write_text(body, encoding="utf-8")
+            check_refs.SCAN = ((f"engine/{name}",),)
+            check_refs.CACHE.clear()
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                check_refs.main()
+            got = buf.getvalue()
+            marker = "[FAIL] 이름 없는 이어 붙인 줄번호" if want_fail else "[PASS] 이름 없는 이어 붙인 줄번호"
+            ok(marker in got and f"이행 대상 {want_n}건" in got,
+               f"continuation ({name}): expected {want_n} to migrate and fail={want_fail}, got:\n{got}")
+            (root / "engine" / name).unlink()
+        check_refs.BASENAMES.clear()
+
         # 5 again, positively: the same bare form with a phrase that IS there resolves
         (root / "engine" / "cited.py").write_text(
             '# 합성 인용 표본\n'
@@ -452,15 +485,15 @@ def main() -> int:
     #   ⚠ 이 수는 소스의 `ok(` 개수가 아니라 **실행된 횟수**다 — 반복문 안의 단정은 여러 번 돈다.
     #   ⚠ **성공 경로에 둔다**: `[PASS]` 를 인쇄하기 직전이라, 앞의 단정들을 **꼬리째** 판정 뒤로
     #   옮기는 사고도 여기서 걸린다 (예전 자리는 자기 위쪽만 지켰다 — 감사석 관찰).
-    if _counter["n"] != 41:
-        print(f"  [FAIL] 도달한 단정 수가 41 이어야 한다 — {_counter['n']} 다. 줄면 어떤 블록이 "
+    if _counter["n"] != 46:
+        print(f"  [FAIL] 도달한 단정 수가 46 이어야 한다 — {_counter['n']} 다. 줄면 어떤 블록이 "
               f"안 돌고 있다는 뜻이고, 늘면 이 수를 안 올린 것이다 (170 E·171 D 의 사고)")
         return 1
 
     print("  [PASS] 인용 체커 자기검증 — 고유 1회 통과 · 삭제된 구절 썩음 · 2회 매치 애매 · 남의 계약 블록 착지 · "
           "빈 줄 착지 · 줄번호는 미이행 카운트 · RECIPE 자기문서 해석 · 대문자 파일명 · bodies 스캔 · "
           "비-.md 대상 · 접힌 인용 · 문서명만 계수 · YAML 파싱 실패 FAIL · 키 상실 FAIL · 주석 안 인용 · 하드랩 앵커 · "
-          "알 수 없는 형식 FAIL · 자기 인용 · 모호한 문서 이름 FAIL · 계약 면제 " + _exempt_shape
+          "알 수 없는 형식 FAIL · 자기 인용 · 모호한 문서 이름 FAIL · 이어 붙인 줄번호 검출(스팬 면제 · 줄바꿈 넘김 · 보존 면제) · 계약 면제 " + _exempt_shape
           + " · composition_intent 는 need")
     return 0
 

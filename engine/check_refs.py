@@ -603,16 +603,32 @@ def main() -> int:
     _ext = _col.Counter(q.suffix for q in files())
     print(f"  이 스윕이 연 확장자 — " + " · ".join(f"{k} {v}" for k, v in sorted(_ext.items()))
           + f" · 이름으로 건너뛴 것 {' · '.join(sorted(SKIP))}")
-    # ⚠ 이름 없는 이어 붙은 줄번호 — 이 항목이 닫는 구멍이 **아니다**. 세어서 이름만 붙여 둔다.
+    # ⚠ 이름 없는 이어 붙은 줄번호 — C97 이 계수기를 **검출기로 올렸다**. 세기만 하던 자리다.
+    #   그물은 그대로다: 쉼표, 있을 수도 있는 백틱, `:`, 숫자. 넓히지 않았다 — 백틱 안 `:숫자`
+    #   전부를 세는 자는 671 건을 내고 그중 590 이 인용이 아니라 슬라이스·오프셋·표 칸이다.
+    # ⚠ **본문 전체에 돌린다. 줄 단위로 돌리면 안 된다** — `,\s*` 가 줄바꿈을 먹으므로, 줄 끝
+    #   쉼표와 다음 줄 `:숫자` 의 짝을 줄 단위 판은 놓친다 (81 이 아니라 79 를 낸다).
+    # ⚠ **보존 노트는 면제다** — `LINE_REF`·`SELF_LINE` 과 같은 규칙이다. 그 인용은 기록이라
+    #   이행 대상이 아니고, 같은 규칙이 그물마다 다르게 걸리면 규칙이 아니라 우연이다 (C94).
     _BARE = re.compile(r",\s*`?:([0-9]+(?:[-–][0-9]+)?)")
-    _bare_n = _bare_f = 0
+    _bare_n = _bare_f = _pres_n = _pres_f = 0
+    _bare_rows: list[str] = []
     for q in files():
-        k = len(_BARE.findall(text(q)))
-        if k:
-            _bare_n += k
-            _bare_f += 1
-    print(f"  이름 없는 이어 붙인 줄번호 {_bare_n}건 · {_bare_f}파일 — 이 검사가 닫는 구멍이 아니다 "
-          "(앞에 파일 이름이 없어 어느 그물에도 안 걸린다)")
+        # ⚠ 코드 스팬(``…``) 안은 세지 않는다 — C94 가 그 자리를 FAIL 로 안 올린 것과 같은 규칙.
+        #   지우지 않고 **같은 길이의 공백**으로 덮는다. 지우면 스팬 앞뒤가 붙어 없던 짝이 생긴다.
+        k = len(_BARE.findall(CODE_SPAN.sub(lambda m: " " * len(m.group(0)), text(q))))
+        if not k:
+            continue
+        if is_preserved(q):
+            _pres_n += k
+            _pres_f += 1
+            continue
+        _bare_n += k
+        _bare_f += 1
+        _bare_rows.append(f"{q.relative_to(ROOT)} — {k}건")
+    print(f"  [{'PASS' if not _bare_rows else 'FAIL'}] 이름 없는 이어 붙인 줄번호 "
+          f"{_bare_n + _pres_n}건 · {_bare_f + _pres_f}파일 "
+          f"(보존 노트 {_pres_n}건 · {_pres_f}파일은 기록이라 면제 · 이행 대상 {_bare_n}건)")
     _c = split_form_census()
     print(f"  갈라 쓴 꼴 스윕 — `LINE_REF` 붙은 꼴 {_c['line_attached']}건 · 갈라 쓴 꼴 "
           f"{_c['line_split']}건 · `SELF_LINE` 붙은 꼴 {_c['self_attached']}건 · 갈라 쓴 꼴 "
@@ -687,6 +703,15 @@ def main() -> int:
             print(f"  [FAIL] 줄번호 인용 — {u}")
         print(f"[FAIL] 줄번호로 쓴 인용 {len(unmigrated_left)}건 — 구절 앵커로 쓰세요 "
               f"(`<file>` 뒤에 @ 와 기욤으로 감싼, 그 문서에서 한 번만 나오는 구절)")
+        return 1
+    # C97 done, 2026-09-16: the same rule as the line above, one net later. The 26 continuations in
+    # files that are not preserved notes were migrated in the commit that turned this counter into a
+    # detector, so a new one now fails here. The 55 in preserved notes are counted and exempt.
+    if _bare_rows:
+        for r in _bare_rows:
+            print(f"  [FAIL] 이름 없는 이어 붙인 줄번호 — {r}")
+        print(f"[FAIL] 이어 붙인 줄번호 {_bare_n}건 · {_bare_f}파일 — 앞에 파일 이름이 없어 어느 "
+              f"그물에도 안 걸린다. 파일 이름을 다시 쓰거나 구절 앵커로 바꾸세요")
         return 1
     print(f"  [PASS] 앵커 {ok}건 전부 대상 문서에서 정확히 1회 매치 · 줄번호 인용 0건 · 문서 전체 인용 {whole}건 · "
           f"보존 노트 인용 {preserved}건 · 인용문 안 인용 {quoted_n}건은 기록이라 이행 대상이 아니다")

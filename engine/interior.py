@@ -3265,7 +3265,7 @@ def _porous_rock_verdict(mass_earth: float, radius_earth: float,
             hi = mid
 
     # ⚠ **둘 중 하나만 지웠다** (C50 (b) 표 4·10행, 브리프 170 B → 정정 170 C).
-    #   `inputs[axis] = 역산값` 은 이 파일의 **규약**이다 — `:3044` 의 일반 축, `:3252`·`:3253` 의
+    #   `inputs[axis] = 역산값` 은 이 파일의 **규약**이다 — 일반 축을 되쓰는 자리와, 그 아래
     #   `core_mass_fraction`·`ice_mass_fraction` 이 같은 일을 하고, `test_interior` 는 `res.regime`
     #   이 이름 붙인 축을 `res.inputs[axis]` 로 읽어 인쇄한다. 그러니 `initial_porosity` 는 «미스한
     #   조회를 덮어쓰는 것» 이 아니라 «역산이 무엇을 되읽었는지 그 축의 이름으로 보고하는 것» 이다.

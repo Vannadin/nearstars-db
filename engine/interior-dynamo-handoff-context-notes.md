@@ -55,8 +55,8 @@ required (status left as is, the mark is a note; a new status word is the owner'
 |---|---|---|---|---|---|
 | `:659` internal_heat_nontidal → dynamo_giant via l_int | Earth 21.3 TW (analog, radiogenic only); every roster giant/BD: supplier refuses by design | none — `scaling:18` lists nothing from the interior; `:78–81` declines to derive L(M, age) | **no** (dipole_field reads `luminosity_lsun` on the BD branch only; `l_int` never read) | requires | (나). ref kept; note added |
 | `:677` interior_layers → dynamo_rocky via core_radius | Earth 0.547 R⊕ (calibrated), Pandora emitted | none — not in `rocky:24–25`; `:108–109` "does not re-run RM22's … solver"; the sole claim is Related `:258` | **no** (`ladder()` has no such argument; hook never fired) | requires | (나). ref :23 (Returns) → :258, old kept in note |
-| `:678` core_state → dynamo_rocky via conductor_phase | Earth `liquid_outer_solid_inner` (analog); Pandora: core_state refuses (no `potential_temperature`) | `rocky:24`, `:28` | **yes** (hook fired, source core_state, Earth) | requires | (가) live. ref :25 → :24 |
-| `:684` composition_intent → dynamo_rocky via layer_fractions | no node emits `layer_fractions`; input `ice_mass_fraction` undeclared on every body → default 0.0 | `rocky:25`, `:27` — the *declared* ice fraction | reads the input (hook fired, source absent → 0.0) | influences · gap | (다) gap, kind **no value** — a declaration, not a solver output. ref :109 → :27 |
+| `:678` core_state → dynamo_rocky via conductor_phase | Earth `liquid_outer_solid_inner` (analog); Pandora: core_state refuses (no `potential_temperature`) | `rocky:24` and `rocky:28` | **yes** (hook fired, source core_state, Earth) | requires | (가) live. ref :25 → :24 |
+| `:684` composition_intent → dynamo_rocky via layer_fractions | no node emits `layer_fractions`; input `ice_mass_fraction` undeclared on every body → default 0.0 | `rocky:25` and `rocky:27` — the *declared* ice fraction | reads the input (hook fired, source absent → 0.0) | influences · gap | (다) gap, kind **no value** — a declaration, not a solver output. ref :109 → :27 |
 | `:686` heat_transport_mode → dynamo_rocky via cmb_heat_flux | Earth q_cmb 2.75 TW, band 1.54–4.77 (analog) from the `cmb_heat_flux` node (Brief 60); from-node has no recipe | none (`:113–114` is prose: stagnant lid → low CMB flux) | **no** (hook never fired) | selects · gap ("내는 노드가 없다" — **stale** since Brief 60) | (나) drawn, not required; the gap note re-typed: value exists, consumer does not read it. ref :70 → :113 |
 | `:687` internal_heat_nontidal → dynamo_rocky via geotherm | core_thermal_history (C20): Earth T_cmb,present 4 028 K, q_cmb,present 5.07 TW (analog — ⚠ H 1.5 pW/kg; **3 911.29 K / 3.75 TW** at the declared 0.088, Brief 166 E); no value *named* geotherm | none in either dynamo doc | **no** | requires · gap ("열진화 모형이 필요" — **stale** since C20) | (나) drawn, not required; note re-typed: value exists, consumer does not read it. ref kept (ihl:202) |
 | `:725` core_entropy_production → dynamo_rocky | Earth φ −69 MW/K, band −264…+238 (analog) | none (`rocky:183` reports the band, as a result, not a Need) | **no** | influences · gap | (나) drawn, not required; kind: value exists, no verdict can be drawn. ref :60 → :183 |
@@ -67,7 +67,7 @@ required (status left as is, the mark is a note; a new status word is the owner'
 **Ⓢ.** The methodology's printed Needs (`rocky:24–25`) name ten inputs; the interior domain owes **one**,
 `conductor_phase`, and supplies it (Earth: emitted, analog, consumed — the hook fired). The other nine are measured or
 declared. Of the five interior → dynamo_rocky edges the chain draws beyond the Needs line, **none is a printed
-requirement and none is read by the code**; the two whose gap notes said "no supplier" (`:686`, `:687`) were stale
+requirement and none is read by the code**; the two whose gap notes said "no supplier" (the `:686` and `:687` rows above) were stale
 in their reason — `cmb_heat_flux` (Brief 60) and `core_thermal_history` (C20) exist and emit on Earth — and are
 re-typed as "value exists, consumer does not read it". `:684` is the one gap of kind "no value", and it is a
 *declaration* the roster never makes, not a solver output. `:725` is "value exists, no verdict". Ⓡ does not hold:
@@ -86,5 +86,5 @@ inputs alone (A b: B_eq 172 µT calibrated; Luhman 16 A/B: 44 / 42 mT calibrated
 **Also found, not repaired.** The parallel seat's sweep listed dynamo-inbound `ref:` line numbers that land on Returns
 lines, blank lines or unrelated gates (re-checked line by line here). Twelve edges were touched in 5ad8f56c: **ten** refs
 corrected with the old number kept in each note (`:658 :660 :668 :669 :677 :678 :684 :685 :686 :725`), and two edges
-(`:659`, `:687`) given a note only, their refs left as they were. *(Corrected 2026-09-04 after the audit: this paragraph
+(the `:659` and `:687` rows) given a note only, their refs left as they were. *(Corrected 2026-09-04 after the audit: this paragraph
 first said "twelve refs … eleven corrected"; the diff carries ten `ref was` lines.)* The stale sentences are kept beneath the dated correction.

@@ -5,7 +5,7 @@
  "steps": 1500,
  "inputs": {
   "ammonia_table.py": "47fbe39e25e453c5",
-  "chain.yaml": "b25b94963227abbd",
+  "chain.yaml": "f08042e8e61ce219",
   "convergence.py": "71d9731ebe94ed66",
   "eos.py": "439a3ecbaf299f48",
   "fe_liquid.py": "d2d38be02270b585",
@@ -13,7 +13,7 @@
   "hhe_table.py": "4e8c1b003e69b834",
   "ice_fr2015.py": "ff4bfefe8553a1a7",
   "ice_melt_table.py": "edf7d6476c3ae64f",
-  "interior.py": "acbca08fdbb8ed2f",
+  "interior.py": "4dcefab52d0320f6",
   "payload.py": "d064510a77507cbc",
   "porosity.py": "ca33b581de6e49bc",
   "registry.py": "7031b25acd49c432",
@@ -46,7 +46,7 @@
  },
  "bodies": {
   "Uranus": {
-   "seconds": 27.2,
+   "seconds": 25.8,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -91,7 +91,7 @@
    "standalone_reproduces_solve": true
   },
   "Neptune": {
-   "seconds": 63.0,
+   "seconds": 60.6,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,

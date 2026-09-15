@@ -66,7 +66,7 @@ def render(body, out, size=1120, z=0.0):
     img = np.zeros((size,size,3),float); img[:]=(5,7,13)
     if pause and pause.get('on',True):
         # 계면은 항성정렬(untilted) 프레임에서 평가 — Kerbalism이 벨트만 tilted GSM으로 두고
-        # 계면은 Gsm_space(rb,false)로 렌더·선량 계산한다(Radiation.cs:609, :714). offset도 그 프레임의
+        # 계면은 Gsm_space(rb,false)로 렌더·선량 계산한다(Radiation.cs:609 와 Radiation.cs:714). offset도 그 프레임의
         # y축(자전축)을 따른다. 이전 판은 계면까지 쌍극 기울기로 돌려 방향이 틀어져 있었다.
         pd = pause_sdf(X,Y-off,Z,pause)
         img[pd<0]=(10,16,30)

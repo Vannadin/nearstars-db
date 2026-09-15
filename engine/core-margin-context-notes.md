@@ -100,9 +100,10 @@ against the bound emitted — ④ as an output.
 
 **Nothing tuned.** `GAMMA_CORE` and `fe_prem`'s K₀ are untouched; the standing rule held.
 
-**For the audit — variable names and `file:line` at `d133ad41`, not values**:
-`engine/core_state.py@«# 쓰이는지를 여기와 eos.py 양쪽에 적어 둔다: 밀도는 αK₀, 핵의 단열선은 이 γ 다.»` `GAMMA_CORE`, `:75` `GAMMA_RANGE_PA`, `:89` `MARGIN_THIN_FRACTION`,
-`:101` `gamma_flip()`, `:108` `k0_flip_gpa()`, `:372–376` `frac_c` / `thin`; `engine/eos.py`
+**For the audit — variable names as of `d133ad41`, not values** (the line numbers this paragraph
+carried have been dropped: a name survives an edit above it and a number does not):
+`engine/core_state.py@«# 쓰이는지를 여기와 eos.py 양쪽에 적어 둔다: 밀도는 αK₀, 핵의 단열선은 이 γ 다.»` `GAMMA_CORE`, then `GAMMA_RANGE_PA`, `MARGIN_THIN_FRACTION`,
+`gamma_flip()`, `k0_flip_gpa()`, `frac_c` / `thin`; `engine/eos.py`
 `FE_PREM` phase `k0 = 201.0 * GPA`, `FE_EPS` `156.2 * GPA`. Anchors: `test_core_state.py`
 section "판정의 여유".
 

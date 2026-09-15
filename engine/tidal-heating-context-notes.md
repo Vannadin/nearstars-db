@@ -26,7 +26,7 @@ bit-identical", which was too loose and the audit said so: Earth's `internal_hea
   10⁻³–10⁻² has no row → "unclassified (between table rows)"), orbital_period. `@recipe("heat_transport_mode")` → mode
   (§6.2: plate tectonics / stagnant lid / heat pipe, on the TOTAL surface flux = tidal + l_int/4πR²; the gap 0.14–2.5 W/m² is
   "unclassified"), total_surface_flux; `resurfacing_rate` not emitted (no formula printed). Not emitted: radius_ceiling,
-  plains_temperature (the Dante lid axis) — the two chain edges carrying them (:626, :650) become `status: gap`, dated.
+  plains_temperature (the Dante lid axis) — the two chain edges carrying them (the chain.yaml rows at 626 and 650 as they stood that day) become `status: gap`, dated.
   `tidal_transport.derive_potential_temperature` is not consulted (validation-failed label; Pandora is not a §6 lid case,
   tidal-heating-methodology.md@«> **Scope — lid-bearing bodies only.**»). Two Io flux anchors carry their different sources in comments: ~2 W/m² Veeder+ 2012 (ABSENT), 2.5 W/m²
   Kankanamge & Moore 2019 (HELD).
@@ -36,7 +36,7 @@ bit-identical", which was too loose and the audit said so: Earth's `internal_hea
   verdict is "cannot-say (heat-pipe regime: the boundary-layer inversion does not apply; radiogenic.py@«f"잰 값이라 천체마다 움직인다. ζ 상단은 모듈 선언 {mantle_flux.ZETA_RANGE[1]:.3f} (Table 2 의 ±0.5) 이고 논문이 "»)". New Need
   `tidal_power` [W] (chain :653 via power).
 - chain.yaml: `tidal_heating` outputs rewritten (old kept in note), `heat_transport_mode` outputs [mode, total_surface_flux]
-  (old kept), :631 units note, :632 via mantle_radiogenic_power → radiogenic_power (dated), :653 via power (built), :686 note
+  (old kept); at 631 a units note, at 632 via mantle_radiogenic_power → radiogenic_power (dated), at 653 via power (built), at 686 a note
   (from-node now has a recipe; dynamo_rocky still reads nothing → gap stands). Contract blocks for both recipes added to the
   tidal doc (en + ko); the heat doc's Returns/Needs extended (en + ko). `registry.load_all` gains `tidal_heating`;
   `check.sh` gains `test_tidal_heating.py`. `bodies/pandora.yaml` gains the four tidal inputs with sources and an
