@@ -119,7 +119,7 @@ POINTER = re.compile(rf"({FILE})(?::(?![\s:])|@|#)")
 
 SCAN = (("engine/chain.yaml",), ("engine/bindings.yaml",), ("engine/bodies/*.yaml",),
         ("engine/*.py",), ("engine/tools/*.py",), ("engine/*.md",),
-        ("scripts/**/*.py",))
+        ("engine/tools/*.md",), ("scripts/**/*.py",))
 CACHE: dict[Path, str] = {}
 
 
@@ -602,8 +602,7 @@ def main() -> int:
     import collections as _col
     _ext = _col.Counter(q.suffix for q in files())
     print(f"  이 스윕이 연 확장자 — " + " · ".join(f"{k} {v}" for k, v in sorted(_ext.items()))
-          + f" · 이름으로 건너뛴 것 {' · '.join(sorted(SKIP))}"
-          + " · ⚠ `engine/tools/*.md` 는 SCAN 밖이라 안 열린다")
+          + f" · 이름으로 건너뛴 것 {' · '.join(sorted(SKIP))}")
     # ⚠ 이름 없는 이어 붙은 줄번호 — 이 항목이 닫는 구멍이 **아니다**. 세어서 이름만 붙여 둔다.
     _BARE = re.compile(r",\s*`?:([0-9]+(?:[-–][0-9]+)?)")
     _bare_n = _bare_f = 0

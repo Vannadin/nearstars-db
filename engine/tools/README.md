@@ -61,8 +61,8 @@ archive was not. Same kind of thing, opposite treatment, and until now nothing s
   shape, and reporting its output as a count asserts that hypothesis silently.** Say the pattern beside the
   count, and have a second reader re-measure with a different one — every one of these four was caught by a
   re-measurement, none by the author noticing.
-- **Read the generator before measuring its source.** `make_hhe_table.py:32` had carried `SENTINEL =
-  -8.8603` with the comment *"우리 창 안에 7칸 있다"* — the value, the convention and the exact count — the
+- **Read the generator before measuring its source.** `make_hhe_table.py@«SENTINEL = -8.8603»` had
+  carried that value with the comment *"우리 창 안에 7칸 있다"* — the value, the convention and the exact count — the
   whole time; two seats re-derived it from the tables, one of them wrongly, before either looked there.
   Third instance the same day (Brief 53): line 113 of the same generator names the grad_ad clamps
   (*"0.1/0.5 로 눌린 grad_ad"*), and the C6 entry's "max 0.40" between the two Chabrier editions was
@@ -112,9 +112,12 @@ Superseded backlog entries, kept for the reasoning:
 emitted as `mantle_temperature_floor_total_verdict`, so its citation is read by whoever reads the
 verdict. A line number there is guaranteed to rot on the next refactor, and it rotted twice in one
 day: the audit found it three sections away from what it described, and the repair that added the
-function name still had the line three lines off. It now names the function alone,
-`radiogenic.py@«def _total_heat(»`, which a reader can find and which the checker resolves — an
-anchor whose only failure mode is the function being renamed, and a rename should invalidate it.
+function name still had the line three lines off. It now names the definition,
+`radiogenic.py@«def _total_heat(b: dict, b_low: dict»`, which a reader can find and which the checker
+resolves — an anchor whose only failure mode is the function being renamed, and a rename should
+invalidate it. The shorter form, the function name alone, matches twice in that file: the definition,
+and `HEAT_PIPE_FLOOR`'s own string, which quotes the anchor. Carrying two parameters past the
+parenthesis is what makes it single-valued.
 
 The same holds for any note or reason that leaves the engine. Inside the engine, an anchor with a
 phrase is fine anywhere; what must not travel outward is a number that means nothing to the reader
@@ -984,7 +987,7 @@ Two failures reached the gate from newly written prose, and both broke a citatio
 already enforces.
 
 - **gate135**: a bibcode shipped without its ADS link, in a file where every other row carries one.
-- **gate139**: `chain.yaml:96` — a line-number citation, in the file whose own C33 work replaced line
+- **gate139**: a citation into `chain.yaml` by line number — in the file whose own C33 work replaced line
   numbers with phrase anchors **because line numbers drift**. The checker that caught it was written
   by this seat the day before.
 
@@ -1006,7 +1009,7 @@ Three citation disciplines were tightened or enforced today — phrase anchors i
 bibcodes as clickable ADS URLs, quotations checked against the sentence they sit in. **All three are
 checks on the shape of the reference. None of them opens what is referenced.**
 
-The gap showed itself at the end of the day. `chain.yaml:96` failed the line-number check, and the
+The gap showed itself at the end of the day. That `chain.yaml` line number failed the line-number check, and the
 cheapest repair was to swap the line number for a phrase from that line — form satisfied, gate green,
 two minutes. Opening the node instead turned up that it is declared `kind: measured`: **it is supplied,
 not computed, so the recipe this item was waiting for is never coming**, and the guardrail meant to
@@ -1399,7 +1402,7 @@ cause" was one keystroke from being written into the item.
 **All four ran at 4 Myr.**
 
 ```python
-def integrate(params, t_c0, t_m0, age_gyr, step_myr: float = STEP_MYR)   # core_history.py:97
+def integrate(params, t_c0, t_m0, age_gyr, step_myr: float = STEP_MYR)   # core_history.py, integrate()
 ```
 
 `ch.STEP_MYR = step` rebinds the module global. **The default was already evaluated when the function

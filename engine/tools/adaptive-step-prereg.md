@@ -30,7 +30,7 @@
 
   So the fixed 4 Myr step was h/τ = **1.02 on Earth's first step** and **75 on Mars's**. Earth survived at
   the edge; Mars did not. (⚠ The "τ ≈ 0.717 Myr, Earth 36.3" in yesterday's sweep comment has no
-  derivation anywhere in the repo; 0.717 Myr is the ²⁶Al half-life at interior-core.md:2245. The directing
+  derivation anywhere in the repo; 0.717 Myr is the ²⁶Al half-life at interior-core.md@«0.717 My (Ruedas)». The directing
   seat relayed it into Briefs 156 and 157 as "h/τ Earth 0.1 · Mars 5.6". Both are withdrawn here.)
 
 ## F
