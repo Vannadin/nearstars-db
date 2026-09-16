@@ -23,6 +23,7 @@
 추적 안 됨). 그 파일과 그 옆의 폴백은 더 쓰지 않는다. 정본은 이 경로다 (C90 개정 6).
 """
 import html, os, pathlib, re, subprocess, datetime, sys
+import yaml
 
 HEAD_HTML = """<title>코어 항목 목록</title>
 <style>
@@ -253,6 +254,34 @@ STATE = {"closed": ("닫힘", "c-done"), "built": ("지어짐", "c-done"),
 #   첫 낱말 분류는 금지다 — 97 개 후보 칸의 첫 낱말은 서른 가지쯤이고 그중 여럿은 상태가 아니라
 #   산문이다(`the` · `whether` · `three` · `a`). 그래서 **구절**로 접고, 우선순위를 숫자로 적는다.
 #   우선순위가 필요한 이유: «반은 닫히고 반은 열림» 은 `closed` 와 `open` 을 **둘 다** 품는다.
+# ⚠ **칩은 셋뿐이다** (C101). 원장 문구는 **일곱 낱말로 계속 읽고**, 그 일곱을 여기서 셋으로 접는다.
+#   규칙 표를 셋으로 다시 쓰지 않는 이유: 그러면 «조건부 닫힘» 이 어느 행에 있었는지 셀 수 없어지고,
+#   접기가 무엇을 숨겼는지 물을 자리가 사라진다 (사전등록 함정 2).
+CHIP3 = {"closed": "closed", "built": "progress", "conditional": "progress",
+         "watch": "progress", "open": "open", "listed": "open", "blocked": "open"}
+STATE3 = {"open": ("열림", "c-stop"), "progress": ("진행", "c-wait"), "closed": ("닫힘", "c-done")}
+
+KIND_FILE = "core_items_kind.yaml"          # ⚠ 추적되는 파일, 이 디렉터리 안
+KINDS = ("physics", "tooling", "record")
+
+
+def read_kinds():
+    """종류·부모·곁가지 번호를 **추적되는 파일 하나**에서 읽는다 (C101 수정 2).
+
+    ⚠ **없으면 이름을 대고 멈춘다.** 기본값도, «전부 physics» 도 없다 — 추적 안 되는 입력이
+    사라지면 페이지가 조용히 달라지는 것이 C90 의 모양이었다."""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), KIND_FILE)
+    if not os.path.exists(path):
+        sys.exit(f"거절: {KIND_FILE} 이 없다 ({path}) — 종류를 짐작하지 않는다. 페이지를 만들지 않는다.")
+    data = yaml.safe_load(pathlib.Path(path).read_text(encoding="utf-8"))
+    items = (data or {}).get("items") or {}
+    bad = [k for k, v in items.items() if (v or {}).get("kind") not in KINDS]
+    if bad:
+        sys.exit(f"거절: {KIND_FILE} 에 종류가 {KINDS} 밖인 행 {len(bad)} — {bad[:5]}")
+    blob = _sh("git", "hash-object", path, quiet=True).strip()
+    return items, blob, path
+
+
 PHRASE_RULES = [
     # (우선순위, 구절, 칩, 비고 — 페이지에 그대로 인쇄된다)
     (1, "half closed", "open", "부분 닫힘 — 닫힌 반은 칩에서 사라진다"),
@@ -412,6 +441,22 @@ cnt = {}
 for r in rows:
     cnt[r["chip"]] = cnt.get(r["chip"], 0) + 1
 
+# ── 종류 (C101) ────────────────────────────────────────────────────────────────
+kind_items, kind_blob, kind_path = read_kinds()
+missing_kind = [r["id"] for r in rows if r["id"] not in kind_items]
+extra_kind = [k for k in kind_items if k not in ids]
+if missing_kind or extra_kind:
+    sys.exit(f"거절: {KIND_FILE} 과 항목 표가 어긋난다 — 표에만 {missing_kind} · 파일에만 {extra_kind}")
+for r in rows:
+    r["kind"] = kind_items[r["id"]]["kind"]
+    r["chip3"] = CHIP3[r["chip"]]
+kcnt = {k: sum(1 for r in rows if r["kind"] == k) for k in KINDS}
+cnt3 = {}
+for r in rows:
+    cnt3[r["chip3"]] = cnt3.get(r["chip3"], 0) + 1
+shown = [r for r in rows if r["kind"] != "tooling"]      # 기본은 물성 (+ 기록)
+folded = [r for r in rows if r["kind"] == "tooling"]     # 접히고, 지워지지 않는다
+
 strict, loose = net_counts(sha)
 print(f"[입력] 원장을 {ledger_text(sha)[1]} 에서 읽었다 · 페이지 머리는 이 스크립트 안")
 print(f"[그물] 파일 전체에서 엄격 {strict} · 느슨 {loose} · 표 안 {len(rows)} · 서로 다른 번호 {len(set(ids))}")
@@ -423,39 +468,69 @@ print(f"[수락선 ②] 항목 표 머리글 {header_hits} 회 · 읽은 행 {le
 print(f"[수락선 ⑤] 겹치는 번호 {len(dups)}")
 print(f"[수락선 ④] 접은 행 {len(rows)} · 못 접은 문구 0 · 규칙 {len(PHRASE_RULES)}")
 print(f"[우선순위] 규칙이 둘 이상 걸린 행 {ties} · 그중 **칩이 갈린 행** {chip_ties} {tie_rows}")
-print(f"[수락선 ①] V19 손목록과 다른 칩 {len(diff)}")
+diff3 = [(i, o, n) for i, o, n in diff if CHIP3[o] != CHIP3[n]]
+print(f"[수락선 ①] V19 손목록과 다른 칩 — 일곱 낱말로 {len(diff)} · 셋으로 접은 뒤 {len(diff3)}")
 for i, old, new in diff:
-    print(f"          {i}: 손목록 {STATE[old][0]} → 원장 {STATE[new][0]}")
+    mark = "" if (old, new) in [(o, n) for _, o, n in diff3] else "  (셋으로 접으면 같아진다)"
+    print(f"          {i}: 손목록 {STATE[old][0]} → 원장 {STATE[new][0]}{mark}")
 print(f"[산문] 한글 두 칸이 없는 행 {len(missing_prose)} {missing_prose}")
-print("[칩 집계]", {STATE[k][0]: v for k, v in sorted(cnt.items())})
+print("[칩 집계·일곱]", {STATE[k][0]: v for k, v in sorted(cnt.items())})
+print("[수락선 C] 칩 7 → 3 — "
+      + " · ".join(f"{STATE[old][0]}({old}) → {STATE3[CHIP3[old]][0]}" for old in STATE))
+print("[칩 집계·셋]", {STATE3[k][0]: v for k, v in sorted(cnt3.items())})
+cond_rows = [r["id"] for r in rows if r["chip"] == "conditional"]
+print(f"[함정 2] 조건부 닫힘이던 행 {len(cond_rows)} {cond_rows} — 전부 "
+      f"{STATE3['progress'][0]} 으로 접힌다 · 상시 감시 "
+      f"{[r['id'] for r in rows if r['chip'] == 'watch']} · 막힘 "
+      f"{[r['id'] for r in rows if r['chip'] == 'blocked']}")
+print(f"[수락선 A·B] 입력 {KIND_FILE} blob {kind_blob} · 접은 행 {len(rows)} · 못 접은 문구 0 · "
+      f"물성 {kcnt['physics']} · 도구 {kcnt['tooling']} · 기록 {kcnt['record']}")
+print(f"[보기] 기본에 보이는 행 {len(shown)} (물성 {kcnt['physics']} + 기록 {kcnt['record']}) · "
+      f"접어 둔 행 {len(folded)} — 지운 것이 아니라 접은 것이다")
+noted = [r["id"] for r in rows if kind_items[r["id"]].get("note")]
+print(f"[함정 3] 측정이 이름 붙인 약한 행·불일치 {len(noted)} {noted} — 같은 문장으로 실렸다")
 
 # ── 페이지 ─────────────────────────────────────────────────────────────────────
 # ⚠ 머리는 **이 파일 안에 있다** — 바깥 스크래치 파일을 열지 않는다 (C90 수정 3, 수락선 ⑦).
 head, extra = HEAD_HTML, EXTRA_CSS
-body_rows = []
-for r in rows:
-    lab, cls = STATE[r["chip"]]
-    q, now, dep = PROSE.get(r["id"], ("", "", ""))
-    body_rows.append(
-        f'<tr class="st-{r["chip"]}"><td class="id">{r["id"]}</td>'
-        f'<td class="q">{html.escape(q) or "—"}</td>'
-        f'<td class="now">{html.escape(now) or "—"}</td>'
-        f'<td><span class="chip {cls}">{lab}</span></td>'
-        f'<td class="dep">{html.escape(dep) or "—"}</td></tr>')
+
+
+def render_rows(subset):
+    out = []
+    for r in subset:
+        lab, cls = STATE3[r["chip3"]]
+        q, now, dep = PROSE.get(r["id"], ("", "", ""))
+        note = kind_items[r["id"]].get("note") or ""
+        parent = kind_items[r["id"]].get("parent")
+        k = kind_items[r["id"]].get("branch_k")
+        branch = f'{parent} 곁가지 {k}' if parent else ""
+        tail = " · ".join(x for x in (branch, note) if x)
+        out.append(
+            f'<tr class="st-{r["chip3"]}"><td class="id">{r["id"]}</td>'
+            f'<td class="q">{html.escape(q) or "—"}</td>'
+            f'<td class="now">{html.escape(now) or "—"}</td>'
+            f'<td><span class="chip {cls}">{lab}</span></td>'
+            f'<td class="dep">{html.escape(tail or dep) or "—"}</td></tr>')
+    return out
+
+
+body_rows = render_rows(shown)
+folded_rows = render_rows(folded)
 
 rule_rows = []
 for pri, ph, chip, note in PHRASE_RULES:
-    lab, cls = STATE[chip]
+    lab, cls = STATE3[CHIP3[chip]]
     rule_rows.append(
         f'<tr><td><code>{html.escape(ph)}</code></td>'
         f'<td><span class="chip {cls}">{lab}</span></td>'
+        f'<td>{html.escape(STATE[chip][0])}</td>'
         f'<td>{pri}</td><td>{html.escape(note) or "—"}</td></tr>')
 
 diff_line = ("원장과 옛 손목록이 <strong>모든 행에서 일치</strong>합니다."
-             if not diff else
-             "⚠ <strong>원장과 옛 손목록이 " + str(len(diff)) +
+             if not diff3 else
+             "⚠ <strong>원장과 옛 손목록이 " + str(len(diff3)) +
              " 행에서 갈립니다</strong> — " +
-             " · ".join(f"{i} 손목록 {STATE[o][0]} → 원장 {STATE[n][0]}" for i, o, n in diff) +
+             " · ".join(f"{i} 손목록 {STATE3[CHIP3[o]][0]} → 원장 {STATE3[CHIP3[n]][0]}" for i, o, n in diff3) +
              ". 이 페이지는 <strong>원장을 따릅니다</strong>.")
 
 body = f"""<div class="wrap">
@@ -465,27 +540,37 @@ body = f"""<div class="wrap">
     <p class="standfirst">일일 보드가 "오늘 무엇이 움직였나"를 말한다면, 이 표는 <strong>번호가 가리키는 것이 무엇인지</strong>를 말합니다. ⚠ <strong>상태 칩은 이제 손으로 옮긴 것이 아니라 원장에서 읽습니다</strong> — <code>git show {sha}:engine/interior-core.md</code> 의 항목 표를 머리글 행으로 찾아 상태 칸을 그대로 읽고, 아래 대응표로 접습니다. 표에 없는 문구가 나오면 이 페이지는 만들어지지 않습니다. 한글 두 칸(무엇이 문제였나 · 지금은)은 여전히 <strong>손으로 쓴 요약</strong>입니다.</p>
   </div>
   <div class="strip">
-    <div class="stat"><span class="stat-label">전체</span><span class="stat-value">{len(rows)}</span><span class="stat-note">{rows[0]['id']} ~ {rows[-1]['id']}</span></div>
-    <div class="stat"><span class="stat-label">닫힘 · 지어짐</span><span class="stat-value v-quiet">{cnt.get('closed',0)+cnt.get('built',0)}</span><span class="stat-note">닫힘 {cnt.get('closed',0)} · 지어짐 {cnt.get('built',0)}</span></div>
-    <div class="stat"><span class="stat-label">진행 · 조건부</span><span class="stat-value v-wait">{cnt.get('open',0)+cnt.get('conditional',0)}</span><span class="stat-note">열림 {cnt.get('open',0)} · 조건부 {cnt.get('conditional',0)}</span></div>
-    <div class="stat"><span class="stat-label">미착수 · 막힘</span><span class="stat-value v-stop">{cnt.get('listed',0)+cnt.get('blocked',0)}</span><span class="stat-note">미착수 {cnt.get('listed',0)} · 막힘 {cnt.get('blocked',0)}</span></div>
+    <div class="stat"><span class="stat-label">전체</span><span class="stat-value">{len(rows)}</span><span class="stat-note">물성 {kcnt['physics']} · 도구 {kcnt['tooling']} · 기록 {kcnt['record']}</span></div>
+    <div class="stat"><span class="stat-label">닫힘</span><span class="stat-value v-quiet">{cnt3.get('closed',0)}</span><span class="stat-note">이름 붙인 거절도 닫힘</span></div>
+    <div class="stat"><span class="stat-label">진행</span><span class="stat-value v-wait">{cnt3.get('progress',0)}</span><span class="stat-note">지어짐 {cnt.get('built',0)} · 조건부 {cnt.get('conditional',0)} · 상시 감시 {cnt.get('watch',0)}</span></div>
+    <div class="stat"><span class="stat-label">열림</span><span class="stat-value v-stop">{cnt3.get('open',0)}</span><span class="stat-note">열림 {cnt.get('open',0)} · 미착수 {cnt.get('listed',0)} · 막힘 {cnt.get('blocked',0)}</span></div>
   </div>
   <section>
-    <div class="sec-head"><h2>읽는 법</h2><p class="sec-sub">상태 칩 일곱 가지와 마지막 열의 뜻입니다.</p></div>
-    <p class="prose"><span class="chip c-done">닫힘</span> 질문에 답이 났거나 이름 붙인 거절로 끝남. <span class="chip c-done">지어짐</span> 코드와 레시피가 들어가 돌아감. <span class="chip c-wait">진행·열림</span> 일부 답이 났고 나머지가 남음. <span class="chip c-wait">조건부 닫힘</span> 닫혔으나 남은 것이 있음. <span class="chip c-park">미착수</span> 등재만 됨. <span class="chip c-stop">막힘·대기</span> 다른 결정이나 자료를 기다림. <span class="chip c-acc">상시 감시</span> 닫히지 않는 것이 정의.</p>
-    <p class="prose">마지막 열 <strong>기다림</strong>은 그 항목이 명시적으로 기다리는 다른 항목입니다.</p>
+    <div class="sec-head"><h2>읽는 법</h2><p class="sec-sub">상태 칩 <strong>셋</strong>과 마지막 열의 뜻입니다.</p></div>
+    <p class="prose"><span class="chip c-done">닫힘</span> 질문에 답이 났거나 이름 붙인 거절로 끝남. <span class="chip c-wait">진행</span> 지어졌거나, 닫혔는데 남은 것이 있거나, 닫히지 않는 것이 정의. <span class="chip c-stop">열림</span> 아직 답이 없음 — 등재만 된 것과 다른 결정을 기다리는 것이 여기 함께 섭니다.</p>
+    <p class="prose">⚠ <strong>접기가 무엇을 가립니다</strong> — 예전 «조건부 닫힘» {cnt.get('conditional',0)} 행은 «닫혔는데 남은 것이 있다» 였고, 그중 <code>C41</code> 의 남은 것은 <strong>임시값</strong>입니다. 진행 칩에서는 그 상태가 안 보이고, 임시값 규칙 다섯(등급 · 카운트 · emit 금지 · 양쪽 기록 · 게이트)이 그것을 드러내는 유일한 자리입니다. «상시 감시» {cnt.get('watch',0)} 행과 «막힘» {cnt.get('blocked',0)} 행도 보통의 진행·열림으로 읽힙니다.</p>
+    <p class="prose">마지막 열은 <strong>곁가지와 단서</strong>입니다 — 도구 항목이면 어느 항목의 몇째 곁가지인지, 측정이 «근거 약함» 이라 적은 행이면 그 문장입니다.</p>
   </section>
   <section>
-    <div class="sec-head"><h2>전체 목록</h2><p class="sec-sub">상태는 <code>{sha}</code> 의 원장에서 읽은 것입니다.</p></div>
+    <div class="sec-head"><h2>물성 {kcnt['physics']} + 기록 {kcnt['record']}</h2><p class="sec-sub">상태는 <code>{sha}</code> 의 원장에서 읽고, 종류는 <code>{KIND_FILE}</code>(<code>{kind_blob[:12]}</code>)에서 읽습니다. 도구 {kcnt['tooling']} 개는 아래로 접혀 있습니다.</p></div>
     <div class="tablewrap"><table class="grid">
-      <tr><th>번호</th><th>무엇이 문제였나</th><th>지금은</th><th>상태</th><th>기다림</th></tr>
+      <tr><th>번호</th><th>무엇이 문제였나</th><th>지금은</th><th>상태</th><th>곁가지 · 단서</th></tr>
       {''.join(body_rows)}
     </table></div>
   </section>
   <section>
+    <div class="sec-head"><h2>도구 {kcnt['tooling']} — 접힘</h2><p class="sec-sub">⚠ 접은 것이지 지운 것이 아닙니다. 여는 순간 같은 표로 보입니다.</p></div>
+    <details><summary>도구 항목 {kcnt['tooling']} 개 펼치기</summary>
+    <div class="tablewrap"><table class="grid">
+      <tr><th>번호</th><th>무엇이 문제였나</th><th>지금은</th><th>상태</th><th>곁가지 · 단서</th></tr>
+      {''.join(folded_rows)}
+    </table></div>
+    </details>
+  </section>
+  <section>
     <div class="sec-head"><h2>원장 문구 → 상태 칩 대응표</h2><p class="sec-sub">생성기가 실제로 쓰는 규칙 {len(PHRASE_RULES)} 개입니다. 여기 없는 문구를 만나면 페이지를 만들지 않고 그 문구와 줄번호를 대며 멈춥니다.</p></div>
     <div class="tablewrap"><table class="grid">
-      <tr><th>원장 구절</th><th>칩</th><th>우선순위</th><th>비고</th></tr>
+      <tr><th>원장 구절</th><th>칩</th><th>접기 전 낱말</th><th>우선순위</th><th>비고</th></tr>
       {''.join(rule_rows)}
     </table></div>
     <p class="prose">⚠ <strong>첫 낱말로 가르지 않습니다</strong> — 원장의 상태 칸 첫 낱말은 서른 가지쯤이고 그중 여럿은 상태가 아니라 산문입니다. 그래서 구절로 접고, 두 규칙이 함께 걸리는 행은 오늘 {ties} 행이고, 그중 **서로 다른 칩을 가리켜 우선순위가 실제로 판정한 행은 {chip_ties} 행**입니다. {diff_line}</p>

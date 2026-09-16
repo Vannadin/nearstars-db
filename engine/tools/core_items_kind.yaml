@@ -1,0 +1,292 @@
+# 코어 항목 98 개의 종류·부모·곁가지 번호 — 보드가 읽는 단 하나의 입력
+#
+# ⚠ 이 파일이 없으면 생성기는 이 이름을 대고 멈춘다. 기본값 없음, «전부 physics» 없음.
+# 값은 아래 두 측정 문서에서 전사한 것이고, 여기서 새로 판정하지 않는다.
+#
+# 출처 1 — C-items-composition-2026-09-16.md  a7b673e5227a0640a5cab3925ccea36e129b0ec8  (수 59 · 38 · 1)
+# 출처 2 — C-items-parents-2026-09-16.md      0c3ca436e7f7b04ad933bf5d03442dfc8faeddde  (tooling 38 의 부모·곁가지)
+#
+# kind: physics | tooling | record.  parent·branch_k 는 tooling 에만 있다.
+# hedge: 측정 문서가 «근거 약함» 으로 인쇄한 행은 그 문장을 그대로 싣는다 (함정 3).
+
+items:
+  C1:
+    kind: physics
+  C2:
+    kind: physics
+  C3:
+    kind: physics
+  C4:
+    kind: physics
+  C5:
+    kind: physics
+  C6:
+    kind: physics
+  C7:
+    kind: physics
+  C8:
+    kind: physics
+  C9:
+    kind: physics
+  C10:
+    kind: physics
+  C11:
+    kind: physics
+  C12:
+    kind: physics
+  C13:
+    kind: physics
+  C14:
+    kind: physics
+  C15:
+    kind: physics
+  C16:
+    kind: physics
+  C17:
+    kind: physics
+  C18:
+    kind: physics
+  C19:
+    kind: physics
+  C20:
+    kind: physics
+  C21:
+    kind: physics
+  C22:
+    kind: physics
+  C23:
+    kind: physics
+  C24:
+    kind: physics
+  C25:
+    kind: physics
+  C26:
+    kind: physics
+  C27:
+    kind: physics
+  C28:
+    kind: physics
+  C29:
+    kind: physics
+  C30:
+    kind: physics
+  C31:
+    kind: tooling
+    parent: C30
+    branch_k: 1
+    note: "⚠ 근거 약함 — 증거 열이 «—»"
+  C32:
+    kind: record
+  C33:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 1
+    note: "⚠ 근거 약함 — 증거 열이 «—»"
+  C34:
+    kind: physics
+  C35:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 2
+  C36:
+    kind: tooling
+    parent: C16
+    branch_k: 1
+  C37:
+    kind: tooling
+    parent: C16
+    branch_k: 2
+  C38:
+    kind: physics
+  C39:
+    kind: physics
+  C40:
+    kind: tooling
+    parent: C32
+    branch_k: 1
+  C41:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 3
+  C42:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 4
+    note: "곁가지 형제 = C41"
+  C43:
+    kind: physics
+  C44:
+    kind: tooling
+    parent: C41
+    branch_k: 1
+  C45:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 5
+  C46:
+    kind: physics
+  C47:
+    kind: physics
+  C48:
+    kind: physics
+  C49:
+    kind: physics
+  C50:
+    kind: tooling
+    parent: C37
+    branch_k: 1
+  C51:
+    kind: physics
+  C52:
+    kind: tooling
+    parent: C45
+    branch_k: 1
+    note: "부모 둘 — C45 · C50, 첫째로 번호"
+  C53:
+    kind: physics
+  C54:
+    kind: physics
+  C55:
+    kind: physics
+  C56:
+    kind: physics
+  C57:
+    kind: physics
+  C58:
+    kind: physics
+  C59:
+    kind: physics
+  C60:
+    kind: physics
+  C61:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 6
+  C62:
+    kind: physics
+  C63:
+    kind: physics
+  C64:
+    kind: tooling
+    parent: C15
+    branch_k: 1
+  C65:
+    kind: tooling
+    parent: C64
+    branch_k: 1
+  C66:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 7
+  C67:
+    kind: physics
+  C68:
+    kind: tooling
+    parent: C64
+    branch_k: 2
+  C69:
+    kind: physics
+  C70:
+    kind: tooling
+    parent: C87
+    branch_k: 1
+    note: "⚠ 대조 — 지휘는 «측정» 으로 열어 둠"
+  C71:
+    kind: tooling
+    parent: C58
+    branch_k: 1
+  C72:
+    kind: physics
+  C73:
+    kind: tooling
+    parent: C45
+    branch_k: 2
+  C74:
+    kind: physics
+  C75:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 8
+  C76:
+    kind: tooling
+    parent: C56
+    branch_k: 1
+  C77:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 9
+  C78:
+    kind: physics
+  C79:
+    kind: physics
+  C82:
+    kind: physics
+  C85:
+    kind: physics
+  C80:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 10
+  C81:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 11
+  C83:
+    kind: tooling
+    parent: C79
+    branch_k: 1
+  C84:
+    kind: tooling
+    parent: C78
+    branch_k: 1
+  C86:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 12
+  C87:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 13
+  C88:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 14
+  C90:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 16
+  C89:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 15
+    note: "대조 — 지휘 예상 «작업 규율» 과 일치"
+  C91:
+    kind: tooling
+    parent: C65
+    branch_k: 1
+  C92:
+    kind: physics
+  C93:
+    kind: physics
+    note: "⚠ 기록된 불일치 — 지휘석 읽기는 record, 이 측정은 physics. 해소하지 않고 기록 (C-items-composition-2026-09-16.md)"
+  C96:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 18
+  C94:
+    kind: tooling
+    parent: 작업 규율
+    branch_k: 17
+  C95:
+    kind: tooling
+    parent: C88
+    branch_k: 1
+  C97:
+    kind: tooling
+    parent: C94
+    branch_k: 1
+    note: "⚠ 대조 불일치 — 지휘 예상 부모 C88"
+  C98:
+    kind: tooling
+    parent: C94
+    branch_k: 2
