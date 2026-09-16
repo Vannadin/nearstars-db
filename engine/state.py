@@ -44,6 +44,9 @@ class BodyState:
     current_node: str | None = None
 
     # ── 읽기 ────────────────────────────────────────────────────────────
+    # ⚠ **반환 모양은 안 바꾼다** (C71). 꼬리표는 값에 붙지 않고 **결과 객체**에 남아 있다.
+    #   바뀐 것은 «누가 답했는가» 를 `_producer` 가 따로 알려 준다는 것뿐이고, 이 함수의 다섯
+    #   호출부(`__contains__`·`__getitem__`·`get`·`get_optional`·계약 검사)는 한 줄도 안 고친다.
     def _find(self, key: str) -> tuple[bool, Any]:
         """조회 한 번의 순수한 부분 — 기록하지 않는다. 선언된 입력이 먼저, 그 다음 도출값."""
         if key in self.inputs:
@@ -52,6 +55,48 @@ class BodyState:
             if r.applicable and key in r.values:
                 return True, r.values[key]
         return False, None
+
+    def _producer(self, key: str) -> str | None:
+        """그 키에 **실제로 답하는** 노드 이름. 선언된 입력이 이기면 `None`.
+
+        ⚠ `_find` 와 **같은 순서로 돈다**. 두 함수가 다른 순서를 돌면 꼬리표가 다른 결과의
+        것이 되고, 그 순간 등급이 남의 수렴 여부를 말하게 된다."""
+        if key in self.inputs:
+            return None
+        for node, r in self.results.items():
+            # ⚠ 위 `_find` 와 **같은 조건, 다른 철자**로 적는다 — 같은 문장을 두 번 쓰면
+            #   원장의 구절 앵커가 두 곳에 매치해 애매해진다 (실제로 한 번 그랬다).
+            if not r.applicable or key not in r.values:
+                continue
+            return node
+        return None
+
+    def unconverged_reads(self, node: str | None = None) -> tuple[str, ...]:
+        """이 노드가 읽은 값 가운데 **미수렴 결과에서 온 것들** — `"노드.키"` 꼴 (C71).
+
+        ⚠ **조회 로그를 읽는다.** 그래서 `NEARSTARS_LOOKUP_LOG=0` 이면 빈 튜플이 나오고, 그
+        빈 튜플은 «미수렴 입력 없음» 과 똑같이 생겼다 — 호출부가 그 둘을 구별해야 한다면
+        로그가 켜져 있는지를 먼저 물어야 한다 (`log_enabled`).
+        ⚠ **순서를 보존하고 중복을 없앤다.** 같은 키를 두 번 읽어도 표지는 하나다."""
+        who = self.current_node if node is None else node
+        out: list[str] = []
+        for reader, key, _kind in self.lookups:
+            if reader != who:
+                continue
+            producer = self._producer(key)
+            if producer is None:
+                continue
+            r = self.results.get(producer)
+            if r is not None and r.converged is False:
+                mark = f"{producer}.{key}"
+                if mark not in out:
+                    out.append(mark)
+        return tuple(out)
+
+    @staticmethod
+    def log_enabled() -> bool:
+        """조회 로그가 켜져 있는가. `unconverged_reads` 의 빈 튜플을 읽을 때 같이 묻는다."""
+        return BodyState._LOG
 
     #: 조회 로그는 기본 켜짐 — 게이트가 이것으로 계약을 검사한다. `NEARSTARS_LOOKUP_LOG=0` 으로
     #: 끄면 append 조차 하지 않는다(측정과 대량 스윕용). C45 (b).

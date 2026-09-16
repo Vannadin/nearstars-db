@@ -25,7 +25,7 @@ import math
 
 from domain import Limit
 from bands import Band, Choice
-from payload import Result, out_of_domain
+from payload import Result, out_of_domain, tagged_with_unconverged
 
 # Anchors for the sentences the values below stand on. They are cited here rather than inside the
 # shipped strings, because a citation that reaches a reader should be short: the string says §6.2,
@@ -453,12 +453,13 @@ from registry import recipe  # noqa: E402
 
 @recipe("tidal_heating")
 def _from_state(state):
-    return solve(mass_earth=state["mass_earth"],
+    # C71: 미수렴 입력을 읽었으면 여기서 표지가 붙고 등급에 상한이 걸린다.
+    return tagged_with_unconverged(solve(mass_earth=state["mass_earth"],
                  radius_earth=state.get_optional("radius_earth", state.get_optional("radius")),   # C45 (b)
                  semi_major_axis_km=state.get("semi_major_axis_km"),
                  perturber_mass_earth=state.get("perturber_mass_earth"),
                  eccentricity_forced=state.get("eccentricity_forced"),
-                 k2_over_q=state.get("k2_over_q"))
+                 k2_over_q=state.get("k2_over_q")), state)
 
 
 @recipe("heat_transport_mode")

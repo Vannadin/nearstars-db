@@ -27,7 +27,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 
-from payload import Result, out_of_domain
+from payload import Result, out_of_domain, tagged_with_unconverged
 from registry import recipe
 
 RECIPE = "tidal-response-methodology"
@@ -609,10 +609,11 @@ def _(state) -> Result:
     units = {k: "" for k in values}
     for k in ("k2", "h2", "l2", "q", "g_surface_identity", "homogeneous_nmoi"):
         units[k] = "dimensionless"
-    return Result(
+    # C71: 미수렴 입력을 읽었으면 여기서 표지가 붙고 등급에 상한이 걸린다.
+    return tagged_with_unconverged(Result(
         recipe=RECIPE, version=VERSION, regime="declared",
         reason="a tidal_response block is declared, so the propagator runs on the "
                "layer-homogeneous stack built from the solved boundaries",
         grade="analog", inputs=inputs, values=values, units=units, refs=REFS,
         notes=tuple(notes) + tuple(
-            f"{rh} refused: {why}" for rh, why in band["refused"].items()))
+            f"{rh} refused: {why}" for rh, why in band["refused"].items())), state)

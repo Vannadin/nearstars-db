@@ -22,7 +22,7 @@ generated rather than typed.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 # chain.yaml 의 grades 와 같은 어휘를 쓴다.
@@ -48,6 +48,11 @@ class Result:
     refs: tuple[str, ...] = ()
     cycles: tuple[int, ...] = ()      # chain.yaml 에 선언된 순환 id
     converged: bool | None = None     # 순환 위에 있을 때만 의미가 있다
+    #: 이 결과를 지으면서 읽은 값 가운데 **미수렴 결과에서 온 것들** — `"노드.키"` 꼴 (C71).
+    #: 비어 있지 않으면 아래 `__post_init__` 이 등급에 상한을 씌운다.
+    #: ⚠ **`converged` 와 다른 질문이다.** `converged` 는 «내가 수렴했나», 이쪽은 «내가 읽은
+    #:   값이 수렴한 풀이에서 왔나» 다. 한 필드로 합치면 그 둘이 구별되지 않는다.
+    unconverged_inputs: tuple[str, ...] = ()
     notes: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
@@ -65,6 +70,19 @@ class Result:
                 raise ValueError(f"{self.recipe}: '{k}' 에 단위가 없다")
         if self.cycles and self.converged is None:
             raise ValueError(f"{self.recipe}: 순환 위에 있는데 converged 가 없다")
+        # ⚠ **미수렴 입력을 읽었으면 등급에 상한이 걸린다** (C71, 지휘 결정 2026-09-16).
+        #   규칙은 **상한**이지 강등이 아니다 — `min(자기 등급, judgment)` 이므로 사다리에서
+        #   `judgment` 위면 내려가고, 이미 그 아래(`authored`)면 그대로다. 새 등급은 안 만든다.
+        #   ⚠ **병합은 단조 최소다**: 표지는 전부 `notes` 에 남고, 등급은 적용되는 상한들의
+        #   최소다. 순서가 판정을 바꾸지 않는다 — 어느 상한이 «이긴다» 는 규칙이 없다.
+        if self.unconverged_inputs:
+            cap = GRADES.index("judgment")
+            if GRADES.index(self.grade) < cap:
+                object.__setattr__(self, "grade", GRADES[cap])
+            marks = tuple(f"unconverged input: {s}" for s in self.unconverged_inputs
+                          if f"unconverged input: {s}" not in self.notes)
+            if marks:
+                object.__setattr__(self, "notes", self.notes + marks)
 
     @property
     def applicable(self) -> bool:
@@ -80,6 +98,9 @@ class Result:
         line = f"{vals} ({self.recipe} v{self.version}, {self.regime}; {self.reason})"
         if self.cycles and not self.converged:
             line += " ⚠ 미수렴 1차 통과값"
+        if self.unconverged_inputs:
+            line += (" ⚠ 미수렴 입력에서 온 값 — 등급 상한 judgment ("
+                     + " · ".join(self.unconverged_inputs) + ")")
         return line
 
     def stale_against(self, current: dict[str, Any], tol: float = 1e-9) -> list[str]:
@@ -108,6 +129,19 @@ def out_of_domain(recipe: str, version: str, reason: str,
     return Result(recipe=recipe, version=version, regime=OUT_OF_DOMAIN,
                   reason=reason, grade="judgment", inputs=inputs,
                   refs=refs, notes=notes)
+
+
+def tagged_with_unconverged(result: "Result", state) -> "Result":
+    """조회 창구가 본 미수렴 입력을 결과에 실어 돌려준다 (C71).
+
+    ⚠ **레시피의 순수한 부분은 그대로 둔다.** 등급을 아는 것은 «무엇을 읽었는가» 이고, 그것을
+    아는 것은 `state` 뿐이다. 그래서 `@recipe` 어댑터가 마지막에 이 함수를 통과시킨다.
+    ⚠ **읽은 것이 없으면 같은 객체를 그대로 돌려준다** — 표지 없는 결과에는 필드가 안 붙고,
+    골든 값도 안 움직인다."""
+    marks = state.unconverged_reads()
+    if not marks:
+        return result
+    return replace(result, unconverged_inputs=marks)
 
 
 def _fmt(v: Any) -> str:

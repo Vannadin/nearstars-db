@@ -32,7 +32,7 @@ from __future__ import annotations
 import math
 
 import mantle_flux
-from payload import Result, out_of_domain
+from payload import Result, out_of_domain, tagged_with_unconverged
 
 RECIPE = "internal-heat-luminosity-methodology"
 VERSION = "1"
@@ -288,7 +288,8 @@ from registry import recipe  # noqa: E402
 
 @recipe("internal_heat_nontidal")
 def _from_state(state):
-    return solve(mass_earth=state["mass_earth"],
+    # C71: 미수렴 입력을 읽었으면 여기서 표지가 붙고 등급에 상한이 걸린다.
+    return tagged_with_unconverged(solve(mass_earth=state["mass_earth"],
                  core_mass_fraction=state.get("core_mass_fraction"),
                  # 브리프 46 후속 ③: 반지름은 **선언된** radius_earth 가 먼저다 (mass_or_radius 엣지, via radius);
                  # 미선언이면 interior_layers 의 도출 반지름으로 대체한다 — 그 엣지도 chain.yaml 에 선언돼 있다.
@@ -300,4 +301,4 @@ def _from_state(state):
                  # C30: tidal_heating's Ė (chain :653 via power); absent → totals not emitted. The contract calls this
                  # `tidal_power`, the state key is the generic `power`: today tidal_heating is the only emitter of that
                  # name, and if a second node ever emits `power` this line would silently add the wrong term.
-                 tidal_power=state.get("power"))
+                 tidal_power=state.get("power")), state)
