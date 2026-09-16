@@ -2,6 +2,31 @@
 # 릴리스 전 일괄 건강 점검 — 수동 실행 전용, 훅 미설치
 set -u
 cd "$(git rev-parse --show-toplevel)"
+
+# ── 게이트의 인터프리터 (C74, 2026-09-17) ──────────────────────────────────
+#
+# ⚠ **경로로 고정한다.** 예전에는 맨 `python3` 을 불렀고, 그것이 어느 파이썬인지는 호출자의
+#   PATH 가 정했다. BurnMan 이 런타임 의존이 된 뒤로 그 느슨함은 «어느 기계에서는 초록,
+#   어느 기계에서는 ImportError» 가 된다.
+# ⚠ **없으면 첫 줄에서 이름을 대고 멈춘다.** 73 개 단계가 각자 ImportError 로 죽는 것보다
+#   한 줄이 낫다.
+# ⚠ **격리 실행에서는 클론 안에 venv 가 없다.** 그래서 이 값은 **절대 경로**로 잡아 재실행에
+#   그대로 넘긴다 — 클론은 게이트 스크립트만 복사하지 venv 를 복사하지 않는다.
+GATE_PY="${GATE_PY:-$PWD/engine/.venv-gate/bin/python3}"
+if [ ! -x "$GATE_PY" ]; then
+  echo "  [FAIL] gate venv missing: run scripts/venv-gate.sh — $GATE_PY 가 없다"
+  exit 2
+fi
+export GATE_PY
+PATH="$(dirname "$GATE_PY"):$PATH"
+export PATH
+# ⚠ 고정이 실제로 먹었는지 **같은 실행에서** 묻는다. PATH 를 앞에 끼우고도 다른 python3 이
+#   먼저 잡히면 위 FAIL 이 아니라 조용한 오답이 된다.
+_resolved=$(command -v python3 || true)
+if [ "$_resolved" != "$GATE_PY" ]; then
+  echo "  [FAIL] gate interpreter not pinned — python3 가 $_resolved 로 풀린다 (기대 $GATE_PY)"
+  exit 2
+fi
 fail=0
 # ⚠ **비0 종료는 이름을 남긴다** (169 E). gate212 가 rc=1 로 끝났는데 로그 어디에도 `[FAIL]` 이
 #   없었다 — 다섯 개의 `run.py` 중 하나가 조용히 1 을 돌려줬고, 어느 바디인지 스크래치를 다시
@@ -394,7 +419,7 @@ if [ -n "$from_sha" ] && [ "${GATE_ISOLATED:-}" != "1" ]; then
   set --
   [ "$lane_req" = "wiring" ] && set -- --wiring
   [ "$lane_req" = "targeted" ] && set -- --targeted
-  GATE_ISOLATED=1 GATE_TREE_SHA="$tree_sha" GATE_BASE_SHA="$base_sha" GATE_SCRATCH="$dest" exec bash "$dest/scripts/check.sh" "$@"
+  GATE_ISOLATED=1 GATE_TREE_SHA="$tree_sha" GATE_BASE_SHA="$base_sha" GATE_SCRATCH="$dest" GATE_PY="$GATE_PY" exec bash "$dest/scripts/check.sh" "$@"
 fi
 
 gate_sha=$(git rev-parse --short HEAD)
