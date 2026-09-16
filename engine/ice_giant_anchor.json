@@ -29,7 +29,7 @@
   "registry.py": "7031b25acd49c432",
   "rheology.py": "84b57ff4bc38ca16",
   "steam_if97.py": "6e1d779f9a269cb8",
-  "test_ice_giant.py": "d46319fb010b925a",
+  "test_ice_giant.py": "3cf550f26a833978",
   "tidal_heating.py": "213441696c6026c1",
   "tidal_locking.py": "a8a90d172827e75f",
   "tidal_response.py": "f7e30876516edfad",
@@ -39,7 +39,7 @@
  },
  "inputs_code": {
   "ammonia_table.py": "20a5bf4e8b8da01d",
-  "bands.py": "71657c5418ac4466",
+  "bands.py": "10782e4fd4d38b46",
   "body_class.py": "c94634be3297293c",
   "cmb_flux.py": "19447d9dc2f7f50c",
   "convergence.py": "4b384530eb0f80ad",
@@ -62,7 +62,7 @@
   "registry.py": "682dd2911edad8b3",
   "rheology.py": "e4825d85960d7156",
   "steam_if97.py": "b9d9efa9320a2935",
-  "test_ice_giant.py": "3303e3279e0ae480",
+  "test_ice_giant.py": "4229b3acf8eaf7e5",
   "tidal_heating.py": "f5f075a9b50860e9",
   "tidal_locking.py": "a82b6e471a84ec25",
   "tidal_response.py": "ee83ae4ad59a5ed9",
@@ -72,7 +72,7 @@
  },
  "bodies": {
   "Uranus": {
-   "seconds": 26.9,
+   "seconds": 27.0,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -117,7 +117,7 @@
    "standalone_reproduces_solve": true
   },
   "Neptune": {
-   "seconds": 62.8,
+   "seconds": 62.3,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,

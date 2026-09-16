@@ -333,6 +333,23 @@ PATH_CONSTANTS = ("STEPS", "INTERPOLATE_LAYERS", "MAX_STEPS", "SHOOT_ITERS", "SH
                   "NARROW_RATIO", "FLUID_CLASSES", "ICE_GIANT_CLASSES")
 
 
+def _stable_repr(c) -> str:
+    """상수 하나의 **실행마다 같은** 글자 표현 (C70 곁가지, 2026-09-16).
+
+    ⚠ `repr(집합)` 은 프로세스마다 다르다. 파이썬은 문자열 해시에 무작위 씨앗을 쓰므로
+    `frozenset({"a", "b"})` 의 원소 순서가 실행마다 바뀐다. 그 `repr` 을 자에 먹이면 자가
+    파일이 아니라 **그 실행의 씨앗** 을 잰다 — `engine/bands.py` 가 실제로 그랬다: 바이트는
+    같은데 코드 자가 세 번 다 달랐다.
+    ⚠ **다른 상수는 손대지 않는다.** 정의가 안 바뀌면 자도 안 바뀌어야 하므로, 정렬은
+    순서가 뜻을 갖지 않는 것(집합·사전)에만 건다. 리스트·튜플의 순서는 뜻이다."""
+    if isinstance(c, (set, frozenset)):
+        return f"{type(c).__name__}({{{', '.join(sorted(_stable_repr(x) for x in c))}}})"
+    if isinstance(c, dict):
+        return "{" + ", ".join(f"{_stable_repr(k)}: {_stable_repr(v)}"
+                               for k, v in sorted(c.items(), key=lambda kv: _stable_repr(kv[0]))) + "}"
+    return repr(c)
+
+
 def _feed_code(h, code) -> None:
     """코드 객체를 재귀로 해시한다. docstring(첫 상수가 문자열이면) 은 뺀다."""
     h.update(code.co_code)
@@ -344,7 +361,7 @@ def _feed_code(h, code) -> None:
         if hasattr(c, "co_code"):
             _feed_code(h, c)
         else:
-            h.update(repr(c).encode())
+            h.update(_stable_repr(c).encode())
 
 
 def path_fingerprint() -> str:
