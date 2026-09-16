@@ -66,7 +66,10 @@ exec 3>&2                     # step() 이 자식의 stderr 를 여기로 빼낸
 #   적혀 있었고, 그 수가 낡은 줄 모르고 시한을 재면 긴 단계가 6 분 만에 죽은 것으로 몰린다.
 #   **@587842b3, 2026-09-11, 풀 2, 부하 적힘: `test_interior.py` 4114 s · `test_giant.py` 284 s.**
 #   산문에 적힌 시간은 sha 와 날짜를 달거나, 적지 않는다.
-GATE_POOL="${GATE_POOL:-8}"
+# ⚠ **기본값은 좌석이 실제로 쓰는 수다** (작업 규율 곁가지, 2026-09-17). 8 은 아무도 안 썼고,
+#   밤새 돈 게이트는 전부 2 아니면 1 이었다. 기본값이 실행과 다르면 「기본으로 돌렸다」 가
+#   어느 판인지 말하지 않는다. ⚠ 지속시간을 재는 좌석은 여전히 1 로 내린다.
+GATE_POOL="${GATE_POOL:-2}"
 # ⚠ **배리어의 단 하나의 천장** (C80). «살아 있지만 조용한» 워커에만 쓰고, 죽은 워커는 시한
 #   없이 즉시 이름을 얻는다. 값은 **이 커밋을 낸 게이트의 가장 긴 단계 × 1.5** 이고 sha 와
 #   날짜를 함께 적는다 — @3716708f, 2026-09-12, 가장 긴 단계 3035 s.
@@ -257,7 +260,38 @@ _cost_fields() {              # _cost_fields <time -l 통계 파일>
 }
 
 
+# ── 값싼 층 (작업 규율 곁가지, 2026-09-17) ────────────────────────────────────────────────
+#
+# ⚠ **여덟은 «값싸고 **실제로 발화한 적 있는**» 검사다.** 목록을 여기 적는 이유는, 다른 문서의
+#   절을 가리키면 이 층이 무엇인지가 한 칸 건너에 있게 되기 때문이다. 합 5 s(측정:
+#   `gate-a818d58c.log`).
+# ⚠ **이 층은 푸시를 허락하지 않는다.** 여덟은 **역사에서 고른 것**이고, 한 번도 안 터진 검사가
+#   다음 결함을 잡을 수 있다. 푸시 직전에는 언제나 full 이다.
+_QUICK_STEPS="scripts/pipeline/validate.py
+scripts/check_dead_links.py
+scripts/check_language.py
+scripts/check_md_tables.py
+check_graph_page
+test_check_refs.py
+engine/check_refs.py
+test_eos_joins.py"
+_quick_skipped=0
+_quick_ran=0
+# ⚠ 단계 밖 덩이는 **다른 단위**다. `step()` 을 거친 것만 «단계» 로 세고, 단계 밖에서 걸러낸
+#   덩이는 이 칸으로 따로 센다. 한 칸에 합치면 돈 수 + 건너뛴 수가 단계 총수를 넘는다
+#   (첫 판에서 8 + 67 = 75, 단계는 74 였다 — 감사 ⑤).
+_quick_skipped_outside=0
+
+_in_quick() {                 # _in_quick <단계 이름>
+  printf '%s\n' "$_QUICK_STEPS" | grep -qxF "$1"
+}
+
 step() {                      # step <이름> <명령...>
+  if [ "$lane" = "quick" ] && ! _in_quick "$1"; then
+    _quick_skipped=$((_quick_skipped + 1))
+    return 0
+  fi
+  [ "$lane" = "quick" ] && _quick_ran=$((_quick_ran + 1))
   # ⚠ **벽시계를 상시로 찍는다** (브리프 183 C). 게이트가 32 분인데 그중 어느 단계가 얼마인지
   #   말할 수 없었다 — 로그에 시간이 하나도 없어서 «미상 24 분» 이 어디 있는지 셀 수가 없다.
   #   측정 없이 층을 가르면 빠른 층에 느린 시험이 들어간다. 그래서 먼저 재고, 가르는 것은 그
@@ -363,6 +397,7 @@ while [ $# -gt 0 ]; do
       [ -n "$from_sha" ] || { echo "  [FAIL] --from 에 sha 가 없다"; exit 2; }
       shift 2 ;;
     --targeted) lane_req="targeted"; shift ;;   # ⚠ 인자를 받지 않는다 — base 는 도출값이다
+    --quick) lane_req="quick"; shift ;;         # 값싼 여덟. ⚠ 푸시를 허락하지 않는다
     *) echo "  [FAIL] 모르는 인자: $1 (--wiring | --from <sha> | --targeted)"; exit 2 ;;
   esac
 done
@@ -435,6 +470,10 @@ fi
 lane="full"
 # ⚠ 격리 클론의 origin 은 로컬 워크트리다 — `@{u}` 가 원격을 가리키지 않으므로 "무엇이 바뀌었는지"
 #   를 말할 수 없다. 그러면 판단을 포기하고 전부 돈다 (기존 upstream-없음 경로와 같은 처분).
+if [ "$lane_req" = "quick" ]; then
+  lane="quick"
+  echo "── 층: quick (값싼 여덟만 — ⚠ 이 층은 푸시를 허락하지 않는다) ──"
+fi
 if [ "$lane_req" = "wiring" ] && [ "${GATE_ISOLATED:-}" = "1" ]; then
   echo "── 층: full (격리 클론에는 원격 upstream 이 없어 무엇이 바뀌었는지 말할 수 없다) ──"
   lane_req="full"
@@ -536,11 +575,19 @@ echo ""
 echo "── 2. 영한 미러 상태 (missing = 실패, stale = 경고) ──"
 # check-mirrors.sh 는 missing 과 stale 둘 다 exit 1 로 묶음.
 # 이 PR 시점에서는 stale 26+ 건이 별도 작업이므로 경고로 강등.
-mirror_out=$(./scripts/check-mirrors.sh 2>&1) || true
-echo "$mirror_out"
-if echo "$mirror_out" | grep -q "Missing Korean mirrors"; then
-  # ⚠ 169 F 가 놓친 자리 — 여기도 `[FAIL]` 없이 fail 만 세웠다 (gate212 와 같은 모양).
-  echo "  [FAIL] 한글 미러 누락 — 위 목록의 파일을 ko/<same-path> 로 만들어라"; fail=1
+# ⚠ 이 덩이는 `step()` 밖이다 — `mirror_out` 을 뒤에서 읽어야 해서 감싸지 못했다. 그래서 quick
+#   층의 걸러내기가 여기에 닿지 않는다. 첫 quick 측정(02:23, 풀 2)에서 전체 26.358 s 중 이 한
+#   덩이가 19 s 였다. 단계 여덟의 [TIME] 합은 7 s 다. 층을 가르려면 단계 밖도 같이 갈라야 한다.
+if [ "$lane" = "quick" ]; then
+  _quick_skipped_outside=$((_quick_skipped_outside + 1))
+  echo "  [건너뜀] 미러 점검 — quick 층 (단계 밖 덩이, 파일 183 개마다 git log)"
+else
+  mirror_out=$(./scripts/check-mirrors.sh 2>&1) || true
+  echo "$mirror_out"
+  if echo "$mirror_out" | grep -q "Missing Korean mirrors"; then
+    # ⚠ 169 F 가 놓친 자리 — 여기도 `[FAIL]` 없이 fail 만 세웠다 (gate212 와 같은 모양).
+    echo "  [FAIL] 한글 미러 누락 — 위 목록의 파일을 ko/<same-path> 로 만들어라"; fail=1
+  fi
 fi
 
 echo ""
@@ -766,7 +813,14 @@ step "test_dynamo.py" bash -c 'cd engine && exec python3 test_dynamo.py'
 #   (완주하는지만 본다). 둘을 한 이름으로 부르면 «일곱 개 대조» 로 읽히는데 그건 사실이 아니다.
 for _b in engine/bodies/*.yaml; do
   _name=$(basename "$_b")
-  if grep -q '^expected:' "$_b"; then _kind="출하값 대조"; else _kind="연기 시험"; fi
+  # ⚠ **세 갈래다** (작업 규율 곁가지, 2026-09-17). 예전에는 둘이었고, `expected:` 가 있는 바디를
+  #   전부 «출하값 대조» 라고 불렀다. 화성의 두 행은 `recorded_disagreement` 라 **판정에 안 세는**
+  #   기록이므로, 그 라벨은 대조하지 않는 것을 대조라고 적는 것이었다.
+  if grep -q '^expected:' "$_b"; then
+    if grep -q 'recorded_disagreement:' "$_b"; then _kind="출하값 기록(세지 않음)"; else _kind="출하값 대조"; fi
+  else
+    _kind="연기 시험"
+  fi
   step "run.py bodies/$_name ($_kind)" bash -c 'cd engine && exec python3 run.py "bodies/$1"' _ "$_name"
 done
 step "test_mass_radius.py" bash -c 'cd engine && exec python3 test_mass_radius.py'
@@ -868,6 +922,9 @@ if [ $fail -eq 0 ]; then
   echo "──────── 모든 점검 통과 ────────"
 else
   echo "──────── 일부 점검 실패 ────────"
+fi
+if [ "$lane" = "quick" ]; then
+  echo "  quick 층 — 돈 단계 $_quick_ran · 건너뛴 단계 $_quick_skipped (합 $((_quick_ran + _quick_skipped)) = 단계 총수) · 단계 밖 건너뛴 덩이 $_quick_skipped_outside (ko 미러 점검) ⚠ 건너뛴 것은 «통과» 가 아니다"
 fi
 echo "GATE END sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field$script_field rc=$fail"
 

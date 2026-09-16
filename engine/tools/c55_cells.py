@@ -27,6 +27,9 @@ MARS_MASS_EARTH = 0.1074          # engine/bodies/mars.yaml 의 선언
 T_POT = 1600.0                    # 맨틀 포텐셜 온도 — 사격의 온도 괄호가 받는 값
 MATERIALS = ("fe_s_13wt_19gpa", "fe_s_19wt_19gpa")
 R_WINDOW_KM = (1820.0, 1870.0)
+#: 선언된 cmf 에서 창을 벗어나는 **사격층** 칸의 수, 2026-09-17 측정. ⚠ 이 수는 허용치가 아니라
+#: **기록**이다 — 늘면 FAIL, 줄면 사람이 내린다. C55 가 연 항목이 닫히면 0 이 된다.
+RECORDED_OUTSIDE = 2
 RHO_WINDOW = (5.7, 6.3)
 def _declared_cmf() -> float:
     """⚠ **화성이 실제로 푸는 핵질량비는 프리셋의 것이 아니다** (브리프 182 A).
@@ -98,12 +101,36 @@ def main(argv: list[str]) -> int:
     print(f"C55 판정 칸 — 화성 질량 {MARS_MASS_EARTH} M⊕ · T_pot {T_POT:.0f} K")
     print(f"창: 핵 반지름 {R_WINDOW_KM[0]:.0f}–{R_WINDOW_KM[1]:.0f} km · "
           f"핵 밀도 {RHO_WINDOW[0]}–{RHO_WINDOW[1]} g/cm3 (균질 맨틀 계열)")
+    # ⚠ **창 밖을 셀 수 있게 한다** (작업 규율 곁가지, 2026-09-17). 예전에는 이 도구가 «창 안 /
+    #   창 밖» 을 인쇄하고도 **언제나 0 을 돌려줬다** — 창을 벗어나도 게이트가 초록이었다.
+    #   비교를 인쇄하는 도구는 그 비교에 실패할 수 있어야 한다.
+    #   ⚠ **판정은 선언된 핵질량비의 행에만 건다.** 나머지 cmf 는 탐침이고, 탐침이 창을
+    #   벗어나는 것은 이 도구가 찾으라고 있는 것이지 결함이 아니다.
+    outside = 0
     for cmf in cmfs:
-        tag = " ← mars.yaml 이 선언한 핵질량비" if cmf == DECLARED_CMF else ""
+        declared = cmf == DECLARED_CMF
+        tag = " ← mars.yaml 이 선언한 핵질량비" if declared else ""
         print(f"\ncmf = {cmf:.3f}{tag}")
         for m in MATERIALS:
-            print(f"  {m:18} 사격층 {cell(m, cmf)}")
+            shoot = cell(m, cmf)
+            print(f"  {m:18} 사격층 {shoot}")
             print(f"  {'':18} 소비층 {consumer_cell(m, cmf)}")
+            if declared and "창 밖" in shoot:
+                outside += 1
+    # ⚠ **오늘의 창 밖 둘은 기록된 어긋남이다** (C55 자신이 연 항목). 그 둘을 FAIL 로 올리면
+    #   이미 아는 사실로 게이트가 빨개지고, 아무도 안 고치는 붉은 줄은 곧 무시된다.
+    #   그래서 **래칫**으로 둔다 — 기록된 수를 넘으면 그때 FAIL 이다. mars.yaml 의
+    #   `recorded_disagreement` 와 같은 형식이고, 닫는 것은 사람이지 이 줄이 아니다.
+    print(f"\n  창 밖 칸 {outside} 개 · 기록된 수 {RECORDED_OUTSIDE} 개 — 창은 "
+          f"R_core {R_WINDOW_KM[0]:.0f}–{R_WINDOW_KM[1]:.0f} km · "
+          f"rho_core {RHO_WINDOW[0]}–{RHO_WINDOW[1]} g/cm3")
+    if outside > RECORDED_OUTSIDE:
+        print(f"  [FAIL] 선언된 cmf {DECLARED_CMF:.3f} 에서 창 밖 칸이 기록된 수보다 많다 "
+              f"({outside} > {RECORDED_OUTSIDE})")
+        return 1
+    if outside < RECORDED_OUTSIDE:
+        print(f"  [기록·해소?] 창 밖 칸이 기록된 수보다 적다 ({outside} < {RECORDED_OUTSIDE}) — "
+              f"기록을 사람이 내려라")
     return 0
 
 

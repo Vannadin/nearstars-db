@@ -352,7 +352,15 @@ def main() -> int:
         print(f"  [FAIL] {f}")
     for n in notes:
         print(f"  {n}")
-    if not fails:
+    # ⚠ **건너뛴 검사가 있으면 PASS 한 줄을 안 찍는다** (작업 규율 곁가지, 2026-09-17).
+    #   예전에는 `[SKIP] J3R …` 을 인쇄하고도 그 아래 고정된 PASS 문구가 «J3R 저자의 Table S3 세 행
+    #   재현» 을 그대로 적었다 — 돌지 않은 검사가 통과로 읽혔다. 「안 돌았다」 와 「통과」 는 다른
+    #   사실이고, 그 구분은 이 파일 자신의 J3R 주석이 이미 적고 있었다.
+    skipped = [n for n in notes if n.startswith("[SKIP]")]
+    if not fails and skipped:
+        print(f"  [건너뜀 {len(skipped)}] hcp 열 세트 — 판정 줄을 안 찍는다. "
+              f"건너뛴 검사가 있으면 그 집합에 대한 PASS 는 사실이 아니다")
+    if not fails and not skipped:
         print("  [PASS] hcp 열 세트 — J1 두 열의 V₀ 복원(부동소수) · J2 g 와 g(1−g) 부호 규칙 "
               "(합성 열로 g>1 까지) · J3 10–600 GPa 연속·유한 · J3R 저자의 Table S3 세 행 재현 "
               "(0.0001·100·328.9 GPa, 값은 보유 SI 에서 시험 시점에 읽는다) · J4 적분기와 핵 "
