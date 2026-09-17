@@ -191,9 +191,18 @@ def main() -> int:
         got, _dens = ph.thermal_label(mat.fit_composition, p_gpa * GPA, t_k)
         if got != want:
             fails.append(f"J5 {p_gpa} GPa / {t_k} K: 판정 {got!r}, 등록된 것은 {want!r}")
+    # ⚠ **「온도 모름」은 통과가 아니라 등급이다** — 온도 없이 물으면 그 답은 `ok` 가 아니라
+    #   `graded-extrapolation` 이어야 한다. 온도를 안 주는 호출부가 «검사를 통과했다» 를 받아
+    #   가면, 그 호출부는 자기가 무엇을 안 준 줄 모른 채 답을 값으로 쓴다.
+    #   ⚠ **이 문장이 이 시험의 앵커다** — `engine/eos.py` 둘 · `engine/test_ice_fr2015.py` ·
+    #   `engine/interior-core.md` 가 이 파일을 가리키며 이 구절을 인용한다 (인용 꼴을 여기
+    #   그대로 적으면 체커가 그것을 **또 하나의 앵커**로 세고 해석에 실패한다 — 실측 594 → 595).
+    #   그래서 여기 주석에 두고, 아래 실패 문구는 자유롭게 고쳐도 인용이 안 깨진다. 예전에는 이 구절이
+    #   실패 문자열 안에 있었고, 그 줄은 시험에서 가장 쉽게 고쳐지는 줄이다.
     got_no_t, _dens = ph.thermal_label(mat.fit_composition, 100.0 * GPA)
     if got_no_t != "graded-extrapolation":
-        fails.append(f"J5: 온도 없이 물었는데 {got_no_t!r} 다 — 「온도 모름」은 통과가 아니라 등급이다")
+        fails.append(f"J5: 온도를 안 주고 물었더니 {got_no_t!r} — 기대는 "
+                     f"'graded-extrapolation' 이다. 온도 부재의 답은 통과가 아니라 등급으로 나온다")
 
     # ── J5B — 바닥만 선언한 세트가 그 아래를 등급으로 낸다 (C84, 브리프 198) ───────────────
     # ⚠ **이 검사가 지키는 것은 이른 반환이다.** `covers_t` 의 예전 판은 `t_max` 가 없으면 `t` 를
