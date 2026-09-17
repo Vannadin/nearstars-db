@@ -848,8 +848,9 @@ step "test_fermi.py" bash -c 'cd engine && exec python3 test_fermi.py'
 step "test_water_hot.py" bash -c 'cd engine && exec python3 test_water_hot.py'
 step "test_ammonia.py" bash -c 'cd engine && exec python3 test_ammonia.py'
 step "test_water2.py" bash -c 'cd engine && exec python3 test_water2.py'
-# ⚠ ANSWER 시험 — 게이트에서 가장 긴 단일 구간(**1 656–1 733 s · 단계 시간 합의 40.5–41.7 %**,
-#   게이트 넷의 `[TIME]` 실측 2026-09-17)이고, 그 시간이 사는 곳이다. ⚠ 분모는 **단계 시간 합**
+# ⚠ ANSWER 시험 — 게이트에서 가장 긴 단일 구간(**1 484–1 733 s · 단계 시간 합의 40.5–41.7 %**,
+#   게이트 **다섯**의 `[TIME]` 실측 2026-09-17~18)이고, 그 시간이 사는 곳이다. ⚠ 초는 기계 상태를
+#   타고 몫은 안 탄다 — 1 484 s 판은 합도 3 602 s 로 함께 짧았다. ⚠ 분모는 **단계 시간 합**
 #   이지 벽시계가 아니다 — 풀 2 에서 단계가 겹친다. 옛 문구 「약 459 초, 전체의 31 %」는 낡았고
 #   분모를 안 적었다.
 # 이 시험만이 엔진을 **현실**과 대조한다. 자기 헤더가 그렇게 적는다 — 앵커는 전부 측정값이고

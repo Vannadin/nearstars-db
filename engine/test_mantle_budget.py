@@ -97,8 +97,8 @@ print(f"      ⚠ **부호가 양수다 — 판정이 아니라 발견이고, �
 print(f"      지구는 방사성 공급 {q_man_w/1e12:.1f} TW 에 표면 손실 {z['q_surface_w']/1e12:.1f} TW 뿐이라 **식히지 못하고 데워진다**")
 print(f"      (Urey {z['urey']:.2f}). 그것이 Reese+ 1998 의 *«정체뚜껑이면 맨틀이 700–1500 K 더 뜨거웠을 것»* 을")
 print(f"      수지의 말로 옮긴 것이다 — 관측 지구의 ~46 TW 와 겨루는 수가 아니라 **반사실**이다 (C51 칸 ②).")
-print(f"      ⚠ 융용 항의 간극은 가정하지 않고 찍는다: dT_p/dt 를 {sc['probe_fraction']:.0%} 움직이려면 "
-      f"융용 열손실 {sc['probe_melt_w']/1e12:.2f} TW — 표면 손실의 {sc['probe_melt_as_fraction_of_surface']:.1%} 다.")
+print(f"      ⚠ 용융 항의 간극은 가정하지 않고 찍는다: dT_p/dt 를 {sc['probe_fraction']:.0%} 움직이려면 "
+      f"용융 열손실 {sc['probe_melt_w']/1e12:.2f} TW — 표면 손실의 {sc['probe_melt_as_fraction_of_surface']:.1%} 다.")
 print(f"      (f_m 자체로 환산하지 않는다 — ΔT_m 이 이 엔진에 값이 없고, 환산은 온도를 지어내는 일이다.)")
 
 print("\n⑥ 식 (2) — 없는 입력은 이름을 대며 거절한다")
@@ -117,6 +117,63 @@ for lab, a, kind in (("S&M 2000 Table 5 (원전 적합)", 0.528, "—"),
                      ("Foley 2018 인쇄 c₁", 0.5, "정의 무선언")):
     print(f"      {lab:34s} a {a:.3f} · 우리 0.5539 대비 {(0.5539/a-1)*100:+6.2f} % · {kind}")
 print("      ⚠ 뜻이 있는 비교는 «정의 안» 하나뿐이고 그것이 +0.71 % (Korenaga 적합 rms ~1.2 % 안) 다.")
+
+print("\n⑦ 2단계 — 시간 적분 (C51 Stage 2, 사전등록 1f907a63 + 개정 1)")
+import time                                                        # noqa: E402
+
+# ⚠ **수락선 A — 현재 시점은 비트까지 그대로여야 한다.** 적분기는 1단계를 감쌀 뿐이므로
+#   t0 == t1 이면 걸음을 한 번도 안 밟고 같은 수를 돌려줘야 한다. 「거의 같다」가 아니라 **같다**.
+still = mb.integrate_tp(1623.0, mb.DELTA_TYPICAL_M, lambda _t: q_man_w, 0.0, 0.0, steps=1)
+row(still["steps"] == 0
+    and still["t_p_end_k"] == 1623.0
+    and still["end_state"]["f_man_w_m2"] == z["f_man_w_m2"]
+    and still["end_state"]["dtp_dt_k_s"] == z["dtp_dt_k_s"]
+    and still["end_state"]["urey"] == z["urey"],
+    f"t0 = t1 이면 걸음 {still['steps']} · F_man {still['end_state']['f_man_w_m2']*1e3:.10f} mW/m² · "
+    f"dT_p/dt {still['end_state']['dtp_dt_k_gyr']:+.7f} K/Gyr — 1단계와 **비트 동일**")
+
+# Q_man(t) 는 이 파일이 안 고른다 — `radiogenic` 이 답한다. t_gyr 은 **오늘을 0** 으로 두는 축이라
+# 과거는 음수이고, 그때 붕괴 인자 2^(−t/t_half) 가 1 보다 커진다 (과거가 더 뜨겁다).
+SIL_EARTH_KG = 0.675 * cf.M_EARTH_KG
+
+
+def q_man_at(t_gyr):
+    return rg.budget(SIL_EARTH_KG, t_gyr=t_gyr)["mantle_w"]
+
+
+t_start = time.perf_counter()
+run = mb.integrate_tp(1623.0, mb.DELTA_TYPICAL_M, q_man_at, -4.5, 0.0, steps=450)
+elapsed = time.perf_counter() - t_start
+# ⚠ **수락선 E — 걸음 예산을 인쇄한다.** 단계 수가 74 로 그대로여도 이 비용은 기존 단계 **안**에
+#   숨는다. 그래서 수를 찍는다.
+# ⚠ **이 줄이 거는 것은 걸음 예산뿐이다.** 끝 온도에는 등록된 폭이 없으므로 **판정 안 한다** —
+#   「어떤 값이어도 통과하는 단언」을 PASS 로 찍으면 검사가 있는 척만 한다 (감사석 ㉠).
+row(run["steps"] == 450 and run["h_gyr"] == (0.0 - -4.5) / 450,
+    f"4.5 Gyr 적분 — 걸음 {run['steps']} · 걸음 크기 {run['h_gyr']:.4f} Gyr (요청과 일치) · "
+    f"벽시계 {elapsed*1e3:.0f} ms")
+print(f"      [인쇄, 판정 아님] 시작 T_p 1623.0 K → 끝 {run['t_p_end_k']:.1f} K")
+print(f"      과거 쪽 Q_man {q_man_at(-4.5)/1e12:.1f} TW · 오늘 {q_man_at(0.0)/1e12:.1f} TW "
+      f"(비 {q_man_at(-4.5)/q_man_at(0.0):.2f}) — 붕괴는 `radiogenic` 이 답하고 이 파일이 안 고른다")
+
+# ⚠ **초기조건은 선택이다** (함정 2). 하나로 끝내면 이력이 적분기의 것인지 출발점의 것인지 못 가른다.
+alt = mb.integrate_tp(1823.0, mb.DELTA_TYPICAL_M, q_man_at, -4.5, 0.0, steps=450)
+spread_now = abs(run["t_p_end_k"] - alt["t_p_end_k"])
+row(spread_now < abs(1823.0 - 1623.0),
+    f"초기조건 둘 — 1623 K 출발 → {run['t_p_end_k']:.1f} K · 1823 K 출발 → {alt['t_p_end_k']:.1f} K. "
+    f"출발 차 200.0 K 가 오늘 {spread_now:.1f} K 로 **{200.0/spread_now if spread_now else float('inf'):.1f} 배 좁혀졌다** "
+    f"— 기억이 지워지는 쪽이고, 그래서 끝값은 출발점보다 수지에 더 매인다")
+
+end = run["end_state"]
+print(f"      끝 상태 — F_man {end['f_man_w_m2']*1e3:.3f} mW/m² · Urey {end['urey']:.3f} · "
+      f"dT_p/dt {end['dtp_dt_k_gyr']:+.1f} K/Gyr")
+# ⚠ **수락선 B — 인쇄된 궤적과 대조하거나, 못 찾았다면 어디를 찾았는지 적는다.**
+print("      ⚠ 인쇄된 `T_p(t)` 궤적과의 대조 **없음**. 찾은 곳: 보유 논문 "
+      "`2018AsBio..18..873F`(Foley 2018, 이 수지의 원전) · `2014GeoJI.199..580F`(F&B 2014) · "
+      "`2008RvGeo..46.2007K`(Korenaga 2008, Urey 비). ⚠ ADS 질의는 **안 돌렸다** — "
+      "«안 찾았다» 와 «찾았는데 없다» 를 가르기 위해 여기 그대로 적는다. 셋에서 우리 초기조건·뚜껑 "
+      "고정과 같은 조건의 인쇄 궤적을 못 봤다는 것이 지금 말할 수 있는 전부다.")
+print("      ⚠ **뚜껑 δ 는 이 적분에서 고정이다** — eq. (2) 의 기울기가 eq. (5) 의 출력이고 그것이 "
+      "안 지어졌다. 그래서 이 이력은 «뚜껑이 그대로일 때의 온도 이력» 이지 «뚜껑까지 함께 푼 이력» 이 아니다.")
 
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)

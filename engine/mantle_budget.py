@@ -197,3 +197,52 @@ def secular_cooling(t_p_k: float, delta_m: float, q_man_w: float, probe_fraction
     return {"at_zero_melt": zero, "probe_melt_w": probe_w, "at_probe_melt": shifted,
             "probe_fraction": probe_fraction,
             "probe_melt_as_fraction_of_surface": probe_w / zero["q_surface_w"]}
+
+
+# ── 2단계: 시간 적분 (C51 Stage 2) ─────────────────────────────────────────────
+GYR_S = 3.156e16          # 1 Gyr [s]. 위 `dtp_dt_k_gyr` 가 쓰는 것과 같은 수다.
+
+
+def integrate_tp(t_p0_k: float, delta_m: float, q_man_at_w, t0_gyr: float, t1_gyr: float,
+                 steps: int, r_p_m: float = R_P_M, r_c_m: float = R_C_M, **flux_kw) -> dict:
+    """`dT_p/dt` 를 시간으로 적분해 `T_p` 이력을 낸다 — 1단계의 답을 **출력**으로 잇는다.
+
+    ⚠ **1단계를 바꾸지 않는다.** 매 걸음의 우변은 `dtp_dt_k_s` 그대로이고, 이 함수는 그것을
+    RK4 로 전진시킬 뿐이다. 그래서 `t0 == t1` 이면 첫 걸음도 안 밟고 1단계의 수를 그대로 돌려준다
+    — 사전등록 수락선 A 가 요구하는 «현재 시점 비트 동일» 이 **구조로** 성립한다.
+
+    `q_man_at_w` 는 **호출자가 주는 함수** `t_gyr -> Q_man [W]` 다. 방사성 붕괴의 모양을 이
+    파일이 고르지 않는다 — 그것은 다른 노드의 출력이고, 여기서 정하면 출처 없는 수가 된다.
+
+    ⚠ **뚜껑 두께 `δ` 는 고정이다.** eq. (2) 는 `∂T/∂z|_{R_p−δ}` 를 요구하는데 그 기울기는
+    eq. (5) 의 출력이고 eq. (5) 는 안 지어졌다 (`ddelta_dt_m_s` 가 이름 대며 거절한다). 그러니
+    이 적분은 «뚜껑이 그대로일 때의 온도 이력» 이지 «뚜껑까지 함께 푼 이력» 이 아니다.
+    두 문장은 다르고, 앞의 것만 주장한다.
+    ⚠ **용융 항도 0 이다** — 매 걸음이 `melt_w=0.0` 으로 불린다. 1단계가 `secular_cooling` 에서
+    「`f_m` 자체가 아니라 **필요한 용융 열손실**을 찍는다」로 둔 것과 같은 이유이고(ΔT_m 이 이
+    엔진에 값이 없다), 그래서 이 이력은 «뚜껑 고정 · 용융 0» 의 이력이다. 뺀 것을 한자리에 적는다."""
+    if steps < 1:
+        raise ValueError("steps 는 1 이상이어야 한다")
+    span_gyr = t1_gyr - t0_gyr
+    h_gyr = span_gyr / steps
+    h_s = h_gyr * GYR_S
+
+    def rhs(t_gyr: float, t_p_k: float) -> float:
+        return dtp_dt_k_s(t_p_k, delta_m, q_man_at_w(t_gyr), melt_w=0.0,
+                          r_p_m=r_p_m, r_c_m=r_c_m, **flux_kw)["dtp_dt_k_s"]
+
+    t_gyr, t_p = t0_gyr, t_p0_k
+    history = [(t_gyr, t_p)]
+    for _ in range(steps if span_gyr != 0.0 else 0):
+        k1 = rhs(t_gyr, t_p)
+        k2 = rhs(t_gyr + 0.5 * h_gyr, t_p + 0.5 * h_s * k1)
+        k3 = rhs(t_gyr + 0.5 * h_gyr, t_p + 0.5 * h_s * k2)
+        k4 = rhs(t_gyr + h_gyr, t_p + h_s * k3)
+        t_p = t_p + (h_s / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+        t_gyr = t_gyr + h_gyr
+        history.append((t_gyr, t_p))
+    end = dtp_dt_k_s(t_p, delta_m, q_man_at_w(t_gyr), melt_w=0.0,
+                     r_p_m=r_p_m, r_c_m=r_c_m, **flux_kw)
+    return {"t_p_end_k": t_p, "t_end_gyr": t_gyr, "steps": steps if span_gyr != 0.0 else 0,
+            "h_gyr": h_gyr, "history": history, "end_state": end,
+            "lid_fixed_m": delta_m}
