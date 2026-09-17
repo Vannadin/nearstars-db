@@ -33,4 +33,9 @@ for name in ("burnman", "numpy", "mpmath", "yaml", "psutil"):
         print(f"  {name:11s} 없음 — {type(exc).__name__}: {exc}")
         raise SystemExit(2)
 PY
-echo "  [OK] $VENV"
+# ⚠ **무엇으로 지었는지를 venv 안에 적는다** (핀 출처). 게이트의 핀 가드는 경로만 보므로
+#   «핀이 걸렸다» 는 알아도 «이 선언으로 지은 핀이다» 는 모른다. 이 한 줄이 그 칸을 채운다.
+#   ⚠ 기록은 **venv 안**에 둔다 — 이것은 트리가 아니라 그 venv 를 기술하는 사실이고,
+#   `engine/.venv-gate` 는 gitignore 된다.
+git hash-object "$REQ" > "$VENV/gate-requirements.blob"
+echo "  [OK] $VENV · $REQ blob $(cat "$VENV/gate-requirements.blob")"

@@ -27,6 +27,26 @@ if [ "$_resolved" != "$GATE_PY" ]; then
   echo "  [FAIL] gate interpreter not pinned — python3 가 $_resolved 로 풀린다 (기대 $GATE_PY)"
   exit 2
 fi
+# ⚠ **핀이 걸렸다 ≠ 이 트리의 선언으로 지은 핀이다.** 위 두 검사는 `GATE_PY` 가 어디를
+#   가리키든 **구성상 통과**한다 — 경로가 있고, PATH 를 앞에 끼웠으니 `command -v` 도 그것을
+#   낸다. 그래서 오늘까지 «빌려 쓴 venv 가 같은 선언으로 지어졌나» 는 사람이 눈으로만 봤다.
+#   `scripts/venv-gate.sh` 가 지을 때 적어 둔 blob 과 이 트리의 것을 대조한다.
+#   ⚠ **기록이 없으면 «모름» 이고 거절하지 않는다** — 이 줄 이전에 지은 venv 가 전부 죽으면
+#   그것은 이 검사가 치르기로 등록한 값이 아니다.
+_req_now=$(git hash-object engine/requirements.txt 2>/dev/null || echo unknown)
+_req_built=$(cat "$(dirname "$(dirname "$GATE_PY")")/gate-requirements.blob" 2>/dev/null || echo unknown)
+#   ⚠ **«모름» 은 양쪽에 대칭이다.** 트리 쪽이 안 읽히는 경우도 있다 — `main` 에는
+#   `engine/requirements.txt` 가 **없다** (감사석 실측). 그때 한쪽만 면제하면 기록을 가진
+#   venv 와 «다르다» 로 떨어져 첫 줄에서 죽고, 인쇄는 «선언 불일치» 라고 말하는데 실제
+#   원인은 **파일 부재**다. 불일치는 **둘 다 읽힌 때만** 말한다.
+if [ "$_req_built" = "unknown" ] || [ "$_req_now" = "unknown" ]; then
+  echo "  [note] gate venv 선언 대조 못 함 — venv $_req_built · 트리 $_req_now (기록 이전 venv 이거나 트리에 선언이 없다)"
+elif [ "$_req_built" != "$_req_now" ]; then
+  echo "  [FAIL] gate venv built from another declaration — venv $_req_built · 트리 $_req_now"
+  exit 2
+else
+  echo "  [note] gate venv 선언 일치 — engine/requirements.txt blob $_req_now"
+fi
 fail=0
 # ⚠ **비0 종료는 이름을 남긴다** (169 E). gate212 가 rc=1 로 끝났는데 로그 어디에도 `[FAIL]` 이
 #   없었다 — 다섯 개의 `run.py` 중 하나가 조용히 1 을 돌려줬고, 어느 바디인지 스크래치를 다시
