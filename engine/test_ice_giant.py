@@ -493,6 +493,72 @@ def _published_nmoi(frozen: dict, fails: list[str]) -> None:
               f"(< {NMOI_SOURCE_TOL * 100:.1f} %; 두 자전 가정 모두)")
 
 
+def _gone_branch_fixture(fails: list[str]) -> None:
+    """`gone` 가지를 **밟아 본다** — 감시 파일이 사라진 적이 없어 한 번도 안 돈 자리다.
+
+    ⚠ **파일을 지우지 않는다.** 지우면 `trigger_files()` 가 움직여 바이트 자가 바뀌고 앵커
+    재동결을 부른다 — 인쇄 한 줄을 증명하려고 앵커를 다시 굳히는 값은 안 치른다. 그래서
+    **합성 `frozen` 사전**을 만들어 `_inputs` 에 그대로 준다.
+    ⚠ **같은 실행에 음성 대조를 둔다** — 트리와 같은 기록으로 한 번 더 불러 `gone` 이 비고
+    판정이 서는 것을 보인다. 대조가 없으면 «가지가 발화했다» 와 «이 시험은 늘 발화한다» 를
+    못 가른다.
+    ⚠ **고장을 잡으려는 것이 아니다.** `gone` 가지는 이름만 이어 붙이고 딕셔너리 조회가 없어
+    C70 의 `KeyError: 'bands.py'` 같은 사고가 날 자리가 아니다 — 그것은 `moved` 쪽의
+    `then[k]`·`now[k]` 였고 이미 막혀 있다. 여기서 보는 것은 **밟힌 적 없는 가지가 실제로
+    발화해 판정을 뒤집는가** 뿐이다."""
+    import io
+    import contextlib
+
+    ghost = "engine/__never_watched__.py"
+    now = input_digests()
+    now_code = code_digests()
+    base = {"inputs": dict(now), "inputs_code": dict(now_code)}
+
+    def run(frozen_like):
+        local: list[str] = []
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            _inputs(frozen_like, local)
+        return local, buf.getvalue()
+
+    # ── 양성: 굳힌 쪽에만 있는 이름 하나 ────────────────────────────────────
+    hit = {"inputs": dict(now) | {ghost: "0" * 16}, "inputs_code": dict(now_code)}
+    hit_fails, hit_out = run(hit)
+    # ── 음성 대조: 트리와 같은 기록 ────────────────────────────────────────
+    ctl_fails, ctl_out = run(base)
+
+    # ⚠ **무엇이 판정을 뒤집었는지 이름으로 가른다** (감사석 개정 1 ②). «가지가 발화했다» 와
+    #   «뭔가가 발화했다» 는 다른 문장이다 — 세 바구니를 같은 실행에 나란히 단언한다.
+    then_hit = hit["inputs"]
+    buckets = {
+        "gone": sorted(k for k in then_hit if k not in now),
+        "added": sorted(k for k in now if k not in then_hit),
+        "moved": sorted(k for k in now if k in then_hit and now[k] != then_hit[k]),
+    }
+
+    problems = []
+    if buckets["gone"] != [ghost]:
+        problems.append(f"gone 바구니가 {buckets['gone']} — 그 한 키여야 한다")
+    if buckets["added"] or buckets["moved"]:
+        problems.append(f"다른 바구니가 비지 않았다 — added {buckets['added']} · moved {buckets['moved']}")
+    if not any(ghost in f and "사라진 파일" in f for f in hit_fails):
+        problems.append("양성에서 «사라진 파일» + 이름이 실패에 안 실렸다")
+    if "사라진 파일 1 개" not in hit_out:
+        problems.append("양성 요약줄이 «사라진 파일 1 개» 를 안 적었다")
+    if "[FAIL]" not in hit_out:
+        problems.append("양성 판정줄이 FAIL 이 아니다")
+    if ctl_fails or "사라진 파일" in ctl_out or "[PASS]" not in ctl_out:
+        problems.append("음성 대조가 조용하지 않다 — 이 시험은 늘 발화하는 셈이다")
+    if problems:
+        fails.extend(f"gone 가지: {p}" for p in problems)
+        print(f"  [FAIL] gone 가지 — {' · '.join(problems)}")
+        return
+    print(f"  [PASS] gone 가지 — 양성: gone {buckets['gone']} · added {buckets['added']} · "
+          f"moved {buckets['moved']} · 실패 {len(hit_fails)} 건에 «사라진 파일 {ghost}» · "
+          f"요약 «사라진 파일 1 개» · 판정 FAIL / 음성 대조: 실패 0 · 판정 PASS "
+          f"(합성 기록으로만 밟았고 감시 파일 {len(now)} 개는 안 건드렸다)")
+
+
 def _fingerprint(frozen: dict, fails: list[str], full: bool) -> None:
     """경로 지문 대조. 두 모드 다 본다 (2026-09-03, Brief 39 감사 ⑤).
 
@@ -818,6 +884,7 @@ def main() -> int:
     print("  굳힐 때 초 — " + " · ".join(f"{n} {v}" for n, v in secs.items())
           + " (수락선 ⑤: 넓힌 비교의 값이 이 수로 매겨진다)")
     _inputs(frozen, fails)
+    _gone_branch_fixture(fails)
     if "--fast" in sys.argv:
         _fast(frozen, fails)
     else:
