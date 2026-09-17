@@ -87,10 +87,18 @@ class BodyState:
             if producer is None:
                 continue
             r = self.results.get(producer)
-            if r is not None and r.converged is False:
+            if r is None:
+                continue
+            mark = None
+            if r.converged is False:
                 mark = f"{producer}.{key}"
-                if mark not in out:
-                    out.append(mark)
+            elif r.values.get("substituted_solvers"):
+                # ⚠ **«미수렴» 이 아니다.** 예산이 끝나 앞선 시행이 답으로 나온 값이고, 그
+                #   시행은 허용오차를 만족한다. 소비처가 알아야 할 것은 «값이 틀렸다» 가
+                #   아니라 «이 값에 이르는 길이 안 보인다» 이고, 등급 상한은 그 사실에 건다.
+                mark = f"best-of-budget:{producer}.{key}"
+            if mark and mark not in out:
+                out.append(mark)
         return tuple(out)
 
     @staticmethod

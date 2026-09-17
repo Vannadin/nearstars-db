@@ -449,10 +449,12 @@ def _convergence_values() -> dict:
     가진 자리가 하나도 안 돌았다» 이고, 통과와 같은 칸에 인쇄되면 안 된다."""
     tr = convergence.current()
     if tr is None:
-        return {"converged": None, "unconverged_solvers": [], "bracket_invalid": []}
+        return {"converged": None, "unconverged_solvers": [], "bracket_invalid": [],
+                "substituted_solvers": []}
     return {"converged": tr.converged,
             "unconverged_solvers": tr.unconverged_sites,
-            "bracket_invalid": tr.bracket_invalid_sites}
+            "bracket_invalid": tr.bracket_invalid_sites,
+            "substituted_solvers": tr.substituted_sites}
 
 
 def _core_or_own_gamma(mat, p: float, rho: float, t: float, t_pot: float) -> float:
@@ -1621,6 +1623,10 @@ T_DIVERGENCE_MIN = 0.05
 # 2 에 가까우면 (1 − n)² ≈ 0.8–1 로 줄어 열네 걸음으로 못 붙는다 (GJ 1214 b 가스 5 %). 앵커는
 # 한 진동에 0.01–0.1 배로 준다 (목성 0.70 → 0.37 → 0.08 → 0.022, 천왕성 0.067 → 0.006 → 0.0004).
 T_CONTRACTION_MIN = 0.5
+# 어긋남이 커지는 걸음에만 걸리는 완화계수. 비례 갱신의 오차 배수는 |1 − α·n| 이고, 해왕성의
+# 실측 n ≈ 2.5 에서 α = 0.5 면 0.25 다. ⚠ **줄고 있는 천체는 이 갈래를 안 지난다** — 앵커
+# 비트를 지키는 것이 이 조건이지 이 수가 아니다.
+T_DAMPING = 0.5
 # 온도 괄호잡기의 시도 횟수. 한 번에 1.6배씩 올린다.
 T_BRACKET_TRIES = 12
 
@@ -1740,15 +1746,21 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     # 시험값을 들고 나가면 붙었던 해가 converged=False 로 나간다 — 2026-08-30 에 해왕성이 3.5e-5 까지
     # 붙고 나서 열두 걸음 동안 1.5 배씩 벌어져 1.25e-3 으로 나갔다. 매 걸음 줄어드는 앵커는 마지막이
     # 곧 최선이라 이 갈래를 타지 않는다.
+    damped = False               # 완화가 걸렸는가 (한 번 켜지면 안 꺼진다)
+    damped_steps = 0             # 완화가 걸린 걸음 수 — «안 지났다» 를 인쇄로 보인다
     best = None                  # (어긋남, Structure, 사격 수렴, 중심 온도)
+    best_attempt = -1            # 그 최선이 몇 번째 시행이었나 (사전등록 B — «답이 몇 걸음 낡았나»)
+    attempts = 0                 # remember 가 본 시행 수
 
     def remember(got, ok, t_now):
-        nonlocal best
+        nonlocal best, best_attempt, attempts
+        attempts += 1
         if got.t_surface <= 0.0:
             return
         d = abs(got.t_surface / t_pot - 1.0)
         if best is None or d < best[0]:
             best = (d, got, ok, t_now)
+            best_attempt = attempts - 1     # 0 부터 센다 — 사격 호출 표와 같은 번호
 
     def note(t_now, got):
         nonlocal lo, hi
@@ -1787,7 +1799,30 @@ def shoot(mass_kg: float, cmf: float, imf: float,
             if wall is not None and wall / math.exp(lo[0]) - 1.0 < 1e-3:
                 break        # 벽에 붙었다. 더 올릴 온도가 없다
         else:
-            nxt = t_c * t_pot / st.t_surface
+            # ⚠ **어긋남이 커지는 동안에는 비례 갱신을 완화한다** (C69, 해왕성). 비례 갱신
+            #   `T_c ← T_c·(T_pot/T_surf)` 는 `T_surf ∝ T_c` 를 놓는데 실제 지수 n 이 2 를 넘는
+            #   천체가 있고, 그러면 오차가 |1 − n| 배씩 **커진다** — 해왕성 실측 걸음별 비 1.50
+            #   (n ≈ 2.5). ⚠ **완화는 비의 «지수» 를 α 배 하는 꼴이다** (`비 ** α`), 선형 혼합
+            #   (`1 + α(비 − 1)`) 이 아니다 — 응답이 비^n 이므로 비^α 를 걸면 지수가 α·n 이 되고
+            #   배수가 |1 − α·n| 이 된다. 그 모형이 수를 맞춘다: 관측 비 1.519 에서 역산 n = 2.519,
+            #   예측 |1 − 0.5 × 2.519| = 0.2595, 관측 0.261 · 0.258 · 0.259 · 0.258. ⚠ **줄고 있을 때는 손대지 않는다** — 매 걸음 줄어드는 천체(천왕성
+            #   일곱 걸음, 비 0.285 · 0.033 · 0.060 · 0.065 · 0.003 · 0.002)는 이 갈래를 한 번도
+            #   지나지 않고, 그래서 앵커의 비트가 안 움직인다. 그것이 이 모양을 고른 이유다.
+            # ⚠ **한 번 커지면 그 뒤로 계속 완화한다** (붙이기 전 실측). 걸음마다 켰다 끄면
+            #   «커진 걸음 1.517 → 완화한 걸음 0.259» 가 번갈아 나서 잔차가 단조로 안 준다 —
+            #   두 걸음 묶음으로는 0.393 배씩 줄지만, 수락선 D 가 묻는 것은 단조다.
+            if not damped and len(devs) >= 2 and devs[-1] > devs[-2]:
+                damped = True
+                print(f"  [완화] 온도 고리 — 어긋남이 커졌다 ({devs[-2]:.4e} → {devs[-1]:.4e}), "
+                      f"완화계수 {T_DAMPING} 를 이 걸음부터 건다")
+            if damped:
+                damped_steps += 1
+                nxt = t_c * (t_pot / st.t_surface) ** T_DAMPING
+            else:
+                # ⚠ **식을 한 글자도 안 바꾼다.** `t_c * (t_pot / t_surf)` 로 묶으면 곱셈 순서가
+                #   달라져 마지막 비트가 움직인다 — 실측: 완화가 **한 걸음도 안 걸린** 천왕성의
+                #   `core_temperature` 가 그 한 줄로 앵커에서 벗어났다.
+                nxt = t_c * t_pot / st.t_surface
             if wall is not None and nxt >= wall:
                 nxt = math.sqrt(t_c * wall)
         done = abs(nxt / t_c - 1.0) < T_TOL
@@ -1828,6 +1863,15 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     if (best is not None and not _surface_temperature_met(st, t_pot)
             and best[0] < T_SURFACE_TOL):
         # 마지막 시험값은 벌어졌지만 그 전에 붙은 시험값이 있다. 그것이 답이다 (위 best 주석).
+        # ⚠ **대체를 이름으로 남긴다** (사전등록 B). 배지는 그대로 «수렴» 이다 — 이 시행은
+        #   허용오차를 만족한다. 안 보이던 것은 «값이 틀렸다» 가 아니라 «예산이 끝났을 때
+        #   무슨 일이 벌어지고 있었나» 다. 해왕성은 답이 열세 걸음 낡았고 그 뒤 궤적은 커지고
+        #   있었는데, 지금까지 그것을 읽을 자리가 어디에도 없었다.
+        convergence.note_substituted("interior._t_loop", best_attempt,
+                                     devs[-1] if devs else float("nan"))
+        _last_dev = devs[-1] if devs else float("nan")
+        print(f"  [대체] 온도 고리 — 답은 시행 {best_attempt} (어긋남 {best[0]:.4e}), "
+              f"마지막 시행 {_last_dev:.4e}, 시행 {len(devs)} 걸음")
         _d, st, converged, t_c = best
     if wall is not None and not _surface_temperature_met(st, t_pot):
         # **선언된 1 bar 온도에 닿는 중심 온도가 없다.** 벽 아래의 가장 뜨거운 묶인 해와 벽을 둘 다
@@ -1858,6 +1902,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
             "답이 아니므로 내보내지 않는다. ⚠ **예산을 더 주는 것은 답이 아니다** — 감쇠율 0.878 에서 "
             "+28 걸음으로도 못 닿았다. 감쇠를 빠르게 하려면 비례 갱신에 완화계수 α < 1 이 필요하고, "
             "그것은 시행 걸음이 아니라 **갱신 규칙 변경**이라 붙는 천체의 경로도 바꾼다 — **C69 후보**다.")
+    print(f"  [고리] 시행 {len(devs)} 걸음 · 완화 걸린 걸음 {damped_steps} · "
+          f"마지막 어긋남 {devs[-1]:.4e}" if devs else "  [고리] 시행 0 걸음")
     _refuse_if_below_floor(st, core_material)
     return st, converged and _surface_temperature_met(st, t_pot)
 
@@ -3120,6 +3166,7 @@ def solve(mass_earth: float,
         units={"converged": "",
                "unconverged_solvers": "",
                "bracket_invalid": "",
+               "substituted_solvers": "",
                "nmoi": "dimensionless",
                "core_temperature": "K",
                "cmb_temperature": "K",

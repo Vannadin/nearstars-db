@@ -40,6 +40,7 @@ class Trace:
     sites: dict[str, bool | None] = field(default_factory=dict)
     unchecked: set[str] = field(default_factory=set)
     invalid: set[str] = field(default_factory=set)
+    substituted: dict[str, tuple[int, float]] = field(default_factory=dict)
 
     def note(self, site: str, converged: bool | None,
              bracket_checked: bool = True, bracket_valid: bool | None = None) -> None:
@@ -69,6 +70,18 @@ class Trace:
         return [name + ("?" if name in self.unchecked else "")
                 for name in sorted(self.sites) if self.sites[name] is False]
 
+    def note_substituted(self, site: str, attempt: int, last_deviation: float) -> None:
+        """⚠ **이 자리는 `note` 가 아니다.** 예산을 다 쓰고 **앞선 시행**을 답으로 들고 나간
+        것은 «수렴하지 않았다» 가 아니다 — 그 시행은 허용오차를 만족한다. `sites` 에 적으면
+        `converged` 가 통째로 뒤집혀 사전등록 B 가 금지한 배지가 된다. 그래서 옆 칸이다.
+        같은 자리가 두 번이면 **나중 것**이 남는다 (마지막 대체가 답을 정한다)."""
+        self.substituted[site] = (attempt, last_deviation)
+
+    @property
+    def substituted_sites(self) -> list[str]:
+        """예산 소진으로 앞선 시행을 답으로 삼은 자리 — `"자리@시행N"` 꼴."""
+        return [f"{name}@시행{self.substituted[name][0]}" for name in sorted(self.substituted)]
+
     @property
     def bracket_invalid_sites(self) -> list[str]:
         """진입 부호 검사가 실패한 자리 — 상태와 무관하게 싣는다."""
@@ -78,6 +91,13 @@ class Trace:
     def no_criterion_sites(self) -> list[str]:
         """기준 가지가 없어 상태를 비운 자리."""
         return sorted(n for n, v in self.sites.items() if v is None)
+
+
+def note_substituted(site: str, attempt: int, last_deviation: float) -> None:
+    """현재 풀이의 기록에 대체 한 줄. 기록이 없으면 조용히 지나간다."""
+    tr = _TRACE.get()
+    if tr is not None:
+        tr.note_substituted(site, attempt, last_deviation)
 
 
 def note(site: str, converged: bool | None, bracket_checked: bool = True,
