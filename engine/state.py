@@ -90,7 +90,15 @@ class BodyState:
             if r is None:
                 continue
             mark = None
-            if r.converged is False:
+            # ⚠ **`Result.converged` 가 아니라 그 풀이가 **기록한** 것을 읽는다** (C71 곁가지).
+            #   필드 `converged` 는 자기 주석이 «순환 위에 있을 때만 의미가 있다» 라고 적는다 —
+            #   `chain.yaml` 의 순환 일곱에 드는 노드는 **13** 개이고 나머지 **38** 개는 그 칸을
+            #   아예 안 채운다. 그 필드로 거르면 네 노드 중 셋에게는 «안 붙었다» 를 말할 통로가
+            #   없다. 기록기가 낸 `values["converged"]` 는 그 풀이 안 솔버 자리들의 AND 라서
+            #   순환과 무관하게 답한다. 실측: earth·pandora 의 `interior_layers` 는 기록기가
+            #   False 인데 필드는 True 였고, 표지가 한 소비처에도 안 갔다.
+            #   ⚠ `None` 은 «물을 것이 없었다» 이므로 표지를 안 단다 — `is False` 로만 건다.
+            if (r.values or {}).get("converged") is False:
                 mark = f"{producer}.{key}"
             elif r.values.get("substituted_solvers"):
                 # ⚠ **«미수렴» 이 아니다.** 예산이 끝나 앞선 시행이 답으로 나온 값이고, 그
