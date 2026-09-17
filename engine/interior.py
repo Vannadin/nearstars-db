@@ -428,7 +428,9 @@ def _integrator_gamma_values(core_material: str, st) -> dict:
         ph = mat.phase_at(st.p_cmb)
         # ⚠ **세트가 P·T 로 묶여 있으면 P·T 로 물어야 한다** (지휘석 규칙, 브리프 187): 압력만
         #   넘기면 온도 축이 접히고, 그 접기가 C74 의 J 가 거절한 바로 그 모양이다. 이 자리는
-        #   CMB 온도를 이미 들고 있으므로 넘긴다 — 「온도 모름」은 통과가 아니라 등급이다.
+        #   CMB 온도를 이미 들고 있으므로 넘긴다. 그 답의 이름은 `engine/test_fe_hcp.py` 의 J5
+        #   주석에 있다 — ⚠ **이 주석은 그 본체를 가리키기만 한다**(사본을 두지 않는다: 예전에는
+        #   같은 문장이 여기 한 벌 더 있었고, 인용 꼴이 없어 `check_refs` 가 세지도 않았다).
         verdict, _density_side = ph.thermal_label(getattr(mat, "fit_composition", ""),
                                                   st.p_cmb, st.t_cmb or None)
     except PhaseGap:

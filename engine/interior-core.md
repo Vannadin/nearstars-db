@@ -24,7 +24,7 @@ this file stays the one place. The C14–C19 and P1–P3 rows are at the end of 
 
 ## Where everything stands — 2026-09-06
 
-This file is 2 700 lines. The table is here so that "what is open right now" does not require reading
+This file is 11 993 lines (`wc -l`, 2026-09-17; it read «2 700» until then). The table is here so that "what is open right now" does not require reading
 them. **The table navigates; the entries below carry the evidence, and no closed entry is deleted** —
 the record is the point of the file.
 
@@ -11394,7 +11394,7 @@ module constant the solver chose, and a constant sitting in the evidence under a
 because they were adjacent, and the convention they belong to lives **three functions away**. A `grep` for
 the literal `inputs["initial_porosity"]` found the write and could not find its meaning, and the consumer
 that would have shown it reads the key through a **variable** (`res.inputs[axis]`), which no literal search
-returns. The test that covers it costs 459 s and was deferred to the gate rather than run before the
+returns. The test that covers it costs 1 656–1 733 s — 40.5–41.7 % of the step-time total, not of the wall clock (measured over four gates on 2026-09-17; the line read «459 s» until then, with no denominator) and was deferred to the gate rather than run before the
 commit — the gate caught it in the isolated lane, which is what that lane is for, and the scratch was kept
 because `rc=1`.
 
