@@ -249,14 +249,59 @@ _ratio = (rg.budget(cf.M_EARTH_KG * 0.675, t_gyr=-4.5)["mantle_w"]
           / rg.budget(cf.M_EARTH_KG * 0.675)["mantle_w"])
 _e_now = BODIES["Earth"]["t_p_c20"]
 _e_then = back[("Earth", 100.0e3)]["t_p_end_k"]
-print(f"  ⚠ **부호 — 세 수가 서로 안 맞는다. 이 항목은 이것을 미해결로 둔다.** (ⓐ) 과거 Q_man 은 "
-      f"오늘의 **{_ratio:.2f} 배**다 — 발열은 과거가 크다. (ⓑ) 그런데 이 수지를 뒤로 돌리면 "
-      f"지구 T_p 가 {_e_now:.0f} K 에서 **{_e_then:.0f} K 로 내려간다** — 도출된 과거는 **더 차다**. "
-      "(ⓒ) 오늘 `dT_p/dt` 는 **양수**(데워지는 중)인데 Urey 비는 **1 보다 작다**(발열 < 표면 손실). "
-      "ⓑ 와 ⓒ 는 서로 맞고(오늘 데워지니 과거는 차다) **ⓐ 와 안 맞는다** — 발열이 과거에 컸는데 "
-      "과거가 더 차다면, 그 시절의 표면 손실이 더 컸거나 수지의 어느 항이 빠졌다는 뜻이다. "
-      "⚠ **어느 쪽인지 여기서 안 고른다** — 가르려면 Foley 수지의 인쇄 궤적이 필요하고 그것을 "
-      "못 찾았다(위 부재 문장). 이 줄은 **관측된 불일치의 기록**이지 해석이 아니다.")
+_e_today = stag[("Earth", "C20", 100.0e3)]
+# 앞으로 가는 적분이 도달하는 «오늘» — 뒤로 돌린 판과 다른 온도의 오늘이라, 값을 따로 든다.
+_fwd = mb.integrate_tp(_e_then, 100.0e3,
+                       lambda t_gyr: rg.budget(cf.M_EARTH_KG * (1.0 - BODIES["Earth"]["cmf"]),
+                                               t_gyr=t_gyr)["mantle_w"],
+                       -4.5, 0.0, steps=STAGE2_STEPS,
+                       r_p_m=geo["Earth"]["r_p_m"], r_c_m=geo["Earth"]["r_c_m"],
+                       g=geo["Earth"]["g"], d_m=geo["Earth"]["d_m"])
+_e_fwd = _fwd["t_p_end_k"]
+_e_fwd_urey = _fwd["end_state"]["urey"]
+_e_fwd_dtp = _fwd["end_state"]["dtp_dt_k_gyr"]
+print(f"  ⚠ **부호는 한 수에 묶여 있다 — 떼어 읽으면 없는 모순이 보인다.** `dtp = (Q_man − Q_surf "
+      f"− melt)/capacity` 이고 `urey = Q_man/Q_surf` 이므로, **같은 상태 안에서 `dT_p/dt > 0` 은 "
+      f"`Urey > 1` 과 같은 말**이다 (분모는 양수, melt 는 0). 그래서 이 둘은 **항상 같은 줄에** "
+      f"`T_p`·시점과 함께 찍는다. 오늘(C20) 지구: T_p {_e_now:.2f} K · Urey "
+      f"{_e_today['urey']:.3f} · dT_p/dt {_e_today['dtp_dt_k_gyr']:+.1f} K/Gyr — 부호가 맞다. "
+      f"⚠ 이 좌석이 한 번 «양수인데 Urey < 1» 이라 적었는데, 그것은 **다른 두 상태의 수를 "
+      f"짝지은 것**이었다. 반례가 같은 로그에 이미 서 있다 — **1단계 T_p 1623 K · Urey 2.117 · "
+      f"dT_p/dt +57.9 K/Gyr**(양수 쪽, 그 줄의 Urey 는 1 보다 크다. ⚠ 1623 K 는 어느 천체의 "
+      f"오늘 값이 아니라 **Foley 2018 의 T_r** 이다 — 위 T_P_FAN 참조. 「지구의 오늘」로 읽으면 "
+      f"«오늘 데워지는 중» 이라는 옛 오독이 그대로 돌아온다)와 **적분 끝 T_p 1804.3 K · "
+      f"Urey 0.759 · −34.9**(음수 쪽). 두 줄을 떼어 앞의 부호와 뒤의 Urey 를 짝지으면 없는 모순이 "
+      f"생긴다. 감사석이 소스로 닫았다.")
+print(f"  ⚠ **세 수는 한 이야기다.** 과거 Q_man 이 오늘의 **{_ratio:.2f} 배**라 초기에는 데워지고, "
+      f"정점을 지나 식는다. 오늘(C20 {_e_now:.2f} K)은 Urey {_e_today['urey']:.3f} · "
+      f"dT_p/dt {_e_today['dtp_dt_k_gyr']:+.1f} K/Gyr 로 **아직 데워지는 쪽**이고, 더 뜨거운 "
+      f"상태에서는 Urey 가 1 아래로 내려가 식는 쪽이 된다 — 그 사이에 **고정점**이 있다. "
+      f"앞으로 가는 적분이 초기조건 기억을 지우는 것(200 K → 2.1 K)이 그 고정점으로 끌리는 모양이다.")
+# ⚠ **고정점을 주장하지 않고 잰다.** 오늘의 Q_man 을 고정한 채 T_p 만 올려 `urey = 1` 이 되는
+#   지점을 이분법으로 찍는다 — 스무 번 남짓이면 닫힌다. 여기 쓰는 1804 K 류의 온도는 **예측이
+#   아니라 탐침**이다: «그 온도에서 오늘의 발열로 수지를 풀면 무엇이 나오나» 만 묻는다.
+_probe = stagnant("Earth", 1804.0, 100.0e3, geo["Earth"])
+print(f"  ⚠ **고정점은 실측이다.** 오늘의 Q_man 으로 T_p **1804 K** 를 풀면 Urey "
+      f"{_probe['urey']:.3f} · dT_p/dt {_probe['dtp_dt_k_gyr']:+.1f} K/Gyr — **식는 쪽**이다. "
+      f"⚠ 이 1804 K 는 **온도 예측이 아니라 탐침**이고, 철회된 «오늘 1804.3 K» 와 다른 역할이다.")
+_lo_t, _hi_t = _e_now, 1804.0
+for _ in range(40):
+    _mid = 0.5 * (_lo_t + _hi_t)
+    if stagnant("Earth", _mid, 100.0e3, geo["Earth"])["urey"] > 1.0:
+        _lo_t = _mid
+    else:
+        _hi_t = _mid
+_fix = stagnant("Earth", 0.5 * (_lo_t + _hi_t), 100.0e3, geo["Earth"])
+print(f"      그 사이 `Urey = 1` 인 지점: T_p **{0.5*(_lo_t+_hi_t):.1f} K** (이분법 40 회, "
+      f"그 점의 dT_p/dt {_fix['dtp_dt_k_gyr']:+.2f} K/Gyr). 오늘 {_e_now:.0f} K 는 그 아래라 "
+      "데워지는 쪽이고, 위로 가면 식는 쪽이다 — **고정점이 둘 사이에 있다**는 것이 이 수다.")
+print(f"  ⚠ **왕복이 닫힌다 — 적분기 자체의 검사다.** 뒤로 돌려 얻은 {_e_then:.1f} K 를 다시 "
+      f"앞으로 굴리면 오늘 **{_e_fwd:.2f} K**, C20 의 {_e_now:.2f} K 와 차 "
+      f"**{abs(_e_fwd - _e_now):.2e} K**. 같은 식을 두 방향으로 돌린 것이므로 이것은 물리가 아니라 "
+      "**적분기가 자기 자신과 일관되다**는 뜻이다.")
+print(f"  ⚠ **첫 판의 «오늘 1804.3 K» 는 철회된 수다.** 그 판은 C20 의 **오늘** 값을 −4.5 Gyr 에 "
+      f"놓고 앞으로 굴려 {_e_now:.0f} → 1804.3 K 를 냈다. 방향을 바로잡은 뒤 그 수는 없다 — "
+      "인용하지 말 것.")
 print("  ⚠ 이 줄들은 **판정 인쇄**이고 게이트가 세는 회귀는 위 여섯 행뿐이다.")
 
 print("\n" + ("재현 이상 없음 — 판정은 위의 [판정] 줄들이다" if not fails else f"{fails}건 회귀"))
