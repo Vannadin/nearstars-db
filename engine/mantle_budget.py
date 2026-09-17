@@ -201,6 +201,9 @@ def secular_cooling(t_p_k: float, delta_m: float, q_man_w: float, probe_fraction
 
 # ── 2단계: 시간 적분 (C51 Stage 2) ─────────────────────────────────────────────
 GYR_S = 3.156e16          # 1 Gyr [s]. 위 `dtp_dt_k_gyr` 가 쓰는 것과 같은 수다.
+#: 적분이 «답이 없다» 로 넘어가는 위쪽 끝. 이 적합들은 맨틀 온도이고 10 000 K 는 어느 적합의
+#: 정의역도 아니다 — 여기 닿았다는 것은 궤적이 달아났다는 뜻이지 물리가 아니다.
+T_P_CEILING_K = 1.0e4
 
 
 def integrate_tp(t_p0_k: float, delta_m: float, q_man_at_w, t0_gyr: float, t1_gyr: float,
@@ -227,20 +230,57 @@ def integrate_tp(t_p0_k: float, delta_m: float, q_man_at_w, t0_gyr: float, t1_gy
     h_gyr = span_gyr / steps
     h_s = h_gyr * GYR_S
 
+    class _OutOfDomain(Exception):
+        """`T_p` 가 `T_s` 아래로 내려간 지점. ⚠ **RK4 의 중간 탐침에서도 난다** — 걸음이 끝난 뒤에만
+        보면 늦는다. `θ`·`Ra_i` 가 `T_p − T_s` 를 실수 거듭제곱의 밑수로 쓰기 때문이다."""
+
     def rhs(t_gyr: float, t_p_k: float) -> float:
+        # ⚠ **양쪽 끝을 다 막는다.** 뒤로 가는 적분은 차게 달아나기도(θ 의 밑수가 음수) 뜨겁게
+        #   달아나기도 한다 — 후자는 `theta_fk` 에서 `OverflowError: Result too large` 로 터진다.
+        #   두 경우 다 «답이 없다» 이지 «죽었다» 가 아니다.
+        if (not math.isfinite(t_p_k)) or t_p_k <= T_S_K or t_p_k > T_P_CEILING_K:
+            raise _OutOfDomain(t_gyr, t_p_k)
         return dtp_dt_k_s(t_p_k, delta_m, q_man_at_w(t_gyr), melt_w=0.0,
                           r_p_m=r_p_m, r_c_m=r_c_m, **flux_kw)["dtp_dt_k_s"]
 
     t_gyr, t_p = t0_gyr, t_p0_k
     history = [(t_gyr, t_p)]
     for _ in range(steps if span_gyr != 0.0 else 0):
-        k1 = rhs(t_gyr, t_p)
-        k2 = rhs(t_gyr + 0.5 * h_gyr, t_p + 0.5 * h_s * k1)
-        k3 = rhs(t_gyr + 0.5 * h_gyr, t_p + 0.5 * h_s * k2)
-        k4 = rhs(t_gyr + h_gyr, t_p + h_s * k3)
+        try:
+            k1 = rhs(t_gyr, t_p)
+            k2 = rhs(t_gyr + 0.5 * h_gyr, t_p + 0.5 * h_s * k1)
+            k3 = rhs(t_gyr + 0.5 * h_gyr, t_p + 0.5 * h_s * k2)
+            k4 = rhs(t_gyr + h_gyr, t_p + h_s * k3)
+        except _OutOfDomain as why:
+            at_gyr, at_t_p = why.args
+            # ⚠ **어느 끝을 넘었는지 이름을 댄다.** 두 경우가 한 문장을 쓰면, 뜨겁게 달아난
+            #   궤적을 두고 «표면 온도 아래» 라고 적는 거짓말이 된다 (첫 판이 그랬다).
+            if not math.isfinite(at_t_p):
+                why_txt = "T_p 가 유한하지 않다"
+            elif at_t_p <= T_S_K:
+                why_txt = (f"T_p {at_t_p:.1f} K 가 표면 온도 {T_S_K:.0f} K **아래**다 — (3) 의 "
+                           "θ·Ra_i 는 T_p − T_s 를 실수 거듭제곱의 밑수로 쓴다")
+            else:
+                why_txt = (f"T_p {at_t_p:.1f} K 가 천장 {T_P_CEILING_K:.0f} K **위**다 — 이 적합들의 "
+                           "정의역이 아니고, 궤적이 달아났다는 뜻이다")
+            return {"refused": f"적분이 도메인을 벗어났다 — t = {at_gyr:+.3f} Gyr 의 탐침에서 {why_txt}",
+                    "t_p_end_k": t_p, "t_end_gyr": t_gyr, "steps": len(history) - 1,
+                    "h_gyr": h_gyr, "history": history, "end_state": None,
+                    "lid_fixed_m": delta_m}
         t_p = t_p + (h_s / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
         t_gyr = t_gyr + h_gyr
         history.append((t_gyr, t_p))
+        # ⚠ **도메인을 벗어나면 이름을 대며 멈춘다.** `θ` 와 `Ra_i` 는 `T_p − T_s` 를 밑수로 쓰므로
+        #   `T_p` 가 표면 온도 아래로 내려가면 실수 거듭제곱이 **복소수**가 된다 — 예전 판은 거기서
+        #   `TypeError: '>' not supported between instances of 'complex' and 'float'` 로 죽었다.
+        #   죽는 것도 조용한 것도 답이 아니다: **어디서 벗어났는지**를 값으로 돌려준다.
+        if t_p <= T_S_K:
+            return {"refused": f"적분이 도메인을 벗어났다 — t = {t_gyr:+.3f} Gyr 에서 T_p "
+                               f"{t_p:.1f} K 가 표면 온도 {T_S_K:.0f} K 아래로 내려갔다 (걸음 끝). "
+                               "(3) 의 θ·Ra_i 는 T_p − T_s 를 밑수로 쓰므로 그 아래는 답이 없다",
+                    "t_p_end_k": t_p, "t_end_gyr": t_gyr, "steps": len(history) - 1,
+                    "h_gyr": h_gyr, "history": history, "end_state": None,
+                    "lid_fixed_m": delta_m}
     end = dtp_dt_k_s(t_p, delta_m, q_man_at_w(t_gyr), melt_w=0.0,
                      r_p_m=r_p_m, r_c_m=r_c_m, **flux_kw)
     return {"t_p_end_k": t_p, "t_end_gyr": t_gyr, "steps": steps if span_gyr != 0.0 else 0,

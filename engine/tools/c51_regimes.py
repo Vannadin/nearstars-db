@@ -183,63 +183,81 @@ if VERBOSE:
         print(f"      {lab:34s} T_p {t_p:7.2f} → F_man {r['f_man_w_m2']*1e3:7.3f} mW/m² · "
               f"dT_p/dt {r['dtp_dt_k_gyr']:+8.1f} K/Gyr · Urey {r['urey']:.3f}")
 
-# ── 2단계: 세 칸을 적분 끝에서 다시 읽는다 (C51 Stage 2, 사전등록 1f907a63 + 개정 1) ───────
+# ── 2단계: 시간 적분 (C51 Stage 2, 사전등록 1f907a63 + 개정 1) ───────────────────────────────
 print("\n" + "=" * 96)
-print("2단계 — 4.5 Gyr 적분 뒤 같은 칸을 다시 읽는다. ⚠ 온도를 결과에 맞춰 올리지 않는다 (오너 결정 6-3)")
+print("2단계 — 시간 적분. ⚠ **오늘 값을 과거에 놓지 않는다**: 출발점이 있는 쪽에서 출발한다")
 print("=" * 96)
+print("  ⚠ **첫 판은 이 자리를 틀렸다** — C20 의 **오늘** T_p 를 −4.5 Gyr 의 값으로 넣고 오늘까지")
+print("    굴렸다. 그러면 «359 K 상승» 은 물리가 아니라 오늘 값을 과거에 놓은 결과이고, 화살표")
+print("    양끝에 **같은 시점의 두 값**이 선다. 감사석이 잡았다.")
+print("  ⚠ **초기 T_p 의 인쇄 출처를 못 찾았다.** 찾은 곳 — 보유 논문 `2008RvGeo..46.2007K`(Korenaga")
+print("    2008) · `2018AsBio..18..873F`(Foley 2018) · `2014GeoJI.199..580F`(F&B 2014). ADS 질의는")
+print("    **안 돌렸다**. 그리고 Korenaga 2008 §[76] 은 그 부재를 이렇게 적는다 — *«Modeling transient")
+print("    phenomena such as secular cooling depends on a poorly known initial condition»*. 즉 이것은")
+print("    **우리가 안 찾은 값이 아니라 그 문헌이 모른다고 적은 값**이다.")
+print("  그래서 **시점이 붙은 쪽에서 출발한다**: 오늘의 C20 T_p 를 **끝점이 아니라 출발점**으로 두고")
+print("    **뒤로** 적분해, 그 수지가 요구하는 **초기 T_p 를 출력으로** 낸다. 오늘 값은 그대로 오늘")
+print("    값이고(칸 ① 의 1.770 은 안 움직인다), 미지인 것만 도출된다.")
 
 STAGE2_STEPS = 450
-after = {}
+back = {}
 for name, b in BODIES.items():
     g = geo[name]
     sil_kg = b["mass_earth"] * cf.M_EARTH_KG * (1.0 - b["cmf"])
-    # ⚠ **뚜껑을 조용히 고르지 않는다** (감사석 ㉡). 화성은 인쇄 밴드가 350–500 km 이고, 한 번
-    #   도는 데 4 ms 이므로 **둘 다** 돌려 둘 다 찍는다. 1단계가 «δ 는 넓이를 바꾸지 열류를 안
-    #   바꾼다» 를 쟀으므로 열류는 같아야 하고, 같지 않으면 그것이 발견이다.
+    # ⚠ 뚜껑을 조용히 고르지 않는다 (감사석). 인쇄 밴드가 둘이면 둘 다 돌린다 — 한 번 4 ms 다.
     deltas = sorted(set(b["delta_m"]))
-    delta = deltas[0]
+    for d in deltas:
+        def q_at(t_gyr, _kg=sil_kg):
+            return rg.budget(_kg, t_gyr=t_gyr)["mantle_w"]
 
-    def q_at(t_gyr, _kg=sil_kg):
-        return rg.budget(_kg, t_gyr=t_gyr)["mantle_w"]
-
-    run = mb.integrate_tp(b["t_p_c20"], delta, q_at, -4.5, 0.0, steps=STAGE2_STEPS,
-                          r_p_m=g["r_p_m"], r_c_m=g["r_c_m"], g=g["g"], d_m=g["d_m"])
-    after[name] = run
-    for d2 in deltas[1:]:
-        r2 = mb.integrate_tp(b["t_p_c20"], d2, q_at, -4.5, 0.0, steps=STAGE2_STEPS,
+        r2 = mb.integrate_tp(b["t_p_c20"], d, q_at, 0.0, -4.5, steps=STAGE2_STEPS,
                              r_p_m=g["r_p_m"], r_c_m=g["r_c_m"], g=g["g"], d_m=g["d_m"])
-        e2 = r2["end_state"]
-        base = run["end_state"]
-        print(f"  {name:>6} δ {d2/1e3:.0f} km — 끝 T_p {r2['t_p_end_k']:.1f} K · "
-              f"F_man {e2['f_man_w_m2']*1e3:.3f} mW/m² · Urey {e2['urey']:.3f}")
-        print(f"      ⚠ **적분에서는 δ 가 답을 바꾼다** — δ {delta/1e3:.0f} km 대 {d2/1e3:.0f} km 에서 "
-              f"끝 T_p {run['t_p_end_k']:.1f} 대 {r2['t_p_end_k']:.1f} K "
-              f"({abs(r2['t_p_end_k']-run['t_p_end_k']):.1f} K) · F_man "
-              f"{base['f_man_w_m2']*1e3:.3f} 대 {e2['f_man_w_m2']*1e3:.3f} mW/m². "
-              "1단계의 «δ 는 넓이를 바꾸지 열류를 안 바꾼다» 는 **고정 T_p 에서의 문장**이고, "
-              "적분에서는 δ 가 **맨틀 부피 = 열용량**을 바꿔 궤적이 갈라진다. 그래서 «밴드에 "
-              "들어왔다» 는 **뚜껑 선택에도 매인다** — 둘 다 [14, 25] 안이라는 것이 지금의 사실이다.")
-    e = run["end_state"]
-    print(f"  {name:>6} T_p {b['t_p_c20']:.2f} K (C20) → {run['t_p_end_k']:.1f} K · "
-          f"F_man {e['f_man_w_m2']*1e3:.3f} mW/m² · Urey {e['urey']:.3f} · "
-          f"dT_p/dt {e['dtp_dt_k_gyr']:+.1f} K/Gyr · 걸음 {run['steps']} · δ {delta/1e3:.0f} km 고정")
+        back[(name, d)] = r2
+        if "refused" in r2:
+            print(f"  {name:>6} δ {d/1e3:>3.0f} km · 오늘 T_p {b['t_p_c20']:.2f} K (C20, t = 0) → "
+                  f"**거절**: {r2['refused'][:96]}… (걸음 {r2['steps']})")
+        else:
+            print(f"  {name:>6} δ {d/1e3:>3.0f} km · 오늘 T_p {b['t_p_c20']:.2f} K (C20, t = 0) → "
+                  f"**−4.5 Gyr 의 T_p {r2['t_p_end_k']:.1f} K** (도출) · 걸음 {r2['steps']}")
 
-m_end = after["Mars"]["end_state"]["f_man_w_m2"] * 1e3
-lo2, hi2, _avg2 = PARRO_MARS
-inside = lo2 <= m_end <= hi2
-print(f"\n  [판정 ①·2단계] 화성 F_man {m_end:.3f} mW/m² 대 Parro+ 2017 [{lo2:.0f}, {hi2:.0f}] — "
-      f"{'**밴드 안**' if inside else '**여전히 밖**'}. 1단계 값은 "
-      f"{stag[('Mars', 'C20', 350.0e3)]['f_man_w_m2']*1e3:.3f} 였다.")
-print("      ⚠ 밴드에 들어왔더라도 그것은 **설명할 결과**이지 받아들일 결과가 아니다 — 적분이 "
-      "무엇을 바꿔서 들어왔는지(온도인가 수지인가)를 먼저 말해야 한다. 밖이면 «C20 화성 맨틀 온도 "
-      "재검토» 항목이 그것을 든다.")
+for name in BODIES:
+    ds = sorted(set(BODIES[name]["delta_m"]))
+    if len(ds) > 1 and all("refused" not in back[(name, d)] for d in (ds[0], ds[-1])):
+        a_, b_ = back[(name, ds[0])]["t_p_end_k"], back[(name, ds[-1])]["t_p_end_k"]
+        print(f"      ⚠ **뚜껑이 답을 바꾼다** — {name} δ {ds[0]/1e3:.0f} 대 {ds[-1]/1e3:.0f} km 에서 "
+              f"도출 초기 T_p {a_:.1f} 대 {b_:.1f} K ({abs(a_-b_):.1f} K). 1단계의 «δ 는 넓이를 "
+              "바꾸지 열류를 안 바꾼다» 는 **고정 T_p 에서의 문장**이고, 적분에서는 δ 가 **맨틀 "
+              "부피 = 열용량**을 바꿔 궤적이 갈라진다.")
 
-u_e = after["Earth"]["end_state"]["urey"]
-u_m = after["Mars"]["end_state"]["urey"]
-print(f"  [판정 ③·2단계] 각 천체 자기 온도로 적분한 끝 — 지구 Urey {u_e:.3f} "
-      f"{'<' if u_e < u_m else '>'} 화성 {u_m:.3f}. 1단계(각자 C20)는 4.251 < 8.780 이었다. "
-      "⚠ 방향이 바뀌었으면 **적분이 바꾼 것**이고, 등록된 결정(각자 자기 온도)은 그대로다.")
-print("      ⚠ 이 두 줄은 **판정 인쇄**이고 게이트가 세는 회귀는 위 여섯 행뿐이다.")
+for name in BODIES:
+    for d in sorted(set(BODIES[name]["delta_m"])):
+        r3 = back[(name, d)]
+        if "refused" in r3:
+            print(f"      ⚠ **뒤로 가는 적분은 불안정하다** — {name} δ {d/1e3:.0f} km 는 "
+                  f"t = {r3['t_end_gyr']:+.3f} Gyr 에서 도메인을 벗어났다. 앞으로 가는 적분이 "
+                  "초기조건의 기억을 지우므로(시험에서 200 K → 2.1 K), 그 역은 작은 차를 **키운다**. "
+                  "그래서 «오늘에서 뒤로 4.5 Gyr» 는 이 수지가 답할 수 있는 물음이 아니다 — "
+                  "거절이 그 사실이다.")
+
+print("\n  [판정 ①·2단계] 칸 ① 은 **안 움직인다** — 오늘 T_p 가 출발점이므로 화성 F_man 은 여전히 "
+      f"{stag[('Mars', 'C20', 350.0e3)]['f_man_w_m2']*1e3:.3f} mW/m², Parro+ 2017 "
+      f"[{PARRO_MARS[0]:.0f}, {PARRO_MARS[1]:.0f}] **밖**이다. ⚠ 첫 판이 «밴드 안» 을 냈던 것은 "
+      "적분이 온도를 올려서였고, 그 온도 상승 자체가 잘못 놓인 초기조건이었다.")
+print("  [판정 ③·2단계] Urey 비는 오늘 값 그대로다(1단계와 같은 수) — 이 적분은 과거를 도출할 뿐 "
+      "오늘을 바꾸지 않는다.")
+_ratio = (rg.budget(cf.M_EARTH_KG * 0.675, t_gyr=-4.5)["mantle_w"]
+          / rg.budget(cf.M_EARTH_KG * 0.675)["mantle_w"])
+_e_now = BODIES["Earth"]["t_p_c20"]
+_e_then = back[("Earth", 100.0e3)]["t_p_end_k"]
+print(f"  ⚠ **부호 — 세 수가 서로 안 맞는다. 이 항목은 이것을 미해결로 둔다.** (ⓐ) 과거 Q_man 은 "
+      f"오늘의 **{_ratio:.2f} 배**다 — 발열은 과거가 크다. (ⓑ) 그런데 이 수지를 뒤로 돌리면 "
+      f"지구 T_p 가 {_e_now:.0f} K 에서 **{_e_then:.0f} K 로 내려간다** — 도출된 과거는 **더 차다**. "
+      "(ⓒ) 오늘 `dT_p/dt` 는 **양수**(데워지는 중)인데 Urey 비는 **1 보다 작다**(발열 < 표면 손실). "
+      "ⓑ 와 ⓒ 는 서로 맞고(오늘 데워지니 과거는 차다) **ⓐ 와 안 맞는다** — 발열이 과거에 컸는데 "
+      "과거가 더 차다면, 그 시절의 표면 손실이 더 컸거나 수지의 어느 항이 빠졌다는 뜻이다. "
+      "⚠ **어느 쪽인지 여기서 안 고른다** — 가르려면 Foley 수지의 인쇄 궤적이 필요하고 그것을 "
+      "못 찾았다(위 부재 문장). 이 줄은 **관측된 불일치의 기록**이지 해석이 아니다.")
+print("  ⚠ 이 줄들은 **판정 인쇄**이고 게이트가 세는 회귀는 위 여섯 행뿐이다.")
 
 print("\n" + ("재현 이상 없음 — 판정은 위의 [판정] 줄들이다" if not fails else f"{fails}건 회귀"))
 sys.exit(1 if fails else 0)

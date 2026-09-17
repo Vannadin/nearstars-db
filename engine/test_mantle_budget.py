@@ -141,31 +141,38 @@ def q_man_at(t_gyr):
     return rg.budget(SIL_EARTH_KG, t_gyr=t_gyr)["mantle_w"]
 
 
+# ⚠ **출발점은 시점이 붙은 쪽이다** — 오늘 값을 과거에 놓지 않는다. 초기 T_p 의 인쇄 출처를 못
+#   찾았고(보유 논문 셋, ADS 질의 안 돌림), Korenaga 2008 §[76] 은 그 부재를 «poorly known initial
+#   condition» 으로 적는다. 그래서 **오늘에서 뒤로** 적분해 초기값을 도출한다.
 t_start = time.perf_counter()
-run = mb.integrate_tp(1623.0, mb.DELTA_TYPICAL_M, q_man_at, -4.5, 0.0, steps=450)
+run = mb.integrate_tp(1623.0, mb.DELTA_TYPICAL_M, q_man_at, 0.0, -4.5, steps=450)
 elapsed = time.perf_counter() - t_start
 # ⚠ **수락선 E — 걸음 예산을 인쇄한다.** 단계 수가 74 로 그대로여도 이 비용은 기존 단계 **안**에
 #   숨는다. 그래서 수를 찍는다.
 # ⚠ **이 줄이 거는 것은 걸음 예산뿐이다.** 끝 온도에는 등록된 폭이 없으므로 **판정 안 한다** —
 #   「어떤 값이어도 통과하는 단언」을 PASS 로 찍으면 검사가 있는 척만 한다 (감사석 ㉠).
-row(run["steps"] == 450 and run["h_gyr"] == (0.0 - -4.5) / 450,
-    f"4.5 Gyr 적분 — 걸음 {run['steps']} · 걸음 크기 {run['h_gyr']:.4f} Gyr (요청과 일치) · "
+row(run["steps"] == 450 and run["h_gyr"] == (-4.5 - 0.0) / 450,
+    f"4.5 Gyr 뒤로 적분 — 걸음 {run['steps']} · 걸음 크기 {run['h_gyr']:+.4f} Gyr (요청과 일치) · "
     f"벽시계 {elapsed*1e3:.0f} ms")
-print(f"      [인쇄, 판정 아님] 시작 T_p 1623.0 K → 끝 {run['t_p_end_k']:.1f} K")
+print(f"      [인쇄, 판정 아님] 오늘 T_p 1623.0 K (t = 0) → −4.5 Gyr 의 T_p {run['t_p_end_k']:.1f} K (도출)")
 print(f"      과거 쪽 Q_man {q_man_at(-4.5)/1e12:.1f} TW · 오늘 {q_man_at(0.0)/1e12:.1f} TW "
       f"(비 {q_man_at(-4.5)/q_man_at(0.0):.2f}) — 붕괴는 `radiogenic` 이 답하고 이 파일이 안 고른다")
 
 # ⚠ **초기조건은 선택이다** (함정 2). 하나로 끝내면 이력이 적분기의 것인지 출발점의 것인지 못 가른다.
-alt = mb.integrate_tp(1823.0, mb.DELTA_TYPICAL_M, q_man_at, -4.5, 0.0, steps=450)
-spread_now = abs(run["t_p_end_k"] - alt["t_p_end_k"])
-row(spread_now < abs(1823.0 - 1623.0),
-    f"초기조건 둘 — 1623 K 출발 → {run['t_p_end_k']:.1f} K · 1823 K 출발 → {alt['t_p_end_k']:.1f} K. "
-    f"출발 차 200.0 K 가 오늘 {spread_now:.1f} K 로 **{200.0/spread_now if spread_now else float('inf'):.1f} 배 좁혀졌다** "
-    f"— 기억이 지워지는 쪽이고, 그래서 끝값은 출발점보다 수지에 더 매인다")
+alt = mb.integrate_tp(1823.0, mb.DELTA_TYPICAL_M, q_man_at, 0.0, -4.5, steps=450)
+# ⚠ **두 번째 출발값은 아예 답이 없다** — 그리고 그것이 이 방향의 성질이다. 앞으로 가는 적분이
+#   초기조건의 기억을 지우므로(위 문단), 그 역은 오늘의 작은 차를 **키운다**. 한쪽은 차게, 다른
+#   쪽은 뜨겁게 달아난다. 둘 다 «거절» 이고, 죽는 것이 아니라 이름이 붙는다.
+row("refused" in alt and "도메인" in alt["refused"],
+    f"오늘 값 둘로 뒤로 — 1623 K → −4.5 Gyr 의 {run['t_p_end_k']:.1f} K (도출) · "
+    f"1823 K → **거절** (t = {alt['t_end_gyr']:+.3f} Gyr, 걸음 {alt['steps']}/450). "
+    "오늘 200 K 차가 뒤로 가면 한쪽은 도메인 밖으로 나간다 — **이 방향은 불안정**하고, "
+    "거절이 그 사실을 값으로 말한다")
+print(f"      [인쇄, 판정 아님] 거절문: «{alt['refused'][:92]}…»")
 
 end = run["end_state"]
-print(f"      끝 상태 — F_man {end['f_man_w_m2']*1e3:.3f} mW/m² · Urey {end['urey']:.3f} · "
-      f"dT_p/dt {end['dtp_dt_k_gyr']:+.1f} K/Gyr")
+print(f"      −4.5 Gyr 상태 — F_man {end['f_man_w_m2']*1e3:.3f} mW/m² · Urey {end['urey']:.3f} · "
+      f"dT_p/dt {end['dtp_dt_k_gyr']:+.1f} K/Gyr (⚠ 오늘 값은 위 ⑤ 가 찍은 1단계 수 그대로다)")
 # ⚠ **수락선 B — 인쇄된 궤적과 대조하거나, 못 찾았다면 어디를 찾았는지 적는다.**
 print("      ⚠ 인쇄된 `T_p(t)` 궤적과의 대조 **없음**. 찾은 곳: 보유 논문 "
       "`2018AsBio..18..873F`(Foley 2018, 이 수지의 원전) · `2014GeoJI.199..580F`(F&B 2014) · "
