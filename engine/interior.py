@@ -789,10 +789,6 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
     mat_c = mat
     if OCEAN_LAYER and t > 0.0 and mat.name == "h2o" and liquid_at(p_center, t):
         mat_c = liquid_material(p_center, t)
-    # ⚠ 적분마다 층 계수를 비우고, 중심 상태에서 첫 층의 계수를 받는다 (C74). 안 비우면 앞
-    #   적분의 마지막 층이 새 적분의 첫 걸음으로 새어 남의 (P, T) 계수로 돈다.
-    eos.reset_layer_thermal()
-    eos.set_layer_thermal(p_center, t)
     rho_c = mat_c.density(p_center, t, t_pot) * bulk_factor(mat_c.name, p_center, phi0, p_cap)
     r_scale = (3.0 * mass_kg / (4.0 * math.pi * rho_c)) ** (1.0 / 3.0)
     dr = r_scale / STEPS
@@ -812,9 +808,6 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             note_switch(prev_layer)
             apply_jump(prev_layer)
             forced_liquid = None
-            # ⚠ **층에 들어설 때 규산염 열계수를 한 번 받는다** (C74). 그 층의 걸음들은 이 값을
-            #   다시 쓴다 — 걸음마다 BurnMan 을 부르면 한 벌이 28 s 에서 236 s 가 된다(실측).
-            eos.set_layer_thermal(p, t)
         in_column = OCEAN_LAYER and t > 0.0 and mat.name == "h2o"
         liquid = False
         if in_column:

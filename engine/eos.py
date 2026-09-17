@@ -43,9 +43,6 @@ from __future__ import annotations
 
 import math
 
-import burnman
-from burnman.minerals import SLB_2022
-
 import convergence
 import fe_liquid
 import ice_fr2015
@@ -509,24 +506,6 @@ class Phase:
             return t * (1.0 - self.t_ref / t_pot)
         return t - self.t_ref
 
-    @property
-    def alpha_k_now(self) -> float:
-        """지금 쓰는 αK [Pa/K] — 층 진입에서 BurnMan 이 준 값이거나, 없으면 상 자신의 상수.
-
-        ⚠ **규산염만 갈린다.** 다른 상은 `SLB_FOR_PHASE` 에 없으므로 이 속성이 늘 상수를
-        돌려주고, 그 상들의 답은 비트까지 예전과 같다.
-        ⚠ **층 계수가 아직 안 채워졌으면 상수로 돈다** — 적분 밖에서 이 상을 직접 부르는
-        자리(시험·탐침)가 그래서 안 깨진다. 그 경우가 «표에서 왔다» 로 세어지지 않도록
-        계수는 `set_layer_thermal` 에서만 올라간다."""
-        cached = _LAYER_ALPHA_K.get(self.name)
-        return self.alpha_k if cached is None else cached[0]
-
-    @property
-    def alpha_k_from_table(self) -> bool:
-        """지금 쓰는 αK 가 SLB 표에서 왔는가. 상한 위 근사면 거짓 — 등급 상한이 걸리는 자리다."""
-        cached = _LAYER_ALPHA_K.get(self.name)
-        return cached is not None and not cached[1]
-
     def thermal_pressure(self, t: float, t_pot: float = 0.0) -> float:
         """열압력 P_th. 기준 대비 ΔT 의 함수다.
 
@@ -534,7 +513,7 @@ class Phase:
         Debye 온도 위에서 αK_T 가 부피에 무관하므로 P_th 가 T 에 선형이다. 금속에는
         전자 여기 때문에 2차 항이 하나 더 붙는다 (Isaak & Anderson 2003)."""
         dt = self.delta_t(t, t_pot)
-        return self.alpha_k_now * dt + 0.5 * self.alpha_k_dt * dt * dt
+        return self.alpha_k * dt + 0.5 * self.alpha_k_dt * dt * dt
 
     def dpdt_v(self, t: float, t_pot: float = 0.0, p: float | None = None) -> float:
         """(∂P/∂T)_V. 열압력의 기울기이고, 그뤼나이젠 계수가 이걸 먹는다.
@@ -543,7 +522,7 @@ class Phase:
         값을 세트에서 받고, 밀도 경로(`thermal_pressure`)는 상 자신의 상수를 계속 쓴다."""
         ts = self.gamma_set_at(p, t)
         if ts is None:
-            return self.alpha_k_now + self.alpha_k_dt * self.delta_t(t, t_pot)
+            return self.alpha_k + self.alpha_k_dt * self.delta_t(t, t_pot)
         if ts.evaluator:
             return THERMAL_EVALUATORS[ts.evaluator](p, t)["dpdt_v"]
         return ts.alpha_k + ts.alpha_k_dt * self._set_delta_t(ts, t, t_pot)
@@ -1784,79 +1763,6 @@ MPA = 1e6
 # 열압력이 튄다. 대가는 차가운 천체의 규산염이 지구 맨틀 기준으로 계산된다는 것이고,
 # 그 방향은 맞다 (차가우면 밀하다). 균일한 규칙 하나를 쓰고 그렇다고 적는다.
 SILICATE_ALPHA_K = 0.00692 * GPA     # Pa/K. Anderson & Masuda 1994, Seager+ 2007 §IV.2.2
-
-# ── 규산염 열항의 출처 — BurnMan/SLB_2022, 층마다 한 번 (C74, 2026-09-17) ──────────
-#
-# ⚠ **상수 αK 는 근사다.** Anderson & Goto 의 형태는 Debye 온도 위에서 αK_T 를 부피에
-#   무관한 상수로 두는데, 광물물리 라이브러리는 같은 (P, T) 에서 그 곱을 실제로 계산한다.
-#   실측(2026-09-15): 인스타타이트에서 SLB 가 우리 상수의 **0.30–0.57 배**, 브리지머나이트에서
-#   **1.10–1.97 배**. 부호가 상마다 반대라 상수 하나를 옮겨서는 둘 다 맞출 수 없다.
-# ⚠ **엔진 이름과 SLB 이름이 엇갈린다.** 우리 `mgsio3_pv` 는 SLB 의 **post-perovskite** 다.
-#   그 교차를 모르고 읽으면 «상한 위에서 pPv 만 쓰자» 같은 불가능한 규칙이 그럴듯해진다.
-SLB_FOR_PHASE = {
-    "mgsio3_en": "enstatite",              # SLB 답하는 상한 ~0.89–1.16 TPa
-    "mgsio3_prem": "mg_perovskite",        # ~6.19–6.21 TPa
-    "mgsio3_pv": "mg_postperovskite",      # ~4.47–4.49 TPa
-}
-# ⚠ **상한 위에서는 상수 근사를 이어 붙인다** (오너 결정 2026-09-16). 값을 내되 등급 상한
-#   `analog` 과 표지를 달고 **센다** — 조용한 답이 하나라도 있으면 그 자리가 다음 사고다.
-ALPHA_K_APPROX_NOTE = "alphaK approx above SLB ceiling"
-#: 이 실행에서 BurnMan 을 실제로 몇 번 불렀고, 상한 위 근사를 상마다 몇 번 냈는가.
-#: ⚠ **분모가 상마다 따로다** — 「근사 2 회」 는 뜻이 없고 「`mgsio3_pv` 12 중 2」 라야 뜻이 있다.
-THERMAL_CALLS = {"burnman": 0, "layers": 0}
-THERMAL_COUNTS: dict[str, dict[str, int]] = {}
-#: 층 진입에서 채워지는 계수 — `{상 이름: (alpha_k, 상한 위인가)}`. 그 층의 걸음들은 이 값을
-#: 다시 쓴다. ⚠ **걸음마다 BurnMan 을 부르면 한 벌이 28 s 에서 236 s 가 된다** (실측
-#: 2026-09-17: 호출 0.54 ms × 384 806 회). 「항상 실시간」의 뜻은 **층마다 한 번**이다.
-_LAYER_ALPHA_K: dict[str, tuple[float, bool]] = {}
-_SLB_CACHE: dict[str, object] = {}
-
-
-def _slb_mineral(name: str):
-    """SLB 광물 하나. 같은 광물을 다시 만들지 않는다 — 생성이 파일 파싱을 탄다."""
-    if name not in _SLB_CACHE:
-        _SLB_CACHE[name] = getattr(SLB_2022, name)()
-    return _SLB_CACHE[name]
-
-
-def _slb_alpha_k(phase_name: str, p: float, t: float) -> float | None:
-    """그 (P, T) 에서 SLB 가 주는 αK_T [Pa/K]. 표 밖이면 `None`.
-
-    ⚠ **`set_state` 만으로는 못 묻는다** — BurnMan 은 부피를 속성 접근 때 푼다. 그래서 여기서
-    속성을 만지고, 거절은 예외로 돌아온다. 그 거절이 «표 밖» 의 정의다."""
-    mineral_name = SLB_FOR_PHASE.get(phase_name)
-    if mineral_name is None or p <= 0.0 or t <= 0.0:
-        return None
-    mineral = _slb_mineral(mineral_name)
-    try:
-        mineral.set_state(p, t)
-        THERMAL_CALLS["burnman"] += 1
-        return mineral.alpha * mineral.K_T
-    except Exception:                                   # noqa: BLE001
-        return None
-
-
-def set_layer_thermal(p: float, t: float) -> None:
-    """층에 들어설 때 그 (P, T) 에서 규산염 열계수를 한 번 받는다 (C74).
-
-    ⚠ **이 함수가 «항상 실시간» 의 뜻을 정한다.** 걸음마다가 아니라 층마다다. 그 층 안의
-    밀도 되묻기는 여기서 받은 계수를 쓴다.
-    ⚠ **표 밖이면 상수 근사를 그대로 둔다** — 그리고 그 사실을 상 이름으로 센다."""
-    THERMAL_CALLS["layers"] += 1
-    for phase_name in SLB_FOR_PHASE:
-        alpha_k = _slb_alpha_k(phase_name, p, t)
-        cell = THERMAL_COUNTS.setdefault(phase_name, {"table": 0, "approx": 0})
-        if alpha_k is None:
-            _LAYER_ALPHA_K[phase_name] = (SILICATE_ALPHA_K, True)
-            cell["approx"] += 1
-        else:
-            _LAYER_ALPHA_K[phase_name] = (alpha_k, False)
-            cell["table"] += 1
-
-
-def reset_layer_thermal() -> None:
-    """적분 하나가 시작할 때 계수를 비운다. 앞 적분의 층이 새 적분으로 새지 않게."""
-    _LAYER_ALPHA_K.clear()
 IRON_ALPHA_K = 0.00121 * GPA         # Pa/K. Isaak & Anderson 2003, 같은 절
 IRON_ALPHA_K_DT = 7.8e-7 * GPA       # Pa/K². 전자 여기 항, 같은 절
 EARTH_POTENTIAL_T = 1600.0           # K. Unterborn+ 2019 §2 의 지구형 맨틀 포텐셜 온도
