@@ -98,7 +98,11 @@ class BodyState:
             #   순환과 무관하게 답한다. 실측: earth·pandora 의 `interior_layers` 는 기록기가
             #   False 인데 필드는 True 였고, 표지가 한 소비처에도 안 갔다.
             #   ⚠ `None` 은 «물을 것이 없었다» 이므로 표지를 안 단다 — `is False` 로만 건다.
-            if (r.values or {}).get("converged") is False:
+            #   ⚠ **둘을 **더한다**, 바꾸지 않는다** (게이트가 잡았다). 필드를 빼면 **순환 위의
+            #   생산자**가 잃는다 — `test_payload` 의 붙박이는 `cycles=(1,)` 에 필드 `False` 인
+            #   결과이고, 그 통로가 필드의 **제 용도**다. 사전등록은 «필드 대신 기록기» 로 읽혔지만
+            #   그대로 하면 등록된 C71 시험 둘이 빨개진다 — 합집합이 두 생산자 모양을 다 덮는다.
+            if r.converged is False or (r.values or {}).get("converged") is False:
                 mark = f"{producer}.{key}"
             elif r.values.get("substituted_solvers"):
                 # ⚠ **«미수렴» 이 아니다.** 예산이 끝나 앞선 시행이 답으로 나온 값이고, 그
