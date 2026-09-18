@@ -137,12 +137,32 @@ def melt_power_w(f_m_m3_s: float, delta_t_m_k: float) -> float:
     return f_m_m3_s * RHO_MELT_KG_M3 * (C_P_J_KG_K * delta_t_m_k + L_M_J_KG)
 
 
+class LidOutsideMantle(Exception):
+    """δ 가 `0 ≤ δ < d_m` 밖이다. ⚠ **`ValueError` 를 안 쓴다** — 다른 뜻으로 그 타입을 잡는 코드가
+    이 거절까지 삼키면, 이름 대며 거절한 자리가 다시 조용해진다 (사전등록 B 함정 4)."""
+
+
+def _lid_domain_message(delta_m: float, body_d_m: float) -> str:
+    """거절 문구는 **한 곳에서 지어 세 입구가 나눠 쓴다** (사전등록 B 함정 1). 문구가 갈리면
+    같은 규칙이 입구마다 다른 말을 하게 되고, 그건 규칙이 둘이라는 뜻이다."""
+    return (f"뚜껑 두께 δ {delta_m / 1e3:.1f} km 가 이 천체의 맨틀 "
+            f"{body_d_m / 1e3:.1f} km 밖이다 (0 ≤ δ < d_m)")
+
+
 def dtp_dt_k_s(t_p_k: float, delta_m: float, q_man_w: float, melt_w: float = 0.0,
                r_p_m: float = R_P_M, r_c_m: float = R_C_M, **flux_kw) -> dict:
     """eq. (1), solved for the unknown `dT_p/dt` at the present state.
 
     `V_man ρ c_p dT_p/dt = Q_man − A_man F_man − (melt term)`, so `dT_p/dt` is what falls out. A
-    negative value is secular cooling — which is the quantity C51 exists to produce."""
+    negative value is secular cooling — which is the quantity C51 exists to produce.
+
+    ⚠ **δ 의 정의역은 여기서도 검사한다.** `integrate_tp` 의 바깥 가드는 자기 호출자만 지켜서,
+    이 함수를 직접 부르면 δ = d_m 이 맨틀 부피 0 → 열용량 0 으로 가 이름 없는
+    `ZeroDivisionError` 로 죽었다. 거절은 **같은 문구**로 나가되, 이 함수는 dict 를 규약으로 쓰지
+    않으므로 예외다 (사전등록 B, 선택지 ①)."""
+    body_d_m = r_p_m - r_c_m
+    if not (0.0 <= delta_m < body_d_m):
+        raise LidOutsideMantle(_lid_domain_message(delta_m, body_d_m))
     v = volumes(delta_m, r_p_m, r_c_m)
     f = f_man_w_m2(t_p_k, **flux_kw)
     surface_w = v["a_man_m2"] * f
@@ -244,8 +264,7 @@ def integrate_tp(t_p0_k: float, delta_m: float, q_man_at_w, t0_gyr: float, t1_gy
     #   죽음** · 1 559.6 km 거절). 부등호와 **문구**를 함께 고친다 — 고친 규칙을 안 말하는 거절은
     #   다음 사람에게 거짓말이다.
     if not (0.0 <= delta_m < body_d_m):
-        return {"refused": f"뚜껑 두께 δ {delta_m / 1e3:.1f} km 가 이 천체의 맨틀 "
-                           f"{body_d_m / 1e3:.1f} km 밖이다 (0 ≤ δ < d_m)",
+        return {"refused": _lid_domain_message(delta_m, body_d_m),
                 "delta_m": delta_m, "d_m_m": body_d_m, "t_p_end_k": None, "end_state": None,
                 "history": [], "steps": 0}
     span_gyr = t1_gyr - t0_gyr

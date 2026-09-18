@@ -201,5 +201,41 @@ for _delta, _want in ((2000.0e3, True), (_DM, True), (350.0e3, False), (-1.0e3, 
     row(_ok, f"δ {_delta/1e3:>7.1f} km (d_m {_DM/1e3:.1f} km) → "
              + (f"거절: «{_txt[:58]}…»" if _txt else "통과 (거절 없음)"))
 
+print("\n⑧ 같은 정의역, 세 입구 — 문구가 하나인가 (사전등록 B)")
+# ⚠ **입구마다 한 행이다.** 한 행이 셋을 덮으면 하나만 고쳐져도 초록이 되고, 그건 이 항목이
+#   막으려는 바로 그 모양이다. δ 는 `r_p_m − r_c_m` 으로 **건네받은 기하에서** 만든다 — 이
+#   시험이 스스로 1559.5 를 타이핑하면 기하가 바뀌는 날 시험만 옛 수를 지키게 된다.
+_DM_B = _RP_M - _RC_M
+_WANT = "(0 ≤ δ < d_m)"
+
+try:
+    mb.dtp_dt_k_s(1600.0, _DM_B, 1.0e13, r_p_m=_RP_M, r_c_m=_RC_M)
+    _got_a, _txt_a = False, "예외가 안 났다"
+except mb.LidOutsideMantle as _e:
+    _got_a, _txt_a = _WANT in str(_e), str(_e)
+row(_got_a, f"`dtp_dt_k_s` δ = d_m → {mb.LidOutsideMantle.__name__}: «{_txt_a[:56]}…»")
+
+try:
+    mb.secular_cooling(1600.0, _DM_B, 1.0e13, r_p_m=_RP_M, r_c_m=_RC_M)
+    _got_b, _txt_b = False, "예외가 안 났다"
+except mb.LidOutsideMantle as _e:
+    _got_b, _txt_b = _WANT in str(_e), str(_e)
+row(_got_b, f"`secular_cooling` δ = d_m → 같은 예외가 **호출로 상속**: «{_txt_b[:44]}…»")
+
+_r_c = mb.integrate_tp(1600.0, _DM_B, _q, 0.0, -0.1, 5, r_p_m=_RP_M, r_c_m=_RC_M)
+row(_WANT in _r_c.get("refused", ""),
+    f"`integrate_tp` δ = d_m → dict 규약 그대로: «{_r_c.get('refused', '')[:44]}…»")
+
+# ⚠ 셋이 **같은 문자열**인지 — 함정 1 은 「셋 다 거절한다」가 아니라 「셋이 같은 말을 한다」다.
+row(_txt_a == _txt_b == _r_c.get("refused"),
+    "세 입구의 문구가 **글자까지 같다** (한 곳에서 지어 나눠 쓴다)")
+
+# 대조 — 같은 실행에서 δ 350 km 는 세 입구 모두 통과한다. 통과가 없으면 「전부 거절」도 초록이다.
+_pass_a = mb.dtp_dt_k_s(1600.0, 350.0e3, 1.0e13, r_p_m=_RP_M, r_c_m=_RC_M)
+_pass_b = mb.secular_cooling(1600.0, 350.0e3, 1.0e13, r_p_m=_RP_M, r_c_m=_RC_M)
+_pass_c = mb.integrate_tp(1600.0, 350.0e3, _q, 0.0, -0.1, 5, r_p_m=_RP_M, r_c_m=_RC_M)
+row("dtp_dt_k_s" in _pass_a and "at_zero_melt" in _pass_b and "refused" not in _pass_c,
+    "대조 — δ 350 km 는 세 입구 모두 **통과**한다 (거절만 세는 시험이 아님)")
+
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)
