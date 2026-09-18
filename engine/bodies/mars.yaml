@@ -69,18 +69,33 @@ inputs:
   #  ⚠ 아래 다섯 수(1382.56–1382.90 · 1668.86 · 1668.41)는 모두 **핵 열원 H 1.5 pW/kg 조건**의
   #    측정이다 — 그때의 공칭이었다. 오너 결정 ⑤ (2026-09-09) 로 선언 H 가 0.088 로 내려오면서
   #    같은 궤적의 답이 T_p 1377.03 K · T_p@3.7 Ga 1668.00 K 로 옮겼다 (브리프 166 D 배선 · 166 E 값).
-  #    **판정은 그대로다** — 기준 B 의 위끝 여유가 4.0–4.7 K 에서 5.15 K 로 오히려 늘었다.
+  #    **판정은 그대로다** — 기준 B 의 위끝 여유가 4.0–4.7 K 에서 5.15 K 로 오히려 늘었다가,
+  #    t_m@3.7 Ga 가 1668.00 → 1668.79 K 로 옮기면서 **현행 4.36 K** 가 됐다 (5.15 − 0.79).
+  #    ⚠ 이 줄의 4.0–4.7 · 5.15 는 **지난 세대의 수**이고 현행은 4.36 K 다. 그 여유는
+  #    방사성 예산의 **4.3 %** 에 해당한다 (3.7 Ga 칸의 기울기 1.003 K/% 로 잰 것, 오늘 칸의
+  #    1.347 K/% 가 아니다 — 자를 섞으면 3.3 % 로 과소평가된다).
   #    ⚠ 166 D 는 이 자리에 1377.23 / 1668.05 를 적었다 — 그때의 선언 H 0.14 는 교과서 환산이었고,
   #    논문 자신의 환산 0.088 로 고치자 −0.20 / −0.04 K 움직였다 (166 E).
-  #    기준 A 의 쓸기(1400–1800 K)는 선언 H 에서 다시 돌리지 않았다. 돌리면 여기 적을 것.
+  #    ✅ **기준 A 의 쓸기를 선언 H 0.088 에서 다시 돌렸다 (2026-09-18).** 다섯 점
+  #    (1400·1500·1600·1700·1800 K) → T_p **1377.61–1377.96 K**, 최대 |기울기| **0.00088**
+  #    (문턱 0.5) — **선언 H 에서도 기준 A 통과**다. ⚠ 응답이 **단조가 아니다**: 1600 K 가
+  #    꼭짓점(최대)이고 T_c 는 거기서 최저다. 그래서 양 끝만 재면 폭이 0.18 K 로 보이는데
+  #    실제는 0.35 K 다. 격자 대조: 걸음 상한 4 → 1 Myr 에서 **오늘 칸은 소수 넷째 자리까지
+  #    불변**(1377.9563), @3.7 Ga 칸만 ±0.17 K 움직인다. 출처 — 작업석 census
+  #    `c20-consumer-census.md` blob affc70c6, 걸음 상한 4.0 Myr, 선언 H 0.088.
   #  · 기준 A — 이 선언을 1400–1800 K 로 쓸어도 출력 T_p 가 1382.56–1382.90 K 안에 머문다.
+  #    ⚠ 이 불릿의 수는 **H 1.5 · 걸음 상한 0.25 Myr** 세대다. 선언 H 0.088 · 4.0 Myr 의 현행은
+  #    위 ✅ 절의 1377.61–1377.96 K · 기울기 0.00088 이다.
   #    최대 |기울기| 0.0017 (문턱 0.5), 즉 400 K 를 흔들어 답이 0.34 K 움직인다. 궤적이 이
   #    선언을 거의 잊는다는 뜻이고, 그래서 옮긴 값이 답을 만들지 않는다.
   #  · 기준 B — 3.7 Ga 검문소(Monders+ 2007: 그때까지 "현대 지구와 비슷")를 스윕 양단에서
   #    똑같이 통과한다. T_p@3.7 Ga = 1668.86 K (1400 K) · 1668.41 K (1800 K), 둘 다 오너가
-  #    고른 판정선 Herzberg+ 2007 [1553.15, 1673.15] K 안.
-  # ⚠ **통과가 정밀검증은 아니다.** Monders 의 진술은 정성적이고, 여유는 밴드 위끝까지 4.0–4.7 K
-  #   뿐이다. 그리고 기록열 Katsura+ 2010 [1575, 1645] 로 재면 양단 모두 밴드 밖이다 — 판정은
+  #    고른 판정선 Herzberg+ 2007 [1553.15, 1673.15] K 안. ⚠ 그 둘은 **H 1.5 · 걸음 상한
+  #    0.25 Myr** 의 수다. 선언 H 0.088 · **걸음 상한 4.0 Myr** 에서 같은 양 끝은
+  #    **1668.21 K (1400 K) · 1667.82 K (1800 K)**, 역시 밴드 안이다. ⚠ 이 칸은 보간이 아니라
+  #    «t = −3.7 Gyr 에 가장 가까운 표본 행» 이라 **걸음 상한을 함께 적지 않으면 재현이 안 된다**.
+  # ⚠ **통과가 정밀검증은 아니다.** Monders 의 진술은 정성적이고, 여유는 밴드 위끝까지
+  #   **4.36 K** 뿐이다 (이 줄은 4.0–4.7 K 로 읽혔다 — 위 ✅ 절 참조). 그리고 기록열 Katsura+ 2010 [1575, 1645] 로 재면 양단 모두 밴드 밖이다 — 판정은
   #   오너가 고른 논문에 딸려 있다. 화성의 현재 T_p 가 측정된 적 없다는 사실은 그대로다.
   potential_temperature: 1600.0
   # C20 열진화의 초기온도 — 지구와 **같은 인쇄값을 그대로 전이**한다. Nimmo+ 2004 Fig. 2
@@ -116,9 +131,14 @@ transfers:
     grade: analog
     anchor: "earth.yaml@«potential_temperature: 1600.0»"
     # C47 (h) stage 0 asked whether Earth's T_p may travel at all; C47 (i) answered it.
-    validated: "C47 stage 0, 2026-09-08: criterion A max |slope| 0.0017 (threshold 0.5) and the 3.7 Ga
-      checkpoint in at both sweep ends (1668.86 / 1668.41 K in Herzberg+ 2007's [1553.15, 1673.15] K).
-      ⚠ 4.0-4.7 K of headroom, and Katsura+ 2010's band would say out — see C47 (i)"
+    validated: "C47 stage 0, 2026-09-08 (H 1.5 pW/kg, 0.25 Myr step cap): criterion A max |slope|
+      0.0017 (threshold 0.5) and the 3.7 Ga checkpoint in at both sweep ends (1668.86 / 1668.41 K in
+      Herzberg+ 2007's [1553.15, 1673.15] K). Re-run 2026-09-18 on the declared H 0.088 with a 4.0 Myr
+      cap: max |slope| 0.00088, five points giving T_p 1377.61-1377.96 K, checkpoint 1668.21 / 1667.82 K
+      — criterion A passes there too, and the response is not monotone (1600 K is the turning point).
+      ⚠ headroom is 4.36 K today, which is 4.3 % of the radiogenic budget on the 3.7 Ga slope; the
+      4.0-4.7 K and 5.15 K figures are earlier generations. Katsura+ 2010's band would still say out
+      — see C47 (i)"
 
   - field: core_initial_temperature
     from_body: Earth

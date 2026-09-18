@@ -239,9 +239,13 @@ def integrate_tp(t_p0_k: float, delta_m: float, q_man_at_w, t0_gyr: float, t1_gy
     #   2890 km)으로 두면 화성에서 2000 km 뚜껑이 통과한다 — 화성 맨틀은 1559.5 km 다
     #   (`r_p` 3389.5 · `r_c` 1830.0 km). 인수를 더 받지 않는다: 부른 쪽이 이미 준 기하로 짓는다.
     body_d_m = r_p_m - r_c_m
-    if not (0.0 <= delta_m <= body_d_m):
+    # ⚠ **위끝은 열린 끝이다.** δ = d_m 이면 맨틀 부피가 0 이라 열용량이 0 이 되고, 아래 나눗셈이
+    #   이름 없이 `ZeroDivisionError` 로 죽는다 (2026-09-18 실측: 1 559.4 km 거절 · **1 559.5 km
+    #   죽음** · 1 559.6 km 거절). 부등호와 **문구**를 함께 고친다 — 고친 규칙을 안 말하는 거절은
+    #   다음 사람에게 거짓말이다.
+    if not (0.0 <= delta_m < body_d_m):
         return {"refused": f"뚜껑 두께 δ {delta_m / 1e3:.1f} km 가 이 천체의 맨틀 "
-                           f"{body_d_m / 1e3:.1f} km 밖이다 (0 ≤ δ ≤ d_m)",
+                           f"{body_d_m / 1e3:.1f} km 밖이다 (0 ≤ δ < d_m)",
                 "delta_m": delta_m, "d_m_m": body_d_m, "t_p_end_k": None, "end_state": None,
                 "history": [], "steps": 0}
     span_gyr = t1_gyr - t0_gyr
