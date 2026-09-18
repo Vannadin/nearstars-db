@@ -179,9 +179,18 @@ def f_man_lid_variables(t_p_k: float, delta_m: float, **flux_kw) -> dict:
 
     (3) is printed on `(T_p − T_s, d)`; the paper says using `(T_p − T_l, d − δ)` gives the same flux.
     This evaluates both and returns the ratio, so the claim is a number in our records."""
+    # ⚠ **두께는 부른 쪽의 것**이지 이 모듈의 `D_MANTLE_M` 이 아니다. 그 상수는 지구의 2890 km 고,
+    #   화성에 쓰면 1.85 배 두꺼운 맨틀을 쓰는 셈이다 — 브리프 167 E 의 12.41 배와 같은 모양이다.
+    #   ⚠ **다만 이 함수의 답은 그래도 안 움직인다** (2026-09-18 실측, ratio 1.0 · alt 0.008918328610331148
+    #   W/m² 가 두 두께에서 같다): (3) 에서 `F ∝ k ΔT/d × Ra^{1/3}` 이고 `Ra ∝ ΔT d³` 이라 `d` 가
+    #   상쇄된다. 그러니 이 줄은 **고친 것이 아니라 출처를 적은 것**이고, 어느 두께를 썼는지가
+    #   이제 출력에 남는다.
+    body_d_m = flux_kw.get("d_m", D_MANTLE_M)
+    rest = {k: v for k, v in flux_kw.items() if k != "d_m"}
     printed = f_man_w_m2(t_p_k, **flux_kw)
-    alt = f_man_w_m2(t_p_k, t_s_k=t_lid_base_k(t_p_k), d_m=D_MANTLE_M - delta_m, **flux_kw)
-    return {"printed_w_m2": printed, "lid_variables_w_m2": alt, "ratio": alt / printed}
+    alt = f_man_w_m2(t_p_k, t_s_k=t_lid_base_k(t_p_k), d_m=body_d_m - delta_m, **rest)
+    return {"printed_w_m2": printed, "lid_variables_w_m2": alt, "ratio": alt / printed,
+            "d_m_used_m": body_d_m, "d_m_from_caller": "d_m" in flux_kw}
 
 
 def secular_cooling(t_p_k: float, delta_m: float, q_man_w: float, probe_fraction: float = 0.10,
@@ -226,6 +235,15 @@ def integrate_tp(t_p0_k: float, delta_m: float, q_man_at_w, t0_gyr: float, t1_gy
     엔진에 값이 없다), 그래서 이 이력은 «뚜껑 고정 · 용융 0» 의 이력이다. 뺀 것을 한자리에 적는다."""
     if steps < 1:
         raise ValueError("steps 는 1 이상이어야 한다")
+    # ⚠ **뚜껑의 정의역은 그 천체 자신의 맨틀 두께다.** 위끝을 모듈 상수 `D_MANTLE_M`(지구
+    #   2890 km)으로 두면 화성에서 2000 km 뚜껑이 통과한다 — 화성 맨틀은 1559.5 km 다
+    #   (`r_p` 3389.5 · `r_c` 1830.0 km). 인수를 더 받지 않는다: 부른 쪽이 이미 준 기하로 짓는다.
+    body_d_m = r_p_m - r_c_m
+    if not (0.0 <= delta_m <= body_d_m):
+        return {"refused": f"뚜껑 두께 δ {delta_m / 1e3:.1f} km 가 이 천체의 맨틀 "
+                           f"{body_d_m / 1e3:.1f} km 밖이다 (0 ≤ δ ≤ d_m)",
+                "delta_m": delta_m, "d_m_m": body_d_m, "t_p_end_k": None, "end_state": None,
+                "history": [], "steps": 0}
     span_gyr = t1_gyr - t0_gyr
     h_gyr = span_gyr / steps
     h_s = h_gyr * GYR_S

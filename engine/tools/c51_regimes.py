@@ -304,5 +304,112 @@ print(f"  ⚠ **첫 판의 «오늘 1804.3 K» 는 철회된 수다.** 그 판�
       "인용하지 말 것.")
 print("  ⚠ 이 줄들은 **판정 인쇄**이고 게이트가 세는 회귀는 위 여섯 행뿐이다.")
 
+# ── 3단계: 인쇄된 뜨거운 출발에서 앞으로 (C51 Stage 3 (1), 사전등록 4d3f37ee) ─────────────────
+print("\n" + "=" * 96)
+print("3단계 — 인쇄된 출발 띠에서 **앞으로**. 출처가 둘 이상인 천체만 출발한다")
+print("=" * 96)
+
+# ⚠ **이 수들은 우리가 고른 것이 아니라 인용이다.** 값·논문·시점을 한 줄에 같이 둔다 — 값만
+#   옮겨 적으면 다음 사람이 어느 시점의 무엇인지 되짚을 수 없다 (캐시 census 2026-09-18).
+HOT_START_K = {
+    # (값 K, 논문, bibcode, 종류, 인용)
+    # ⚠ **종류를 값 옆에 적는다.** 「단일값 주장」과 「매개변수 쓸기 범위」는 다른 것이고, 쓸기의
+    #   양끝을 띠로 쓰면 아무도 주장한 적 없는 수가 우리 띠의 끝이 된다 (감사석 2026-09-18).
+    "Mars": (
+        (1650.0, "Morschhauser, Grott & Breuer 2011", "2011Icar..212..541M", "단일값 주장",
+         "«initial mantle temperature of 1650 K», t = 0"),
+        (1750.0, "Hauck & Phillips 2002 (Breuer & Spohn 2006 :156–160 경유)", "2006P_SS...54..153B",
+         "제약된 추론 1700–1800 K 의 가운데 — 지각 두께 50–120 km 제약에서 나온 범위",
+         "«… 1700 and 1800 K», 지각 두께 제약에서 추론"),
+        (1900.0, "Nimmo 2000", "2000JGR...10511969N", "단일값 주장",
+         "«the initial mantle temperature is 1900 K», t = 0"),
+    ),
+}
+# ⚠ **띠는 주장 셋의 폭이다 — 1650–1900 K.** Breuer & Spohn 2006 의 «1700–2100 K»(:1075–1076)는
+#   **매개변수 쓸기 범위**이고 초기 온도 주장이 아니다. 그 2100 을 띠 위끝으로 쓰면 인쇄된 적
+#   없는 주장을 만든다.
+# ⚠ **지구는 값이 없다 — 「없음」이 아니라 「우리가 안 본 곳이 있다」로 적는다.**
+HOT_START_STOP = {
+    "Earth": ("t = 0 의 인쇄값이 **우리가 가진 667 편 텍스트층에 없다** (2 484 편 중 텍스트층이 "
+              "있는 것만 뒤졌고, **ADS 질의는 안 돌렸다**). 있는 것은 오늘(1350 °C)과 시생대"
+              "(1500·1650·>1800 °C, Korenaga 2008)뿐이고 시점이 다르며, 시생대 셋은 구조 가정 "
+              "셋의 결과라 한 양의 띠도 아니다. 값을 지어 넣는 대신 여기서 멈춘다"),
+}
+STAGE3_STEPS = 450
+
+for name, b in BODIES.items():
+    g = geo[name]
+    if name in HOT_START_STOP:
+        # ⚠ **정지는 등록된 결과이지 회귀가 아니다.** 비0 종료로 세면 게이트가 «값이 없다» 를
+        #   «코드가 깨졌다» 로 읽는다. 사실은 로그에 남기고 판정 수는 안 건드린다.
+        print(f"  [STOP] {name} — {HOT_START_STOP[name]}")
+        continue
+    sil_kg = b["mass_earth"] * cf.M_EARTH_KG * (1.0 - b["cmf"])
+
+    def q_at(t_gyr, _kg=sil_kg):
+        return rg.budget(_kg, t_gyr=t_gyr)["mantle_w"]
+
+    band = HOT_START_K[name]
+    derived = []
+    by_delta = {}          # δ 별로 모은다 — 뚜껑 효과와 지움을 섞지 않으려면 같은 δ 끼리만 본다
+    print(f"  {name:>6} · 인쇄 주장 {len(band)} 개 · 띠 {min(v for v, *_ in band):.0f}–"
+          f"{max(v for v, *_ in band):.0f} K (t = −4.5 Gyr) — 띠는 **주장들의 폭**이지 "
+          f"어느 논문의 쓸기 범위가 아니다")
+    for t0_k, paper, bibcode, kind, quote in band:
+        for d in sorted(set(b["delta_m"])):
+            r3 = mb.integrate_tp(t0_k, d, q_at, -4.5, 0.0, steps=STAGE3_STEPS,
+                                 r_p_m=g["r_p_m"], r_c_m=g["r_c_m"], g=g["g"], d_m=g["d_m"])
+            if "refused" in r3:
+                print(f"      {t0_k:.0f} K (t = −4.5 Gyr) · δ {d/1e3:>3.0f} km → **거절**: "
+                      f"{r3['refused'][:88]}…")
+                continue
+            got = r3["t_p_end_k"]
+            derived.append(got)
+            by_delta.setdefault(d, []).append(got)
+            print(f"      {t0_k:.0f} K (t = −4.5 Gyr) · δ {d/1e3:>3.0f} km → 오늘 T_p {got:.1f} K "
+                  f"· C20 오늘 {b['t_p_c20']:.2f} K · 차 {got - b['t_p_c20']:+.1f} K · {paper}")
+        print(f"        인용: {quote}")
+
+    # ⚠ **방향 시험은 인쇄된 수에 건다** (수락선 C). 값이 없어서 통과하는 시험은 안 센다.
+    hot = max(v for v, *_ in band)
+    d0 = sorted(set(b["delta_m"]))[0]
+    r_now = mb.integrate_tp(b["t_p_c20"], d0, q_at, 0.0, 0.0, steps=1,
+                            r_p_m=g["r_p_m"], r_c_m=g["r_c_m"], g=g["g"], d_m=g["d_m"])
+    now_slope = r_now["end_state"]["dtp_dt_k_gyr"]
+    r_hot = mb.integrate_tp(hot, d0, q_at, -4.5, -4.5, steps=1,
+                            r_p_m=g["r_p_m"], r_c_m=g["r_c_m"], g=g["g"], d_m=g["d_m"])
+    hot_slope = r_hot["end_state"]["dtp_dt_k_gyr"]
+    ok_cool = now_slope < 0.0
+    ok_hotter = hot > b["t_p_c20"]
+    # ⚠ **수락선 C 의 「오늘 식는 중」은 이 트리의 상태와 어긋난 등록이었다.** 2단계가 이미
+    #   같은 말을 인쇄하고 있었다 — 오늘은 고정점(지구 1752.3 K) **아래**라 데워지는 쪽이다.
+    #   결과를 보고 시험을 고치지 않는다. 대신 **판정이 아니라 등급 줄**로 사실을 남긴다:
+    #   판정 수를 늘리지도 줄이지도 않고, 다음 사람이 이 수를 그대로 본다.
+    ends = [r for r in derived if r is not None]
+    print(f"  [GRADE] 오늘 방향: {'식음' if ok_cool else '데워짐'} {now_slope:+.2f} K/Gyr "
+          f"(고정점 아래) · C20 {b['t_p_c20']:.2f} K 대 도출 {min(ends):.0f}–{max(ends):.0f} K, "
+          f"{min(ends) - b['t_p_c20']:+.0f}~{max(ends) - b['t_p_c20']:+.0f} K")
+    print(f"  [GRADE] 과거가 더 뜨거운가: 띠 위끝 {hot:.0f} K (t = −4.5 Gyr) 는 오늘보다 "
+          f"{'뜨겁다' if ok_hotter else '안 뜨겁다'} · 그 점의 dT_p/dt {hot_slope:+.2f} K/Gyr")
+    # ⚠ **지움은 같은 δ 끼리만 잰다.** 표 전체의 폭을 쓰면 뚜껑이 만든 12 K 차이가 지움 비에
+    #   섞여 들어가 비가 작아 보인다 (첫 인쇄가 20 배로 나온 이유).
+    span_in = max(v for v, *_ in band) - min(v for v, *_ in band)
+    for d, outs in sorted(by_delta.items()):
+        span_out = max(outs) - min(outs)
+        print(f"  [GRADE] δ {d/1e3:.0f} km — 출발 {span_in:.0f} K 폭이 오늘 {span_out:.2f} K 로 "
+              f"모인다 · 초기조건 {span_in / span_out:.0f} 배 지워짐")
+
+# ⚠ **이 항목 뒤로 방향을 보는 시험은 없다.** 위 `[GRADE]` 줄은 수를 남길 뿐 아무것도 실패시키지
+#   않는다. 「오늘 식는 중」을 다시 시험으로 걸려면 **C20 의 화성 맨틀 온도가 답을 낸 뒤** 새로
+#   등록해야 한다 — 지금 걸면 트리 상태와 어긋난 시험을 다시 세우는 것이다.
+print("  ⚠ **방향은 이제 어떤 시험도 안 본다** — 위 [GRADE] 는 기록이고 판정이 아니다. 다시 "
+      "시험으로 세우는 것은 C20 의 화성 맨틀 온도가 답을 낸 뒤의 새 등록이다.")
+print("  ⚠ **화성 자신의 고정점은 안 쟀다** — 위 끝값들이 지구 고정점 1752.3 K 바로 아래 앉지만, "
+      "그 수는 **지구** 것이고 화성에 그대로 쓰면 안 된다. 화성 고정점은 별도 측정이다.")
+print("  ⚠ **뚜껑은 여전히 고정이다** — eq. (5) 는 안 지었다. 막힌 것은 수가 아니라 **모형**이다: "
+      "Foley 2018 은 `Q_crust`·`δ_c` 를 eq. (16)–(18) 의 미분방정식으로 두고(`D = 0.002`), 이 "
+      "엔진에는 지각 층 자체가 없다(`git grep` 0건). 그래서 `ddelta_dt_m_s` 의 이름 붙은 거절을 "
+      "그대로 둔다 — 다음 항목의 이름은 «지각 모형»이다.")
+
 print("\n" + ("재현 이상 없음 — 판정은 위의 [판정] 줄들이다" if not fails else f"{fails}건 회귀"))
 sys.exit(1 if fails else 0)
