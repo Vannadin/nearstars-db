@@ -285,8 +285,9 @@ _cost_fields() {              # _cost_fields <time -l 통계 파일>
 # ⚠ **여덟은 «값싸고 **실제로 발화한 적 있는**» 검사다.** 목록을 여기 적는 이유는, 다른 문서의
 #   절을 가리키면 이 층이 무엇인지가 한 칸 건너에 있게 되기 때문이다. 합 5 s(측정:
 #   `gate-a818d58c.log`).
-# ⚠ **이 층은 푸시를 허락하지 않는다.** 여덟은 **역사에서 고른 것**이고, 한 번도 안 터진 검사가
-#   다음 결함을 잡을 수 있다. 푸시 직전에는 언제나 full 이다.
+# ⚠ **오너 2026-09-18 규칙**: quick 초록 + 정체선이면 **푸시할 수 있다**. 예전 문장은 «이 층은
+#   푸시를 허락하지 않는다» 였고 그 문장이 낡았다. 단, 여덟은 **역사에서 고른 것**이고 **66 은
+#   안 돈다** — 한 번도 안 터진 검사가 다음 결함을 잡을 수 있다. 안 돈 것은 «통과» 가 아니다.
 _QUICK_STEPS="scripts/pipeline/validate.py
 scripts/check_dead_links.py
 scripts/check_language.py
@@ -400,6 +401,7 @@ step() {                      # step <이름> <명령...>
 #   바로 그 결정을 뒤집는다. 그래서 목록은 **diff 에서 도출**되고, 도출이 비면 full 로 되돌아간다.
 # 운용: 브리프마다 `--from <sha> --targeted`, 푸시 직전(~10커밋)에만 `--from <sha>` full.
 lane_req="full"
+auto_req=0   # `--auto-lane` 가 왔나. 층 요청과 다른 칸이다 (감사석 2026-09-18).
 from_sha=""
 # ⚠ base 는 **사람이 넣는 값이 아니다.** 푸시 tip 을 원격 이름으로 지목한다 — 격리 클론은 detached 라
 #   `@{u}` 를 쓸 수 없고, base 를 인자로 열어 두면 "무엇에 대해 좁혔는지" 를 부르는 사람이 정하게 된다.
@@ -417,9 +419,53 @@ while [ $# -gt 0 ]; do
       [ -n "$from_sha" ] || { echo "  [FAIL] --from 에 sha 가 없다"; exit 2; }
       shift 2 ;;
     --targeted) lane_req="targeted"; shift ;;   # ⚠ 인자를 받지 않는다 — base 는 도출값이다
-    --quick) lane_req="quick"; shift ;;         # 값싼 여덟. ⚠ 푸시를 허락하지 않는다
-    *) echo "  [FAIL] 모르는 인자: $1 (--wiring | --from <sha> | --targeted)"; exit 2 ;;
+    --quick) lane_req="quick"; shift ;;         # 값싼 여덟. ⚠ **오너 2026-09-18**: quick 초록 +
+                                                #   정체선이면 **푸시 가능**하다. 예전 주석은
+                                                #   «푸시를 허락하지 않는다» 였고 그 문장이 낡았다.
+    --auto-lane) auto_req=1; shift ;;           # diff 가 고른다 (차선 규칙, 오너 2026-09-18).
+                                                # ⚠ **층 변수를 안 덮어쓴다** — 덮어쓰면 깃발 차례가
+                                                #   판정을 이긴다 (`--auto-lane --quick` 이 diff 를
+                                                #   안 보고 quick 을 샀다, 감사석 반례 2026-09-18).
+    *) echo "  [FAIL] 모르는 인자: $1 (--wiring | --from <sha> | --targeted | --auto-lane)"; exit 2 ;;
   esac
+done
+
+# ── 차선을 diff 가 고른다 (`--auto-lane`) ─────────────────────────────────────────────────
+# ⚠ **여기서 고르고, 고른 결과만 아래로 넘긴다.** 격리 클론 안에서 고르면 두 가지가 깨진다:
+#   클론의 `origin` 은 로컬이라 부모를 못 짚고, «오늘 full 있었나» 를 볼 로그 디렉터리가 없다.
+# ⚠ **앵커 지문을 안 쓴다** — 그 33 은 얼음거인 경로뿐이라 `mantle_budget.py` 가 안 들어 있고,
+#   적분 방향을 뒤집은 커밋이 «지문 같음» 으로 quick 을 탈 뻔했다 (감사석 반례).
+# ⚠ **기본값에 날짜 폴더가 박혀 있다.** 항목 묶음이 바뀌어 아티팩트 폴더가 바뀌면 스캔이 빈 답을
+#   내고 안전망이 영구 full 로 굳는다 (full 쪽 실패라 위험하진 않다). 그때 고칠 곳은 **이 한 줄**이다.
+GATE_LOGS_DIR="${GATE_LOGS_DIR:-$HOME/Desktop/NearStars-artifacts/2026-09-11-interior-state/gate-logs}"
+while [ "$auto_req" = 1 ]; do
+  # ⚠ **밑변은 `<sha>^`** (개정 1 ㉰). 커밋 안 된 트리는 비교할 짝이 없어 자동 판정을 안 한다.
+  if [ -z "$from_sha" ] && [ -n "$(git status --porcelain)" ]; then
+    echo "  [차선] 커밋 안 된 편집이 있다 — 비교할 짝이 없으므로 **full**"
+    lane_req="full"
+    break
+  fi
+  _target=$(git rev-parse --short "${from_sha:-HEAD}")
+  _parent=$(git rev-parse --short "${from_sha:-HEAD}^")
+  _decided=$("$GATE_PY" scripts/lane_decide.py "$_parent" "$_target" "$GATE_LOGS_DIR")
+  printf '%s\n' "$_decided"
+  # ⚠ **판정 줄은 `lane=` 으로 시작하는 줄이다** — 그 앞은 오늘-full 스캔의 기록이다.
+  case "$(printf '%s\n' "$_decided" | grep -m1 '^lane=')" in
+    lane=quick*) _auto="quick" ;;
+    *)           _auto="full" ;;
+  esac
+  # ⚠ **호출자가 층을 함께 줘도 더 넓은 쪽이 이긴다** (개정 1 ㉮) — 깃발이 diff 가 번 것보다
+  #   좁은 게이트를 사지 못한다. `--quick` 은 자동도 quick 일 때만 살아남는다.
+  # 자동이 full 이면 요청이 무엇이든 full. 자동이 quick 이면 요청이 이미 좁을 때만 그 요청이 산다.
+  # ⚠ **`targeted`·`wiring` 은 이 규칙이 안 건드린다** — 두 층은 각자 자기 기준으로 범위를 좁히고,
+  #   차선 규칙은 «full 대 quick» 만 고른다 (사전등록 §1: 층 정의는 범위 밖).
+  if [ "$_auto" = "full" ]; then
+    lane_req="full"
+  elif [ "$lane_req" = "full" ]; then
+    lane_req="quick"
+  fi
+  echo "  [차선] $_parent → $_target · 자동 **$_auto** · 요청 층과 견줘 고른 층 **$lane_req** (위 이유 줄이 판정이다)"
+  break
 done
 
 # ── 격리: sha 를 스크래치에 클론해 거기서 다시 자기를 부른다 ──────────────────────────────
@@ -474,6 +520,7 @@ if [ -n "$from_sha" ] && [ "${GATE_ISOLATED:-}" != "1" ]; then
   set --
   [ "$lane_req" = "wiring" ] && set -- --wiring
   [ "$lane_req" = "targeted" ] && set -- --targeted
+  [ "$lane_req" = "quick" ] && set -- --quick
   GATE_ISOLATED=1 GATE_TREE_SHA="$tree_sha" GATE_BASE_SHA="$base_sha" GATE_SCRATCH="$dest" GATE_PY="$GATE_PY" exec bash "$dest/scripts/check.sh" "$@"
 fi
 
@@ -492,7 +539,7 @@ lane="full"
 #   를 말할 수 없다. 그러면 판단을 포기하고 전부 돈다 (기존 upstream-없음 경로와 같은 처분).
 if [ "$lane_req" = "quick" ]; then
   lane="quick"
-  echo "── 층: quick (값싼 여덟만 — ⚠ 이 층은 푸시를 허락하지 않는다) ──"
+  echo "── 층: quick (값싼 여덟만 — ⚠ 66 단계는 안 돈다. 오너 2026-09-18 규칙: quick 초록 + 정체선이면 푸시 가능) ──"
 fi
 if [ "$lane_req" = "wiring" ] && [ "${GATE_ISOLATED:-}" = "1" ]; then
   echo "── 층: full (격리 클론에는 원격 upstream 이 없어 무엇이 바뀌었는지 말할 수 없다) ──"
@@ -578,7 +625,7 @@ else
   matches_tree=no
 fi
 script_field=" script=${self_hash%"${self_hash#???????}"} matches_tree=$matches_tree"
-echo "GATE START sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field$script_field"
+echo "GATE START sha=$gate_sha date=$(date "+%F%z") pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field$script_field"
 # ── 풀을 연다 (브리프 184). `GATE_POOL=1` 이면 예전과 같은 완전 직렬이다 (되돌릴 손잡이). ──
 if [ "$GATE_POOL" -gt 1 ] 2>/dev/null; then
   _pool_dir=$(mktemp -d "${TMPDIR:-/tmp}/gate-pool.XXXXXX")
@@ -950,7 +997,7 @@ fi
 if [ "$lane" = "quick" ]; then
   echo "  quick 층 — 돈 단계 $_quick_ran · 건너뛴 단계 $_quick_skipped (합 $((_quick_ran + _quick_skipped)) = 단계 총수) · 단계 밖 건너뛴 덩이 $_quick_skipped_outside (ko 미러 점검) ⚠ 건너뛴 것은 «통과» 가 아니다"
 fi
-echo "GATE END sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field$script_field rc=$fail"
+echo "GATE END sha=$gate_sha date=$(date "+%F%z") pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field$script_field rc=$fail"
 
 # ── ④ 스크래치 정리. rc=0 이면 지우고, **실패면 남긴다** — 재현할 것이 있는 쪽만 보관한다 ──
 # ⚠ 169 는 아무것도 지우지 않았고 반나절에 네 벌 684 MB 가 쌓였다 (감사석 관측).
