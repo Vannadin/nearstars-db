@@ -11394,7 +11394,7 @@ module constant the solver chose, and a constant sitting in the evidence under a
 because they were adjacent, and the convention they belong to lives **three functions away**. A `grep` for
 the literal `inputs["initial_porosity"]` found the write and could not find its meaning, and the consumer
 that would have shown it reads the key through a **variable** (`res.inputs[axis]`), which no literal search
-returns. The test that covers it costs 1 484–1 733 s — 40.5–41.7 % of the step-time total, not of the wall clock (measured over five gates on 2026-09-17/18; the seconds track machine state while the share does not, the 1 484 s run having a 3 602 s total; the line read «459 s» until then, with no denominator) and was deferred to the gate rather than run before the
+returns. The test that covers it was one step costing 1 484–1 733 s — 40.5–41.7 % of the step-time total, not of the wall clock — **until `4e4b08af`; since 2026-09-18 it is two steps**, the ocean block (845 s, 59.3 % of the file measured solo) having moved to `engine/test_interior_ocean.py`, leaving about 580 s here (measured over five gates on 2026-09-17/18; the seconds track machine state while the share does not, the 1 484 s run having a 3 602 s total; the line read «459 s» until then, with no denominator) and was deferred to the gate rather than run before the
 commit — the gate caught it in the isolated lane, which is what that lane is for, and the scratch was kept
 because `rc=1`.
 
