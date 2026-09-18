@@ -964,6 +964,14 @@ step "tools/c51_regimes.py" bash -c 'cd engine && exec python3 tools/c51_regimes
 # 오늘은 둘 다 거절이고 그 거절이 **이름을 대는지**가 여기서 도는 이유다. 인자를 주면 cmf 밴드를 훑는다.
 # ⚠ 도구는 `shoot` 으로 부른다 (C60 (c)) — `_shoot_pressure` 를 직접 부르면 «답이 적합 밖이면 거절»
 #   하는 층 아래에서 인쇄해, 엔진이 안 내놓을 수를 표만 내놓는다. ~2 s.
+# 코어 항목 페이지 생성기 (사전등록 c139dc5c). 도구는 **안 고쳤다** — 게이트에 넣기만 한다.
+# ⚠ 이 단계가 주장하는 것은 «원장 항목 표를 읽어 페이지로 접을 수 있다», 즉 **형식 표류 감지**다.
+#   `[PASS]` 를 안 늘린다; 대신 이미 있는 거절 일곱이 게이트를 세운다 — `:275` KIND_FILE 없음 ·
+#   `:280` 종류가 KINDS 밖 · **`:346` 작업 트리 원장이 sha 의 것과 다름** · `:363` 표 머리글 ≠ 1 회 ·
+#   `:415` 번호 겹침 · `:432` 대응표에 없는 문구 · `:449` KIND_FILE 과 표가 어긋남.
+# ⚠ **sha 는 게이트 자신의 트리 sha 다** — 리터럴이면 낡은 원장을 읽고 통과한다 (C90 의 결함이
+#   자리만 바꾼 꼴). 페이지는 격리 클론 안에 쓰고 버린다; 워크트리 밖으로 안 나간다.
+step "tools/core_items.py" bash -c 'cd engine && exec python3 tools/core_items.py "$0"' "$gate_sha"
 step "tools/c55_cells.py" bash -c 'cd engine && exec python3 tools/c55_cells.py' 
 # 페이로드 등급 계약 (2026-09-04 오너 결정). authored 는 두 표지(gap:, consistent-with:) 없이는 생성되지 않는다.
 step "test_payload.py" bash -c 'cd engine && exec python3 test_payload.py'
