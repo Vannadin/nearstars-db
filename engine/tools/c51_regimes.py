@@ -84,8 +84,15 @@ def geometry(b: dict) -> dict:
 
 
 def stagnant(name: str, t_p: float, delta: float, geo: dict) -> dict:
-    return mb.secular_cooling(t_p, delta, geo["q_man_w"], r_p_m=geo["r_p_m"], r_c_m=geo["r_c_m"],
-                              g=geo["g"], d_m=geo["d_m"])["at_zero_melt"]
+    # ⚠ **`LidOutsideMantle` 만 잡는다** (사전등록 825f0949). `except Exception` 이면 다음에 올
+    #   이름 없는 고장을 그대로 삼킨다 — `ZeroDivisionError` 가 그렇게 숨어 있었다. 문구는
+    #   **예외가 들고 온 것 그대로** 쓴다; 여기서 다시 쓰면 세 입구의 말이 갈린다.
+    try:
+        return mb.secular_cooling(t_p, delta, geo["q_man_w"], r_p_m=geo["r_p_m"], r_c_m=geo["r_c_m"],
+                                  g=geo["g"], d_m=geo["d_m"])["at_zero_melt"]
+    except mb.LidOutsideMantle as why:
+        print(f"  [STOP] {name} δ {delta / 1e3:.0f} km — {why}")
+        return {"refused": str(why)}
 
 
 print("=" * 96)
