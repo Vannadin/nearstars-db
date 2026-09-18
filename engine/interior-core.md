@@ -10877,7 +10877,7 @@ does: a verdict left red in the gate becomes the background the next seat reads 
 | transitional | F&B 2014 eqs (54)(58)(59)(60) | ⚠ **refused** | ⚠ **refused** | seven non-dimensional inputs, none declared |
 
 **Cell ① — Mars's stagnant-lid `F_man` inside Parro's [14, 25] mW/m²: FAILS, on every combination.**
-1.770 mW/m² at C20's `T_p` 1377.03 K and 8.923 at the declared 1600 K, at both lid thicknesses (350 and
+1.784 mW/m² at C20's `T_p` 1377.9563 K and 8.923 at the declared 1600 K ⚠ *(the pair read 1.770 at 1377.03 K until 2026-09-19, which was the pre-180 C generation)*, at both lid thicknesses (350 and
 500 km — Breuer & Spohn 2003's printed band; `δ` changes the area, not the flux). **The registered
 failure sentence stands as written:** *"the budget does not reproduce the only rocky body with a
 published stagnant-lid flux, and the transcription is suspect before the physics is."* ⚠ Mars would need
@@ -10892,7 +10892,7 @@ used, as registered.
 
 | pairing | Urey (Earth) | Urey (Mars) | direction |
 |---|---|---|---|
-| **each body at its own C20 temperature** — ✅ **the owner's row** | 4.251 | 8.780 | ✓ **as registered** |
+| **each body at its own C20 temperature** — ✅ **the owner's row** | 4.251 | **8.713** | ✓ **as registered** *(8.780 until 2026-09-19, at the older `T_p` 1377.03 K)* |
 | both at the declared 1600 K | 2.450 | 1.742 | ✗ **reversed** |
 
 ⚠ **The pre-registration named a direction and never fixed which temperature row it is read on**, and
@@ -10924,7 +10924,7 @@ arguments the answer used; and `c51_regimes` now passes **each body's own mantle
 leaving it at Foley's Earth value. ⚠ *The second was free precisely because of what C51 (b) measured:*
 (3)'s flux is **exactly invariant to `d`**, so passing the right thickness cannot move an answer — and
 every number in this section is **bit-identical** after both repairs (`F_man` 7.1041467231 and
-1.7704573721 mW/m², Urey 4.25068708 and 8.78022345, all six regression rows unchanged).
+1.7840798826 mW/m², Urey 4.25068708 and 8.71318123, all six regression rows unchanged ⚠ *(1.7704573721 and 8.78022345 until 2026-09-19)*).
 
 ⚠ **No answer was ever wrong, and that is the whole point.** `F_man` received the right `g` and does
 not read `d`, so the physics was right while the printed path to it was not. **An intermediate value is
@@ -10960,7 +10960,7 @@ forbids without a printed ground. **Not done here.**
 | (c) | ⚠ **new — which temperature row cell ③ means** | **decided 2026-09-09: each body's own C20 temperature.** The direction flips between the two pairings, so this was the registration's defect rather than a physics choice — the one decision this brief created rather than inherited, and the only one already closed |
 
 ⚠ **One sensitivity to carry beside (a) and (b): `δ` moves the Urey ratio and nothing anchors `δ`.**
-Mars's Urey goes **8.780 → 9.716** across Breuer & Spohn 2003's printed lid band 350 → 500 km, **+10.7 %**,
+Mars's Urey goes **8.713 → 9.641** across Breuer & Spohn 2003's printed lid band 350 → 500 km, **+10.7 %**,
 purely through `A_man = 4π(R_p − δ)²` — the flux itself does not read `δ` at all. **So a cell scored on
 Urey inherits the lid-thickness band**, and no printed value picks a point inside it.
 

@@ -36,8 +36,8 @@ EXPECTED = {
     ("Earth", "C20", 100.0): (7.104, 3.51, +84.2, 4.251),
     ("Mars", "declared", 350.0): (8.923, 1.04, +49.4, 1.742),
     ("Mars", "declared", 500.0): (8.923, 0.94, +67.1, 1.928),
-    ("Mars", "C20", 350.0): (1.770, 0.21, +102.8, 8.780),
-    ("Mars", "C20", 500.0): (1.770, 0.19, +125.1, 9.716),
+    ("Mars", "C20", 350.0): (1.784, 0.21, +102.7, 8.713),
+    ("Mars", "C20", 500.0): (1.784, 0.19, +125.0, 9.641),
 }
 
 # ── the two bodies, from the interior solve rather than typed in ────────────
@@ -45,7 +45,10 @@ BODIES = {
     "Earth": {"mass_earth": 1.0, "cmf": 0.325, "radius_earth": 1.0,
               "t_p_declared": 1600.0, "t_p_c20": 1517.34, "delta_m": (100.0e3, 100.0e3)},
     "Mars": {"mass_earth": 0.1074, "cmf": 0.24, "radius_earth": 0.5320,
-             "t_p_declared": 1600.0, "t_p_c20": 1377.03, "delta_m": (350.0e3, 500.0e3)},
+             # ⚠ 1377.9563 은 `core_history` 기본 경로의 오늘 값이다 — 걸음 상한 4.0 Myr ·
+             # STEP_FRACTION 0.1 · H_CORE 0.088 · 선언 1600 K (`test_core_history.py` 의 선언 H 갈래).
+             # 2026-09-19 까지 여기 1377.03 이 있었고, 그것은 브리프 180 C 이전 세대의 수다.
+             "t_p_declared": 1600.0, "t_p_c20": 1377.9563, "delta_m": (350.0e3, 500.0e3)},
 }
 #: Foley 2018 §4.1 의 지구 뚜껑 «∼100 km»; 화성은 Breuer & Spohn 2003 의 인쇄 밴드 «350–500 km».
 T_P_FAN = {"our declaration (Unterborn+ 2019)": 1600.0, "Foley 2018 T_r": 1623.0,
@@ -197,7 +200,7 @@ print("    phenomena such as secular cooling depends on a poorly known initial c
 print("    **우리가 안 찾은 값이 아니라 그 문헌이 모른다고 적은 값**이다.")
 print("  그래서 **시점이 붙은 쪽에서 출발한다**: 오늘의 C20 T_p 를 **끝점이 아니라 출발점**으로 두고")
 print("    **뒤로** 적분해, 그 수지가 요구하는 **초기 T_p 를 출력으로** 낸다. 오늘 값은 그대로 오늘")
-print("    값이고(칸 ① 의 1.770 은 안 움직인다), 미지인 것만 도출된다.")
+print("    값이고(칸 ① 의 1.784 는 안 움직인다), 미지인 것만 도출된다.")
 
 STAGE2_STEPS = 450
 back = {}
