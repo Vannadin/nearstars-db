@@ -10967,6 +10967,79 @@ Urey inherits the lid-thickness band**, and no printed value picks a point insid
 ⚠ **Decision ③ (C34's feed) is still held**, exactly as C25 (f) recorded, and nothing in this brief
 changed the transport table's input.
 
+#### C51 (e) 2026-09-19 — three dials swept one at a time, and none reaches Khan+ 2022
+
+*Why here: the three dials are inputs to the stagnant-lid budget itself, so they belong beside the item that built it. Source blob **`d7b608cb`**, registered in **`06dc3ed7`**.*
+
+**Three dials, one at a time, and none of them reaches the checkpoint.** The budget's present-epoch answer
+on Mars is **`T_p` 1739.1481 K** at `c1` 0.5 · δ 350 km · start 1750 K, which is **+104.15 K** from the
+centre of Khan+ 2022's 1635 ± 31 K and **+73.15 K** from its near edge. Each dial was swept alone, on one
+geometry (`r_p` 3 389 372.0 m · `r_c` 1 666 533.8 m · `d_m` 1 722 838.2 m · `g` 3.72625):
+
+| dial | range | `T_p` today, low → high | span | slope |
+|---|---|---|---|---|
+| flux prefactor `c1` | 0.5 → 0.57 | 1739.1481 → **1714.7586 K** | **24.39 K** | **−3.48 K per 0.01 of `c1`** |
+| lid δ | 300 → 500 km | 1735.4697 → **1750.9119 K** | **15.44 K** | **+0.77 K per 10 km** |
+| hot start | 1650 → 1900 K | 1738.6795 → **1739.5787 K** | **0.90 K** | **+0.36 K per 100 K** |
+
+⚠ **The lid runs the wrong way for closing the gap** — a thinner lid *lowers* today's `T_p`, and 300 km,
+the thin end InSight supports, still sits **+100.47 K** above the centre. **The hot start reproduces
+Stage 3's erasure exactly**: 250 K of spread arrives as 0.90 K, a factor of **278**, which the run
+predicted before measuring. The nearest approach of any dial is `c1` at 0.57 — **1714.76 K, still
+79.76 K above the centre and 48.76 K above the near edge** — and extrapolating `c1` alone the gap would
+close at about **0.799**, far outside every printed value in either definition system. ⚠ *That number is
+printed to show the distance, not to propose a value.* The five `c1` values are fits of differently
+defined quantities, so the column is a spread across definition systems rather than an error bar.
+
+⚠ **Two dials together were not tried, by registration**, and the three spans do not add to 104 K even if
+they combined. **Reaching is not being right**: matching one checkpoint by moving one constant would be
+evidence about arithmetic, not about Mars.
+
+**Code this row points at**: `engine/mantle_budget.py@«def integrate_tp(»` — the function every row above
+was run through — and `engine/mantle_budget.py@«def dtp_dt_k_s(»`, which holds the `c1` and δ terms.
+
+---
+
+#### C51 (f) 2026-09-19 — the mantle's share of the budget, swept 50–90 %
+
+*Why here: the model that was measured is the lid budget, so the row sits with the item that owns it. Source blob **`79c44de4`**, registered in **`f506b3a4`**. **C20 gets one prose line of cross-reference instead of the row**, because the two models share this budget and split only on the law:*
+
+> The mantle's share of the radiogenic budget was swept 50–90 % under C51 and moves today's `T_p` by **+2.132 K per percentage point, 85.28 K across the range** — the largest of the four dials measured, and still short of Khan+ 2022 by **+57.01 K** at its nearest row. The integrator here draws the same budget from the same line of code; the **14.4×** between the two models is in the loss law, not in the budget.
+
+⚠ **That quoted line is the whole of C20's share of this section** — *it adds no anchor, so the expected anchor count is unchanged.*
+
+**The mantle's share was swept 50 → 90 %, and it does not close the gap either.** `radiogenic.MANTLE_SHARE`
+itself was never edited — the caller scales `q_man` — so `core_history` did not move with this sweep:
+
+| share | today's `q_man` | `T_p` today | to Khan's centre | to the near edge | label |
+|---|---|---|---|---|---|
+| **50 %** | 1.2890e12 W | **1692.0129 K** | +57.01 K | **+26.01 K** | printed — Taylor+ 2006, via Morschhauser+ 2011 |
+| 60 % | 1.5468e12 W | 1717.0028 K | +82.00 K | +51.00 K | inside the printed range |
+| **70 %** | 1.8045e12 W | 1739.1481 K | +104.15 K | +73.15 K | **the declaration — Earth's appendix figure, no Mars source** |
+| 80 % | 2.0623e12 W | 1759.0941 K | +124.09 K | +93.09 K | inside the printed range |
+| 90 % | 2.3201e12 W | 1777.2927 K | +142.29 K | +111.29 K | range end, not a candidate |
+
+**Slope +2.132 K per percentage point · span 85.28 K across 50–90 %.** The predictions were registered
+first and held: ≈1.9 K per point measured **2.132** (+12 %), ≈77 K across the range measured **85.28 K**
+(+11 %), and the direction held. ⚠ **The size prediction came from the other model** — `core_history`'s
+1.347 K per percent of `q_man` — *so the two models' responses to the same fractional change in mantle
+power agree in size, which nothing required.* **They share the budget exactly and split on the law**: the
+same two models differ by **14.4×** in `Q_surf` at the same temperature.
+
+**1635 K is not reachable inside 50–90 %**; the nearest row, 50 %, is **+57.01 K** from the centre, and
+extrapolating the slope the gap would close at about **23 %**, less than half the lowest figure the
+literature prints. ⚠ **One paper carries two figures** — Morschhauser+ 2011 reports Taylor's «about half»
+and then adopts Λ = 5, i.e. 12 % of the heat-producing elements in the crust — **and the engine's 0.70
+sits between them and cites neither**. ⚠ **The checkpoint is not independent of the dial**: Khan+ 2022's
+areotherm assumes no crustal enrichment in heat-producing elements, which is precisely the quantity swept
+here, so the comparison is worth printing and **is not a test**.
+
+**Code this row points at**: `engine/radiogenic.py@«# — the appendix. Earth's number, DECLARED for every rocky body.»`
+— the declaration's own provenance comment — and `engine/radiogenic.py@«def budget(silicate_mass_kg: float, set_name: str = DEFAULT_SET, t_gyr: float = 0.0) -> dict:»`,
+the one line both models draw the budget from.
+
+---
+
 #### ⚠ Earth has three present-day CMB temperatures, and the supplier and the consumer reach opposite verdicts
 
 **Measured 2026-09-09, after Briefs 166 D/E. No verdict is drawn here** — this is the asymmetry the third
@@ -11397,6 +11470,39 @@ that would have shown it reads the key through a **variable** (`res.inputs[axis]
 returns. The test that covers it was one step costing 1 484–1 733 s — 40.5–41.7 % of the step-time total, not of the wall clock — **until `4e4b08af`; since 2026-09-18 it is two steps**, the ocean block (845 s, 59.3 % of the file measured solo) having moved to `engine/test_interior_ocean.py`, leaving about 580 s here (measured over five gates on 2026-09-17/18; the seconds track machine state while the share does not, the 1 484 s run having a 3 602 s total; the line read «459 s» until then, with no denominator) and was deferred to the gate rather than run before the
 commit — the gate caught it in the isolated lane, which is what that lane is for, and the scratch was kept
 because `rc=1`.
+
+#### ⚠ Where the ocean step's seconds go — counted, 2026-09-19
+
+*Why here: that paragraph is the only place in the ledger that prices this test's step, and this row says where the price goes. Source blob **`5ea86a68`**, registered in **`80c41938`**.*
+
+**One ocean step, counted rather than timed.** `density()` was called **38 062 675** times and
+`pressure()` **459 612 424** times — **12.075 `pressure` calls per `density`**. ⚠ **The Newton loop's cap
+is 60 and the measured maximum is 13**: **69.45 %** of calls take 4 iterations, **30.37 %** take 3, and
+the loop is therefore not where iterations pile up. **34.69 %** of `density` calls repeat a
+`(class, p, t, t_pot)` key already seen; the top key repeats **18 times** in 38 million calls, so the
+repetition is broad and shallow. ⚠ *This counts repetition; it does not say a cache is worth it.*
+
+**What an analytic derivative would buy, measured in isolation** (`Phase` on `fe_prem` at 50 GPa,
+`pressure` 149.5 ns, `density` 3.03 µs): the 12.08 `pressure` calls inside one `density` cost **≈1.81 µs,
+59.6 %** of it; removing two of the three calls per iteration leaves ≈4.03 calls and saves **≈1.20 µs —
+39.7 % of a `density` call**. ⚠ **That is the ceiling on `density`, not on `solve()`** — the shooting
+loop, the phase ladder and the ocean layer are untouched, and their share is unmeasured. ⚠ **It also
+moves the last bits**, so any registration that builds it must state a tolerance instead of claiming
+bit-identity.
+
+**The bookkeeping is the small term.** A no-op `convergence.note` run reproduced the total exactly —
+**39 206 250** notes across **10 sites**, of which `eos.density_newton` holds **38 045 467**, which is
+**38 062 675 − 17 208**, the density calls minus the early returns. The notes cost **79 031 525 392
+instructions, 0.311 %** of the run — **2 016 instructions per note** against roughly **666 577 per
+`density()` call**. ⚠ **No share of `solve()`'s 28.6 s is attributed here**; the step from a `density`
+call to a whole `solve()` needs the shooting loop's own profile, which this run does not have.
+
+**Code this row points at**: `engine/eos.py@«이 자리가 적분 안쪽 고리라 반복 횟수가 그대로»` — the
+docstring sentence that says why this loop's iteration count is the run time — and
+`engine/eos.py@«dfd = (self.pressure(rho + h) - self.pressure(rho - h)) / (2.0 * h)»`, the two-sided
+difference an analytic derivative would delete.
+
+---
 
 #### Record 170 D — the owner's two declarations, and a registered prediction that failed
 
