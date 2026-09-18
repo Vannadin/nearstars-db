@@ -11040,6 +11040,152 @@ the one line both models draw the budget from.
 
 ---
 
+#### C51 (g) 2026-09-19 — the 3.7 Ga checkpoint is read by interpolation now, and two recorded anchors moved
+
+**The checkpoint was reading the nearest sampled row, not 3.7 Ga.** `core_history.integrate` prints rows on
+its own adaptive step, so the reader's `min(rows, key=…)` returned whichever row happened to land closest and
+never compared that row's own time against the time it was asked for. `core_history.t_at_gyr(rows, t_gyr,
+key="t_m")` now brackets the requested time and interpolates linearly between the two neighbouring rows, and
+refuses outside the span instead of extrapolating. `engine/tools/mars_step_sweep.py` reads it the same way, so
+`t_37_actual` is now the time that was requested rather than the time that was sampled.
+
+**Two recorded anchors moved by about one sampling step**: `1668.79 → 1668.68 K` and `1669.99 → 1669.88 K`,
+both **−0.11 K**. ⚠ *Neither number was wrong as printed* — each was a real row's temperature — and both were
+wrong as read, because this file and the tests called them the 3.7 Ga values. The old rule's comment is kept
+at `engine/test_core_history.py@«2026-09-19: 3.7 Ga 칸의 규칙이 바뀌어 그 수가 다시 움직였다»` with a generation label, so the movement stays legible.
+
+⚠ **The helper raises `ValueError`, and that is a departure from the convention the same night defended.**
+`mantle_budget.LidOutsideMantle` exists precisely so a domain refusal is not swallowed by code catching
+`ValueError` (pre-registration B, trap 4), and `t_at_gyr` then uses `ValueError` for out-of-order rows. The
+distinction claimed is that unsorted rows are a **caller's bug**, not a physical domain refusal, so a physics
+name would be the wrong label; the docstring carries that reasoning. **The tension is registered, not
+resolved** — if a second caller-bug condition appears, the two decisions should be decided together rather
+than one at a time.
+
+⚠ **The pre-registration for this item missed a coupling, and the bundle gate found it.** Item 2 registered
+the anchor movements and the tests that would move; it never listed `engine/ice_giant_anchor.json`, whose
+input trigger watches `core_history.py` **by code digest**. The gate went red at `gate-17a6274d.log:1453`:
+
+> `· 굳힌 뒤로 풀이가 읽는 파일이 움직였다 — 코드가 바뀐 파일 core_history.py 코드 0f4cbd0e7c9021ce → aab09c48a45af765 (바이트 a375ad175350e25a → f676f6d957cd2b64). **이 커밋에서 `--refresh`** 로 다시 굳혀 diff 에 남겨라`
+
+**A pre-registration that lists the tests but not the frozen snapshots is incomplete.** The rule this adds:
+*a change to a module named in an anchor's input trigger is a change to that anchor*, and belongs in the same
+commit.
+
+#### C51 (h) 2026-09-19 — the lid guard refuses by name, and nothing reads the refusal
+
+**A lid must be inside its own mantle**: `0 ≤ δ < d_m`, half-open, because at `δ = d_m` the stagnant-lid
+expression divides by a zero mantle thickness and died with `ZeroDivisionError` — a refusal with no name.
+`engine/mantle_budget.py@«def _lid_domain_message(delta_m: float, body_d_m: float) -> str:»` states the domain and returns the refusal text
+*«뚜껑 두께 δ … 가 이 천체의 맨틀 … 밖이다 (0 ≤ δ < d_m)»*; the two remaining entrances that still died
+unnamed were closed by the parallel seat in `91f5440b` with the `LidOutsideMantle` type.
+`engine/tools/c51_regimes.py` catches **that type only** — `except Exception` would swallow the next
+unnamed death — and prints one `[STOP]` line, which is the `[STOP]` the gate counts.
+
+⚠ **The refusal dict has no reader, and this is an open defect rather than a finished repair.** `stagnant()`
+returns `{"refused": str(why)}` on the stop path while its consumers index the success shape:
+`stag[("Earth", "C20", 100.0e3)]["urey"]` and two neighbouring reads would raise `KeyError` if that entry
+were ever a refusal. **No roster row takes the branch tonight, so the gate is green and the hole is
+invisible** — which is the condition under which this kind of defect normally survives. Registered as its own
+item: either the call site filters refusals before indexing, or the refusal carries the keys its readers use.
+
+**No number moved when the lid thickness became an argument.** `f_man_lid_variables` records `d_m_used_m` and
+`d_m_from_caller`, and the ratio of the two answers is exactly **1.0** — `d` cancels in Foley 2018 eq. (3), so
+the value was never at risk. The two variables exist so that the cancellation is **printed** rather than
+assumed by whoever reads this next.
+
+#### C88 (e) 2026-09-19 — the anchor was re-frozen, and the trigger printed which of its three rulers moved
+
+**Six lines changed in `engine/ice_giant_anchor.json` and no value key moved**: `frozen_at` 2026-09-17 →
+2026-09-19, `core_history.py` in **both** digest tables, `interior.py` in the byte table **only**, and two
+`seconds`. ⚠ **That `interior.py` moved on one ruler and not the other is the two-ruler split doing its
+job** — it means that file has changed only in prose since 2026-09-17. The question *«why did a file I did
+not touch move?»* has its answer inside the diff.
+
+⚠ **The gate printed the same reading independently.** `gate-17a6274d.log:1418`:
+
+> `[FAIL] 입력 방아쇠 33 파일 · 바이트 자 32 개 · 코드 자 31 개 — 코드 자 1 개 움직임 (문서만 바뀐 파일 1 개는 판정 밖) — 폐포 18 모듈 + 이름으로 더한 모듈 13 + 데이터 1 + 앵커 자신`
+
+**One line carries all three counts and the reason they differ** — 33 files are watched, 32 have a byte
+digest and 31 a code digest, because the data file and the anchor itself have no code to digest. *«문서만
+바뀐 파일 1 개는 판정 밖»* is `interior.py`. **So the red gate was caused by exactly one moved code digest,
+`core_history.py`**, and the diff-reading and the gate's own printed sentence agree without having consulted
+each other. The green run prints the same line ending in *«그대로»* (`gate-6c90ae31.log:1414`).
+
+⚠ **The two `seconds` (27.2 → 26.9 and 35.9 → 35.8) are not measurements of anything.** They are the timings
+of the re-freeze itself, taken on a machine that had just finished a 32-minute bundle gate. Acceptance line
+⑤ reads them **as a ruler, not as a threshold**: they say which run produced the snapshot, and nothing about
+whether the solve got faster.
+
+#### C90 (b) 2026-09-19 — the ledger generator runs as a gate step, and its cost needs three rulers to state honestly
+
+**`engine/tools/core_items.py` now runs inside `scripts/check.sh` against `git rev-parse --short HEAD`**, so
+a ledger page that disagrees with the ledger cannot pass unseen. Pre-registration 10's trap 4 asked for the
+cost to be reported if it was large. **It is not large, and one ruler alone would overstate how small.**
+
+| ruler | value |
+|---|---|
+| `instr` | **1 044 209 094** |
+| share of the gate's total (`93 281 762 738 828`) | **0.0011 %** |
+| share of the median step (`15 272 987 247.5`) | **6.84 %** |
+| rank | **17th-cheapest of 76 steps** |
+
+⚠ **«0.0011 % of the total» is the lenient ruler and should not be quoted alone.** The five heaviest steps
+are **67.6 %** of the total and the distribution spans five orders of magnitude (max
+`23 115 860 165 213`, min `214 620 140`), so *any* new step looks negligible against the sum. Against a
+median step the new one is **one-fifteenth**; by rank it is an ordinary cheap step, three to five times the
+cheapest five (`0.214–0.300 G`) and an order of magnitude under the median. **All three rulers point the same
+way, which is why all three are printed.** The rank is the ruler that does not move when one heavy step is
+added or removed.
+
+#### ⚠ The `instr` ruler's own reproducibility width, measured — and last night's verdict retracted
+
+**Two full gates ran back to back on the same machine tonight**, `17a6274d` (rc=1) and `6c90ae31` (rc=0), the
+trees differing by one JSON file that only the anchor step reads. Removing that step leaves **75 steps of
+identical code on identical inputs**:
+
+| run | total `instr` | anchor step | total minus anchor |
+|---|---|---|---|
+| `gate-17a6274d.log` | 93 285 818 601 091 | 2 381 471 962 889 | **90 904 346 638 202** |
+| `gate-6c90ae31.log` | 93 281 762 738 828 | 2 381 524 719 039 | **90 900 238 019 789** |
+
+**Difference −4 108 618 413 = −0.00452 %.** ⚠ *This is the first same-machine, same-night, consecutive pair
+this ruler has been measured against*, and it was counted twice from the two log blobs independently by the
+work and audit seats. The isolated clone is built outside any `step`, so its work never enters these sums and
+did not need removing.
+
+⚠ **It retracts a verdict from 2026-09-18.** That night a **−0.055 %** movement in an `instr` total was
+called *ruler noise*, on the grounds that untouched steps had scattered **0.1–2 %** in both signs while the
+touched step rose **+1.132 %**. **A width of 0.0045 % cannot support that reading**: the scatter and the
+0.055 % total cannot both be noise, and by tonight's number neither is. What survives unchanged is the
+touched step's own movement (**+51 052 076**, +1.132 %, attributable); what is withdrawn is the claim that the
+remaining −51 G was the ruler. **It is now unexplained, which is a different and smaller statement.**
+
+⚠ **The measurement still owed is the clean one**: two runs of the **same sha**, so that no file differs at
+all. Tonight's pair differs by one JSON, and that is why the anchor step had to be subtracted rather than
+compared.
+
+**Two rulers that did not settle, recorded so they are not read as settled.** *Seconds*: the leading and
+trailing clock loops read **0.886 s** and **0.922 s**, within the ±5 % rule (**+4.06 %**), so seconds are
+usable **inside** this run — but the trailing loop sits above the established 0.86–0.88 s band, so this run
+licenses no seconds comparison **between** runs. *Peak memory*: `maxrss` was **2 580.9 MiB** here against
+**2 578.0 MiB** in the red run (**+0.11 %** — the new step did not move it), but across five full-lane gates
+it reads 1 786.2 · 2 022.0 · 2 572.0 · 2 578.0 · 2 580.9 MiB with no monotone relation to the tree. `maxrss`
+is the **maximum over children**, so it names whichever child peaked and not the gate's demand. ⚠ **The
+~1.8 GiB child from the memory census is still unidentified**, and these five numbers are new material for
+that count rather than an answer to it.
+
+#### ⚠ Clearance before the edit, twice — a process record
+
+**Twice tonight a hash was cleared by the audit seat and then the file was edited before the commit**, so the
+committed blob was not the blob that was cleared. Both times the content turned out to be within the expected
+range, and the audit seat's reading of that is the sentence worth keeping: *«두 번 다 「내용이 예상 범위였다」가
+이유였고 그건 규칙이 아니라 운입니다».* **A clearance is a statement about one blob, not about an
+intention.** The rule adopted: when a cleared file changes for any reason, send *«해시 바뀌었습니다, 재클리어
+주십시오»* before committing — the cost is one message and it removes the luck.
+
+---
+
 #### ⚠ Earth has three present-day CMB temperatures, and the supplier and the consumer reach opposite verdicts
 
 **Measured 2026-09-09, after Briefs 166 D/E. No verdict is drawn here** — this is the asymmetry the third
