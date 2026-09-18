@@ -117,6 +117,42 @@ def rates(t_c: float, t_m: float, p: dict, t_gyr_from_present: float) -> dict:
             "extrapolation_notes": tuple(notes)}
 
 
+def t_at_gyr(rows: list[dict], t_gyr: float, key: str = "t_m") -> float:
+    """`rows` 를 시간으로 선형 보간해 `t_gyr` 에서의 값을 낸다 — 표본 격자와 무관한 읽기.
+
+    ⚠ **왜 최근접 행이 아니라 보간인가.** 예전에는 호출자들이 `min(rows, key=|t_gyr − t|)` 로
+    **가장 가까운 표본 행**을 골랐고, 그러면 **걸음 상한을 바꾸면 값이 움직였다** — 3.7 Ga 칸에서
+    4 → 1 Myr 로 촘촘히 하면 **±0.17 K**, 기준 B 여유 4.36 K 의 4 % 다 (2026-09-18 측정).
+    보간은 그 흔들림을 없앤다. ⚠ **그래서 이 함수가 내는 수는 옛 수와 다르다** — 규칙이 바뀐
+    것이지 궤적이 바뀐 것이 아니고, 그 사실은 인용하는 쪽이 적는다.
+
+    ⚠ 범위 밖이면 이름 대며 거절한다. 양 끝은 그 끝의 값을 돌려주지 않는다 — 없는 시점을
+    있는 것처럼 만들지 않기 위해서다.
+
+    ⚠ **거절이 `ValueError` 인 이유.** 한 커밋 전(`91f5440b`)이 뚜껑 정의역에 `LidOutsideMantle`
+    을 새로 만든 것은 «`ValueError` 를 다른 뜻으로 잡는 코드가 삼킨다» 였다. 여기서는 그 위험이
+    없다 — 호출 셋이 시험·도구이고 그 경로에 넓은 `except` 가 없다. 도메인이 타입을 새로 만들
+    만큼 크지도 않다. 위험이 생기면 그때 타입을 만든다."""
+    if not rows:
+        raise ValueError("t_at_gyr: rows 가 비었다")
+    xs = [r["t_gyr"] for r in rows]
+    lo, hi = min(xs), max(xs)
+    if not (lo <= t_gyr <= hi):
+        raise ValueError(f"t_at_gyr: t = {t_gyr:+.4f} Gyr 이 이력 [{lo:+.4f}, {hi:+.4f}] 밖이다")
+    prev = rows[0]
+    for row in rows[1:]:
+        a, b = prev["t_gyr"], row["t_gyr"]
+        if (a - t_gyr) * (b - t_gyr) <= 0.0:
+            if b == a:
+                return float(row[key])
+            w = (t_gyr - a) / (b - a)
+            return float(prev[key]) + w * (float(row[key]) - float(prev[key]))
+        prev = row
+    # ⚠ 위 범위 검사를 지나면 **여기 못 온다** — 어떤 쌍이든 브래킷되기 때문이다. 온다면 `rows`
+    #   가 시간순이 아니라는 뜻이고, 끝 행을 조용히 돌려주면 **틀린 값이 답처럼 나간다**.
+    raise ValueError("t_at_gyr: rows 가 시간순이 아니다 — 브래킷을 못 찾았다")
+
+
 MYR_S = GYR_S / 1000.0
 STEP_FRACTION = 0.1                 # F in h = min(STEP_MYR, F·τ) — Brief 157, tools/adaptive-step-prereg.md: 1/28 of RK4's
                                     # real-axis limit 2.78, 1/10 of the h/τ ≈ 1.02 Earth's first fixed step already passed

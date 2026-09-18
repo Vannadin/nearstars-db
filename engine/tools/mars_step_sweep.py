@@ -18,7 +18,7 @@ Question.  h/τ is 0.1 on Earth and 5.6 on Mars (τ ≈ 0.717 Myr from the mantl
 Steps.     4 · 2 · 1 · 0.5 · 0.25 Myr — these five, none added afterwards.
 
 Compared.  Three numbers per step: final T_p (present-day mantle potential temperature), final T_c
-           (present-day core-side CMB temperature), and T_p at the 3.7 Ga checkpoint (the row nearest
+           (present-day core-side CMB temperature), and T_p at the 3.7 Ga checkpoint (⚠ from 2026-09-19 **interpolated** by `core_history.t_at_gyr`, not the row nearest
            t = −3.7 Gyr; Monders, Médard & Grove 2007 put Mars's mantle "similar to modern Earth" until then).
 
 Verdict — one of these sentences, verbatim, on the successive-halving differences |Δ| of all three:
@@ -106,9 +106,11 @@ def run(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: float)
         return {"diverged": f"domain: {hist['refused'][:110]}", "seconds": time.time() - t0}
     rows = hist["rows"]
     last = rows[-1]
-    near = min(rows, key=lambda r: abs(r["t_gyr"] - CHECKPOINT_GYR))
-    out = {"n": hist["n_steps"], "t_p": last["t_m"], "t_c": last["t_c"], "t_p_37": near["t_m"],
-           "t_37_actual": near["t_gyr"], "seconds": time.time() - t0}
+    # ⚠ 최근접 표본 행이 아니라 **보간** 이다 (2026-09-19, 사전등록 ec974a1d) — 걸음 상한을
+    #   바꿔도 이 칸이 안 움직인다. 그래서 `t_37_actual` 은 표본 시각이 아니라 **요청한 시각**이다.
+    near_t_m = ch.t_at_gyr(rows, CHECKPOINT_GYR)
+    out = {"n": hist["n_steps"], "t_p": last["t_m"], "t_c": last["t_c"], "t_p_37": near_t_m,
+           "t_37_actual": CHECKPOINT_GYR, "seconds": time.time() - t0}
     if any(not math.isfinite(x) for x in (out["t_p"], out["t_c"], out["t_p_37"])):
         return {"diverged": "non-finite temperature", "seconds": out["seconds"]}
     del rows, hist
