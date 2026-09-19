@@ -226,6 +226,39 @@ _r_c = mb.integrate_tp(1600.0, _DM_B, _q, 0.0, -0.1, 5, r_p_m=_RP_M, r_c_m=_RC_M
 row(_WANT in _r_c.get("refused", ""),
     f"`integrate_tp` δ = d_m → dict 규약 그대로: «{_r_c.get('refused', '')[:44]}…»")
 
+# ── 항목 10 — 거절 dict 에 독자가 생겼다 (사전등록 92d80b73 + 덧붙임 1) ─────────────────
+# ⚠ **읽개를 `import` 로 가져오지 않는다.** `tools/c51_regimes.py` 는 모듈 바닥에서 전체를 실행하는
+# 스크립트라 한 줄 부르려고 `import` 하면 **도구가 통째로 한 번 더 돈다**(같은 함정을 2026-09-19 에
+# 한 번 밟았고, 이번 첫 판에서 실제로 재현됐다). 새 시험 파일을 만들면 게이트 단계가 늘어 수락선
+# B 를 깨뜨린다. 그래서 **그 함수의 소스만** 떼어 온다 — 도구를 안 돌리고 파일도 안 늘린다.
+# ⚠ 이 `exec` 는 그 함수가 **모듈 전역을 안 쓸 때만** 안전하다. 쓰게 되는 날 이름 없는 `NameError`
+# 로 죽는다 — 잡는 것은 이 주석이 아니라 그때의 빨강이다. 맞바꿨다는 사실을 적어 둔다.
+import ast as _ast                        # noqa: E402
+_c51_src = (Path(__file__).resolve().parent / "tools" / "c51_regimes.py").read_text()
+_fn = next((n for n in _ast.parse(_c51_src).body
+            if isinstance(n, _ast.FunctionDef) and n.name == "refusal_line"), None)
+if _fn is None:                           # 판정이 아니라 **이름 붙은 정지** — 잴 것이 없으면 안 센다
+    raise SystemExit("  [STOP] tools/c51_regimes.py 에 `refusal_line` 이 없다 — 읽개를 못 잰다")
+_ns: dict = {}
+exec(compile(_ast.Module(body=[_fn], type_ignores=[]), "c51_regimes.refusal_line", "exec"), _ns)
+_read_line = _ns["refusal_line"]
+
+# ⓐ **생산자가 칸을 싣는가.** ⚠ 손으로 지은 dict 에 대고 재면 **읽개의 서식**만 재고, 내일
+#   `d_m_m` 이 빠져도 초록이다 — 그 침묵이 이 항목이 고치려던 것이다. 진짜 거절을 쓴다.
+row(all(k in _r_c for k in ("refused", "delta_m", "d_m_m")),
+    f"생산자가 칸을 싣는다 — `integrate_tp` 거절에 "
+    f"{sorted(k for k in ('refused', 'delta_m', 'd_m_m') if k in _r_c)}")
+
+# ⓑ **선택 칸이 없으면 안 적는가.** 읽개가 없는 칸을 지어내면 그것도 침묵의 한 종류다.
+_bare = _read_line({"refused": _r_c["refused"]})
+row(_bare == _r_c["refused"],
+    "선택 칸 없는 거절 → 읽개가 문구 **한 줄 그대로**, 없는 칸을 지어내지 않는다")
+
+# ⓒ **다른 모양도 같은 읽개로 읽히는가** — `missing`(transitional_lid) 과 `steps`(integrate_tp).
+_shaped = _read_line({"refused": _r_c["refused"], "missing": ["a_in", "b_in"], "steps": 5})
+row(all(t in _shaped for t in ("a_in", "b_in", "걸음 5")) and _shaped.split("\n")[0] == _r_c["refused"],
+    "다른 모양 — `missing` 둘과 `steps` 가 이름으로 펴지고 첫 줄은 그대로다")
+
 # ⚠ 셋이 **같은 문자열**인지 — 함정 1 은 「셋 다 거절한다」가 아니라 「셋이 같은 말을 한다」다.
 row(_txt_a == _txt_b == _r_c.get("refused"),
     "세 입구의 문구가 **글자까지 같다** (한 곳에서 지어 나눠 쓴다)")

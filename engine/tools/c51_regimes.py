@@ -92,7 +92,30 @@ def stagnant(name: str, t_p: float, delta: float, geo: dict) -> dict:
                                   g=geo["g"], d_m=geo["d_m"])["at_zero_melt"]
     except mb.LidOutsideMantle as why:
         print(f"  [STOP] {name} δ {delta / 1e3:.0f} km — {why}")
-        return {"refused": str(why)}
+        # ⚠ **거절도 부분을 들고 다닌다.** 문구는 예외가 들고 온 것 **그대로**(세 입구가 같은 말을
+        #   쓰게), 거기에 그 문구가 만들어진 수를 이름으로 얹는다. 전에는 소비처 넷이 이 문자열을
+        #   `[:88]` 로 잘라 찍었고, **잘린 문장이 기록의 전부**였다 — 거절된 두께도, 그 바디의 맨틀
+        #   깊이도, 깨진 부등식도 산문 안에만 있었다.
+        return {"refused": str(why), "delta_m": delta, "d_m_m": geo["d_m"],
+                "bound": "0 ≤ δ < d_m"}
+
+
+def refusal_line(r: dict, indent: str = "      ") -> str:
+    """거절 dict 하나를 사람이 읽는 줄로 만든다 — **자르지 않는다**.
+
+    ⚠ **모양이 여럿이라 하나로 읽는다.** 이 파일이 받는 거절은 세 곳에서 온다 —
+    `stagnant()`(위), `mantle_budget.integrate_tp`(`delta_m`·`d_m_m` 있음),
+    `transitional_lid.solve_on_body`(`missing` 목록). 공통은 `refused` 하나뿐이고,
+    나머지는 **있으면 적고 없으면 안 적는다**. 없는 칸을 지어내지 않는 것이 이 읽개의 일이다."""
+    out = [r["refused"]]
+    if r.get("delta_m") is not None and r.get("d_m_m") is not None:
+        out.append(f"{indent}· δ {r['delta_m'] / 1e3:.1f} km · 이 바디의 맨틀 "
+                   f"{r['d_m_m'] / 1e3:.1f} km · 정의역 {r.get('bound', '0 ≤ δ < d_m')}")
+    for m in r.get("missing", ()):
+        out.append(f"{indent}· 빠진 입력: {m}")
+    if r.get("steps") is not None:
+        out.append(f"{indent}· 걸음 {r['steps']}")
+    return "\n".join(out)
 
 
 print("=" * 96)
@@ -133,9 +156,7 @@ for name, b in BODIES.items():
 
 print("\n■ 전이 — Foley & Bercovici 2014 식 (54)(58)(59)(60)")
 ref = tl.solve_on_body()
-print(f"  ⚠ 거절: {ref['refused'][:88]}…")
-for m in ref["missing"]:
-    print(f"      · {m}")
+print(f"  ⚠ 거절: {refusal_line(ref, indent='      ')}")
 
 print("\n" + "=" * 96)
 print("등록된 판정 칸 셋 — 사전등록에 실패 문장까지 미리 적혀 있다. **게이트는 위의 재현만 검사한다**")
@@ -225,7 +246,7 @@ for name, b in BODIES.items():
         back[(name, d)] = r2
         if "refused" in r2:
             print(f"  {name:>6} δ {d/1e3:>3.0f} km · 오늘 T_p {b['t_p_c20']:.2f} K (C20, t = 0) → "
-                  f"**거절**: {r2['refused'][:96]}… (걸음 {r2['steps']})")
+                  f"**거절**: {refusal_line(r2)}")
         else:
             print(f"  {name:>6} δ {d/1e3:>3.0f} km · 오늘 T_p {b['t_p_c20']:.2f} K (C20, t = 0) → "
                   f"**−4.5 Gyr 의 T_p {r2['t_p_end_k']:.1f} K** (도출) · 걸음 {r2['steps']}")
@@ -371,7 +392,7 @@ for name, b in BODIES.items():
                                  r_p_m=g["r_p_m"], r_c_m=g["r_c_m"], g=g["g"], d_m=g["d_m"])
             if "refused" in r3:
                 print(f"      {t0_k:.0f} K (t = −4.5 Gyr) · δ {d/1e3:>3.0f} km → **거절**: "
-                      f"{r3['refused'][:88]}…")
+                      f"{refusal_line(r3)}")
                 continue
             got = r3["t_p_end_k"]
             derived.append(got)
