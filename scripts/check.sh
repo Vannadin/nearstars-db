@@ -679,12 +679,18 @@ step "scripts/check_citation_links.py" bash -c 'python3 scripts/check_citation_l
 
 echo ""
 echo "── 4. 컨벤션 점검 ──"
+# ⚠ **이 절은 자기 실패만 센다** (2026-09-20). 전에는 마지막 줄이 전역 `fail` 을 읽었고, `fail` 은
+#   스크립트 전체 누산기다 — 그래서 **3c 인용 링크가 실패한 판에서 이 절은 자기 검사 둘을 다 통과하고도
+#   아무것도 안 찍었다**(`gate-d6dd5463.log` 의 빈 절). 그 줄은 컨벤션에 대한 판정이 아니라 **남의
+#   상태에 얹힌 줄**이었다. 지역 계수기로 바꾸면 이 절의 판정은 이 절의 것만 본다.
+#   ⚠ 전역 `fail` 은 그대로 올린다 — 게이트 rc 는 여전히 전체가 정한다.
+_conv_fail=0
 # 4a. 같은 라이브 스킬이 두 트리에 동시 존재 금지
 for d in .claude/skills/*/; do
   name=$(basename "$d")
   if [ -d ".agents/skills/$name" ]; then
     echo "  [FAIL] skill duplicated: .claude/skills/$name vs .agents/skills/$name"
-    fail=1
+    fail=1; _conv_fail=1
   fi
 done
 # 4b. phase3 시스템 디렉토리는 snake_case (또는 _private / 알려진 topic)
@@ -692,10 +698,10 @@ for d in phase3/*/; do
   name=$(basename "$d")
   case "$name" in
     _*|html-pipeline|stability-sim|generic-driver|kopernicus-emit-workspace|circumstellar-disk-schema) ;;  # allowlist
-    *[-]*) echo "  [FAIL] phase3 non-snake_case system dir: $name"; fail=1 ;;
+    *[-]*) echo "  [FAIL] phase3 non-snake_case system dir: $name"; fail=1; _conv_fail=1 ;;
   esac
 done
-if [ $fail -eq 0 ]; then echo "  [PASS] 컨벤션 점검 통과"; fi
+if [ $_conv_fail -eq 0 ]; then echo "  [PASS] 컨벤션 점검 통과"; fi
 
 echo ""
 echo "── 5. 경로 마이그레이션 잔여물 점검 ──"
