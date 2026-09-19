@@ -46,7 +46,7 @@ literature, separate recipes.
 `figure_relaxation` [—] · `maxwell_time_mantle_top` [yr] · `relaxation_threshold_max` [K] ·
 `integrator_core_gamma_verdict` [—] · `integrator_red_gamma_used` [—] ·
 `converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—] ·
-`core_mass_fraction` [—] · `ice_mass_fraction` [—]
+`core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] ·
 `composition` [—] · `body_class` [—] · `radius_earth` [R_earth] · `age_gyr` [Gyr] ·
 `tidal_heating` [—] · `envelope_z_rock_fraction` [—] · `envelope_z_profile` [—] ·

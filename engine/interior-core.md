@@ -6075,17 +6075,19 @@ than by reading:
   `cmb_temperature` returns 0 K and `cmb_flux` raises *"no superadiabatic jump, eq. 37 undefined"*. **Every
   figure below was measured with that change in place.**
 
+**Two things about that branch, read by the audit seat in the `4018fad8` tree and re-counted here** *(each phrase matches once)*: *it solves **one** free fraction — `engine/interior.py@«# 위의 역산은 자유 분율 **하나** 를 푼다 — 질량과 반지름 둘로 미지수 하나»` — and it refuses by name when it cannot: `engine/interior.py@«조성이 선언되지 않았고 역산할 반지름도 없다»`.* ⚠ **So the radius is not optional on this path** *(work seat, measured)*: **a caller that reaches `infer_composition` without `radius_earth` does not get an inversion — it falls to the preset's 0.325.** *The declaration this item deletes is therefore replaced by a different requirement, not by nothing.*
+
 **The unchosen axis is pinned at 0.0** rather than left None — the solve used that value, and None read
 downstream as *not declared*, which is what made `dynamo_rocky` refuse for want of an ice fraction it could
 have been told. ⚠ *That 0.0 is this inversion's model assumption for a rocky body, not a measurement.*
 
-**What the gate and the roster say** (parent `4018fad8`, its log blob `09ca20a2`): `[PASS]` **762** ·
-`[FAIL]` **0** · `[SKIP]` **13** · `[STEP]` **77** · anchors **605 → 603**. ⚠ **Two anchors were retired on purpose**: *two ledger sentences cited the `"earth_like"` fallback by phrase, and the phrase is gone with it. **The sentences stay**, quoted as plain code in the past tense — an anchor to a line that no longer exists is a rotten anchor, and the record of what the line used to be is not.* Every body's node tally is unchanged
+**What the gate and the roster say** (parent `6d91e82a`, its log blob `03b76d88`): `[PASS]` **762** ·
+`[FAIL]` **0** · `[SKIP]` **13** · `[STEP]` **77** · anchors **605 → 605**, by two different routes. ⚠ **Two anchors were retired on purpose**: *two ledger sentences cited the `"earth_like"` fallback by phrase, and the phrase is gone with it. **The sentences stay**, quoted as plain code in the past tense — an anchor to a line that no longer exists is a rotten anchor, and the record of what the line used to be is not.* ⚠ **And two were added in this record** — the inversion's degree of freedom and its named refusal — *so the count leaves at 603 and returns to 605 by a different route than it left.* Every body's node tally is unchanged
 across both commits and across two rebases — `2·12·1·20` (Alpha Centauri A b) · `4·10·1·20` (Dante
 fixture) · `11·3·1·20` (Earth) · `2·12·1·20` · `2·12·1·20` (Luhman 16 A, B) · `11·3·1·20` (Mars) ·
 `9·5·1·20` (Pandora). The three `[증인]` lines of `test_core_history` are byte-identical to the baseline.
 
-**The ice-giant fingerprint was re-frozen, six lines, and the six are three commits' worth**: *`chain.yaml` and `interior.py` (byte and code digests) from C57 (c) itself; `core_history.py`'s byte digest from the 216 K commit that landed before it; and the two `seconds` (28.2 → 27.8, 37.4 → 37.1), which are machine, not model.* **No value key moved.**
+**The ice-giant fingerprint was re-frozen, six lines, and the six are three commits' worth**: *`chain.yaml` and `interior.py` (byte and code digests) from C57 (c) itself; `core_history.py`'s byte digest from the 216 K commit that landed before it; and the two `seconds` (28.2 → 27.8, 37.4 → 37.1), which are machine, not model.* **No value key moved.** ⚠ *The two `seconds` are **one run's clock**, not a property of this tree: a re-freeze on the same digests produced 28.0 / 37.3 against the committed 27.8 / 37.1, and the committed pair was kept because it came **first**, not because it is more right. **When they drift again, that is the machine** — tonight one clock loop read −12.5 %.*
 
 **Mars, before and after**: `core_mass_fraction` **0.24 declared → 0.23958333333333331 inferred**,
 `composition` **`inferred`**, grade **`analog`**, `ice_mass_fraction` **0.0**, `cmb_temperature`

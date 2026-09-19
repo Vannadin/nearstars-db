@@ -1,7 +1,7 @@
 # C55 의 판정 칸 넷을 잰다 — Fe–S 두 재질 × (핵 반지름, 핵 밀도), 화성 질량으로.
 """C55 verdict cells, measured rather than argued.
 
-    python3 tools/c55_cells.py            # 선언된 조성(earth_like, cmf 0.325)
+    python3 tools/c55_cells.py            # 화성의 핵질량비 — 선언이 있으면 그 값, 없으면 역산이 푼 값
     python3 tools/c55_cells.py 0.24 0.20  # 핵질량비를 직접 주며 훑는다
 
 ⚠ **이 도구는 화성을 배선하지 않는다.** `engine/bodies/mars.yaml` 은 여전히
@@ -31,7 +31,7 @@ R_WINDOW_KM = (1820.0, 1870.0)
 #: **기록**이다 — 늘면 FAIL, 줄면 사람이 내린다. C55 가 연 항목이 닫히면 0 이 된다.
 RECORDED_OUTSIDE = 2
 RHO_WINDOW = (5.7, 6.3)
-def _declared_cmf() -> float:
+def _mars_cmf() -> tuple[float, str]:
     """⚠ **화성이 실제로 푸는 핵질량비는 프리셋의 것이 아니다** (브리프 182 A).
 
     `mars.yaml` 이 `core_mass_fraction` 을 직접 선언하고 `interior.solve` 는 선언을 프리셋보다
@@ -41,13 +41,25 @@ def _declared_cmf() -> float:
     doc = yaml.safe_load((Path(__file__).resolve().parent.parent
                           / "bodies" / "mars.yaml").read_text(encoding="utf-8"))
     got = (doc.get("inputs") or {}).get("core_mass_fraction")
-    if got is None:                       # 선언이 없으면 그때는 프리셋이 답이다
-        preset = (doc.get("inputs") or {}).get("composition_intent", "earth_like")
-        return interior.COMPOSITIONS[preset][0]
-    return float(got)
+    if got is not None:
+        return float(got), "mars.yaml 이 선언한 핵질량비"
+    # ⚠ **선언이 없으면 프리셋이 아니라 «엔진이 푸는 값»이 답이다** (C57 (c), 2026-09-20).
+    #   여기 있던 폴백은 `earth_like` 의 0.325 를 돌려줬는데, 화성이 실제로 푸는 값은
+    #   0.2396 이다 — 위 독스트링이 경고한 «화성이 안 푸는 조성을 화성의 것으로 인쇄» 가
+    #   선언을 지운 날 그대로 발화했다. 그래서 역산을 불러 **푼 값**을 받고, 라벨도 그렇게 적는다.
+    res = interior.infer_composition(
+        float((doc.get("inputs") or {})["mass_earth"]),
+        float((doc.get("inputs") or {})["radius_earth"]),
+        ice_allowed=False, potential_temperature=T_POT)
+    cmf = res.values.get("core_mass_fraction", res.inputs.get("core_mass_fraction"))
+    if cmf is None:
+        raise SystemExit(
+            "화성의 핵질량비를 못 얻었다 — mars.yaml 에 선언이 없고 역산도 값을 안 냈다. "
+            "이 표는 그 수 없이는 «선언된 행» 을 못 고르므로 인쇄하지 않는다.")
+    return float(cmf), "역산이 푼 핵질량비 (mars.yaml 에 선언 없음)"
 
 
-DECLARED_CMF = _declared_cmf()
+DECLARED_CMF, CMF_SOURCE = _mars_cmf()
 
 
 PROBE = "_c55_probe"          # 아래 `consumer_cell` 이 잠깐 등록했다 지우는 조성 이름
@@ -101,6 +113,13 @@ def main(argv: list[str]) -> int:
     print(f"C55 판정 칸 — 화성 질량 {MARS_MASS_EARTH} M⊕ · T_pot {T_POT:.0f} K")
     print(f"창: 핵 반지름 {R_WINDOW_KM[0]:.0f}–{R_WINDOW_KM[1]:.0f} km · "
           f"핵 밀도 {RHO_WINDOW[0]}–{RHO_WINDOW[1]} g/cm3 (균질 맨틀 계열)")
+    # ⚠ **이 창은 보드의 수이고 논문의 구간이 아니다** (2026-09-20 확인). Stähler+ 2021 은
+    #   «1830±40 km»(`2021Sci...373..443S:104-106`) 와 대안 «1820±40 km»(`:286`) 를 인쇄한다 —
+    #   구간으로는 1790–1870 과 1780–1860 이고, 여기 쓰는 1820–1870 은 **두 구간에서 끝을
+    #   하나씩 가져다 섞은 것**이다. 그래서 아래 «창 밖» 은 **보드 대비 판정**이지 논문 대비가
+    #   아니다. 창 자체를 고치는 것은 별 항목이다.
+    print("  ⚠ 창은 보드의 수다 — 1820–1870 은 Stähler+ 2021 의 두 구간(1790–1870 · "
+          "1780–1860)에서 끝을 하나씩 섞은 것이라, 아래 판정은 **보드 대비**다")
     # ⚠ **창 밖을 셀 수 있게 한다** (작업 규율 곁가지, 2026-09-17). 예전에는 이 도구가 «창 안 /
     #   창 밖» 을 인쇄하고도 **언제나 0 을 돌려줬다** — 창을 벗어나도 게이트가 초록이었다.
     #   비교를 인쇄하는 도구는 그 비교에 실패할 수 있어야 한다.
@@ -109,7 +128,7 @@ def main(argv: list[str]) -> int:
     outside = 0
     for cmf in cmfs:
         declared = cmf == DECLARED_CMF
-        tag = " ← mars.yaml 이 선언한 핵질량비" if declared else ""
+        tag = f" ← {CMF_SOURCE}" if declared else ""
         print(f"\ncmf = {cmf:.3f}{tag}")
         for m in MATERIALS:
             shoot = cell(m, cmf)
@@ -125,7 +144,7 @@ def main(argv: list[str]) -> int:
           f"R_core {R_WINDOW_KM[0]:.0f}–{R_WINDOW_KM[1]:.0f} km · "
           f"rho_core {RHO_WINDOW[0]}–{RHO_WINDOW[1]} g/cm3")
     if outside > RECORDED_OUTSIDE:
-        print(f"  [FAIL] 선언된 cmf {DECLARED_CMF:.3f} 에서 창 밖 칸이 기록된 수보다 많다 "
+        print(f"  [FAIL] 화성의 cmf {DECLARED_CMF:.3f} ({CMF_SOURCE}) 에서 창 밖 칸이 기록된 수보다 많다 "
               f"({outside} > {RECORDED_OUTSIDE})")
         return 1
     if outside < RECORDED_OUTSIDE:
