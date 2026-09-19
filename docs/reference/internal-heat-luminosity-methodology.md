@@ -577,6 +577,8 @@ The recipe refuses instead, by name, and the missing declaration is what gets fi
 than about the bodies.** It is the law that runs without an extra declaration; no comparison
 has been made for a mobile body, so nothing here should be read as having judged that case.
 
+⚠ **Limit of the lid law: eq. (3) at `n = 1` cannot tell two surface temperatures apart.** `θ ∝ ΔT` and `Ra_i ∝ ΔT` with `Nu = a·θ^(−1−β)·Ra^β`, `β = 1/3`, so the flux scales as `ΔT⁰` — measured as the same value to sixteen digits at 216 K and 293 K. **Mars's declared surface temperature therefore does not enter its answer under this law**, while the Nimmo branch does respond to it. The declaration is still required of both, because the cancellation is a property of this fit rather than a promise of the law.
+
 ⚠ **Foley eq. (3) is a flux through the lid base, not through the surface.** Its area is
 `4π(R_p − δ)²`, and the conversion belongs in the code's output rather than in a reader's
 head: the surface figure moves by about **−9.6 %** across a lid thickness of 350 → 500 km

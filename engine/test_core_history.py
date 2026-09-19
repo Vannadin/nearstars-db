@@ -249,9 +249,12 @@ _mars_nimmo = _run(_mars_decl, tectonic_regime=None)
 # ⚠ 지구는 **음성 대조**라 법칙 이름만 필요하다. 나이를 0.05 Gyr 로 줄여 부른다 — 법칙 선택은
 # 적분 전에 끝나므로 4.54 Gyr 를 더 도는 값이 아무 칸도 안 채운다.
 _earth = _run(_earth_decl, age_gyr=0.05)
-for _lab, _res in (("지구 (mobile · 음성 대조)", _earth),
-                   ("화성 (stagnant · δ 선언)", _mars),
-                   ("화성 (영역 뺀 판)", _mars_nimmo)):
+# ⚠ **줄이 자기 조건을 말하게 한다.** 지구 줄은 `age_gyr 0.05` 픽스처라 오늘값(1517.34)이 아니고,
+# 화성 nimmo 는 이 레시피 경로(바디 선언 읽음)라 위 `[증인]` 의 손수 짠 경로와 다른 수다.
+# 라벨이 없으면 두 수를 맞대고 「움직였다」로 읽는다.
+for _lab, _res in ((f"지구 (mobile · 음성 대조 · age_gyr 0.05 픽스처)", _earth),
+                   ("화성 (stagnant · δ 선언 · 레시피 경로)", _mars),
+                   ("화성 (영역 뺀 판 · 레시피 경로, 위 [증인] 은 손수 짠 params)", _mars_nimmo)):
     _v = getattr(_res, "values", None) or {}
     print(f"  [증인·법칙] {_lab} — law {_v.get('loss_law')!r} · "
           f"t_m {_v.get('mantle_potential_temperature_present')!r}")

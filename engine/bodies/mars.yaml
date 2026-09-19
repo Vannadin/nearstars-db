@@ -100,17 +100,26 @@ inputs:
   #   **4.36 K** 뿐이다 (이 줄은 4.0–4.7 K 로 읽혔다 — 위 ✅ 절 참조). 그리고 기록열 Katsura+ 2010 [1575, 1645] 로 재면 양단 모두 밴드 밖이다 — 판정은
   #   오너가 고른 논문에 딸려 있다. 화성의 현재 T_p 가 측정된 적 없다는 사실은 그대로다.
   potential_temperature: 1600.0
-  # 표면온도 — 두 손실 법칙이 ΔT 의 아래끝으로 쓴다. ⚠ **293.0 은 지구에서 상속한 값이고
-  # 화성의 실측이 아니다.** 화성 평균 표면은 그보다 훨씬 차다. 이 줄은 «오늘 도는 수에 이름을
-  # 붙인 것»이고, 실측값으로 바꾸는 것은 **별도 커밋**이다 — 한 커밋에 다이얼 하나.
+  # 표면온도 — 두 손실 법칙이 ΔT 의 아래끝으로 **받는다**(Foley 쪽은 받되 답이 안 움직인다, 아래).
+  # ⚠ **216.0 은 Plesa+ 2016 의 모형 상수이지 화성 실측 평균이 아니다.**
+  # ⚠ **2026-09-20 에 지구 상속값 293.0 을
+  # 이 값으로 바꿨다** (그 «별도 커밋»이 이 커밋이다). 293.0 은 `mantle_flux` 의 모듈 기본값이
+  # 바디 선언으로 올라온 것이었고, 화성의 수가 아니었다.
+  # ⚠ **그런데 화성의 답은 이 교체로 안 움직인다** — 화성은 `stagnant` 라 Foley eq. (3) 으로 돌고,
+  # 그 식은 `n = 1` 에서 표면온도에 **정확히 둔감**하다 (θ ∝ ΔT · Ra_i ∝ ΔT · Nu = a θ^(−1−β) Ra^β,
+  # β = 1/3 → F ∝ ΔT⁰; 216 K 와 293 K 에서 16 자리 동일). 움직이는 것은 Nimmo 쪽뿐이다.
+  # **그러니 이 커밋이 산 것은 수의 이동이 아니라 출처다.**
   surface_temperature_k:
-    value: 293.0
+    value: 216.0
     grade: analog
-    source: "2004GeoJI.156..363N"
+    source: "2016JGRE..121.2386P"
     note: >
-      Inherited from Earth's declaration, not measured on Mars. It is the number the Nimmo
-      branch has been running with as a module default, named here so the substitution is
-      visible; replacing it with a Mars value is a separate commit with its own source.
+      Plesa+ 2016's thermal-evolution models hold the surface temperature constant at
+      "216 K or as a function of latitude" (Parameters Held Constant). ⚠ The paper's own
+      default is the latitude-dependent form; 216 K is its globally constant alternative,
+      which is what a single declared number can carry. The grade is analog because this is
+      a model parameter, not a measured global mean. It replaces the 293.0 inherited from
+      Earth, which was the module default both loss laws had been running with.
   # 정체뚜껑 두께 δ — Foley 2018 eq. (3) 이 받는 양이다. 선언이 없으면 정체뚜껑 바디는
   # 손실 법칙을 못 고른다 (결정 8). ⚠ **도구 상수와 다른 물건이다** — `tools/c51_regimes.py` 가
   # 훑는 350–500 km 는 **스윕 범위**이고 이 값은 **선언**이라, 둘은 같이 산다. 선언 330 은
@@ -154,12 +163,6 @@ transfers:
     grade: analog
     anchor: "earth.yaml@«age_gyr: 4.54»"
     validated: "same fact — the system's age, not a Mars-only dating"
-  - field: surface_temperature_k
-    from_body: Earth
-    form: printed
-    kind: state
-    grade: analog
-    anchor: "earth.yaml@«Nimmo+ 2004 eq. 34's surface temperature for Earth»"
   - field: potential_temperature
     from_body: Earth
     form: printed

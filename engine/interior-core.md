@@ -2101,6 +2101,48 @@ cannot do.
 two of Nimmo's three dynamo criteria (mean and minimum ΔE over the last 3.1 Gyr) are history quantities and
 the discriminating one is ΔE_min; a present-day φ cannot answer them. C20 stops being a listed-only item.
 
+#### C20 (j) 2026-09-20 — the declared regime now chooses the loss law, and two rulers were corrected on the way
+
+**A rocky body's mantle loses heat through whichever lid it has**, and the two regimes are not two settings of one law. `engine/core_history.py` now reads the body's `tectonic_regime` and routes a lid regime to **Foley 2018 eq. (3)** and everything else to **Nimmo+ 2004 eqs 34–36**. Mars, declared `stagnant` with `lid_thickness_km: 330.0`, is the first body ever evaluated at its own declared lid thickness — `engine/tools/c51_regimes.py` sweeps **350–500 km**, and the declaration sits below that band.
+
+**Same body, same inputs, only the law**: `t_m` **1378.076674658375** on Nimmo against **1774.674973674531** on Foley. ⚠ *Only the direction was registered, and only the direction is claimed.* **1739 K is not a target** — that number belongs to a mantle-only integrator started at 1750 K, and a near miss would be a coincidence of two configurations.
+
+⚠ **A draft compared the declaration block to a string, which is always false.** A stagnant body would have cooled on the mobile law **silently**, with `loss_law` honestly reporting the law that actually ran. It surfaced only because the neighbouring key died with `TypeError: unsupported operand type(s) for *: 'dict' and 'float'`: **the cell that failed loudly caught the one that was failing quietly.**
+
+**Refusals, all by name**: a lid regime with no thickness; a lid outside its own mantle (reusing `mantle_budget`'s wording, so the message matches the guard in `91f5440b`); a declared regime with no mapping; and a surface temperature that is absent or not finite. ⚠ **That last check reads the *unwrapped* value** — a block whose `value` is missing passed the earlier form and then died unnamed inside the law.
+
+**Two rulers were corrected while landing this.**
+⚠ **Foley eq. (3) does not respond to the surface temperature, and that is measured, not argued.** Holding everything else fixed and moving `t_s` 216 ↔ 293 K returns **the same number to sixteen digits** (`0.002130395885779607` at `T_p` 1400 K; `0.03887510417178484` at 1800 K) — the leading `(T_p − T_s)` cancels against the ΔT inside `θ^(−4/3) Ra_i^(1/3)`. *The reading that ΔT enters twice and therefore matters is wrong for this law.* ⚠ **The cancellation is exact, not coincidental**: `θ ∝ ΔT` and `Ra_i ∝ ΔT`, and `Nu = a·θ^(−1−β)·Ra^β` at `β = 1/3`, so `F ∝ ΔT^(−4/3 + 1/3 + 1) = ΔT⁰`. **Nimmo does move**: `q_m` **3.609e12 → 3.300e12 W** across the same two values. The argument is still passed, because the cancellation is a property of this fit rather than a promise of the law, and because leaving it out restores the asymmetry where `g` and `d_m` are the body's and `T_s` is a module default.
+⚠ **The witness lines are a ruler and stay fixed.** `engine/test_core_history.py` builds its own `params`, so a change to `mars.yaml` does not move them — which is what makes them usable as the bit-identity check for the untouched branch. *A ruler that follows what it measures is not a ruler*, so they were deliberately not wired to the body file.
+
+⚠ **Mars's `core_thermal_history` output does not move in this commit.** Mars is `stagnant`, so it runs Foley, and Foley does not see the surface temperature. What moves is the **counterfactual** `[증인·법칙]` line — Mars with its regime removed, on Nimmo — from **1378.076674658375** to **1358.4226002593311**, and `[전이·pending]` from **1** to **0**. *A declaration that replaces an inherited placeholder changed no published value here, and saying so is the point of the line.*
+
+**What the red gate taught.** `d6dd5463` failed alone and `393c9489` turned it green; they are one landing read together. ⚠ **Adding a required input means walking every direct call site** — three files had to follow (`test_core_history.py`, `tools/mars_step_sweep.py`, `test_domain.py`), found one gate run at a time when one `git grep` would have found all three. ⚠ **And an anchor's input trigger reaches non-Python files**: this is the first time `chain.yaml`'s byte digest moved it.
+
+**Departures from the frozen registration, recorded rather than absorbed.** *Undeclared regime takes the Nimmo law* (as registered) rather than refusing; routing it to a refusal would delete C20 for any body that never declared one. *Acceptance A reads as «existing value keys unchanged, plus one declared addition»* — `loss_law` and `loss_law_reason` are new returns. *Foley's 273 K module constant is now fixture-only.* *The 216 K registration's acceptance E was closed in the parent commit*, where the finite-number check landed. ⚠ *The two `seconds` in the re-frozen anchor were taken on a run whose clock loop read **−12.5 %**, outside the ±5 % band — they record today's noise and gate nothing.*
+
+⚠ **One item found and not fixed**: `[PASS] 컨벤션 점검 통과` is not a verdict about conventions. `scripts/check.sh` keeps `fail` as a script-wide accumulator, so an unrelated earlier failure deletes that line even when the section's own checks passed — which is exactly what the red run showed. A local variable closes it.
+
+
+#### C20 (k) 2026-09-20 — Mars's surface temperature stops being Earth's, and nothing published moves
+
+**`engine/bodies/mars.yaml` declares `surface_temperature_k: 216.0`** (`analog`, `2016JGRE..121.2386P`), replacing the **293.0** it had carried for one commit as an explicit inheritance from Earth. That 293.0 was never a Mars number: it was `mantle_flux`'s module default lifted into a declaration so the substitution would be visible while a source was found. The `transfers:` entry that recorded the inheritance is removed — the value no longer comes from another body.
+
+⚠ **Mars's `core_thermal_history` output does not move.** Mars is `stagnant`, so it runs Foley eq. (3), and that law is exactly insensitive to the surface temperature — `t_m` stays **1774.674973674531**. *So this commit did not change an answer; it changed where the answer's input comes from.* **Reading it as «216 K shifted Mars by so much» would be wrong in both direction and size.**
+
+**What did move, in full:**
+
+| quantity | before | after |
+|---|---|---|
+| the counterfactual `[증인·법칙]` line — Mars with its regime removed, on Nimmo | **1378.076674658375** | **1358.4226002593311** (−19.65 K) |
+| `[전이·pending]` | **1** | **0** |
+| anchors | **606** | **605** |
+| the registered direction, Foley over Nimmo on one body | **+396.60 K** | **+416.25 K** |
+
+⚠ **The anchor count falls rather than rises**, which is the opposite of what adding a source usually does: deleting the `transfers:` entry took its phrase anchor into `earth.yaml` with it, and a bibcode inside a body file is an off-repo citation that the anchor rule never counted. *The new source is cited and the anchor total drops by one; both are true.*
+
+⚠ **The pending counter has still caught nothing.** It was added in the parent commit, counted exactly one entry — this one — and returns to zero here. **It has not yet survived long enough to catch a placeholder anybody would otherwise have missed**, which is the case it exists for.
+
 ### C21 — the short-lived radiogenic formation pulse (²⁶Al · ⁶⁰Fe) — **listed 2026-09-03, not started**
 
 Owner: *"단수명도 파긴 해야겠네."* (`4b8e06ba`, 09-03 18:10) and *"등재하고 측정은 그때 가서."* (18:17) — listed
