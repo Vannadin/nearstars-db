@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import yaml  # noqa: E402
 import transfers  # noqa: E402
 from transfers import Transfer, TransferError, check_body  # noqa: E402
 
@@ -118,6 +119,14 @@ def main() -> int:
 
     for f in fails:
         print(f"  [FAIL] {f}")
+    # ⚠ **판정이 아니라 인쇄다.** `validated` 는 이 검사의 축이 아니고(기본값 `pending`),
+    # 그래서 「옮겨도 되는지 아직 아무도 답 안 한 값」이 조용히 늘어난다. 매 실행 세어 둔다.
+    pending = []
+    for _b in sorted(transfers.BODIES_DIR.glob("*.yaml")):
+        for _t in transfers.parse(yaml.safe_load(_b.read_text())):
+            if (_t.validated or "pending") == "pending":
+                pending.append(f"{_b.stem}.{_t.field}")
+    print(f"  [전이·pending] {len(pending)}건 — " + (" · ".join(pending) if pending else "없음"))
     print(f"test_transfers: {'PASS' if not fails else 'FAIL'} ({len(fails)} failures)")
     return 1 if fails else 0
 

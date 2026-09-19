@@ -23,6 +23,18 @@ inputs:
   # 맨틀 포텐셜 온도. **선언** 이다 — Unterborn+ 2019 §2 의 지구형 값이고,
   # 암석-금속 상들의 적합 기준이 이 단열선이라 여기서 열압력이 정확히 0 이다.
   potential_temperature: 1600.0
+  # 표면온도 — 두 손실 법칙(Nimmo eqs 34–36 · Foley eq. (3))이 ΔT 의 아래끝으로 쓴다.
+  # ⚠ **모듈 기본값을 바디 선언으로 끌어올린 것이다.** `mantle_flux.py` 는 293 K, `mantle_budget.py`
+  # 는 273 K 를 들고 있었고, 둘 다 지구 값이라 다른 천체에 조용히 대입될 수 있었다. 여기 적힌
+  # 293.0 은 **오늘 Nimmo 갈래가 실제로 도는 값**이고, 그래서 이 선언으로 지구의 수는 안 움직인다.
+  surface_temperature_k:
+    value: 293.0
+    grade: declared
+    source: "2004GeoJI.156..363N"
+    note: >
+      Nimmo+ 2004 eq. 34's surface temperature for Earth, the value `mantle_flux.T_S` has carried
+      as a module default. Declaring it here does not change Earth's answer; it stops the same
+      number from being applied to a body that never declared one.
   # 핵 **쪽** 핵-맨틀 경계 온도. 이것도 선언이고, D″ 열경계층을 가로지르는 열류가
   # 정하는 값이라 이 엔진이 도출하지 않는다. Sinmyo+ 2019 (2019E&PSL.510...45S) 의
   # 3760 ± 290 K 다. 맨틀 쪽 값(이 적분이 내는 ~2530 K)보다 1200 K 넘게 높다.
@@ -61,6 +73,7 @@ units:
   radius_earth: R_earth
   age_gyr: Gyr
   potential_temperature: K
+  surface_temperature_k: K
   core_cmb_temperature: K
   core_initial_temperature: K
   mantle_initial_potential_temperature: K

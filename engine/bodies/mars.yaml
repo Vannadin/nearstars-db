@@ -100,6 +100,17 @@ inputs:
   #   **4.36 K** 뿐이다 (이 줄은 4.0–4.7 K 로 읽혔다 — 위 ✅ 절 참조). 그리고 기록열 Katsura+ 2010 [1575, 1645] 로 재면 양단 모두 밴드 밖이다 — 판정은
   #   오너가 고른 논문에 딸려 있다. 화성의 현재 T_p 가 측정된 적 없다는 사실은 그대로다.
   potential_temperature: 1600.0
+  # 표면온도 — 두 손실 법칙이 ΔT 의 아래끝으로 쓴다. ⚠ **293.0 은 지구에서 상속한 값이고
+  # 화성의 실측이 아니다.** 화성 평균 표면은 그보다 훨씬 차다. 이 줄은 «오늘 도는 수에 이름을
+  # 붙인 것»이고, 실측값으로 바꾸는 것은 **별도 커밋**이다 — 한 커밋에 다이얼 하나.
+  surface_temperature_k:
+    value: 293.0
+    grade: analog
+    source: "2004GeoJI.156..363N"
+    note: >
+      Inherited from Earth's declaration, not measured on Mars. It is the number the Nimmo
+      branch has been running with as a module default, named here so the substitution is
+      visible; replacing it with a Mars value is a separate commit with its own source.
   # 정체뚜껑 두께 δ — Foley 2018 eq. (3) 이 받는 양이다. 선언이 없으면 정체뚜껑 바디는
   # 손실 법칙을 못 고른다 (결정 8). ⚠ **도구 상수와 다른 물건이다** — `tools/c51_regimes.py` 가
   # 훑는 350–500 km 는 **스윕 범위**이고 이 값은 **선언**이라, 둘은 같이 산다. 선언 330 은
@@ -143,6 +154,12 @@ transfers:
     grade: analog
     anchor: "earth.yaml@«age_gyr: 4.54»"
     validated: "same fact — the system's age, not a Mars-only dating"
+  - field: surface_temperature_k
+    from_body: Earth
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "earth.yaml@«Nimmo+ 2004 eq. 34's surface temperature for Earth»"
   - field: potential_temperature
     from_body: Earth
     form: printed
@@ -172,6 +189,7 @@ units:
   radius_earth: R_earth
   age_gyr: Gyr
   potential_temperature: K
+  surface_temperature_k: K
   lid_thickness_km: km
   core_initial_temperature: K
   mantle_initial_potential_temperature: K

@@ -192,12 +192,17 @@ declaration band, gated at < 10 MW/K. `engine/core-entropy-context-notes.md`.
 **Returns** — `core_cmb_temperature_present` [K] · `mantle_potential_temperature_present` [K] · `dtc_dt_present_k_per_gyr` [K/Gyr] ·
 `q_cmb_present` [W] · `q_mantle_present` [W] · `inner_core_radius_present_km` [km] · `inner_core_case` [—] ·
 `inner_core_nucleation_gyr_ago` [Gyr] · `delta_e_min_3gyr_lo` [W/K] · `delta_e_min_3gyr_hi` [W/K] · `delta_e_present_lo` [W/K] ·
-`delta_e_present_hi` [W/K] · `entropy_history_verdict` [—] · `history_converged` [—] · `history_convergence_width` [—] · `history_steps` [—]
+`delta_e_present_hi` [W/K] · `entropy_history_verdict` [—] · `history_converged` [—] · `history_convergence_width` [—] · `history_steps` [—] ·
+`loss_law` [—] (which law ran, so no output can hide it) · `loss_law_reason` [—] (why it ran — a declared regime, or no declaration at all)
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] · `cmb_temperature` [K] ·
 `potential_temperature` [K] · `radius_earth` [R_earth] · `age_gyr` [Gyr] · `core_initial_temperature` [K] ·
 `mantle_initial_potential_temperature` [K] · `core_material` [—] · `body_class` [—] · `step_myr` [Myr] ·
-`step_fraction` [—] (the fraction F in h = min(step_myr, F·τ), τ the mantle time constant; default 0.1) · `core_h_w_per_kg` [W/kg]
+`step_fraction` [—] (the fraction F in h = min(step_myr, F·τ), τ the mantle time constant; default 0.1) · `core_h_w_per_kg` [W/kg] ·
+`tectonic_regime` [—] (selects the loss law, §8b) ·
+`lid_thickness_km` [km] (required only for a lid regime, §8b) ·
+`surface_temperature_k` [K] (both laws use it as the cold end of ΔT, §8b)
 **Discriminating keys** — `body_class`: rocky bodies only. No interior solution or no initial temperatures → refused by name.
+`tectonic_regime` `stagnant` with no `lid_thickness_km` → refused by name (§8b): the body is not given a law its own regime contradicts.
 **Grade** — **analog**: Nimmo+ 2004 eqs 30 and 32 integrated forward (RK4, h = min(4 Myr, 0.1·τ) with Nimmo's 4 Myr as the cap) on the state (T_c, T_m); the
 mantle base temperature by the interior solve's own adiabat ratio (eq. 29's form); long-lived radiogenic heat only (K·Th·U);
 the initial temperatures are Nimmo's printed 4 800 K on Earth and declarations elsewhere; the result stands on ≈24
@@ -545,6 +550,42 @@ The relation is grounded and calibrated (it reproduces Neptune's `T_eff` from it
 internal flux, and the Uranus null); the *inputs* (`L_int` via cooling track or measured
 energy balance, the start scenario, composition) carry the uncertainty. Confidence is
 **factor-of-a-few on `T_int`, but high on the regime classification.**
+
+---
+
+## 8b. The declared regime selects the loss law
+
+A rocky body's mantle sheds heat through whichever lid it has, and the two regimes are not
+two settings of one law — they are **different laws with different inputs**. The body's
+declared `tectonic_regime` therefore selects which one runs, and the selection is a
+declaration's consequence, never an inference from the numbers.
+
+| declared regime | law | input it needs |
+|---|---|---|
+| **`stagnant`** | Foley 2018 eq. (3) (`2018AsBio..18..873F`) | the body's own **`lid_thickness_km`** |
+| **`mobile`**, or undeclared | Nimmo+ 2004 eqs 34–36 (`2004GeoJI.156..363N`) | none beyond the state already solved |
+
+⚠ **A declared `mobile` and no declaration at all are distinguished in the output.** Both run Nimmo, and `loss_law_reason` says which — a body that never declared its regime must not read like one that did.
+| **`stagnant` with no lid thickness** | **a named refusal** | — |
+
+**The refusal is the point of the third row.** A stagnant body without a declared lid could
+be run on the mobile law by falling back to a default, and it would produce a number — a
+number cooled by a law its own regime contradicts, with nothing in the output saying so.
+The recipe refuses instead, by name, and the missing declaration is what gets fixed.
+
+⚠ **`mobile` keeps the Nimmo law by default, and that is a statement about the engine rather
+than about the bodies.** It is the law that runs without an extra declaration; no comparison
+has been made for a mobile body, so nothing here should be read as having judged that case.
+
+⚠ **Foley eq. (3) is a flux through the lid base, not through the surface.** Its area is
+`4π(R_p − δ)²`, and the conversion belongs in the code's output rather than in a reader's
+head: the surface figure moves by about **−9.6 %** across a lid thickness of 350 → 500 km
+while the lid-base flux is unchanged.
+
+⚠ **Grade ceiling.** The mantle's share of the radiogenic budget is a **declaration** (70 %,
+Earth's appendix value, carried to every rocky body), and no selection edge can be graded
+above the declaration it stands on. Selecting a law does not raise the grade of the inputs
+it selects between.
 
 ---
 

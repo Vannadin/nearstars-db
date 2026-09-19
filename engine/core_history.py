@@ -36,6 +36,8 @@ import cmb_flux as cf            # noqa: E402
 import core_energy as ce         # noqa: E402
 import core_entropy as cent      # noqa: E402
 import mantle_flux as mf         # noqa: E402
+import mantle_budget as mb      # noqa: E402  — 결정 8: 정체뚜껑 바디의 손실 법칙
+import tectonic_regime as tect  # noqa: E402  — 선언을 읽는 **하나뿐인** 독자 (C53)
 import radiogenic as rg          # noqa: E402
 from eos import PhaseGap         # noqa: E402
 from payload import Result, out_of_domain  # noqa: E402
@@ -62,6 +64,15 @@ ROCKY_ONLY = ("giant", "gas_giant", "ice_giant", "sub_neptune", "brown_dwarf", "
 NO_INITIAL = ("cannot-say (no initial temperatures declared — core_initial_temperature and "
               "mantle_initial_potential_temperature are the two declarations this integrator adds)")
 NO_STRUCTURE = "cannot-say (no interior solution — needs core_radius, cmb_pressure, cmb_temperature, potential_temperature)"
+#: 결정 8 — 정체뚜껑 법칙은 표면온도를 쓴다. 기본값은 지구의 273 K 이고, 그것을 다른 천체에
+#: 조용히 대입하면 ΔT 가 두 번 들어가는 식에서 바로 값이 된다. **선언 없이는 안 돈다.**
+NO_SURFACE_T = ("cannot-say (두 손실 법칙 다 표면온도를 쓰는데 surface_temperature_k 가 없거나 "
+                "유한한 수가 아니다 — 모듈 기본값(Nimmo 293 K · Foley 273 K, 둘 다 지구)을 "
+                "다른 천체에 대입하지 않는다)")
+#: 결정 8 — 정체뚜껑인데 뚜껑 두께가 없으면 법칙을 못 고른다. **기본값으로 때우지 않는다**:
+#: Nimmo 로 돌리면 그 바디는 자기 영역과 다른 법칙으로 식고, 아무도 그 사실을 안 읽는다.
+NO_LID = ("cannot-say (tectonic_regime 이 stagnant 인데 lid_thickness_km 선언이 없다 — "
+          "Foley 2018 eq. (3) 은 뚜껑 두께 δ 를 받아야 하고, 없는 값을 기본값으로 만들지 않는다)")
 NOT_CONVERGED = "step-not-converged (the step is the result, not the physics — pre-registered branch ⑤ fail)"
 CANNOT_SAY_HISTORY = "cannot-say (the four-corner band straddles zero inside the last 3.1 Gyr — C20 built, C15 still cannot say)"
 SUSTAINED = "sustained (ΔE_min > 0 over the last 3.1 Gyr on all four k × H corners)"
@@ -105,12 +116,26 @@ def rates(t_c: float, t_m: float, p: dict, t_gyr_from_present: float) -> dict:
         q_c = 0.0
     q_r = side["m_core"] * p["h_core"]
     dtc = -(q_c - q_r) / side["q_tilde"]          # K/s; negative = cooling
-    top = mf.implied_flux(t_m, p["g"], p["r_p"])
-    if top["domain_refusal"] is not None:
-        return {"refused": top["domain_refusal"]}
-    q_m = top["q_m_w"]
-    if top["extrapolation_note"]:
-        notes.append(top["extrapolation_note"])
+    # 결정 8 — 맨틀이 위로 버리는 열을 **그 바디의 영역이 고른 법칙**으로 낸다. 법칙 이름은
+    # `params` 에 실려 오므로 어느 실행도 자기가 쓴 법칙을 숨길 수 없다 (사전등록 수락선 G).
+    if p.get("loss_law") == "foley":
+        # eq. (3) 은 **뚜껑 바닥**을 지나는 flux 다. 면적도 그 반지름의 것이어야 한다 — 표면적을
+        # 쓰면 δ 350→500 km 에서 −9.6 % 가 조용히 섞인다 (사전등록 함정 3).
+        delta = p["delta_m"]
+        r_lid = p["r_p"] - delta
+        # ⚠ **표면온도도 이 바디의 것이어야 한다.** `g` 와 `d_m` 만 넘기고 `T_s` 를 기본값에
+        # 맡기면 **손이 셋 중 둘만 닿은 비대칭**이고, 그 기본값은 지구의 273 K 다. `F_man ∝
+        # (T_p − T_s)·Ra^(1/3)` 이라 ΔT 가 두 번 들어가므로 작은 칸이 아니다 — 그래서 선언을
+        # 요구하고, 없으면 위에서 이름 대며 거절한다 (`NO_SURFACE_T`).
+        f_man = mb.f_man_w_m2(t_m, t_s_k=p["t_surface_k"], d_m=p["d_mantle_m"] - delta, g=p["g"])
+        q_m = f_man * 4.0 * math.pi * r_lid ** 2
+    else:
+        top = mf.implied_flux(t_m, p["g"], p["r_p"], t_s=p["t_surface_k"])
+        if top["domain_refusal"] is not None:
+            return {"refused": top["domain_refusal"]}
+        q_m = top["q_m_w"]
+        if top["extrapolation_note"]:
+            notes.append(top["extrapolation_note"])
     h_m = p["h_m_present_w"] * rg.history_factor(t_gyr_from_present)
     dtm = (h_m - q_m + q_c) / (p["m_mantle"] * mf.C_PM * math.sqrt(p["r_b"]))
     return {"dtc": dtc, "dtm": dtm, "q_c": q_c, "q_m": q_m, "h_m": h_m, "q_r": q_r, "side": side,
@@ -315,13 +340,17 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
           cmb_pressure_gpa: float | None, cmb_temperature: float | None, potential_temperature: float | None,
           radius_earth: float | None, age_gyr: float | None, core_initial_temperature: float | None,
           mantle_initial_potential_temperature: float | None, core_material: str = "fe_prem",
-          body_class: str | None = None, run_sweep: bool = False) -> Result:
+          body_class: str | None = None, tectonic_regime=None,
+          lid_thickness_km=None, legacy_stagnant_lid=None, surface_temperature_k=None,
+          run_sweep: bool = False) -> Result:
     inputs = {"mass_earth": mass_earth, "core_mass_fraction": core_mass_fraction, "core_radius": core_radius_earth,
               "cmb_pressure": cmb_pressure_gpa, "cmb_temperature": cmb_temperature,
               "potential_temperature": potential_temperature, "radius_earth": radius_earth, "age_gyr": age_gyr,
               "core_initial_temperature": core_initial_temperature,
               "mantle_initial_potential_temperature": mantle_initial_potential_temperature,
               "core_material": core_material, "body_class": body_class,
+              "tectonic_regime": tectonic_regime, "lid_thickness_km": lid_thickness_km,
+              "surface_temperature_k": surface_temperature_k,
               "step_myr": STEP_MYR, "step_fraction": STEP_FRACTION, "core_h_w_per_kg": ce.H_CORE}
     if body_class in ROCKY_ONLY:
         return out_of_domain(RECIPE, VERSION, f"'{body_class}' 에는 규산염 맨틀·금속 핵의 결합 열진화가 뜻이 없다 — 암석체의 것이다.",
@@ -332,13 +361,79 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
         return out_of_domain(RECIPE, VERSION, NO_STRUCTURE, inputs=inputs, refs=REFS)
     if core_initial_temperature is None or mantle_initial_potential_temperature is None:
         return out_of_domain(RECIPE, VERSION, NO_INITIAL, inputs=inputs, refs=REFS)
-
+    # 결정 8 — 영역이 법칙을 고른다. `mobile` 과 **미선언**은 둘 다 Nimmo 로 가는데, 그것은
+    # ⚠ **증거가 아니라 엔진이 돌릴 수 있는 것**이다: 지구·판도라가 `mobile` 이고 판도라에는
+    # 인쇄된 뚜껑 밴드가 아예 없다. 그 사실을 여기 적어 둬야 나중에 「판정했다」로 안 읽힌다.
+    # ⚠ **독자는 하나다.** `tectonic_regime` 을 여기서 따로 풀지 않고 `tectonic_regime` 모듈의
+    # 기존 경로를 그대로 부른다 — 맨 스칼라·옛 `stagnant_lid` 병존·어휘 밖 값의 거절이 전부 거기
+    # 있고(C53), 두 번째 독자를 만들면 **같은 바디를 `dynamo_rocky` 는 거절하고 이 노드는
+    # 통과시키는** 일이 생긴다. 거절은 그 이유 문장을 그대로 싣는다 — 조용히 nimmo 로 떨어지지
+    # 않게 하는 것이 이 항목의 요점이다.
     m_kg = mass_earth * cf.M_EARTH_KG
     r_p = radius_earth * cf.R_EARTH_M
+    # ⚠ 맨틀 두께는 **한 번만** 센다 — 가드와 `params` 가 각자 계산하면 대수적으로 같아도
+    # 부동소수 마지막 자리가 갈린다.
+    d_mantle_m = r_p - core_radius_earth * cf.R_EARTH_M
+
+    # ⚠ **독자는 하나고, 표도 하나다.** 영역→법칙은 여기서 다시 적지 않고 `tectonic_regime` 의
+    # `DERIVED` 결과에서 한 줄로 유도한다 — `True`(stagnant·contested) → Foley, `False`(mobile)
+    # → Nimmo, `None`(transitional) 과 매핑 없는 값(episodic·heat_pipe)과 미선언은 **그 모듈의
+    # 거절 문구를 그대로 싣고 멈춘다**. ⚠ `contested` 가 Foley 로 가는 것은 **오너 결정 (a) 를
+    # 물려받은 것**이지 이 노드가 새로 판단한 것이 아니다.
+    # ⚠ **사전등록과 갈리는 칸**: 등록은 「미선언 → Nimmo」였는데 `tect` 는 「판정 불가는
+    # 기본값이 아니다」로 거절한다. 두 문장이 같이 참일 수 없어 C53 쪽을 따랐다 — 오늘 로스터에는
+    # 미선언 암석체가 없어 값 영향은 0 이고, 이탈은 착지 기록에 적는다.
+    derived = tect.derived_stagnant_lid(tectonic_regime, legacy_stagnant_lid)
+    if derived.refusal is not None:
+        return out_of_domain(RECIPE, VERSION, f"cannot-say ({derived.refusal})", inputs=inputs, refs=REFS)
+    # ⚠ **미선언과 「선언됐는데 매핑이 없다」를 가른다.** `tect` 는 둘 다 `value None` 으로 내지만
+    # 뜻이 다르다. 선언이 **아예 없는** 바디는 그래도 식어야 하고, 그 갈래를 거절로 만들면
+    # 영역을 선언한 적 없는 모든 암석체가 C20 을 잃는다 — 이 파일의 기존 `solve()` 호출들이
+    # 그것으로 죽는 것을 실측했다. 그래서 **미선언 → Nimmo**(사전등록 `0bbb3ad0` §1 그대로),
+    # **선언됐으나 `transitional`·매핑 없음 → 그 모듈의 문구로 거절**.
+    # ⚠ C53 의 「판정 불가는 기본값이 아니다」는 **다이나모 불리언**에 대한 문장이다. 여기서는
+    # 「법칙을 못 고른다」가 아니라 「추가 선언 없이 도는 법칙이 Nimmo 다」이고, 그 사실은
+    # §8b 와 `[증인·법칙]` 줄에 매번 인쇄된다.
+    if tectonic_regime is None and legacy_stagnant_lid is None:
+        # ⚠ **미선언과 `mobile` 은 출력에서 갈려야 한다.** 둘 다 Nimmo 로 가지만 뜻이 다르다 —
+        # 하나는 「그렇게 선언했다」이고 하나는 「선언이 없어 기본 법칙으로 돈다」이다. 갈리지
+        # 않으면 선언 빠진 바디가 선언한 바디처럼 읽힌다.
+        derived = derived._replace(
+            value=False,
+            note="tectonic_regime 선언이 없다 — 추가 선언 없이 도는 법칙(Nimmo)으로 돈다. "
+                 "이것은 이 바디의 영역에 대한 판정이 아니다")
+    if derived.value is None:
+        return out_of_domain(RECIPE, VERSION, f"cannot-say ({derived.note})", inputs=inputs, refs=REFS)
+    lid_km = _declared_scalar(lid_thickness_km)
+    lid_thickness_m = None if lid_km is None else lid_km * 1e3
+    loss_law = "foley" if derived.value else "nimmo"
+    if loss_law == "foley" and lid_thickness_m is None:
+        return out_of_domain(RECIPE, VERSION, NO_LID, inputs=inputs, refs=REFS)
+    # ⚠ **푼 뒤에 검사한다.** 원본만 보면 블록은 있는데 `value` 가 없거나 숫자가 아닌 판이
+    # 이 검사를 **통과**하고, 법칙 안에서 이름 없는 `TypeError` 로 죽는다 — 우리가 세는 「이름
+    # 없는 실패」다. 선언이 있다는 것과 쓸 수 있는 수라는 것은 다른 말이다.
+    t_surface_k = _declared_scalar(surface_temperature_k)
+    if not isinstance(t_surface_k, (int, float)) or isinstance(t_surface_k, bool) \
+            or not math.isfinite(t_surface_k):
+        return out_of_domain(RECIPE, VERSION, NO_SURFACE_T, inputs=inputs, refs=REFS)
+    if loss_law == "foley":
+        # ⚠ **이 길에는 뚜껑 가드가 없다.** `mantle_budget` 의 `LidOutsideMantle` 은
+        # `dtp_dt_k_s`·`secular_cooling`·`integrate_tp` 에 걸려 있고, 우리가 부르는
+        # `f_man_w_m2` 는 δ 를 아예 안 받는다 — 우리가 `d_m − δ` 를 **미리 빼서** 넘기므로
+        # δ ≥ d_m 이면 0 이나 음수가 **조용히** 들어간다. `NO_LID` 는 「δ 없음」만 막는다.
+        # 그래서 같은 정의역을 같은 문구로 여기서 다시 건다.
+        if not (0.0 <= lid_thickness_m < d_mantle_m):
+            return out_of_domain(RECIPE, VERSION,
+                                 f"cannot-say ({mb._lid_domain_message(lid_thickness_m, d_mantle_m)})",
+                                 inputs=inputs, refs=REFS)
+
     params = {"material": core_material, "p_cmb": cmb_pressure_gpa * 1e9, "r_cmb": core_radius_earth * cf.R_EARTH_M,
               "m_core": m_kg * core_mass_fraction, "m_mantle": m_kg * (1.0 - core_mass_fraction),
               "r_b": cmb_temperature / potential_temperature,
               "g": cf.G_NEWTON * m_kg / r_p ** 2, "r_p": r_p, "h_core": ce.H_CORE,
+              "loss_law": loss_law, "delta_m": lid_thickness_m,
+              "t_surface_k": t_surface_k,
+              "d_mantle_m": d_mantle_m,
               "h_m_present_w": rg.budget(m_kg * (1.0 - core_mass_fraction))["mantle_w"]}
     try:
         if run_sweep:
@@ -380,13 +475,16 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
         "history_converged": converged,
         "history_convergence_width": width,
         "history_steps": best["hist"]["n_steps"],
+        "loss_law": loss_law,
+        "loss_law_reason": derived.note,
     }
     units = {"core_cmb_temperature_present": "K", "mantle_potential_temperature_present": "K",
              "dtc_dt_present_k_per_gyr": "K/Gyr", "q_cmb_present": "W", "q_mantle_present": "W",
              "inner_core_radius_present_km": "km", "inner_core_case": "", "inner_core_nucleation_gyr_ago": "Gyr",
              "delta_e_min_3gyr_lo": "W/K", "delta_e_min_3gyr_hi": "W/K", "delta_e_present_lo": "W/K",
              "delta_e_present_hi": "W/K", "entropy_history_verdict": "", "history_converged": "",
-             "history_convergence_width": "", "history_steps": ""}
+             "history_convergence_width": "", "history_steps": "", "loss_law": "",
+             "loss_law_reason": ""}
     if converged is None:
         values["history_converged"] = None   # the sweep is on demand (test_core_history.py --sweep); record: 2026-09-04 width 0.001 %
     mw = 1e6
@@ -416,6 +514,15 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
 from registry import recipe  # noqa: E402
 
 
+def _declared_scalar(declared):
+    """선언 블록에서 스칼라 값을 꺼낸다 (`lid_thickness_km`·`surface_temperature_k`). ⚠ **여기는 맨 스칼라도 받는다** — 이 키에는
+    엄격한 독자가 없고, 트리에 두 꼴이 같이 산다. 위 함수와 **일부러 다르고**, 다른 이유는
+    「엄격한 독자가 이미 있느냐」 하나다."""
+    if isinstance(declared, dict):
+        return declared.get("value")
+    return declared
+
+
 @recipe("core_thermal_history")
 def _from_state(state):
     return solve(mass_earth=state["mass_earth"], core_mass_fraction=state.get("core_mass_fraction"),
@@ -425,4 +532,12 @@ def _from_state(state):
                  age_gyr=state.get("age_gyr"),
                  core_initial_temperature=state.get("core_initial_temperature"),
                  mantle_initial_potential_temperature=state.get("mantle_initial_potential_temperature"),
-                 core_material=state.get("core_material", "fe_prem"), body_class=state.get("body_class"))
+                 core_material=state.get("core_material", "fe_prem"), body_class=state.get("body_class"),
+                 # ⚠ **선언을 푸는 자리와 단위를 바꾸는 자리를 `solve()` 안 한 곳으로 모았다.**
+                 #   사전등록은 «전환은 레시피에서» 였는데, 선언 블록 검증이 거절을 내야 해서
+                 #   거절이 사는 곳으로 한 함수 안쪽으로 옮겼다 — 전환 자리가 **여전히 하나**인
+                 #   것은 그대로다. 1 000 배 오류는 안 죽고 조용히 틀린 flux 를 내기 때문이다.
+                 tectonic_regime=state.get_optional("tectonic_regime"),
+                 legacy_stagnant_lid=state.get_optional("stagnant_lid"),
+                 lid_thickness_km=state.get_optional("lid_thickness_km"),
+                 surface_temperature_k=state.get_optional("surface_temperature_k"))

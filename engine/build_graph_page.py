@@ -68,6 +68,7 @@ def input_paths() -> list[Path]:
 LABELS = {
     "star_physical": "별의 성질", "star_metallicity": "별 금속함량",
     "system_age": "계 나이", "body_age": "천체 나이",
+    "tectonic_declaration": "판구조 선언",
     "orbit_elements": "궤도 요소", "mass_or_radius": "질량 또는 반지름",
     "composition_intent": "조성 의도", "ocean_fraction": "바다 비율",
     "ocean_depth": "바다 깊이", "resonance_architecture": "공명 구조",
@@ -105,7 +106,7 @@ NODEKIND_KO = {"measured": "측정", "owner": "결정", "computed": "계산",
 # SCC 로 접으면 이번엔 그래프 절반이 한 칸에 뭉친다. 단은 계산 결과가 아니라
 # 문서가 이미 갖고 있는 의미적 구분이므로, 그대로 옮겨 적는 편이 정직하다.
 LAYER = {
-    0: ["star_physical", "star_metallicity", "system_age", "body_age",
+    0: ["star_physical", "star_metallicity", "system_age", "body_age", "tectonic_declaration",
         "orbit_elements", "mass_or_radius", "composition_intent",
         "ocean_fraction", "ocean_depth", "resonance_architecture", "ring_system"],
     1: ["body_class", "mass_radius_relation"],

@@ -58,6 +58,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import cmb_flux as cf                 # noqa: E402
 import core_history as ch             # noqa: E402
 import radiogenic as rg               # noqa: E402
+import mantle_flux as mf            # noqa: E402  — 픽스처 표면온도
 from interior import solve as isolve  # noqa: E402
 
 STEPS_MYR = (4.0, 2.0, 1.0, 0.5, 0.25)
@@ -91,7 +92,8 @@ def build(body: dict, t_pot: float, core_init: float) -> tuple[dict, float, floa
               "m_core": m_kg * cmf, "m_mantle": m_kg * (1.0 - cmf),
               "r_b": v["cmb_temperature"] / t_pot,
               "g": cf.G_NEWTON * m_kg / r_p ** 2, "r_p": r_p, "h_core": H_NIMMO,
-              "h_m_present_w": rg.budget(m_kg * (1.0 - cmf))["mantle_w"]}
+              "h_m_present_w": rg.budget(m_kg * (1.0 - cmf))["mantle_w"],
+              "t_surface_k": mf.T_S}   # 픽스처: 모듈 값을 명시로 (레시피는 바디 선언을 읽는다)
     return params, core_init, core_init / params["r_b"]
 
 

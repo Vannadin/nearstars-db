@@ -26,6 +26,7 @@ import cmb_flux as cf                  # noqa: E402
 import core_energy as ce               # noqa: E402
 import core_history as ch              # noqa: E402
 import radiogenic as rg                # noqa: E402
+import mantle_flux as mf
 from interior import solve as interior_solve  # noqa: E402
 
 fails = 0
@@ -43,7 +44,10 @@ M, RP = cf.M_EARTH_KG, cf.R_EARTH_M
 R_B = v["cmb_temperature"] / 1600.0
 PARAMS = {"material": "fe_prem", "p_cmb": v["cmb_pressure"] * 1e9, "r_cmb": v["core_radius"] * RP,
           "m_core": 0.325 * M, "m_mantle": 0.675 * M, "r_b": R_B, "g": cf.G_NEWTON * M / RP ** 2, "r_p": RP,
-          "h_core": ce.H_CORE, "h_m_present_w": rg.budget(0.675 * M)["mantle_w"]}
+          "h_core": ce.H_CORE, "h_m_present_w": rg.budget(0.675 * M)["mantle_w"],
+          # ⚠ **픽스처도 표면온도를 명시로 적는다.** 레시피는 바디 선언을 요구하고 기본값을
+          #   안 쓴다 — 손수 짠 `params` 만 모듈 값을 쓰면 두 경로가 다른 수로 돈다.
+          "t_surface_k": mf.T_S}
 T_C0, T_M0 = 4800.0, 4800.0 / R_B     # Nimmo Fig. 2 caption: "starting temperature of both mantle and core was 4800 K" (real)
 AGE = 4.54
 
@@ -112,15 +116,16 @@ row(ws["verdict"] == ch.CANNOT_SAY_HISTORY if lo < 0.0 < hi else ws["verdict"] i
     "판정 문자열이 밴드의 부호 구조와 맞는다 (③c 면 cannot-say, 좁히지 않는다)")
 
 print("\n계약 — 레시피 출력과 거절")
+# ⚠ 표면온도를 명시로 넘긴다 — 레시피는 선언을 요구하고 모듈 기본값을 안 쓴다 (결정 8).
 res = ch.solve(1.0, 0.325, v["core_radius"], v["cmb_pressure"], v["cmb_temperature"], 1600.0, 1.0, AGE,
-               T_C0, T_M0, run_sweep=False)
+               T_C0, T_M0, surface_temperature_k=mf.T_S, run_sweep=False)
 row(res.applicable and res.values["inner_core_case"] == "never" and res.values["history_converged"] is None,
     f"solve(): {res.regime} · {res.values['entropy_history_verdict'][:40]}… · 수렴 필드 None (스윕은 온디맨드)")
 row(all(k in res.units for k in res.values), "모든 값에 단위")
 r2 = ch.solve(1.0, 0.325, v["core_radius"], v["cmb_pressure"], v["cmb_temperature"], 1600.0, 1.0, AGE, None, None)
 row(not r2.applicable and "initial" in r2.reason, "초기온도 미선언 → 이름 붙여 거절")
 r3 = ch.solve(1.0, 0.325, v["core_radius"], v["cmb_pressure"], v["cmb_temperature"], 1600.0, 1.0, AGE, T_C0, T_M0,
-              body_class="giant")
+              body_class="giant", surface_temperature_k=mf.T_S)
 row(not r3.applicable, "거대행성 → 거절")
 
 # ── Brief 157 / C48 — the Mars divergence was the step, both ways ─────────────────────────────────
@@ -132,7 +137,8 @@ RPM = 0.5320 * RP
 R_BM = vm["cmb_temperature"] / 1600.0
 PARAMS_M = {"material": "fe_prem", "p_cmb": vm["cmb_pressure"] * 1e9, "r_cmb": vm["core_radius"] * RP,
             "m_core": 0.24 * MM, "m_mantle": 0.76 * MM, "r_b": R_BM, "g": cf.G_NEWTON * MM / RPM ** 2, "r_p": RPM,
-            "h_core": ce.H_CORE, "h_m_present_w": rg.budget(0.76 * MM)["mantle_w"]}
+            "h_core": ce.H_CORE, "h_m_present_w": rg.budget(0.76 * MM)["mantle_w"],
+            "t_surface_k": mf.T_S}
 PARAMS_M_NIMMO = {**PARAMS_M, "h_core": H_NIMMO}
 try:
     ch.integrate(PARAMS_M_NIMMO, 4800.0, 4800.0 / R_BM, AGE, adaptive=False)
@@ -200,6 +206,86 @@ print("\n증인 — 전정밀 여섯 칸 (판정 아님; 전후 로그에서 문
 _witness(f"지구 (H 선언 · {_earth_path})", hist, ch.t_at_gyr(hist["rows"], -3.7))
 _witness("화성 (H 1.5, Brief 166 D 조건)", hm, nearm_t_m)
 _witness("화성 (H 선언 0.088)", hmd, neard_t_m)
+
+# ── 결정 8 — 영역이 법칙을 고른다 ────────────────────────────────────────────────
+# ⚠ **수를 손으로 다시 치지 않는다.** 바디 선언을 읽어 같은 입력에서 법칙만 갈리게 한다.
+# ⚠ **음성 대조가 같이 있어야 한다** — 화성만 보면 «foley 라고 찍혔다» 는 하드코딩 경로에서도
+# 똑같이 나온다. 지구(mobile)가 같은 판에서 `nimmo` 를 찍어야 그 줄이 뜻을 가진다.
+import yaml                              # noqa: E402
+
+_BODIES = Path(__file__).resolve().parent / "bodies"
+
+
+def _decl(name):
+    return yaml.safe_load((_BODIES / f"{name}.yaml").read_text())["inputs"]
+
+
+def _run(decl, age_gyr=None, **over):
+    st = interior_solve(decl["mass_earth"], core_mass_fraction=decl["core_mass_fraction"],
+                        potential_temperature=decl["potential_temperature"]).values
+    kw = {"tectonic_regime": decl.get("tectonic_regime"),
+          "lid_thickness_km": decl.get("lid_thickness_km"),
+          "surface_temperature_k": decl.get("surface_temperature_k"), **over}
+    return ch.solve(mass_earth=decl["mass_earth"], core_mass_fraction=decl["core_mass_fraction"],
+                    core_radius_earth=st["core_radius"], cmb_pressure_gpa=st["cmb_pressure"],
+                    cmb_temperature=st["cmb_temperature"],
+                    potential_temperature=decl["potential_temperature"],
+                    radius_earth=st["radius"], age_gyr=age_gyr or decl["age_gyr"],
+                    core_initial_temperature=decl["core_initial_temperature"],
+                    mantle_initial_potential_temperature=decl["mantle_initial_potential_temperature"],
+                    **kw)
+
+
+def _block(value, grade="measured", source="fixture"):
+    return {"value": value, "grade": grade, "source": source}
+
+
+print("\n⑦ 결정 8 — 선언된 영역이 손실 법칙을 고른다 (법칙 이름은 실행이 낸 값이다)")
+_mars_decl, _earth_decl = _decl("mars"), _decl("earth")
+# ⚠ **쌍은 같은 바디에서 법칙만 갈아 끼운 두 판이다.** 지구와 화성을 비교하면 바디가 달라서
+# 차이가 법칙의 것이 아니다. 화성을 두 번 돌린다 — 선언대로(foley) 와 영역을 뺀 판(nimmo).
+_mars = _run(_mars_decl)
+_mars_nimmo = _run(_mars_decl, tectonic_regime=None)
+# ⚠ 지구는 **음성 대조**라 법칙 이름만 필요하다. 나이를 0.05 Gyr 로 줄여 부른다 — 법칙 선택은
+# 적분 전에 끝나므로 4.54 Gyr 를 더 도는 값이 아무 칸도 안 채운다.
+_earth = _run(_earth_decl, age_gyr=0.05)
+for _lab, _res in (("지구 (mobile · 음성 대조)", _earth),
+                   ("화성 (stagnant · δ 선언)", _mars),
+                   ("화성 (영역 뺀 판)", _mars_nimmo)):
+    _v = getattr(_res, "values", None) or {}
+    print(f"  [증인·법칙] {_lab} — law {_v.get('loss_law')!r} · "
+          f"t_m {_v.get('mantle_potential_temperature_present')!r}")
+row(_earth.values["loss_law"] == "nimmo" and _mars.values["loss_law"] == "foley"
+    and _mars_nimmo.values["loss_law"] == "nimmo",
+    f"법칙 선택 — 지구 {_earth.values['loss_law']} · 화성 {_mars.values['loss_law']} · "
+    f"화성(영역 뺌) {_mars_nimmo.values['loss_law']} (음성 대조 둘, 같은 줄에서 나온다)")
+_dt = (_mars.values["mantle_potential_temperature_present"]
+       - _mars_nimmo.values["mantle_potential_temperature_present"])
+row(_dt > 0.0,
+    f"방향 — 같은 바디·같은 입력에서 foley 가 nimmo 위다 ({_dt:+.2f} K). "
+    f"⚠ 크기는 등록 안 했다 — 1739 K 근접은 다른 적분기의 수라 우연이다")
+
+# 갈래 넷 — 오늘 로스터가 안 밟는 자리라 픽스처로만 발화한다. 거절 문구는 `tectonic_regime` 의 것이다.
+# ⚠ **`contested` 는 등급도 `contested` 여야 한다** — `tect` 가 값과 등급의 어긋남을 이름 대며 거절한다.
+for _name, _over, _want in (
+        ("contested → foley (오너 결정 (a) 를 물려받음)",
+         {"tectonic_regime": _block("contested", grade="contested")}, "foley"),
+        ("transitional → 판단 불가, 이름 대는 거절",
+         {"tectonic_regime": _block("transitional")}, "transitional"),
+        ("episodic → 매핑 없음, 이름 대는 거절",
+         {"tectonic_regime": _block("episodic")}, "no derived-boolean mapping"),
+        ("영역 미선언 → Nimmo (사전등록 §1; 거절 아님)",
+         {"tectonic_regime": None}, "nimmo")):
+    # ⚠ **나이를 0.05 Gyr 로 줄여 부른다.** 이 넷이 재는 것은 **어느 법칙이 골라졌나**이지
+    # 오늘 온도가 아니다. 4.54 Gyr 를 네 번 더 적분하면 이 단계가 몇 분 늘어나는데, 그 시간은
+    # 아무 칸도 안 채운다 — 법칙 선택은 적분 **전에** 끝난다.
+    _r = _run(_mars_decl, age_gyr=0.05, **_over)
+    _got = (_r.values or {}).get("loss_law", "") if getattr(_r, "values", None) else ""
+    _hit = _want in f"{_got} {_r.reason or ''}"
+    row(_hit, f"{_name} — {(_got or _r.regime)!r}"
+        + (f" · «{(_r.reason or '')[:64]}…»" if _r.reason else "")
+        + ("" if _hit else f" · 기대 문구 «{_want}» 못 찾음"))
+
 
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)
