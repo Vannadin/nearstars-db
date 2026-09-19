@@ -4788,7 +4788,7 @@ earth_like`, whose preset supplies a core mass fraction, leaving nothing to infe
 also **restoring the copy**, since `test_interior`'s roster calls `infer_composition` with mass, radius,
 ice-permission and tidal heating and nothing else — changed the branch not at all.
 
-**The reason is one line in the adapter**: `interior.py@«composition=state.get("composition_intent", "earth_like")»`.
+**The reason is one line in the adapter**: `composition=state.get("composition_intent", "earth_like")` in `interior.py` — ⚠ **that fallback **was** there when this was written and was removed on 2026-09-20 (C57 (c)); the call now reads `composition=state.get("composition_intent"),`.** *The phrase is quoted as plain code, not as an anchor: the line it named no longer exists.*
 The node **always** hands `solve` a composition, falling back to `earth_like`, so the recipe always
 integrates forward. ⚠ **`infer_composition` is not reachable from `interior_layers` under any body
 declaration** — only a direct call reaches it, which is what `test_interior` does.
@@ -6035,7 +6035,7 @@ reasonable reading). ⚠ **The finding is that nothing separates the legitimate 
 The repair is per-entry: move it into `Declared-optional` with the reason written, or refuse. **Listed, not
 started**; the count 16 is the baseline a checker addition would have to move.
 
-⚠ **The `earth_like` literal itself is still in the code** (`engine/interior.py@«composition=state.get("composition_intent", "earth_like"),»`).
+⚠ **The `earth_like` literal was still in the code when this was written** — `composition=state.get("composition_intent", "earth_like"),` — **and was removed on 2026-09-20 (C57 (c))**; the call now reads `composition=state.get("composition_intent"),`. *Both are quoted as plain code, since the first no longer exists to anchor to.*
 182 B removed the *bodies* that reach it, not the mechanism: the path that still would is «a body that
 declares a mass fraction but no intent», and **there is no such body today**. If one appears it takes the
 preset's *material* — `fe_prem` — so the problem 182 B stripped off the fraction remains one layer down on
@@ -6045,6 +6045,63 @@ the **material**. *"The material is a declaration too"* is the sentence C55 arri
 in the same convention as the board's 0.3644, so the **0.0009** difference between the equatorial and
 mean-radius conventions is larger than that printed uncertainty. The convention has to be declared before
 an inversion is anchored on it.
+
+### C57 (c) 2026-09-20 — the inversion's answer is delivered, and Mars stops declaring its core
+
+**Registered in `c57-inversion-prereg-revision.md`, body blob `72577201`, amendments 1 and 2.** The owner's
+decision of 2026-09-10 — *Mars's core mass fraction is not declared, the solver infers it* — was built in
+C57 (b) and **did not reach Mars**, because `mars.yaml` declared both `core_mass_fraction: 0.24` and
+`composition_intent: earth_like` and the branch tests for both.
+
+⚠ **Deleting the two lines alone does not work, and that was measured before anything was written.** Eight
+nodes fall from *value* to *out of domain*, `core_thermal_history` among them, refusing with «cannot-say
+(no core — no core radius or no core mass fraction)». The inversion solves the fraction and writes it into
+the payload's **`inputs`**; `core_history` reads `state.get("core_mass_fraction")`, which sees **values**.
+**The answer existed and was not delivered.**
+
+**So the node delivers it.** `interior_layers` now returns `core_mass_fraction`, `ice_mass_fraction` and
+`composition` whichever branch ran. Three things had to move together, and each was found by a run rather
+than by reading:
+
+- **The delivery sits in the node wrapper**, not in the inference branch. Emitting only there made the key
+  blink — pass 1 inferred and published it, pass 2 read it back as a declaration, and pass 2's result
+  carried no such key, so the state lost it again.
+- **The branch is chosen from declared inputs only.** Asking `state.get` asked a question this node's own
+  output could answer: pass 2 relabelled the inferred fraction `earth_like` and raised the grade from
+  analog to **calibrated**. On declared inputs the branch is the same every pass and the answer is a fixed
+  point.
+- ⚠ **A departure from the registration**: the inversion now receives the body's declared
+  `potential_temperature`. It was not registered, and without it that branch solves isothermally,
+  `cmb_temperature` returns 0 K and `cmb_flux` raises *"no superadiabatic jump, eq. 37 undefined"*. **Every
+  figure below was measured with that change in place.**
+
+**The unchosen axis is pinned at 0.0** rather than left None — the solve used that value, and None read
+downstream as *not declared*, which is what made `dynamo_rocky` refuse for want of an ice fraction it could
+have been told. ⚠ *That 0.0 is this inversion's model assumption for a rocky body, not a measurement.*
+
+**What the gate and the roster say** (parent `4018fad8`, its log blob `09ca20a2`): `[PASS]` **762** ·
+`[FAIL]` **0** · `[SKIP]` **13** · `[STEP]` **77** · anchors **605 → 603**. ⚠ **Two anchors were retired on purpose**: *two ledger sentences cited the `"earth_like"` fallback by phrase, and the phrase is gone with it. **The sentences stay**, quoted as plain code in the past tense — an anchor to a line that no longer exists is a rotten anchor, and the record of what the line used to be is not.* Every body's node tally is unchanged
+across both commits and across two rebases — `2·12·1·20` (Alpha Centauri A b) · `4·10·1·20` (Dante
+fixture) · `11·3·1·20` (Earth) · `2·12·1·20` · `2·12·1·20` (Luhman 16 A, B) · `11·3·1·20` (Mars) ·
+`9·5·1·20` (Pandora). The three `[증인]` lines of `test_core_history` are byte-identical to the baseline.
+
+**The ice-giant fingerprint was re-frozen, six lines, and the six are three commits' worth**: *`chain.yaml` and `interior.py` (byte and code digests) from C57 (c) itself; `core_history.py`'s byte digest from the 216 K commit that landed before it; and the two `seconds` (28.2 → 27.8, 37.4 → 37.1), which are machine, not model.* **No value key moved.**
+
+**Mars, before and after**: `core_mass_fraction` **0.24 declared → 0.23958333333333331 inferred**,
+`composition` **`inferred`**, grade **`analog`**, `ice_mass_fraction` **0.0**, `cmb_temperature`
+**1910.0244647221907 K**. ⚠ **The registered prediction failed**: the registration expected the fraction to
+rise toward ~0.325 and the core radius to enter the board's window. It does neither — **0.325 is the
+`earth_like` preset's fraction, and an inversion constrained by Mars's radius cannot choose it**. The
+declared 0.24 and the inverted 0.2396 are the same answer to three decimals, so **C59's two recorded
+disagreements stay outside their tolerances**: `core_radius_fraction` **8.9 %** against a 3 % tolerance,
+`nmoi` **2.7 %** against 1 %.
+
+**A second commit removes the silent default behind all of this.** `_solve_from_state` passed
+`composition_intent` with a literal `"earth_like"` fallback, so a body that declared no composition was
+solved as Earth and nothing said so — and the name reached `solve()` before the check that refuses an
+unknown composition, so that refusal could not fire. The literal is gone; an undeclared body sends `None`,
+and the branch above routes it to the inversion. **The roster is identical after that change too**, giants
+included.
 
 ### C55 (e) 2026-09-10 — stage 2, the multi-component core, pre-registered before the build
 

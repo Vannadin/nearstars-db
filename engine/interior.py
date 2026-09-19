@@ -3931,7 +3931,11 @@ def _solve_from_state(state):
         # ⚠ 여기 오는 것은 **선언이 있는 바디뿐**이다 (위 갈래). 핵질량비만 선언한 바디는
         # 재료를 고를 이름이 필요하고, 그 자리의 `earth_like` 는 «지구식 철» 이라는 뜻이지
         # 핵질량비 0.325 가 아니다 — 선언된 분율이 프리셋을 이긴다.
-        composition=state.get("composition_intent", "earth_like"),
+        # ⚠ **리터럴 기본값을 안 쓴다** (C57-b, 2026-09-20). `"earth_like"` 가 여기 박혀 있던 동안,
+        #   조성을 선언하지 않은 바디가 **지구의 조성으로** 풀리고도 그 사실을 아무 데도 안 적었다.
+        #   선언이 없으면 `None` 이 내려가고, 조성 이름을 검사하는 자리가 이름 대며 거절한다 —
+        #   이 갈래에 오는 것은 «선언이 있는 바디뿐» 이므로 정상 경로에서는 그 거절이 안 난다.
+        composition=state.get("composition_intent"),
         radius_earth=state.get("radius_earth"),
         differentiated=state.get("differentiated", True),
         body_class=state.get("body_class"),
