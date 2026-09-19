@@ -156,7 +156,7 @@ consolidated from what used to be scattered across memory. This file only carrie
 essentials below; `CONVENTIONS.md` is the reference for everything else.
 
 Always-on essentials (never skip, even if you don't open `CONVENTIONS.md`):
-- **Replies to the user: Korean, 존댓말.** Sentences end with `.`/`?`/`!`, never `:` (rule 5).
+- **Replies to the user: Korean.** 존댓말 is for the **directing session only** (`nearstars-cb`); work, parallel and audit seats reply in 명사형/반말 — no `-습니다`/`-십시오` endings, no pleasantries (owner decision 2026-09-19, token budget). Sentences end with `.`/`?`/`!`, never `:` (rule 5).
 - **`.md` is English source-of-truth** (write English first, never Korean-first); reader-facing docs
   (`docs/`, `plans/`, root `README.md`, this repo's `CONVENTIONS.md`) get a `ko/<same-path>` mirror,
   written as natural Korean (not literal). Commits in English; identity `VaNnadin <vannadin00@gmail.com>`.

@@ -7,7 +7,7 @@
 ## 1. Communication & Language — PORTABLE
 
 ### 1.1 Korean speech level
-Always reply in formal Korean (존댓말). Full rule: `CLAUDE.md` §5 + §12 essentials.
+Reply in Korean. 존댓말 only in the directing session; other seats use 명사형/반말 (owner decision 2026-09-19). Full rule: `CLAUDE.md` §5 + §12 essentials.
 **Source:** `feedback_speech_level.md`
 
 ### 1.2 Markdown source-of-truth language
