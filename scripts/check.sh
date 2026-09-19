@@ -884,8 +884,14 @@ echo "── 13. 엔진 그래프 + 역류 층 ──"
 # chain.yaml 은 방법론끼리의 의존, bindings.yaml 은 이미 출하된 확정값이 어느
 # 노드에서 나왔고 무엇이 그걸 먹는지. 후자가 없어서 Proxima pause_nose 사고가 났다.
 step "engine/chain.py" bash -c 'python3 engine/chain.py check'
-python3 engine/backflow.py check 2>&1 | grep -v "^  \[WARN\]" || true
-step "engine/backflow.py" bash -c 'exec python3 engine/backflow.py check >/dev/null 2>&1'
+# ⚠ **한 번만 돌린다** (항목 11, 2026-09-20). 전에는 같은 명령이 **두 번** 돌았다 — 한 번은
+#   `step()` 밖에서 출력을 찍으려고, 한 번은 `step()` 안에서 종료코드를 받으려고. 밖의 한 번은
+#   **어느 `[TIME]` 에도 `[COST]` 에도 안 들어가서**, 게이트의 기록이 게이트가 한 일보다 작았다.
+#   이제 `step()` 이 출력을 그대로 흘리고 종료코드가 판사다. ⚠ **찍힌 글로 판정하지 않는다** —
+#   `grep` 은 `[WARN]` 을 **보기에서** 지울 뿐이고, 판정은 `backflow.py` 의 종료코드다.
+#   ⚠ 그래서 `grep -v` 를 파이프 끝에 두되 **`pipefail` 이 없는 쉘**에서 앞 명령의 코드가 묻히지
+#   않도록 `PIPESTATUS` 로 되살린다 — 이것을 안 하면 **거절이 조용히 통과**한다.
+step "engine/backflow.py" bash -c 'python3 engine/backflow.py check 2>&1 | grep -v "^  \[WARN\]"; exit ${PIPESTATUS[0]}'
 step "test_backflow.py" bash -c 'cd engine && exec python3 test_backflow.py'
 step "test_dynamo.py" bash -c 'cd engine && exec python3 test_dynamo.py'
 # ⚠ **바디 목록은 고정 셋이 아니라 디렉토리다** (169 E). 예전에는 셋(alpha·pandora·earth)을 손으로
