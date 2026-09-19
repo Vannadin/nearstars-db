@@ -703,17 +703,29 @@ echo "── 5. 경로 마이그레이션 잔여물 점검 ──"
 # 자기참조 감사 기록, 소스 .md + ko 미러 + docs/wiki 렌더 HTML 셋 다)는 제외.
 # `docs/wiki` 는 이제 build_docs.py 가 정상 생성하는 라이브 렌더 경로라 패턴에서
 # 뺀다(옛 flat 위키 경로 가드는 LLM-위키 롤백으로 무의미).
-patterns="alpha-cen-proxima-system|trappist-1-system|llm-wiki|skills-lock"
-hits=$(git grep -lE "$patterns" -- ':!scripts/check.sh' ':!plans/doc-tool-sprawl-audit.md' ':!ko/plans/doc-tool-sprawl-audit.md' ':!docs/wiki/plans__doc-tool-sprawl-audit.html' 2>/dev/null || true)
-dup_skill=$(git grep -lE "\.agents/skills/(firefly-cfg|nearstars-phase3|find-skills|kopernicus-cfg|nearstars-add-star)/" -- ':!scripts/check.sh' 2>/dev/null || true)
-if [ -n "$hits" ] || [ -n "$dup_skill" ]; then
-  [ -n "$hits" ] && { echo "  옛 경로 잔존:"; echo "$hits" | sed 's/^/    /'; }
-  [ -n "$dup_skill" ] && { echo "  옛 스킬 경로 잔존:"; echo "$dup_skill" | sed 's/^/    /'; }
-  echo "  [FAIL] 위 파일을 점검하세요."
-  fail=1
-else
+# ⚠ **`-lE` 가 아니라 `-lF -e` 다** (2026-09-19, 사전등록 d56416a4). 이 정규식 하나가 게이트
+#   전체의 최대 RSS 를 혼자 만들었다 — 감싼 대안 다섯이 **2 576.0 MiB**, 같은 리터럴을 고정
+#   문자열로 주면 **49.7 MiB**. 찾는 집합은 바뀌지 않는다: 접두 `.agents/skills/` 와 접미 `/`
+#   가 리터럴이고 대안만 다섯이라, `-F -e <리터럴>` 다섯이 정확히 같은 파일 집합을 낸다.
+# ⚠ **그리고 `step()` 안이다** — 밖에 있는 동안 이 일은 `[TIME]` 에도 `[COST]` 에도 안 찍혔고,
+#   그래서 2.5 GiB 가 오래 보이지 않았다. 다음 판부터 이 줄의 비용은 로그에 남는다.
+step "경로 잔여물 grep" bash -c '
+  hits=$(git grep -lF \
+    -e "alpha-cen-proxima-system" -e "trappist-1-system" -e "llm-wiki" -e "skills-lock" \
+    -- ":!scripts/check.sh" ":!plans/doc-tool-sprawl-audit.md" \
+       ":!ko/plans/doc-tool-sprawl-audit.md" ":!docs/wiki/plans__doc-tool-sprawl-audit.html" 2>/dev/null || true)
+  dup_skill=$(git grep -lF \
+    -e ".agents/skills/firefly-cfg/" -e ".agents/skills/nearstars-phase3/" \
+    -e ".agents/skills/find-skills/" -e ".agents/skills/kopernicus-cfg/" \
+    -e ".agents/skills/nearstars-add-star/" -- ":!scripts/check.sh" 2>/dev/null || true)
+  if [ -n "$hits" ] || [ -n "$dup_skill" ]; then
+    [ -n "$hits" ] && { echo "  옛 경로 잔존:"; echo "$hits" | sed "s/^/    /"; }
+    [ -n "$dup_skill" ] && { echo "  옛 스킬 경로 잔존:"; echo "$dup_skill" | sed "s/^/    /"; }
+    echo "  [FAIL] 위 파일을 점검하세요."
+    exit 1
+  fi
   echo "  [PASS] 경로 마이그레이션 잔여물 없음"
-fi
+'
 
 echo ""
 echo "── 6. 영문 source-of-truth 영역 한글 dominant 검사 ──"
