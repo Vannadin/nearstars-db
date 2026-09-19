@@ -72,6 +72,21 @@ EARTH_ANCHOR_T_P = 1525.46
 # integrator, not `core_energy.H_CORE`. Re-running under the declared H is a different sweep and would be
 # recorded as one. (Same H as `test_core_energy.H4`, Nimmo+ 2004 Table 4's 400 ppm K.)
 H_NIMMO = 1.5e-12
+# ⚠ **이 둘은 바디 파일의 사본이다 — 선언이 아니다** (2026-09-20). 화성의 `core_mass_fraction`
+#   선언이 트리에서 사라져도 이 dict 가 0.24 를 계속 내주므로, 이 도구는 **없어진 선언의 사본으로**
+#   돈다. 터지지 않으니 게이트도 안 잡는다.
+#   ⚠ **그래서 값을 빼 봤고, 그건 더 나빴다 — 실측이다.** `core_mass_fraction=None` 으로 부르면
+#   `interior.solve` 가 역산으로 가지 않고 **프리셋 0.325(지구)** 로 물러선다. 화성의 핵을 지구
+#   값으로 계산하면서 「화성」이라 인쇄하는 것이라, 사본보다 더 조용히 틀린다. 역산을 여는 것은
+#   `interior.infer_composition(mass, radius, …)` 라는 **다른 함수**다.
+#   ⚠ 그래서 **사본을 유지하되 사본이라고 적는다**. 엔진이 역산으로 내는 값은 0.23958333333333331
+#   이고 여기 적힌 0.24 는 **바디 파일에서 옮긴 수**다 — C57 이 그 선언을 지우면 **이 줄이 원본
+#   없는 사본이 된다**. 그때 고칠 자리는 여기이고, 고침은 `infer_composition` 쪽이다.
+#   ⚠ **왜 물러서는지도 적어 둔다**: 역산은 질량과 반지름 둘로 미지수 하나를 푸는데(`interior.py`),
+#   `build()` 는 `isolve(...)` 에 **`radius_earth` 를 안 넘긴다**. 풀 것이 없으니 프리셋으로 간다.
+#   **그러니 전환할 때 `radius_earth` 도 같이 넘겨야 한다 — 이 dict 가 이미 들고 있다.**
+#   ⚠ `composition="earth_like"` 도 같은 성격으로 `build()` 안에 남아 있다. **주인이 아직 없다** —
+#   `infer_composition` 전환과 **같은 판에서 닫는다**. 남에게 맡긴 것이 아니라 **미결**이다.
 MARS = dict(mass_earth=0.1074, core_mass_fraction=0.24, radius_earth=0.5320, age_gyr=4.54)
 EARTH = dict(mass_earth=1.0, core_mass_fraction=0.325, radius_earth=1.0, age_gyr=4.54)
 
@@ -82,12 +97,19 @@ def say(msg: str) -> None:
 
 def build(body: dict, t_pot: float, core_init: float) -> tuple[dict, float, float]:
     """The same `params` dict `core_history.solve` builds, plus the two initial temperatures (mantle = core/r_b)."""
-    ii = isolve(mass_earth=body["mass_earth"], core_mass_fraction=body["core_mass_fraction"],
+    # ⚠ **핵질량분율은 풀린 상태에서 읽는다** (2026-09-20). 선언이 남아 있는 트리에서는 그 값이
+    #   `inputs` 에 있고, 선언을 지우면 역산이 돌아 `values` 에 생긴다 — 둘 다 보는 한 줄이라야
+    #   두 판에서 다 돈다. `body[...]` 로 읽으면 뒤 판에서 `KeyError`, `.get` 으로 눅이면 `None`
+    #   이 흘러 내려가 거절이 조용히 값처럼 읽힌다. 없으면 **이름 대며 멈춘다**.
+    ii = isolve(mass_earth=body["mass_earth"], core_mass_fraction=body.get("core_mass_fraction"),
                 composition="earth_like", body_class="rocky", potential_temperature=t_pot)
     v = ii.values
     m_kg = body["mass_earth"] * cf.M_EARTH_KG
     r_p = body["radius_earth"] * cf.R_EARTH_M
-    cmf = body["core_mass_fraction"]
+    cmf = ii.values.get("core_mass_fraction", ii.inputs.get("core_mass_fraction"))
+    if cmf is None:
+        raise SystemExit("  [STOP] 핵질량분율을 선언에서도 풀이에서도 못 읽었다 — "
+                         "이 스윕은 그 값을 전제한다")
     params = {"material": "fe_prem", "p_cmb": v["cmb_pressure"] * 1e9, "r_cmb": v["core_radius"] * cf.R_EARTH_M,
               "m_core": m_kg * cmf, "m_mantle": m_kg * (1.0 - cmf),
               "r_b": v["cmb_temperature"] / t_pot,

@@ -220,13 +220,49 @@ def _decl(name):
     return yaml.safe_load((_BODIES / f"{name}.yaml").read_text())["inputs"]
 
 
+#: ⑦ 절이 바디 선언에 요구하는 키. ⚠ **`.get` 으로 눅이지 않는다** — 빠진 키가 `None` 으로
+#: 흘러가면 `ch.solve` 가 `NO_CORE` 로 거절하고, 아래 세 판정은 **조용히 딴 뜻**이 되거나
+#: `values` 가 없어 이름 없는 `AttributeError` 로 죽는다. 없으면 **이름 대며 멈춘다**.
+#: ⚠ `core_mass_fraction` 은 **여기 없다** — C57 뒤로 그 값은 선언이 아니라 **풀이의 출력**일 수
+#: 있고(역산 갈래), 아래 `_cmf()` 가 두 자리를 다 본다. 선언을 요구하면 C57 판에서 멈춘다.
+_NEEDS = ("mass_earth", "potential_temperature", "age_gyr",
+          "core_initial_temperature", "mantle_initial_potential_temperature")
+
+
+def _decl_or_stop(decl, body):
+    missing = [k for k in _NEEDS if k not in decl]
+    if missing:
+        raise SystemExit(f"  [STOP] {body}.yaml 에 {' · '.join(missing)} 가 없다 — 결정 8 ⑦ 절은 "
+                         f"그 선언을 전제한다. 값이 다른 이름으로 옮겨졌으면 이 자리를 그 이름으로 "
+                         f"고쳐라; 느슨하게 읽으면 거절이 판정으로 둔갑한다")
+    return decl
+
+
+def _cmf(res, body):
+    """핵질량분율을 **풀린 상태에서** 읽는다 — 선언 판과 역산 판 둘 다.
+
+    ⚠ **두 자리를 다 본다** (병렬석 실측, 2026-09-20): 선언이 남아 있는 트리에서는
+    `values` 에 그 키가 **없고** `inputs` 이 0.24 를 든다. 선언을 지우면 역산이 돌아
+    **둘 다** 0.23958333333333331 이 된다. `values` 만 읽으면 앞 판에서 `None`,
+    `decl[...]` 로 읽으면 뒤 판에서 `KeyError` 다.
+    ⚠ **`.get` 으로 눅여서 `None` 을 흘리지 않는다** — 그러면 `ch.solve` 가 `NO_CORE` 로
+    거절하고 아래 판정들이 **조용히 딴 뜻**이 된다. 없으면 이름 대며 멈춘다."""
+    cmf = res.values.get("core_mass_fraction", res.inputs.get("core_mass_fraction"))
+    if cmf is None:
+        raise SystemExit(f"  [STOP] {body} 의 핵질량분율을 선언에서도 풀이에서도 못 읽었다 — "
+                         f"결정 8 ⑦ 절은 그 값을 전제한다 (느슨하게 읽으면 거절이 판정으로 둔갑한다)")
+    return cmf
+
+
 def _run(decl, age_gyr=None, **over):
-    st = interior_solve(decl["mass_earth"], core_mass_fraction=decl["core_mass_fraction"],
-                        potential_temperature=decl["potential_temperature"]).values
+    # ⚠ 선언이 없으면 `None` 을 넘겨 **역산 갈래를 연다** — 그 값을 `_cmf()` 가 되읽는다.
+    _res = interior_solve(decl["mass_earth"], core_mass_fraction=decl.get("core_mass_fraction"),
+                          potential_temperature=decl["potential_temperature"])
+    st, _cm = _res.values, _cmf(_res, "화성/지구 중 한 바디")
     kw = {"tectonic_regime": decl.get("tectonic_regime"),
           "lid_thickness_km": decl.get("lid_thickness_km"),
           "surface_temperature_k": decl.get("surface_temperature_k"), **over}
-    return ch.solve(mass_earth=decl["mass_earth"], core_mass_fraction=decl["core_mass_fraction"],
+    return ch.solve(mass_earth=decl["mass_earth"], core_mass_fraction=_cm,
                     core_radius_earth=st["core_radius"], cmb_pressure_gpa=st["cmb_pressure"],
                     cmb_temperature=st["cmb_temperature"],
                     potential_temperature=decl["potential_temperature"],
@@ -241,7 +277,8 @@ def _block(value, grade="measured", source="fixture"):
 
 
 print("\n⑦ 결정 8 — 선언된 영역이 손실 법칙을 고른다 (법칙 이름은 실행이 낸 값이다)")
-_mars_decl, _earth_decl = _decl("mars"), _decl("earth")
+_mars_decl = _decl_or_stop(_decl("mars"), "mars")
+_earth_decl = _decl_or_stop(_decl("earth"), "earth")
 # ⚠ **쌍은 같은 바디에서 법칙만 갈아 끼운 두 판이다.** 지구와 화성을 비교하면 바디가 달라서
 # 차이가 법칙의 것이 아니다. 화성을 두 번 돌린다 — 선언대로(foley) 와 영역을 뺀 판(nimmo).
 _mars = _run(_mars_decl)
