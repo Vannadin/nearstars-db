@@ -105,14 +105,15 @@ def main() -> int:
     from interior import solve as interior_solve
     v = interior_solve(1.0, core_mass_fraction=0.325, potential_temperature=1600.0).values
     args = (1.0, 0.325, v["core_radius"], v["cmb_pressure"], v["cmb_temperature"], 1600.0, 1.0, 4.54)
-    r_hot = ch.solve(*args, 4800.0, 5000.0)
+    r_hot = ch.solve(*args, 4800.0, 5000.0, surface_temperature_k=mf.T_S)
     ok(r_hot.regime == "out-of-domain" and DOMAIN_REFUSED in r_hot.reason and "eqs 34–36" in r_hot.reason,
        f"4: T_m0 5000 K → out-of-domain naming eqs 34–36, got {r_hot.regime}: {r_hot.reason[:120]}")
-    r_hot_c = ch.solve(*args, 5200.0, 3040.0)
+    r_hot_c = ch.solve(*args, 5200.0, 3040.0, surface_temperature_k=mf.T_S)
     ok(r_hot_c.regime == "out-of-domain" and "eqs 37–39" in r_hot_c.reason,
        f"4: T_c0 5200 K (T_a > 4800 at the start) → out-of-domain naming eqs 37–39, got {r_hot_c.reason[:120]}")
     # the shipped Earth start is inside both domains — asserted through solve(), which test_core_history already anchors
-    r_earth = ch.solve(*args, 4800.0, 3040.0)
+    # ⚠ 표면온도를 명시로 넘긴다 — 레시피는 바디 선언을 읽고 모듈 기본값을 안 쓴다 (결정 8).
+    r_earth = ch.solve(*args, 4800.0, 3040.0, surface_temperature_k=mf.T_S)
     ok(r_earth.regime != "out-of-domain", f"4: Earth's shipped start (4800 / 3040) integrates, got {r_earth.regime}")
     ok(any("extrapolat" in n for n in r_earth.notes),
        "4: Earth's history carries the extrapolation count note (its early T_m is below T_0 on no step, its late T_a is below T_1)")

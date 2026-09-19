@@ -476,8 +476,8 @@ null도 맞춘다). 불확실성을 짊어지는 것은 *입력*(냉각 트랙�
 
 | 선언된 영역 | 법칙 | 필요한 입력 |
 |---|---|---|
-| **`stagnant`** | Foley 2018 식 (3) (`2018AsBio..18..873F`) | 그 천체의 **`lid_thickness_km`** |
-| **`mobile`**, 또는 미선언 | Nimmo+ 2004 식 34–36 (`2004GeoJI.156..363N`) | 이미 푼 상태 말고는 없음 |
+| **`stagnant`** | Foley 2018 식 (3) ([`2018AsBio..18..873F`](https://ui.adsabs.harvard.edu/abs/2018AsBio..18..873F)) | 그 천체의 **`lid_thickness_km`** |
+| **`mobile`**, 또는 미선언 | Nimmo+ 2004 식 34–36 ([`2004GeoJI.156..363N`](https://ui.adsabs.harvard.edu/abs/2004GeoJI.156..363N)) | 이미 푼 상태 말고는 없음 |
 
 ⚠ **선언된 `mobile` 과 미선언은 출력에서 갈린다.** 둘 다 Nimmo 로 돌지만 `loss_law_reason` 이 어느 쪽인지 적는다 — 선언이 빠진 천체가 선언한 천체처럼 읽히면 안 된다.
 | **뚜껑 두께가 없는 `stagnant`** | **이름을 대는 거절** | — |

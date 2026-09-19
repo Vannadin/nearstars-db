@@ -562,8 +562,8 @@ declaration's consequence, never an inference from the numbers.
 
 | declared regime | law | input it needs |
 |---|---|---|
-| **`stagnant`** | Foley 2018 eq. (3) (`2018AsBio..18..873F`) | the body's own **`lid_thickness_km`** |
-| **`mobile`**, or undeclared | Nimmo+ 2004 eqs 34–36 (`2004GeoJI.156..363N`) | none beyond the state already solved |
+| **`stagnant`** | Foley 2018 eq. (3) ([`2018AsBio..18..873F`](https://ui.adsabs.harvard.edu/abs/2018AsBio..18..873F)) | the body's own **`lid_thickness_km`** |
+| **`mobile`**, or undeclared | Nimmo+ 2004 eqs 34–36 ([`2004GeoJI.156..363N`](https://ui.adsabs.harvard.edu/abs/2004GeoJI.156..363N)) | none beyond the state already solved |
 
 ⚠ **A declared `mobile` and no declaration at all are distinguished in the output.** Both run Nimmo, and `loss_law_reason` says which — a body that never declared its regime must not read like one that did.
 | **`stagnant` with no lid thickness** | **a named refusal** | — |
