@@ -537,5 +537,47 @@ row("1373" in _msg and "14 GPa" in _msg,
     "⚠ 창 밖 거절이 **인쇄된 것을 들고 나간다** — 25 GPa 괄호와 Fei 선형선의 실제 범위를 문장에 "
     "싣는다. 그러지 않으면 그 두 상수가 «저장만» 이 되고, 거절을 읽는 사람은 자료가 없다고 읽는다")
 
+# ── 항목 19 — 이 그물이 **오늘 무엇을 가르는가** (오너 2026-09-20) ──────────────────
+# ⚠ 로스터에서 19 GPa 아래로 내려가는 바디는 화성 하나이고 깊이도 0.0558 % 다. 그래서 세기만
+#   두면 «1 번 세었다» 가 «아무것도 안 세는 그물» 과 겉이 같다. 아는 답 셋을 한 실행에 묻되,
+#   **두 깊이가 서로 다르게 찍히는 것**까지 본다.
+print("\n⑯ 항목 19 — 기준 아래: 무엇을 가르는가")
+_binary = eos.MATERIALS["fe_s_19wt_19gpa"]
+try:
+    _binary.density(1.0 * eos.GPA)
+    _refused = ""
+except eos.PhaseGap as gap:
+    _refused = str(gap)
+row("1.5" in _refused and "Balog" in _refused,
+    "이원계는 1.5 GPa 아래에서 **이름 대고 거절한다** — 항목 19 는 이 규칙을 안 건드렸다 "
+    f"(문구: {_refused[:60]}…)")
+
+_quat = eos.MATERIALS["fe_s19_o1_c5permil_19gpa"]
+eos.DENSITY_REACH["beyond_measured"] = 0
+eos.DENSITY_BELOW_REF["lowest_pa"] = None
+eos.DENSITY_BELOW_REF["min_p_over_ref"] = None
+_mars_cmb = 18.98939861528558 * eos.GPA
+_rho_mars = _quat.density(_mars_cmb)
+_depth_mars = eos.DENSITY_BELOW_REF["min_p_over_ref"]
+row(eos.DENSITY_REACH["beyond_measured"] == 1 and _rho_mars > 0.0
+    and abs(_depth_mars - _mars_cmb / (19.0 * eos.GPA)) < 1e-12,
+    f"사원계는 화성 CMB(18.98939861528558 GPa)에서 **답하고 한 번 센다** — 기준 아래로 "
+    f"{(19.0 * eos.GPA - _mars_cmb) / eos.GPA:.6f} GPa · "
+    f"{(1.0 - _depth_mars) * 100:.4f} % (= p/p_ref {_depth_mars * 100:.4f} %)")
+
+_floor = _quat.phases[0].p_min
+_just_above = _floor * 1.0001
+eos.DENSITY_BELOW_REF["min_p_over_ref"] = None
+_rho_low = _quat.density(_just_above)
+_depth_low = eos.DENSITY_BELOW_REF["min_p_over_ref"]
+row(_rho_low > 0.0 and _depth_low < 0.5 and _depth_low < _depth_mars / 2.0,
+    f"되돌이점 바로 위({_just_above / eos.GPA:.4f} GPa)도 답하지만 깊이가 **다르게** 찍힌다 — "
+    f"기준 아래로 {(19.0 * eos.GPA - _just_above) / eos.GPA:.4f} GPa · "
+    f"{(1.0 - _depth_low) * 100:.2f} % (= p/p_ref {_depth_low * 100:.2f} %), "
+    f"화성의 {(1.0 - _depth_mars) * 100:.4f} % 와 자릿수가 다르다. "
+    "⚠ 두 줄이 같은 수를 찍으면 그 그물은 아무것도 안 재고 있는 것이다. "
+    "⚠ **사전등록 예측은 «≈9–13 GPa · ≈50 %» 였고 빗나갔다** — 모서리 되돌이점이 5.87–9.93 GPa 라 "
+    "«바로 위» 는 그 최저값 근처이고, 예측은 넓게 잡힌 수였다")
+
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)

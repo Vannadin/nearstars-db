@@ -6101,6 +6101,12 @@ fixture) · `11·3·1·20` (Earth) · `2·12·1·20` · `2·12·1·20` (Luhman 1
 
 **The ice-giant fingerprint was re-frozen, six lines, and the six are three commits' worth**: *`chain.yaml` and `interior.py` (byte and code digests) from C57 (c) itself; `core_history.py`'s byte digest from the 216 K commit that landed before it; and the two `seconds` (28.2 → 27.8, 37.4 → 37.1), which are machine, not model.* **No value key moved.** ⚠ *The two `seconds` are **one run's clock**, not a property of this tree: a re-freeze on the same digests produced 28.0 / 37.3 against the committed 27.8 / 37.1, and the committed pair was kept because it came **first**, not because it is more right. **When they drift again, that is the machine** — tonight one clock loop read −12.5 %.*
 
+⚠ **Acceptance B's three predictions: two missed, and they are written as missed** *(audit seat's reading)*. *The registration predicted the fraction would **rise** toward ~0.325 and the core radius would enter the board's 1820–1870 km window. Measured: **0.24 → 0.23958333333333331**, a fall of 0.17 % of itself; core radius **0.2616 → 0.2614 R⊕ ≈ 1 665.6 km**, which is **~155 km below the window**, and `core_radius_fraction` **0.4916**. **The third — that `d_m` would fall — is not reported here because this item does not print it.*** ⚠ **A miss stays a miss**: *0.325 is the `earth_like` preset's fraction, and an inversion tied to Mars's radius cannot choose it. That is the evidence branch ⓑ of the sulphur-fit registration rests on — the box, not the declaration, is what the core radius waits on.*
+
+⚠ **One printed pair moved, and this seat did not declare it** *(the directing seat saw the movement after the green gate; the audit seat confirmed that the frozen registration `24f5d27c` never registered those rows)*: the `[증인·법칙]` rows, which run through the **recipe** rather than through hand-built params, read **foley `t_m` 1774.674973674531 → 1768.2056095076882** and **nimmo 1358.4226002593311 → 1349.4669881086427**. *The cause is this item's whole point — the recipe now feeds them the inverted **0.23958333333333331** instead of the declared 0.24 — but **it was not in the pre-print**, and the three `[증인]` rows that were declared unchanged are the hand-built ones, which never read the body file.* **Two witness families, and only one of them was named.**
+
+⚠ **C57 also moved the gate's total `instr`** *(audit seat)*: **106 226 900 440 337 → 127 123 476 525 090, +19.68 %**. *That is Mars beginning to run the inversion on every gate, not measurement noise — the number belongs beside the item that caused it.*
+
 **Mars, before and after**: `core_mass_fraction` **0.24 declared → 0.23958333333333331 inferred**,
 `composition` **`inferred`**, grade **`analog`**, `ice_mass_fraction` **0.0**, `cmb_temperature`
 **1910.0244647221907 K**. ⚠ **The registered prediction failed**: the registration expected the fraction to
@@ -6116,6 +6122,43 @@ solved as Earth and nothing said so — and the name reached `solve()` before th
 unknown composition, so that refusal could not fire. The literal is gone; an undeclared body sends `None`,
 and the branch above routes it to the inversion. **The roster is identical after that change too**, giants
 included.
+
+### C55 (g) 2026-09-20 — the quaternary phases answer below 19 GPa, named and counted
+
+**Registered in `item19-quaternary-floor-prereg.md`, body blob `671ecc2d`, frozen.** The owner's decision of
+2026-09-20 turns off `FE_S_BELOW_REF_REASON` **for the Fe–S–O–C phases only**: they may be carried below the
+pressure their fit was measured at, so long as every such call is counted and its depth printed. ⚠ **No
+tolerance was widened** — the rule was reversed for one family, and the binaries still refuse below 1.5 GPa.
+
+**The floor is derived, not chosen.** `bm2_ref` reads `p = p_ref + 1.5·k0·(x^{7/3} − x^{5/3})` with
+`x = ρ/ρ₀`, and that pressure **turns around** at `x = (5/7)^{3/2} = 0.6037`: below it two densities share a
+pressure and the inversion has no answer. So `p_min` is now computed from the fit itself — measured on the
+four S = 19 wt% corners, **6.4798 · 5.8730 · 9.9277 · 9.2766 GPa** — and `p_ref` does not move.
+
+⚠ **That is a «cannot solve» floor, not a «solves wrongly» floor.** *Between it and 19 GPa the fit answers,
+and how far wrong it is there is a different question: the same corners read **−16.7 % to −35.8 %** against
+their own 19 GPa anchors at 10 GPa. **Mars sits 0.010601 GPa below the reference — 0.0558 % — and the
+corners' own solutions sit 0.40 to 1.19 GPa below it**, where the density is off by 0.6 % to 2.3 %.*
+
+**No new counter.** The existing `DENSITY_REACH["beyond_measured"]` counts these calls; beside it,
+`DENSITY_BELOW_REF` carries **two depth cells** — the lowest pressure reached and `min(p / p_ref)`. *A count
+says how often, the depths say how far; one without the other cannot tell a net that measures from a net
+that is merely quiet.*
+
+**What the fixtures separate, measured in one run**: a binary asked at 1.0 GPa **refuses by name**; a
+quaternary at Mars's CMB **answers and counts once**, **0.010601 GPa below the reference — 0.0558 %**
+*(`p/p_ref` 99.9442 %)*; a quaternary just above its turning point (6.4805 GPa) also answers,
+**12.5195 GPa below — 65.89 %** *(`p/p_ref` 34.11 %)*. ⚠ **Both conventions are printed**, because the
+registration's table used «how far below» and the first implementation printed its complement.
+⚠ **And the registration's own guess for that third probe was wrong**: it said **≈9–13 GPa, ≈50 %**, and
+the measurement is **6.4805 GPa, 65.89 %**. *The requirement — that the two depths differ visibly — is met;
+the predicted numbers are not, and a miss is written as a miss.* ⚠ **The two depths must differ,
+and they do by a factor of three** — *the roster's only sub-19 GPa user is Mars, so a counter that printed
+«1» and nothing else would look exactly like a counter that measures nothing.*
+
+⚠ **The materials say they are temporary.** *Each quaternary `Material`'s label now carries «19 GPa 아래는
+이 적합을 이어 쓴 값 … 그 구간의 자료(P39)가 들어오면 이 상을 갈아 끼운다» — the condition lives on the
+object, not only in a brief.*
 
 ### C55 (e) 2026-09-10 — stage 2, the multi-component core, pre-registered before the build
 

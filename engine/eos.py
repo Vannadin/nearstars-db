@@ -315,6 +315,12 @@ class Phase:
     p_model_measured_max: float = 0.0   # Pa. 모형 구간 안에서 «측정이 받치는 아래 밴드» 의 위 끝
     p_measured_max: float = 0.0   # Pa. 등급 구간 안에서 «측정 범위 안» 과 «둘 다의 외삽» 의 경계
     graded_reason: str = ""       # 그 등급이 **무엇의** 외삽인지 — 셀과 함께 인쇄한다
+    # ⚠ **아래쪽 등급 구간** (항목 19, 오너 2026-09-20). 위의 셋이 «기준 위» 를 말하는 것과
+    #   대칭으로, 이 값은 «기준 **아래**» 를 말한다: `p_ref` 밑에서도 답을 내되 그 호출을
+    #   세고 깊이를 남긴다. 선언이 없으면(0) 아무 상도 안 바뀐다 — 이원계는 이 필드를 안 쓴다.
+    #   ⚠ **허용치를 넓힌 것이 아니라 규칙을 뒤집은 것**이다: `FE_S_BELOW_REF_REASON` 의
+    #   «아래 끝 밑에서는 값을 내지 않는다» 를 **사원계 상에 한해** 오너가 거둬들였다.
+    graded_below_ref: bool = False
     # ── 온도 천장 ──────────────────────────────────────────────────────
     # p_max 와 **같은 종류** 다. 적합이 어디까지 유효한가를 말하지, 물질이 어디서
     # 상을 바꾸는가를 말하지 않는다. 0 이면 선언된 천장이 없다는 뜻이다.
@@ -415,6 +421,23 @@ class Phase:
         band = ("측정 구간(1.5–17.5 GPa) 위, 적합 자신의 사거리"
                 if beyond else "측정이 받치는 구간 안")
         return "model", self.model_reason.format(p_gpa=p / 1e9, band=band)
+
+    def note_below_ref(self, p: float) -> None:
+        """기준 아래 호출을 세고 깊이를 남긴다 (항목 19). ⚠ **값을 만들지 않는다.**
+
+        세는 것은 `DENSITY_REACH["beyond_measured"]` 이고 — 이 구간은 어느 앵커도 안 받치니
+        그 칸이 뜻하는 바 그대로다 — 깊이 둘은 `DENSITY_BELOW_REF` 에 남는다. 소비처가
+        풀이 앞뒤로 읽어 라벨을 붙인다 (190 C 와 같은 모양, 새 낱말은 안 만든다)."""
+        if not (self.graded_below_ref and self.p_ref > 0.0 and p < self.p_ref):
+            return
+        DENSITY_REACH["beyond_measured"] += 1
+        lo = DENSITY_BELOW_REF["lowest_pa"]
+        if lo is None or p < lo:
+            DENSITY_BELOW_REF["lowest_pa"] = p
+        ratio = p / self.p_ref
+        cur = DENSITY_BELOW_REF["min_p_over_ref"]
+        if cur is None or ratio < cur:
+            DENSITY_BELOW_REF["min_p_over_ref"] = ratio
 
     def density_reach(self, p: float) -> tuple[str, str]:
         """이 압력에서 밀도 적합이 어디까지 와 있는가 — `ok` 또는 `graded-extrapolation` (196 B).
@@ -776,6 +799,7 @@ class Material:
         # ⚠ **세기만 한다** (196 B) — 반환값은 이 줄 앞뒤로 한 비트도 안 움직인다.
         #   선언이 없는 상은 `density_reach` 가 곧바로 `ok` 를 돌려주고 카운터도 안 는다.
         ph.density_reach(p)
+        ph.note_below_ref(p)   # 항목 19 — 기준 아래 호출의 횟수와 깊이, 같은 자리에서
         ph.model_reach(p)          # P33 B — 모형 구간도 같은 자리에서 센다
         return ph.density(p, t, t_pot)
 
@@ -2108,7 +2132,14 @@ def huang_core_phase(x: dict[str, float], anchor: str = "19GPa") -> "Phase":
     return Phase(
         name=f"fe_core_{anchor}_{tag}", form="bm2_ref",
         rho0=rho, k0=k_t, k0p=4.0,
-        p_max=MORI_FES_P_MAX, p_min=p_ref, p_ref=p_ref,
+        # ⚠ **바닥은 고른 수가 아니라 적합이 스스로 정하는 자리다** (항목 19, 오너 2026-09-20).
+        #   `bm2_ref` 의 압력은 x = ρ/ρ₀ 가 (5/7)^{3/2} = 0.6037 일 때 **최소**가 되고 그 아래로는
+        #   다시 올라간다 — 거기서는 한 압력에 두 밀도가 있어 뒤집기가 답을 못 낸다. 그래서
+        #   여기가 **«못 푼다» 바닥**이고, 그 위 ~ `p_ref` 사이는 답을 내되 세고 깊이를 남긴다.
+        #   측정된 구간은 여전히 19 GPa 위뿐이다.
+        p_max=MORI_FES_P_MAX, p_min=p_ref + 1.5 * k_t * (BM2_TURN ** (7.0 / 3.0)
+                                                        - BM2_TURN ** (5.0 / 3.0)),
+        p_ref=p_ref, graded_below_ref=True,
         alpha_k=alpha * k_t, t_ref=t_ref, t_ref_kind="isotherm", c_v_ref=c_v,
         thermal_source_state="liquid", thermal_source_composition="pure-Fe-liquid",
         ref=f"Huang+ 2023 (2023GeoRL..5002271H) Table 1 + SI Table S5, {anchor} 기준 · "
@@ -3705,6 +3736,15 @@ FE_S_BELOW_REF_REASON = (
 #: 어디에도 안 들어가고, 소비처가 풀이 앞뒤로 차이를 읽어 라벨을 붙인다 (190 C 와 같은 모양).
 DENSITY_REACH = {"graded": 0, "beyond_measured": 0}
 
+#: `bm2_ref` 압력이 최소가 되는 ρ/ρ₀ — f(x) = x^{7/3} − x^{5/3} 의 도함수가 0 인 자리.
+#: ⚠ **유도값이다**: (5/7)^{3/2} = 0.6037…, 고른 수가 아니다.
+BM2_TURN = (5.0 / 7.0) ** 1.5
+
+#: 기준 **아래** 로 내려간 호출의 깊이 (항목 19). ⚠ **새 계수기를 세우지 않는다** — 세는 것은
+#: 위의 `beyond_measured` 이고, 여기 있는 둘은 그 옆의 **깊이 칸**이다. 횟수는 «얼마나 자주»
+#: 를, 이 둘은 «얼마나 깊이» 를 말한다 — 하나만으로는 그물이 무엇을 가르는지 못 본다.
+DENSITY_BELOW_REF = {"lowest_pa": None, "min_p_over_ref": None}
+
 FE_S_MOLAR_MASS = (55.845, 32.06)          # (M_Fe, M_S) g/mol — 교과서 값
 FE_S_BAND_WT = (0.13, 0.19)                # 오너 결정 2026-09-10
 
@@ -3909,9 +3949,14 @@ def _core_box_materials() -> dict[str, Material]:
                 label = (f"액체 Fe–S–O–C 핵 · S {w_s * 100:.0f} · O {w_o * 100:.0f} · "
                          f"C {w_c * 100:.1f} wt% (19 GPa 기준)")
                 out[name] = Material(
-                    name, label, (huang_core_phase(x, "19GPa"),),
+                    name, label + " · ⚠ 임시: 19 GPa **아래** 는 이 적합을 이어 쓴 값이다 "
+                                  "(오너 2026-09-20, 항목 19). 그 구간의 자료(P39)가 들어오면 "
+                                  "**이 상을 갈아 끼운다** — 허용치를 넓히는 것이 아니라 상을 바꾸는 일이다.",
+                    (huang_core_phase(x, "19GPa"),),
                     fit_composition="Fe-S-O-C", role="core",
                     gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
+                    # ⚠ 이 문구는 이제 **되돌이점 아래**에서만 발화한다 (항목 19). 그 위 ~ 19 GPa 는
+                    #   거절이 아니라 «세고 깊이를 남기는» 구간이고, 이원계의 1.5 GPa 규칙은 안 바뀌었다.
                     under_reason=FE_S_BELOW_REF_REASON)
     return out
 
