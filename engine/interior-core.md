@@ -2101,6 +2101,18 @@ cannot do.
 two of Nimmo's three dynamo criteria (mean and minimum ΔE over the last 3.1 Gyr) are history quantities and
 the discriminating one is ΔE_min; a present-day φ cannot answer them. C20 stops being a listed-only item.
 
+#### C20 (i) 2026-09-19 — Mars is given a lid thickness, and nothing moves
+
+Decision 8 routes a `stagnant` body to Foley eq. (3) and reads δ **from the body file**. ⚠ **No body file had one** — a `git grep` for `lid_thickness`, `delta_km` and `lid_km` across `engine/bodies` returned nothing, while the declared regimes are Earth `mobile`, Pandora `mobile`, Mars `stagnant`. **So decision 8 as frozen would have sent Mars to its own named refusal and deleted its C20 outputs**, and its acceptance — *print Mars's today `T_p` before and after* — could not have been met. *Its trap 1 forbids moving the law and δ together, so the input landed first, alone.*
+
+**`engine/bodies/mars.yaml` gains `lid_thickness_km: 330.0`, `grade: analog`, `source: 2011Icar..212..541M`** — Morschhauser, Grott & Breuer 2011's present-day stagnant lid. ⚠ **It is the quantity eq. (3) takes**: the paper defines `Dl` as the lid thickness, and the ~250 km elastic thickness printed in the same sentence is a **different quantity** that neither confirms nor refutes it. **The grade is `analog` because the number is a model output, not an observation**, and the declaration writes its own refutation site: *an observational lid-base thickness, an InSight-class result, not another model.*
+
+⚠ **The declared value sits below the tool's sweep band.** `engine/tools/c51_regimes.py` sweeps **350–500 km**; the declaration is **330 km**, and the tool is untouched. **A sweep range and a declaration are different objects, and they now coexist on purpose** — *so the tool has never evaluated Mars at Mars's own lid thickness, and when decision 8 lands it will be the first time that happens.*
+
+**The gate says nothing moved.** `gate-0fed555b.log`, `rc=0`: `[PASS]` **753** · `[FAIL]` **0** · `[SKIP]` **13** · `[판정` **5** · `[GRADE]` **4** · `[STOP]` **1** · `[STEP]`/`[COST]` **77** · anchors **602** · line-number citations **0** — every count identical to `b4b92728`. **`test_transfers.py` passes**, which is the gate confirming the value is *not* a transfer: `transfers:` records values that arrived **from another body**, its rule (iii) requires the anchor to be a phrase citation into another file — the form written `<file>` then `@` then the phrase in guillemets — and a paper reference cannot live there. ⚠ *Had it been written into that block, the step would have refused it by name rather than pass quietly.*
+
+⚠ **`instr` and seconds were deliberately kept out of the "nothing moved" acceptance**, and the run shows why: wall clock read **1 926.97 s** against the previous run's **1 912.91 s**, **+0.7 %**, on an edit that no code reads. **An equality test on those would have failed for reasons unconnected to the change.**
+
 #### C20 (j) 2026-09-20 — the declared regime now chooses the loss law, and two rulers were corrected on the way
 
 **A rocky body's mantle loses heat through whichever lid it has**, and the two regimes are not two settings of one law. `engine/core_history.py` now reads the body's `tectonic_regime` and routes a lid regime to **Foley 2018 eq. (3)** and everything else to **Nimmo+ 2004 eqs 34–36**. Mars, declared `stagnant` with `lid_thickness_km: 330.0`, is the first body ever evaluated at its own declared lid thickness — `engine/tools/c51_regimes.py` sweeps **350–500 km**, and the declaration sits below that band.
@@ -11239,6 +11251,56 @@ cheapest five (`0.214–0.300 G`) and an order of magnitude under the median. **
 way, which is why all three are printed.** The rank is the ruler that does not move when one heavy step is
 added or removed.
 
+#### C90 (c) 2026-09-19 — the gate's peak memory, and what removing it cost
+
+One expression owned it. Measured alone, the skill-path `git grep -lE` in `scripts/check.sh`'s section 5 peaked at **2 577.0 MiB** and its sibling, the old-path grep beside it, at **974.4 MiB** — enough to account for every logged run (2 572.6 · 2 578.0 · 2 580.9 · 2 583.9 MiB). **Both sat outside `step()`, so the cost appeared in no `[TIME]` and no `[COST]` line.**
+
+**Both prefix and suffix are literal**, so `-F -e <literal>` per alternative selects the same files. ⚠ **Checked on a scratch clone with bait files `git add -f`-ed into the index** — on a clean tree both greps return empty, and *an empty-to-empty comparison proves nothing*. Sorted, old against new: **`:707` 2 = 2 · `:708` 2 = 2, no diff.**
+
+| | before | after |
+|---|---|---|
+| `:708` alone | **2 577.0 MiB** | **61.2 MiB** |
+| `:707` alone | **974.4 MiB** | **53.3 MiB** |
+| whole gate | **2 580.9 MiB** | **88.6 MiB** |
+
+**The gate's peak fell 29×**, `rc=0`, and the verdict counts did not move: `[PASS]` **753**. **The price of the edit is one step**: `[STEP]` and `[COST]` go **76 → 77**, and the new step costs **32 833 241 `instr`** — **0.000035 %** of the gate's total. ⚠ *That cost is now printed every run, which is the point of moving it inside `step()`.*
+
+⚠ **The registered prediction named the right number for the wrong reason, and finding out why moved the ruler itself.** It said the new ceiling would be **132.6 MiB, the clone**. The gate printed **88.6 MiB**, below the clone's own standalone figure — so the first reading was *«a block that was seen does not cost what it cost alone»*. **That reading is wrong.**
+
+**Re-measured, the clone is immovable**: 138 969 088 · 138 969 088 · 139 001 856 B — **132.5 · 132.5 · 132.6 MiB** across three runs, 0.02 % apart, cold or warm. It was never cheaper inside the gate.
+
+⚠ **The outer ruler could not see it.** `scripts/check.sh` ends its isolation block with `exec bash "$dest/scripts/check.sh"`, and the clone, the checkout and the scratch cleanup all happen **before** that `exec`. **`exec` discards the accumulated child rusage of the process it replaces.** Shown directly:
+
+| command | `maxrss` |
+|---|---|
+| `bash -c 'python3 <300 MB>; python3 <small>'` | **308 412 416 B** |
+| `bash -c 'python3 <300 MB>; **exec** python3 <small>'` | **8 388 608 B** |
+
+**The same 300 MB child disappears when an `exec` follows it.**
+
+⚠ **So every gate `maxrss` quoted in this repository measures only what happens after the `exec`** — the 2 580.9 MiB before this change and the 88.6 MiB after it alike. **The gate's actual ceiling is `max(88.6, 132.6) = 132.6 MiB`, the clone**, which no run has ever printed. *The prediction's number was right and its reason was not; the failure clause — «if not, there is another block I have not seen» — pointed at the block that was there all along, on the far side of a window boundary nobody had checked.*
+
+⚠ **So «outside `step()`» was never one category — there are three rulers, not two.** ⓐ the `[COST]` sums, which see steps only; ⓑ the outer `/usr/bin/time -l`, which sees **everything after the `exec`**, steps and non-steps alike; ⓒ a window **nothing measures**, the work the `:477` block does before handing over.
+
+⚠ **And «before the `exec`» is not one thing either — sorting the blocks by line number is the wrong ruler.** What decides is the guard around each block, and there are four cases:
+
+| case | blocks | what the outer ruler sees |
+|---|---|---|
+| exec-only | the `:477` block — stale-scratch cleanup, clone, checkout, gate-logic copy, symlink count | **nothing** |
+| runs on **both** sides | unconditional top-level work — the interpreter pin `:25`, the requirements blob `:36`–`:37` | **the second execution only** |
+| not reached in these runs | `:448`–`:450`, inside `while [ "$auto_req" = 1 ]` | nothing, because **`--auto-lane` was never passed** |
+| after the `exec` | every `step()` and every non-step block past `:524` | **everything** |
+
+⚠ **«Invisible», «runs twice» and «never ran» had been collapsed into one category.** *They are three different facts and only the first is a limitation of the ruler.*
+
+⚠ **The second case leaves a visible trace that had been read as noise**: `[note] gate venv 선언 일치` prints **twice** in every log — `:9` and `:13` in `gate-b4b92728.log`, twice again in the quick log. **That is `:36`–`:37` executing once on each side of the `exec`**, not a duplicated line.
+
+⚠ **One block that looked like the same structure is not.** `engine/backflow.py check` runs **twice in a full gate** — once at `:881` outside `step()`, where its non-`[WARN]` output is printed, and once at `:882` inside `step()`, where the output is discarded and only the exit status is judged. *Both sit after the `exec`*, so this is two call sites invoking one program, not one block executing on both sides of a window boundary. **The measured half costs `instr` 2 422 389 at 22 MB; the unmeasured half is not measured.**
+
+**The conclusion is a rule, not a list: a line number does not say which window a block falls in — the condition wrapping it does.** ⚠ *Re-splitting the 17-block census has to be done by guard, and the only guard verified here is `:477`.*
+
+**The same boundary applies to `instr`** on the outer `/usr/bin/time -l` line. It does **not** affect the `[COST]` sums used for the width measurement above, which are per-step and all post-`exec`; ⚠ *but the outer line and the `[COST]` sum are two different windows and should never be quoted as one.*
+
 #### ⚠ The `instr` ruler's own reproducibility width, measured — and last night's verdict retracted
 
 **Two full gates ran back to back on the same machine tonight**, `17a6274d` (rc=1) and `6c90ae31` (rc=0), the
@@ -11275,6 +11337,31 @@ it reads 1 786.2 · 2 022.0 · 2 572.0 · 2 578.0 · 2 580.9 MiB with no monoton
 is the **maximum over children**, so it names whichever child peaked and not the gate's demand. ⚠ **The
 ~1.8 GiB child from the memory census is still unidentified**, and these five numbers are new material for
 that count rather than an answer to it.
+
+#### ⚠ The `instr` ruler at one unchanged sha — the width the night's pair could not give, 2026-09-19
+
+Two full gates ran back to back on `54e4671d`, nothing edited between them. `git status --porcelain` printed **0** four times — before and after each run. Logs `4bcbf6bd…` and `6005514f…`, both `rc=0`, both `matches_tree=yes`.
+
+**The verdict counts are identical in both**: `[PASS]` **753** · `[FAIL]` **0** · `[SKIP]` **13** · `[판정` **5** · `[GRADE]` **4** · `[STOP]` **1** · `[COST]` **76** · `[STEP]` **76** · anchors **602**. The frozen acceptance line — *both runs must print 76* — holds, so the pair is valid.
+
+**Summed `instr`: 93 185 591 977 534 → 93 255 343 092 781, a difference of +69 751 115 247 = +0.07485 %.**
+
+⚠ **Three of the four registered predictions failed.**
+
+| # | registered before the runs | outcome |
+|---|---|---|
+| 1 | summed difference **< 0.01 %** | **failed** — 7.5× that |
+| 2 | lands near **0.0045 %**, the mixed-sha figure | **failed** — 17× that |
+| 3 | per-step differences scatter in **both signs** | **held** — 36 up, 40 down |
+| 4 | no single step holds **more than half** of the difference | **failed** — one step holds **228 %** of it |
+
+**`test_water_column_steam.py` moved +159 110 075 235 (+2.1684 %)**, which is **228 % of the whole difference**; the next three run the other way — `test_interior.py` −0.2387 %, `test_core_history.py` −0.3140 %, `run.py bodies/earth.yaml` −0.3016 %.
+
+⚠ **A verdict is withdrawn, and it is the withdrawal of a withdrawal.** On 2026-09-18 a **−0.055 %** movement was called ruler noise. That call was retracted the same night on the strength of a **0.0045 %** width. **At one unchanged sha the width is 0.07485 %, so 0.055 % sits inside it** and the original reading stands again. ⚠ *The precise sentence is not «proved to be noise» but **«not distinguishable from run-to-run width, so it cannot be read as a saving»**.*
+
+⚠ **And «the width» is not a single number.** The scatter is not spread evenly — it concentrates in a few steps, and which steps are loud changes between pairs. **0.0045 % was a draw in which the loud step was quiet.** *Two runs cannot set this ruler's tick size; the next measurement is more runs, and the scale has to come from the per-step distribution rather than from the sum.*
+
+⚠ **A counting trap, found by falling into it.** `[COST]` names repeat — `run.py bodies/…` appears **7 times** — and with `GATE_POOL=2` **the two runs finish in different orders**. Pairing rows by position produced `test_fe_s.py` **−75 %** and `test_core_energy.py` **+304 %**, both artefacts. **Rows must be paired by name with duplicates summed.**
 
 #### ⚠ Clearance before the edit, twice — a process record
 
