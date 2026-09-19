@@ -100,6 +100,23 @@ inputs:
   #   **4.36 K** 뿐이다 (이 줄은 4.0–4.7 K 로 읽혔다 — 위 ✅ 절 참조). 그리고 기록열 Katsura+ 2010 [1575, 1645] 로 재면 양단 모두 밴드 밖이다 — 판정은
   #   오너가 고른 논문에 딸려 있다. 화성의 현재 T_p 가 측정된 적 없다는 사실은 그대로다.
   potential_temperature: 1600.0
+  # 정체뚜껑 두께 δ — Foley 2018 eq. (3) 이 받는 양이다. 선언이 없으면 정체뚜껑 바디는
+  # 손실 법칙을 못 고른다 (결정 8). ⚠ **도구 상수와 다른 물건이다** — `tools/c51_regimes.py` 가
+  # 훑는 350–500 km 는 **스윕 범위**이고 이 값은 **선언**이라, 둘은 같이 산다. 선언 330 은
+  # 그 범위 아래에 있고, 그래서 그 도구는 화성을 자기 선언값에서 평가한 적이 없다.
+  lid_thickness_km:
+    value: 330.0
+    grade: analog
+    source: "2011Icar..212..541M"
+    note: >
+      Morschhauser, Grott & Breuer 2011's thermal-evolution model prints a present-day
+      stagnant-lid thickness of 330 km for Mars (2011Icar..212..541M:1457–1459, cache text
+      layer; the paper defines `Dl` as the lid base at :274, not an elastic or seismic
+      thickness — so it is the quantity eq. (3) takes). It is a model output, not an
+      observation, which is why the grade is analog. Breuer & Spohn 2003's 350–500 km band
+      brackets it from above; the ~250 km elastic thickness is a different quantity and
+      neither confirms nor refutes it. The refutation site is an observational lid-base
+      thickness, an InSight-class result, not another model.
   # C20 열진화의 초기온도 — 지구와 **같은 인쇄값을 그대로 전이**한다. Nimmo+ 2004 Fig. 2
   # 캡션의 *"starting temperature of both mantle and core was 4800 K"*, 실온도로 읽음.
   # ⚠ **지구의 3040 K 를 옮기면 안 된다** — 그것은 4800/r_b 이고 r_b 는 **바디마다 다르다.**
@@ -155,6 +172,7 @@ units:
   radius_earth: R_earth
   age_gyr: Gyr
   potential_temperature: K
+  lid_thickness_km: km
   core_initial_temperature: K
   mantle_initial_potential_temperature: K
 
