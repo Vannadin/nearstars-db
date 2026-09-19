@@ -3370,7 +3370,8 @@ def _porous_rock_verdict(mass_earth: float, radius_earth: float,
 
 def infer_composition(mass_earth: float, radius_earth: float,
                       ice_allowed: bool = True,
-                      tidal_heating: bool = False) -> Result:
+                      tidal_heating: bool = False,
+                      potential_temperature: float | None = None) -> Result:
     """질량과 반지름을 재현하는 자유 분율 하나를 푼다.
 
     금속도 얼음도 없는 순수 규산염을 기준선으로 잡는다. 관측 반지름이 그보다
@@ -3398,7 +3399,12 @@ def infer_composition(mass_earth: float, radius_earth: float,
         return out_of_domain(RECIPE, VERSION, "질량 또는 반지름이 양수가 아니다",
                              inputs=inputs, refs=REFS)
 
+    # ⚠ **선언된 포텐셜 온도를 그대로 들고 간다** (C57, 2026-09-20). 안 넘기면 이 갈래의
+    #   해는 등온이라 핵·경계 온도가 0 K 로 나오고, 그것을 받은 `cmb_flux` 가 «초단열
+    #   도약이 없다» 로 터진다. 선언 갈래는 늘 넘기고 있었으므로, 두 갈래가 같은 선언을
+    #   읽어야 답이 갈래에 안 딸린다.
     rock = solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=0.0,
+                 potential_temperature=potential_temperature,
                  tidal_heating=tidal_heating)
     if not rock.applicable:
         return rock
@@ -3408,6 +3414,7 @@ def infer_composition(mass_earth: float, radius_earth: float,
 
         def at(x):
             return solve(mass_earth, core_mass_fraction=x, ice_mass_fraction=0.0,
+                         potential_temperature=potential_temperature,
                          tidal_heating=tidal_heating)
     elif not ice_allowed:
         # 기준선보다 가벼운데 얼음이 선언으로 배제돼 있다. 남는 기작은 빈 공간이고,
@@ -3419,6 +3426,7 @@ def infer_composition(mass_earth: float, radius_earth: float,
 
         def at(x):
             return solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=x,
+                         potential_temperature=potential_temperature,
                          tidal_heating=tidal_heating)
 
     # 1) 축을 훑는다. 값이 나오는 눈금과 막힌 눈금을 모두 들고 간다.
@@ -3539,9 +3547,28 @@ def infer_composition(mass_earth: float, radius_earth: float,
             hi = mid
     convergence.note("interior._infer_axis_bisection", closed)
     inputs[axis] = x
+    # ⚠ **안 고른 축의 0.0 은 이 풀이가 실제로 쓴 값이다** (C57). 모형 공간에는 축이 **둘**
+    #   있고(금속·얼음), 이 바디는 순규산염보다 **작아서** 금속 축이 골렸다 — 얼음 축은
+    #   있는데 안 고른 것이다. 그래서 0.0 은 «이 천체에 얼음이 없다고 쟀다» 가 아니라
+    #   **«이 풀이는 얼음 0 으로 반지름을 맞췄다»** 는 뜻이고, 등급·출처는 결과 전체와
+    #   같다(`composition: inferred` · `grade: analog`). `None` 으로 남기면 소비처가
+    #   «선언이 없다» 로 읽는다 — `dynamo_rocky` 가 얼음분율을 프리셋에서 읽으려다 이름
+    #   대고 거절한 자리가 그것이다.
+    other = "ice_mass_fraction" if axis == "core_mass_fraction" else "core_mass_fraction"
+    inputs[other] = 0.0
     v = dict(best.values)
+    # ⚠ **푼 분율을 값으로도 내보낸다** (C57). 여기서 `inputs` 에만 적던 동안 하류는
+    #   그 수를 못 봤다 — `core_history` 는 `state.get("core_mass_fraction")` 을 읽고,
+    #   선언을 지운 바디에서 「핵이 없다」로 거절했다(측정 2026-09-20: 노드 여덟이
+    #   값에서 범위 밖으로). 역산이 답을 냈는데 그 답이 상태에 없는 것은 **값의 부재가
+    #   아니라 배달의 부재**다. 등급은 이 결과의 등급(`analog`)이고 출처는 `composition:
+    #   inferred` — 선언이 아니라 이 레시피가 푼 값이라는 뜻이다.
+    v[axis] = x
+    v[other] = 0.0
     notes = list(best.notes)
-    notes.insert(0, f"역산이다 — {axis} = {x:.3f} 가 선언된 반지름을 재현한다.")
+    notes.insert(0, f"역산이다 — {axis} = {x:.3f} 가 선언된 반지름을 재현한다. 안 고른 축 "
+                    f"{other} 는 이 풀이가 쓴 값 0.0 으로 함께 내보낸다 — 두 분율의 출처는 "
+                    "같은 칸(`composition: inferred`)이고, 측정이 아니라 이 역산의 출력이다.")
     notes.append(
         f"이 배합은 유일하지 않다. 중심압 {v['core_pressure'] * 1e3:.0f} MPa 는 공극이 "
         "살아남을 수 있는 크기이고, 공극과 얼음은 평균밀도를 같은 방향으로 낮춘다. "
@@ -3557,7 +3584,8 @@ def infer_composition(mass_earth: float, radius_earth: float,
         inputs=inputs,
         cycles=(1, 3, 7),
         converged=best.converged,
-        values=v, units=best.units, refs=REFS, notes=tuple(notes),
+        values=v, units={**best.units, axis: "dimensionless", other: "dimensionless"},
+        refs=REFS, notes=tuple(notes),
     )
 
 
@@ -3755,9 +3783,12 @@ def infer_three_layer(mass_earth: float, radius_earth: float,
     inputs["core_mass_fraction"] = cmf
     inputs["ice_mass_fraction"] = imf
     v = dict(res.values)
-    v.update({"nmoi_low": n_lo, "nmoi_high": n_hi, "members": members})
+    # ⚠ 같은 이유로 3층 역산도 푼 두 분율을 값으로 내보낸다 (C57).
+    v.update({"nmoi_low": n_lo, "nmoi_high": n_hi, "members": members,
+              "core_mass_fraction": cmf, "ice_mass_fraction": imf})
     u = dict(res.units)
-    u.update({"nmoi_low": "dimensionless", "nmoi_high": "dimensionless", "members": ""})
+    u.update({"nmoi_low": "dimensionless", "nmoi_high": "dimensionless", "members": "",
+              "core_mass_fraction": "dimensionless", "ice_mass_fraction": "dimensionless"})
     notes = [f"역산이다 — 핵질량분율 {cmf:.3f} · 얼음질량분율 {imf:.3f} 가 질량·반지름과 "
              f"관측 C/MR² {nmoi:.4f} 를 재현한다. C/MR² 는 **세 번째 관측** 으로 받아 띠를 "
              "좁히는 데만 썼고, 이 값은 예측이 아니라 되읽은 값이다.",
@@ -3801,14 +3832,31 @@ def _from_state(state):
         silicate_state=res.values.get("silicate_melt_state"),
         variant="peridotitic" if state.get("differentiated", True) else "chondritic",
         silicate_is_outermost=silicate_on_top)
+    # ⚠ **핵질량분율·얼음질량분율은 이 노드가 늘 값으로 배달한다** (C57). 둘의 출처는
+    #   한 칸에 있다 — `inputs["composition"]` 이 `inferred` 면 역산이 푼 값이고, 프리셋
+    #   이름이면 선언이 지나간 값이다. 값만 보고 둘을 가를 수 없으므로 그 칸을 함께 읽어라. 선언한 바디에서는 선언값을,
+    #   역산한 바디에서는 푼 값을 — 둘 다 `res.inputs` 에 이미 있다. **어느 갈래로 풀었든
+    #   같은 키가 나와야** 한다: 역산 갈래에서만 내보내면 다음 걸음이 그 값을 보고 선언
+    #   갈래로 풀고, 그 결과에는 키가 없어 값이 **사라졌다 나타났다** 한다 (2026-09-20 측정:
+    #   화성이 첫 걸음에 역산, 둘째 걸음에 `integrated_fe_prem_silicate` 로 덮여 `core_history`
+    #   가 「핵이 없다」로 거절). 그래서 배달은 갈래가 아니라 이 자리에서 한 번 한다.
+    cmf_out = res.inputs.get("core_mass_fraction")
+    imf_out = res.inputs.get("ice_mass_fraction")
+    comp_out = res.inputs.get("composition")
     return _dc_replace(
         res,
         inputs={**res.inputs, "age_gyr": state.get("age_gyr")},
         values={**res.values, "figure_relaxation": v["figure_relaxation"],
                 "maxwell_time_mantle_top": v["maxwell_time_mantle_top"],
-                "relaxation_threshold_max": v["relaxation_threshold_max"]},
+                "relaxation_threshold_max": v["relaxation_threshold_max"],
+                **({"core_mass_fraction": cmf_out} if cmf_out is not None else {}),
+                **({"ice_mass_fraction": imf_out} if imf_out is not None else {}),
+                **({"composition": comp_out} if comp_out is not None else {})},
         units={**res.units, "figure_relaxation": "", "maxwell_time_mantle_top": "yr",
-               "relaxation_threshold_max": "K"},
+               "relaxation_threshold_max": "K",
+               **({"core_mass_fraction": "dimensionless"} if cmf_out is not None else {}),
+               **({"ice_mass_fraction": "dimensionless"} if imf_out is not None else {}),
+               **({"composition": ""} if comp_out is not None else {})},
         notes=res.notes + tuple(v["notes"]))
 
 
@@ -3855,7 +3903,8 @@ def _infer_from_state(state):
     # 선언이지 «모른다» 가 아니다 — 그 구분이 없으면 규산염 화산체에 얼음을 붙인다.
     imf = state.get("ice_mass_fraction")
     return infer_composition(mass, radius, ice_allowed=(imf is None or imf > 0.0),
-                             tidal_heating=bool(state.get("tidal_heating", False)))
+                             tidal_heating=bool(state.get("tidal_heating", False)),
+                             potential_temperature=state.get("potential_temperature"))
 
 
 def _solve_from_state(state):
@@ -3863,9 +3912,14 @@ def _solve_from_state(state):
     #   갈색왜성은 `solve` 이 «중수소가 탄다 …» 로 거절한다 — 조성 미선언보다 그쪽이 더 좁고
     #   더 물리적인 문장이라, 조성 갈래를 앞에 두면 좋은 거절을 일반적인 거절로 덮는다.
     #   루만 16 둘이 첫 실행에서 실제로 그렇게 나빠졌다.
+    # ⚠ **갈래는 «선언» 으로만 고른다** (C57, 2026-09-20). 예전에는 `state.get` 으로 물었는데,
+    #   그 조회는 **이 노드가 방금 내보낸 값**도 본다. 그래서 첫 걸음이 역산으로 푼 핵질량분율을
+    #   둘째 걸음이 «선언» 으로 읽고 선언 갈래로 내려가, 같은 수에 프리셋 이름표를 달고 등급을
+    #   analog 에서 calibrated 로 올렸다. 선언만 보면 걸음마다 같은 갈래라 답이 고정점이 된다.
+    declared = state.inputs
     if (state.get("body_class") not in FLUID_CLASSES
-            and state.get("composition_intent") is None
-            and state.get("core_mass_fraction") is None):
+            and declared.get("composition_intent") is None
+            and declared.get("core_mass_fraction") is None):
         return _infer_from_state(state)
     return solve(
         mass_earth=state["mass_earth"],

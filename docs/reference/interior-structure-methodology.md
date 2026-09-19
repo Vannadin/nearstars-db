@@ -45,7 +45,8 @@ literature, separate recipes.
 `ocean_thickness` [km] · `ice_shell_thickness` [km] · `crust_thickness` [km] · `bulk_porosity` [—] · `voids_expected` [—] ·
 `figure_relaxation` [—] · `maxwell_time_mantle_top` [yr] · `relaxation_threshold_max` [K] ·
 `integrator_core_gamma_verdict` [—] · `integrator_red_gamma_used` [—] ·
-`converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—]
+`converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—] ·
+`core_mass_fraction` [—] · `ice_mass_fraction` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] ·
 `composition` [—] · `body_class` [—] · `radius_earth` [R_earth] · `age_gyr` [Gyr] ·
 `tidal_heating` [—] · `envelope_z_rock_fraction` [—] · `envelope_z_profile` [—] ·
@@ -62,6 +63,10 @@ below Jupiter's mass, where the branch has never been checked. The equations of 
 moments of inertia without being handed layer densities; the compaction relation is a
 laboratory curve extrapolated past the pressures it was measured at, and the initial
 porosity it needs is a declaration this recipe cannot derive.
+
+⚠ The last two Returns keys are also Needs keys. Declared, they pass through unchanged; undeclared, this node
+infers them from mass and radius and returns what it solved, so a consumer reads one key either way. Which of
+the two happened is in the composition input — it reads inferred when they were solved here.
 
 `radius_earth` is **not used to compute anything**: radius is an output. When supplied it
 is compared against the derived radius, so a composition declaration that fails to

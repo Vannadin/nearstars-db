@@ -14,13 +14,11 @@ inputs:
   # *"CMF 는 조성 선언이지 적합 매개변수가 아니다 … 우리 답이 맞도록 돌려 맞춘 값이 아니다."*
   mass_earth: 0.1074
   radius_earth: 0.5320
-  core_mass_fraction: 0.24
   # 태양계와 함께 강착했다는 표준 진술. 지구가 쓰는 4.54 와 같은 수이고, 화성만의 별도
   # 연대 측정이 아니라 계 전체의 나이다 — 그래서 지구와 같은 값을 쓰는 것이 선언이 아니라
   # 같은 사실의 재사용이다.
   age_gyr: 4.54
   body_class: rocky
-  composition_intent: earth_like
   # 핵 **쪽** 핵-맨틀 경계 온도 — **오너 결정 2026-09-09** (C54 (b), 브리프 174). 문헌 밴드는
   # **1900–2100 K** 이고 Durán+ 2022 (2022PEPI..32506851D, 보유) 가 그 밴드를 인쇄한다. 같은 논문의
   # 포텐셜 온도는 1650–1750 K 이며 «implying an entirely liquid core at present» 라고 적는다.

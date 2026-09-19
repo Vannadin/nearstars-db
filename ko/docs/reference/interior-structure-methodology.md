@@ -50,7 +50,8 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 `ocean_thickness` [km] · `ice_shell_thickness` [km] · `bulk_porosity` [—] · `voids_expected` [—] ·
 `figure_relaxation` [—] · `maxwell_time_mantle_top` [yr] · `relaxation_threshold_max` [K] ·
 `integrator_core_gamma_verdict` [—] · `integrator_red_gamma_used` [—] ·
-`converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—]
+`converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—] ·
+`core_mass_fraction` [—] · `ice_mass_fraction` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] ·
 `composition` [—] · `body_class` [—] · `radius_earth` [R_earth] · `age_gyr` [Gyr] ·
 `tidal_heating` [—] · `envelope_z_rock_fraction` [—] · `envelope_z_profile` [—] ·
@@ -67,6 +68,10 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 상태방정식은 전부 발표된 적합값이고 레시피는 층 밀도를 넘겨받지 않고도 측정된 관성모멘트
 넷을 재현합니다. 반면 압밀 관계식은 측정된 압력 밖으로 외삽되는 실험실 곡선이고, 그것이
 요구하는 초기 공극은 이 레시피가 도출하지 못하는 선언값입니다.
+
+⚠ 마지막 Returns 키 둘은 Needs 키이기도 하다. 선언되면 그대로 지나가고, 선언이 없으면 이 노드가 질량과
+반지름에서 역산해 푼 값을 그대로 내보낸다 — 소비처는 어느 쪽이든 같은 키 하나를 읽는다. 둘 중 무엇이었는지는
+composition 칸이 든다(역산이면 inferred).
 
 `radius_earth` 는 **아무것도 계산하는 데 쓰이지 않습니다.** 반지름은 출력입니다. 넘겨주면
 도출된 반지름과 대조만 하므로, 알려진 천체를 재현하지 못하는 조성 선언은 조용히 통과하는
