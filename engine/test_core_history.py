@@ -178,5 +178,28 @@ row(hmd["n_steps"] == 1197 and abs(lastd["t_m"] - 1377.96) < 0.05 and abs(lastd[
     f"(H 1.5 대비 {lastd['t_m']-lastm['t_m']:+.2f} / {lastd['t_c']-lastm['t_c']:+.2f} / {neard_t_m-nearm_t_m:+.2f} K, {time.perf_counter()-t0:.0f} s) "
     f"— 기준 B: Herzberg [1553.15, 1673.15] K 안 (위끝 여유 {1673.15-neard_t_m:.2f} K)")
 
+# ── 증인 줄 — 측정 장치이고 판정이 아니다 (2026-09-19) ─────────────────────────────
+# ⚠ **왜 `repr` 인가.** 이 파일의 판정 줄은 `:.2f` 로 찍고 허용오차가 5 K 다. 그래서 손실 법칙
+# 분기(결정 8) 같은 변경이 이 갈래의 수를 **1 K 움직여도 통과한다**. 아래 여섯 칸은 전정밀
+# 문자열로 찍히므로, 전후 두 로그에서 **문자열이 같으면 그 갈래는 비트 동일**이고 다르면 어느
+# 칸이 움직였는지가 바로 보인다. ⚠ **`row()` 가 아니라 맨 `print()`** — 판정 수를 안 늘린다.
+# ⚠ 이 파일이 적분하는 것은 지구와 화성 둘이다. 판도라는 여기 없고 `run.py` 쪽에서 돈다.
+def _witness(label, hist_, near_t_m):
+    last_ = hist_["rows"][-1]
+    print(f"  [증인] {label} — t_m {last_['t_m']!r} · t_c {last_['t_c']!r} · n_steps {hist_['n_steps']!r} · "
+          f"h_min_myr {hist_['h_min_myr']!r} · max_h_over_tau {hist_['max_h_over_tau']!r} · "
+          f"t_m@3.7Ga {near_t_m!r}")
+
+
+# ⚠ **어느 갈래에서 나온 수인지 라벨에 박는다.** 지구의 `hist` 는 `--sweep` 이면 고정걸음
+# (`sw["h/4"]["hist"]`), 아니면 적응 1152 걸음이다 — 그러면 여섯 칸 중 `n_steps` 와
+# `max_h_over_tau`(고정이면 `None`) 가 달라진다. 라벨이 없으면 다른 갈래의 두 로그를 맞대 놓고
+# **허수 경보**가 난다. 게이트는 앞 갈래로만 돈다.
+_earth_path = "게이트 경로(적응)" if hist.get("adaptive") else "--sweep 경로(고정걸음)"
+print("\n증인 — 전정밀 여섯 칸 (판정 아님; 전후 로그에서 문자열로 대조한다)")
+_witness(f"지구 (H 선언 · {_earth_path})", hist, ch.t_at_gyr(hist["rows"], -3.7))
+_witness("화성 (H 1.5, Brief 166 D 조건)", hm, nearm_t_m)
+_witness("화성 (H 선언 0.088)", hmd, neard_t_m)
+
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)
