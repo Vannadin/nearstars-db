@@ -579,5 +579,30 @@ row(_rho_low > 0.0 and _depth_low < 0.5 and _depth_low < _depth_mars / 2.0,
     "⚠ **사전등록 예측은 «≈9–13 GPa · ≈50 %» 였고 빗나갔다** — 모서리 되돌이점이 5.87–9.93 GPa 라 "
     "«바로 위» 는 그 최저값 근처이고, 예측은 넓게 잡힌 수였다")
 
+# ── 항목 19-b — 가드와 뒤집기가 같은 압력을 본다 ────────────────────────────────
+# ⚠ 전에는 바닥을 **전체 압력**에 걸고 뒤집기는 **냉각 압력**에서 했다. 그래서 가드를 통과한
+#   시행이 가드 밖에서 Newton 을 돌리다 «밀도가 수렴하지 않는다» 로 터졌다(전체 6.5 GPa 언저리가
+#   냉각 1.271 GPa 로 내려간 자리). 이제 둘이 같은 수를 본다 — 아래 두 줄이 그것을 묻는다.
+print("\n⑰ 항목 19-b — 바닥은 뒤집기가 쓰는 압력에")
+_q = eos.MATERIALS["fe_s19_o1_c5permil_19gpa"]
+_ph = _q.phases[0]
+_hot = 3000.0                      # 앵커 2100 K 보다 뜨겁다 → P_th > 0 → 냉각 압력이 내려간다
+_p_th = _ph.thermal_pressure(_hot, _hot)
+_total = _ph.p_min + 0.5 * _p_th   # 전체로는 바닥 위, 냉각으로는 바닥 아래인 자리
+try:
+    _q.density(_total, _hot, _hot)
+    _got = "값을 냈다"
+except eos.PhaseGap as gap:
+    _got = str(gap)
+except ValueError as bad:
+    _got = f"VALUEERROR {bad}"
+row("냉각 압력" in _got and "되돌이점" in _got,
+    f"전체 {_total/eos.GPA:.4f} GPa · 열압력 {_p_th/eos.GPA:+.4f} GPa 인 자리는 **이름 대고 거절한다** — "
+    f"`ValueError` 가 아니라 `PhaseGap` 이고, 문구가 전체·냉각 두 압력을 다 든다 ({_got[:70]}…)")
+_cold_ok = _ph.p_min + 1.5 * _p_th
+row(_q.density(_cold_ok, _hot, _hot) > 0.0,
+    f"같은 온도라도 냉각 압력이 바닥 위면 **답한다** (전체 {_cold_ok/eos.GPA:.4f} GPa) — "
+    "가드가 온도를 이유로 구간을 통째로 닫지 않는다")
+
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)

@@ -796,6 +796,23 @@ class Material:
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         self.check_temperature(p, t)
         ph = self.phase_at(p)
+        # ⚠ **바닥은 뒤집기가 쓰는 압력에 걸어야 한다** (항목 19-b, 2026-09-20). `phase_at` 은
+        #   **전체 압력**으로 재고, 아래 `ph.density` 는 **냉각 압력**(`p − P_th`)에서 뒤집는다 —
+        #   그래서 가드를 통과한 시행이 가드 **밖**에서 Newton 을 돌리다 발산했다(측정: 전체 6.5 GPa
+        #   언저리가 냉각 1.271 GPa 로 내려가 «밀도가 수렴하지 않는다»). 같은 수를 보게 한 자리에서
+        #   다시 잰다. ⚠ 선언이 없는 상(`graded_below_ref = False`)은 이 가지를 안 탄다.
+        if ph.graded_below_ref:
+            cold = p - ph.thermal_pressure(t, t_pot)
+            if cold <= 0.0:
+                raise PhaseGap(self.name, p, (
+                    f"{p / 1e9:.4f} GPa 에서 열압력을 빼면 냉각 압력이 {cold / 1e9:.4f} GPa 로 "
+                    f"양수가 아니다 — 이 온도에서 이 상은 그 압력에 존재하지 않는다"))
+            if cold < ph.p_min:
+                raise PhaseGap(self.name, p, (
+                    f"냉각 압력 {cold / 1e9:.4f} GPa 가 이 적합이 뒤집을 수 있는 아래 끝"
+                    f"({ph.p_min / 1e9:.4f} GPa, 적합 자신의 되돌이점) **밑**이다 — 전체 압력은 "
+                    f"{p / 1e9:.4f} GPa 이고 열압력이 {ph.thermal_pressure(t, t_pot) / 1e9:.4f} GPa 다. "
+                    "가드와 뒤집기가 같은 압력을 본다 (항목 19-b)"))
         # ⚠ **세기만 한다** (196 B) — 반환값은 이 줄 앞뒤로 한 비트도 안 움직인다.
         #   선언이 없는 상은 `density_reach` 가 곧바로 `ok` 를 돌려주고 카운터도 안 는다.
         ph.density_reach(p)

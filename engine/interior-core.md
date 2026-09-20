@@ -6160,6 +6160,34 @@ and they do by a factor of three** — *the roster's only sub-19 GPa user is Mar
 이 적합을 이어 쓴 값 … 그 구간의 자료(P39)가 들어오면 이 상을 갈아 끼운다» — the condition lives on the
 object, not only in a brief.*
 
+### C55 (h) 2026-09-20 — the floor was checked against one pressure and the inversion ran at another
+
+**Registered in `item19-quaternary-floor-prereg.md`, body blob `671ecc2d`, amendment 2 (file `25441802`).**
+Item 19 gave the quaternary phases a floor at the fit's own turning point. ⚠ **The guard and the inversion
+were not looking at the same number**: `Material.phase_at` tests the **total** pressure, while
+`Phase.density` inverts at the **cold** pressure, `p − P_th`. A trial that passed the guard could therefore
+run Newton **below** the floor and die there — measured, at `cmf 0.25` with `potential_temperature 1600`:
+*«fe_core_19GPa_S0.2795O0.0295C0.0196: P=1.271e+09 Pa 에서 밀도가 수렴하지 않는다»*, a total of about
+6.5 GPa arriving at the inverter as **1.271 GPa**.
+
+**The floor now sits where the inversion reads.** Inside `Material.density`, for phases that declare
+`graded_below_ref`, the cold pressure is computed once and tested: **not positive → a named refusal**
+(the thermal pressure exceeds the total), **below the turning point → a named refusal** that prints the
+cold pressure, the turning point, the total and the thermal pressure together. ⚠ *Phases without the
+declaration do not take this branch, so nothing else in the registry changes.*
+
+**What it unblocked.** *With the declared potential temperature on, the quaternary route had been refusing
+almost everywhere — seven of eight probes across S 13–30 wt%. After this fix the same composition
+(S 19 · O 1 · C 0.5 wt%, 1600 K) converges and returns a core radius of* **1 832.07 km** *(cmf 0.276042) —
+a number produced in the region below 19 GPa that this engine continues by its own arithmetic, measured
+against a board window (1820–1870 km) that itself mixes the ends of Stähler+ 2021's two estimates, so*
+**landing inside that window is not evidence**; *it is the same fit, carried further, compared with a
+number nobody published.*
+
+⚠ **The earlier reading is withdrawn.** *«The sulphur axis cannot reproduce Mars's observed core radius»
+was measured under this defect and is not a statement about the box. The sulphur fit is re-run after this
+lands, and the owner's table carries the retraction beside the new figures.*
+
 ### C55 (e) 2026-09-10 — stage 2, the multi-component core, pre-registered before the build
 
 ⚠ **Committed before the code.** The owner's decisions of 2026-09-10: **O 1–4 wt%**, **C 0.5–1.4 wt%
