@@ -60,6 +60,7 @@ import core_history as ch             # noqa: E402
 import radiogenic as rg               # noqa: E402
 import mantle_flux as mf            # noqa: E402  — 픽스처 표면온도
 from interior import solve as isolve  # noqa: E402
+from interior import infer_composition  # noqa: E402
 
 STEPS_MYR = (4.0, 2.0, 1.0, 0.5, 0.25)
 TOL_K = 5.0
@@ -72,23 +73,57 @@ EARTH_ANCHOR_T_P = 1525.46
 # integrator, not `core_energy.H_CORE`. Re-running under the declared H is a different sweep and would be
 # recorded as one. (Same H as `test_core_energy.H4`, Nimmo+ 2004 Table 4's 400 ppm K.)
 H_NIMMO = 1.5e-12
-# ⚠ **이 둘은 바디 파일의 사본이다 — 선언이 아니다** (2026-09-20). 화성의 `core_mass_fraction`
-#   선언이 트리에서 사라져도 이 dict 가 0.24 를 계속 내주므로, 이 도구는 **없어진 선언의 사본으로**
-#   돈다. 터지지 않으니 게이트도 안 잡는다.
-#   ⚠ **그래서 값을 빼 봤고, 그건 더 나빴다 — 실측이다.** `core_mass_fraction=None` 으로 부르면
-#   `interior.solve` 가 역산으로 가지 않고 **프리셋 0.325(지구)** 로 물러선다. 화성의 핵을 지구
-#   값으로 계산하면서 「화성」이라 인쇄하는 것이라, 사본보다 더 조용히 틀린다. 역산을 여는 것은
-#   `interior.infer_composition(mass, radius, …)` 라는 **다른 함수**다.
-#   ⚠ 그래서 **사본을 유지하되 사본이라고 적는다**. 엔진이 역산으로 내는 값은 0.23958333333333331
-#   이고 여기 적힌 0.24 는 **바디 파일에서 옮긴 수**다 — C57 이 그 선언을 지우면 **이 줄이 원본
-#   없는 사본이 된다**. 그때 고칠 자리는 여기이고, 고침은 `infer_composition` 쪽이다.
-#   ⚠ **왜 물러서는지도 적어 둔다**: 역산은 질량과 반지름 둘로 미지수 하나를 푸는데(`interior.py`),
-#   `build()` 는 `isolve(...)` 에 **`radius_earth` 를 안 넘긴다**. 풀 것이 없으니 프리셋으로 간다.
-#   **그러니 전환할 때 `radius_earth` 도 같이 넘겨야 한다 — 이 dict 가 이미 들고 있다.**
-#   ⚠ `composition="earth_like"` 도 같은 성격으로 `build()` 안에 남아 있다. **주인이 아직 없다** —
-#   `infer_composition` 전환과 **같은 판에서 닫는다**. 남에게 맡긴 것이 아니라 **미결**이다.
-MARS = dict(mass_earth=0.1074, core_mass_fraction=0.24, radius_earth=0.5320, age_gyr=4.54)
+# ⚠ **이 둘은 바디 파일의 사본이었다 — 화성 쪽 사본은 지웠다** (2026-09-20, 미결 25).
+#   화성의 `core_mass_fraction` 선언이 C57 (c) 에서 트리에서 사라진 뒤에도 이 dict 가 **0.24** 를
+#   계속 내줬다. 원본 없는 사본이라 아무도 대조하지 않았고, 터지지 않으니 게이트도 안 잡았다.
+#   ⚠ **값을 그냥 빼면 더 나빴다 — 실측이다.** `core_mass_fraction=None` 으로 `interior.solve` 를
+#   부르면 역산으로 가지 않고 **프리셋 0.325(지구)** 로 물러선다. 화성의 핵을 지구 값으로 계산하면서
+#   「화성」이라 인쇄하므로 사본보다 조용히 틀린다. 역산은 `interior.infer_composition(mass, radius, …)`
+#   라는 **다른 함수**이고, 질량과 반지름 **둘** 로 미지수 하나를 푼다.
+#   ⚠ 그래서 사본을 지우면서 **읽는 길을 같이 놨다** — `_composition()` 의 세 갈래(선언 · 역산 ·
+#   이름 대는 정지)이고, `build()` 가 `radius_earth` 를 호출에 넘긴다. 이 dict 가 그 값을 이미
+#   들고 있었는데 호출이 안 넘기고 있었다. **없던 것은 파일이 아니라 호출이다.**
+#   ⚠ 지구 쪽 `core_mass_fraction=0.325` 는 **사본이 아니라 지구의 값**이라 남긴다. 그래서 지구는
+#   갈래 1 로, 화성은 갈래 2 로 돈다 — 두 갈래가 한 판에서 같이 돌아야 둘 다 살아 있음이 보인다.
+MARS = dict(mass_earth=0.1074, radius_earth=0.5320, age_gyr=4.54)
 EARTH = dict(mass_earth=1.0, core_mass_fraction=0.325, radius_earth=1.0, age_gyr=4.54)
+
+
+# ⚠ **조성 이름과 핵질량비의 «출처» 는 다른 양이다** (2026-09-20, 감사석이 이 자리에서 잡음).
+#   `composition` 은 **엔진의 재료 어휘**다 — `interior.COMPOSITIONS` 의 다섯 키(`iron` ·
+#   `earth_like` · `silicate` · `water` · `gas_giant`) 밖의 이름을 주면 `interior.py` 가
+#   «재료가 배정된 조성이 아니다» 로 **거절**하고, 그 거절은 `values` 를 안 싣는다.
+#   ⚠ **한 번 그렇게 지었다가 화성 갈래를 통째로 죽였다.** 역산 결과의 `inputs["composition"]` 은
+#   항상 `"inferred"` 인데 그것을 `isolve` 에 넘겼다. 엔진이 적분 전에 거절하고, `v = ii.values`
+#   가 `{}` 가 되어 `v["cmb_pressure"]` 에서 `KeyError` 로 죽는다. 지구는 갈래 1 이라 살아서
+#   **한 판에서 한 갈래만 죽는 모양**이었다.
+#   ⚠ **프리셋으로 물러서는 주체는 이름이 아니라 `core_mass_fraction` 이다** (`interior.py` 의
+#   `preset_cmf` 는 그 인자가 `None` 일 때만 읽힌다). 그러므로 **cmf 를 명시로 넘기는 한**
+#   이 이름이 `earth_like` 여도 0.325 로 물러서지 않는다. 출처는 아래 `_composition()` 이 낸
+#   `cmf_source` 가 말하고, **그 줄은 인쇄된다**.
+ENGINE_COMPOSITION = "earth_like"
+
+
+def _composition(body: dict, t_pot: float) -> tuple[float, str]:
+    """핵질량비와 그 출처를 세 갈래로 얻는다 — 선언 · 역산 · 이름 대는 정지.
+
+    `.get` 으로 눅여 `None` 을 흘리지 않는다. ⚠ **두 `solve` 가 `None` 을 다르게 다룬다** —
+    `interior.solve` 는 거절하지 않고 **프리셋 0.325(지구)로 조용히 물러서고**, `core_history.solve`
+    (`ch.solve`) 는 `NO_CORE` 로 거절한다. 앞쪽이 더 위험하다: 거절은 눈에 띄지만 프리셋은 안 띈다."""
+    declared = body.get("core_mass_fraction")
+    if declared is not None:
+        return float(declared), "바디가 선언한 핵질량비"
+    res = infer_composition(float(body["mass_earth"]), float(body["radius_earth"]),
+                            ice_allowed=False, potential_temperature=t_pot)
+    cmf = res.values.get("core_mass_fraction", res.inputs.get("core_mass_fraction"))
+    if cmf is None:
+        raise SystemExit(
+            f"  [STOP] 핵질량비를 못 얻었다 — 이 바디는 선언이 없고"
+            f" (`core_mass_fraction` 키 없음, 질량 {body['mass_earth']} · 반지름"
+            f" {body['radius_earth']} R⊕), `infer_composition` 도 값을 안 냈다"
+            f" (regime {res.regime} · {res.reason or '사유 문장 없음'})."
+            f" 이 스윕은 그 값을 전제하므로 인쇄하지 않는다")
+    return float(cmf), "역산이 푼 핵질량비 (선언 없음)"
 
 
 def say(msg: str) -> None:
@@ -96,26 +131,46 @@ def say(msg: str) -> None:
 
 
 def build(body: dict, t_pot: float, core_init: float) -> tuple[dict, float, float]:
-    """The same `params` dict `core_history.solve` builds, plus the two initial temperatures (mantle = core/r_b)."""
-    # ⚠ **핵질량분율은 풀린 상태에서 읽는다** (2026-09-20). 선언이 남아 있는 트리에서는 그 값이
-    #   `inputs` 에 있고, 선언을 지우면 역산이 돌아 `values` 에 생긴다 — 둘 다 보는 한 줄이라야
-    #   두 판에서 다 돈다. `body[...]` 로 읽으면 뒤 판에서 `KeyError`, `.get` 으로 눅이면 `None`
-    #   이 흘러 내려가 거절이 조용히 값처럼 읽힌다. 없으면 **이름 대며 멈춘다**.
-    ii = isolve(mass_earth=body["mass_earth"], core_mass_fraction=body.get("core_mass_fraction"),
-                composition="earth_like", body_class="rocky", potential_temperature=t_pot)
+    """The same `params` dict **`core_history.solve`** (`ch.solve`) builds, plus the two initial
+    temperatures (mantle = core/r_b). ⚠ Not `interior.solve`, which this function *calls* as
+    `isolve` — the two take different arguments and the names sat one line apart."""
+    # ⚠ **핵질량비는 «풀린 상태»에서 읽고, 그 값의 출처를 같이 들고 다닌다** (2026-09-20).
+    #   `_composition()` 이 세 갈래를 가르고, 여기서는 그것이 낸 수를 넘긴다. `radius_earth` 도
+    #   같이 넘긴다 — 안 넘기면 풀 것이 없어 프리셋으로 물러서고, 그게 이 항목이 고친 결함이다.
+    cmf, _cmf_source = _composition(body, t_pot)
+    ii = isolve(mass_earth=body["mass_earth"], core_mass_fraction=cmf,
+                radius_earth=body["radius_earth"], composition=ENGINE_COMPOSITION,
+                body_class="rocky", potential_temperature=t_pot)
+    # ⚠ **거절은 `values` 를 안 싣는다.** 여기서 안 보면 다음 줄이 `KeyError` 로 죽고, 인쇄는
+    #   「키가 없다」고 말하는데 실제 원인은 **엔진이 이 입력을 거절했다** 이다.
+    if "cmb_pressure" not in ii.values:
+        raise SystemExit(f"  [STOP] interior.solve 가 이 입력을 안 받았다 — regime {ii.regime}"
+                         f" · {ii.reason or '사유 문장 없음'}."
+                         f" 아래 줄들이 읽는 `cmb_pressure` 가 결과에 없다")
+    # ⚠ **출처와 `regime` 을 한 줄에 같이 찍는다.** 수가 어디서 왔는지와 엔진이 그 입력을 받았는지는
+    #   다른 사실이고, 둘이 떨어져 있으면 「역산이 값을 냈다」를 「스윕이 돌았다」로 읽게 된다 —
+    #   이 항목이 한 번 그렇게 틀렸다. `regime` 이 `out-of-domain` 이면 위 줄에서 이미 멈춘다.
+    say(f"  [출처] {body['mass_earth']} M⊕ — 핵질량비 {cmf!r} · {_cmf_source} · regime {ii.regime}")
     v = ii.values
     m_kg = body["mass_earth"] * cf.M_EARTH_KG
     r_p = body["radius_earth"] * cf.R_EARTH_M
-    cmf = ii.values.get("core_mass_fraction", ii.inputs.get("core_mass_fraction"))
-    if cmf is None:
-        raise SystemExit("  [STOP] 핵질량분율을 선언에서도 풀이에서도 못 읽었다 — "
-                         "이 스윕은 그 값을 전제한다")
     params = {"material": "fe_prem", "p_cmb": v["cmb_pressure"] * 1e9, "r_cmb": v["core_radius"] * cf.R_EARTH_M,
               "m_core": m_kg * cmf, "m_mantle": m_kg * (1.0 - cmf),
               "r_b": v["cmb_temperature"] / t_pot,
               "g": cf.G_NEWTON * m_kg / r_p ** 2, "r_p": r_p, "h_core": H_NIMMO,
               "h_m_present_w": rg.budget(m_kg * (1.0 - cmf))["mantle_w"],
               "t_surface_k": mf.T_S}   # 픽스처: 모듈 값을 명시로 (레시피는 바디 선언을 읽는다)
+    # ⚠ **이 줄은 기록이지 시험이 아니다** (2026-09-20, 감사석이 자를 뒤집어 보임). 위 `[출처]`
+    #   줄이 찍는 것은 역산이 **돌려준** 수 그대로이고, 아래는 질량 둘로 되돌려 나눈 수다.
+    #   ⚠ **「되돌린 값 == 인쇄값」을 수락선으로 쓰면 안 된다 — 그 자는 뒤집혀 있다.**
+    #   m_kg = 6.413928e+23 에서 참값 `0.23958333333333331` 은 `0.2395833333333333` 로 돌아와
+    #   **안 맞고**, 틀린 값 `0.24` 와 `0.325` 는 **정확히 맞는다**. 손실은 나눗셈이 아니라
+    #   `1.0 - cmf` 에서 나고 (`1.0 - (1.0 - cmf) != cmf`), 대수로 고쳐 쓸 수 없다.
+    #   ⚠ **`m_core + m_mantle == m_kg` 도 자가 아니다** — 어떤 cmf 에서도 참이다.
+    #   그래서 차를 **감추지도 판정하지도 않고 그대로 찍는다.** 어긋남이 커지면 눈에 보이고,
+    #   그때 그것이 어디서 났는지 이 줄이 말한다.
+    _back = params["m_core"] / (params["m_core"] + params["m_mantle"])
+    say(f"  [검산] 질량 둘로 되돌린 핵질량비 {_back!r} · 인쇄값과의 차 {_back - cmf!r}")
     return params, core_init, core_init / params["r_b"]
 
 
