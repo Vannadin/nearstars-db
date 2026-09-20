@@ -32,6 +32,7 @@ from __future__ import annotations
 import convergence
 import ice_fr2015          # 190 C: 적합 격자 이탈 카운터를 풀이 전후로 읽는다
 import eos                 # 196 B: 밀도 적합의 압력 도달 카운터를 풀이 전후로 읽는다
+import json
 import math
 
 import water_hot
@@ -42,6 +43,7 @@ from eos import (EARTH_POTENTIAL_T, IAPWS_VII_END, ICE_VII_TO_X,
                  ICE_VII_X_T_MAX, MATERIALS, REINHARDT_P_MAX, SILICATE_PREM_TO_PV,
                  Mixture, PhaseGap, core_gamma, mix, water_phase_name,
                  water_vii1_vii2_boundary)
+from pathlib import Path
 from payload import Result, out_of_domain
 from porosity import (MASS_COMPACT_KG, PHI0_NOMINAL, P_GRAIN_FRACTURE, P_LAB_MAX,
                       malamud_ice_porosity, malamud_rock_porosity,
@@ -3865,6 +3867,181 @@ def _from_state(state):
 INFERABLE_CLASSES = ("rocky", "moon", None)
 
 
+#: 오너 상자의 **고정 이름** — 황은 맞추고 산소·탄소는 이 둘 중 한 끝에 둔다 (2026-09-20).
+#: ⚠ **조용한 기본값을 안 둔다**: 선언이 없으면 아래 맞춤이 이름 대고 거절한다. 두 끝이 서로
+#: 다른 황을 주기 때문이다. ⚠ **두 수가 두 벌 있다 — 해상도가 다르기 때문이지 물리가 다른 게
+#: 아니다.** 같은 해상도로 잰 것은 **반분 6 둘: 18.9062 대 13.8438 wt%, 차 5.06**; 굳힌 값은
+#: 상한을 반분 2 로 사므로 **14.5000, 차 4.41** 이다(해상도 3 wt%). ⚠ **반분 6 쌍은 굳히기 전
+#: 측정(2026-09-20, 목표 1830 km)이고 `mars_sulphur_anchor.json` 에는 없다** — 앵커를 열어
+#: 13.8438 을 찾으면 안 나온다. 그 쌍을 여기 두는 이유는 「고정 선택이 답을 움직인다」가
+#: **같은 자로 잰 둘**에서만 나오기 때문이다. 픽스처는 «갈리느냐» 만
+#: 물으므로 거친 쪽으로도 갈린다.
+LIGHT_ELEMENT_PINS = {"box_floor": {"O": 0.01, "C": 0.005},
+                      "box_ceiling": {"O": 0.04, "C": 0.014}}
+
+#: 이분법 회수와 그에 따른 황 해상도. 한 시행이 사원계 역산 한 번(≈121 s)이라 회수가 곧 시간이다.
+SULPHUR_FIT_HALVINGS = 6
+SULPHUR_FIT_BRACKET = (0.13, 0.25)
+
+#: 맞춘 답을 굳혀 두는 파일. **게이트의 한 단계만 맞춤을 돌리고**, 화성 노드는 여기서 읽는다.
+#: 왜: 맞춤 한 번이 사원계 역산 아홉 번(괄호 둘 + 반분 여섯 + 보고점 하나)이라, 노드를 푸는 자리마다 그것을
+#: 물리면 한 게이트가 역산을 열세 번 더 푼다 (측정 2026-09-20: 픽스처만으로 +814 s).
+SULPHUR_ANCHOR_FILE = Path(__file__).with_name("mars_sulphur_anchor.json")
+
+#: 굳힌 답을 움직이는 **선언들**. 파일 해시가 아니라 값이다 — `mars.yaml` 은 산문 주석이 자주
+#: 바뀌고, 파일 자를 쓰면 물리가 그대로인데도 지문이 깨져 `--refresh` 가 «늘 누르는 단추» 가 된다.
+SULPHUR_ANCHOR_DECLARATIONS = ("mass_earth", "radius_earth", "core_radius_km",
+                               "light_element_fixing", "potential_temperature")
+
+
+def solve_with_core_sulphur(mass_earth: float, radius_earth: float, w_s: float, pin: str,
+                            potential_temperature: float | None = None):
+    """황 분율 하나를 핵에 넣고 **한 번** 푼다.
+
+    맞춤(`fit_sulphur_to_core_radius`)도 읽기(`read_sulphur_anchor` 뒤의 노드)도 이 함수를 쓴다 —
+    두 벌로 지으면 굳힌 값과 노드의 값이 서로 다른 길로 나올 수 있다."""
+    from eos import Material, core_mole_fractions, huang_core_phase, FE_S_BELOW_REF_REASON, MATERIALS
+    w_o = LIGHT_ELEMENT_PINS[pin]["O"]
+    w_c = LIGHT_ELEMENT_PINS[pin]["C"]
+    x = core_mole_fractions({"S": w_s, "O": w_o, "C": w_c})
+    name = f"fe_core_fit_s{w_s * 100:.4f}_{pin}"
+    MATERIALS[name] = Material(
+        name, f"액체 Fe–S–O–C · S {w_s * 100:.4f} wt% ({pin})",
+        (huang_core_phase(x, "19GPa"),), fit_composition="Fe-S-O-C", role="core",
+        gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다",
+        under_reason=FE_S_BELOW_REF_REASON)
+    saved = COMPOSITIONS["earth_like"]
+    COMPOSITIONS["earth_like"] = (saved[0], saved[1], saved[2], name)
+    try:
+        return infer_composition(mass_earth, radius_earth, ice_allowed=False,
+                                 potential_temperature=potential_temperature)
+    finally:
+        COMPOSITIONS["earth_like"] = saved
+        MATERIALS.pop(name, None)
+
+
+def _sulphur_result(res, w_s: float, pin: str, core_radius_km: float, how: str):
+    """맞춘 결과에 **등급과 황 키를 붙인다**.
+
+    ⚠ **호출부마다 붙이면 직접 부른 자리가 조용히 `analog` 로 남는다** (측정 2026-09-20: 함수를
+    직접 부르니 `grade analog` · `core_sulphur_wt None`). 그래서 붙이는 자리는 여기 하나다."""
+    v = dict(res.values)
+    v["core_sulphur_wt"] = w_s
+    return _dc_replace(
+        res, values=v, grade="calibrated",
+        units={**res.units, "core_sulphur_wt": "dimensionless"},
+        notes=(f"황 맞춤 — S {w_s * 100:.4f} wt% 가 선언된 핵 반지름 {core_radius_km:.1f} km 를 "
+               f"재현한다 (고정 {pin}, {how}). ⚠ **맞춘 값은 그 맞춤을 검사하지 못한다** — "
+               "핵 반지름은 이제 소비된 관측이고, 남는 독립 검사는 관성모멘트뿐이다.",) + tuple(res.notes))
+
+
+def fit_sulphur_to_core_radius(mass_earth: float, radius_earth: float,
+                               core_radius_km: float, pin: str,
+                               potential_temperature: float | None = None,
+                               halvings: int | None = None):
+    """관측 핵 반지름을 재현하는 황 분율을 푼다 — **맞춤이지 측정이 아니다**.
+
+    ⚠ **맞춘 양은 그 맞춤을 검사하지 못한다.** 이 함수가 돌고 나면 핵 반지름은 «소비된 관측» 이
+    되어 기록된 어긋남에서 빠진다. 남는 독립 검사는 관성모멘트 하나뿐이고, 그것은 이 함수가
+    건드리지 않는다 (사전등록 `f82dd9f7` 수락선 C).
+
+    ⚠ **산소·탄소는 맞추지 않는다** — 선언된 끝에 고정한다. 두 끝이 **다른 답**을 주므로
+    (같은 해상도로: 하한 S 18.9062 · 상한 S 13.8438 wt%, 반분 6 둘) 그 선택은 오너의 것이고,
+    없으면 여기서 거절한다.
+
+    ⚠ **이 함수를 부르는 자리는 게이트의 한 단계뿐이다** (`test_mars_sulphur.py`). 화성 노드는
+    굳힌 답을 읽는다 — 왜는 `SULPHUR_ANCHOR_FILE` 의 주석에 있다."""
+    if pin not in LIGHT_ELEMENT_PINS:
+        raise ValueError(
+            f"가벼운 원소 고정이 선언되지 않았다 — `light_element_fixing` 에 "
+            f"{' 또는 '.join(LIGHT_ELEMENT_PINS)} 중 하나가 있어야 한다. 두 끝은 서로 다른 황을 "
+            f"주므로(같은 해상도로 18.9062 대 13.8438 wt%) 여기서 하나를 고르는 것은 **선언**이고, "
+            f"이 레시피가 대신 고르지 않는다. 받은 값: {pin!r}")
+    target_frac = core_radius_km / (radius_earth * EARTH_RADIUS_M / 1e3)
+
+    def at(w_s):
+        return solve_with_core_sulphur(mass_earth, radius_earth, w_s, pin,
+                                       potential_temperature=potential_temperature)
+
+    # ⚠ **회수는 곧 시간이다** — 한 시행이 사원계 역산 한 번(측정 ≈68 s). 기본 6 회는 착지용
+    #   정밀도이고, 다른 고정은 «두 답이 갈리느냐» 만 보므로 더 적게 사서 쓴다.
+    n = SULPHUR_FIT_HALVINGS if halvings is None else halvings
+    lo, hi = SULPHUR_FIT_BRACKET
+    got_lo, got_hi = at(lo), at(hi)
+    for res in (got_lo, got_hi):
+        if not res.applicable:
+            return None, res
+    f_lo = got_lo.values["core_radius_fraction"] - target_frac
+    f_hi = got_hi.values["core_radius_fraction"] - target_frac
+    if f_lo * f_hi > 0:
+        return None, got_hi              # 축이 목표를 안 감싼다 — 호출부가 이름 대고 거절한다
+    best = got_hi
+    for _ in range(n):
+        mid = 0.5 * (lo + hi)
+        best = at(mid)
+        if not best.applicable:
+            return None, best
+        if (best.values["core_radius_fraction"] - target_frac) * f_lo <= 0:
+            hi = mid
+        else:
+            lo, f_lo = mid, best.values["core_radius_fraction"] - target_frac
+    w_s = 0.5 * (lo + hi)
+    # ⚠ **마지막 시행은 `w_s` 에서 풀지 않았다** — 고리 안의 `best` 는 마지막 **중점**의 구조이고,
+    #   `w_s` 는 그 뒤 좁혀진 괄호의 중점이라 반분 한 칸만큼 다른 조성이다. 한 번 더 풀지 않으면
+    #   인쇄되는 S 와 인쇄되는 핵 반지름이 **서로 다른 조성의 값**이 되고, 굳힌 황을 읽어 푸는
+    #   노드도 이 결과와 안 맞는다 (2026-09-20, 앵커를 지으며 드러남). 역산 한 번을 더 산다.
+    best = at(w_s)
+    if not best.applicable:
+        return None, best
+    return w_s, _sulphur_result(best, w_s, pin, core_radius_km, f"이분법 {n} 회")
+
+
+def read_sulphur_anchor(declared: dict):
+    """굳힌 황을 읽는다 — `(w_s, 회수, 거절 문장)`. 셋째가 있으면 앞 둘은 뜻이 없다.
+
+    ⚠ **이 자리는 선언만 검사한다.** 물리 파일이 움직였는지는 게이트 단계
+    (`test_mars_sulphur.py`)가 바이트·코드 두 자로 본다 — 그래서 **게이트 밖에서 `eos.py` 를
+    고치고 노드를 돌리면 이 함수는 낡은 황을 조용히 돌려준다**. 그 구멍은 다음 게이트가 닫는다.
+
+    ⚠ **화성이 아닌 바디는 여기서 거절된다** (결정 ⓘ) — 선언이 다르면 굳힌 답이 그 바디의 것이
+    아니기 때문이고, 조용히 548 s 를 태우는 것보다 이름 있는 정지가 낫다."""
+    if not SULPHUR_ANCHOR_FILE.exists():
+        return None, None, (
+            f"굳힌 황 맞춤이 없다 — `{SULPHUR_ANCHOR_FILE.name}` 이 이 트리에 없다. "
+            "`python3 engine/test_mars_sulphur.py --refresh` 로 굳혀라 — 이것을 잡는 자는 "
+            "그 단계 하나다")
+    anchor = json.loads(SULPHUR_ANCHOR_FILE.read_text(encoding="utf-8"))
+    for key in SULPHUR_ANCHOR_DECLARATIONS:
+        want, got = anchor["declared"].get(key), declared.get(key)
+        if isinstance(want, float) and isinstance(got, (int, float)):
+            same = abs(float(got) - want) <= 1e-12 * max(1.0, abs(want))
+        else:
+            same = want == got
+        if not same:
+            return None, None, (
+                f"굳힌 황 맞춤은 이 선언의 것이 아니다 — **`{key}` 가 움직였다** "
+                f"(굳힘 {want!r} · 지금 {got!r}). 맞춤은 선언 다섯에 묶여 있고, 그 중 하나가 "
+                f"바뀌면 굳힌 황은 다른 바디의 답이다. 같은 선언이 맞으면 "
+                f"`python3 engine/test_mars_sulphur.py --refresh` 로 이 커밋에서 다시 굳혀라 — "
+                f"물리 파일이 움직였는지까지 보는 자는 그 단계 하나다")
+    pin = declared.get("light_element_fixing")
+    fixing = anchor["fixings"].get(pin)
+    if fixing is None:
+        return None, None, (
+            f"굳힌 황 맞춤에 고정 `{pin}` 이 없다 — 굳힌 것은 "
+            f"{' · '.join(sorted(anchor['fixings']))} 뿐이다. "
+            "`python3 engine/test_mars_sulphur.py --refresh` 로 다시 굳혀라 — 이것을 잡는 자는 "
+            "그 단계 하나다")
+    return fixing["core_sulphur_wt"], fixing["halvings"], None
+
+
+def _declared_value(declared):
+    """선언 블록에서 값을 꺼낸다 — 블록이든 맨 스칼라든 (`core_history._declared_scalar` 와 같은 꼴)."""
+    if isinstance(declared, dict):
+        return declared.get("value")
+    return declared
+
+
 def _infer_from_state(state):
     """조성이 하나도 선언되지 않았다 — **채우지 말고 역산하거나 이름 대고 거절한다** (C57, 182 B).
 
@@ -3899,6 +4076,27 @@ def _infer_from_state(state):
             "`core_mass_fraction`·`radius_earth` 중 하나는 있어야 한다. 예전에는 이 자리가 "
             "조용히 `earth_like` 로 채워졌다.",
             inputs=inputs, refs=REFS)
+    # ⚠ **관측 핵 반지름이 선언돼 있으면 조성은 그것을 재현하도록 맞춘다** (황 맞춤, 오너
+    #   2026-09-20). 자유 분율 하나를 반지름으로 푸는 위 갈래와 달리, 이 갈래는 **황까지**
+    #   푼다 — 미지수 둘(핵질량분율·S), 관측 셋(질량·반지름·핵 반지름). 맞춘 뒤의 핵 반지름은
+    #   **소비된 관측**이라 더는 검사가 아니고, 남는 독립 검사는 관성모멘트뿐이다.
+    core_km = _declared_value(state.get("core_radius_km"))
+    if core_km:
+        #   ⚠ **여기서 맞춤을 돌리지 않는다** — 굳힌 황을 읽고 그 황으로 **한 번** 푼다. 맞춤은
+        #   게이트의 한 단계(`test_mars_sulphur.py`)에서만 돌고, 그 단계가 굳힌 값을 다시 대본다.
+        pin = _declared_value(state.get("light_element_fixing"))
+        t_pot = state.get("potential_temperature")
+        declared = {"mass_earth": mass, "radius_earth": radius,
+                    "core_radius_km": float(core_km), "light_element_fixing": pin,
+                    "potential_temperature": t_pot}
+        w_s, halvings, why = read_sulphur_anchor(declared)
+        if why:
+            return out_of_domain(RECIPE, VERSION, why, inputs=inputs, refs=REFS)
+        res = solve_with_core_sulphur(mass, radius, w_s, pin, potential_temperature=t_pot)
+        if not res.applicable:
+            return res
+        return _sulphur_result(res, w_s, pin, float(core_km),
+                               f"굳힌 값 · 이분법 {halvings} 회 · {SULPHUR_ANCHOR_FILE.name}")
     # 얼음 축을 열지 말지는 **선언**이다. `ice_mass_fraction: 0.0` 은 «얼음 없음» 이라는
     # 선언이지 «모른다» 가 아니다 — 그 구분이 없으면 규산염 화산체에 얼음을 붙인다.
     imf = state.get("ice_mass_fraction")

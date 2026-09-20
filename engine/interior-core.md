@@ -6180,9 +6180,14 @@ declaration do not take this branch, so nothing else in the registry changes.*
 almost everywhere — seven of eight probes across S 13–30 wt%. After this fix the same composition
 (S 19 · O 1 · C 0.5 wt%, 1600 K) converges and returns a core radius of* **1 832.07 km** *(cmf 0.276042) —
 a number produced in the region below 19 GPa that this engine continues by its own arithmetic, measured
-against a board window (1820–1870 km) that itself mixes the ends of Stähler+ 2021's two estimates, so*
+against a board window (1820–1870 km) whose radii are **Durán+ 2022's abstract band**
+(`2022PEPI..32506851D:79`) while its densities are Stähler+ 2021's 5.7–6.3 — ⚠ **two papers in one window**;
+the earlier claim that it mixed the ends of Stähler's own two estimates is **withdrawn as wrong**, and which
+series the gate should use is the owner's cell (④′), so*
 **landing inside that window is not evidence**; *it is the same fit, carried further, compared with a
 number nobody published.*
+
+⚠ **Where the fingerprint's four lines can be seen, and where they cannot.** *They live in this commit's **diff of `engine/ice_giant_anchor.json`** — `eos.py`'s byte and code digests, and two `seconds`. **The gate log prints only the frozen figure**, one line, so a reader checking «did the fingerprint move» against the log will find nothing to compare. **The corpus to open is the diff.*** ⚠ *And the two `seconds` (27.3 → 27.7 · 36.3 → 36.7) are **the re-freeze's own clock**, not a quantity to compare across commits.*
 
 ⚠ **The earlier reading is withdrawn.** *«The sulphur axis cannot reproduce Mars's observed core radius»
 was measured under this defect and is not a statement about the box. The sulphur fit is re-run after this

@@ -28,6 +28,7 @@
 """
 from __future__ import annotations
 
+import json
 import sys
 
 import interior
@@ -2105,6 +2106,69 @@ def main() -> int:
         if not cond:
             fails.append(f"계약: {label}")
         print(f"  [{'PASS' if cond else 'FAIL'}] {label}")
+
+    # ── 황 맞춤 — 노드가 **읽는** 자리의 넷 ────────────────────────────────────
+    # ⚠ **여기서는 맞춤을 돌리지 않는다.** 맞춤은 게이트의 한 단계(`test_mars_sulphur.py`)에서만
+    #   돌고, 그 단계가 굳힌 값을 다시 대본다. 이 넷이 묻는 것은 노드 쪽 — 굳힌 두 고정이
+    #   **다른 답**인가, 미선언이 **조용한 기본값 없이** 거절하는가, 선언이 움직이면 읽기가
+    #   **어느 키가 움직였는지 말하며** 거절하는가, 굳히지 않은 고정에 거절하는가.
+    # ⚠ **왜 안 돌리나**: 한 맞춤이 사원계 역산 아홉 번이다. 픽스처가 맞춤을 돌리던 판을 쟀더니
+    #   이 파일이 633 s → 1447 s 였다 (측정 2026-09-20, +814 s).
+    print("\n황 맞춤 — 굳힌 답을 읽는 자리 (오너 2026-09-20: 고정 box_floor)")
+    _anchor_path = interior.SULPHUR_ANCHOR_FILE
+    _anchor = json.loads(_anchor_path.read_text(encoding="utf-8")) if _anchor_path.exists() else None
+    if _anchor is None:
+        fails.append(f"황 맞춤: {_anchor_path.name} 이 없다 — "
+                     "`python3 engine/test_mars_sulphur.py --refresh` 로 굳혀라")
+        print(f"  [FAIL] {_anchor_path.name} 이 없다")
+    else:
+        _lo_s = _anchor["fixings"]["box_floor"]["core_sulphur_wt"]
+        _hi_s = _anchor["fixings"]["box_ceiling"]["core_sulphur_wt"]
+        for _pin, _w in (("box_floor", _lo_s), ("box_ceiling", _hi_s)):
+            _rec = _anchor["fixings"][_pin]
+            print(f"  [기록] {_pin:12} S {_w * 100:7.4f} wt% · 핵 {_rec['core_radius_km']:8.2f} km "
+                  f"· C/MR² {_rec['nmoi']:.6f}")
+        _apart = abs(_lo_s - _hi_s) * 100
+        _cond = _apart > 1.0
+        if not _cond:
+            fails.append(f"황 맞춤: 두 고정의 S 가 {_apart:.2f} wt% 밖에 안 갈린다 — 고정 선택이 답을 "
+                         "안 움직인다면 그 선언은 아무것도 안 하고 있는 것이다")
+        print(f"  [{'PASS' if _cond else 'FAIL'}] 두 고정이 **다른 답**을 준다 — S {_apart:.2f} wt% 차 "
+              f"(상자 폭 6 wt% 의 {_apart / 6 * 100:.0f} %). 그래서 `light_element_fixing` 은 선언이다")
+
+        _declared = dict(_anchor["declared"])
+        _w_s, _n, _why = interior.read_sulphur_anchor(_declared)
+        _cond = _why is None and _w_s == _lo_s
+        if not _cond:
+            fails.append(f"황 맞춤: 굳힌 선언 그대로인데 읽기가 거절했다 — {(_why or '')[:70]}")
+        print(f"  [{'PASS' if _cond else 'FAIL'}] 굳힌 선언 그대로면 읽기가 S {_w_s if _cond else float('nan')} 를 "
+              f"돌려준다 — 반분 {_n} 회로 굳힌 값")
+
+        _moved = {**_declared, "mass_earth": _declared["mass_earth"] * 1.1}
+        _w_s, _n, _why = interior.read_sulphur_anchor(_moved)
+        _cond = _why is not None and "mass_earth" in _why and "--refresh" in _why
+        if not _cond:
+            fails.append("황 맞춤: 선언이 움직였는데 읽기가 **어느 키인지** 말하며 거절하지 않는다")
+        print(f"  [{'PASS' if _cond else 'FAIL'}] 선언이 움직이면 **움직인 키를 먼저 대고** 거절한다 "
+              f"— 결정 ⓘ, 화성 아닌 바디도 여기서 멈춘다 ({(_why or '')[:48]}…)")
+
+        _w_s, _n, _why = interior.read_sulphur_anchor({**_declared, "light_element_fixing": "box_middle"})
+        _cond = _why is not None and "box_middle" in _why
+        if not _cond:
+            fails.append("황 맞춤: 굳히지 않은 고정에 이름 대고 거절하지 않는다")
+        print(f"  [{'PASS' if _cond else 'FAIL'}] 굳히지 않은 고정은 **이름 대고 거절한다** — "
+              "조용한 기본값 없음")
+
+    try:
+        interior.fit_sulphur_to_core_radius(0.1074, 0.5320, 1830.0, None)
+        _why = ""
+    except ValueError as _e:
+        _why = str(_e)
+    _cond = "light_element_fixing" in _why and "선언" in _why
+    if not _cond:
+        fails.append("황 맞춤: 고정 미선언이 이름 대고 거절하지 않는다")
+    print(f"  [{'PASS' if _cond else 'FAIL'}] 고정을 선언 안 하면 **이름 대고 거절한다** — 조용한 기본값 없음 "
+          f"({_why[:60]}…)")
 
     print(f"\n  최악 C/MR² 오차 {worst_n * 100:.1f}% · 최악 반지름 오차 "
           f"{worst_r * 100:.1f}% (허용 {TOL * 100:.0f}% / {RADIUS_TOL * 100:.0f}%)")

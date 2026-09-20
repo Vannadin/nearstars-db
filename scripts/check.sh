@@ -956,6 +956,11 @@ step "test_rheology.py" bash -c 'cd engine && exec python3 test_rheology.py'
 # 그리고 ⚠ **ρ₀ 가 인쇄되지 않아 재질을 짓지 않는다는 거절**이 앵커다 — R4–R6 은 SI 도착 전까지
 # 거절이 기대 결과다. Mori 공백(19 GPa → None)도 여기서 지킨다. ~0 s.
 step "test_fe_s.py" bash -c 'cd engine && exec python3 test_fe_s.py'
+# 화성 핵 황 맞춤 — 굳힌 답(`mars_sulphur_anchor.json`)과 지금 코드가 같은 황을 내는가.
+# ⚠ **맞춤을 돌리는 자리는 여기 하나다**: 한 맞춤이 사원계 역산 아홉 번이라, 노드를 푸는 자리마다
+# 물리면 한 게이트가 역산을 열세 번 더 푼다 (측정 2026-09-20: 픽스처만으로 +814 s). 노드와
+# 픽스처는 굳힌 값을 읽고, 이 단계가 그 값을 다시 대본다. 역산 16 회 ~1090 s.
+step "test_mars_sulphur.py" bash -c 'cd engine && exec python3 test_mars_sulphur.py'
 # 밀도 적합 ↔ 녹는곡선의 조성·물질상 선언 (Brief 41). 다른 조인을 말없이 잇는 상이 생기면 여기서 잡힌다.
 step "test_eos_joins.py" bash -c 'cd engine && exec python3 test_eos_joins.py'
 # hcp 철 열 세트 (브리프 187). 저자의 Table S3 재현(보유 SI 에서 시험 시점에 읽는다) · g 와 g(1−g)
