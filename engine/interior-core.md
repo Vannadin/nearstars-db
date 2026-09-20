@@ -5050,7 +5050,7 @@ InSight's density is a **whole-core mean**, so the pass/fail is not a point eval
 > whole-core mean density must land in 5.7–6.65 × 10³ kg m⁻³ AND the core radius in 1830 ± 40 km — both,
 > in the same run.**
 
-Sources of the two windows (printed): Stähler+ 2021 "1830 ± 40 kilometers", "5.7 to 6.3 g cm⁻³" (held);
+Sources of the two windows (printed): ⚠ **both axes are Durán+ 2022 since 2026-09-20** — 1820–1870 km and 6.0–6.2 g cm⁻³, the ranges its own abstract prints. Stähler+ 2021 "1830 ± 40 kilometers", "5.7 to 6.3 g cm⁻³" is what Durán calls *previously*, and was the density window in force until that decision (held);
 Le Maistre+ 2023 [`2023Natur.619..733L`](https://ui.adsabs.harvard.edu/abs/2023Natur.619..733L) "1,835 ± 55 km", "5,955–6,290 kg m⁻³" (abstract only, B18); Durán+ 2022 [`2022PEPI..32506851D`](https://ui.adsabs.harvard.edu/abs/2022PEPI..32506851D) "1820–1870 km", "6–6.2 g cm⁻³" (held); Khan+ 2023 "1,675 ± 30 km", "6.65 ± 0.1 g cm⁻³" (held; **this is the molten-silicate-layer model — its radius window does *not* overlap Stähler's, so the cell above is the homogeneous-mantle window; if the owner elects the Khan/Samuel layered model the cell becomes 1650–1675 ± 30 km and 6.5–6.65**). The 5.7–6.65 band spans both families on purpose and the radius window does not — ⚠ **registered as the one place this cell can pass on density and fail on radius, which is the point of carrying both.**
 
 Expected outcomes, registered before running:
