@@ -91,7 +91,7 @@ def _fit(declared: dict, pin: str, halvings: int) -> tuple:
 def _record(w_s: float, res, halvings: int, declared: dict) -> dict:
     """굳히는 값. ⚠ **초는 여기 안 들어간다.**
 
-    이 파일은 `interior.py` 가 이름을 대는 데이터 파일이라 `test_ice_giant.py:trigger_files()`
+    이 파일은 `interior.py` 가 이름을 대는 데이터 파일이라 `engine/test_ice_giant.py@«def trigger_files»`
     의 그물(소스에서 `.json` 리터럴을 긁는다)에 걸리고, 그쪽 `input_digests()` 가 **이 파일 전체
     바이트를 해시**한다. 초를 담으면 물리가 하나도 안 바뀐 재굳힘도 바이트를 움직여 얼음거대행성
     앵커가 빨개진다 — **초는 기록만 하고 판정하지 않는다**는 규칙이 해시 안에서 뒤집힌다
@@ -204,7 +204,10 @@ def check() -> int:
 
     # ⚠ **축이 목표를 감싸지 못하면 값이 아니라 없음이 나와야 한다** — 상자를 넓히는 것은 이
     #   레시피의 일이 아니다. 괄호 둘만 풀고 끝나므로 역산 **두 번**이다.
-    far, res, seconds = _fit({**declared, "core_radius_km": 1200.0}, "box_floor", 1)
+    # ⚠ **선언된 고정으로 묻는다** — 고정 이름을 박아 두면 오너가 선언을 바꾼 날 시험이
+    #   **선언이 아니라 옛 결정**을 재게 된다(2026-09-20 게이트에서 실제로 그렇게 빨개졌다).
+    far, res, seconds = _fit({**declared, "core_radius_km": 1200.0},
+                             declared["light_element_fixing"], 1)
     ok = far is None
     if not ok:
         fails.append("목표 1200 km 는 이 축이 감싸지 못하는데 값을 냈다 — 감싸지 못하면 거절해야 한다")

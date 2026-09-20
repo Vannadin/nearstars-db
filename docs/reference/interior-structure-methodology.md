@@ -46,7 +46,13 @@ literature, separate recipes.
 `figure_relaxation` [—] · `maxwell_time_mantle_top` [yr] · `relaxation_threshold_max` [K] ·
 `integrator_core_gamma_verdict` [—] · `integrator_red_gamma_used` [—] ·
 `converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—] ·
-`core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—]
+`core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—]
+
+⚠ **`core_sulphur_wt` is a mass fraction of the core, 0–1, not wt%** — it is present only when the
+sulphur fit runs, that is when the body declares `core_radius_km` and `light_element_fixing` and lets the
+composition be inferred; a body that declares its composition never carries it. Its grade is `calibrated`,
+because it is tuned to reproduce the declared core radius. Like `composition`, it is a `Returns` key with
+no `outputs` entry in `chain.yaml`, so C73's record counts it and nothing judges it.
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] ·
 `composition` [—] · `body_class` [—] · `radius_earth` [R_earth] · `age_gyr` [Gyr] ·
 `tidal_heating` [—] · `envelope_z_rock_fraction` [—] · `envelope_z_profile` [—] ·

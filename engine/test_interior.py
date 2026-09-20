@@ -2114,7 +2114,7 @@ def main() -> int:
     #   **어느 키가 움직였는지 말하며** 거절하는가, 굳히지 않은 고정에 거절하는가.
     # ⚠ **왜 안 돌리나**: 한 맞춤이 사원계 역산 아홉 번이다. 픽스처가 맞춤을 돌리던 판을 쟀더니
     #   이 파일이 633 s → 1447 s 였다 (측정 2026-09-20, +814 s).
-    print("\n황 맞춤 — 굳힌 답을 읽는 자리 (오너 2026-09-20: 고정 box_floor)")
+    print("\n황 맞춤 — 굳힌 답을 읽는 자리")
     _anchor_path = interior.SULPHUR_ANCHOR_FILE
     _anchor = json.loads(_anchor_path.read_text(encoding="utf-8")) if _anchor_path.exists() else None
     if _anchor is None:
@@ -2122,12 +2122,17 @@ def main() -> int:
                      "`python3 engine/test_mars_sulphur.py --refresh` 로 굳혀라")
         print(f"  [FAIL] {_anchor_path.name} 이 없다")
     else:
+        # ⚠ **선언된 고정을 글자로 박지 않는다** — 오너가 2026-09-20 에 box_floor 에서
+        #   box_ceiling 으로 바꿨고, 박아 둔 시험은 그 순간 **선언이 아니라 옛 결정**을 쟀다.
+        #   이 판이 게이트에서 빨개진 자리다.
+        _pin_dec = _anchor["declared"]["light_element_fixing"]
         _lo_s = _anchor["fixings"]["box_floor"]["core_sulphur_wt"]
         _hi_s = _anchor["fixings"]["box_ceiling"]["core_sulphur_wt"]
         for _pin, _w in (("box_floor", _lo_s), ("box_ceiling", _hi_s)):
             _rec = _anchor["fixings"][_pin]
-            print(f"  [기록] {_pin:12} S {_w * 100:7.4f} wt% · 핵 {_rec['core_radius_km']:8.2f} km "
-                  f"· C/MR² {_rec['nmoi']:.6f}")
+            print(f"  [기록] {_pin:12}{' ←선언' if _pin == _pin_dec else '     '} S {_w * 100:7.4f} wt% "
+                  f"· 핵 {_rec['core_radius_km']:8.2f} km · C/MR² {_rec['nmoi']:.6f} "
+                  f"· 반분 {_rec['halvings']}")
         _apart = abs(_lo_s - _hi_s) * 100
         _cond = _apart > 1.0
         if not _cond:
@@ -2138,11 +2143,13 @@ def main() -> int:
 
         _declared = dict(_anchor["declared"])
         _w_s, _n, _why = interior.read_sulphur_anchor(_declared)
-        _cond = _why is None and _w_s == _lo_s
+        _want = _anchor["fixings"][_pin_dec]["core_sulphur_wt"]
+        _cond = _why is None and _w_s == _want
         if not _cond:
-            fails.append(f"황 맞춤: 굳힌 선언 그대로인데 읽기가 거절했다 — {(_why or '')[:70]}")
-        print(f"  [{'PASS' if _cond else 'FAIL'}] 굳힌 선언 그대로면 읽기가 S {_w_s if _cond else float('nan')} 를 "
-              f"돌려준다 — 반분 {_n} 회로 굳힌 값")
+            fails.append(f"황 맞춤: 읽기가 선언 고정 `{_pin_dec}` 의 값을 안 돌려준다 — 기대 {_want} · "
+                         f"받음 {_w_s} · 거절 {(_why or '없음')[:50]}")
+        print(f"  [{'PASS' if _cond else 'FAIL'}] 굳힌 선언 그대로면 읽기가 **선언 고정 `{_pin_dec}` 의** "
+              f"S {_w_s if _cond else float('nan')} 를 돌려준다 — 반분 {_n} 회로 굳힌 값")
 
         _moved = {**_declared, "mass_earth": _declared["mass_earth"] * 1.1}
         _w_s, _n, _why = interior.read_sulphur_anchor(_moved)
