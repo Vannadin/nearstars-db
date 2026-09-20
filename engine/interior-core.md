@@ -12397,6 +12397,41 @@ that proof would have **failed on its own anchor** the next time anyone ran the 
 would have said so beforehand. It now names `H_NIMMO` and the proof reproduces 1525.46 K again. **This is the
 argument against moving the declared-H rows out of the gate**: what a lane does not recompute, nobody re-measures.
 
+⚠ **A third breakage in the same tool, found 2026-09-20 by the work seat and confirmed independently by the
+audit seat.** `mars_step_sweep.py` carried Mars's core mass fraction as a literal in its own module-level
+dict — a copy of a declaration `bodies/mars.yaml` stopped making when C57 (c) removed the key. Nothing
+compares a copy with the tree it was copied from, so the sweep kept printing Mars rows from a number with no
+origin, and the tool's own `cmf is None` stop could never fire because the copy always supplied one.
+⚠ **Deleting the copy alone is worse, and that was measured rather than argued**: with no fraction and no
+radius in the call, `interior.solve` does not invert. It looks the composition name up and falls back to the
+`earth_like` preset while the rows still say Mars. The inversion is a different function, `infer_composition`,
+which needs mass *and* radius — and the tool's dict already held the radius; the call simply never passed it.
+**What was missing was not in the file, it was in the call.** The fraction now comes from three branches —
+declaration, inversion, then a stop that names the body and both places looked at — and Earth still takes the
+first branch from its own declared value, so one run exercises both. The inversion returns
+**0.23958333333333331**, reproduced bit-identically by the audit seat from `infer_composition` directly.
+
+⚠ **Two quantities had been conflated, and separating them is the repair.** `composition` is the engine's
+material vocabulary and accepts five names; the inversion's own label is not one of them, and passing it — or
+`None` — is refused before integration, with the refusal carrying no values, so the next line died on a
+missing key rather than on the refusal. The tool now passes the vocabulary name, prints the *source* of the
+number as a label beside the solved regime, and stops on the refusal by name. ⚠ **A first attempt at an
+acceptance test here was inverted**: recovering the fraction from the two masses and comparing it with the
+literal passes two wrong values and fails the true one. ⚠ **The stated mechanism was wrong once, and the
+correction is the point**: the two masses sum exactly, so the subtraction's error cancels; the residual comes
+from multiplying and dividing back, and no algebra removes it. That is recorded where the line lives, in the tool's own comment, with the three numbers that show
+it — **not repeated here, so that one place stays canonical.** The check line prints the difference instead of
+judging it.
+
+⚠ **Two cost figures, and one of them was wrong for a reason worth keeping.** The inversion takes about two
+minutes per call on an idle machine (121.41 s for the inversion and 127.99 s for the whole of
+`build` on one run, 132 s for `build` on a second, each with the machine's process count recorded from inside
+the measurement); a figure of about 20 seconds had been carried into this
+work and is withdrawn — it was a binary-system measurement applied to a quaternary one, not an unsupported
+number. ⚠ An earlier explanation that the slow timing came from contention is also withdrawn: the busy-machine
+figure and the idle one differ by 1.1 s. **The tool is not a gate step**, so none of this appears in the
+gate's timings, and a reader who wants the cost has to run it — two minutes, once, per call.
+
 **The integrator's own reference row moves with it, and it is not the row C15 reads.** At the declared H the
 Earth history ends at `T_c` **3915.75 K** (inside C14's 3750–4284 K band), inner-core branch **`never`**,
 −d`T_c`/d`t` **58 K/Gyr**, and the four-corner ΔE_min band **−205.7 … −2.9 MW/K, 0 of 4 corners positive →
