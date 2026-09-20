@@ -5925,10 +5925,19 @@ measure.
   row; the primary is Konopliv+ 2011, **which is not in the held cache** (`docs/phase3/_papers/` has no
   `…K` bibcode for it). Fetching it, or labelling the value as second-hand through Rivoldini 2011, is the
   first act of 182 B.
-- **ⓓ The moment-of-inertia anchor declares its convention.** 0.3644 is Konopliv 2011's **equatorial-radius**
+- **ⓓ The moment-of-inertia anchor declares its convention.** ⚠ **This entry stated the convention backwards
+  and the correction is written here rather than below.** It said: *0.3644 is Konopliv 2011's **equatorial-radius**
   form; the mean-radius form differs by **≈0.0009**, which is larger than the printed uncertainties
-  (0.0001–0.0006). An inversion anchored on the wrong convention is wrong by more than its own error bar.
-  ⚠ *The gate's 0.01 tolerance is a gate width, not an uncertainty.*
+  (0.0001–0.0006).* ⚠ **0.3644 is the mean-radius form.** Rivoldini+ 2011's table carries it under the footnote
+  `MOI = I/ma ra²` with `ra = 3389.5 ± 0.2 (Seidelmann 2002)`, the volumetric mean radius; the equatorial
+  convention is the separate polar row `C/(ma·re²)` at `re = 3396.2`, and 0.3644 is not that number.
+  ⚠ **And the convention does not explain the gap it was invoked for.** `(3396.2/3389.5)² = 1.003957`, so
+  `0.36340 × 1.003957 = 0.36484` — a convention step of **0.0014**, while the difference actually to be
+  explained is `0.3644 − 0.36340 = 0.0010`. **The step is larger than the gap and in the wrong place**: the two
+  figures are not one number in two conventions but **two determinations**, pre-InSight (Konopliv) against
+  InSight (Stähler). ⚠ **Three numbers — 0.0009, 0.0014, 0.0010 — never agreed with each other, and that was the
+  signal.** Nobody stopped on it; the entry's own arithmetic contradicted its own claim for as long as it stood.
+  ⚠ *The gate's 0.01 tolerance is a gate width, not an uncertainty — that part stands.*
 - **ⓔ No value moves.** 182 A is documentation; the seven bodies stay byte-identical.
 
 #### Predicted, before running
@@ -6055,9 +6064,10 @@ preset's *material* — `fe_prem` — so the problem 182 B stripped off the frac
 the **material**. *"The material is a declaration too"* is the sentence C55 arrived at from the other side.
 
 ⚠ **And one number from C57 (a) ⓓ is now cross-checked**: Rivoldini+ 2011 prints `I/MR²` **0.3645 ± 0.0005**
-in the same convention as the board's 0.3644, so the **0.0009** difference between the equatorial and
-mean-radius conventions is larger than that printed uncertainty. The convention has to be declared before
-an inversion is anchored on it.
+in the same convention as the board's 0.3644 — ⚠ **which is the mean-radius convention, not the equatorial one
+this paragraph first named** (the correction, with the arithmetic that refutes it, is at C57 (a) ⓓ itself).
+The two figures agreeing to 0.0001 in the same convention is the cross-check; **the convention still has to be
+declared before an inversion is anchored on it**, and that is what this entry was reaching for.
 
 ### C57 (c) 2026-09-20 — the inversion's answer is delivered, and Mars stops declaring its core
 
