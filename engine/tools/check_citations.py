@@ -63,6 +63,10 @@ NOT_AUTHOR = {"Corrected", "Registered", "Revisited", "Measured", "Listed", "Bui
 #: ⚠ **남은 25 절은 이 브리프의 몫이 아니다** (C38 15건 · C13 13건 · C47 10건 · C9 9건 …). 그것들이
 #: 규칙 A 가 드러내려던 **실제 백로그**이고, 조용히 함께 고치지 않는다 — 세어 두는 것이 먼저다.
 BASELINE = (26, 121)
+#: 기준선을 찍은 판. ⚠ **리터럴은 위 한 쌍뿐이다** — 오늘 수는 인쇄할 때 계산하고 저장하지 않는다.
+#: 한 사실이 두 곳에 서면 한쪽이 낡을 때 어느 쪽이 정본인지 못 댄다.
+BASELINE_COMMIT = "e5f2f83d"
+BASELINE_DATE = "2026-09-09"
 
 
 def scan(path: Path) -> tuple[list[tuple[str, int]], int, int]:
@@ -90,11 +94,16 @@ def main() -> int:
             print(f"  {path.name} — bibcode 없는 절 {n_secs}개 · 그 절들의 인용 {n_cites}건 (규칙 A)")
             for head, n in sorted(rows, key=lambda r: -r[1])[:12]:
                 print(f"      {n:3d}  {head}")
-    same = (total_secs, total_cites) == BASELINE
-    print(f"  [기록] 인용 규약 (규칙 A): 절 {total_secs} · 인용 {total_cites} "
-          f"(기준선 {BASELINE[0]} · {BASELINE[1]}) — "
-          f"{'변화 없음' if same else '⚠ 기준선과 다르다'}. 판정 아님 — 규칙 본문과 오검출 종류는 "
-          f"이 파일의 독스트링에 있다")
+    # ⚠ **차를 찍고 경고를 안 찍는다** (미결 22, 2026-09-20, 등록본 8d035991). 예전 줄은 기준선과
+    #   다르기만 하면 ⚠ 를 냈고, **예순 판 넘게 켜져 있었다** — 늘 켜진 경고는 장식으로 읽힌다.
+    #   기준선은 리터럴 하나로 남고(찍힌 날짜와 커밋을 옆에), 오늘 수는 **저장하지 않고 계산**한다.
+    #   ⚠ 이 줄에 `파일명:숫자` 꼴을 쓰지 않는다 — 맨 sha 와 맨 날짜는 인용이 아니지만 그 꼴은
+    #   미이행 줄번호 인용으로 세진다.
+    d_secs = total_secs - BASELINE[0]
+    d_cites = total_cites - BASELINE[1]
+    print(f"  [기록] 인용 규약 (규칙 A): 절 {total_secs} · 인용 {total_cites} — "
+          f"기준선 {BASELINE[0]} · {BASELINE[1]} ({BASELINE_COMMIT}, {BASELINE_DATE}) 이래 "
+          f"{d_secs:+d} 절 · {d_cites:+d} 인용. 판정 아님")
     return 0
 
 
