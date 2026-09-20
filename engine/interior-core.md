@@ -12516,6 +12516,26 @@ why C33 (b)'s four are deliberately left (three of them are the regex's own work
 `FAIL` threshold is that section's count and not zero). **The other 25 flagged sections are the backlog the
 rule exists to surface** and were not touched.
 
+⚠ **Eleven days later the same line had become decoration, and the count had moved twice more**
+(2026-09-20, work seat; audit seat reproduced every figure independently). Sixty gate logs carry the
+record line and **not one of them prints 26 · 121** — the oldest already reads 36 · 161, so the first
+ten steps of the drift happened before the log series and cannot be placed from it. Ordering those
+logs by their `GATE START` commit dates rather than by file time gives the same two boundaries, each
+**+1 section and +1 citation**: 2026-09-11, then 2026-09-16, then today's 38 · 163. That shape is
+ordinary ledger writing rather than a regression, which is exactly why a standing ⚠ on every plate
+taught no one anything.
+⚠ **The warning was removed and the difference put in its place** — the line now reads the counts,
+the baseline, the commit and date the baseline was taken, and the signed deltas since. It is still
+not a verdict and the literal is still one pair; today's figures are computed at print time and
+stored nowhere, so no second place can go stale. ⚠ **The docstring rule that a baseline is not
+updated without a written reason is untouched**: this changed what is printed, not whether the
+number may move. ⚠ *A pointer at the end of the old line, saying where the rule text lives, went
+with the old wording. It is recorded rather than restored, because the printed string is itself the
+registered acceptance for this change; whether to bring it back is for the next registration.*
+⚠ **One figure in the pre-registration was wrong and is corrected here**: the baseline entered at
+`e5f2f83d`, not at the commit that wrote the counter — and 26 · 121 is the **second** baseline, taken
+after bibcodes pulled 28 · 128 down, not the first count of anything.
+
 **Two source corrections, from the originals rather than from either summary.** The dipolar/multipolar
 transition sentence this file quoted as Christensen & Aubert 2006's is **Olson & Christensen 2006's**; C&A
 2006 is the primary source because it *defines* the quantity (its eq. 28, `Ro_ℓ = Ro · ℓ̄_u / π`, which it
