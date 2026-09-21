@@ -37,10 +37,10 @@ BOUNDARY_NAMES = (
 NOT_RECIPES = ("run.py", "build_graph_page.py", "dynamo_table.py", "rocky_roster.py")
 
 #: Frozen 2026-09-21 against tree 16110413, and re-read at every landing that touches these names.
-#: ⚠ `dynamo_rocky.py` is deliberately absent: `chain.yaml` draws the edge and the module never
-#:   reads it (`chain.yaml@«no code consumer (ladder() has no core_radius argument; hook never
-#:   fired on Earth or Pandora although interior_layers emits it, calibrated)»`). Its absence from
-#:   this table IS the negative control.
+#: ⚠ `dynamo_rocky.py` is deliberately absent: `chain.yaml` draws the edge
+#:   `interior_layers → dynamo_rocky (via core_radius)` and the module never reads it — that
+#:   edge's own note says so, and records that the hook never fired on Earth or Pandora although
+#:   `interior_layers` emits the value. Its absence from this table IS the negative control.
 REACH = {
     "cmb_flux.py": {"cmb_pressure", "cmb_temperature", "core_radius", "core_radius_earth",
                     "p_cmb", "r_cmb"},

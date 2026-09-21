@@ -52,7 +52,7 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 `integrator_core_gamma_verdict` [—] · `integrator_red_gamma_used` [—] ·
 `converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—] ·
 `core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—] ·
-`basal_silicate_state` [—] · `core_plus_layer_radius_km` [km]
+`basal_silicate_state` [—] · `core_plus_layer_radius_solved_km` [km]
 
 ⚠ **`core_sulphur_wt` 은 핵의 질량분율이고 0–1 이다. wt% 가 아니다.** 황 맞춤이 돌 때만 있다 —
 바디가 `core_plus_layer_radius_km` 와 `light_element_fixing` 을 선언하고 조성은 역산에 맡길 때다. 조성을 직접
@@ -60,10 +60,10 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 `composition` 과 마찬가지로 `chain.yaml` 의 `outputs` 에는 없는 `Returns` 키라, C73 은 세기만 하고
 판정하지 않는다.
 
-⚠ **`basal_silicate_state` 와 `core_plus_layer_radius_km` 도 `outputs` 없는 `Returns` 키이고,
+⚠ **`basal_silicate_state` 와 `core_plus_layer_radius_solved_km` 도 `outputs` 없는 `Returns` 키이고,
 그것은 고른 결과다.** `basal_silicate_state` 는 규산염이 **핵과 만나는 자리**에서 녹았는가를
 말한다 — 기둥 전체를 최대 용융분율 하나로 줄이는 `silicate_melt_state` 와 다른 물음이다.
-`core_plus_layer_radius_km` 은 **겉보기** 핵 반지름, 곧 철 핵에 그 위의 녹은 규산염 층을 더한
+`core_plus_layer_radius_solved_km` 은 **겉보기** 핵 반지름, 곧 철 핵에 그 위의 녹은 규산염 층을 더한
 값이고 지진 추정이 보고하는 양이다. `core_radius` 는 철 핵만 그대로 가리킨다.
 
 겉보기 반지름은 **늘 수인 것이 아니다.** 바닥이 고체이거나 규산염 기둥이 아예 없으면 철 핵

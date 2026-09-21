@@ -47,7 +47,7 @@ literature, separate recipes.
 `integrator_core_gamma_verdict` [—] · `integrator_red_gamma_used` [—] ·
 `converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—] ·
 `core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—] ·
-`basal_silicate_state` [—] · `core_plus_layer_radius_km` [km]
+`basal_silicate_state` [—] · `core_plus_layer_radius_solved_km` [km]
 
 ⚠ **`core_sulphur_wt` is a mass fraction of the core, 0–1, not wt%** — it is present only when the
 sulphur fit runs, that is when the body declares `core_plus_layer_radius_km` and `light_element_fixing` and lets the
@@ -55,10 +55,10 @@ composition be inferred; a body that declares its composition never carries it. 
 because it is tuned to reproduce the declared core radius. Like `composition`, it is a `Returns` key with
 no `outputs` entry in `chain.yaml`, so C73's record counts it and nothing judges it.
 
-⚠ **`basal_silicate_state` and `core_plus_layer_radius_km` are `Returns` keys with no `outputs`
+⚠ **`basal_silicate_state` and `core_plus_layer_radius_solved_km` are `Returns` keys with no `outputs`
 entry either, and the choice is deliberate.** `basal_silicate_state` answers whether the silicate
 is molten *where it meets the core* — a different question from `silicate_melt_state`, which
-reduces the whole column to its largest melt fraction. `core_plus_layer_radius_km` is the apparent
+reduces the whole column to its largest melt fraction. `core_plus_layer_radius_solved_km` is the apparent
 core radius, the iron core plus a molten silicate layer above it, which is the quantity a seismic
 estimate reports; `core_radius` remains the iron core alone.
 

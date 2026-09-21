@@ -2899,6 +2899,11 @@ def solve(mass_earth: float,
         notes.append(basal_note)
     # ⚠ **같음을 조용히 두지 않는다.** 층이 없으면 두 반지름이 같고, 그 «같다» 가 인쇄되지
     #   않으면 «층을 안 봤다» 와 «층이 0 이다» 가 같은 모양이 된다 (사전등록 3be84248 §2).
+    # ⚠ **이름 끝의 `_solved_` 가 선언과 우리 답을 가른다.** `state` 는 선언과 노드 출력을 한
+    #   이름공간에서 찾고(`State.get` 하나가 둘을 다 찾는다), `_declared_value` 는 **맨 스칼라·맨 문자열도 선언으로
+    #   받는다**. 같은 이름으로 내보내면 **선언이 없는 천체에서 우리 출력이 선언 자리에 앉는다** —
+    #   2026-09-22 에 `dante_fixture` 가 그렇게 죽었고(문자열이 `float()` 에 들어갔다), 화성에서는
+    #   같은 일이 **수라서 조용히 지나갔다**. 시끄러운 쪽이 좁다.
     if basal_state in (BASAL_SOLID, BASAL_NONE):
         plus_layer = st.core_radius_m / 1e3
     elif basal_state == BASAL_MOLTEN:
@@ -3222,7 +3227,7 @@ def solve(mass_earth: float,
                 "silicate_melt_state": rock_state,
                 "silicate_melt_fraction_max": rock_phi,
                 "basal_silicate_state": basal_state,
-                "core_plus_layer_radius_km": plus_layer,
+                "core_plus_layer_radius_solved_km": plus_layer,
                 "ocean_thickness": st.ocean_thickness_m / 1e3,
                 "ice_shell_thickness": st.ice_shell_thickness_m / 1e3,
                 "core_radius_fraction": st.core_radius_m / st.radius_m,
@@ -3255,7 +3260,7 @@ def solve(mass_earth: float,
                "ice_column_state": "",
                "silicate_melt_state": "",
                "basal_silicate_state": "",
-               "core_plus_layer_radius_km": "km",
+               "core_plus_layer_radius_solved_km": "km",
                "silicate_melt_fraction_max": "",
                "ocean_thickness": "km",
                "ice_shell_thickness": "km",

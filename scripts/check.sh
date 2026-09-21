@@ -847,6 +847,9 @@ step "test_domain.py" bash -c 'cd engine && exec python3 test_domain.py'
 # 핵 경계 도달 (층 항목, 사전등록 3be84248 §3 ㉣). 경계량을 읽는 모듈이 정확히 어느 것인가 —
 # 안 읽어야 할 셋이 안 읽는지를 거는 **음성 대조**다. 정적이고 아무것도 풀지 않는다.
 step "test_boundary_reach.py" bash -c 'cd engine && exec python3 test_boundary_reach.py'
+# 이름 충돌 (2026-09-22). 내보내는 이름이 바디 선언 이름과 겹치면 `state` 가 한 이름공간이라
+# 우리 출력이 선언 자리에 앉는다 — 단테가 그렇게 죽었고 화성에서는 조용히 지나갔다.
+step "test_name_collision.py" bash -c 'cd engine && exec python3 test_name_collision.py'
 step "test_check_refs.py" bash -c 'cd engine && exec python3 test_check_refs.py'
 step "engine/check_refs.py" bash -c 'python3 engine/check_refs.py'
 # 논문 인용 규약 (C33 (b), 브리프 165). ⚠ **판정 아님 — 세기만 한다**: bibcode 없는 절의 "저자+연도"

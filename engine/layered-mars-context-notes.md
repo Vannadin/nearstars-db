@@ -8,12 +8,12 @@ One name, `core_radius_km`, carries two different quantities today.
 
 | Where | What it holds | Which quantity |
 |---|---|---|
-| `bodies/mars.yaml:133` | 1845.0 km, Durán+ 2022, seismic/diffracted | **apparent** — iron core plus molten layer |
-| `interior.py:4083` `_declared_value(state.get("core_radius_km"))` | the same declaration, read out | **apparent** |
-| `interior.py:4090` → `mars_sulphur_anchor.json:11` `declared` | the fit's target | **apparent** |
-| `interior.py:3960` `target_frac = core_radius_km / …` | what the bisection aims at | **apparent** |
-| `mars_sulphur_anchor.json:32,41` `fixings.*.core_radius_km` | what the solve produced | **iron core** |
-| `test_mars_sulphur.py:104` `r_m / 1e3` | the same, recorded | **iron core** |
+| the `core_plus_layer_radius_km` block of `bodies/mars.yaml` | 1845.0 km, Durán+ 2022, seismic/diffracted | **apparent** — iron core plus molten layer |
+| `_infer_from_state`, reading the declaration | the same declaration, read out | **apparent** |
+| `_infer_from_state` → the anchor's `declared` block | the fit's target | **apparent** |
+| `fit_sulphur_to_core_radius`, the bisection target | what the bisection aims at | **apparent** |
+| the anchor's `fixings.*.core_radius_km` | what the solve produced | **iron core** |
+| `_record` in `test_mars_sulphur.py` | the same, recorded | **iron core** |
 
 Samuel+ 2023 prints the relation the split rests on: the apparent core radius is the radius of the
 liquid iron alloy **plus** the thickness of the fully molten silicate layer, and the apparent radii
@@ -24,7 +24,7 @@ So the declaration is renamed and the solver output keeps the old name:
 - **declared input** → `core_plus_layer_radius_km`
 - **solver output** → `core_radius_km` (unchanged)
 
-`test_interior.py:296-314` also uses `core_radius_km`, but as a local parameter of the Noack &
+`nl2020_exponent` and `nl2020_tcmb` in `test_interior.py` also use `core_radius_km`, but as a local parameter of the Noack &
 Lasbleis formula, not as the board declaration. It is left alone.
 
 ### Why not `apparent_core_radius_km`
@@ -46,7 +46,7 @@ against a frozen list. It solves nothing and runs in milliseconds.
 
 ## Why removing `recorded_disagreement` is not only "turning a red on"
 
-`run.py:145-147` prints `[기록·해소?]` when a recorded disagreement has come back inside its
+`compare()` in `engine/run.py` prints `[기록·해소?]` when a recorded disagreement has come back inside its
 tolerance. The radius axis is inside today, so that line prints on every run. Removing the key
 removes that line too. It is the result of this item, not a regression — recorded here because the
 line is described in the gate log's own header as being there by design.
@@ -62,7 +62,7 @@ nothing to fix.
 samples — so its answer is **"is the column molten anywhere"**. The layer is a *basal* one: what
 this item needs is **"is the silicate molten where it meets the core"**.
 
-`rock_samples` is a tuple of `(p, t)` pairs (`interior.py:168`, filled at `:886`). **There is no
+`rock_samples` is a tuple of `(p, t)` pairs (`Structure.__init__` stores it; the integrator fills it). **There is no
 radius in it.** So the basal question cannot be asked by position.
 
 Pressure is monotone with depth, so the deepest sample is the highest-pressure one, and that is
@@ -74,7 +74,7 @@ the handle this item uses. Three branches, and only the first two have a supplie
    the apparent radius is a named `cannot-say` — it is not filled with Khan+ 2023's 150 ± 15 km,
    which is the number this item compares against;
 3. the deepest sample is one the melting curve does not reach (`silicate_melt_fraction` returns
-   `None` above its range — `interior.py:2292` collects those as `blind_p`), or it sits inside the
+   `None` above its range — `_silicate_melt_verdict` collects those as `blind_p`), or it sits inside the
    partial-melt window → **undecided**, named as such.
 
 ⚠ Branch 2 is the one the Martian case lands in, and it returns no number. That is the honest
@@ -97,7 +97,7 @@ So the first re-freeze carries the rename alone, and the second carries the basa
 
 ## The prescription for this was already in the code
 
-`test_mars_sulphur.py:209` asks its out-of-range question with the *declared* pin rather than a
+the out-of-range probe in `test_mars_sulphur.py` asks its out-of-range question with the *declared* pin rather than a
 pinned name, and the comment above it says why: writing the pin's name into the test makes the
 test measure an old decision instead of the declaration on the day the owner changes it — and it
 records that this is not hypothetical, a gate went red on exactly that in 2026-09-20.
