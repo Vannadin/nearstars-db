@@ -33,7 +33,7 @@ import sys
 
 import interior
 import math
-from eos import EARTH_POTENTIAL_T as _NL_EARTH_T
+from eos import EARTH_POTENTIAL_T as _NL_EARTH_T, FE_S_BAND_WT as _FE_S_BAND_WT
 from interior import (EARTH_MASS_KG, EARTH_RADIUS_M, infer_composition,
                       infer_three_layer, solve)
 from porosity import MASS_COMPACT_KG, P_GRAIN_FRACTURE, voids_expected
@@ -2131,9 +2131,17 @@ def main() -> int:
         _pin_dec = _anchor["declared"]["light_element_fixing"]
         _lo_s = _anchor["fixings"]["box_floor"]["core_sulphur_wt"]
         _hi_s = _anchor["fixings"]["box_ceiling"]["core_sulphur_wt"]
+        # ⚠ **상자 밖은 표시이지 거절이 아니다** (오너 결정 2026-09-21, ⓐ). 상자 규칙은 **선언
+        #   고정에만** 걸린다 — 동반 고정은 대조군이고, 그것이 상자를 벗어난 것이 바로 오너가
+        #   선언을 옮긴 근거라, 거절로 지우면 그 증거가 사라진다. 대신 **값 옆에 이름을 붙인다.**
+        #   ⚠ **선언이 상자 «안» 이어도 동반이 밖이면 찍힌다** — 오늘이 그 판이다(선언 ceiling
+        #   15.5313 안 · 동반 floor 20.5000 밖). 선언 행만 보는 표시는 오늘 아무것도 안 찍는다.
+        #   ⚠ 상자는 여기 다시 안 적는다 — `eos.FE_S_BAND_WT` 가 오너 결정 2026-09-10 의 값이다.
+        _box_lo, _box_hi = _FE_S_BAND_WT
         for _pin, _w in (("box_floor", _lo_s), ("box_ceiling", _hi_s)):
             _rec = _anchor["fixings"][_pin]
-            print(f"  [기록] {_pin:12}{' ←선언' if _pin == _pin_dec else '     '} S {_w * 100:7.4f} wt% "
+            _out = "" if _box_lo <= _w <= _box_hi else "  ⚠ 상자 밖"
+            print(f"  [기록] {_pin:12}{' ←선언' if _pin == _pin_dec else '     '} S {_w * 100:7.4f} wt%{_out} "
                   f"· 핵 {_rec['core_radius_km']:8.2f} km · C/MR² {_rec['nmoi']:.6f} "
                   f"· 반분 {_rec['halvings']}")
         _apart = abs(_lo_s - _hi_s) * 100
