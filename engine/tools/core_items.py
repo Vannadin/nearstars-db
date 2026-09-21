@@ -290,6 +290,7 @@ PHRASE_RULES = [
     (1, "stages 1 and 2 built", "open", "부분 닫힘 — 단계가 남았다 (C55)"),
     (1, "open on P34", "open", "일부 축만 열림 (C74)"),
     (1, "as a recorded disagreement", "open", "기록된 불일치는 열린 항목이다 (C59)"),
+    (1, "observation only, no prescription", "open", "관측만 · 처방 없음 (C99)"),
     (1, "redesigned and pre-registered", "open", "재설계 + 사전등록, 일부는 지어짐 (C58)"),
     (1, "open, one reason of three retired", "open", "이유 셋 중 하나 철회 (C16)"),
     (1, "open (`status: gap`)", "open", "사슬이 gap 으로 표시한 간선"),
