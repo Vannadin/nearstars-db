@@ -44,13 +44,16 @@ from porosity import MASS_COMPACT_KG, P_GRAIN_FRACTURE, voids_expected
 # 그대로 쓴다 — 우리 답이 맞도록 돌려 맞춘 값이 아니다.
 ANCHORS = [
     ("Earth",   1.0000, 1.0000, 0.325, 0.3307, 3480 / 6371,
-     "PREM (Dziewonski & Anderson 1981)"),
-    ("Mars",    0.1074, 0.5320, 0.24,  0.3644, 1830 / 3390,
-     "Konopliv+ 2011 · InSight"),
+     "PREM (Dziewonski & Anderson 1981)", "PREM (Dziewonski & Anderson 1981)"),
+    # ⚠ **한 칸에 두 출처를 두지 않는다** (오너 결정 2026-09-21). 질량·반지름·cmf 와 (0.24 ↔ 1830 km)
+    #   짝은 Konopliv+ 2011 · InSight 에서 오고, `nmoi` 만 Stähler+ 2021 로 옮겼다. 앞 판은 값만
+    #   옮겨서 Stähler 의 수가 Konopliv 이름표를 달고 있었다 — 그때 그 칸은 어느 출처의 것도 아니었다.
+    ("Mars",    0.1074, 0.5320, 0.24,  0.36340, 1830 / 3390,
+     "Konopliv+ 2011 · InSight", "Stähler+ 2021 (±0.00006)"),
     ("Mercury", 0.0553, 0.3829, 0.70,  0.3460, 2020 / 2440,
-     "Margot+ 2012 (MESSENGER)"),
+     "Margot+ 2012 (MESSENGER)", "Margot+ 2012 (MESSENGER)"),
     ("Moon",    0.0123, 0.2727, 0.019, 0.3931, 350 / 1737,
-     "Williams+ 2014 (LLR)"),
+     "Williams+ 2014 (LLR)", "Williams+ 2014 (LLR)"),
 ]
 
 # 거절해야 하는 것들. 거절이 답이고, **어느 기작 때문인지 이름을 대야** 답이다.
@@ -475,7 +478,7 @@ RADIUS_TOL = 0.01   # 반지름 1 %
 
 
 def rows():
-    for name, m, r_pub, cmf, nmoi_pub, f_pub, src in ANCHORS:
+    for name, m, r_pub, cmf, nmoi_pub, f_pub, src, _nmoi_src in ANCHORS:
         yield name, solve(m, core_mass_fraction=cmf), m, r_pub, nmoi_pub, f_pub, src
 
 
@@ -1259,7 +1262,7 @@ def main() -> int:
     # 잡았으므로 그 온도에서는 ΔT 가 항등적으로 0 이고, 그래서 허용오차가 아니라
     # **같음** 을 검사한다.
     from eos import EARTH_POTENTIAL_T
-    for name, m, r_pub, cmf, nmoi_pub, f_pub, _src in ANCHORS:
+    for name, m, r_pub, cmf, nmoi_pub, f_pub, _src, _nmoi_src in ANCHORS:
         off = solve(m, core_mass_fraction=cmf)
         on = solve(m, core_mass_fraction=cmf,
                    potential_temperature=EARTH_POTENTIAL_T)

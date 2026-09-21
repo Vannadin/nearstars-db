@@ -5817,7 +5817,7 @@ the disagreement C59 actually names.
 
 ⚠ **And the two axes move in opposite directions**, which is the finding that matters for C57:
 
-| cmf | core radius fraction (want 0.5398) | `nmoi` (want 0.3644) |
+| cmf | core radius fraction (want 0.5398) | `nmoi` (want 0.36340) |
 |---|---|---|
 | **0.24** (declared) | 0.4919 — **8.87 %** off | 0.3545 — **2.71 %** off |
 | **0.325** (`earth_like`) | 0.5542 — **2.65 %** off | 0.3450 — **5.32 %** off |
@@ -5831,7 +5831,7 @@ registered here before C57 is built rather than discovered afterwards.
 Because 0.24 is below the 0.302 cut C60 (c) measured, **both band-end materials solve at the composition
 Mars actually declares** — the opposite of what C60 (b) recorded, which was about 0.325:
 
-| core material | R_core | fraction (want 0.5398) | `nmoi` (want 0.3644) |
+| core material | R_core | fraction (want 0.5398) | `nmoi` (want 0.36340) |
 |---|---|---|---|
 | `fe_prem` (today) | 1666.5 km | 0.4919 — 8.87 % | 0.3545 — 2.71 % |
 | `fe_s_13wt_19gpa` | 1698.6 km | 0.5001 — 7.36 % | 0.3566 — 2.14 % |

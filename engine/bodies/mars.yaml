@@ -258,11 +258,13 @@ expected:
   # ⚠ 아래 두 행은 **기록된 어긋남**이다 (C59, 브리프 177). 값도 허용오차도 안 움직였다 —
   # 어긋남을 판정에서 빼되 매 실행 인쇄한다. 원인이 하나이므로 이유도 하나다.
   nmoi:
-    value: 0.3644
+    value: 0.36340
+    # ⚠ tol 은 **게이트 폭이지 불확도가 아니다** — 인쇄된 불확도는 ±0.00006 이고 이 값은 그보다 두
+    #   자릿수 크다. 오너 결정 2026-09-21 로 값이 0.3644 에서 옮겨왔고, tol 은 안 움직였다.
     tol: 0.01
-    source: "Konopliv+ 2011 · InSight — engine/test_interior.py 의 ANCHORS 와 같은 값"
+    source: "Stähler+ 2021 (±0.00006) — engine/test_interior.py 의 ANCHORS 와 같은 값"
     recorded_disagreement: >
-      엔진 0.3545 (2.7 %). 아래 `core_radius_fraction` 과 **같은 원인의 다른 얼굴**이다 — 관성모멘트는
+      엔진 0.3545 (2.4 % — 새 앵커 0.36340 기준. 옛 앵커 0.3644 에서는 2.7 % 였고, 비교 대상은 안 움직였다). 아래 `core_radius_fraction` 과 **같은 원인의 다른 얼굴**이다 — 관성모멘트는
       질량을 반지름으로 어떻게 나눠 담느냐이고, 핵이 작으면 그 값이 따라 움직인다. C59.
   core_radius_fraction:
     value: 0.5398
