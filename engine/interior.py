@@ -2264,6 +2264,59 @@ SILICATE_STATE_MOLTEN = "molten"
 SILICATE_STATE_UNDECIDED = "undecided"
 
 
+
+#: 바닥 규산염 — 규산염이 **핵과 만나는 자리**의 상태. 기둥 전체를 하나로 줄이는
+#: `_silicate_melt_verdict` 와 **다른 물음**이다: 저쪽은 «기둥 어딘가 녹았나», 이쪽은
+#: «바닥이 녹았나». 층은 바닥의 것이므로 이 물음이 층을 정한다.
+#: ⚠ `rock_samples` 에는 반지름이 없다 (`(p, t)` 쌍뿐) — 위치로는 바닥을 못 묻는다. 그래서
+#:   **가장 높은 압력 표본**을 바닥으로 삼는다. 그것이 유일한 손잡이다.
+#: ⚠ **이것은 가정이다 — 「압력이 깊이와 단조」.** 정수압 기둥에서는 참이고 이 적분기가 내는
+#:   기둥은 그렇다. 밀도 역전이 생겨 단조가 깨지는 판이 오면 이 대체는 **조용히 틀린다** —
+#:   가정을 안 적으면 다음 사람이 검사 없이 쓴다.
+BASAL_NONE = "none"                 # 규산염 표본이 없다
+BASAL_SOLID = "solid"               # 바닥이 솔리더스 아래 — 층이 없다
+BASAL_MOLTEN = "molten"             # 바닥이 리퀴더스 위 — 층이 있다
+BASAL_PARTIAL = "partial-melt"      # 부분용융 창 안 — 층이라 부를지 정한 적 없다
+BASAL_OFF_CURVE = "off-curve"       # ⚠ 곡선이 그 압력에 안 닿는다 — «모른다»이지 «안 녹았다»가 아니다
+
+#: 바닥에 층이 있는데 두께를 낼 공급자가 없을 때 겉보기 반지름 자리에 서는 문장.
+#: ⚠ **Khan+ 2023 의 150 ± 15 km 로 채우지 않는다** — 그 수는 대조 대상이지 설치할 상수가
+#:   아니다 (사전등록 3be84248 §1).
+NO_LAYER_THICKNESS = ("cannot-say (바닥 규산염이 녹아 있고 층 두께를 낼 공급자가 없다 — "
+                      "겉보기 핵 반지름 = 철 핵 + 층 두께이므로 두께 없이는 합이 안 선다)")
+NO_BASAL_ANSWER = ("cannot-say (바닥 규산염 상태를 판정하지 못했다 — 층이 있는지가 "
+                   "안 정해지면 겉보기 반지름도 안 선다)")
+
+
+def _basal_silicate_state(st, variant: str) -> tuple[str, str]:
+    """바닥 규산염이 녹았는가. (상태, 한 줄 설명).
+
+    가장 깊은 표본 하나만 본다 — 기둥 전체의 최대 용융분율이 아니라 **바닥의** 용융분율이다.
+    ⚠ 두 물음이 같은 답을 주는 일이 흔하지만 같은 물음은 아니다: 얕은 곳만 녹은 기둥은
+    «어딘가 녹았다» 이면서 «바닥은 고체» 다."""
+    from eos import silicate_melt_fraction, silicate_melt_refusal
+    if not st.rock_samples:
+        return BASAL_NONE, ""
+    p_base, t_base = max(st.rock_samples, key=lambda pt: pt[0])
+    phi = silicate_melt_fraction(p_base, t_base, variant)
+    if phi is None:
+        return (BASAL_OFF_CURVE,
+                f"**바닥 규산염을 판정하지 않았다** — 가장 깊은 표본 {p_base / 1e9:.1f} GPa 에 "
+                f"녹는곡선이 안 닿는다. " + silicate_melt_refusal(p_base) +
+                " ⚠ 이것은 «안 녹았다» 가 아니라 «모른다» 다.")
+    if phi >= 1.0:
+        return (BASAL_MOLTEN,
+                f"**바닥 규산염이 리퀴더스 위다** ({p_base / 1e9:.1f} GPa · {t_base:.0f} K, "
+                f"φ = {phi:.2f}) — 핵 위에 녹은 규산염 층이 선다. ⚠ **두께는 이 레시피가 못 낸다**, "
+                "그래서 겉보기 핵 반지름은 수가 아니라 이름 댄 cannot-say 로 나간다.")
+    if phi <= 0.0:
+        return (BASAL_SOLID,
+                f"**바닥 규산염은 솔리더스 아래다** ({p_base / 1e9:.1f} GPa · {t_base:.0f} K) — "
+                "핵 위에 녹은 층이 없다. 겉보기 핵 반지름과 철 핵 반지름이 **같다**.")
+    return (BASAL_PARTIAL,
+            f"**바닥 규산염이 부분용융 창 안이다** ({p_base / 1e9:.1f} GPa · {t_base:.0f} K, "
+            f"φ = {phi:.2f}) — 이것을 층이라 부를지 정한 적이 없다. 겉보기 반지름을 안 낸다.")
+
 def _silicate_melt_verdict(st, potential_temperature, variant: str) -> tuple[str, float, str]:
     """암석 기둥이 녹았는가 (브리프 36). (상태, 최대 용융분율, 한 줄 설명).
 
@@ -2841,6 +2894,17 @@ def solve(mass_earth: float,
         st, potential_temperature, silicate_variant)
     if rock_note:
         notes.append(rock_note)
+    basal_state, basal_note = _basal_silicate_state(st, silicate_variant)
+    if basal_note:
+        notes.append(basal_note)
+    # ⚠ **같음을 조용히 두지 않는다.** 층이 없으면 두 반지름이 같고, 그 «같다» 가 인쇄되지
+    #   않으면 «층을 안 봤다» 와 «층이 0 이다» 가 같은 모양이 된다 (사전등록 3be84248 §2).
+    if basal_state in (BASAL_SOLID, BASAL_NONE):
+        plus_layer = st.core_radius_m / 1e3
+    elif basal_state == BASAL_MOLTEN:
+        plus_layer = NO_LAYER_THICKNESS
+    else:
+        plus_layer = NO_BASAL_ANSWER
 
     # 2026-08-26: 혼합 규칙이 들어오면서 **앵커 수가 하나에서 둘로 늘었다.** 목성이
     # Z = 0 에서 +0.6 %, 토성이 Z = 0.200 에서 −0.1 % 다. 그래서 이 강등 규칙을 다시
@@ -3157,6 +3221,8 @@ def solve(mass_earth: float,
                 "ice_column_state": ice_state,
                 "silicate_melt_state": rock_state,
                 "silicate_melt_fraction_max": rock_phi,
+                "basal_silicate_state": basal_state,
+                "core_plus_layer_radius_km": plus_layer,
                 "ocean_thickness": st.ocean_thickness_m / 1e3,
                 "ice_shell_thickness": st.ice_shell_thickness_m / 1e3,
                 "core_radius_fraction": st.core_radius_m / st.radius_m,
@@ -3188,6 +3254,8 @@ def solve(mass_earth: float,
                "cmb_pressure": "GPa",
                "ice_column_state": "",
                "silicate_melt_state": "",
+               "basal_silicate_state": "",
+               "core_plus_layer_radius_km": "km",
                "silicate_melt_fraction_max": "",
                "ocean_thickness": "km",
                "ice_shell_thickness": "km",
@@ -3890,7 +3958,7 @@ SULPHUR_ANCHOR_FILE = Path(__file__).with_name("mars_sulphur_anchor.json")
 
 #: 굳힌 답을 움직이는 **선언들**. 파일 해시가 아니라 값이다 — `mars.yaml` 은 산문 주석이 자주
 #: 바뀌고, 파일 자를 쓰면 물리가 그대로인데도 지문이 깨져 `--refresh` 가 «늘 누르는 단추» 가 된다.
-SULPHUR_ANCHOR_DECLARATIONS = ("mass_earth", "radius_earth", "core_radius_km",
+SULPHUR_ANCHOR_DECLARATIONS = ("mass_earth", "radius_earth", "core_plus_layer_radius_km",
                                "light_element_fixing", "potential_temperature")
 
 
@@ -3920,7 +3988,7 @@ def solve_with_core_sulphur(mass_earth: float, radius_earth: float, w_s: float, 
         MATERIALS.pop(name, None)
 
 
-def _sulphur_result(res, w_s: float, pin: str, core_radius_km: float, how: str):
+def _sulphur_result(res, w_s: float, pin: str, core_plus_layer_radius_km: float, how: str):
     """맞춘 결과에 **등급과 황 키를 붙인다**.
 
     ⚠ **호출부마다 붙이면 직접 부른 자리가 조용히 `analog` 로 남는다** (측정 2026-09-20: 함수를
@@ -3930,13 +3998,13 @@ def _sulphur_result(res, w_s: float, pin: str, core_radius_km: float, how: str):
     return _dc_replace(
         res, values=v, grade="calibrated",
         units={**res.units, "core_sulphur_wt": "dimensionless"},
-        notes=(f"황 맞춤 — S {w_s * 100:.4f} wt% 가 선언된 핵 반지름 {core_radius_km:.1f} km 를 "
+        notes=(f"황 맞춤 — S {w_s * 100:.4f} wt% 가 선언된 핵 반지름 {core_plus_layer_radius_km:.1f} km 를 "
                f"재현한다 (고정 {pin}, {how}). ⚠ **맞춘 값은 그 맞춤을 검사하지 못한다** — "
                "핵 반지름은 이제 소비된 관측이고, 남는 독립 검사는 관성모멘트뿐이다.",) + tuple(res.notes))
 
 
 def fit_sulphur_to_core_radius(mass_earth: float, radius_earth: float,
-                               core_radius_km: float, pin: str,
+                               core_plus_layer_radius_km: float, pin: str,
                                potential_temperature: float | None = None,
                                halvings: int | None = None):
     """관측 핵 반지름을 재현하는 황 분율을 푼다 — **맞춤이지 측정이 아니다**.
@@ -3957,7 +4025,7 @@ def fit_sulphur_to_core_radius(mass_earth: float, radius_earth: float,
             f"{' 또는 '.join(LIGHT_ELEMENT_PINS)} 중 하나가 있어야 한다. 두 끝은 서로 다른 황을 "
             f"주므로(같은 해상도로 18.9062 대 13.8438 wt%) 여기서 하나를 고르는 것은 **선언**이고, "
             f"이 레시피가 대신 고르지 않는다. 받은 값: {pin!r}")
-    target_frac = core_radius_km / (radius_earth * EARTH_RADIUS_M / 1e3)
+    target_frac = core_plus_layer_radius_km / (radius_earth * EARTH_RADIUS_M / 1e3)
 
     def at(w_s):
         return solve_with_core_sulphur(mass_earth, radius_earth, w_s, pin,
@@ -3993,7 +4061,7 @@ def fit_sulphur_to_core_radius(mass_earth: float, radius_earth: float,
     best = at(w_s)
     if not best.applicable:
         return None, best
-    return w_s, _sulphur_result(best, w_s, pin, core_radius_km, f"이분법 {n} 회")
+    return w_s, _sulphur_result(best, w_s, pin, core_plus_layer_radius_km, f"이분법 {n} 회")
 
 
 def read_sulphur_anchor(declared: dict):
@@ -4080,14 +4148,14 @@ def _infer_from_state(state):
     #   2026-09-20). 자유 분율 하나를 반지름으로 푸는 위 갈래와 달리, 이 갈래는 **황까지**
     #   푼다 — 미지수 둘(핵질량분율·S), 관측 셋(질량·반지름·핵 반지름). 맞춘 뒤의 핵 반지름은
     #   **소비된 관측**이라 더는 검사가 아니고, 남는 독립 검사는 관성모멘트뿐이다.
-    core_km = _declared_value(state.get("core_radius_km"))
+    core_km = _declared_value(state.get("core_plus_layer_radius_km"))
     if core_km:
         #   ⚠ **여기서 맞춤을 돌리지 않는다** — 굳힌 황을 읽고 그 황으로 **한 번** 푼다. 맞춤은
         #   게이트의 한 단계(`test_mars_sulphur.py`)에서만 돌고, 그 단계가 굳힌 값을 다시 대본다.
         pin = _declared_value(state.get("light_element_fixing"))
         t_pot = state.get("potential_temperature")
         declared = {"mass_earth": mass, "radius_earth": radius,
-                    "core_radius_km": float(core_km), "light_element_fixing": pin,
+                    "core_plus_layer_radius_km": float(core_km), "light_element_fixing": pin,
                     "potential_temperature": t_pot}
         w_s, halvings, why = read_sulphur_anchor(declared)
         if why:

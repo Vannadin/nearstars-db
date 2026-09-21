@@ -61,7 +61,7 @@ def declared_inputs() -> dict:
         return x.get("value") if isinstance(x, dict) else x
 
     out = {k: value(doc.get(k)) for k in interior.SULPHUR_ANCHOR_DECLARATIONS}
-    out["core_radius_km"] = float(out["core_radius_km"])
+    out["core_plus_layer_radius_km"] = float(out["core_plus_layer_radius_km"])
     return out
 
 
@@ -83,7 +83,7 @@ def file_digests() -> dict:
 def _fit(declared: dict, pin: str, halvings: int) -> tuple:
     t0 = time.perf_counter()
     w_s, res = interior.fit_sulphur_to_core_radius(
-        declared["mass_earth"], declared["radius_earth"], declared["core_radius_km"], pin,
+        declared["mass_earth"], declared["radius_earth"], declared["core_plus_layer_radius_km"], pin,
         potential_temperature=declared["potential_temperature"], halvings=halvings)
     return w_s, res, time.perf_counter() - t0
 
@@ -206,7 +206,7 @@ def check() -> int:
     #   레시피의 일이 아니다. 괄호 둘만 풀고 끝나므로 역산 **두 번**이다.
     # ⚠ **선언된 고정으로 묻는다** — 고정 이름을 박아 두면 오너가 선언을 바꾼 날 시험이
     #   **선언이 아니라 옛 결정**을 재게 된다(2026-09-20 게이트에서 실제로 그렇게 빨개졌다).
-    far, res, seconds = _fit({**declared, "core_radius_km": 1200.0},
+    far, res, seconds = _fit({**declared, "core_plus_layer_radius_km": 1200.0},
                              declared["light_element_fixing"], 1)
     ok = far is None
     if not ok:

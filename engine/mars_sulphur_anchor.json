@@ -1,6 +1,6 @@
 {
  "python": "3.9.6",
- "frozen_at": "2026-09-20",
+ "frozen_at": "2026-09-22",
  "bracket": [
   0.13,
   0.25
@@ -8,14 +8,14 @@
  "declared": {
   "mass_earth": 0.1074,
   "radius_earth": 0.532,
-  "core_radius_km": 1845.0,
+  "core_plus_layer_radius_km": 1845.0,
   "light_element_fixing": "box_ceiling",
   "potential_temperature": 1600.0
  },
  "files": {
   "interior.py": {
-   "bytes": "810d7262cc4edc9f",
-   "code": "affb8d678fce5491"
+   "bytes": "e6b6295045738b5a",
+   "code": "3f8631899a3188c4"
   },
   "eos.py": {
    "bytes": "0386af2551afc8f0",

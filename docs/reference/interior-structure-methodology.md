@@ -46,13 +46,32 @@ literature, separate recipes.
 `figure_relaxation` [—] · `maxwell_time_mantle_top` [yr] · `relaxation_threshold_max` [K] ·
 `integrator_core_gamma_verdict` [—] · `integrator_red_gamma_used` [—] ·
 `converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—] ·
-`core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—]
+`core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—] ·
+`basal_silicate_state` [—] · `core_plus_layer_radius_km` [km]
 
 ⚠ **`core_sulphur_wt` is a mass fraction of the core, 0–1, not wt%** — it is present only when the
-sulphur fit runs, that is when the body declares `core_radius_km` and `light_element_fixing` and lets the
+sulphur fit runs, that is when the body declares `core_plus_layer_radius_km` and `light_element_fixing` and lets the
 composition be inferred; a body that declares its composition never carries it. Its grade is `calibrated`,
 because it is tuned to reproduce the declared core radius. Like `composition`, it is a `Returns` key with
 no `outputs` entry in `chain.yaml`, so C73's record counts it and nothing judges it.
+
+⚠ **`basal_silicate_state` and `core_plus_layer_radius_km` are `Returns` keys with no `outputs`
+entry either, and the choice is deliberate.** `basal_silicate_state` answers whether the silicate
+is molten *where it meets the core* — a different question from `silicate_melt_state`, which
+reduces the whole column to its largest melt fraction. `core_plus_layer_radius_km` is the apparent
+core radius, the iron core plus a molten silicate layer above it, which is the quantity a seismic
+estimate reports; `core_radius` remains the iron core alone.
+
+The apparent radius **is not always a number**. When the base is solid, or there is no silicate
+column at all, it equals the iron-core radius and that equality is emitted rather than left
+silent — otherwise "we did not look" and "there is nothing there" print the same way. When the
+base is molten a layer exists and nothing in this engine supplies its thickness, so the key
+carries a named `cannot-say` that says what is missing. Khan+ 2023's 150 ± 15 km is what this
+value is compared against, not what fills it.
+
+Because the value is sometimes a sentence, an `outputs` entry would let a consumer bind to it
+through `via` and receive a string where it expected a length. No node consumes it today, so the
+entry is withheld until one does and until the thickness has a supplier.
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] ·
 `composition` [—] · `body_class` [—] · `radius_earth` [R_earth] · `age_gyr` [Gyr] ·
 `tidal_heating` [—] · `envelope_z_rock_fraction` [—] · `envelope_z_profile` [—] ·

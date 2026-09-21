@@ -51,13 +51,29 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 `figure_relaxation` [—] · `maxwell_time_mantle_top` [yr] · `relaxation_threshold_max` [K] ·
 `integrator_core_gamma_verdict` [—] · `integrator_red_gamma_used` [—] ·
 `converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—] ·
-`core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—]
+`core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—] ·
+`basal_silicate_state` [—] · `core_plus_layer_radius_km` [km]
 
 ⚠ **`core_sulphur_wt` 은 핵의 질량분율이고 0–1 이다. wt% 가 아니다.** 황 맞춤이 돌 때만 있다 —
-바디가 `core_radius_km` 와 `light_element_fixing` 을 선언하고 조성은 역산에 맡길 때다. 조성을 직접
+바디가 `core_plus_layer_radius_km` 와 `light_element_fixing` 을 선언하고 조성은 역산에 맡길 때다. 조성을 직접
 선언한 바디에는 없다. 등급은 `calibrated` 인데, 선언된 핵 반지름을 재현하도록 맞춘 값이기 때문이다.
 `composition` 과 마찬가지로 `chain.yaml` 의 `outputs` 에는 없는 `Returns` 키라, C73 은 세기만 하고
 판정하지 않는다.
+
+⚠ **`basal_silicate_state` 와 `core_plus_layer_radius_km` 도 `outputs` 없는 `Returns` 키이고,
+그것은 고른 결과다.** `basal_silicate_state` 는 규산염이 **핵과 만나는 자리**에서 녹았는가를
+말한다 — 기둥 전체를 최대 용융분율 하나로 줄이는 `silicate_melt_state` 와 다른 물음이다.
+`core_plus_layer_radius_km` 은 **겉보기** 핵 반지름, 곧 철 핵에 그 위의 녹은 규산염 층을 더한
+값이고 지진 추정이 보고하는 양이다. `core_radius` 는 철 핵만 그대로 가리킨다.
+
+겉보기 반지름은 **늘 수인 것이 아니다.** 바닥이 고체이거나 규산염 기둥이 아예 없으면 철 핵
+반지름과 같고, 그 **같다는 사실을 인쇄한다** — 안 그러면 「층을 안 봤다」와 「층이 0 이다」가 같은
+모양으로 나온다. 바닥이 녹아 있으면 층이 있고 그 두께를 줄 공급자가 이 엔진에 없으므로, 그 키는
+**무엇이 없어서 값이 안 서는지 이름을 댄 `cannot-say`** 를 든다. Khan+ 2023 의 150 ± 15 km 는 이
+값을 **대조할 수**이지 채울 수가 아니다.
+
+값이 때로 문장이므로 `outputs` 에 넣으면 소비처가 `via` 로 묶여 길이 대신 문자열을 받는다.
+오늘 이 값을 소비하는 노드는 없다 — 소비처가 생기고 두께에 공급자가 생길 때까지 그 칸을 비워 둔다.
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] ·
 `composition` [—] · `body_class` [—] · `radius_earth` [R_earth] · `age_gyr` [Gyr] ·
 `tidal_heating` [—] · `envelope_z_rock_fraction` [—] · `envelope_z_profile` [—] ·
