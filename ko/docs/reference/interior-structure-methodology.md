@@ -52,7 +52,7 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 `integrator_core_gamma_verdict` [—] · `integrator_red_gamma_used` [—] ·
 `converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—] ·
 `core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—] ·
-`basal_silicate_state` [—] · `core_plus_layer_radius_solved_km` [km]
+`basal_silicate_state` [—] · `core_plus_layer_radius_solved_km` [km] · `basal_layer_thickness_km` [km]
 
 ⚠ **`core_sulphur_wt` 은 핵의 질량분율이고 0–1 이다. wt% 가 아니다.** 황 맞춤이 돌 때만 있다 —
 바디가 `core_plus_layer_radius_km` 와 `light_element_fixing` 을 선언하고 조성은 역산에 맡길 때다. 조성을 직접
@@ -80,7 +80,7 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 `potential_temperature` [K] ·
 `boundary_temperature_jump` [K] · `mantle_rock_fraction` [—] · `ammonia_mass_fraction` [—] · `serpentinisation` [—] ·
 `differentiation_front` [—] · `crust_rock_fraction` [—] · `crust_porosity` [—]
-**Declared-optional** — 이 레시피가 코드와 위 산문에서 **기본값을 선언한** 입력입니다. 없는 것이 정상 상태이지 구멍이 아닙니다 (C50 (b), 브리프 170 B). `ice_mass_fraction` [—] (없을 때 증거에는 `0.0` 이 기록됩니다 — 레시피가 안에서 정규화합니다) · `differentiated` [—] (기본값 `True`) · `initial_porosity` [—] 와 `porosity_cap` [Pa] (코드가 «기본값 0 은 공극이 없다가 아니라 이 레시피가 판정하지 않는다는 뜻» 이라고 적어 둡니다) · `gas_mass_fraction` [—] (없으면 «가스 바디가 아니다». 없을 때 증거에는 `0.0` 이 기록됩니다 — 레시피가 안에서 정규화합니다) · `envelope_z` [—] («Z 는 선언입니다. 강착과 진화가 정하는 값이고 이 레시피에 그 둘이 없습니다») · `ice_allowed` [—] (**선언이 아니라 도출입니다** — `ice_mass_fraction` 을 진술로 읽은 것입니다. 명시된 `0.0` 은 «이 천체에는 얼음이 없다», 없는 것은 «모른다» 이고, 역산의 얼음 축은 뒤엣것에서만 열립니다. C57, 브리프 182 B).
+**Declared-optional** — 이 레시피가 코드와 위 산문에서 **기본값을 선언한** 입력입니다. 없는 것이 정상 상태이지 구멍이 아닙니다 (C50 (b), 브리프 170 B). `ice_mass_fraction` [—] (없을 때 증거에는 `0.0` 이 기록됩니다 — 레시피가 안에서 정규화합니다) · `differentiated` [—] (기본값 `True`) · `initial_porosity` [—] 와 `porosity_cap` [Pa] (코드가 «기본값 0 은 공극이 없다가 아니라 이 레시피가 판정하지 않는다는 뜻» 이라고 적어 둡니다) · `gas_mass_fraction` [—] (없으면 «가스 바디가 아니다». 없을 때 증거에는 `0.0` 이 기록됩니다 — 레시피가 안에서 정규화합니다) · `envelope_z` [—] («Z 는 선언입니다. 강착과 진화가 정하는 값이고 이 레시피에 그 둘이 없습니다») · `ice_allowed` [—] (**선언이 아니라 도출입니다** — `ice_mass_fraction` 을 진술로 읽은 것입니다. 명시된 `0.0` 은 «이 천체에는 얼음이 없다», 없는 것은 «모른다» 이고, 역산의 얼음 축은 뒤엣것에서만 열립니다. C57, 브리프 182 B) · `basal_iron_number` [Fe#, 0–100] (**선언이지 도출이 아닙니다**, C100. C103 이 걷어냅니다. Fe# 는 Samuel+ 2021 을 따라 `100*Fe/(Fe + Mg)` 라 0–100 입니다 — 여기에 Mg#(0–1)을 적으면 녹는곡선이 내려가는 양이 100 배 작아지고, *작은 쪽은 아무 일도 안 난 것과 똑같아 보입니다*. 없으면 곡선은 그대로입니다 — `d_fe` 가 `None` 이고 모든 값이 비트까지 같습니다. ⚠ **부화는 가장 깊은 암석 표본에만 닿습니다** — 바닥 층의 성질이므로 얕은 표본이 부화 없는 곡선을 쓰는 것은 **설계입니다**. 적분기의 잠열 항은 이것을 아예 보지 않고, 그쪽은 **한계**입니다 — 어느 걸음이 층 안인지 알려면 층이 있어야 하는데 그 층이 찾고 있는 답이기 때문입니다).
 **갈리는 축** — `composition` 이 고르는 물질 스택, 그리고 각 층 경계에서 도달하는 압력.
 거기 근거 있는 상(phase)이 존재하는지를 그 압력이 정합니다. 레짐과 수치 조건은
 [유효 영역](#유효-영역)에 있습니다.

@@ -10,12 +10,13 @@
   "radius_earth": 0.532,
   "core_plus_layer_radius_km": 1845.0,
   "light_element_fixing": "box_ceiling",
-  "potential_temperature": 1600.0
+  "potential_temperature": 1600.0,
+  "basal_iron_number": 75.0
  },
  "files": {
   "interior.py": {
-   "bytes": "5252df219406bd67",
-   "code": "96e046cde7cb425b"
+   "bytes": "ca2dd95aad0033c9",
+   "code": "59b5fdf9ca0f1837"
   },
   "eos.py": {
    "bytes": "d59d7d5d6d0afad9",

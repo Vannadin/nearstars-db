@@ -2288,17 +2288,38 @@ NO_BASAL_ANSWER = ("cannot-say (바닥 규산염 상태를 판정하지 못했�
                    "안 정해지면 겉보기 반지름도 안 선다)")
 
 
-def _basal_silicate_state(st, variant: str) -> tuple[str, str]:
+def _basal_iron_difference(variant: str, basal_iron_number: float | None) -> float | None:
+    """선언된 바닥 철 수에서 항이 쓰는 차 Fe_d − Fe_m 을 낸다. 선언이 없으면 None.
+
+    ⚠ **단위는 Fe# 이고 0–100 이다** (`eos.FE_NUMBER_MANTLE` 의 블록 주석).
+    ⚠ **맨틀 철 수가 없는 조성은 None 을 낸다** — `eos._iron_shift` 가 거절하기 전에
+    여기서 멈춘다. 0 으로 메우면 부화 전부가 차로 잡혀 항이 최대가 된다."""
+    from eos import FE_NUMBER_MANTLE
+    if basal_iron_number is None:
+        return None
+    fe_m = FE_NUMBER_MANTLE.get(variant)
+    return None if fe_m is None else basal_iron_number - fe_m
+
+
+def _basal_silicate_state(st, variant: str,
+                          d_fe: float | None = None) -> tuple[str, str]:
     """바닥 규산염이 녹았는가. (상태, 한 줄 설명).
 
     가장 깊은 표본 하나만 본다 — 기둥 전체의 최대 용융분율이 아니라 **바닥의** 용융분율이다.
     ⚠ 두 물음이 같은 답을 주는 일이 흔하지만 같은 물음은 아니다: 얕은 곳만 녹은 기둥은
     «어딘가 녹았다» 이면서 «바닥은 고체» 다."""
-    from eos import silicate_melt_fraction, silicate_melt_refusal
+    from eos import (silicate_melt_fraction, silicate_melt_refusal, silicate_solidus,
+                     silicate_liquidus, IRON_SHIFT_K_PER_FE_NUMBER, FE_NUMBER_MANTLE)
     if not st.rock_samples:
         return BASAL_NONE, ""
+    # ⚠ **부화는 바닥 표본 하나에만 건다** (사전등록 f68e8156 개정 3 R12, 자 ⓜ).
+    #   부화는 바닥 층의 성질이고 (Samuel+ 2021 «within the basal layer»), 얕은 표본이
+    #   부화 없는 곡선을 쓰는 것은 **설계이지 한계가 아니다**.
+    # ⚠ **한계는 따로 있다 — 적분기(`eos.silicate_melt_dh`)는 부화를 안 본다.** 걸음마다
+    #   `d_fe` 를 걸려면 그 걸음이 층 안인지 알아야 하는데 **층이 어디부터인지가 우리가
+    #   찾는 답이라 순환이다.** 그 순환을 푼 Samuel 의 깊이 함수는 SI S1·S5 에 있고 미보유다.
     p_base, t_base = max(st.rock_samples, key=lambda pt: pt[0])
-    phi = silicate_melt_fraction(p_base, t_base, variant)
+    phi = silicate_melt_fraction(p_base, t_base, variant, d_fe)
     if phi is None:
         return (BASAL_OFF_CURVE,
                 f"**바닥 규산염을 판정하지 않았다** — 가장 깊은 표본 {p_base / 1e9:.1f} GPa 에 "
@@ -2307,15 +2328,46 @@ def _basal_silicate_state(st, variant: str) -> tuple[str, str]:
     if phi >= 1.0:
         return (BASAL_MOLTEN,
                 f"**바닥 규산염이 리퀴더스 위다** ({p_base / 1e9:.1f} GPa · {t_base:.0f} K, "
-                f"φ = {phi:.2f}) — 핵 위에 녹은 규산염 층이 선다. ⚠ **두께는 이 레시피가 못 낸다**, "
-                "그래서 겉보기 핵 반지름은 수가 아니라 이름 댄 cannot-say 로 나간다.")
+                f"φ = {phi:.2f}) — 핵 위에 녹은 규산염 층이 선다. ⚠ **교차 자리를 낼 장치가 "
+                "아직 없다** — 두께는 리퀴더스 교차에서 나오고 그것은 걸음마다 묻는 길이라 "
+                "아직 안 지었다 (사전등록 f68e8156 §4 A, 개정 3 R13 이 미뤘다). 이 갈래가 "
+                "켜지는 날이 그 길이 열리는 날이다. 그래서 겉보기 핵 반지름은 수가 아니라 "
+                "이름 댄 cannot-say 로 나간다.")
+    # ⚠ **리퀴더스에 안 닿았다 → 두께는 «거절» 이 아니라 «0» 이다** (사전등록 f68e8156 §5-A ㉱).
+    #   0 은 수이고 대조되고 뜻이 분명하다 — **«선언한 부화로는 논문의 그 물건이 안 생긴다»**.
+    #   거절은 그 말을 못 한다. `off-curve` 만 거절로 남는다 (위 가지, «모른다»).
+    # ⚠ **부족분과 한계를 같은 기준에서 잰다 — 둘 다 «부화 0» 의 리퀴더스에 대고 잰다.**
+    #   부화를 건 곡선까지의 거리와 «항이 낼 수 있는 총량» 을 맞대면 **이미 쓴 몫이 두 번
+    #   세어진다**. 그래서 `t_liq0` (선언 없는 리퀴더스) 를 기준선으로 둔다.
+    t_liq = silicate_liquidus(p_base, variant, d_fe)
+    t_liq0 = silicate_liquidus(p_base, variant)
+    fe_m = FE_NUMBER_MANTLE.get(variant)
+    short = ""
+    if t_liq is not None:
+        short = f" 리퀴더스까지 {t_liq - t_base:.2f} K 모자란다."
+        if d_fe is not None:
+            short += (f" (부화 0 기준 {t_liq0 - t_base:.2f} K, 항이 "
+                      f"{IRON_SHIFT_K_PER_FE_NUMBER * d_fe:.2f} K 를 냈다.)")
+    if fe_m is not None and t_liq0 is not None:
+        # 항이 낼 수 있는 최대 — Fe# 100 은 맨틀에 Mg 가 하나도 없다는 뜻이라 **도달 불가능한 끝점**이다.
+        cap = IRON_SHIFT_K_PER_FE_NUMBER * (100.0 - fe_m)
+        gap0 = t_liq0 - t_base
+        short += (f" 항의 한계는 {cap:.2f} K (Fe# 100 — 맨틀에 Mg 가 없다는 뜻인 "
+                  f"**도달 불가능한 끝점**)이고, **거기서도 {gap0 - cap:.2f} K 모자란다**."
+                  if cap < gap0 else
+                  f" 항의 한계 {cap:.2f} K 이 부화 0 기준 부족분 {gap0:.2f} K 보다 크므로 "
+                  f"Fe# {fe_m + gap0 / IRON_SHIFT_K_PER_FE_NUMBER:.1f} 위에서는 닿는다.")
     if phi <= 0.0:
+        t_sol = silicate_solidus(p_base, variant, d_fe)
+        sol_gap = "" if t_sol is None else f" 솔리더스까지 {t_sol - t_base:.2f} K,"
         return (BASAL_SOLID,
                 f"**바닥 규산염은 솔리더스 아래다** ({p_base / 1e9:.1f} GPa · {t_base:.0f} K) — "
-                "핵 위에 녹은 층이 없다. 겉보기 핵 반지름과 철 핵 반지름이 **같다**.")
+                f"핵 위에 녹은 층이 없다. 겉보기 핵 반지름과 철 핵 반지름이 **같다**."
+                f"{sol_gap}{short} **두께 0 km 는 답이지 거절이 아니다.**")
     return (BASAL_PARTIAL,
             f"**바닥 규산염이 부분용융 창 안이다** ({p_base / 1e9:.1f} GPa · {t_base:.0f} K, "
-            f"φ = {phi:.2f}) — 이것을 층이라 부를지 정한 적이 없다. 겉보기 반지름을 안 낸다.")
+            f"φ = {phi:.2f}) — 리퀴더스를 안 넘었으므로 «fully molten» 층이 아니다 "
+            f"(Khan+ 2023 의 물건이 그것이다).{short} **두께 0 km 는 답이지 거절이 아니다.**")
 
 def _silicate_melt_verdict(st, potential_temperature, variant: str) -> tuple[str, float, str]:
     """암석 기둥이 녹았는가 (브리프 36). (상태, 최대 용융분율, 한 줄 설명).
@@ -2513,7 +2565,8 @@ def solve(mass_earth: float,
           crust_rock_fraction: float = 0.0,
           crust_porosity: bool = False,
           envelope_z_profile: tuple | None = None,
-          ammonia_mass_fraction: float = 0.0) -> Result:
+          ammonia_mass_fraction: float = 0.0,
+          basal_iron_number: float | None = None) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
@@ -2551,7 +2604,11 @@ def solve(mass_earth: float,
               "serpentinisation": serpentinisation,
               "differentiation_front": differentiation_front,
               "crust_rock_fraction": crust_rock_fraction,
-              "crust_porosity": crust_porosity}
+              "crust_porosity": crust_porosity,
+              # ⚠ **계약이 이 사전을 읽는다** — `check_contracts` 의 `union_in` 은 표본 천체가
+              #   실제로 낸 `Result.inputs` 의 합집합이다. 서명에만 더하고 여기 안 넣으면
+              #   **문서가 적은 키를 코드가 안 쓴다**로 빨개진다 (2026-09-22 에 그렇게 났다).
+              "basal_iron_number": basal_iron_number}
 
     if body_class in FLUID_CLASSES:
         why = {
@@ -2894,7 +2951,8 @@ def solve(mass_earth: float,
         st, potential_temperature, silicate_variant)
     if rock_note:
         notes.append(rock_note)
-    basal_state, basal_note = _basal_silicate_state(st, silicate_variant)
+    d_fe = _basal_iron_difference(silicate_variant, basal_iron_number)
+    basal_state, basal_note = _basal_silicate_state(st, silicate_variant, d_fe)
     if basal_note:
         notes.append(basal_note)
     # ⚠ **같음을 조용히 두지 않는다.** 층이 없으면 두 반지름이 같고, 그 «같다» 가 인쇄되지
@@ -2904,12 +2962,20 @@ def solve(mass_earth: float,
     #   받는다**. 같은 이름으로 내보내면 **선언이 없는 천체에서 우리 출력이 선언 자리에 앉는다** —
     #   2026-09-22 에 `dante_fixture` 가 그렇게 죽었고(문자열이 `float()` 에 들어갔다), 화성에서는
     #   같은 일이 **수라서 조용히 지나갔다**. 시끄러운 쪽이 좁다.
-    if basal_state in (BASAL_SOLID, BASAL_NONE):
+    # ⚠ **㉱ — 층 경계는 리퀴더스 교차다** (사전등록 f68e8156 §5-A). 리퀴더스에 안 닿으면
+    #   두께는 **거절이 아니라 `0`** 이고, 그래서 `partial-melt` 도 수를 낸다 — 「부분용융은
+    #   Khan 의 «fully molten» 층이 아니다」가 **답**이지 판단 보류가 아니다.
+    # ⚠ **`off-curve` 만 거절로 남는다** — 거기서는 곡선이 그 압력에 안 닿아 «모른다» 이고,
+    #   «모른다» 와 «0» 을 한 문장으로 내보내면 둘을 되찾을 수 없다 (`:2293` 이 그렇게 적는다).
+    if basal_state in (BASAL_SOLID, BASAL_NONE, BASAL_PARTIAL):
         plus_layer = st.core_radius_m / 1e3
+        layer_km = 0.0
     elif basal_state == BASAL_MOLTEN:
         plus_layer = NO_LAYER_THICKNESS
+        layer_km = NO_LAYER_THICKNESS
     else:
         plus_layer = NO_BASAL_ANSWER
+        layer_km = NO_BASAL_ANSWER
 
     # 2026-08-26: 혼합 규칙이 들어오면서 **앵커 수가 하나에서 둘로 늘었다.** 목성이
     # Z = 0 에서 +0.6 %, 토성이 Z = 0.200 에서 −0.1 % 다. 그래서 이 강등 규칙을 다시
@@ -3227,6 +3293,9 @@ def solve(mass_earth: float,
                 "silicate_melt_state": rock_state,
                 "silicate_melt_fraction_max": rock_phi,
                 "basal_silicate_state": basal_state,
+                # ⚠ **두께를 값으로 낸다.** 산문에 「두께 0 km」라 적어 두고 값을 안 내면
+                #   하류가 못 읽고, 「0」과 「안 냈다」가 같은 모양이 된다 (사전등록 §5).
+                "basal_layer_thickness_km": layer_km,
                 "core_plus_layer_radius_solved_km": plus_layer,
                 "ocean_thickness": st.ocean_thickness_m / 1e3,
                 "ice_shell_thickness": st.ice_shell_thickness_m / 1e3,
@@ -3261,6 +3330,7 @@ def solve(mass_earth: float,
                "silicate_melt_state": "",
                "basal_silicate_state": "",
                "core_plus_layer_radius_solved_km": "km",
+               "basal_layer_thickness_km": "km",
                "silicate_melt_fraction_max": "",
                "ocean_thickness": "km",
                "ice_shell_thickness": "km",
@@ -3446,7 +3516,8 @@ def _porous_rock_verdict(mass_earth: float, radius_earth: float,
 def infer_composition(mass_earth: float, radius_earth: float,
                       ice_allowed: bool = True,
                       tidal_heating: bool = False,
-                      potential_temperature: float | None = None) -> Result:
+                      potential_temperature: float | None = None,
+                      basal_iron_number: float | None = None) -> Result:
     """질량과 반지름을 재현하는 자유 분율 하나를 푼다.
 
     금속도 얼음도 없는 순수 규산염을 기준선으로 잡는다. 관측 반지름이 그보다
@@ -3480,7 +3551,8 @@ def infer_composition(mass_earth: float, radius_earth: float,
     #   읽어야 답이 갈래에 안 딸린다.
     rock = solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=0.0,
                  potential_temperature=potential_temperature,
-                 tidal_heating=tidal_heating)
+                 tidal_heating=tidal_heating,
+                 basal_iron_number=basal_iron_number)
     if not rock.applicable:
         return rock
 
@@ -3490,7 +3562,8 @@ def infer_composition(mass_earth: float, radius_earth: float,
         def at(x):
             return solve(mass_earth, core_mass_fraction=x, ice_mass_fraction=0.0,
                          potential_temperature=potential_temperature,
-                         tidal_heating=tidal_heating)
+                         tidal_heating=tidal_heating,
+                         basal_iron_number=basal_iron_number)
     elif not ice_allowed:
         # 기준선보다 가벼운데 얼음이 선언으로 배제돼 있다. 남는 기작은 빈 공간이고,
         # 이제 그 빈 공간에 근거된 관계식이 있다 — 그래서 여기서 끝나지 않는다.
@@ -3502,7 +3575,8 @@ def infer_composition(mass_earth: float, radius_earth: float,
         def at(x):
             return solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=x,
                          potential_temperature=potential_temperature,
-                         tidal_heating=tidal_heating)
+                         tidal_heating=tidal_heating,
+                         basal_iron_number=basal_iron_number)
 
     # 1) 축을 훑는다. 값이 나오는 눈금과 막힌 눈금을 모두 들고 간다.
     grid = [span[0] + (span[1] - span[0]) * i / (SCAN_POINTS - 1)
@@ -3964,11 +4038,13 @@ SULPHUR_ANCHOR_FILE = Path(__file__).with_name("mars_sulphur_anchor.json")
 #: 굳힌 답을 움직이는 **선언들**. 파일 해시가 아니라 값이다 — `mars.yaml` 은 산문 주석이 자주
 #: 바뀌고, 파일 자를 쓰면 물리가 그대로인데도 지문이 깨져 `--refresh` 가 «늘 누르는 단추» 가 된다.
 SULPHUR_ANCHOR_DECLARATIONS = ("mass_earth", "radius_earth", "core_plus_layer_radius_km",
-                               "light_element_fixing", "potential_temperature")
+                               "light_element_fixing", "potential_temperature",
+                               "basal_iron_number")
 
 
 def solve_with_core_sulphur(mass_earth: float, radius_earth: float, w_s: float, pin: str,
-                            potential_temperature: float | None = None):
+                            potential_temperature: float | None = None,
+                            basal_iron_number: float | None = None):
     """황 분율 하나를 핵에 넣고 **한 번** 푼다.
 
     맞춤(`fit_sulphur_to_core_radius`)도 읽기(`read_sulphur_anchor` 뒤의 노드)도 이 함수를 쓴다 —
@@ -3987,6 +4063,7 @@ def solve_with_core_sulphur(mass_earth: float, radius_earth: float, w_s: float, 
     COMPOSITIONS["earth_like"] = (saved[0], saved[1], saved[2], name)
     try:
         return infer_composition(mass_earth, radius_earth, ice_allowed=False,
+                                 basal_iron_number=basal_iron_number,
                                  potential_temperature=potential_temperature)
     finally:
         COMPOSITIONS["earth_like"] = saved
@@ -4011,7 +4088,8 @@ def _sulphur_result(res, w_s: float, pin: str, core_plus_layer_radius_km: float,
 def fit_sulphur_to_core_radius(mass_earth: float, radius_earth: float,
                                core_plus_layer_radius_km: float, pin: str,
                                potential_temperature: float | None = None,
-                               halvings: int | None = None):
+                               halvings: int | None = None,
+                               basal_iron_number: float | None = None):
     """관측 핵 반지름을 재현하는 황 분율을 푼다 — **맞춤이지 측정이 아니다**.
 
     ⚠ **맞춘 양은 그 맞춤을 검사하지 못한다.** 이 함수가 돌고 나면 핵 반지름은 «소비된 관측» 이
@@ -4033,8 +4111,20 @@ def fit_sulphur_to_core_radius(mass_earth: float, radius_earth: float,
     target_frac = core_plus_layer_radius_km / (radius_earth * EARTH_RADIUS_M / 1e3)
 
     def at(w_s):
+        # ⚠ **맞춤도 선언된 부화를 본다** (사전등록 f68e8156 개정 6). 이유는 하나다 —
+        #   **맞춤이 푸는 천체와 노드가 푸는 천체가 같아야 한다.** 맞춤은
+        #   `solve_with_core_sulphur` 로 이 천체를 통째로 다시 푼다. 한쪽만 선언을 보면
+        #   **같은 화성이 둘**이 되고, **앵커가 얼리는 것은 노드가 보고하는 쪽이 아니게 된다.**
+        # ⚠ **예측 — 맞춘 황은 안 움직인다.** 위 `_silicate_melt_verdict` 의 산문이 근거다:
+        #   *«밀도는 어디서나 고체 EOS 다 … molten 판정은 상태의 이름이지 반지름을 바꾼 것이
+        #   아니다»*. 부화는 **융해 판정만** 움직이고 밀도를 안 움직이므로 철 핵 반지름을
+        #   못 움직이고, 그러면 그 반지름에 맞춘 황도 안 움직인다.
+        #   ⚠ **안 맞으면 그것이 소식이다** — 재굳힘에서 황 14 칸이 움직이면 멈추고 보고한다.
+        # ⚠ **대가는 적어 둔다** — 위 독스트링의 「맞춘 양은 그 맞춤을 검사하지 못한다」가
+        #   한 겹 깊어진다. 맞추는 곡선 자체가 이제 선언 하나를 더 탄다.
         return solve_with_core_sulphur(mass_earth, radius_earth, w_s, pin,
-                                       potential_temperature=potential_temperature)
+                                       potential_temperature=potential_temperature,
+                                       basal_iron_number=basal_iron_number)
 
     # ⚠ **회수는 곧 시간이다** — 한 시행이 사원계 역산 한 번(측정 ≈68 s). 기본 6 회는 착지용
     #   정밀도이고, 다른 고정은 «두 답이 갈리느냐» 만 보므로 더 적게 사서 쓴다.
@@ -4093,7 +4183,8 @@ def read_sulphur_anchor(declared: dict):
         if not same:
             return None, None, (
                 f"굳힌 황 맞춤은 이 선언의 것이 아니다 — **`{key}` 가 움직였다** "
-                f"(굳힘 {want!r} · 지금 {got!r}). 맞춤은 선언 다섯에 묶여 있고, 그 중 하나가 "
+                f"(굳힘 {want!r} · 지금 {got!r}). 맞춤은 선언 "
+                f"{len(SULPHUR_ANCHOR_DECLARATIONS)} 에 묶여 있고, 그 중 하나가 "
                 f"바뀌면 굳힌 황은 다른 바디의 답이다. 같은 선언이 맞으면 "
                 f"`python3 engine/test_mars_sulphur.py --refresh` 로 이 커밋에서 다시 굳혀라 — "
                 f"물리 파일이 움직였는지까지 보는 자는 그 단계 하나다")
@@ -4159,13 +4250,22 @@ def _infer_from_state(state):
         #   게이트의 한 단계(`test_mars_sulphur.py`)에서만 돌고, 그 단계가 굳힌 값을 다시 대본다.
         pin = _declared_value(state.get("light_element_fixing"))
         t_pot = state.get("potential_temperature")
-        declared = {"mass_earth": mass, "radius_earth": radius,
-                    "core_plus_layer_radius_km": float(core_km), "light_element_fixing": pin,
-                    "potential_temperature": t_pot}
+        # ⚠ **목록에서 짓는다. 손으로 적지 않는다** (2026-09-22, C100 이 여섯째 선언을 더하며).
+        #   손으로 적으면 `SULPHUR_ANCHOR_DECLARATIONS` 가 자라도 이 사전은 안 자라고,
+        #   그러면 `read_sulphur_anchor` 가 **없는 값(None)과 굳힌 값을 대조해 늘 거절한다.**
+        #   ⚠ **거절의 얼굴이 조용하다** — 화성이 황 갈래를 못 타고 `core_sulphur_wt` 가
+        #   출력에서 사라져, 계약이 「Returns 에 적었는데 코드가 안 쓴다」로 빨개진다.
+        #   결함은 황 맞춤인데 빨강은 계약 대조에서 뜬다.
+        _from_state = {"mass_earth": mass, "radius_earth": radius,
+                       "core_plus_layer_radius_km": float(core_km),
+                       "light_element_fixing": pin, "potential_temperature": t_pot}
+        declared = {k: _from_state[k] if k in _from_state else state.get(k)
+                    for k in SULPHUR_ANCHOR_DECLARATIONS}
         w_s, halvings, why = read_sulphur_anchor(declared)
         if why:
             return out_of_domain(RECIPE, VERSION, why, inputs=inputs, refs=REFS)
-        res = solve_with_core_sulphur(mass, radius, w_s, pin, potential_temperature=t_pot)
+        res = solve_with_core_sulphur(mass, radius, w_s, pin, potential_temperature=t_pot,
+                                      basal_iron_number=state.get("basal_iron_number"))
         if not res.applicable:
             return res
         return _sulphur_result(res, w_s, pin, float(core_km),
@@ -4175,7 +4275,8 @@ def _infer_from_state(state):
     imf = state.get("ice_mass_fraction")
     return infer_composition(mass, radius, ice_allowed=(imf is None or imf > 0.0),
                              tidal_heating=bool(state.get("tidal_heating", False)),
-                             potential_temperature=state.get("potential_temperature"))
+                             potential_temperature=state.get("potential_temperature"),
+                             basal_iron_number=state.get("basal_iron_number"))
 
 
 def _solve_from_state(state):
@@ -4217,4 +4318,6 @@ def _solve_from_state(state):
         # 포텐셜 온도도 **선언** 이다. 없으면 온도가 아예 흐르지 않고 예전 등온 경로다.
         potential_temperature=state.get("potential_temperature"),
         tidal_heating=bool(state.get("tidal_heating", False)),
+        # 바닥 층의 철 수도 **선언** 이다 (C100). 없으면 녹는곡선이 오늘 그대로다.
+        basal_iron_number=state.get("basal_iron_number"),
     )

@@ -378,9 +378,13 @@ def main() -> int:
               # ⚠ `ice_allowed` 는 182 B 가 더한 것이고 **선언이 아니라 도출**이다 —
               #   `ice_mass_fraction` 을 진술로 읽은 것(명시된 0.0 = 얼음 없음, 부재 = 모름).
               #   역산이 노드 경로에 들어오면서 처음으로 계약 대상이 됐다 (C57).
-              "interior_layers": {"differentiated", "envelope_z", "gas_mass_fraction",
-                                  "ice_allowed", "ice_mass_fraction", "initial_porosity",
-                                  "porosity_cap"},
+              # ⚠ `basal_iron_number` 는 C100 이 더한 **선언**이다 (2026-09-22). 없는 것이
+              #   정상 상태다 — 없으면 `d_fe` 가 `None` 이고 녹는곡선이 오늘 그대로다.
+              #   ⚠ **이 집합은 넓어지는 쪽이라 다른 그물이 전부 조용하다** (위 C65 주석의
+              #   gate240 과 같은 모양). 그래서 키를 더할 때마다 **왜 면제인지**를 여기 적는다.
+              "interior_layers": {"basal_iron_number", "differentiated", "envelope_z",
+                                  "gas_mass_fraction", "ice_allowed", "ice_mass_fraction",
+                                  "initial_porosity", "porosity_cap"},
               "internal_heat_nontidal": {"ice_mass_fraction"},
               # ⚠ 둘 다 **C65 후속이 2026-09-11 에 더한 것**이고, 더한 이유가 서로 다르다.
               #   `composition_intent` 는 어댑터가 실제로 조회하는 키인데 계약이 이름조차 적지

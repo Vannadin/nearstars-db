@@ -54,7 +54,10 @@ SULPHUR_TOL_WT = 0.002
 
 
 def declared_inputs() -> dict:
-    """`mars.yaml` 이 선언한 다섯 — 굳힌 답을 움직이는 것 전부."""
+    """`mars.yaml` 이 선언한 여섯 — 굳힌 답을 움직이는 것 전부.
+
+    ⚠ **수를 여기 적지 말고 목록을 세라** — 2026-09-22 에 `basal_iron_number` 가 들어와
+    다섯이 여섯이 됐고, **산문의 「다섯」은 안 따라왔다.** 목록은 `interior.SULPHUR_ANCHOR_DECLARATIONS` 다."""
     doc = yaml.safe_load(MARS_FILE.read_text(encoding="utf-8"))["inputs"]
 
     def value(x):
@@ -84,7 +87,8 @@ def _fit(declared: dict, pin: str, halvings: int) -> tuple:
     t0 = time.perf_counter()
     w_s, res = interior.fit_sulphur_to_core_radius(
         declared["mass_earth"], declared["radius_earth"], declared["core_plus_layer_radius_km"], pin,
-        potential_temperature=declared["potential_temperature"], halvings=halvings)
+        potential_temperature=declared["potential_temperature"], halvings=halvings,
+        basal_iron_number=declared["basal_iron_number"])
     return w_s, res, time.perf_counter() - t0
 
 
@@ -96,6 +100,12 @@ def _record(w_s: float, res, halvings: int, declared: dict) -> dict:
     바이트를 해시**한다. 초를 담으면 물리가 하나도 안 바뀐 재굳힘도 바이트를 움직여 얼음거대행성
     앵커가 빨개진다 — **초는 기록만 하고 판정하지 않는다**는 규칙이 해시 안에서 뒤집힌다
     (감사석, 2026-09-20). 걸린 시간은 인쇄로 남는다."""
+    # ⚠ **`values` 전부를 굳히지 않는다. 일곱을 손으로 고른다** — 이 앵커가 지키는 것은
+    #   **황 맞춤의 답**이지 노드 출력 전체가 아니다.
+    # ⚠ **그래서 `basal_layer_thickness_km` 는 여기 안 들어간다** (C100, 2026-09-22).
+    #   두께는 맞춤의 답이 아니라 **융해 판정의 답**이고, 판정은 밀도를 안 움직이므로
+    #   (`interior.py` 의 `_silicate_melt_verdict` 산문) 황이 안 움직이면 두께도 안 움직인다.
+    #   **늘어난 키를 보는 자는 얼음 앵커의 C102 칸이다** — 거기서 「답에만 있는 키」로 뜬다.
     v = res.values
     r_m = v["core_radius"] * interior.EARTH_RADIUS_M
     m_core = declared["mass_earth"] * interior.EARTH_MASS_KG * v["core_mass_fraction"]
