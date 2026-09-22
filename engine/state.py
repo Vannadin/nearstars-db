@@ -194,7 +194,7 @@ class BodyState:
                      f"· 범위 밖 {len(self.declined)}")
         for node, r in sorted(self.results.items()):
             mark = "  " if r.applicable else "· "
-            vals = ", ".join(f"{k}={_short(v)}{_u(r.units.get(k))}"
+            vals = ", ".join(f"{k}={_short(v)}{_u(r.units.get(k), v)}"
                              for k, v in r.values.items()) or r.reason[:72]
             lines.append(f"    {mark}{node:24} {vals}")
         return "\n".join(lines)
@@ -206,5 +206,18 @@ def _short(v: Any) -> str:
     return str(v)[:40]
 
 
-def _u(unit: str | None) -> str:
-    return f" {unit}" if unit else ""
+def _u(unit: str | None, value: Any = None) -> str:
+    """단위 도장. ⚠ **수가 아닌 값에는 안 찍는다.**
+
+    값이 `None` 이거나 이름 댄 거절문(`cannot-say (…)`)인데 단위를 달면 **그 줄이 수처럼
+    읽힌다** — `cmb_boundary_layer=cannot-say (경계층 δ_b … km` 처럼 문장이 잘린 뒤에
+    `km` 이 붙어, 읽는 사람에게는 **답이 있는 것처럼 보이는 거절**이 된다.
+    측정 (2026-09-23): 단위가 붙는 자리 346(고유 128) 중 **수가 아닌 것 35** —
+    `None` 33 + 거절문 2. ⚠ **경계층 가드가 그 2 를 8 로 늘리므로 같은 판에서 닫는다.**
+
+    ⚠ **자르는 표시(`…`)는 여기서 안 넣는다** — 그것은 판정 라벨 24 자리(고유 15)를
+    같이 바꿔 화면이 넓게 움직인다. **해악의 핵심은 «잘린 것» 이 아니라 «단위를 달아
+    수처럼 보이게 한 것» 이다.** 한 번에 하나 (별건으로 등재)."""
+    if not unit:
+        return ""
+    return f" {unit}" if isinstance(value, (int, float)) and not isinstance(value, bool) else ""
