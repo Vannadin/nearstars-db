@@ -82,7 +82,7 @@ Primack 2020 의 **미발표 초안 표**(LaTeX 소스 `\end{document}` 뒤, PDF
 `adiabat_gradient_cmb` [K/km] · `g_cmb` [m/s2] · `k_core` [W/(m K)] · `cmb_jump` [K] · `cmb_flux_verdict` [—] ·
 `q_cmb_in_paper_range` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
-`cmb_temperature` [K] · `core_cmb_temperature_used` [K] · `core_cmb_temperature` [K] · `core_material` [—] · `body_class` [—]
+`cmb_temperature` [K] · `core_cmb_temperature_used` [K] · `core_cmb_temperature` [K] · `core_material` [—] · `body_class` [—] · `radius` [R_earth]
 **분기키** — `body_class`. 암석체만 받습니다(거대행성에는 규산염 하단 경계층이 없습니다). `core_cmb_temperature`
 미선언 → 이름 대며 거절합니다. `core_state` 의 하한 갈래는 핵 쪽 온도를 맨틀 단열선과 같게 두므로 경계층을 몰
 점프가 없습니다. `core_radius` 나 `core_mass_fraction` 이 없어도 거절합니다.

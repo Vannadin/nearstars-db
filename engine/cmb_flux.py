@@ -129,13 +129,17 @@ def adiabatic_flow(material_name: str, p_cmb: float, t_c: float, r_cmb: float, m
 def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth: float | None,
           cmb_pressure_gpa: float | None, cmb_temperature: float | None,
           core_cmb_temperature_used: float | None, core_cmb_declared: bool,
-          core_material: str = "fe_prem", body_class: str | None = None) -> Result:
+          core_material: str = "fe_prem", body_class: str | None = None,
+          radius_earth: float | None = None) -> Result:
     # keys are the state's names (the contract's Needs); the declaration is recorded as its value or None
     inputs = {"mass_earth": mass_earth, "core_mass_fraction": core_mass_fraction,
               "core_radius": core_radius_earth, "cmb_pressure": cmb_pressure_gpa,
               "cmb_temperature": cmb_temperature, "core_cmb_temperature_used": core_cmb_temperature_used,
               "core_cmb_temperature": core_cmb_temperature_used if core_cmb_declared else None,
-              "core_material": core_material, "body_class": body_class}
+              "core_material": core_material, "body_class": body_class,
+              # ⚠ **계약이 이 사전을 읽는다** — 서명에만 더하고 여기 빼면 `check_contracts` 가
+              #   「문서가 적었는데 코드가 안 쓴다」로 빨개진다 (2026-09-22, C100 에서 그렇게 났다).
+              "radius": radius_earth}
     if body_class in ("giant", "gas_giant", "ice_giant", "sub_neptune", "brown_dwarf", "star"):
         return out_of_domain(RECIPE, VERSION, f"'{body_class}' 에는 규산염 맨틀 하단 경계층이 없다 — 이 노드는 암석체의 것이다.",
                              inputs=inputs, refs=REFS)
@@ -150,23 +154,53 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
                              inputs=inputs, refs=REFS)
     r_cmb = core_radius_earth * R_EARTH_M
     m_core = mass_earth * M_EARTH_KG * core_mass_fraction
-    core = bottom_layer(t_c, t_m, r_cmb)
+    # ⚠ **바닥 경계층은 그 천체 자신의 표면중력을 쓴다** (사전등록 6a04bba5 개정 2).
+    #   Nimmo+ 2004 Table 2 가 `g` 를 천체 양으로 적는다. 여기까지는 지구값 9.8 이 기본값으로
+    #   흘러 **모든 천체가 지구 중력으로 경계층을 풀고 있었다.**
+    # ✅ **`radiogenic.py` 가 맨틀 **위** 경계층에 쓰는 것과 같은 식**이라, 맨틀 양쪽이 한 정의에 선다.
+    # ⚠ **`bottom_layer` 의 기본값 `mf.EARTH_G` 는 남긴다** — 안 넘기는 호출부 열이 오늘 거동을 유지한다.
+    g_body = (G_NEWTON * mass_earth * M_EARTH_KG / (radius_earth * R_EARTH_M) ** 2
+              if radius_earth else mf.EARTH_G)
+    core = bottom_layer(t_c, t_m, r_cmb, g=g_body)
     if core["domain_refusal"] is not None:
         return out_of_domain(RECIPE, VERSION, core["domain_refusal"], inputs=inputs, refs=REFS)
-    band = [bottom_layer(t_c, t_m, r_cmb, z, kb)["q_c_w"]
+    band = [bottom_layer(t_c, t_m, r_cmb, z, kb, g=g_body)["q_c_w"]
             for z in (mf.ZETA_RANGE[0], mf.ZETA, mf.ZETA_RANGE[1]) for kb in (KAPPA_B_RANGE[0], KAPPA_B, KAPPA_B_RANGE[1])]
+    # ⚠ **가드는 «보고되는 δ_b» 만 본다** (사전등록 6a04bba5 개정 6). 위 두 호출은 `solve()` 가
+    #   발표할 답이고, 이 비교는 그 답을 받은 **뒤에** 한 번 돈다.
+    # ⚠ **탐색 고리 안에 두면 틀린 답을 잡는 게 아니라 이분법이 멈춘다** — 화성 한 판의
+    #   `bottom_layer` 호출 11 553 회 중 T̃_m 고정 스캔이 276 회이고 **그중 160 회가 이미 선 너머**다.
+    #   δ_b ∝ ΔT^(−1/3) 이라 이분법이 구간 끝에 다가가면 층 두께가 발산한다 — **탐색이 밟는 자리가
+    #   아니라 구간의 답이 뜻을 갖는다.**
+    mantle_km = ((radius_earth - core_radius_earth) * R_EARTH_M / 1e3
+                 if radius_earth else None)
+    delta_km = core["delta_b_m"] / 1e3
+    over = mantle_km is not None and delta_km >= mantle_km
     ad = adiabatic_flow(core_material, cmb_pressure_gpa * 1e9, t_c, r_cmb, m_core)
     ad_band = (ad["q_ad_w"] * K_CORE_RANGE[0] / K_CORE, ad["q_ad_w"] * K_CORE_RANGE[1] / K_CORE)
     verdict = SUPER_ADIABATIC if core["q_c_w"] > ad["q_ad_w"] else SUB_ADIABATIC   # on a lower-bound Q_CMB
     lo, hi = PAPER["range_tw"]
     inside = lo * 1e12 <= core["q_c_w"] <= hi * 1e12
-    values = {"q_cmb": core["q_c_w"], "q_cmb_min": min(band), "q_cmb_max": max(band),
-              "cmb_boundary_layer": core["delta_b_m"] / 1e3, "cmb_heat_flux_density": core["f_b_w_m2"],
+    # ⚠ **꼴 (ii) — 노드는 계속 답하고, δ_b 를 지나는 일곱만 이름 댄 거절로 나간다.**
+    #   `out_of_domain()` 을 쓰면 노드째 되돌려 **깨끗한 여덟까지 가져간다** — 특히 `cmb_jump` 는
+    #   `t_c - t_m` 이라 δ_b 를 안 지나고, 그것을 버리는 것은 **멀쩡한 값에 대해 거짓을 보고하는 일**이다.
+    # ⚠ **문장의 첫 40 자 안에 두 수가 들어가야 한다** — `state.report` 의 `_short()` 가 40 자에서
+    #   자르고 `_u()` 가 단위를 그대로 찍는다 (등재된 결함). 그래서 수와 규칙 이름이 앞에 온다.
+    if over:
+        _no = (f"cannot-say (경계층 δ_b {delta_km:.0f} km ≥ 맨틀 {mantle_km:.0f} km — "
+               f"경계층이 담긴 층보다 두껍다. Nimmo+ 2004 식 37–39 는 맨틀 안의 얇은 층을 "
+               f"기술하는 식이고, 이 천체에서는 그 전제가 깨졌다. 점프 {t_c - t_m:.0f} K 와 "
+               f"단열 쪽 값은 δ_b 를 안 지나므로 그대로 나간다)")
+    values = {"q_cmb": _no if over else core["q_c_w"],
+              "q_cmb_min": _no if over else min(band), "q_cmb_max": _no if over else max(band),
+              "cmb_boundary_layer": _no if over else delta_km,
+              "cmb_heat_flux_density": _no if over else core["f_b_w_m2"],
               "eta_bottom": core["eta_b"], "q_adiabat": ad["q_ad_w"],
               "q_adiabat_min": ad_band[0], "q_adiabat_max": ad_band[1],
               "adiabat_gradient_cmb": ad["dt_dr_ad"] * 1e3, "g_cmb": ad["g_cmb"],
-              "k_core": K_CORE, "cmb_jump": t_c - t_m, "cmb_flux_verdict": verdict,
-              "q_cmb_in_paper_range": inside}
+              "k_core": K_CORE, "cmb_jump": t_c - t_m,
+              "cmb_flux_verdict": _no if over else verdict,
+              "q_cmb_in_paper_range": _no if over else inside}
     units = {"q_cmb": "W", "q_cmb_min": "W", "q_cmb_max": "W", "cmb_boundary_layer": "km",
              "cmb_heat_flux_density": "W/m2", "eta_bottom": "Pa s", "q_adiabat": "W", "q_adiabat_min": "W",
              "q_adiabat_max": "W", "adiabat_gradient_cmb": "K/km", "g_cmb": "m/s2", "k_core": "W/(m K)",
@@ -211,4 +245,7 @@ def _from_state(state):
                  core_cmb_temperature_used=state.get("core_cmb_temperature_used"),
                  core_cmb_declared=state.get("core_cmb_temperature") is not None,
                  core_material=state.get("core_material", "fe_prem"),
-                 body_class=state.get("body_class"))
+                 body_class=state.get("body_class"),
+                 # ⚠ **`interior_layers` 의 `radius` 여야 한다** — `core_radius` 와 같은 풀이에서
+                 #   나온 수라야 뺄셈이 한 구조의 두 수가 된다 (사전등록 6a04bba5 A1-③).
+                 radius_earth=state.get("radius"))

@@ -92,7 +92,7 @@ stays a gap because its consumer wiring is the φ step, not for want of the pape
 `adiabat_gradient_cmb` [K/km] · `g_cmb` [m/s2] · `k_core` [W/(m K)] · `cmb_jump` [K] · `cmb_flux_verdict` [—] ·
 `q_cmb_in_paper_range` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
-`cmb_temperature` [K] · `core_cmb_temperature_used` [K] · `core_cmb_temperature` [K] · `core_material` [—] · `body_class` [—]
+`cmb_temperature` [K] · `core_cmb_temperature_used` [K] · `core_cmb_temperature` [K] · `core_material` [—] · `body_class` [—] · `radius` [R_earth]
 **Discriminating keys** — `body_class`: rocky bodies only (a giant has no silicate bottom boundary layer).
 `core_cmb_temperature` undeclared → refused by name: `core_state`'s lower-bound branch sets the core-side
 temperature equal to the mantle adiabat, so there is no jump to drive a boundary layer. `core_radius` or
