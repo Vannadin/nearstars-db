@@ -183,10 +183,17 @@ citation policy is in `docs/reference/data-sources.md`.
     https://pubs.usgs.gov/ds/1035/
     Mineral reflectance behind the surface-color work. (The lab's own pages
     block automated access; the Data Series release is the citable copy.)
-  PALEOS equation-of-state tables, v1.2.1 —
-    https://doi.org/10.5281/zenodo.20084812
+  PALEOS equation-of-state tables, iron v1.3.0 and MgSiO3/water v1.2.1 —
+    https://doi.org/10.5281/zenodo.22776069  (iron, v1.3.0, published 2026-09-15)
+    https://doi.org/10.5281/zenodo.20084812  (MgSiO3 and water, v1.2.1, published 2026-05-08)
+    concept DOI https://doi.org/10.5281/zenodo.19000315
     "PALEOS: Thermodynamic Equation of State Tables for Fe, MgSiO3, and H2O at
-    Planetary Interior Conditions", published 2026-05-08.
+    Planetary Interior Conditions".
+    The iron table was re-fitted between the two releases and the other two were
+    not: the v1.3.0 record publishes MgSiO3 and water at the same checksums and
+    sizes as v1.2.1, so those two are still the v1.2.1 bytes. Checksums for what
+    is held are in docs/phase3/_papers/paleos-eos-tables-zenodo-v130.PROVENANCE.txt
+    beside the v1.2.1 provenance, which is kept because a comparison needs both.
     Licensed CC-BY-4.0. Three tables are used — iron, MgSiO3 and water — and
     they are read only outside the pressure range our own fits are grounded
     in, printed as a named second opinion beside our value and never in place

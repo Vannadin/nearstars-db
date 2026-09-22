@@ -8,9 +8,13 @@ validation line»*, so the module is not wired into any solve path: the second o
 here, next to ours, and never travels into a shipped cell. Acceptance ① is therefore structural —
 there is no consumer to move a digit — and this file proves that by grep rather than by assertion.
 
-⚠ **The pre-registration does not register a gate step, so this file is not in `scripts/check.sh`.**
-*Nothing runs it but a person. That is the registration's choice, written down here so the next
-reader does not mistake «not in the gate» for «passing in the gate».*
+⚠ **This file IS in the gate** — `scripts/check.sh` runs it as `step "test_paleos"`. The sentence
+that stood here said the opposite, and ⚠ **it was true when it was written**: the docstring landed
+in `26e44e36` (2026-09-14 23:18:50) and the gate step in `5a7687dd` (2026-09-15 01:57:43), **two
+hours and thirty-nine minutes later**. Nobody went back. **A sentence about wiring does not have to
+be wrong to become wrong — it only has to stop being told.** That is worse than a lie, because
+nothing looks suspicious at the moment it rots. Corrected 2026-09-22, and the claim it replaced is
+named here rather than deleted, because the next reader is owed the reason the line moved.
 
 The six acceptance lines of §7, each counted in this run:
 
@@ -51,7 +55,13 @@ import paleos                                                         # noqa: E4
 #   ⚠ **분모를 함께 찍는다** — 「0 of 3」과 「3 of 3 인데 못 읽음」은 다른 사건이고, 분모가 없으면
 #   둘이 같은 줄로 인쇄된다. 판단은 이 파일이 한다: 게이트가 따로 세면 같은 규칙이 두 자리에
 #   앉고, 시험을 혼자 돌릴 때는 아무도 안 세게 된다.
-_found = [n for n in paleos.TABLES.values() if (paleos.PAPERS / n).is_file()]
+# ⚠ **어느 파일을 읽는지 판마다 한 번 인쇄한다.** 사유 줄은 「어느 격자 칸인가」를 답하는
+#   자리라 조회마다 상수를 되풀이할 데가 아니고, 「어느 파일인가」는 **판당 한 번**이면 된다.
+#   그 한 줄이 게이트 로그에 남아 **사람이 볼 대조표**가 된다 — 판본은 우리 선언이므로
+#   **파일명과 갈라졌는지 볼 수 있는 자리가 로그에만 있다.**
+print("  [기록] PALEOS 표 — "
+      + " · ".join(f"{name} v{t.version} `{t.file}`" for name, t in sorted(paleos.TABLES.items())))
+_found = [t.file for t in paleos.TABLES.values() if (paleos.PAPERS / t.file).is_file()]
 if len(_found) < len(paleos.TABLES):
     print(f"  [SKIP] SKIP — PALEOS tables: {len(_found)} of {len(paleos.TABLES)} found "
           f"({paleos.PAPERS}/*.dat) — 물어볼 표가 없다, 실패가 아니다")

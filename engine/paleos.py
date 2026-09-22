@@ -32,15 +32,32 @@ from __future__ import annotations
 
 import math
 import pathlib
+from typing import NamedTuple
 import re
 import time
 
 # 읽기 전용 논문 캐시. ⚠ 이 경로에 **쓰지 않는다** — 워크트리 밖이다.
 PAPERS = pathlib.Path("/Users/vana/Desktop/NearStars/docs/phase3/_papers")
 
-TABLES = {"Fe": "paleos_iron_eos_table_pt.dat",
-          "MgSiO3": "paleos_mgsio3_eos_table_pt.dat",
-          "H2O": "paleos_water_eos_table_pt.dat"}
+class Table(NamedTuple):
+    """한 표의 파일명과 판본. ⚠ **둘을 한 자리에 둔다** — 따로 두면 갈라지고, 이 항목이 고치는
+    것이 바로 그 갈라짐이다 (2026-09-22: v1.3.0 표를 읽은 실행이 자기 출력에 «v1.2.1» 이라 적었다)."""
+    file: str
+    version: str
+
+
+#: ⚠ **판본은 표에서 못 읽는다 — 우리 선언이다.** 머리말에 판본 문자열이 **셋 다 0 건**이고
+#:   `Generated:` 타임스탬프뿐이라, v1.2.1 과 v1.3.0 의 머리 세 줄이 **글자까지 같다.**
+#:   그러므로 **표를 갈아 끼울 때 판본을 같이 바꾸는 것은 사람의 일**이다 — 기계가 못 잡는다.
+#:   우리가 줄 수 있는 것은 **사유 줄에 파일명과 판본을 나란히 찍는 것**뿐이고(아래 `why`),
+#:   그러면 어긋남이 로그에서 읽힌다.
+#: ⚠ **판본은 표마다 다르다.** Fe 만 1.3.0 이고 MgSiO₃·H₂O 는 1.2.1 그대로다 — 저자가 그 둘은
+#:   양쪽 해상도에서 깨끗하다고 했고 v1.3.0 레코드가 **같은 md5·같은 크기**로 인쇄한다.
+#: ⚠ **Fe 는 파일명에 판본이 들어 있다** (`…v130.dat`). 같은 이름으로 몰래 갈아 끼우는 일이
+#:   그 표에서는 저절로 닫힌다. 나머지 둘은 안 그렇다.
+TABLES = {"Fe": Table("paleos_iron_eos_table_pt.v130.dat", "1.3.0"),
+          "MgSiO3": Table("paleos_mgsio3_eos_table_pt.dat", "1.2.1"),
+          "H2O": Table("paleos_water_eos_table_pt.dat", "1.2.1")}
 
 # ⚠ 상은 마지막 필드가 아니다 — 물 표는 열이 13 이고 마지막은 `x_d` 라, 마지막 필드를 읽는
 #   코드는 세 파일 중 둘에서만 맞는다 (§6 C). 그리고 **자리도 우리가 적지 않는다**: 머리말이
@@ -154,7 +171,7 @@ class TableFacts:
 
 def facts(table: str) -> TableFacts:
     if table not in _FACTS:
-        _FACTS[table] = TableFacts(table, PAPERS / TABLES[table])
+        _FACTS[table] = TableFacts(table, PAPERS / TABLES[table].file)
     return _FACTS[table]
 
 
@@ -239,7 +256,8 @@ def lookup(table: str, p: float, t: float) -> dict:
         PALEOS_COST[GRADE_HIT] += 1
         return {"grade": GRADE_HIT, "density": float(parts[2]), "phase": phase,
                 "p_node": p_node, "t_node": t_node,
-                "why": (f"{table} 표 v1.2.1 의 격자 칸 (i_p {i} · j_t {j}) — "
+                "why": (f"{table} 표 v{TABLES[table].version} "
+                        f"(`{TABLES[table].file}`) 의 격자 칸 (i_p {i} · j_t {j}) — "
                         f"우리 상자 밖이라 이 값은 **남의 표의 외삽**이다")}
     finally:
         PALEOS_COST["seconds"] += time.perf_counter() - t0
