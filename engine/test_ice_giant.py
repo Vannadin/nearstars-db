@@ -771,6 +771,12 @@ def _live(frozen: dict, fails: list[str]) -> None:
         keys = _value_keys(rec)
         moved = [k for k in keys if k in v and _frozen_form(v[k]) != rec["values"][k]]
         missing = [k for k in keys if k not in v]
+        # ⚠ **굳힌 키 목록 안에서만 돌면 «나타난» 키는 안 보인다** (C102). 위 두 고리는 `keys`
+        #   를 돌므로 사라진 키는 잡고 늘어난 키는 못 잡는다 — 2026-09-22 에 이 앵커가 22 에서
+        #   24 로 조용히 늘었고, 빨개진 것은 방아쇠 지문이지 이 칸이 아니었다.
+        # ⚠ **세기만 하고 판정하지 않는다.** 노드가 출력을 더하는 것은 흔한 일이고, 그것이
+        #   결함인지는 **이 줄이 정하지 않는다**. `fails` 에 안 넣는 이유가 그것이다.
+        appeared = sorted(set(v) - set(keys))
         extra_moved = [k for k in moved if k not in BIT_KEYS]
         if moved or missing:
             fails.append(f"{name}: 전체 풀이가 굳힌 값과 다르다 — "
@@ -779,9 +785,13 @@ def _live(frozen: dict, fails: list[str]) -> None:
                          + ". 의도한 변화면 `--refresh` 로 다시 굳혀 diff 에 남겨라")
         # ⚠ **넓힌 비교가 무엇을 벌었는지 인쇄한다** (수락선 ⑥). 넷만 보던 때라면 «그대로» 로
         #   지나갔을 재굳힘에서 나머지가 몇 개 움직였는가 — **0 이면 0 이라고 적는다.**
+        # ⚠ **`답에만` 칸은 그 원칙의 다른 쪽이다** (C102): 늘어난 키는 **늘 0 으로 찍힌다**.
+        #   0 이 찍히는 것이 이 칸이 살아 있다는 증거이고, 안 찍으면 «죽은 줄» 과 구별이 안 된다.
         print(f"  [기록 · C88] {name} — 비교한 키 {len(keys)} 개 (그중 이름으로 박힌 것 "
               f"{len(BIT_KEYS)}), 움직인 키 {len(moved)} · 그중 넷 밖 {len(extra_moved)}"
-              + (f" ({', '.join(extra_moved)})" if extra_moved else ""))
+              + (f" ({', '.join(extra_moved)})" if extra_moved else "")
+              + f" · 답에만 있는 키 {len(appeared)}"
+              + (f" ({', '.join(appeared)})" if appeared else ""))
         # 단독 구조도 굳힌 대로인가 — 굳히기가 쓴 것과 **같은 함수로 다시 지어** 사전째 견준다.
         sa = rec.get("standalone") or {}
         st_now = _structure_record(_standalone(name, float(sa["p_center_pa"]),
