@@ -54,9 +54,15 @@ there `a⁻⁷·⁵`).
 **Declared-optional** — inputs this recipe declares a default for, in the code and in prose above; absent is a normal state, not a hole (C50 (b), Brief 170 B). `permanent_quadrupole` [—] — a declaration with a default of `False`; it selects among §4's states once a body has despun and does not affect whether it despun.
 **Discriminating keys** — `eccentricity` and `permanent_quadrupole` choose among §4's states once the
 body has despun; neither affects whether it despun. `permanent_quadrupole` is a declaration.
-**Grade** — analog. ⚠ **The despin formula's own sources are not held** (Goldreich & Soter 1966;
-Murray & Dermott 1999), so `τ_lock` is carried as what this document prints. Four of the six cited
-below are held as of 2026-09-06, two of them read — see the recipe's header for which carries what.
+**Grade** — analog. The grade stands on the formula being a class-level scaling applied to one
+body, which is what `analog` names, and it does not depend on the note below.
+
+⚠ **Holdings, as a footnote to scope rather than to the grade.** The despin formula's own sources
+are not held (Goldreich & Soter 1966; Murray & Dermott 1999), so `τ_lock` is carried as what this
+document prints. Four of the six cited below are held as of 2026-09-06, two of them read — see the
+recipe's header for which carries what. **This bounds what can be checked against the primary
+literature; it is not the reason the grade reads `analog`.** Reading the two sentences as one made
+the grade look derived from the holdings, and it is not.
 **Not emitted** — which p:q resonance a captured body settles into (§4 calls capture probabilistic),
 and the §5 thermal-tide override.
 
