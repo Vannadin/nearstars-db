@@ -30,7 +30,7 @@
   "registry.py": "7031b25acd49c432",
   "rheology.py": "84b57ff4bc38ca16",
   "steam_if97.py": "6e1d779f9a269cb8",
-  "test_ice_giant.py": "77b13f3f4c68e322",
+  "test_ice_giant.py": "7ddad68c9e3c38d5",
   "tidal_heating.py": "6b24a77a918aa8d8",
   "tidal_locking.py": "a8a90d172827e75f",
   "tidal_response.py": "31e7e6768267a843",
@@ -63,7 +63,7 @@
   "registry.py": "682dd2911edad8b3",
   "rheology.py": "e4825d85960d7156",
   "steam_if97.py": "b9d9efa9320a2935",
-  "test_ice_giant.py": "051ce232f2301a3a",
+  "test_ice_giant.py": "757a59e463ada57c",
   "tidal_heating.py": "32f1b93d9c3af0e0",
   "tidal_locking.py": "a82b6e471a84ec25",
   "tidal_response.py": "8caa474b5538210c",
@@ -73,7 +73,7 @@
  },
  "bodies": {
   "Uranus": {
-   "seconds": 26.8,
+   "seconds": 26.5,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
