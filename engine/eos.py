@@ -3035,6 +3035,53 @@ SILICATE_MELT_DH = 4.0e5      # J/kg. Monteux+ 2016 Table 1, ΔH (Ghosh & McSwee
 # 없어 적분기 안정용 명목값을 선언한다. 브리프 36 의 100–200 K 대의 중앙.
 SILICATE_MELT_POINT_WIDTH = 150.0   # K. 선언 (명목), 논문값 아님
 
+# 바닥 규산염층의 철 부화가 녹는곡선을 끌어내리는 항 (사전등록 f68e8156 §2).
+# 축자 — Samuel+ 2021 (2021JGRE..12606613S) 가 Elkins-Tanton 2008 식 (2) 를 인용하며
+#   *"the influence of iron on both the solidus and the liquidus is accounted for by
+#    subtracting the term: 6 (Fe_d − Fe_m), to T_sol and T_liq where Fe_m is the Fe-number
+#    (i.e., Fe_m = 100 Fe/(Fe + Mg)) for the overlying mantle, and Fe_d is the Fe-number
+#    within the basal layer."*
+# ⚠ **단위가 Fe# 다 — 0–100 이지 0–1 이 아니다.** 계수 6 은 Fe# 한 눈금당 6 K 이므로
+#   Mg#(0–1)이나 무게 분율을 넘기면 항이 100 배 작아지고, **작은 쪽은 아무 일도 안 난
+#   것처럼 조용하다.** 그래서 이름에 단위를 적는다.
+# ⚠ **도출 논문(Elkins-Tanton 2008)은 미보유다** (유료벽, `is_oa: false` 로 측정됨) —
+#   계수 자신의 적용 조건은 우리 손에 없고 10 월 구매 목록에 있다. 여기 인용은
+#   **"Samuel+ 2021 이 인용한 대로"** 이며, 그 이상을 주장하지 않는다.
+IRON_SHIFT_K_PER_FE_NUMBER = 6.0
+
+#: 위 맨틀의 철 수 Fe# — 조성별. 항은 **차**(Fe_d − Fe_m)라 이 값이 있어야 성립한다.
+#: ⚠ **한 천체의 논문에서 온 수를 조성 상수로 둔다.** `differentiated` 의 기본값이 True 이고
+#:   어느 `bodies/*.yaml` 도 그것을 선언하지 않으므로 **암석 천체 전부가 `peridotitic` 으로
+#:   푼다** — 곧 지구·판도라도 화성 맨틀의 철 수를 물려받는다. 오늘은 안 터진다(부화를
+#:   선언한 천체가 0 이라 항이 안 불린다). **그러나 그것은 잠복이지 안전이 아니다** —
+#:   둘째 천체가 부화를 선언하는 날 틀린 값을 물려받는다 (사전등록 f68e8156 §1).
+#: ⚠ **`chondritic` 은 None 이다 — 「0」이 아니라 「없다」.** 인쇄된 A-콘드라이트 맨틀
+#:   철 수를 우리가 안 가졌고, 없는 자리에 0 을 넣으면 **부화 전부가 차로 잡혀** 항이
+#:   가장 커진다. 조용히 틀리는 쪽이라 거절한다.
+FE_NUMBER_MANTLE = {
+    "peridotitic": 18.18,   # Khan+ 2023 (2023Natur.622..718K) Extended Data Table 2 의
+                            # Martian mantle 조성 Fe6Mg27… → 100·6/(6+27). 우리가 고른 수가 아니다.
+    "chondritic": None,
+}
+
+
+def _iron_shift(variant: str, d_fe: float | None) -> float:
+    """철 부화가 솔리더스·리퀴더스를 함께 끌어내리는 양 [K]. 선언이 없으면 0.0.
+
+    ⚠ **`d_fe is None` 이면 정확히 0.0 을 돌려주고, 부르는 쪽은 `T - 0.0` 을 한다** —
+    양수 K 에서 그것은 **비트로 같은 값**이다. 「부화를 선언하지 않으면 오늘 답이 비트까지
+    같다」가 시험의 결과가 아니라 산술의 성질이다 (사전등록 f68e8156 §2·⑥-1).
+
+    ⚠ `d_fe` 는 이미 **차**(Fe_d − Fe_m)다. 두 수를 따로 받지 않는다 — 받으면 호출부마다
+    뺄셈이 생기고, 뺄셈이 생긴 자리마다 부호를 틀릴 수 있다."""
+    if d_fe is None:
+        return 0.0
+    if FE_NUMBER_MANTLE.get(variant) is None:
+        raise ValueError(
+            f"{variant!r} 조성에는 맨틀 철 수(Fe#)가 없다 — 부화 차를 이 조성에 걸 수 없다. "
+            "FE_NUMBER_MANTLE 을 보라. 0 으로 대신하지 않는다.")
+    return IRON_SHIFT_K_PER_FE_NUMBER * d_fe
+
 
 def _simon_pa(p: float, t0: float, p_scale: float, c: float) -> float:
     """Simon–Glatzel 형 T = t0·(P/p_scale + 1)^(1/c). P [Pa]."""
@@ -3068,39 +3115,50 @@ def _silicate_variant_check(variant: str) -> None:
             "조성은 differentiated 선언에서 온다 (interior.solve).")
 
 
-def silicate_solidus(p: float, variant: str = "peridotitic") -> float | None:
+def silicate_solidus(p: float, variant: str = "peridotitic",
+                     d_fe: float | None = None) -> float | None:
     """압력 p [Pa] 에서 규산염 솔리더스 [K]. 500 GPa 위는 None (곡선 없음).
 
     조성(variant)은 리퀴더스에서만 곡선을 바꾼다 — 솔리더스는 20 GPa 아래 HZ96,
     20–140 GPa 는 Monteux 가 양쪽 조성에 같이 쓰는 A-콘드라이트 식 (12)다.
     140 GPa 위는 순수 MgSiO₃ 단일점 − 명목 폭/2 이고 **암석 솔리더스의 상계**로
-    읽는다 (위 블록 주석)."""
+    읽는다 (위 블록 주석).
+
+    `d_fe` 는 바닥 층의 철 부화 차 Fe# (Fe_d − Fe_m) — 선언이 없으면 None 이고 곡선이
+    오늘 그대로다 (`_iron_shift`)."""
     _silicate_variant_check(variant)
     if p < 0.0 or p > SILICATE_MELT_MAX_PA:
         return None
+    shift = _iron_shift(variant, d_fe)
     if p < MONTEUX_JOIN_PA:
-        return _simon_pa(p, *MONTEUX_SOL_LOW)
+        return _simon_pa(p, *MONTEUX_SOL_LOW) - shift
     if p < SILICATE_ROCK_MAX_PA:
-        return _simon_pa(p, *MONTEUX_SOL_HIGH)
+        return _simon_pa(p, *MONTEUX_SOL_HIGH) - shift
     tm = _silicate_melt_point(p)
-    return None if tm is None else tm - 0.5 * SILICATE_MELT_POINT_WIDTH
+    return None if tm is None else tm - 0.5 * SILICATE_MELT_POINT_WIDTH - shift
 
 
-def silicate_liquidus(p: float, variant: str = "peridotitic") -> float | None:
-    """압력 p [Pa] 에서 규산염 리퀴더스 [K]. 조성이 20–140 GPa 에서 곡선을 바꾼다."""
+def silicate_liquidus(p: float, variant: str = "peridotitic",
+                      d_fe: float | None = None) -> float | None:
+    """압력 p [Pa] 에서 규산염 리퀴더스 [K]. 조성이 20–140 GPa 에서 곡선을 바꾼다.
+
+    ⚠ **솔리더스와 같은 양을 뺀다** — 논문이 *"both the solidus and the liquidus"* 라고
+    적는다. 그래서 **융해 폭(T_liq − T_sol)은 부화에 안 움직이고 창 전체가 내려간다.**"""
     _silicate_variant_check(variant)
     if p < 0.0 or p > SILICATE_MELT_MAX_PA:
         return None
+    shift = _iron_shift(variant, d_fe)
     if p < MONTEUX_JOIN_PA:
-        return _simon_pa(p, *MONTEUX_LIQ_LOW)
+        return _simon_pa(p, *MONTEUX_LIQ_LOW) - shift
     if p < SILICATE_ROCK_MAX_PA:
         coef = MONTEUX_LIQ_F if variant == "peridotitic" else MONTEUX_LIQ_A
-        return _simon_pa(p, *coef)
+        return _simon_pa(p, *coef) - shift
     tm = _silicate_melt_point(p)
-    return None if tm is None else tm + 0.5 * SILICATE_MELT_POINT_WIDTH
+    return None if tm is None else tm + 0.5 * SILICATE_MELT_POINT_WIDTH - shift
 
 
-def silicate_melt_fraction(p: float, t: float, variant: str = "peridotitic") -> float | None:
+def silicate_melt_fraction(p: float, t: float, variant: str = "peridotitic",
+                           d_fe: float | None = None) -> float | None:
     """용융분율 φ = (T − T_sol)/(T_liq − T_sol), 0..1 로 잘라서 (Monteux+ 2016 식 (6)).
 
     **단일 진리원이다** — 상 이름·겉보기 비열·하류 가중치가 전부 이 수 하나를 읽어야
@@ -3109,10 +3167,10 @@ def silicate_melt_fraction(p: float, t: float, variant: str = "peridotitic") -> 
     0 인 척하지 않는다. 140 GPa 위에서 0.0 은 "확실히 고체" 가 아니라 "상계 아래" 다."""
     if t <= 0.0:
         return None
-    sol = silicate_solidus(p, variant)
+    sol = silicate_solidus(p, variant, d_fe)
     if sol is None:
         return None
-    liq = silicate_liquidus(p, variant)
+    liq = silicate_liquidus(p, variant, d_fe)
     if t <= sol:
         return 0.0
     if t >= liq:
