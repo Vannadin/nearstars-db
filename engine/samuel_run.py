@@ -171,6 +171,7 @@ def run(s: Setup, cap_myr: float) -> dict:
     t = t0
     n = 0
     h_min = None
+    n_remesh, remesh_loss = 0, []
     worst = (0.0, None)
     while True:
         try:
@@ -213,9 +214,32 @@ def run(s: Setup, cap_myr: float) -> dict:
             h_m, h_cr = sm.heat_split(h_pm, v_cr, v_sil - v_cr, s.lam)
         except sm.Refused as e:
             return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
+        if lid.r is not None:
+            # diagnosis (v2-12): the heat one linear re-interpolation changes, over the lid both grids share
+            lid_r0 = lid.r[:]
+            lid_t0 = lid.t[:]
+            r_new = [s.r_p - y[2] + i * y[2] / (lid.n - 1) for i in range(lid.n)]
+            lo = max(lid_r0[0], r_new[0])
+            lid.r, lid.t = r_new, [sl._interp(x, lid_r0, lid_t0) for x in r_new]
+            after_shared = _heat_above(lid, lo)
+            lid.r, lid.t = lid_r0, lid_t0
+            remesh_loss.append(after_shared - _heat_above(lid, lo))
+            n_remesh += 1
         grad = lid.step(h, d_l=y[2], d_cr=y[3], t_l=t_l, h_m=h_m, h_cr=h_cr)
     return {"rows": rows, "n_steps": n, "cap_myr": cap_myr, "h_min_myr": h_min / GYR_S * 1e3,
-            "max_lambda_over_ceiling": worst}
+            "max_lambda_over_ceiling": worst, "n_remesh": n_remesh, "remesh_loss_j": remesh_loss}
+
+
+def _heat_above(lid, r_lo: float) -> float:
+    """∫ ρC T dV of the lid profile above `r_lo`, by trapezoids on its own nodes (diagnosis)."""
+    pts = [(r, tt) for r, tt in zip(lid.r, lid.t) if r >= r_lo]
+    if pts and pts[0][0] > r_lo:
+        pts.insert(0, (r_lo, sl._interp(r_lo, lid.r, lid.t)))
+    tot = 0.0
+    for (ra, ta), (rb, tb) in zip(pts, pts[1:]):
+        rc = lid.crust[0] if 0.5 * (ra + rb) > lid._r_crust else lid.mantle[0]
+        tot += 0.5 * (ra * ra * ta + rb * rb * tb) * 4.0 * math.pi * (rb - ra) * rc
+    return tot
 
 
 def _rates(f: dict) -> list:

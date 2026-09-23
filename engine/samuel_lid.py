@@ -72,6 +72,7 @@ class LidGrid:
         self.crust = (rho_cr * c_cr, k_cr)
         self.r: list | None = None
         self.t: list | None = None
+        self._r_crust = r_p
 
     def start(self, d_l: float, t_l: float) -> None:
         """The initial profile: linear between T_l at the base and T_s at the surface."""
@@ -82,6 +83,7 @@ class LidGrid:
         """Re-mesh onto the lid of thickness `d_l`, advance one implicit step of `dt`, return ∂T/∂r at R_l."""
         if self.r is None:
             raise RuntimeError("LidGrid.step before LidGrid.start")
+        self._r_crust = self.r_p - d_cr
         r_new = [self.r_p - d_l + i * d_l / (self.n - 1) for i in range(self.n)]
         t_old = [_interp(x, self.r, self.t) for x in r_new]
         dr = d_l / (self.n - 1)

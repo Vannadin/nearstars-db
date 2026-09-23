@@ -173,7 +173,11 @@ def main() -> int:
     print(f"  (유출 − q_m + 지각 항) 과 dD_l/dt 의 부호가 다른 걸음 {len(full)} — 0 이면 배선이 식 20(`−` 해석) 그대로")
 
     st_min = min(r["stefan"] for r in base["rows"])
-    print(f"\n  본판 Stefan 최소 {st_min:.4f} (인쇄 꼴은 음수가 될 수 있다 — V_melt 고정, 평균 φ 가 줄면 음)")
+    base_setup_shells = sr.Setup(lam=ref, profile=prof, g=g, g_c=g_c).melt_shells
+    n_neg = sum(r["stefan"] < 0 for r in base["rows"])
+    print(f"\n  본판 Stefan 최소 {st_min:.4f} · 음수 걸음 {n_neg} / {len(base['rows'])}"
+          f" (껍질 {base_setup_shells} — 음수는 녹는 부피 경계가 껍질을 건너는 이산화 잡음이다, v2-10."
+          " «V_melt 고정이라 음» 이라던 앞 설명은 철회)")
     return 0
 
 
