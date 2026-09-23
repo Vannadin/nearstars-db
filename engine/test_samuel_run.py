@@ -4,8 +4,9 @@
     python3 engine/test_samuel_run.py
 
 Invariants, which a wrong wiring breaks whatever the target says:
-* the core's energy closes — ∫ q_c A_c dt equals ρ_c C_pc V_c ϵ_c (T_c0 − T_c) (2021 eq. (11)), trapezoid
-  against RK4, so only to the step's order;
+* the core's energy closes — ∫ q_c A_c dt equals ρ_c C_pc V_c ϵ_c (T_c0 − T_c) (2021 eq. (11)), to 1 %.
+  ⚠ The residual is not the trapezoid's step error: shortening the step moves it within ±0.5 % either way
+  (audit seat, six runs). It was melt-shell noise leaking into q_c — 1.00392 at 120 shells, 0.99991 at 1 920;
 * dD_l/dt has the sign of (k_m-conducted outflow at the lid base − q_m + the crust term) at every step —
   2019 SI eq. (20) wired with the v2 `−`;
 * Λ 20 stays below its ceiling for the whole run.
@@ -36,7 +37,7 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 
 # The A0 values that need no source data, at Λ 20 and cap 10 Myr, frozen from this run's own output on
 # 2026-09-23 at 1 920 melt shells (v2-10; at 120 shells the printed Stefan number turned negative on 57 steps
-# from discretisation, and these values moved ≤ 0.8 K). The two RMS conditions need the 2023 source data,
+# from discretisation, and these values moved ≤ 0.9 K — 0.83 K for T_m at 480). The two RMS conditions need the 2023 source data,
 # which is outside the repo, so the gate cannot hold them.
 FROZEN_L20 = {"T_c today": 2101.66, "T_m today": 1941.77, "T_c(1) − T_c0": -48.69, "T_m(1) − T_m0": 287.04,
               "T_m peak": 2045.15, "T_m peak time": 1.2726}
