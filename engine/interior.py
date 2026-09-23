@@ -2358,11 +2358,14 @@ def _basal_silicate_state(st, variant: str,
             short += (f" (부화 0 기준 {t_liq0 - t_base:.2f} K, 항이 "
                       f"{IRON_SHIFT_K_PER_FE_NUMBER * d_fe:.2f} K 를 냈다.)")
     if fe_m is not None and t_liq0 is not None:
-        # 항이 낼 수 있는 최대 — Fe# 100 은 맨틀에 Mg 가 하나도 없다는 뜻이라 **도달 불가능한 끝점**이다.
+        # 항이 낼 수 있는 최대 — 기저층 Fe_d = 100 은 그 층의 암석에 Mg 가 없다는 뜻이다. 균일한 값으로는
+        #   끝점이고, 깊이 분포가 있으면 층 바닥 한 자리는 평균이 그보다 낮아도 닿을 수 있다(수를 박지 않는다 —
+        #   이 문장은 선언이 있는 모든 천체에서 찍힌다).
         cap = IRON_SHIFT_K_PER_FE_NUMBER * (100.0 - fe_m)
         gap0 = t_liq0 - t_base
-        short += (f" 항의 한계는 {cap:.2f} K (Fe# 100 — 맨틀에 Mg 가 없다는 뜻인 "
-                  f"**도달 불가능한 끝점**)이고, **거기서도 {gap0 - cap:.2f} K 모자란다**."
+        short += (f" 항의 한계는 {cap:.2f} K (기저층 Fe_d = 100 — 그 층의 암석에 Mg 가 없다는 뜻. "
+                  f"균일한 값으로는 끝점이고, 깊이 분포가 있으면 층 바닥 한 자리는 평균이 그보다 낮아도 "
+                  f"닿을 수 있다)이고, **거기서도 {gap0 - cap:.2f} K 모자란다**."
                   if cap < gap0 else
                   f" 항의 한계 {cap:.2f} K 이 부화 0 기준 부족분 {gap0:.2f} K 보다 크므로 "
                   f"Fe# {fe_m + gap0 / IRON_SHIFT_K_PER_FE_NUMBER:.1f} 위에서는 닿는다.")
