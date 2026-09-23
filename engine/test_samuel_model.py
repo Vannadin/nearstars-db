@@ -1,4 +1,4 @@
-# Samuel 층 없는 모형 우변 조각의 시험 — 인쇄식 값 · Ra<Ra_c 분기 · 식 20 부호 · 거절
+# Samuel 층 없는 모형 우변 조각의 시험 — 인쇄식 값 · Ra<Ra_c 분기 · 식 20 부호 · 우리 유도(v2-7)
 """Checks for `samuel_model`, plate 2 first cut. No integration yet: the refused slots stop it.
 
     python3 engine/test_samuel_model.py
@@ -120,12 +120,33 @@ check("2021 eq. (9) — melt fraction clamps to [0, 1]",
       sm.melt_fraction(1000, 1400, 2000) == 0.0 and sm.melt_fraction(2500, 1400, 2000) == 1.0
       and sm.melt_fraction(1700, 1400, 2000) == 0.5)
 
-for fn, word in ((sm.melt_state, "melt"),):
-    try:
-        fn()
-        check(f"refusal — {fn.__name__}", False, "returned a value")
-    except sm.Refused as e:
-        check(f"refusal — {fn.__name__}", word in str(e), str(e)[:70])
+# v2-7 ① — ϵ_m of an isothermal mantle is 1, and a mantle hotter at depth gives ϵ_m > 1, below T_b/T_m.
+r_top, r_bot = st.R_PLANET_M - 300e3, st.R_CORE_NO_BML_M + 100e3
+check("v2-7 ① — ϵ_m = 1 when T_b = T_m", abs(sm.mantle_mean_ratio(1700, 1700, r_top, r_bot) - 1) < 1e-12)
+eps = sm.mantle_mean_ratio(1700, 1900, r_top, r_bot)
+check("v2-7 ① — 1 < ϵ_m < T_b/T_m, and below the radial mean (the shell weights the top)",
+      1 < eps < 1900 / 1700 and eps < (1700 + 1900) / 2 / 1700, f"ϵ_m {eps:.5f}")
+
+# v2-7 ④ with the supplement's hydrostatic profile — melting only where the adiabat crosses the solidus,
+# and the Stefan number is ≥ 0 and grows with a hotter mantle.
+def hydro(r):
+    return sm.hydrostatic_pressure(r, rho_m=3500.0, g=3.7, r_p=st.R_PLANET_M)
+kw = dict(d_cr=0.0, d_ref=sm.crust_reference_thickness(st.R_PLANET_M, st.R_CORE_NO_BML_M),
+          delta_t_sol=st.DELTA_T_SOL_K, extraction_below_pa=st.MELT_EXTRACTION_BELOW_PA, shells=400)
+cold = sm.melt_integrals(1300, 1400, r_top, r_bot, hydro, **kw)
+hot = sm.melt_integrals(1900, 2000, r_top, r_bot, hydro, **kw)
+check("v2-7 ④ — a 1300 K mantle does not melt; a 1900 K one melts in the shallow zone",
+      cold["shallow_phi_v"] == cold["deep_phi_v"] == 0.0 and hot["shallow_phi_v"] > 0,
+      f"hot shallow ∫φdV {hot['shallow_phi_v']:.3g} m³")
+v_m = 4 / 3 * math.pi * (r_top ** 3 - r_bot ** 3)
+stk = dict(v_m=v_m, l_m=st.L_MANTLE_J_PER_KG, c_m=st.CP_MANTLE_J_PER_KG_K, dt_k=1.0, **kw)
+s_cold = sm.stefan_number(1300, 1400, r_top, r_bot, hydro, **stk)
+s_hot = sm.stefan_number(1900, 2000, r_top, r_bot, hydro, **stk)
+check("2019 SI eq. (13) — St = 0 without melt, > 0 with it", s_cold == 0.0 and s_hot > 0, f"St {s_hot:.4g}")
+kw_dep = dict(kw, d_cr=kw["d_ref"])
+dep = sm.melt_integrals(1900, 2000, r_top, r_bot, hydro, **kw_dep)
+check("2019 SI eq. (15) — a depleted solidus melts less in the shallow zone, deep unchanged",
+      dep["shallow_phi_v"] < hot["shallow_phi_v"] and dep["deep_phi_v"] == hot["deep_phi_v"])
 
 print(f"  test_samuel_model — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)

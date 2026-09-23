@@ -20,15 +20,16 @@ takes the energy balance from 2021: 2021 writes `ΔT = T_m − T_l + max(T_c −
 The temperature gradient at the base of the lid (2019 SI eq. (21)) is `samuel_lid`'s — a grid, by owner
 decision (pre-registration v2-3), with a quasi-steady comparison beside it.
 
-⚠ **Not built here, and refused by name when asked** (none of them gets a stand-in value):
+Built from printed sources: `H_pm(t)` (Ruedas 2017, v2-5/v2-6) and its crust–mantle split (2019 SI eq. (22),
+v2-4, refusing above its ceiling); the solidus and liquidus (2023 SI eq. (9), v2-6), the local melt fraction
+(2021 eq. (9)) and the depletion shift (2019 SI eq. (15), `ΔT_sol` from Morschhauser+ 2011).
 
-* the volume-averaged melt fraction and the Stefan number — they need the mantle's pressure profile, and
-  `g` and `P_m` are not decided. Built beside them: `H_pm(t)` (Ruedas 2017, v2-5/v2-6) and its crust–mantle
-  split (2019 SI eq. (22), v2-4); the solidus and liquidus (2023 SI eq. (9), v2-6), the local melt fraction
-  (2021 eq. (9)) and the depletion shift (2019 SI eq. (15), `ΔT_sol` from Morschhauser+ 2011).
+⚠ **Our derivations, marked as such** (v2-7 — no paper in the chain prints them): `ϵ_m` as the volume mean
+of the linear adiabat over T_m; the melt integrals and the Stefan number over a pressure profile the caller
+passes; and the hydrostatic profile `ρ_m g (R_p − r)` of the v2-7 supplement's sensitivity path.
 
-Gravity and pressure are arguments with no default: neither the fixed set nor the pre-registration names
-a value, and the bottom heat flow must print which gravity it used (acceptance G).
+Gravity and pressure are arguments with no default. v2-7 takes them from the engine's present-day Mars
+structure; the bottom heat flow must print which gravity it used (acceptance G).
 """
 from __future__ import annotations
 
@@ -217,6 +218,55 @@ def melt_fraction(t_k: float, t_sol: float, t_liq: float) -> float:
     return min(max(0.0, (t_k - t_sol) / (t_liq - t_sol)), 1.0)
 
 
-def melt_state(*_args, **_kwargs) -> dict:
-    raise Refused("the volume-averaged melt fraction and the Stefan number are not built: they need the "
-                  "mantle's pressure profile, and g and P_m are not decided")
+# ── Our derivations — pre-registration v2-7 (and its supplement) ─────────────────────────────────
+def mantle_mean_ratio(t_m: float, t_b: float, r_top: float, r_bot: float) -> float:
+    """ϵ_m — **our derivation** (v2-7 ①): the volume mean of the convecting mantle's temperature over T_m.
+    The profile is the model's own adiabat, linear in depth from T_m at `r_top` = R_l − δ_u to T_b at
+    `r_bot` = R_c + δ_c (2019 SI eq. (7)'s form), weighted over the spherical shell between them."""
+    num = (r_top ** 4 - r_bot ** 4) / 4.0 - r_bot * (r_top ** 3 - r_bot ** 3) / 3.0
+    den = (r_top ** 3 - r_bot ** 3) / 3.0
+    mean = t_b + (t_m - t_b) * num / den / (r_top - r_bot)
+    return mean / t_m
+
+
+def hydrostatic_pressure(r: float, *, rho_m: float, g: float, r_p: float) -> float:
+    """P = ρ_m g (R_p − r) — the sensitivity path of the v2-7 supplement (printed g 3.7, ρ_m 3500)."""
+    return rho_m * g * (r_p - r)
+
+
+def melt_integrals(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_pa, *, d_cr: float,
+                   d_ref: float, delta_t_sol: float, extraction_below_pa: float, shells: int) -> dict:
+    """∫ φ dV over the convecting mantle on the linear adiabat, split at the extraction pressure.
+
+    `pressure_pa(r)` is the profile the caller chose (v2-7 ③④, or the hydrostatic path). The shallow part
+    (P < extraction) is 2019 SI eq. (14)'s melt zone: its solidus carries the depletion shift of eq. (15),
+    as eq. (14) prints. The deep part uses the undepleted solidus — **our reading** of 2019 SI PDF p6,
+    which shifts the solidus only "in Eq. (14)". Midpoint rule on `shells` equal radial shells."""
+    dr = (r_top - r_bot) / shells
+    out = {"shallow_phi_v": 0.0, "shallow_v": 0.0, "deep_phi_v": 0.0, "deep_v": 0.0}
+    for k in range(shells):
+        r = r_bot + (k + 0.5) * dr
+        t = t_b + (t_m - t_b) * (r - r_bot) / (r_top - r_bot)
+        p_gpa = pressure_pa(r) / 1e9
+        dv = 4.0 * math.pi * r * r * dr
+        shallow = p_gpa * 1e9 < extraction_below_pa
+        t_sol = solidus(p_gpa)
+        if shallow:
+            t_sol = depleted_solidus(t_sol, d_cr, d_ref, delta_t_sol)
+        phi = melt_fraction(t, t_sol, liquidus(p_gpa))
+        if phi > 0.0:
+            key = "shallow" if shallow else "deep"
+            out[key + "_phi_v"] += phi * dv
+            out[key + "_v"] += dv
+    return out
+
+
+def stefan_number(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_pa, *, v_m: float,
+                  l_m: float, c_m: float, dt_k: float, **melt_kw) -> float:
+    """St = (L_m / (C_m V_m)) d(∫ φ dV)/dT_m — 2019 SI eq. (13) with V_a m_a = ∫_{V_a} φ dV, over all
+    melting, shallow and deep (2019 SI PDF p6: deep melting enters St through V_melt, m_melt). The
+    derivative is central, moving the whole adiabat with T_m (T_b ∝ T_m in 2021 eq. (14))."""
+    def total(tm):
+        mi = melt_integrals(tm, t_b * tm / t_m, r_top, r_bot, pressure_pa, **melt_kw)
+        return mi["shallow_phi_v"] + mi["deep_phi_v"]
+    return l_m / (c_m * v_m) * (total(t_m + dt_k) - total(t_m - dt_k)) / (2.0 * dt_k)
