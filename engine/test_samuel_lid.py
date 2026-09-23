@@ -5,7 +5,7 @@ either H = 0 or a uniform H chosen only to exercise the term — the values here
     python3 engine/test_samuel_lid.py
 
 The grid's steady limit must equal the exact steady solution, and its error must fall by about four when
-the spacing halves (second order) — with no crust boundary between nodes; with one, only the fall is asserted. The analytic path is checked against a hand evaluation and against its
+the spacing halves (second order) — with the crust boundary on a node or absent; with it between nodes, only the fall is asserted. The analytic path is checked against a hand evaluation and against its
 own continuity conditions. A re-mesh must carry a linear profile exactly.
 """
 from __future__ import annotations
@@ -72,7 +72,9 @@ for name, d_cr, h_m, h_cr in cases:
     e4 = abs(steady_grid(161, d_l, d_cr, h_m, h_cr)[0] - exact)
     rel = e4 / abs(exact)
     check(f"grid steady limit → analytic, {name}", rel < 1e-3, f"rel. error {rel:.2e} at 161 nodes")
-    if d_cr == 0.0:
+    if d_cr in (0.0, 50e3):
+        # 50 km sits on a node at 41, 81 and 161 nodes (Δr 5, 2.5, 1.25 km), so this checks the grid and
+        # the boundary treatment together at their clean order; the between-nodes case below does not.
         check(f"grid error is second order, {name}", 3.0 < e1 / e2 < 5.0 and 3.0 < e2 / e4 < 5.0,
               f"ratios {e1 / e2:.2f}, {e2 / e4:.2f}")
     elif d_cr == 47.3e3:

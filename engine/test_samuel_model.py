@@ -100,6 +100,14 @@ check("v2-6 ① — ²³⁵U + ²³⁸U today = U element 9.8314e-5 W/kg", abs(u
 u_back = (sm.primitive_heat(704.0, 1.0) - sm.primitive_heat_th_k(704.0, 1.0)) / 14e-9
 f235 = 0.0072045 * 235.043928190 / 238.02891 * 5.68402e-4
 f238 = 0.9927955 * 238.050786996 / 238.02891 * 9.4946e-5
+# The same mass-weighted sum for K, from the ⁴⁰K row of Ruedas 2017 Table 2 (PDF p6, rendered): the atomic
+# masses 39.963998166 and 39.0983 and H(⁴⁰K) 2.8761e-5 W/kg are test-only literals, not model inputs.
+k_elem = st.X_ISO_K40 * 39.963998166 / 39.0983 * 2.8761e-5
+check("v2-6 ① — ⁴⁰K mass-weighted = K element 3.4302e-9 W/kg", abs(k_elem / st.H_K_W_PER_KG - 1) < 5e-5,
+      f"{k_elem:.6e} W/kg")
+atomic_only = sum(n["x_iso"] * n["h_w_per_kg"] for n in (st.U235, st.U238))
+check("v2-6 ① — atomic fractions alone miss by ~0.04 % (why the mass weight is there)",
+      3e-4 < atomic_only / st.H_U_W_PER_KG - 1 < 6e-4, f"{atomic_only:.6e} W/kg")
 check("v2-6 ① — one ²³⁵U half-life back, by hand", abs(u_back / (2 * f235 + f238 * 2 ** (704 / 4468)) - 1) < 1e-12)
 
 # 2023 SI eq. (9): the seam goes to the first line, the gap there is 0.3 K (v2-5 ②), and T_liq > T_sol.
