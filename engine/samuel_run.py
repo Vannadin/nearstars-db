@@ -50,6 +50,7 @@ class Setup:
         # δ_b guard (v2-14, our derivation): δ_b ≤ fraction · (R_l − δ_u − R_c); sensitivity ¼ and 1
         self.delta_b_cap_fraction = delta_b_cap_fraction
         self.guard_stage_hits: list = []   # (t, |T_c − T_b|) of every RK stage the guard bit, not only step starts
+        self.guard_iter_hits: list = []    # (t, |T_c − T_b|) of every fixed-point iteration the guard bit
 
     def pressure(self, r: float) -> float:
         return self.profile.pressure(r)
@@ -73,6 +74,7 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
     t_l = sm.lid_base_temperature(t_m, st.E_STAR_NO_BML_J_PER_MOL, st.A_RH, st.R_GAS_J_PER_MOL_K)
     # δ_u, δ_b and T_b depend on each other through ΔR (2021 eq. (14)); fixed-point iteration from 0.
     d_u = d_b = 0.0
+    guard_gap = None          # |T_c − T_b| of the first fixed-point iteration where the δ_b guard bit, if any
     for _ in range(60):
         d_r = sm.convecting_thickness(r_p, d_l, r_c, d_u, d_b)
         t_b = sm.mantle_base_temperature(t_m, st.ALPHA_SILICATE_PER_K, g, st.CP_MANTLE_J_PER_KG_K, d_r)
@@ -88,14 +90,19 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
         lo = sm.lower_layer(t_m, t_c, t_b, eta_m, eta_c, rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K,
                             g=g, k_m=st.K_MANTLE_W_PER_M_K, c_pm=st.CP_MANTLE_J_PER_KG_K, r_p=r_p, r_c=r_c,
                             t_s=st.T_SURFACE_K, delta_b_cap=cap)
+        if lo["guarded"]:
+            s.guard_iter_hits.append((t_gyr, abs(t_c - t_b)))
+            if guard_gap is None:
+                guard_gap = abs(t_c - t_b)
         new_u, new_b = up["delta_u"], lo["delta_b"]
         if abs(new_u - d_u) < 1e-6 and abs(new_b - d_b) < 1e-6:
             d_u, d_b = new_u, new_b
             break
         d_u, d_b = new_u, new_b
     r_top, r_bot = r_l - d_u, r_c + d_b
-    if lo["guarded"]:
-        s.guard_stage_hits.append((t_gyr, abs(t_c - t_b)))
+    # ⚠ any iteration counts, not only the last (audit seat: the last alone missed 67 bites at Λ 20, cap 10)
+    if guard_gap is not None:
+        s.guard_stage_hits.append((t_gyr, guard_gap))
     # ϵ_m — v2-7 ①, and its two sensitivity forms
     eps = sm.mantle_mean_ratio(t_m, t_b, r_top, r_bot)
     if s.eps_mode == "one":
@@ -141,7 +148,7 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
         ddl = 0.0
     return {"dtc": dtc, "dtm": dtm, "ddl": ddl, "ddcr": d_cr_rate, "t_l": t_l, "t_b": t_b, "delta_u": d_u,
             "delta_b": d_b, "q_m": up["q_m"], "q_c": lo["q_c"], "ra": up["ra"], "subcritical": up["subcritical"],
-            "guarded": lo["guarded"], "delta_b_raw_over_shell": lo["delta_b_raw"] / (r_l - d_u - r_c),
+            "guarded": guard_gap is not None, "guard_gap": guard_gap, "delta_b_raw_over_shell": lo["delta_b_raw"] / (r_l - d_u - r_c),
             "tc_tb_gap": abs(t_c - t_b),
             "eps_m": eps, "stefan": stefan, "h_m": h_m, "h_cr": h_cr, "p_m": p_m,
             "ceiling": sm.crust_enrichment_ceiling(v_cr, v_sil - v_cr), "lid_gradient": lid_gradient}
@@ -193,7 +200,7 @@ def run(s: Setup, cap_myr: float) -> dict:
                      "t": t, "t_c": y[0], "t_m": y[1], "d_l": y[2], "d_cr": y[3], "delta_u": f1["delta_u"],
                      "q_m": f1["q_m"], "q_c": f1["q_c"], "eps_m": f1["eps_m"], "stefan": f1["stefan"],
                      "subcritical": f1["subcritical"], "p_m": f1["p_m"], "ceiling": f1["ceiling"],
-                     "guarded": f1["guarded"], "delta_b_raw_over_shell": f1["delta_b_raw_over_shell"],
+                     "guarded": f1["guarded"], "guard_gap": f1["guard_gap"], "delta_b_raw_over_shell": f1["delta_b_raw_over_shell"],
                      "tc_tb_gap": f1["tc_tb_gap"]})
         if s.lam / f1["ceiling"] > worst[0]:
             worst = (s.lam / f1["ceiling"], t)
@@ -238,7 +245,7 @@ def run(s: Setup, cap_myr: float) -> dict:
         grad = lid.step(h, d_l=y[2], d_cr=y[3], t_l=t_l, h_m=h_m, h_cr=h_cr)
     return {"rows": rows, "n_steps": n, "cap_myr": cap_myr, "h_min_myr": h_min / GYR_S * 1e3,
             "max_lambda_over_ceiling": worst, "n_remesh": n_remesh,
-            "guard_stage_hits": list(s.guard_stage_hits), "remesh_loss_j": remesh_loss}
+            "guard_stage_hits": list(s.guard_stage_hits), "guard_iter_hits": list(s.guard_iter_hits), "remesh_loss_j": remesh_loss}
 
 
 def _heat_above(lid, r_lo: float) -> float:

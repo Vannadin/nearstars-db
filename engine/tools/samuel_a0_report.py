@@ -57,18 +57,21 @@ def main() -> int:
         return out
 
     def guard_line(out):
+        """δ_b guard bites in three layers: step starts, RK stages, fixed-point iterations (v2-14)."""
         rows = out["rows"]
-        hit = [r["t"] for r in rows if r["guarded"]]
         gap = min(rows, key=lambda r: r["tc_tb_gap"])
         raw = max(rows, key=lambda r: r["delta_b_raw_over_shell"])
-        hr = [r for r in rows if r["guarded"]]
-        each = " ".join(f"{r['t']:.3f}Gyr/|ΔT|{r['tc_tb_gap']:.3g}K" for r in hr[:8]) + (" …" if len(hr) > 8 else "")
-        return (f"δ_b 가드(v2-14, ½ 껍질) 걸린 걸음 {len(hit)}"
-                + (f" ({hit[0]:.4f}–{hit[-1]:.4f} Gyr; 그 걸음들의 |T_c − T_b| 최대 "
-                   f"{max(r['tc_tb_gap'] for r in hr):.3g} K — {each})" if hit else "")
-                + f" · RK 단계까지 센 가드 {len(out['guard_stage_hits'])}"
-                + (f" (단계들의 |T_c − T_b| 최대 {max(g for _, g in out['guard_stage_hits']):.3g} K)"
-                   if out['guard_stage_hits'] else "")
+
+        def layer(name, hits):
+            if not hits:
+                return f"{name} 0"
+            worst = max(hits, key=lambda h: h[1])
+            return (f"{name} {len(hits)} ({hits[0][0]:.4f}–{hits[-1][0]:.4f} Gyr, |T_c − T_b| 최대 {worst[1]:.3g} K"
+                    f" @ {worst[0]:.4f})")
+        # the gap at the iteration where the guard bit — the converged T_b of the step can sit far from it
+        steps = [(r["t"], r["guard_gap"]) for r in rows if r["guarded"]]
+        return ("δ_b 가드(v2-14, ½ 껍질) 걸림 — " + layer("걸음", steps) + " · "
+                + layer("RK 단계", out["guard_stage_hits"]) + " · " + layer("고리 반복", out["guard_iter_hits"])
                 + f" · 걸음 시작의 |T_c − T_b| 최소 {gap['tc_tb_gap']:.4f} K @ {gap['t']:.4f} Gyr"
                 + f" · 누르기 전 δ_b/껍질 최대 {raw['delta_b_raw_over_shell']:.4f} @ {raw['t']:.4f} Gyr")
 
