@@ -37,7 +37,7 @@ class Setup:
 
     def __init__(self, *, lam: float, profile, g: float, g_c: float, eps_mode: str = "derived",
                  p_m_mode: str = "mid", melt_pressure: str = "engine", stefan_mode: str = "printed",
-                 lid_mode: str = "grid", lid_nodes: int = 41, melt_shells: int = 120,
+                 lid_mode: str = "grid", lid_nodes: int = 41, melt_shells: int = 1920,
                  fixed_lid_m: float | None = None):
         self.lam, self.profile, self.g, self.g_c = lam, profile, g, g_c
         self.eps_mode, self.p_m_mode = eps_mode, p_m_mode

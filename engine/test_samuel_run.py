@@ -10,8 +10,8 @@ Invariants, which a wrong wiring breaks whatever the target says:
   2019 SI eq. (20) wired with the v2 `−`;
 * Λ 20 stays below its ceiling for the whole run.
 
-Regression: the A0 values that need no source data at Λ 20, cap 10 Myr, as reported in `9f8e2c8c` (v2-9 records A0 failing
-there). A move is not a failure of physics — it is a change to explain, then re-freeze with the reason.
+Regression: the A0 values that need no source data at Λ 20, cap 10 Myr, re-frozen at 1 920 melt shells (v2-9 records A0
+failing there). A move is not a failure of physics — it is a change to explain, then re-freeze with the reason.
 The A0 verdict itself is **not** asserted: the gate stays green on a recorded failure.
 """
 from __future__ import annotations
@@ -35,11 +35,12 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 
 
 # The A0 values that need no source data, at Λ 20 and cap 10 Myr, frozen from this run's own output on
-# 2026-09-23 (the report, blob aa12e90d, prints the same to one decimal). The two RMS conditions need the
-# 2023 source data, which is outside the repo, so the gate cannot hold them.
-FROZEN_L20 = {"T_c today": 2101.5, "T_m today": 1941.5, "T_c(1) − T_c0": -48.4, "T_m(1) − T_m0": 287.1,
-              "T_m peak": 2045.1, "T_m peak time": 1.26}
-FROZEN_TOL = {"T_m peak time": 0.005}   # Gyr; every other value K, to the report's printed decimal
+# 2026-09-23 at 1 920 melt shells (v2-10; at 120 shells the printed Stefan number turned negative on 57 steps
+# from discretisation, and these values moved ≤ 0.8 K). The two RMS conditions need the 2023 source data,
+# which is outside the repo, so the gate cannot hold them.
+FROZEN_L20 = {"T_c today": 2101.66, "T_m today": 1941.77, "T_c(1) − T_c0": -48.69, "T_m(1) − T_m0": 287.04,
+              "T_m peak": 2045.15, "T_m peak time": 1.2726}
+FROZEN_TOL = {"T_m peak time": 0.0005}  # Gyr; every other value K, to the frozen decimal
 
 
 prof = ss.mars_profile(Path(__file__).resolve().parent / "bodies" / "mars.yaml")
@@ -70,7 +71,7 @@ check("v2-4 ③ — Λ 20 stays under its ceiling", worst < 1.0, f"largest Λ/ce
 # regression — the six data-free values
 c = sr.curve_values(rows)
 for key, frozen in FROZEN_L20.items():
-    tol = FROZEN_TOL.get(key, 0.05)
+    tol = FROZEN_TOL.get(key, 0.006)
     check(f"regression — Λ 20 {key} = {frozen}", abs(c[key] - frozen) <= tol, f"now {c[key]:.4f}")
 
 print(f"  test_samuel_run — {'모두 통과' if not fails else f'실패 {fails}'}")
