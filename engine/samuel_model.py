@@ -11,7 +11,7 @@ Every equation is cited with its **year**, because the two papers number differe
 * **2019 SI** — Samuel, Lognonné, Panning & Lainey 2019, Nature 569, 523, Supplementary Information
   (`2019Natur.569..523S-si.pdf`). Page numbers are PDF pages, read off a 110 dpi render.
 * **2021** — Samuel, Ballmer, Padovan, Tosi, Rivoldini & Plesa 2021, JGR Planets 126, e2020JE006613
-  (`2021JGRE..12606613S.pdf`), §4.1, PDF pp. 10–11, read off a render.
+  (`2021JGRE..12606613S.pdf`), §4.1, PDF pp. 11–12, read off a render.
 
 Where the two print the same relation differently, the 2021 form is used, because the pre-registration
 takes the energy balance from 2021: 2021 writes `ΔT = T_m − T_l + max(T_c − T_b, 0)` and
@@ -52,13 +52,13 @@ def viscosity(t_k: float, p_pa: float, eta0: float, e_star: float, v_star: float
                            - (e_star + p_ref * v_star) / (r_gas * t_ref))
 
 
-# ── The lid's base — 2019 SI eq. (4), PDF p2 (also 2021 PDF p10) ───────────────────────────────
+# ── The lid's base — 2019 SI eq. (4), PDF p2 (also 2021 PDF p11) ───────────────────────────────
 def lid_base_temperature(t_m: float, e_star: float, a_rh: float, r_gas: float) -> float:
     """T_l = T_m − a_rh R T_m² / E*."""
     return t_m - a_rh * r_gas * t_m * t_m / e_star
 
 
-# ── The adiabat to the bottom of the convecting mantle — 2021 eq. (14), PDF p11 ────────────────
+# ── The adiabat to the bottom of the convecting mantle — 2021 eq. (14), PDF p12 ────────────────
 def convecting_thickness(r_p: float, d_l: float, r_c: float, delta_u: float, delta_b: float) -> float:
     """ΔR = R_p − D_l − R_c − δ_u − δ_c (2021 eq. (14)'s definition)."""
     return r_p - d_l - r_c - delta_u - delta_b
@@ -69,7 +69,7 @@ def mantle_base_temperature(t_m: float, alpha: float, g: float, c_pm: float, d_r
     return t_m + alpha * g * t_m / c_pm * d_r
 
 
-# ── Upper boundary layer — 2021 eqs (15)–(16) and (12), PDF pp. 10–11 ──────────────────────────
+# ── Upper boundary layer — 2021 eqs (15)–(16) and (12), PDF pp. 11–12 ──────────────────────────
 def upper_layer(t_m: float, t_l: float, t_c: float, t_b: float, eta_m: float, *, rho_m: float,
                 alpha: float, g: float, k_m: float, c_pm: float, r_p: float, d_l: float, r_c: float,
                 ra_c: float, beta_u: float) -> dict:
@@ -87,7 +87,7 @@ def upper_layer(t_m: float, t_l: float, t_c: float, t_b: float, eta_m: float, *,
     return {"ra": ra, "delta_u": delta_u, "q_m": k_m * (t_m - t_l) / delta_u, "subcritical": False}
 
 
-# ── Lower boundary layer — 2021 eq. (17) and (13), PDF pp. 10–11 ───────────────────────────────
+# ── Lower boundary layer — 2021 eq. (17) and (13), PDF pp. 11–12 ───────────────────────────────
 def lower_layer(t_m: float, t_c: float, t_b: float, eta_m: float, eta_c: float, *, rho_m: float,
                 alpha: float, g: float, k_m: float, c_pm: float, r_p: float, r_c: float,
                 t_s: float) -> dict:
@@ -118,7 +118,7 @@ def crust_growth_rate(u: float, m_a: float, v_a: float, r_p: float) -> float:
     return u * m_a * v_a / (4.0 * math.pi * r_p ** 3)
 
 
-# ── Energy balance — 2021 eqs (10)–(11), PDF p10 ───────────────────────────────────────────────
+# ── Energy balance — 2021 eqs (10)–(11), PDF p11 ───────────────────────────────────────────────
 def mantle_rate(*, q_m: float, q_c: float, h_m: float, d_cr_rate: float, t_m: float, t_l: float,
                 stefan: float, eps_m: float, rho_m: float, c_pm: float, v_m: float, a_m: float, a_c: float,
                 rho_cr: float, l_m: float, c_pcr: float) -> float:
@@ -138,7 +138,7 @@ def lid_rate(*, q_m: float, d_cr_rate: float, lid_base_gradient: float, t_m: flo
     """ρ_m C_m (T_m − T_l) dD_l/dt = −{q_m − ρ_cr [L_m + C_m (T_m − T_s)] dD_cr/dt} − k_m ∂T/∂r|_{R_l}.
 
     ⚠ **The last term is wired `−`: the v2 interpretation.** The render of PDF p6 prints `+`; Samuel+ 2021
-    (PDF p10) says that term carries a sign typo and prints no corrected equation (v2 §3, risk 3).
+    (PDF p11) says that term carries a sign typo and prints no corrected equation (v2 §3, risk 3).
     The braces hold `C_m (T_m − T_s)` as printed — not the `C_cr (T_m − T_l)` of 2019 SI eq. (2)."""
     rhs = -(q_m - rho_cr * (l_m + c_m * (t_m - t_s)) * d_cr_rate) - k_m * lid_base_gradient
     return rhs / (rho_m * c_m * (t_m - t_l))
