@@ -9,6 +9,7 @@ a hand evaluation of 2019 SI eq. (4), the `Ra < Ra_c` branch (v2-2 ②), the sig
 """
 from __future__ import annotations
 
+import math
 import sys
 from pathlib import Path
 
@@ -63,9 +64,24 @@ mant = sm.mantle_rate(q_m=0.0, q_c=0.01, h_m=0.0, d_cr_rate=0.0, t_m=t_m0, t_l=t
                       rho_cr=st.RHO_CRUST_KG_M3, l_m=st.L_MANTLE_J_PER_KG, c_pcr=st.CP_CRUST_J_PER_KG_K)
 check("2021 eqs (10)–(11) — q_c > 0 cools the core and warms the mantle", core < 0 < mant)
 
+# v2-14 — the δ_b guard. At T_b = T_c the printed δ_b is infinite; held, it equals the cap, is finite, and
+# q_c is 0. Where the guard does not bite, the result is bit-identical to the unguarded call.
+lo_kw = dict(rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K, g=3.7, k_m=st.K_MANTLE_W_PER_M_K,
+             c_pm=st.CP_MANTLE_J_PER_KG_K, r_p=st.R_PLANET_M, r_c=st.R_CORE_NO_BML_M, t_s=st.T_SURFACE_K)
+cap_m = 0.5 * (st.R_PLANET_M - 400e3 - 120e3 - st.R_CORE_NO_BML_M)
+for gap in (0.0, 1e-4):
+    held = sm.lower_layer(1900.0, 2150.0, 2150.0 - gap, 1e21, 1e20, delta_b_cap=cap_m, **lo_kw)
+    check(f"v2-14 — |T_c − T_b| = {gap:g} K: δ_b held at the cap, finite", held["guarded"] and held["delta_b"] == cap_m
+          and math.isfinite(held["delta_b"]), f"raw {held['delta_b_raw']:.3g} m, held {held['delta_b'] / 1e3:.1f} km, "
+          f"q_c {held['q_c']:.3g} W/m²")
+free = sm.lower_layer(1900.0, 2300.0, 2150.0, 1e21, 1e20, **lo_kw)
+capd = sm.lower_layer(1900.0, 2300.0, 2150.0, 1e21, 1e20, delta_b_cap=cap_m, **lo_kw)
+check("v2-14 — away from T_b = T_c the guard changes nothing, bit for bit",
+      not capd["guarded"] and capd["delta_b"] == free["delta_b"] and capd["q_c"] == free["q_c"],
+      f"δ_b {free['delta_b'] / 1e3:.2f} km")
+
 # 2019 SI eq. (22) with Λ as H_cr/H_pm (v2-4): total heat is conserved, H_m hits 0 at the ceiling,
 # and a Λ above it refuses rather than clipping. The volumes are a 50 km crust on the a–f mantle.
-import math                            # noqa: E402
 v_sil = 4 / 3 * math.pi * (st.R_PLANET_M ** 3 - st.R_CORE_NO_BML_M ** 3)
 v_cr = 4 / 3 * math.pi * (st.R_PLANET_M ** 3 - (st.R_PLANET_M - 50e3) ** 3)
 v_m = v_sil - v_cr

@@ -36,11 +36,12 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 
 
 # The A0 values that need no source data, at Λ 20 and cap 10 Myr, frozen from this run's own output on
-# 2026-09-23 at 1 920 melt shells (v2-10; at 120 shells the printed Stefan number turned negative on 57 steps
-# from discretisation, and these values moved ≤ 0.9 K — 0.83 K for T_m at 480). The two RMS conditions need the 2023 source data,
-# which is outside the repo, so the gate cannot hold them.
-FROZEN_L20 = {"T_c today": 2101.66, "T_m today": 1941.77, "T_c(1) − T_c0": -48.69, "T_m(1) − T_m0": 287.04,
-              "T_m peak": 2045.15, "T_m peak time": 1.2726}
+# 2026-09-24: 1 920 melt shells (v2-10) and the δ_b guard at ½ shell (v2-14). Before the guard they read
+# 2101.66 / 1941.77; at 120 shells the printed Stefan number turned negative on 57 steps and the values
+# moved ≤ 0.9 K. The two RMS conditions need the 2023 source data, which is outside the repo, so the gate
+# cannot hold them.
+FROZEN_L20 = {"T_c today": 2101.59, "T_m today": 1941.69, "T_c(1) − T_c0": -48.71, "T_m(1) − T_m0": 287.03,
+              "T_m peak": 2045.12, "T_m peak time": 1.2726}
 FROZEN_TOL = {"T_m peak time": 0.0005}  # Gyr; every other value K, to the frozen decimal
 
 

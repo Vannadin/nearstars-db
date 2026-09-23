@@ -56,6 +56,22 @@ def main() -> int:
             out["a0"] = sr.a0(out["rows"], tc, tm)
         return out
 
+    def guard_line(out):
+        rows = out["rows"]
+        hit = [r["t"] for r in rows if r["guarded"]]
+        gap = min(rows, key=lambda r: r["tc_tb_gap"])
+        raw = max(rows, key=lambda r: r["delta_b_raw_over_shell"])
+        hr = [r for r in rows if r["guarded"]]
+        each = " ".join(f"{r['t']:.3f}Gyr/|ΔT|{r['tc_tb_gap']:.3g}K" for r in hr[:8]) + (" …" if len(hr) > 8 else "")
+        return (f"δ_b 가드(v2-14, ½ 껍질) 걸린 걸음 {len(hit)}"
+                + (f" ({hit[0]:.4f}–{hit[-1]:.4f} Gyr; 그 걸음들의 |T_c − T_b| 최대 "
+                   f"{max(r['tc_tb_gap'] for r in hr):.3g} K — {each})" if hit else "")
+                + f" · RK 단계까지 센 가드 {len(out['guard_stage_hits'])}"
+                + (f" (단계들의 |T_c − T_b| 최대 {max(g for _, g in out['guard_stage_hits']):.3g} K)"
+                   if out['guard_stage_hits'] else "")
+                + f" · 걸음 시작의 |T_c − T_b| 최소 {gap['tc_tb_gap']:.4f} K @ {gap['t']:.4f} Gyr"
+                + f" · 누르기 전 δ_b/껍질 최대 {raw['delta_b_raw_over_shell']:.4f} @ {raw['t']:.4f} Gyr")
+
     def line(tag, out):
         if "refused" in out:
             return f"  {tag:<28} 거절 @ {out['refused_at_gyr']:.3f} Gyr — {out['refused'][:90]}"
@@ -67,7 +83,7 @@ def main() -> int:
                 f" ①′ {c['①′'][0]:+7.1f}{'✓' if c['①′'][1] else '✗'} {verdict if out['a0']['pass'] else ''}"
                 f" [{out['n_steps']} 걸음 {out['secs']:.1f} s]")
 
-    print(f"── A0 본판 — Λ 훑기 5–20, 걸음 상한 {CAP_MYR:g} Myr, 뚜껑 격자 ──")
+    print(f"── A0 본판(δ_b 가드 판, v2-14) — Λ 훑기 5–20, 걸음 상한 {CAP_MYR:g} Myr, 뚜껑 격자 ──")
     print("  목표: ㉠c 2081.49±40 · ㉠m 1867.39±50 · ㉡c ≤40 · ㉡m ≤50 · ① <0 · ② [0.5,2.0] · ①′ >0")
     scan = {}
     for lam in LAMBDAS:
@@ -79,6 +95,9 @@ def main() -> int:
             print(f"      천장 사용 최대 Λ/천장 {worst:.3f} @ {when:.3f} Gyr")
     ok = [lam for lam, o in scan.items() if "refused" not in o and o["a0"]["pass"]]
     print(f"  {verdict} Λ: {ok if ok else '없음'}")
+    for lam in (5.0, 10.0, 15.0, 20.0):
+        if "refused" not in scan[lam]:
+            print(f"      Λ {lam:g}: " + guard_line(scan[lam]))
 
     def miss(o):
         c = o["a0"]["conditions"]
@@ -90,9 +109,12 @@ def main() -> int:
         return 0
     print(f"  기준 Λ = {ref:g} ({'통과점' if ok else '가장 가까운 점 — 네 폭 대비 최대 초과가 가장 작음'})\n")
 
-    print("── 적분기 — (h, h/2, h/4), 기준 Λ ──")
-    for cap in (CAP_MYR, CAP_MYR / 2, CAP_MYR / 4):
-        print(line(f"상한 {cap:g} Myr", one(ref, cap)))
+    print("── 적분기 — (h, h/2, h/4, h/8), 기준 Λ ──")
+    for cap in (CAP_MYR, CAP_MYR / 2, CAP_MYR / 4, CAP_MYR / 8):
+        o = one(ref, cap)
+        print(line(f"상한 {cap:g} Myr", o))
+        if "refused" not in o:
+            print("      " + guard_line(o))
 
     print("\n── 준정상 비교판 (v2-3 ②, 보고) ──")
     base, qs = scan[ref], one(ref, lid_mode="quasi_steady")
@@ -114,7 +136,9 @@ def main() -> int:
                     *((("P_m 대류층 중간", {"p_m_mode": "mid"}),) if post else (("P_m 대류층 위 끝", {"p_m_mode": "top"}),)),
                     ("P_m 대류층 아래 끝", {"p_m_mode": "bottom"}),
                     ("(13)(14) 정수압 3500·3.7", {"melt_pressure": "hydrostatic"}),
-                    ("Stefan 전미분", {"stefan_mode": "total"})):
+                    ("Stefan 전미분", {"stefan_mode": "total"}),
+                    ("δ_b 가드 ¼ 껍질", {"delta_b_cap_fraction": 0.25}),
+                    ("δ_b 가드 1 껍질", {"delta_b_cap_fraction": 1.0})):
         print(line(tag, one(ref, **kw)))
     print("  ⚠ g_c 3.1 은 식에 안 들어간다 — 2021 (14)–(17) 이 g 하나를 인쇄한다. 인쇄만 한다.")
     print("\n── 판 2′ — L1 비교 판 (v2 §2, v2-2 ①), 기준 Λ ──")

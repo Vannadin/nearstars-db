@@ -92,16 +92,25 @@ def upper_layer(t_m: float, t_l: float, t_c: float, t_b: float, eta_m: float, *,
 # ── Lower boundary layer — 2021 eq. (17) and (13), PDF pp. 11–12 ───────────────────────────────
 def lower_layer(t_m: float, t_c: float, t_b: float, eta_m: float, eta_c: float, *, rho_m: float,
                 alpha: float, g: float, k_m: float, c_pm: float, r_p: float, r_c: float,
-                t_s: float) -> dict:
+                t_s: float, delta_b_cap: float | None = None) -> dict:
     """Ra_i, Ra_δb = 0.28 Ra_i^0.21, δ_b = (κ η_c Ra_δb / (ρ_m α g |T_c − T_b|))^(1/3), q_c = k_m (T_c − T_b)/δ_b.
 
-    `η_c = η((T_b + T_c)/2, P_c)` is the caller's to evaluate — the pressure is an argument there."""
+    `η_c = η((T_b + T_c)/2, P_c)` is the caller's to evaluate — the pressure is an argument there.
+
+    ⚠ **δ_b guard — our derivation** (pre-registration v2-14; no printed rule). As T_b → T_c the printed
+    δ_b diverges; it is held to `delta_b_cap` with `min`, and the held value is the δ_c of q_c too. The
+    unheld value and whether the guard bit are returned so a run can print them. `delta_b_cap=None`
+    applies no guard."""
     kappa = k_m / (rho_m * c_pm)
     d_t_i = t_m - t_s + max(t_c - t_b, 0.0)
     ra_i = rho_m * alpha * g * d_t_i * (r_p - r_c) ** 3 / (eta_m * kappa)
     ra_db = st.RA_DELTA_B_COEFF * ra_i ** st.RA_DELTA_B_EXP
-    delta_b = (kappa * eta_c * ra_db / (rho_m * alpha * g * abs(t_c - t_b))) ** (1.0 / 3.0)
-    return {"ra_i": ra_i, "ra_delta_b": ra_db, "delta_b": delta_b, "q_c": k_m * (t_c - t_b) / delta_b}
+    gap = abs(t_c - t_b)
+    raw = (kappa * eta_c * ra_db / (rho_m * alpha * g * gap)) ** (1.0 / 3.0) if gap > 0.0 else math.inf
+    guarded = delta_b_cap is not None and raw > delta_b_cap
+    delta_b = delta_b_cap if guarded else raw
+    return {"ra_i": ra_i, "ra_delta_b": ra_db, "delta_b": delta_b, "delta_b_raw": raw, "guarded": guarded,
+            "q_c": k_m * (t_c - t_b) / delta_b}
 
 
 # ── Crust growth — 2019 SI eqs (16)–(18), PDF p5 ───────────────────────────────────────────────

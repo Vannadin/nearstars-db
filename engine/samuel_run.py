@@ -38,7 +38,7 @@ class Setup:
     def __init__(self, *, lam: float, profile, g: float, g_c: float, eps_mode: str = "derived",
                  p_m_mode: str = "mid", melt_pressure: str = "engine", stefan_mode: str = "printed",
                  lid_mode: str = "grid", lid_nodes: int = 41, melt_shells: int = 1920,
-                 fixed_lid_m: float | None = None):
+                 fixed_lid_m: float | None = None, delta_b_cap_fraction: float = 0.5):
         self.lam, self.profile, self.g, self.g_c = lam, profile, g, g_c
         self.eps_mode, self.p_m_mode = eps_mode, p_m_mode
         self.melt_pressure, self.stefan_mode, self.lid_mode = melt_pressure, stefan_mode, lid_mode
@@ -47,6 +47,9 @@ class Setup:
         self.eps_frozen = None
         # L1 comparison plate (v2 §2 plate 2′): the lid does not grow; its thickness is declared.
         self.fixed_lid_m = fixed_lid_m
+        # δ_b guard (v2-14, our derivation): δ_b ≤ fraction · (R_l − δ_u − R_c); sensitivity ¼ and 1
+        self.delta_b_cap_fraction = delta_b_cap_fraction
+        self.guard_stage_hits: list = []   # (t, |T_c − T_b|) of every RK stage the guard bit, not only step starts
 
     def pressure(self, r: float) -> float:
         return self.profile.pressure(r)
@@ -81,15 +84,18 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
                             g=g, k_m=st.K_MANTLE_W_PER_M_K, c_pm=st.CP_MANTLE_J_PER_KG_K, r_p=r_p, d_l=d_l,
                             r_c=r_c, ra_c=st.RA_CRITICAL, beta_u=st.BETA_U)
         eta_c = _eta(0.5 * (t_b + t_c), s.pressure(r_c))
+        cap = s.delta_b_cap_fraction * (r_l - up["delta_u"] - r_c)
         lo = sm.lower_layer(t_m, t_c, t_b, eta_m, eta_c, rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K,
                             g=g, k_m=st.K_MANTLE_W_PER_M_K, c_pm=st.CP_MANTLE_J_PER_KG_K, r_p=r_p, r_c=r_c,
-                            t_s=st.T_SURFACE_K)
+                            t_s=st.T_SURFACE_K, delta_b_cap=cap)
         new_u, new_b = up["delta_u"], lo["delta_b"]
         if abs(new_u - d_u) < 1e-6 and abs(new_b - d_b) < 1e-6:
             d_u, d_b = new_u, new_b
             break
         d_u, d_b = new_u, new_b
     r_top, r_bot = r_l - d_u, r_c + d_b
+    if lo["guarded"]:
+        s.guard_stage_hits.append((t_gyr, abs(t_c - t_b)))
     # ϵ_m — v2-7 ①, and its two sensitivity forms
     eps = sm.mantle_mean_ratio(t_m, t_b, r_top, r_bot)
     if s.eps_mode == "one":
@@ -135,6 +141,8 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
         ddl = 0.0
     return {"dtc": dtc, "dtm": dtm, "ddl": ddl, "ddcr": d_cr_rate, "t_l": t_l, "t_b": t_b, "delta_u": d_u,
             "delta_b": d_b, "q_m": up["q_m"], "q_c": lo["q_c"], "ra": up["ra"], "subcritical": up["subcritical"],
+            "guarded": lo["guarded"], "delta_b_raw_over_shell": lo["delta_b_raw"] / (r_l - d_u - r_c),
+            "tc_tb_gap": abs(t_c - t_b),
             "eps_m": eps, "stefan": stefan, "h_m": h_m, "h_cr": h_cr, "p_m": p_m,
             "ceiling": sm.crust_enrichment_ceiling(v_cr, v_sil - v_cr), "lid_gradient": lid_gradient}
 
@@ -184,7 +192,9 @@ def run(s: Setup, cap_myr: float) -> dict:
                                                          * (y[1] - st.T_SURFACE_K)) * f1["ddcr"],
                      "t": t, "t_c": y[0], "t_m": y[1], "d_l": y[2], "d_cr": y[3], "delta_u": f1["delta_u"],
                      "q_m": f1["q_m"], "q_c": f1["q_c"], "eps_m": f1["eps_m"], "stefan": f1["stefan"],
-                     "subcritical": f1["subcritical"], "p_m": f1["p_m"], "ceiling": f1["ceiling"]})
+                     "subcritical": f1["subcritical"], "p_m": f1["p_m"], "ceiling": f1["ceiling"],
+                     "guarded": f1["guarded"], "delta_b_raw_over_shell": f1["delta_b_raw_over_shell"],
+                     "tc_tb_gap": f1["tc_tb_gap"]})
         if s.lam / f1["ceiling"] > worst[0]:
             worst = (s.lam / f1["ceiling"], t)
         remaining = (AGE_GYR - t) * GYR_S
@@ -227,7 +237,8 @@ def run(s: Setup, cap_myr: float) -> dict:
             n_remesh += 1
         grad = lid.step(h, d_l=y[2], d_cr=y[3], t_l=t_l, h_m=h_m, h_cr=h_cr)
     return {"rows": rows, "n_steps": n, "cap_myr": cap_myr, "h_min_myr": h_min / GYR_S * 1e3,
-            "max_lambda_over_ceiling": worst, "n_remesh": n_remesh, "remesh_loss_j": remesh_loss}
+            "max_lambda_over_ceiling": worst, "n_remesh": n_remesh,
+            "guard_stage_hits": list(s.guard_stage_hits), "remesh_loss_j": remesh_loss}
 
 
 def _heat_above(lid, r_lo: float) -> float:
