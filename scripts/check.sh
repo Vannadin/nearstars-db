@@ -985,6 +985,8 @@ step "test_core_energy.py" bash -c 'cd engine && exec python3 test_core_energy.p
 step "test_core_entropy.py" bash -c 'cd engine && exec python3 test_core_entropy.py'
 # 열진화 적분기 (C20). 지구 단일 실행(h = min(4 Myr, 0.1·τ) — Nimmo 의 4 Myr 은 상한, 브리프 157)이 사전등록 분기 ①②④③ 을 그 순서로 읽는다; 수렴 스윕은 온디맨드(--sweep, ~400 s).
 step "test_core_history.py" bash -c 'cd engine && exec python3 test_core_history.py'
+# Samuel 층 없는 모형의 우변 조각 (열진화 판 2 첫 판). 인쇄식 값 · Ra<Ra_c 분기 · 2019 SI 식 20 의 `−` 배선 · 거절 셋. 적분 없음, ~0 s.
+step "test_samuel_model.py" bash -c 'cd engine && exec python3 test_samuel_model.py'
 # 정체뚜껑 맨틀 수지 (C51 1단계). Foley 2018 식 (1)–(4) 전사가 논문 인쇄 도출값(μ_r, Pe)을 재현하고, «cancel out» 이
 # 항등식임을 재고, 식 (2) 는 없는 입력을 이름 대며 거절한다. 판정 칸 셋은 여기서 읽지 않는다 (커밋 D). ~0 s.
 step "test_mantle_budget.py" bash -c 'cd engine && exec python3 test_mantle_budget.py'
