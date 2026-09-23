@@ -93,9 +93,28 @@ check("Ruedas 2017 — Th + K today by hand", abs(now / hand - 1) < 1e-12, f"{no
 back = sm.primitive_heat_th_k(1248.0, 1.0)
 hand_back = 54e-9 * 2.6368e-5 * 2 ** (1248 / 14000) + 284e-6 * 3.4302e-9 * 2
 check("Ruedas 2017 — one ⁴⁰K half-life back", abs(back / hand_back - 1) < 1e-12)
-for fn, word in ((sm.primitive_heat, "U"), (sm.melt_state, "melt")):
+# U split by nuclide reproduces the table's element rate today (v2-6 ① 검산), and each nuclide decays alone.
+u_now = (sm.primitive_heat(0.0, 1.0) - sm.primitive_heat_th_k(0.0, 1.0)) / 14e-9
+check("v2-6 ① — ²³⁵U + ²³⁸U today = U element 9.8314e-5 W/kg", abs(u_now / st.H_U_W_PER_KG - 1) < 5e-5,
+      f"{u_now:.6e} W/kg")
+u_back = (sm.primitive_heat(704.0, 1.0) - sm.primitive_heat_th_k(704.0, 1.0)) / 14e-9
+f235 = 0.0072045 * 235.043928190 / 238.02891 * 5.68402e-4
+f238 = 0.9927955 * 238.050786996 / 238.02891 * 9.4946e-5
+check("v2-6 ① — one ²³⁵U half-life back, by hand", abs(u_back / (2 * f235 + f238 * 2 ** (704 / 4468)) - 1) < 1e-12)
+
+# 2023 SI eq. (9): the seam goes to the first line, the gap there is 0.3 K (v2-5 ②), and T_liq > T_sol.
+check("2023 SI eq. (9) — solidus at 10 GPa is the first line, 2075.3 K", abs(sm.solidus(10.0) - 2075.3) < 1e-9)
+check("2023 SI eq. (9) — just above the seam, the second line (≈ 2075 K)", abs(sm.solidus(10.0 + 1e-9) - 2075.0) < 1e-6)
+check("2023 SI eq. (9) — liquidus above solidus from 0 to 25 GPa",
+      all(sm.liquidus(p / 2) > sm.solidus(p / 2) for p in range(0, 51)),
+      f"at 0 GPa {sm.solidus(0):.1f} / {sm.liquidus(0):.1f} K")
+check("2021 eq. (9) — melt fraction clamps to [0, 1]",
+      sm.melt_fraction(1000, 1400, 2000) == 0.0 and sm.melt_fraction(2500, 1400, 2000) == 1.0
+      and sm.melt_fraction(1700, 1400, 2000) == 0.5)
+
+for fn, word in ((sm.melt_state, "melt"),):
     try:
-        fn(0.0, 3500.0) if fn is sm.primitive_heat else fn()
+        fn()
         check(f"refusal — {fn.__name__}", False, "returned a value")
     except sm.Refused as e:
         check(f"refusal — {fn.__name__}", word in str(e), str(e)[:70])

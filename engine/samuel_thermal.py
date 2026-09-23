@@ -135,6 +135,17 @@ HALF_LIFE_TH232_MY = 14000.0
 HALF_LIFE_U235_MY = 704.0
 HALF_LIFE_U238_MY = 4468.0
 X_ISO_K40 = 1.1668e-4
+# Uranium's two nuclides, the same table (pre-registration v2-6 ①); both rows include ²³⁴U per its footnote.
+U_ATOMIC_MASS = 238.02891
+U235 = {"u": 235.043928190, "x_iso": 0.0072045, "h_w_per_kg": 5.68402e-4, "half_life_my": HALF_LIFE_U235_MY}
+U238 = {"u": 238.050786996, "x_iso": 0.9927955, "h_w_per_kg": 9.4946e-5, "half_life_my": HALF_LIFE_U238_MY}
+
+# ── Melting curves — Samuel et al. 2023 SI eq. (9), PDF p16 (pre-registration v2-6 ②), T in K, P in GPa ──
+# Solidus: Duncan+ 2018; liquidus: Ruedas & Breuer 2017. The seam at P = 10 GPa goes to the first line (v2-5 ②).
+SOLIDUS_LOW = (1361.0, 120.2, -4.877)              # 1361 + 120.2 P − 4.877 P²,                 P ≤ 10
+SOLIDUS_HIGH = (2075.0, 38.18, -1.323)             # 2075 + 38.18 (P − 10) − 1.323 (P − 10)²,  P > 10
+SOLIDUS_SEAM_GPA = 10.0
+LIQUIDUS = (2160.6, 64.7109, -3.97463, 0.0957894)  # 2160.6 + 64.7109 P − 3.97463 P² + 0.0957894 P³
 
 # ── Auxiliary reference — 2023 Extended Data Table 1, BML (main set), 2023 PDF p10 ─────────────
 # (value, 1σ) over the best 1 000 models. Transcription blob 60e348cd. For reporting a distance only.

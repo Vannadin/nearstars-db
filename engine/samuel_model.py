@@ -22,12 +22,10 @@ decision (pre-registration v2-3), with a quasi-steady comparison beside it.
 
 ⚠ **Not built here, and refused by name when asked** (none of them gets a stand-in value):
 
-* uranium's part of the primitive-mantle heat production `H_pm(t)` — it needs the ²³⁵U/²³⁸U split, which
-  the pre-registration does not carry; the Th and K part is built (Ruedas 2017, v2-5), and so is the split
-  of a given `H_pm` between crust and mantle (2019 SI eq. (22), v2-4);
-* the melt fraction, the undepleted solidus and liquidus, and the Stefan number — 2023 SI eq. (9) is the
-  chosen source (v2-4 ④) and its coefficients are not yet read off a render; the depletion shift
-  (2019 SI eq. (15), `ΔT_sol` from Morschhauser+ 2011) is built.
+* the volume-averaged melt fraction and the Stefan number — they need the mantle's pressure profile, and
+  `g` and `P_m` are not decided. Built beside them: `H_pm(t)` (Ruedas 2017, v2-5/v2-6) and its crust–mantle
+  split (2019 SI eq. (22), v2-4); the solidus and liquidus (2023 SI eq. (9), v2-6), the local melt fraction
+  (2021 eq. (9)) and the depletion shift (2019 SI eq. (15), `ΔT_sol` from Morschhauser+ 2011).
 
 Gravity and pressure are arguments with no default: neither the fixed set nor the pre-registration names
 a value, and the bottom heat flow must print which gravity it used (acceptance G).
@@ -177,12 +175,13 @@ def depleted_solidus(t_sol_primitive: float, d_cr: float, d_ref: float, delta_t_
 # ── Refused slots ──────────────────────────────────────────────────────────────────────────────
 def primitive_heat(t_before_present_my: float, rho_m: float) -> float:
     """H_pm, W/m³, at a time before present: ρ_m Σ c_i H_i exp(λ_i t) with the v2 §3 concentrations and
-    Ruedas 2017's rates (v2-5 ①). Th and K each decay as one isotope (only ⁴⁰K of K decays).
-
-    ⚠ **U refuses by name.** U is two isotopes with different half-lives, and the element rate alone cannot
-    be run backward; the isotope rows of the same table are not in the pre-registration yet."""
-    raise Refused("H_pm(t) needs U's isotope split (²³⁵U, ²³⁸U rows of Ruedas 2017 Table 2), which the "
-                  "pre-registration does not carry yet")
+    Ruedas 2017's rates (v2-5 ①, v2-6 ①). Th and K each decay as one nuclide (only ⁴⁰K of K decays);
+    U is split into ²³⁵U and ²³⁸U, each weighted by X_iso · u_iso/u_U."""
+    u = 0.0
+    for nuc in (st.U235, st.U238):
+        share = nuc["x_iso"] * nuc["u"] / st.U_ATOMIC_MASS * nuc["h_w_per_kg"]
+        u += _decay_up(share, nuc["half_life_my"], t_before_present_my)
+    return rho_m * st.U_PPB * 1e-9 * u + primitive_heat_th_k(t_before_present_my, rho_m)
 
 
 def _decay_up(h_now: float, half_life_my: float, t_before_present_my: float) -> float:
@@ -197,6 +196,27 @@ def primitive_heat_th_k(t_before_present_my: float, rho_m: float) -> float:
     return rho_m * (th + k)
 
 
+# ── Melting curves — 2023 SI eq. (9), PDF p16 (v2-6 ②); the melt fraction in 2021 eq. (9)'s clamped form ─
+def solidus(p_gpa: float) -> float:
+    """Undepleted solidus, K. P = 10 GPa takes the first line (v2-5 ②)."""
+    if p_gpa <= st.SOLIDUS_SEAM_GPA:
+        a, b, c = st.SOLIDUS_LOW
+        return a + b * p_gpa + c * p_gpa ** 2
+    a, b, c = st.SOLIDUS_HIGH
+    x = p_gpa - st.SOLIDUS_SEAM_GPA
+    return a + b * x + c * x ** 2
+
+
+def liquidus(p_gpa: float) -> float:
+    a, b, c, d = st.LIQUIDUS
+    return a + b * p_gpa + c * p_gpa ** 2 + d * p_gpa ** 3
+
+
+def melt_fraction(t_k: float, t_sol: float, t_liq: float) -> float:
+    """φ = min(max(0, (T − T_sol)/(T_liq − T_sol)), 1) — 2021 eq. (9) (2019 SI writes it without the clamp)."""
+    return min(max(0.0, (t_k - t_sol) / (t_liq - t_sol)), 1.0)
+
+
 def melt_state(*_args, **_kwargs) -> dict:
-    raise Refused("melt fraction, solidus and Stefan number are not built: the solidus and liquidus are "
-                  "2023 SI eq. (9) (v2-4 ④), whose coefficients are not yet read off a render")
+    raise Refused("the volume-averaged melt fraction and the Stefan number are not built: they need the "
+                  "mantle's pressure profile, and g and P_m are not decided")
