@@ -588,7 +588,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
               serpentinisation: float = 0.0, differentiation_front: float = 1.0,
               crust_rock_fraction: float = 0.0, crust_porosity: bool = False,
               envelope_z_profile: tuple | None = None,
-              ammonia_mass_fraction: float = 0.0) -> Structure:
+              ammonia_mass_fraction: float = 0.0,
+              record: list | None = None) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -597,7 +598,11 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
 
     `phi0` 가 0 보다 크면 각 자리의 고체 밀도에 (1 − φ(P)) 를 곱한다. φ 는 **국소
     압력의 함수** 이므로 자유 매개변수가 아니다 — porosity.py 를 보라. φ₀ 자체는
-    강착과 가열이 정하고 이 레시피에 그 둘이 없어서 선언으로 들어온다."""
+    강착과 가열이 정하고 이 레시피에 그 둘이 없어서 선언으로 들어온다.
+
+    `record` 에 리스트를 주면 걸음마다 그 걸음 **시작** 상태 `(r, P, m, T, 재료 이름)` 을, 고리가
+    끝난 뒤 마지막 상태를 한 번 더 덧붙인다 (열진화 v2-7 — 맨틀의 P(r)·g(r)). **기록만 한다** —
+    계산 경로와 돌려주는 구조는 켰을 때와 껐을 때 같다. 기본은 None(끔)."""
     stack = _stack(cmf, imf, core_material, gmf, envelope_z, envelope_z_rock_fraction, differentiated, serpentinisation,
                    differentiation_front, crust_rock_fraction, crust_porosity, envelope_z_profile)
     mat = stack[0][1]
@@ -810,6 +815,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
         steps += 1
         prev_layer = layer
         mat = material_for(m)
+        if record is not None:
+            record.append((r, p, m, t, mat.name))
         if layer != prev_layer:
             note_switch(prev_layer)
             apply_jump(prev_layer)
@@ -1165,6 +1172,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             note_switch(layer - 1)
             apply_jump(layer - 1)
 
+    if record is not None:
+        record.append((r, p, m, t, mat.name))
     if not (steps >= MAX_STEPS and p > p_stop):
         convergence.note("interior.integrate_max_steps", True)
     if steps >= MAX_STEPS and p > p_stop:
