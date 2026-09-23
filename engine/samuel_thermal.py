@@ -101,6 +101,7 @@ A_RH = 2.54                                 # T_l = T_m − a_rh R T_m²/E*   (a
 BETA_U = 0.335                              # δ_u = (…)(Ra_c/Ra)^β_u        (also 2021 PDF p12)
 RA_CRITICAL = 450.0                         # Choblet & Sotin 2000          (also 2021 PDF p12)
 R_GAS_J_PER_MOL_K = 8.31                    # SI Table 2, PDF p44 — as printed, not CODATA
+U0_M_PER_S = 2.0e-12                        # mantle convective velocity scale, 2019 SI eq. (18); Table 1 p43
 # ⚠ The 2021 equations also need these. In Drilleau's framework density, thermal expansion and
 #   specific heat are **not fixed** — "bulk mantle properties (density, thermal expansion, specific
 #   heat) are deduced" from the composition with Perple_X (§4.1.2, PDF p9). The 2019 constants stand
