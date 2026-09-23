@@ -142,7 +142,11 @@ v_m = 4 / 3 * math.pi * (r_top ** 3 - r_bot ** 3)
 stk = dict(v_m=v_m, l_m=st.L_MANTLE_J_PER_KG, c_m=st.CP_MANTLE_J_PER_KG_K, dt_k=1.0, **kw)
 s_cold = sm.stefan_number(1300, 1400, r_top, r_bot, hydro, **stk)
 s_hot = sm.stefan_number(1900, 2000, r_top, r_bot, hydro, **stk)
-check("2019 SI eq. (13) — St = 0 without melt, > 0 with it", s_cold == 0.0 and s_hot > 0, f"St {s_hot:.4g}")
+s_tot = sm.stefan_number_total(1900, 2000, r_top, r_bot, hydro, **stk)
+check("2019 SI PDF p6 printed St — 0 without melt; at T_m 1900 (hydrostatic) 0.09369 (v2-8)",
+      s_cold == 0.0 and abs(s_hot - 0.09369) < 5e-6, f"St {s_hot:.5f}")
+check("comparison St, total derivative — 0.2004 at the same input (v2-8)", abs(s_tot - 0.2004) < 5e-5,
+      f"St {s_tot:.5f}")
 kw_dep = dict(kw, d_cr=kw["d_ref"])
 dep = sm.melt_integrals(1900, 2000, r_top, r_bot, hydro, **kw_dep)
 check("2019 SI eq. (15) — a depleted solidus melts less in the shallow zone, deep unchanged",

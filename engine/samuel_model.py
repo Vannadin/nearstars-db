@@ -241,7 +241,8 @@ def melt_integrals(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_
     `pressure_pa(r)` is the profile the caller chose (v2-7 ③④, or the hydrostatic path). The shallow part
     (P < extraction) is 2019 SI eq. (14)'s melt zone: its solidus carries the depletion shift of eq. (15),
     as eq. (14) prints. The deep part uses the undepleted solidus — **our reading** of 2019 SI PDF p6,
-    which shifts the solidus only "in Eq. (14)". Midpoint rule on `shells` equal radial shells."""
+    which shifts the solidus only "in Eq. (14)". ⚠ PDF p6 prints the deep melt fraction as
+    (T_sol − T)/(T_liq − T_sol); **v2-8 interpretation: a sign typo**, and both parts use (T − T_sol). Midpoint rule on `shells` equal radial shells."""
     dr = (r_top - r_bot) / shells
     out = {"shallow_phi_v": 0.0, "shallow_v": 0.0, "deep_phi_v": 0.0, "deep_v": 0.0}
     for k in range(shells):
@@ -263,9 +264,24 @@ def melt_integrals(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_
 
 def stefan_number(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_pa, *, v_m: float,
                   l_m: float, c_m: float, dt_k: float, **melt_kw) -> float:
-    """St = (L_m / (C_m V_m)) d(∫ φ dV)/dT_m — 2019 SI eq. (13) with V_a m_a = ∫_{V_a} φ dV, over all
-    melting, shallow and deep (2019 SI PDF p6: deep melting enters St through V_melt, m_melt). The
-    derivative is central, moving the whole adiabat with T_m (T_b ∝ T_m in 2021 eq. (14))."""
+    """St = (L_m V_melt / (C_m V_m)) dm_melt/dT_m — the form 2019 SI PDF p6 prints for deep melting, used
+    for all melting (pre-registration v2-8): V_melt is the melting volume at T_m, and m_melt its mean φ,
+    differentiated centrally while the whole adiabat moves with T_m (T_b ∝ T_m in 2021 eq. (14))."""
+    def mean_phi(tm):
+        mi = melt_integrals(tm, t_b * tm / t_m, r_top, r_bot, pressure_pa, **melt_kw)
+        v = mi["shallow_v"] + mi["deep_v"]
+        return (mi["shallow_phi_v"] + mi["deep_phi_v"]) / v if v > 0 else 0.0
+    here = melt_integrals(t_m, t_b, r_top, r_bot, pressure_pa, **melt_kw)
+    v_melt = here["shallow_v"] + here["deep_v"]
+    if v_melt == 0.0:
+        return 0.0
+    return l_m * v_melt / (c_m * v_m) * (mean_phi(t_m + dt_k) - mean_phi(t_m - dt_k)) / (2.0 * dt_k)
+
+
+def stefan_number_total(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_pa, *, v_m: float,
+                        l_m: float, c_m: float, dt_k: float, **melt_kw) -> float:
+    """Comparison path, reported beside the main one (v2-8): (L_m / (C_m V_m)) d(∫ φ dV)/dT_m, the total
+    derivative — it also counts the melting volume's own growth, which the printed form holds fixed."""
     def total(tm):
         mi = melt_integrals(tm, t_b * tm / t_m, r_top, r_bot, pressure_pa, **melt_kw)
         return mi["shallow_phi_v"] + mi["deep_phi_v"]
