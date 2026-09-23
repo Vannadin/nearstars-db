@@ -37,13 +37,16 @@ class Setup:
 
     def __init__(self, *, lam: float, profile, g: float, g_c: float, eps_mode: str = "derived",
                  p_m_mode: str = "mid", melt_pressure: str = "engine", stefan_mode: str = "printed",
-                 lid_mode: str = "grid", lid_nodes: int = 41, melt_shells: int = 120):
+                 lid_mode: str = "grid", lid_nodes: int = 41, melt_shells: int = 120,
+                 fixed_lid_m: float | None = None):
         self.lam, self.profile, self.g, self.g_c = lam, profile, g, g_c
         self.eps_mode, self.p_m_mode = eps_mode, p_m_mode
         self.melt_pressure, self.stefan_mode, self.lid_mode = melt_pressure, stefan_mode, lid_mode
         self.lid_nodes, self.melt_shells = lid_nodes, melt_shells
         self.r_p, self.r_c = st.R_PLANET_M, st.R_CORE_NO_BML_M
         self.eps_frozen = None
+        # L1 comparison plate (v2 §2 plate 2′): the lid does not grow; its thickness is declared.
+        self.fixed_lid_m = fixed_lid_m
 
     def pressure(self, r: float) -> float:
         return self.profile.pressure(r)
@@ -128,6 +131,8 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
     ddl = sm.lid_rate(q_m=up["q_m"], d_cr_rate=d_cr_rate, lid_base_gradient=lid_gradient, t_m=t_m, t_l=t_l,
                       t_s=st.T_SURFACE_K, rho_m=st.RHO_MANTLE_KG_M3, c_m=st.CP_MANTLE_J_PER_KG_K,
                       rho_cr=st.RHO_CRUST_KG_M3, l_m=st.L_MANTLE_J_PER_KG, k_m=st.K_MANTLE_W_PER_M_K)
+    if s.fixed_lid_m is not None:
+        ddl = 0.0
     return {"dtc": dtc, "dtm": dtm, "ddl": ddl, "ddcr": d_cr_rate, "t_l": t_l, "t_b": t_b, "delta_u": d_u,
             "delta_b": d_b, "q_m": up["q_m"], "q_c": lo["q_c"], "ra": up["ra"], "subcritical": up["subcritical"],
             "eps_m": eps, "stefan": stefan, "h_m": h_m, "h_cr": h_cr, "p_m": p_m,
@@ -154,7 +159,8 @@ def run(s: Setup, cap_myr: float) -> dict:
     exactly on the end. A refusal (Λ above its ceiling) stops the run and is returned with its time."""
     t0 = st.T_INITIAL_ROW_GYR
     cap = cap_myr * 1e-3 * GYR_S
-    y = [st.T_CORE_0_NO_BML_K, st.T_MANTLE_0_NO_BML_K, D_L_0_M, D_CR_0_M]
+    y = [st.T_CORE_0_NO_BML_K, st.T_MANTLE_0_NO_BML_K,
+         D_L_0_M if s.fixed_lid_m is None else s.fixed_lid_m, D_CR_0_M]
     lid = sl.LidGrid(s.lid_nodes, r_p=s.r_p, t_s=st.T_SURFACE_K, rho_m=st.RHO_MANTLE_KG_M3,
                      c_m=st.CP_MANTLE_J_PER_KG_K, k_m=st.K_MANTLE_W_PER_M_K, rho_cr=st.RHO_CRUST_KG_M3,
                      c_cr=st.CP_CRUST_J_PER_KG_K, k_cr=st.K_CRUST_W_PER_M_K)
@@ -171,7 +177,11 @@ def run(s: Setup, cap_myr: float) -> dict:
             f1 = state_terms(s, *y, t, grad)
         except sm.Refused as e:
             return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
-        rows.append({"t": t, "t_c": y[0], "t_m": y[1], "d_l": y[2], "d_cr": y[3], "delta_u": f1["delta_u"],
+        # v2-9 ③ diagnosis: conduction out of the lid base minus the heat the mantle brings, beside dD_l/dt
+        rows.append({"ddl": f1["ddl"], "lid_net": -st.K_MANTLE_W_PER_M_K * f1["lid_gradient"] - f1["q_m"],
+                     "crust_term": st.RHO_CRUST_KG_M3 * (st.L_MANTLE_J_PER_KG + st.CP_MANTLE_J_PER_KG_K
+                                                         * (y[1] - st.T_SURFACE_K)) * f1["ddcr"],
+                     "t": t, "t_c": y[0], "t_m": y[1], "d_l": y[2], "d_cr": y[3], "delta_u": f1["delta_u"],
                      "q_m": f1["q_m"], "q_c": f1["q_c"], "eps_m": f1["eps_m"], "stefan": f1["stefan"],
                      "subcritical": f1["subcritical"], "p_m": f1["p_m"], "ceiling": f1["ceiling"]})
         if s.lam / f1["ceiling"] > worst[0]:
@@ -223,6 +233,15 @@ def at(rows: list, key: str, t_gyr: float) -> float:
             w = (t_gyr - a["t"]) / (b["t"] - a["t"])
             return a[key] + w * (b[key] - a[key])
     return rows[-1][key] if t_gyr >= rows[-1]["t"] else rows[0][key]
+
+
+def curve_values(rows: list) -> dict:
+    """The A0 values that need no source data: today's T_c and T_m, the 1 Gyr changes, the T_m peak."""
+    peak = max(rows, key=lambda r: r["t_m"])
+    return {"T_c today": rows[-1]["t_c"], "T_m today": rows[-1]["t_m"],
+            "T_c(1) − T_c0": at(rows, "t_c", 1.0) - rows[0]["t_c"],
+            "T_m(1) − T_m0": at(rows, "t_m", 1.0) - rows[0]["t_m"],
+            "T_m peak": peak["t_m"], "T_m peak time": peak["t"]}
 
 
 def a0(rows: list, tc_data: list, tm_data: list) -> dict:

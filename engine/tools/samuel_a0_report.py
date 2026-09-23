@@ -106,6 +106,61 @@ def main() -> int:
                     ("Stefan 전미분", {"stefan_mode": "total"})):
         print(line(tag, one(ref, **kw)))
     print("  ⚠ g_c 3.1 은 식에 안 들어간다 — 2021 (14)–(17) 이 g 하나를 인쇄한다. 인쇄만 한다.")
+    print("\n── 판 2′ — L1 비교 판 (v2 §2, v2-2 ①), 기준 Λ ──")
+    l1 = {}
+    for d in (260.0, 330.0):
+        l1[d] = one(ref, fixed_lid_m=d * 1e3)
+        print(line(f"L1({d:g})", l1[d]))
+        if "refused" not in l1[d]:
+            du = [r["delta_u"] / 1e3 for r in l1[d]["rows"]]
+            print(f"      「D_lu {d:g} 을 D_l 자리에 넣었다 — 이 판의 껍질은 {d:g} + δ_u 로 Samuel 보다 δ_u 만큼 두껍다」"
+                  f" δ_u {min(du):.1f}–{max(du):.1f} km (오늘 {du[-1]:.1f})")
+    if all("refused" not in o for o in l1.values()):
+        def end(o, k):
+            return o["rows"][-1][k]
+        for k, name in (("t_m", "T_m"), ("t_c", "T_c")):
+            a, b, c = end(l1[330.0], k), end(l1[260.0], k), end(base, k)
+            print(f"  A-방향 {name}: L1(330) {a:.1f} > L1(260) {b:.1f} > L2 {c:.1f} — {'✓' if a > b > c else '✗'}")
+    else:
+        print(f"  L1 이 Λ {ref:g} 에서 천장에 걸렸다 — 방향 비교를 거절 없는 Λ 10 에서 한 번 더 (보고)")
+        l1b = {d: one(10.0, fixed_lid_m=d * 1e3) for d in (260.0, 330.0)}
+        l2b = scan[10.0]
+        for d, o in l1b.items():
+            print(line(f"L1({d:g}), Λ 10", o))
+            if "refused" not in o:
+                du = [r["delta_u"] / 1e3 for r in o["rows"]]
+                print(f"      「D_lu {d:g} 을 D_l 자리에 넣었다 — 이 판의 껍질은 {d:g} + δ_u 로 Samuel 보다 δ_u 만큼 두껍다」"
+                      f" δ_u {min(du):.1f}–{max(du):.1f} km (오늘 {du[-1]:.1f})")
+        if all("refused" not in o for o in l1b.values()):
+            for k, name in (("t_m", "T_m"), ("t_c", "T_c")):
+                a, b, c = (l1b[330.0]["rows"][-1][k], l1b[260.0]["rows"][-1][k], l2b["rows"][-1][k])
+                print(f"  A-방향 {name} (Λ 10): L1(330) {a:.1f} > L1(260) {b:.1f} > L2 {c:.1f} — {'✓' if a > b > c else '✗'}")
+
+    print("\n── 진단 ② — 뚜껑 두께, PANEL_A/Dlu.dat 의 모든 시각 (km) ──")
+    print("   t Gyr    D_l    δ_u  D_l+δ_u  논문 Dlu   차")
+    first = None
+    for tt, v in dlu:
+        if tt < base["rows"][0]["t"]:
+            continue
+        dl = sr.at(base["rows"], "d_l", tt) / 1e3
+        du = sr.at(base["rows"], "delta_u", tt) / 1e3
+        if first is None and abs(dl + du - v) > 20:
+            first = tt
+        if abs(round(tt * 20) - tt * 20) < 1e-9:          # print every 0.05 Gyr, compare at every row
+            print(f"  {tt:6.3f} {dl:7.1f} {du:6.1f} {dl + du:8.1f} {v:9.1f} {dl + du - v:+6.1f}")
+    print(f"  |차| > 20 km 가 처음 되는 시각: {first}")
+
+    print("\n── 진단 ③ — 식 20 부호: dD_l/dt 대 (뚜껑 바닥 전도 유출 − q_m) ──")
+    rows_ = [r for r in base["rows"] if r["ddl"] != 0.0 and r["lid_net"] != 0.0]
+    bad = [r for r in rows_ if (r["ddl"] > 0) != (r["lid_net"] > 0)]
+    print(f"  부호가 다른 걸음 {len(bad)} / {len(rows_)}"
+          + (f" — 첫 {bad[0]['t']:.4f} Gyr, 마지막 {bad[-1]['t']:.4f} Gyr" if bad else ""))
+    print("  (지각 항 ρ_cr[L_m + C_m(T_m − T_s)]Ḋ_cr 이 있으므로 두 부호가 갈릴 수 있다 — 갈린 걸음은 그 항의 몫인지도 본다)")
+    explained = [r for r in bad if (r["ddl"] > 0) == (r["lid_net"] + r["crust_term"] > 0)]
+    print(f"  그중 지각 항을 더하면 부호가 맞는 걸음 {len(explained)} / {len(bad)}")
+    full = [r for r in rows_ if (r["ddl"] > 0) != (r["lid_net"] + r["crust_term"] > 0)]
+    print(f"  (유출 − q_m + 지각 항) 과 dD_l/dt 의 부호가 다른 걸음 {len(full)} — 0 이면 배선이 식 20(`−` 해석) 그대로")
+
     st_min = min(r["stefan"] for r in base["rows"])
     print(f"\n  본판 Stefan 최소 {st_min:.4f} (인쇄 꼴은 음수가 될 수 있다 — V_melt 고정, 평균 φ 가 줄면 음)")
     return 0
