@@ -22,10 +22,12 @@ decision (pre-registration v2-3), with a quasi-steady comparison beside it.
 
 ⚠ **Not built here, and refused by name when asked** (none of them gets a stand-in value):
 
-* the heat production `H_m`, `H_cr` — the crustal-enrichment definition and the decay data are being
-  sourced (2019 SI eqs (22)–(23) use a different `Λ` from the pre-registration's);
-* the melt fraction, the solidus and the Stefan number — two printed parameterizations disagree
-  (2019 SI eqs (14)–(15), (19) against 2021 eqs (8)–(9)), and `ΔT_sol` is not printed.
+* uranium's part of the primitive-mantle heat production `H_pm(t)` — it needs the ²³⁵U/²³⁸U split, which
+  the pre-registration does not carry; the Th and K part is built (Ruedas 2017, v2-5), and so is the split
+  of a given `H_pm` between crust and mantle (2019 SI eq. (22), v2-4);
+* the melt fraction, the undepleted solidus and liquidus, and the Stefan number — 2023 SI eq. (9) is the
+  chosen source (v2-4 ④) and its coefficients are not yet read off a render; the depletion shift
+  (2019 SI eq. (15), `ΔT_sol` from Morschhauser+ 2011) is built.
 
 Gravity and pressure are arguments with no default: neither the fixed set nor the pre-registration names
 a value, and the bottom heat flow must print which gravity it used (acceptance G).
@@ -145,12 +147,56 @@ def lid_rate(*, q_m: float, d_cr_rate: float, lid_base_gradient: float, t_m: flo
     return rhs / (rho_m * c_m * (t_m - t_l))
 
 
+# ── Heat production split — 2019 SI eq. (22), PDF p7; pre-registration v2-4 ①–③ ────────────────
+def crust_enrichment_ceiling(v_cr: float, v_m: float) -> float:
+    """Λ ≤ V_sil / V_cr = 1 + V_m / V_cr — the largest Λ that keeps H_m ≥ 0 (v2-4 ③). It falls as the crust
+    grows, so a run judges it where its crust is thickest and records that time."""
+    return 1.0 + v_m / v_cr
+
+
+def heat_split(h_pm: float, v_cr: float, v_m: float, lam: float) -> tuple[float, float]:
+    """(H_m, H_cr) from the primitive-mantle rate H_pm.
+
+    H_m = H_pm (1 + (V_cr/V_m)(1 − Λ)) is 2019 SI eq. (22). ⚠ **Λ is read as the volumetric ratio
+    H_cr/H_pm — the v2-4 ② interpretation**, so H_cr = Λ H_pm; eq. (23) as printed is not transcribed
+    (v2-4 ①). Above the ceiling this refuses by name and does not clip (v2-4 ③)."""
+    ceiling = crust_enrichment_ceiling(v_cr, v_m)
+    if lam > ceiling:
+        raise Refused(f"crustal enrichment Λ = {lam:g} is above its ceiling V_sil/V_cr = {ceiling:.4g} "
+                      "(H_m would be negative) — refused, not clipped")
+    return h_pm * (1.0 + v_cr / v_m * (1.0 - lam)), lam * h_pm
+
+
+# ── Solidus shift by melt extraction — 2019 SI eq. (15), PDF p5 ─────────────────────────────────
+def depleted_solidus(t_sol_primitive: float, d_cr: float, d_ref: float, delta_t_sol: float) -> float:
+    """T_sol = T_sol,0 + ΔT_sol D_cr / D_ref. ΔT_sol is Morschhauser+ 2011 eq. (18)'s (v2-4 ④); the
+    undepleted solidus itself is refused below."""
+    return t_sol_primitive + delta_t_sol * d_cr / d_ref
+
+
 # ── Refused slots ──────────────────────────────────────────────────────────────────────────────
-def heat_production(*_args, **_kwargs) -> float:
-    raise Refused("H_m and H_cr are not built: the crustal-enrichment definition (v2 §3, Drilleau's) has "
-                  "no printed split, and the decay data have no chosen source")
+def primitive_heat(t_before_present_my: float, rho_m: float) -> float:
+    """H_pm, W/m³, at a time before present: ρ_m Σ c_i H_i exp(λ_i t) with the v2 §3 concentrations and
+    Ruedas 2017's rates (v2-5 ①). Th and K each decay as one isotope (only ⁴⁰K of K decays).
+
+    ⚠ **U refuses by name.** U is two isotopes with different half-lives, and the element rate alone cannot
+    be run backward; the isotope rows of the same table are not in the pre-registration yet."""
+    raise Refused("H_pm(t) needs U's isotope split (²³⁵U, ²³⁸U rows of Ruedas 2017 Table 2), which the "
+                  "pre-registration does not carry yet")
+
+
+def _decay_up(h_now: float, half_life_my: float, t_before_present_my: float) -> float:
+    """A present-day rate taken back in time: h exp(ln 2 · t / T½)."""
+    return h_now * math.exp(math.log(2.0) * t_before_present_my / half_life_my)
+
+
+def primitive_heat_th_k(t_before_present_my: float, rho_m: float) -> float:
+    """The Th and K part of H_pm, W/m³ — the part that needs no isotope split."""
+    th = st.TH_PPB * 1e-9 * _decay_up(st.H_TH_W_PER_KG, st.HALF_LIFE_TH232_MY, t_before_present_my)
+    k = st.K_PPM * 1e-6 * _decay_up(st.H_K_W_PER_KG, st.HALF_LIFE_K40_MY, t_before_present_my)
+    return rho_m * (th + k)
 
 
 def melt_state(*_args, **_kwargs) -> dict:
-    raise Refused("melt fraction, solidus and Stefan number are not built: 2019 SI eqs (14)–(15), (19) "
-                  "and 2021 eqs (8)–(9) disagree, and ΔT_sol is not printed")
+    raise Refused("melt fraction, solidus and Stefan number are not built: the solidus and liquidus are "
+                  "2023 SI eq. (9) (v2-4 ④), whose coefficients are not yet read off a render")

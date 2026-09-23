@@ -63,10 +63,39 @@ mant = sm.mantle_rate(q_m=0.0, q_c=0.01, h_m=0.0, d_cr_rate=0.0, t_m=t_m0, t_l=t
                       rho_cr=st.RHO_CRUST_KG_M3, l_m=st.L_MANTLE_J_PER_KG, c_pcr=st.CP_CRUST_J_PER_KG_K)
 check("2021 eqs (10)–(11) — q_c > 0 cools the core and warms the mantle", core < 0 < mant)
 
+# 2019 SI eq. (22) with Λ as H_cr/H_pm (v2-4): total heat is conserved, H_m hits 0 at the ceiling,
+# and a Λ above it refuses rather than clipping. The volumes are a 50 km crust on the a–f mantle.
+import math                            # noqa: E402
+v_sil = 4 / 3 * math.pi * (st.R_PLANET_M ** 3 - st.R_CORE_NO_BML_M ** 3)
+v_cr = 4 / 3 * math.pi * (st.R_PLANET_M ** 3 - (st.R_PLANET_M - 50e3) ** 3)
+v_m = v_sil - v_cr
+h_m, h_cr = sm.heat_split(1e-8, v_cr, v_m, 10.0)
+check("2019 SI eq. (22) — H_m V_m + H_cr V_cr = H_pm V_sil", abs((h_m * v_m + h_cr * v_cr) / (1e-8 * v_sil) - 1) < 1e-12,
+      f"H_m {h_m:.4g}, H_cr {h_cr:.4g} W/m³")
+ceil = sm.crust_enrichment_ceiling(v_cr, v_m)
+check("v2-4 ③ — the ceiling is V_sil/V_cr and H_m = 0 there",
+      abs(ceil - v_sil / v_cr) < 1e-9 * ceil and abs(sm.heat_split(1e-8, v_cr, v_m, ceil)[0]) < 1e-20,
+      f"ceiling {ceil:.2f} for a 50 km crust")
+try:
+    sm.heat_split(1e-8, v_cr, v_m, ceil * 1.01)
+    check("v2-4 ③ — above the ceiling refuses", False, "returned a value")
+except sm.Refused as e:
+    check("v2-4 ③ — above the ceiling refuses", "ceiling" in str(e), str(e)[:70])
+check("2019 SI eq. (15) — no crust, no shift; D_cr = D_ref shifts by ΔT_sol",
+      sm.depleted_solidus(1400.0, 0.0, 1e5, st.DELTA_T_SOL_K) == 1400.0
+      and sm.depleted_solidus(1400.0, 1e5, 1e5, st.DELTA_T_SOL_K) == 1550.0)
+
 # The two slots still unbuilt refuse by name, with no value.
-for fn, word in ((sm.heat_production, "H_m"), (sm.melt_state, "melt")):
+# Th and K back in time: at t = 0 the present rate; one half-life back, ⁴⁰K's part doubles.
+now = sm.primitive_heat_th_k(0.0, 1.0)
+hand = 54e-9 * 2.6368e-5 + 284e-6 * 3.4302e-9
+check("Ruedas 2017 — Th + K today by hand", abs(now / hand - 1) < 1e-12, f"{now:.5g} W/kg")
+back = sm.primitive_heat_th_k(1248.0, 1.0)
+hand_back = 54e-9 * 2.6368e-5 * 2 ** (1248 / 14000) + 284e-6 * 3.4302e-9 * 2
+check("Ruedas 2017 — one ⁴⁰K half-life back", abs(back / hand_back - 1) < 1e-12)
+for fn, word in ((sm.primitive_heat, "U"), (sm.melt_state, "melt")):
     try:
-        fn()
+        fn(0.0, 3500.0) if fn is sm.primitive_heat else fn()
         check(f"refusal — {fn.__name__}", False, "returned a value")
     except sm.Refused as e:
         check(f"refusal — {fn.__name__}", word in str(e), str(e)[:70])

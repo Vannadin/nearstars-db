@@ -83,11 +83,11 @@ TH_PPB = 54.0
 K_PPM = 284.0
 
 # ── Scanned, not fixed — the example model's values are not published ─────────────────────────
-# Crustal enrichment factor, Drilleau's definition (§4.1.2): "the ratio of heat production in the
-# crust to the total heat production in the bulk silicate envelope crust plus mantle" —
-# crust ÷ (crust + mantle). Range: Drilleau Table 2, PDF p10 ("5–20", Gaussian).
-# ⚠ With the crust in the denominator the factor has a ceiling, Λ ≤ 1 / (crust mass fraction). A run
-#   that crosses it must refuse by name, not clip (preregistration amendment 27).
+# Crustal enrichment factor. Range: Drilleau Table 2, PDF p10 ("5–20", Gaussian). ⚠ Pre-registration
+# v2-4 supersedes amendment 27's reading: Drilleau's "crust to the bulk silicate envelope" is a ratio of
+# concentrations, the same Λ as 2019 SI's "relative to the primitive mantle", and it is used in 2019 SI
+# eq. (22)'s form, the volumetric ratio H_cr/H_pm (our interpretation). Its ceiling is Λ ≤ V_sil/V_cr;
+# a run that crosses it refuses by name, not clips (`samuel_model.heat_split`).
 CRUST_ENRICHMENT_SCAN = (5.0, 20.0)
 # Basal-layer conductivity: 2023 SI §3, PDF p11 — "sampled between 4 and 16 W m⁻¹ K⁻¹", and its
 # posterior "was similar to the regular mantle value that we fixed to 4".
@@ -117,6 +117,24 @@ ALPHA_SILICATE_PER_K = 2.0e-5
 RA_DELTA_B_COEFF = 0.28                     # Ra_δb = 0.28 Ra_i^0.21 (Deschamps & Sotin 2000), 2021 PDF p12
 RA_DELTA_B_EXP = 0.21
 DELTA_T_B_COEFF = 1.43                      # ΔT′_b = 1.43 R T_m²/E*, layered case only, 2021 PDF p13
+
+# ── Solidus depletion — Morschhauser, Grott & Breuer 2011, Icarus 212, 541 (`2011Icar..212..541M`) ──
+# 2019 SI eq. (15) uses ΔT_sol and prints no value; Morschhauser eq. (18), PDF p13: "A total maximum
+# solidus change of ∆Tsol = 150 K" (pre-registration v2-4 ④).
+DELTA_T_SOL_K = 150.0
+
+# ── Radiogenic heat — Ruedas 2017, G³ 18, 3530 (`2017GGG....18.3530R`), Table 2, PDF p6 (render) ──────
+# ⚠ Outside the chain: none of the six chain papers prints or cites a heat table, so this is a source we
+#   chose (pre-registration v2-5 ①) — the arXiv author's final manuscript, "final version, 6 September 2017".
+# Present-day specific heat production of the element in its natural isotopic mix, W/kg, and half-lives, My.
+H_U_W_PER_KG = 9.8314e-5
+H_TH_W_PER_KG = 2.6368e-5
+H_K_W_PER_KG = 3.4302e-9
+HALF_LIFE_K40_MY = 1248.0
+HALF_LIFE_TH232_MY = 14000.0
+HALF_LIFE_U235_MY = 704.0
+HALF_LIFE_U238_MY = 4468.0
+X_ISO_K40 = 1.1668e-4
 
 # ── Auxiliary reference — 2023 Extended Data Table 1, BML (main set), 2023 PDF p10 ─────────────
 # (value, 1σ) over the best 1 000 models. Transcription blob 60e348cd. For reporting a distance only.
