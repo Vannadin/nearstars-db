@@ -37,7 +37,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-TARGETS = [ROOT / "interior-core.md"]
+TARGETS = [ROOT / "interior-core.md", ROOT / "interior-core-closed.md"]   # 닫힌 절은 보관 파일로 옮겨졌다 (2026-09-23)
 
 BIBCODE = re.compile(r"`(\d{4}[A-Za-z&][^`\s]{6,})`")
 CITE = re.compile(
