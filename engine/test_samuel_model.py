@@ -1,11 +1,11 @@
-# Samuel 층 없는 모형 우변 조각의 시험 — 인쇄식 값 · Ra<Ra_c 분기 · 식 20 부호 · 거절 셋
-"""Checks for `samuel_model`, plate 2 first cut. No integration yet: the three refused slots stop it.
+# Samuel 층 없는 모형 우변 조각의 시험 — 인쇄식 값 · Ra<Ra_c 분기 · 식 20 부호 · 거절
+"""Checks for `samuel_model`, plate 2 first cut. No integration yet: the refused slots stop it.
 
     python3 engine/test_samuel_model.py
 
 Each check is a property a wrong wiring would break, not a stored number: the lid-base temperature against
 a hand evaluation of 2019 SI eq. (4), the `Ra < Ra_c` branch (v2-2 ②), the sign of the lid-base term in
-2019 SI eq. (20) (the v2 interpretation, `−`), the energy balance's signs, and the three named refusals.
+2019 SI eq. (20) (the v2 interpretation, `−`), the energy balance's signs, and the named refusals.
 """
 from __future__ import annotations
 
@@ -63,8 +63,8 @@ mant = sm.mantle_rate(q_m=0.0, q_c=0.01, h_m=0.0, d_cr_rate=0.0, t_m=t_m0, t_l=t
                       rho_cr=st.RHO_CRUST_KG_M3, l_m=st.L_MANTLE_J_PER_KG, c_pcr=st.CP_CRUST_J_PER_KG_K)
 check("2021 eqs (10)–(11) — q_c > 0 cools the core and warms the mantle", core < 0 < mant)
 
-# The three slots refuse by name, with no value.
-for fn, word in ((sm.lid_base_gradient, "lid"), (sm.heat_production, "H_m"), (sm.melt_state, "melt")):
+# The two slots still unbuilt refuse by name, with no value.
+for fn, word in ((sm.heat_production, "H_m"), (sm.melt_state, "melt")):
     try:
         fn()
         check(f"refusal — {fn.__name__}", False, "returned a value")

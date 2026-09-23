@@ -17,10 +17,11 @@ Where the two print the same relation differently, the 2021 form is used, becaus
 takes the energy balance from 2021: 2021 writes `ΔT = T_m − T_l + max(T_c − T_b, 0)` and
 `ΔT_i = T_m − T_s + max(T_c − T_b, 0)`, where 2019 SI eqs (9) and (12) have no `max`.
 
+The temperature gradient at the base of the lid (2019 SI eq. (21)) is `samuel_lid`'s — a grid, by owner
+decision (pre-registration v2-3), with a quasi-steady comparison beside it.
+
 ⚠ **Not built here, and refused by name when asked** (none of them gets a stand-in value):
 
-* the temperature gradient at the base of the lid, 2019 SI eq. (21) — a conduction solve inside the lid,
-  held for the owner's reading of decision `ed7750bb`;
 * the heat production `H_m`, `H_cr` — the crustal-enrichment definition and the decay data are being
   sourced (2019 SI eqs (22)–(23) use a different `Λ` from the pre-registration's);
 * the melt fraction, the solidus and the Stefan number — two printed parameterizations disagree
@@ -145,11 +146,6 @@ def lid_rate(*, q_m: float, d_cr_rate: float, lid_base_gradient: float, t_m: flo
 
 
 # ── Refused slots ──────────────────────────────────────────────────────────────────────────────
-def lid_base_gradient(*_args, **_kwargs) -> float:
-    raise Refused("∂T/∂r at the lid base (2019 SI eq. (21), a conduction solve inside the lid) is not "
-                  "built: whether a lid grid falls under owner decision ed7750bb is with the owner")
-
-
 def heat_production(*_args, **_kwargs) -> float:
     raise Refused("H_m and H_cr are not built: the crustal-enrichment definition (v2 §3, Drilleau's) has "
                   "no printed split, and the decay data have no chosen source")
