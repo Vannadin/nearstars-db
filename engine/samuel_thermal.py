@@ -8,17 +8,18 @@ What each block is, and where it comes from:
 
 * **Equations** — Samuel, Ballmer, Padovan, Tosi, Rivoldini & Plesa 2021, JGR Planets 126,
   e2020JE006613 (`2021JGRE..12606613S`), eqs (10)–(22).
-* **The reproduction target** — Samuel et al. 2023, Nature 622, 712 (`2023Natur.622..712S`),
-  Fig. 1 panels g–l: *"One model among the best 50"*, the **BML** (heterogeneous-mantle) case.
-  ⚠ Panels a–f are the model **without** a BML; in the source data both columns carry `Tc.dat` and
-  `Tm.dat` of the same name and the same size (23 903 B), and they run in opposite directions.
-  The target is `METADATA_BML/DATA_FIG1/PANEL_G`–`PANEL_L` inside `41586_2023_6601_MOESM3_ESM_rev.zip`.
+* **The reproduction targets** — Samuel et al. 2023, Nature 622, 712 (`2023Natur.622..712S`),
+  Fig. 1: *"One model among the best 50"*, twice. Panels g–l are the **BML** (heterogeneous-mantle)
+  case, plate 4's target; panels a–f are the model **without** a BML, plate 2's target.
+  ⚠ In the source data both columns carry `Tc.dat` and `Tm.dat` of the same name and the same size
+  (23 903 B), and they run in opposite directions. Both sit in `METADATA_BML/DATA_FIG1/` inside
+  `41586_2023_6601_MOESM3_ESM_rev.zip`: `PANEL_A`–`PANEL_F` and `PANEL_G`–`PANEL_L`.
 * **Fixed values** — 2023's SI §3 says the parameters it inverts for *"are those listed in Drilleau
   et al. [2022]"*; the values that are held fixed are in Drilleau et al. 2022, JGR Planets 127,
   e2021JE007067 (`2022JGRE..12707067D`), §4.1.2.
 * **Inherited by equation reference** — Drilleau §4.1.2 hands the equations to *"Samuel et al.
   (2019) and references therein"*; neither 2023 nor Drilleau prints these values. They are taken
-  from the 2019 SI Table 1 and **graded lower** than a printed value: no sentence says 2023 used
+  from the 2019 SI (Tables 1–2 and the body text) and **graded lower** than a printed value: no sentence says 2023 used
   them.
 * **Auxiliary reference** — 2023 Extended Data Table 1, BML (main set): the mean ± σ of the best
   1 000 models. Kept for reporting a distance only; a run on mean inputs has no duty to produce
@@ -51,6 +52,20 @@ T_MANTLE_0_K = 1815.5593199821958
 T_CORE_0_K = 2158.1024424461625
 T_INITIAL_ROW_GYR = 0.001
 
+# ── Reproduction target for plate 2 — 2023 Fig. 1 a–f, the model without a BML ─────────────────
+# Same caption (2023 PDF p2, 600 dpi render): "a–f, Without a BML (homogeneous mantle), with
+# η₀ = 6 × 10²¹ Pa s, E* = 300 kJ mol⁻¹, V* = 3.8 cm³ mol⁻¹."
+ETA0_NO_BML_PA_S = 6.0e21
+E_STAR_NO_BML_J_PER_MOL = 300.0e3
+V_STAR_NO_BML_M3_PER_MOL = 3.8e-6
+# `PANEL_D/rho_profile.dat`: rows 102–103 are the largest density step (Δρ 1 796.02) at
+# 1 834.637473 km — the core. The next step (rows 402–403, Δρ 389.85 at 3 317.74 km) is the crust;
+# there is no BML step.
+R_CORE_NO_BML_M = 1834.637473e3
+# `PANEL_B/Tm.dat` and `Tc.dat`, first row — t = 0.001 Gyr again, the same T_INITIAL_ROW_GYR.
+T_MANTLE_0_NO_BML_K = 1752.7913502870781
+T_CORE_0_NO_BML_K = 2191.8284607057844
+
 # ── Fixed — Drilleau et al. 2022 §4.1.2, PDF p9 ────────────────────────────────────────────────
 R_PLANET_M = 3389.5e3
 T_SURFACE_K = 220.0
@@ -78,13 +93,14 @@ CRUST_ENRICHMENT_SCAN = (5.0, 20.0)
 # posterior "was similar to the regular mantle value that we fixed to 4".
 K_D_SCAN_W_PER_M_K = (4.0, 16.0)
 
-# ── Inherited by equation reference — 2019 SI Table 1, PDF p43 ────────────────────────────────
+# ── Inherited by equation reference — 2019 SI, Table 1 (PDF p43) unless the line says otherwise ─
 # grade: inherited-by-equation-reference. Neither 2023 nor Drilleau prints these numbers.
 EPSILON_CORE = 1.05                         # mean core temperature ÷ temperature at the top of the core
+# a_rh and β_u are not rows of Table 1: both are printed in the SI body, PDF p3, under eq. (8).
 A_RH = 2.54                                 # T_l = T_m − a_rh R T_m²/E*   (also 2021 PDF p11)
 BETA_U = 0.335                              # δ_u = (…)(Ra_c/Ra)^β_u        (also 2021 PDF p12)
 RA_CRITICAL = 450.0                         # Choblet & Sotin 2000          (also 2021 PDF p12)
-R_GAS_J_PER_MOL_K = 8.31                    # as printed, not CODATA
+R_GAS_J_PER_MOL_K = 8.31                    # SI Table 2, PDF p44 — as printed, not CODATA
 # ⚠ The 2021 equations also need these. In Drilleau's framework density, thermal expansion and
 #   specific heat are **not fixed** — "bulk mantle properties (density, thermal expansion, specific
 #   heat) are deduced" from the composition with Perple_X (§4.1.2, PDF p9). The 2019 constants stand
