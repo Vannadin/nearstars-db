@@ -76,14 +76,13 @@ def main() -> int:
                 + f" · 누르기 전 δ_b/껍질 최대 {raw['delta_b_raw_over_shell']:.4f} @ {raw['t']:.4f} Gyr")
 
     def limit_line(out):
-        """v2-15: evaluations where the δ_u/δ_b fixed point hit its 60-iteration limit, unconverged."""
-        hits = out["fixed_point_limit_hits"]
-        if not hits:
-            return "고정점 한도(60 회) 도달 0"
-        wu = max(hits, key=lambda h: h[1])
-        wb = max(hits, key=lambda h: h[2])
-        return (f"고정점 한도(60 회) 도달 {len(hits)} 평가 ({hits[0][0]:.4f}–{hits[-1][0]:.4f} Gyr) · 마지막 두 반복 차 — "
-                f"|Δδ_u| 최대 {wu[1] / 1e3:.3g} km @ {wu[0]:.4f} Gyr · |Δδ_b| 최대 {wb[2] / 1e3:.3g} km @ {wb[0]:.4f} Gyr")
+        """v2-17: the bracket solve of δ_u/δ_b — failures, evaluations with several inner roots, root jumps."""
+        jumps = out.get("root_jumps", [])
+        s_ = (f"괄호 풀이 — 실패 {len(out['fixed_point_limit_hits'])} · 근 여럿 평가 {out.get('multi_root_evals', 0)}"
+              f" · 뜀 {len(jumps)}")
+        for j in jumps:
+            s_ += f" [{j[0]:.4f} Gyr δ_b {j[1] / 1e3:.1f}→{j[2] / 1e3:.1f} km, T_c−T_b {j[3]:+.3f} K]"
+        return s_
 
     def line(tag, out):
         if "refused" in out:
@@ -153,7 +152,10 @@ def main() -> int:
                     ("(13)(14) 정수압 3500·3.7", {"melt_pressure": "hydrostatic"}),
                     ("Stefan 전미분", {"stefan_mode": "total"}),
                     ("δ_b 가드 ¼ 껍질", {"delta_b_cap_fraction": 0.25}),
-                    ("δ_b 가드 1 껍질", {"delta_b_cap_fraction": 1.0})):
+                    ("δ_b 가드 1 껍질", {"delta_b_cap_fraction": 1.0}),
+                    ("근 가지 — 가장 작은 근", {"root_branch": "smallest"}),
+                    ("근 가지 — 가장 큰 근", {"root_branch": "largest"}),
+                    ("근 가지 — 가운데 근", {"root_branch": "middle"})):
         print(line(tag, one(ref, **kw)))
     print("  ⚠ g_c 3.1 은 식에 안 들어간다 — 2021 (14)–(17) 이 g 하나를 인쇄한다. 인쇄만 한다.")
     print("\n── 판 2′ — L1 비교 판 (v2 §2, v2-2 ①), 기준 Λ ──")

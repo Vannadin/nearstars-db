@@ -36,18 +36,19 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 
 
 # The A0 values that need no source data, at Λ 20 and cap 10 Myr, frozen from this run's own output on
-# 2026-09-24: 1 920 melt shells (v2-10) and the δ_b guard at ½ shell (v2-14). Before the guard they read
-# 2101.66 / 1941.77; at 120 shells the printed Stefan number turned negative on 57 steps and the values
-# moved ≤ 0.9 K. The two RMS conditions need the 2023 source data, which is outside the repo, so the gate
-# cannot hold them.
-FROZEN_L20 = {"T_c today": 2101.59, "T_m today": 1941.69, "T_c(1) − T_c0": -48.71, "T_m(1) − T_m0": 287.03,
-              "T_m peak": 2045.12, "T_m peak time": 1.2726}
+# 2026-09-24: 1 920 melt shells (v2-10), the δ_b guard at ½ shell (v2-14), and the δ_u/δ_b bracket solve
+# with the nearest inner root (v2-17 and supplements; v2-18). Before the bracket solve they read
+# 2101.59 / 1941.69 (a fixed point stopping silently at 60 iterations, noise ~1 K). The two RMS conditions
+# need the 2023 source data, which is outside the repo, so the gate cannot hold them.
+FROZEN_L20 = {"T_c today": 2101.64, "T_m today": 1942.02, "T_c(1) − T_c0": -48.90, "T_m(1) − T_m0": 286.63,
+              "T_m peak": 2044.64, "T_m peak time": 1.2726}
 FROZEN_TOL = {"T_m peak time": 0.0005}  # Gyr; every other value K, to the frozen decimal
 
 
 prof = ss.mars_profile(Path(__file__).resolve().parent / "bodies" / "mars.yaml")
 print(f"  구조 — {prof.source}")
-s = sr.Setup(lam=20.0, profile=prof, g=prof.gravity(prof.radius_m), g_c=prof.gravity(st.R_CORE_NO_BML_M))
+s = sr.Setup(lam=20.0, profile=prof, g=prof.gravity(prof.radius_m), g_c=prof.gravity(st.R_CORE_NO_BML_M),
+             path_check_every=100)
 out = sr.run(s, 10.0)
 check("Λ 20 runs to 4.5 Gyr without a refusal", "refused" not in out, out.get("refused", "")[:80])
 rows = out["rows"]
@@ -69,6 +70,18 @@ check("2019 SI eq. (20) — dD_l/dt has the sign of (outflow − q_m + crust ter
 # ③ the ceiling
 worst, when = out["max_lambda_over_ceiling"]
 check("v2-4 ③ — Λ 20 stays under its ceiling", worst < 1.0, f"largest Λ/ceiling {worst:.3f} at {when:.3f} Gyr")
+
+# v2-17 supplements — the bracket solve: no failure, cold starts agree where the inner root is single,
+# and every root jump is printed.
+check("v2-17 — the δ_u/δ_b bracket solve never fails", not out["fixed_point_limit_hits"],
+      f"{len(out['fixed_point_limit_hits'])} failures")
+single = [p for p in out["path_checks"] if p[1] == 1]
+worst = max((max(abs(p[2] - p[4]), abs(p[3] - p[5])) for p in single), default=math.nan)
+check("v2-17 — a cold start gives the same δ_u, δ_b where the inner root is single (≤ 1e-6 m)",
+      single and worst <= 1e-6, f"{len(single)} samples, largest difference {worst:.3g} m")
+for j in out["root_jumps"]:
+    print(f"      뜀 @ {j[0]:.4f} Gyr: δ_b {j[1] / 1e3:.1f} → {j[2] / 1e3:.1f} km, T_c − T_b {j[3]:+.3f} K")
+print(f"      근 여럿 평가 {out['multi_root_evals']} · 뜀 {len(out['root_jumps'])}")
 
 # regression — the six data-free values
 c = sr.curve_values(rows)

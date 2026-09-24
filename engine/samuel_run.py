@@ -38,7 +38,8 @@ class Setup:
     def __init__(self, *, lam: float, profile, g: float, g_c: float, eps_mode: str = "derived",
                  p_m_mode: str = "mid", melt_pressure: str = "engine", stefan_mode: str = "printed",
                  lid_mode: str = "grid", lid_nodes: int = 41, melt_shells: int = 1920,
-                 fixed_lid_m: float | None = None, delta_b_cap_fraction: float = 0.5):
+                 fixed_lid_m: float | None = None, delta_b_cap_fraction: float = 0.5,
+                 root_branch: str = "nearest", path_check_every: int = 0):
         self.lam, self.profile, self.g, self.g_c = lam, profile, g, g_c
         self.eps_mode, self.p_m_mode = eps_mode, p_m_mode
         self.melt_pressure, self.stefan_mode, self.lid_mode = melt_pressure, stefan_mode, lid_mode
@@ -54,6 +55,15 @@ class Setup:
         # v2-15: evaluations whose δ_u/δ_b fixed point hit the 60-iteration limit without converging —
         # (t, |Δδ_u| and |Δδ_b| of the last two iterations, m). Recorded, not acted on.
         self.fixed_point_limit_hits: list = []
+        self.fixed_point_start: tuple | None = None   # the last converged (δ_u, δ_b) — the warm start
+        self.multi_root_evals = 0
+        self.root_jumps: list = []      # (t, old δ_b, new δ_b, T_c − T_b)
+        self.root_notes: list = []
+        self.last_root_count = None
+        self.root_branch = root_branch             # v2-17 supplement 3 ①: nearest | smallest | largest | middle
+        self.path_check_every = path_check_every   # supplement 2: cold-start comparison every n-th evaluation
+        self.path_checks: list = []
+        self.eval_count = 0
 
     def pressure(self, r: float) -> float:
         return self.profile.pressure(r)
@@ -64,9 +74,113 @@ class Setup:
         return self.profile.pressure(r)
 
 
+BISECT_ITERS = 50                      # v2-17 supplement: bracket solves
+INNER_SCAN = 48
+OUTER_SCAN = 32
+ROOT_JUMP_M = 5e3                      # a lost root: the chosen δ_b moves by more than this as roots vanish
+
+
 def _eta(t: float, p: float) -> float:
     return sm.viscosity(t, p, st.ETA0_NO_BML_PA_S, st.E_STAR_NO_BML_J_PER_MOL, st.V_STAR_NO_BML_M3_PER_MOL,
                         st.T_REF_K, st.P_REF_PA, st.R_GAS_J_PER_MOL_K)
+
+
+def solve_layers(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float, prev, branch: str):
+    """(δ_u, δ_b, inner roots, up, lo, T_b, P_m, η_m, note) — no side effects; None if δ_u has no bracket.
+
+    Outer δ_u: bisection on F(δ_u) = G_u(δ_u, δ_b*(δ_u)) − δ_u, in the scanned bracket nearest the previous
+    δ_u. Inner δ_b: every root of G_b(δ_u, ·) − δ_b on [0, shell − δ_u] by scan + bisection, then chosen by
+    `branch` — "nearest" the previous δ_b (v2-17 supplement 1, the main path); "smallest", "largest",
+    "middle" (of three, else nearest) the sensitivity branches (supplement 3 ①). With no previous state,
+    "nearest" takes a root where the iteration map is stable, |∂G_b/∂δ_b| < 1, the smaller of two
+    (supplement 3 ②)."""
+    r_p, r_c, g = s.r_p, s.r_c, s.g
+    r_l = r_p - d_l
+
+    def layers(du, db):
+        d_r = sm.convecting_thickness(r_p, d_l, r_c, du, db)
+        t_b_ = sm.mantle_base_temperature(t_m, st.ALPHA_SILICATE_PER_K, g, st.CP_MANTLE_J_PER_KG_K, d_r)
+        rt, rb = r_l - du, r_c + db
+        p_m_ = {"mid": s.pressure(0.5 * (rt + rb)), "top": s.pressure(rt), "bottom": s.pressure(rb)}[s.p_m_mode]
+        eta_m_ = _eta(t_m, p_m_)
+        up_ = sm.upper_layer(t_m, t_l, t_c, t_b_, eta_m_, rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K,
+                             g=g, k_m=st.K_MANTLE_W_PER_M_K, c_pm=st.CP_MANTLE_J_PER_KG_K, r_p=r_p, d_l=d_l,
+                             r_c=r_c, ra_c=st.RA_CRITICAL, beta_u=st.BETA_U)
+        eta_c_ = _eta(0.5 * (t_b_ + t_c), s.pressure(r_c))
+        cap_ = s.delta_b_cap_fraction * (r_l - up_["delta_u"] - r_c)
+        lo_ = sm.lower_layer(t_m, t_c, t_b_, eta_m_, eta_c_, rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K,
+                             g=g, k_m=st.K_MANTLE_W_PER_M_K, c_pm=st.CP_MANTLE_J_PER_KG_K, r_p=r_p, r_c=r_c,
+                             t_s=st.T_SURFACE_K, delta_b_cap=cap_)
+        return up_, lo_, t_b_, p_m_, eta_m_
+
+    def bisect(f, a, b, fa):
+        for _ in range(BISECT_ITERS):
+            m = 0.5 * (a + b)
+            fm = f(m)
+            if (fm > 0) == (fa > 0):
+                a, fa = m, fm
+            else:
+                b = m
+        return 0.5 * (a + b)
+
+    def inner_roots(du):
+        top = max(r_l - du - r_c, 1.0)
+        h = lambda db: layers(du, db)[1]["delta_b"] - db
+        roots, a, fa = [], 0.0, h(0.0)
+        for k in range(1, INNER_SCAN + 1):
+            b = top * k / INNER_SCAN
+            fb = h(b)
+            if (fa > 0) != (fb > 0):
+                roots.append(bisect(h, a, b, fa))
+            a, fa = b, fb
+        return roots
+
+    ref_b = prev[1] if prev is not None else None
+    note = []
+
+    def choose(du, rts, record=False):
+        if not rts:
+            return None
+        if branch == "smallest":
+            return min(rts)
+        if branch == "largest":
+            return max(rts)
+        if branch == "middle" and len(rts) == 3:
+            return sorted(rts)[1]
+        if ref_b is not None:
+            return min(rts, key=lambda x: abs(x - ref_b))
+        stable = []
+        for x in rts:
+            e = max(1.0, 1e-6 * x)
+            slope = (layers(du, x + e)[1]["delta_b"] - layers(du, x - e)[1]["delta_b"]) / (2 * e)
+            if abs(slope) < 1.0:
+                stable.append(x)
+        pick = min(stable) if stable else min(rts)
+        if record:
+            note.append(f"첫 평가 근 {len(rts)} · 안정한 근 {len(stable)}"
+                        + (" — 임의 선택(작은 쪽)" if len(stable) > 1 else "")
+                        + ("" if stable else " — 안정한 근 없음, 가장 작은 근"))
+        return pick
+
+    def outer(du):
+        db = choose(du, inner_roots(du))
+        return math.nan if db is None else layers(du, db)[0]["delta_u"] - du
+
+    top_u = r_l - r_c
+    grid = [top_u * k / OUTER_SCAN for k in range(OUTER_SCAN + 1)]
+    vals = [outer(x) for x in grid]
+    brackets = [(grid[k], grid[k + 1], vals[k]) for k in range(OUTER_SCAN)
+                if not (math.isnan(vals[k]) or math.isnan(vals[k + 1])) and (vals[k] > 0) != (vals[k + 1] > 0)]
+    if not brackets:
+        return None
+    ref_u = prev[0] if prev is not None else None
+    a, b, fa = (min(brackets, key=lambda br: abs(0.5 * (br[0] + br[1]) - ref_u)) if ref_u is not None
+                else brackets[0])
+    d_u = bisect(outer, a, b, fa)
+    rts = inner_roots(d_u)
+    d_b = choose(d_u, rts, record=prev is None)
+    up, lo, t_b, p_m, eta_m = layers(d_u, d_b)
+    return d_u, d_b, rts, up, lo, t_b, p_m, eta_m, "; ".join(note)
 
 
 def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr: float,
@@ -75,36 +189,32 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
     r_p, r_c, g = s.r_p, s.r_c, s.g
     r_l = r_p - d_l
     t_l = sm.lid_base_temperature(t_m, st.E_STAR_NO_BML_J_PER_MOL, st.A_RH, st.R_GAS_J_PER_MOL_K)
-    # δ_u, δ_b and T_b depend on each other through ΔR (2021 eq. (14)); fixed-point iteration from 0.
-    d_u = d_b = 0.0
-    guard_gap = None          # |T_c − T_b| of the first fixed-point iteration where the δ_b guard bit, if any
-    for _ in range(60):
-        d_r = sm.convecting_thickness(r_p, d_l, r_c, d_u, d_b)
-        t_b = sm.mantle_base_temperature(t_m, st.ALPHA_SILICATE_PER_K, g, st.CP_MANTLE_J_PER_KG_K, d_r)
-        r_top, r_bot = r_l - d_u, r_c + d_b
-        p_m = {"mid": s.pressure(0.5 * (r_top + r_bot)), "top": s.pressure(r_top),
-               "bottom": s.pressure(r_bot)}[s.p_m_mode]
-        eta_m = _eta(t_m, p_m)
-        up = sm.upper_layer(t_m, t_l, t_c, t_b, eta_m, rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K,
-                            g=g, k_m=st.K_MANTLE_W_PER_M_K, c_pm=st.CP_MANTLE_J_PER_KG_K, r_p=r_p, d_l=d_l,
-                            r_c=r_c, ra_c=st.RA_CRITICAL, beta_u=st.BETA_U)
-        eta_c = _eta(0.5 * (t_b + t_c), s.pressure(r_c))
-        cap = s.delta_b_cap_fraction * (r_l - up["delta_u"] - r_c)
-        lo = sm.lower_layer(t_m, t_c, t_b, eta_m, eta_c, rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K,
-                            g=g, k_m=st.K_MANTLE_W_PER_M_K, c_pm=st.CP_MANTLE_J_PER_KG_K, r_p=r_p, r_c=r_c,
-                            t_s=st.T_SURFACE_K, delta_b_cap=cap)
-        if lo["guarded"]:
-            s.guard_iter_hits.append((t_gyr, abs(t_c - t_b)))
-            if guard_gap is None:
-                guard_gap = abs(t_c - t_b)
-        new_u, new_b = up["delta_u"], lo["delta_b"]
-        if abs(new_u - d_u) < 1e-6 and abs(new_b - d_b) < 1e-6:
-            d_u, d_b = new_u, new_b
-            break
-        last_diff = (abs(new_u - d_u), abs(new_b - d_b))
-        d_u, d_b = new_u, new_b
-    else:
-        s.fixed_point_limit_hits.append((t_gyr, last_diff[0], last_diff[1]))
+    # δ_u, δ_b and T_b depend on each other through ΔR (2021 eq. (14)). Solved by brackets — v2-17
+    # supplements 1–3, our choice; see `solve_layers`.
+    guard_gap = None
+    prev = s.fixed_point_start
+    sol = solve_layers(s, t_c, t_m, d_l, t_l, prev, s.root_branch)
+    if sol is None:
+        s.fixed_point_limit_hits.append((t_gyr, math.nan, math.nan))
+        raise sm.Refused(f"no bracket for δ_u at t = {t_gyr:.4f} Gyr (v2-17 supplement)")
+    d_u, d_b, rts, up, lo, t_b, p_m, eta_m, note = sol
+    if note:
+        s.root_notes.append(f"{t_gyr:.4f} Gyr: {note}")
+    if len(rts) > 1:
+        s.multi_root_evals += 1
+    if prev is not None and s.last_root_count is not None and len(rts) < s.last_root_count \
+            and abs(d_b - prev[1]) > ROOT_JUMP_M:
+        s.root_jumps.append((t_gyr, prev[1], d_b, t_c - t_b))
+    s.last_root_count = len(rts)
+    if s.path_check_every and s.eval_count % s.path_check_every == 0 and len(s.path_checks) < 20:
+        cold = solve_layers(s, t_c, t_m, d_l, t_l, None, s.root_branch)
+        s.path_checks.append((t_gyr, len(rts), d_u, d_b, cold[0] if cold else math.nan,
+                              cold[1] if cold else math.nan, [x for x in rts], t_c - t_b))
+    s.eval_count += 1
+    if lo["guarded"]:
+        guard_gap = abs(t_c - t_b)
+        s.guard_iter_hits.append((t_gyr, guard_gap))
+    s.fixed_point_start = (d_u, d_b)
     r_top, r_bot = r_l - d_u, r_c + d_b
     # ⚠ any iteration counts, not only the last (audit seat: the last alone missed 67 bites at Λ 20, cap 10)
     if guard_gap is not None:
@@ -252,7 +362,9 @@ def run(s: Setup, cap_myr: float) -> dict:
     return {"rows": rows, "n_steps": n, "cap_myr": cap_myr, "h_min_myr": h_min / GYR_S * 1e3,
             "max_lambda_over_ceiling": worst, "n_remesh": n_remesh,
             "guard_stage_hits": list(s.guard_stage_hits), "guard_iter_hits": list(s.guard_iter_hits),
-            "fixed_point_limit_hits": list(s.fixed_point_limit_hits), "remesh_loss_j": remesh_loss}
+            "fixed_point_limit_hits": list(s.fixed_point_limit_hits),
+            "multi_root_evals": s.multi_root_evals, "root_jumps": list(s.root_jumps), "root_notes": list(s.root_notes),
+            "path_checks": list(s.path_checks), "remesh_loss_j": remesh_loss}
 
 
 def _heat_above(lid, r_lo: float) -> float:
