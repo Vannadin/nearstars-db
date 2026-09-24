@@ -1,5 +1,6 @@
 # 게이트 풀 단계의 시작 순서 — 지난 정상 full 판들의 instr 평균 내림차순 (C104, 긴 단계 먼저)
 # 판 9: 01d3a4ce 06a8f325 196c9189 2d8ca21c 3277acd0 5c83ff70 8f61f619 d642e293 de672360 · 한 줄에 단계 이름 하나 · 없는 이름은 원래 순서로 뒤에 선다
+run.py bodies/venus.yaml (출하값 대조)
 test_mars_sulphur.py
 test_interior_ocean.py
 test_core_history.py
