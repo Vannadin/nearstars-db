@@ -40,10 +40,11 @@
 `mantle_temperature_floor_min` [K] · `mantle_temperature_floor_max` [K] · `mantle_temperature_floor_verdict` [—] ·
 `mantle_temperature_width_zeta` [K] · `mantle_temperature_width_set` [K] · `mantle_temperature_width_denominator` [K] ·
 `mantle_temperature_width_surface` [K] · `l_int_total` [W] · `t_int_total` [K] · `mantle_temperature_floor_total_min` [K] ·
-`mantle_temperature_floor_total_max` [K] · `mantle_temperature_floor_total_verdict` [—]
+`mantle_temperature_floor_total_max` [K] · `mantle_temperature_floor_total_verdict` [—] ·
+`radiogenic_concentration_grade` [—] (measured · literature · owner-override, 천체가 선언하지 않으면 declared-default)
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] ·
 `radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K] · `tidal_power` [W]
-**Declared-optional** — 이 레시피가 코드와 위 산문에서 **기본값을 선언한** 입력입니다. 없는 것이 정상 상태이지 구멍이 아닙니다 (C50 (b), 브리프 170 B). `ice_mass_fraction` [—] — 방사성 예산이 건조 바디에 0.0 을 기본값으로 씁니다.
+**Declared-optional** — 이 레시피가 코드와 위 산문에서 **기본값을 선언한** 입력입니다. 없는 것이 정상 상태이지 구멍이 아닙니다 (C50 (b), 브리프 170 B). `ice_mass_fraction` [—] — 방사성 예산이 건조 바디에 0.0 을 기본값으로 씁니다. `radiogenic_concentration` [블록: U_ppb · Th_ppb · K_ppm · grade · source, 선택 칸 `alternative`] — 천체가 선언한 규산염 U · Th · K 입니다(prereg-radiogenic §4). 없으면 지구 벌(N&P 2020 출간본, 260 ppm / 23 ppb / 85 ppb)을 쓰고 등급 `declared-default` 를 붙입니다.
 **상태 키 주의** — `tidal_power` 는 상태 키 `power` 로 들어온다. tidal_heating 이 Ė 를 그 이름으로 내기
 때문이다(chain.yaml 의 tidal_heating → internal_heat_nontidal 간선, via power). 이 이름은 총칭이다.
 지금은 tidal_heating 이 유일한 emitter 이지만, power 를 내는 노드가 둘이 되면 여기서 조용히 합산된다.
@@ -175,6 +176,7 @@ dT_c/dt 의 여덟 모서리, `_h0` 는 H = 0 모서리 — 우리 H 밴드의 �
 `potential_temperature` [K] · `radius_earth` [R_earth] · `age_gyr` [Gyr] · `core_initial_temperature` [K] ·
 `mantle_initial_potential_temperature` [K] · `core_material` [—] · `body_class` [—] · `step_myr` [Myr] ·
 `step_fraction` [—] (h = min(step_myr, F·τ) 의 분율 F, τ 는 맨틀 시간상수. 기본 0.1) · `core_h_w_per_kg` [W/kg]
+**Declared-optional** — `radiogenic_concentration` [블록] — `internal_heat_nontidal` 이 읽는 것과 같은 선언으로, 현재 맨틀 발열과 그 이력을 정합니다. 없으면 지구 벌.
 **Discriminating keys** — `body_class`: 암석체만. 내부구조 해나 초기온도가 없으면 이름 붙여 거절.
 **Grade** — **analog**: Nimmo+ 2004 식 30·32 를 상태 (T_c, T_m) 위에서 시간 앞으로 적분(RK4, h = min(4 Myr, 0.1·τ), Nimmo 의 4 Myr 은 상한). 맨틀 바닥
 온도는 내부구조 해의 단열비(식 29 형태), 방사성 열은 장수명 반쪽(K·Th·U)만. 초기온도는 지구에선 Nimmo 의 인쇄값 4 800 K,

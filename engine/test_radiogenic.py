@@ -8,7 +8,9 @@
    values (the difference is printed). R3 — each paper's composition gives that paper's number, on the
    engine Earth's silicate mass (4.0311e24 kg), within ±0.5 TW (prereg-radiogenic addenda 1, 2, 5).
 1. Closure — with the standard BSE mass 4.0e24 kg: Earth (1) and appendix are now the same set (N&P 2020
-   published, 260/23/85) and give 21.58 TW; Earth (2) 10.64 vs the draft's 10.8 (≤ 3 %).
+   published, 260/23/85) and give 21.58 TW. Earth (2) is now O'Neill & Palme 2008 as the published papers print it
+   (10/40/140, addendum 10): 10.07 TW here, 10.1506 on the engine Earth's silicate mass — no longer the draft
+   table's set, so it is pinned and not closed against the draft's 10.8.
 2. The caption trap — read as "initial composition" and decayed 4.5 Gyr the set gives 11.79 TW,
    1.9× short. Pinned so nobody re-adopts the caption's reading. (11.59 until the Earth set's U moved
    22 → 23, prereg-radiogenic addenda 2 and 6.)
@@ -50,9 +52,36 @@ def main() -> int:
         tw = rg.heat_per_kg(conc) * silicate / 1e12
         ok(abs(tw - printed_tw) <= 0.5, f"R3: {label} {tw:.4f} TW vs printed {printed_tw}")
         print(f"  [기록] R3 {label}: {tw:.4f} TW (인쇄 {printed_tw:g}, 차 {tw - printed_tw:+.4f}) · 질량 {silicate:.6e} kg")
+    # ── 0b. R5 — declared concentrations, their grades, and the pair set (prereg-radiogenic §4, addendum 9) ──
+    base = {"U_ppb": 14.0, "Th_ppb": 54.0, "K_ppm": 284.0, "source": "fixture"}
+    def run(decl):
+        return rg.solve(0.1074, 0.25, 0.532, "rocky", 4.54, radiogenic_concentration=decl)
+    none = run(None)
+    ok(none.applicable and none.values["radiogenic_concentration_grade"] == "declared-default"
+       and none.values["radiogenic_power_low"] is not None, "R5/R6: no declaration → declared-default, _low kept")
+    for g in ("measured", "literature"):
+        r = run(dict(base, grade=g))
+        ok(r.applicable and r.values["radiogenic_concentration_grade"] == g and r.values["radiogenic_power_low"] is None
+           and r.values["mantle_temperature_width_set"] == 0.0, f"R5: {g} without a pair → _low empty, one-set band")
+    ov = run(dict(base, grade="owner-override", reason="dynamo needs a liquid core", window="outside"))
+    ok(ov.applicable and "문헌 창 밖" in " ".join(ov.notes), "R5: owner-override outside the window is printed")
+    no_reason = run(dict(base, grade="owner-override", window="inside"))
+    ok(not no_reason.applicable and "reason" in no_reason.reason, "R5: owner-override without a reason refuses by name")
+    ok(not run(dict(base, grade="declared-default")).applicable, "R5: a body file may not declare declared-default")
+    pair = {"U_ppb": 11.0, "Th_ppb": 43.0, "K_ppm": 130.0, "source": "fixture pair"}
+    lit_pair = run(dict(base, grade="literature", alternative=dict(pair, grade="literature")))
+    ok(lit_pair.applicable and lit_pair.values["radiogenic_power_low"] is not None
+       and lit_pair.values["mantle_temperature_width_set"] > 0, "addendum 9: a literature pair keeps _low and the union")
+    dd_pair = run(dict(base, grade="literature", alternative=dict(pair, grade="declared-default")))
+    ok(dd_pair.applicable and dd_pair.values["radiogenic_power_low"] is None
+       and "싣지 않는다" in " ".join(dd_pair.notes), "addendum 9: a declared-default pair is recorded and not used")
     # ── 1. closure ─────────────────────────────────────────────────────────
-    # earth_2 10.63 → 10.64: the constants moved to Ruedas 2017 (10.6448; prereg-radiogenic addendum 7).
-    want = {"earth_1_chondritic": (21.58, 22.0), "earth_2_non_chondritic": (10.64, 10.8),
+    # earth_2 10.63 → 10.64 (Ruedas constants, addendum 7) → 10.07 (the set itself replaced, addendum 10).
+    tw2 = rg.budget(M, "earth_2_non_chondritic")["total_w"] / 1e12
+    ok(abs(tw2 - 10.07) < 0.02, f"1: earth_2_non_chondritic = {tw2:.2f} TW, expected 10.07")
+    tw2e = rg.budget(rg.M_EARTH_KG * 0.675, "earth_2_non_chondritic")["total_w"] / 1e12
+    ok(abs(tw2e - 10.1506) < 1e-4, f"1: earth_2 on the engine Earth's silicate mass {tw2e:.4f} TW, expected 10.1506")
+    want = {"earth_1_chondritic": (21.58, 22.0),
             "appendix": (21.58, 22.0)}
     for s, (mine, printed) in want.items():
         tw = rg.budget(M, s)["total_w"] / 1e12
@@ -106,7 +135,7 @@ def main() -> int:
     for f in fails:
         print(f"  [FAIL] {f}")
     if not fails:
-        print(f"  [PASS] 방사성 예산 — 폐합 3세트(≤ 2.1 %) · 캡션 오독 {initial_read:.2f} TW · 과거 배율 {past:.2f} "
+        print(f"  [PASS] 방사성 예산 — 폐합 2세트(≤ 2.1 %) · earth_2 10.07 TW 핀 · 캡션 오독 {initial_read:.2f} TW · 과거 배율 {past:.2f} "
               f"(순방향 {fwd:.2f}, ²³⁵U 없이 {no_u235:.2f}) · 지구 {earth.values['radiogenic_power'] / 1e12:.2f} TW, "
               f"t_int(방사성만) {earth.values['t_int']:.1f} K · 얼음체 규산염만 · 거대행성·핵질량분율 미선언 거절")
     return 1 if fails else 0

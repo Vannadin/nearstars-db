@@ -10,8 +10,10 @@
    ×10⁻² (±4 %); inverted for 42 TW: 1639 / 1614 / 1603 K (±1 %).
 3. Labels — every verdict is a registered string and carries the calibrated-at-source condition;
    missing T_m and missing budget refuse by name.
-4. Roster — Earth's declared 1600 K against its 21.3 TW budget lands inside the secular gap
-   (ratio ≈ 1.85); a cold and a hot declaration land in the two flag branches.
+4. Roster — Earth's declared 1600 K against its 21.75 TW budget lands inside the secular gap
+   (ratio ≈ 1.803; 1.85 against 21.3 TW until the Earth set's U moved 22 → 23, prereg-radiogenic addenda 2 and
+   11 — the ratio is this engine's own number, not a printed one); a cold and a hot declaration land in the two
+   flag branches.
 """
 from __future__ import annotations
 
@@ -62,8 +64,8 @@ def main() -> int:
     ok(cases[3]["verdict"] == mf.TOO_COLD, f"4: 1400 K must flag less-than-radiogenic, got {cases[3]['verdict']}")
     ok(cases[4]["verdict"] == mf.TOO_HOT, f"4: 1800 K must flag more-than-secular, got {cases[4]['verdict']}")
     earth = rg.solve(1.0, 0.325, 1.0, "rocky", 4.54, potential_temperature=1600.0)
-    ok(earth.applicable and abs(earth.values["implied_surface_heat_flow"] / earth.values["radiogenic_power"] - 1.85) < 0.03,
-       f"4: Earth ratio on the declared R⊕ must be 1.85, got {earth.values['implied_surface_heat_flow'] / earth.values['radiogenic_power']:.3f}")
+    ok(earth.applicable and abs(earth.values["implied_surface_heat_flow"] / earth.values["radiogenic_power"] - 1.803) < 0.03,
+       f"4: Earth ratio on the declared R⊕ must be 1.803, got {earth.values['implied_surface_heat_flow'] / earth.values['radiogenic_power']:.3f}")
     ok(earth.applicable and earth.values["heat_flow_consistency"] == mf.CONSISTENT
        and 55.0 < earth.values["mantle_top_boundary_layer"] < 62.0,
        f"4: recipe Earth → {earth.values.get('heat_flow_consistency')}, δ_t {earth.values.get('mantle_top_boundary_layer')}")
@@ -74,8 +76,10 @@ def main() -> int:
     # ── 5. Brief 57 — the band, its four widths, and the bracket refusal ───
     band = earth.values
     ok(band["mantle_temperature_floor_verdict"] == mf.BAND_OK
-       and 1050.0 < band["mantle_temperature_floor_min"] < 1070.0 and 1480.0 < band["mantle_temperature_floor_max"] < 1500.0,
-       f"5: Earth floor band expected ~1060–1490 K, got {band['mantle_temperature_floor_min']}–{band['mantle_temperature_floor_max']} ({band['mantle_temperature_floor_verdict']})")
+       # ~1060–1490 K until prereg-radiogenic addenda 2 and 10 (Earth U 23; the pair set now O'Neill & Palme 2008
+       # as published, 10/40/140) — the band's own numbers, measured 1044.6–1495.3 K (addendum 11)
+       and 1035.0 < band["mantle_temperature_floor_min"] < 1055.0 and 1485.0 < band["mantle_temperature_floor_max"] < 1505.0,
+       f"5: Earth floor band expected ~1045–1495 K, got {band['mantle_temperature_floor_min']}–{band['mantle_temperature_floor_max']} ({band['mantle_temperature_floor_verdict']})")
     wz, ws, wd, wt = (band["mantle_temperature_width_zeta"], band["mantle_temperature_width_set"],
                       band["mantle_temperature_width_denominator"], band["mantle_temperature_width_surface"])
     ok(all(x is not None for x in (wz, ws, wd, wt)) and 0.5 < max(wz, ws, wd) / min(wz, ws, wd) < 2.5,

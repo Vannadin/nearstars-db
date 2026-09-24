@@ -74,7 +74,10 @@ ISOTOPES = {name: (row["half_life_my"] / 1000.0, row["x_iso"] * row["u"] / ELEME
 #   It is now the same set as `appendix`; both names stay, so the callers and the tests keep their names.
 CONCENTRATION_SETS = {
     "earth_1_chondritic":      {"K": 260e-6, "Th": 85e-9, "U": 23e-9},   # N&P 2020 published, PDF p14
-    "earth_2_non_chondritic":  {"K": 130e-6, "Th": 43e-9, "U": 11e-9},   # O'Neill & Palme 2008 (draft table)
+    # O'Neill & Palme 2008 as the published papers print it — U 10 · Th 40 · K 140 (prereg-radiogenic addendum 10,
+    # second-hand: Šrámek+ 2013 arXiv 1207.0853 PDF p5 and Bellini+ 2022 arXiv 2109.01482 v1 Tables 16 and 18, two
+    # author versions agreeing, the published versions not compared). The draft table's 11 / 43 / 130 is dropped.
+    "earth_2_non_chondritic":  {"K": 140e-6, "Th": 40e-9, "U": 10e-9},
     "appendix":                {"K": 260e-6, "Th": 85e-9, "U": 23e-9},   # the paper's own model set
 }
 DEFAULT_SET = "earth_1_chondritic"
@@ -102,21 +105,85 @@ def heat_per_kg(conc: dict[str, float], t_gyr: float = 0.0,
     return total
 
 
-def budget(silicate_mass_kg: float, set_name: str = DEFAULT_SET, t_gyr: float = 0.0) -> dict:
-    conc = CONCENTRATION_SETS[set_name]
+def budget(silicate_mass_kg: float, set_name: str = DEFAULT_SET, t_gyr: float = 0.0,
+           conc: dict[str, float] | None = None) -> dict:
+    """`conc` (element mass fractions) overrides the named set — a body's declared concentration."""
+    conc = conc if conc is not None else CONCENTRATION_SETS[set_name]
     total = heat_per_kg(conc, t_gyr) * silicate_mass_kg
     return {"total_w": total, "mantle_w": MANTLE_SHARE * total,
             "crust_w": (1.0 - MANTLE_SHARE) * total, "set": set_name}
 
 
 def history_factor(t_gyr: float, set_name: str = "appendix",
-                   species: tuple[str, ...] | None = None) -> float:
+                   species: tuple[str, ...] | None = None, conc: dict[str, float] | None = None) -> float:
     """H(t)/H(now). t = −4.0 is four billion years AGO. ⚠ The past is the negative argument:
     computed forward once (a future time compared to now), this gives ~1.7 instead of 3.67 — both
     believable, one sign apart.
     ²³⁵U carries the factor (51× over 4 Gyr from 0.38 TW today): prune it and 3.67 becomes 2.8."""
-    conc = CONCENTRATION_SETS[set_name]
+    conc = conc if conc is not None else CONCENTRATION_SETS[set_name]
     return heat_per_kg(conc, t_gyr, species) / heat_per_kg(conc, 0.0, species)
+
+
+# ── A body's declared concentration — prereg-radiogenic §4, R5 ────────────────────────────────
+GRADES_DECLARED = ("measured", "literature", "owner-override")   # what a body file may say
+GRADE_DEFAULT = "declared-default"                                # what the engine says when it says nothing
+
+
+def read_concentration(decl) -> tuple[dict[str, float] | None, str, str]:
+    """(element mass fractions, grade, label) from a body's `radiogenic_concentration` block, or
+    (None, "declared-default", label) when there is none. Raises ValueError, naming what is missing —
+    the caller turns it into a named refusal. `owner-override` needs a one-line `reason` and a `window`
+    (inside | outside the literature's range); `outside` is printed."""
+    if decl is None:
+        return None, GRADE_DEFAULT, (f"농도 선언 없음 — 지구 기본 벌({DEFAULT_SET}: K 260 ppm · Th 85 ppb · U 23 ppb, "
+                                     f"N&P 2020 출간본) · 등급 {GRADE_DEFAULT}")
+    if not isinstance(decl, dict):
+        raise ValueError("radiogenic_concentration 은 U_ppb · Th_ppb · K_ppm · grade · source 를 가진 블록이어야 한다")
+    missing = [k for k in ("U_ppb", "Th_ppb", "K_ppm", "grade") if decl.get(k) is None]
+    if missing:
+        raise ValueError(f"radiogenic_concentration 에 {', '.join(missing)} 가 없다")
+    grade = decl["grade"]
+    if grade not in GRADES_DECLARED:
+        raise ValueError(f"radiogenic_concentration 의 등급 '{grade}' 는 천체 파일이 쓸 수 없다 — "
+                         f"{', '.join(GRADES_DECLARED)} 중 하나 ('{GRADE_DEFAULT}' 는 엔진이 붙이는 등급)")
+    if not decl.get("source"):
+        raise ValueError(f"radiogenic_concentration 등급 {grade} 에 source 가 없다")
+    label = (f"농도 선언 — U {decl['U_ppb']:g} ppb · Th {decl['Th_ppb']:g} ppb · K {decl['K_ppm']:g} ppm · "
+             f"등급 {grade} · 출처 {decl['source']}")
+    if grade == "owner-override":
+        if not decl.get("reason"):
+            raise ValueError("owner-override 에 까닭 한 줄(reason)이 없다")
+        if decl.get("window") not in ("inside", "outside"):
+            raise ValueError("owner-override 의 window 는 inside 또는 outside 여야 한다")
+        label += f" · 까닭 «{decl['reason']}» · 문헌 창 {decl['window']}"
+        if decl["window"] == "outside":
+            label += " — ⚠ 문헌 창 밖"
+    conc = {"U": float(decl["U_ppb"]) * 1e-9, "Th": float(decl["Th_ppb"]) * 1e-9, "K": float(decl["K_ppm"]) * 1e-6}
+    return conc, grade, label
+
+
+GRADES_ALTERNATIVE = ("measured", "literature", GRADE_DEFAULT)
+
+
+def read_alternative(decl) -> tuple[dict[str, float] | None, str]:
+    """The optional pair set of a declaration (`alternative`, prereg-radiogenic addendum 9): with it, `_low`
+    and the temperature band's union stay; without it a declared body has no pair (decision A).
+    Its grade may be `declared-default` — a set carried with no source held — and then it is recorded and
+    NOT used: only a `measured` or `literature` pair keeps `_low` and the band's union (addendum 9 supplement)."""
+    if not isinstance(decl, dict) or decl.get("alternative") is None:
+        return None, ""
+    alt = decl["alternative"]
+    missing = [k for k in ("U_ppb", "Th_ppb", "K_ppm", "grade", "source") if not alt.get(k) and alt.get(k) != 0]
+    if missing:
+        raise ValueError(f"radiogenic_concentration.alternative 에 {', '.join(missing)} 가 없다")
+    if alt["grade"] not in GRADES_ALTERNATIVE:
+        raise ValueError(f"alternative 의 등급 '{alt['grade']}' — {', '.join(GRADES_ALTERNATIVE)} 중 하나여야 한다")
+    label = (f"짝 벌 — U {alt['U_ppb']:g} ppb · Th {alt['Th_ppb']:g} ppb · K {alt['K_ppm']:g} ppm · "
+             f"등급 {alt['grade']} · 출처 {alt['source']}")
+    if alt["grade"] == GRADE_DEFAULT:
+        return None, label + " — declared-default 짝은 싣지 않는다(_low 빔, 밴드 한 세트)"
+    return ({"U": float(alt["U_ppb"]) * 1e-9, "Th": float(alt["Th_ppb"]) * 1e-9, "K": float(alt["K_ppm"]) * 1e-6},
+            label)
 
 
 ROCKY_CLASSES = ("rocky", "super_earth", "moon", "icy")
@@ -126,11 +193,12 @@ GIANT_CLASSES = ("giant", "gas_giant", "ice_giant", "sub_neptune", "brown_dwarf"
 def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: float | None,
           body_class: str | None, age_gyr: float | None,
           ice_mass_fraction: float = 0.0, potential_temperature: float | None = None,
-          tidal_power: float | None = None) -> Result:
+          tidal_power: float | None = None, radiogenic_concentration: dict | None = None) -> Result:
     inputs = {"mass_earth": mass_earth, "core_mass_fraction": core_mass_fraction,
               "ice_mass_fraction": ice_mass_fraction,
               "radius_earth": radius_earth, "body_class": body_class, "age_gyr": age_gyr,
-              "potential_temperature": potential_temperature, "tidal_power": tidal_power}
+              "potential_temperature": potential_temperature, "tidal_power": tidal_power,
+              "radiogenic_concentration": radiogenic_concentration}
     if body_class in GIANT_CLASSES:
         return out_of_domain(
             RECIPE, VERSION,
@@ -153,12 +221,23 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
             f"규산염 질량분율이 {silicate_frac:.3f} 다 (1 − 핵 {core_mass_fraction} − 얼음 {imf}) — "
             "방사성 예산을 걸 규산염이 없거나 분율 선언이 어긋났다.", inputs=inputs, refs=REFS)
     silicate_kg = mass_earth * M_EARTH_KG * silicate_frac
-    b = budget(silicate_kg, DEFAULT_SET)
-    b_low = budget(silicate_kg, LOW_SET)
+    try:
+        conc, grade, conc_label = read_concentration(radiogenic_concentration)
+    except ValueError as e:
+        return out_of_domain(RECIPE, VERSION, f"거절: {e}", inputs=inputs, refs=REFS)
+    try:
+        alt, alt_label = read_alternative(radiogenic_concentration)
+    except ValueError as e:
+        return out_of_domain(RECIPE, VERSION, f"거절: {e}", inputs=inputs, refs=REFS)
+    b = budget(silicate_kg, DEFAULT_SET, conc=conc)
+    # decision A (addendum 1): a declared value has no pair — `_low` is emptied, with the reason — unless the
+    # declaration carries its own pair, `alternative` (addendum 9)
+    b_low = (budget(silicate_kg, LOW_SET) if conc is None
+             else budget(silicate_kg, LOW_SET, conc=alt) if alt is not None else None)
     r_m = (radius_earth or 0.0) * R_EARTH_M
     flux = b["total_w"] / (4.0 * math.pi * r_m ** 2) if r_m > 0.0 else None
     t_int = (flux / SIGMA_SB) ** 0.25 if flux else None
-    hist = history_factor(-4.0)
+    hist = history_factor(-4.0) if conc is None else history_factor(-4.0, conc=conc)
     # Brief 46 — the declared potential temperature, checked against this budget (Nimmo+ 2004 eqs 34–36).
     # Composed here because both ends live here: the budget is this recipe's, the temperature is the
     # declaration interior_layers reads. Nothing in solve()'s physics changes.
@@ -168,9 +247,10 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
                             "q_m_w": None, "ratio": None, "notes": ("heat-flow consistency: no radius, no flux.",)})
     # Brief 57 — the same budget inverted: the mantle temperature at which the top boundary layer
     # sheds exactly the radiogenic power. A floor, a family (four named widths), never a point.
-    band = (mantle_flux.radiogenic_temperature_band(
-                {DEFAULT_SET: {"mantle_w": b["mantle_w"], "total_w": b["total_w"]},
-                 LOW_SET: {"mantle_w": b_low["mantle_w"], "total_w": b_low["total_w"]}}, g_body, r_m)
+    band_sets = {DEFAULT_SET if conc is None else "declared": {"mantle_w": b["mantle_w"], "total_w": b["total_w"]}}
+    if b_low is not None:
+        band_sets[LOW_SET if conc is None else "alternative"] = {"mantle_w": b_low["mantle_w"], "total_w": b_low["total_w"]}
+    band = (mantle_flux.radiogenic_temperature_band(band_sets, g_body, r_m)
             if g_body else {"verdict": "cannot-say (no radius)", "t_min": None, "t_max": None, "widths": {}})
     w = band["widths"]
     # C30 (2026-09-04) — the heat doc's own instruction (:34 "add the tidal flux into T_int if it is non-negligible"):
@@ -197,13 +277,18 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
            f"이름 대며 거절 — 이분법 괄호 {mantle_flux.INVERSION_BRACKET_K[0]:.0f}–{mantle_flux.INVERSION_BRACKET_K[1]:.0f} K 밖이라 값을 "
            "내지 않는다 (예전에는 괄호 끝을 값처럼 돌려줬다).")
         + " 조석 가열 천체에서는 이 하한이 맨틀 온도가 아니다. " + mantle_flux.CONDITION + ".")
+    conc_name = ("Earth (1) 농도(K 260 ppm · Th 85 ppb · U 23 ppb, Nimmo & Primack 2020 출간본 PDF 14 쪽)"
+                 if conc is None else "선언 농도")
+    low_text = (f"{'Earth (2) 비콘드라이트 세트' if conc is None else '선언의 짝 벌'}로는 {b_low['total_w'] / 1e12:.2f} TW"
+                " — 두 값을 다 싣고 어느 쪽도 뽑지 않는다"
+                if b_low is not None else
+                "선언값에는 짝 세트가 없어 radiogenic_power_low 를 비운다(결정 A) — 온도 밴드의 세트 폭도 한 세트라 0")
     notes = (
+        conc_label + (f" · {alt_label}" if alt_label else ""),
         f"방사성 예산 (현재값): 규산염 질량 {silicate_kg:.3e} kg (= 질량 × (1 − 핵질량분율 {core_mass_fraction} "
-        f"− 얼음질량분율 {imf}), 도출) × "
-        f"Earth (1) 농도(K 260 ppm · Th 85 ppb · U 23 ppb, Nimmo & Primack 2020 출간본 PDF 14 쪽) → 총 "
+        f"− 얼음질량분율 {imf}), 도출) × {conc_name} → 총 "
         f"{b['total_w'] / 1e12:.2f} TW; 맨틀 몫 70 % = {b['mantle_w'] / 1e12:.2f} TW, 지각 30 % = "
-        f"{b['crust_w'] / 1e12:.2f} TW. **농도 세트와 70/30 은 선언이다** (Earth (2) 비콘드라이트 세트로는 "
-        f"{b_low['total_w'] / 1e12:.2f} TW — 두 값을 다 싣고 어느 쪽도 뽑지 않는다). 핵종 상수는 표준 "
+        f"{b['crust_w'] / 1e12:.2f} TW. **농도와 70/30 은 선언이다** ({low_text}). 핵종 상수는 표준 "
         "핵데이터로 Ruedas 2017 Table 2(PDF 6 쪽)에서 읽었고 원소 1 kg 당 핵종 질량(X_iso·u_iso/u_원소)으로 가중한다. "
         "검산은 그 표의 원소값(U 9.8314e-5 · Th 2.6368e-5 · K 3.4302e-9 W/kg)을 상대 3e-5 안으로 내는 것이다.",
         f"붕괴 이력: H(−4 Gyr)/H(now) = {hist:.2f} (논문 산문 3.5). ²³⁵U 가 그 배율을 끈다 — 지금 "
@@ -220,7 +305,9 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
     ) + tuple(cons["notes"]) + (band_note,)
     values = {"l_int": b["total_w"], "t_int": t_int,
               "radiogenic_power": b["total_w"], "mantle_radiogenic_power": b["mantle_w"],
-              "crust_radiogenic_power": b["crust_w"], "radiogenic_power_low": b_low["total_w"],
+              "crust_radiogenic_power": b["crust_w"],
+              "radiogenic_power_low": b_low["total_w"] if b_low is not None else None,
+              "radiogenic_concentration_grade": grade,
               "radiogenic_heat_w_m2": flux, "radiogenic_power_history_4gyr": hist,
               "mantle_top_boundary_layer": cons["delta_t_km"],
               "implied_surface_heat_flux": cons["f_t_w_m2"],
@@ -239,7 +326,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
     units = {"l_int": "W", "t_int": "K", "radiogenic_power": "W", "mantle_radiogenic_power": "W",
              "l_int_total": "W", "t_int_total": "K", "mantle_temperature_floor_total_min": "K",
              "mantle_temperature_floor_total_max": "K", "mantle_temperature_floor_total_verdict": "",
-             "crust_radiogenic_power": "W", "radiogenic_power_low": "W",
+             "crust_radiogenic_power": "W", "radiogenic_power_low": "W", "radiogenic_concentration_grade": "",
              "radiogenic_heat_w_m2": "W/m2", "radiogenic_power_history_4gyr": "dimensionless",
              "mantle_top_boundary_layer": "km", "implied_surface_heat_flux": "W/m2",
              "implied_surface_heat_flow": "W", "heat_flow_consistency": "",
@@ -310,4 +397,6 @@ def _from_state(state):
                  # C30: tidal_heating's Ė (chain :653 via power); absent → totals not emitted. The contract calls this
                  # `tidal_power`, the state key is the generic `power`: today tidal_heating is the only emitter of that
                  # name, and if a second node ever emits `power` this line would silently add the wrong term.
-                 tidal_power=state.get("power")), state)
+                 tidal_power=state.get("power"),
+                 # prereg-radiogenic §4: a body's declared U · Th · K; absent → the Earth default, graded so
+                 radiogenic_concentration=state.get_optional("radiogenic_concentration")), state)

@@ -8224,7 +8224,7 @@ areotherm assumes no crustal enrichment in heat-producing elements, which is pre
 here, so the comparison is worth printing and **is not a test**.
 
 **Code this row points at**: `engine/radiogenic.py@«# — the appendix. Earth's number, DECLARED for every rocky body.»`
-— the declaration's own provenance comment — and `engine/radiogenic.py@«def budget(silicate_mass_kg: float, set_name: str = DEFAULT_SET, t_gyr: float = 0.0) -> dict:»`,
+— the declaration's own provenance comment — and `engine/radiogenic.py@«def budget(silicate_mass_kg: float, set_name: str = DEFAULT_SET, t_gyr: float = 0.0,»`,
 the one line both models draw the budget from.
 
 ---

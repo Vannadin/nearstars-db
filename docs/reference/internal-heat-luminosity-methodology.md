@@ -43,10 +43,11 @@ non-negligible, see that doc).
 `mantle_temperature_floor_min` [K] · `mantle_temperature_floor_max` [K] · `mantle_temperature_floor_verdict` [—] ·
 `mantle_temperature_width_zeta` [K] · `mantle_temperature_width_set` [K] · `mantle_temperature_width_denominator` [K] ·
 `mantle_temperature_width_surface` [K] · `l_int_total` [W] · `t_int_total` [K] · `mantle_temperature_floor_total_min` [K] ·
-`mantle_temperature_floor_total_max` [K] · `mantle_temperature_floor_total_verdict` [—]
+`mantle_temperature_floor_total_max` [K] · `mantle_temperature_floor_total_verdict` [—] ·
+`radiogenic_concentration_grade` [—] (measured | literature | owner-override, or declared-default when the body declares none)
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] ·
 `radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K] · `tidal_power` [W]
-**Declared-optional** — inputs this recipe declares a default for, in the code and in prose above; absent is a normal state, not a hole (C50 (b), Brief 170 B). `ice_mass_fraction` [—] — the radiogenic budget defaults it to 0.0 for a dry body.
+**Declared-optional** — inputs this recipe declares a default for, in the code and in prose above; absent is a normal state, not a hole (C50 (b), Brief 170 B). `ice_mass_fraction` [—] — the radiogenic budget defaults it to 0.0 for a dry body. `radiogenic_concentration` [block: U_ppb · Th_ppb · K_ppm · grade · source, optional `alternative`] — the body's declared bulk-silicate U · Th · K (prereg-radiogenic §4); absent, the Earth set (N&P 2020 published, 260 ppm / 23 ppb / 85 ppb) is used and graded `declared-default`.
 **State-key note** — `tidal_power` reaches this recipe under the state key `power`, which is the name
 `tidal_heating` emits its Ė under (chain.yaml, the tidal_heating to internal_heat_nontidal edge, via power).
 That name is generic: today tidal_heating is its only emitter, and a second node emitting power would be
@@ -201,6 +202,7 @@ declaration band, gated at < 10 MW/K. `engine/core-entropy-context-notes.md`.
 `tectonic_regime` [—] (selects the loss law, §8b) ·
 `lid_thickness_km` [km] (required only for a lid regime, §8b) ·
 `surface_temperature_k` [K] (both laws use it as the cold end of ΔT, §8b)
+**Declared-optional** — `radiogenic_concentration` [block] — the same declaration `internal_heat_nontidal` reads; it sets the present mantle heat and its history. Absent, the Earth set.
 **Discriminating keys** — `body_class`: rocky bodies only. No interior solution or no initial temperatures → refused by name.
 `tectonic_regime` `stagnant` with no `lid_thickness_km` → refused by name (§8b): the body is not given a law its own regime contradicts.
 **Grade** — **analog**: Nimmo+ 2004 eqs 30 and 32 integrated forward (RK4, h = min(4 Myr, 0.1·τ) with Nimmo's 4 Myr as the cap) on the state (T_c, T_m); the

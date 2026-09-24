@@ -38,9 +38,11 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 # The A0 values that need no source data, at Λ 20 and cap 10 Myr, frozen from this run's own output on
 # 2026-09-24: 1 920 melt shells (v2-10), the δ_b guard at ½ shell (v2-14), and the δ_u/δ_b bracket solve
 # with the nearest inner root (v2-17 and supplements; v2-18), and H_pm from `radiogenic.heat_per_kg`
-# (prereg-radiogenic §2). ⚠ R2's second condition — these six unmoved — FAILED: H_pm moved ≤ 1.04e-5
-# relative and T_c / T_m today moved 2101.64 → 2101.44 / 1942.02 → 1942.15 (−0.20 / +0.13 K), the size of the
-# 0.1–0.3 K noise the uniform-scaling test measured on this solver. The reference was moved knowing that
+# (prereg-radiogenic §2). ⚠ R2's second condition — these six unmoved — FAILED. H_pm moved ≤ 1.04e-5
+# relative, and the six moved: T_c today −0.20 · T_m today +0.13 · T_c(1) − T_c0 −0.42 · T_m(1) − T_m0
+# −0.72 · T_m peak −0.79 K · peak time 0. The two today values are the size of the noise floor the
+# uniform-scaling test measured on this solver (even part 0.06–0.12 K); the 1 Gyr differences and the
+# peak are several times it — cause not looked at. The reference was moved knowing that
 # (addendum 8). Before the bracket solve they read
 # 2101.59 / 1941.69 (a fixed point stopping silently at 60 iterations, noise ~1 K). The two RMS conditions
 # need the 2023 source data, which is outside the repo, so the gate cannot hold them.

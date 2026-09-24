@@ -19,6 +19,14 @@ inputs:
   # 같은 사실의 재사용이다.
   age_gyr: 4.54
   body_class: rocky
+  # 규산염 방사성 농도 — prereg-radiogenic §4 (오너 결정 ③, 2026-09-24). Drilleau+ 2022 §4.1.2(PDF 9 쪽)의
+  # EH45 벌. 2023 역산이 고정한 값이고 열진화 판 2 가 쓰는 것과 같은 벌이다.
+  radiogenic_concentration:
+    U_ppb: 14.0
+    Th_ppb: 54.0
+    K_ppm: 284.0
+    grade: literature
+    source: "2022JGRE..12707067D §4.1.2, PDF p9"
   # 핵 **쪽** 핵-맨틀 경계 온도 — **오너 결정 2026-09-09** (C54 (b), 브리프 174). 문헌 밴드는
   # **1900–2100 K** 이고 Durán+ 2022 (2022PEPI..32506851D, 보유) 가 그 밴드를 인쇄한다. 같은 논문의
   # 포텐셜 온도는 1650–1750 K 이며 «implying an entirely liquid core at present» 라고 적는다.

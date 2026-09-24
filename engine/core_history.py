@@ -140,7 +140,7 @@ def rates(t_c: float, t_m: float, p: dict, t_gyr_from_present: float) -> dict:
         q_m = top["q_m_w"]
         if top["extrapolation_note"]:
             notes.append(top["extrapolation_note"])
-    h_m = p["h_m_present_w"] * rg.history_factor(t_gyr_from_present)
+    h_m = p["h_m_present_w"] * rg.history_factor(t_gyr_from_present, conc=p.get("radiogenic_conc"))
     dtm = (h_m - q_m + q_c) / (p["m_mantle"] * mf.C_PM * math.sqrt(p["r_b"]))
     return {"dtc": dtc, "dtm": dtm, "q_c": q_c, "q_m": q_m, "h_m": h_m, "q_r": q_r, "side": side,
             "extrapolation_notes": tuple(notes)}
@@ -346,7 +346,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
           mantle_initial_potential_temperature: float | None, core_material: str = "fe_prem",
           body_class: str | None = None, tectonic_regime=None,
           lid_thickness_km=None, legacy_stagnant_lid=None, surface_temperature_k=None,
-          run_sweep: bool = False) -> Result:
+          run_sweep: bool = False, radiogenic_concentration: dict | None = None) -> Result:
     inputs = {"mass_earth": mass_earth, "core_mass_fraction": core_mass_fraction, "core_radius": core_radius_earth,
               "cmb_pressure": cmb_pressure_gpa, "cmb_temperature": cmb_temperature,
               "potential_temperature": potential_temperature, "radius_earth": radius_earth, "age_gyr": age_gyr,
@@ -355,7 +355,8 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
               "core_material": core_material, "body_class": body_class,
               "tectonic_regime": tectonic_regime, "lid_thickness_km": lid_thickness_km,
               "surface_temperature_k": surface_temperature_k,
-              "step_myr": STEP_MYR, "step_fraction": STEP_FRACTION, "core_h_w_per_kg": ce.H_CORE}
+              "step_myr": STEP_MYR, "step_fraction": STEP_FRACTION, "core_h_w_per_kg": ce.H_CORE,
+              "radiogenic_concentration": radiogenic_concentration}
     if body_class in ROCKY_ONLY:
         return out_of_domain(RECIPE, VERSION, f"'{body_class}' 에는 규산염 맨틀·금속 핵의 결합 열진화가 뜻이 없다 — 암석체의 것이다.",
                              inputs=inputs, refs=REFS)
@@ -431,6 +432,10 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
                                  f"cannot-say ({mb._lid_domain_message(lid_thickness_m, d_mantle_m)})",
                                  inputs=inputs, refs=REFS)
 
+    try:
+        conc, _grade, _label = rg.read_concentration(radiogenic_concentration)
+    except ValueError as e:
+        return out_of_domain(RECIPE, VERSION, f"거절: {e}", inputs=inputs, refs=REFS)
     params = {"material": core_material, "p_cmb": cmb_pressure_gpa * 1e9, "r_cmb": core_radius_earth * cf.R_EARTH_M,
               "m_core": m_kg * core_mass_fraction, "m_mantle": m_kg * (1.0 - core_mass_fraction),
               "r_b": cmb_temperature / potential_temperature,
@@ -438,7 +443,9 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
               "loss_law": loss_law, "delta_m": lid_thickness_m,
               "t_surface_k": t_surface_k,
               "d_mantle_m": d_mantle_m,
-              "h_m_present_w": rg.budget(m_kg * (1.0 - core_mass_fraction))["mantle_w"]}
+              # prereg-radiogenic §4: the body's declared U · Th · K when it has one (the share form, 70 %, stays)
+              "h_m_present_w": rg.budget(m_kg * (1.0 - core_mass_fraction), conc=conc)["mantle_w"],
+              "radiogenic_conc": conc}
     try:
         if run_sweep:
             sw = sweep(params, core_initial_temperature, mantle_initial_potential_temperature, age_gyr)
@@ -544,4 +551,5 @@ def _from_state(state):
                  tectonic_regime=state.get_optional("tectonic_regime"),
                  legacy_stagnant_lid=state.get_optional("stagnant_lid"),
                  lid_thickness_km=state.get_optional("lid_thickness_km"),
-                 surface_temperature_k=state.get_optional("surface_temperature_k"))
+                 surface_temperature_k=state.get_optional("surface_temperature_k"),
+                 radiogenic_concentration=state.get_optional("radiogenic_concentration"))
