@@ -1,7 +1,7 @@
 {
  "python": "3.9.6",
  "path_fingerprint": "cc06ddc16e575532",
- "frozen_at": "2026-09-23",
+ "frozen_at": "2026-09-24",
  "steps": 1500,
  "inputs": {
   "ammonia_table.py": "47fbe39e25e453c5",
@@ -21,9 +21,9 @@
   "hhe_table.py": "4e8c1b003e69b834",
   "ice_fr2015.py": "ff4bfefe8553a1a7",
   "ice_melt_table.py": "edf7d6476c3ae64f",
-  "interior.py": "ca2dd95aad0033c9",
+  "interior.py": "3b54df5373143501",
   "mantle_flux.py": "2d71f84d13d3c7f3",
-  "mars_sulphur_anchor.json": "4527f8a0d0159149",
+  "mars_sulphur_anchor.json": "eca48d5489235adb",
   "payload.py": "dbdea3f9889d4307",
   "porosity.py": "ca33b581de6e49bc",
   "radiogenic.py": "2e8eeef8588be8a6",
@@ -55,7 +55,7 @@
   "hhe_table.py": "eeaede52d8c20a41",
   "ice_fr2015.py": "bd9796e141166399",
   "ice_melt_table.py": "ccb88c5bb86ee1d0",
-  "interior.py": "59b5fdf9ca0f1837",
+  "interior.py": "3aa09fdbb0a07db8",
   "mantle_flux.py": "98aaccfa3d7d6155",
   "payload.py": "f787ad53b1c7eaed",
   "porosity.py": "143b86cfd0290cb7",
@@ -73,7 +73,7 @@
  },
  "bodies": {
   "Uranus": {
-   "seconds": 28.0,
+   "seconds": 27.7,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -122,7 +122,7 @@
    "standalone_reproduces_solve": true
   },
   "Neptune": {
-   "seconds": 37.0,
+   "seconds": 36.3,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
