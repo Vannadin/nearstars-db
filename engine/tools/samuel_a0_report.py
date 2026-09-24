@@ -75,6 +75,15 @@ def main() -> int:
                 + f" · 걸음 시작의 |T_c − T_b| 최소 {gap['tc_tb_gap']:.4f} K @ {gap['t']:.4f} Gyr"
                 + f" · 누르기 전 δ_b/껍질 최대 {raw['delta_b_raw_over_shell']:.4f} @ {raw['t']:.4f} Gyr")
 
+    def limit_line(out):
+        """v2-15: evaluations where the δ_u/δ_b fixed point hit its 60-iteration limit, unconverged."""
+        hits = out["fixed_point_limit_hits"]
+        if not hits:
+            return "고정점 한도(60 회) 도달 0"
+        worst = max(hits, key=lambda h: max(h[1], h[2]))
+        return (f"고정점 한도(60 회) 도달 {len(hits)} 평가 ({hits[0][0]:.4f}–{hits[-1][0]:.4f} Gyr) · 마지막 두 반복 차 최대 "
+                f"|Δδ_u| {worst[1] / 1e3:.3g} km · |Δδ_b| {worst[2] / 1e3:.3g} km @ {worst[0]:.4f} Gyr")
+
     def line(tag, out):
         if "refused" in out:
             return f"  {tag:<28} 거절 @ {out['refused_at_gyr']:.3f} Gyr — {out['refused'][:90]}"
@@ -101,6 +110,7 @@ def main() -> int:
     for lam in (5.0, 10.0, 15.0, 20.0):
         if "refused" not in scan[lam]:
             print(f"      Λ {lam:g}: " + guard_line(scan[lam]))
+            print(f"      Λ {lam:g}: " + limit_line(scan[lam]))
 
     def miss(o):
         c = o["a0"]["conditions"]
@@ -118,6 +128,7 @@ def main() -> int:
         print(line(f"상한 {cap:g} Myr", o))
         if "refused" not in o:
             print("      " + guard_line(o))
+            print("      " + limit_line(o))
 
     print("\n── 준정상 비교판 (v2-3 ②, 보고) ──")
     base, qs = scan[ref], one(ref, lid_mode="quasi_steady")

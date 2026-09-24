@@ -51,6 +51,9 @@ class Setup:
         self.delta_b_cap_fraction = delta_b_cap_fraction
         self.guard_stage_hits: list = []   # (t, |T_c − T_b|) of every RK stage the guard bit, not only step starts
         self.guard_iter_hits: list = []    # (t, |T_c − T_b|) of every fixed-point iteration the guard bit
+        # v2-15: evaluations whose δ_u/δ_b fixed point hit the 60-iteration limit without converging —
+        # (t, |Δδ_u| and |Δδ_b| of the last two iterations, m). Recorded, not acted on.
+        self.fixed_point_limit_hits: list = []
 
     def pressure(self, r: float) -> float:
         return self.profile.pressure(r)
@@ -98,7 +101,10 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
         if abs(new_u - d_u) < 1e-6 and abs(new_b - d_b) < 1e-6:
             d_u, d_b = new_u, new_b
             break
+        last_diff = (abs(new_u - d_u), abs(new_b - d_b))
         d_u, d_b = new_u, new_b
+    else:
+        s.fixed_point_limit_hits.append((t_gyr, last_diff[0], last_diff[1]))
     r_top, r_bot = r_l - d_u, r_c + d_b
     # ⚠ any iteration counts, not only the last (audit seat: the last alone missed 67 bites at Λ 20, cap 10)
     if guard_gap is not None:
@@ -245,7 +251,8 @@ def run(s: Setup, cap_myr: float) -> dict:
         grad = lid.step(h, d_l=y[2], d_cr=y[3], t_l=t_l, h_m=h_m, h_cr=h_cr)
     return {"rows": rows, "n_steps": n, "cap_myr": cap_myr, "h_min_myr": h_min / GYR_S * 1e3,
             "max_lambda_over_ceiling": worst, "n_remesh": n_remesh,
-            "guard_stage_hits": list(s.guard_stage_hits), "guard_iter_hits": list(s.guard_iter_hits), "remesh_loss_j": remesh_loss}
+            "guard_stage_hits": list(s.guard_stage_hits), "guard_iter_hits": list(s.guard_iter_hits),
+            "fixed_point_limit_hits": list(s.fixed_point_limit_hits), "remesh_loss_j": remesh_loss}
 
 
 def _heat_above(lid, r_lo: float) -> float:
