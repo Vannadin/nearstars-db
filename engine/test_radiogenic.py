@@ -3,15 +3,18 @@
 
     python3 engine/test_radiogenic.py
 
-1. Closure — with the standard BSE mass 4.0e24 kg the three sets reproduce the paper's own
-   numbers: Earth (1) 21.15 vs 21.4, Earth (2) 10.63 vs 10.8, appendix 21.55 vs "22 TW" (≤ 3 %).
-   The constants are standard nuclear data read from an unpublished draft table; if this closure
-   fails, we misread them — do not adjust the constants (pre-registered branch ⑤).
-2. The caption trap — read as "initial composition" and decayed 4.5 Gyr the set gives 11.59 TW,
-   1.9× short. Pinned so nobody re-adopts the caption's reading.
-3. Direction — H(−4 Gyr)/H(now) = 3.67 against the paper's 3.5; computed forward it is ~1.7,
-   believable and wrong. ²³⁵U carries it: 0.38 TW today, without it the factor is 2.8, Th + ²³⁸U
-   alone 1.5.
+0. R1 — the nuclide sums reproduce Ruedas 2017's element rates: pinned to 1e-12 at the sums themselves
+   (U 9.831432361e-5, Th 2.6368e-5, K 3.430136938e-9 W/kg), and within 3e-5 of the printed element
+   values (the difference is printed). R3 — each paper's composition gives that paper's number, on the
+   engine Earth's silicate mass (4.0311e24 kg), within ±0.5 TW (prereg-radiogenic addenda 1, 2, 5).
+1. Closure — with the standard BSE mass 4.0e24 kg: Earth (1) and appendix are now the same set (N&P 2020
+   published, 260/23/85) and give 21.58 TW; Earth (2) 10.64 vs the draft's 10.8 (≤ 3 %).
+2. The caption trap — read as "initial composition" and decayed 4.5 Gyr the set gives 11.79 TW,
+   1.9× short. Pinned so nobody re-adopts the caption's reading. (11.59 until the Earth set's U moved
+   22 → 23, prereg-radiogenic addenda 2 and 6.)
+3. Direction — H(−4 Gyr)/H(now) = 3.66 against the paper's 3.5; computed forward it is 1.74,
+   believable and wrong. ²³⁵U carries it: 0.37 TW today, without it the factor is 2.83, Th + ²³⁸U
+   alone 1.53. (Ruedas 2017 constants; with the draft table these read 3.67 · 0.38 · 2.8 · 1.5.)
 4. Roster — Earth's own silicate mass gives ~21 TW and a radiogenic-only t_int ≈ 29 K (the
    methodology's 35 K is the total 0.087 W/m², radiogenic + secular); giants refuse; a body
    without core_mass_fraction refuses; labels carry the declarations.
@@ -31,16 +34,33 @@ def main() -> int:
             fails.append(msg)
 
     M = rg.BSE_MASS_STANDARD_KG
+    # ── 0. R1 and R3 ───────────────────────────────────────────────────────
+    sums = {el: sum(rg.ISOTOPES[n][1] * rg.ISOTOPES[n][2] for n in rg.ISOTOPES if rg.ELEMENT_OF[n] == el)
+            for el in ("U", "Th", "K")}
+    for el, pinned in (("U", 9.831432361070902e-05), ("Th", 2.6368e-05), ("K", 3.430136937926238e-09)):
+        ok(abs(sums[el] / pinned - 1) < 1e-12, f"R1: {el} nuclide sum {sums[el]!r}, pinned {pinned}")
+        printed = rg.RUEDAS_2017_ELEMENT_W_PER_KG[el]
+        rel = sums[el] / printed - 1
+        ok(abs(rel) < 3e-5, f"R1: {el} sum {sums[el]:.9e} vs Ruedas element {printed} — {rel:+.2e}")
+        print(f"  [기록] R1 {el}: 핵종 합 {sums[el]:.9e} · Ruedas 원소값 {printed} · 차 {rel:+.2e}")
+    silicate = 1.0 * rg.M_EARTH_KG * (1.0 - 0.325)       # the engine Earth's silicate mass (addendum 1 C)
+    for label, conc, printed_tw in (("McDonough & Sun 1995", {"U": 20e-9, "Th": 80e-9, "K": 240e-6}, 20.0),
+                                    ("Lyubetskaya & Korenaga 2007a", {"U": 17e-9, "Th": 63e-9, "K": 190e-6}, 16.0),
+                                    ("Nimmo & Primack 2020", {"U": 23e-9, "Th": 85e-9, "K": 260e-6}, 22.0)):
+        tw = rg.heat_per_kg(conc) * silicate / 1e12
+        ok(abs(tw - printed_tw) <= 0.5, f"R3: {label} {tw:.4f} TW vs printed {printed_tw}")
+        print(f"  [기록] R3 {label}: {tw:.4f} TW (인쇄 {printed_tw:g}, 차 {tw - printed_tw:+.4f}) · 질량 {silicate:.6e} kg")
     # ── 1. closure ─────────────────────────────────────────────────────────
-    want = {"earth_1_chondritic": (21.15, 21.4), "earth_2_non_chondritic": (10.63, 10.8),
-            "appendix": (21.55, 22.0)}
+    # earth_2 10.63 → 10.64: the constants moved to Ruedas 2017 (10.6448; prereg-radiogenic addendum 7).
+    want = {"earth_1_chondritic": (21.58, 22.0), "earth_2_non_chondritic": (10.64, 10.8),
+            "appendix": (21.58, 22.0)}
     for s, (mine, printed) in want.items():
         tw = rg.budget(M, s)["total_w"] / 1e12
         ok(abs(tw - mine) < 0.02, f"1: {s} = {tw:.2f} TW, expected {mine}")
         ok(abs(tw / printed - 1.0) < 0.03, f"1: {s} = {tw:.2f} TW vs the paper's {printed} — off by {(tw / printed - 1) * 100:.1f} %")
     # ── 2. caption trap ────────────────────────────────────────────────────
     initial_read = rg.budget(M, "earth_1_chondritic", t_gyr=4.5)["total_w"] / 1e12
-    ok(abs(initial_read - 11.59) < 0.05, f"2: caption-as-initial read gives {initial_read:.2f} TW, expected 11.59")
+    ok(abs(initial_read - 11.79) < 0.05, f"2: caption-as-initial read gives {initial_read:.2f} TW, expected 11.79")
     ok(22.0 / initial_read > 1.8, "2: the caption reading must fall ~1.9× short of the appendix's 22 TW")
     # ── 3. direction and ²³⁵U ──────────────────────────────────────────────
     past = rg.history_factor(-4.0)
@@ -69,8 +89,8 @@ def main() -> int:
     ok(earth.applicable and abs(earth.values["mantle_radiogenic_power"] / earth.values["radiogenic_power"] - 0.70) < 1e-9,
        "4: mantle share must be the declared 0.70")
     ok(earth.applicable and earth.grade == "analog", "4: grade must be analog — the concentrations and the split are declarations")
-    ok(earth.applicable and "선언" in " ".join(earth.notes) and "미발표 초안 표" in " ".join(earth.notes),
-       "4: the label must say the set/split are declared and the table is an unpublished draft")
+    ok(earth.applicable and "선언" in " ".join(earth.notes) and "Ruedas 2017" in " ".join(earth.notes),
+       "4: the label must say the set/split are declared and name the constants' source (Ruedas 2017)")
     giant = rg.solve(120.0, None, 11.2, "giant", 5.3)
     ok(not giant.applicable and "냉각광도" in giant.reason, "4: a giant must refuse by name (cooling luminosity)")
     # 얼음체 (감사, 44 후속 ①): 얼음 맨틀은 규산염이 아니다 — 같은 질량의 암석체 대비 예산이 규산염 분율만큼 준다

@@ -2,18 +2,14 @@
 """Radiogenic heat budget of a rocky body, present day, plus its decay history.
 
     from radiogenic import budget, history_factor
-    budget(silicate_mass_kg=4.0e24)["total_w"] / 1e12          -> 21.15 TW (Earth (1) set)
+    budget(silicate_mass_kg=4.0e24)["total_w"] / 1e12          -> 21.58 TW (Earth (1) set)
     history_factor(-4.0)                                        -> 3.67
 
-⚠ Where the constants come from — say all three things, every time.
-The four isotope constants below are **standard nuclear data** (half-life, isotopic abundance,
-heat production per kg of isotope): any handbook prints them, which is why the closure works.
-**We read them from Nimmo & Primack 2020's unpublished draft table** — it sits after
-`\\end{document}` in `docs/phase3/_papers/2020ApJ...903L..37N.src/main.tex` (lines 494–499), never
-compiled, caption ending `\\textcolor{red}{check}`, absent from the PDF (0 hits for every number).
-**There is no "Nimmo & Primack 2020 Table 1"; never cite one.** The closure in `test_radiogenic.py`
-is the check that we read them right: 21.15 / 10.63 / 21.55 TW against the draft's own 21.4 / 10.8
-and the appendix's printed "22 TW at the present day" (`Nimmo & Primack 2020 unpublished draft main.tex:420–421`).
+⚠ Where the constants come from. The four nuclide constants are **Ruedas 2017 Table 2** (G³ 18, 3530,
+PDF p6, rendered), chosen by us outside any chain (pre-registration `prereg-radiogenic.md` §1). Until
+2026-09-24 they were read from Nimmo & Primack 2020's unpublished draft table (after `\\end{document}` in
+`2020ApJ...903L..37N.src/main.tex`, never compiled); that is no longer their source. The default Earth
+concentrations are the published N&P 2020 set (PDF p14), 260 ppm / 23 ppb / 85 ppb.
 
 ⚠ The draft caption says the heating rates refer to the *initial* composition. Read that way the set
 gives 11.59 TW today, 1.9× short of the paper's own appendix; **the concentrations are present-day**
@@ -37,14 +33,9 @@ from payload import Result, out_of_domain, tagged_with_unconverged
 RECIPE = "internal-heat-luminosity-methodology"
 VERSION = "1"
 REFS = (
-    "2020ApJ...903L..37N",     # Nimmo & Primack 2020, ApJL 903, L37 — the appendix (22 TW, 70 %) is in
-                               # the paper; the four constants are in its UNPUBLISHED draft table only
-    # The constants are standard nuclear data; **the canonical tabulation is not held.** Read from
-    # N&P's draft table and closure-checked against that table's own totals — which certifies the
-    # transcription, not the constants (the authors computed those totals from the same numbers).
-    # Candidate standard source, named from memory and NOT read (on the request list):
-    # Ruedas 2017, Geochem. Geophys. Geosyst. — radioactive heat production of the long-lived nuclides.
-    "standard-nuclear-data (not held; see engine/radiogenic-budget-context-notes.md §5)",
+    "2017GGG....18.3530R",     # Ruedas 2017, G³ 18, 3530 — Table 2, the four nuclide constants (PDF p6)
+    "2020ApJ...903L..37N",     # Nimmo & Primack 2020, ApJL 903, L37 — the published Earth set 260/23/85
+                               # (PDF p14) and the appendix's 22 TW, 70 %
 )
 
 SIGMA_SB = 5.670374419e-8            # W m⁻² K⁻⁴
@@ -52,20 +43,38 @@ M_EARTH_KG = 5.972e24
 R_EARTH_M = 6.371e6
 GYR_S = 1e9 * 365.25 * 86400.0
 
-# (half-life Gyr, isotopic mass fraction of the element, W per kg of isotope) — Nimmo & Primack 2020 unpublished draft main.tex:494-499
-ISOTOPES = {
-    "K40":   (1.25,  0.0117e-2, 2.92e-5),
-    "Th232": (14.0,  1.0,       2.64e-5),
-    "U238":  (4.47,  0.99275,   9.46e-5),
-    "U235":  (0.704, 0.0072,    5.69e-4),
+# Ruedas 2017, G³ 18, 3530 (`2017GGG....18.3530R`), Table 2, PDF p6 (rendered; the arXiv author's final
+# manuscript) — pre-registration `prereg-radiogenic.md` §1, replacing N&P 2020's unpublished draft table.
+# Per nuclide: half-life My, present atom fraction X_iso, heat per kg of the nuclide W/kg, atomic mass u.
+# ⚠ The ²³⁸U row includes ²³⁴U (the table's footnote).
+RUEDAS_2017 = {
+    "K40":   {"half_life_my": 1248.0,  "x_iso": 1.1668e-4, "h_w_per_kg": 2.8761e-5,  "u": 39.963998166},
+    "Th232": {"half_life_my": 14000.0, "x_iso": 1.0,       "h_w_per_kg": 2.6368e-5,  "u": 232.038053689},
+    "U235":  {"half_life_my": 704.0,   "x_iso": 0.0072045, "h_w_per_kg": 5.68402e-4, "u": 235.043928190},
+    "U238":  {"half_life_my": 4468.0,  "x_iso": 0.9927955, "h_w_per_kg": 9.4946e-5,  "u": 238.050786996},
 }
-ELEMENT_OF = {"K40": "K", "Th232": "Th", "U238": "U", "U235": "U"}
+ELEMENT_U = {"K": 39.0983, "Th": 232.038053689, "U": 238.02891}
+# The element's printed rates, kept only to check the sum against (acceptance R1, ≤ 3×10⁻⁵ relative):
+RUEDAS_2017_ELEMENT_W_PER_KG = {"K": 3.4302e-9, "Th": 2.6368e-5, "U": 9.8314e-5}
 
-# Bulk-silicate concentrations (element mass fractions), the declared family — Nimmo & Primack 2020 unpublished draft main.tex:494-499,
-# :420. Neither set is elected; the recipe emits the default and the second beside it.
+# (half-life Gyr, mass fraction of the nuclide in its element, W per kg of the nuclide).
+# ⚠ The mass fraction is X_iso · u_iso / u_element — the atom fraction alone was used here until
+#   2026-09-24, which made U 0.04 % high. The engine uses the nuclide sum (K 3.430137e-9 W/kg), not the
+#   printed element rate (3.4302e-9): one set, the same one the decay runs on (addendum 5).
+ELEMENT_OF = {"K40": "K", "Th232": "Th", "U238": "U", "U235": "U"}
+ISOTOPES = {name: (row["half_life_my"] / 1000.0, row["x_iso"] * row["u"] / ELEMENT_U[ELEMENT_OF[name]],
+                   row["h_w_per_kg"])
+            for name, row in RUEDAS_2017.items()}
+
+# Bulk-silicate concentrations (element mass fractions). Neither set is elected; the recipe emits the
+# default and the second beside it.
+# ⚠ `earth_1_chondritic` is now the PUBLISHED Nimmo & Primack 2020 set, PDF p14: "260 ppm, 23 ppb and 85 ppb
+#   respectively for K, U and Th; this produces 22 TW of heat production at the present day" (addendum 2,
+#   owner 2026-09-24). U 22 came only from the unpublished draft table (P&O 2014, no lawful open copy).
+#   It is now the same set as `appendix`; both names stay, so the callers and the tests keep their names.
 CONCENTRATION_SETS = {
-    "earth_1_chondritic":      {"K": 260e-6, "Th": 85e-9, "U": 22e-9},   # Palme & O'Neill 2014
-    "earth_2_non_chondritic":  {"K": 130e-6, "Th": 43e-9, "U": 11e-9},   # O'Neill & Palme 2008
+    "earth_1_chondritic":      {"K": 260e-6, "Th": 85e-9, "U": 23e-9},   # N&P 2020 published, PDF p14
+    "earth_2_non_chondritic":  {"K": 130e-6, "Th": 43e-9, "U": 11e-9},   # O'Neill & Palme 2008 (draft table)
     "appendix":                {"K": 260e-6, "Th": 85e-9, "U": 23e-9},   # the paper's own model set
 }
 DEFAULT_SET = "earth_1_chondritic"
@@ -191,12 +200,12 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
     notes = (
         f"방사성 예산 (현재값): 규산염 질량 {silicate_kg:.3e} kg (= 질량 × (1 − 핵질량분율 {core_mass_fraction} "
         f"− 얼음질량분율 {imf}), 도출) × "
-        f"Earth (1) 콘드라이트 농도(K 260 ppm · Th 85 ppb · U 22 ppb, Palme & O'Neill 2014) → 총 "
+        f"Earth (1) 농도(K 260 ppm · Th 85 ppb · U 23 ppb, Nimmo & Primack 2020 출간본 PDF 14 쪽) → 총 "
         f"{b['total_w'] / 1e12:.2f} TW; 맨틀 몫 70 % = {b['mantle_w'] / 1e12:.2f} TW, 지각 30 % = "
         f"{b['crust_w'] / 1e12:.2f} TW. **농도 세트와 70/30 은 선언이다** (Earth (2) 비콘드라이트 세트로는 "
         f"{b_low['total_w'] / 1e12:.2f} TW — 두 값을 다 싣고 어느 쪽도 뽑지 않는다). 핵종 상수는 표준 "
-        "핵데이터이고, Nimmo & Primack 2020 의 **미발표 초안 표**(main.tex \\end{document} 뒤, PDF 에 없음)"
-        "에서 읽었으며, 그 표 자신의 21.4 / 10.8 TW 와 부록의 22 TW 에 1–2 % 로 폐합하는 것이 읽기의 검산이다.",
+        "핵데이터로 Ruedas 2017 Table 2(PDF 6 쪽)에서 읽었고 원소 1 kg 당 핵종 질량(X_iso·u_iso/u_원소)으로 가중한다. "
+        "검산은 그 표의 원소값(U 9.8314e-5 · Th 2.6368e-5 · K 3.4302e-9 W/kg)을 상대 3e-5 안으로 내는 것이다.",
         f"붕괴 이력: H(−4 Gyr)/H(now) = {hist:.2f} (논문 산문 3.5). ²³⁵U 가 그 배율을 끈다 — 지금 "
         f"{heat_per_kg(CONCENTRATION_SETS['appendix'], 0.0, ('U235',)) * BSE_MASS_STANDARD_KG / 1e12:.2f} TW 인 "
         "종을 빼면 2.8 로 준다. **이력은 여기서 끝난다**: 핵이 지금도 대류하는가는 열진화 모형(Nimmo+ 2004)의 몫이다 — "
