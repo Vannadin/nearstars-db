@@ -411,7 +411,11 @@ _pool_dispatch() {            # 줄 세운 풀 단계를 순서 파일대로 띄
     eval "_nm=\$_pool_qname_$_i"
     eval "_cmd=\$_pool_qcmd_$_i"      # %q 로 적은 명령을 **값으로 꺼낸 뒤** 다시 읽어야 인용이 산다
     eval "set -- $_cmd"
-    _pool_launch "$_nm" "$@"
+    # ⚠ **줄 세운 뒤 스풀이 죽었으면 직렬로 돈다** (감사석, `4ba39795` 대조). 줄 세울 때 본
+    #   `_pool_alive` 는 띄울 때의 상태가 아니다 — 여기서 다시 묻지 않으면 워커가 조용히 나가고
+    #   판정 대신 `pool_incomplete` 만 남는다. 옛 판이 `step()` 에서 하던 강등을 여기서 한다.
+    if [ -n "$_pool_dir" ] && ! _pool_alive; then _pool_dir=""; fi
+    if [ -n "$_pool_dir" ]; then _pool_launch "$_nm" "$@"; else _step_serial "$_nm" "$@"; fi
   done
   _pool_q_n=0
 }
