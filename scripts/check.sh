@@ -1049,6 +1049,8 @@ step "test_core_history.py" bash -c 'cd engine && exec python3 test_core_history
 step "test_samuel_model.py" bash -c 'cd engine && exec python3 test_samuel_model.py'
 # 정체 뚜껑 안 전도 (열진화 v2-3). 2019 SI 식 (21) 음해 격자가 정상 해석해로 수렴하고(지각 경계 없으면 2 차), 재격자·큰 걸음에 안 깨진다. ~0 s.
 step "test_samuel_lid.py" bash -c 'cd engine && exec python3 test_samuel_lid.py'
+# 기저층 안 전도 (열진화 v2-20, 판 3-0). 2021 식 (21)–(22) 음해 격자가 구껍질 정상 해석해·경계 열류에 2 차로 붙고 에너지가 닫힌다 · D_d = 0 이면 층 없음. ~1 s.
+step "test_samuel_layer.py" bash -c 'cd engine && exec python3 test_samuel_layer.py'
 # 적분기 기록 인자 (열진화 v2-7). record 를 켜도 Structure 스칼라 전부가 비트 동일 — 기록만 한다. ~1 s.
 step "test_interior_record.py" bash -c 'cd engine && exec python3 test_interior_record.py'
 # 판 2 적분 (열진화 v2-9 ④). 화성 구조 한 번(~65 s) 위에 Λ 20 한 판 — 핵 에너지 폐합 · 식 20 부호 · 천장 불변식과
