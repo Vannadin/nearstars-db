@@ -340,6 +340,31 @@ def _rock(serpentinisation: float):
 
 CRUST_NAME = "crust_primordial"
 
+#: 재료 경계 점프의 어휘 — 경계 이름은 «안쪽 역할/바깥 역할» (prereg-interface-jumps 덧붙임 3 ①).
+#: 상·하부 맨틀 · 내외핵은 층이 아니라 여기 없다(오너 결정: 판 4 뒤).
+INTERFACE_ROLES = ("core", "rock", "ice", "crust", "envelope")
+INTERFACE_NAMES = frozenset(f"{a}/{b}" for a in INTERFACE_ROLES for b in INTERFACE_ROLES if a != b)
+
+
+def _layer_role(stack, i: int, cmf: float, differentiated: bool) -> str:
+    """층 i 의 역할 — 점프 경계 이름의 한 쪽."""
+    mat = stack[i][1]
+    if i == 0 and differentiated and cmf > 0:
+        return "core"
+    if mat.name == "h2o":
+        return "ice"
+    if mat.name == CRUST_NAME:
+        return "crust"
+    if getattr(mat, "p_floor", 0.0):
+        return "envelope"
+    return "rock"
+
+
+def _interfaces_in(stack, cmf: float, differentiated: bool) -> set:
+    """이 층 열에 실제로 있는 경계 이름들."""
+    return {f"{_layer_role(stack, i - 1, cmf, differentiated)}/{_layer_role(stack, i, cmf, differentiated)}"
+            for i in range(1, len(stack))} & INTERFACE_NAMES
+
 
 def _crust(crust_rock_fraction: float, crust_porosity: bool = False):
     """원시 지각의 재료 (C11). 얼음 사다리(h2o)와 규산염을 부피 가법으로 섞은 것 — 액체 물이
@@ -589,7 +614,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
               crust_rock_fraction: float = 0.0, crust_porosity: bool = False,
               envelope_z_profile: tuple | None = None,
               ammonia_mass_fraction: float = 0.0,
-              record: list | None = None) -> Structure:
+              record: list | None = None,
+              interface_jumps: dict | None = None) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -697,9 +723,11 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
         바깥으로 적분하므로 여기서 온도가 그만큼 **떨어진다** (Nettelmann+ 2016 의 TBL). 떨어진
         온도가 0 아래면 이 시험 중심 온도로는 경계층 위가 존재하지 않으므로 온도가 막은 것으로 던진다."""
         nonlocal t
-        if boundary_temperature_jump <= 0.0 or t <= 0.0:
+        if t <= 0.0:
             return
-        if (stack[prev_layer][1].name == "h2o"
+        # ⚠ **옛 얼음→외피 경로는 한 글자도 안 바꾼다** (prereg-interface-jumps 덧붙임 3 ②) — 새 선언의
+        #   `ice/envelope` 는 `solve` 가 이 인수로 옮겨 이 가지를 그대로 탄다.
+        if (boundary_temperature_jump > 0.0 and stack[prev_layer][1].name == "h2o"
                 and getattr(stack[layer][1], "p_floor", 0.0)):
             if t - boundary_temperature_jump <= 0.0:
                 raise PhaseGap(
@@ -708,6 +736,19 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                     "빼면 외피가 0 K 아래다 — 이 중심 온도로는 경계층 위의 외피가 없다.",
                     t, too_cold=True)
             t -= boundary_temperature_jump
+        # 그 밖의 재료 경계 — 선언된 점프만큼 바깥이 차다 (안쪽이 뜨겁다).
+        if interface_jumps:
+            name = (f"{_layer_role(stack, prev_layer, cmf, differentiated)}/"
+                    f"{_layer_role(stack, layer, cmf, differentiated)}")
+            jump = interface_jumps.get(name)
+            if jump:
+                if t - jump <= 0.0:
+                    raise PhaseGap(
+                        stack[layer][1].name, p,
+                        f"경계 {name} 에서 {t:.0f} K 에 선언된 점프 {jump:.0f} K 를 빼면 0 K 아래다 — "
+                        "이 중심 온도로는 경계 위 층이 없다.",
+                        t, too_cold=True)
+                t -= jump
 
     def liquid_material(pp: float, tt: float):
         """액체인 자리의 재료. 2.3 GPa · 500 K 까지는 바다(SeaFreeze water1); 그 위는 1000 K 부터
@@ -1336,7 +1377,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     crust_rock_fraction: float = 0.0,
                     crust_porosity: bool = False,
                     envelope_z_profile: tuple | None = None,
-                    ammonia_mass_fraction: float = 0.0) -> tuple[Structure, bool]:
+                    ammonia_mass_fraction: float = 0.0,
+                    interface_jumps: dict | None = None) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
@@ -1430,7 +1472,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                          boundary_temperature_jump, mantle_rock_fraction,
                          serpentinisation, differentiation_front, crust_rock_fraction,
                          crust_porosity, envelope_z_profile,
-                         ammonia_mass_fraction=ammonia_mass_fraction)
+                         ammonia_mass_fraction=ammonia_mass_fraction,
+                         interface_jumps=interface_jumps)
 
     # 괄호잡기. 시험압을 네 배씩 올리며 겉질량이 목표에 닿는 자리를 찾는다.
     #
@@ -1554,7 +1597,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                         boundary_temperature_jump, mantle_rock_fraction,
                         serpentinisation, differentiation_front, crust_rock_fraction,
                         crust_porosity, envelope_z_profile,
-                        ammonia_mass_fraction=ammonia_mass_fraction)
+                        ammonia_mass_fraction=ammonia_mass_fraction,
+                        interface_jumps=interface_jumps)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     if p_stop and rung is not None:
@@ -1610,7 +1654,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     boundary_temperature_jump, mantle_rock_fraction,
                     serpentinisation, differentiation_front, crust_rock_fraction,
                     crust_porosity, envelope_z_profile,
-                    ammonia_mass_fraction=ammonia_mass_fraction)
+                    ammonia_mass_fraction=ammonia_mass_fraction,
+                    interface_jumps=interface_jumps)
         y1 = math.log(st.mass_kg / mass_kg)
     convergence.note("interior._shoot_pressure", False)
     return st, False
@@ -1660,7 +1705,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           crust_rock_fraction: float = 0.0,
           crust_porosity: bool = False,
           envelope_z_profile: tuple | None = None,
-          ammonia_mass_fraction: float = 0.0) -> tuple[Structure, bool]:
+          ammonia_mass_fraction: float = 0.0,
+          interface_jumps: dict | None = None) -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
 
     온도가 선언되지 않으면(`potential_temperature is None`) 아래 고리가 아예 돌지
@@ -1680,7 +1726,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           "crust_rock_fraction": crust_rock_fraction,
           "crust_porosity": crust_porosity,
           "envelope_z_profile": envelope_z_profile,
-          "ammonia_mass_fraction": ammonia_mass_fraction}
+          "ammonia_mass_fraction": ammonia_mass_fraction,
+          "interface_jumps": interface_jumps}
     if not potential_temperature:
         return _shoot_pressure(*args, **kw)
     t_pot = float(potential_temperature)
@@ -2578,7 +2625,8 @@ def solve(mass_earth: float,
           crust_porosity: bool = False,
           envelope_z_profile: tuple | None = None,
           ammonia_mass_fraction: float = 0.0,
-          basal_iron_number: float | None = None) -> Result:
+          basal_iron_number: float | None = None,
+          interface_temperature_jumps: dict | None = None) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
@@ -2620,7 +2668,11 @@ def solve(mass_earth: float,
               # ⚠ **계약이 이 사전을 읽는다** — `check_contracts` 의 `union_in` 은 표본 천체가
               #   실제로 낸 `Result.inputs` 의 합집합이다. 서명에만 더하고 여기 안 넣으면
               #   **문서가 적은 키를 코드가 안 쓴다**로 빨개진다 (2026-09-22 에 그렇게 났다).
-              "basal_iron_number": basal_iron_number}
+              "basal_iron_number": basal_iron_number,
+              # 재료 경계의 온도 점프 선언 (prereg-interface-jumps). 빈 사전이 기본 — 점프 없음.
+              # ⚠ 없으면 `None` 으로 적는다 — 호출부 기본값과 같은 수라야 계약의 클래스 ④ 가 조용하다.
+              "interface_temperature_jumps": (dict(interface_temperature_jumps)
+                                              if interface_temperature_jumps else None)}
 
     if body_class in FLUID_CLASSES:
         why = {
@@ -2902,6 +2954,47 @@ def solve(mass_earth: float,
     # ⚠ **밀도 적합이 자기 앵커 위에서 답했는가도 같은 모양으로 읽는다** (브리프 196 B).
     #   `eos.DENSITY_REACH` 는 세기만 하고 평가 경로가 안 읽으므로 이 읽기가 값을 못 움직인다.
     _reach0 = (eos.DENSITY_REACH["graded"], eos.DENSITY_REACH["beyond_measured"])
+    # ── 재료 경계의 온도 점프 (prereg-interface-jumps 덧붙임 3) ──
+    # `ice/envelope` 는 옛 선언(boundary_temperature_jump)의 자리라 그 값으로 옮겨 옛 경로를 그대로 탄다.
+    jumps = dict(interface_temperature_jumps or {})
+    if jumps:
+        if "ice/envelope" in jumps and boundary_temperature_jump:
+            return out_of_domain(
+                RECIPE, VERSION,
+                "얼음→외피 점프가 두 이름으로 들어왔다 — `boundary_temperature_jump` 와 "
+                "`interface_temperature_jumps` 의 `ice/envelope` 는 같은 선언이다. 하나만 준다.",
+                inputs=inputs, refs=REFS)
+        bad = sorted(k for k in jumps if k not in INTERFACE_NAMES)
+        if bad:
+            return out_of_domain(
+                RECIPE, VERSION,
+                f"모르는 경계 이름 {bad} — 어휘는 «안쪽/바깥» 역할 {sorted(INTERFACE_ROLES)} 의 쌍이다.",
+                inputs=inputs, refs=REFS)
+        neg = sorted(k for k, v in jumps.items() if not isinstance(v, (int, float)) or isinstance(v, bool)
+                     or not math.isfinite(v) or v < 0.0)
+        if neg:
+            return out_of_domain(
+                RECIPE, VERSION,
+                f"경계 점프는 0 이상의 유한한 수여야 한다 — {neg}.",
+                inputs=inputs, refs=REFS)
+        if not potential_temperature:
+            return out_of_domain(
+                RECIPE, VERSION,
+                "경계 점프는 온도가 흐르는 풀이의 선언이다 — `potential_temperature` 가 없으면 온도가 없어 "
+                "뛸 자리가 없다.",
+                inputs=inputs, refs=REFS)
+        present = _interfaces_in(_stack(cmf, imf, core_material, gmf, envelope_z, envelope_z_rock_fraction,
+                                        differentiated, serpentinisation, differentiation_front,
+                                        crust_rock_fraction, crust_porosity, envelope_z_profile),
+                                 cmf, differentiated)
+        absent = sorted(k for k in jumps if k not in present)
+        if absent:
+            return out_of_domain(
+                RECIPE, VERSION,
+                f"선언한 경계 {absent} 가 이 천체의 층에 없다 — 있는 경계는 {sorted(present) or '없음'}.",
+                inputs=inputs, refs=REFS)
+        if "ice/envelope" in jumps:
+            boundary_temperature_jump = float(jumps.pop("ice/envelope"))
     _ICE_GRID_DELTA.clear()
     try:
         st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
@@ -2910,7 +3003,8 @@ def solve(mass_earth: float,
                               boundary_temperature_jump, mantle_rock_fraction,
                               serpentinisation, differentiation_front, crust_rock_fraction,
                               crust_porosity, envelope_z_profile,
-                              ammonia_mass_fraction=ammonia_mass_fraction)
+                              ammonia_mass_fraction=ammonia_mass_fraction,
+                              interface_jumps=jumps or None)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -3287,6 +3381,7 @@ def solve(mass_earth: float,
         # 미분화는 측정 앵커가 없다.
         grade=("analog" if (initial_porosity > 0 or envelope_z > 0
                             or boundary_temperature_jump > 0 or mantle_rock_fraction > 0
+                            or bool(jumps)
                             or serpentinisation > 0 or crust_mass > 0.0
                             or not differentiated or giant_declared
                             or silicate_extrapolated or thermal_moves
@@ -3300,6 +3395,10 @@ def solve(mass_earth: float,
         values={"nmoi": st.nmoi,
                 "core_temperature": st.t_center,
                 "cmb_temperature": st.t_cmb,
+                # 핵 쪽(= `cmb_temperature`, 뜻 그대로)과 맨틀 바닥 쪽 — `core/rock` 점프만큼 다르다.
+                "cmb_temperature_core": st.t_cmb,
+                "cmb_temperature_mantle": (None if st.t_cmb is None
+                                           else st.t_cmb - float(jumps.get("core/rock", 0.0))),
                 "cmb_pressure": (st.p_cmb or 0.0) / 1e9,
                 "ice_column_state": ice_state,
                 "silicate_melt_state": rock_state,
@@ -3337,6 +3436,8 @@ def solve(mass_earth: float,
                "nmoi": "dimensionless",
                "core_temperature": "K",
                "cmb_temperature": "K",
+               "cmb_temperature_core": "K",
+               "cmb_temperature_mantle": "K",
                "cmb_pressure": "GPa",
                "ice_column_state": "",
                "silicate_melt_state": "",
@@ -4211,6 +4312,15 @@ def read_sulphur_anchor(declared: dict):
     return fixing["core_sulphur_wt"], fixing["halvings"], None
 
 
+def _declared_jumps(declared):
+    """`interface_temperature_jumps` 선언을 {경계: K} 로 — 경계마다 블록(`value`)이든 맨 스칼라든."""
+    if not declared:
+        return None
+    if not isinstance(declared, dict):
+        return {"?": declared}          # 사전이 아니면 `solve` 의 어휘 검사가 이름 대고 거절한다
+    return {k: _declared_value(v) for k, v in declared.items()}
+
+
 def _declared_value(declared):
     """선언 블록에서 값을 꺼낸다 — 블록이든 맨 스칼라든 (`core_history._declared_scalar` 와 같은 꼴)."""
     if isinstance(declared, dict):
@@ -4301,9 +4411,17 @@ def _solve_from_state(state):
     #   둘째 걸음이 «선언» 으로 읽고 선언 갈래로 내려가, 같은 수에 프리셋 이름표를 달고 등급을
     #   analog 에서 calibrated 로 올렸다. 선언만 보면 걸음마다 같은 갈래라 답이 고정점이 된다.
     declared = state.inputs
+    jumps = _declared_jumps(state.get_optional("interface_temperature_jumps"))
     if (state.get("body_class") not in FLUID_CLASSES
             and declared.get("composition_intent") is None
             and declared.get("core_mass_fraction") is None):
+        if jumps:
+            # ⚠ **역산 갈래는 점프를 안 받는다** — 조용히 버리면 선언한 바디가 점프 없이 풀린 답을 낸다.
+            return out_of_domain(
+                RECIPE, VERSION,
+                f"경계 점프 {sorted(jumps)} 가 선언됐는데 이 바디는 조성을 역산하는 갈래로 간다 — 역산 "
+                "(`infer_composition` · 황 맞춤)은 아직 점프를 넘기지 않는다. 조성을 선언하거나 점프를 뺀다.",
+                inputs={"interface_temperature_jumps": jumps}, refs=REFS)
         return _infer_from_state(state)
     return solve(
         mass_earth=state["mass_earth"],
@@ -4332,4 +4450,6 @@ def _solve_from_state(state):
         tidal_heating=bool(state.get("tidal_heating", False)),
         # 바닥 층의 철 수도 **선언** 이다 (C100). 없으면 녹는곡선이 오늘 그대로다.
         basal_iron_number=state.get("basal_iron_number"),
+        # 재료 경계 점프도 **선언** 이다 (prereg-interface-jumps). 없으면 None — 점프 없음.
+        interface_temperature_jumps=jumps,
     )

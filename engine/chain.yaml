@@ -176,7 +176,8 @@ nodes:
     kind: computed
     recipe: interior-structure-methodology
     outputs: [nmoi, core_radius_fraction, core_radius, radius, core_pressure,
-              core_temperature, cmb_temperature, cmb_pressure, ice_column_state,
+              core_temperature, cmb_temperature, cmb_temperature_core, cmb_temperature_mantle,
+              cmb_pressure, ice_column_state,
               ocean_thickness, ice_shell_thickness, crust_thickness, bulk_porosity,
               voids_expected, figure_relaxation, converged, unconverged_solvers,
               bracket_invalid, substituted_solvers, core_mass_fraction,
@@ -205,6 +206,11 @@ nodes:
       mantle_rock_fraction (얼음 맨틀에 섞인 암석의 질량분율). 둘 다 형성과 열 이력이
       정하고 이 레시피가 도출하지 않으며, 쓰이면 등급이 analog 로 내려간다. 앵커는 둘 다
       0 으로 두어 움직이지 않는다.
+      2026-09-24 에 재료 경계 점프가 선언 하나로 넓어졌다 — interface_temperature_jumps
+      (경계 «안쪽 역할/바깥 역할» → K, 층 열의 재료 경계만). ice/envelope 는 위 열경계층
+      점프의 경계 이름이라 옛 경로를 그대로 탄다. core/rock 점프가 있으면 cmb_temperature 는
+      핵 쪽(뜻 그대로, = cmb_temperature_core)이고 맨틀 바닥 쪽은 cmb_temperature_mantle 이다.
+      쓰이면 등급이 analog. 없으면 모든 옛 값이 비트까지 같다 (prereg-interface-jumps).
       같은 날 serpentinisation 이 들어왔다 (C10) — 암석층에서 antigorite 가 차지하는
       질량분율, 규산염과 부피 가법으로 섞는 선언 축 하나. 물이 어디까지 갔는가의 이력이라
       도출하지 않는다. Hilairet+ 2006 의 antigorite 는 상온 적합뿐이라 등급은 그 결핍이

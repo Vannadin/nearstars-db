@@ -1055,6 +1055,8 @@ step "test_samuel_layer.py" bash -c 'cd engine && exec python3 test_samuel_layer
 step "test_samuel_run_layer.py" bash -c 'cd engine && exec python3 test_samuel_run_layer.py'
 # 적분기 기록 인자 (열진화 v2-7). record 를 켜도 Structure 스칼라 전부가 비트 동일 — 기록만 한다. ~1 s.
 step "test_interior_record.py" bash -c 'cd engine && exec python3 test_interior_record.py'
+# 재료 경계 온도 점프 (prereg-interface-jumps). 옛 얼음→외피 점프와 새 이름이 비트 같음 · 거절 여섯 · 지구 core/rock 방향. ~3 분.
+step "test_interface_jumps.py" bash -c 'cd engine && exec python3 test_interface_jumps.py'
 # 판 2 적분 (열진화 v2-9 ④). 화성 구조 한 번(~65 s) 위에 Λ 20 한 판 — 핵 에너지 폐합 · 식 20 부호 · 천장 불변식과
 # 원자료 없이 나오는 여섯 값 회귀. A0 판정은 싣지 않는다 — 불통과는 v2-9 에 기록돼 있고 게이트는 그것으로 빨개지지 않는다.
 step "test_samuel_run.py" bash -c 'cd engine && exec python3 test_samuel_run.py'

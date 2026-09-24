@@ -383,9 +383,11 @@ def main() -> int:
               #   정상 상태다 — 없으면 `d_fe` 가 `None` 이고 녹는곡선이 오늘 그대로다.
               #   ⚠ **이 집합은 넓어지는 쪽이라 다른 그물이 전부 조용하다** (위 C65 주석의
               #   gate240 과 같은 모양). 그래서 키를 더할 때마다 **왜 면제인지**를 여기 적는다.
+              # ⚠ `interface_temperature_jumps` 는 재료 경계 점프의 **선언**이다 (2026-09-24,
+              #   prereg-interface-jumps). 없는 것이 정상 상태다 — 점프가 없고 옛 값이 비트까지 같다.
               "interior_layers": {"basal_iron_number", "differentiated", "envelope_z",
                                   "gas_mass_fraction", "ice_allowed", "ice_mass_fraction",
-                                  "initial_porosity", "porosity_cap"},
+                                  "initial_porosity", "interface_temperature_jumps", "porosity_cap"},
               # ⚠ `radiogenic_concentration` (both nodes) is a **declaration** added by the radiogenic
               #   landing (2026-09-24): absent = the Earth default set, graded «default».
               "internal_heat_nontidal": {"ice_mass_fraction", "radiogenic_concentration"},
