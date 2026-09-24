@@ -374,6 +374,7 @@ def main() -> int:
     _g = _run.load_chain()
     #: ⚠ **수가 아니라 집합으로 박는다** — «고유 9» 는 하나가 빠지고 하나가 들어와도 통과한다.
     EXEMPT = {"body_class": {"gas_mass_fraction", "semi_major_axis_au"},
+              "core_thermal_history": {"radiogenic_concentration"},   # declaration, see internal_heat_nontidal
               "dynamo_rocky": {"dynamo_regime", "ice_mass_fraction"},
               # ⚠ `ice_allowed` 는 182 B 가 더한 것이고 **선언이 아니라 도출**이다 —
               #   `ice_mass_fraction` 을 진술로 읽은 것(명시된 0.0 = 얼음 없음, 부재 = 모름).
@@ -385,7 +386,9 @@ def main() -> int:
               "interior_layers": {"basal_iron_number", "differentiated", "envelope_z",
                                   "gas_mass_fraction", "ice_allowed", "ice_mass_fraction",
                                   "initial_porosity", "porosity_cap"},
-              "internal_heat_nontidal": {"ice_mass_fraction"},
+              # ⚠ `radiogenic_concentration` (both nodes) is a **declaration** added by the radiogenic
+              #   landing (2026-09-24): absent = the Earth default set, graded «default».
+              "internal_heat_nontidal": {"ice_mass_fraction", "radiogenic_concentration"},
               # ⚠ 둘 다 **C65 후속이 2026-09-11 에 더한 것**이고, 더한 이유가 서로 다르다.
               #   `composition_intent` 는 어댑터가 실제로 조회하는 키인데 계약이 이름조차 적지
               #   않고 있었다. `composition` 은 계약이 **Needs 라 적었는데** 호출부가 리터럴로

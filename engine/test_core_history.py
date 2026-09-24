@@ -60,7 +60,15 @@ AGE = 4.54
 # now name their condition (`H_NIMMO`, the same 1.5e-12 as `test_core_energy.H4`, Nimmo+ 2004 Table 4's 400 ppm K),
 # and the engine's declared H gets rows of its own, measured 2026-09-09 and pinned here as anchors in turn.
 H_NIMMO = 1.5e-12                     # W/kg — Nimmo Table 4; = test_core_energy.H4. NOT the engine's declared H.
-PARAMS_NIMMO = {**PARAMS, "h_core": H_NIMMO}
+# ⚠ **Mantle heating: Nimmo's printed present-day product, history ours (Nimmo does not print it).** Nimmo+ 2004
+#   Table 4 (PDF p. 7) prints the present H_m M_m = 23.4 TW (Table 2: "Hm 5.3 pW kg−1", from the abundances of
+#   Sun & McDonough 1989, PDF p. 6). M_m and whether "mantle" includes the crust are not printed (PDF pp. 6–7
+#   searched), so the product is taken as printed. The decay history is `radiogenic.history_factor` of our
+#   set — not Sun & McDonough 1989 ratios (not cached). Until 2026-09-24 this row carried `rg.budget`'s
+#   mantle_w (15.22 TW, crust removed), so its old anchor (1525.46 · 4027.43) was «our set + Nimmo core
+#   condition», not a reproduction of Nimmo's mantle.
+H_M_M_NIMMO_W = 23.4e12               # W — Nimmo+ 2004 Table 4, present-day H_m M_m (printed product).
+PARAMS_NIMMO = {**PARAMS, "h_core": H_NIMMO, "h_m_present_w": H_M_M_NIMMO_W}
 
 print("⑤ 수렴 — 판정선은 종점 T_c 가 아니라 3.1 Gyr 창의 ΔE_min (h/4 대 h/2 < 10 %), 내핵 갈래 동일")
 if "--sweep" in sys.argv:
@@ -83,14 +91,18 @@ else:
         f"단일 실행 h ≤ {hist['step_myr']:.2f} Myr (적응, 최대 h/τ {hist['max_h_over_tau']:.3f}) · {hist['n_steps']} 걸음 · 최소 h {hist['h_min_myr']:.3f} Myr ({time.perf_counter()-t0:.0f} s)")
     fixed_n = ch.integrate(PARAMS_NIMMO, T_C0, T_M0, AGE, adaptive=False)
     fx_n = fixed_n["rows"][-1]
-    row(fixed_n["n_steps"] == 1135 and abs(fx_n["t_m"] - 1525.46) < 0.005 and abs(fx_n["t_c"] - 4027.43) < 0.005,
-        f"고정 4 Myr 재현 (H 1.5 pW/kg, Nimmo Table 4 조건): {fixed_n['n_steps']} 걸음 (앵커 1135) · T_p {fx_n['t_m']:.2f} K (앵커 1525.46) · "
-        f"T_c {fx_n['t_c']:.2f} K (앵커 4027.43)")
+    # ⚠ **2026-09-24 re-freeze (radiogenic landing, Ruedas 2017 mass-weighted).** Declared-H row 1517.34 → 1519.86 ·
+    #   3911.29 → 3910.45. Nimmo row: mantle heating switched to Table 4's printed H_m M_m 23.4 TW (was our
+    #   mantle_w 15.22 TW, crust removed), so 1525.46 → 1586.452 · 4027.43 → 4004.202;
+    #   pinned to three decimals.
+    row(fixed_n["n_steps"] == 1135 and abs(fx_n["t_m"] - 1586.452) < 0.005 and abs(fx_n["t_c"] - 4004.202) < 0.005,
+        f"고정 4 Myr — Nimmo 현재 H_m M_m(Table 4) · 이력 우리 벌 · 핵 Table 4 조건 (H 1.5 pW/kg): {fixed_n['n_steps']} 걸음 (앵커 1135) · T_p {fx_n['t_m']:.2f} K (앵커 1586.452) · "
+        f"T_c {fx_n['t_c']:.2f} K (앵커 4004.202)")
     fixed = ch.integrate(PARAMS, T_C0, T_M0, AGE, adaptive=False)
-    row(fixed["n_steps"] == 1135 and abs(fixed["rows"][-1]["t_m"] - 1517.34) < 0.005 and abs(fixed["rows"][-1]["t_c"] - 3911.29) < 0.005
+    row(fixed["n_steps"] == 1135 and abs(fixed["rows"][-1]["t_m"] - 1519.86) < 0.005 and abs(fixed["rows"][-1]["t_c"] - 3910.45) < 0.005
         and abs(fixed["rows"][-1]["t_m"] - hist["rows"][-1]["t_m"]) < 0.01,
-        f"선언 H 0.088 pW/kg (오너 결정 ⑤ · 브리프 166 E 환산 정정): 1135 걸음 · T_p {fixed['rows'][-1]['t_m']:.2f} K (앵커 1517.34) · "
-        f"T_c {fixed['rows'][-1]['t_c']:.2f} K (앵커 3911.29) · 적응과의 차 {hist['rows'][-1]['t_m'] - fixed['rows'][-1]['t_m']:+.4f} K")
+        f"선언 H 0.088 pW/kg (오너 결정 ⑤ · 브리프 166 E 환산 정정): 1135 걸음 · T_p {fixed['rows'][-1]['t_m']:.2f} K (앵커 1519.86) · "
+        f"T_c {fixed['rows'][-1]['t_c']:.2f} K (앵커 3910.45) · 적응과의 차 {hist['rows'][-1]['t_m'] - fixed['rows'][-1]['t_m']:+.4f} K")
 ws = ch.window_summary(hist["rows"])
 last = hist["rows"][-1]
 
@@ -178,8 +190,9 @@ neard_t_m = ch.t_at_gyr(hmd["rows"], -3.7)
 # ⚠ **2026-09-19: 3.7 Ga 칸의 규칙이 바뀌어 그 수가 다시 움직였다** — 최근접 표본 행 **1668.79 K** →
 # 보간 **1668.68 K**(`core_history.t_at_gyr`). **궤적이 아니라 읽는 규칙이 바뀐 것**이고, 여유는
 # 4.36 → **4.47 K** 가 된다. 위 두 줄의 수는 그 전 세대의 것이다.
-row(hmd["n_steps"] == 1197 and abs(lastd["t_m"] - 1377.96) < 0.05 and abs(lastd["t_c"] - 3780.60) < 0.05
-    and abs(neard_t_m - 1668.68) < 0.05,
+# ⚠ **2026-09-24 re-freeze (radiogenic landing):** 1377.96 → 1380.65 · 3780.60 → 3779.52 · 1668.68 → 1670.60 — Herzberg headroom 4.47 → 2.55 K.
+row(hmd["n_steps"] == 1197 and abs(lastd["t_m"] - 1380.65) < 0.05 and abs(lastd["t_c"] - 3779.52) < 0.05
+    and abs(neard_t_m - 1670.60) < 0.05,
     f"선언 H 0.088 화성 → T_p {lastd['t_m']:.2f} · T_c {lastd['t_c']:.2f} · T_p@3.7Ga {neard_t_m:.2f} K · {hmd['n_steps']} 걸음 "
     f"(H 1.5 대비 {lastd['t_m']-lastm['t_m']:+.2f} / {lastd['t_c']-lastm['t_c']:+.2f} / {neard_t_m-nearm_t_m:+.2f} K, {time.perf_counter()-t0:.0f} s) "
     f"— 기준 B: Herzberg [1553.15, 1673.15] K 안 (위끝 여유 {1673.15-neard_t_m:.2f} K)")
