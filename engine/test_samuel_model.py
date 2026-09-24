@@ -101,30 +101,32 @@ check("2019 SI eq. (15) — no crust, no shift; D_cr = D_ref shifts by ΔT_sol",
       sm.depleted_solidus(1400.0, 0.0, 1e5, st.DELTA_T_SOL_K) == 1400.0
       and sm.depleted_solidus(1400.0, 1e5, 1e5, st.DELTA_T_SOL_K) == 1550.0)
 
-# The two slots still unbuilt refuse by name, with no value.
-# Th and K back in time: at t = 0 the present rate; one half-life back, ⁴⁰K's part doubles.
+# H_pm now comes from `radiogenic.heat_per_kg` (prereg-radiogenic §2). By hand from Ruedas 2017 Table 2:
+# K is the ⁴⁰K nuclide mass-weighted (3.430137e-9 W/kg, not the printed element 3.4302e-9 — addendum 5).
+K_NUCLIDE = 1.1668e-4 * 39.963998166 / 39.0983 * 2.8761e-5
+F235 = 0.0072045 * 235.043928190 / 238.02891 * 5.68402e-4
+F238 = 0.9927955 * 238.050786996 / 238.02891 * 9.4946e-5
 now = sm.primitive_heat_th_k(0.0, 1.0)
-hand = 54e-9 * 2.6368e-5 + 284e-6 * 3.4302e-9
-check("Ruedas 2017 — Th + K today by hand", abs(now / hand - 1) < 1e-12, f"{now:.5g} W/kg")
+hand = 54e-9 * 2.6368e-5 + 284e-6 * K_NUCLIDE
+check("H_pm Th + K today by hand", abs(now / hand - 1) < 1e-12, f"{now:.5g} W/kg")
 back = sm.primitive_heat_th_k(1248.0, 1.0)
-hand_back = 54e-9 * 2.6368e-5 * 2 ** (1248 / 14000) + 284e-6 * 3.4302e-9 * 2
-check("Ruedas 2017 — one ⁴⁰K half-life back", abs(back / hand_back - 1) < 1e-12)
-# U split by nuclide reproduces the table's element rate today (v2-6 ① 검산), and each nuclide decays alone.
+hand_back = 54e-9 * 2.6368e-5 * 2 ** (1248 / 14000) + 284e-6 * K_NUCLIDE * 2
+check("H_pm — one ⁴⁰K half-life back", abs(back / hand_back - 1) < 1e-12)
 u_now = (sm.primitive_heat(0.0, 1.0) - sm.primitive_heat_th_k(0.0, 1.0)) / 14e-9
-check("v2-6 ① — ²³⁵U + ²³⁸U today = U element 9.8314e-5 W/kg", abs(u_now / st.H_U_W_PER_KG - 1) < 5e-5,
-      f"{u_now:.6e} W/kg")
+check("H_pm — ²³⁵U + ²³⁸U today by hand (9.831432e-5 W/kg)", abs(u_now / (F235 + F238) - 1) < 1e-12,
+      f"{u_now:.9e} W/kg")
 u_back = (sm.primitive_heat(704.0, 1.0) - sm.primitive_heat_th_k(704.0, 1.0)) / 14e-9
-f235 = 0.0072045 * 235.043928190 / 238.02891 * 5.68402e-4
-f238 = 0.9927955 * 238.050786996 / 238.02891 * 9.4946e-5
-# The same mass-weighted sum for K, from the ⁴⁰K row of Ruedas 2017 Table 2 (PDF p6, rendered): the atomic
-# masses 39.963998166 and 39.0983 and H(⁴⁰K) 2.8761e-5 W/kg are test-only literals, not model inputs.
-k_elem = st.X_ISO_K40 * 39.963998166 / 39.0983 * 2.8761e-5
-check("v2-6 ① — ⁴⁰K mass-weighted = K element 3.4302e-9 W/kg", abs(k_elem / st.H_K_W_PER_KG - 1) < 5e-5,
-      f"{k_elem:.6e} W/kg")
-atomic_only = sum(n["x_iso"] * n["h_w_per_kg"] for n in (st.U235, st.U238))
-check("v2-6 ① — atomic fractions alone miss by ~0.04 % (why the mass weight is there)",
-      3e-4 < atomic_only / st.H_U_W_PER_KG - 1 < 6e-4, f"{atomic_only:.6e} W/kg")
-check("v2-6 ① — one ²³⁵U half-life back, by hand", abs(u_back / (2 * f235 + f238 * 2 ** (704 / 4468)) - 1) < 1e-12)
+check("H_pm — one ²³⁵U half-life back, by hand", abs(u_back / (2 * F235 + F238 * 2 ** (704 / 4468)) - 1) < 1e-12)
+
+# prereg-radiogenic R2 — the plate's own copy of H_pm (before §2: element K rate, exp form) against the
+# shared function, on a 1 My grid over 0–4.5 Gyr (4 501 points). Measured 2026-09-24: 1.036e-5 at 4 455 My.
+def _old_h_pm(t_my):
+    decay = lambda h, half: h * math.exp(math.log(2.0) * t_my / half)
+    u = decay(F235, 704.0) + decay(F238, 4468.0)
+    return 14e-9 * u + 54e-9 * decay(2.6368e-5, 14000.0) + 284e-6 * decay(3.4302e-9, 1248.0)
+r2 = max((abs(sm.primitive_heat(float(i), 1.0) / _old_h_pm(float(i)) - 1), i) for i in range(4501))
+check("prereg-radiogenic R2 — H_pm moved ≤ 2e-5 relative (1.036e-5 @ 4455 My)",
+      r2[0] <= 2e-5 and abs(r2[0] - 1.036e-5) < 5e-9 and r2[1] == 4455, f"{r2[0]:.4e} @ {r2[1]} My")
 
 # 2023 SI eq. (9): the seam goes to the first line, the gap there is 0.3 K (v2-5 ②), and T_liq > T_sol.
 check("2023 SI eq. (9) — solidus at 10 GPa is the first line, 2075.3 K", abs(sm.solidus(10.0) - 2075.3) < 1e-9)

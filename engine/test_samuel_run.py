@@ -37,11 +37,15 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 
 # The A0 values that need no source data, at Λ 20 and cap 10 Myr, frozen from this run's own output on
 # 2026-09-24: 1 920 melt shells (v2-10), the δ_b guard at ½ shell (v2-14), and the δ_u/δ_b bracket solve
-# with the nearest inner root (v2-17 and supplements; v2-18). Before the bracket solve they read
+# with the nearest inner root (v2-17 and supplements; v2-18), and H_pm from `radiogenic.heat_per_kg`
+# (prereg-radiogenic §2). ⚠ R2's second condition — these six unmoved — FAILED: H_pm moved ≤ 1.04e-5
+# relative and T_c / T_m today moved 2101.64 → 2101.44 / 1942.02 → 1942.15 (−0.20 / +0.13 K), the size of the
+# 0.1–0.3 K noise the uniform-scaling test measured on this solver. The reference was moved knowing that
+# (addendum 8). Before the bracket solve they read
 # 2101.59 / 1941.69 (a fixed point stopping silently at 60 iterations, noise ~1 K). The two RMS conditions
 # need the 2023 source data, which is outside the repo, so the gate cannot hold them.
-FROZEN_L20 = {"T_c today": 2101.64, "T_m today": 1942.02, "T_c(1) − T_c0": -48.90, "T_m(1) − T_m0": 286.63,
-              "T_m peak": 2044.64, "T_m peak time": 1.2726}
+FROZEN_L20 = {"T_c today": 2101.44, "T_m today": 1942.15, "T_c(1) − T_c0": -49.32, "T_m(1) − T_m0": 285.91,
+              "T_m peak": 2043.85, "T_m peak time": 1.2726}
 FROZEN_TOL = {"T_m peak time": 0.0005}  # Gyr; every other value K, to the frozen decimal
 
 

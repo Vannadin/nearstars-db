@@ -38,6 +38,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import radiogenic as rg  # noqa: E402
 import samuel_thermal as st  # noqa: E402
 
 
@@ -183,27 +184,21 @@ def depleted_solidus(t_sol_primitive: float, d_cr: float, d_ref: float, delta_t_
 
 
 # ── Refused slots ──────────────────────────────────────────────────────────────────────────────
+def _concentration() -> dict:
+    """The plate's bulk-silicate concentrations (v2 §3, Drilleau 2022), as element mass fractions."""
+    return {"U": st.U_PPB * 1e-9, "Th": st.TH_PPB * 1e-9, "K": st.K_PPM * 1e-6}
+
+
 def primitive_heat(t_before_present_my: float, rho_m: float) -> float:
-    """H_pm, W/m³, at a time before present: ρ_m Σ c_i H_i exp(λ_i t) with the v2 §3 concentrations and
-    Ruedas 2017's rates (v2-5 ①, v2-6 ①). Th and K each decay as one nuclide (only ⁴⁰K of K decays);
-    U is split into ²³⁵U and ²³⁸U, each weighted by X_iso · u_iso/u_U."""
-    u = 0.0
-    for nuc in (st.U235, st.U238):
-        share = nuc["x_iso"] * nuc["u"] / st.U_ATOMIC_MASS * nuc["h_w_per_kg"]
-        u += _decay_up(share, nuc["half_life_my"], t_before_present_my)
-    return rho_m * st.U_PPB * 1e-9 * u + primitive_heat_th_k(t_before_present_my, rho_m)
-
-
-def _decay_up(h_now: float, half_life_my: float, t_before_present_my: float) -> float:
-    """A present-day rate taken back in time: h exp(ln 2 · t / T½)."""
-    return h_now * math.exp(math.log(2.0) * t_before_present_my / half_life_my)
+    """H_pm, W/m³, at a time before present: ρ_m × `radiogenic.heat_per_kg` (Ruedas 2017, each nuclide
+    decaying alone, mass-weighted) with the plate's concentrations (`prereg-radiogenic.md` §2).
+    Replacing the plate's own copy moved H_pm by ≤ 1.04×10⁻⁵ relative over 0–4.5 Gyr (R2)."""
+    return rho_m * rg.heat_per_kg(_concentration(), -t_before_present_my / 1000.0)
 
 
 def primitive_heat_th_k(t_before_present_my: float, rho_m: float) -> float:
-    """The Th and K part of H_pm, W/m³ — the part that needs no isotope split."""
-    th = st.TH_PPB * 1e-9 * _decay_up(st.H_TH_W_PER_KG, st.HALF_LIFE_TH232_MY, t_before_present_my)
-    k = st.K_PPM * 1e-6 * _decay_up(st.H_K_W_PER_KG, st.HALF_LIFE_K40_MY, t_before_present_my)
-    return rho_m * (th + k)
+    """The Th and K part of H_pm, W/m³."""
+    return rho_m * rg.heat_per_kg(_concentration(), -t_before_present_my / 1000.0, ("Th232", "K40"))
 
 
 # ── Melting curves — 2023 SI eq. (9), PDF p16 (v2-6 ②); the melt fraction in 2021 eq. (9)'s clamped form ─

@@ -124,22 +124,8 @@ DELTA_T_B_COEFF = 1.43                      # ΔT′_b = 1.43 R T_m²/E*, layere
 # solidus change of ∆Tsol = 150 K" (pre-registration v2-4 ④).
 DELTA_T_SOL_K = 150.0
 
-# ── Radiogenic heat — Ruedas 2017, G³ 18, 3530 (`2017GGG....18.3530R`), Table 2, PDF p6 (render) ──────
-# ⚠ Outside the chain: none of the six chain papers prints or cites a heat table, so this is a source we
-#   chose (pre-registration v2-5 ①) — the arXiv author's final manuscript, "final version, 6 September 2017".
-# Present-day specific heat production of the element in its natural isotopic mix, W/kg, and half-lives, My.
-H_U_W_PER_KG = 9.8314e-5
-H_TH_W_PER_KG = 2.6368e-5
-H_K_W_PER_KG = 3.4302e-9
-HALF_LIFE_K40_MY = 1248.0
-HALF_LIFE_TH232_MY = 14000.0
-HALF_LIFE_U235_MY = 704.0
-HALF_LIFE_U238_MY = 4468.0
-X_ISO_K40 = 1.1668e-4
-# Uranium's two nuclides, the same table (pre-registration v2-6 ①); both rows include ²³⁴U per its footnote.
-U_ATOMIC_MASS = 238.02891
-U235 = {"u": 235.043928190, "x_iso": 0.0072045, "h_w_per_kg": 5.68402e-4, "half_life_my": HALF_LIFE_U235_MY}
-U238 = {"u": 238.050786996, "x_iso": 0.9927955, "h_w_per_kg": 9.4946e-5, "half_life_my": HALF_LIFE_U238_MY}
+# ── Radiogenic heat — the nuclide constants live in `radiogenic.py` only (Ruedas 2017 Table 2,
+#   `prereg-radiogenic.md` §2: one constant set, not two). This module keeps the concentrations above.
 
 # ── Melting curves — Samuel et al. 2023 SI eq. (9), PDF p16 (pre-registration v2-6 ②), T in K, P in GPa ──
 # Solidus: Duncan+ 2018; liquidus: Ruedas & Breuer 2017. The seam at P = 10 GPa goes to the first line (v2-5 ②).
