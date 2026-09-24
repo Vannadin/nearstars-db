@@ -21,13 +21,13 @@ inputs:
     grade: literature
     source: "2020ApJ...903L..37N (published), PDF p14 — 260 ppm, 23 ppb, 85 ppb for K, U, Th"
     # 짝 벌(덧붙임 9 · 10) — Earth (2), O'Neill & Palme 2008 비콘드라이트. 출간된 두 논문의 저자 판이 같은 수를
-    # 인쇄한다(2 차 인용, 출판본은 대조 안 함). 초안 표의 11 / 43 / 130 은 버렸다.
+    # 인쇄한다(2 차 인용 — Šrámek 은 출판본까지 대조, Bellini 는 저자 판만). 초안 표의 11 / 43 / 130 은 버렸다.
     alternative:
       U_ppb: 10.0
       Th_ppb: 40.0
       K_ppm: 140.0
       grade: literature
-      source: "O'Neill & Palme 2008, second-hand: Šrámek+ 2013 arXiv 1207.0853 PDF p5; Bellini+ 2022 arXiv 2109.01482 v1 Tables 16, 18"
+      source: "O'Neill & Palme 2008, second-hand: Šrámek+ 2013 EPSL 361 PDF p3 (published) and arXiv 1207.0853 PDF p5; Bellini+ 2022 arXiv 2109.01482 v1 Tables 16, 18 (published not compared)"
   # 핵 물질 — **선언**. 네 핵 노드(`cmb_heat_flux` · `core_energy_balance` ·
   # `core_entropy_production` · `core_thermal_history`)가 전부 `"fe_prem"` 을 기본값으로 쓰고 있었고,
   # 그래서 C50 의 클래스 ③ 에 네 번 세어졌다. 지구에 대해서는 이것이 **전사**다 — `fe_prem` 은

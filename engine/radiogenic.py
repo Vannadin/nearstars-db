@@ -75,8 +75,9 @@ ISOTOPES = {name: (row["half_life_my"] / 1000.0, row["x_iso"] * row["u"] / ELEME
 CONCENTRATION_SETS = {
     "earth_1_chondritic":      {"K": 260e-6, "Th": 85e-9, "U": 23e-9},   # N&P 2020 published, PDF p14
     # O'Neill & Palme 2008 as the published papers print it — U 10 · Th 40 · K 140 (prereg-radiogenic addendum 10,
-    # second-hand: Šrámek+ 2013 arXiv 1207.0853 PDF p5 and Bellini+ 2022 arXiv 2109.01482 v1 Tables 16 and 18, two
-    # author versions agreeing, the published versions not compared). The draft table's 11 / 43 / 130 is dropped.
+    # second-hand: Šrámek+ 2013 — published version EPSL 361, PDF p3, and arXiv 1207.0853 PDF p5 — and Bellini+ 2022
+    # arXiv 2109.01482 v1 Tables 16 and 18 (its published version not compared). The draft table's 11 / 43 / 130 is
+    # dropped.
     "earth_2_non_chondritic":  {"K": 140e-6, "Th": 40e-9, "U": 10e-9},
     "appendix":                {"K": 260e-6, "Th": 85e-9, "U": 23e-9},   # the paper's own model set
 }
