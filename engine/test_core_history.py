@@ -61,12 +61,14 @@ AGE = 4.54
 # and the engine's declared H gets rows of its own, measured 2026-09-09 and pinned here as anchors in turn.
 H_NIMMO = 1.5e-12                     # W/kg — Nimmo Table 4; = test_core_energy.H4. NOT the engine's declared H.
 # ⚠ **Mantle heating: Nimmo's printed present-day product, history ours (Nimmo does not print it).** Nimmo+ 2004
-#   Table 4 (PDF p. 7) prints the present H_m M_m = 23.4 TW (Table 2: "Hm 5.3 pW kg−1", from the abundances of
+#   Table 4 (PDF p. 10, printed 372) prints the present H_m M_m = 23.4 TW (Table 2: "Hm 5.3 pW kg−1", from the abundances of
 #   Sun & McDonough 1989, PDF p. 6). M_m and whether "mantle" includes the crust are not printed (PDF pp. 6–7
 #   searched), so the product is taken as printed. The decay history is `radiogenic.history_factor` of our
 #   set — not Sun & McDonough 1989 ratios (not cached). Until 2026-09-24 this row carried `rg.budget`'s
 #   mantle_w (15.22 TW, crust removed), so its old anchor (1525.46 · 4027.43) was «our set + Nimmo core
 #   condition», not a reproduction of Nimmo's mantle.
+# ⚠ **Not a reproduction — our pins.** The same Table 4 prints the results Tm 1613 · Tc 4155 K; this row gives
+#   1586.452 · 4004.202, i.e. −27 · −151 K (C111).
 H_M_M_NIMMO_W = 23.4e12               # W — Nimmo+ 2004 Table 4, present-day H_m M_m (printed product).
 PARAMS_NIMMO = {**PARAMS, "h_core": H_NIMMO, "h_m_present_w": H_M_M_NIMMO_W}
 
@@ -96,7 +98,7 @@ else:
     #   mantle_w 15.22 TW, crust removed), so 1525.46 → 1586.452 · 4027.43 → 4004.202;
     #   pinned to three decimals.
     row(fixed_n["n_steps"] == 1135 and abs(fx_n["t_m"] - 1586.452) < 0.005 and abs(fx_n["t_c"] - 4004.202) < 0.005,
-        f"고정 4 Myr — Nimmo 현재 H_m M_m(Table 4) · 이력 우리 벌 · 핵 Table 4 조건 (H 1.5 pW/kg): {fixed_n['n_steps']} 걸음 (앵커 1135) · T_p {fx_n['t_m']:.2f} K (앵커 1586.452) · "
+        f"고정 4 Myr — Nimmo 현재 H_m M_m(Table 4) · 이력 우리 벌 · 핵 Table 4 조건 (H 1.5 pW/kg) — 재현 아님, 우리 핀(Table 4 Tm 1613 · Tc 4155 K 대 −27 · −151 K): {fixed_n['n_steps']} 걸음 (앵커 1135) · T_p {fx_n['t_m']:.2f} K (앵커 1586.452) · "
         f"T_c {fx_n['t_c']:.2f} K (앵커 4004.202)")
     fixed = ch.integrate(PARAMS, T_C0, T_M0, AGE, adaptive=False)
     row(fixed["n_steps"] == 1135 and abs(fixed["rows"][-1]["t_m"] - 1519.86) < 0.005 and abs(fixed["rows"][-1]["t_c"] - 3910.45) < 0.005
