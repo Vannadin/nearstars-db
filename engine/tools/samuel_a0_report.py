@@ -80,9 +80,10 @@ def main() -> int:
         hits = out["fixed_point_limit_hits"]
         if not hits:
             return "고정점 한도(60 회) 도달 0"
-        worst = max(hits, key=lambda h: max(h[1], h[2]))
-        return (f"고정점 한도(60 회) 도달 {len(hits)} 평가 ({hits[0][0]:.4f}–{hits[-1][0]:.4f} Gyr) · 마지막 두 반복 차 최대 "
-                f"|Δδ_u| {worst[1] / 1e3:.3g} km · |Δδ_b| {worst[2] / 1e3:.3g} km @ {worst[0]:.4f} Gyr")
+        wu = max(hits, key=lambda h: h[1])
+        wb = max(hits, key=lambda h: h[2])
+        return (f"고정점 한도(60 회) 도달 {len(hits)} 평가 ({hits[0][0]:.4f}–{hits[-1][0]:.4f} Gyr) · 마지막 두 반복 차 — "
+                f"|Δδ_u| 최대 {wu[1] / 1e3:.3g} km @ {wu[0]:.4f} Gyr · |Δδ_b| 최대 {wb[2] / 1e3:.3g} km @ {wb[0]:.4f} Gyr")
 
     def line(tag, out):
         if "refused" in out:
