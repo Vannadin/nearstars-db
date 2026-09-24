@@ -1,0 +1,64 @@
+# 게이트 풀 단계의 시작 순서 — 지난 정상 full 판들의 instr 평균 내림차순 (C104, 긴 단계 먼저)
+# 판 9: 01d3a4ce 06a8f325 196c9189 2d8ca21c 3277acd0 5c83ff70 8f61f619 d642e293 de672360 · 한 줄에 단계 이름 하나 · 없는 이름은 원래 순서로 뒤에 선다
+test_mars_sulphur.py
+test_interior_ocean.py
+test_core_history.py
+test_interior.py
+run.py bodies/mars.yaml (출하값 대조)
+test_water_column_steam.py
+test_giant.py
+test_mixture.py
+run.py bodies/earth.yaml (출하값 대조)
+test_ice_giant.py
+test_samuel_run.py
+test_domain.py
+test_fe_s.py
+test_core_state.py
+run.py bodies/pandora.yaml (출하값 대조)
+test_tectonic_regime.py
+test_porosity.py
+test_core_energy.py
+test_core_entropy.py
+test_silicate_melt.py
+test_fermi.py
+run.py bodies/dante_fixture.yaml (연기 시험)
+test_stagnant_lid.py
+test_mass_radius.py
+test_rocky_roster.py
+run.py bodies/luhman_16_a.yaml (연기 시험)
+run.py bodies/luhman_16_b.yaml (연기 시험)
+run.py bodies/alpha_centauri_a_b.yaml (출하값 대조)
+test_check_refs.py
+test_provisional.py
+test_tidal_transport.py
+test_interior_record.py
+test_transfers.py
+test_body_class.py
+test_water_hot.py
+test_mantle_budget.py
+test_dynamo_rocky.py
+test_tidal_heating.py
+test_samuel_lid.py
+test_backflow.py
+test_mantle_flux.py
+test_radiogenic.py
+test_cmb_flux.py
+test_dynamo.py
+test_tidal_locking.py
+test_ammonia.py
+test_name_collision.py
+test_boundary_reach.py
+test_fe_hcp.py
+test_paleos
+test_water2.py
+test_sub_neptune_dynamo.py
+test_phase_tables.py
+test_transitional_lid.py
+test_rheology.py
+test_eos_joins.py
+test_samuel_model.py
+test_albedo_table.py
+test_greenhouse_cases.py
+test_payload.py
+test_bands.py
+test_stellar_wind.py

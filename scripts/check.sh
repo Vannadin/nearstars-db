@@ -89,7 +89,21 @@ exec 3>&2                     # step() 이 자식의 stderr 를 여기로 빼낸
 # ⚠ **기본값은 좌석이 실제로 쓰는 수다** (작업 규율 곁가지, 2026-09-17). 8 은 아무도 안 썼고,
 #   밤새 돈 게이트는 전부 2 아니면 1 이었다. 기본값이 실행과 다르면 「기본으로 돌렸다」 가
 #   어느 판인지 말하지 않는다. ⚠ 지속시간을 재는 좌석은 여전히 1 로 내린다.
-GATE_POOL="${GATE_POOL:-2}"
+# ⚠ **기본을 2 → 4 로 올렸다** (C104, 2026-09-24, 오너 결정). 근거는 판 아홉의 `[TIME]`·`[COST]` 표
+#   (풀 단계 최고 RSS 93 MB, 상위 넷 합 246 MB)와 `196c9189` 로그로 돌린 모의 — 풀 2 59.5 분(실측
+#   59.7 분) · 풀 4 39.1 분 · 풀 4 + 아래 «긴 단계 먼저» 36.8 분. 바닥은 가장 긴 단계 하나
+#   (`test_mars_sulphur.py`, 그 판 1 259 s)다. 수는 그 판의 것이고 낡는다 — 새 판에서 다시 잰다.
+GATE_POOL="${GATE_POOL:-4}"
+# ⚠ **긴 단계 먼저** (C104). `scripts/gate_pool_order.txt` 가 있으면 풀 단계를 **바로 띄우지 않고
+#   줄 세웠다가**, 집계 앞 배리어(`step_flush`)에서 그 파일의 순서(지난 정상 판들의 instr 평균
+#   내림차순)대로 띄운다. 파일에 없는 이름은 원래 순서로 뒤에 선다. **파일이 없으면 예전처럼 만나는
+#   즉시 띄운다** — 되돌릴 손잡이는 파일 하나다. ⚠ 대가: 직렬 단계가 풀과 겹치지 않고 먼저 다 돈다.
+#   모의에서는 그 손해보다 가장 긴 단계를 맨 먼저 띄우는 이득이 컸다(39.1 → 36.8 분). 판정은 안
+#   바뀐다 — 같은 단계가 같은 명령으로 돌고, 셈(띄움 = 거둠)도 그대로다.
+_POOL_ORDER_FILE="scripts/gate_pool_order.txt"
+_pool_defer=0
+[ -f "$_POOL_ORDER_FILE" ] && _pool_defer=1
+_pool_q_n=0
 # ⚠ **배리어의 단 하나의 천장** (C80). «살아 있지만 조용한» 워커에만 쓰고, 죽은 워커는 시한
 #   없이 즉시 이름을 얻는다. 값은 **이 커밋을 낸 게이트의 가장 긴 단계 × 1.5** 이고 sha 와
 #   날짜를 함께 적는다 — @3716708f, 2026-09-12, 가장 긴 단계 3035 s.
@@ -220,6 +234,7 @@ step_flush() {                # 배리어 — 풀을 비우고, **띄운 수와 
   #   `_pool_alive` 가 실패하면 `step()` 이 `_pool_dir` 를 비워 직렬로 강등하는데, 예전 가드는
   #   그때 **셈을 한 번도 돌리지 않고 빠져나갔다** — rc 는 이미 빨갛지만 «몇 개가, 어느 이름이»
   #   가 사라진다. 그 귀속이 이 셈의 존재 이유다.
+  _pool_dispatch
   [ "$_pool_launched" -gt 0 ] || [ -n "$_pool_dir" ] || return 0
   _pool_barrier
   _pool_drain
@@ -328,6 +343,21 @@ step() {                      # step <이름> <명령...>
     fi
   fi
   if [ -n "$_pool_dir" ] && _pool_eligible "$name"; then
+    if [ "$_pool_defer" = "1" ]; then       # 긴 단계 먼저 — 줄만 세우고 `step_flush` 가 띄운다
+      _pool_q_n=$((_pool_q_n + 1))
+      eval "_pool_qname_$_pool_q_n=\$name"
+      eval "_pool_qcmd_$_pool_q_n=\$(printf '%q ' \"\$@\")"
+      return 0
+    fi
+    _pool_launch "$name" "$@"
+    return 0
+  fi
+  _step_serial "$name" "$@"
+}
+
+_pool_launch() {              # _pool_launch <이름> <명령...> — 풀 워커 하나를 띄운다 (자리가 날 때까지 기다린다)
+  local name=$1; shift
+  {
     while [ "$(jobs -rp | wc -l)" -ge "$GATE_POOL" ]; do sleep 0.2; _pool_drain; done
     _pool_seq=$((_pool_seq + 1))
     _pool_launched=$((_pool_launched + 1))
@@ -361,8 +391,33 @@ step() {                      # step <이름> <명령...>
     #   죽었다» 를 말할 근거가 없었다. 이름은 부모의 기억에 둔다 (스풀이 사라져도 남는다).
     echo "$!" > "$_base.pid"
     eval "_pool_name_$_pool_seq=\$name"
-    return 0
-  fi
+  }
+}
+
+_pool_dispatch() {            # 줄 세운 풀 단계를 순서 파일대로 띄운다 (C104)
+  [ "$_pool_q_n" -gt 0 ] || return 0
+  local _i _nm _rank _order _cmd
+  _order=$(grep -v '^#' "$_POOL_ORDER_FILE" 2>/dev/null | grep -v '^[[:space:]]*$')
+  echo "  [풀 순서] 줄 세운 풀 단계 $_pool_q_n 개를 «${_POOL_ORDER_FILE}» 순서(instr 평균 내림차순)로 띄운다"
+  for _i in $(
+    _j=1
+    while [ "$_j" -le "$_pool_q_n" ]; do
+      eval "_nm=\$_pool_qname_$_j"
+      _rank=$(printf '%s\n' "$_order" | grep -nxF -- "$_nm" | head -1 | cut -d: -f1)
+      printf '%d\t%d\n' "${_rank:-99999}" "$_j"
+      _j=$((_j + 1))
+    done | sort -n -k1,1 -k2,2 | cut -f2
+  ); do
+    eval "_nm=\$_pool_qname_$_i"
+    eval "_cmd=\$_pool_qcmd_$_i"      # %q 로 적은 명령을 **값으로 꺼낸 뒤** 다시 읽어야 인용이 산다
+    eval "set -- $_cmd"
+    _pool_launch "$_nm" "$@"
+  done
+  _pool_q_n=0
+}
+
+_step_serial() {              # _step_serial <이름> <명령...> — 직렬 단계
+  local name=$1; shift
   local _t0=$SECONDS _c0 _tf _rss
   _c0=$(date "+%H:%M:%S")
   # ⚠ **시작선을 먼저 찍는다** (183 D). `[TIME]` 은 단계가 **끝난 뒤** 나오므로, 실행 중인
@@ -853,9 +908,10 @@ step "test_name_collision.py" bash -c 'cd engine && exec python3 test_name_colli
 step "test_check_refs.py" bash -c 'cd engine && exec python3 test_check_refs.py'
 step "engine/check_refs.py" bash -c 'python3 engine/check_refs.py'
 # 논문 인용 규약 (C33 (b), 브리프 165). ⚠ **판정 아님 — 세기만 한다**: bibcode 없는 절의 "저자+연도"
-# 인용 수를 인쇄하고 기준선(28 절 · 128 건)과 비교한다. 0 이 되면 FAIL 로 승격. 비용 ~0.1 s.
-# ⚠ 기준선이 27·124 가 아니라 28·128 인 이유: 이 규칙을 설명하는 절(C33 (b))이 인용 **예시** 를 적어
-#   스스로 4건 걸린다 — 오검출 종류로 도구 독스트링에 적혀 있다.
+# 인용 수를 인쇄하고 기준선과 비교한다. 0 이 되면 FAIL 로 승격. 비용 ~0.1 s.
+# ⚠ **기준선의 수를 여기 적지 않는다** — 도구(`engine/tools/check_citations.py` 의 기준선 상수)가 자기
+#   줄에 인쇄한다. 예전 이 자리의 「28 절 · 128 건」은 도구가 (26, 121) 로 내린 뒤(브리프 166 E,
+#   2026-09-09)에도 남아 있었다(C104 커밋에서 지움). 오검출 종류는 도구 독스트링에 적혀 있다.
 # ⚠ `|| fail=1` 을 붙이지 않는다: 이 도구는 항상 0 을 돌려주므로 붙여도 불발이고, 붙은 채 두면
 #   "판정한다" 로 잘못 읽힌다 (B2, 감사 지적).
 python3 engine/tools/check_citations.py --quiet
