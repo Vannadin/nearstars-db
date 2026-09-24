@@ -1,0 +1,121 @@
+# Venus — 셋째 대조 바디 초안 (2026-09-24, 병렬석 e5). 구조–열진화 거르기(prereg-structure-coupling)를 금성에서 돌리려고 짓는다.
+# earth.yaml · mars.yaml 과 같은 자격: 보드 천체가 아니라 **발표된 값으로 엔진을 대보는 표본**이고, 보드에도 emit 에도 안 올라간다.
+# ⚠ 초안 — 9f 대조 뒤 작업석(ed)이 engine/bodies/ 에 커밋. 방사성 선언 칸은 비워 둔다(기본값, prereg-radiogenic 덧붙임 9 규칙).
+name: Venus
+kind: planet
+parent: Sun
+
+inputs:
+  # 질량·반지름 — NASA NSSDCA «Venus Fact Sheet» (Last Updated 11 January 2024, DRW), 2026-09-24 받음
+  # (https://nssdc.gsfc.nasa.gov/planetary/factsheet/venusfact.html, 파일 sha256 473c61da…541c).
+  # 인쇄: Mass 4.8673 ×10²⁴ kg · Volumetric mean radius 6051.8 km. 엔진 단위(interior.EARTH_MASS_KG 5.972e24 ·
+  # EARTH_RADIUS_M 6371000)로 나눔: 4.8673/5.972 = 0.81502 · 6051.8/6371.0 = 0.94990.
+  # (같은 표의 Earth 비 열 «0.815 · 0.950» 은 NASA 의 지구값 5.9722 · 6371.0 으로 나눈 것 — 넷째 자리에서 같다.)
+  mass_earth: 0.81502
+  radius_earth: 0.94990
+  # 나이 — 지구·화성 파일과 같은 4.54 Gyr. ⚠ declared-default: 태양계 천체의 나이를 따로 인쇄한 원문을 이 초안은 안 봤다.
+  age_gyr: 4.54
+  body_class: rocky
+  # 조성 — **선언하지 않는다.** 선언이 없으면 interior 가 질량·반지름에서 핵질량분율을 역산한다(C57 의 길).
+  # 초안 판(8cbd6273)에서 역산 cmf 0.30729166666666663 · 핵 반지름 3240.8 km · nmoi 0.33238 (T_pot 1600 K).
+  # 대조: Margot+ 2021 핵 «approximately 3500 km … with large (>500 km) uncertainties»(2021NatAs...5..676M txt 589–590),
+  # Dumoulin+ 2017 «moment of inertia … 0.327 to 0.342, corresponding to a core radius of 2900 to 3450 km»(2017JGRE..122.1338D txt 60).
+  # 포텐셜 온도 — 지구·화성과 같은 1600 K. ⚠ declared-default: 금성 맨틀 포텐셜 온도의 인쇄값을 이 초안은 안 찾았다.
+  # 구조에는 열압력으로만 들어간다(prereg-structure-coupling §2).
+  potential_temperature: 1600.0
+  surface_temperature_k:
+    value: 737.0
+    grade: measured
+    source: "NASA NSSDCA Venus Fact Sheet (2024-01-11), «Average temperature: 737 K (464 C)»"
+    note: >
+      Cache cross-check: O'Rourke & Korenaga 2015 (2015Icar..260..128O txt 49–50) «surface temperatures on Venus to
+      roughly 740 K (e.g., Bullock and Grinspoon, 2001)»; Gillmann & Tackley 2014 (2014JGRE..119.1189G txt 68)
+      «surface temperature of Venus is around 740 K». The fact sheet's printed 737 K is used; 740 K is the rounded
+      literature figure. Diurnal range ~0 (same fact sheet).
+  tectonic_regime:
+    value: stagnant
+    grade: declared
+    source: "1998JGR...10313643R; 2015Icar..260..128O"
+    note: >
+      Reese, Solomatov & Moresi 1998's abstract prints «Mantle convection on Mars and Venus is likely to occur in the
+      [stagnant lid] regime» (the same sentence mars.yaml cites). O'Rourke & Korenaga 2015 model «continuous evolution
+      in the stagnant-lid regime». Grade is declared, not measured: Gillmann & Tackley 2014 find episodic mobile-lid
+      phases when surface temperature drops (txt 52–54), and Driscoll & Bercovici 2014 (txt 61) state «Venus has a
+      stagnant lid (Solomon et al., 1992)» — the regime is a reading, not an observation.
+  lid_thickness_km:
+    value: 300.0
+    grade: judgment             # 엔진 바디 등급 어휘(analog · declared · judgment · measured) 안에서 — 우리가 고른 점
+    source: "2015Icar..260..128O"
+    note: >
+      O'Rourke & Korenaga 2015 (PDF p. 2, txt 147–149): «Some authors favor a relatively thick lithosphere, usually
+      200–400 km (e.g., Turcotte, 1993; Solomatov and Moresi, 1996), but data permit values as high as 600 km (Orth
+      and Solomatov, 2011). Thinner (100 km) lithosphere allows a larger magnitude of melt generation to explain recent
+      resurfacing». No single value is printed; 300 km is **our** midpoint of the «usually 200–400 km» band — a choice,
+      not a reading. Foley eq. (3) needs one δ, so a value must be declared; the band (100–600 km) is the sensitivity
+      to report. Mars's 330 km (Morschhauser+ 2011, model output) is a different body and is not transferred.
+  # C20 열진화의 초기온도 — 화성 파일과 같은 전이: Nimmo+ 2004 Fig. 2 캡션의 «starting temperature of both mantle and
+  # core was 4800 K», 실온도로 읽음. 맨틀 퍼텐셜은 이 바디의 r_b 로 나눈다: 초안 판 구조(T_pot 1600 K)의
+  # cmb_temperature 2446.741515761152 K → r_b = 1.5292134473507202 → 4800 / r_b = 3138.87 K.
+  # ⚠ declared-default(지구 인쇄값의 전이) — 금성 초기온도를 인쇄한 원문이 아니다.
+  core_initial_temperature: 4800.0
+  mantle_initial_potential_temperature: 3138.87
+
+transfers:
+  - field: age_gyr
+    from_body: Earth
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "earth.yaml@«age_gyr: 4.54»"
+    validated: "same fact — the system's age, not a Venus-only dating (as mars.yaml records it)"
+  - field: potential_temperature
+    from_body: Earth
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "earth.yaml@«potential_temperature: 1600.0»"
+    validated: "pending — no Venus-specific test of whether Earth's T_p may travel; Mars's C47 stage 0 does not cover Venus"
+  - field: core_initial_temperature
+    from_body: Earth
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "earth.yaml@«core_initial_temperature: 4800.0»"
+    validated: "pending — Nimmo+ 2004 Fig. 2's starting temperature, transferred as mars.yaml does; the mantle potential is re-divided by Venus's own r_b"
+
+units:
+  mass_earth: M_earth
+  radius_earth: R_earth
+  age_gyr: Gyr
+  potential_temperature: K
+  surface_temperature_k: K
+  lid_thickness_km: km
+  core_initial_temperature: K
+  mantle_initial_potential_temperature: K
+
+# 발표된 값. 엔진은 읽지 않고 대조만 한다.
+expected:
+  radius:
+    value: 0.94990
+    unit: R_earth
+    tol: 0.01
+    source: "NASA NSSDCA Venus Fact Sheet — volumetric mean radius 6051.8 km; Margot+ 2021 (R=6051.8 km, txt 840)"
+  nmoi:
+    value: 0.337
+    unit: dimensionless
+    tol: 0.0712
+    tol_reason: >
+      Margot+ 2021 (2021NatAs...5..676M txt 23) «a normalized moment of inertia of 0.337 ± 0.024» (1σ);
+      0.024 / 0.337 = 0.0712. The observational 1σ is wider than the 0.01 anchor tolerance used for Earth and Mars,
+      so the printed 1σ is the tolerance here, not a loosened one.
+      ⚠ C109: Margot's 0.337 is the precession C/MR² (polar), used here as the mean-nmoi anchor. Venus is
+      nearly spherical (J2 ≈ 4.46e-6), so C and the mean I differ far less than the 0.024 width — ignored here.
+    source: "Margot+ 2021, Nature Astronomy 5, 676 (2021NatAs...5..676M)"
+  core_radius_fraction:
+    value: 0.578
+    tol: 0.143
+    tol_reason: >
+      Margot+ 2021 (txt 589–590) «a core radius of approximately 3500 km (58% of the planetary radius) with large
+      (>500 km) uncertainties». 3500 / 6051.8 = 0.578; 500 / 3500 = 0.143 as the relative tolerance (the paper says
+      «>500 km», so this is a lower bound on the uncertainty). Dumoulin+ 2017's 2900–3450 km (0.479–0.570) sits inside.
+    source: "Margot+ 2021 (2021NatAs...5..676M)"
