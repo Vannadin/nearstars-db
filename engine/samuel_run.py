@@ -342,7 +342,8 @@ def _start_layer(s: Setup, t_c: float, t_i: float) -> None:
     s.layer_grid = lay.LayerGrid(L["nodes"], r_c=s.r_c, d_d=L["d_d"], c_p=st.CP_MANTLE_J_PER_KG_K, k_d=L["k_d"],
                                  fe_mean=L["fe_mean"], fe_top=L["fe_top"],
                                  latent=st.L_MANTLE_J_PER_KG if melting else None,
-                                 pressure_gpa=(lambda r: s.pressure(r) / 1e9) if melting else None)
+                                 pressure_gpa=(lambda r: s.pressure(r) / 1e9) if melting else None,
+                                 iron_shift=L.get("iron_shift", True), record=L.get("record", False))
     s.layer_grid.start(t_c, t_i)
     s.layer_q = s.layer_grid.fluxes()
 
@@ -394,7 +395,7 @@ def run(s: Setup, cap_myr: float) -> dict:
                      "q_m": f1["q_m"], "q_c": f1["q_c"], "eps_m": f1["eps_m"], "stefan": f1["stefan"],
                      "subcritical": f1["subcritical"], "p_m": f1["p_m"], "ceiling": f1["ceiling"],
                      "guarded": f1["guarded"], "guard_gap": f1["guard_gap"], "delta_b_raw_over_shell": f1["delta_b_raw_over_shell"],
-                     "tc_tb_gap": f1["tc_tb_gap"], "layer": f1["layer"]})
+                     "tc_tb_gap": f1["tc_tb_gap"], "t_b": f1["t_b"], "layer": f1["layer"]})
         if s.lam / f1["ceiling"] > worst[0]:
             worst = (s.lam / f1["ceiling"], t)
         remaining = (AGE_GYR - t) * GYR_S
@@ -452,7 +453,8 @@ def run(s: Setup, cap_myr: float) -> dict:
             "layer": None if s.layer_grid is None else {
                 "describe": s.layer_grid.describe(), "margin": s.layer_grid.margin,
                 "max_phi": max(s.layer_grid.phi) if s.layer_grid.latent is not None else None,
-                "iterations_max": s.layer_grid.iterations_max, "source": s.layer.get("source")}}
+                "iterations_max": s.layer_grid.iterations_max, "source": s.layer.get("source"),
+                "history": s.layer_grid.history}}
 
 
 def _heat_above(lid, r_lo: float) -> float:

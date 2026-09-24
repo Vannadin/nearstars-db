@@ -153,5 +153,25 @@ try:
 except ValueError as e:
     check("3-1 without pressure_gpa is refused", "pressure_gpa" in str(e))
 
+# D's record (v2-29): recording reads the profile and changes nothing — bit identical with it off.
+pair = []
+for rec in (False, True):
+    g = lay.LayerGrid(41, r_c=R_C, d_d=D_D, c_p=C_P, k_d=K_D, fe_mean=FE_MEAN, fe_top=FE_TOP, latent=L_M,
+                      pressure_gpa=p_gpa, record=rec)
+    g.start(2100.0, 1900.0)
+    for k in range(60):
+        g.step(1e7 * YEAR, t_c=2500.0, t_i=1900.0, h_d=H, t_now=k * 0.01)
+    pair.append(g)
+check("D record on ≡ off (bit identical)", pair[0].t == pair[1].t and pair[0].phi == pair[1].phi
+      and pair[0].margin == pair[1].margin and len(pair[1].history) == 60 and pair[0].history == [],
+      f"last record t {pair[1].history[-1][0]:.2f} · max φ {pair[1].history[-1][1]:.3f} · molten {pair[1].history[-1][2]:.3f}")
+
+# Option B (a one-point comparison, v2-20 §4): no Fe# shift — the curves are plate 2's unshifted.
+gb = lay.LayerGrid(21, r_c=R_C, d_d=D_D, c_p=C_P, k_d=K_D, fe_mean=FE_MEAN, fe_top=FE_TOP, latent=L_M,
+                   pressure_gpa=p_gpa, iron_shift=False)
+check("option B — solidus unshifted, base pressure printed",
+      all(t == lay.sm.solidus(p) for t, p in zip(gb.t_sol, gb.p_gpa)) and "option B" in gb.describe()
+      and max(gb.p_gpa) < 23.0, gb.describe().split(" · ")[-1])
+
 print(f"  test_samuel_layer — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)
