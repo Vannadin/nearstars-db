@@ -18,6 +18,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import samuel_layer as lay             # noqa: E402
 import samuel_lid as sl                # noqa: E402
 import samuel_model as sm              # noqa: E402
 import samuel_thermal as st            # noqa: E402
@@ -26,6 +27,16 @@ GYR_S = 3.15576e16
 AGE_GYR = 4.5
 D_CR_0_M = 1.0                         # 2021 PDF p12: "small values for D_cr = 1 m and D_l = 10 m"
 D_L_0_M = 10.0
+
+
+#: The two reproduction targets' own constants (2023 Fig. 1 caption and source data, `samuel_thermal`).
+#: "no_bml" is plate 2 (panels a–f); "bml" is plate 4 (panels g–l), whose layer is declared on `Setup`.
+MODELS = {
+    "no_bml": dict(eta0=st.ETA0_NO_BML_PA_S, e_star=st.E_STAR_NO_BML_J_PER_MOL, v_star=st.V_STAR_NO_BML_M3_PER_MOL,
+                   r_c=st.R_CORE_NO_BML_M, t_c0=st.T_CORE_0_NO_BML_K, t_m0=st.T_MANTLE_0_NO_BML_K),
+    "bml": dict(eta0=st.ETA0_PA_S, e_star=st.E_STAR_J_PER_MOL, v_star=st.V_STAR_M3_PER_MOL,
+                r_c=st.R_CORE_M, t_c0=st.T_CORE_0_K, t_m0=st.T_MANTLE_0_K),
+}
 
 
 def _shell(r_out: float, r_in: float) -> float:
@@ -39,12 +50,17 @@ class Setup:
                  p_m_mode: str = "mid", melt_pressure: str = "engine", stefan_mode: str = "printed",
                  lid_mode: str = "grid", lid_nodes: int = 41, melt_shells: int = 1920,
                  fixed_lid_m: float | None = None, delta_b_cap_fraction: float = 0.5,
-                 root_branch: str = "nearest", path_check_every: int = 0):
+                 root_branch: str = "nearest", path_check_every: int = 0, model: str = "no_bml",
+                 layer: dict | None = None):
         self.lam, self.profile, self.g, self.g_c = lam, profile, g, g_c
+        self.model = model
+        m = MODELS[model]
+        self.eta0, self.e_star, self.v_star = m["eta0"], m["e_star"], m["v_star"]
+        self.t_c0, self.t_m0 = m["t_c0"], m["t_m0"]
         self.eps_mode, self.p_m_mode = eps_mode, p_m_mode
         self.melt_pressure, self.stefan_mode, self.lid_mode = melt_pressure, stefan_mode, lid_mode
         self.lid_nodes, self.melt_shells = lid_nodes, melt_shells
-        self.r_p, self.r_c = st.R_PLANET_M, st.R_CORE_NO_BML_M
+        self.r_p, self.r_c = st.R_PLANET_M, m["r_c"]
         self.eps_frozen = None
         # L1 comparison plate (v2 §2 plate 2′): the lid does not grow; its thickness is declared.
         self.fixed_lid_m = fixed_lid_m
@@ -64,6 +80,16 @@ class Setup:
         self.path_check_every = path_check_every   # supplement 2: cold-start comparison every n-th evaluation
         self.path_checks: list = []
         self.eval_count = 0
+        # Plate 4 (v2-23 · v2-24): the basal layer. `layer` declares d_d, k_d, lambda_d, fe_mean, fe_top,
+        # nodes, melting, source. D_d = 0 is no layer at all — the plate 2 path, untouched (B1).
+        self.layer = layer if layer and layer["d_d"] != 0.0 else None
+        self.r_base = self.r_c if self.layer is None else self.r_c + self.layer["d_d"]
+        self.layer_grid = None
+        self.layer_q = None                        # (q_c, q_d) of the layer profile, held through a step
+        self.layer_t_i = None                      # T_i of the last evaluation — the layer step's top value
+
+    def eta(self, t: float, p: float) -> float:
+        return sm.viscosity(t, p, self.eta0, self.e_star, self.v_star, st.T_REF_K, st.P_REF_PA, st.R_GAS_J_PER_MOL_K)
 
     def pressure(self, r: float) -> float:
         return self.profile.pressure(r)
@@ -80,11 +106,6 @@ OUTER_SCAN = 32
 ROOT_JUMP_M = 5e3                      # a lost root: the chosen δ_b moves by more than this as roots vanish
 
 
-def _eta(t: float, p: float) -> float:
-    return sm.viscosity(t, p, st.ETA0_NO_BML_PA_S, st.E_STAR_NO_BML_J_PER_MOL, st.V_STAR_NO_BML_M3_PER_MOL,
-                        st.T_REF_K, st.P_REF_PA, st.R_GAS_J_PER_MOL_K)
-
-
 def solve_layers(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float, prev, branch: str):
     """(δ_u, δ_b, inner roots, up, lo, T_b, P_m, η_m, note) — no side effects; None if δ_u has no bracket.
 
@@ -94,21 +115,23 @@ def solve_layers(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float, pre
     "middle" (of three, else nearest) the sensitivity branches (supplement 3 ①). With no previous state,
     "nearest" takes a root where the iteration map is stable, |∂G_b/∂δ_b| < 1, the smaller of two
     (supplement 3 ②)."""
-    r_p, r_c, g = s.r_p, s.r_c, s.g
+    r_p, r_c, g = s.r_p, s.r_base, s.g
     r_l = r_p - d_l
 
     def layers(du, db):
         d_r = sm.convecting_thickness(r_p, d_l, r_c, du, db)
         t_b_ = sm.mantle_base_temperature(t_m, st.ALPHA_SILICATE_PER_K, g, st.CP_MANTLE_J_PER_KG_K, d_r)
+        # with a layer, (17)–(20) take T_i = T′_b + ΔT′_b and R_c + D_d in place of T_c and R_c (v2-24 ②)
+        t_bot = t_c if s.layer is None else t_b_ + layer_contrast(s, t_m)
         rt, rb = r_l - du, r_c + db
         p_m_ = {"mid": s.pressure(0.5 * (rt + rb)), "top": s.pressure(rt), "bottom": s.pressure(rb)}[s.p_m_mode]
-        eta_m_ = _eta(t_m, p_m_)
-        up_ = sm.upper_layer(t_m, t_l, t_c, t_b_, eta_m_, rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K,
+        eta_m_ = s.eta(t_m, p_m_)
+        up_ = sm.upper_layer(t_m, t_l, t_bot, t_b_, eta_m_, rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K,
                              g=g, k_m=st.K_MANTLE_W_PER_M_K, c_pm=st.CP_MANTLE_J_PER_KG_K, r_p=r_p, d_l=d_l,
                              r_c=r_c, ra_c=st.RA_CRITICAL, beta_u=st.BETA_U)
-        eta_c_ = _eta(0.5 * (t_b_ + t_c), s.pressure(r_c))
+        eta_c_ = s.eta(0.5 * (t_b_ + t_bot), s.pressure(r_c))
         cap_ = s.delta_b_cap_fraction * (r_l - up_["delta_u"] - r_c)
-        lo_ = sm.lower_layer(t_m, t_c, t_b_, eta_m_, eta_c_, rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K,
+        lo_ = sm.lower_layer(t_m, t_bot, t_b_, eta_m_, eta_c_, rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K,
                              g=g, k_m=st.K_MANTLE_W_PER_M_K, c_pm=st.CP_MANTLE_J_PER_KG_K, r_p=r_p, r_c=r_c,
                              t_s=st.T_SURFACE_K, delta_b_cap=cap_)
         return up_, lo_, t_b_, p_m_, eta_m_
@@ -183,12 +206,22 @@ def solve_layers(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float, pre
     return d_u, d_b, rts, up, lo, t_b, p_m, eta_m, "; ".join(note)
 
 
+def layer_contrast(s: "Setup", t_m: float) -> float:
+    """ΔT′_b = T_i − T′_b = 1.43 R T_m² / E* (2021 PDF p. 13, Deschamps & Sotin 2000)."""
+    return 1.43 * st.R_GAS_J_PER_MOL_K * t_m * t_m / s.e_star
+
+
+def printed_t_b(s: "Setup", t_m: float, d_l: float, d_u: float, d_b: float) -> float:
+    """T′_b as printed, α g T_m (R_c + D_d − D_l − δ_u − δ′_b) / C_pm — compared, never used (v2-22 ①)."""
+    return t_m + st.ALPHA_SILICATE_PER_K * s.g * t_m * (s.r_base - d_l - d_u - d_b) / st.CP_MANTLE_J_PER_KG_K
+
+
 def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr: float,
                 lid_gradient: float) -> dict:
     """Everything the right-hand side needs at one state. Raises `sm.Refused` above the Λ ceiling."""
     r_p, r_c, g = s.r_p, s.r_c, s.g
     r_l = r_p - d_l
-    t_l = sm.lid_base_temperature(t_m, st.E_STAR_NO_BML_J_PER_MOL, st.A_RH, st.R_GAS_J_PER_MOL_K)
+    t_l = sm.lid_base_temperature(t_m, s.e_star, st.A_RH, st.R_GAS_J_PER_MOL_K)
     # δ_u, δ_b and T_b depend on each other through ΔR (2021 eq. (14)). Solved by brackets — v2-17
     # supplements 1–3, our choice; see `solve_layers`.
     guard_gap = None
@@ -215,7 +248,7 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
         guard_gap = abs(t_c - t_b)
         s.guard_iter_hits.append((t_gyr, guard_gap))
     s.fixed_point_start = (d_u, d_b)
-    r_top, r_bot = r_l - d_u, r_c + d_b
+    r_top, r_bot = r_l - d_u, s.r_base + d_b
     # ⚠ any iteration counts, not only the last (audit seat: the last alone missed 67 bites at Λ 20, cap 10)
     if guard_gap is not None:
         s.guard_stage_hits.append((t_gyr, guard_gap))
@@ -231,7 +264,12 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
     v_sil = _shell(r_p, r_c)
     v_cr = _shell(r_p, r_p - d_cr)
     h_pm = sm.primitive_heat((AGE_GYR - t_gyr) * 1000.0, st.RHO_MANTLE_KG_M3)
-    h_m, h_cr = sm.heat_split(h_pm, v_cr, v_sil - v_cr, s.lam)
+    lay_terms = None
+    if s.layer is None:
+        h_m, h_cr = sm.heat_split(h_pm, v_cr, v_sil - v_cr, s.lam)
+    else:
+        lay_terms = _layer_heat(s, h_pm, v_sil, v_cr)
+        h_m, h_cr = lay_terms["h_m"], lay_terms["h_cr"]
     # melt, Stefan, crust growth
     d_ref = sm.crust_reference_thickness(r_p, r_c)
     mkw = dict(d_cr=d_cr, d_ref=d_ref, delta_t_sol=st.DELTA_T_SOL_K,
@@ -247,11 +285,24 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
         u = sm.convective_velocity(up["ra"], st.RA_CRITICAL, st.U0_M_PER_S)
         d_cr_rate = sm.crust_growth_rate(u, mi["shallow_phi_v"] / mi["shallow_v"], mi["shallow_v"], r_p)
     a_m, a_c = 4 * math.pi * r_l ** 2, 4 * math.pi * r_c ** 2
-    dtm = sm.mantle_rate(q_m=up["q_m"], q_c=lo["q_c"], h_m=h_m, d_cr_rate=d_cr_rate, t_m=t_m, t_l=t_l,
+    q_c_core, q_base, a_base, v_bal = lo["q_c"], lo["q_c"], a_c, v_sil
+    if s.layer is not None:
+        # (18): the mantle takes q_d A_d over V_conv′; the core balance (11) takes the layer's q_c (v2-23 §1)
+        t_i = t_b + layer_contrast(s, t_m)
+        s.layer_t_i = t_i
+        if s.layer_grid is None:
+            _start_layer(s, t_c, t_i)
+        q_c_core, q_base = s.layer_q
+        a_base = 4 * math.pi * s.r_base ** 2
+        v_bal = _shell(r_l, s.r_base)
+        lay_terms["v_conv_p"] = v_bal
+        lay_terms.update(t_i=t_i, q_d=q_base, q_c_layer=q_c_core,
+                         t_b_printed=printed_t_b(s, t_m, d_l, d_u, d_b))
+    dtm = sm.mantle_rate(q_m=up["q_m"], q_c=q_base, h_m=h_m, d_cr_rate=d_cr_rate, t_m=t_m, t_l=t_l,
                          stefan=stefan, eps_m=eps, rho_m=st.RHO_MANTLE_KG_M3, c_pm=st.CP_MANTLE_J_PER_KG_K,
-                         v_m=v_sil, a_m=a_m, a_c=a_c, rho_cr=st.RHO_CRUST_KG_M3, l_m=st.L_MANTLE_J_PER_KG,
+                         v_m=v_bal, a_m=a_m, a_c=a_base, rho_cr=st.RHO_CRUST_KG_M3, l_m=st.L_MANTLE_J_PER_KG,
                          c_pcr=st.CP_CRUST_J_PER_KG_K)
-    dtc = sm.core_rate(q_c=lo["q_c"], rho_c=st.RHO_CORE_KG_M3, c_pc=st.CP_CORE_J_PER_KG_K,
+    dtc = sm.core_rate(q_c=q_c_core, rho_c=st.RHO_CORE_KG_M3, c_pc=st.CP_CORE_J_PER_KG_K,
                        v_c=4 / 3 * math.pi * r_c ** 3, eps_c=st.EPSILON_CORE, a_c=a_c)
     if s.lid_mode == "quasi_steady":
         lid_gradient = sl.quasi_steady_gradient(r_p=r_p, d_l=d_l, d_cr=d_cr, t_l=t_l, t_s=st.T_SURFACE_K,
@@ -267,7 +318,33 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
             "guarded": guard_gap is not None, "guard_gap": guard_gap, "delta_b_raw_over_shell": lo["delta_b_raw"] / (r_l - d_u - r_c),
             "tc_tb_gap": abs(t_c - t_b),
             "eps_m": eps, "stefan": stefan, "h_m": h_m, "h_cr": h_cr, "p_m": p_m,
-            "ceiling": sm.crust_enrichment_ceiling(v_cr, v_sil - v_cr), "lid_gradient": lid_gradient}
+            "ceiling": sm.crust_enrichment_ceiling(v_cr, v_sil - v_cr), "lid_gradient": lid_gradient,
+            "layer": lay_terms}
+
+
+def _layer_heat(s: Setup, h_pm: float, v_sil: float, v_cr: float) -> dict:
+    """Heat with a layer (v2-22 ② · v2-23 §4 ②). Eq. (1) first, on the whole silicate: H_d = Λ_d H_pm and
+    H′_m = H_pm [1 − (V_d / V_sil′)(Λ_d − 1)], V_sil′ = V_sil − V_d (the preprint's V′_m, crust included).
+    Then the crust share from V_sil′ — ⚠ our interpretation. V_conv′ (the published (18)'s V′_m, R_c + D_d
+    to R_l) is where the mantle share is spent; both volumes are returned so every run prints them."""
+    lam_d = s.layer["lambda_d"]
+    v_d = _shell(s.r_base, s.r_c)
+    v_sil_p = v_sil - v_d
+    h_mp = h_pm * (1.0 - v_d / v_sil_p * (lam_d - 1.0))
+    h_m, h_cr = sm.heat_split(h_mp, v_cr, v_sil_p - v_cr, s.lam)
+    return {"h_d": lam_d * h_pm, "h_m_prime": h_mp, "h_m": h_m, "h_cr": h_cr, "v_d": v_d, "v_sil_p": v_sil_p}
+
+
+def _start_layer(s: Setup, t_c: float, t_i: float) -> None:
+    """The layer grid (plate 3), started linear between T_c and T_i (v2-23 §3, our choice)."""
+    L = s.layer
+    melting = L["melting"]
+    s.layer_grid = lay.LayerGrid(L["nodes"], r_c=s.r_c, d_d=L["d_d"], c_p=st.CP_MANTLE_J_PER_KG_K, k_d=L["k_d"],
+                                 fe_mean=L["fe_mean"], fe_top=L["fe_top"],
+                                 latent=st.L_MANTLE_J_PER_KG if melting else None,
+                                 pressure_gpa=(lambda r: s.pressure(r) / 1e9) if melting else None)
+    s.layer_grid.start(t_c, t_i)
+    s.layer_q = s.layer_grid.fluxes()
 
 
 STEP_FRACTION = 0.1                    # core_history's h = min(cap, 0.1 τ), Brief 157
@@ -290,12 +367,12 @@ def run(s: Setup, cap_myr: float) -> dict:
     exactly on the end. A refusal (Λ above its ceiling) stops the run and is returned with its time."""
     t0 = st.T_INITIAL_ROW_GYR
     cap = cap_myr * 1e-3 * GYR_S
-    y = [st.T_CORE_0_NO_BML_K, st.T_MANTLE_0_NO_BML_K,
+    y = [s.t_c0, s.t_m0,
          D_L_0_M if s.fixed_lid_m is None else s.fixed_lid_m, D_CR_0_M]
     lid = sl.LidGrid(s.lid_nodes, r_p=s.r_p, t_s=st.T_SURFACE_K, rho_m=st.RHO_MANTLE_KG_M3,
                      c_m=st.CP_MANTLE_J_PER_KG_K, k_m=st.K_MANTLE_W_PER_M_K, rho_cr=st.RHO_CRUST_KG_M3,
                      c_cr=st.CP_CRUST_J_PER_KG_K, k_cr=st.K_CRUST_W_PER_M_K)
-    t_l0 = sm.lid_base_temperature(y[1], st.E_STAR_NO_BML_J_PER_MOL, st.A_RH, st.R_GAS_J_PER_MOL_K)
+    t_l0 = sm.lid_base_temperature(y[1], s.e_star, st.A_RH, st.R_GAS_J_PER_MOL_K)
     lid.start(y[2], t_l0)
     grad = (st.T_SURFACE_K - t_l0) / y[2]
     rows = []
@@ -317,7 +394,7 @@ def run(s: Setup, cap_myr: float) -> dict:
                      "q_m": f1["q_m"], "q_c": f1["q_c"], "eps_m": f1["eps_m"], "stefan": f1["stefan"],
                      "subcritical": f1["subcritical"], "p_m": f1["p_m"], "ceiling": f1["ceiling"],
                      "guarded": f1["guarded"], "guard_gap": f1["guard_gap"], "delta_b_raw_over_shell": f1["delta_b_raw_over_shell"],
-                     "tc_tb_gap": f1["tc_tb_gap"]})
+                     "tc_tb_gap": f1["tc_tb_gap"], "layer": f1["layer"]})
         if s.lam / f1["ceiling"] > worst[0]:
             worst = (s.lam / f1["ceiling"], t)
         remaining = (AGE_GYR - t) * GYR_S
@@ -340,7 +417,7 @@ def run(s: Setup, cap_myr: float) -> dict:
         t = AGE_GYR if h == remaining else t + dt_gyr
         n += 1
         # the lid profile: one implicit step with the step's end values
-        t_l = sm.lid_base_temperature(y[1], st.E_STAR_NO_BML_J_PER_MOL, st.A_RH, st.R_GAS_J_PER_MOL_K)
+        t_l = sm.lid_base_temperature(y[1], s.e_star, st.A_RH, st.R_GAS_J_PER_MOL_K)
         v_sil, v_cr = _shell(s.r_p, s.r_c), _shell(s.r_p, s.r_p - y[3])
         h_pm = sm.primitive_heat((AGE_GYR - t) * 1000.0, st.RHO_MANTLE_KG_M3)
         try:
@@ -359,12 +436,23 @@ def run(s: Setup, cap_myr: float) -> dict:
             remesh_loss.append(after_shared - _heat_above(lid, lo))
             n_remesh += 1
         grad = lid.step(h, d_l=y[2], d_cr=y[3], t_l=t_l, h_m=h_m, h_cr=h_cr)
+        if s.layer_grid is not None:
+            # the layer profile: one implicit step with the end T_c and the last stage's T_i (our choice —
+            # that stage sits at t + h), H_d = Λ_d H_pm at the end time (v2-23 §3)
+            try:
+                s.layer_q = s.layer_grid.step(h, t_c=y[0], t_i=s.layer_t_i, h_d=s.layer["lambda_d"] * h_pm, t_now=t)
+            except sm.Refused as e:
+                return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
     return {"rows": rows, "n_steps": n, "cap_myr": cap_myr, "h_min_myr": h_min / GYR_S * 1e3,
             "max_lambda_over_ceiling": worst, "n_remesh": n_remesh,
             "guard_stage_hits": list(s.guard_stage_hits), "guard_iter_hits": list(s.guard_iter_hits),
             "fixed_point_limit_hits": list(s.fixed_point_limit_hits),
             "multi_root_evals": s.multi_root_evals, "root_jumps": list(s.root_jumps), "root_notes": list(s.root_notes),
-            "path_checks": list(s.path_checks), "remesh_loss_j": remesh_loss}
+            "path_checks": list(s.path_checks), "remesh_loss_j": remesh_loss,
+            "layer": None if s.layer_grid is None else {
+                "describe": s.layer_grid.describe(), "margin": s.layer_grid.margin,
+                "max_phi": max(s.layer_grid.phi) if s.layer_grid.latent is not None else None,
+                "iterations_max": s.layer_grid.iterations_max, "source": s.layer.get("source")}}
 
 
 def _heat_above(lid, r_lo: float) -> float:
@@ -419,4 +507,21 @@ def a0(rows: list, tc_data: list, tm_data: list) -> dict:
     c = {"㉠c": (tc_end, abs(tc_end - 2081.49) <= 40), "㉠m": (tm_end, abs(tm_end - 1867.39) <= 50),
          "㉡c": (rms_c, rms_c <= 40), "㉡m": (rms_m, rms_m <= 50), "①": (tc1, tc1 < 0),
          "②": ((peak["t_m"], peak["t"]), peak_ok), "①′": (tm1, tm1 > 0)}
+    return {"conditions": c, "pass": all(ok for _, ok in c.values())}
+
+
+# ── A — pre-registration v2 §5 A (plate 4, 2023 Fig. 1 g–l) ─────────────────────────────────────
+def a_layer(rows: list, tc_data: list, tm_data: list) -> dict:
+    """The four conditions of A and their values (v2 §5 A; widths are ours, borrowed EDT1 σ)."""
+    tc_end, tm_end = rows[-1]["t_c"], rows[-1]["t_m"]
+    win = [(tt, v) for tt, v in tc_data if 0.5 <= tt <= 4.5]
+    rms_c = math.sqrt(sum((at(rows, "t_c", tt) - v) ** 2 for tt, v in win) / len(win))
+    winm = [(tt, v) for tt, v in tm_data if 0.5 <= tt <= 4.5]
+    rms_m = math.sqrt(sum((at(rows, "t_m", tt) - v) ** 2 for tt, v in winm) / len(winm))
+    tc1 = at(rows, "t_c", 1.0) - rows[0]["t_c"]
+    peak = max(rows, key=lambda r: r["t_c"])
+    peak_ok = peak["t_c"] > rows[0]["t_c"] and peak["t_c"] > rows[-1]["t_c"] and 1.5 <= peak["t"] <= 3.5
+    c = {"㉠": ((tm_end, tc_end), abs(tm_end - 1531.66) <= 20 and abs(tc_end - 2843.69) <= 150),
+         "㉡": ((rms_m, rms_c), rms_m <= 20 and rms_c <= 150), "①": (tc1, tc1 > 0),
+         "②": ((peak["t_c"], peak["t"]), peak_ok)}
     return {"conditions": c, "pass": all(ok for _, ok in c.values())}

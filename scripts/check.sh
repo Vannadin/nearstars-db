@@ -1051,6 +1051,8 @@ step "test_samuel_model.py" bash -c 'cd engine && exec python3 test_samuel_model
 step "test_samuel_lid.py" bash -c 'cd engine && exec python3 test_samuel_lid.py'
 # 기저층 안 전도 (열진화 v2-20, 판 3-0). 2021 식 (21)–(22) 음해 격자가 구껍질 정상 해석해·경계 열류에 2 차로 붙고 에너지가 닫힌다 · D_d = 0 이면 층 없음. ~1 s.
 step "test_samuel_layer.py" bash -c 'cd engine && exec python3 test_samuel_layer.py'
+# 판 4 배선 (열진화 v2-23 · v2-24). D_d = 0 이면 층 없는 판과 한 번 평가가 비트 동일(B1) · 식 (1) 질량 수지 · ΔT′_b · 두 V′_m. ~70 s(구조 한 번).
+step "test_samuel_run_layer.py" bash -c 'cd engine && exec python3 test_samuel_run_layer.py'
 # 적분기 기록 인자 (열진화 v2-7). record 를 켜도 Structure 스칼라 전부가 비트 동일 — 기록만 한다. ~1 s.
 step "test_interior_record.py" bash -c 'cd engine && exec python3 test_interior_record.py'
 # 판 2 적분 (열진화 v2-9 ④). 화성 구조 한 번(~65 s) 위에 Λ 20 한 판 — 핵 에너지 폐합 · 식 20 부호 · 천장 불변식과
