@@ -155,6 +155,8 @@ def main() -> int:
     dj = next(j for j in js if j["name"] == "B2 declared")["layer"]
     print(f"     R_c(엔진 핵) {(1845e3 - dj['d_d']) / 1e3:.3f} km · D_d {dj['d_d'] / 1e3:.3f} km · Λ_d(S6, φ_i 0.05) {dj['lambda_d']:.3f} · "
           f"‾Fe#_d 75 · 균일 — 우리 선택")
+    print(f"     ⚠ 약한 판 — 선언 1845 km 는 핵 + 층의 합이고 엔진이 핵을 그것에 맞춰 풀어 층이 {dj['d_d'] / 1e3:.1f} km 만 남는다. "
+          "층 두께(또는 핵 반지름)를 따로 선언해야 이 판이 선다 — 오너 결정 칸")
     if "refused" not in d:
         r = d["rows"][-1]
         print(f"     오늘 T_c {r['t_c']:.1f} ({r['t_c'] - old_c:+.0f}) · T_m {r['t_m']:.1f} ({r['t_m'] - old_p:+.0f} 대 옛 T_p)\n")
