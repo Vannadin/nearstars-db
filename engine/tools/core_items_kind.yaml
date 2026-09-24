@@ -341,3 +341,6 @@ items:
     kind: physics
   C111:
     kind: physics
+  # ⚠ C113 (2026-09-25) — 판 2 맨틀 수지 부피가 원문(대류 맨틀)과 다름. 엔진이 내는 수의 뜻이라 physics.
+  C113:
+    kind: physics
