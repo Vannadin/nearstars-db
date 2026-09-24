@@ -95,7 +95,7 @@ def main() -> int:
                 f" ①′ {c['①′'][0]:+7.1f}{'✓' if c['①′'][1] else '✗'} {verdict if out['a0']['pass'] else ''}"
                 f" [{out['n_steps']} 걸음 {out['secs']:.1f} s]")
 
-    print(f"── A0 본판(δ_b 가드 판, v2-14) — Λ 훑기 5–20, 걸음 상한 {CAP_MYR:g} Myr, 뚜껑 격자 ──")
+    print(f"── A0 본판(고정점 고침 판 — 괄호 풀이, v2-17·18) — Λ 훑기 5–20, 걸음 상한 {CAP_MYR:g} Myr, 뚜껑 격자 ──")
     print("  목표: ㉠c 2081.49±40 · ㉠m 1867.39±50 · ㉡c ≤40 · ㉡m ≤50 · ① <0 · ② [0.5,2.0] · ①′ >0")
     scan = {}
     for lam in LAMBDAS:
@@ -107,10 +107,15 @@ def main() -> int:
             print(f"      천장 사용 최대 Λ/천장 {worst:.3f} @ {when:.3f} Gyr")
     ok = [lam for lam, o in scan.items() if "refused" not in o and o["a0"]["pass"]]
     print(f"  {verdict} Λ: {ok if ok else '없음'}")
-    for lam in (5.0, 10.0, 15.0, 20.0):
+    for lam in LAMBDAS:
         if "refused" not in scan[lam]:
             print(f"      Λ {lam:g}: " + guard_line(scan[lam]))
             print(f"      Λ {lam:g}: " + limit_line(scan[lam]))
+    # v2-17 supplement 3 ①: a passing Λ with several inner roots is judged on all three branches too
+    for lam in ok:
+        if scan[lam].get("multi_root_evals", 0) > 0:
+            for br in ("smallest", "largest", "middle"):
+                print(line(f"Λ {lam:g} 가지 {br}", one(lam, root_branch=br)))
 
     def miss(o):
         c = o["a0"]["conditions"]
