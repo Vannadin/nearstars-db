@@ -1428,6 +1428,8 @@ measured surface flux sitting beside our number.
 | Earth | 41.80 mW/m² = **21.32 TW** | Korenaga 2008 §41: BSE **16 ± 3 TW**; §2's sketch says *"about 20 TW"* | **1.33×** (1.12–1.64 across 13–19 TW); **1.07×** against the sketch | Davies & Davies 2010: **47 ± 2 TW** = 92.1 mW/m² | **0.45×** |
 | Mars | 15.87 mW/m² | Parro+ 2017: **14.3 mW/m²**, Wänke & Dreibus composition | **1.11×** | Parro+ 2017's own model: **19 mW/m²** (range 14–25) | **0.84×** |
 
+⚠ **Corrected 2026-09-24 (prereg-radiogenic, `12afb7f8`) — the table stays as written:** the engine now feeds Earth 21.75 TW (0.04263 W/m²) and Mars 12.14 mW/m², so Earth ÷ Korenaga 2008's 16 TW is 1.36× (not 1.33×) and Mars ÷ Parro+ 2017 is **0.85×**, not 1.11× (1.19× on the 09-23 tree). The row this correction belongs to is C47 in `interior-core.md`.
+
 ⚠ **Verdict: (b) — a different quantity, not an inaccurate one.** It agrees with radiogenic production
 on both bodies to within 11–33 % and misses surface heat flow by factors that differ *between* the
 bodies. An inaccurate surface flux would miss by a similar factor on both.
