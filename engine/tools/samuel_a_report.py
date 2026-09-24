@@ -2,7 +2,11 @@
 """Plate 4's A report (pre-registration v2 §5 A, v2-23, v2-24). Prints; decides nothing beyond A's own four
 conditions, and the widths are ours (borrowed EDT1 σ), not an implementation tolerance.
 
-    python3 engine/tools/samuel_a_report.py <MOESM3 DATA_FIG1 dir> [--jobs N] [--out results.jsonl]
+    python3 engine/tools/samuel_a_report.py <MOESM3 DATA_FIG1 dir> [--jobs N] [--out results.jsonl] [--post-4p]
+
+`--post-4p` is the post-hoc plate 4P (pre-registration v2-27): P_m at the top of the convecting mantle,
+R_l − δ_u — plate 2P's definition, nothing else changed. It does not replace plate 4's verdict, and its
+verdict is labelled as after a post-hoc change.
 
 The box is k_d 4–16 W/m/K × Λ 5–20, both in steps of 1 — the step is our choice (plate 2 swept Λ by 1).
 Every point runs twice: the main plate (stratified, Fe#_di 94.1306, v2-24 ①) and the comparison plate
@@ -34,12 +38,12 @@ _PROF = None
 
 def _one(args):
     global _PROF
-    k_d, lam, fe_top, melting, tc, tm = args
+    k_d, lam, fe_top, melting, tc, tm, p_m_mode = args
     if _PROF is None:
         _PROF = ss.mars_profile(Path(__file__).resolve().parent.parent / "bodies" / "mars.yaml")
     layer = dict(LAYER_BASE, k_d=k_d, fe_top=fe_top, melting=melting)
     s = sr.Setup(lam=lam, profile=_PROF, g=_PROF.gravity(_PROF.radius_m), g_c=_PROF.gravity(st.R_CORE_M),
-                 model="bml", layer=layer)
+                 model="bml", layer=layer, p_m_mode=p_m_mode)
     t0 = time.time()
     out = sr.run(s, CAP_MYR)
     res = {"k_d": k_d, "lam": lam, "fe_top": fe_top, "melting": melting, "secs": time.time() - t0,
@@ -80,12 +84,17 @@ def main() -> int:
     fig = Path(argv[0])
     jobs = int(argv[argv.index("--jobs") + 1]) if "--jobs" in argv else 4
     out_path = Path(argv[argv.index("--out") + 1]) if "--out" in argv else None
+    post = "--post-4p" in argv
+    p_m_mode = "top" if post else "mid"
+    verdict_word = "사후 수정 후 통과" if post else "통과"
+    if post:
+        print("사후 판 4P — 판 4 판정(불통과)을 대신하지 않음. P_m = 대류 맨틀 위 끝(R_l − δ_u) 압력 (v2-27)\n")
     tc = sr.read_panel(fig / "PANEL_H" / "Tc.dat")
     tm = sr.read_panel(fig / "PANEL_H" / "Tm.dat")
     print("판 4 A — 2023 그림 1 g–l · 폭은 우리가 고른 폭(EDT1 σ 를 빌림) — 구현 오차 폭이 아님")
     print(f"  상자 k_d {K_DS[0]:g}–{K_DS[-1]:g} × Λ {LAMBDAS[0]:g}–{LAMBDAS[-1]:g}, 간격 1 (우리 선택) · "
           f"본판 층상 Fe#_di {FE_TOP_MAIN} · 비교판 균일 · 3-1 본판")
-    tasks = [(k, lam, top, True, tc, tm) for top in (FE_TOP_MAIN, None) for k in K_DS for lam in LAMBDAS]
+    tasks = [(k, lam, top, True, tc, tm, p_m_mode) for top in (FE_TOP_MAIN, None) for k in K_DS for lam in LAMBDAS]
     t0 = time.time()
     with ProcessPoolExecutor(jobs) as ex:
         results = list(ex.map(_one, tasks))
@@ -108,14 +117,14 @@ def main() -> int:
     if any(k >= 12 for k, _ in pm):
         print("  ⚠ k_d 12–16 에 통과 점 — v2 §5 A 의 신호(2023 은 사후 k_d ≈ 4)")
     verdict = bool(pm) and bool(pu)
-    print(f"[A 판정] {'통과' if verdict else '불통과'}"
+    print(f"[A 판정{' — 사후 판 4P' if post else ''}] {verdict_word if verdict else '불통과'}"
           + ("" if bool(pm) == bool(pu) else " — 두 판 판정이 다름: «층상 분포 선택에 의존» (v2-24 ①)"))
-    # 3-0 comparison at the main plate's best point (smallest RMS sum)
+    # 3-0 comparison at the main plate's best point (smallest RMS sum — «RMS 합 최소»)
     ok = [r for r in main_r if "conditions" in r]
     if ok:
         best = min(ok, key=lambda r: sum(r["conditions"]["㉡"][0]))
-        r0 = _one((best["k_d"], best["lam"], FE_TOP_MAIN, False, tc, tm))
-        print(f"\n3-0 비교(녹음 끔, 본판 RMS 최소 점 k_d {best['k_d']:g} Λ {best['lam']:g})")
+        r0 = _one((best["k_d"], best["lam"], FE_TOP_MAIN, False, tc, tm, p_m_mode))
+        print(f"\n3-0 비교(녹음 끔, 본판 RMS 합 최소 점 k_d {best['k_d']:g} Λ {best['lam']:g})")
         print(_line(r0))
     print(f"\n전체 {time.time() - t0:.0f} s · 실행 {len(results) + (1 if ok else 0)}")
     return 0
