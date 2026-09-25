@@ -56,9 +56,15 @@ r_p, d_l, d_cr = st.R_PLANET_M, STATE[2], STATE[3]
 shell = lambda a, b: 4 / 3 * math.pi * (a ** 3 - b ** 3)
 v_lid, v_cr, v_sil = shell(r_p, r_p - d_l), shell(r_p, r_p - d_cr), shell(r_p, st.R_CORE_M)
 h_pm = L["h_d"] / LAYER["lambda_d"]
-total = L["h_m"] * (v_lid - v_cr) + L["h_cr"] * v_cr + L["h_m"] * L["v_conv_p"] + L["h_d"] * L["v_d"]
+lid_m, lid_cr = ts.lid_heat(sf, h_pm, v_sil, v_cr)     # what `run` hands the lid grid (backlog #33)
+total = lid_m * (v_lid - v_cr) + lid_cr * v_cr + L["h_m"] * L["v_conv_p"] + L["h_d"] * L["v_d"]
 check("SF-에너지 — h_m (V_lid − V_cr) + h_cr V_cr + h_m V_conv′ + H_d V_d = H_pm V_sil (1e-12)",
       abs(total / (h_pm * v_sil) - 1.0) < 1e-12, f"ratio {total / (h_pm * v_sil) - 1.0:+.2e}")
+off = ts.samuel_stack(lam=10.0, profile=prof, g=G, model="bml", layer=LAYER)
+om, oc = ts.lid_heat(off, h_pm, v_sil, v_cr)
+t_off = om * (v_lid - v_cr) + oc * v_cr + L["h_m"] * L["v_conv_p"] + L["h_d"] * L["v_d"]
+check("C114 switch — with it off the lid's split breaks the balance (the preserved T2 behaviour)",
+      abs(t_off / (h_pm * v_sil) - 1.0) > 1e-3, f"ratio off {t_off / (h_pm * v_sil) - 1.0:+.3e}")
 p2 = ts.state_terms(ts.samuel_stack(lam=20.0, profile=prof, g=G), *STATE, -0.02)
 p2s_stack = ts.samuel_stack(lam=20.0, profile=prof, g=G, source_volume=True)
 p2s = ts.state_terms(p2s_stack, *STATE, -0.02)

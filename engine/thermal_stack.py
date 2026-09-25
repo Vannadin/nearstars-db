@@ -280,6 +280,15 @@ def _heat(s: Stack, h_pm: float, v_sil: float, v_cr: float):
                        "v_sil_p": v_sil_p}
 
 
+def lid_heat(s: Stack, h_pm: float, v_sil: float, v_cr: float) -> tuple:
+    """(H_m, H_cr) the lid grid receives each step — the one place `run` takes them from."""
+    if s.basal is not None and s.lid.params["source_heat"]:
+        h_m, h_cr, _ = _heat(s, h_pm, v_sil, v_cr)     # C114 source form: the mantle's split
+        return h_m, h_cr
+    # ⚠ the lid grid's heat is split without the basal layer even when there is one (module note, C114)
+    return sm.heat_split(h_pm, v_cr, v_sil - v_cr, s.lam)
+
+
 def _start_basal(s: Stack, t_c: float, t_i: float) -> None:
     L = s.basal.params
     melting = L["melting"]
@@ -462,11 +471,7 @@ def run(s: Stack, cap_myr: float) -> dict:
         v_sil, v_cr = _shell(s.r_p, s.r_c), _shell(s.r_p, s.r_p - y[3])
         h_pm = sm.primitive_heat((AGE_GYR - t) * 1000.0, st.RHO_MANTLE_KG_M3)
         try:
-            if s.basal is not None and s.lid.params["source_heat"]:
-                h_m, h_cr, _ = _heat(s, h_pm, v_sil, v_cr)     # C114 source form: the mantle's split
-            else:
-                # ⚠ the lid grid's heat is split without the basal layer even when there is one (module note)
-                h_m, h_cr = sm.heat_split(h_pm, v_cr, v_sil - v_cr, s.lam)
+            h_m, h_cr = lid_heat(s, h_pm, v_sil, v_cr)
         except sm.Refused as e:
             return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
         grad = lid.step(h, d_l=y[2], d_cr=y[3], t_l=t_l, h_m=h_m, h_cr=h_cr)
