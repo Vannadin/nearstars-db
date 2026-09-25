@@ -76,8 +76,9 @@ check("C113 switch — plate 2's mantle volume becomes the convective one and dT
 out = ts.run(ts.samuel_stack(lam=20.0, profile=prof, g=G), 10.0)
 v = sr.curve_values(out["rows"])
 # the same pins and widths as test_samuel_run.FROZEN_L20 / FROZEN_TOL (K to the frozen decimal; peak time 0.0005 Gyr)
-for key, want, tol in (("T_c today", 2101.44, 0.005), ("T_m today", 1942.15, 0.005), ("T_c(1) − T_c0", -49.32, 0.005),
-                       ("T_m(1) − T_m0", 285.91, 0.005), ("T_m peak", 2043.85, 0.005), ("T_m peak time", 1.2726, 0.0005)):
+# C116: moved with INFER_TOL 5e-7 (Mars's core mass fraction); old values beside FROZEN_L20
+for key, want, tol in (("T_c today", 2101.38, 0.005), ("T_m today", 1941.67, 0.005), ("T_c(1) − T_c0", -48.94, 0.005),
+                       ("T_m(1) − T_m0", 286.19, 0.005), ("T_m peak", 2044.18, 0.005), ("T_m peak time", 1.2732, 0.0005)):
     check(f"R2 — {key} = {want}", abs(v[key] - want) <= tol, f"{v[key]:.6f}")
 
 print(f"  test_thermal_stack — {'모두 통과' if not fails else f'실패 {fails}'}")

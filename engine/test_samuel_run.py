@@ -46,8 +46,10 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 # (addendum 8). Before the bracket solve they read
 # 2101.59 / 1941.69 (a fixed point stopping silently at 60 iterations, noise ~1 K). The two RMS conditions
 # need the 2023 source data, which is outside the repo, so the gate cannot hold them.
-FROZEN_L20 = {"T_c today": 2101.44, "T_m today": 1942.15, "T_c(1) − T_c0": -49.32, "T_m(1) − T_m0": 285.91,
-              "T_m peak": 2043.85, "T_m peak time": 1.2726}
+# C116: INFER_TOL 5e-4 → 5e-7 moves Mars's inverted core mass fraction, so the pins moved on 2026-09-26
+# (old → new: 2101.44 → 2101.38 · 1942.15 → 1941.67 · -49.32 → -48.94 · 285.91 → 286.19 · 2043.85 → 2044.18 · 1.2726 → 1.2732).
+FROZEN_L20 = {"T_c today": 2101.38, "T_m today": 1941.67, "T_c(1) − T_c0": -48.94, "T_m(1) − T_m0": 286.19,
+              "T_m peak": 2044.18, "T_m peak time": 1.2732}
 FROZEN_TOL = {"T_m peak time": 0.0005}  # Gyr; every other value K, to the frozen decimal
 
 
