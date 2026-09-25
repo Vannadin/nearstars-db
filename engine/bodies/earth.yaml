@@ -51,6 +51,17 @@ inputs:
       Nimmo+ 2004 eq. 34's surface temperature for Earth, the value `mantle_flux.T_S` has carried
       as a module default. Declaring it here does not change Earth's answer; it stops the same
       number from being applied to a body that never declared one.
+  # 표면 암석권 — 구조 전용 전도 층(prereg-surface-lithosphere, 층 일반화 ⓑ1). 층 안 온도는 T = A/r + B(H = 0),
+  # 바닥은 단열선에서 연속, 윗끝은 위 surface_temperature_k. 없으면 구조 전 구간 단열(예전 경로).
+  lithosphere_thickness_km:
+    value: 135.0
+    grade: analog
+    source: "2018JGRB..123.9136R (accepted manuscript) txt 80 · 2196 — «a plate thickness of 135 ± 30 km»"
+    counter_evidence_searched: >
+      The same paper's prior plate values (second-hand): Parsons & Sclater 1977 125 ± 10 km, Stein & Stein 1992
+      95 km, McKenzie+ 2005 106 km — all inside or near the ± 30 km band. An oceanic-plate value used as Earth's
+      mean layer: continental lithosphere is thicker, and its primary sources (Artemieva & Mooney 2001, McKenzie+
+      2005) are not held (sources survey core-si-h-and-lithosphere-sources §3-4, 2026-09-25).
   # 핵 **쪽** 핵-맨틀 경계 온도. 이것도 선언이고, D″ 열경계층을 가로지르는 열류가
   # 정하는 값이라 이 엔진이 도출하지 않는다. Sinmyo+ 2019 (2019E&PSL.510...45S) 의
   # 3760 ± 290 K 다. 맨틀 쪽 값(이 적분이 내는 ~2530 K)보다 1200 K 넘게 높다.
@@ -90,6 +101,7 @@ units:
   age_gyr: Gyr
   potential_temperature: K
   surface_temperature_k: K
+  lithosphere_thickness_km: km
   core_cmb_temperature: K
   core_initial_temperature: K
   mantle_initial_potential_temperature: K

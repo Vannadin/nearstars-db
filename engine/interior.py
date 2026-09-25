@@ -343,7 +343,7 @@ CRUST_NAME = "crust_primordial"
 
 #: 재료 경계 점프의 어휘 — 경계 이름은 «안쪽 역할/바깥 역할» (prereg-interface-jumps 덧붙임 3 ①).
 #: 상·하부 맨틀 · 내외핵은 층이 아니라 여기 없다(오너 결정: 판 4 뒤).
-INTERFACE_ROLES = ("core", "rock", "ice", "crust", "envelope")
+INTERFACE_ROLES = ("core", "rock", "ice", "crust", "envelope", "lithosphere")   # lithosphere — 이름만, 점프는 아직 거절
 INTERFACE_NAMES = frozenset(f"{a}/{b}" for a in INTERFACE_ROLES for b in INTERFACE_ROLES if a != b)
 
 
@@ -602,6 +602,8 @@ class BasalConstDensity:
 _ICE_GRID_DELTA: dict[int, tuple[int, int]] = {}
 #: 기저층 기록 — `Structure` 가 `__slots__` 라 위 표와 같은 꼴로 id 에 단다(같은 조건, 같은 비우기).
 _BASAL_INFO: dict[int, dict] = {}
+#: 표면 암석권의 자리(prereg-surface-lithosphere) — 구조 id → 층 바닥 반지름 · 그 자리 단열 온도 · 윗끝 · 표면 온도.
+_LITHO_INFO: dict[int, dict] = {}
 
 
 def integrate(*args, **kw):
@@ -639,7 +641,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
               ammonia_mass_fraction: float = 0.0,
               record: list | None = None,
               interface_jumps: dict | None = None,
-              basal_layer: dict | None = None) -> Structure:
+              basal_layer: dict | None = None,
+              lithosphere: dict | None = None) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -715,6 +718,12 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
     basal_top = None           # 핵 반지름이 정해지면 채운다
     basal_done = False
     r_basal_top = p_basal_base = p_basal_top = t_basal_base = None
+    # 표면 암석권 (prereg-surface-lithosphere 덧붙임 2) — 층 바닥 반지름 `r_base` 에서 걸음을 자르고, 그 뒤로는
+    # **밀도만** 전도 온도 T = A/r + B (H = 0; 두 끝 (r_base, 그 자리의 단열 온도) · (r_top, t_s))로 읽는다. 적분이
+    # 들고 가는 `t` 는 층 안에서도 가상 단열선으로 계속 걷는다 — 쏘기 조건(표면 = T_pot)은 그 끝점이다.
+    # None 이면 이 칸들은 한 번도 안 읽힌다(층 없는 몸은 예전 경로 그대로).
+    litho_a = litho_b = None           # 층 바닥에 닿으면 채운다
+    r_litho = t_litho_base = None
     # ── 두 선언 (C5) ──
     # 얼음 맨틀에 섞인 암석. 물의 어느 상이든(사다리·바다·뜨거운 물) 같은 분율의 규산염과 부피
     # 가법으로 섞고, ∇_ad 는 c_P 가중이다 (Mixture). 상마다 혼합 객체를 하나씩 만들어 둔다.
@@ -1026,7 +1035,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                 # 고르므로, 이 반 걸음만 IF97 로 잇는다. 오늘까지 이 갈래는 거절이었으니 앵커는 비트 그대로다.
                 rr_rho = COLUMN_STEAM.density(pp, t)
             else:
-                rr_rho = (mat.density(_at_floor(max(pp, p_stop)), t, t_pot) if pp > 0.0
+                t_rho = t if litho_a is None else litho_a / rr + litho_b
+                rr_rho = (mat.density(_at_floor(max(pp, p_stop)), t_rho, t_pot) if pp > 0.0
                           else mat.rho0)
             phi = porosity_at(mat, pp, phi0, p_cap)
             rr_rho *= 1.0 - phi
@@ -1175,6 +1185,20 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             crossed = False
             basal_crossed = True
 
+        # 표면 암석권 바닥 — 반지름 경계(기저층 꼭대기와 같은 RK4 재걷기). 층 바닥 온도는 걸음 끝의 단열 온도.
+        litho_crossed = False
+        if lithosphere is not None and litho_a is None and r + h > lithosphere["r_base"] > r:
+            h = lithosphere["r_base"] - r
+            k2 = deriv(r + h / 2, m + h / 2 * k1[0], p + h / 2 * k1[1])
+            k3 = deriv(r + h / 2, m + h / 2 * k2[0], p + h / 2 * k2[1])
+            k4 = deriv(r + h, m + h * k3[0], p + h * k3[1])
+            dm = h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
+            dp = h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
+            di = h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
+            dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
+            crossed = False
+            litho_crossed = True
+
         # **상 경계도 걸음 안에서 찾는다.** 층 경계(질량)와 표 바닥(온도)을 걸음 안에서 보간하는
         # 것과 같은 자리다. 걸음 끝의 (P, T) 를 선형으로 내다보고 상이 뒤집히면, 뒤집히는 분율을
         # 이분법으로 찾아 그만큼만 걷는다. 층 경계가 이 걸음 안에 먼저 있었으면 이미 h 가 거기까지로
@@ -1206,6 +1230,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                     di = h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
                     dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
                     crossed = False
+                    litho_crossed = False
                 phase_crossed = True
 
         # **이 층이 자기 적합의 바닥에 걸렸다** (C60 (c), 브리프 181 B). 위의 층 경계 보간이
@@ -1259,6 +1284,11 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
         if basal_crossed:
             basal_done = True
             r_basal_top, p_basal_top = r, p
+        if litho_crossed:
+            r_litho, t_litho_base = r, t
+            inv = 1.0 / r - 1.0 / lithosphere["r_top"]
+            litho_a = (t - lithosphere["t_s"]) / inv
+            litho_b = lithosphere["t_s"] - litho_a / lithosphere["r_top"]
         if crossed:
             # 경계에 섰다. 다음 걸음은 새 재료로 시작한다 — material_for 의 문턱에 맡기지
             # 않는다. RK4 의 겉질량은 첫 기울기로 잰 m_b 와 O(dr²) 만큼 다를 수 있어서,
@@ -1320,6 +1350,9 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                      r_grad_base=r_grad_base, r_grad_top=r_grad_top,
                      crust_void=crust_void, floor_truncated=floor_truncated,
                      surface_reached=floor_truncated is None)
+    if lithosphere is not None:
+        _LITHO_INFO[id(structure)] = {"r_base": r_litho, "t_base": t_litho_base, "r_top": lithosphere["r_top"],
+                                      "t_s": lithosphere["t_s"]}
     if basal_mat is not None:
         _BASAL_INFO[id(structure)] = {"r_base": core_radius, "r_top": r_basal_top, "p_base": p_basal_base,
                                       "p_top": p_basal_top, "t_base": t_basal_base,
@@ -1438,7 +1471,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     envelope_z_profile: tuple | None = None,
                     ammonia_mass_fraction: float = 0.0,
                     interface_jumps: dict | None = None,
-                    basal_layer: dict | None = None) -> tuple[Structure, bool]:
+                    basal_layer: dict | None = None,
+                    lithosphere: dict | None = None) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
@@ -1533,7 +1567,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                          serpentinisation, differentiation_front, crust_rock_fraction,
                          crust_porosity, envelope_z_profile,
                          ammonia_mass_fraction=ammonia_mass_fraction,
-                         interface_jumps=interface_jumps, basal_layer=basal_layer)
+                         interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere)
 
     # 괄호잡기. 시험압을 네 배씩 올리며 겉질량이 목표에 닿는 자리를 찾는다.
     #
@@ -1658,7 +1692,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                         serpentinisation, differentiation_front, crust_rock_fraction,
                         crust_porosity, envelope_z_profile,
                         ammonia_mass_fraction=ammonia_mass_fraction,
-                        interface_jumps=interface_jumps, basal_layer=basal_layer)
+                        interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     if p_stop and rung is not None:
@@ -1715,7 +1749,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     serpentinisation, differentiation_front, crust_rock_fraction,
                     crust_porosity, envelope_z_profile,
                     ammonia_mass_fraction=ammonia_mass_fraction,
-                    interface_jumps=interface_jumps, basal_layer=basal_layer)
+                    interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere)
         y1 = math.log(st.mass_kg / mass_kg)
     convergence.note("interior._shoot_pressure", False)
     return st, False
@@ -1751,6 +1785,9 @@ T_DAMPING = 0.5
 T_DAMPING_MAX_DEV = T_DIVERGENCE_MIN
 # 온도 괄호잡기의 시도 횟수. 한 번에 1.6배씩 올린다.
 T_BRACKET_TRIES = 12
+#: 표면 암석권 층 바닥 자리의 바깥 고정점 (prereg-surface-lithosphere 덧붙임 2 ①) — |ΔR| 문턱 · 최대 횟수.
+LITHO_R_TOL = 1.0            # m — STEPS 1500 지구 걸음 dr ≈ 3.2 km 의 3e-4
+LITHO_ITERS = 8
 
 
 def shoot(mass_kg: float, cmf: float, imf: float,
@@ -1767,7 +1804,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           envelope_z_profile: tuple | None = None,
           ammonia_mass_fraction: float = 0.0,
           interface_jumps: dict | None = None,
-          basal_layer: dict | None = None) -> tuple[Structure, bool]:
+          basal_layer: dict | None = None,
+          lithosphere: dict | None = None) -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
 
     온도가 선언되지 않으면(`potential_temperature is None`) 아래 고리가 아예 돌지
@@ -1791,6 +1829,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           "interface_jumps": interface_jumps}
     if basal_layer:
         kw["basal_layer"] = basal_layer
+    if lithosphere:
+        kw["lithosphere"] = lithosphere
     if not potential_temperature:
         return _shoot_pressure(*args, **kw)
     t_pot = float(potential_temperature)
@@ -2691,7 +2731,9 @@ def solve(mass_earth: float,
           basal_iron_number: float | None = None,
           interface_temperature_jumps: dict | None = None,
           basal_layer_thickness_km: float | None = None,
-          basal_layer_density: float | None = None) -> Result:
+          basal_layer_density: float | None = None,
+          lithosphere_thickness_km: float | None = None,
+          surface_temperature_k: float | None = None) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
@@ -2737,7 +2779,10 @@ def solve(mass_earth: float,
               # 재료 경계의 온도 점프 선언 (prereg-interface-jumps). 빈 사전이 기본 — 점프 없음.
               # ⚠ 없으면 `None` 으로 적는다 — 호출부 기본값과 같은 수라야 계약의 클래스 ④ 가 조용하다.
               "interface_temperature_jumps": (dict(interface_temperature_jumps)
-                                              if interface_temperature_jumps else None)}
+                                              if interface_temperature_jumps else None),
+              # 표면 암석권 (prereg-surface-lithosphere) — 없으면 둘 다 None.
+              "lithosphere_thickness_km": lithosphere_thickness_km,
+              "surface_temperature_k": surface_temperature_k}
 
     if body_class in FLUID_CLASSES:
         why = {
@@ -3035,6 +3080,13 @@ def solve(mass_earth: float,
                 RECIPE, VERSION,
                 f"모르는 경계 이름 {bad} — 어휘는 «안쪽/바깥» 역할 {sorted(INTERFACE_ROLES)} 의 쌍이다.",
                 inputs=inputs, refs=REFS)
+        litho_jump = sorted(k for k in jumps if "lithosphere" in k.split("/"))
+        if litho_jump:
+            # ⚠ 이름은 열었지만 점프는 안 건다 (prereg-surface-lithosphere 덧붙임 3) — 조용히 무시하지 않는다.
+            return out_of_domain(
+                RECIPE, VERSION,
+                f"경계 {litho_jump} — 이 판은 암석권 경계의 온도 점프를 지원하지 않는다(층 바닥은 단열선에서 연속).",
+                inputs=inputs, refs=REFS)
         neg = sorted(k for k, v in jumps.items() if not isinstance(v, (int, float)) or isinstance(v, bool)
                      or not math.isfinite(v) or v < 0.0)
         if neg:
@@ -3074,16 +3126,52 @@ def solve(mass_earth: float,
                                  "기저층과 재료 경계 점프를 함께 선언했다 — 점프 어휘에 `basal` 이 아직 없다 "
                                  "(prereg-structure-basal-layer: 점프 값은 0).", inputs=inputs, refs=REFS)
         basal = {"thickness_m": float(basal_layer_thickness_km) * 1e3, "density": float(basal_layer_density)}
+    # 표면 암석권 (prereg-surface-lithosphere) — 없거나 None 이면 층이 없다(예전 경로 그대로).
+    litho_d_m = None
+    if lithosphere_thickness_km is not None:
+        if not float(lithosphere_thickness_km) > 0.0:
+            return out_of_domain(RECIPE, VERSION, f"`lithosphere_thickness_km` {lithosphere_thickness_km!r} 가 0 보다 "
+                                 "크지 않다 — 층이 없으면 칸을 빼라.", inputs=inputs, refs=REFS)
+        if not potential_temperature:
+            return out_of_domain(RECIPE, VERSION, "`lithosphere_thickness_km` 가 선언됐는데 `potential_temperature` 가 "
+                                 "없다 — 온도가 흐르지 않는 구조에는 전도 층이 뜻이 없다.", inputs=inputs, refs=REFS)
+        if not surface_temperature_k:
+            return out_of_domain(RECIPE, VERSION, "`lithosphere_thickness_km` 가 선언됐는데 `surface_temperature_k` 가 "
+                                 "없다 — 전도 층의 윗끝 온도가 없다.", inputs=inputs, refs=REFS)
+        litho_d_m = float(lithosphere_thickness_km) * 1e3
+    _LITHO_INFO.clear()
+    litho_log = None
+
+    def _shoot(lithosphere=None):
+        return shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
+                     initial_porosity, porosity_cap, gmf,
+                     envelope_z, envelope_z_rock_fraction, differentiated, potential_temperature,
+                     boundary_temperature_jump, mantle_rock_fraction,
+                     serpentinisation, differentiation_front, crust_rock_fraction,
+                     crust_porosity, envelope_z_profile,
+                     ammonia_mass_fraction=ammonia_mass_fraction,
+                     interface_jumps=jumps or None,
+                     basal_layer=basal, lithosphere=lithosphere)
     try:
-        st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
-                              initial_porosity, porosity_cap, gmf,
-                              envelope_z, envelope_z_rock_fraction, differentiated, potential_temperature,
-                              boundary_temperature_jump, mantle_rock_fraction,
-                              serpentinisation, differentiation_front, crust_rock_fraction,
-                              crust_porosity, envelope_z_profile,
-                              ammonia_mass_fraction=ammonia_mass_fraction,
-                              interface_jumps=jumps or None,
-                              basal_layer=basal)
+        st, converged = _shoot()
+        if litho_d_m is not None:
+            # 층 바닥 r_L = R − D 는 R 을 알아야 정해진다 — 바깥 고정점(덧붙임 2 ①).
+            r_est = st.radius_m
+            litho_log = []
+            for _ in range(LITHO_ITERS):
+                if litho_d_m >= r_est - st.core_radius_m:
+                    return out_of_domain(RECIPE, VERSION, f"`lithosphere_thickness_km` {litho_d_m / 1e3:g} km 가 맨틀 두께 "
+                                         f"{(r_est - st.core_radius_m) / 1e3:.1f} km 이상이다.", inputs=inputs, refs=REFS)
+                st, converged = _shoot({"r_base": r_est - litho_d_m, "r_top": r_est,
+                                        "t_s": float(surface_temperature_k)})
+                d_r = abs(st.radius_m - r_est)
+                litho_log.append(d_r)
+                r_est = st.radius_m
+                if d_r <= LITHO_R_TOL:
+                    break
+            else:
+                return out_of_domain(RECIPE, VERSION, f"표면 암석권의 층 바닥 자리가 {LITHO_ITERS} 번 안에 안 멈췄다 — "
+                                     f"마지막 |ΔR| {litho_log[-1]:.3g} m (허용 {LITHO_R_TOL:g} m).", inputs=inputs, refs=REFS)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -3153,6 +3241,12 @@ def solve(mass_earth: float,
     # ⚠ **`off-curve` 만 거절로 남는다** — 거기서는 곡선이 그 압력에 안 닿아 «모른다» 이고,
     #   «모른다» 와 «0» 을 한 문장으로 내보내면 둘을 되찾을 수 없다 (`:2293` 이 그렇게 적는다).
     basal_info = _BASAL_INFO.get(id(st))
+    litho_info = _LITHO_INFO.get(id(st))
+    if litho_info is not None:
+        notes.append(
+            f"표면 암석권 {litho_d_m / 1e3:g} km(전도 T = A/r + B, H = 0) — 바닥 r {litho_info['r_base'] / 1e3:.3f} km · "
+            f"바닥 T {litho_info['t_base']:.2f} K(단열선에서 연속) · 윗끝 {litho_info['t_s']:g} K · 층 바닥 고정점 "
+            f"{len(litho_log)} 번, |ΔR| " + " → ".join(f"{d:.3g}" for d in litho_log) + " m.")
     if basal_info is not None and basal_info["reached_top"]:
         # 쌓은 층 — 두께와 꼭대기는 적분기가 반지름으로 건 그대로(S-경계)
         plus_layer = basal_info["r_top"] / 1e3
@@ -4537,6 +4631,7 @@ def _solve_from_state(state):
     #   analog 에서 calibrated 로 올렸다. 선언만 보면 걸음마다 같은 갈래라 답이 고정점이 된다.
     declared = state.inputs
     jumps = _declared_jumps(state.get_optional("interface_temperature_jumps"))
+    litho_km = _declared_value(state.get_optional("lithosphere_thickness_km"))
     if (state.get("body_class") not in FLUID_CLASSES
             and declared.get("composition_intent") is None
             and declared.get("core_mass_fraction") is None):
@@ -4547,6 +4642,14 @@ def _solve_from_state(state):
                 f"경계 점프 {sorted(jumps)} 가 선언됐는데 이 바디는 조성을 역산하는 갈래로 간다 — 역산 "
                 "(`infer_composition` · 황 맞춤)은 아직 점프를 넘기지 않는다. 조성을 선언하거나 점프를 뺀다.",
                 inputs={"interface_temperature_jumps": jumps}, refs=REFS)
+        if litho_km is not None:
+            # ⚠ 역산 몸(화성 · 금성 · dante)은 INFER_TOL 판이 같은 갈래를 고치는 중이라 이 판에서 층을 섞지 않는다
+            #   (prereg-surface-lithosphere 덧붙임 1 보충). 조용히 버리면 층 없이 풀린 답이 층 선언을 단다.
+            return out_of_domain(
+                RECIPE, VERSION,
+                f"표면 암석권 {litho_km!r} km 가 선언됐는데 이 바디는 조성을 역산하는 갈래로 간다 — 역산은 아직 "
+                "층을 넘기지 않는다. 조성을 선언하거나 층을 뺀다.",
+                inputs={"lithosphere_thickness_km": litho_km}, refs=REFS)
         return _infer_from_state(state)
     return solve(
         mass_earth=state["mass_earth"],
@@ -4577,4 +4680,8 @@ def _solve_from_state(state):
         basal_iron_number=state.get("basal_iron_number"),
         # 재료 경계 점프도 **선언** 이다 (prereg-interface-jumps). 없으면 None — 점프 없음.
         interface_temperature_jumps=jumps,
+        # 표면 암석권도 **선언** 이다 (prereg-surface-lithosphere). 없으면 None — 층 없음, 표면 온도도 안 읽는다.
+        lithosphere_thickness_km=litho_km,
+        surface_temperature_k=(_declared_value(state.get_optional("surface_temperature_k"))
+                               if litho_km is not None else None),
     )

@@ -60,9 +60,12 @@ bodies = sorted((Path(__file__).resolve().parent / "bodies").glob("*.yaml"))
 for path in bodies:
     run.load_body(path)
 payload.check_provenance = orig
-check(f"몸 파일 {len(bodies)} 개 전부 로드", True)
+print(f"  [보고] 몸 파일 {len(bodies)} 개 로드 — 실패는 위에서 예외로 멈춤")
 print(f"  [보고] 새 칸 목록 {payload.NEW_PROVENANCE_FIELDS!r} · check_provenance 호출 {calls} 회")
-check("새 칸 목록이 비어 있으면 검사 0 회", calls == 0 or bool(payload.NEW_PROVENANCE_FIELDS))
+import yaml                            # noqa: E402
+declared = sum(1 for path in bodies for name in payload.NEW_PROVENANCE_FIELDS
+               if name in ((yaml.safe_load(path.read_text(encoding="utf-8")) or {}).get("inputs") or {}))
+check("새 칸을 선언한 수만큼 검사 (9f #34)", calls == declared, f"선언 {declared} · 호출 {calls}")
 
 print(f"  test_provenance — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)
