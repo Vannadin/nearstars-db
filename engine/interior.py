@@ -572,6 +572,26 @@ def _carries_silicate(mat) -> bool:
     return any(m.name.startswith("silicate") for m, w in getattr(mat, "parts", ()) if w > 0.0)
 
 
+class BasalConstDensity:
+    """기저층 재료 — **밀도만 상수**, 나머지(열 상수 · 단열 · 상 · 온도 영역)는 규산염에 맡긴다
+    (prereg-structure-basal-layer, 결정 B). 화성의 4050 ± 50 kg/m³ 은 Khan+ 2023 역산값이고 등급은
+    analog(Khan 기하 150 ± 15 km 로 선언할 때만 literature, `bml-molten-density-sources.md`).
+    T · P 의존이 없다 — 녹은 층의 역산값이라 «녹음» 을 이미 품는다(상태는 표시 칸)."""
+
+    name = "silicate_basal_const"
+
+    def __init__(self, density: float, base=None):
+        self._rho = float(density)
+        self._base = MATERIALS["silicate"] if base is None else base
+        self.rho0 = self._rho
+
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        return self._rho
+
+    def __getattr__(self, attr):
+        return getattr(self._base, attr)
+
+
 #: 돌려주는 구조마다 «그 적분이 격자를 몇 번 벗어났나» 를 들고 있는 자리 (브리프 190 C).
 #: ⚠ **등급은 답에 대한 진술이므로, 버려진 사격 시도의 델타는 여기 안 남는다** — 스냅샷을 적분
 #:   **호출마다** 뜨고, 사격기가 실제로 돌려주는 구조의 것만 읽는다. 풀이 전후로 한 번 뜨면
@@ -579,6 +599,8 @@ def _carries_silicate(mat) -> bool:
 #: ⚠ 키는 `id(구조)` 다 — `Structure` 는 `__slots__` 라 필드를 붙일 수 없다. 같은 풀이 안에서만
 #:   읽고 다음 풀이 시작 때 비우므로 id 재사용이 답을 섞지 않는다.
 _ICE_GRID_DELTA: dict[int, tuple[int, int]] = {}
+#: 기저층 기록 — `Structure` 가 `__slots__` 라 위 표와 같은 꼴로 id 에 단다(같은 조건, 같은 비우기).
+_BASAL_INFO: dict[int, dict] = {}
 
 
 def integrate(*args, **kw):
@@ -615,7 +637,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
               envelope_z_profile: tuple | None = None,
               ammonia_mass_fraction: float = 0.0,
               record: list | None = None,
-              interface_jumps: dict | None = None) -> Structure:
+              interface_jumps: dict | None = None,
+              basal_layer: dict | None = None) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -683,6 +706,14 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
         grad_hi_kg = min(_zp_mid + 2.0 * _zp_dm, 1.0) * mass_kg
     p_crust_base = None
     crust_void = 0.0
+    # ── 기저층 (prereg-structure-basal-layer, 결정 ①) ──
+    # 층 경계를 **반지름**으로 건다: 핵이 끝난 자리에서 `thickness_m` 만큼. 층 안의 재료는 밀도 상수
+    # (`BasalConstDensity`), 층을 넘으면 다시 층 열의 재료. `basal_layer` 가 None 이면 이 칸들은
+    # 한 번도 안 쓰여 예전 경로와 비트까지 같다(S-B1).
+    basal_mat = BasalConstDensity(basal_layer["density"]) if basal_layer else None
+    basal_top = None           # 핵 반지름이 정해지면 채운다
+    basal_done = False
+    r_basal_top = p_basal_base = p_basal_top = t_basal_base = None
     # ── 두 선언 (C5) ──
     # 얼음 맨틀에 섞인 암석. 물의 어느 상이든(사다리·바다·뜨거운 물) 같은 분율의 규산염과 부피
     # 가법으로 섞고, ∇_ad 는 c_P 가중이다 (Mixture). 상마다 혼합 객체를 하나씩 만들어 둔다.
@@ -862,6 +893,11 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             note_switch(prev_layer)
             apply_jump(prev_layer)
             forced_liquid = None
+        if basal_mat is not None and not basal_done and core_radius is not None and layer >= 1:
+            if basal_top is None:
+                basal_top = core_radius + basal_layer["thickness_m"]
+                p_basal_base, t_basal_base = p_cmb, t_cmb
+            mat = basal_mat
         in_column = OCEAN_LAYER and t > 0.0 and mat.name == "h2o"
         liquid = False
         if in_column:
@@ -1124,6 +1160,20 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                     dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
                     crossed = True
 
+        # 기저층 꼭대기 — 반지름 경계. 걸음이 넘으면 꼭대기까지만 걷는다(질량 경계와 같은 RK4 재걷기).
+        basal_crossed = False
+        if mat is basal_mat and basal_top is not None and r + h > basal_top:
+            h = basal_top - r
+            k2 = deriv(r + h / 2, m + h / 2 * k1[0], p + h / 2 * k1[1])
+            k3 = deriv(r + h / 2, m + h / 2 * k2[0], p + h / 2 * k2[1])
+            k4 = deriv(r + h, m + h * k3[0], p + h * k3[1])
+            dm = h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
+            dp = h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
+            di = h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
+            dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
+            crossed = False
+            basal_crossed = True
+
         # **상 경계도 걸음 안에서 찾는다.** 층 경계(질량)와 표 바닥(온도)을 걸음 안에서 보간하는
         # 것과 같은 자리다. 걸음 끝의 (P, T) 를 선형으로 내다보고 상이 뒤집히면, 뒤집히는 분율을
         # 이분법으로 찾아 그만큼만 걷는다. 층 경계가 이 걸음 안에 먼저 있었으면 이미 h 가 거기까지로
@@ -1205,6 +1255,9 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             # 이쪽에 멈추므로 다시 판정하면 같은 상이 나와 폭 0 의 걸음을 되풀이한다. 층 경계에서
             # material_for 의 문턱에 맡기지 않는 것과 같은 이유다.
             forced_liquid = not liquid
+        if basal_crossed:
+            basal_done = True
+            r_basal_top, p_basal_top = r, p
         if crossed:
             # 경계에 섰다. 다음 걸음은 새 재료로 시작한다 — material_for 의 문턱에 맡기지
             # 않는다. RK4 의 겉질량은 첫 기울기로 잰 m_b 와 O(dr²) 만큼 다를 수 있어서,
@@ -1254,7 +1307,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
         # T − T_melt 가 제일 큰 자리가 여기다. 가스 외피가 있으면 마지막 층이 얼음이
         # 아니라서 이 표본을 넣지 않는다 — 다른 층의 점을 얼음이라고 부르지 않는다.
         ice_samples.append((p, t))
-    return Structure(r, m, moi, core_radius, p_center, p_cmb, p_ice_base, phases,
+    structure = Structure(r, m, moi, core_radius, p_center, p_cmb, p_ice_base, phases,
                      v_pore=v_pore, m_above_lab=m_above_lab,
                      p_silicate_max=p_si_max, t_center=t_center,
                      t_cmb=t_cmb if t_cmb is not None else 0.0,
@@ -1266,6 +1319,11 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                      r_grad_base=r_grad_base, r_grad_top=r_grad_top,
                      crust_void=crust_void, floor_truncated=floor_truncated,
                      surface_reached=floor_truncated is None)
+    if basal_mat is not None:
+        _BASAL_INFO[id(structure)] = {"r_base": core_radius, "r_top": r_basal_top, "p_base": p_basal_base,
+                                      "p_top": p_basal_top, "t_base": t_basal_base,
+                                      "density": basal_mat.density(0.0), "reached_top": basal_done}
+    return structure
 
 
 # ⚠ **이름 뒤에서 몸통을 빼내면 «이름으로 키를 잡는 감시» 가 눈이 먼다** (C87; 게이트 `86dfbc11` 의
@@ -1378,7 +1436,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     crust_porosity: bool = False,
                     envelope_z_profile: tuple | None = None,
                     ammonia_mass_fraction: float = 0.0,
-                    interface_jumps: dict | None = None) -> tuple[Structure, bool]:
+                    interface_jumps: dict | None = None,
+                    basal_layer: dict | None = None) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
@@ -1473,7 +1532,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                          serpentinisation, differentiation_front, crust_rock_fraction,
                          crust_porosity, envelope_z_profile,
                          ammonia_mass_fraction=ammonia_mass_fraction,
-                         interface_jumps=interface_jumps)
+                         interface_jumps=interface_jumps, basal_layer=basal_layer)
 
     # 괄호잡기. 시험압을 네 배씩 올리며 겉질량이 목표에 닿는 자리를 찾는다.
     #
@@ -1598,7 +1657,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                         serpentinisation, differentiation_front, crust_rock_fraction,
                         crust_porosity, envelope_z_profile,
                         ammonia_mass_fraction=ammonia_mass_fraction,
-                        interface_jumps=interface_jumps)
+                        interface_jumps=interface_jumps, basal_layer=basal_layer)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     if p_stop and rung is not None:
@@ -1655,7 +1714,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     serpentinisation, differentiation_front, crust_rock_fraction,
                     crust_porosity, envelope_z_profile,
                     ammonia_mass_fraction=ammonia_mass_fraction,
-                    interface_jumps=interface_jumps)
+                    interface_jumps=interface_jumps, basal_layer=basal_layer)
         y1 = math.log(st.mass_kg / mass_kg)
     convergence.note("interior._shoot_pressure", False)
     return st, False
@@ -1706,7 +1765,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           crust_porosity: bool = False,
           envelope_z_profile: tuple | None = None,
           ammonia_mass_fraction: float = 0.0,
-          interface_jumps: dict | None = None) -> tuple[Structure, bool]:
+          interface_jumps: dict | None = None,
+          basal_layer: dict | None = None) -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
 
     온도가 선언되지 않으면(`potential_temperature is None`) 아래 고리가 아예 돌지
@@ -1728,6 +1788,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           "envelope_z_profile": envelope_z_profile,
           "ammonia_mass_fraction": ammonia_mass_fraction,
           "interface_jumps": interface_jumps}
+    if basal_layer:
+        kw["basal_layer"] = basal_layer
     if not potential_temperature:
         return _shoot_pressure(*args, **kw)
     t_pot = float(potential_temperature)
@@ -2626,7 +2688,9 @@ def solve(mass_earth: float,
           envelope_z_profile: tuple | None = None,
           ammonia_mass_fraction: float = 0.0,
           basal_iron_number: float | None = None,
-          interface_temperature_jumps: dict | None = None) -> Result:
+          interface_temperature_jumps: dict | None = None,
+          basal_layer_thickness_km: float | None = None,
+          basal_layer_density: float | None = None) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
@@ -2996,6 +3060,19 @@ def solve(mass_earth: float,
         if "ice/envelope" in jumps:
             boundary_temperature_jump = float(jumps.pop("ice/envelope"))
     _ICE_GRID_DELTA.clear()
+    _BASAL_INFO.clear()
+    # 기저층 (prereg-structure-basal-layer) — 두께 0 또는 없음이면 층이 없다(S-B2: 예전 경로 그대로).
+    basal = None
+    if basal_layer_thickness_km:
+        if basal_layer_density is None:
+            return out_of_domain(RECIPE, VERSION,
+                                 "기저층 두께가 선언됐는데 밀도가 없다 — 층을 쌓을 수 없다.",
+                                 inputs=inputs, refs=REFS)
+        if interface_temperature_jumps:
+            return out_of_domain(RECIPE, VERSION,
+                                 "기저층과 재료 경계 점프를 함께 선언했다 — 점프 어휘에 `basal` 이 아직 없다 "
+                                 "(prereg-structure-basal-layer: 점프 값은 0).", inputs=inputs, refs=REFS)
+        basal = {"thickness_m": float(basal_layer_thickness_km) * 1e3, "density": float(basal_layer_density)}
     try:
         st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
                               initial_porosity, porosity_cap, gmf,
@@ -3004,7 +3081,8 @@ def solve(mass_earth: float,
                               serpentinisation, differentiation_front, crust_rock_fraction,
                               crust_porosity, envelope_z_profile,
                               ammonia_mass_fraction=ammonia_mass_fraction,
-                              interface_jumps=jumps or None)
+                              interface_jumps=jumps or None,
+                              basal_layer=basal)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -3073,7 +3151,12 @@ def solve(mass_earth: float,
     #   Khan 의 «fully molten» 층이 아니다」가 **답**이지 판단 보류가 아니다.
     # ⚠ **`off-curve` 만 거절로 남는다** — 거기서는 곡선이 그 압력에 안 닿아 «모른다» 이고,
     #   «모른다» 와 «0» 을 한 문장으로 내보내면 둘을 되찾을 수 없다 (`:2293` 이 그렇게 적는다).
-    if basal_state in (BASAL_SOLID, BASAL_NONE, BASAL_PARTIAL):
+    basal_info = _BASAL_INFO.get(id(st))
+    if basal_info is not None and basal_info["reached_top"]:
+        # 쌓은 층 — 두께와 꼭대기는 적분기가 반지름으로 건 그대로(S-경계)
+        plus_layer = basal_info["r_top"] / 1e3
+        layer_km = (basal_info["r_top"] - basal_info["r_base"]) / 1e3
+    elif basal_state in (BASAL_SOLID, BASAL_NONE, BASAL_PARTIAL):
         plus_layer = st.core_radius_m / 1e3
         layer_km = 0.0
     elif basal_state == BASAL_MOLTEN:
@@ -3630,7 +3713,9 @@ def infer_composition(mass_earth: float, radius_earth: float,
                       ice_allowed: bool = True,
                       tidal_heating: bool = False,
                       potential_temperature: float | None = None,
-                      basal_iron_number: float | None = None) -> Result:
+                      basal_iron_number: float | None = None,
+                      basal_layer_thickness_km: float | None = None,
+                      basal_layer_density: float | None = None) -> Result:
     """질량과 반지름을 재현하는 자유 분율 하나를 푼다.
 
     금속도 얼음도 없는 순수 규산염을 기준선으로 잡는다. 관측 반지름이 그보다
@@ -3665,7 +3750,8 @@ def infer_composition(mass_earth: float, radius_earth: float,
     rock = solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=0.0,
                  potential_temperature=potential_temperature,
                  tidal_heating=tidal_heating,
-                 basal_iron_number=basal_iron_number)
+                 basal_iron_number=basal_iron_number,
+                 basal_layer_thickness_km=basal_layer_thickness_km, basal_layer_density=basal_layer_density)
     if not rock.applicable:
         return rock
 
@@ -3676,7 +3762,9 @@ def infer_composition(mass_earth: float, radius_earth: float,
             return solve(mass_earth, core_mass_fraction=x, ice_mass_fraction=0.0,
                          potential_temperature=potential_temperature,
                          tidal_heating=tidal_heating,
-                         basal_iron_number=basal_iron_number)
+                         basal_iron_number=basal_iron_number,
+                         basal_layer_thickness_km=basal_layer_thickness_km,
+                         basal_layer_density=basal_layer_density)
     elif not ice_allowed:
         # 기준선보다 가벼운데 얼음이 선언으로 배제돼 있다. 남는 기작은 빈 공간이고,
         # 이제 그 빈 공간에 근거된 관계식이 있다 — 그래서 여기서 끝나지 않는다.
@@ -3689,7 +3777,9 @@ def infer_composition(mass_earth: float, radius_earth: float,
             return solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=x,
                          potential_temperature=potential_temperature,
                          tidal_heating=tidal_heating,
-                         basal_iron_number=basal_iron_number)
+                         basal_iron_number=basal_iron_number,
+                         basal_layer_thickness_km=basal_layer_thickness_km,
+                         basal_layer_density=basal_layer_density)
 
     # 1) 축을 훑는다. 값이 나오는 눈금과 막힌 눈금을 모두 들고 간다.
     grid = [span[0] + (span[1] - span[0]) * i / (SCAN_POINTS - 1)
@@ -4157,7 +4247,9 @@ SULPHUR_ANCHOR_DECLARATIONS = ("mass_earth", "radius_earth", "core_plus_layer_ra
 
 def solve_with_core_sulphur(mass_earth: float, radius_earth: float, w_s: float, pin: str,
                             potential_temperature: float | None = None,
-                            basal_iron_number: float | None = None):
+                            basal_iron_number: float | None = None,
+                            basal_layer_thickness_km: float | None = None,
+                            basal_layer_density: float | None = None):
     """황 분율 하나를 핵에 넣고 **한 번** 푼다.
 
     맞춤(`fit_sulphur_to_core_radius`)도 읽기(`read_sulphur_anchor` 뒤의 노드)도 이 함수를 쓴다 —
@@ -4177,7 +4269,9 @@ def solve_with_core_sulphur(mass_earth: float, radius_earth: float, w_s: float, 
     try:
         return infer_composition(mass_earth, radius_earth, ice_allowed=False,
                                  basal_iron_number=basal_iron_number,
-                                 potential_temperature=potential_temperature)
+                                 potential_temperature=potential_temperature,
+                                 basal_layer_thickness_km=basal_layer_thickness_km,
+                                 basal_layer_density=basal_layer_density)
     finally:
         COMPOSITIONS["earth_like"] = saved
         MATERIALS.pop(name, None)
@@ -4202,7 +4296,9 @@ def fit_sulphur_to_core_radius(mass_earth: float, radius_earth: float,
                                core_plus_layer_radius_km: float, pin: str,
                                potential_temperature: float | None = None,
                                halvings: int | None = None,
-                               basal_iron_number: float | None = None):
+                               basal_iron_number: float | None = None,
+                               basal_layer_thickness_km: float | None = None,
+                               basal_layer_density: float | None = None):
     """관측 핵 반지름을 재현하는 황 분율을 푼다 — **맞춤이지 측정이 아니다**.
 
     ⚠ **맞춘 양은 그 맞춤을 검사하지 못한다.** 이 함수가 돌고 나면 핵 반지름은 «소비된 관측» 이
@@ -4237,7 +4333,9 @@ def fit_sulphur_to_core_radius(mass_earth: float, radius_earth: float,
         #   한 겹 깊어진다. 맞추는 곡선 자체가 이제 선언 하나를 더 탄다.
         return solve_with_core_sulphur(mass_earth, radius_earth, w_s, pin,
                                        potential_temperature=potential_temperature,
-                                       basal_iron_number=basal_iron_number)
+                                       basal_iron_number=basal_iron_number,
+                                       basal_layer_thickness_km=basal_layer_thickness_km,
+                                       basal_layer_density=basal_layer_density)
 
     # ⚠ **회수는 곧 시간이다** — 한 시행이 사원계 역산 한 번(측정 ≈68 s). 기본 6 회는 착지용
     #   정밀도이고, 다른 고정은 «두 답이 갈리느냐» 만 보므로 더 적게 사서 쓴다.
