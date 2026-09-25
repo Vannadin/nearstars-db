@@ -3576,7 +3576,7 @@ def _porosity_note(st, phi0: float, mass_earth: float) -> str:
 # 15 % 인 천체는 이 솔버가 구분하지 못한다. 그래서 반환값의 note 가 그 축퇴를 명시하고,
 # 등급을 analog 로 내린다.
 
-INFER_TOL = 5e-4        # 반지름 상대오차
+INFER_TOL = 5e-7        # 반지름 상대오차 (C116: 5e-4 → 5e-7, prereg-infer-tol 사다리 규칙)
 SCAN_POINTS = 13        # 자유 분율 축을 훑는 눈금 수
 
 
