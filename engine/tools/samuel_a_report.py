@@ -3,6 +3,7 @@
 conditions, and the widths are ours (borrowed EDT1 σ), not an implementation tolerance.
 
     python3 engine/tools/samuel_a_report.py <MOESM3 DATA_FIG1 dir> [--jobs N] [--out results.jsonl] [--post-4p]
+                                            [--engine samuel_run|stack]
 
 `--post-4p` is the post-hoc plate 4P (pre-registration v2-27): P_m at the top of the convecting mantle,
 R_l − δ_u — plate 2P's definition, nothing else changed. It does not replace plate 4's verdict, and its
@@ -26,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import samuel_run as sr                # noqa: E402
 import samuel_structure as ss          # noqa: E402
 import samuel_thermal as st            # noqa: E402
+import thermal_stack as ts             # noqa: E402
 
 CAP_MYR = 10.0
 K_DS = [4.0 + i for i in range(13)]
@@ -38,14 +40,18 @@ _PROF = None
 
 def _one(args):
     global _PROF
-    k_d, lam, fe_top, melting, tc, tm, p_m_mode = args
+    k_d, lam, fe_top, melting, tc, tm, p_m_mode, engine = args
     if _PROF is None:
         _PROF = ss.mars_profile(Path(__file__).resolve().parent.parent / "bodies" / "mars.yaml")
     layer = dict(LAYER_BASE, k_d=k_d, fe_top=fe_top, melting=melting)
-    s = sr.Setup(lam=lam, profile=_PROF, g=_PROF.gravity(_PROF.radius_m), g_c=_PROF.gravity(st.R_CORE_M),
-                 model="bml", layer=layer, p_m_mode=p_m_mode)
     t0 = time.time()
-    out = sr.run(s, CAP_MYR)
+    if engine == "stack":       # T2 (prereg-T2-layer-list §7 R4 · R4P): the same box through thermal_stack
+        out = ts.run(ts.samuel_stack(lam=lam, profile=_PROF, g=_PROF.gravity(_PROF.radius_m), model="bml",
+                                     layer=layer, p_m_mode=p_m_mode), CAP_MYR)
+    else:
+        s = sr.Setup(lam=lam, profile=_PROF, g=_PROF.gravity(_PROF.radius_m), g_c=_PROF.gravity(st.R_CORE_M),
+                     model="bml", layer=layer, p_m_mode=p_m_mode)
+        out = sr.run(s, CAP_MYR)
     res = {"k_d": k_d, "lam": lam, "fe_top": fe_top, "melting": melting, "secs": time.time() - t0,
            "n_steps": out.get("n_steps")}
     if "refused" in out:
@@ -85,6 +91,7 @@ def main() -> int:
     jobs = int(argv[argv.index("--jobs") + 1]) if "--jobs" in argv else 4
     out_path = Path(argv[argv.index("--out") + 1]) if "--out" in argv else None
     post = "--post-4p" in argv
+    engine = argv[argv.index("--engine") + 1] if "--engine" in argv else "samuel_run"
     p_m_mode = "top" if post else "mid"
     verdict_word = "사후 수정 후 통과" if post else "통과"
     if post:
@@ -94,7 +101,8 @@ def main() -> int:
     print("판 4 A — 2023 그림 1 g–l · 폭은 우리가 고른 폭(EDT1 σ 를 빌림) — 구현 오차 폭이 아님")
     print(f"  상자 k_d {K_DS[0]:g}–{K_DS[-1]:g} × Λ {LAMBDAS[0]:g}–{LAMBDAS[-1]:g}, 간격 1 (우리 선택) · "
           f"본판 층상 Fe#_di {FE_TOP_MAIN} · 비교판 균일 · 3-1 본판")
-    tasks = [(k, lam, top, True, tc, tm, p_m_mode) for top in (FE_TOP_MAIN, None) for k in K_DS for lam in LAMBDAS]
+    print(f"  적분기 {engine}")
+    tasks = [(k, lam, top, True, tc, tm, p_m_mode, engine) for top in (FE_TOP_MAIN, None) for k in K_DS for lam in LAMBDAS]
     t0 = time.time()
     with ProcessPoolExecutor(jobs) as ex:
         results = list(ex.map(_one, tasks))
@@ -123,7 +131,7 @@ def main() -> int:
     ok = [r for r in main_r if "conditions" in r]
     if ok:
         best = min(ok, key=lambda r: sum(r["conditions"]["㉡"][0]))
-        r0 = _one((best["k_d"], best["lam"], FE_TOP_MAIN, False, tc, tm, p_m_mode))
+        r0 = _one((best["k_d"], best["lam"], FE_TOP_MAIN, False, tc, tm, p_m_mode, engine))
         print(f"\n3-0 비교(녹음 끔, 본판 RMS 합 최소 점 k_d {best['k_d']:g} Λ {best['lam']:g})")
         print(_line(r0))
     print(f"\n전체 {time.time() - t0:.0f} s · 실행 {len(results) + (1 if ok else 0)}")
