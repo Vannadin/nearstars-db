@@ -4,57 +4,57 @@
   "potential_temperature"
  ],
  "t_pot": [
-  1589.962672618586,
-  1910.5410431060404,
-  2231.1194135934948,
-  2551.697784080949,
-  2872.2761545684034
+  1589.8378493115806,
+  1911.0381008746995,
+  2232.2383524378183,
+  2553.438604000937,
+  2874.638855564056
  ],
  "points": [
   {
-   "p_cmb": 18344364189.09281,
-   "r_cmb": 1840953.5658928084,
-   "r_b": 1.1756311228102427,
-   "r_p": 3390219.5898547648,
-   "g": 3.724385478349985,
-   "d_mantle_m": 1549266.0239619564,
-   "core_mass_fraction": 0.27604166666666663
+   "p_cmb": 18328909470.77872,
+   "r_cmb": 1844011.844832266,
+   "r_b": 1.1755057039654533,
+   "r_p": 3388703.1841674256,
+   "g": 3.7277194634469186,
+   "d_mantle_m": 1544691.3393351596,
+   "core_mass_fraction": 0.27790323893229163
   },
   {
-   "p_cmb": 17824059267.945568,
-   "r_cmb": 1859289.5206769456,
-   "r_b": 1.1518720647317542,
-   "r_p": 3409765.973235219,
-   "g": 3.6818080052780817,
-   "d_mantle_m": 1550476.4525582732,
-   "core_mass_fraction": 0.27604166666666663
+   "p_cmb": 17807915332.77869,
+   "r_cmb": 1862392.9142360834,
+   "r_b": 1.151650085377386,
+   "r_p": 3408287.8954972285,
+   "g": 3.6850020890146657,
+   "d_mantle_m": 1545894.981261145,
+   "core_mass_fraction": 0.27790323893229163
   },
   {
-   "p_cmb": 17284166687.970314,
-   "r_cmb": 1880033.7666215342,
-   "r_b": 1.1264586970879829,
-   "r_p": 3427479.177136802,
-   "g": 3.6438511904253086,
-   "d_mantle_m": 1547445.4105152679,
-   "core_mass_fraction": 0.27604166666666663
+   "p_cmb": 17267643197.421814,
+   "r_cmb": 1883170.4561914098,
+   "r_b": 1.1260823413460956,
+   "r_p": 3426029.350078246,
+   "g": 3.646935852775517,
+   "d_mantle_m": 1542858.8938868362,
+   "core_mass_fraction": 0.27790323893229163
   },
   {
-   "p_cmb": 16722025000.030712,
-   "r_cmb": 1904217.2098267581,
-   "r_b": 1.1001821048123155,
-   "r_p": 3443814.4280051785,
-   "g": 3.609364980710981,
-   "d_mantle_m": 1539597.2181784203,
-   "core_mass_fraction": 0.27604166666666663
+   "p_cmb": 16704995085.134775,
+   "r_cmb": 1907399.5447873136,
+   "r_b": 1.0997926925488293,
+   "r_p": 3442397.213689749,
+   "g": 3.6123375003595144,
+   "d_mantle_m": 1534997.6689024356,
+   "core_mass_fraction": 0.27790323893229163
   },
   {
-   "p_cmb": 16123318593.063488,
-   "r_cmb": 1933820.5811018622,
-   "r_b": 1.07303519355944,
-   "r_p": 3459599.9713872713,
-   "g": 3.5765023360529677,
-   "d_mantle_m": 1525779.390285409,
-   "core_mass_fraction": 0.27604166666666663
+   "p_cmb": 16106267362.430672,
+   "r_cmb": 1937026.370853026,
+   "r_b": 1.072621498939623,
+   "r_p": 3458209.9388335617,
+   "g": 3.579378074602812,
+   "d_mantle_m": 1521183.5679805358,
+   "core_mass_fraction": 0.27790323893229163
   }
  ],
  "adaptive": {
@@ -64,38 +64,38 @@
   "points": 5,
   "structure_solves": 9,
   "interp_error_max": {
-   "p_cmb": 0.0003933143846517252,
-   "r_cmb": 0.00045857122187935876,
-   "r_b": 0.0004332755463015266,
-   "r_p": 7.48218148558254e-05,
-   "g": 0.0001744522840494435,
-   "d_mantle_m": 0.0005660922767004879
+   "p_cmb": 0.0003859593826313189,
+   "r_cmb": 0.00045422628279615044,
+   "r_b": 0.0005081311151304939,
+   "r_p": 7.59918313016588e-05,
+   "g": 0.0001769121641528014,
+   "d_mantle_m": 0.000564495660338128
   },
   "discontinuities": "none",
   "jumps": [],
   "fingerprints": [
    [
-    "integrated_fe_core_fit_s15.5313_box_ceiling_silicate",
+    "integrated_fe_core_fit_s15.3438_box_ceiling_silicate",
     "none",
     null
    ],
    [
-    "integrated_fe_core_fit_s15.5313_box_ceiling_silicate",
+    "integrated_fe_core_fit_s15.3438_box_ceiling_silicate",
     "none",
     null
    ],
    [
-    "integrated_fe_core_fit_s15.5313_box_ceiling_silicate",
+    "integrated_fe_core_fit_s15.3438_box_ceiling_silicate",
     "none",
     null
    ],
    [
-    "integrated_fe_core_fit_s15.5313_box_ceiling_silicate",
+    "integrated_fe_core_fit_s15.3438_box_ceiling_silicate",
     "none",
     null
    ],
    [
-    "integrated_fe_core_fit_s15.5313_box_ceiling_silicate",
+    "integrated_fe_core_fit_s15.3438_box_ceiling_silicate",
     "none",
     null
    ]
@@ -105,8 +105,8 @@
    "log": [
     {
      "eps": 0.0005858398154313838,
-     "t_c_over_width": 0.0005692789536355618,
-     "q_cmb_over_width": 0.0006752371062671461,
+     "t_c_over_width": 0.0007469053960531627,
+     "q_cmb_over_width": 0.0007774687773074722,
      "words_same": true
     }
    ]
@@ -114,12 +114,12 @@
  },
  "grade": "adaptive",
  "breaks": [],
- "t_ok": 2872.2761545684034,
- "t_no": 2872.881876572159,
- "composition": "fixed sulphur 0.15531250000000002 (box_ceiling) and cmf 0.27604166666666663",
+ "t_ok": 2874.638855564056,
+ "t_no": 2875.2446080422515,
+ "composition": "fixed sulphur 0.1534375 (box_ceiling) and cmf 0.27790323893229163",
  "s0_potential_temperature": 1600.0,
  "history_t_m_range": [
-  1739.962672618586,
+  1739.8378493115806,
   4021.0
  ],
  "triggers": {
@@ -182,7 +182,7 @@
    "tidal_heating": null
   },
   "code": {
-   "interior.py": "9df068b562769ebf",
+   "interior.py": "522466ec25f15e26",
    "core_history.py": "19d81091f8a88dd7",
    "eos.py": "99643de4b9bffd60"
   },
@@ -193,21 +193,21 @@
   "sulphur_fixings": {
    "box_ceiling": {
     "halvings": 6,
-    "core_sulphur_wt": 0.15531250000000002,
-    "core_radius_km": 1841.562746515093,
-    "core_radius_fraction": 0.543092661864701,
-    "core_mass_fraction": 0.27604166666666663,
-    "core_mean_density_gcc": 6.767847267826932,
-    "nmoi": 0.35733369461981207
+    "core_sulphur_wt": 0.1534375,
+    "core_radius_km": 1844.6292922402067,
+    "core_radius_fraction": 0.5442390537838935,
+    "core_mass_fraction": 0.27790323893229163,
+    "core_mean_density_gcc": 6.77956418989275,
+    "nmoi": 0.35708035417111156
    },
    "box_floor": {
     "halvings": 2,
     "core_sulphur_wt": 0.20500000000000002,
-    "core_radius_km": 1840.9808410521814,
-    "core_radius_fraction": 0.5429508463015275,
-    "core_mass_fraction": 0.27604166666666663,
-    "core_mean_density_gcc": 6.774266930909958,
-    "nmoi": 0.3572344038655765
+    "core_radius_km": 1845.7057929300354,
+    "core_radius_fraction": 0.5445569028965713,
+    "core_mass_fraction": 0.27816263834635413,
+    "core_mean_density_gcc": 6.774025733921949,
+    "nmoi": 0.35703503344009885
    }
   }
  }
