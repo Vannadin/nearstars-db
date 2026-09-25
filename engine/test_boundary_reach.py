@@ -54,6 +54,9 @@ REACH = {
     #   더는 안 든다 — 그 이름은 이제 **풀이 출력** 쪽에만 산다 (앵커 `fixings`, `test_mars_sulphur`).
     "interior.py": {"cmb_pressure", "cmb_temperature", "core_radius", "core_radius_fraction",
                     "core_plus_layer_radius_km", "p_cmb", "t_cmb"},
+    # 구조 표는 풀이 출력(p_cmb · r_cmb …)을 격자로 굳히고 방아쇠에 선언 키를 든다 — 경계 값을 만들지 않는다.
+    "structure_grid.py": {"cmb_pressure", "cmb_temperature", "core_plus_layer_radius_km", "core_radius",
+                          "core_radius_fraction", "p_cmb", "r_cmb"},
     "tidal_response.py": {"core_radius", "r_cmb"},
 }
 

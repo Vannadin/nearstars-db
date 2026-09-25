@@ -1,0 +1,191 @@
+{
+ "body": "Earth",
+ "axes": [
+  "potential_temperature"
+ ],
+ "t_pot": [
+  1368.944002067157,
+  1584.0760018087624,
+  1799.2080015503677,
+  2014.3400012919733,
+  2229.4720010335786,
+  2444.604000775184,
+  2659.7360005167893,
+  2874.8680002583947,
+  3090.0
+ ],
+ "points": [
+  {
+   "p_cmb": 135955546315.75146,
+   "r_cmb": 3483219.9529705863,
+   "r_b": 1.5631908142741198,
+   "r_p": 6375625.9596337015,
+   "g": 9.805287696751154,
+   "d_mantle_m": 2892406.006663115,
+   "core_mass_fraction": 0.325
+  },
+  {
+   "p_cmb": 135324600049.98552,
+   "r_cmb": 3484681.146249224,
+   "r_b": 1.577737120791071,
+   "r_p": 6388863.627702785,
+   "g": 9.764696856164438,
+   "d_mantle_m": 2904182.4814535608,
+   "core_mass_fraction": 0.325
+  },
+  {
+   "p_cmb": 134660842765.43091,
+   "r_cmb": 3486354.579205908,
+   "r_b": 1.5676789455563018,
+   "r_p": 6402721.037377247,
+   "g": 9.722475127469021,
+   "d_mantle_m": 2916366.458171339,
+   "core_mass_fraction": 0.325
+  },
+  {
+   "p_cmb": 133989035864.61902,
+   "r_cmb": 3488191.970094351,
+   "r_b": 1.5565785691139589,
+   "r_p": 6416088.977231387,
+   "g": 9.682003722747783,
+   "d_mantle_m": 2927897.007137036,
+   "core_mass_fraction": 0.325
+  },
+  {
+   "p_cmb": 133304964228.13072,
+   "r_cmb": 3490191.430724599,
+   "r_b": 1.5434818326993875,
+   "r_p": 6429270.374298666,
+   "g": 9.642344009798544,
+   "d_mantle_m": 2939078.9435740667,
+   "core_mass_fraction": 0.325
+  },
+  {
+   "p_cmb": 132616233132.9792,
+   "r_cmb": 3492340.2090341495,
+   "r_b": 1.5310995443969628,
+   "r_p": 6441932.2502321,
+   "g": 9.604476434584244,
+   "d_mantle_m": 2949592.04119795,
+   "core_mass_fraction": 0.325
+  },
+  {
+   "p_cmb": 131921015350.4583,
+   "r_cmb": 3494627.2224349524,
+   "r_b": 1.5167713935553715,
+   "r_p": 6454349.574308953,
+   "g": 9.567556471398841,
+   "d_mantle_m": 2959722.351874001,
+   "core_mass_fraction": 0.325
+  },
+  {
+   "p_cmb": 131215572096.20502,
+   "r_cmb": 3497070.647613532,
+   "r_b": 1.5047458469572663,
+   "r_p": 6466490.674306207,
+   "g": 9.531663243524465,
+   "d_mantle_m": 2969420.0266926754,
+   "core_mass_fraction": 0.325
+  },
+  {
+   "p_cmb": 130510664361.5453,
+   "r_cmb": 3499632.152921052,
+   "r_b": 1.4912562888753726,
+   "r_p": 6478190.230334235,
+   "g": 9.497266127811464,
+   "d_mantle_m": 2978558.077413183,
+   "core_mass_fraction": 0.325
+  }
+ ],
+ "adaptive": {},
+ "grade": "provisional — uniform N=9 (prereg-structure-grid addendum 23); adaptive refused on the r_b sawtooth, C115 open",
+ "breaks": [],
+ "t_ok": null,
+ "t_no": null,
+ "composition": "declared composition",
+ "s0_potential_temperature": 1600.0,
+ "history_t_m_range": [
+  1518.944002067157,
+  3040.0
+ ],
+ "triggers": {
+  "declared": {
+   "age_gyr": 4.54,
+   "basal_iron_number": null,
+   "body_class": "rocky",
+   "composition_intent": "earth_like",
+   "core_initial_temperature": 4800.0,
+   "core_mass_fraction": 0.325,
+   "core_plus_layer_radius_km": null,
+   "differentiated": null,
+   "envelope_z": null,
+   "gas_mass_fraction": null,
+   "ice_mass_fraction": null,
+   "initial_porosity": null,
+   "interface_temperature_jumps": null,
+   "lid_thickness_km": null,
+   "light_element_fixing": null,
+   "mantle_initial_potential_temperature": 3040.0,
+   "mass_earth": 1.0,
+   "porosity_cap": null,
+   "potential_temperature": 1600.0,
+   "radiogenic_concentration": {
+    "U_ppb": 23.0,
+    "Th_ppb": 85.0,
+    "K_ppm": 260.0,
+    "grade": "literature",
+    "source": "2020ApJ...903L..37N (published), PDF p14 — 260 ppm, 23 ppb, 85 ppb for K, U, Th",
+    "alternative": {
+     "U_ppb": 10.0,
+     "Th_ppb": 40.0,
+     "K_ppm": 140.0,
+     "grade": "literature",
+     "source": "O'Neill & Palme 2008, second-hand: Šrámek+ 2013 EPSL 361 PDF p3 (published) and arXiv 1207.0853 PDF p5; Bellini+ 2022 arXiv 2109.01482 v1 Tables 16, 18 (published not compared)"
+    }
+   },
+   "radius_earth": 1.0,
+   "surface_temperature_k": {
+    "value": 293.0,
+    "grade": "declared",
+    "source": "2004GeoJI.156..363N",
+    "note": "Nimmo+ 2004 eq. 34's surface temperature for Earth, the value `mantle_flux.T_S` has carried as a module default. Declaring it here does not change Earth's answer; it stops the same number from being applied to a body that never declared one.\n"
+   },
+   "tectonic_regime": {
+    "value": "mobile",
+    "grade": "declared",
+    "source": "2018AsBio..18..873F, plus owner decision 2026-09-09 (C53 (b))",
+    "note": "the grain-damage scheme (2014GeoJI.199..580F) reads Earth as transitional; C46's computed ladder scores Earth plutonic-squishy lid, and that disagreement is its own item"
+   },
+   "tidal_heating": null
+  },
+  "code": {
+   "interior.py": "9df068b562769ebf",
+   "core_history.py": "19d81091f8a88dd7",
+   "eos.py": "99643de4b9bffd60"
+  },
+  "bytes": {
+   "eos.py": "d59d7d5d6d0afad9",
+   "chain.yaml": "c10803eedefe9cc7"
+  },
+  "sulphur_fixings": {
+   "box_ceiling": {
+    "halvings": 6,
+    "core_sulphur_wt": 0.15531250000000002,
+    "core_radius_km": 1841.562746515093,
+    "core_radius_fraction": 0.543092661864701,
+    "core_mass_fraction": 0.27604166666666663,
+    "core_mean_density_gcc": 6.767847267826932,
+    "nmoi": 0.35733369461981207
+   },
+   "box_floor": {
+    "halvings": 2,
+    "core_sulphur_wt": 0.20500000000000002,
+    "core_radius_km": 1840.9808410521814,
+    "core_radius_fraction": 0.5429508463015275,
+    "core_mass_fraction": 0.27604166666666663,
+    "core_mean_density_gcc": 6.774266930909958,
+    "nmoi": 0.3572344038655765
+   }
+  }
+ }
+}

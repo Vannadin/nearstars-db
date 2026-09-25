@@ -15,15 +15,15 @@
  },
  "files": {
   "interior.py": {
-   "bytes": "4841635f8ce880da",
-   "code": "b708115bc4a13e23"
+   "bytes": "d71b109ed49f8694",
+   "code": "15264543b26ab301"
   },
   "eos.py": {
    "bytes": "d59d7d5d6d0afad9",
    "code": "3d2ae6435f687127"
   },
   "chain.yaml": {
-   "bytes": "81ce25bfb9dc0497"
+   "bytes": "c10803eedefe9cc7"
   }
  },
  "fixings": {

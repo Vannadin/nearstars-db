@@ -1,0 +1,214 @@
+{
+ "body": "Mars",
+ "axes": [
+  "potential_temperature"
+ ],
+ "t_pot": [
+  1589.962672618586,
+  1910.5410431060404,
+  2231.1194135934948,
+  2551.697784080949,
+  2872.2761545684034
+ ],
+ "points": [
+  {
+   "p_cmb": 18344364189.09281,
+   "r_cmb": 1840953.5658928084,
+   "r_b": 1.1756311228102427,
+   "r_p": 3390219.5898547648,
+   "g": 3.724385478349985,
+   "d_mantle_m": 1549266.0239619564,
+   "core_mass_fraction": 0.27604166666666663
+  },
+  {
+   "p_cmb": 17824059267.945568,
+   "r_cmb": 1859289.5206769456,
+   "r_b": 1.1518720647317542,
+   "r_p": 3409765.973235219,
+   "g": 3.6818080052780817,
+   "d_mantle_m": 1550476.4525582732,
+   "core_mass_fraction": 0.27604166666666663
+  },
+  {
+   "p_cmb": 17284166687.970314,
+   "r_cmb": 1880033.7666215342,
+   "r_b": 1.1264586970879829,
+   "r_p": 3427479.177136802,
+   "g": 3.6438511904253086,
+   "d_mantle_m": 1547445.4105152679,
+   "core_mass_fraction": 0.27604166666666663
+  },
+  {
+   "p_cmb": 16722025000.030712,
+   "r_cmb": 1904217.2098267581,
+   "r_b": 1.1001821048123155,
+   "r_p": 3443814.4280051785,
+   "g": 3.609364980710981,
+   "d_mantle_m": 1539597.2181784203,
+   "core_mass_fraction": 0.27604166666666663
+  },
+  {
+   "p_cmb": 16123318593.063488,
+   "r_cmb": 1933820.5811018622,
+   "r_b": 1.07303519355944,
+   "r_p": 3459599.9713872713,
+   "g": 3.5765023360529677,
+   "d_mantle_m": 1525779.390285409,
+   "core_mass_fraction": 0.27604166666666663
+  }
+ ],
+ "adaptive": {
+  "eps": 0.0005858398154313838,
+  "start_points": 5,
+  "depth_max": 0,
+  "points": 5,
+  "structure_solves": 9,
+  "interp_error_max": {
+   "p_cmb": 0.0003933143846517252,
+   "r_cmb": 0.00045857122187935876,
+   "r_b": 0.0004332755463015266,
+   "r_p": 7.48218148558254e-05,
+   "g": 0.0001744522840494435,
+   "d_mantle_m": 0.0005660922767004879
+  },
+  "discontinuities": "none",
+  "jumps": [],
+  "fingerprints": [
+   [
+    "integrated_fe_core_fit_s15.5313_box_ceiling_silicate",
+    "none",
+    null
+   ],
+   [
+    "integrated_fe_core_fit_s15.5313_box_ceiling_silicate",
+    "none",
+    null
+   ],
+   [
+    "integrated_fe_core_fit_s15.5313_box_ceiling_silicate",
+    "none",
+    null
+   ],
+   [
+    "integrated_fe_core_fit_s15.5313_box_ceiling_silicate",
+    "none",
+    null
+   ],
+   [
+    "integrated_fe_core_fit_s15.5313_box_ceiling_silicate",
+    "none",
+    null
+   ]
+  ],
+  "self_check": {
+   "halvings": 0,
+   "log": [
+    {
+     "eps": 0.0005858398154313838,
+     "t_c_over_width": 0.0005692789536355618,
+     "q_cmb_over_width": 0.0006752371062671461,
+     "words_same": true
+    }
+   ]
+  }
+ },
+ "grade": "adaptive",
+ "breaks": [],
+ "t_ok": 2872.2761545684034,
+ "t_no": 2872.881876572159,
+ "composition": "fixed sulphur 0.15531250000000002 (box_ceiling) and cmf 0.27604166666666663",
+ "s0_potential_temperature": 1600.0,
+ "history_t_m_range": [
+  1739.962672618586,
+  4021.0
+ ],
+ "triggers": {
+  "declared": {
+   "age_gyr": 4.54,
+   "basal_iron_number": 75.0,
+   "body_class": "rocky",
+   "composition_intent": null,
+   "core_initial_temperature": 4800.0,
+   "core_mass_fraction": null,
+   "core_plus_layer_radius_km": {
+    "value": 1845.0,
+    "uncertainty_km": 25.0,
+    "grade": "judgment",
+    "source": "2022PEPI..32506851D",
+    "note": "Durán, Khan, Giardini et al. 2022, \"Observation of a core-diffracted P-wave from a farside impact with implications for the lower-mantle structure of Mars\", PEPI 325, 106851. 축자: \"we obtain an improved estimate of the Martian core radius (1820–1870 km) and mean core density (6–6.2 g/cm3)\" (2022PEPI..32506851D:79), 그리고 :1948 에서 같은 구간을 \"the ranges 1820–1870 km (previously 1790–1870 km) and 6–6.2 g/cm3 (previously 5.7–6.3 g/cm3)\" 로 적으며 자기 값이 Stähler et al. (2021) 보다 좁다고 밝힌다. ⚠ **논문이 인쇄하는 것은 구간이고 1845 라는 수가 아니다** — 여기 쓰는 1845±25 는 그 구간의 중점과 반폭이고, 엔진 입력이 스칼라 하나이기 때문에 그렇게 적는다. 구간 밖의 판단은 하나도 안 들어갔다. ⚠ **그래서 등급이 `judgment` 다.** 이 파일이 `core_cmb_temperature` 자리에서 같은 판정을 이미 내려 놨다 — «밴드는 인쇄값이지만 중점은 인쇄된 수가 아니라 고른 점이다. 이 파일에서 `grade: measured` 를 든 것은 `tectonic_regime` 하나뿐이고, 그건 원전이 그 분류를 그 바디에 대해 인쇄하기 때문이다». 앞 판본이 `measured` 였던 것은 옳았다 — Stähler 는 \"1830 ± 40 km\" 를 **그대로 인쇄**한다. 논문이 바뀌면서 **등급의 근거가 사라진 것**이지 표기 취향이 아니다 (감사석, 2026-09-20). ⚠ **앞 판본은 Stähler+ 2021 의 1830±40 이었다** (2021Sci...373..443S:104–106 · 2021Sci...373..443S:279; 방법별 폭 1836/1815 km 는 :283–285, 진원 깊이 고정 1820±40 은 :286–287). 그 판으로 맞춘 값은 S 18.9062 wt% · 핵 1819.89 km 였고, 이 결정으로 **착지 전에 대체된다** — 물리가 바뀐 것이 아니라 목표가 바뀐 것이다. `uncertainty_km` 은 **기록**이다: 이 트리에 그 칸을 읽는 소비처가 아직 없고, 블록에서 값을 꺼내는 독자(`core_history._declared_scalar`)는 `value` 만 본다.\n"
+   },
+   "differentiated": null,
+   "envelope_z": null,
+   "gas_mass_fraction": null,
+   "ice_mass_fraction": null,
+   "initial_porosity": null,
+   "interface_temperature_jumps": null,
+   "lid_thickness_km": {
+    "value": 330.0,
+    "grade": "analog",
+    "source": "2011Icar..212..541M",
+    "note": "Morschhauser, Grott & Breuer 2011's thermal-evolution model prints a present-day stagnant-lid thickness of 330 km for Mars (2011Icar..212..541M:1457–1459, cache text layer; the paper defines `Dl` as the lid base at :274, not an elastic or seismic thickness — so it is the quantity eq. (3) takes). It is a model output, not an observation, which is why the grade is analog. Breuer & Spohn 2003's 350–500 km band brackets it from above; the ~250 km elastic thickness is a different quantity and neither confirms nor refutes it. The refutation site is an observational lid-base thickness, an InSight-class result, not another model.\n"
+   },
+   "light_element_fixing": {
+    "value": "box_ceiling",
+    "grade": "declared",
+    "source": "owner declaration 2026-09-20",
+    "note": "오너 상자(2026-09-10)는 S 13–19 · O 1–4 · C 0.5–1.4 wt% 다. 황은 관측 핵 반지름 (core_plus_layer_radius_km)을 재현하도록 풀고, 나머지 둘은 이 선언이 가리키는 끝에 고정한다. ⚠ 두 끝이 **다른 답**을 주므로 이 한 줄이 곧 조성 결정이다 — 측정값은 착지 기록에. ⚠ **2026-09-20: box_floor → box_ceiling 으로 바꿨다 (오너, «산소 탄소를 늘려보자»).** 이유는 측정이다 — 목표가 Durán 의 1845 km 로 가자 하한 고정이 요구하는 황이 **20.5938 wt%** 로 **상자(13–19) 밖**으로 나갔고, 상한 고정은 같은 자(반분 6)에서 **15.5313 wt%** 로 상자 안에 있다. ⚠ **전환이 고치는 것은 그 한 가지뿐이다**: 같은 실행에서 nmoi 는 −1.956 → −1.939 %(허용 1 %, **여전히 밖**)이고 평균 핵밀도는 **6.768 g/cm³ 로 한 자리도 안 움직인다**(Durán 창 6.0–6.2 대비 +9.2 %). 두 고정의 핵 반지름도 1841.52 대 1841.56 km 로 사실상 같다 — 맞춤이 목표를 재현하기 때문이고, 그래서 **O·C 선택은 핵의 크기가 아니라 황의 양으로만 드러난다**.\n"
+   },
+   "mantle_initial_potential_temperature": 4021.0,
+   "mass_earth": 0.1074,
+   "porosity_cap": null,
+   "potential_temperature": 1600.0,
+   "radiogenic_concentration": {
+    "U_ppb": 14.0,
+    "Th_ppb": 54.0,
+    "K_ppm": 284.0,
+    "grade": "literature",
+    "source": "2022JGRE..12707067D §4.1.2, PDF p9"
+   },
+   "radius_earth": 0.532,
+   "surface_temperature_k": {
+    "value": 216.0,
+    "grade": "analog",
+    "source": "2016JGRE..121.2386P",
+    "note": "Plesa+ 2016's thermal-evolution models hold the surface temperature constant at \"216 K or as a function of latitude\" (Parameters Held Constant). ⚠ The paper's own default is the latitude-dependent form; 216 K is its globally constant alternative, which is what a single declared number can carry. The grade is analog because this is a model parameter, not a measured global mean. It replaces the 293.0 inherited from Earth, which was the module default both loss laws had been running with.\n"
+   },
+   "tectonic_regime": {
+    "value": "stagnant",
+    "grade": "measured",
+    "source": "1998JGR...10313643R",
+    "note": "single plate in every scheme surveyed (P9); Reese, Solomatov & Moresi 1998's abstract prints «Mantle convection on Mars and Venus is likely to occur in the [stagnant lid] regime»"
+   },
+   "tidal_heating": null
+  },
+  "code": {
+   "interior.py": "9df068b562769ebf",
+   "core_history.py": "19d81091f8a88dd7",
+   "eos.py": "99643de4b9bffd60"
+  },
+  "bytes": {
+   "eos.py": "d59d7d5d6d0afad9",
+   "chain.yaml": "c10803eedefe9cc7"
+  },
+  "sulphur_fixings": {
+   "box_ceiling": {
+    "halvings": 6,
+    "core_sulphur_wt": 0.15531250000000002,
+    "core_radius_km": 1841.562746515093,
+    "core_radius_fraction": 0.543092661864701,
+    "core_mass_fraction": 0.27604166666666663,
+    "core_mean_density_gcc": 6.767847267826932,
+    "nmoi": 0.35733369461981207
+   },
+   "box_floor": {
+    "halvings": 2,
+    "core_sulphur_wt": 0.20500000000000002,
+    "core_radius_km": 1840.9808410521814,
+    "core_radius_fraction": 0.5429508463015275,
+    "core_mass_fraction": 0.27604166666666663,
+    "core_mean_density_gcc": 6.774266930909958,
+    "nmoi": 0.3572344038655765
+   }
+  }
+ }
+}

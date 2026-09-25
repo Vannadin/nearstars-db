@@ -41,6 +41,7 @@ import tectonic_regime as tect  # noqa: E402  — 선언을 읽는 **하나뿐�
 import radiogenic as rg          # noqa: E402
 from eos import PhaseGap         # noqa: E402
 from payload import Result, out_of_domain  # noqa: E402
+import structure_grid            # noqa: E402  — 구조 표 (prereg-structure-grid)
 
 RECIPE = "internal-heat-luminosity-methodology"
 VERSION = "1"
@@ -202,7 +203,7 @@ def mantle_time_constant_s(params: dict, t_m: float) -> float | None:
 
 
 def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: float = STEP_MYR,
-              adaptive: bool = True) -> dict:
+              adaptive: bool = True, grid=None) -> dict:
     """RK4 from t = −age to 0. Returns the sampled history (one row per step) and the entropy corners per row.
 
     Brief 157: the step is `h = min(step_myr, STEP_FRACTION · τ(state))`, τ recomputed at the start of every
@@ -225,8 +226,29 @@ def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: 
         return {"refused": reason, "rows": rows, "n_steps": n, "step_myr": step_myr,
                 "refused_at": {"t_gyr": t_now, "t_c": t_c, "t_m": t_m}}
 
+    # 구조 표 (prereg-structure-grid 덧붙임 7 ①) — 있으면 매 호출 전에 그 t_m 으로 구조 여섯 칸을 보간한다.
+    # 없으면(`grid=None`) 이 함수는 오늘과 한 비트도 다르지 않다.
+    held = {"calls": 0, "steps": 0}
+    p0 = None
+    if grid is not None:
+        params = dict(params)             # 호출자의 사전을 걸음마다 덮지 않는다 (sweep 이 같은 사전을 세 번 쓴다)
+        p0 = {k: params[k] for k in ("p_cmb", "r_cmb", "r_b", "r_p", "g", "d_mantle_m")}
+
+    def step_rates(tc, tm, t, start=False):
+        if grid is not None:
+            kind, got = grid.at(tm)
+            if kind == "refused":
+                return {"refused": got}
+            if kind == "hold":            # 구조가 거절하는 온도 — 못 봄, S0 값에 붙든다
+                held["calls"] += 1
+                held["steps"] += start
+                params.update(p0)
+            else:
+                params.update(got)
+        return rates(tc, tm, params, t)
+
     while True:
-        r1 = rates(t_c, t_m, params, t_now)
+        r1 = step_rates(t_c, t_m, t_now, start=True)
         if "refused" in r1:
             return refused(r1["refused"])
         for note in r1["extrapolation_notes"]:
@@ -262,15 +284,15 @@ def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: 
         h_min = h if h_min is None else min(h_min, h)
         # classical RK4 on (T_c, T_m)
         k1 = (r1["dtc"], r1["dtm"])
-        r2 = rates(t_c + 0.5 * h * k1[0], t_m + 0.5 * h * k1[1], params, t_now + 0.5 * h / GYR_S)
+        r2 = step_rates(t_c + 0.5 * h * k1[0], t_m + 0.5 * h * k1[1], t_now + 0.5 * h / GYR_S)
         if "refused" in r2:
             return refused(r2["refused"])
         k2 = (r2["dtc"], r2["dtm"])
-        r3 = rates(t_c + 0.5 * h * k2[0], t_m + 0.5 * h * k2[1], params, t_now + 0.5 * h / GYR_S)
+        r3 = step_rates(t_c + 0.5 * h * k2[0], t_m + 0.5 * h * k2[1], t_now + 0.5 * h / GYR_S)
         if "refused" in r3:
             return refused(r3["refused"])
         k3 = (r3["dtc"], r3["dtm"])
-        r4 = rates(t_c + h * k3[0], t_m + h * k3[1], params, t_now + h / GYR_S)
+        r4 = step_rates(t_c + h * k3[0], t_m + h * k3[1], t_now + h / GYR_S)
         if "refused" in r4:
             return refused(r4["refused"])
         k4 = (r4["dtc"], r4["dtm"])
@@ -280,7 +302,8 @@ def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: 
         n += 1
     return {"rows": rows, "n_steps": n, "step_myr": step_myr, "adaptive": adaptive,
             "h_min_myr": (h_min / MYR_S) if h_min is not None else None,
-            "max_h_over_tau": max_ratio if adaptive else None, "extrapolated_steps": extrapolated}
+            "max_h_over_tau": max_ratio if adaptive else None, "extrapolated_steps": extrapolated,
+            "grid_held_steps": held["steps"], "grid_held_calls": held["calls"]}
 
 
 def window_summary(rows: list[dict], window_gyr: float = WINDOW_GYR) -> dict:
@@ -306,7 +329,7 @@ def window_summary(rows: list[dict], window_gyr: float = WINDOW_GYR) -> dict:
             "inner_core_case": ("always" if always else "never" if nucleation is None else "nucleates")}
 
 
-def sweep(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: float = STEP_MYR) -> dict:
+def sweep(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: float = STEP_MYR, grid=None) -> dict:
     """h, h/2, h/4 — the pre-registered convergence test on ΔE_min (nominal corner) and the inner-core case.
 
     ⚠ **Fixed step, deliberately** (`adaptive=False`). Branch ⑤ was registered before the adaptive step
@@ -316,7 +339,7 @@ def sweep(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: floa
     original meaning was Brief 161's first item; **an adaptive-cap sweep is not built here** (C47 (i))."""
     out = {}
     for label, s in (("h", step_myr), ("h/2", step_myr / 2.0), ("h/4", step_myr / 4.0)):
-        hist = integrate(params, t_c0, t_m0, age_gyr, s, adaptive=False)
+        hist = integrate(params, t_c0, t_m0, age_gyr, s, adaptive=False, grid=grid)
         if "refused" in hist:
             return {"refused": hist["refused"], "h/4": {"hist": hist}}
         ws = window_summary(hist["rows"])
@@ -346,7 +369,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
           mantle_initial_potential_temperature: float | None, core_material: str = "fe_prem",
           body_class: str | None = None, tectonic_regime=None,
           lid_thickness_km=None, legacy_stagnant_lid=None, surface_temperature_k=None,
-          run_sweep: bool = False, radiogenic_concentration: dict | None = None) -> Result:
+          run_sweep: bool = False, radiogenic_concentration: dict | None = None, grid=None) -> Result:
     inputs = {"mass_earth": mass_earth, "core_mass_fraction": core_mass_fraction, "core_radius": core_radius_earth,
               "cmb_pressure": cmb_pressure_gpa, "cmb_temperature": cmb_temperature,
               "potential_temperature": potential_temperature, "radius_earth": radius_earth, "age_gyr": age_gyr,
@@ -448,14 +471,14 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
               "radiogenic_conc": conc}
     try:
         if run_sweep:
-            sw = sweep(params, core_initial_temperature, mantle_initial_potential_temperature, age_gyr)
+            sw = sweep(params, core_initial_temperature, mantle_initial_potential_temperature, age_gyr, grid=grid)
             if "refused" in sw:
                 return out_of_domain(RECIPE, VERSION, f"적분이 법칙의 선언 정의역 밖에서 시작하거나 그리로 갔다 — {sw['refused']}",
                                      inputs=inputs, refs=REFS)
             best = sw["h/4"]
             converged, width = sw["converged"], sw["convergence_width"]
         else:
-            hist = integrate(params, core_initial_temperature, mantle_initial_potential_temperature, age_gyr)
+            hist = integrate(params, core_initial_temperature, mantle_initial_potential_temperature, age_gyr, grid=grid)
             if "refused" in hist:
                 return out_of_domain(RECIPE, VERSION, f"적분이 법칙의 선언 정의역 밖에서 시작하거나 그리로 갔다 — {hist['refused']}",
                                      inputs=inputs, refs=REFS)
@@ -488,6 +511,9 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
         "history_steps": best["hist"]["n_steps"],
         "loss_law": loss_law,
         "loss_law_reason": derived.note,
+        # 구조 표 (prereg-structure-grid) — 구조가 거절하는 초기 구간(«못 봄») 에서 S0 에 붙든 걸음 · 호출 수.
+        "structure_grid_held_steps": best["hist"].get("grid_held_steps", 0),
+        "structure_grid_held_calls": best["hist"].get("grid_held_calls", 0),
     }
     units = {"core_cmb_temperature_present": "K", "mantle_potential_temperature_present": "K",
              "dtc_dt_present_k_per_gyr": "K/Gyr", "q_cmb_present": "W", "q_mantle_present": "W",
@@ -495,7 +521,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
              "delta_e_min_3gyr_lo": "W/K", "delta_e_min_3gyr_hi": "W/K", "delta_e_present_lo": "W/K",
              "delta_e_present_hi": "W/K", "entropy_history_verdict": "", "history_converged": "",
              "history_convergence_width": "", "history_steps": "", "loss_law": "",
-             "loss_law_reason": ""}
+             "loss_law_reason": "", "structure_grid_held_steps": "", "structure_grid_held_calls": ""}
     if converged is None:
         values["history_converged"] = None   # the sweep is on demand (test_core_history.py --sweep); record: 2026-09-04 width 0.001 %
     mw = 1e6
@@ -536,6 +562,15 @@ def _declared_scalar(declared):
 
 @recipe("core_thermal_history")
 def _from_state(state):
+    # 구조 표 (prereg-structure-grid, 오너 결정 2026-09-24) — 적분이 실제로 도는 바디(초기온도 둘을 선언한 바디)만 읽는다.
+    # 그 밖의 바디는 `solve` 가 제 까닭(NO_INITIAL 등)으로 거절하므로 표 없음으로 거절 문구를 바꾸지 않는다.
+    grid = None
+    if (not structure_grid.BUILDING and state.get_optional("core_initial_temperature") is not None
+            and state.get_optional("mantle_initial_potential_temperature") is not None
+            and state.get("body_class") not in ROCKY_ONLY):
+        grid, why = structure_grid.load_for(state)
+        if why:
+            return out_of_domain(RECIPE, VERSION, f"cannot-say ({why})", inputs={"body": state.name}, refs=REFS)
     return solve(mass_earth=state["mass_earth"], core_mass_fraction=state.get("core_mass_fraction"),
                  core_radius_earth=state.get("core_radius"), cmb_pressure_gpa=state.get("cmb_pressure"),
                  cmb_temperature=state.get("cmb_temperature"), potential_temperature=state.get("potential_temperature"),
@@ -552,4 +587,5 @@ def _from_state(state):
                  legacy_stagnant_lid=state.get_optional("stagnant_lid"),
                  lid_thickness_km=state.get_optional("lid_thickness_km"),
                  surface_temperature_k=state.get_optional("surface_temperature_k"),
-                 radiogenic_concentration=state.get_optional("radiogenic_concentration"))
+                 radiogenic_concentration=state.get_optional("radiogenic_concentration"),
+                 grid=grid)

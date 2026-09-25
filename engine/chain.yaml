@@ -317,7 +317,8 @@ nodes:
     outputs: [core_cmb_temperature_present, mantle_potential_temperature_present, dtc_dt_present_k_per_gyr,
               q_cmb_present, q_mantle_present, inner_core_radius_present_km, inner_core_case,
               inner_core_nucleation_gyr_ago, delta_e_min_3gyr_lo, delta_e_min_3gyr_hi, delta_e_present_lo,
-              delta_e_present_hi, entropy_history_verdict, history_converged, history_convergence_width, history_steps]
+              delta_e_present_hi, entropy_history_verdict, history_converged, history_convergence_width, history_steps,
+              structure_grid_held_steps, structure_grid_held_calls]
   core_entropy_production:
     layer: "2층. 허브"
     domain: interior
@@ -744,7 +745,7 @@ edges:
   - {from: body_class, to: core_entropy_production, kind: selects, ref: "internal-heat-luminosity-methodology.md@«## Contract — `core_entropy_production`»", note: "암석체만."}
   - {from: interior_layers, to: core_thermal_history, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md@«## Contract — `core_thermal_history`»", note: "C20. 핵 프로파일의 바깥 끝, 식 31 의 R."}
   - {from: interior_layers, to: core_thermal_history, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md@«## Contract — `core_thermal_history`»"}
-  - {from: interior_layers, to: core_thermal_history, kind: requires, via: cmb_temperature, ref: "internal-heat-luminosity-methodology.md@«## Contract — `core_thermal_history`»", note: "기준 퍼텐셜 온도에서의 맨틀 바닥 온도 → 단열비 r_b = T̃_m/T_m (식 29 형태), 시간에 따라 고정."}
+  - {from: interior_layers, to: core_thermal_history, kind: requires, via: cmb_temperature, ref: "internal-heat-luminosity-methodology.md@«## Contract — `core_thermal_history`»", note: "기준 퍼텐셜 온도에서의 맨틀 바닥 온도 → 단열비 r_b = T̃_m/T_m (식 29 형태). 2026-09-24 부터 적분 안의 r_b 는 걸음마다 구조 표(engine/structure_grid/<body>.json)에서 그 걸음 t_m 으로 보간 — 이 엣지의 cmb_temperature 는 S0(표에 붙드는 값) 뜻 그대로 (prereg-structure-grid)."}
   - {from: mass_or_radius, to: core_thermal_history, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md@«## Contract — `core_thermal_history`»", note: "핵 질량·맨틀 질량 = 질량 × (CMF, 1−CMF)."}
   - {from: mass_or_radius, to: core_thermal_history, kind: requires, via: radius, ref: "internal-heat-luminosity-methodology.md@«## Contract — `core_thermal_history`»", note: "식 33 의 R_p 와 표면 중력."}
   - {from: body_age, to: core_thermal_history, kind: requires, via: t_body, ref: "internal-heat-luminosity-methodology.md@«## Contract — `core_thermal_history`»", note: "적분 구간 = 계의 나이 (오너 조건 1)."}

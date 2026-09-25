@@ -194,7 +194,8 @@ declaration band, gated at < 10 MW/K. `engine/core-entropy-context-notes.md`.
 `q_cmb_present` [W] · `q_mantle_present` [W] · `inner_core_radius_present_km` [km] · `inner_core_case` [—] ·
 `inner_core_nucleation_gyr_ago` [Gyr] · `delta_e_min_3gyr_lo` [W/K] · `delta_e_min_3gyr_hi` [W/K] · `delta_e_present_lo` [W/K] ·
 `delta_e_present_hi` [W/K] · `entropy_history_verdict` [—] · `history_converged` [—] · `history_convergence_width` [—] · `history_steps` [—] ·
-`loss_law` [—] (which law ran, so no output can hide it) · `loss_law_reason` [—] (why it ran — a declared regime, or no declaration at all)
+`loss_law` [—] (which law ran, so no output can hide it) · `loss_law_reason` [—] (why it ran — a declared regime, or no declaration at all) ·
+`structure_grid_held_steps` [—] · `structure_grid_held_calls` [—] (steps and rate calls held at the S0 structure because the structure refuses at that mantle temperature — «not seen», prereg-structure-grid)
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] · `cmb_temperature` [K] ·
 `potential_temperature` [K] · `radius_earth` [R_earth] · `age_gyr` [Gyr] · `core_initial_temperature` [K] ·
 `mantle_initial_potential_temperature` [K] · `core_material` [—] · `body_class` [—] · `step_myr` [Myr] ·

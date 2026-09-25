@@ -34,6 +34,7 @@ import ice_fr2015          # 190 C: 적합 격자 이탈 카운터를 풀이 전
 import eos                 # 196 B: 밀도 적합의 압력 도달 카운터를 풀이 전후로 읽는다
 import json
 import math
+from contextlib import contextmanager
 
 import water_hot
 import water_table
@@ -4245,15 +4246,10 @@ SULPHUR_ANCHOR_DECLARATIONS = ("mass_earth", "radius_earth", "core_plus_layer_ra
                                "basal_iron_number")
 
 
-def solve_with_core_sulphur(mass_earth: float, radius_earth: float, w_s: float, pin: str,
-                            potential_temperature: float | None = None,
-                            basal_iron_number: float | None = None,
-                            basal_layer_thickness_km: float | None = None,
-                            basal_layer_density: float | None = None):
-    """황 분율 하나를 핵에 넣고 **한 번** 푼다.
-
-    맞춤(`fit_sulphur_to_core_radius`)도 읽기(`read_sulphur_anchor` 뒤의 노드)도 이 함수를 쓴다 —
-    두 벌로 지으면 굳힌 값과 노드의 값이 서로 다른 길로 나올 수 있다."""
+@contextmanager
+def _sulphur_core(w_s: float, pin: str):
+    """황 분율 w_s 의 액체 Fe–S–O–C 핵 재질을 `earth_like` 의 핵 자리에 잠시 끼운다 — 맞춤 · 읽기 · 고정 풀이가
+    **같은 재질 짓기**를 쓴다(두 벌로 지으면 굳힌 값과 노드 값이 다른 길로 나온다)."""
     from eos import Material, core_mole_fractions, huang_core_phase, FE_S_BELOW_REF_REASON, MATERIALS
     w_o = LIGHT_ELEMENT_PINS[pin]["O"]
     w_c = LIGHT_ELEMENT_PINS[pin]["C"]
@@ -4267,14 +4263,45 @@ def solve_with_core_sulphur(mass_earth: float, radius_earth: float, w_s: float, 
     saved = COMPOSITIONS["earth_like"]
     COMPOSITIONS["earth_like"] = (saved[0], saved[1], saved[2], name)
     try:
+        yield
+    finally:
+        COMPOSITIONS["earth_like"] = saved
+        MATERIALS.pop(name, None)
+
+
+def solve_with_core_sulphur(mass_earth: float, radius_earth: float, w_s: float, pin: str,
+                            potential_temperature: float | None = None,
+                            basal_iron_number: float | None = None,
+                            basal_layer_thickness_km: float | None = None,
+                            basal_layer_density: float | None = None):
+    """황 분율 하나를 핵에 넣고 **한 번** 푼다.
+
+    맞춤(`fit_sulphur_to_core_radius`)도 읽기(`read_sulphur_anchor` 뒤의 노드)도 이 함수를 쓴다 —
+    두 벌로 지으면 굳힌 값과 노드의 값이 서로 다른 길로 나올 수 있다."""
+    with _sulphur_core(w_s, pin):
         return infer_composition(mass_earth, radius_earth, ice_allowed=False,
                                  basal_iron_number=basal_iron_number,
                                  potential_temperature=potential_temperature,
                                  basal_layer_thickness_km=basal_layer_thickness_km,
                                  basal_layer_density=basal_layer_density)
-    finally:
-        COMPOSITIONS["earth_like"] = saved
-        MATERIALS.pop(name, None)
+
+
+def solve_with_fixed_sulphur(mass_earth: float, w_s: float, pin: str, core_mass_fraction: float,
+                             potential_temperature: float | None = None,
+                             basal_iron_number: float | None = None,
+                             basal_layer_thickness_km: float | None = None,
+                             basal_layer_density: float | None = None):
+    """황 **과 핵질량분율을 둘 다 고정**하고 한 번 푼다 — 반지름이 출력이다 (prereg-structure-grid 덧붙임 7 ②).
+
+    `solve_with_core_sulphur` 는 반지름에 cmf 를 다시 맞추므로 온도가 바뀌면 조성이 바뀐다. 구조 표는 «같은 조성이
+    다른 온도에서 어떤 구조인가» 를 물으므로 역산 대신 선언 cmf 로 `solve` 를 부른다 — 역산의 마지막 풀이와 같은
+    인자라 선언 온도에서 비트까지 같다(연구판 2026-09-24 측정)."""
+    with _sulphur_core(w_s, pin):
+        return solve(mass_earth, core_mass_fraction=core_mass_fraction, ice_mass_fraction=0.0,
+                     potential_temperature=potential_temperature, tidal_heating=False,
+                     basal_iron_number=basal_iron_number,
+                     basal_layer_thickness_km=basal_layer_thickness_km,
+                     basal_layer_density=basal_layer_density)
 
 
 def _sulphur_result(res, w_s: float, pin: str, core_plus_layer_radius_km: float, how: str):
