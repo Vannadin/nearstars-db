@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from payload import GRADES, AUTHORED_MARKERS, Result  # noqa: E402
+from payload import GRADES, GRADE_WORDS, INPUT_GRADES, AUTHORED_MARKERS, Result  # noqa: E402
 
 fails = 0
 
@@ -28,6 +28,10 @@ def make(grade, notes=()):
 print("등급 어휘 — chain.yaml 의 grades 와 같은 다섯")
 row(GRADES == ("measured", "calibrated", "analog", "judgment", "authored"), f"GRADES = {GRADES}")
 row(AUTHORED_MARKERS == ("gap:", "consistent-with:"), f"표지 = {AUTHORED_MARKERS}")
+row(GRADE_WORDS == ("measured", "literature", "analog", "derived", "judgment", "declared", "inherited", "authored",
+                    "calibrated"), f"GRADE_WORDS = {GRADE_WORDS} (prereg-grade-vocabulary §1 ①)")
+row(INPUT_GRADES == tuple(g for g in GRADE_WORDS if g != "calibrated") and set(GRADES) <= set(GRADE_WORDS),
+    f"INPUT_GRADES = {INPUT_GRADES} · GRADES ⊂ GRADE_WORDS")
 
 print("\nauthored — 두 표지가 다 있어야 생성된다")
 ok = True

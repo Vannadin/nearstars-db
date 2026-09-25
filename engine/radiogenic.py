@@ -28,7 +28,7 @@ from __future__ import annotations
 import math
 
 import mantle_flux
-from payload import Result, out_of_domain, tagged_with_unconverged
+from payload import INPUT_GRADES, Result, out_of_domain, tagged_with_unconverged
 
 RECIPE = "internal-heat-luminosity-methodology"
 VERSION = "1"
@@ -126,51 +126,61 @@ def history_factor(t_gyr: float, set_name: str = "appendix",
 
 
 # ── A body's declared concentration — prereg-radiogenic §4, R5 ────────────────────────────────
-GRADES_DECLARED = ("measured", "literature", "owner-override")   # what a body file may say
-GRADE_DEFAULT = "declared-default"                                # what the engine says when it says nothing
+GRADES_DECLARED = ("measured", "literature", "declared")   # what a body file may say (payload.INPUT_GRADES 의 부분)
+GRADE_DEFAULT = "declared"     # what the engine says when it says nothing — with `default` True (prereg-grade-vocabulary §1 ④)
+assert set(GRADES_DECLARED) <= set(INPUT_GRADES)
 
 
 def read_concentration(decl) -> tuple[dict[str, float] | None, str, str]:
     """(element mass fractions, grade, label) from a body's `radiogenic_concentration` block, or
-    (None, "declared-default", label) when there is none. Raises ValueError, naming what is missing —
-    the caller turns it into a named refusal. `owner-override` needs a one-line `reason` and a `window`
-    (inside | outside the literature's range); `outside` is printed."""
+    (None, "declared", label) when there is none — the engine default, marked by `default` True in the
+    outputs. Raises ValueError, naming what is missing — the caller turns it into a named refusal.
+    A deliberately changed set is `grade: declared` with an `override` block: a one-line `reason` and a
+    `window` (inside | outside the literature's range); `outside` is printed (the old `owner-override`)."""
     if decl is None:
         return None, GRADE_DEFAULT, (f"농도 선언 없음 — 지구 기본 벌({DEFAULT_SET}: K 260 ppm · Th 85 ppb · U 23 ppb, "
-                                     f"N&P 2020 출간본) · 등급 {GRADE_DEFAULT}")
+                                     f"N&P 2020 출간본) · 등급 {GRADE_DEFAULT} · 기본 벌")
     if not isinstance(decl, dict):
         raise ValueError("radiogenic_concentration 은 U_ppb · Th_ppb · K_ppm · grade · source 를 가진 블록이어야 한다")
     missing = [k for k in ("U_ppb", "Th_ppb", "K_ppm", "grade") if decl.get(k) is None]
     if missing:
         raise ValueError(f"radiogenic_concentration 에 {', '.join(missing)} 가 없다")
+    if "default" in decl:
+        raise ValueError("radiogenic_concentration.default 는 천체 파일이 쓸 수 없다 — 엔진이 기본 벌에만 붙인다")
     grade = decl["grade"]
     if grade not in GRADES_DECLARED:
         raise ValueError(f"radiogenic_concentration 의 등급 '{grade}' 는 천체 파일이 쓸 수 없다 — "
-                         f"{', '.join(GRADES_DECLARED)} 중 하나 ('{GRADE_DEFAULT}' 는 엔진이 붙이는 등급)")
+                         f"{', '.join(GRADES_DECLARED)} 중 하나 (일부러 바꾼 값은 declared + override)")
     if not decl.get("source"):
         raise ValueError(f"radiogenic_concentration 등급 {grade} 에 source 가 없다")
     label = (f"농도 선언 — U {decl['U_ppb']:g} ppb · Th {decl['Th_ppb']:g} ppb · K {decl['K_ppm']:g} ppm · "
              f"등급 {grade} · 출처 {decl['source']}")
-    if grade == "owner-override":
-        if not decl.get("reason"):
-            raise ValueError("owner-override 에 까닭 한 줄(reason)이 없다")
-        if decl.get("window") not in ("inside", "outside"):
-            raise ValueError("owner-override 의 window 는 inside 또는 outside 여야 한다")
-        label += f" · 까닭 «{decl['reason']}» · 문헌 창 {decl['window']}"
-        if decl["window"] == "outside":
+    if grade == "declared":
+        ov = decl.get("override")
+        if not isinstance(ov, dict):
+            raise ValueError("radiogenic_concentration 등급 declared 에 override 블록(reason · window)이 없다")
+        if not ov.get("reason"):
+            raise ValueError("radiogenic_concentration.override 에 까닭 한 줄(reason)이 없다")
+        if ov.get("window") not in ("inside", "outside"):
+            raise ValueError("radiogenic_concentration.override 의 window 는 inside 또는 outside 여야 한다")
+        label += f" · 까닭 «{ov['reason']}» · 문헌 창 {ov['window']}"
+        if ov["window"] == "outside":
             label += " — ⚠ 문헌 창 밖"
+    elif "override" in decl:
+        raise ValueError(f"radiogenic_concentration.override 는 등급 declared 에만 붙는다 — 지금 {grade}")
     conc = {"U": float(decl["U_ppb"]) * 1e-9, "Th": float(decl["Th_ppb"]) * 1e-9, "K": float(decl["K_ppm"]) * 1e-6}
     return conc, grade, label
 
 
-GRADES_ALTERNATIVE = ("measured", "literature", GRADE_DEFAULT)
+GRADES_ALTERNATIVE = ("measured", "literature", "declared")
 
 
 def read_alternative(decl) -> tuple[dict[str, float] | None, str]:
     """The optional pair set of a declaration (`alternative`, prereg-radiogenic addendum 9): with it, `_low`
     and the temperature band's union stay; without it a declared body has no pair (decision A).
-    Its grade may be `declared-default` — a set carried with no source held — and then it is recorded and
-    NOT used: only a `measured` or `literature` pair keeps `_low` and the band's union (addendum 9 supplement)."""
+    Its grade may be `declared` with `default: true` — a set carried with no source held (the old
+    `declared-default`) — and then it is recorded and NOT used: only a `measured` or `literature` pair
+    keeps `_low` and the band's union (addendum 9 supplement)."""
     if not isinstance(decl, dict) or decl.get("alternative") is None:
         return None, ""
     alt = decl["alternative"]
@@ -179,10 +189,12 @@ def read_alternative(decl) -> tuple[dict[str, float] | None, str]:
         raise ValueError(f"radiogenic_concentration.alternative 에 {', '.join(missing)} 가 없다")
     if alt["grade"] not in GRADES_ALTERNATIVE:
         raise ValueError(f"alternative 의 등급 '{alt['grade']}' — {', '.join(GRADES_ALTERNATIVE)} 중 하나여야 한다")
+    if (alt["grade"] == "declared") != (alt.get("default") is True):
+        raise ValueError("alternative 의 등급 declared 는 default: true 와만 함께 온다 (근거 없이 실은 짝 벌)")
     label = (f"짝 벌 — U {alt['U_ppb']:g} ppb · Th {alt['Th_ppb']:g} ppb · K {alt['K_ppm']:g} ppm · "
              f"등급 {alt['grade']} · 출처 {alt['source']}")
-    if alt["grade"] == GRADE_DEFAULT:
-        return None, label + " — declared-default 짝은 싣지 않는다(_low 빔, 밴드 한 세트)"
+    if alt["grade"] == "declared":
+        return None, label + " — declared(기본) 짝은 싣지 않는다(_low 빔, 밴드 한 세트)"
     return ({"U": float(alt["U_ppb"]) * 1e-9, "Th": float(alt["Th_ppb"]) * 1e-9, "K": float(alt["K_ppm"]) * 1e-6},
             label)
 
@@ -309,6 +321,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
               "crust_radiogenic_power": b["crust_w"],
               "radiogenic_power_low": b_low["total_w"] if b_low is not None else None,
               "radiogenic_concentration_grade": grade,
+              "radiogenic_concentration_default": radiogenic_concentration is None,
               "radiogenic_heat_w_m2": flux, "radiogenic_power_history_4gyr": hist,
               "mantle_top_boundary_layer": cons["delta_t_km"],
               "implied_surface_heat_flux": cons["f_t_w_m2"],
@@ -327,7 +340,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
     units = {"l_int": "W", "t_int": "K", "radiogenic_power": "W", "mantle_radiogenic_power": "W",
              "l_int_total": "W", "t_int_total": "K", "mantle_temperature_floor_total_min": "K",
              "mantle_temperature_floor_total_max": "K", "mantle_temperature_floor_total_verdict": "",
-             "crust_radiogenic_power": "W", "radiogenic_power_low": "W", "radiogenic_concentration_grade": "",
+             "crust_radiogenic_power": "W", "radiogenic_power_low": "W", "radiogenic_concentration_grade": "", "radiogenic_concentration_default": "",
              "radiogenic_heat_w_m2": "W/m2", "radiogenic_power_history_4gyr": "dimensionless",
              "mantle_top_boundary_layer": "km", "implied_surface_heat_flux": "W/m2",
              "implied_surface_heat_flow": "W", "heat_flow_consistency": "",

@@ -271,7 +271,7 @@ nodes:
     # l_int = 총 방사성 출력, mantle_radiogenic_power = 맨틀 몫 70 %(선언). 거대행성 갈래(냉각광도)는
     # dynamo.py 와 같은 이유로 거절한다. 붕괴 이력은 계산하되 열진화는 아니다(Nimmo+ 2004 는 보유 — 하단 경계층은 cmb_heat_flux 가 전사했다).
     outputs: [l_int, t_int, radiogenic_power, mantle_radiogenic_power, crust_radiogenic_power,
-              radiogenic_power_low, radiogenic_concentration_grade, radiogenic_heat_w_m2, radiogenic_power_history_4gyr,
+              radiogenic_power_low, radiogenic_concentration_grade, radiogenic_concentration_default, radiogenic_heat_w_m2, radiogenic_power_history_4gyr,
               mantle_top_boundary_layer, implied_surface_heat_flux, implied_surface_heat_flow,
               heat_flow_consistency, urey_ratio,
               mantle_temperature_floor_min, mantle_temperature_floor_max, mantle_temperature_floor_verdict,

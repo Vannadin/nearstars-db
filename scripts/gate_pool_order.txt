@@ -65,5 +65,6 @@ test_samuel_model.py
 test_albedo_table.py
 test_greenhouse_cases.py
 test_payload.py
+test_provenance.py
 test_bands.py
 test_stellar_wind.py

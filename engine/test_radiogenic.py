@@ -57,24 +57,40 @@ def main() -> int:
     def run(decl):
         return rg.solve(0.1074, 0.25, 0.532, "rocky", 4.54, radiogenic_concentration=decl)
     none = run(None)
-    ok(none.applicable and none.values["radiogenic_concentration_grade"] == "declared-default"
-       and none.values["radiogenic_power_low"] is not None, "R5/R6: no declaration → declared-default, _low kept")
+    ok(none.applicable and none.values["radiogenic_concentration_grade"] == "declared"
+       and none.values["radiogenic_concentration_default"] is True
+       and none.values["radiogenic_power_low"] is not None, "R5/R6: no declaration → declared + default, _low kept")
     for g in ("measured", "literature"):
         r = run(dict(base, grade=g))
         ok(r.applicable and r.values["radiogenic_concentration_grade"] == g and r.values["radiogenic_power_low"] is None
+           and r.values["radiogenic_concentration_default"] is False
            and r.values["mantle_temperature_width_set"] == 0.0, f"R5: {g} without a pair → _low empty, one-set band")
-    ov = run(dict(base, grade="owner-override", reason="dynamo needs a liquid core", window="outside"))
-    ok(ov.applicable and "문헌 창 밖" in " ".join(ov.notes), "R5: owner-override outside the window is printed")
-    no_reason = run(dict(base, grade="owner-override", window="inside"))
-    ok(not no_reason.applicable and "reason" in no_reason.reason, "R5: owner-override without a reason refuses by name")
-    ok(not run(dict(base, grade="declared-default")).applicable, "R5: a body file may not declare declared-default")
+    ov = run(dict(base, grade="declared", override={"reason": "dynamo needs a liquid core", "window": "outside"}))
+    ok(ov.applicable and "문헌 창 밖" in " ".join(ov.notes), "R5: declared + override outside the window is printed")
+    no_reason = run(dict(base, grade="declared", override={"window": "inside"}))
+    ok(not no_reason.applicable and "reason" in no_reason.reason, "R5: override without a reason refuses by name")
+    no_ov = run(dict(base, grade="declared"))
+    ok(not no_ov.applicable and "override" in no_ov.reason, "R5: declared without an override block refuses by name")
+    # prereg-grade-vocabulary §3-3 — the old words and the engine-only mark refuse by name
+    for bad, needle in (("owner-override", "owner-override"), ("declared-default", "declared-default"),
+                        ("calibrated", "calibrated")):
+        r = run(dict(base, grade=bad))
+        ok(not r.applicable and needle in r.reason, f"R5: a body file may not declare {bad}")
+    ddef = run(dict(base, grade="literature", default=True))
+    ok(not ddef.applicable and "default" in ddef.reason, "R5: a body file may not write default")
+    stray = run(dict(base, grade="literature", override={"reason": "x", "window": "inside"}))
+    ok(not stray.applicable and "override" in stray.reason, "R5: override on a non-declared grade refuses by name")
     pair = {"U_ppb": 11.0, "Th_ppb": 43.0, "K_ppm": 130.0, "source": "fixture pair"}
     lit_pair = run(dict(base, grade="literature", alternative=dict(pair, grade="literature")))
     ok(lit_pair.applicable and lit_pair.values["radiogenic_power_low"] is not None
        and lit_pair.values["mantle_temperature_width_set"] > 0, "addendum 9: a literature pair keeps _low and the union")
-    dd_pair = run(dict(base, grade="literature", alternative=dict(pair, grade="declared-default")))
+    dd_pair = run(dict(base, grade="literature", alternative=dict(pair, grade="declared", default=True)))
     ok(dd_pair.applicable and dd_pair.values["radiogenic_power_low"] is None
-       and "싣지 않는다" in " ".join(dd_pair.notes), "addendum 9: a declared-default pair is recorded and not used")
+       and "싣지 않는다" in " ".join(dd_pair.notes), "addendum 9: a declared (default) pair is recorded and not used")
+    nd_pair = run(dict(base, grade="literature", alternative=dict(pair, grade="declared")))
+    ok(not nd_pair.applicable and "default" in nd_pair.reason, "a declared pair without default: true refuses by name")
+    old_pair = run(dict(base, grade="literature", alternative=dict(pair, grade="declared-default")))
+    ok(not old_pair.applicable and "declared-default" in old_pair.reason, "the old declared-default pair word refuses by name")
     # ── 1. closure ─────────────────────────────────────────────────────────
     # earth_2 10.63 → 10.64 (Ruedas constants, addendum 7) → 10.07 (the set itself replaced, addendum 10).
     tw2 = rg.budget(M, "earth_2_non_chondritic")["total_w"] / 1e12

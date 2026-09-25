@@ -61,7 +61,8 @@ for body, was in BEFORE.items():
 print("\n② 등록된 단정 2 — contested 는 dead, transitional 은 cannot-say (문자열이 아니라 상수 동일성으로)")
 LADDER = dict(mass_earth=1.0, radius_earth=1.0, conductor_phase="liquid_outer_solid_inner",
               age_gyr=4.54)
-cont = tect.derived_stagnant_lid({"value": "contested", "grade": "contested", "source": "P9 (다섯 인쇄 분류)"})
+cont = tect.derived_stagnant_lid({"value": "contested", "grade": "declared", "source": "P9 (다섯 인쇄 분류)",
+                                   "contested": ["P9 (다섯 인쇄 분류)"]})
 row(cont.value is True, f"contested → 파생 {cont.value!r} (오너 결정 (a))")
 r = dr.ladder(stagnant_lid=cont.value, lid_note=cont.label, **LADDER)
 row(r.values["regime"] == dr.DEAD_LID,
@@ -97,7 +98,9 @@ CASES = (
     ({"value": "mobile", "grade": "guessed", "source": "x"}, "grade"),
     ({"value": "mobile", "grade": "declared"}, "source"),
     ({"value": "contested", "grade": "declared", "source": "x"}, "어긋난다"),
-    ({"value": "mobile", "grade": "contested", "source": "x"}, "어긋난다"),
+    ({"value": "mobile", "grade": "declared", "source": "x", "contested": ["a", "b"]}, "어긋난다"),
+    ({"value": "mobile", "grade": "contested", "source": "x"}, "grade"),
+    ({"value": "contested", "grade": "declared", "source": "x", "contested": []}, "비지 않은"),
     ("stagnant", "블록이어야"),
 )
 for payload, needle in CASES:

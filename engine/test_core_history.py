@@ -324,7 +324,7 @@ row(_dt > 0.0,
 # ⚠ **`contested` 는 등급도 `contested` 여야 한다** — `tect` 가 값과 등급의 어긋남을 이름 대며 거절한다.
 for _name, _over, _want in (
         ("contested → foley (오너 결정 (a) 를 물려받음)",
-         {"tectonic_regime": _block("contested", grade="contested")}, "foley"),
+         {"tectonic_regime": dict(_block("contested", grade="declared"), contested=["fixture a", "fixture b"])}, "foley"),
         ("transitional → 판단 불가, 이름 대는 거절",
          {"tectonic_regime": _block("transitional")}, "transitional"),
         ("episodic → 매핑 없음, 이름 대는 거절",

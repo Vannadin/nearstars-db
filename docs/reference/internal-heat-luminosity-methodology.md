@@ -44,7 +44,8 @@ non-negligible, see that doc).
 `mantle_temperature_width_zeta` [K] · `mantle_temperature_width_set` [K] · `mantle_temperature_width_denominator` [K] ·
 `mantle_temperature_width_surface` [K] · `l_int_total` [W] · `t_int_total` [K] · `mantle_temperature_floor_total_min` [K] ·
 `mantle_temperature_floor_total_max` [K] · `mantle_temperature_floor_total_verdict` [—] ·
-`radiogenic_concentration_grade` [—] (measured | literature | owner-override, or declared-default when the body declares none)
+`radiogenic_concentration_grade` [—] (measured | literature | declared — a deliberately changed set carries an override block; declared when the body declares none) ·
+`radiogenic_concentration_default` [—] (True when the body declares none and the engine's default set is used)
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] ·
 `radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K] · `tidal_power` [W]
 **Declared-optional** — inputs this recipe declares a default for, in the code and in prose above; absent is a normal state, not a hole (C50 (b), Brief 170 B). `ice_mass_fraction` [—] — the radiogenic budget defaults it to 0.0 for a dry body. `radiogenic_concentration` [block: U_ppb · Th_ppb · K_ppm · grade · source, optional `alternative`] — the body's declared bulk-silicate U · Th · K (prereg-radiogenic §4); absent, the Earth set (N&P 2020 published, 260 ppm / 23 ppb / 85 ppb) is used and graded `declared-default`.

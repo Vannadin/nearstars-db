@@ -31,6 +31,7 @@ from pathlib import Path
 import yaml
 
 import graph
+import payload
 import registry
 import transfers
 from payload import Result
@@ -102,6 +103,9 @@ def solve(body: BodyState, g: dict, verbose: bool = False) -> dict[str, int]:
 def load_body(path: Path) -> tuple[BodyState, dict]:
     doc = yaml.safe_load(path.read_text(encoding="utf-8"))
     transfers.check_body(doc)      # a value from another body loads only with its record (Brief 153)
+    for name in payload.NEW_PROVENANCE_FIELDS:       # prereg-grade-vocabulary §1 ② — 새 칸만
+        if name in (doc.get("inputs") or {}):
+            payload.check_provenance(name, doc["inputs"][name])
     body = BodyState(
         name=doc["name"], kind=doc["kind"], parent=doc.get("parent"),
         inputs=doc.get("inputs") or {}, units=doc.get("units") or {})

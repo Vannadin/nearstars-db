@@ -26,15 +26,19 @@ to know a body is contested reads `tectonic_regime`; the derived boolean cannot 
 * `measured` — a source we hold prints this classification *for this body*.
 * `analog` — carried from a body classified elsewhere, with that body named.
 * `declared` — the owner elected a statement; the schemes disagree, or there is nothing to measure.
-* `contested` — the sources disagree in print. ⚠ Travels with `value: contested` and only with it.
+* disagreement is not a grade: a `contested: [sources]` field (non-empty list) says the sources disagree in
+  print. ⚠ It travels with `value: contested` and only with it (prereg-grade-vocabulary §1 ⑤).
 """
 from __future__ import annotations
 
 from typing import Any, NamedTuple
 
+from payload import INPUT_GRADES
+
 #: 이 어휘 밖의 값은 거절된다 (derivation-discipline §7).
 REGIMES = ("stagnant", "mobile", "transitional", "episodic", "heat_pipe", "contested")
-GRADES = ("measured", "analog", "declared", "contested")
+GRADES = ("measured", "analog", "declared")          # payload.INPUT_GRADES 의 부분
+assert set(GRADES) <= set(INPUT_GRADES)
 
 #: 파생 규칙. ⚠ **`contested` → `True` 는 오너 결정 (a), 2026-09-09** — 그 바디에서 다이나모는 실제로
 #: 0 이고, 금성형 행성이 실제로 가지는 장은 대기 상층부 이온화가 만드는 **유도 자기권**, 즉 다른
@@ -100,9 +104,12 @@ def derived_stagnant_lid(regime: Any, legacy: Any = None) -> Derived:
         return _refuse(f"`tectonic_regime.grade` «{grade}» 는 이 어휘에 없다 — {' · '.join(GRADES)}")
     if not source:
         return _refuse(f"«{value}» 선언에 `source` 가 없다 — 누가 그렇게 말하는지 없이는 등급이 뜻이 없다")
-    if (value == "contested") != (grade == "contested"):
-        return _refuse(f"`value` «{value}» 와 `grade` «{grade}» 가 어긋난다 — 등급 contested 는 "
-                       "값 contested 와만 함께 이동한다 (출처들이 인쇄물에서 서로 다르다는 뜻)")
+    disagree = regime.get("contested")
+    if disagree is not None and not (isinstance(disagree, list) and disagree):
+        return _refuse(f"`tectonic_regime.contested` 는 비지 않은 출처 목록이어야 한다 — {disagree!r}")
+    if (value == "contested") != bool(disagree):
+        return _refuse(f"`value` «{value}» 와 `contested` 칸이 어긋난다 — 값 contested 는 "
+                       "출처 목록 `contested: [...]` 와만 함께 이동한다 (출처들이 인쇄물에서 서로 다르다는 뜻)")
 
     if value in UNMAPPED:
         return _refuse(f"no derived-boolean mapping is declared for regime «{value}» — owner pending "

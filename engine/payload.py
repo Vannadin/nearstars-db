@@ -29,6 +29,28 @@ from typing import Any
 # authored (2026-09-04, 오너 결정 — engine/AUTHORED-VALUES-POLICY.md): 이 프로젝트가 공급한 값. 어느 보유 출처도
 # 주지 않으며, 근거 있는 것과 모순되지 않는다. judgment(발표된 선택지 사이의 판단)와 섞지 않는다.
 GRADES = ("measured", "calibrated", "analog", "judgment", "authored")
+# 등급 낱말 단일 목록 (prereg-grade-vocabulary §1, 오너 2026-09-25 «목록은 통일»). 결과(`GRADES`)와 입력
+# (`INPUT_GRADES`)은 이 목록의 부분집합 둘이다 — calibrated 는 결과 전용, 입력 칸에 쓰면 거절.
+GRADE_WORDS = ("measured", "literature", "analog", "derived", "judgment", "declared", "inherited", "authored",
+               "calibrated")
+INPUT_GRADES = tuple(g for g in GRADE_WORDS if g != "calibrated")
+assert set(GRADES) <= set(GRADE_WORDS)
+#: 세 칸 검사(`check_provenance`)를 받는 새 입력 칸 이름. 층 일반화 ⓐ–ⓓ 가 칸을 만들 때 한 줄씩 더한다.
+NEW_PROVENANCE_FIELDS: tuple[str, ...] = ()
+
+
+def check_provenance(field_name: str, entry: Any) -> None:
+    """새 입력 칸 하나의 세 칸(grade · source · counter_evidence_searched)을 본다 — 오너 원칙 09-24.
+    어긋나면 칸 이름을 대고 ValueError."""
+    if not isinstance(entry, dict):
+        raise ValueError(f"`{field_name}` 은 value · grade · source · counter_evidence_searched 블록이어야 한다")
+    grade = entry.get("grade")
+    if grade not in INPUT_GRADES:
+        raise ValueError(f"`{field_name}.grade` «{grade}» 는 입력 등급이 아니다 — {' · '.join(INPUT_GRADES)}")
+    for key in ("source", "counter_evidence_searched"):
+        if not entry.get(key):
+            raise ValueError(f"`{field_name}` 에 `{key}` 가 없다")
+
 # authored 결과가 notes 에 반드시 달아야 하는 두 표지. 없으면 생성 시점에 거절한다.
 AUTHORED_MARKERS = ("gap:", "consistent-with:")
 

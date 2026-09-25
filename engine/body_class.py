@@ -156,7 +156,7 @@ M_EARTH_PER_MJ = 317.8
 M_EARTH_PER_MSUN = 332946.0         # IAU 2015 명목 GM 비
 R_EARTH_PER_RJ = 11.209             # IAU 2015 명목 적도반지름 비
 
-_GRADE_ORDER = ("measured", "calibrated", "analog", "judgment")
+_GRADE_ORDER = ("measured", "calibrated", "analog", "judgment", "authored")   # authored 맨 아래 — 지휘 2026-09-25 (prereg-grade-vocabulary §1 ③)
 
 BELOW, INSIDE, ABOVE = -1, 0, 1
 

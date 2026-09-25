@@ -41,7 +41,8 @@
 `mantle_temperature_width_zeta` [K] · `mantle_temperature_width_set` [K] · `mantle_temperature_width_denominator` [K] ·
 `mantle_temperature_width_surface` [K] · `l_int_total` [W] · `t_int_total` [K] · `mantle_temperature_floor_total_min` [K] ·
 `mantle_temperature_floor_total_max` [K] · `mantle_temperature_floor_total_verdict` [—] ·
-`radiogenic_concentration_grade` [—] (measured · literature · owner-override, 천체가 선언하지 않으면 declared-default)
+`radiogenic_concentration_grade` [—] (measured · literature · declared — 일부러 바꾼 벌은 override 블록을 단다; 천체가 선언하지 않으면 declared) ·
+`radiogenic_concentration_default` [—] (천체가 선언하지 않아 엔진 기본 벌을 쓰면 True)
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] ·
 `radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K] · `tidal_power` [W]
 **Declared-optional** — 이 레시피가 코드와 위 산문에서 **기본값을 선언한** 입력입니다. 없는 것이 정상 상태이지 구멍이 아닙니다 (C50 (b), 브리프 170 B). `ice_mass_fraction` [—] — 방사성 예산이 건조 바디에 0.0 을 기본값으로 씁니다. `radiogenic_concentration` [블록: U_ppb · Th_ppb · K_ppm · grade · source, 선택 칸 `alternative`] — 천체가 선언한 규산염 U · Th · K 입니다(prereg-radiogenic §4). 없으면 지구 벌(N&P 2020 출간본, 260 ppm / 23 ppb / 85 ppb)을 쓰고 등급 `declared-default` 를 붙입니다.
