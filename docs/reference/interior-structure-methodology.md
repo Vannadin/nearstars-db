@@ -430,6 +430,17 @@ to a polytrope constant fitted to a Jupiter that already has them. The rock-and-
 is therefore referenced to **Earth's adiabat**, anchored at the 1600 K mantle potential
 temperature of Unterborn+ 2019 §2. Declaring 1600 K makes ΔT identically zero and the answer
 bit-for-bit the isothermal one, which the test asserts as equality rather than closeness.
+
+**When the thermal pressure exceeds the total pressure, the cold curve is read on its expansion side.**
+Near the surface of a body hotter than the reference, `P − P_th` goes negative. Until 2026-09-26 the density
+there was floored at `ρ₀`; that kink switched on one integration step at a time as T_pot moved and put a
+sawtooth in Earth's structure (C115). The same closed form is now inverted for ρ < ρ₀, down to the curve's
+spinodal (its pressure minimum, `dP/dρ = 0`); below the spinodal the phase does not exist at that temperature and
+the call is refused by name as a temperature wall. This use of the expansion side is a judgment — Seager+ 2007
+states no range for negative cold pressure and itself held low pressures at a constant density. Calls with no
+thermal pressure (isothermal, or the 1600 K reference) keep the old `ρ₀`. The `bm2_ref` core-box phases, whose
+ρ₀ is a 19 GPa reference, have a positive spinodal and so refuse any non-positive cold pressure.
+prereg-thermal-pressure-floor.md.
 Ice phases are referenced to the real isotherms already recorded above.
 
 **The anchor is a declaration, and it is not the surface temperature.** In a convecting

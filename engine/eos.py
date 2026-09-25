@@ -242,6 +242,10 @@ THERMAL_EVALUATORS = {
 }
 
 
+#: 상(이름 · 꼴 · 계수) → 냉각 곡선의 스피노달 (ρ_s, P_s) — `Phase._spinodal` 이 한 번 재어 둔다(frozen dataclass 라 칸을 못 붙임).
+_SPINODAL: dict[tuple, tuple[float, float]] = {}
+
+
 @dataclass(frozen=True)
 class Phase:
     """한 상의 냉각 등온 상태방정식."""
@@ -615,6 +619,50 @@ class Phase:
             return self.p_ref + 1.5 * self.k0 * (x ** (7.0 / 3.0) - x ** (5.0 / 3.0))
         raise ValueError(f"모르는 EOS 형태 '{self.form}'")
 
+    def _spinodal(self) -> tuple[float, float]:
+        """냉각 곡선 P(ρ) 의 ρ < ρ0 쪽 최소(dP/dρ = 0) — (ρ_s, P_s). 상마다 한 번(값은 상 상수만의 함수).
+        [0.05 ρ0, ρ0] 를 0.005 ρ0 격자로 훑어 최소 칸을 찾고, 그 이웃 두 칸 안에서 황금분할로 좁힌다.
+        ρ ∈ [ρ_s, ρ0] 에서 P(ρ) 는 단조 증가라 `_density_tension` 의 이분법 괄호가 된다."""
+        key = (self.name, self.form, self.rho0, self.k0, self.k0p)
+        got = _SPINODAL.get(key)
+        if got is not None:
+            return got
+        xs = [1.0 - 0.005 * i for i in range(191)]            # 1.0 … 0.05
+        ps = [self.pressure(x * self.rho0) for x in xs]
+        k = min(range(len(xs)), key=ps.__getitem__)
+        lo = xs[min(k + 1, len(xs) - 1)] * self.rho0
+        hi = xs[max(k - 1, 0)] * self.rho0
+        g = 0.5 * (math.sqrt(5.0) - 1.0)
+        for _ in range(200):
+            a, b = hi - g * (hi - lo), lo + g * (hi - lo)
+            if self.pressure(a) < self.pressure(b):
+                hi = b                      # 최소는 [lo, b]
+            else:
+                lo = a                      # 최소는 [a, hi]
+            if hi - lo <= 1e-12 * self.rho0:
+                break
+        rho_s = 0.5 * (lo + hi)
+        _SPINODAL[key] = (rho_s, self.pressure(rho_s))
+        return _SPINODAL[key]
+
+    def _density_tension(self, p_cold: float, t: float) -> float:
+        """냉각 압력 p_cold ≤ 0 에서 ρ ∈ [ρ_s, ρ0] — P(ρ) 가 그 구간에서 단조라 이분법(결정적, 횟수 고정)."""
+        rho_s, p_s = self._spinodal()
+        if p_cold < p_s:
+            convergence.note("eos.density_tension", False)
+            raise PhaseGap(self.name, p_cold, (
+                f"{self.name}: 열압력을 뺀 냉각 압력 {p_cold / 1e9:.4f} GPa 가 냉각 곡선의 스피노달 "
+                f"{p_s / 1e9:.4f} GPa 밑이다 — 이 온도({t:.0f} K)에서 이 상은 그 압력에 없다"), t, too_cold=False)
+        lo, hi = rho_s, self.rho0
+        for _ in range(80):
+            mid = 0.5 * (lo + hi)
+            if self.pressure(mid) < p_cold:
+                lo = mid
+            else:
+                hi = mid
+        convergence.note("eos.density_tension", True)
+        return 0.5 * (lo + hi)
+
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """P 에서 ρ. 온도를 주면 열압력을 뺀 **냉각 곡선의** 압력에서 뒤집는다.
 
@@ -631,15 +679,20 @@ class Phase:
         폴리트로프는 뒤집기가 닫힌 형태라 반복이 아예 없다."""
         p_th = self.thermal_pressure(t, t_pot)
         if p_th:
-            # 열압력이 전체 압력을 넘으면 그 온도에서 이 상은 존재할 수 없다. 냉각
-            # 압력을 음수로 넘기면 Newton 이 발산하므로, 영압 밀도로 바닥을 친다.
             p = p - p_th
         if self.form == "polytrope":
             if p <= 0.0:
                 return 0.0
             return (p / self.k0) ** (self.k0p / (self.k0p + 1.0))
         if p <= 0.0:
-            return self.rho0
+            if not p_th:
+                return self.rho0          # 열압력 없는 호출(등온 · 기준 온도) — 옛 길 그대로
+            # ⚠ **열압력이 전체 압력을 넘으면 같은 냉각 식을 팽창 쪽(ρ < ρ0)으로 뒤집는다**
+            #   (prereg-thermal-pressure-floor ⓑ, C115). 예전에는 여기서 `rho0` 로 바닥을 쳤고, 그 꺾임이
+            #   표면 가까이 한 걸음씩 켜지며 지구 구조에 톱니를 냈다. 팽창 쪽 사용은 적합 원문이 말하지
+            #   않은 판단이다(grade judgment — Seager+ 2007 은 저압을 상수 밀도로 막았다). 스피노달(냉각
+            #   곡선의 최소 압력) 밖이면 이 온도에서 이 상은 없다 — 이름 대고 온도 벽으로 던진다.
+            return self._density_tension(p, t)
         rho = self.rho0 * (1.0 + p / self.k0) ** 0.4
         for _ in range(60):
             f = self.pressure(rho) - p
