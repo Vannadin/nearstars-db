@@ -47,6 +47,25 @@ check("the mantle names its volume — silicate without a layer, convective with
       and ts.samuel_stack(lam=10.0, profile=prof, g=G, model="bml", layer=LAYER).mantle.params["volume"] == "convective")
 check("the inner-core slot is empty in every reproduction stack (T2 §6)", s1.core.params["inner_core"] is None)
 
+# Source-form switches (prereg-source-form-plates d9d5af99). SF-B1: off is T2 — every check above ran with
+# them off. SF-에너지: in a layered stack every heating term adds back to the whole silicate's (1e-12).
+import math                            # noqa: E402
+sf = ts.samuel_stack(lam=10.0, profile=prof, g=G, model="bml", layer=LAYER, source_volume=True, source_lid_heat=True)
+L = ts.state_terms(sf, *STATE, -0.02)["layer"]
+r_p, d_l, d_cr = st.R_PLANET_M, STATE[2], STATE[3]
+shell = lambda a, b: 4 / 3 * math.pi * (a ** 3 - b ** 3)
+v_lid, v_cr, v_sil = shell(r_p, r_p - d_l), shell(r_p, r_p - d_cr), shell(r_p, st.R_CORE_M)
+h_pm = L["h_d"] / LAYER["lambda_d"]
+total = L["h_m"] * (v_lid - v_cr) + L["h_cr"] * v_cr + L["h_m"] * L["v_conv_p"] + L["h_d"] * L["v_d"]
+check("SF-에너지 — h_m (V_lid − V_cr) + h_cr V_cr + h_m V_conv′ + H_d V_d = H_pm V_sil (1e-12)",
+      abs(total / (h_pm * v_sil) - 1.0) < 1e-12, f"ratio {total / (h_pm * v_sil) - 1.0:+.2e}")
+p2 = ts.state_terms(ts.samuel_stack(lam=20.0, profile=prof, g=G), *STATE, -0.02)
+p2s_stack = ts.samuel_stack(lam=20.0, profile=prof, g=G, source_volume=True)
+p2s = ts.state_terms(p2s_stack, *STATE, -0.02)
+check("C113 switch — plate 2's mantle volume becomes the convective one and dT_m/dt moves",
+      p2s_stack.mantle.params["volume"] == "convective" and p2s["dtm"] != p2["dtm"],
+      f"dT_m/dt {p2['dtm']:.4e} → {p2s['dtm']:.4e} K/s")
+
 # R2 — plate 2's six regression pins, through the stack.
 out = ts.run(ts.samuel_stack(lam=20.0, profile=prof, g=G), 10.0)
 v = sr.curve_values(out["rows"])

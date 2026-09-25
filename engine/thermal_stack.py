@@ -127,9 +127,16 @@ def samuel_stack(*, lam: float, profile, g: float, model: str = "no_bml", layer:
                  eps_mode: str = "derived", p_m_mode: str = "mid", melt_pressure: str = "engine",
                  stefan_mode: str = "printed", lid_mode: str = "grid", lid_nodes: int = 41,
                  melt_shells: int = 1920, fixed_lid_m: float | None = None, delta_b_cap_fraction: float = 0.5,
-                 root_branch: str = "nearest", path_check_every: int = 0, r_c: float | None = None) -> Stack:
+                 root_branch: str = "nearest", path_check_every: int = 0, r_c: float | None = None,
+                 source_volume: bool = False, source_lid_heat: bool = False) -> Stack:
     """The stacks of plates 2 · 2P (no layer) and 4 · 4P (basal layer) — `samuel_run.Setup`'s arguments,
-    as layers. `layer` with D_d = 0 is no layer (B1). `r_c` overrides the bundle's core radius."""
+    as layers. `layer` with D_d = 0 is no layer (B1). `r_c` overrides the bundle's core radius.
+
+    Source-form switches (prereg-source-form-plates, frozen d9d5af99), both off = T2's bit reproduction:
+    `source_volume` — the mantle balance over the convective volume as 2021 PDF p. 11 prints it («Vm is
+    the volume of the convective mantle»), not plate 2's whole silicate (C113; grade literature);
+    `source_lid_heat` — in a layered stack the lid grid's heat is split like the mantle's, eq. (1) first
+    and the crust share from V_sil′ (C114; grade our inference — v2-22 ② calls that step our reading)."""
     m = MODELS[model]
     rc = m["r_c"] if r_c is None else r_c
     layer = layer if layer and layer["d_d"] != 0.0 else None
@@ -139,11 +146,12 @@ def samuel_stack(*, lam: float, profile, g: float, model: str = "no_bml", layer:
         layers.append(Layer("basal", "conductive", rc, rc + layer["d_d"], dict(layer)))
     mantle = Layer("mantle", "convective", None, None,
                    {"t0": m["t_m0"], "eta0": m["eta0"], "e_star": m["e_star"], "v_star": m["v_star"],
-                    "volume": "silicate" if layer is None else "convective",
+                    "volume": "convective" if (layer is not None or source_volume) else "silicate",
                     "bottom": "tbl" if layer is None else "grid_flux+jump"})
     layers.append(mantle)
     layers.append(Layer("lid", "conductive", None, st.R_PLANET_M,
-                        {"nodes": lid_nodes, "fixed_m": fixed_lid_m, "crust_lambda": lam}))
+                        {"nodes": lid_nodes, "fixed_m": fixed_lid_m, "crust_lambda": lam,
+                         "source_heat": source_lid_heat}))
     return Stack(layers, profile=profile, g=g,
                  options=dict(eps_mode=eps_mode, p_m_mode=p_m_mode, melt_pressure=melt_pressure,
                               stefan_mode=stefan_mode, lid_mode=lid_mode, melt_shells=melt_shells,
@@ -454,8 +462,11 @@ def run(s: Stack, cap_myr: float) -> dict:
         v_sil, v_cr = _shell(s.r_p, s.r_c), _shell(s.r_p, s.r_p - y[3])
         h_pm = sm.primitive_heat((AGE_GYR - t) * 1000.0, st.RHO_MANTLE_KG_M3)
         try:
-            # ⚠ the lid grid's heat is split without the basal layer even when there is one (module note)
-            h_m, h_cr = sm.heat_split(h_pm, v_cr, v_sil - v_cr, s.lam)
+            if s.basal is not None and s.lid.params["source_heat"]:
+                h_m, h_cr, _ = _heat(s, h_pm, v_sil, v_cr)     # C114 source form: the mantle's split
+            else:
+                # ⚠ the lid grid's heat is split without the basal layer even when there is one (module note)
+                h_m, h_cr = sm.heat_split(h_pm, v_cr, v_sil - v_cr, s.lam)
         except sm.Refused as e:
             return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
         grad = lid.step(h, d_l=y[2], d_cr=y[3], t_l=t_l, h_m=h_m, h_cr=h_cr)

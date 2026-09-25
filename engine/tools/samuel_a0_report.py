@@ -20,24 +20,32 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import samuel_run as sr                # noqa: E402
 import samuel_structure as ss          # noqa: E402
 import samuel_thermal as st            # noqa: E402
+import thermal_stack as ts             # noqa: E402
 
 CAP_MYR = 10.0
 LAMBDAS = [5.0 + i for i in range(16)]
 
 
 def main() -> int:
-    fig = Path([a for a in sys.argv[1:] if a != "--post-2p"][0])
+    fig = Path([a for a in sys.argv[1:] if a not in ("--post-2p", "--engine", "stack", "samuel_run", "--source-form")][0])
     tc = sr.read_panel(fig / "PANEL_B" / "Tc.dat")
     tm = sr.read_panel(fig / "PANEL_B" / "Tm.dat")
     dlu = sr.read_panel(fig / "PANEL_A" / "Dlu.dat")
     post = "--post-2p" in sys.argv
-    args = [a for a in sys.argv[1:] if a != "--post-2p"]
+    engine = sys.argv[sys.argv.index("--engine") + 1] if "--engine" in sys.argv else "samuel_run"
+    source = "--source-form" in sys.argv
+    if source and engine != "stack":
+        raise SystemExit("--source-form needs --engine stack (the switches live in thermal_stack)")
+    args = [a for a in sys.argv[1:] if a not in ("--post-2p", "--engine", "stack", "samuel_run", "--source-form")]
     prof = ss.load(Path(args[1])) if len(args) > 1 else ss.mars_profile(Path("bodies/mars.yaml"))
     base_pm = "top" if post else "mid"
     verdict = "사후 수정 후 통과" if post else "A0 통과"
-    if post:
+    if source:          # v2-33 ①: P_m 위 끝이 엔진 정의 — 원문 꼴 판 2S 는 «사후» 꼬리표 없음, -mid 는 비교
+        verdict = "원문 꼴 판 A0 통과" if post else "비교(옛 P_m 중간) A0 통과"
+    if post and not source:
         print("사후 판 2P — 판 2 판정(불통과)을 대신하지 않음. P_m = 대류 맨틀 위 끝(R_l − δ_u) 압력 (v2-11)\n")
     g, g_c = prof.gravity(prof.radius_m), prof.gravity(st.R_CORE_NO_BML_M)
+    print(f"적분기 {engine}" + (" · 원문 꼴 판(C113 V_conv · C114 뚜껑 H′_m, prereg-source-form-plates)" if source else ""))
     print(f"구조 — {prof.source}")
     print(f"  엔진 R {prof.radius_m / 1e3:.3f} km · 판 R_p {st.R_PLANET_M / 1e3:.1f} km · 엔진 핵 {prof.core_radius_m / 1e3:.3f} km"
           f" · 판 R_c {st.R_CORE_NO_BML_M / 1e3:.3f} km · 차 {(prof.core_radius_m - st.R_CORE_NO_BML_M) / 1e3:+.3f} km")
@@ -50,7 +58,14 @@ def main() -> int:
 
     def one(lam, cap=CAP_MYR, **kw):
         t0 = time.time()
-        out = sr.run(setup(lam, **kw), cap)
+        if engine == "stack":      # T2 R2 · R2P (prereg-T2-layer-list §7): the same report through thermal_stack
+            kw.setdefault("p_m_mode", base_pm)
+            if source:             # prereg-source-form-plates: both source-form switches on (plate 2S / 2S-mid)
+                kw.setdefault("source_volume", True)
+                kw.setdefault("source_lid_heat", True)
+            out = ts.run(ts.samuel_stack(lam=lam, profile=prof, g=kw.pop("g", g), **kw), cap)
+        else:
+            out = sr.run(setup(lam, **kw), cap)
         out["secs"] = time.time() - t0
         if "refused" not in out:
             out["a0"] = sr.a0(out["rows"], tc, tm)

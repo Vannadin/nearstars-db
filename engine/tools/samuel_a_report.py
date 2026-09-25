@@ -40,14 +40,16 @@ _PROF = None
 
 def _one(args):
     global _PROF
-    k_d, lam, fe_top, melting, tc, tm, p_m_mode, engine = args
+    k_d, lam, fe_top, melting, tc, tm, p_m_mode, engine = args[:8]
+    source = len(args) > 8 and args[8]
     if _PROF is None:
         _PROF = ss.mars_profile(Path(__file__).resolve().parent.parent / "bodies" / "mars.yaml")
     layer = dict(LAYER_BASE, k_d=k_d, fe_top=fe_top, melting=melting)
     t0 = time.time()
     if engine == "stack":       # T2 (prereg-T2-layer-list §7 R4 · R4P): the same box through thermal_stack
         out = ts.run(ts.samuel_stack(lam=lam, profile=_PROF, g=_PROF.gravity(_PROF.radius_m), model="bml",
-                                     layer=layer, p_m_mode=p_m_mode), CAP_MYR)
+                                     layer=layer, p_m_mode=p_m_mode,
+                                     source_volume=bool(source), source_lid_heat=bool(source)), CAP_MYR)
     else:
         s = sr.Setup(lam=lam, profile=_PROF, g=_PROF.gravity(_PROF.radius_m), g_c=_PROF.gravity(st.R_CORE_M),
                      model="bml", layer=layer, p_m_mode=p_m_mode)
@@ -92,17 +94,22 @@ def main() -> int:
     out_path = Path(argv[argv.index("--out") + 1]) if "--out" in argv else None
     post = "--post-4p" in argv
     engine = argv[argv.index("--engine") + 1] if "--engine" in argv else "samuel_run"
+    source = "--source-form" in argv
+    if source and engine != "stack":
+        raise SystemExit("--source-form needs --engine stack (the switches live in thermal_stack)")
     p_m_mode = "top" if post else "mid"
     verdict_word = "사후 수정 후 통과" if post else "통과"
-    if post:
+    if source:          # P_m 위 끝은 v2-33 ① 로 엔진 정의 — 원문 꼴 판에는 «사후» 꼬리표가 없다
+        verdict_word = "원문 꼴 판 통과" if post else "비교(옛 P_m 중간) 통과"
+    if post and not source:
         print("사후 판 4P — 판 4 판정(불통과)을 대신하지 않음. P_m = 대류 맨틀 위 끝(R_l − δ_u) 압력 (v2-27)\n")
     tc = sr.read_panel(fig / "PANEL_H" / "Tc.dat")
     tm = sr.read_panel(fig / "PANEL_H" / "Tm.dat")
     print("판 4 A — 2023 그림 1 g–l · 폭은 우리가 고른 폭(EDT1 σ 를 빌림) — 구현 오차 폭이 아님")
     print(f"  상자 k_d {K_DS[0]:g}–{K_DS[-1]:g} × Λ {LAMBDAS[0]:g}–{LAMBDAS[-1]:g}, 간격 1 (우리 선택) · "
           f"본판 층상 Fe#_di {FE_TOP_MAIN} · 비교판 균일 · 3-1 본판")
-    print(f"  적분기 {engine}")
-    tasks = [(k, lam, top, True, tc, tm, p_m_mode, engine) for top in (FE_TOP_MAIN, None) for k in K_DS for lam in LAMBDAS]
+    print(f"  적분기 {engine}" + (" · 원문 꼴 판(C113 · C114, prereg-source-form-plates)" if source else ""))
+    tasks = [(k, lam, top, True, tc, tm, p_m_mode, engine, source) for top in (FE_TOP_MAIN, None) for k in K_DS for lam in LAMBDAS]
     t0 = time.time()
     with ProcessPoolExecutor(jobs) as ex:
         results = list(ex.map(_one, tasks))
@@ -125,13 +132,13 @@ def main() -> int:
     if any(k >= 12 for k, _ in pm):
         print("  ⚠ k_d 12–16 에 통과 점 — v2 §5 A 의 신호(2023 은 사후 k_d ≈ 4)")
     verdict = bool(pm) and bool(pu)
-    print(f"[A 판정{' — 사후 판 4P' if post else ''}] {verdict_word if verdict else '불통과'}"
+    print(f"[A 판정{' — 원문 꼴 판 4S' if (source and post) else ' — 비교 4S-mid(판정 아님)' if source else ' — 사후 판 4P' if post else ''}] {verdict_word if verdict else '불통과'}"
           + ("" if bool(pm) == bool(pu) else " — 두 판 판정이 다름: «층상 분포 선택에 의존» (v2-24 ①)"))
     # 3-0 comparison at the main plate's best point (smallest RMS sum — «RMS 합 최소»)
     ok = [r for r in main_r if "conditions" in r]
     if ok:
         best = min(ok, key=lambda r: sum(r["conditions"]["㉡"][0]))
-        r0 = _one((best["k_d"], best["lam"], FE_TOP_MAIN, False, tc, tm, p_m_mode, engine))
+        r0 = _one((best["k_d"], best["lam"], FE_TOP_MAIN, False, tc, tm, p_m_mode, engine, source))
         print(f"\n3-0 비교(녹음 끔, 본판 RMS 합 최소 점 k_d {best['k_d']:g} Λ {best['lam']:g})")
         print(_line(r0))
     print(f"\n전체 {time.time() - t0:.0f} s · 실행 {len(results) + (1 if ok else 0)}")
