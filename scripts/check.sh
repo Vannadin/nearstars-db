@@ -549,7 +549,7 @@ if [ -n "$from_sha" ] && [ "${GATE_ISOLATED:-}" != "1" ]; then
     #   그 실패는 **증거를 남기는 쪽**이므로 고치지 않는다 (감사석 판정, 170 F).
     old_pid=${old##*-}
     case "$old_pid" in
-      ''|*[!0-9]*) ;;                       # pid 로 안 읽히면 지우지 않는다
+      ''|*[!0-9]*) continue ;;              # pid 로 안 읽히면 지우지 않는다 — ⚠ `continue` 없이 `;;` 만이면 아래 rm 으로 떨어져 도는 게이트의 `gate-pool.XXXX` 를 지웠다(2026-09-26, 두 게이트 겹침)
       *) kill -0 "$old_pid" 2>/dev/null && continue ;;
     esac
     echo "  옛 스크래치 정리: $old (실패 표시 없음 · 도는 게이트 아님)"
@@ -696,6 +696,8 @@ fi
 echo "GATE POOL size=${GATE_POOL} rule=\"이름이 test_* 또는 run.py* 인 단계만 풀, 나머지는 직렬\" dir=${_pool_dir:-none}"
 
 echo "── 1. 스키마 검증 (db/systems/*.json + curated) ──"
+# 게이트 자신: 시작의 옛 스크래치 정리가 도는 게이트의 풀 · 살아 있는 pid 디렉토리를 안 지우는가 (2026-09-26 버그). ~1 s.
+step "scripts/test_gate_cleanup.sh" bash scripts/test_gate_cleanup.sh
 step "scripts/pipeline/validate.py" bash -c 'python3 scripts/pipeline/validate.py'
 step "scripts/refs/validate_plasma_temp.py" bash -c 'python3 scripts/refs/validate_plasma_temp.py'
 
