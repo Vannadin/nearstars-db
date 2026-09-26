@@ -366,6 +366,15 @@ items:
   # ⚠ C119 (2026-09-26, 병렬석 e5) — 뜨거운 핵(fe_prem 스피노달 밑)은 액체 철로, 결정 (A) 와 함께. 엔진이 내는 수라 physics.
   C119:
     kind: physics
+  # ⚠ C120 (2026-09-27, 병렬석 e5) — 고상선 위 규산염에 고체 SLB 집합이 없음, 액체 규산염 EOS 필요. 엔진 수라 physics.
+  C120:
+    kind: physics
   # ⚠ C121 (2026-09-27, 작업석 ed) — 조성 프리셋 칸이 선언에 조용히 덮임 → 결과 notes 에 이름 댄 한 줄. 엔진이 내는 결과의 뜻이라 physics.
   C121:
     kind: physics
+  # ⚠ C122 (2026-09-27, 오너 놀이터 · 지휘) — 뜨거운 물이 밀도 괄호 밑에서 RHO_MIN 에 앉음. 엔진 수라 physics.
+  C122:
+    kind: physics
+  # ⚠ C123 (2026-09-27, 병렬석 e5) — 구조 표 방아쇠가 fe_liquid.py 를 놓침. 표의 낡음 검사(도구)라 tooling.
+  C123:
+    kind: tooling
