@@ -58,7 +58,7 @@ def structure_keys() -> tuple[str, ...]:
     tree = ast.parse((HERE / "interior.py").read_text(encoding="utf-8"))
     keys = set(interior.SULPHUR_ANCHOR_DECLARATIONS)
     for fn in (n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)
-               and n.name in ("_from_state", "_solve_from_state", "_infer_from_state")):
+               and n.name in ("_from_state", "_solve_from_state", "_solve_declared", "_infer_from_state")):
         for n in ast.walk(fn):
             if (isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr in ("get", "get_optional")
                     and isinstance(n.func.value, ast.Name) and n.func.value.id in ("state", "declared")

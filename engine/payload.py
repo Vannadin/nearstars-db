@@ -36,7 +36,8 @@ GRADE_WORDS = ("measured", "literature", "analog", "derived", "judgment", "decla
 INPUT_GRADES = tuple(g for g in GRADE_WORDS if g != "calibrated")
 assert set(GRADES) <= set(GRADE_WORDS)
 #: 세 칸 검사(`check_provenance`)를 받는 새 입력 칸 이름. 층 일반화 ⓐ–ⓓ 가 칸을 만들 때 한 줄씩 더한다.
-NEW_PROVENANCE_FIELDS: tuple[str, ...] = ("lithosphere_thickness_km",)   # ⓑ1 prereg-surface-lithosphere
+NEW_PROVENANCE_FIELDS: tuple[str, ...] = ("lithosphere_thickness_km",      # ⓑ1 prereg-surface-lithosphere
+                                         "core_light_elements")          # ⓒ1 prereg-core-light-elements
 
 
 def check_provenance(field_name: str, entry: Any) -> None:

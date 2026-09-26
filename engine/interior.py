@@ -4365,6 +4365,73 @@ def _sulphur_core(w_s: float, pin: str):
         MATERIALS.pop(name, None)
 
 
+#: 핵 경원소 선언 칸의 원소 (prereg-core-light-elements §1). Si · H 는 이름만 — 이 판은 0 이 아니면 거절(ⓒ2 · ⓒ3).
+CORE_LIGHT_ELEMENTS = ("S", "Si", "O", "C", "H")
+
+
+def read_core_light_elements(decl):
+    """`core_light_elements` 선언을 `(spec, 거절 문장)` 으로. spec 은 `{"fit": "S" | None, "S": 분율 | None,
+    "O": 분율, "C": 분율}` — 값은 **질량분율**(0–1), 상자는 `eos.CORE_BOX_WT`. 없으면 `(None, None)`."""
+    if decl is None:
+        return None, None
+    from eos import CORE_BOX_WT
+    value = decl.get("value") if isinstance(decl, dict) else None
+    if not isinstance(value, dict):
+        return None, "`core_light_elements.value` 는 원소 → 질량분율(또는 S: fit) 사전이어야 한다"
+    bad = sorted(k for k in value if k not in CORE_LIGHT_ELEMENTS)
+    if bad:
+        return None, f"`core_light_elements` 의 원소 {bad} 는 어휘 밖 — {' · '.join(CORE_LIGHT_ELEMENTS)}"
+    for k in ("Si", "H"):
+        if value.get(k) not in (None, 0, 0.0):
+            return None, (f"`core_light_elements.{k}` {value[k]!r} — 이 판에는 {k} 의 재질 틀이 없다 "
+                          f"({'ⓒ2 수성 Si' if k == 'Si' else 'ⓒ3 Huang SI S5 H'} 판에서). 0 으로 두거나 뺀다")
+    fits = sorted(k for k, v in value.items() if v == "fit")
+    if fits and fits != ["S"]:
+        return None, f"`core_light_elements` 의 fit {fits} — 맞춤 기계는 황 전용이라 fit 은 S 하나만 된다"
+    spec = {"fit": "S" if fits else None}
+    for k in ("S", "O", "C"):
+        v = value.get(k)
+        if k == "S" and v == "fit":
+            spec["S"] = None
+            continue
+        if not isinstance(v, (int, float)) or isinstance(v, bool):
+            return None, f"`core_light_elements.{k}` 가 없거나 수가 아니다 — {v!r}"
+        lo, hi = CORE_BOX_WT[k]
+        if not lo <= float(v) <= hi:
+            return None, (f"`core_light_elements.{k}` {float(v):g} 가 핵 상자 {lo:g}–{hi:g}(질량분율, Huang 19 GPa 틀의 "
+                          "적합 범위) 밖 — 외삽하지 않는다")
+        spec[k] = float(v)
+    return spec, None
+
+
+def pin_for(spec) -> str | None:
+    """spec 의 O · C 와 **같은 수**(float ==)인 `LIGHT_ELEMENT_PINS` 핀 이름, 없으면 None."""
+    for name, pin in LIGHT_ELEMENT_PINS.items():
+        if pin["O"] == spec["O"] and pin["C"] == spec["C"]:
+            return name
+    return None
+
+
+@contextmanager
+def _declared_light_core(spec, composition: str):
+    """선언 수 S · O · C 의 액체 Fe–S–O–C 핵을 조성 `composition` 의 핵 자리에 잠시 끼운다(`_sulphur_core` 와 같은 짓기)."""
+    from eos import Material, core_mole_fractions, huang_core_phase, FE_S_BELOW_REF_REASON, MATERIALS
+    x = core_mole_fractions({"S": spec["S"], "O": spec["O"], "C": spec["C"]})
+    name = f"fe_core_decl_s{spec['S'] * 100:.4f}_o{spec['O'] * 100:.4f}_c{spec['C'] * 100:.4f}"
+    MATERIALS[name] = Material(
+        name, f"액체 Fe–S–O–C · S {spec['S'] * 100:.4f} · O {spec['O'] * 100:.4f} · C {spec['C'] * 100:.4f} wt% (선언)",
+        (huang_core_phase(x, "19GPa"),), fit_composition="Fe-S-O-C", role="core",
+        gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다",
+        under_reason=FE_S_BELOW_REF_REASON)
+    saved = COMPOSITIONS[composition]
+    COMPOSITIONS[composition] = (saved[0], saved[1], saved[2], name)
+    try:
+        yield
+    finally:
+        COMPOSITIONS[composition] = saved
+        MATERIALS.pop(name, None)
+
+
 def solve_with_core_sulphur(mass_earth: float, radius_earth: float, w_s: float, pin: str,
                             potential_temperature: float | None = None,
                             basal_iron_number: float | None = None,
@@ -4592,6 +4659,26 @@ def _infer_from_state(state):
         #   ⚠ **여기서 맞춤을 돌리지 않는다** — 굳힌 황을 읽고 그 황으로 **한 번** 푼다. 맞춤은
         #   게이트의 한 단계(`test_mars_sulphur.py`)에서만 돌고, 그 단계가 굳힌 값을 다시 대본다.
         pin = _declared_value(state.get("light_element_fixing"))
+        spec, why = read_core_light_elements(state.get_optional("core_light_elements"))
+        if why:
+            return out_of_domain(RECIPE, VERSION, why, inputs=inputs, refs=REFS)
+        if spec is not None:
+            # ⚠ **새 칸이 핀을 대신한다** (prereg-core-light-elements §1 ②, 덧붙임 1 ④) — O · C 가 같은 핀을 찾고,
+            #   재질 이름 · 굳힌 황이 그 핀 이름을 그대로 써서 앵커가 비트 같다. 옛 칸이 같이 있으면 대조만.
+            if spec["fit"] != "S":
+                return out_of_domain(RECIPE, VERSION, "관측 핵 반지름이 선언된 몸은 황을 맞춘다 — "
+                                     "`core_light_elements.S` 를 `fit` 으로 둔다", inputs=inputs, refs=REFS)
+            found = pin_for(spec)
+            if found is None:
+                return out_of_domain(RECIPE, VERSION, (
+                    f"`core_light_elements` 의 O {spec['O']:g} · C {spec['C']:g} 가 굳힌 고정 "
+                    f"{' · '.join(sorted(LIGHT_ELEMENT_PINS))} 어느 것과도 같지 않다 — 새 고정은 새 황 앵커가 필요하다"
+                    " (이 판 밖)"), inputs=inputs, refs=REFS)
+            if pin is not None and pin != found:
+                return out_of_domain(RECIPE, VERSION, (
+                    f"옛 `light_element_fixing` «{pin}» 과 `core_light_elements` 가 가리키는 «{found}» 가 어긋난다"),
+                    inputs=inputs, refs=REFS)
+            pin = found
         t_pot = state.get("potential_temperature")
         # ⚠ **목록에서 짓는다. 손으로 적지 않는다** (2026-09-22, C100 이 여섯째 선언을 더하며).
         #   손으로 적으면 `SULPHUR_ANCHOR_DECLARATIONS` 가 자라도 이 사전은 안 자라고,
@@ -4611,8 +4698,16 @@ def _infer_from_state(state):
                                       basal_iron_number=state.get("basal_iron_number"))
         if not res.applicable:
             return res
-        return _sulphur_result(res, w_s, pin, float(core_km),
-                               f"굳힌 값 · 이분법 {halvings} 회 · {SULPHUR_ANCHOR_FILE.name}")
+        out = _sulphur_result(res, w_s, pin, float(core_km),
+                              f"굳힌 값 · 이분법 {halvings} 회 · {SULPHUR_ANCHOR_FILE.name}")
+        if spec is not None:
+            # ⚠ **계약이 `Result.inputs` 를 읽는다** — 새 칸이 답을 정했으면 그 사실을 inputs 에 남긴다.
+            out = _dc_replace(out, inputs={**out.inputs,
+                                           "core_light_elements": _declared_value(state.get_optional("core_light_elements"))})
+        return out
+    if state.get_optional("core_light_elements") is not None:
+        return out_of_domain(RECIPE, VERSION, "`core_light_elements` 가 선언됐는데 이 바디는 조성을 역산하는 갈래로 "
+                             "간다 — 역산(`infer_composition`)은 아직 핵 경원소를 받지 않는다", inputs=inputs, refs=REFS)
     # 얼음 축을 열지 말지는 **선언**이다. `ice_mass_fraction: 0.0` 은 «얼음 없음» 이라는
     # 선언이지 «모른다» 가 아니다 — 그 구분이 없으면 규산염 화산체에 얼음을 붙인다.
     imf = state.get("ice_mass_fraction")
@@ -4653,6 +4748,24 @@ def _solve_from_state(state):
                 "층을 넘기지 않는다. 조성을 선언하거나 층을 뺀다.",
                 inputs={"lithosphere_thickness_km": litho_km}, refs=REFS)
         return _infer_from_state(state)
+    # 핵 경원소도 **선언** 이다 (prereg-core-light-elements). 없으면 None — 조성 이름의 핵 재질 그대로(비트 동일).
+    core_spec, why = read_core_light_elements(state.get_optional("core_light_elements"))
+    if why:
+        return out_of_domain(RECIPE, VERSION, why, inputs={"core_light_elements": state.get_optional("core_light_elements")},
+                             refs=REFS)
+    if core_spec is not None and core_spec["fit"]:
+        return out_of_domain(RECIPE, VERSION, "`core_light_elements.S` 가 fit 인데 맞출 관측 핵 반지름"
+                             "(`core_plus_layer_radius_km`)이 없다 — 수로 적는다", inputs={}, refs=REFS)
+    if core_spec is not None:
+        with _declared_light_core(core_spec, state.get("composition_intent") or "earth_like"):
+            res = _solve_declared(state, jumps, litho_km)
+        return _dc_replace(res, inputs={**res.inputs,
+                                        "core_light_elements": _declared_value(state.get_optional("core_light_elements"))})
+    return _solve_declared(state, jumps, litho_km)
+
+
+def _solve_declared(state, jumps, litho_km):
+    """선언 조성 몸의 `solve` 호출 — 핵 경원소 재질을 끼운 채로도, 없이도 같은 인자(한 벌)."""
     return solve(
         mass_earth=state["mass_earth"],
         core_mass_fraction=state.get("core_mass_fraction"),

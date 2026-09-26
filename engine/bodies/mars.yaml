@@ -185,6 +185,18 @@ inputs:
   # 해상도가 3 wt% 이기 때문이고, 물리가 다른 것이 아니다. 굳힘이 상한에 정밀도를 안 사는 이유는
   # 그 값을 쓰는 시험이 «두 고정이 갈리느냐» 만 묻기 때문이다(거친 값으로도 차 4.41 wt%).
   # ⚠ 이 키가 없으면 맞춤은 **이름 대고 거절한다** — 조용한 기본값을 두지 않는다.
+  # 핵의 가벼운 원소를 **한 칸에** — 황은 fit(관측 핵 반지름에 맞춤), 산소 · 탄소는 오너 상자의 윗모서리
+  # (prereg-core-light-elements, 층 일반화 ⓒ1). 값은 질량분율. 아래 옛 `light_element_fixing` 과 같은 수여야 하고
+  # (다르면 이름 대고 거절), 옛 칸은 정리 단계에서 지운다.
+  core_light_elements:
+    value: {S: fit, O: 0.04, C: 0.014}
+    grade: declared
+    fit: true
+    source: "owner core box 2026-09-10 (S 13–19 · O 1–4 · C 0.5–1.4 wt%) and owner declaration 2026-09-20 (box_ceiling)"
+    counter_evidence_searched: >
+      C107 (interior-core.md): with this box the layered family's core is not reached; the two box corners give
+      S 18.9062 (floor) against 13.8438 wt% (ceiling) at halvings 6, so the choice of corner is a declaration.
+      Huang+ 2023's fit range (19 GPa anchor) is the box; no source held gives Mars's O or C.
   light_element_fixing:
     value: box_ceiling        # box_floor = O 1 · C 0.5 wt% · box_ceiling = O 4 · C 1.4 wt%
     grade: declared

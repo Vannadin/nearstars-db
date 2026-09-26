@@ -388,7 +388,9 @@ def main() -> int:
               # ⚠ `lithosphere_thickness_km` 는 표면 암석권의 **선언**이다 (2026-09-26, prereg-surface-lithosphere).
               #   없는 것이 정상 상태다 — 층이 없고 옛 값이 비트까지 같다. `surface_temperature_k` 는 그 층이
               #   선언됐을 때만 읽는 윗끝 온도라 같이 면제다.
-              "interior_layers": {"basal_iron_number", "differentiated", "envelope_z",
+              # ⚠ `core_light_elements` 는 핵 경원소의 **선언**이다 (2026-09-26, prereg-core-light-elements).
+              #   없는 것이 정상 상태다 — 조성 이름의 핵 재질 그대로, 옛 값이 비트까지 같다.
+              "interior_layers": {"basal_iron_number", "core_light_elements", "differentiated", "envelope_z",
                                   "gas_mass_fraction", "ice_allowed", "ice_mass_fraction",
                                   "initial_porosity", "interface_temperature_jumps", "lithosphere_thickness_km",
                                   "porosity_cap", "surface_temperature_k"},
