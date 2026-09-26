@@ -627,6 +627,25 @@ def integrate(*args, **kw):
     return structure
 
 
+#: 상 경계에서 걸음을 **안** 자르는 재료 — 얼음 사다리(Ih → III → V → VI → VII → X)는 이 판 밖
+#: (prereg-phase-boundary-step 결정 ①: 얼음 거대 · 얼음 위성 앵커와 C/MR² 줄에 얽혀 후속 판 몫).
+PHASE_CUT_EXCLUDED = ("h2o",)
+
+
+def _phase_floor(mat, p: float) -> float:
+    """`p` 에서 유효한 `eos.Material` 상의 아래 끝 [Pa] — 걸음이 그 밑으로 가면 상이 바뀐다.
+
+    첫 상이면 0 이다: 첫 상의 아래 끝은 재료 자신의 바닥이고 그건 `shoot_lo` 잘림(`floor_truncated`)이 따로
+    본다. 상이 하나뿐이거나 `Material` 이 아니거나 `p` 가 어느 상에도 안 들면 0 (예외를 삼키지 않고 판정만)."""
+    phases = mat.phases if isinstance(mat, eos.Material) and mat.name not in PHASE_CUT_EXCLUDED else ()
+    if len(phases) < 2:
+        return 0.0
+    for i, ph in enumerate(phases):
+        if ph.p_min <= p <= ph.p_max:
+            return ph.p_min if i > 0 else 0.0
+    return 0.0
+
+
 def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
               core_material: str, phi0: float = 0.0,
               p_cap: float | None = None, gmf: float = 0.0,
@@ -1184,6 +1203,28 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
             crossed = False
             basal_crossed = True
+
+        # **재료 안 상 경계 — 압력 경계.** `eos.Material` 의 상은 압력만으로 갈리는데(예: 규산염 en → PREM
+        # 23.83 GPa) 예전엔 걸음을 안 잘랐다 — 걸음 머리 압력이 경계 어느 쪽인지에 따라 그 걸음 전체의 단열
+        # 기울기가 갈려, 한 걸음의 T 차가 중심까지 옮겨갔다(C118 혹, prereg-c118-hump-diagnosis 덧붙임 1).
+        # 걸음 끝 압력이 머리 상의 아래 끝 밑이면 그 경계까지만 **같은 RK4 로 다시 걷는다** — 층 경계 · 기저층
+        # 꼭대기와 같은 재걷기(prereg-phase-boundary-step, 동결 8f1ab05f; 개입 ⓖ 와 같은 자리 · 같은 식).
+        # 다음 걸음은 경계 압력에서 시작해 `phase_at` 이 새 상을 고른다. 층 경계가 이미 이 걸음을 잘랐으면
+        # 거기서 재료가 바뀌므로 묻지 않는다(`not crossed`).
+        if INTERPOLATE_LAYERS and not crossed and dp < 0.0:
+            p_b = _phase_floor(mat, p)
+            if p_b > 0.0 and p + dp < p_b < p:
+                f = (p - p_b) / (-dp)
+                if 0.0 < f < 1.0:
+                    h = f * h
+                    k2 = deriv(r + h / 2, m + h / 2 * k1[0], p + h / 2 * k1[1])
+                    k3 = deriv(r + h / 2, m + h / 2 * k2[0], p + h / 2 * k2[1])
+                    k4 = deriv(r + h, m + h * k3[0], p + h * k3[1])
+                    dm = h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
+                    dp = h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
+                    di = h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
+                    dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
+                    basal_crossed = False
 
         # 표면 암석권 바닥 — 반지름 경계(기저층 꼭대기와 같은 RK4 재걷기). 층 바닥 온도는 걸음 끝의 단열 온도.
         litho_crossed = False
