@@ -219,6 +219,17 @@
    "body_class": "rocky",
    "composition_intent": null,
    "core_initial_temperature": 4800.0,
+   "core_light_elements": {
+    "value": {
+     "S": "fit",
+     "O": 0.04,
+     "C": 0.014
+    },
+    "grade": "declared",
+    "fit": true,
+    "source": "owner core box 2026-09-10 (S 13–19 · O 1–4 · C 0.5–1.4 wt%) and owner declaration 2026-09-20 (box_ceiling)",
+    "counter_evidence_searched": "C107 (interior-core.md): with this box the layered family's core is not reached; the two box corners give S 18.9062 (floor) against 13.8438 wt% (ceiling) at halvings 6, so the choice of corner is a declaration. Huang+ 2023's fit range (19 GPa anchor) is the box; no source held gives Mars's O or C.\n"
+   },
    "core_mass_fraction": null,
    "core_plus_layer_radius_km": {
     "value": 1845.0,
@@ -273,7 +284,7 @@
    "tidal_heating": null
   },
   "code": {
-   "interior.py": "4fb244ea35e4e306",
+   "interior.py": "2db0574b32522774",
    "core_history.py": "19d81091f8a88dd7",
    "eos.py": "e4474a5b31a5a901"
   },
