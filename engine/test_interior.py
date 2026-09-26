@@ -1452,7 +1452,7 @@ def main() -> int:
               f"({(r['t_engine'] / r['t_nl'] - 1) * 100:+.1f} %) · eq. 7 "
               + ("–" if r["t_unt"] is None else f"{r['t_unt']:.0f} K ({(r['t_engine'] / r['t_unt'] - 1) * 100:+.1f} %)"))
     print(f"  [{'PASS' if ok else 'FAIL'}] 엔진은 식 (22) 에 {worst_lo * 100:+.1f} ~ {worst_hi * 100:+.1f} % — "
-          f"기록 구간 {NL2020_BAND[0] * 100:+.0f} ~ {NL2020_BAND[1] * 100:+.0f} %")
+          f"기록 구간 {NL2020_BAND[0] * 100:+.1f} ~ {NL2020_BAND[1] * 100:+.1f} %")   # 한 자리 — 정수로 찍으면 (−2.3, +1.3) 이 −2 ~ +1 로 보임(9f, 09-27)
     slopes = [r["rise_engine"] / r["rise_nl"] - 1.0 for r in nl_rows]
     ok = NL2020_SLOPE_BAND[0] <= min(slopes) and max(slopes) <= NL2020_SLOPE_BAND[1]
     if not ok:
