@@ -15,12 +15,12 @@
  },
  "files": {
   "interior.py": {
-   "bytes": "1ad6fe7840d2c59d",
-   "code": "bf74e4b02d2a4a3c"
+   "bytes": "b87f2f423d4ce304",
+   "code": "c61a03ee292e5410"
   },
   "eos.py": {
-   "bytes": "d59d7d5d6d0afad9",
-   "code": "3d2ae6435f687127"
+   "bytes": "54f9c795462fbd36",
+   "code": "227f9e18806686ba"
   },
   "chain.yaml": {
    "bytes": "80a6e30d17ebcf06"
