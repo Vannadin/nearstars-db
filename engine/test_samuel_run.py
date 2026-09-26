@@ -48,8 +48,11 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 # need the 2023 source data, which is outside the repo, so the gate cannot hold them.
 # C116: INFER_TOL 5e-4 → 5e-7 moves Mars's inverted core mass fraction, so the pins moved on 2026-09-26
 # (old → new: 2101.44 → 2101.38 · 1942.15 → 1941.67 · -49.32 → -48.94 · 285.91 → 286.19 · 2043.85 → 2044.18 · 1.2726 → 1.2732).
-FROZEN_L20 = {"T_c today": 2101.38, "T_m today": 1941.67, "T_c(1) − T_c0": -48.94, "T_m(1) − T_m0": 286.19,
-              "T_m peak": 2044.18, "T_m peak time": 1.2732}
+# C118 (prereg-phase-boundary-step, 2026-09-27): the structure step stops at a material's pressure phase boundary, and
+# Mars's Fe-S core crosses 19 GPa, so the profile rows plate 2 reads shift (old → new: 2101.38 → 2101.39 · 1941.67 →
+# 1941.68 · -48.94 → -48.93 · 286.19 → 286.22 · 2044.18 → 2044.21 · 1.2732 → 1.2632 — the peak lands one step earlier).
+FROZEN_L20 = {"T_c today": 2101.39, "T_m today": 1941.68, "T_c(1) − T_c0": -48.93, "T_m(1) − T_m0": 286.22,
+              "T_m peak": 2044.21, "T_m peak time": 1.2632}
 FROZEN_TOL = {"T_m peak time": 0.0005}  # Gyr; every other value K, to the frozen decimal
 
 

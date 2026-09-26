@@ -89,7 +89,10 @@ else:
     hist = ch.integrate(PARAMS, T_C0, T_M0, AGE)
     # Brief 157: the step is adaptive (h = min(4 Myr, 0.1·τ)); Earth takes 1152 steps (fixed: 1135 — the 17 extra are the hot
     # first ~50 Myr) and its anchors do not move at two decimals (T_p 1525.46, T_c 4027.43). Recorded, not absorbed (rule 1).
-    row(hist["n_steps"] == 1152 and abs(hist["step_myr"] - 4.0) < 0.01 and abs(hist["max_h_over_tau"] - 0.1) < 1e-9,
+    # ⚠ **2026-09-27 re-freeze (C118 (prereg-phase-boundary-step): the structure step now stops at a material's pressure phase boundary).** Earth: adaptive 1152 → 1151 steps · Nimmo row 1586.452 → 1586.721 ·
+    #   4004.202 → 3998.428 · declared-H row 1519.86 → 1520.22 · 3910.45 → 3904.70. Earth's CMB and core run ≈ 20–25 K hotter
+    #   in the structure the history reads; the Mars row (1197 steps) does not move.
+    row(hist["n_steps"] == 1151 and abs(hist["step_myr"] - 4.0) < 0.01 and abs(hist["max_h_over_tau"] - 0.1) < 1e-9,
         f"단일 실행 h ≤ {hist['step_myr']:.2f} Myr (적응, 최대 h/τ {hist['max_h_over_tau']:.3f}) · {hist['n_steps']} 걸음 · 최소 h {hist['h_min_myr']:.3f} Myr ({time.perf_counter()-t0:.0f} s)")
     fixed_n = ch.integrate(PARAMS_NIMMO, T_C0, T_M0, AGE, adaptive=False)
     fx_n = fixed_n["rows"][-1]
@@ -97,14 +100,14 @@ else:
     #   3911.29 → 3910.45. Nimmo row: mantle heating switched to Table 4's printed H_m M_m 23.4 TW (was our
     #   mantle_w 15.22 TW, crust removed), so 1525.46 → 1586.452 · 4027.43 → 4004.202;
     #   pinned to three decimals.
-    row(fixed_n["n_steps"] == 1135 and abs(fx_n["t_m"] - 1586.452) < 0.005 and abs(fx_n["t_c"] - 4004.202) < 0.005,
-        f"고정 4 Myr — Nimmo 현재 H_m M_m(Table 4) · 이력 우리 벌 · 핵 Table 4 조건 (H 1.5 pW/kg) — 재현 아님, 우리 핀(Table 4 Tm 1613 · Tc 4155 K 대 −27 · −151 K): {fixed_n['n_steps']} 걸음 (앵커 1135) · T_p {fx_n['t_m']:.2f} K (앵커 1586.452) · "
-        f"T_c {fx_n['t_c']:.2f} K (앵커 4004.202)")
+    row(fixed_n["n_steps"] == 1135 and abs(fx_n["t_m"] - 1586.721) < 0.005 and abs(fx_n["t_c"] - 3998.428) < 0.005,
+        f"고정 4 Myr — Nimmo 현재 H_m M_m(Table 4) · 이력 우리 벌 · 핵 Table 4 조건 (H 1.5 pW/kg) — 재현 아님, 우리 핀(Table 4 Tm 1613 · Tc 4155 K 대 −27 · −151 K): {fixed_n['n_steps']} 걸음 (앵커 1135) · T_p {fx_n['t_m']:.2f} K (앵커 1586.721) · "
+        f"T_c {fx_n['t_c']:.2f} K (앵커 3998.428)")
     fixed = ch.integrate(PARAMS, T_C0, T_M0, AGE, adaptive=False)
-    row(fixed["n_steps"] == 1135 and abs(fixed["rows"][-1]["t_m"] - 1519.86) < 0.005 and abs(fixed["rows"][-1]["t_c"] - 3910.45) < 0.005
+    row(fixed["n_steps"] == 1135 and abs(fixed["rows"][-1]["t_m"] - 1520.22) < 0.005 and abs(fixed["rows"][-1]["t_c"] - 3904.70) < 0.005
         and abs(fixed["rows"][-1]["t_m"] - hist["rows"][-1]["t_m"]) < 0.01,
-        f"선언 H 0.088 pW/kg (오너 결정 ⑤ · 브리프 166 E 환산 정정): 1135 걸음 · T_p {fixed['rows'][-1]['t_m']:.2f} K (앵커 1519.86) · "
-        f"T_c {fixed['rows'][-1]['t_c']:.2f} K (앵커 3910.45) · 적응과의 차 {hist['rows'][-1]['t_m'] - fixed['rows'][-1]['t_m']:+.4f} K")
+        f"선언 H 0.088 pW/kg (오너 결정 ⑤ · 브리프 166 E 환산 정정): 1135 걸음 · T_p {fixed['rows'][-1]['t_m']:.2f} K (앵커 1520.22) · "
+        f"T_c {fixed['rows'][-1]['t_c']:.2f} K (앵커 3904.70) · 적응과의 차 {hist['rows'][-1]['t_m'] - fixed['rows'][-1]['t_m']:+.4f} K")
 ws = ch.window_summary(hist["rows"])
 last = hist["rows"][-1]
 
@@ -213,7 +216,7 @@ def _witness(label, hist_, near_t_m):
 
 
 # ⚠ **어느 갈래에서 나온 수인지 라벨에 박는다.** 지구의 `hist` 는 `--sweep` 이면 고정걸음
-# (`sw["h/4"]["hist"]`), 아니면 적응 1152 걸음이다 — 그러면 여섯 칸 중 `n_steps` 와
+# (`sw["h/4"]["hist"]`), 아니면 적응 1151 걸음이다(2026-09-27 까지 1152 — C118 고침) — 그러면 여섯 칸 중 `n_steps` 와
 # `max_h_over_tau`(고정이면 `None`) 가 달라진다. 라벨이 없으면 다른 갈래의 두 로그를 맞대 놓고
 # **허수 경보**가 난다. 게이트는 앞 갈래로만 돈다.
 _earth_path = "게이트 경로(적응)" if hist.get("adaptive") else "--sweep 경로(고정걸음)"
