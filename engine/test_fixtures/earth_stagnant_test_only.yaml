@@ -1,0 +1,163 @@
+# 시험 전용 가상 정체 지구 — bodies/earth.yaml 사본에 tectonic_regime stagnant 와 thermal_evolution(전부 authored) 을 더함 (ⓐ1, 출하 경로 밖)
+# Earth — 이 엔진의 앵커. 보드 천체가 아니라 **발표된 값으로 엔진을 대보는** 표본이다.
+# core_state 가 값을 내려면 핵 쪽 경계 온도가 선언돼 있어야 하고, 지구는 그 값이
+# 발표돼 있는 유일한 천체다. 그래서 계약 대조도 여기서 돈다.
+name: Earth
+kind: planet
+parent: Sun
+
+inputs:
+  mass_earth: 1.0
+  radius_earth: 1.0
+  age_gyr: 4.54
+  body_class: rocky
+  composition_intent: earth_like
+  core_mass_fraction: 0.325     # PREM 핵 질량 / 지구 질량
+  # 규산염 방사성 농도 — prereg-radiogenic §4 결정 B · 덧붙임 2 (오너 2026-09-24). 엔진 기본 벌과 같은
+  # 수지만 등급이 다르다: 지구는 문헌값(literature)이고, 선언 없는 천체만 declared-default 를 받는다.
+  radiogenic_concentration:
+    U_ppb: 23.0
+    Th_ppb: 85.0
+    K_ppm: 260.0
+    grade: literature
+    source: "2020ApJ...903L..37N (published), PDF p14 — 260 ppm, 23 ppb, 85 ppb for K, U, Th"
+    # 짝 벌(덧붙임 9 · 10) — Earth (2), O'Neill & Palme 2008 비콘드라이트. 출간된 두 논문의 저자 판이 같은 수를
+    # 인쇄한다(2 차 인용 — Šrámek 은 출판본까지 대조, Bellini 는 저자 판만). 초안 표의 11 / 43 / 130 은 버렸다.
+    alternative:
+      U_ppb: 10.0
+      Th_ppb: 40.0
+      K_ppm: 140.0
+      grade: literature
+      source: "O'Neill & Palme 2008, second-hand: Šrámek+ 2013 EPSL 361 PDF p3 (published) and arXiv 1207.0853 PDF p5; Bellini+ 2022 arXiv 2109.01482 v1 Tables 16, 18 (published not compared)"
+  # 핵 물질 — **선언**. 네 핵 노드(`cmb_heat_flux` · `core_energy_balance` ·
+  # `core_entropy_production` · `core_thermal_history`)가 전부 `"fe_prem"` 을 기본값으로 쓰고 있었고,
+  # 그래서 C50 의 클래스 ③ 에 네 번 세어졌다. 지구에 대해서는 이것이 **전사**다 — `fe_prem` 은
+  # PREM 외핵의 액체 밀도 적합이고(`core_state.py` 의 주석), 그 PREM 이 이 파일의 `nmoi` 와
+  # `cmb_pressure` 가 이미 인용하는 바로 그 원전이다. 값은 기본값과 같으므로 출력은 안 움직인다.
+  # ⚠ 화성·판도라에는 **넣지 않았다**: 지구의 PREM 을 더 가벼운 핵에 주장하는 것은 전사가 아니라
+  # 선택이고, 그 선택은 오너의 것이다 (C50 (b) 표 5행, owner-pending).
+  core_material: fe_prem        # PREM (Dziewonski & Anderson 1981, 1981PEPI...25..297D)
+  # 맨틀 포텐셜 온도. **선언** 이다 — Unterborn+ 2019 §2 의 지구형 값이고,
+  # 암석-금속 상들의 적합 기준이 이 단열선이라 여기서 열압력이 정확히 0 이다.
+  potential_temperature: 1600.0
+  # 표면온도 — 두 손실 법칙(Nimmo eqs 34–36 · Foley eq. (3))이 ΔT 의 아래끝으로 쓴다.
+  # ⚠ **모듈 기본값을 바디 선언으로 끌어올린 것이다.** `mantle_flux.py` 는 293 K, `mantle_budget.py`
+  # 는 273 K 를 들고 있었고, 둘 다 지구 값이라 다른 천체에 조용히 대입될 수 있었다. 여기 적힌
+  # 293.0 은 **오늘 Nimmo 갈래가 실제로 도는 값**이고, 그래서 이 선언으로 지구의 수는 안 움직인다.
+  surface_temperature_k:
+    value: 293.0
+    grade: declared
+    source: "2004GeoJI.156..363N"
+    note: >
+      Nimmo+ 2004 eq. 34's surface temperature for Earth, the value `mantle_flux.T_S` has carried
+      as a module default. Declaring it here does not change Earth's answer; it stops the same
+      number from being applied to a body that never declared one.
+  # 표면 암석권 — 구조 전용 전도 층(prereg-surface-lithosphere, 층 일반화 ⓑ1). 층 안 온도는 T = A/r + B(H = 0),
+  # 바닥은 단열선에서 연속, 윗끝은 위 surface_temperature_k. 없으면 구조 전 구간 단열(예전 경로).
+  lithosphere_thickness_km:
+    value: 135.0
+    grade: analog
+    source: "2018JGRB..123.9136R (accepted manuscript) txt 80 · 2196 — «a plate thickness of 135 ± 30 km»"
+    counter_evidence_searched: >
+      The same paper's prior plate values (second-hand): Parsons & Sclater 1977 125 ± 10 km, Stein & Stein 1992
+      95 km, McKenzie+ 2005 106 km — all inside or near the ± 30 km band. An oceanic-plate value used as Earth's
+      mean layer: continental lithosphere is thicker, and its primary sources (Artemieva & Mooney 2001, McKenzie+
+      2005) are not held (sources survey core-si-h-and-lithosphere-sources §3-4, 2026-09-25).
+  # 핵 **쪽** 핵-맨틀 경계 온도. 이것도 선언이고, D″ 열경계층을 가로지르는 열류가
+  # 정하는 값이라 이 엔진이 도출하지 않는다. Sinmyo+ 2019 (2019E&PSL.510...45S) 의
+  # 3760 ± 290 K 다. 맨틀 쪽 값(이 적분이 내는 ~2530 K)보다 1200 K 넘게 높다.
+  #
+  # ⚠ **오너 선언 2026-09-09 (C25 뿔 ①)**: 값은 그대로 3760 K 이고 **지위가 정해졌다** —
+  # Sinmyo 가 인쇄한 것은 **상한**이며(C25 (e)), 오너는 *"그 상한을 값으로 취한다"* 를 택했다.
+  # 귀결도 함께 선언된 것으로 읽는다: 내핵이 있고(566–572 km), 맨틀 쪽 열류가 작아져
+  # `Q_CMB` 2.75 TW 로 Nimmo 의 인쇄 범위 4.5–9 아래에 놓인다. 대안(4155 K, 범위 안,
+  # 내핵 없음)은 C25 (c) 표에 남아 있다.
+  #
+  # ⚠ **민감도 — «내핵이 있다» 는 튼튼하고 «566–572 km» 는 아니다** (브리프 166 D/E 측정).
+  # 이 선언에서 11 K 만 올라가면 내핵이 572 → 206 km 로 줄고, **3772.37 K 에서 사라진다**
+  # (이분 60회). H 는 이 경계에 들어가지 않으므로 (프로파일도 융해 교차도 H 를 안 읽는다)
+  # 경계는 칼륨 결정과 무관하다. C14 가 스스로 닫는 뿌리는 지금 **3770.33 K**(내핵 239.3 km)
+  # 로, 그 경계 **2.04 K 아래**다. 그래서 여기 적힌 반지름을 근거로 쓰지 말 것 —
+  # 내핵의 유무만 쓸 수 있다. 전체 표는 C25 (f).
+  core_cmb_temperature: 3760.0
+  # 판구조 영역 — **선언**. 옛 `stagnant_lid: false` 를 대신하고, dynamo_rocky 의 생존 게이트는
+  # 여기서 파생한 불리언을 읽는다 (C53, 브리프 168). 등급이 `measured` 가 아닌 이유는 체계마다
+  # 답이 다르기 때문이다 — Foley 2018 의 거친 «이동 대 정체» 에서는 mobile 이지만, 같은 저자의
+  # 입자손상 체계에서는 **transitional** 이다. 오너가 앞의 진술을 택했다 (결정 (b), 2026-09-09):
+  # 우리는 전이 법칙을 평가할 수 없으므로(C51 (d), 선언되지 않은 비차원 입력 일곱) transitional 은
+  # 계산이 뒤에 없는 라벨이 된다.
+  tectonic_regime:
+    value: stagnant
+    grade: authored
+    test_only: "시험 전용 — 층 적분기(정체 뚜껑 모형)를 화성 아닌 값으로 끝까지 돌리는 가상 정체 지구 (prereg-a1 결정 ①). 출하 지구는 mobile 그대로"
+    source: "2018AsBio..18..873F, plus owner decision 2026-09-09 (C53 (b))"
+    note: "the grain-damage scheme (2014GeoJI.199..580F) reads Earth as transitional; C46's computed ladder scores Earth plutonic-squishy lid, and that disagreement is its own item"
+  # C20 열진화의 초기온도 — Nimmo+ 2004 Fig. 2 캡션의 인쇄값 "starting temperature of both mantle and core was
+  # 4800 K", 실온도로 읽음: 핵 4800 K, 맨틀 바닥(실온도) 4800 K → 퍼텐셜 = 4800 / r_b(1.579, interior 단열비) = 3040 K.
+  core_initial_temperature: 4800.0
+  mantle_initial_potential_temperature: 3040.0
+
+  thermal_evolution:
+    mantle:
+      rho: {value: 4400.0, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      cp: {value: 1250.0, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      k: {value: 3.3, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      alpha: {value: 3.0e-5, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      latent: {value: 640000.0, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      eta0: {value: 1.0e+21, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      e_star: {value: 350000.0, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      v_star: {value: 4.0e-6, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+    crust:
+      rho: {value: 2800.0, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      cp: {value: 1050.0, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      k: {value: 2.2, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      enrichment: {value: 9.0, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+    core:
+      cp: {value: 800.0, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      epsilon: {value: 1.2, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+    melting:
+      solidus_seam_gpa: {value: 12.0, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      solidus_low: {value: [1400.0, 130.0, -5.0], grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      solidus_high: {value: [2150.0, 40.0, -1.4], grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      liquidus: {value: [2200.0, 65.0, -4.0, 0.1], grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      melt_extraction_below_pa: {value: 8.0e+9, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      delta_t_sol: {value: 120.0, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+      crust_reference_fraction: {value: 0.18, grade: authored, source: "시험 전용 (prereg-a1 결정 ②) — 문헌값 아님, 화성 판의 값과 일부러 다르게 고름(화성 값이 새는지 가르려고)", counter_evidence_searched: "출하 몸에 안 쓰임; 지구의 실제 값은 이 판의 범위 밖(prereg-a1 §4)"}
+
+units:
+  mass_earth: M_earth
+  radius_earth: R_earth
+  age_gyr: Gyr
+  potential_temperature: K
+  surface_temperature_k: K
+  lithosphere_thickness_km: km
+  core_cmb_temperature: K
+  core_initial_temperature: K
+  mantle_initial_potential_temperature: K
+
+# 발표된 값. 엔진은 읽지 않고 대조만 한다.
+expected:
+  radius:
+    value: 1.0
+    unit: R_earth
+    tol: 0.01
+    source: "IAU/IAG (Archinal+ 2011) — 평균반지름 6371 km"
+  nmoi:
+    value: 0.3307
+    unit: dimensionless
+    tol: 0.01
+    source: "PREM (Dziewonski & Anderson 1981, 1981PEPI...25..297D)"
+  cmb_pressure:
+    value: 135.75
+    unit: GPa
+    tol: 0.02
+    source: "PREM — 핵-맨틀 경계 압력"
+  icb_pressure:
+    value: 328.85
+    unit: GPa
+    tol: 0.10
+    tol_reason: >
+      중심 근처에서 핵의 단열선과 철의 융해곡선이 거의 나란하다. 융해온도 1 % 가
+      경계를 수십 GPa 옮기므로, 이 값의 잔차는 두 곡선의 벌어짐이 아니라 그
+      나란함이 증폭한 것이다. 같은 압력에서 두 융해 실험이 13 % 어긋난다.
+    source: "PREM — 내핵 경계 압력"
