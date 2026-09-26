@@ -4300,7 +4300,7 @@ construction, so "overshoot ≤ dp" almost never fails. A rule that cannot fail 
 #### What replaced it, and why the replacement is about the profile
 
 **Inside a step, the material's floor is now clamped unconditionally** — exactly what
-`engine/interior.py@«rr_rho = (mat.density(_at_floor(max(pp, p_stop)), t, t_pot) if pp > 0.0»` already did
+`engine/interior.py@«rr_rho = (mat.density(_at_floor(max(pp, p_stop)), t_rho, t_pot) if pp > 0.0»` already did
 for `p_stop`, whose comment has said since the gas tables landed that a half-step below the floor is read
 at the floor. Intermediate stages are machinery; they do not appear in any profile.
 

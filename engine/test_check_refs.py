@@ -385,9 +385,13 @@ def main() -> int:
               #   gate240 과 같은 모양). 그래서 키를 더할 때마다 **왜 면제인지**를 여기 적는다.
               # ⚠ `interface_temperature_jumps` 는 재료 경계 점프의 **선언**이다 (2026-09-24,
               #   prereg-interface-jumps). 없는 것이 정상 상태다 — 점프가 없고 옛 값이 비트까지 같다.
+              # ⚠ `lithosphere_thickness_km` 는 표면 암석권의 **선언**이다 (2026-09-26, prereg-surface-lithosphere).
+              #   없는 것이 정상 상태다 — 층이 없고 옛 값이 비트까지 같다. `surface_temperature_k` 는 그 층이
+              #   선언됐을 때만 읽는 윗끝 온도라 같이 면제다.
               "interior_layers": {"basal_iron_number", "differentiated", "envelope_z",
                                   "gas_mass_fraction", "ice_allowed", "ice_mass_fraction",
-                                  "initial_porosity", "interface_temperature_jumps", "porosity_cap"},
+                                  "initial_porosity", "interface_temperature_jumps", "lithosphere_thickness_km",
+                                  "porosity_cap", "surface_temperature_k"},
               # ⚠ `radiogenic_concentration` (both nodes) is a **declaration** added by the radiogenic
               #   landing (2026-09-24): absent = the Earth default set, graded «default».
               "internal_heat_nontidal": {"ice_mass_fraction", "radiogenic_concentration"},
