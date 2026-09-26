@@ -41,6 +41,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import radiogenic as rg  # noqa: E402
 import samuel_thermal as st  # noqa: E402
 
+#: ⓐ2 (prereg-a2-stack-params): calls that fell back to a `samuel_thermal` value because the caller passed none.
+#: The layer stack passes every value, so this stays 0 there (A2-기본값); `samuel_run` passes none, by design.
+DEFAULT_USES: dict[str, int] = {}
+
+
+def _default(name: str, value):
+    DEFAULT_USES[name] = DEFAULT_USES.get(name, 0) + 1
+    return value
+
 
 class Refused(Exception):
     """A quantity this plate does not build yet. The message names it and says why."""
@@ -93,7 +102,7 @@ def upper_layer(t_m: float, t_l: float, t_c: float, t_b: float, eta_m: float, *,
 # ── Lower boundary layer — 2021 eq. (17) and (13), PDF pp. 11–12 ───────────────────────────────
 def lower_layer(t_m: float, t_c: float, t_b: float, eta_m: float, eta_c: float, *, rho_m: float,
                 alpha: float, g: float, k_m: float, c_pm: float, r_p: float, r_c: float,
-                t_s: float, delta_b_cap: float | None = None) -> dict:
+                t_s: float, delta_b_cap: float | None = None, ra_delta_b: tuple | None = None) -> dict:
     """Ra_i, Ra_δb = 0.28 Ra_i^0.21, δ_b = (κ η_c Ra_δb / (ρ_m α g |T_c − T_b|))^(1/3), q_c = k_m (T_c − T_b)/δ_b.
 
     `η_c = η((T_b + T_c)/2, P_c)` is the caller's to evaluate — the pressure is an argument there.
@@ -105,7 +114,9 @@ def lower_layer(t_m: float, t_c: float, t_b: float, eta_m: float, eta_c: float, 
     kappa = k_m / (rho_m * c_pm)
     d_t_i = t_m - t_s + max(t_c - t_b, 0.0)
     ra_i = rho_m * alpha * g * d_t_i * (r_p - r_c) ** 3 / (eta_m * kappa)
-    ra_db = st.RA_DELTA_B_COEFF * ra_i ** st.RA_DELTA_B_EXP
+    coeff, expo = ra_delta_b if ra_delta_b is not None else _default(
+        "ra_delta_b", (st.RA_DELTA_B_COEFF, st.RA_DELTA_B_EXP))
+    ra_db = coeff * ra_i ** expo
     gap = abs(t_c - t_b)
     raw = (kappa * eta_c * ra_db / (rho_m * alpha * g * gap)) ** (1.0 / 3.0) if gap > 0.0 else math.inf
     guarded = delta_b_cap is not None and raw > delta_b_cap
@@ -115,9 +126,11 @@ def lower_layer(t_m: float, t_c: float, t_b: float, eta_m: float, eta_c: float, 
 
 
 # ── Crust growth — 2019 SI eqs (16)–(18), PDF p5 ───────────────────────────────────────────────
-def crust_reference_thickness(r_p: float, r_c: float) -> float:
-    """D_ref = (0.2/3)(R_p³ − R_c³)/R_p²."""
-    return 0.2 / 3.0 * (r_p ** 3 - r_c ** 3) / r_p ** 2
+def crust_reference_thickness(r_p: float, r_c: float, fraction: float | None = None) -> float:
+    """D_ref = (0.2/3)(R_p³ − R_c³)/R_p² — 0.2 is 2019 SI eq. (16)'s «20 % melt extraction of the total silicate
+    volume», an assumption, so a body may carry its own (`fraction`)."""
+    f = fraction if fraction is not None else _default("crust_reference_fraction", 0.2)
+    return f / 3.0 * (r_p ** 3 - r_c ** 3) / r_p ** 2
 
 
 def convective_velocity(ra: float, ra_c: float, u0: float) -> float:
@@ -184,36 +197,50 @@ def depleted_solidus(t_sol_primitive: float, d_cr: float, d_ref: float, delta_t_
 
 
 # ── Refused slots ──────────────────────────────────────────────────────────────────────────────
-def _concentration() -> dict:
+def plate_concentration() -> dict:
     """The plate's bulk-silicate concentrations (v2 §3, Drilleau 2022), as element mass fractions."""
     return {"U": st.U_PPB * 1e-9, "Th": st.TH_PPB * 1e-9, "K": st.K_PPM * 1e-6}
 
 
-def primitive_heat(t_before_present_my: float, rho_m: float) -> float:
+def _concentration(conc: dict | None = None) -> dict:
+    return conc if conc is not None else _default("concentration", plate_concentration())
+
+
+def primitive_heat(t_before_present_my: float, rho_m: float, concentration: dict | None = None) -> float:
     """H_pm, W/m³, at a time before present: ρ_m × `radiogenic.heat_per_kg` (Ruedas 2017, each nuclide
     decaying alone, mass-weighted) with the plate's concentrations (`prereg-radiogenic.md` §2).
     Replacing the plate's own copy moved H_pm by ≤ 1.04×10⁻⁵ relative over 0–4.5 Gyr (R2)."""
-    return rho_m * rg.heat_per_kg(_concentration(), -t_before_present_my / 1000.0)
+    return rho_m * rg.heat_per_kg(_concentration(concentration), -t_before_present_my / 1000.0)
 
 
-def primitive_heat_th_k(t_before_present_my: float, rho_m: float) -> float:
+def primitive_heat_th_k(t_before_present_my: float, rho_m: float, concentration: dict | None = None) -> float:
     """The Th and K part of H_pm, W/m³."""
-    return rho_m * rg.heat_per_kg(_concentration(), -t_before_present_my / 1000.0, ("Th232", "K40"))
+    return rho_m * rg.heat_per_kg(_concentration(concentration), -t_before_present_my / 1000.0, ("Th232", "K40"))
 
 
 # ── Melting curves — 2023 SI eq. (9), PDF p16 (v2-6 ②); the melt fraction in 2021 eq. (9)'s clamped form ─
-def solidus(p_gpa: float) -> float:
+def plate_curves() -> dict:
+    """The plate's melting-curve coefficients (2023 SI eq. (9)) — the values `solidus`/`liquidus` fall back to."""
+    return {"seam_gpa": st.SOLIDUS_SEAM_GPA, "low": st.SOLIDUS_LOW, "high": st.SOLIDUS_HIGH, "liquidus": st.LIQUIDUS}
+
+
+def _curves(curves: dict | None) -> dict:
+    return curves if curves is not None else _default("curves", plate_curves())
+
+
+def solidus(p_gpa: float, curves: dict | None = None) -> float:
     """Undepleted solidus, K. P = 10 GPa takes the first line (v2-5 ②)."""
-    if p_gpa <= st.SOLIDUS_SEAM_GPA:
-        a, b, c = st.SOLIDUS_LOW
+    c_ = _curves(curves)
+    if p_gpa <= c_["seam_gpa"]:
+        a, b, c = c_["low"]
         return a + b * p_gpa + c * p_gpa ** 2
-    a, b, c = st.SOLIDUS_HIGH
-    x = p_gpa - st.SOLIDUS_SEAM_GPA
+    a, b, c = c_["high"]
+    x = p_gpa - c_["seam_gpa"]
     return a + b * x + c * x ** 2
 
 
-def liquidus(p_gpa: float) -> float:
-    a, b, c, d = st.LIQUIDUS
+def liquidus(p_gpa: float, curves: dict | None = None) -> float:
+    a, b, c, d = _curves(curves)["liquidus"]
     return a + b * p_gpa + c * p_gpa ** 2 + d * p_gpa ** 3
 
 
@@ -239,7 +266,8 @@ def hydrostatic_pressure(r: float, *, rho_m: float, g: float, r_p: float) -> flo
 
 
 def melt_integrals(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_pa, *, d_cr: float,
-                   d_ref: float, delta_t_sol: float, extraction_below_pa: float, shells: int) -> dict:
+                   d_ref: float, delta_t_sol: float, extraction_below_pa: float, shells: int,
+                   curves: dict | None = None) -> dict:
     """∫ φ dV over the convecting mantle on the linear adiabat, split at the extraction pressure.
 
     `pressure_pa(r)` is the profile the caller chose (v2-7 ③④, or the hydrostatic path). The shallow part
@@ -255,10 +283,10 @@ def melt_integrals(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_
         p_gpa = pressure_pa(r) / 1e9
         dv = 4.0 * math.pi * r * r * dr
         shallow = p_gpa * 1e9 < extraction_below_pa
-        t_sol = solidus(p_gpa)
+        t_sol = solidus(p_gpa, curves)
         if shallow:
             t_sol = depleted_solidus(t_sol, d_cr, d_ref, delta_t_sol)
-        phi = melt_fraction(t, t_sol, liquidus(p_gpa))
+        phi = melt_fraction(t, t_sol, liquidus(p_gpa, curves))
         if phi > 0.0:
             key = "shallow" if shallow else "deep"
             out[key + "_phi_v"] += phi * dv

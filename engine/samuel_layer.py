@@ -75,7 +75,8 @@ class LayerGrid:
 
     def __init__(self, nodes: int, *, r_c: float, d_d: float, c_p: float, k_d: float, fe_mean: float,
                  fe_top: float | None, rho_d: float | None = None, latent: float | None = None,
-                 pressure_gpa=None, fe_m: float = FE_M, iron_shift: bool = True, record: bool = False):
+                 pressure_gpa=None, fe_m: float = FE_M, iron_shift: bool = True, record: bool = False,
+                 shift_k: float | None = None, curves: dict | None = None):
         if nodes < 3:
             raise ValueError(f"LayerGrid needs at least 3 nodes for second-order boundary fluxes, got {nodes}")
         if d_d <= 0.0:
@@ -94,13 +95,15 @@ class LayerGrid:
                 raise ValueError("variant 3-1 (latent given) needs pressure_gpa(r) for the melting curves")
             # option A shifts both curves by 6 (Fe_d − Fe_m); option B (v2-20 §4, a one-point comparison)
             # keeps Duncan's curve unshifted — Duncan+ 2018 measured one composition, Fe# ≈ 25
-            shift = [FE_SHIFT_K * (fe_mean * f - fe_m) if iron_shift else 0.0 for f in self.f]
+            k6 = shift_k if shift_k is not None else sm._default("fe_shift_k", FE_SHIFT_K)
+            shift = [k6 * (fe_mean * f - fe_m) if iron_shift else 0.0 for f in self.f]
             p = [pressure_gpa(x) for x in self.r]
             self.p_gpa = p
-            self.t_sol = [sm.solidus(pi) - s for pi, s in zip(p, shift)]
-            self.t_liq = [sm.liquidus(pi) - s for pi, s in zip(p, shift)]
+            self.t_sol = [sm.solidus(pi, curves) - s for pi, s in zip(p, shift)]
+            self.t_liq = [sm.liquidus(pi, curves) - s for pi, s in zip(p, shift)]
             self.phi: list | None = None
         self.iron_shift = iron_shift
+        self.fe_m = fe_m
         self.margin: tuple | None = None           # D: (min T_sol − T, r, P, T, t)
         # D's record (v2-29): per step (t, max φ, molten volume fraction, min T_sol − T). Reads only.
         self.record = record
@@ -114,7 +117,7 @@ class LayerGrid:
                 f"(2021 SI S5 (S13)) · ρ_d {self.rho_d:.1f} kg/m³ (S3, our arithmetic) · "
                 f"k_d {self.k:g} W/m/K — our interpretation (2023 SI §3 k_d) · "
                 + ("variant 3-0 (melting off)" if self.latent is None else
-                   (f"variant 3-1 (L_m {self.latent:g} J/kg, option A: 6 (Fe_d − Fe_m), Fe_m {FE_M}, "
+                   (f"variant 3-1 (L_m {self.latent:g} J/kg, option A: 6 (Fe_d − Fe_m), Fe_m {self.fe_m}, "
                     f"«Samuel+ 2021's printed choice»)" if self.iron_shift else
                     f"variant 3-1 (L_m {self.latent:g} J/kg, option B: no Fe# shift — Duncan+ 2018 one point, "
                     f"a comparison; layer base P {max(self.p_gpa):.2f} GPa)")))

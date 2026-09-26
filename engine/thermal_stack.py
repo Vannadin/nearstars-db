@@ -32,10 +32,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import samuel_layer as lay             # noqa: E402
 import samuel_lid as sl                # noqa: E402
 import samuel_model as sm              # noqa: E402
-import samuel_thermal as st            # noqa: E402
 
 GYR_S = 3.15576e16
-AGE_GYR = 4.5
 D_CR_0_M = 1.0                         # 2021 PDF p12: "small values for D_cr = 1 m and D_l = 10 m"
 D_L_0_M = 10.0
 BISECT_ITERS = 50                      # v2-17 supplement: bracket solves
@@ -62,10 +60,13 @@ class Layer:
 class Stack:
     """A list of layers plus the run's options and the state a run carries (root tracking, grids)."""
 
-    def __init__(self, layers: list, *, profile, g: float, options: dict):
+    def __init__(self, layers: list, *, profile, g: float, options: dict, body: dict):
         self.layers = layers
         self.profile, self.g = profile, g
         self.opt = options
+        #: whole-body values (ⓐ2, prereg-a2-stack-params): surface temperature, age, start time, radiogenic
+        #: concentrations, melting curves, melt-extraction depth, solidus depletion, crust reference fraction
+        self.body = body
         self.core = self._one("core")
         self.mantle = self._one("mantle")
         self.lid = self._one("lid")
@@ -103,70 +104,34 @@ class Stack:
         return got[0] if got else None
 
     def eta(self, t: float, p: float) -> float:
-        return sm.viscosity(t, p, self.eta0, self.e_star, self.v_star, st.T_REF_K, st.P_REF_PA, st.R_GAS_J_PER_MOL_K)
+        o = self.opt
+        return sm.viscosity(t, p, self.eta0, self.e_star, self.v_star, o["t_ref"], o["p_ref"], o["r_gas"])
 
     def pressure(self, r: float) -> float:
         return self.profile.pressure(r)
 
     def melt_p(self, r: float) -> float:
         if self.opt["melt_pressure"] == "hydrostatic":
-            return sm.hydrostatic_pressure(r, rho_m=st.RHO_MANTLE_KG_M3, g=3.7, r_p=self.r_p)
+            # the printed form's own ρ and g (2021 (13)(14): «3500 · 3.7»), not the engine's `self.g`
+            return sm.hydrostatic_pressure(r, rho_m=self.opt["hydrostatic_rho"], g=self.opt["hydrostatic_g"],
+                                           r_p=self.r_p)
         return self.profile.pressure(r)
 
 
-#: the two reproduction targets' constants — the same bundles as `samuel_run.MODELS`
-MODELS = {
-    "no_bml": dict(eta0=st.ETA0_NO_BML_PA_S, e_star=st.E_STAR_NO_BML_J_PER_MOL, v_star=st.V_STAR_NO_BML_M3_PER_MOL,
-                   r_c=st.R_CORE_NO_BML_M, t_c0=st.T_CORE_0_NO_BML_K, t_m0=st.T_MANTLE_0_NO_BML_K),
-    "bml": dict(eta0=st.ETA0_PA_S, e_star=st.E_STAR_J_PER_MOL, v_star=st.V_STAR_M3_PER_MOL,
-                r_c=st.R_CORE_M, t_c0=st.T_CORE_0_K, t_m0=st.T_MANTLE_0_K),
-}
-
-
-def samuel_stack(*, lam: float, profile, g: float, model: str = "no_bml", layer: dict | None = None,
-                 eps_mode: str = "derived", p_m_mode: str = "mid", melt_pressure: str = "engine",
-                 stefan_mode: str = "printed", lid_mode: str = "grid", lid_nodes: int = 41,
-                 melt_shells: int = 1920, fixed_lid_m: float | None = None, delta_b_cap_fraction: float = 0.5,
-                 root_branch: str = "nearest", path_check_every: int = 0, r_c: float | None = None,
-                 source_volume: bool = False, source_lid_heat: bool = False) -> Stack:
-    """The stacks of plates 2 · 2P (no layer) and 4 · 4P (basal layer) — `samuel_run.Setup`'s arguments,
-    as layers. `layer` with D_d = 0 is no layer (B1). `r_c` overrides the bundle's core radius.
-
-    Source-form switches (prereg-source-form-plates, frozen d9d5af99), both off = T2's bit reproduction:
-    `source_volume` — the mantle balance over the convective volume as 2021 PDF p. 11 prints it («Vm is
-    the volume of the convective mantle»), not plate 2's whole silicate (C113; grade literature);
-    `source_lid_heat` — in a layered stack the lid grid's heat is split like the mantle's, eq. (1) first
-    and the crust share from V_sil′ (C114; grade our inference — v2-22 ② calls that step our reading)."""
-    m = MODELS[model]
-    rc = m["r_c"] if r_c is None else r_c
-    layer = layer if layer and layer["d_d"] != 0.0 else None
-    core = Layer("core", "lumped", 0.0, rc, {"t0": m["t_c0"], "inner_core": None})
-    layers = [core]
-    if layer is not None:
-        layers.append(Layer("basal", "conductive", rc, rc + layer["d_d"], dict(layer)))
-    mantle = Layer("mantle", "convective", None, None,
-                   {"t0": m["t_m0"], "eta0": m["eta0"], "e_star": m["e_star"], "v_star": m["v_star"],
-                    "volume": "convective" if (layer is not None or source_volume) else "silicate",
-                    "bottom": "tbl" if layer is None else "grid_flux+jump"})
-    layers.append(mantle)
-    layers.append(Layer("lid", "conductive", None, st.R_PLANET_M,
-                        {"nodes": lid_nodes, "fixed_m": fixed_lid_m, "crust_lambda": lam,
-                         "source_heat": source_lid_heat}))
-    return Stack(layers, profile=profile, g=g,
-                 options=dict(eps_mode=eps_mode, p_m_mode=p_m_mode, melt_pressure=melt_pressure,
-                              stefan_mode=stefan_mode, lid_mode=lid_mode, melt_shells=melt_shells,
-                              delta_b_cap_fraction=delta_b_cap_fraction, root_branch=root_branch,
-                              path_check_every=path_check_every))
+def samuel_stack(**kw) -> "Stack":
+    """The Samuel plates' stacks — built in `samuel_stack.py`, the one module that reads `samuel_thermal` (ⓐ2)."""
+    import samuel_stack as ss
+    return ss.samuel_stack(**kw)
 
 
 def layer_contrast(s: Stack, t_m: float) -> float:
     """ΔT′_b = T_i − T′_b = 1.43 R T_m² / E* (2021 PDF p. 13, Deschamps & Sotin 2000) — the `jump` rule."""
-    return 1.43 * st.R_GAS_J_PER_MOL_K * t_m * t_m / s.e_star
+    return 1.43 * s.opt["r_gas"] * t_m * t_m / s.e_star
 
 
 def printed_t_b(s: Stack, t_m: float, d_l: float, d_u: float, d_b: float) -> float:
     """T′_b as printed — compared, never used (v2-22 ①)."""
-    return t_m + st.ALPHA_SILICATE_PER_K * s.g * t_m * (s.r_base - d_l - d_u - d_b) / st.CP_MANTLE_J_PER_KG_K
+    return t_m + s.mantle.params["alpha"] * s.g * t_m * (s.r_base - d_l - d_u - d_b) / s.mantle.params["cp"]
 
 
 def solve_boundary_layers(s: Stack, t_c: float, t_m: float, d_l: float, t_l: float, prev, branch: str):
@@ -180,19 +145,20 @@ def solve_boundary_layers(s: Stack, t_c: float, t_m: float, d_l: float, t_l: flo
 
     def layers(du, db):
         d_r = sm.convecting_thickness(r_p, d_l, r_c, du, db)
-        t_b_ = sm.mantle_base_temperature(t_m, st.ALPHA_SILICATE_PER_K, g, st.CP_MANTLE_J_PER_KG_K, d_r)
+        t_b_ = sm.mantle_base_temperature(t_m, s.mantle.params["alpha"], g, s.mantle.params["cp"], d_r)
         t_bot = t_c if not jump else t_b_ + layer_contrast(s, t_m)
         rt, rb = r_l - du, r_c + db
         p_m_ = {"mid": s.pressure(0.5 * (rt + rb)), "top": s.pressure(rt), "bottom": s.pressure(rb)}[p_m_mode]
         eta_m_ = s.eta(t_m, p_m_)
-        up_ = sm.upper_layer(t_m, t_l, t_bot, t_b_, eta_m_, rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K,
-                             g=g, k_m=st.K_MANTLE_W_PER_M_K, c_pm=st.CP_MANTLE_J_PER_KG_K, r_p=r_p, d_l=d_l,
-                             r_c=r_c, ra_c=st.RA_CRITICAL, beta_u=st.BETA_U)
+        up_ = sm.upper_layer(t_m, t_l, t_bot, t_b_, eta_m_, rho_m=s.mantle.params["rho"], alpha=s.mantle.params["alpha"],
+                             g=g, k_m=s.mantle.params["k"], c_pm=s.mantle.params["cp"], r_p=r_p, d_l=d_l,
+                             r_c=r_c, ra_c=s.opt["ra_critical"], beta_u=s.opt["beta_u"])
         eta_c_ = s.eta(0.5 * (t_b_ + t_bot), s.pressure(r_c))
         cap_ = cap_frac * (r_l - up_["delta_u"] - r_c)
-        lo_ = sm.lower_layer(t_m, t_bot, t_b_, eta_m_, eta_c_, rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K,
-                             g=g, k_m=st.K_MANTLE_W_PER_M_K, c_pm=st.CP_MANTLE_J_PER_KG_K, r_p=r_p, r_c=r_c,
-                             t_s=st.T_SURFACE_K, delta_b_cap=cap_)
+        lo_ = sm.lower_layer(t_m, t_bot, t_b_, eta_m_, eta_c_, rho_m=s.mantle.params["rho"], alpha=s.mantle.params["alpha"],
+                             g=g, k_m=s.mantle.params["k"], c_pm=s.mantle.params["cp"], r_p=r_p, r_c=r_c,
+                             t_s=s.body["t_surface"], delta_b_cap=cap_,
+                             ra_delta_b=s.opt["ra_delta_b"])
         return up_, lo_, t_b_, p_m_, eta_m_
 
     def bisect(f, a, b, fa):
@@ -292,11 +258,12 @@ def lid_heat(s: Stack, h_pm: float, v_sil: float, v_cr: float) -> tuple:
 def _start_basal(s: Stack, t_c: float, t_i: float) -> None:
     L = s.basal.params
     melting = L["melting"]
-    s.layer_grid = lay.LayerGrid(L["nodes"], r_c=s.r_c, d_d=L["d_d"], c_p=st.CP_MANTLE_J_PER_KG_K, k_d=L["k_d"],
+    s.layer_grid = lay.LayerGrid(L["nodes"], r_c=s.r_c, d_d=L["d_d"], c_p=s.mantle.params["cp"], k_d=L["k_d"],
                                  fe_mean=L["fe_mean"], fe_top=L["fe_top"],
-                                 latent=st.L_MANTLE_J_PER_KG if melting else None,
+                                 latent=s.mantle.params["latent"] if melting else None,
                                  pressure_gpa=(lambda r: s.pressure(r) / 1e9) if melting else None,
-                                 iron_shift=L.get("iron_shift", True), record=L.get("record", False))
+                                 iron_shift=L.get("iron_shift", True), record=L.get("record", False),
+                                 rho_d=L["rho_d"], fe_m=L["fe_m"], shift_k=L["shift_k"], curves=s.body["curves"])
     s.layer_grid.start(t_c, t_i)
     s.layer_q = s.layer_grid.fluxes()
 
@@ -306,7 +273,7 @@ def state_terms(s: Stack, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
     """Every layer's rate at one state. Raises `sm.Refused` above the Λ ceiling or without a bracket."""
     r_p, r_c, g = s.r_p, s.r_c, s.g
     r_l = r_p - d_l
-    t_l = sm.lid_base_temperature(t_m, s.e_star, st.A_RH, st.R_GAS_J_PER_MOL_K)
+    t_l = sm.lid_base_temperature(t_m, s.e_star, s.opt["a_rh"], s.opt["r_gas"])
     guard_gap = None
     prev = s.fixed_point_start
     sol = solve_boundary_layers(s, t_c, t_m, d_l, t_l, prev, s.opt["root_branch"])
@@ -344,20 +311,21 @@ def state_terms(s: Stack, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
         eps = s.eps_frozen
     v_sil = _shell(r_p, r_c)
     v_cr = _shell(r_p, r_p - d_cr)
-    h_pm = sm.primitive_heat((AGE_GYR - t_gyr) * 1000.0, st.RHO_MANTLE_KG_M3)
+    h_pm = sm.primitive_heat((s.body["age_gyr"] - t_gyr) * 1000.0, s.mantle.params["rho"], s.body["concentration"])
     h_m, h_cr, lay_terms = _heat(s, h_pm, v_sil, v_cr)
-    d_ref = sm.crust_reference_thickness(r_p, r_c)
-    mkw = dict(d_cr=d_cr, d_ref=d_ref, delta_t_sol=st.DELTA_T_SOL_K,
-               extraction_below_pa=st.MELT_EXTRACTION_BELOW_PA, shells=s.opt["melt_shells"])
+    d_ref = sm.crust_reference_thickness(r_p, r_c, s.body["crust_reference_fraction"])
+    mkw = dict(d_cr=d_cr, d_ref=d_ref, delta_t_sol=s.body["delta_t_sol"],
+               extraction_below_pa=s.body["melt_extraction_below_pa"], shells=s.opt["melt_shells"],
+               curves=s.body["curves"])
     mi = sm.melt_integrals(t_m, t_b, r_top, r_bot, s.melt_p, **mkw)
     v_conv = _shell(r_top, r_bot)
     sfn = sm.stefan_number if s.opt["stefan_mode"] == "printed" else sm.stefan_number_total
-    stefan = sfn(t_m, t_b, r_top, r_bot, s.melt_p, v_m=v_conv, l_m=st.L_MANTLE_J_PER_KG,
-                 c_m=st.CP_MANTLE_J_PER_KG_K, dt_k=1.0, **mkw)
+    stefan = sfn(t_m, t_b, r_top, r_bot, s.melt_p, v_m=v_conv, l_m=s.mantle.params["latent"],
+                 c_m=s.mantle.params["cp"], dt_k=1.0, **mkw)
     if up["subcritical"] or mi["shallow_v"] == 0.0:
         d_cr_rate = 0.0
     else:
-        u = sm.convective_velocity(up["ra"], st.RA_CRITICAL, st.U0_M_PER_S)
+        u = sm.convective_velocity(up["ra"], s.opt["ra_critical"], s.opt["u0"])
         d_cr_rate = sm.crust_growth_rate(u, mi["shallow_phi_v"] / mi["shallow_v"], mi["shallow_v"], r_p)
     a_m, a_c = 4 * math.pi * r_l ** 2, 4 * math.pi * r_c ** 2
     # the mantle's lower boundary: `tbl` takes the core's q_c; `grid_flux+jump` the basal grid's q_d
@@ -376,20 +344,20 @@ def state_terms(s: Stack, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
         lay_terms.update(t_i=s.layer_t_i, q_d=q_base, q_c_layer=q_c_core,
                          t_b_printed=printed_t_b(s, t_m, d_l, d_u, d_b))
     dtm = sm.mantle_rate(q_m=up["q_m"], q_c=q_base, h_m=h_m, d_cr_rate=d_cr_rate, t_m=t_m, t_l=t_l,
-                         stefan=stefan, eps_m=eps, rho_m=st.RHO_MANTLE_KG_M3, c_pm=st.CP_MANTLE_J_PER_KG_K,
-                         v_m=v_bal, a_m=a_m, a_c=a_base, rho_cr=st.RHO_CRUST_KG_M3, l_m=st.L_MANTLE_J_PER_KG,
-                         c_pcr=st.CP_CRUST_J_PER_KG_K)
-    dtc = sm.core_rate(q_c=q_c_core, rho_c=st.RHO_CORE_KG_M3, c_pc=st.CP_CORE_J_PER_KG_K,
-                       v_c=4 / 3 * math.pi * r_c ** 3, eps_c=st.EPSILON_CORE, a_c=a_c)
+                         stefan=stefan, eps_m=eps, rho_m=s.mantle.params["rho"], c_pm=s.mantle.params["cp"],
+                         v_m=v_bal, a_m=a_m, a_c=a_base, rho_cr=s.lid.params["rho_crust"], l_m=s.mantle.params["latent"],
+                         c_pcr=s.lid.params["cp_crust"])
+    dtc = sm.core_rate(q_c=q_c_core, rho_c=s.core.params["rho"], c_pc=s.core.params["cp"],
+                       v_c=4 / 3 * math.pi * r_c ** 3, eps_c=s.core.params["epsilon"], a_c=a_c)
     if s.core.params["inner_core"] is not None:
         raise NotImplementedError("the inner-core term is a slot in T2 (§6) — off in every reproduction stack")
     if s.opt["lid_mode"] == "quasi_steady":
-        lid_gradient = sl.quasi_steady_gradient(r_p=r_p, d_l=d_l, d_cr=d_cr, t_l=t_l, t_s=st.T_SURFACE_K,
-                                                k_m=st.K_MANTLE_W_PER_M_K, k_cr=st.K_CRUST_W_PER_M_K,
+        lid_gradient = sl.quasi_steady_gradient(r_p=r_p, d_l=d_l, d_cr=d_cr, t_l=t_l, t_s=s.body["t_surface"],
+                                                k_m=s.mantle.params["k"], k_cr=s.lid.params["k_crust"],
                                                 h_m=h_m, h_cr=h_cr)
     ddl = sm.lid_rate(q_m=up["q_m"], d_cr_rate=d_cr_rate, lid_base_gradient=lid_gradient, t_m=t_m, t_l=t_l,
-                      t_s=st.T_SURFACE_K, rho_m=st.RHO_MANTLE_KG_M3, c_m=st.CP_MANTLE_J_PER_KG_K,
-                      rho_cr=st.RHO_CRUST_KG_M3, l_m=st.L_MANTLE_J_PER_KG, k_m=st.K_MANTLE_W_PER_M_K)
+                      t_s=s.body["t_surface"], rho_m=s.mantle.params["rho"], c_m=s.mantle.params["cp"],
+                      rho_cr=s.lid.params["rho_crust"], l_m=s.mantle.params["latent"], k_m=s.mantle.params["k"])
     if s.lid.params["fixed_m"] is not None:
         ddl = 0.0
     return {"dtc": dtc, "dtm": dtm, "ddl": ddl, "ddcr": d_cr_rate, "t_l": t_l, "t_b": t_b, "delta_u": d_u,
@@ -418,16 +386,16 @@ def _rates(f: dict) -> list:
 def run(s: Stack, cap_myr: float) -> dict:
     """RK4 over the lumped and convective layers' temperatures and the growing lid and crust; the
     conductive grids advance once per accepted step (lid, then basal layer) — `samuel_run.run`'s order."""
-    t0 = st.T_INITIAL_ROW_GYR
+    t0 = s.body["t_initial_gyr"]
     cap = cap_myr * 1e-3 * GYR_S
     fixed = s.lid.params["fixed_m"]
     y = [s.core.params["t0"], s.mantle.params["t0"], D_L_0_M if fixed is None else fixed, D_CR_0_M]
-    lid = sl.LidGrid(s.lid.params["nodes"], r_p=s.r_p, t_s=st.T_SURFACE_K, rho_m=st.RHO_MANTLE_KG_M3,
-                     c_m=st.CP_MANTLE_J_PER_KG_K, k_m=st.K_MANTLE_W_PER_M_K, rho_cr=st.RHO_CRUST_KG_M3,
-                     c_cr=st.CP_CRUST_J_PER_KG_K, k_cr=st.K_CRUST_W_PER_M_K)
-    t_l0 = sm.lid_base_temperature(y[1], s.e_star, st.A_RH, st.R_GAS_J_PER_MOL_K)
+    lid = sl.LidGrid(s.lid.params["nodes"], r_p=s.r_p, t_s=s.body["t_surface"], rho_m=s.mantle.params["rho"],
+                     c_m=s.mantle.params["cp"], k_m=s.mantle.params["k"], rho_cr=s.lid.params["rho_crust"],
+                     c_cr=s.lid.params["cp_crust"], k_cr=s.lid.params["k_crust"])
+    t_l0 = sm.lid_base_temperature(y[1], s.e_star, s.opt["a_rh"], s.opt["r_gas"])
     lid.start(y[2], t_l0)
-    grad = (st.T_SURFACE_K - t_l0) / y[2]
+    grad = (s.body["t_surface"] - t_l0) / y[2]
     rows = []
     t = t0
     n = 0
@@ -438,9 +406,9 @@ def run(s: Stack, cap_myr: float) -> dict:
             f1 = state_terms(s, *y, t, grad)
         except sm.Refused as e:
             return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
-        rows.append({"ddl": f1["ddl"], "lid_net": -st.K_MANTLE_W_PER_M_K * f1["lid_gradient"] - f1["q_m"],
-                     "crust_term": st.RHO_CRUST_KG_M3 * (st.L_MANTLE_J_PER_KG + st.CP_MANTLE_J_PER_KG_K
-                                                         * (y[1] - st.T_SURFACE_K)) * f1["ddcr"],
+        rows.append({"ddl": f1["ddl"], "lid_net": -s.mantle.params["k"] * f1["lid_gradient"] - f1["q_m"],
+                     "crust_term": s.lid.params["rho_crust"] * (s.mantle.params["latent"] + s.mantle.params["cp"]
+                                                         * (y[1] - s.body["t_surface"])) * f1["ddcr"],
                      "t": t, "t_c": y[0], "t_m": y[1], "d_l": y[2], "d_cr": y[3], "delta_u": f1["delta_u"],
                      "q_m": f1["q_m"], "q_c": f1["q_c"], "eps_m": f1["eps_m"], "stefan": f1["stefan"],
                      "subcritical": f1["subcritical"], "p_m": f1["p_m"], "ceiling": f1["ceiling"],
@@ -448,7 +416,7 @@ def run(s: Stack, cap_myr: float) -> dict:
                      "tc_tb_gap": f1["tc_tb_gap"], "t_b": f1["t_b"], "layer": f1["layer"]})
         if s.lam / f1["ceiling"] > worst[0]:
             worst = (s.lam / f1["ceiling"], t)
-        remaining = (AGE_GYR - t) * GYR_S
+        remaining = (s.body["age_gyr"] - t) * GYR_S
         if remaining <= 1e-9 * GYR_S:
             break
         h = min(cap, STEP_FRACTION * _tau_s(y, f1), remaining)
@@ -465,11 +433,11 @@ def run(s: Stack, cap_myr: float) -> dict:
         except sm.Refused as e:
             return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
         y = [a + h * (b + 2 * c + 2 * d + e) / 6.0 for a, b, c, d, e in zip(y, k1, k2, k3, k4)]
-        t = AGE_GYR if h == remaining else t + dt_gyr
+        t = s.body["age_gyr"] if h == remaining else t + dt_gyr
         n += 1
-        t_l = sm.lid_base_temperature(y[1], s.e_star, st.A_RH, st.R_GAS_J_PER_MOL_K)
+        t_l = sm.lid_base_temperature(y[1], s.e_star, s.opt["a_rh"], s.opt["r_gas"])
         v_sil, v_cr = _shell(s.r_p, s.r_c), _shell(s.r_p, s.r_p - y[3])
-        h_pm = sm.primitive_heat((AGE_GYR - t) * 1000.0, st.RHO_MANTLE_KG_M3)
+        h_pm = sm.primitive_heat((s.body["age_gyr"] - t) * 1000.0, s.mantle.params["rho"], s.body["concentration"])
         try:
             h_m, h_cr = lid_heat(s, h_pm, v_sil, v_cr)
         except sm.Refused as e:
