@@ -2748,12 +2748,18 @@ SUB_NEPTUNE_CLASSES = ("sub_neptune",)
 ICE_GIANT_CLASSES = ("ice_giant",)
 
 
+#: `solve` 의 `composition` 을 **안 넘겼다**는 표지 (C121, prereg-preset-override-note). 안 넘기면 오늘처럼 `earth_like`
+#: 로 읽지만 «명시한 조성» 이 아니므로 프리셋 덮임 줄을 안 단다 — 역산 · 맞춤의 안쪽 호출이 시행 분율을 넘길 때
+#: 가짜 줄이 서지 않게. 명시로 넘긴 `None` 은 오늘처럼 아래 조성 검사가 이름 대고 거절한다.
+_UNSET = object()
+
+
 @convergence.traced
 def solve(mass_earth: float,
           core_mass_fraction: float | None = None,
           ice_mass_fraction: float | None = None,
           gas_mass_fraction: float | None = None,
-          composition: str = "earth_like",
+          composition: str | None = _UNSET,
           radius_earth: float | None = None,
           differentiated: bool = True,
           body_class: str | None = None,
@@ -2792,11 +2798,23 @@ def solve(mass_earth: float,
     뚜껑이 있고 지구에서 그 차이가 1300 K 쯤 된다. 뚜껑의 두께를 정하는 것은 열류이고,
     열류는 `internal_heat_nontidal` 의 출력이라 여기서 도출하지 않는다. 주지 않으면
     (`None`) 온도가 아예 흐르지 않고 예전 등온 경로 그대로다."""
+    explicit_composition = composition is not _UNSET and composition is not None
+    if composition is _UNSET:
+        composition = "earth_like"
     preset_cmf, preset_imf, preset_gmf, core_material = COMPOSITIONS.get(
         composition, (None, None, None, "fe_prem"))
     cmf = preset_cmf if core_mass_fraction is None else core_mass_fraction
     imf = preset_imf if ice_mass_fraction is None else ice_mass_fraction
     gmf = preset_gmf if gas_mass_fraction is None else gas_mass_fraction
+    # ⚠ **선언이 프리셋 칸을 덮으면 말한다** (C121). 값은 규칙대로 선언이 이긴다 — 조용히 이기면 «물 조성인데 물 0»
+    #   같은 답이 이름표만 프리셋으로 남는다(오너, 놀이터의 Dante). 명시한 조성의 칸을 다른 값이 덮을 때만.
+    preset_overridden = [
+        f"`composition_intent` '{composition}' 의 `{name}` {pre:g} 을 선언 {got:g} 이 덮음 — 선언이 이긴다(규칙). "
+        f"프리셋 이름표는 남지만 이 칸은 프리셋 값이 아니다."
+        for name, pre, got in (("core_mass_fraction", preset_cmf, core_mass_fraction),
+                               ("ice_mass_fraction", preset_imf, ice_mass_fraction),
+                               ("gas_mass_fraction", preset_gmf, gas_mass_fraction))
+        if explicit_composition and got is not None and pre is not None and got != pre]
 
     inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth,
               "core_mass_fraction": cmf, "ice_mass_fraction": imf,
@@ -3583,10 +3601,12 @@ def solve(mass_earth: float,
               f"중심압 {st.p_center / 1e9:.1f} GPa 를 주고, 그 압력 분포에서 층 밀도가 "
               f"결정되므로 자기압축이 C/MR² 에 들어간다.")
 
+    notes.extend(preset_overridden)
     if radius_earth is not None:
         off = (radius_earth - radius) / radius
         notes.append(
-            f"선언된 반지름 {radius_earth:.4f} R⊕ 대비 도출값이 {off * -100:+.1f} % 다.")
+            f"선언된 반지름 {radius_earth:.4f} R⊕ 대비 도출값이 {off * -100:+.1f} % 다 "
+            f"(조성을 선언한 풀이라 반지름은 풀이 입력이 아니라 대조값이다).")
         if abs(off) > 0.03:
             notes.append(
                 "3 % 를 넘는다. 조성 선언이 이 천체를 재현하지 못한다는 뜻이므로, "
