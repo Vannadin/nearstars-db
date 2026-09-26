@@ -42,7 +42,7 @@ import water2_table
 import steam_if97
 from eos import (EARTH_POTENTIAL_T, IAPWS_VII_END, ICE_VII_TO_X,
                  ICE_VII_X_T_MAX, MATERIALS, REINHARDT_P_MAX, SILICATE_PREM_TO_PV,
-                 Mixture, PhaseGap, core_gamma, mix, water_phase_name,
+                 Mixture, PhaseGap, SpinodalGap, core_gamma, mix, water_phase_name,
                  water_vii1_vii2_boundary)
 from pathlib import Path
 from payload import Result, out_of_domain
@@ -1870,6 +1870,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
                 got.crust_blocked = crust_hit
                 convergence.note("interior._t_bracket_tries", True)
                 return got, ok, t_now
+            except SpinodalGap:
+                raise            # 스피노달 벽 — 시행 안에서 옮기지 않고 바깥 고리가 벽으로 받는다 (덧붙임 7)
             except PhaseGap as gap:
                 if not gap.temperature_k:
                     raise        # 온도가 아니라 압력이 막았다. 그건 진짜다
@@ -2002,7 +2004,7 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         done = abs(nxt / t_c - 1.0) < T_TOL
         try:
             got, ok, t_now = attempt(nxt)
-        except (Unbound, NoCompactRoot, GridExceeded) as why:
+        except (Unbound, NoCompactRoot, GridExceeded, SpinodalGap) as why:
             wall, wall_why = nxt, str(why)
             bracketed = True
             passes += 1      # 벽을 찾은 걸음은 통과 횟수에서 빼 준다

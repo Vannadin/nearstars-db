@@ -79,6 +79,12 @@ class PhaseGap(Exception):
         super().__init__(reason)
 
 
+class SpinodalGap(PhaseGap):
+    """냉각 압력이 냉각 곡선의 스피노달 밑이다 — 이 온도에서 이 상은 그 압력에 없다(prereg-thermal-pressure-floor).
+    온도가 막은 것이라 `PhaseGap` 의 온도 벽이지만, 온도 괄호가 시행 안에서 옮기지 않고 바깥 고리가 벽으로 받는다
+    (`interior.shoot`, 덧붙임 7) — 시행 안에서 ÷1.6 로 내리면 요청과 다른 온도의 답이 돌아가 할선이 갈피를 잃는다."""
+
+
 # 녹는곡선이 측정된 조성. Phase.join 과 다르면 Phase.join_note 가 있어야 한다 (브리프 41).
 MELT_CURVE_JOIN = {
     "water": "H2O",
@@ -650,7 +656,7 @@ class Phase:
         rho_s, p_s = self._spinodal()
         if p_cold < p_s:
             convergence.note("eos.density_tension", False)
-            raise PhaseGap(self.name, p_cold, (
+            raise SpinodalGap(self.name, p_cold, (
                 f"{self.name}: 열압력을 뺀 냉각 압력 {p_cold / 1e9:.4f} GPa 가 냉각 곡선의 스피노달 "
                 f"{p_s / 1e9:.4f} GPa 밑이다 — 이 온도({t:.0f} K)에서 이 상은 그 압력에 없다"), t, too_cold=False)
         lo, hi = rho_s, self.rho0
