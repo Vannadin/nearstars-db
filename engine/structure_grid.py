@@ -45,7 +45,7 @@ BUILDING = False
 #: 열진화 선언 — 격자 범위(ⓐ 판의 t_m)를 정하므로 방아쇠에 든다.
 THERMAL_KEYS = ("age_gyr", "core_initial_temperature", "mantle_initial_potential_temperature", "tectonic_regime",
                 "lid_thickness_km", "surface_temperature_k", "radiogenic_concentration")
-CODE_FILES = ("interior.py", "core_history.py", "eos.py")
+CODE_FILES = ("interior.py", "core_history.py", "eos.py", "mantle_composition.py")
 BYTE_FILES = ("eos.py", "chain.yaml")     # chain.yaml: 표 짓기가 그래프로 S0 · ⓐ 판을 받는다 (9f, 덧붙임 24 고침)
 #: 황 앵커는 바이트가 아니라 **표가 쓰는 값**(`fixings`)으로 — 그 파일은 코드 해시를 품어 코드를 고칠 때마다 바이트가 바뀐다 (덧붙임 24)
 SULPHUR_ANCHOR = "mars_sulphur_anchor.json"
@@ -58,7 +58,8 @@ def structure_keys() -> tuple[str, ...]:
     tree = ast.parse((HERE / "interior.py").read_text(encoding="utf-8"))
     keys = set(interior.SULPHUR_ANCHOR_DECLARATIONS)
     for fn in (n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)
-               and n.name in ("_from_state", "_solve_from_state", "_solve_declared", "_infer_from_state")):
+               and n.name in ("_from_state", "_solve_from_state", "_solve_from_state_body", "_solve_declared",
+                              "_infer_from_state")):
         for n in ast.walk(fn):
             if (isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr in ("get", "get_optional")
                     and isinstance(n.func.value, ast.Name) and n.func.value.id in ("state", "declared")
@@ -86,7 +87,18 @@ def triggers(inputs: dict) -> dict:
     return {"declared": {k: inputs.get(k) for k in keys},
             "code": {f: _code_digest(HERE / f) for f in CODE_FILES},
             "bytes": {f: hashlib.sha256((HERE / f).read_bytes()).hexdigest()[:16] for f in BYTE_FILES},
-            "sulphur_fixings": json.loads((HERE / SULPHUR_ANCHOR).read_text(encoding="utf-8")).get("fixings")}
+            "sulphur_fixings": json.loads((HERE / SULPHUR_ANCHOR).read_text(encoding="utf-8")).get("fixings"),
+            "mantle_table": _mantle_table_digest(inputs.get("mantle_composition"))}
+
+
+def _mantle_table_digest(decl) -> str | None:
+    """선언된 맨틀 조성의 광물 집합 표 바이트 (C74-2). 선언이 없으면 None — 표를 안 읽는 몸."""
+    import mantle_composition as mc
+    wt, _ = mc.read_mantle_composition(decl)
+    if wt is None:
+        return None
+    f = mc.TABLE_DIR / f"{mc.expected_key(wt)}.json"
+    return hashlib.sha256(f.read_bytes()).hexdigest()[:16] if f.exists() else "missing"
 
 
 def _path_for(name: str) -> Path:
@@ -136,6 +148,8 @@ def load_for(state):
              if now[part].get(k) != doc["triggers"].get(part, {}).get(k)]
     if now["sulphur_fixings"] != doc["triggers"].get("sulphur_fixings"):
         moved.append("sulphur_fixings")
+    if now["mantle_table"] != doc["triggers"].get("mantle_table"):
+        moved.append("mantle_table")
     if moved:
         return None, (f"구조 표가 낡았다 — 방아쇠 {moved} 가 움직였다. 조용히 다시 풀지 않는다: "
                       f"`python3 engine/structure_grid.py --refresh {state.name.lower()}`")
@@ -172,7 +186,9 @@ def _solver(body, s0):
 
         def solve(t):
             return interior.solve_with_fixed_sulphur(declared["mass_earth"], w_s, pin, cmf0, potential_temperature=float(t),
-                                                     basal_iron_number=declared.get("basal_iron_number"))
+                                                     basal_iron_number=declared.get("basal_iron_number"),
+                                                     mantle_composition=interior._declared_value(
+                                                         declared.get("mantle_composition")))
     else:
         how = f"inferred cmf {cmf0!r} declared"
 

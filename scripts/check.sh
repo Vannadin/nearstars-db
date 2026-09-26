@@ -1105,6 +1105,8 @@ step "test_payload.py" bash -c 'cd engine && exec python3 test_payload.py'
 step "test_provenance.py" bash -c 'cd engine && exec python3 test_provenance.py'
 step "test_lithosphere.py" bash -c 'cd engine && exec python3 test_lithosphere.py'
 step "test_core_light_elements.py" bash -c 'cd engine && exec python3 test_core_light_elements.py'
+# 맨틀 조성 선언 (C74-2). 읽기 · 거절 · 선언 없는 몸 비트 동일 · A′-배관(표 격자점 대 BurnMan 직접, ≤ 1e-6) — 몸 파일은 아직 안 켬(지휘 ⓒ).
+step "test_mantle_composition.py" bash -c 'cd engine && exec python3 test_mantle_composition.py'
 # 상 곁표 (2026-09-04, 오너 채택 패턴). 키 집합 = eos 가 내는 상, 채운 칸은 등급·출처, authored 는 두 표지, 채움/전체를 출력한다.
 step "test_phase_tables.py" bash -c 'cd engine && exec python3 test_phase_tables.py'
 # 조석 가열 (C30). 이오 밴드 재현·판도라 보드 45 W/m² 재현(0.75 %)·×Io 규약 R⁵·§6.1/§6.2 라벨 표·거절 넷이 앵커다.

@@ -32,6 +32,7 @@ from __future__ import annotations
 import convergence
 import ice_fr2015          # 190 C: 적합 격자 이탈 카운터를 풀이 전후로 읽는다
 import eos                 # 196 B: 밀도 적합의 압력 도달 카운터를 풀이 전후로 읽는다
+import mantle_composition  # C74-2: 상부 맨틀 광물 집합 표를 풀이 동안 끼운다
 import json
 import math
 from contextlib import contextmanager
@@ -4400,7 +4401,7 @@ SULPHUR_ANCHOR_FILE = Path(__file__).with_name("mars_sulphur_anchor.json")
 #: 바뀌고, 파일 자를 쓰면 물리가 그대로인데도 지문이 깨져 `--refresh` 가 «늘 누르는 단추» 가 된다.
 SULPHUR_ANCHOR_DECLARATIONS = ("mass_earth", "radius_earth", "core_plus_layer_radius_km",
                                "light_element_fixing", "potential_temperature",
-                               "basal_iron_number")
+                               "basal_iron_number", "mantle_composition")
 
 
 @contextmanager
@@ -4497,12 +4498,13 @@ def solve_with_core_sulphur(mass_earth: float, radius_earth: float, w_s: float, 
                             potential_temperature: float | None = None,
                             basal_iron_number: float | None = None,
                             basal_layer_thickness_km: float | None = None,
-                            basal_layer_density: float | None = None):
+                            basal_layer_density: float | None = None,
+                            mantle_composition: dict | None = None):
     """황 분율 하나를 핵에 넣고 **한 번** 푼다.
 
     맞춤(`fit_sulphur_to_core_radius`)도 읽기(`read_sulphur_anchor` 뒤의 노드)도 이 함수를 쓴다 —
     두 벌로 지으면 굳힌 값과 노드의 값이 서로 다른 길로 나올 수 있다."""
-    with _sulphur_core(w_s, pin):
+    with _sulphur_core(w_s, pin), _mantle(mantle_composition):
         return infer_composition(mass_earth, radius_earth, ice_allowed=False,
                                  basal_iron_number=basal_iron_number,
                                  potential_temperature=potential_temperature,
@@ -4514,13 +4516,14 @@ def solve_with_fixed_sulphur(mass_earth: float, w_s: float, pin: str, core_mass_
                              potential_temperature: float | None = None,
                              basal_iron_number: float | None = None,
                              basal_layer_thickness_km: float | None = None,
-                             basal_layer_density: float | None = None):
+                             basal_layer_density: float | None = None,
+                             mantle_composition: dict | None = None):
     """황 **과 핵질량분율을 둘 다 고정**하고 한 번 푼다 — 반지름이 출력이다 (prereg-structure-grid 덧붙임 7 ②).
 
     `solve_with_core_sulphur` 는 반지름에 cmf 를 다시 맞추므로 온도가 바뀌면 조성이 바뀐다. 구조 표는 «같은 조성이
     다른 온도에서 어떤 구조인가» 를 물으므로 역산 대신 선언 cmf 로 `solve` 를 부른다 — 역산의 마지막 풀이와 같은
     인자라 선언 온도에서 비트까지 같다(연구판 2026-09-24 측정)."""
-    with _sulphur_core(w_s, pin):
+    with _sulphur_core(w_s, pin), _mantle(mantle_composition):
         return solve(mass_earth, core_mass_fraction=core_mass_fraction, ice_mass_fraction=0.0,
                      potential_temperature=potential_temperature, tidal_heating=False,
                      basal_iron_number=basal_iron_number,
@@ -4549,7 +4552,8 @@ def fit_sulphur_to_core_radius(mass_earth: float, radius_earth: float,
                                halvings: int | None = None,
                                basal_iron_number: float | None = None,
                                basal_layer_thickness_km: float | None = None,
-                               basal_layer_density: float | None = None):
+                               basal_layer_density: float | None = None,
+                               mantle_composition: dict | None = None):
     """관측 핵 반지름을 재현하는 황 분율을 푼다 — **맞춤이지 측정이 아니다**.
 
     ⚠ **맞춘 양은 그 맞춤을 검사하지 못한다.** 이 함수가 돌고 나면 핵 반지름은 «소비된 관측» 이
@@ -4586,7 +4590,8 @@ def fit_sulphur_to_core_radius(mass_earth: float, radius_earth: float,
                                        potential_temperature=potential_temperature,
                                        basal_iron_number=basal_iron_number,
                                        basal_layer_thickness_km=basal_layer_thickness_km,
-                                       basal_layer_density=basal_layer_density)
+                                       basal_layer_density=basal_layer_density,
+                                       mantle_composition=mantle_composition)
 
     # ⚠ **회수는 곧 시간이다** — 한 시행이 사원계 역산 한 번(측정 ≈68 s). 기본 6 회는 착지용
     #   정밀도이고, 다른 고정은 «두 답이 갈리느냐» 만 보므로 더 적게 사서 쓴다.
@@ -4677,6 +4682,21 @@ def _declared_value(declared):
     return declared
 
 
+@contextmanager
+def _mantle(oxides):
+    """맨틀 조성(산화물 wt% 사전 · 없으면 None)의 광물 집합 표를 풀이 동안 끼운다 (C74-2). 이미 끼워져 있으면 그대로.
+    ⚠ 표가 없거나 선언이 틀리면 `ValueError` — 선언 노드(`_solve_from_state`)는 그 전에 이름 대고 거절한다."""
+    if oxides is None or MATERIALS["silicate"].phases[0].name == "mantle_assemblage":
+        yield
+        return
+    wt, why = mantle_composition.read_mantle_composition({"value": oxides})
+    ctx, why2 = (None, why) if why else mantle_composition.declared(wt)
+    if why2:
+        raise ValueError(why2)
+    with ctx:
+        yield
+
+
 def _infer_from_state(state):
     """조성이 하나도 선언되지 않았다 — **채우지 말고 역산하거나 이름 대고 거절한다** (C57, 182 B).
 
@@ -4749,14 +4769,16 @@ def _infer_from_state(state):
         #   결함은 황 맞춤인데 빨강은 계약 대조에서 뜬다.
         _from_state = {"mass_earth": mass, "radius_earth": radius,
                        "core_plus_layer_radius_km": float(core_km),
-                       "light_element_fixing": pin, "potential_temperature": t_pot}
+                       "light_element_fixing": pin, "potential_temperature": t_pot,
+                       "mantle_composition": _declared_value(state.get_optional("mantle_composition"))}
         declared = {k: _from_state[k] if k in _from_state else state.get(k)
                     for k in SULPHUR_ANCHOR_DECLARATIONS}
         w_s, halvings, why = read_sulphur_anchor(declared)
         if why:
             return out_of_domain(RECIPE, VERSION, why, inputs=inputs, refs=REFS)
         res = solve_with_core_sulphur(mass, radius, w_s, pin, potential_temperature=t_pot,
-                                      basal_iron_number=state.get("basal_iron_number"))
+                                      basal_iron_number=state.get("basal_iron_number"),
+                                      mantle_composition=_declared_value(state.get_optional("mantle_composition")))
         if not res.applicable:
             return res
         out = _sulphur_result(res, w_s, pin, float(core_km),
@@ -4779,6 +4801,36 @@ def _infer_from_state(state):
 
 
 def _solve_from_state(state):
+    """구조 노드의 입구 — 맨틀 조성 선언(C74-2)을 읽고, 있으면 그 광물 집합 표를 끼운 채 `_solve_from_state_body` 를 푼다.
+    선언이 없으면 끼우는 것이 없다(비트 동일)."""
+    decl = state.get_optional("mantle_composition")
+    wt, why = mantle_composition.read_mantle_composition(decl)
+    if why is None and wt is not None and state.get("potential_temperature") is None:
+        why = ("`mantle_composition` 이 선언됐는데 `potential_temperature` 가 없다 — 광물 집합 표는 (P, T) 의 표라 "
+               "온도가 흐르지 않는 풀이에는 답이 없다")
+    ctx = None
+    if why is None and wt is not None:
+        ctx, why = mantle_composition.declared(wt)
+    if why:
+        return out_of_domain(RECIPE, VERSION, why, inputs={"mantle_composition": _declared_value(decl)}, refs=REFS)
+    if wt is None:
+        return _solve_from_state_body(state)
+    before = dict(mantle_composition.TABLE_ASKS)
+    with ctx:
+        res = _solve_from_state_body(state)
+    if not res.applicable:
+        return res
+    asks = {k: mantle_composition.TABLE_ASKS[k] - before[k] for k in before}
+    note = (f"상부 맨틀(표면 – {eos.SILICATE_EN_TO_PREM / 1e9:.2f} GPa)의 밀도 · 열 항은 선언된 산화물 조성의 평형 광물 집합 "
+            f"표(BurnMan SLB 2022, 후보 {len(mantle_composition.CANDIDATES)} 개 안의 깁스 최소 — grade judgment)에서 왔다. "
+            f"표 읽기 {asks['calls']} 회 중 굳힌 집합 칸(풀이기가 저온에서 수렴하지 않아 이웃 집합을 굳힘) {asks['frozen']} 회 · "
+            f"고상선 위 고체 상 연장 칸 {asks['above_solidus']} 회 · 표 밖 → 순수 MgSiO₃ 연장 {asks['outside']} 회 · "
+            f"섞임 띠({mantle_composition.BLEND_K:g} K) {asks['blend']} 회 — 고체 SLB 집합이 없는 고온 저압은 옛 상이 답한다")
+    return _dc_replace(res, inputs={**res.inputs, "mantle_composition": _declared_value(decl)},
+                       notes=tuple(res.notes) + (note,))
+
+
+def _solve_from_state_body(state):
     # ⚠ **이미 자기 물리를 이름 대는 거절이 있으면 그것이 이긴다** (182 B, 첫 판에서 잡힌 회귀).
     #   갈색왜성은 `solve` 이 «중수소가 탄다 …» 로 거절한다 — 조성 미선언보다 그쪽이 더 좁고
     #   더 물리적인 문장이라, 조성 갈래를 앞에 두면 좋은 거절을 일반적인 거절로 덮는다.

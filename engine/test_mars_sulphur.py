@@ -37,7 +37,18 @@ ANCHOR_FILE = interior.SULPHUR_ANCHOR_FILE
 MARS_FILE = Path(__file__).resolve().parent / "bodies" / "mars.yaml"
 
 #: 물리 쪽 방아쇠. `mars.yaml` 은 여기 없다 — 그 파일은 **값**으로 잰다(`declared`).
-TRIGGER_FILES = ("interior.py", "eos.py", "chain.yaml")
+TRIGGER_FILES = ("interior.py", "eos.py", "chain.yaml", "mantle_composition.py")
+
+
+def _mantle_table() -> tuple[str, ...]:
+    """화성이 선언한 맨틀 조성의 광물 집합 표(C74-2) — 선언이 있으면 그 파일도 방아쇠다."""
+    import mantle_composition as mc
+    doc = yaml.safe_load(MARS_FILE.read_text(encoding="utf-8"))["inputs"]
+    wt, _ = mc.read_mantle_composition(doc.get("mantle_composition"))
+    return () if wt is None else (f"mantle_tables/{mc.expected_key(wt)}.json",)
+
+
+TRIGGER_FILES = TRIGGER_FILES + _mantle_table()
 
 #: 선언된 고정은 착지 정밀도, 다른 고정은 «갈리느냐» 만.
 #: ⚠ 한 맞춤의 역산은 **반분 회수 + 3** 이다 — 괄호 둘, 반분마다 하나, 그리고 보고하는
@@ -88,7 +99,7 @@ def _fit(declared: dict, pin: str, halvings: int) -> tuple:
     w_s, res = interior.fit_sulphur_to_core_radius(
         declared["mass_earth"], declared["radius_earth"], declared["core_plus_layer_radius_km"], pin,
         potential_temperature=declared["potential_temperature"], halvings=halvings,
-        basal_iron_number=declared["basal_iron_number"])
+        basal_iron_number=declared["basal_iron_number"], mantle_composition=declared["mantle_composition"])
     return w_s, res, time.perf_counter() - t0
 
 
