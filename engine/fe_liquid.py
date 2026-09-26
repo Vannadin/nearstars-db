@@ -156,6 +156,10 @@ def k_t(v: float, t: float, col: Column = LIQUID) -> float:
             + _k_t_el(col, v, t) - _k_t_el(col, v, col.t_ref))
 
 
+#: 시작점 반분 횟수 — 창 폭 1.3·v0 를 2⁸ 로 나눠 ≈ 0.005·v0 안에서 Newton 을 시작한다 (prereg ⓒ)
+START_HALVINGS = 8
+
+
 def volume_at(p: float, t: float, col: Column = LIQUID) -> float:
     """P, T 에서 몰부피 [m³/mol]. P(V) 는 단조감소라 뿌리가 하나다.
 
@@ -163,7 +167,18 @@ def volume_at(p: float, t: float, col: Column = LIQUID) -> float:
     이것을 부르니 `core_state` 한 판이 2 분을 넘겼다 — 답은 맞고 **쓸 수 없이 느렸다.** 그래서
     Newton 으로 바꾸고(수치미분, 보통 4–6회) 이분법은 **발산했을 때의 안전망**으로만 남긴다.
     `interior.py` 의 밀도 뒤집기가 같은 이유로 같은 모양이다."""
-    v = col.v0 * 0.9
+    # ⚠ **시작점** (prereg-fe-liquid-newton-fix ⓒ, C117): 옛 시작 0.9·v0 는 핵 압력(뿌리 0.44–0.64·v0)에서
+    #   냉곡선 기울기가 얕아 첫 걸음이 창 밖으로 튀었다(650 GPa 에서 −2.92·v0). 창을 여덟 번 반분한 중점에서
+    #   시작한다 — (P, T) 만의 함수라 호출 순서에 안 딸린다(따뜻한 출발 전역 금지, convergence.bracket_valid).
+    lo, hi = 0.2 * col.v0, 1.5 * col.v0
+    for _ in range(START_HALVINGS):
+        mid = 0.5 * (lo + hi)
+        if pressure(mid, t, col) > p:
+            lo = mid
+        else:
+            hi = mid
+    v = 0.5 * (lo + hi)
+    left_window = False
     for _ in range(40):
         f = pressure(v, t, col) - p
         if abs(f) < 1.0:                      # 1 Pa. P 는 GPa 규모라 상대오차 1e-11 이하다
@@ -176,26 +191,34 @@ def volume_at(p: float, t: float, col: Column = LIQUID) -> float:
         step = f / dfdv
         v_new = v - step
         if not (0.2 * col.v0 < v_new < 1.5 * col.v0):  # 창을 벗어나면 Newton 을 믿지 않는다
+            left_window = True
             break
         if abs(step) < v * 1e-12:
             convergence.note("fe_liquid.volume_newton", True)
             return v_new
         v = v_new
-    # ⚠ Newton 이 기준으로 못 나갔다 — 창 밖으로 튀었거나 도함수가 죽었거나 예산을 다 썼다.
-    #   아래 이분법은 **그 실패의 안전망**이고, 기준 가지가 없어 상태가 `None` 이다 (브리프 189).
-    convergence.note("fe_liquid.volume_newton", False)
-    convergence.note("fe_liquid.volume_bisect", None,
-                     bracket_valid=convergence.bracket_valid(
-                         pressure(0.2 * col.v0, t, col) - p,
-                         pressure(1.5 * col.v0, t, col) - p))
+    # ⚠ Newton 이 기준으로 못 나갔다. 창 밖으로 나간 것은 **안전망이 받는 길**이라 판정에서 빼고(`None`)
+    #   따로 센다 — 사실은 기록에 남는다(prereg ⓐ). 도함수 0 · 예산 소진은 그대로 `False`.
+    if left_window:
+        convergence.note("fe_liquid.volume_newton", None)
+        convergence.count("fe_liquid.volume_newton.window_exit")
+    else:
+        convergence.note("fe_liquid.volume_newton", False)
     lo, hi = 0.2 * col.v0, 1.5 * col.v0
+    valid = convergence.bracket_valid(pressure(lo, t, col) - p, pressure(hi, t, col) - p)
+    if not valid:                             # 뿌리가 창 밖 — 반분은 창 끝을 돌려준다(세기만, 판정은 아래 note)
+        convergence.count("fe_liquid.volume_at.root_outside_window")
     for _ in range(80):
         mid = 0.5 * (lo + hi)
         if pressure(mid, t, col) > p:
             lo = mid
         else:
             hi = mid
-    return 0.5 * (lo + hi)
+    v = 0.5 * (lo + hi)
+    # 80 번을 **다 돈 뒤** 돌려줄 v 의 잔차를 한 번 읽는다 — 중점은 안 바뀐다(이른 break 없음, 브리프 189)
+    convergence.note("fe_liquid.volume_bisect", valid and abs(pressure(v, t, col) - p) < 1.0,
+                     bracket_valid=valid)
+    return v
 
 
 #: (열, P, T) → 결과. 적분기가 같은 자리를 여러 번 묻는다 (K_S 와 γ, 그리고 걸음의 반 칸 차분).

@@ -41,6 +41,9 @@ class Trace:
     unchecked: set[str] = field(default_factory=set)
     invalid: set[str] = field(default_factory=set)
     substituted: dict[str, tuple[int, float]] = field(default_factory=dict)
+    #: events counted, not judged — e.g. a Newton leaving its window before a safety net took over
+    #: (prereg-fe-liquid-newton-fix ⓐ: the fact stays on record even when the site's state is `None`)
+    counts: dict[str, int] = field(default_factory=dict)
 
     def note(self, site: str, converged: bool | None,
              bracket_checked: bool = True, bracket_valid: bool | None = None) -> None:
@@ -91,6 +94,13 @@ class Trace:
     def no_criterion_sites(self) -> list[str]:
         """기준 가지가 없어 상태를 비운 자리."""
         return sorted(n for n, v in self.sites.items() if v is None)
+
+
+def count(event: str) -> None:
+    """현재 풀이의 기록에 사건 하나를 센다(판정 아님). 기록이 없으면 조용히 지나간다."""
+    tr = _TRACE.get()
+    if tr is not None:
+        tr.counts[event] = tr.counts.get(event, 0) + 1
 
 
 def note_substituted(site: str, attempt: int, last_deviation: float) -> None:
