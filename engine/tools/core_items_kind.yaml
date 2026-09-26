@@ -353,9 +353,13 @@ items:
   # ⚠ C116 (2026-09-25) — C108 축 수 조건 미기록 · 황 앵커와 C108 창이 역산 허용오차에 딸림. 엔진이 내는 수의 뜻이라 physics.
   C116:
     kind: physics
-  # ⚠ C117 (2026-09-26, 작업석 ed) — fe_liquid.volume_newton 의 UNCONVERGED 가 엄격한 표지일 뿐 값은 맞음. 엔진이 내는 표지의 뜻이라 physics.
+  # ⚠ C117 (2026-09-26, 작업석 ed · 지휘 결정) — fe_liquid.volume_newton 의 UNCONVERGED 가 엄격한 표지일 뿐 값은 맞음.
+  #   엔진 수가 아니라 기록기(convergence, C71 이 만든 자리)의 뜻이라 tooling. 부모는 fe_liquid.py 의 «이분법은 그 실패의
+  #   안전망이고 … (브리프 189)» — volume_newton 표지를 넣은 판이 C71. 곁가지 번호는 부모마다 항목 순(C-items-parents) — C71 의 첫째.
   C117:
-    kind: physics
+    kind: tooling
+    parent: C71
+    branch_k: 1
   # ⚠ C118 (2026-09-26, 작업석 ed) — 지구 r_b 의 1698–1714 K 혹 · 1713 K 온도 고리 거절, 원인 미상. 엔진이 내는 수라 physics.
   C118:
     kind: physics
