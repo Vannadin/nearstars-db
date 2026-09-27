@@ -1832,6 +1832,32 @@ LITHO_R_TOL = 1.0            # m — STEPS 1500 지구 걸음 dr ≈ 3.2 km 의 
 LITHO_ITERS = 8
 
 
+def _litho_bracket(points: list, radius_at, tol: float):
+    """층 바닥 자리를 괄호로 푼다 — 오늘 반복이 못 닫은 자리에서만 부른다 (prereg-litho-fixed-point-bracket, 동결 9cc09710).
+
+    `points` 는 반복이 밟은 r₀ … r_n, `radius_at(r)` 는 층 윗끝을 r 에 둔 풀이의 반지름 R(r − D).
+    g(r) = R(r − D) − r 이고 g(r_k) = r_{k+1} − r_k. **g 부호가 바뀌는 마지막 이웃 쌍**이 괄호 — 새 점은 안 찍는다.
+    좁힘은 **순수 이분**, 횟수 ⌈log₂(W₀ / tol)⌉(괄호 폭에서 도출). 돌려주는 것: `(None, 까닭)` — 괄호 못 잡음 ·
+    또는 `(r, (폭, 이분 횟수, 계단 위 뿌리?))` — r 은 마지막 괄호의 가운데."""
+    g = [points[k + 1] - points[k] for k in range(len(points) - 1)]
+    pair = next((k for k in range(len(g) - 2, -1, -1) if (g[k] > 0.0) != (g[k + 1] > 0.0)), None)
+    if pair is None:
+        return None, "괄호 못 잡음 — g 부호가 반복한 점 내내 같다"
+    lo, hi, g_lo = points[pair], points[pair + 1], g[pair]
+    width = abs(hi - lo)
+    n_bisect = math.ceil(math.log2(width / tol)) if width > tol else 0
+    for _ in range(n_bisect):
+        mid = 0.5 * (lo + hi)
+        g_mid = radius_at(mid) - mid
+        if (g_mid > 0.0) == (g_lo > 0.0):
+            lo, g_lo = mid, g_mid
+        else:
+            hi = mid
+    r = 0.5 * (lo + hi)
+    step_root = abs(radius_at(r) - r) > tol          # 0 을 안 지나는 계단 위 뿌리 — 표지, 거절 아님
+    return r, (width, n_bisect, step_root)
+
+
 def shoot(mass_kg: float, cmf: float, imf: float,
           core_material: str, phi0: float = 0.0,
           p_cap: float | None = None, gmf: float = 0.0,
@@ -3203,6 +3229,7 @@ def solve(mass_earth: float,
         litho_d_m = float(lithosphere_thickness_km) * 1e3
     _LITHO_INFO.clear()
     litho_log = None
+    litho_bracket = None          # 괄호 풀이를 탔으면 (폭, 이분 횟수, 계단 위 뿌리?) — 오늘 닫히는 몸은 None
 
     def _shoot(lithosphere=None):
         return shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
@@ -3220,6 +3247,7 @@ def solve(mass_earth: float,
             # 층 바닥 r_L = R − D 는 R 을 알아야 정해진다 — 바깥 고정점(덧붙임 2 ①).
             r_est = st.radius_m
             litho_log = []
+            litho_pts = [r_est]       # 반복이 밟은 점 r₀ … — 괄호 찾기가 이 점들만 쓴다(새 점 안 찍음)
             for _ in range(LITHO_ITERS):
                 if litho_d_m >= r_est - st.core_radius_m:
                     return out_of_domain(RECIPE, VERSION, f"`lithosphere_thickness_km` {litho_d_m / 1e3:g} km 가 맨틀 두께 "
@@ -3229,11 +3257,23 @@ def solve(mass_earth: float,
                 d_r = abs(st.radius_m - r_est)
                 litho_log.append(d_r)
                 r_est = st.radius_m
+                litho_pts.append(r_est)
                 if d_r <= LITHO_R_TOL:
                     break
             else:
-                return out_of_domain(RECIPE, VERSION, f"표면 암석권의 층 바닥 자리가 {LITHO_ITERS} 번 안에 안 멈췄다 — "
-                                     f"마지막 |ΔR| {litho_log[-1]:.3g} m (허용 {LITHO_R_TOL:g} m).", inputs=inputs, refs=REFS)
+                # ⚠ **오늘 반복이 못 닫은 자리에서만 괄호로 푼다** (prereg-litho-fixed-point-bracket, 동결 9cc09710) —
+                #   오늘 닫히는 몸은 이 갈래에 안 와 궤적 · 답이 그대로다. 규칙은 `_litho_bracket`.
+                def _radius_at(r_top):
+                    return _shoot({"r_base": r_top - litho_d_m, "r_top": r_top,
+                                   "t_s": float(surface_temperature_k)})[0].radius_m
+                r_est, info = _litho_bracket(litho_pts, _radius_at, LITHO_R_TOL)
+                if r_est is None:
+                    return out_of_domain(RECIPE, VERSION, f"표면 암석권의 층 바닥 자리가 {LITHO_ITERS} 번 안에 안 멈췄고 "
+                                         f"{info}(마지막 두 점 {litho_pts[-2]:.3f} · {litho_pts[-1]:.3f} m, 마지막 |ΔR| "
+                                         f"{litho_log[-1]:.3g} m, 허용 {LITHO_R_TOL:g} m).", inputs=inputs, refs=REFS)
+                st, converged = _shoot({"r_base": r_est - litho_d_m, "r_top": r_est,
+                                        "t_s": float(surface_temperature_k)})
+                litho_bracket = info
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -3308,7 +3348,10 @@ def solve(mass_earth: float,
         notes.append(
             f"표면 암석권 {litho_d_m / 1e3:g} km(전도 T = A/r + B, H = 0) — 바닥 r {litho_info['r_base'] / 1e3:.3f} km · "
             f"바닥 T {litho_info['t_base']:.2f} K(단열선에서 연속) · 윗끝 {litho_info['t_s']:g} K · 층 바닥 고정점 "
-            f"{len(litho_log)} 번, |ΔR| " + " → ".join(f"{d:.3g}" for d in litho_log) + " m.")
+            f"{len(litho_log)} 번, |ΔR| " + " → ".join(f"{d:.3g}" for d in litho_log) + " m."
+            + ("" if litho_bracket is None else
+               f" 반복이 안 닫혀 괄호로 풂 — 괄호 폭 {litho_bracket[0]:.3g} m · 이분 {litho_bracket[1]} 번"
+               + (" · ⚠ 계단 위의 뿌리(g 가 0 을 안 지남, 값은 괄호 가운데)" if litho_bracket[2] else "") + "."))
     if basal_info is not None and basal_info["reached_top"]:
         # 쌓은 층 — 두께와 꼭대기는 적분기가 반지름으로 건 그대로(S-경계)
         plus_layer = basal_info["r_top"] / 1e3
