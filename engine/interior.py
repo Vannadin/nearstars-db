@@ -132,7 +132,7 @@ class Structure:
                  "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples", "rock_samples",
                  "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached",
                  "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void", "crust_blocked",
-                 "r_grad_base", "r_grad_top", "floor_truncated")
+                 "r_grad_base", "r_grad_top", "floor_truncated", "hot_water_filled", "boiling_flips")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
@@ -140,7 +140,11 @@ class Structure:
                  ice_samples=(), rock_samples=(), p_surface=0.0, r_ocean_base=None, r_ocean_top=None,
                  surface_reached=True, ice_x_reached=False, r_crust_base=None,
                  p_crust_base=None, crust_void=0.0, r_grad_base=None, r_grad_top=None,
-                 floor_truncated=None):
+                 floor_truncated=None, hot_water_filled=None, boiling_flips=None):
+        # C122 고침(prereg-c122-fix 3db41d5f): 물 걸음의 **기록만** — 시행에서는 읽지 않고 답에서만 거절한다.
+        #   hot_water_filled = (걸음 수, 질량 kg, 첫 (P, T)) · boiling_flips = (뒤집힘 수, 첫 (P, T, P_sat)).
+        self.hot_water_filled = hot_water_filled
+        self.boiling_flips = boiling_flips
         # 어느 층이 **자기 적합의 바닥**에 걸려 질량 몫을 못 채우고 끝났는가 — 그 재료와 압력
         # (C60 (c), 브리프 181 B). 시행에서는 값이고(질량이 모자란 괄호 점), **답에서는 거절**이다.
         self.floor_truncated = floor_truncated
@@ -913,6 +917,10 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
 
     steps = 0
     floor_truncated = None       # (재료 이름, 바닥 압력) — 아래 걸음 고리가 채운다
+    # C122 고침 — 기록만. 밀도를 다시 부르지 않는다(`water_hot.density` 는 직전 해를 출발점으로 기억해서, 부르는
+    #   것만으로 뒤 풀이의 비트가 움직일 수 있다). 괄호 밑 걸음의 밀도는 정확히 `RHO_MIN` 이라 질량은 그것으로 센다.
+    hw_steps, hw_mass, hw_first = 0, 0.0, None
+    bf_flips, bf_last, bf_first = 0, 0, None
     while p > p_stop and steps < MAX_STEPS:
         steps += 1
         prev_layer = layer
@@ -997,6 +1005,20 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
         if mat.name in ("h2o", "h2o_liquid", "h2o_liquid_dense", "h2o_hot") and (not ice_samples
                                                              or steps % ICE_SAMPLE_EVERY == 0):
             ice_samples.append((p, t))
+        if mat is hot_mat and t > 0.0 and water_hot.pressure(water_hot.RHO_MIN, t) >= p:
+            hw_steps += 1
+            hw_mass += 4.0 * math.pi * r * r * water_hot.RHO_MIN * dr
+            if hw_first is None:
+                hw_first = (p, t)
+        if mat is COLUMN_STEAM and t > 0.0:
+            # 1 ↔ 2 직접 바뀜만 센다 — 3(초임계) · 0(도메인 밖)은 세지 않고 이음도 끊지 않는다(등록 R2).
+            reg = steam_if97.region(p, t)
+            if reg in (1, 2):
+                if bf_last in (1, 2) and reg != bf_last:
+                    bf_flips += 1
+                    if bf_first is None:
+                        bf_first = (p, t, steam_if97.p_sat_pa(t) if t <= 623.15 else None)
+                bf_last = reg
         if _carries_silicate(mat) and (not rock_samples or steps % ICE_SAMPLE_EVERY == 0):
             rock_samples.append((p, t))
         if p_si_max == 0.0 and _carries_silicate(mat):
@@ -1363,7 +1385,9 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                              p_surface=p,
                              surface_reached=False, r_crust_base=r_crust_base,
                              p_crust_base=p_crust_base, crust_void=crust_void,
-                             floor_truncated=floor_truncated)
+                             floor_truncated=floor_truncated,
+                             hot_water_filled=(hw_steps, hw_mass, hw_first) if hw_steps else None,
+                             boiling_flips=(bf_flips, bf_first) if bf_flips else None)
         raise GridExceeded(
             f"{MAX_STEPS} 걸음(중심 격자 dr 의 {MAX_STEPS / STEPS:.0f} 배 반지름, 여기서는 "
             f"{r / EARTH_RADIUS_M:.1f} R⊕) 안에 표면에 닿지 못했다 — 중심압 "
@@ -1391,7 +1415,9 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                      r_crust_base=r_crust_base, p_crust_base=p_crust_base,
                      r_grad_base=r_grad_base, r_grad_top=r_grad_top,
                      crust_void=crust_void, floor_truncated=floor_truncated,
-                     surface_reached=floor_truncated is None)
+                     surface_reached=floor_truncated is None,
+                     hot_water_filled=(hw_steps, hw_mass, hw_first) if hw_steps else None,
+                     boiling_flips=(bf_flips, bf_first) if bf_flips else None)
     if lithosphere is not None:
         _LITHO_INFO[id(structure)] = {"r_base": r_litho, "t_base": t_litho_base, "r_top": lithosphere["r_top"],
                                       "t_s": lithosphere["t_s"]}
@@ -2150,7 +2176,39 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     print(f"  [고리] 시행 {len(devs)} 걸음 · 완화 걸린 걸음 {damped_steps} · "
           f"마지막 어긋남 {devs[-1]:.4e}" if devs else "  [고리] 시행 0 걸음")
     _refuse_if_below_floor(st, core_material)
+    _refuse_if_water_filled(st)
     return st, converged and _surface_temperature_met(st, t_pot)
+
+
+#: C122 고침 거절 문구의 앞머리 (C122 묶음, 오너 승인 2026-09-27).
+_HOT_WATER_PREAMBLE = ("이 온도의 물은 증기압 밑이라 끓어 달아난다 — 붙잡으려면 차가운 껍질(얼음 껍질이나 암석권)이 "
+                       "필요한데, 이 풀이는 표면 온도 칸이 따로 없다. ")
+
+
+def _refuse_if_water_filled(st) -> None:
+    """**시행은 값, 답은 거절** (C122 고침, prereg-c122-fix 3db41d5f) — `_refuse_if_below_floor` 와 같은 꼴.
+
+    R1: 수렴한 답에 뜨거운 물의 밀도 괄호 밑(`RHO_MIN` 으로 채운) 걸음이 하나라도 있으면 거절.
+    R2: 수렴한 답의 IF97 물기둥이 끓는곡선을 두 번 이상 건너면(region 1 ↔ 2 직접 바뀜) 거절 — 한 번은 상 경계
+    하나(물리)라 거절 아님. 시행 사격은 이 칸을 읽지 않는다: 천왕성 · 해왕성은 시행이 괄호 밑을 7 567 회 밟지만
+    수렴 해에서는 0 걸음이고, 시행에서 거절하면 사격이 흔들린다(C122 평가)."""
+    if st.hot_water_filled is not None:
+        n, m_fill, (p0, t0) = st.hot_water_filled
+        raise PhaseGap(
+            "h2o_hot", p0,
+            _HOT_WATER_PREAMBLE
+            + f"{p0 / 1e9:.4g} GPa · {t0:.0f} K 에서 뜨거운 물 적합(Mazevet+ 2019)의 밀도 괄호 "
+              f"[{water_hot.RHO_MIN:.0f}, …] kg/m³ 밑이다 — 이 (P, T) 의 물은 증기 쪽이고, 이 풀이는 그 자리를 "
+              f"{water_hot.RHO_MIN:.0f} kg/m³ 로 채우지 않는다. 채웠을 걸음 {n} 개 · 질량 몫 {m_fill / st.mass_kg:.3e}. "
+              "시험값이 아니라 **수렴한 답**이 그렇다.", t0)
+    if st.boiling_flips is not None and st.boiling_flips[0] >= 2:
+        n, (p0, t0, p_sat) = st.boiling_flips
+        sat = f" · P_sat({t0:.0f} K) {p_sat / 1e6:.4g} MPa" if p_sat is not None else ""
+        raise PhaseGap(
+            "h2o_if97", p0,
+            _HOT_WATER_PREAMBLE
+            + f"물기둥이 끓는곡선을 건넘 — {p0 / 1e6:.4g} MPa · {t0:.0f} K{sat}, 액체 ↔ 증기가 {n} 번 뒤집힌다. "
+              "두 상 섞임을 다루는 표현이 없다. 시험값이 아니라 **수렴한 답**이 그렇다.", t0)
 
 
 def _refuse_if_below_floor(st, core_material: str) -> None:

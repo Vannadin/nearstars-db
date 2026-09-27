@@ -38,25 +38,25 @@ r0 = solve(1.0, core_mass_fraction=0.325, potential_temperature=1600.0)
 row(r0.converged and r0.grade == "calibrated" and abs(r0.values["radius"] - 1.0030) < 5e-5 and abs(r0.values["core_pressure"] - 358.46) < 0.05,
     f"ice 0: {r0.grade} · R {r0.values['radius']:.4f} · centre {r0.values['core_pressure']:.2f} GPa ({time.perf_counter()-t0:.0f} s)")
 
-print("\n⑥ 물 많은 암석체 — 수렴하거나 다음 벽이 이름을 댄다 (연쇄로 메우지 않는다)")
+print("\n⑥ 물 많은 암석체 — 뜨거운 물 괄호 밑을 채운 답은 수렴한 답에서 R1 로 이름 대고 거절한다 (C122 고침)")
+# ⚠ 옛 기대(수렴, 2026-09-04 기록 R 1.1313 · 1.2585)는 뜨거운 물 괄호 밑을 500 kg/m³ 로 채운 답이었다 —
+#   C122 고침(prereg-c122-fix 3db41d5f, 덧붙임 1 00b9dd4d)이 답에서 거절한다. PASS 는 등록 R1 문장 요소에 댄다:
+#   밀도 괄호 구절 · 채웠을 걸음 수 · 질량 몫. 다른 벽의 거절은 FAIL 로 드러난다(옛 이름 목록은 이 두 행에서 뺐다).
+import re  # noqa: E402
 for imf in (0.1, 0.3):
     t0 = time.perf_counter()
     r = solve(1.0, core_mass_fraction=0.325, ice_mass_fraction=imf, potential_temperature=1600.0)
     dt = time.perf_counter() - t0
     if r.applicable:
-        print(f"      ice {imf}: converged {r.converged} · {r.grade} · R {r.values['radius']:.4f} · P_cmb {r.values['cmb_pressure']:.1f} · T_cmb {r.values['cmb_temperature']:.0f} K ({dt:.0f} s)")
-        # 등급은 수렴 판정이 아니다 — interior 는 열이 흐르는 물 기둥이 있으면 규칙으로 analog 를 준다(thermal_moves 등).
-        # 사전등록 ⑥ 의 "calibrated 복귀" 는 마른 천체의 등급을 보고 적은 것이라 물 천체에는 성립할 수 없는 기준이었고,
-        # 그렇게 기록한다. 판정은 converged 하나다.
-        row(r.converged, f"ice {imf}: 수렴 (등급 {r.grade} 은 규칙, 판정 아님)")
+        print(f"      ice {imf}: 풀림 R {r.values['radius']:.4f} ({dt:.0f} s)")
+        row(False, f"ice {imf}: R1 거절을 기대했는데 풀림")
     else:
-        print(f"      ice {imf}: REFUSED — {r.reason[:140]} ({dt:.0f} s)")
-        # ⚠ **거절의 이름 목록에 «표면온도» 가 들어왔다** (브리프 180 D). 물 많은 암석체는 급한 핵
-        #   단열선(180 C) 아래에서 표면 온도 경계조건이 1 % 근처 진동 바닥에 걸리고, 그때 노드는
-        #   `converged=False` 를 조용히 내지 않고 **예산 소진·개선 중**을 이름 대며 거절한다.
-        row("IF97" in r.reason or "표현" in r.reason or "PhaseGap" in r.reason
-            or "표면온도" in r.reason,
-            f"ice {imf}: 이름 있는 거절 (다음 벽) — 기록만")
+        why = r.reason or ""
+        print(f"      ice {imf}: REFUSED — {why[:200]} ({dt:.0f} s)")
+        ok = ("뜨거운 물 적합(Mazevet+ 2019)의 밀도 괄호" in why
+              and re.search(r"채웠을 걸음 \d+ 개", why) is not None
+              and re.search(r"질량 몫 [0-9][0-9.e+-]*", why) is not None)
+        row(ok, f"ice {imf}: R1 이름 댄 거절(C122 고침)")
 
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)
