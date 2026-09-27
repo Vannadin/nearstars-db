@@ -262,6 +262,9 @@ def _solver(body, s0):
     elif interior._declared_value(declared.get("core_plus_layer_radius_km")):
         anchor = json.loads(interior.SULPHUR_ANCHOR_FILE.read_text(encoding="utf-8"))
         pin = interior._declared_value(declared.get("light_element_fixing"))
+        if anchor["fixings"][pin].get("bracket_miss"):
+            raise SystemExit(f"{body.name}: 굳힌 황 맞춤에서 고정 `{pin}` 은 괄호 밖으로 굳혀졌다 — 값이 없다 "
+                             "(층 판 덧붙임 2) — 표를 못 짓는다")
         w_s = anchor["fixings"][pin]["core_sulphur_wt"]
         how = f"fixed sulphur {w_s!r} ({pin}) and cmf {cmf0!r}"
 

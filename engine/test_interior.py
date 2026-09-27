@@ -2206,8 +2206,10 @@ def main() -> int:
         #   box_ceiling 으로 바꿨고, 박아 둔 시험은 그 순간 **선언이 아니라 옛 결정**을 쟀다.
         #   이 판이 게이트에서 빨개진 자리다.
         _pin_dec = _anchor["declared"]["light_element_fixing"]
-        _lo_s = _anchor["fixings"]["box_floor"]["core_sulphur_wt"]
-        _hi_s = _anchor["fixings"]["box_ceiling"]["core_sulphur_wt"]
+        # ⚠ 층 판(prereg-mars-layered-declaration 덧붙임 2 ②): 둘째 고정이 «괄호 밖» 으로 굳을 수 있다 — 값 대신 표지
+        _miss = sorted(p for p, r in _anchor["fixings"].items() if r.get("bracket_miss"))
+        _lo_s = None if "box_floor" in _miss else _anchor["fixings"]["box_floor"]["core_sulphur_wt"]
+        _hi_s = None if "box_ceiling" in _miss else _anchor["fixings"]["box_ceiling"]["core_sulphur_wt"]
         # ⚠ **상자 밖은 표시이지 거절이 아니다** (오너 결정 2026-09-21, ⓐ). 상자 규칙은 **선언
         #   고정에만** 걸린다 — 동반 고정은 대조군이고, 그것이 상자를 벗어난 것이 바로 오너가
         #   선언을 옮긴 근거라, 거절로 지우면 그 증거가 사라진다. 대신 **값 옆에 이름을 붙인다.**
@@ -2217,17 +2219,26 @@ def main() -> int:
         _box_lo, _box_hi = _FE_S_BAND_WT
         for _pin, _w in (("box_floor", _lo_s), ("box_ceiling", _hi_s)):
             _rec = _anchor["fixings"][_pin]
+            if _w is None:
+                print(f"  [기록] {_pin:12}{' ←선언' if _pin == _pin_dec else '     '} 괄호 밖 — 값 없음(층 판, 덧붙임 2)")
+                continue
             _out = "" if _box_lo <= _w <= _box_hi else "  ⚠ 상자 밖"
             print(f"  [기록] {_pin:12}{' ←선언' if _pin == _pin_dec else '     '} S {_w * 100:7.4f} wt%{_out} "
                   f"· 핵 {_rec['core_radius_km']:8.2f} km · C/MR² {_rec['nmoi']:.6f} "
                   f"· 반분 {_rec['halvings']}")
-        _apart = abs(_lo_s - _hi_s) * 100
-        _cond = _apart > 1.0
-        if not _cond:
-            fails.append(f"황 맞춤: 두 고정의 S 가 {_apart:.2f} wt% 밖에 안 갈린다 — 고정 선택이 답을 "
-                         "안 움직인다면 그 선언은 아무것도 안 하고 있는 것이다")
-        print(f"  [{'PASS' if _cond else 'FAIL'}] 두 고정이 **다른 답**을 준다 — S {_apart:.2f} wt% 차 "
-              f"(상자 폭 6 wt% 의 {_apart / 6 * 100:.0f} %). 그래서 `light_element_fixing` 은 선언이다")
+        if _miss:
+            _cond = _pin_dec not in _miss and bool(_anchor["declared"].get("basal_layer_thickness_km"))
+            if not _cond:
+                fails.append(f"황 맞춤: 괄호 밖 기록 {_miss} 가 선언 고정이거나 층 없는 판이다 (덧붙임 2 ①)")
+            print(f"  [{'PASS' if _cond else 'FAIL'}] 둘째 고정 {_miss} 는 괄호 밖(층 판) — 두 고정 갈림 대신")
+        else:
+            _apart = abs(_lo_s - _hi_s) * 100
+            _cond = _apart > 1.0
+            if not _cond:
+                fails.append(f"황 맞춤: 두 고정의 S 가 {_apart:.2f} wt% 밖에 안 갈린다 — 고정 선택이 답을 "
+                             "안 움직인다면 그 선언은 아무것도 안 하고 있는 것이다")
+            print(f"  [{'PASS' if _cond else 'FAIL'}] 두 고정이 **다른 답**을 준다 — S {_apart:.2f} wt% 차 "
+                  f"(상자 폭 6 wt% 의 {_apart / 6 * 100:.0f} %). 그래서 `light_element_fixing` 은 선언이다")
 
         _declared = dict(_anchor["declared"])
         _w_s, _n, _why = interior.read_sulphur_anchor(_declared)

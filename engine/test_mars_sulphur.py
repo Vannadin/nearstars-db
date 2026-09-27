@@ -155,6 +155,16 @@ def _record(w_s: float, res, halvings: int, declared: dict) -> dict:
             "nmoi": v["nmoi"]}
 
 
+def _layered(declared: dict) -> bool:
+    """층이 선언된 판인가 — 둘째 고정의 «괄호 밖» 기록은 이 판에서만 허용(prereg-mars-layered-declaration 덧붙임 2 ①)."""
+    return bool(declared.get("basal_layer_thickness_km"))
+
+
+def _bracket_miss(res) -> bool:
+    """맞춤이 «축이 목표를 안 감싼다» 로 끝났나 — 값 없음 · 결과는 풀림. 다른 오류(결과가 안 풀림)와 가른다."""
+    return res is not None and bool(res.applicable)
+
+
 def refresh() -> int:
     declared = declared_inputs()
     pin_declared = declared["light_element_fixing"]
@@ -165,6 +175,13 @@ def refresh() -> int:
         n = HALVINGS_DECLARED if pin == pin_declared else HALVINGS_OTHER
         print(f"{pin} — 맞춤 (역산 {n + 3} 회) …", flush=True)
         w_s, res, seconds = _fit(declared, pin, n)
+        if w_s is None and pin != pin_declared and _layered(declared) and _bracket_miss(res):
+            # ⚠ 층 판의 둘째 고정은 괄호 밖일 수 있다 — 지우지 않고 이름 대고 기록(덧붙임 2 ②)
+            out["fixings"][pin] = {"bracket_miss": True, "halvings": n, "bracket": list(interior.SULPHUR_FIT_BRACKET),
+                                   "target_km": declared["core_plus_layer_radius_km"],
+                                   "reason": "축이 목표를 안 감싼다 — S 괄호 안에서 핵+층이 목표에 못 닿음"}
+            print(f"  {seconds:.0f} s · 괄호 밖 — 기록만(층 판, 덧붙임 2)")
+            continue
         if w_s is None:
             print(f"  거절 — {(res.reason or '')[:90]}")
             return 1
@@ -251,6 +268,13 @@ def check() -> int:
     for pin, (w_s, res, seconds, printed) in zip(pins, fits[:-1]):
         sys.stdout.write(printed)
         rec = frozen["fixings"][pin]
+        if rec.get("bracket_miss"):        # 덧붙임 2 — 층 판의 괄호 밖 고정(값은 위 C135 일감이 미리 푼 것)
+            ok = w_s is None and _bracket_miss(res) and _layered(declared)
+            if not ok:
+                fails.append(f"{pin}: 괄호 밖으로 굳혔는데 다시 풀면 괄호 밖이 아니다(값 또는 다른 오류) — "
+                             "의도한 변화면 **이 커밋에서 `--refresh`**")
+            print(f"  [{'PASS' if ok else 'FAIL'}] {pin:12} 괄호 밖 그대로(층 판, 덧붙임 2) · {seconds:.0f} s")
+            continue
         if w_s is None:
             fails.append(f"{pin}: 다시 풀었더니 값이 안 나왔다 — {(res.reason or '')[:70]}")
             print(f"  [FAIL] {pin:12} 거절 — {(res.reason or '')[:70]}")
@@ -276,13 +300,42 @@ def check() -> int:
     print(f"  [{'PASS' if ok else 'FAIL'}] 목표 1200 km 는 이 축이 **감싸지 못한다** → 값 없음 "
           f"({seconds:.0f} s)")
 
-    apart = abs(frozen["fixings"]["box_floor"]["core_sulphur_wt"]
-                - frozen["fixings"]["box_ceiling"]["core_sulphur_wt"])
-    ok = apart > APART_MIN_WT
-    if not ok:
-        fails.append(f"두 고정의 S 가 {apart * 100:.2f} wt% 밖에 안 갈린다 — 고정 선택이 답을 "
-                     "안 움직인다면 그 선언은 아무것도 안 하고 있는 것이다")
-    print(f"  [{'PASS' if ok else 'FAIL'}] 두 고정이 **다른 답**을 준다 — S {apart * 100:.2f} wt% 차")
+    misses = [p for p, r in frozen["fixings"].items() if r.get("bracket_miss")]
+    if misses:
+        # ⚠ 층 판(덧붙임 2 ②): «두 고정이 1 wt% 넘게 갈리느냐» 대신 «둘째 고정이 괄호 밖» 을 단언 — 위 고리가 다시 풀어 봤다
+        ok = _layered(declared) and declared["light_element_fixing"] not in misses
+        if not ok:
+            fails.append(f"괄호 밖 기록 {misses} 가 층 없는 판이거나 선언 고정이다 — 덧붙임 2 ① 밖")
+        print(f"  [{'PASS' if ok else 'FAIL'}] 둘째 고정 {misses} 는 괄호 밖(층 판) — 두 고정 갈림 단언을 대신함")
+        pin_miss = misses[0]
+        _w, _n, why = interior.read_sulphur_anchor({**declared, "light_element_fixing": pin_miss})
+        ok = _w is None and bool(why) and "괄호 밖" in why
+        if not ok:
+            fails.append(f"괄호 밖 고정 `{pin_miss}` 를 선언한 읽기가 이름 댄 거절이 아니다 — {why!r}")
+        print(f"  [{'PASS' if ok else 'FAIL'}] `{pin_miss}` 를 선언하면 읽기가 이름 대고 거절 — {(why or '')[:60]}")
+        # 구조 표 짓기(`structure_grid._solver`)도 같은 기록에서 이름 대고 멈추는가(9f 권고 — 읽는 자리 둘 다)
+        import types
+        import run
+        import structure_grid
+        body, _ = run.load_body(MARS_FILE)
+        body.inputs["light_element_fixing"] = {"value": pin_miss, "grade": "declared", "source": "test"}
+        try:
+            structure_grid._solver(body, types.SimpleNamespace(values={"core_mass_fraction": 0.2}))
+            stop = None
+        except SystemExit as e:
+            stop = str(e)
+        ok = bool(stop) and "괄호 밖" in stop
+        if not ok:
+            fails.append(f"구조 표 짓기가 괄호 밖 고정 `{pin_miss}` 에서 이름 대고 멈추지 않는다 — {stop!r}")
+        print(f"  [{'PASS' if ok else 'FAIL'}] 구조 표 짓기도 `{pin_miss}` 에서 이름 대고 멈춤 — {(stop or '')[:60]}")
+    else:
+        apart = abs(frozen["fixings"]["box_floor"]["core_sulphur_wt"]
+                    - frozen["fixings"]["box_ceiling"]["core_sulphur_wt"])
+        ok = apart > APART_MIN_WT
+        if not ok:
+            fails.append(f"두 고정의 S 가 {apart * 100:.2f} wt% 밖에 안 갈린다 — 고정 선택이 답을 "
+                         "안 움직인다면 그 선언은 아무것도 안 하고 있는 것이다")
+        print(f"  [{'PASS' if ok else 'FAIL'}] 두 고정이 **다른 답**을 준다 — S {apart * 100:.2f} wt% 차")
 
     if CODE_MOVED:
         print(f"  [{'PASS' if not fails else 'FAIL'}] 코드 움직임 {CODE_MOVED} · 값 "

@@ -5670,6 +5670,10 @@ def read_sulphur_anchor(declared: dict):
             f"{' · '.join(sorted(anchor['fixings']))} 뿐이다. "
             "`python3 engine/test_mars_sulphur.py --refresh` 로 다시 굳혀라 — 이것을 잡는 자는 "
             "그 단계 하나다")
+    if fixing.get("bracket_miss"):
+        return None, None, (
+            f"굳힌 황 맞춤에서 고정 `{pin}` 은 괄호 밖으로 굳혀졌다 — 값이 없다 (층 판 덧붙임 2: S "
+            f"{fixing.get('bracket')} 안에서 핵+층이 목표 {fixing.get('target_km')} km 에 못 닿음)")
     return fixing["core_sulphur_wt"], fixing["halvings"], None
 
 
