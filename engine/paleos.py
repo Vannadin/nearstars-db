@@ -17,9 +17,12 @@ carries a grade that travels with it.
 they are absent lines rather than `NaN` — a reader who greps for `NaN` finds the header's own
 instructions and concludes the table is complete (P40 Amendment 3).
 
-⚠ **The iron table's phase column is never read.** It carries `liquid` and `unknown` only — 236 651
-rows of `unknown`, fully populated, names missing. A label we cannot read must not decorate a value
-we print.
+⚠ **The iron table's phase column is never read.** ~~It carries `liquid` and `unknown` only — 236 651
+rows of `unknown`, fully populated, names missing.~~ ⚠ **That was the v1.2.1 file** (`liquid` 276 729 ·
+`unknown` 236 651). The v1.3.0 table this module reads carries full labels — `liquid` 276 729 ·
+`solid-epsilon-hcp` 141 164 · `solid-alpha-bcc` 63 835 · `solid-gamma-fcc` 25 850 · `solid-delta-bcc` 5 802,
+`unknown` 0 (counted from the file, C125). The lookup still does not return it — whether it should is a
+change of this module's answer, left to the PALEOS evaluation plate.
 
 ⚠ **Each axis's step is derived from that axis's own endpoints, never typed.** Three of the four axes
 are exactly 150.00000 nodes per decade; the **T axis of Fe and MgSiO₃** is **150.2252**. A hard-coded
@@ -185,7 +188,10 @@ def _seek_line_start(fh, pos: int, floor: int) -> int:
     """`pos` 를 품은 줄의 시작 오프셋. 줄 한복판에 떨어지는 이분법을 줄 경계로 되돌린다."""
     if pos <= floor:
         return floor
-    fh.seek(pos)
+    # ⚠ **한 바이트 앞에서 버린다** (C125). `pos` 에서 바로 `readline` 하면 `pos` 가 정확히 줄 시작일 때 그 온전한
+    #   줄을 통째로 버렸다 — 찾는 줄이 그 줄이면 «PALEOS 없음» 으로 답했다(실재 줄 100 무작위 중 25–31).
+    #   `pos − 1` 이 줄바꿈이면 그 한 글자만 버려 `pos` 의 줄이 남고, 줄 한복판이면 오늘처럼 나머지를 버린다.
+    fh.seek(pos - 1)
     fh.readline()                      # 잘린 줄 버리기
     return fh.tell()
 

@@ -892,6 +892,8 @@ step "check_graph_page" bash -c 'exec python3 engine/tools/check_graph_page.py'
 #   「n of 3 found」를 세어 SKIP 하고 rc=0 으로 빠진다. 판단이 시험 안에 있어야 게이트에서든
 #   손으로든 같게 행동한다. 실측 0.008 s, 상한 60 s.
 step "test_paleos" bash -c 'exec python3 engine/test_paleos.py'
+# PALEOS 조회기가 표 줄을 빠짐없이 찾는가 (C125, prereg-c125-paleos-lookup). 300 무작위 × seed 둘 · 줄 시작 63 · 없는 칸. ~2 s.
+step "test_paleos_lookup" bash -c 'exec python3 engine/test_paleos_lookup.py'
 # 인용 앵커 (C33). 앵커 구절이 대상 문서에서 정확히 1회 매치돼야 한다 — 0회는 썩음, 2회 이상은 애매.
 # 줄번호 인용은 아직 실패시키지 않고 미이행으로 센다(배치 이행 중). 체커 자기검증은 test_check_refs.py.
 # 밴드 규칙 (C32). 세 상태 · 출처 없는 폭 거절 · 묶음 불가분 · 선택지 요건이 앵커다.

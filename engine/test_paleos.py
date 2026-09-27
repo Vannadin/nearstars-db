@@ -82,7 +82,8 @@ print("① 배달 셀 무변경 — 소비처가 없다는 것을 grep 으로, �
 _users = subprocess.run(
     ["grep", "-rln", "-e", "import paleos", "-e", "from paleos", "--include=*.py", "."],
     cwd=ENGINE, capture_output=True, text=True).stdout.split()
-_users = [u for u in _users if pathlib.Path(u).name != "test_paleos.py"]
+# ⚠ 시험 파일은 소비처가 아니다 — 조회기 자신을 묻는 시험 둘(이 파일 · C125 의 `test_paleos_lookup.py`)만 뺀다.
+_users = [u for u in _users if pathlib.Path(u).name not in ("test_paleos.py", "test_paleos_lookup.py")]
 ok(not _users,
    "엔진 파일 중 `paleos` 를 읽는 곳 0 개 — 이 시험 말고는 소비처가 없다"
    + (f" (발견: {' · '.join(_users)})" if _users else ""))
