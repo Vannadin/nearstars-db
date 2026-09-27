@@ -103,7 +103,8 @@ def _fit(declared: dict, pin: str, halvings: int) -> tuple:
     w_s, res = interior.fit_sulphur_to_core_radius(
         declared["mass_earth"], declared["radius_earth"], declared["core_plus_layer_radius_km"], pin,
         potential_temperature=declared["potential_temperature"], halvings=halvings,
-        basal_iron_number=declared["basal_iron_number"], mantle_composition=declared["mantle_composition"])
+        basal_iron_number=declared["basal_iron_number"], mantle_composition=declared["mantle_composition"],
+        basal_layer_thickness_km=declared["basal_layer_thickness_km"], basal_layer_density=declared["basal_layer_density"])
     return w_s, res, time.perf_counter() - t0
 
 

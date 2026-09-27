@@ -5399,7 +5399,8 @@ SULPHUR_ANCHOR_FILE = Path(__file__).with_name("mars_sulphur_anchor.json")
 #: 바뀌고, 파일 자를 쓰면 물리가 그대로인데도 지문이 깨져 `--refresh` 가 «늘 누르는 단추» 가 된다.
 SULPHUR_ANCHOR_DECLARATIONS = ("mass_earth", "radius_earth", "core_plus_layer_radius_km",
                                "light_element_fixing", "potential_temperature",
-                               "basal_iron_number", "mantle_composition")
+                               "basal_iron_number", "mantle_composition",
+                               "basal_layer_thickness_km", "basal_layer_density")      # 층 있는 화성(prereg-mars-layered-declaration)
 
 
 @contextmanager
@@ -5600,8 +5601,15 @@ def fit_sulphur_to_core_radius(mass_earth: float, radius_earth: float,
     for res in (got_lo, got_hi):
         if not res.applicable:
             return None, res
-    f_lo = got_lo.values["core_radius_fraction"] - target_frac
-    f_hi = got_hi.values["core_radius_fraction"] - target_frac
+    def frac(res):
+        # ⚠ **층이 있으면 맞춤 목표는 «핵 + 층»** (prereg-mars-layered-declaration §2) — 관측 1845 km 는 녹은 기저층까지의
+        #   반지름이다. 층이 없으면 예전 그대로 핵 반지름 비.
+        if basal_layer_thickness_km:
+            return res.values["core_plus_layer_radius_solved_km"] / (radius_earth * EARTH_RADIUS_M / 1e3)
+        return res.values["core_radius_fraction"]
+
+    f_lo = frac(got_lo) - target_frac
+    f_hi = frac(got_hi) - target_frac
     if f_lo * f_hi > 0:
         return None, got_hi              # 축이 목표를 안 감싼다 — 호출부가 이름 대고 거절한다
     best = got_hi
@@ -5610,10 +5618,10 @@ def fit_sulphur_to_core_radius(mass_earth: float, radius_earth: float,
         best = at(mid)
         if not best.applicable:
             return None, best
-        if (best.values["core_radius_fraction"] - target_frac) * f_lo <= 0:
+        if (frac(best) - target_frac) * f_lo <= 0:
             hi = mid
         else:
-            lo, f_lo = mid, best.values["core_radius_fraction"] - target_frac
+            lo, f_lo = mid, frac(best) - target_frac
     w_s = 0.5 * (lo + hi)
     # ⚠ **마지막 시행은 `w_s` 에서 풀지 않았다** — 고리 안의 `best` 는 마지막 **중점**의 구조이고,
     #   `w_s` 는 그 뒤 좁혀진 괄호의 중점이라 반분 한 칸만큼 다른 조성이다. 한 번 더 풀지 않으면
@@ -5769,7 +5777,9 @@ def _infer_from_state(state):
         _from_state = {"mass_earth": mass, "radius_earth": radius,
                        "core_plus_layer_radius_km": float(core_km),
                        "light_element_fixing": pin, "potential_temperature": t_pot,
-                       "mantle_composition": _declared_value(state.get_optional("mantle_composition"))}
+                       "mantle_composition": _declared_value(state.get_optional("mantle_composition")),
+                       "basal_layer_thickness_km": _declared_value(state.get_optional("basal_layer_thickness_km")),
+                       "basal_layer_density": _declared_value(state.get_optional("basal_layer_density"))}
         declared = {k: _from_state[k] if k in _from_state else state.get(k)
                     for k in SULPHUR_ANCHOR_DECLARATIONS}
         w_s, halvings, why = read_sulphur_anchor(declared)
@@ -5777,7 +5787,9 @@ def _infer_from_state(state):
             return out_of_domain(RECIPE, VERSION, why, inputs=inputs, refs=REFS)
         res = solve_with_core_sulphur(mass, radius, w_s, pin, potential_temperature=t_pot,
                                       basal_iron_number=state.get("basal_iron_number"),
-                                      mantle_composition=_declared_value(state.get_optional("mantle_composition")))
+                                      mantle_composition=_declared_value(state.get_optional("mantle_composition")),
+                                      basal_layer_thickness_km=declared["basal_layer_thickness_km"],
+                                      basal_layer_density=declared["basal_layer_density"])
         if not res.applicable:
             return res
         out = _sulphur_result(res, w_s, pin, float(core_km),

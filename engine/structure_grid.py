@@ -269,6 +269,10 @@ def _solver(body, s0):
             return interior.solve_with_fixed_sulphur(declared["mass_earth"], w_s, pin, cmf0, potential_temperature=float(t),
                                                      p_hint=p_hint,
                                                      basal_iron_number=declared.get("basal_iron_number"),
+                                                     basal_layer_thickness_km=interior._declared_value(
+                                                         declared.get("basal_layer_thickness_km")),
+                                                     basal_layer_density=interior._declared_value(
+                                                         declared.get("basal_layer_density")),
                                                      mantle_composition=interior._declared_value(
                                                          declared.get("mantle_composition")))
     else:

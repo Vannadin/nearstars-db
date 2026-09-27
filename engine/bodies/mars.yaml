@@ -185,6 +185,37 @@ inputs:
   # 해상도가 3 wt% 이기 때문이고, 물리가 다른 것이 아니다. 굳힘이 상한에 정밀도를 안 사는 이유는
   # 그 값을 쓰는 시험이 «두 고정이 갈리느냐» 만 묻기 때문이다(거친 값으로도 차 4.41 wt%).
   # ⚠ 이 키가 없으면 맞춤은 **이름 대고 거절한다** — 조용한 기본값을 두지 않는다.
+  # 층 있는 화성 (prereg-mars-layered-declaration, 동결 d0f93ea1) — 오너 2026-09-27 «층 있는 화성은 ㄱㄱ».
+  # 맨틀 조성 — 표면 – 23.83 GPa 창(화성 맨틀은 거의 전부)의 밀도 · 열 항이 이 조성의 광물 집합 표
+  # (`mantle_tables/25cb82c1607ef8c7.json`, BurnMan SLB 2022, C74-2)에서 온다.
+  mantle_composition:
+    value: {SiO2: 46.66, Al2O3: 3.49, MgO: 32.81, CaO: 2.66, FeO: 13.68, Na2O: 0.69}
+    grade: analog
+    source: "2022E_PSL.57817330K Table 1 «Best-fit average values of the Martian mantle composition in the system CFMASNa (normalised to 100%)» (txt 595–)"
+    counter_evidence_searched: >
+      Khan+ 2022's FeO belongs to its own geophysical inversion (its own core, no basal layer), while this body's core
+      is fitted with a layer — a model mix, hence analog. Other printed bulk silicate Mars (2020GeCoA.273..137Y Table 3,
+      txt 1235–): Yoshizaki & McDonough 2020 FeO 14.7 wt%, Wänke & Dreibus 1994 17.9, Taylor 2013 18.1
+      (2013ChEG...73..401T txt 238 «FeO in the mantle is 39.1 × 0.46 = 17.9 wt%»).
+  # 녹은 기저층 — 밀도만 싣는 층(액체 규산염 EOS 없음, C120). 두께 · 밀도는 Khan+ 2023 의 인쇄 쌍. 관측 반지름
+  # `core_plus_layer_radius_km` 1845 는 황 맞춤의 목표 하나로만 쓰인다(맞춤이 «핵 + 층» 을 그 값에 댄다).
+  basal_layer_thickness_km:
+    value: 150.0
+    grade: analog
+    source: "2023Natur.622..718K abstract (PDF p1, txt 27–28) «the thickness and density of the molten silicate layer are 150 ± 15 km and 4.05 ± 0.05 g cm−3»"
+    counter_evidence_searched: >
+      Samuel+ 2023 (2023Natur.622..712S) BML ~169 km, read from its Fig. 1 (judgment); our own closure 1845 − R_c = 142.8 km
+      (prereg-mars-khan-mantle-layer-probe addendum 1, derived — defines the layer from the observed radius, not evidence
+      that it exists); Khan's ± 15 km. Analog: Khan 2023's layer sits on Khan's model, this body's mantle is Khan 2022.
+  basal_layer_density:
+    value: 4050.0
+    grade: analog
+    source: "2023Natur.622..718K abstract (PDF p1, txt 27–28), paired with the 150 km thickness"
+    counter_evidence_searched: >
+      Khan ± 50 kg/m3. Samuel+ 2023: no layer density found in the cached text (bml-molten-density-sources.md, search
+      density × layer/BML/melt/Fe#); its EDT1 6470 ± 60 is the core's density, not the layer's. The engine has no liquid
+      silicate EOS (C120), so it cannot give its own layer density; the derived candidate A of that note disagrees with
+      Khan by 6.5 σ and is not used.
   # 핵의 가벼운 원소를 **한 칸에** — 황은 fit(관측 핵 반지름에 맞춤), 산소 · 탄소는 오너 상자의 윗모서리
   # (prereg-core-light-elements, 층 일반화 ⓒ1). 값은 질량분율. 아래 옛 `light_element_fixing` 과 같은 수여야 하고
   # (다르면 이름 대고 거절), 옛 칸은 정리 단계에서 지운다.
@@ -311,6 +342,8 @@ units:
   potential_temperature: K
   surface_temperature_k: K
   core_plus_layer_radius_km: km
+  basal_layer_thickness_km: km
+  basal_layer_density: kg/m3
   lid_thickness_km: km
   core_initial_temperature: K
   mantle_initial_potential_temperature: K
