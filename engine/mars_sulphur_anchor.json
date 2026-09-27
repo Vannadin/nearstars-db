@@ -1,6 +1,6 @@
 {
  "python": "3.9.6",
- "frozen_at": "2026-09-27",
+ "frozen_at": "2026-09-28",
  "bracket": [
   0.13,
   0.25
@@ -16,8 +16,8 @@
  },
  "files": {
   "interior.py": {
-   "bytes": "00bd8df5f0325575",
-   "code": "b228b931897eeda3"
+   "bytes": "1f0bbe9d69185894",
+   "code": "9613798dedae7217"
   },
   "eos.py": {
    "bytes": "54f9c795462fbd36",
