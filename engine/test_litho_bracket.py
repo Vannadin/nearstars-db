@@ -59,6 +59,8 @@ step = lambda r: R_STAR + (25.0 if r < R_STAR else -25.0)
 r, info = interior._litho_bracket(iterate(step, R_STAR + 300.0), step, TOL)
 check("LB-계단 — a step across the root is not refused; it is flagged as a root on a step",
       r is not None and info[2] and abs(r - R_STAR) <= info[0], f"r − R* {r - R_STAR if r else None!r} m · {info}")
+check("LB-계단 — the leftover |R − r| at a step root is reported (half-jump 25 m + r's own offset from the jump)",
+      r is not None and abs(info[3] - (25.0 + abs(r - R_STAR))) < 1e-9, f"|g| {info[3] if r else None!r}")
 
 print(f"\n  test_litho_bracket — {'모두 통과' if fails == 0 else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)

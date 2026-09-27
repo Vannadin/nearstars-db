@@ -1838,7 +1838,7 @@ def _litho_bracket(points: list, radius_at, tol: float):
     `points` 는 반복이 밟은 r₀ … r_n, `radius_at(r)` 는 층 윗끝을 r 에 둔 풀이의 반지름 R(r − D).
     g(r) = R(r − D) − r 이고 g(r_k) = r_{k+1} − r_k. **g 부호가 바뀌는 마지막 이웃 쌍**이 괄호 — 새 점은 안 찍는다.
     좁힘은 **순수 이분**, 횟수 ⌈log₂(W₀ / tol)⌉(괄호 폭에서 도출). 돌려주는 것: `(None, 까닭)` — 괄호 못 잡음 ·
-    또는 `(r, (폭, 이분 횟수, 계단 위 뿌리?))` — r 은 마지막 괄호의 가운데."""
+    또는 `(r, (폭, 이분 횟수, 계단 위 뿌리?, |g(r)|))` — r 은 마지막 괄호의 가운데, |g(r)| 는 그 자리의 남은 어긋남."""
     g = [points[k + 1] - points[k] for k in range(len(points) - 1)]
     pair = next((k for k in range(len(g) - 2, -1, -1) if (g[k] > 0.0) != (g[k + 1] > 0.0)), None)
     if pair is None:
@@ -1854,8 +1854,9 @@ def _litho_bracket(points: list, radius_at, tol: float):
         else:
             hi = mid
     r = 0.5 * (lo + hi)
-    step_root = abs(radius_at(r) - r) > tol          # 0 을 안 지나는 계단 위 뿌리 — 표지, 거절 아님
-    return r, (width, n_bisect, step_root)
+    g_r = abs(radius_at(r) - r)
+    step_root = g_r > tol                            # 0 을 안 지나는 계단 위 뿌리 — 표지, 거절 아님
+    return r, (width, n_bisect, step_root, g_r)
 
 
 def shoot(mass_kg: float, cmf: float, imf: float,
@@ -3351,7 +3352,8 @@ def solve(mass_earth: float,
             f"{len(litho_log)} 번, |ΔR| " + " → ".join(f"{d:.3g}" for d in litho_log) + " m."
             + ("" if litho_bracket is None else
                f" 반복이 안 닫혀 괄호로 풂 — 괄호 폭 {litho_bracket[0]:.3g} m · 이분 {litho_bracket[1]} 번"
-               + (" · ⚠ 계단 위의 뿌리(g 가 0 을 안 지남, 값은 괄호 가운데)" if litho_bracket[2] else "") + "."))
+               + (f" · ⚠ 계단 위의 뿌리(g 가 0 을 안 지남, 값은 괄호 가운데 — 남은 |R − r| {litho_bracket[3]:.3g} m)"
+                  if litho_bracket[2] else "") + "."))
     if basal_info is not None and basal_info["reached_top"]:
         # 쌓은 층 — 두께와 꼭대기는 적분기가 반지름으로 건 그대로(S-경계)
         plus_layer = basal_info["r_top"] / 1e3
