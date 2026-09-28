@@ -45,6 +45,7 @@ import math
 
 import convergence
 import fe_liquid
+import rtpress              # C120: 액체 MgSiO₃ (Wolf & Bower 2018 RTpress · Luo & Deng 2025)
 import ice_fr2015
 import hhe_table
 import ice_melt_table
@@ -933,7 +934,28 @@ class Material:
             raise PhaseGap(self.name, p, self.t_over_reason.format(
                 t_k=t, t_max=ph.t_max, phase=ph.name, p_gpa=p / 1e9), t)
 
+    def melt_phi(self, p: float, t: float) -> float:
+        """녹은 질량분율 φ — 규산염 상(`melt == "silicate"`)에서만 엔진 자신의 `silicate_melt_fraction`
+        (고상선 ~ 액상선 선형, Monteux+ 2016 식 (6)). 그 밖 · 온도 미선언 · 곡선 밖은 0 (C120, prereg-c120-melt)."""
+        if t <= 0.0:
+            return 0.0
+        ph = self.phase_at(p)
+        if ph.melt != "silicate":
+            return 0.0
+        return silicate_melt_fraction(p, t, ph.melt_variant) or 0.0
+
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """고체 밀도에 녹은 몫만큼 액체 MgSiO₃(RTpress, `rtpress.py`)를 부피 가법으로 섞는다 — 1/ρ = (1 − φ)/ρ_s + φ/ρ_ℓ
+        (C120, prereg-c120-melt 1.2). φ = 0 이면 `solid_density` 그대로라 비트까지 같다. 액체는 순수 MgSiO₃ 한 끝성분 — 등급 analog."""
+        rho_s = self.solid_density(p, t, t_pot)
+        phi = self.melt_phi(p, t)
+        if phi <= 0.0:
+            return rho_s
+        rho_l = rtpress.liquid(p, t)[0]
+        return rho_l if phi >= 1.0 else 1.0 / ((1.0 - phi) / rho_s + phi / rho_l)
+
+    def solid_density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """상의 고체 밀도 — C120 앞의 `density` 그대로. 열성질(k_t · c_p · grad_ad)은 이것으로 잰다."""
         _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         self.check_temperature(p, t)
         ph = self.phase_at(p)
@@ -972,7 +994,7 @@ class Material:
         위에 시험점을 놓을 때(antigorite 10 GPa 에서 실제로 걸렸다, 2026-08-30 F2) 미분이 상한 밖을
         찔러 거절을 만들면 안 된다. 상한에 닿지 않는 자리에서는 예전과 같은 중앙차분이다."""
         h = p * 1e-4
-        rho = self.density(p, t, t_pot)
+        rho = self.solid_density(p, t, t_pot)
         p_hi = min(p + h, self.p_max)
         # ⚠ **아래쪽도 같은 이유로 막는다** (C60 (d), 브리프 183 B). 위 주석이 상한에 대해 적은
         #   것과 같은 말이다 — 차분의 발판은 **시험 걸음**이고, 그것이 재질의 도메인 밖으로
@@ -983,8 +1005,8 @@ class Material:
         p_lo = max(p - h, 1.0, self.shoot_lo)
         if p_hi <= p_lo:
             return 0.0
-        d_hi = self.density(p_hi, t, t_pot)
-        d_lo = self.density(p_lo, t, t_pot)
+        d_hi = self.solid_density(p_hi, t, t_pot)
+        d_lo = self.solid_density(p_lo, t, t_pot)
         return 0.0 if d_hi <= d_lo else rho * (p_hi - p_lo) / (d_hi - d_lo)
 
     def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
@@ -996,7 +1018,7 @@ class Material:
         ph = self.phase_at(p)
         if not ph.has_thermal or t <= 0.0:
             return 0.0
-        rho = self.density(p, t, t_pot)
+        rho = self.solid_density(p, t, t_pot)
         k_t = self.k_t(p, t, t_pot)
         # ⚠ **평가자 세트는 상수가 없다 — `c_v_ref` 가 0 이다** (브리프 187 에서 실측). 예전에는
         #   그 0 이 `gamma = dpdt / (rho * c_v)` 로 그대로 들어가 `ZeroDivisionError` 가 났다:
@@ -1052,7 +1074,7 @@ class Material:
         _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         if t <= 0.0 or p <= 0.0:
             return 0.0
-        rho = self.density(p, t, t_pot)
+        rho = self.solid_density(p, t, t_pot)
         gamma = self.gruneisen(p, rho, t, t_pot)
         if gamma <= 0.0:
             return 0.0
@@ -1062,6 +1084,16 @@ class Material:
         grad = gamma * p / k_s
         ph = self.phase_at(p)
         lat = self._latent_cp(ph, p, t)
+        phi = self.melt_phi(p, t)
+        if phi > 0.0:
+            # C120 덧붙임 4 — 잠열 곱은 그대로 두고, 그 안의 고체 ∇_ad 자리만 φ 의 c_p 가중(고체 · RTpress 액체)으로.
+            _rho_l, grad_l, cp_l = rtpress.liquid(p, t)
+            if phi >= 1.0:
+                grad = grad_l
+            else:
+                cp_s = self.c_p(p, t, t_pot) - lat
+                w_s, w_l = (1.0 - phi) * cp_s, phi * cp_l
+                grad = (w_s * grad + w_l * grad_l) / (w_s + w_l) if w_s + w_l > 0.0 else grad_l
         if lat > 0.0:
             base = self.c_p(p, t, t_pot) - lat
             if base > 0.0:

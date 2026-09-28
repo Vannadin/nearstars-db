@@ -106,7 +106,7 @@ if burnman is not None:
         ps = [math.exp(x) for x in tab.lnp]
         window = [i for i, pp in enumerate(ps) if pp <= eos.SILICATE_EN_TO_PREM]
         nodes = [(i, j) for j in range(0, len(tab.t), 7) for i in window[::23]]
-        worst, used, skipped = 0.0, 0, 0
+        worst, used, skipped, melted = 0.0, 0, 0, 0
         for i, j in nodes:
             name = tab.assemblage[j][i]
             if name is None or name.endswith("*frozen") or mat.phase_at(ps[i])._w(ps[i], tab.t[j]) < 1.0:
@@ -116,12 +116,15 @@ if burnman is not None:
             if direct is None or direct["assemblage"] != name:
                 skipped += 1
                 continue
-            rho = mat.density(ps[i], tab.t[j])
+            # C120 덧붙임 5 C.2 — 배관의 뜻(표 값이 엔진에 그대로 흐르는가)은 녹은 몫을 섞기 전의 고체 밀도로 잰다.
+            rho = mat.solid_density(ps[i], tab.t[j])
+            melted += mat.melt_phi(ps[i], tab.t[j]) > 0.0
             ak = mat.phase_at(ps[i]).dpdt_v(tab.t[j], 0.0, ps[i])
             worst = max(worst, abs(rho / direct["rho"] - 1.0), abs(ak / direct["alpha_k"] - 1.0))
             used += 1
         check(f"{body} A′-배관 — 격자점 {used} 개에서 ρ · αK 상대 ≤ 1e-6", used > 0 and worst <= 1e-6,
-              f"최대 {worst:.3e} · 건너뜀 {skipped}(빈 칸 · 굳힌 칸 · 섞임 띠 · 직접 선택기가 다른 집합)")
+              f"최대 {worst:.3e} · 건너뜀 {skipped}(빈 칸 · 굳힌 칸 · 섞임 띠 · 직접 선택기가 다른 집합)"
+              f" · 그중 φ > 0 인 점 {melted}(고체 밀도로 대조, 인쇄만)")
         rows = {"전이": [], "전이 없음": []}
         for i in window[:-1][::17]:
             for j in range(0, len(tab.t) - 1, 9):

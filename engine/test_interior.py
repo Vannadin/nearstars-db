@@ -1283,18 +1283,45 @@ def main() -> int:
     #   1e-3 급으로 움직인다 — 1700 K(ΔT 100 K 더)의 픽스처가 넷 모두 8.6e-5 이상으로 갈렸다.
     from eos import EARTH_POTENTIAL_T
     from interior import SHOOT_TOL
+    import interior as _interior
+    import rtpress
+    # C120 덧붙임 5 C.3 — 뜨거운 풀이 **전체(시행 포함)** 에서 녹은 규산염 액체(`rtpress.liquid`)를 한 번도 안 부른
+    #   몸만 비트 동일을 단언한다. 부른 몸은 «기록» 행으로 (호출 수 · 수렴 해를 낸 적분의 호출 수 · 켠/끈 차)를 찍고,
+    #   수렴 해의 적분이 액체를 불렀으면(곧 수렴 해에 φ > 0 이 있으면) 행 앞에 «⚠ 수렴 해가 녹음».
+    _orig_integrate = _interior.integrate
+    _per_integration = []
+    def _counting_integrate(*a, **k):
+        c0 = rtpress.CALLS
+        st = _orig_integrate(*a, **k)
+        _per_integration.append((st.radius_m, rtpress.CALLS - c0))
+        return st
     for name, m, r_pub, cmf, nmoi_pub, f_pub, _src, _nmoi_src in ANCHORS:
         off = solve(m, core_mass_fraction=cmf)
-        on = solve(m, core_mass_fraction=cmf,
-                   potential_temperature=EARTH_POTENTIAL_T)
-        d_n = abs(on.values["nmoi"] / off.values["nmoi"] - 1.0)
-        d_r = abs(on.values["radius"] / off.values["radius"] - 1.0)
-        same = d_n <= SHOOT_TOL and d_r <= SHOOT_TOL
-        if not same:
-            fails.append(f"{name}: 기준 온도에서 답이 움직였다 — 이중계상이다 "
-                         f"({off.values['nmoi']:.10f} → {on.values['nmoi']:.10f})")
-        print(f"  [{'PASS' if same else 'FAIL'}] {name:8} C/MR² {on.values['nmoi']:.6f} · "
-              f"R {on.values['radius']:.6f} — 온도를 끈 답과 상대 {max(d_n, d_r):.1e} ≤ SHOOT_TOL")
+        rtpress.CALLS = 0
+        _per_integration.clear()
+        _interior.integrate = _counting_integrate
+        try:
+            on = solve(m, core_mass_fraction=cmf,
+                       potential_temperature=EARTH_POTENTIAL_T)
+        finally:
+            _interior.integrate = _orig_integrate
+        calls = rtpress.CALLS
+        if calls == 0:
+            d_n = abs(on.values["nmoi"] / off.values["nmoi"] - 1.0)
+            d_r = abs(on.values["radius"] / off.values["radius"] - 1.0)
+            same = d_n <= SHOOT_TOL and d_r <= SHOOT_TOL
+            if not same:
+                fails.append(f"{name}: 기준 온도에서 답이 움직였다 — 이중계상이다 "
+                             f"({off.values['nmoi']:.10f} → {on.values['nmoi']:.10f})")
+            print(f"  [{'PASS' if same else 'FAIL'}] {name:8} C/MR² {on.values['nmoi']:.6f} · "
+                  f"R {on.values['radius']:.6f} — 온도를 끈 답과 상대 {max(d_n, d_r):.1e} ≤ SHOOT_TOL")
+        else:
+            r_on = on.values["radius"] * EARTH_RADIUS_M
+            conv = min(_per_integration, key=lambda x: abs(x[0] - r_on))[1] if _per_integration else 0
+            mark = "⚠ 수렴 해가 녹음 " if conv > 0 else ""
+            print(f"  [기록 · C120] {mark}{name:8} 녹은 규산염 액체 호출 {calls}(수렴 해 적분 {conv}) — "
+                  f"켠/끈 R 상대 {on.values['radius'] / off.values['radius'] - 1.0:+.2e} · "
+                  f"C/MR² 상대 {on.values['nmoi'] / off.values['nmoi'] - 1.0:+.2e} (판정 없음)")
     ok = solve(1.0, core_mass_fraction=0.325,
                potential_temperature=EARTH_POTENTIAL_T).grade == "calibrated"
     if not ok:

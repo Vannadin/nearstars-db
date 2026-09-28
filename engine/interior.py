@@ -41,6 +41,7 @@ import water_hot
 import water_table
 import water2_table
 import steam_if97
+import rtpress             # C120: 녹은 규산염의 액체 끝성분
 from eos import (EARTH_POTENTIAL_T, IAPWS_VII_END, ICE_VII_TO_X,
                  ICE_VII_X_T_MAX, MATERIALS, REINHARDT_P_MAX, SILICATE_PREM_TO_PV,
                  Mixture, PhaseGap, SpinodalGap, core_gamma, mix, water_phase_name,
@@ -600,6 +601,15 @@ def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:
     own = getattr(mat, "dtdp_adiabat", None)
     if own is not None:
         return own(p, t, t_pot)
+    # C120 덧붙임 4 — 녹은 규산염: φ = 1 은 RTpress 액체의 ∇_ad, 창 안은 고체(오늘 경로, **고체 밀도로**) · 액체 dT/dP 의
+    #   φ c_p 가중. 순수 층엔 오늘처럼 잠열이 없다. φ = 0 은 한 줄도 안 지난다(비트 동일).
+    phi = mat.melt_phi(p, t) if isinstance(mat, eos.Material) and p > 0.0 else 0.0
+    if phi > 0.0:
+        _rho_l, grad_l, cp_l = rtpress.liquid(p, t)
+        dtdp_l = grad_l * t / p
+        if phi >= 1.0:
+            return dtdp_l
+        rho = mat.solid_density(p, t, t_pot)
     gamma = _core_or_own_gamma(mat, p, rho, t, t_pot)
     if gamma <= 0.0 or t <= 0.0:
         return 0.0
@@ -617,14 +627,20 @@ def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:
     if ceiling and p_hi > ceiling:
         p_hi = ceiling
         p_lo = min(p_lo, p_hi - 2.0 * h)
-    d_hi, d_lo = mat.density(p_hi, t, t_pot), mat.density(p_lo, t, t_pot)
+    dens = mat.solid_density if phi > 0.0 else mat.density
+    d_hi, d_lo = dens(p_hi, t, t_pot), dens(p_lo, t, t_pot)
     if d_hi <= d_lo:
         return 0.0
     k_t = rho * (p_hi - p_lo) / (d_hi - d_lo)
     # αK_T·γ·T = K_T·αγT 이므로 K_S 가 새 상수 없이 닫힌다.
     ph = mat.phase_at(p) if hasattr(mat, "phase_at") else None
     k_s = k_t + (ph.dpdt_v(t, t_pot, p) * gamma * t if ph is not None else 0.0)
-    return gamma * t / max(k_s, 1.0)
+    dtdp_s = gamma * t / max(k_s, 1.0)
+    if phi <= 0.0:
+        return dtdp_s
+    cp_s = mat.c_p(p, t, t_pot) - mat._latent_cp(ph, p, t)
+    w_s, w_l = (1.0 - phi) * cp_s, phi * cp_l
+    return (w_s * dtdp_s + w_l * dtdp_l) / (w_s + w_l) if w_s + w_l > 0.0 else dtdp_l
 
 
 def _grad_ad_at(mat, p: float, t: float, t_pot: float = 0.0) -> float:
