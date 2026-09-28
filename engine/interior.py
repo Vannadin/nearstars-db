@@ -116,12 +116,15 @@ OCEAN_LAYER = True
 FLOOR_EXTRAPOLATION_MAX = 100.0
 MAX_STEPS = 40000
 # ── 적응 걸음 (prereg-adaptive-rk45, 동결 975c1447 — 뼈대, 아직 안 켬) ──────────────────────────
-#: False 면 지금 고정 걸음 RK4 그대로(비교 · 되돌림용 손잡이). 계수표가 원문 대조를 마치기 전에는 켜지 않는다.
-ADAPTIVE = False
+#: False 면 고정 걸음 RK4 그대로(비교 · 되돌림용 손잡이). 계수표는 원문 대조를 마쳤다(DP45_* 주석).
+#: 오너 2026-09-28 «ㅇㅇ» — 값 이동(지구 CMB −21 K · 판도라 −13 K, 고정 1500 이 격자 수렴 띠보다 치우친 쪽이 고쳐짐)을 받음.
+ADAPTIVE = True
 #: 걸음 오차 허용(결정 ①) · 걸음 상한 배수(결정 ②) · 하한 배수 — 모두 judgment(등록의 수).
 ADAPTIVE_RTOL = 1e-7
 H_MAX_FACTOR = 20.0
 H_MIN_FACTOR = 1e-6
+#: 적응 걸음 세기(보기만) — 받은 · 버린 걸음. 풀이 앞뒤 차로 읽는다.
+ADAPTIVE_STATS = {"accepted": 0, "rejected": 0, "fixed": 0}
 #: Dormand–Prince 5(4) 계수표 — 원문 Dormand & Prince 1980, J. Comput. Appl. Math. 6, 19–26, **Table 2 «Coefficients
 #: for RK5(4)7M»**(5 쪽, open archive — 오너가 받은 PDF 의 쪽 그림에서 눈으로 옮김). 대조(2026-09-28): 고정 빌드
 #: scipy 1.13.1 `RK45.C · A · B` 와 분수 그대로 차 0, `RK45.E` 는 **b − b̂**(이 표의 b̂ − b 와 부호 반대) 로 차 0.
@@ -136,6 +139,18 @@ DP45_A: tuple = ((),
                  (35 / 384, 0.0, 500 / 1113, 125 / 192, -2187 / 6784, 11 / 84))
 DP45_B5: tuple = (35 / 384, 0.0, 500 / 1113, 125 / 192, -2187 / 6784, 11 / 84, 0.0)
 DP45_B4: tuple = (5179 / 57600, 0.0, 7571 / 16695, 393 / 640, -92097 / 339200, 187 / 2100, 1 / 40)
+
+
+#: 휘발성 유체 · 얼음 성분(물 · 암모니아 · 메탄 계열) — 이 성분이 든 층의 걸음은 고정 (prereg-adaptive-rk45 덧붙임 1 ①).
+VOLATILE_NAMES = ("h2o", "h2o_liquid", "h2o_liquid_dense", "h2o_hot", "column_steam", "nh3", "ch4")
+
+
+def _volatile(mat) -> bool:
+    """재료나 그 부분(`Mixture.parts`)에 휘발성 유체 · 얼음 성분이 하나라도 있는가 — 이름이 아니라 성분으로 판정."""
+    name = getattr(mat, "name", "")
+    if name in VOLATILE_NAMES or name.startswith(("h2o", "steam")):
+        return True
+    return any(_volatile(m) for m, w in getattr(mat, "parts", ()) if w > 0.0)
 
 
 def _dp45_step(deriv, r: float, y: tuple, h: float):
@@ -958,6 +973,9 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
     rho_c = mat_c.density(p_center, t, t_pot) * bulk_factor(mat_c.name, p_center, phi0, p_cap)
     r_scale = (3.0 * mass_kg / (4.0 * math.pi * rho_c)) ** (1.0 / 3.0)
     dr = r_scale / STEPS
+    dr0 = dr                 # 고정 걸음 폭 — 적응 걸음의 첫 걸음 · 상하한 · 경계 뒤 재시작 (prereg-adaptive-rk45)
+    h_ad = dr
+    ad_floors = (1e-12 * mass_kg, 1e5, 1e-12 * mass_kg * r_scale ** 2, 1e-12 * 4.0 / 3.0 * math.pi * r_scale ** 3)
     r = dr
     m = 4.0 / 3.0 * math.pi * r ** 3 * rho_c
     moi = 8.0 / 15.0 * math.pi * r ** 5 * rho_c
@@ -1076,6 +1094,14 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
         # 4차 Runge-Kutta. 한 단계 안에서는 재료를 고정한다 — 경계에서 한 단계
         # 어긋나는 오차는 dr/R ~ 3e-4 이라 C/MR² 의 유효숫자 밖이다.
         # 이 단계의 단열 기울기. 한 단계에 한 번만 잰다 (위 _adiabatic_dtdp 주석).
+        # 적응 걸음은 휘발성 성분이 없는 층에서만(덧붙임 1 ①). 고정 ↔ 적응 넘어가는 첫 걸음은 dr0(②).
+        adapt_now = ADAPTIVE and not in_column and not _volatile(mat)
+        if adapt_now:
+            dr = min(max(h_ad, dr0 * H_MIN_FACTOR), dr0 * H_MAX_FACTOR)
+        else:
+            dr, h_ad = dr0, dr0
+            if ADAPTIVE:
+                ADAPTIVE_STATS["fixed"] += 1
         dtdp = _adiabatic_dtdp(mat, p, mat.density(p, t, t_pot), t, t_pot) if t > 0.0 else 0.0
         # **기체 층에서는 온도를 선형이 아니라 멱법칙으로 나른다.** 반지름 격자가 균일한데
         # 기체 외피는 바깥 몇 걸음에서 압력이 자릿수로 떨어진다 — 한 걸음이 척도높이 두세
@@ -1110,7 +1136,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             그래서 프로파일에 기록되는 압력은 결코 바닥 아래가 아니다."""
             return _lo_mat if (_lo_mat and pp_eval < _lo_mat) else pp_eval
 
-        def deriv(rr, mm, pp):
+        def deriv(rr, mm, pp, tt=None):
             if rr <= 0.0:
                 return 0.0, 0.0, 0.0, 0.0
             # 마지막 반 걸음이 바닥 아래로 내려갈 수 있다. 그 자리의 밀도는 바닥의
@@ -1126,7 +1152,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                 # 고르므로, 이 반 걸음만 IF97 로 잇는다. 오늘까지 이 갈래는 거절이었으니 앵커는 비트 그대로다.
                 rr_rho = COLUMN_STEAM.density(pp, t)
             else:
-                t_rho = t if litho_a is None else litho_a / rr + litho_b
+                t_rho = (t if tt is None else tt) if litho_a is None else litho_a / rr + litho_b
                 rr_rho = (mat.density(_at_floor(max(pp, p_stop)), t_rho, t_pot) if pp > 0.0
                           else mat.rho0)
             phi = porosity_at(mat, pp, phi0, p_cap)
@@ -1137,6 +1163,47 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                     4.0 * math.pi * rr * rr * phi)
 
         k1 = deriv(r, m, p)
+        dT_last = [None]         # 마지막 DP 걸음의 T 증분(결정 ③) — 걸음 끝 온도 갱신이 쓴다
+
+        def _rk(hh):
+            """한 걸음 증분 (dm, dp, di, dv) — 고정 걸음이면 지금 RK4 그대로(같은 산술), 적응이면 DP45 5 차."""
+            if not adapt_now:
+                k2 = deriv(r + hh / 2, m + hh / 2 * k1[0], p + hh / 2 * k1[1])
+                k3 = deriv(r + hh / 2, m + hh / 2 * k2[0], p + hh / 2 * k2[1])
+                k4 = deriv(r + hh, m + hh * k3[0], p + hh * k3[1])
+                return (hh / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]),
+                        hh / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]),
+                        hh / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]),
+                        hh / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3]))
+            return _dp(hh)[0]
+
+        def _dp(hh):
+            """DP45 한 걸음 — (5 차 증분, 5 차 − 4 차). 단계는 (m, P[, T]) 로 나아가고 I · V 는 곁 적분.
+            T 를 상태에 넣는 것은 결정 ③(동결 975c1447) — 단계마다 그 자리 (P, T) 의 단열 기울기로 dT/dr = (dT/dP)(dP/dr).
+            기체 층(멱법칙 갈래) · 암석권(T = A/r + B) · 온도 없는 풀이는 T 칸 없이 옛 길."""
+            t_state = t > 0.0 and not grad and litho_a is None
+            def dT(rr, mm, pp, tt, kk):
+                if not t_state:
+                    return 0.0
+                g = _adiabatic_dtdp(mat, max(pp, p_stop), mat.density(_at_floor(max(pp, p_stop)), tt, t_pot), tt, t_pot)
+                return g * kk[1]
+            ks = [k1]
+            kt = [dT(r, m, p, t, k1)]
+            for i in range(1, 7):
+                a = DP45_A[i]
+                ri = r + DP45_C[i] * hh
+                mi = m + hh * sum(a[l] * ks[l][0] for l in range(i))
+                pi_ = p + hh * sum(a[l] * ks[l][1] for l in range(i))
+                ti = t + hh * sum(a[l] * kt[l] for l in range(i)) if t_state else None
+                ki = deriv(ri, mi, pi_, ti)
+                ks.append(ki)
+                kt.append(dT(ri, mi, pi_, ti, ki))
+            inc5 = tuple(hh * sum(DP45_B5[i] * ks[i][j] for i in range(7)) for j in range(4))
+            inc4 = tuple(hh * sum(DP45_B4[i] * ks[i][j] for i in range(7)) for j in range(4))
+            t5 = hh * sum(DP45_B5[i] * kt[i] for i in range(7))
+            t4 = hh * sum(DP45_B4[i] * kt[i] for i in range(7))
+            dT_last[0] = t5 if t_state else None
+            return inc5, tuple(x - y for x, y in zip(inc5, inc4)) + (t5 - t4,)
         dp_step = abs(dr * k1[1])        # 이 걸음의 폭(오일러 추정) — 위 규칙의 척도다
 
         # **바닥이 이 걸음 안에 들어왔고 이 층은 이 걸음 안에 안 끝난다 — 그러면 여기서 끝난다**
@@ -1164,13 +1231,21 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                 floor_truncated = (mat.name, p, m / share if share > 0.0 else 0.0)
                 break
 
-        k2 = deriv(r + dr / 2, m + dr / 2 * k1[0], p + dr / 2 * k1[1])
-        k3 = deriv(r + dr / 2, m + dr / 2 * k2[0], p + dr / 2 * k2[1])
-        k4 = deriv(r + dr, m + dr * k3[0], p + dr * k3[1])
-        dm = dr / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
-        dp = dr / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
-        di = dr / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
-        dv = dr / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
+        if not adapt_now:
+            dm, dp, di, dv = _rk(dr)
+            h_next = dr
+        else:
+            # 걸음 제어(prereg-adaptive-rk45 §1 2) — 오차가 허용을 넘으면 줄여 다시(k1 은 출발점 기울기라 그대로)
+            while True:
+                (dm, dp, di, dv), err = _dp(dr)
+                en = _dp45_norm(err, (m + dm, p + dp, moi + di, v_pore + dv, t + (dT_last[0] or 0.0)),
+                                ad_floors + (10.0,)) / ADAPTIVE_RTOL
+                if en <= 1.0 or dr <= dr0 * H_MIN_FACTOR:
+                    h_next = _dp45_next_h(dr, en, True)
+                    ADAPTIVE_STATS["accepted"] += 1
+                    break
+                ADAPTIVE_STATS["rejected"] += 1
+                dr = max(_dp45_next_h(dr, en, False), dr0 * H_MIN_FACTOR)
 
         # **표 바닥도 걸음 안에서 찾는다.** 위의 in_domain 검사는 걸음의 출발점에서만 보므로
         # 온도 바닥에 닿는 자리가 걸음 단위로 양자화되고, 그러면 층 경계를 보간해도 반지름이
@@ -1223,6 +1298,10 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
         if p + dp <= p_stop:
             # 표면을 넘어섰다. 멈출 압력 자리로 선형 보간한다.
             frac = (p - p_stop) / (-dp) if dp != 0 else 0.0
+            if adapt_now and 0.0 < frac < 1.0:
+                # 적응 걸음은 길어 선형 보간이 거칠다 — 표면까지 분율 f 로 같은 DP 걸음 다시(§1 3, 9f HOLD (나))
+                dm, dp, di, dv = _rk(dr * frac)
+                dm, dp, di, dv = dm / frac, dp / frac, di / frac, dv / frac   # 아래 «× frac» 이 그 증분 그대로가 되게
             r += dr * frac
             m += dm * frac
             moi += di * frac
@@ -1253,26 +1332,14 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                 f = (m_b - m) / dm
                 if 0.0 < f < 1.0:
                     h = f * dr
-                    k2 = deriv(r + h / 2, m + h / 2 * k1[0], p + h / 2 * k1[1])
-                    k3 = deriv(r + h / 2, m + h / 2 * k2[0], p + h / 2 * k2[1])
-                    k4 = deriv(r + h, m + h * k3[0], p + h * k3[1])
-                    dm = h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
-                    dp = h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
-                    di = h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
-                    dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
+                    dm, dp, di, dv = _rk(h)
                     crossed = True
 
         # 기저층 꼭대기 — 반지름 경계. 걸음이 넘으면 꼭대기까지만 걷는다(질량 경계와 같은 RK4 재걷기).
         basal_crossed = False
         if mat is basal_mat and basal_top is not None and r + h > basal_top:
             h = basal_top - r
-            k2 = deriv(r + h / 2, m + h / 2 * k1[0], p + h / 2 * k1[1])
-            k3 = deriv(r + h / 2, m + h / 2 * k2[0], p + h / 2 * k2[1])
-            k4 = deriv(r + h, m + h * k3[0], p + h * k3[1])
-            dm = h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
-            dp = h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
-            di = h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
-            dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
+            dm, dp, di, dv = _rk(h)
             crossed = False
             basal_crossed = True
 
@@ -1289,26 +1356,14 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                 f = (p - p_b) / (-dp)
                 if 0.0 < f < 1.0:
                     h = f * h
-                    k2 = deriv(r + h / 2, m + h / 2 * k1[0], p + h / 2 * k1[1])
-                    k3 = deriv(r + h / 2, m + h / 2 * k2[0], p + h / 2 * k2[1])
-                    k4 = deriv(r + h, m + h * k3[0], p + h * k3[1])
-                    dm = h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
-                    dp = h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
-                    di = h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
-                    dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
+                    dm, dp, di, dv = _rk(h)
                     basal_crossed = False
 
         # 표면 암석권 바닥 — 반지름 경계(기저층 꼭대기와 같은 RK4 재걷기). 층 바닥 온도는 걸음 끝의 단열 온도.
         litho_crossed = False
         if lithosphere is not None and litho_a is None and r + h > lithosphere["r_base"] > r:
             h = lithosphere["r_base"] - r
-            k2 = deriv(r + h / 2, m + h / 2 * k1[0], p + h / 2 * k1[1])
-            k3 = deriv(r + h / 2, m + h / 2 * k2[0], p + h / 2 * k2[1])
-            k4 = deriv(r + h, m + h * k3[0], p + h * k3[1])
-            dm = h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
-            dp = h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
-            di = h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
-            dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
+            dm, dp, di, dv = _rk(h)
             crossed = False
             litho_crossed = True
 
@@ -1335,13 +1390,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                 f = lo_f
                 if 0.0 < f < 1.0:
                     h = f * h
-                    k2 = deriv(r + h / 2, m + h / 2 * k1[0], p + h / 2 * k1[1])
-                    k3 = deriv(r + h / 2, m + h / 2 * k2[0], p + h / 2 * k2[1])
-                    k4 = deriv(r + h, m + h * k3[0], p + h * k3[1])
-                    dm = h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
-                    dp = h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
-                    di = h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
-                    dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
+                    dm, dp, di, dv = _rk(h)
                     crossed = False
                     litho_crossed = False
                 phase_crossed = True
@@ -1384,9 +1433,14 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                 r_grad_top = r
         # 온도는 압력을 따라간다 — dT = (dT/dP) dP. 열 상수가 없는 층에서는
         # dtdp 가 0 이라 온도가 그 층을 그대로 통과한다.
-        t = t * ((p + dp) / p) ** grad if grad else t + dtdp * dp
+        if adapt_now and dT_last[0] is not None:
+            t = t + dT_last[0]           # 결정 ③ — DP 가 나른 온도
+        else:
+            t = t * ((p + dp) / p) ** grad if grad else t + dtdp * dp
         p += dp
         t_surface = t
+        if adapt_now:
+            h_ad = h_next if h == dr else dr0      # 경계에서 잘린 걸음 뒤는 고정 폭으로 다시(§1 3)
         if liquid and mat is liquid_mat:
             r_ocean_top = r
         if phase_crossed:
