@@ -327,8 +327,19 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
     solve, how, cmf0 = _solver(body, s0)
     check = solve(t_pot0)
     keys = ("radius", "nmoi", "core_radius", "core_radius_fraction", "cmb_pressure", "cmb_temperature")
-    if not check.applicable or any(check.values.get(k) != s0.values.get(k) for k in keys):
-        raise SystemExit(f"{name}: 조성 고정 풀이가 선언 온도에서 S0 과 비트가 다르다 ({how}) — 표를 못 짓는다")
+    # 덧붙임 42 — 비트가 아니라 엔진 자신의 수렴 허용(SHOOT_TOL, 겉질량의 선을 여섯 칸에 옮긴 judgment) 안이면 같은 풀이다. 단계 벽 폴백(RK45 덧붙임 2)이
+    #   S0 의 역산 시행과 조성 고정 풀이에서 다른 횟수로 밟혀 끝자리가 갈린다(화성 5.1e-11). 0 칸은 절대 0.
+    import interior
+    worst, where = 0.0, ""
+    for k in keys:
+        a, b = s0.values.get(k), check.values.get(k) if check.applicable else None
+        d = 0.0 if a == b else (abs(b - a) / abs(a) if a and b is not None else math.inf)
+        if d > worst:
+            worst, where = d, k
+    if not check.applicable or worst > interior.SHOOT_TOL:
+        raise SystemExit(f"{name}: 조성 고정 풀이가 선언 온도에서 S0 과 다르다 ({how}; 최대 상대 차 {worst:.3e} at {where}, "
+                         f"허용 SHOOT_TOL {interior.SHOOT_TOL:.0e}) — 표를 못 짓는다")
+    print(f"자기 점검 — 조성 고정 풀이 대 S0 최대 상대 차 {worst:.3e} at {where or '-'} (허용 SHOOT_TOL {interior.SHOOT_TOL:.0e})")
     lo, hi = min(t_ms) - BELOW_K, max(t_ms) + ABOVE_K
     t_no = None
     top = solve(hi) if points is None else None
