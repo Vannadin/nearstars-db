@@ -123,8 +123,8 @@ ADAPTIVE = True
 ADAPTIVE_RTOL = 1e-7
 H_MAX_FACTOR = 20.0
 H_MIN_FACTOR = 1e-6
-#: 적응 걸음 세기(보기만) — 받은 · 버린 걸음. 풀이 앞뒤 차로 읽는다.
-ADAPTIVE_STATS = {"accepted": 0, "rejected": 0, "fixed": 0}
+#: 적응 걸음 세기(보기만) — 받은 · 버린 걸음 · 고정 걸음 · 단계 벽에서 고정으로 내려간 걸음. 풀이 앞뒤 차로 읽는다.
+ADAPTIVE_STATS = {"accepted": 0, "rejected": 0, "fixed": 0, "fallback": 0}
 #: Dormand–Prince 5(4) 계수표 — 원문 Dormand & Prince 1980, J. Comput. Appl. Math. 6, 19–26, **Table 2 «Coefficients
 #: for RK5(4)7M»**(5 쪽, open archive — 오너가 받은 PDF 의 쪽 그림에서 눈으로 옮김). 대조(2026-09-28): 고정 빌드
 #: scipy 1.13.1 `RK45.C · A · B` 와 분수 그대로 차 0, `RK45.E` 는 **b − b̂**(이 표의 b̂ − b 와 부호 반대) 로 차 0.
@@ -1237,7 +1237,19 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
         else:
             # 걸음 제어(prereg-adaptive-rk45 §1 2) — 오차가 허용을 넘으면 줄여 다시(k1 은 출발점 기울기라 그대로)
             while True:
-                (dm, dp, di, dv), err = _dp(dr)
+                try:
+                    (dm, dp, di, dv), err = _dp(dr)
+                except PhaseGap:
+                    # ⚠ **단계가 벽을 찔렀다 — 이 걸음 하나만 옛 고정 RK4(dr0)로** (덧붙임 2, 동결 8404dd38).
+                    #   긴 시행 걸음의 중간 단계 T 외삽이 튀어(핵 재질 γ 가 저온에서 음수인 자리 — 기울기가 0 으로
+                    #   잘림, C58) 스피노달 · 냉각 가드를 찌르면, 그것은 이 걸음의 판정이 아니라 단계의 발이다.
+                    #   고정 걸음이 또 내면 옛 길과 같은 자리의 진짜 벽이라 그대로 나간다(거절 이름이 옛 길과 같음).
+                    ADAPTIVE_STATS["fallback"] += 1
+                    dr = dr0
+                    adapt_now = False
+                    dm, dp, di, dv = _rk(dr)
+                    h_next = dr
+                    break
                 en = _dp45_norm(err, (m + dm, p + dp, moi + di, v_pore + dv, t + (dT_last[0] or 0.0)),
                                 ad_floors + (10.0,)) / ADAPTIVE_RTOL
                 if en <= 1.0 or dr <= dr0 * H_MIN_FACTOR:
