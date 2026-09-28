@@ -115,6 +115,47 @@ OCEAN_LAYER = True
 # 최대 9 bar (해왕성) 의 열 배 위라, 앵커는 이 갈래를 한 번도 타지 않는다.
 FLOOR_EXTRAPOLATION_MAX = 100.0
 MAX_STEPS = 40000
+# ── 적응 걸음 (prereg-adaptive-rk45, 동결 975c1447 — 뼈대, 아직 안 켬) ──────────────────────────
+#: False 면 지금 고정 걸음 RK4 그대로(비교 · 되돌림용 손잡이). 계수표가 원문 대조를 마치기 전에는 켜지 않는다.
+ADAPTIVE = False
+#: 걸음 오차 허용(결정 ①) · 걸음 상한 배수(결정 ②) · 하한 배수 — 모두 judgment(등록의 수).
+ADAPTIVE_RTOL = 1e-7
+H_MAX_FACTOR = 20.0
+H_MIN_FACTOR = 1e-6
+#: Dormand–Prince 5(4) 계수표 — ⚠ **비어 있다.** 원문(Dormand & Prince 1980, J. Comput. Appl. Math. 6, 19,
+#: open archive)에서 옮기고 대조한 뒤 채운다(등록 위험 4). 비어 있는 동안 `_dp45_step` 은 이름 대고 멈춘다.
+DP45_C: tuple = ()
+DP45_A: tuple = ()
+DP45_B5: tuple = ()
+DP45_B4: tuple = ()
+
+
+def _dp45_step(deriv, r: float, y: tuple, h: float):
+    """내장 쌍 한 걸음 — `(dy, err)`. dy 는 5 차 증분(칸마다), err 는 5 차 − 4 차(칸마다).
+    `deriv(r, *y)` 는 칸 수만큼의 기울기를 돌려준다(지금 적분기의 `deriv` 와 같은 꼴에 T 칸이 더해질 자리)."""
+    if not (DP45_C and DP45_A and DP45_B5 and DP45_B4):
+        raise RuntimeError("DP45 계수표가 비어 있다 — 원문 대조 전(prereg-adaptive-rk45 위험 4)")
+    ks = []
+    for i, c in enumerate(DP45_C):
+        yi = tuple(y[j] + h * sum(DP45_A[i][l] * ks[l][j] for l in range(i)) for j in range(len(y)))
+        ks.append(deriv(r + c * h, *yi))
+    dy = tuple(h * sum(DP45_B5[i] * ks[i][j] for i in range(len(ks))) for j in range(len(y)))
+    d4 = tuple(h * sum(DP45_B4[i] * ks[i][j] for i in range(len(ks))) for j in range(len(y)))
+    return dy, tuple(a - b for a, b in zip(dy, d4))
+
+
+def _dp45_norm(err: tuple, y: tuple, floors: tuple) -> float:
+    """상대 오차의 최대 노름 — 칸마다 max(|y|, floor) 로 나눔(등록 §1 2, floor 는 결과 전 수)."""
+    return max(abs(e) / max(abs(v), f) for e, v, f in zip(err, y, floors))
+
+
+def _dp45_next_h(h: float, err_norm: float, accepted: bool) -> float:
+    """다음 걸음 — 받아들이면 h · min(5, 0.9 (1/err)^{1/5}), 버리면 h · max(0.2, 0.9 (1/err)^{1/4})."""
+    if err_norm <= 0.0:
+        return h * 5.0
+    if accepted:
+        return h * min(5.0, 0.9 * (1.0 / err_norm) ** 0.2)
+    return h * max(0.2, 0.9 * (1.0 / err_norm) ** 0.25)
 SHOOT_ITERS = 200
 SHOOT_TOL = 1e-8            # 겉질량의 상대오차
 # 괄호의 **아래쪽** 시험점이 재료의 적합 도메인 밖이라 거절할 때 위로 좁혀 보는 횟수 (C60 (a),
