@@ -143,13 +143,9 @@ def load_for(state):
                       f"(오너 결정 2026-09-24). `python3 engine/structure_grid.py --refresh {state.name.lower()}` 로 짓는다")
     doc = json.loads(path.read_text(encoding="utf-8"))
     now = triggers(state.inputs)
-    moved = [f"{part}.{k}" for part in ("declared", "code", "bytes")
-             for k in sorted(set(now[part]) | set(doc["triggers"].get(part, {})))
-             if now[part].get(k) != doc["triggers"].get(part, {}).get(k)]
-    if now["sulphur_fixings"] != doc["triggers"].get("sulphur_fixings"):
-        moved.append("sulphur_fixings")
-    if now["mantle_table"] != doc["triggers"].get("mantle_table"):
-        moved.append("mantle_table")
+    # ⚠ **런타임은 코드 칸을 안 본다** (prereg-value-based-staleness, 동결 668e1616 ②) — 코드가 움직였을 때의 검산은
+    #   게이트 단계(`--check`)가 격자점 전부를 다시 풀어 한다. 데이터(선언 · .py 밖 바이트 · 황 고정 · 맨틀 표)는 즉시 낡음(⑤).
+    moved, _code = _moved(doc["triggers"], now)
     if moved:
         return None, (f"구조 표가 낡았다 — 방아쇠 {moved} 가 움직였다. 조용히 다시 풀지 않는다: "
                       f"`python3 engine/structure_grid.py --refresh {state.name.lower()}`")
@@ -430,15 +426,61 @@ def self_checked_build(name: str) -> dict:
     raise SystemExit(f"{name}: ε 를 {MAX_HALVINGS} 번 반으로 줄여도 자기 검증이 안 선다 — {log}")
 
 
+def _moved(then: dict, now: dict) -> tuple[list[str], list[str]]:
+    """(데이터 칸 움직임, 코드 칸 움직임) — `.py` 는 코드, 그 밖은 데이터(prereg-value-based-staleness ⑤)."""
+    data, code = [], []
+    for part in ("declared", "code", "bytes"):
+        for k in sorted(set(now[part]) | set(then.get(part, {}))):
+            if now[part].get(k) != then.get(part, {}).get(k):
+                (code if part == "code" or (part == "bytes" and k.endswith(".py")) else data).append(f"{part}.{k}")
+    if now["sulphur_fixings"] != then.get("sulphur_fixings"):
+        data.append("sulphur_fixings")
+    if now.get("mantle_table") != then.get("mantle_table"):
+        data.append("mantle_table")
+    return data, code
+
+
+def _recheck(doc: dict, body) -> tuple[float, str]:
+    """코드가 움직인 표의 검산 — 격자점 **전부**를 다시 풀어 저장 여섯 칸과의 최대 상대 차(②④). (차, 칸 이름)."""
+    import types
+    import cmb_flux as cf
+    solve, _how, _cmf = _solver(body, types.SimpleNamespace(values={"core_mass_fraction": doc["points"][0]["core_mass_fraction"]}))
+    m_kg = body.inputs["mass_earth"] * cf.M_EARTH_KG
+    worst, where = 0.0, ""
+    for t, row in zip(doc["t_pot"], doc["points"]):
+        r = solve(t)
+        if not r.applicable:
+            return math.inf, f"{t!r} K 에서 거절 — {(r.reason or '')[:80]}"
+        new = _params(r.values, t, m_kg)
+        for k in FIELDS:
+            d = abs(new[k] - row[k]) / abs(row[k])
+            if d > worst:
+                worst, where = d, f"{k} @ {t:.2f} K"
+    return worst, where
+
+
 def check_all() -> int:
+    """방아쇠 대조 — 데이터가 움직이면 낡음(FAIL), **코드만** 움직이면 격자점 전부를 다시 풀어 ε 안이면 통과
+    (prereg-value-based-staleness, 동결 668e1616). 못 봄: 격자점 사이에서만 곡선이 바뀌는 변경."""
     import run
     bad = 0
     for path in sorted(GRID_DIR.glob("*.json")):
         doc = json.loads(path.read_text(encoding="utf-8"))
         body, _ = run.load_body(BODIES_DIR / f"{doc['body'].lower()}.yaml")
-        _, why = load_for(body)
-        print(f"  [{'FAIL' if why else 'PASS'}] {path.name} — {why or '방아쇠 그대로'}")
-        bad += bool(why)
+        data, code = _moved(doc["triggers"], triggers(body.inputs))
+        if data:
+            print(f"  [FAIL] {path.name} — 데이터 방아쇠 {data} 가 움직였다 — `--refresh {doc['body'].lower()}`")
+            bad += 1
+            continue
+        if not code:
+            print(f"  [PASS] {path.name} — 방아쇠 그대로")
+            continue
+        worst, where = _recheck(doc, body)
+        ok = worst <= EPS
+        print(f"  [{'PASS' if ok else 'FAIL'}] {path.name} — 코드 움직임 {code} · 값 허용 {'안' if ok else '밖'}"
+              f"(최대 상대 차 {worst:.3e} at {where}, ε {EPS:.4e}, 격자점 {len(doc['t_pot'])})"
+              + ("" if ok else f" — `--refresh {doc['body'].lower()}`"))
+        bad += not ok
     return bad
 
 

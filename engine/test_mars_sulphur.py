@@ -174,6 +174,10 @@ def _check_declared(frozen: dict, declared: dict, fails: list) -> None:
                          "같은 선언이 맞으면 **이 커밋에서 `--refresh`**")
 
 
+#: 코드(.py) 자가 움직인 방아쇠 파일 — 판정은 다시 맞춤의 값 대조가 한다(값 기반 낡음).
+CODE_MOVED: list = []
+
+
 def _check_files(frozen: dict, fails: list) -> None:
     """⚠ **어느 자가 움직였는지 먼저 말하고, 그 다음에 `--refresh` 를 말한다.**
 
@@ -184,8 +188,15 @@ def _check_files(frozen: dict, fails: list) -> None:
         then, here = frozen["files"].get(name, {}), now[name]
         moved = [ruler for ruler in ("bytes", "code")
                  if ruler in here and then.get(ruler) != here[ruler]]
-        print(f"  [{'PASS' if not moved else 'FAIL'}] `{name}` "
-              + ("자 그대로" if not moved else f"{'·'.join(moved)} 가 움직였다"))
+        label = "PASS" if not moved else ("note" if name.endswith(".py") else "FAIL")
+        print(f"  [{label}] `{name}` "
+              + ("자 그대로" if not moved else f"{'·'.join(moved)} 가 움직였다"
+                 + (" — 코드, 값 대조로 판정" if name.endswith(".py") else "")))
+        if moved and name.endswith(".py"):
+            # ⚠ **코드는 값으로 본다** (prereg-value-based-staleness, 동결 668e1616 ②) — 아래 «같은 코드가 같은 황을
+            #   내는가» 의 다시 맞춤(SULPHUR_TOL_WT)이 검산이다. 여기서는 기록만, 판정은 그 값 대조가 한다.
+            CODE_MOVED.append(name)
+            continue
         if moved:
             what = ("주석·빈 줄만 움직였다 (코드 자는 그대로)" if moved == ["bytes"]
                     else "이 파일이 **하는 일**이 바뀌었다")
@@ -243,6 +254,9 @@ def check() -> int:
                      "안 움직인다면 그 선언은 아무것도 안 하고 있는 것이다")
     print(f"  [{'PASS' if ok else 'FAIL'}] 두 고정이 **다른 답**을 준다 — S {apart * 100:.2f} wt% 차")
 
+    if CODE_MOVED:
+        print(f"  [{'PASS' if not fails else 'FAIL'}] 코드 움직임 {CODE_MOVED} · 값 "
+              f"{'허용 안 — 다시 맞춘 황이 굳힘과 SULPHUR_TOL_WT 안(재굳힘 없이 통과)' if not fails else '대조가 위에서 실패'}")
     if fails:
         print(f"\n[FAIL] {len(fails)}")
         for f in fails:

@@ -559,6 +559,10 @@ def _gone_branch_fixture(fails: list[str]) -> None:
           f"(합성 기록으로만 밟았고 감시 파일 {len(now)} 개는 안 건드렸다)")
 
 
+#: 코드가 움직인 자리 — 전체 모드에서는 아래 `_live` 의 값 대조가 판정한다(prereg-value-based-staleness, 동결 668e1616 ②).
+CODE_MOVED: list = []
+
+
 def _fingerprint(frozen: dict, fails: list[str], full: bool) -> None:
     """경로 지문 대조. 두 모드 다 본다 (2026-09-03, Brief 39 감사 ⑤).
 
@@ -570,6 +574,10 @@ def _fingerprint(frozen: dict, fails: list[str], full: bool) -> None:
     `--refresh`. 값이 움직였다면 그것은 아래 전체 풀이 대조가 따로 잡는다."""
     fp_now, fp_then = path_fingerprint(), frozen["path_fingerprint"]
     ok = fp_now == fp_then
+    if not ok and full:
+        CODE_MOVED.append(f"경로 지문 {fp_then} → {fp_now}")
+        print(f"  [note] 경로 지문 {fp_then} → {fp_now} (바뀜) — 코드, 아래 전체 풀이 값 대조로 판정")
+        return
     if not ok:
         fails.append("사격·온도 고리·적분기의 경로 지문이 굳힐 때와 다르다 — "
                      + ("값이 그대로여도 경로 함수가 바뀐 것이니 **이 커밋에서 `--refresh`** 로 "
@@ -580,7 +588,7 @@ def _fingerprint(frozen: dict, fails: list[str], full: bool) -> None:
           f"{', '.join(PATH_FUNCTIONS)} + 상수 {len(PATH_CONSTANTS)}개")
 
 
-def _inputs(frozen: dict, fails: list[str]) -> None:
+def _inputs(frozen: dict, fails: list[str], full: bool = False) -> None:
     """굳힌 뒤에 **풀이가 읽는 파일**이 바뀌었는가 (C88 C, 2026-09-14).
 
     지문과 다른 질문이다. 지문은 «경로 함수의 몸통이 바뀌었나», 이쪽은 «입력이 바뀌었나» 다.
@@ -618,6 +626,12 @@ def _inputs(frozen: dict, fails: list[str]) -> None:
     code_moved = sorted(k for k in moved if k in now_code and now_code[k] != then_code.get(k))
     nonpy_moved = sorted(k for k in moved if k not in now_code)
     bytes_only = [k for k in moved if k not in code_moved and k not in nonpy_moved]
+    if full and code_moved:
+        # 전체 모드: 코드(.py)만 움직인 파일은 값 대조(`_live`)가 판정 — 여기서는 기록만
+        CODE_MOVED.extend(code_moved)
+        for k in code_moved:
+            print(f"  [note] 코드 움직임 {k} 코드 {then_code.get(k)} → {now_code[k]} — 아래 전체 풀이 값 대조로 판정")
+        code_moved = []
     ok = not (code_moved or nonpy_moved or gone or added)
     if not ok:
         parts = []
@@ -893,7 +907,7 @@ def main() -> int:
     secs = {n: r.get("seconds") for n, r in frozen["bodies"].items()}
     print("  굳힐 때 초 — " + " · ".join(f"{n} {v}" for n, v in secs.items())
           + " (수락선 ⑤: 넓힌 비교의 값이 이 수로 매겨진다)")
-    _inputs(frozen, fails)
+    _inputs(frozen, fails, full="--fast" not in sys.argv)
     _gone_branch_fixture(fails)
     if "--fast" in sys.argv:
         _fast(frozen, fails)
@@ -902,6 +916,9 @@ def main() -> int:
         _live(frozen, fails)
         _clamp_invariance(frozen, fails)
     _published_nmoi(frozen, fails)
+    if CODE_MOVED:
+        print(f"  [{'PASS' if not fails else 'FAIL'}] 코드 움직임 {len(CODE_MOVED)} 자리 · 값 "
+              + ("허용 안 — 전체 풀이가 굳힌 값을 다시 냄(재굳힘 없이 통과)" if not fails else "대조가 위에서 실패"))
 
     if fails:
         print(f"\n실패 {len(fails)}건")
