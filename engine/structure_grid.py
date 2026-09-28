@@ -174,30 +174,31 @@ def _solver(body, s0):
     if declared.get("composition_intent") is not None or declared.get("core_mass_fraction") is not None:
         how = "declared composition"
 
-        def solve(t):
+        def solve(t, p_hint=None):
             b = copy.deepcopy(body); b.results = {}
             b.inputs["potential_temperature"] = float(t)
-            return interior._solve_from_state(b)
+            return interior._solve_from_state(b, p_hint)
     elif interior._declared_value(declared.get("core_plus_layer_radius_km")):
         anchor = json.loads(interior.SULPHUR_ANCHOR_FILE.read_text(encoding="utf-8"))
         pin = interior._declared_value(declared.get("light_element_fixing"))
         w_s = anchor["fixings"][pin]["core_sulphur_wt"]
         how = f"fixed sulphur {w_s!r} ({pin}) and cmf {cmf0!r}"
 
-        def solve(t):
+        def solve(t, p_hint=None):
             return interior.solve_with_fixed_sulphur(declared["mass_earth"], w_s, pin, cmf0, potential_temperature=float(t),
+                                                     p_hint=p_hint,
                                                      basal_iron_number=declared.get("basal_iron_number"),
                                                      mantle_composition=interior._declared_value(
                                                          declared.get("mantle_composition")))
     else:
         how = f"inferred cmf {cmf0!r} declared"
 
-        def solve(t):
+        def solve(t, p_hint=None):
             b = copy.deepcopy(body); b.results = {}
             b.inputs["potential_temperature"] = float(t)
             b.inputs["core_mass_fraction"] = cmf0
             b.inputs["composition_intent"] = "earth_like"
-            return interior._solve_from_state(b)
+            return interior._solve_from_state(b, p_hint)
     return solve, how, cmf0
 
 
@@ -215,15 +216,21 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
     """성긴 5 점에서 시작해 구간 가운데를 풀어 보간 오차가 eps 를 넘는 구간만 반으로 (덧붙임 11 · 12)."""
     cache = {}
 
+    p_centres = {}
+
     def at(t):
         if t not in cache:
-            r = solve(t)
+            # 이미 푼 가장 가까운 이웃 점의 중심압을 힌트로(prereg-shoot-warm-start)
+            near = min(p_centres, key=lambda x: abs(x - t)) if p_centres else None
+            r = solve(t, p_hint=p_centres[near] if near is not None else None)
             if not r.applicable:
                 raise SystemExit(f"{name}: {t!r} K 에서 구조가 거절한다 — 격자 안에서 단조가 아니다: {r.reason}")
             cmf_t = r.inputs.get("core_mass_fraction")
             if cmf_t != cmf0:
                 raise SystemExit(f"{name}: {t!r} K 의 cmf {cmf_t!r} 가 S0 {cmf0!r} 와 다르다 — 조성이 고정이 아니다")
             cache[t] = ({**_params(r.values, t, m_kg), "core_mass_fraction": cmf0}, _fingerprint(r))
+            if r.values.get("core_pressure"):
+                p_centres[t] = r.values["core_pressure"] * 1e9
         return cache[t]
 
     grid = [lo + (hi - lo) * i / (START_POINTS - 1) for i in range(START_POINTS)]

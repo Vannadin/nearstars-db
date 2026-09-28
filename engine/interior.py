@@ -1525,6 +1525,13 @@ def _narrow_bracket(good: float, bad: float, at, mass_kg: float):
     return best_p, best_st
 
 
+#: 안쪽 사격 허용을 바깥 온도 고리에 맞추는 비 (prereg-shoot-warm-start 덧붙임 2 A, judgment · 까닭 없는 둥근 수) —
+#: 통과 k 의 허용 = max(SHOOT_TOL, LOOSE_C · 앞 통과 표면 온도 상대 차), 첫 통과는 max(SHOOT_TOL, LOOSE_C).
+LOOSE_C = 0.1
+#: 따뜻한 출발의 괄호 폭 — 힌트의 ÷ · × (prereg-shoot-warm-start, judgment · 까닭 없는 둥근 수).
+WARM_BRACKET = 1.5
+
+
 def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     core_material: str, phi0: float = 0.0,
                     p_cap: float | None = None, gmf: float = 0.0,
@@ -1540,8 +1547,15 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     ammonia_mass_fraction: float = 0.0,
                     interface_jumps: dict | None = None,
                     basal_layer: dict | None = None,
-                    lithosphere: dict | None = None) -> tuple[Structure, bool]:
+                    lithosphere: dict | None = None,
+                    p_hint: float | None = None,
+                    tol: float = SHOOT_TOL) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
+
+    `p_hint` — 앞 통과가 구한 중심압(prereg-shoot-warm-start, 동결 `f0122297`). 있으면 먼저 그 둘레
+    [p_hint / 1.5, p_hint · 1.5] 를 적분해 겉질량이 목표를 감싸면 그 괄호에서 할선을 돈다. 못 감싸거나
+    `PhaseGap` 이면 버리고 아래 옛 괄호로 처음부터 — 거절 집합이 안 바뀐다. 기체 외피(`p_stop` > 0)는
+    힌트를 안 씀(1 bar 표면의 U 자 질량 곡선에서 다른 가지 뿌리를 고를 수 있어서).
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
     를 단 결과다. 예외로 던지면 호출자가 그 사실을 조용히 삼킬 수 있다."""
@@ -1662,124 +1676,144 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     # 자리** 로 둔다. 사다리는 위로 올라가며 그 눈금들의 질량을 이미 계산했으므로 적분이
     # 더 들지 않고, ×4 라는 눈금 간격이 답을 정하지도 않는다 — 정하는 것은 "최소를
     # 넘긴 뒤" 라는 조건이다.
-    good = None                  # 마지막으로 적분이 끝난 시험압
-    rung = None                  # 질량이 목표에 못 미친 마지막 눈금 (압력, 질량)
+    good = None
+    rung = None
     broke: PhaseGap | None = None
-    # **씨앗이 이미 목표를 넘긴 기체 천체.** U 자의 왼쪽 가지(부푼 쪽)에서 출발한 것일 수 있다.
-    # 예전에는 사다리가 즉시 멈추고 할선의 둘째 점을 hi × 10⁻³ 에 두어 부푼 뿌리로 갔다 — 5 M⊕
-    # 순수 가스 천체가 같은 중심 온도에서 11 R⊕ 와 131 R⊕ 두 답을 번갈아 냈다. 물리적인 쪽은
-    # 오른쪽 가지(치밀한 쪽)다: 중심압을 올리면 질량이 늘어나는 구간이고, 발표된 거대행성 반지름은
-    # 전부 그쪽이다. 그래서 질량이 줄어드는 동안 위로 오른다 — 목표 아래로 내려가면 그 눈금이
-    # rung 이고 기존 사다리가 이어받는다. 최소를 지나서도 목표 아래로 못 내려가면 치밀한 뿌리가
-    # 없다는 뜻이고, 그것은 묶이지 않는 외피와 같은 종류의 사실이다.
-    if p_stop:
+    hinted = False
+    if p_hint and not p_stop:
+        h_lo, h_hi = max(p_hint / WARM_BRACKET, lo), min(p_hint * WARM_BRACKET, p_ceiling)
         try:
-            st0 = at(hi)
+            st_lo, st_hi = at(h_lo), at(h_hi)
+            hinted = h_lo < h_hi and st_lo.mass_kg < mass_kg <= st_hi.mass_kg
         except PhaseGap:
-            st0 = None
-        if st0 is not None and st0.mass_kg >= mass_kg:
-            # 먼저 내려가 본다. 오른쪽 가지의 뿌리 위에 앉은 씨앗이면(목성·토성 질량의 순수 가스
-            # 천체가 그렇다) 내려갈수록 질량이 줄어 목표 아래로 떨어지고, 그 눈금이 rung 이다.
-            # 내려갈수록 질량이 **늘면** 왼쪽(부푼) 가지이고, 그때는 위로 올라 최소를 넘긴다.
-            prev, p_prev = st0, hi
-            rung_found = False
-            while p_prev / 4.0 > lo:
-                p_dn = p_prev / 4.0
-                try:
-                    st_dn = at(p_dn)
-                except PhaseGap:
-                    break
-                if st_dn.mass_kg < mass_kg:
-                    rung = (p_dn, st_dn.mass_kg)
-                    rung_found = True
-                    break
-                if st_dn.mass_kg > prev.mass_kg:
-                    break                    # 내려가는데 질량이 는다. 부푼 가지다
-                prev, p_prev = st_dn, p_dn
-            if not rung_found:
+            hinted = False
+        convergence.note("interior._shoot_warm_start", hinted)
+        if hinted:
+            hi, st = h_hi, st_hi
+            if abs(st.mass_kg - mass_kg) / mass_kg < tol:
+                return st, True
+            x0, y0 = math.log(h_hi), math.log(st_hi.mass_kg / mass_kg)
+            x1, y1 = math.log(h_lo), math.log(st_lo.mass_kg / mass_kg)
+            st = st_lo
+    if not hinted:
+        good = None                  # 마지막으로 적분이 끝난 시험압
+        rung = None                  # 질량이 목표에 못 미친 마지막 눈금 (압력, 질량)
+        broke: PhaseGap | None = None
+        # **씨앗이 이미 목표를 넘긴 기체 천체.** U 자의 왼쪽 가지(부푼 쪽)에서 출발한 것일 수 있다.
+        # 예전에는 사다리가 즉시 멈추고 할선의 둘째 점을 hi × 10⁻³ 에 두어 부푼 뿌리로 갔다 — 5 M⊕
+        # 순수 가스 천체가 같은 중심 온도에서 11 R⊕ 와 131 R⊕ 두 답을 번갈아 냈다. 물리적인 쪽은
+        # 오른쪽 가지(치밀한 쪽)다: 중심압을 올리면 질량이 늘어나는 구간이고, 발표된 거대행성 반지름은
+        # 전부 그쪽이다. 그래서 질량이 줄어드는 동안 위로 오른다 — 목표 아래로 내려가면 그 눈금이
+        # rung 이고 기존 사다리가 이어받는다. 최소를 지나서도 목표 아래로 못 내려가면 치밀한 뿌리가
+        # 없다는 뜻이고, 그것은 묶이지 않는 외피와 같은 종류의 사실이다.
+        if p_stop:
+            try:
+                st0 = at(hi)
+            except PhaseGap:
+                st0 = None
+            if st0 is not None and st0.mass_kg >= mass_kg:
+                # 먼저 내려가 본다. 오른쪽 가지의 뿌리 위에 앉은 씨앗이면(목성·토성 질량의 순수 가스
+                # 천체가 그렇다) 내려갈수록 질량이 줄어 목표 아래로 떨어지고, 그 눈금이 rung 이다.
+                # 내려갈수록 질량이 **늘면** 왼쪽(부푼) 가지이고, 그때는 위로 올라 최소를 넘긴다.
                 prev, p_prev = st0, hi
-                while True:
-                    nxt_p = min(p_prev * 4.0, p_ceiling)
+                rung_found = False
+                while p_prev / 4.0 > lo:
+                    p_dn = p_prev / 4.0
                     try:
-                        st1 = at(nxt_p)
+                        st_dn = at(p_dn)
                     except PhaseGap:
-                        break                # 위가 막혔다. 기존 사다리가 좁힌다
-                    if st1.mass_kg < mass_kg:
-                        hi = nxt_p           # 최소를 지나 목표 아래로 내려왔다. 여기가 rung 이 된다
                         break
-                    if st1.mass_kg >= prev.mass_kg or nxt_p >= p_ceiling:
-                        raise NoCompactRoot(
-                            f"중심 온도 {t_center:.0f} K 에서 치밀한 뿌리가 없다 — 중심압 {p_prev / 1e9:.4g} 에서 "
-                            f"{nxt_p / 1e9:.4g} GPa 로 올려도 겉질량이 목표의 {prev.mass_kg / mass_kg:.3g} 배에서 "
-                            f"{st1.mass_kg / mass_kg:.3g} 배로 줄지 않는다. 1 bar 에 묶인 외피의 겉질량이 중심압에 "
-                            "U 자를 그리는데 그 최소가 목표 위에 있어서, 남는 해는 부푼 왼쪽 가지뿐이고 그것은 "
-                            "발표된 어떤 거대행성도 앉아 있지 않은 가지다.")
-                    prev, p_prev = st1, nxt_p
-    while True:
-        try:
-            st = at(hi)
-        except PhaseGap as gap:
-            if gap.temperature_k:
-                # **온도가 막은 것은 압력 괄호로 못 고친다.** 중심압을 낮춰도 그 층의
-                # 온도는 중심 온도가 정하므로, 좁히는 대신 위로 올려 보낸다 — 바깥의
-                # 온도 고리가 중심 온도를 올려 다시 잡는다.
-                raise
-            if good is None:
-                raise            # 첫 시험부터 깨진다. 좁힐 바닥이 없다
-            broke = gap
-            hi, st = _narrow_bracket(good, hi, at, mass_kg)
-            break
-        good = hi
-        if st.mass_kg >= mass_kg:
-            break
-        # 목표에 못 미치는 **마지막** 눈금을 들고 간다. 질량이 U 자를 그려도 마지막인
-        # 것이 중요하다 — 내려가는 가지에서 목표 아래로 떨어진 눈금이 있었다면 그 뒤의
-        # 눈금들도 최소까지 계속 목표 아래이므로, 마지막은 언제나 최소의 오른쪽,
-        # 곧 질량이 중심압에 단조증가하는 구간에 있다.
-        rung = (hi, st.mass_kg)
-        if hi >= p_ceiling:
-            raise ValueError(
-                f"이 질량을 담으려면 중심압이 {_ceiling_owner(stack[0][1])} 의 근거 "
-                f"구간 상한({p_ceiling / 1e9:.0f} GPa) 을 넘어야 한다. "
-                + _ceiling_why(stack[0][1]))
-        hi = min(hi * 4.0, p_ceiling)
+                    if st_dn.mass_kg < mass_kg:
+                        rung = (p_dn, st_dn.mass_kg)
+                        rung_found = True
+                        break
+                    if st_dn.mass_kg > prev.mass_kg:
+                        break                    # 내려가는데 질량이 는다. 부푼 가지다
+                    prev, p_prev = st_dn, p_dn
+                if not rung_found:
+                    prev, p_prev = st0, hi
+                    while True:
+                        nxt_p = min(p_prev * 4.0, p_ceiling)
+                        try:
+                            st1 = at(nxt_p)
+                        except PhaseGap:
+                            break                # 위가 막혔다. 기존 사다리가 좁힌다
+                        if st1.mass_kg < mass_kg:
+                            hi = nxt_p           # 최소를 지나 목표 아래로 내려왔다. 여기가 rung 이 된다
+                            break
+                        if st1.mass_kg >= prev.mass_kg or nxt_p >= p_ceiling:
+                            raise NoCompactRoot(
+                                f"중심 온도 {t_center:.0f} K 에서 치밀한 뿌리가 없다 — 중심압 {p_prev / 1e9:.4g} 에서 "
+                                f"{nxt_p / 1e9:.4g} GPa 로 올려도 겉질량이 목표의 {prev.mass_kg / mass_kg:.3g} 배에서 "
+                                f"{st1.mass_kg / mass_kg:.3g} 배로 줄지 않는다. 1 bar 에 묶인 외피의 겉질량이 중심압에 "
+                                "U 자를 그리는데 그 최소가 목표 위에 있어서, 남는 해는 부푼 왼쪽 가지뿐이고 그것은 "
+                                "발표된 어떤 거대행성도 앉아 있지 않은 가지다.")
+                        prev, p_prev = st1, nxt_p
+        while True:
+            try:
+                st = at(hi)
+            except PhaseGap as gap:
+                if gap.temperature_k:
+                    # **온도가 막은 것은 압력 괄호로 못 고친다.** 중심압을 낮춰도 그 층의
+                    # 온도는 중심 온도가 정하므로, 좁히는 대신 위로 올려 보낸다 — 바깥의
+                    # 온도 고리가 중심 온도를 올려 다시 잡는다.
+                    raise
+                if good is None:
+                    raise            # 첫 시험부터 깨진다. 좁힐 바닥이 없다
+                broke = gap
+                hi, st = _narrow_bracket(good, hi, at, mass_kg)
+                break
+            good = hi
+            if st.mass_kg >= mass_kg:
+                break
+            # 목표에 못 미치는 **마지막** 눈금을 들고 간다. 질량이 U 자를 그려도 마지막인
+            # 것이 중요하다 — 내려가는 가지에서 목표 아래로 떨어진 눈금이 있었다면 그 뒤의
+            # 눈금들도 최소까지 계속 목표 아래이므로, 마지막은 언제나 최소의 오른쪽,
+            # 곧 질량이 중심압에 단조증가하는 구간에 있다.
+            rung = (hi, st.mass_kg)
+            if hi >= p_ceiling:
+                raise ValueError(
+                    f"이 질량을 담으려면 중심압이 {_ceiling_owner(stack[0][1])} 의 근거 "
+                    f"구간 상한({p_ceiling / 1e9:.0f} GPa) 을 넘어야 한다. "
+                    + _ceiling_why(stack[0][1]))
+            hi = min(hi * 4.0, p_ceiling)
 
-    if st.mass_kg < mass_kg:
-        # 좁힌 위쪽 끝에서도 질량이 모자란다. 중심압을 더 올려야 하는데 그러면 바깥
-        # 층이 깨지므로, 이건 실재하는 거절이다. 이유는 **바깥 층** 이지 안쪽 재료의
-        # 상한이 아니다.
-        raise ValueError(
-            f"이 질량을 담으려면 중심압을 {hi / 1e9:.0f} GPa 위로 올려야 하는데, "
-            f"그러면 바깥의 {broke.material} 층이 근거 구간을 벗어난다 "
-            f"(그 층 바닥이 {broke.pressure_pa / 1e9:.0f} GPa). {broke.reason}")
-    # log M 은 log P_c 에 거의 선형이라 할선법이 몇 번 만에 붙는다. 벗어나면
-    # 괄호 안의 로그 이분법으로 되돌린다 — 적분 한 번이 비싸서 반복 횟수가 곧 비용이다.
-    st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
-                        envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
-                        boundary_temperature_jump, mantle_rock_fraction,
-                        serpentinisation, differentiation_front, crust_rock_fraction,
-                        crust_porosity, envelope_z_profile,
-                        ammonia_mass_fraction=ammonia_mass_fraction,
-                        interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere)
-    if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
-        return st, True
-    if p_stop and rung is not None:
-        # 기체가 바깥에 있다. 사다리가 밟은 눈금을 아래끝으로 쓴다. 그 눈금의 질량이
-        # 이미 있으므로 할선의 두 점이 **공짜** 이고, 이 구간 안에서는 질량이 중심압에
-        # 단조증가하므로 뿌리가 하나다. st 는 위쪽 점(hi)의 것이라 x1 과 짝이 맞는다.
-        lo = rung[0]
-        x0, y0 = math.log(rung[0]), math.log(rung[1] / mass_kg)
-        x1, y1 = math.log(hi), math.log(st.mass_kg / mass_kg)
-    else:
-        x0, y0 = math.log(hi), math.log(st.mass_kg / mass_kg)
-        # 응축상. 표면이 P = 0 이라 질량이 중심압에 단조이고, 아래끝이 어디든 뿌리가
-        # 하나다. 예전 경로를 그대로 둬서 앵커가 비트까지 같게 유지한다.
-        x1 = math.log(max(lo, hi * 1e-3))
-        st, x1 = lower_point(x1)
-        y1 = math.log(st.mass_kg / mass_kg)
+        if st.mass_kg < mass_kg:
+            # 좁힌 위쪽 끝에서도 질량이 모자란다. 중심압을 더 올려야 하는데 그러면 바깥
+            # 층이 깨지므로, 이건 실재하는 거절이다. 이유는 **바깥 층** 이지 안쪽 재료의
+            # 상한이 아니다.
+            raise ValueError(
+                f"이 질량을 담으려면 중심압을 {hi / 1e9:.0f} GPa 위로 올려야 하는데, "
+                f"그러면 바깥의 {broke.material} 층이 근거 구간을 벗어난다 "
+                f"(그 층 바닥이 {broke.pressure_pa / 1e9:.0f} GPa). {broke.reason}")
+        # log M 은 log P_c 에 거의 선형이라 할선법이 몇 번 만에 붙는다. 벗어나면
+        # 괄호 안의 로그 이분법으로 되돌린다 — 적분 한 번이 비싸서 반복 횟수가 곧 비용이다.
+        st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
+                            envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
+                            boundary_temperature_jump, mantle_rock_fraction,
+                            serpentinisation, differentiation_front, crust_rock_fraction,
+                            crust_porosity, envelope_z_profile,
+                            ammonia_mass_fraction=ammonia_mass_fraction,
+                            interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere)
+        if abs(st.mass_kg - mass_kg) / mass_kg < tol:
+            return st, True
+        if p_stop and rung is not None:
+            # 기체가 바깥에 있다. 사다리가 밟은 눈금을 아래끝으로 쓴다. 그 눈금의 질량이
+            # 이미 있으므로 할선의 두 점이 **공짜** 이고, 이 구간 안에서는 질량이 중심압에
+            # 단조증가하므로 뿌리가 하나다. st 는 위쪽 점(hi)의 것이라 x1 과 짝이 맞는다.
+            lo = rung[0]
+            x0, y0 = math.log(rung[0]), math.log(rung[1] / mass_kg)
+            x1, y1 = math.log(hi), math.log(st.mass_kg / mass_kg)
+        else:
+            x0, y0 = math.log(hi), math.log(st.mass_kg / mass_kg)
+            # 응축상. 표면이 P = 0 이라 질량이 중심압에 단조이고, 아래끝이 어디든 뿌리가
+            # 하나다. 예전 경로를 그대로 둬서 앵커가 비트까지 같게 유지한다.
+            x1 = math.log(max(lo, hi * 1e-3))
+            st, x1 = lower_point(x1)
+            y1 = math.log(st.mass_kg / mass_kg)
     last_short = None            # 질량이 모자란 마지막 구조 (외피 없는 암석)
     for _ in range(SHOOT_ITERS):
-        if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
+        if abs(st.mass_kg - mass_kg) / mass_kg < tol:
             convergence.note("interior._shoot_pressure", True)
             return st, True
         if st.mass_kg < mass_kg:
@@ -1900,8 +1934,14 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           ammonia_mass_fraction: float = 0.0,
           interface_jumps: dict | None = None,
           basal_layer: dict | None = None,
-          lithosphere: dict | None = None) -> tuple[Structure, bool]:
+          lithosphere: dict | None = None,
+          p_hint: float | None = None,
+          _t_start: float | None = None, _loose: bool = True,
+          _passes: int | None = None) -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
+
+    `_t_start` · `_loose` · `_passes` 는 끝맺음 뒤 이어 돌기(prereg-shoot-warm-start 덧붙임 2 HOLD 반영) 전용 —
+    바깥 호출자는 안 넘긴다.
 
     온도가 선언되지 않으면(`potential_temperature is None`) 아래 고리가 아예 돌지
     않고 예전 경로 그대로다 — 비트까지 같다.
@@ -1927,14 +1967,20 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     if lithosphere:
         kw["lithosphere"] = lithosphere
     if not potential_temperature:
-        return _shoot_pressure(*args, **kw)
+        return _shoot_pressure(*args, p_hint=p_hint, **kw)
     t_pot = float(potential_temperature)
-    t_c = t_pot * 2.0        # 첫 추측. 비율로 다시 재므로 값 자체는 중요하지 않다
+    t_c = t_pot * 2.0 if _t_start is None else float(_t_start)   # 첫 추측. 비율로 다시 재므로 값 자체는 중요하지 않다
 
-    # 직전 통과의 중심압을 괄호의 출발점으로 물려주는 것을 재봤고, 되돌렸다. 27 % 를
-    # 벌지만 할선의 경로가 바뀌어 수렴점이 마지막 비트에서 달라지고, 그러면 "기준
-    # 포텐셜 온도에서는 답이 비트까지 안 움직인다" 는 항등식이 깨진다. 그 항등식이
-    # 속도보다 무겁다.
+    # 직전 통과의 중심압을 괄호의 출발점으로 물려준다(prereg-shoot-warm-start, 동결 `f0122297`).
+    # ⚠ 예전에는 재보고 되돌렸다 — 27 % 를 벌지만 할선의 경로가 바뀌어 수렴점이 마지막 비트에서 달라지고
+    #   «기준 포텐셜 온도에서는 답이 비트까지 안 움직인다» 는 항등식이 깨져서였다. 오너 결정(2026-09-28)
+    #   «미세하게 값이 달라지는 건 괜찮아. 압도적으로 오래 걸리는 걸 고치는 게 필요하지» 로 그 항등식을
+    #   속도 뒤에 둔다 — 값은 수렴 허용치 안에서 움직이고, 게이트(몸 파일 tol)가 그 폭을 본다.
+    hint = {"p": p_hint}
+    # 안쪽 사격 허용(덧붙임 2 A) — 기체 외피(gmf > 0)는 이 규칙 밖(지금 그대로 SHOOT_TOL)
+    loose = _loose and gmf <= 0.0 and envelope_z <= 0.0
+    tol_now = {"v": max(SHOOT_TOL, LOOSE_C) if loose else SHOOT_TOL}
+    used_tol: dict = {}
     def attempt(t_try: float) -> tuple[Structure, bool, float]:
         """중심 온도 하나로 사격한다. 온도 바닥에 걸리면 올려서 다시 잡는다.
 
@@ -1961,9 +2007,12 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         crust_hit = False        # 이 시도 안에서 지각(C11)의 벽에 닿아 내려왔는가
         for _ in range(T_BRACKET_TRIES):
             try:
-                got, ok = _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, **kw)
+                got, ok = _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, p_hint=hint["p"], tol=tol_now["v"], **kw)
+                used_tol[id(got)] = tol_now["v"]
                 got.crust_blocked = crust_hit
                 convergence.note("interior._t_bracket_tries", True)
+                if ok:
+                    hint["p"] = got.p_center
                 return got, ok, t_now
             except SpinodalGap:
                 raise            # 스피노달 벽 — 시행 안에서 옮기지 않고 바깥 고리가 벽으로 받는다 (덧붙임 7)
@@ -1979,8 +2028,11 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         # ⚠ **열두 번을 다 쓰고도 벽을 못 벗어났다** (C71, 브리프 189). 아래 한 번이 더 돌고 그
         #   결과가 답의 자리로 나가는데, 그 «다 썼다» 는 지금까지 어디에도 안 적혔다. 값은 그대로다.
         convergence.note("interior._t_bracket_tries", False)
-        got, ok = _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, **kw)
+        got, ok = _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, p_hint=hint["p"], tol=tol_now["v"], **kw)
+        used_tol[id(got)] = tol_now["v"]
         got.crust_blocked = crust_hit
+        if ok:
+            hint["p"] = got.p_center
         return got, ok, t_now
 
     # **괄호가 옮긴 온도를 그대로 받아 온다.** 받지 않으면 바깥 고리가 자기가 요청한
@@ -2003,7 +2055,7 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     bracketed = False
     extensions = 0               # 연장 횟수. 좁히는 갈래는 한 번, 진동이 **줄고 있을 때**는 두 번까지
                                  # bracketed 값으로는 못 지킨다 (2026-09-01, 무한 사이클의 원인)
-    passes = T_PASSES
+    passes = T_PASSES if _passes is None else _passes
     # 가장 잘 붙은 시험값. 1 bar 온도는 중심 온도에 대해 격자 위상의 잔여 요철(해왕성에서 ±0.02 K,
     # 온도를 걸음마다 한 번의 ∇_ad 로 나르는 1차 오차)을 갖고 있어서, 어긋남이 허용오차 안으로
     # 들어온 뒤에도 비례 갱신이 요철의 국소 기울기(n ≈ 2.5)를 타고 다시 벌어질 수 있다. 그때 마지막
@@ -2044,6 +2096,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         if st.t_surface <= 0.0:
             break            # 열 상수가 없는 재료뿐이다. 온도가 흐르지 않는다
         devs.append(abs(st.t_surface / t_pot - 1.0))
+        if loose:
+            tol_now["v"] = max(SHOOT_TOL, LOOSE_C * devs[-1])
         # 어긋남이 **크면서** 한 진동 전보다 줄지 않았을 때만이다. 수렴 근처의 1e-4 급 흔들림은
         # 발산이 아니라 반올림이고, 거기서 갈래를 바꾸면 앵커의 마지막 비트가 움직인다 (2026-08-29
         # 에 천왕성·해왕성이 그렇게 움직였다).
@@ -2144,6 +2198,21 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         print(f"  [대체] 온도 고리 — 답은 시행 {best_attempt} (어긋남 {best[0]:.4e}), "
               f"마지막 시행 {_last_dev:.4e}, 시행 {len(devs)} 걸음")
         _d, st, converged, t_c = best
+    if used_tol.get(id(st), SHOOT_TOL) > SHOOT_TOL:
+        # **끝맺음(덧붙임 2 A):** 고른 답이 느슨한 허용으로 닫힌 사격이면 같은 중심 온도에서 SHOOT_TOL 로 한 번 더 —
+        #   돌려주는 구조는 늘 지금 허용으로 닫힌 것. 수렴 표지 · 표면 온도 판정은 아래가 이 구조로 다시 한다.
+        blocked = getattr(st, "crust_blocked", False)
+        st, converged = _shoot_pressure(*args, t_center=t_c, t_pot=t_pot, p_hint=st.p_center, tol=SHOOT_TOL, **kw)
+        st.crust_blocked = blocked
+        if st.t_surface > 0.0 and not _surface_temperature_met(st, t_pot):
+            # 끝맺음 구조의 표면 온도가 허용 밖 — 그 T_c 에서 SHOOT_TOL 로 온도 고리를 **이어** 돈다(지휘 선택 (a)):
+            #   남은 통과 예산 · 연장 · 완화 · 대체는 지금 고리 규칙 그대로, 끝은 지금과 같은 판정.
+            return shoot(mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z, envelope_z_rock_fraction,
+                         differentiated, potential_temperature, boundary_temperature_jump, mantle_rock_fraction,
+                         serpentinisation, differentiation_front, crust_rock_fraction, crust_porosity,
+                         envelope_z_profile, ammonia_mass_fraction=ammonia_mass_fraction,
+                         interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere,
+                         p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=max(passes, 1))
     if wall is not None and not _surface_temperature_met(st, t_pot):
         # **선언된 1 bar 온도에 닿는 중심 온도가 없다.** 벽 아래의 가장 뜨거운 묶인 해와 벽을 둘 다
         # 들고 나간다 — 버린 시험값이 아니라 실제로 도달한 두 상태다.
@@ -2868,7 +2937,8 @@ def solve(mass_earth: float,
           basal_layer_thickness_km: float | None = None,
           basal_layer_density: float | None = None,
           lithosphere_thickness_km: float | None = None,
-          surface_temperature_k: float | None = None) -> Result:
+          surface_temperature_k: float | None = None,
+          p_hint: float | None = None) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
@@ -3290,7 +3360,7 @@ def solve(mass_earth: float,
     litho_log = None
     litho_bracket = None          # 괄호 풀이를 탔으면 (폭, 이분 횟수, 계단 위 뿌리?) — 오늘 닫히는 몸은 None
 
-    def _shoot(lithosphere=None):
+    def _shoot(lithosphere=None, p_hint=None):
         return shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
                      initial_porosity, porosity_cap, gmf,
                      envelope_z, envelope_z_rock_fraction, differentiated, potential_temperature,
@@ -3299,9 +3369,9 @@ def solve(mass_earth: float,
                      crust_porosity, envelope_z_profile,
                      ammonia_mass_fraction=ammonia_mass_fraction,
                      interface_jumps=jumps or None,
-                     basal_layer=basal, lithosphere=lithosphere)
+                     basal_layer=basal, lithosphere=lithosphere, p_hint=p_hint)
     try:
-        st, converged = _shoot()
+        st, converged = _shoot(p_hint=p_hint)      # 앞 통과(역산 훑기 · 구조 표 이웃 점)의 중심압 — prereg-shoot-warm-start
         if litho_d_m is not None:
             # 층 바닥 r_L = R − D 는 R 을 알아야 정해진다 — 바깥 고정점(덧붙임 2 ①).
             r_est = st.radius_m
@@ -4017,16 +4087,21 @@ def infer_composition(mass_earth: float, radius_earth: float,
     if not rock.applicable:
         return rock
 
+    warm = {"p": None}
     if radius_earth <= rock.values["radius"]:
         axis, span = "core_mass_fraction", (0.0, 1.0)
 
         def at(x):
-            return solve(mass_earth, core_mass_fraction=x, ice_mass_fraction=0.0,
-                         potential_temperature=potential_temperature,
-                         tidal_heating=tidal_heating,
-                         basal_iron_number=basal_iron_number,
-                         basal_layer_thickness_km=basal_layer_thickness_km,
-                         basal_layer_density=basal_layer_density)
+            # 앞 시행의 중심압을 힌트로(prereg-shoot-warm-start) — 풀린 시행만 갈아 끼움
+            res = solve(mass_earth, core_mass_fraction=x, ice_mass_fraction=0.0,
+                        potential_temperature=potential_temperature,
+                        tidal_heating=tidal_heating,
+                        basal_iron_number=basal_iron_number,
+                        basal_layer_thickness_km=basal_layer_thickness_km,
+                        basal_layer_density=basal_layer_density, p_hint=warm["p"])
+            if res.applicable and res.values.get("core_pressure"):
+                warm["p"] = res.values["core_pressure"] * 1e9
+            return res
     elif not ice_allowed:
         # 기준선보다 가벼운데 얼음이 선언으로 배제돼 있다. 남는 기작은 빈 공간이고,
         # 이제 그 빈 공간에 근거된 관계식이 있다 — 그래서 여기서 끝나지 않는다.
@@ -4036,12 +4111,16 @@ def infer_composition(mass_earth: float, radius_earth: float,
         axis, span = "ice_mass_fraction", (0.0, 0.98)
 
         def at(x):
-            return solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=x,
-                         potential_temperature=potential_temperature,
-                         tidal_heating=tidal_heating,
-                         basal_iron_number=basal_iron_number,
-                         basal_layer_thickness_km=basal_layer_thickness_km,
-                         basal_layer_density=basal_layer_density)
+            # 앞 시행의 중심압을 힌트로(prereg-shoot-warm-start) — 풀린 시행만 갈아 끼움
+            res = solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=x,
+                        potential_temperature=potential_temperature,
+                        tidal_heating=tidal_heating,
+                        basal_iron_number=basal_iron_number,
+                        basal_layer_thickness_km=basal_layer_thickness_km,
+                        basal_layer_density=basal_layer_density, p_hint=warm["p"])
+            if res.applicable and res.values.get("core_pressure"):
+                warm["p"] = res.values["core_pressure"] * 1e9
+            return res
 
     # 1) 축을 훑는다. 값이 나오는 눈금과 막힌 눈금을 모두 들고 간다.
     grid = [span[0] + (span[1] - span[0]) * i / (SCAN_POINTS - 1)
@@ -4142,10 +4221,51 @@ def infer_composition(mass_earth: float, radius_earth: float,
     # 3) 이분법. 감싼 구간 안이라 반드시 값이 나온다. 얼음은 넣을수록 반지름이
     #    커지고 금속은 넣을수록 작아지므로, 어느 쪽으로 좁힐지는 축이 정한다.
     lo, hi = bracket
+    bracket_r = tuple(next(r.values["radius"] for xx, r in scan if xx == b) - radius_earth for b in bracket)
     grows = axis == "ice_mass_fraction"
     x, best = lo, at(lo)
     closed = False
-    for _ in range(40):
+    # **먼저 Brent**(prereg-shoot-warm-start 덧붙임 2 B) — 멈춤은 아래 이분과 같은 |f|/target < INFER_TOL. 한 시행이라도
+    #   안 풀리면 Brent 를 버리고 그때까지 좁힌 괄호에서 아래 이분 고리를 잇는다(거절 집합이 안 바뀌게).
+    from scipy.optimize import brentq
+
+    class _Done(Exception):
+        pass
+
+    brent = {"lo": lo, "hi": hi, "x": x, "best": best, "why": "brent",
+             "pts": [(lo, bracket_r[0]), (hi, bracket_r[1])]}
+
+    def f(xx):
+        res = at(xx)
+        if not res.applicable:
+            brent["why"] = "unsolved"
+            raise _Done
+        got_r = res.values["radius"]
+        brent["x"], brent["best"] = xx, res
+        brent["pts"].append((xx, got_r - radius_earth))
+        if abs(got_r - radius_earth) / radius_earth < INFER_TOL:
+            brent["why"] = "closed"
+            raise _Done
+        return got_r - radius_earth
+
+    try:
+        brentq(f, lo, hi, xtol=1e-15, rtol=1e-15, maxiter=40)
+    except _Done:
+        pass
+    except (ValueError, RuntimeError):
+        brent["why"] = "failed"
+    convergence.note("interior._infer_axis_brent", brent["why"] == "closed")
+    if brent["why"] == "closed":
+        closed, x, best = True, brent["x"], brent["best"]
+    else:
+        # 이분으로 넘길 괄호(HOLD 반영) — 평가한 풀린 점 중 목표와의 부호가 갈리는 **가장 좁은 이웃 쌍**
+        pts = sorted(brent["pts"])
+        pairs = [(a, b) for (a, fa), (b, fb) in zip(pts, pts[1:]) if fa * fb <= 0.0]
+        if pairs:
+            lo, hi = min(pairs, key=lambda ab: ab[1] - ab[0])
+        if brent["best"] is not None and brent["best"].applicable:
+            x, best = brent["x"], brent["best"]
+    for _ in range(0 if closed else 40):
         mid = 0.5 * (lo + hi)
         res = at(mid)
         if not res.applicable:
@@ -4620,7 +4740,8 @@ def solve_with_fixed_sulphur(mass_earth: float, w_s: float, pin: str, core_mass_
                              basal_iron_number: float | None = None,
                              basal_layer_thickness_km: float | None = None,
                              basal_layer_density: float | None = None,
-                             mantle_composition: dict | None = None):
+                             mantle_composition: dict | None = None,
+                             p_hint: float | None = None):
     """황 **과 핵질량분율을 둘 다 고정**하고 한 번 푼다 — 반지름이 출력이다 (prereg-structure-grid 덧붙임 7 ②).
 
     `solve_with_core_sulphur` 는 반지름에 cmf 를 다시 맞추므로 온도가 바뀌면 조성이 바뀐다. 구조 표는 «같은 조성이
@@ -4631,7 +4752,7 @@ def solve_with_fixed_sulphur(mass_earth: float, w_s: float, pin: str, core_mass_
                      potential_temperature=potential_temperature, tidal_heating=False,
                      basal_iron_number=basal_iron_number,
                      basal_layer_thickness_km=basal_layer_thickness_km,
-                     basal_layer_density=basal_layer_density)
+                     basal_layer_density=basal_layer_density, p_hint=p_hint)
 
 
 def _sulphur_result(res, w_s: float, pin: str, core_plus_layer_radius_km: float, how: str):
@@ -4903,7 +5024,7 @@ def _infer_from_state(state):
                              basal_iron_number=state.get("basal_iron_number"))
 
 
-def _solve_from_state(state):
+def _solve_from_state(state, p_hint: float | None = None):
     """구조 노드의 입구 — 맨틀 조성 선언(C74-2)을 읽고, 있으면 그 광물 집합 표를 끼운 채 `_solve_from_state_body` 를 푼다.
     선언이 없으면 끼우는 것이 없다(비트 동일)."""
     decl = state.get_optional("mantle_composition")
@@ -4917,10 +5038,10 @@ def _solve_from_state(state):
     if why:
         return out_of_domain(RECIPE, VERSION, why, inputs={"mantle_composition": _declared_value(decl)}, refs=REFS)
     if wt is None:
-        return _solve_from_state_body(state)
+        return _solve_from_state_body(state, p_hint)
     before = dict(mantle_composition.TABLE_ASKS)
     with ctx:
-        res = _solve_from_state_body(state)
+        res = _solve_from_state_body(state, p_hint)
     if not res.applicable:
         return res
     asks = {k: mantle_composition.TABLE_ASKS[k] - before[k] for k in before}
@@ -4933,7 +5054,7 @@ def _solve_from_state(state):
                        notes=tuple(res.notes) + (note,))
 
 
-def _solve_from_state_body(state):
+def _solve_from_state_body(state, p_hint: float | None = None):
     # ⚠ **이미 자기 물리를 이름 대는 거절이 있으면 그것이 이긴다** (182 B, 첫 판에서 잡힌 회귀).
     #   갈색왜성은 `solve` 이 «중수소가 탄다 …» 로 거절한다 — 조성 미선언보다 그쪽이 더 좁고
     #   더 물리적인 문장이라, 조성 갈래를 앞에 두면 좋은 거절을 일반적인 거절로 덮는다.
@@ -4974,13 +5095,13 @@ def _solve_from_state_body(state):
                              "(`core_plus_layer_radius_km`)이 없다 — 수로 적는다", inputs={}, refs=REFS)
     if core_spec is not None:
         with _declared_light_core(core_spec, state.get("composition_intent") or "earth_like"):
-            res = _solve_declared(state, jumps, litho_km)
+            res = _solve_declared(state, jumps, litho_km, p_hint)
         return _dc_replace(res, inputs={**res.inputs,
                                         "core_light_elements": _declared_value(state.get_optional("core_light_elements"))})
-    return _solve_declared(state, jumps, litho_km)
+    return _solve_declared(state, jumps, litho_km, p_hint)
 
 
-def _solve_declared(state, jumps, litho_km):
+def _solve_declared(state, jumps, litho_km, p_hint: float | None = None):
     """선언 조성 몸의 `solve` 호출 — 핵 경원소 재질을 끼운 채로도, 없이도 같은 인자(한 벌)."""
     return solve(
         mass_earth=state["mass_earth"],
@@ -5015,4 +5136,6 @@ def _solve_declared(state, jumps, litho_km):
         lithosphere_thickness_km=litho_km,
         surface_temperature_k=(_declared_value(state.get_optional("surface_temperature_k"))
                                if litho_km is not None else None),
+        # 구조 표 짓기의 이웃 점 중심압(prereg-shoot-warm-start) — 노드에서는 None(지금 길)
+        p_hint=p_hint,
     )
