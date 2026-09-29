@@ -35,6 +35,7 @@ START_POINTS = 5
 MAX_DEPTH = 6
 MIN_INTERVAL_K = 1.0
 JUMP_RATIO = 10.0            # 값 칸 뜀: 두 반쪽 변화의 큰 쪽 / 작은 쪽 (덧붙임 16)
+GRID_POOL = int(os.environ.get("GRID_POOL", "8"))   # 덧붙임 44 — 한 깊이의 가운데 점들을 동시에 푸는 프로세스 수
 KINK_MIN_K = 0.25            # 폭 바닥의 꺾임 구간만 이분 두 번 더 (덧붙임 43) — 꺾임의 선형 보간 오차는 폭에 비례
 BELOW_K = 150.0              # 격자 아래 끝 = ⓐ 판 t_m 최저 − 150 K (prereg-structure-grid 덧붙임 7 ③)
 ABOVE_K = 50.0               # 위 끝 = ⓐ 판 t_m 최고 + 50 K, 구조가 거절하면 T_ok 로
@@ -215,20 +216,33 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
 
     p_centres = {}
 
-    def at(t):
+    def _take(t, r):
+        if not r.applicable:
+            raise SystemExit(f"{name}: {t!r} K 에서 구조가 거절한다 — 격자 안에서 단조가 아니다: {r.reason}")
+        cmf_t = r.inputs.get("core_mass_fraction")
+        if cmf_t != cmf0:   # 덧붙임 45 «거절문 전부» 밖 — 격자 한계가 아니라 조성 고정 위반(입력 비트 검사)
+            raise SystemExit(f"{name}: {t!r} K 의 cmf {cmf_t!r} 가 S0 {cmf0!r} 와 다르다 — 조성이 고정이 아니다")
+        cache[t] = ({**_params(r.values, t, m_kg), "core_mass_fraction": cmf0}, _fingerprint(r))
+        if r.values.get("core_pressure"):
+            p_centres[t] = r.values["core_pressure"] * 1e9
+
+    def at(t, a=None, b=None):
+        """t 의 표 칸. (a, b) 는 t 를 가운데로 둔 구간 — 힌트는 가까운 끝점(덧붙임 44 ①), 없으면 힌트 없음."""
         if t not in cache:
-            # 이미 푼 가장 가까운 이웃 점의 중심압을 힌트로(prereg-shoot-warm-start)
-            near = min(p_centres, key=lambda x: abs(x - t)) if p_centres else None
-            r = solve(t, p_hint=p_centres[near] if near is not None else None)
-            if not r.applicable:
-                raise SystemExit(f"{name}: {t!r} K 에서 구조가 거절한다 — 격자 안에서 단조가 아니다: {r.reason}")
-            cmf_t = r.inputs.get("core_mass_fraction")
-            if cmf_t != cmf0:
-                raise SystemExit(f"{name}: {t!r} K 의 cmf {cmf_t!r} 가 S0 {cmf0!r} 와 다르다 — 조성이 고정이 아니다")
-            cache[t] = ({**_params(r.values, t, m_kg), "core_mass_fraction": cmf0}, _fingerprint(r))
-            if r.values.get("core_pressure"):
-                p_centres[t] = r.values["core_pressure"] * 1e9
+            near = None if a is None else (a if abs(t - a) <= abs(b - t) else b)
+            _take(t, _pool_solve(solve, [(t, p_centres.get(near) if near is not None else None)])[0])
         return cache[t]
+
+    def prefetch(jobs):
+        """덧붙임 44 ② — 아직 안 푼 (t, 가까운 끝점) 들을 풀로 한꺼번에 — 값은 at() 와 같은 힌트 규칙."""
+        jobs = [(t, near) for t, near in dict.fromkeys(jobs) if t not in cache]
+        if not jobs:
+            return
+        results = _pool_solve(solve, [(t, p_centres.get(near) if near is not None else None) for t, near in jobs])
+        for (t, _near), r in zip(jobs, results):
+            if not r.applicable:   # 감사 9f 곁 — 묶음으로 미리 푸니 직렬판과 먼저 만나는 거절 점이 다를 수 있다: 묶음을 찍는다
+                print(f"미리 풀기 묶음 {len(jobs)} 점 중 {t!r} K 가 거절(묶음 {[j[0] for j in jobs]!r})", flush=True)
+            _take(t, r)
 
     grid = [lo + (hi - lo) * i / (START_POINTS - 1) for i in range(START_POINTS)]
     todo = [(grid[i], grid[i + 1], 0) for i in range(START_POINTS - 1)]
@@ -247,13 +261,16 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         x, y, steps = a, b, 0
         while y - x > MIN_INTERVAL_K:
             m = 0.5 * (x + y)
-            r, left_big = ratio(at(x)[0], at(m)[0], at(y)[0], k)
+            r, left_big = ratio(at(x)[0], at(m, x, y)[0], at(y)[0], k)
             if r <= JUMP_RATIO:
                 return None
             x, y = (x, m) if left_big else (m, y)
             steps += 1
         return x, y, steps
+    prefetch([(t, None) for t in grid])
     while todo:
+        # 덧붙임 44 ② — 쌓인 구간들의 가운데 점을 먼저 한꺼번에(캐시에 없는 것만), 판정은 아래 지금 순서 그대로
+        prefetch([(0.5 * (a_ + b_), a_) for a_, b_, _d in todo])   # 가운데 점 — 힌트는 왼쪽 끝점(덧붙임 44 ①)
         a, b, d = todo.pop(0)
         pa, fa = at(a)
         pb, fb = at(b)
@@ -261,13 +278,14 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             x, y = a, b
             while y - x > MIN_INTERVAL_K:
                 m = 0.5 * (x + y)
-                if at(m)[1] == fa:
+                if at(m, x, y)[1] == fa:
                     x = m
                 else:
                     y = m
-            raise SystemExit(f"{name}: 보간 불가 구간 [{x!r}, {y!r}] K — 지문 {fa} → {at(y)[1]}")
+            raise SystemExit(f"{name}: 보간 불가 구간 [{x!r}, {y!r}] K — 지문 {fa} → {at(y)[1]} "
+                             f"(걸린 것: 폭 바닥 — 폭 {y - x:.3f} K ≤ MIN_INTERVAL_K {MIN_INTERVAL_K} K, 깊이 {d}/{MAX_DEPTH})")
         m = 0.5 * (a + b)
-        pm, fm = at(m)
+        pm, fm = at(m, a, b)
         err = {k: abs(0.5 * (pa[k] + pb[k]) - pm[k]) / abs(pm[k]) for k in FIELDS}
         if max(err.values()) > eps and fm == fa:
             jump = None
@@ -294,8 +312,12 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
                 depth_max = max(depth_max, d + 1)
                 continue
             if d + 1 > MAX_DEPTH or (b - a) / 2 < MIN_INTERVAL_K:
-                raise SystemExit(f"{name}: [{a!r}, {b!r}] K 가 깊이 {MAX_DEPTH} · 폭 {MIN_INTERVAL_K} K 안에서 ε {eps!r} 에 "
-                                 f"안 든다 (오차 {max(err.values())!r})")
+                # 덧붙임 45 — 걸린 한계를 수로. 꺾임 가지가 안 열린 까닭(지문 다름 · 반폭 바닥)도 한 낱말로.
+                hit = ("꺾임 반폭 바닥" if fm == fa and (b - a) / 2 < KINK_MIN_K else
+                       "지문 다름" if fm != fa else "깊이 상한" if d + 1 > MAX_DEPTH else "폭 바닥")
+                raise SystemExit(f"{name}: [{a!r}, {b!r}] K 가 ε {eps!r} 에 안 든다 (오차 {max(err.values())!r}) — "
+                                 f"걸린 것: {hit} · 깊이 {d}/{MAX_DEPTH} · 폭 {b - a:.3f} K · 폭 바닥 {MIN_INTERVAL_K} K · "
+                                 f"꺾임 반폭 바닥 {KINK_MIN_K} K")
             todo += [(a, m, d + 1), (m, b, d + 1)]
             depth_max = max(depth_max, d + 1)
         else:
@@ -304,6 +326,21 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
                 worst[k] = max(worst[k], err[k])
     ts = sorted({t for ab in done for t in ab} | {t for br in breaks for t in br[:2]})
     return ts, [at(t)[0] for t in ts], [at(t)[1] for t in ts], worst, depth_max, len(cache), breaks, kinks
+
+
+def _light(r):
+    """풀 일꾼이 돌려주는 가벼운 결과 — 판정에 쓰는 칸만(결과 객체 전체는 피클하지 않음)."""
+    import types
+    return types.SimpleNamespace(applicable=r.applicable, reason=r.reason, regime=r.regime,
+                                 inputs={"core_mass_fraction": r.inputs.get("core_mass_fraction")},
+                                 values=dict(r.values) if r.applicable else {})
+
+
+def _pool_solve(solve, jobs):
+    """덧붙임 44 ② — (t, hint) 들을 공용 도우미로(점마다 `process_state.reset()`), 입력 순서대로."""
+    import parallel_points
+    return parallel_points.solve_points(
+        lambda t, hint: _light(solve(t, p_hint=hint) if hint is not None else solve(t)), jobs, GRID_POOL)
 
 
 def build(name: str, n: int | None = None, points: list[float] | None = None, t_ok: float | None = None,
@@ -377,8 +414,7 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
     else:
         grid = list(points) if points is not None else [lo + (hi - lo) * i / (n - 1) for i in range(n)]
         points = []
-        for t in grid:
-            r = solve(t)
+        for t, r in zip(grid, _pool_solve(solve, [(t, None) for t in grid])):   # 덧붙임 44 ③ — 힌트 없음 그대로
             if not r.applicable:
                 raise SystemExit(f"{name}: 격자 {t!r} K 에서 구조가 거절한다 — 단조가 아니다: {r.reason}")
             cmf_t = r.inputs.get("core_mass_fraction")
