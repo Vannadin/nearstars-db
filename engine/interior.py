@@ -553,11 +553,14 @@ def _convergence_values() -> dict:
     tr = convergence.current()
     if tr is None:
         return {"converged": None, "unconverged_solvers": [], "bracket_invalid": [],
-                "substituted_solvers": []}
+                "substituted_solvers": [], "fallback_solvers": [], "trial_unconverged": []}
     return {"converged": tr.converged,
             "unconverged_solvers": tr.unconverged_sites,
             "bracket_invalid": tr.bracket_invalid_sites,
-            "substituted_solvers": tr.substituted_sites}
+            "substituted_solvers": tr.substituted_sites,
+            # C138 — 다른 길(F)과 버린 시행(P)은 AND 밖 따로 칸(늘 있음, 비면 [])
+            "fallback_solvers": sorted(tr.fallbacks),
+            "trial_unconverged": sorted(tr.trial_false)}
 
 
 def _core_or_own_gamma(mat, p: float, rho: float, t: float, t_pot: float) -> float:
@@ -1569,12 +1572,12 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
     if record is not None:
         record.append((r, p, m, t, mat.name))
     if not (steps >= MAX_STEPS and p > p_stop):
-        convergence.note("interior.integrate_max_steps", True)
+        convergence.note("interior.integrate_max_steps", True, trial=True)
     if steps >= MAX_STEPS and p > p_stop:
         # ⚠ **격자를 다 쓰고 표면에 못 닿았다 — 그 사실이 값으로 나간 적이 없다** (C71, 브리프 189).
         #   아래 두 갈래 중 하나는 구조를 돌려주고 하나는 이름 대며 거절하는데, 돌려주는 쪽이
         #   조용했다. 값은 그대로, 기록만 남는다.
-        convergence.note("interior.integrate_max_steps", False)
+        convergence.note("interior.integrate_max_steps", False, trial=True)   # C138 P — 사격 시행 안
         if m > mass_kg * (1.0 + SHOOT_TOL):
             # 표면에 닿기 전에 목표 질량을 이미 넘겼다. 사격이 이 시험값에서 알아야 하는 것은
             # "질량이 넘친다" 뿐이므로 여기서 멈춰 그 사실을 들고 나간다 — 예전에는 예외를
@@ -1839,12 +1842,12 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                 lo = p1              # 이 아래에는 해가 없다. 괄호에서 뺀다
                 x1 = 0.5 * (x1 + math.log(hi))
                 continue
-            convergence.note("interior._shoot_lo_tries", True)
+            convergence.note("interior._shoot_lo_tries", True, trial=True)
             return got, x1
         assert gap is not None
         # ⚠ 예산을 다 쓰고 이름 붙은 `PhaseGap` 으로 나간다 — 거절은 있지만 «소진» 은 그 자체로
         #   기록되지 않았다 (C71, 브리프 189). 값은 그대로, 기록만 남는다.
-        convergence.note("interior._shoot_lo_tries", False)
+        convergence.note("interior._shoot_lo_tries", False, trial=True)   # C138 P/R — 거절이면 거절이 따로 보임
         raise gap
 
     def at(p: float):
@@ -1892,7 +1895,10 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             hinted = h_lo < h_hi and st_lo.mass_kg < mass_kg <= st_hi.mass_kg
         except PhaseGap:
             hinted = False
-        convergence.note("interior._shoot_warm_start", hinted)
+        if hinted:
+            convergence.note("interior._shoot_warm_start", True)
+        else:
+            convergence.note_fallback("interior._shoot_warm_start")   # C138 F — 옛 사다리가 제대로 푼다
         if hinted:
             hi, st = h_hi, st_hi
             if abs(st.mass_kg - mass_kg) / mass_kg < tol:
@@ -2035,7 +2041,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     last_short = None            # 질량이 모자란 마지막 구조 (외피 없는 암석)
     for _ in range(SHOOT_ITERS):
         if abs(st.mass_kg - mass_kg) / mass_kg < tol:
-            convergence.note("interior._shoot_pressure", True)
+            convergence.note("interior._shoot_pressure", True, trial=True)
             return st, True
         if st.mass_kg < mass_kg:
             lo = math.exp(x1)
@@ -2062,7 +2068,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             # 없음, 위로 던짐)에 밀려 2000 K 대의 시험을 돌고 그 적분이 하나하나 비쌌던 것이다
             # (antigorite-thermal-context-notes.md). 이 보호는 그 조사 중 발견한 별개의 빈틈이고, 수렴하는
             # 앵커는 여기 오지 않는다.
-            convergence.note("interior._shoot_pressure", False)
+            convergence.note("interior._shoot_pressure", False, trial=True)   # C138 P — 채택 사격의 ok 는 겉 표지가 든다
             return st, False
         x0, y0 = x1, y1
         x1 = x2
@@ -2074,7 +2080,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     ammonia_mass_fraction=ammonia_mass_fraction,
                     interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere)
         y1 = math.log(st.mass_kg / mass_kg)
-    convergence.note("interior._shoot_pressure", False)
+    convergence.note("interior._shoot_pressure", False, trial=True)
     return st, False
 
 
@@ -2313,7 +2319,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         if got.t_surface <= 0.0:
             return
         d = abs(got.t_surface / t_pot - 1.0)
-        if best is None or d < best[0]:
+        # C138 규칙 2 — **사격이 닫힌 시행만** 최선 후보(사격 뿌리 없는 T_c 의 시행이 답으로 남지 않게)
+        if ok and (best is None or d < best[0]):
             best = (d, got, ok, t_now)
             best_attempt = attempts - 1     # 0 부터 센다 — 사격 호출 표와 같은 번호
 
@@ -2424,8 +2431,9 @@ def shoot(mass_kg: float, cmf: float, imf: float,
             extensions += 1
         if done:
             break
-    if (best is not None and not _surface_temperature_met(st, t_pot)
-            and best[0] < T_SURFACE_TOL):
+    if (best is not None and best[1] is not st and best[0] < T_SURFACE_TOL
+            and (not _surface_temperature_met(st, t_pot) or not converged)):
+        # C138 규칙 2 — 마지막 시행의 사격이 안 닫혔어도(표면은 허용 안이어도) 닫힌 앞 시행이 답.
         # 마지막 시험값은 벌어졌지만 그 전에 붙은 시험값이 있다. 그것이 답이다 (위 best 주석).
         # ⚠ **대체를 이름으로 남긴다** (사전등록 B). 배지는 그대로 «수렴» 이다 — 이 시행은
         #   허용오차를 만족한다. 안 보이던 것은 «값이 틀렸다» 가 아니라 «예산이 끝났을 때
@@ -2529,7 +2537,9 @@ def shoot(mass_kg: float, cmf: float, imf: float,
               + " · ".join("고체" if f is None else f"[{f[0]:.2f}, {f[1]:.2f}] GPa" for f in reps))
     _refuse_if_below_floor(st, core_material)
     _refuse_if_water_filled(st)
-    return st, converged and _surface_temperature_met(st, t_pot)
+    met = _surface_temperature_met(st, t_pot)
+    convergence.note("interior._surface_temperature", met)   # C138 — 이름 없던 2367 행 길(T 형)
+    return st, converged and met
 
 
 #: C122 고침 거절 문구의 앞머리 (C122 묶음, 오너 승인 2026-09-27).
@@ -4158,6 +4168,8 @@ def solve(mass_earth: float,
                "unconverged_solvers": "",
                "bracket_invalid": "",
                "substituted_solvers": "",
+               "fallback_solvers": "",       # C138 — 다른 길(F) 자리 이름
+               "trial_unconverged": "",      # C138 — 버린 시행(P) 자리 이름
                "nmoi": "dimensionless",
                "core_temperature": "K",
                "cmb_temperature": "K",
@@ -4564,7 +4576,10 @@ def infer_composition(mass_earth: float, radius_earth: float,
         pass
     except (ValueError, RuntimeError):
         brent["why"] = "failed"
-    convergence.note("interior._infer_axis_brent", brent["why"] == "closed")
+    if brent["why"] == "closed":
+        convergence.note("interior._infer_axis_brent", True)
+    else:
+        convergence.note_fallback("interior._infer_axis_brent")   # C138 F — 이분법이 같은 축 · 구간으로 잇는다
     if brent["why"] == "closed":
         closed, x, best = True, brent["x"], brent["best"]
     else:

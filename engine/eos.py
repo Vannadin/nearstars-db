@@ -736,7 +736,7 @@ class Phase:
         """냉각 압력 p_cold ≤ 0 에서 ρ ∈ [ρ_s, ρ0] — P(ρ) 가 그 구간에서 단조라 이분법(결정적, 횟수 고정)."""
         rho_s, p_s = self._spinodal()
         if p_cold < p_s:
-            convergence.note("eos.density_tension", False)
+            convergence.note("eos.density_tension", False, trial=True)   # C138 P/R — 사격 시행이면 벽
             raise SpinodalGap(self.name, p_cold, (
                 f"{self.name}: 열압력을 뺀 냉각 압력 {p_cold / 1e9:.4f} GPa 가 냉각 곡선의 스피노달 "
                 f"{p_s / 1e9:.4f} GPa 밑이다 — 이 온도({t:.0f} K)에서 이 상은 그 압력에 없다"), t, too_cold=False)
@@ -747,7 +747,7 @@ class Phase:
                 lo = mid
             else:
                 hi = mid
-        convergence.note("eos.density_tension", True)
+        convergence.note("eos.density_tension", True, trial=True)
         return 0.5 * (lo + hi)
 
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:

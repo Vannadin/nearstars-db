@@ -44,10 +44,21 @@ class Trace:
     #: events counted, not judged — e.g. a Newton leaving its window before a safety net took over
     #: (prereg-fe-liquid-newton-fix ⓐ: the fact stays on record even when the site's state is `None`)
     counts: dict[str, int] = field(default_factory=dict)
+    #: C138 — 다른 길로 간 자리(F): 대체 길이 제대로 된 답을 냈다. **AND 밖**, 셈만.
+    fallbacks: dict[str, int] = field(default_factory=dict)
+    #: C138 — 버린 시행 · 중간 패스의 False(P): 채택 답은 다른 시행일 수 있다. **AND 밖**, 따로 칸.
+    trial_false: set[str] = field(default_factory=set)
 
     def note(self, site: str, converged: bool | None,
-             bracket_checked: bool = True, bracket_valid: bool | None = None) -> None:
-        """⚠ **한 자리가 여러 번 불리면 AND 다** — 한 번이라도 안 닫혔으면 안 닫힌 것이다."""
+             bracket_checked: bool = True, bracket_valid: bool | None = None, trial: bool = False) -> None:
+        """⚠ **한 자리가 여러 번 불리면 AND 다** — 한 번이라도 안 닫혔으면 안 닫힌 것이다.
+        ``trial=True`` 면 버린 시행 · 중간 패스의 기록(C138 P 형) — False 는 `trial_false` 에만, AND 밖."""
+        if trial:
+            if converged is False:
+                self.trial_false.add(site)
+            if bracket_valid is False:
+                self.invalid.add(site)
+            return
         if converged is None:
             self.sites.setdefault(site, None)
         else:
@@ -111,11 +122,18 @@ def note_substituted(site: str, attempt: int, last_deviation: float) -> None:
 
 
 def note(site: str, converged: bool | None, bracket_checked: bool = True,
-         bracket_valid: bool | None = None) -> None:
+         bracket_valid: bool | None = None, trial: bool = False) -> None:
     """현재 풀이의 기록에 한 줄. 기록이 없으면(모듈을 직접 부른 경우) 조용히 지나간다."""
     tr = _TRACE.get()
     if tr is not None:
-        tr.note(site, converged, bracket_checked, bracket_valid)
+        tr.note(site, converged, bracket_checked, bracket_valid, trial)
+
+
+def note_fallback(site: str) -> None:
+    """C138 F 형 — 대체 길로 가서 제대로 된 답이 났다. «미수렴» 이 아니다: AND 밖, 셈만(`fallback_solvers`)."""
+    tr = _TRACE.get()
+    if tr is not None:
+        tr.fallbacks[site] = tr.fallbacks.get(site, 0) + 1
 
 
 @contextlib.contextmanager

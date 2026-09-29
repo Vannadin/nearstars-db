@@ -203,7 +203,7 @@ def volume_at(p: float, t: float, col: Column = LIQUID) -> float:
         convergence.note("fe_liquid.volume_newton", None)
         convergence.count("fe_liquid.volume_newton.window_exit")
     else:
-        convergence.note("fe_liquid.volume_newton", False)
+        convergence.note_fallback("fe_liquid.volume_newton")   # C138 F — 아래 이분법 안전망이 답을 낸다
     lo, hi = 0.2 * col.v0, 1.5 * col.v0
     valid = convergence.bracket_valid(pressure(lo, t, col) - p, pressure(hi, t, col) - p)
     if not valid:                             # 뿌리가 창 밖 — 반분은 창 끝을 돌려준다(세기만, 판정은 아래 note)
