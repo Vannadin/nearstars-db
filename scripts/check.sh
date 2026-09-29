@@ -1024,6 +1024,8 @@ step "test_mixture.py" bash -c 'cd engine && exec python3 test_mixture.py'
 # 얼음 VII·X French & Redmer 2015 열 세트 · 조석 응답 노드 앵커 — 게이트에 안 엮였던 둘 (C129). 각 ~1 s.
 step "test_ice_fr2015.py" bash -c 'cd engine && exec python3 test_ice_fr2015.py'
 step "test_tidal_response.py" bash -c 'cd engine && exec python3 test_tidal_response.py'
+# 프로세스 전역 상태 레지스트리 밖 가변 상태 0 — 구조 격자 덧붙임 44 가 «게이트에 넣음» 으로 등록한 시험. ~1 s.
+step "test_process_state.py" bash -c 'cd engine && exec python3 test_process_state.py'
 step "test_rocky_roster.py" bash -c 'cd engine && exec python3 test_rocky_roster.py'
 # 조석 수송 축 (Brief 35). 이오 재현 실패가 측정 불변량으로 고정되어 있다 —
 # 이 테스트가 울리면 실패 서사 자체가 바뀐 것이니 멈추고 추적한다.
