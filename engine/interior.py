@@ -695,6 +695,41 @@ class BasalConstDensity:
 _ICE_GRID_DELTA: dict[int, tuple[int, int]] = {}
 #: 기저층 기록 — `Structure` 가 `__slots__` 라 위 표와 같은 꼴로 id 에 단다(같은 조건, 같은 비우기).
 _BASAL_INFO: dict[int, dict] = {}
+#: 가족 오가기 기록 — 온도 고리가 부분 용융 구간의 가족 사이를 오가며 끝난 구조(prereg-melt-window-answers a703f21a §1.1).
+#:   위 두 표와 같은 꼴(id 키, 풀이마다 비움). 감지만 한다 — 가족을 고르지 않는다.
+_FAMILY_INFO: dict[int, dict] = {}
+FAMILY_OSCILLATION_NOTE = "고리가 가족 사이를 오가며 끝남"
+FAMILY_JUMP_GPA = 0.5          # 이웃 시행 사이 p_lo 또는 p_hi 가 이보다 크게 뛰면 가족이 바뀜(동결 §2 자 1 · §1.1)
+
+
+def _melt_family(st) -> tuple[float, float] | None:
+    """구조의 부분 용융 구간 [p_lo, p_hi] GPa(0 < φ < 1 인 암석 표본의 압력 범위) — 없으면 None."""
+    part = [p for p, t in st.rock_samples
+            if p > 0.0 and t > 0.0 and 0.0 < (eos.silicate_melt_fraction(p, t) or 0.0) < 1.0]
+    return (min(part) / 1e9, max(part) / 1e9) if part else None
+
+
+def _family_jump(a, b) -> bool:
+    """가족이 바뀌었나 — 한쪽만 구간이 있으면 뜀(동결 줄 지휘 결정), 둘 다 있으면 끝 하나라도 0.5 GPa 넘게."""
+    if (a is None) != (b is None):
+        return True
+    return a is not None and (abs(a[0] - b[0]) > FAMILY_JUMP_GPA or abs(a[1] - b[1]) > FAMILY_JUMP_GPA)
+
+
+def _family_oscillation(fams: list) -> list | None:
+    """시행 가족 목록이 «가족 사이를 오가며 끝남» 이면 대표 가족들, 아니면 None.
+    끝남 = 마지막 두 시행 사이가 뜀 · 또는 끝 네 시행 안에 뜀이 둘 이상."""
+    if len(fams) < 2:
+        return None
+    tail = fams[-4:]
+    n_tail = sum(_family_jump(tail[i - 1], tail[i]) for i in range(1, len(tail)))
+    if not (_family_jump(fams[-2], fams[-1]) or n_tail >= 2):
+        return None
+    reps = []
+    for f in fams:
+        if all(_family_jump(r, f) for r in reps):
+            reps.append(f)
+    return reps
 #: 표면 암석권의 자리(prereg-surface-lithosphere) — 구조 id → 층 바닥 반지름 · 그 자리 단열 온도 · 윗끝 · 표면 온도.
 _LITHO_INFO: dict[int, dict] = {}
 
@@ -2236,10 +2271,12 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     best = None                  # (어긋남, Structure, 사격 수렴, 중심 온도)
     best_attempt = -1            # 그 최선이 몇 번째 시행이었나 (사전등록 B — «답이 몇 걸음 낡았나»)
     attempts = 0                 # remember 가 본 시행 수
+    fams = []                    # 시행마다 부분 용융 구간(가족) — 가족 오가기 감지(prereg-melt-window-answers §1.1)
 
     def remember(got, ok, t_now):
         nonlocal best, best_attempt, attempts
         attempts += 1
+        fams.append(_melt_family(got))
         if got.t_surface <= 0.0:
             return
         d = abs(got.t_surface / t_pot - 1.0)
@@ -2413,6 +2450,12 @@ def shoot(mass_kg: float, cmf: float, imf: float,
             "그것은 시행 걸음이 아니라 **갱신 규칙 변경**이라 붙는 천체의 경로도 바꾼다 — **C69 후보**다.")
     print(f"  [고리] 시행 {len(devs)} 걸음 · 완화 걸린 걸음 {damped_steps} · "
           f"마지막 어긋남 {devs[-1]:.4e}" if devs else "  [고리] 시행 0 걸음")
+    reps = _family_oscillation(fams)
+    if reps is not None:
+        # ⚠ **고르지 않는다 — 감지 · 알림만** (오너에게 한 약속 «답이 둘이면 조용히 하나를 고르지 않고 알린다»).
+        _FAMILY_INFO[id(st)] = {"families": reps, "trials": len(fams)}
+        print(f"  [가족] 온도 고리가 가족 {len(reps)} 개 사이를 오가며 끝남 — "
+              + " · ".join("고체" if f is None else f"[{f[0]:.2f}, {f[1]:.2f}] GPa" for f in reps))
     _refuse_if_below_floor(st, core_material)
     _refuse_if_water_filled(st)
     return st, converged and _surface_temperature_met(st, t_pot)
@@ -3507,6 +3550,7 @@ def solve(mass_earth: float,
             boundary_temperature_jump = float(jumps.pop("ice/envelope"))
     _ICE_GRID_DELTA.clear()
     _BASAL_INFO.clear()
+    _FAMILY_INFO.clear()
     # 기저층 (prereg-structure-basal-layer) — 두께 0 또는 없음이면 층이 없다(S-B2: 예전 경로 그대로).
     basal = None
     if basal_layer_thickness_km:
@@ -3649,6 +3693,13 @@ def solve(mass_earth: float,
     #   «모른다» 와 «0» 을 한 문장으로 내보내면 둘을 되찾을 수 없다 (`:2293` 이 그렇게 적는다).
     basal_info = _BASAL_INFO.get(id(st))
     litho_info = _LITHO_INFO.get(id(st))
+    fam_info = _FAMILY_INFO.get(id(st))
+    if fam_info is not None:
+        # prereg-melt-window-answers §1.1 — 이름 붙은 불수락 까닭. 수렴 표지를 내려 소비처가 «받을 답 아님» 으로 본다.
+        converged = False
+        notes.append(FAMILY_OSCILLATION_NOTE + f" — 가족 {len(fam_info['families'])} 개(시행 {fam_info['trials']}): "
+                     + " · ".join("고체(부분 용융 없음)" if f is None else f"부분 용융 [{f[0]:.2f}, {f[1]:.2f}] GPa"
+                                  for f in fam_info["families"]))
     if litho_info is not None:
         notes.append(
             f"표면 암석권 {litho_d_m / 1e3:g} km(전도 T = A/r + B, H = 0) — 바닥 r {litho_info['r_base'] / 1e3:.3f} km · "
