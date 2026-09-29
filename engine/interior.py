@@ -702,6 +702,17 @@ FAMILY_OSCILLATION_NOTE = "고리가 가족 사이를 오가며 끝남"
 FAMILY_JUMP_GPA = 0.5          # 이웃 시행 사이 p_lo 또는 p_hi 가 이보다 크게 뛰면 가족이 바뀜(동결 §2 자 1 · §1.1)
 
 
+def answer_verdict(result) -> str | None:
+    """이 풀이를 답으로 받는가 — 모든 소비처가 묻는 한 함수(C130, prereg-melt-window-answers a703f21a §1.1).
+    받으면 None, 아니면 까닭 한 줄: 거절 · 수렴 표지 False(표면 온도 허용 밖 · 사격 미수렴) · 가족 오가기."""
+    if not result.applicable:
+        return f"거절 — {(result.reason or '')[:160]}"
+    if result.converged is False:
+        fam = next((n for n in (result.notes or ()) if n.startswith(FAMILY_OSCILLATION_NOTE)), None)
+        return fam or "수렴 표지 False — 표면 온도가 허용(T_SURFACE_TOL) 밖이거나 사격이 안 닫힘"
+    return None
+
+
 def _melt_family(st) -> tuple[float, float] | None:
     """구조의 부분 용융 구간 [p_lo, p_hi] GPa(0 < φ < 1 인 암석 표본의 압력 범위) — 없으면 None."""
     part = [p for p, t in st.rock_samples

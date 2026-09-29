@@ -212,6 +212,7 @@ def _fingerprint(r) -> list:
 
 def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
     """성긴 5 점에서 시작해 구간 가운데를 풀어 보간 오차가 eps 를 넘는 구간만 반으로 (덧붙임 11 · 12)."""
+    import interior
     cache = {}
 
     p_centres = {}
@@ -219,6 +220,9 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
     def _take(t, r):
         if not r.applicable:
             raise SystemExit(f"{name}: {t!r} K 에서 구조가 거절한다 — 격자 안에서 단조가 아니다: {r.reason}")
+        why = interior.answer_verdict(r)   # C130 — 수렴 표지 False 인 점을 표에 조용히 넣지 않는다
+        if why is not None:
+            raise SystemExit(f"{name}: {t!r} K 에서 받을 답 아님 — {why}")
         cmf_t = r.inputs.get("core_mass_fraction")
         if cmf_t != cmf0:   # 덧붙임 45 «거절문 전부» 밖 — 격자 한계가 아니라 조성 고정 위반(입력 비트 검사)
             raise SystemExit(f"{name}: {t!r} K 의 cmf {cmf_t!r} 가 S0 {cmf0!r} 와 다르다 — 조성이 고정이 아니다")
@@ -332,6 +336,7 @@ def _light(r):
     """풀 일꾼이 돌려주는 가벼운 결과 — 판정에 쓰는 칸만(결과 객체 전체는 피클하지 않음)."""
     import types
     return types.SimpleNamespace(applicable=r.applicable, reason=r.reason, regime=r.regime,
+                                 converged=r.converged, notes=tuple(r.notes or ()),
                                  inputs={"core_mass_fraction": r.inputs.get("core_mass_fraction")},
                                  values=dict(r.values) if r.applicable else {})
 
@@ -420,6 +425,9 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
         for t, r in zip(grid, _pool_solve(solve, [(t, None) for t in grid])):   # 덧붙임 44 ③ — 힌트 없음 그대로
             if not r.applicable:
                 raise SystemExit(f"{name}: 격자 {t!r} K 에서 구조가 거절한다 — 단조가 아니다: {r.reason}")
+            why = interior.answer_verdict(r)   # C130
+            if why is not None:
+                raise SystemExit(f"{name}: 격자 {t!r} K 에서 받을 답 아님 — {why}")
             cmf_t = r.inputs.get("core_mass_fraction")
             if cmf_t != cmf0:
                 raise SystemExit(f"{name}: 격자 {t!r} K 의 cmf {cmf_t!r} 가 S0 {cmf0!r} 와 다르다 — 조성이 고정이 아니다")
