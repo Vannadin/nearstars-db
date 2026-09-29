@@ -699,16 +699,36 @@ _BASAL_INFO: dict[int, dict] = {}
 #:   위 두 표와 같은 꼴(id 키, 풀이마다 비움). 감지만 한다 — 가족을 고르지 않는다.
 _FAMILY_INFO: dict[int, dict] = {}
 FAMILY_OSCILLATION_NOTE = "고리가 가족 사이를 오가며 끝남"
+FAMILY_RESOLVED_NOTE = "다시 닫아 한 가족으로 닫힘"
+FAMILY_TWO_NOTE = "답 둘"
+_REOPEN = [False]              # 다시 닫는 고리 안에서는 또 다시 닫지 않는다(덧붙임 3 규칙 1)
+
+
+def _family_groups(branches):
+    """닫힌 갈래들을 §1.1 가족 정의로 **이어 묶기**(한 짝이라도 같으면 한 묶음, 덧붙임 3 규칙 2)."""
+    groups = []
+    for b in branches:
+        hit = [g for g in groups if any(not _family_jump(b["family"], o["family"]) for o in g)]
+        merged = [b] + [o for g in hit for o in g]
+        groups = [g for g in groups if g not in hit] + [merged]
+    return groups
 FAMILY_JUMP_GPA = 0.5          # 이웃 시행 사이 p_lo 또는 p_hi 가 이보다 크게 뛰면 가족이 바뀜(동결 §2 자 1 · §1.1)
 
 
-def answer_verdict(result) -> str | None:
-    """이 풀이를 답으로 받는가 — 모든 소비처가 묻는 한 함수(C130, prereg-melt-window-answers a703f21a §1.1).
-    받으면 None, 아니면 까닭 한 줄: 거절 · 수렴 표지 False(표면 온도 허용 밖 · 사격 미수렴) · 가족 오가기."""
+def answer_verdict(result, tags: list | None = None) -> str | None:
+    """이 풀이를 답으로 받는가 — 모든 소비처가 묻는 한 함수(C130, prereg-melt-window-answers a703f21a §1.1 · 덧붙임 4).
+    두 칸: 돌려주는 값 = 불수락 까닭(받으면 None) — 거절 · **겉** 수렴 표지 False(표면 온도 허용 밖 · 사격 미수렴 ·
+    가족 오가기 · 답 둘). ``tags`` 목록을 주면 표지를 담는다 — **속** 기록만 False(`values["converged"] is False`)인
+    받은 답에 «속 풀이 미수렴 — 자리 이름들»(`state.py` 와 같은 뜻, 값은 내고 길이 안 닫힌 자리를 들고 감).
+    속 기록 None(추적기 없음)은 표지 없음."""
+    if tags is not None and result.applicable and result.converged is not False \
+            and (result.values or {}).get("converged") is False:
+        tags.append("속 풀이 미수렴 — " + ", ".join((result.values or {}).get("unconverged_solvers") or ["(이름 없음)"]))
     if not result.applicable:
         return f"거절 — {(result.reason or '')[:160]}"
     if result.converged is False:
-        fam = next((n for n in (result.notes or ()) if n.startswith(FAMILY_OSCILLATION_NOTE)), None)
+        fam = next((n for n in (result.notes or ())
+                    if n.startswith(FAMILY_OSCILLATION_NOTE) or n.startswith(FAMILY_TWO_NOTE)), None)
         return fam or "수렴 표지 False — 표면 온도가 허용(T_SURFACE_TOL) 밖이거나 사격이 안 닫힘"
     return None
 
@@ -2282,12 +2302,14 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     best = None                  # (어긋남, Structure, 사격 수렴, 중심 온도)
     best_attempt = -1            # 그 최선이 몇 번째 시행이었나 (사전등록 B — «답이 몇 걸음 낡았나»)
     attempts = 0                 # remember 가 본 시행 수
+    fam_t = []                   # 시행의 중심 온도 — 가족을 다시 닫는 출발점(덧붙임 3)
     fams = []                    # 시행마다 부분 용융 구간(가족) — 가족 오가기 감지(prereg-melt-window-answers §1.1)
 
     def remember(got, ok, t_now):
         nonlocal best, best_attempt, attempts
         attempts += 1
         fams.append(_melt_family(got))
+        fam_t.append(t_now)
         if got.t_surface <= 0.0:
             return
         d = abs(got.t_surface / t_pot - 1.0)
@@ -2462,6 +2484,39 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     print(f"  [고리] 시행 {len(devs)} 걸음 · 완화 걸린 걸음 {damped_steps} · "
           f"마지막 어긋남 {devs[-1]:.4e}" if devs else "  [고리] 시행 0 걸음")
     reps = _family_oscillation(fams)
+    if reps is not None and not _REOPEN[0]:
+        # 덧붙임 3 규칙 1 — 감지된 가족 **전부** 를 그 가족의 마지막 시행 중심 온도에서 다시 닫는다.
+        picks = [max(i for i in range(len(fams)) if not _family_jump(f, fams[i])) for f in reps]
+        branches = []
+        _REOPEN[0] = True
+        try:
+            for i in dict.fromkeys(picks):
+                b_st, b_ok = shoot(mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z, envelope_z_rock_fraction,
+                                   differentiated, potential_temperature, boundary_temperature_jump, mantle_rock_fraction,
+                                   serpentinisation, differentiation_front, crust_rock_fraction, crust_porosity,
+                                   envelope_z_profile, ammonia_mass_fraction=ammonia_mass_fraction,
+                                   interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere,
+                                   p_hint=st.p_center, _t_start=fam_t[i], _loose=False, _passes=T_PASSES)
+                dev = abs(b_st.t_surface / t_pot - 1.0) if b_st.t_surface > 0.0 else float("inf")
+                if b_ok and dev < T_SURFACE_TOL:
+                    branches.append({"st": b_st, "ok": b_ok, "dev": dev, "family": _melt_family(b_st)})
+        finally:
+            _REOPEN[0] = False
+        groups = _family_groups(branches)
+        widths = [(max(b["family"][0] for b in g) - min(b["family"][0] for b in g),
+                   max(b["family"][1] for b in g) - min(b["family"][1] for b in g))
+                  if all(b["family"] is not None for b in g) else None for g in groups]
+        print(f"  [가족] 다시 닫음 {len(dict.fromkeys(picks))} 벌 · 닫힘 {len(branches)} · 묶음 {len(groups)} · 묶음 폭 {widths}")
+        if len(groups) == 1:
+            best_b = min(groups[0], key=lambda b: b["dev"])   # 규칙 3 — 어긋남 최소(같으면 먼저 닫힌 것)
+            _FAMILY_INFO[id(best_b["st"])] = {"resolved": True, "families": reps, "trials": len(fams),
+                                               "family": best_b["family"], "dev": best_b["dev"], "width": widths[0]}
+            return best_b["st"], best_b["ok"]
+        if len(groups) >= 2:
+            reps_g = [min(g, key=lambda b: b["dev"]) for g in groups]   # 규칙 4 — 묶음마다 대표, 고르지 않음
+            _FAMILY_INFO[id(st)] = {"families": reps, "trials": len(fams),
+                                    "two": [(b["family"], b["dev"]) for b in reps_g]}
+            return st, False
     if reps is not None:
         # ⚠ **고르지 않는다 — 감지 · 알림만** (오너에게 한 약속 «답이 둘이면 조용히 하나를 고르지 않고 알린다»).
         _FAMILY_INFO[id(st)] = {"families": reps, "trials": len(fams)}
@@ -3705,6 +3760,18 @@ def solve(mass_earth: float,
     basal_info = _BASAL_INFO.get(id(st))
     litho_info = _LITHO_INFO.get(id(st))
     fam_info = _FAMILY_INFO.get(id(st))
+    if fam_info is not None and fam_info.get("resolved"):
+        f = fam_info["family"]
+        notes.append(FAMILY_RESOLVED_NOTE + f" — 감지 가족 {len(fam_info['families'])} 개(시행 {fam_info['trials']})를 다시 닫아 "
+                     + ("고체" if f is None else f"부분 용융 [{f[0]:.2f}, {f[1]:.2f}] GPa")
+                     + f" · 표면 어긋남 {fam_info['dev']:.2e} · 묶음 폭 {fam_info['width']}")
+        fam_info = None
+    if fam_info is not None and fam_info.get("two"):
+        converged = False
+        notes.append(FAMILY_TWO_NOTE + " — 다시 닫은 갈래가 다른 가족 " + str(len(fam_info["two"])) + " 개로 닫힘(고르지 않음): "
+                     + " · ".join(("고체" if f is None else f"[{f[0]:.2f}, {f[1]:.2f}] GPa") + f" dev {d:.2e}"
+                                  for f, d in fam_info["two"]))
+        fam_info = None
     if fam_info is not None:
         # prereg-melt-window-answers §1.1 — 이름 붙은 불수락 까닭. 수렴 표지를 내려 소비처가 «받을 답 아님» 으로 본다.
         converged = False
