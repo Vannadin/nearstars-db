@@ -1061,7 +1061,11 @@ class Material:
         liq = silicate_liquidus(p, ph.melt_variant)
         if t >= liq:
             return 0.0
-        return SILICATE_MELT_DH / (liq - sol)
+        # 후보 ㉮(prereg-melt-window-answers a703f21a §1.2, 결정 칸 ② 폭 φ 0.05) — 창 가장자리에서 계단 대신 smoothstep.
+        phi = (t - sol) / (liq - sol)
+        x = min(phi, 1.0 - phi) / LATENT_EDGE_PHI
+        w = 1.0 if x >= 1.0 else x * x * (3.0 - 2.0 * x)
+        return w * SILICATE_MELT_DH / (liq - sol)
 
     def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """(∂lnT/∂lnP)_S = γ P / K_S. 혼합이 이걸 c_P 로 가중해 합친다.
@@ -3220,6 +3224,7 @@ SILICATE_MELT_MAX_PA = 500e9                  # 이 위는 자료 있는 전사 
 #   용융 밀도를 채택하지 않으므로(밀도는 고체 EOS 그대로), 16만 넣으면 고체 밀도
 #   기둥에 용융 팽창 기울기를 섞는 비일관이 된다. 기록만 남긴다: Δρ/ρ = 1.5 %
 #   (Monteux Table 1, Tosi et al.).
+LATENT_EDGE_PHI = 0.05       # 후보 ㉮ — 잠열 항을 창 가장자리 φ 0.05 안에서 매끄럽게 켜고 끔
 SILICATE_MELT_DH = 4.0e5      # J/kg. Monteux+ 2016 Table 1, ΔH (Ghosh & McSween 1998)
 # 단일점 융해(140 GPa 위 순수 MgSiO₃)의 명목 부분용융 폭. **선언이고 채워 넣은
 # 값이다** — 실제 다성분 암석은 솔리더스와 리퀴더스가 따로 인쇄되어 폭이 측정에서
