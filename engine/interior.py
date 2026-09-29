@@ -2491,12 +2491,17 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         _REOPEN[0] = True
         try:
             for i in dict.fromkeys(picks):
-                b_st, b_ok = shoot(mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z, envelope_z_rock_fraction,
+                try:
+                    b_st, b_ok = shoot(mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z, envelope_z_rock_fraction,
                                    differentiated, potential_temperature, boundary_temperature_jump, mantle_rock_fraction,
                                    serpentinisation, differentiation_front, crust_rock_fraction, crust_porosity,
                                    envelope_z_profile, ammonia_mass_fraction=ammonia_mass_fraction,
                                    interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere,
                                    p_hint=st.p_center, _t_start=fam_t[i], _loose=False, _passes=T_PASSES)
+                except (ValueError, PhaseGap) as why:
+                    # 이 갈래는 다시 닫는 고리 안에서 거절됐다 — «안 닫힌 갈래»(덧붙임 3 규칙 5). 바깥 풀이로 새지 않는다.
+                    print(f"  [가족] 다시 닫는 갈래 하나가 거절 — {str(why)[:80]}")
+                    continue
                 dev = abs(b_st.t_surface / t_pot - 1.0) if b_st.t_surface > 0.0 else float("inf")
                 if b_ok and dev < T_SURFACE_TOL:
                     branches.append({"st": b_st, "ok": b_ok, "dev": dev, "family": _melt_family(b_st)})
