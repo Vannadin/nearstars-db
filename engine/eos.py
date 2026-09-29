@@ -85,6 +85,42 @@ class SpinodalGap(PhaseGap):
     (`interior.shoot`, 덧붙임 7) — 시행 안에서 ÷1.6 로 내리면 요청과 다른 온도의 답이 돌아가 할선이 갈피를 잃는다."""
 
 
+#: 부동소수가 담는 가장 큰 지수 — `math.exp` 인자의 문턱. 둥근 수가 아니라 이 기계의 float 에서 계산한다.
+_LOG_FMAX = math.log(__import__("sys").float_info.max)
+
+#: **재료가 값을 내는 창의 바닥** (C133, prereg-c133-cold-window dbaa96f3). 창 밑 온도는 입구에서 이름 댄
+#   `PhaseGap(too_cold=True)` — 이름 없는 예외(넘침 · 정의역 · 첨자)로 죽지 않게 한 곳에서 막는다.
+#   ⚠ **창은 인쇄 적합 창과 다를 수 있다.** 창 = 그 재료가 **값을 내는** 바닥이고, 인쇄 창 밑 사용이 설계인 재료
+#   (얼음 VII · X 의 French & Redmer 2015 열 세트 — 인쇄 295 K, 밑은 격자 이탈 수 · 등급, 브리프 190)는
+#   **수가 유한한 바닥**을 쓴다: 그 재료 열 경로의 식들 중 가장 먼저 넘치는 인자의 문턱.
+#     ice_fr2015 `_debye` 의 `math.expm1(t)`, t = θ/T → θ/T ≤ L  (L = `_LOG_FMAX`)
+#     fe_liquid  `_p_th` 의 `math.exp(th / t)`       → θ(v)/T ≤ L
+#     fe_liquid  `_c_v_th` 의 `(math.exp(u) - 1.0) ** 2` → θ(v)/T ≤ L/2  ← 철은 이것이 먼저
+#   철의 θ(v) 는 `volume_at` 의 탐색 창 [0.2, 1.5]·v0(`lo, hi = 0.2 * col.v0, 1.5 * col.v0`) 에서 v 에 단조감소라
+#   최댓값이 끝값 θ(0.2) — 두 열 중 큰 쪽(hcp)이 창을 정한다. 인쇄 창이 곧 값을 내는 창인 재료는 인쇄 바닥 그대로.
+#   **새 열 세트가 들어오면 이 표를 같이 채운다.** 표에 없는 재료는 0.3 K 까지 이름 없는 예외가 없었다(탐침, 2026-09-30).
+_FE_THETA_MAX = max(fe_liquid._theta_v(col, 0.2) for col in (fe_liquid.LIQUID, fe_liquid.HCP))
+T_WINDOW_LO = {
+    "h2o": (ice_fr2015.T_D / _LOG_FMAX,
+            "French & Redmer 2015 열 세트의 Debye 적분이 넘치는 바닥(θ/T > ln(float max)); 인쇄 적합 창 295 K 는 등급 칸"),
+    "fe_prem": (_FE_THETA_MAX / (0.5 * _LOG_FMAX),
+                "Dorogokupets 2017 열 세트의 격자 열용량이 넘치는 바닥(θ(0.2 v0)/T > ln(float max)/2)"),
+    "fe_eps": (_FE_THETA_MAX / (0.5 * _LOG_FMAX),
+               "Dorogokupets 2017 열 세트의 격자 열용량이 넘치는 바닥(θ(0.2 v0)/T > ln(float max)/2)"),
+    "h2o_hot": (water_hot.T_MIN, "Mazevet+ 2019 가 적는 온도의 아래끝"),
+    "h2o_liquid_dense": (water2_table.T_LO_K, "SeaFreeze water2 / Brown 2018 굳힌 창의 온도 아래끝"),
+    "nh3": (ammonia_table.T_MIN_K, "Bethkenhagen, French & Redmer 2013 Appendix B Table I 의 온도 아래끝"),
+}
+
+
+def _below_t_window(name: str, p: float, t: float) -> None:
+    """창 밑이면 이름 댄 `PhaseGap(too_cold=True)` (C133). `t <= 0` 은 «온도가 흐르지 않음» 이라 건드리지 않는다."""
+    w = T_WINDOW_LO.get(name)
+    if w is not None and 0.0 < t < w[0]:
+        raise PhaseGap(name, p, f"{t:.4g} K 는 {name} 이 값을 내는 창의 하한 {w[0]:.6g} K 밑이다 — {w[1]}",
+                       temperature_k=t, too_cold=True)
+
+
 # 녹는곡선이 측정된 조성. Phase.join 과 다르면 Phase.join_note 가 있어야 한다 (브리프 41).
 MELT_CURVE_JOIN = {
     "water": "H2O",
@@ -853,6 +889,7 @@ class Material:
                 t_k=t, t_max=ph.t_max, phase=ph.name, p_gpa=p / 1e9), t)
 
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         self.check_temperature(p, t)
         ph = self.phase_at(p)
         # ⚠ **바닥은 뒤집기가 쓰는 압력에 걸어야 한다** (항목 19-b, 2026-09-20). `phase_at` 은
@@ -880,6 +917,7 @@ class Material:
         return ph.density(p, t, t_pot)
 
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return self.phase_at(p).gruneisen(rho, t, t_pot, p)
 
     def k_t(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
@@ -909,6 +947,7 @@ class Material:
 
         α = (∂P/∂T)_V / K_T 이고 γ = (∂P/∂T)_V / (ρ c_V) 이므로, 이 파일이 이미 들고
         있는 것들로 닫힌다. 열 상수가 없는 상은 0 을 낸다 — 없는 척하지 않는다."""
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         ph = self.phase_at(p)
         if not ph.has_thermal or t <= 0.0:
             return 0.0
@@ -965,6 +1004,7 @@ class Material:
         인쇄된 식 (16)의 α′ 은 비채택이다: 식 (15)의 용융 밀도를 채택하지 않는 채로
         α′ 만 넣으면 고체 밀도 기둥에 용융 팽창 기울기를 섞는 비일관이 된다
         (SILICATE_MELT_DH 블록 주석)."""
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         if t <= 0.0 or p <= 0.0:
             return 0.0
         rho = self.density(p, t, t_pot)
@@ -1304,10 +1344,12 @@ class HotWater:
                 "Mazevet+ 2019 초록이 'for temperatures below 50,000K' 로 적는다.", t)
 
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         self.check_temperature(p, t)
         return water_hot.density(p, t)
 
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         if t <= 0.0:
             return 0.0
         return water_hot.gruneisen(rho, t)
@@ -1317,6 +1359,7 @@ class HotWater:
         water_hot 의 P(ρ,T)·U(ρ,T) 유한차분이다. **혼합(Mixture)이 ∇_ad 를 c_P 로 가중할 때만 쓴다**
         — 적분기의 단열 기울기는 예전 그대로 gruneisen 과 수치 K_S 로 조립하므로(dtdp_adiabat 을
         일부러 두지 않는다), 이 함수가 생겨도 순수 물 경로는 비트까지 같다."""
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         c_v, dpdt, k_t = self._thermal(p, t)
         if c_v <= 0.0:
             return 0.0
@@ -1329,6 +1372,7 @@ class HotWater:
 
     def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """(∂lnT/∂lnP)_S = γ P / K_S, K_S = K_T (1 + αγT). c_p 와 같은 유한차분에서 닫힌다."""
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         if t <= 0.0 or p <= 0.0:
             return 0.0
         c_v, dpdt, k_t = self._thermal(p, t)
@@ -1453,6 +1497,7 @@ class Ammonia:
                 "표 밖은 외삽하지 않는다.", t, too_cold=t < ammonia_table.T_MIN_K)
 
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         self.check_temperature(p, t)
         try:
             return ammonia_table.density(p, t)
@@ -1479,6 +1524,7 @@ class Ammonia:
         return ammonia_table.uncertainty(self.density(p, t), t)
 
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         if t <= 0.0:
             return 0.0
         c_v, dpdt, _k_t = self._thermal(p, t)
@@ -1486,6 +1532,7 @@ class Ammonia:
 
     def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """c_P = c_V (1 + αγT). HotWater 와 같은 항등식, 표의 p·u 유한차분에서."""
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         c_v, dpdt, k_t = self._thermal(p, t)
         if c_v <= 0.0:
             return 0.0
@@ -1498,6 +1545,7 @@ class Ammonia:
 
     def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """(∂lnT/∂lnP)_S = γ P / K_S, K_S = K_T (1 + αγT)."""
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         if t <= 0.0 or p <= 0.0:
             return 0.0
         c_v, dpdt, k_t = self._thermal(p, t)
@@ -1649,6 +1697,7 @@ class LiquidWater:
                 t, too_cold=True)
 
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         self.check_temperature(p, t)
         return water_table.density(max(p, 0.0), t)
 
@@ -1656,11 +1705,13 @@ class LiquidWater:
         """c_P [J/kg/K] — 원본(Bollengier+ 2019 깁스 표현)이 처음부터 싣던 양을 2026-08-31
         (얼음 축, 브리프 23) 에 표로 구웠다. 혼합(Mixture)의 ∇_ad 가중이 소비처다 — 그 전까지
         이 표는 dT/dP|_S 만 실어서 물 섞인 혼합이 바다 창에서 c_P 없음으로 거절됐다."""
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         self.check_temperature(p, t)
         return water_table.c_p(max(p, 0.0), t)
 
     def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """(∂lnT/∂lnP)_S = (dT/dP|_S)·P/T — 표의 기울기에서 그대로."""
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         self.check_temperature(p, t)
         if t <= 0.0:
             return 0.0
@@ -1669,6 +1720,7 @@ class LiquidWater:
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
         """쓰이지 않는다 — 단열 기울기는 표가 직접 든다 (dtdp_adiabat). 0 은 '없다' 가 아니라
         이 길이 아니라는 뜻이다."""
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return 0.0
 
     def dtdp_adiabat(self, p: float, t: float, t_pot: float = 0.0) -> float:
@@ -1782,10 +1834,12 @@ class DenseLiquidWater:
                 t, too_cold=True)
 
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         self.check_temperature(p, t)
         return water2_table.density(p, t)
 
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return 0.0
 
     def dtdp_adiabat(self, p: float, t: float, t_pot: float = 0.0) -> float:
@@ -1794,9 +1848,11 @@ class DenseLiquidWater:
         return water2_table.dtdp_adiabat(p, t)
 
     def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return water2_table.c_p(p, t)
 
     def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         if t <= 0.0 or p <= 0.0:
             return 0.0
         return water2_table.dtdp_adiabat(p, t) * p / t
@@ -3795,19 +3851,23 @@ class HydrogenHelium:
             "손보는 대신 영역을 말한다.", t, too_cold=True)
 
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         self.check_temperature(p, t)
         return hhe_table.density(p, t)
 
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         if t <= 0.0:
             return 0.0
         return hhe_table.gruneisen(p, t)
 
     def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """정압비열 [J/kg/K]. 표의 엔트로피 열에서 온다 — 조립한 값이 아니다."""
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return 0.0 if t <= 0.0 else hhe_table.heat_capacity_p(p, t)
 
     def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return 0.0 if t <= 0.0 else hhe_table.grad_ad(p, t)
 
     def dtdp_adiabat(self, p: float, t: float, t_pot: float = 0.0) -> float:

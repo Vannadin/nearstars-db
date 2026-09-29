@@ -2517,12 +2517,15 @@ class _Steam:
     has_thermal = True
 
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        eos._below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return steam_if97.density(p, t)
 
     def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        eos._below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return steam_if97.c_p(p, t)
 
     def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        eos._below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return steam_if97.grad_ad(p, t)
 
     def check_temperature(self, p: float, t: float) -> None:
@@ -2569,6 +2572,7 @@ class _ColumnSteam(_Steam):
         return steam_if97.grad_ad(p, t) * t / p
 
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        eos._below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return 0.0
 
     def phase_at(self, p: float, t: float = 0.0):
@@ -2644,12 +2648,15 @@ class _EnvelopeWater:
             t, too_cold=True)
 
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        eos._below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return self._rep(p, t).density(p, t, t_pot)
 
     def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        eos._below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return self._rep(p, t).c_p(p, t, t_pot)
 
     def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        eos._below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return self._rep(p, t).grad_ad(p, t, t_pot)
 
     def check_temperature(self, p: float, t: float) -> None:
