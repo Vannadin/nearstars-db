@@ -26,7 +26,10 @@ import types
 ALWAYS_FULL = re.compile(
     r"(^scripts/.*\.sh$)|(^engine/chain\.yaml$)|(^engine/requirements\.txt$)"
     r"|(^engine/ice_giant_anchor\.json$)|(^engine/bodies/.*\.(yaml|json)$)"
-    r"|(^engine/.*\.(yaml|json|csv|tsv|txt)$)|(^scripts/.*\.py$)")
+    r"|(^engine/.*\.(yaml|json|csv|tsv|txt)$)|(^scripts/.*\.py$)"
+    r"|(^scripts/gate_expected_red\.yaml$)")
+#: 기대 빨강 목록 (C128) — 이 칸과 정확히 같은 빨강만 있는 `rc≠0` full 을 인정한다.
+EXPECTED_RED = pathlib.Path(__file__).with_name("gate_expected_red.yaml")
 #: 산문·미러·생성 페이지. 계산에 안 들어간다.
 PROSE = re.compile(r"(\.md$)|(^ko/)|(^docs/)|(^plans/)|(^phase4/.*\.md$)"
                    r"|(^engine/chain-explorer\.html$)")
@@ -94,10 +97,64 @@ def classify(parent: str, target: str) -> tuple[str, list[str], int]:
     return verdict, reasons, len(rows)
 
 
+def _step_range(lines: list[str], step: str) -> list[str] | None:
+    """단계 X 의 구간 — `[COST] X —` 줄에서 위로 올라가 처음 만나는 `[STEP]`/`[COST]` 줄 바로 다음부터
+    `[COST] X —` 줄까지 (C128 §1.2). 풀 단계는 부모가 `_pool_drain` 에서 자기 로그를 `cat` 한 번에
+    붙이고 `[STEP]` 은 띄울 때 따로 찍으므로, `[STEP] X` 부터 세면 남의 출력이 섞인다.
+    `[COST] X` 가 없으면 None (구간을 못 정함 → 불인정)."""
+    head = f"[COST] {step} —"
+    for i in range(len(lines) - 1, -1, -1):
+        if lines[i].strip().startswith(head):
+            j = i - 1
+            while j >= 0 and not re.match(r"\s*\[(STEP|COST)\]", lines[j]):
+                j -= 1
+            return lines[j + 1:i + 1]
+    return None
+
+
+def expected_red_only(text: str, table: list[dict]) -> tuple[bool, list[str]]:
+    """`rc≠0` 로그의 **모든** `[FAIL]` 줄이 기대 칸의 단계 FAIL 줄이고, 그 단계 구간의 `[어긋남]` 키
+    집합이 칸의 `mismatch_keys` 와 정확히 같을 때만 참. ⚠ `[FAIL]` 이 0 줄이면 불인정 — 빈 집합에서
+    «전부가 기대 줄» 이 참이 되는 꼴을 막는다 (합성 ④)."""
+    lines = text.split("\n")
+    fails = [l.strip() for l in lines if re.match(r"\s*\[FAIL\]", l)]
+    if not fails:
+        return False, ["rc≠0 인데 [FAIL] 줄 0 → 불인정"]
+    notes: list[str] = []
+    for f in fails:
+        row = next((r for r in table if f.startswith(f"[FAIL] {r['step']} —")
+                    and f.endswith("(이 단계가 fail=1 을 세웠다)")), None)
+        if row is None:
+            return False, [f"기대 밖 FAIL: {f[:90]} → 불인정"]
+        rng = _step_range(lines, row["step"])
+        if rng is None:
+            return False, [f"{row['id']} — [COST] 줄 없음, 구간을 못 정함 → 불인정"]
+        mis = {}
+        for l in rng:
+            m = re.match(r"\s*\[어긋남\]\s+(\S+)\s+엔진\s+(\S+)\s+·\s+보드\s+(\S+)", l)
+            if m:
+                mis[m.group(1)] = (m.group(2), m.group(3))
+            elif re.match(r"\s*\[어긋남\]\s+(\S+)", l):
+                mis[re.match(r"\s*\[어긋남\]\s+(\S+)", l).group(1)] = None
+        if set(mis) != set(row["mismatch_keys"]):
+            return False, [f"{row['id']} — 어긋남 키 {sorted(mis)} ≠ 기대 {sorted(row['mismatch_keys'])} → 불인정"]
+        for k, v in mis.items():
+            old = (row.get("values") or {}).get(k)
+            if v and old and (float(v[0]), float(v[1])) != (float(old[0]), float(old[1])):
+                notes.append(f"⚠ {row['id']} {k} 엔진 {v[0]} · 보드 {v[1]} (옛 {old[0]} · {old[1]}) — 크기 바뀜")
+        notes.append(f"기대 빨강 {row['id']} 만 있음 → 인정")
+    return True, notes
+
+
+def _load_expected_red() -> list[dict]:
+    import yaml
+    return yaml.safe_load(EXPECTED_RED.read_text(encoding="utf-8")) or []
+
+
 def full_ran_today(logs_dir: pathlib.Path, day: str) -> tuple[bool, list[str]]:
     """오늘 **끝난** full 게이트가 있었나 — 별도 상태 파일 없이 로그 디렉터리를 훑는다.
 
-    세는 조건을 문장으로 (감사석 개정 1): **오늘(+0900)** · **END 줄이 있고** · **`rc=0`** ·
+    세는 조건을 문장으로 (감사석 개정 1): **오늘(+0900)** · **END 줄이 있고** · **`rc=0`, 또는 기대 빨강만(C128, `expected_red_only`)** ·
     **`lane=full`** · **이 레포**(END 줄의 `isolated=` 경로나 sha 로 판별). ⚠ **END 가 없는 판은
     «미완 full 진행 중» 으로 따로 세고 «오늘 full 있었음» 으로 안 친다.**
     ⚠ **못 찾으면 full 쪽으로 실패한다** — 디렉터리가 없거나 사본이 안 옮겨졌을 때 조용히 quick
@@ -106,6 +163,7 @@ def full_ran_today(logs_dir: pathlib.Path, day: str) -> tuple[bool, list[str]]:
     if not logs_dir.is_dir():
         return False, [f"로그 디렉터리 없음 ({logs_dir}) → 안전망은 full 쪽으로 실패한다"]
     done = running = undated = 0
+    table = _load_expected_red()
     for log in sorted(logs_dir.glob("gate-*.log")):
         text = log.read_text(encoding="utf-8", errors="ignore")
         end = [l for l in text.split("\n") if l.startswith("GATE END")]
@@ -129,9 +187,19 @@ def full_ran_today(logs_dir: pathlib.Path, day: str) -> tuple[bool, list[str]]:
                 capture_output=True).returncode != 0:
             notes.append(f"{log.name} — 이 레포의 조상이 아니다 → 안 셈")
             continue
-        if "lane=full" in line and "rc=0" in line:
+        if "lane=full" not in line:
+            continue
+        if re.search(r"\brc=0\b", line):
             done += 1
             notes.append(f"{log.name} — 오늘 끝난 full (rc=0, sha={sha.group(1)})")
+            for r in table:
+                notes.append(f"⚠ 기대 빨강 {r['id']} 가 초록 — 목록에서 빼는 등록이 필요")
+            continue
+        ok, why = expected_red_only(text, table)
+        notes += [f"{log.name} — {w}" for w in why]
+        if ok:
+            done += 1
+            notes.append(f"{log.name} — 오늘 끝난 full (rc≠0 이나 기대 빨강만, sha={sha.group(1)})")
     notes.append(f"오늘({day}) 끝난 full {done} · 미완 {running} · 날짜 없는 옛 로그 {undated}(안 셈)")
     return done > 0, notes
 

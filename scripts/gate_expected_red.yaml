@@ -1,0 +1,8 @@
+# 게이트 기대 빨강 목록 — 여기 칸과 정확히 같은 빨강만 있는 오늘 full 은 auto-lane 이 «오늘 full 있었음» 으로 인정 (C128)
+# 칸을 더하거나 빼는 것은 등록(원장 줄 + 9f 클리어 → 지휘 동결). 이 파일이 바뀐 판은 lane_decide 의 ALWAYS_FULL 로 full.
+# values 는 등록 때의 어긋남 값(엔진 · 보드) — 값이 바뀌면 인정하되 한 줄 알림.
+- id: C59
+  step: "run.py bodies/mars.yaml (출하값 대조)"
+  mismatch_keys: [nmoi]
+  values: {nmoi: [0.3571, 0.3634]}
+  registered: f47fc14b
