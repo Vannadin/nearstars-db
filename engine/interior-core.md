@@ -4097,7 +4097,7 @@ Measured, Mars-scale (`p_center` 45.9 GPa, cmf 0.325):
 
 The middle two evaluations are the same point, so **the difference of two consecutive recorded calls can
 be 0** and is not a usable scale. The scale registered is the **step's own**, the Euler estimate that
-`engine/interior.py@«dp = dr / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])»` is the corrected form of.
+`engine/interior.py@«hh / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])»` is the corrected form of.
 
 **Rule.** A substep that leaves the current material's domain by **no more than that step's width** is
 **boundary reached**, and the in-step bisection this file already runs for `p_floor` finds the fraction.
@@ -4579,7 +4579,7 @@ brief that has to run first. This section is the reading; the build is 182 B.
 | fact | measured how |
 |---|---|
 | `infer_composition` is called from **two files only** — `test_interior.py` and `rocky_roster.py` | grep of every call site; the node path has none |
-| the node path enters through `engine/interior.py@«def _solve_from_state(state):»`, which resolves composition as `state.get("composition_intent", "earth_like")` | read, then confirmed by a spy on the state a real body hands over |
+| the node path enters through `engine/interior.py@«def _solve_from_state(state, p_hint»`, which resolves composition as `state.get("composition_intent", "earth_like")` | read, then confirmed by a spy on the state a real body hands over |
 | a **declared** `core_mass_fraction` beats the preset (`cmf = preset_cmf if core_mass_fraction is None else core_mass_fraction`) | Mars: declared 0.24 reproduces the shipped 0.4919 exactly (C59 (a)) |
 | **three of seven** bodies declare a core mass fraction; four declare neither it nor an intent | body-file census |
 | the silent default **produces answers**, not only refusals | `dante_fixture` returns a 455.7 km radius carrying `inputs["core_mass_fraction"] = 0.325` |
