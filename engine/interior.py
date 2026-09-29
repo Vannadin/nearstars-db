@@ -1817,6 +1817,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         good = None                  # 마지막으로 적분이 끝난 시험압
         rung = None                  # 질량이 목표에 못 미친 마지막 눈금 (압력, 질량)
         broke: PhaseGap | None = None
+        first_breaks = 0             # 첫 눈금이 깨져 아래끝을 올린 횟수 (C131 결정 ①)
         # **씨앗이 이미 목표를 넘긴 기체 천체.** U 자의 왼쪽 가지(부푼 쪽)에서 출발한 것일 수 있다.
         # 예전에는 사다리가 즉시 멈추고 할선의 둘째 점을 hi × 10⁻³ 에 두어 부푼 뿌리로 갔다 — 5 M⊕
         # 순수 가스 천체가 같은 중심 온도에서 11 R⊕ 와 131 R⊕ 두 답을 번갈아 냈다. 물리적인 쪽은
@@ -1871,13 +1872,22 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             try:
                 st = at(hi)
             except PhaseGap as gap:
-                if gap.temperature_k:
-                    # **온도가 막은 것은 압력 괄호로 못 고친다.** 중심압을 낮춰도 그 층의
-                    # 온도는 중심 온도가 정하므로, 좁히는 대신 위로 올려 보낸다 — 바깥의
-                    # 온도 고리가 중심 온도를 올려 다시 잡는다.
-                    raise
+                # **시험 중심압의 거절은 종류를 가리지 않고 압력 괄호의 벽이다** (C131, prereg-c131-trial-refusal
+                #   44773c4f — C122 «시행은 값, 답은 거절» 의 일반화). 예전에는 온도 딸린 거절을 «온도가 막은 것은
+                #   압력 괄호로 못 고친다» 며 좁히지 않고 올려 보냈다. 그런데 그 거절이 **시험** 중심압 탓인 판이
+                #   있다 — 천왕성 앵커 cmf 0.4 에서 12000 GPa 눈금의 얼음층 바닥 2646 GPa · 288 K 는 표현이 없지만
+                #   6594 GPa 와 12000 GPa 사이에는 답이 있을 자리였고, 올려 보낸 거절을 온도 괄호가 좇아 T_c 를
+                #   여섯 번 올린 끝에 첫 눈금의 철 스피노달(시험값)로 끝났다. 온도 괄호로 올려 보내는 것은 좁힌
+                #   뒤에도 질량 답이 없을 때만이다(아래 «좁힌 위쪽 끝에서도 질량이 모자란다»).
                 if good is None:
-                    raise            # 첫 시험부터 깨진다. 좁힐 바닥이 없다
+                    # 첫 눈금부터 깨진다 — `lower_point` 와 같은 뜻으로 이 압력 밑에는 해가 없다고 보고 아래끝을
+                    #   올린다(결정 ①). 예산(`SHOOT_LO_TRIES`)이나 상한에 닿으면 그때의 거절이 답이다.
+                    first_breaks += 1
+                    if first_breaks > SHOOT_LO_TRIES or hi >= p_ceiling:
+                        raise
+                    lo = hi
+                    hi = min(hi * 4.0, p_ceiling)
+                    continue
                 broke = gap
                 hi, st = _narrow_bracket(good, hi, at, mass_kg)
                 break
@@ -1900,6 +1910,12 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             # 좁힌 위쪽 끝에서도 질량이 모자란다. 중심압을 더 올려야 하는데 그러면 바깥
             # 층이 깨지므로, 이건 실재하는 거절이다. 이유는 **바깥 층** 이지 안쪽 재료의
             # 상한이 아니다.
+            if broke.temperature_k:
+                # 온도가 막은 벽이면 온도 괄호가 받을 수 있게 같은 종류로 올려 보낸다 — 이제는 **좁힌 괄호 끝**의
+                #   상태라 시험값이 아니다(C131). 문장에 그 자리를 붙인다.
+                raise type(broke)(broke.material, broke.pressure_pa,
+                                  f"좁힌 괄호 끝(중심압 {hi / 1e9:.4g} GPa · 중심 {t_center:.0f} K)에서: {broke.reason}",
+                                  broke.temperature_k, broke.too_cold)
             raise ValueError(
                 f"이 질량을 담으려면 중심압을 {hi / 1e9:.0f} GPa 위로 올려야 하는데, "
                 f"그러면 바깥의 {broke.material} 층이 근거 구간을 벗어난다 "
@@ -2157,7 +2173,23 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     # 온도로 비율을 다시 재는데, 실제로 적분된 것은 괄호가 옮긴 온도라 매 통과가 같은
     # 배수만큼 틀리고 고리가 수렴하지 않는다. 통과 횟수를 6 에서 14 로 올렸더니 목성은
     # 붙고 토성은 +2.09 % 에서 +7.06 % 로 흔들린 것이 이 자리였다.
-    st, converged, t_c = attempt(t_c)
+    # ⚠ **첫 시행의 벽도 온도 고리의 벽 규칙과 같은 꼴로 받는다** (C131 결정 ②). 예전에는 첫 `attempt` 가 try
+    #   밖이라 거기서 난 스피노달 · 묶이지 않음이 시험값인데도 천체의 거절로 새어 나갔다. 아래 고리처럼 그
+    #   온도를 벽으로 적고 ÷1.6 으로 내려 다시 잡는다(`T_BRACKET_TRIES` 까지). 다 써도 못 잡으면 첫 벽의 거절이 답이다.
+    first_wall = None
+    try:
+        st, converged, t_c = attempt(t_c)
+    except (Unbound, NoCompactRoot, GridExceeded, SpinodalGap) as why:
+        first_wall, first_why = t_c, why
+        for _ in range(T_BRACKET_TRIES):
+            t_c = t_c / 1.6
+            try:
+                st, converged, t_c = attempt(t_c)
+                break
+            except (Unbound, NoCompactRoot, GridExceeded, SpinodalGap):
+                continue
+        else:
+            raise first_why
     # **비례 갱신이 발산하는 천체가 있다.** T_c·T_pot/T_surf 는 T_surf ∝ T_c 를 놓는데, 얇은 외피가
     # 무거운 핵 위에 있으면 지수가 2 를 넘는다 — 외피 바닥이 핵 단열선을 그대로 타고 1 bar 온도는
     # 그 위에서 외피 두께까지 같이 바뀐다 (GJ 1214 b 가스 2 % 에서 2.3). 지수 n 의 비례 갱신은
@@ -2168,6 +2200,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     # 같다는 것을 그 경로로 보장한다.
     wall = None                  # 외피가 묶이지 않은 가장 낮은 중심 온도
     wall_why = ""                # 그 온도에서 왜 묶이지 않았는가 (사다리의 문장)
+    if first_wall is not None:   # 첫 시행이 벽에 닿았으면 그것이 첫 벽이다 (C131 결정 ②)
+        wall, wall_why = first_wall, str(first_why)
     lo = hi = None               # (log T_c, log T_surf/T_pot): 아래쪽(차다) · 위쪽(뜨겁다)
     devs: list[float] = []
     bracketed = False
