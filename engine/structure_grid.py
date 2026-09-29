@@ -371,7 +371,10 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
     t_ms = [r["t_m"] for r in rows_cap["rows"]]
     t_pot0 = float(body.inputs["potential_temperature"])
     solve, how, cmf0 = _solver(body, s0)
-    check = solve(t_pot0)
+    # 덧붙임 46 — 두 풀이는 같은 출발에서: 조성 고정 풀이에 S0 의 중심압을 힌트로. 이 점검은 결정성과 «S0 사슬이
+    #   구조를 바꾸지 않음» 을 본다(«출발이 달라도 같은 답» 은 안 봄 — 그 흔들림은 T_TOL 급, 표 ε 의 1000 배 밑).
+    p_c0 = s0.values.get("core_pressure")
+    check = solve(t_pot0, p_hint=p_c0 * 1e9 if p_c0 else None)
     keys = ("radius", "nmoi", "core_radius", "core_radius_fraction", "cmb_pressure", "cmb_temperature")
     # 덧붙임 42 — 비트가 아니라 엔진 자신의 수렴 허용(SHOOT_TOL, 겉질량의 선을 여섯 칸에 옮긴 judgment) 안이면 같은 풀이다. 단계 벽 폴백(RK45 덧붙임 2)이
     #   S0 의 역산 시행과 조성 고정 풀이에서 다른 횟수로 밟혀 끝자리가 갈린다(화성 5.1e-11). 0 칸은 절대 0.
