@@ -387,3 +387,12 @@ items:
   # ⚠ C126 (2026-09-28, 병렬석 e5) — 고정 1500 걸음 적분기의 CMB 온도 치우침(+12…+17 K), 적응 적분기가 고침. 엔진 수라 physics.
   C126:
     kind: physics
+  # ⚠ C128 (2026-09-30, 작업석 ed) — auto-lane 이 기대 빨강(C59)만 있는 full 게이트를 인정하게 함. 게이트 도구라 tooling.
+  C128:
+    kind: tooling
+  # ⚠ C129 (2026-09-30, 작업석 ed) — 게이트가 안 부르는 test_*.py 를 게이트가 잡음. 게이트 도구라 tooling.
+  C129:
+    kind: tooling
+  # ⚠ C131 (2026-09-30, 작업석 ed · 지휘 3d) — 시험 중심압의 거절이 천체의 거절로 새어 나감(C122 일반화). 엔진 풀이라 physics.
+  C131:
+    kind: physics
