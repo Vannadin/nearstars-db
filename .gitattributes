@@ -1,0 +1,5 @@
+# 방아쇠가 바이트로 해시하는 파일 부류를 LF 로 고정 — 새 방아쇠 확장자가 생기면 여기도 함께 (C132, prereg-c132-eol 3d314d38)
+*.py text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
