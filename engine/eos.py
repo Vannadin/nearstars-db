@@ -287,6 +287,47 @@ THERMAL_EVALUATORS = {
 #: 상(이름 · 꼴 · 계수) → 냉각 곡선의 스피노달 (ρ_s, P_s) — `Phase._spinodal` 이 한 번 재어 둔다(frozen dataclass 라 칸을 못 붙임).
 _SPINODAL: dict[tuple, tuple[float, float]] = {}
 
+# ── C137: 형태별 압력 클로저 ──────────────────────────────────────────────────────────────
+# `Phase.pressure` 의 `if` 사슬과 속성 조회를 밀도 뒤집기(Newton, 한 번에 압력 11–13 번)에서 걷어낸다.
+# ⚠ **연산 순서가 그대로여야 비트가 같다.** 현재 식이 **왼쪽부터 먼저** 계산하는 부분식만 상수로
+#   뽑는다 — `1.5 * self.k0 * (…)` 의 `1.5 * k0`, `0.75 * (self.k0p - 4.0) * (…)` 의 `0.75 * (k0p - 4.0)`.
+#   분배·재결합·FMA 는 쓰지 않는다. 지수는 같은 리터럴(`7.0 / 3.0` 등)이다.
+# ⚠ **키는 상수 값이다**(`_SPINODAL` 과 같은 규율) — `id()` 로 잡으면 객체 수명이 바뀌는 날 옛 상수를
+#   조용히 내준다. 황 맞춤은 시행 분율마다 새 상을 짓는다(`interior.fit_sulphur_to_core_radius`).
+# ⚠ 상수에 NaN 이 오면 키가 자기와 같지 않아 호출마다 새 항목이 쌓인다 — 상 상수는 유한값이라는 전제다.
+_PRESSURE_FAST: dict[tuple, object] = {}
+
+
+def _pressure_fast(ph: "Phase"):
+    """이 상의 형태별 압력 클로저. `bm2`·`bme3`·`bm2_ref` 밖이면 `None` — 그때는 예전 길이다."""
+    key = (ph.form, ph.rho0, ph.k0, ph.k0p, ph.p_ref)
+    got = _PRESSURE_FAST.get(key, _PRESSURE_FAST)
+    if got is not _PRESSURE_FAST:
+        return got
+    rho0 = ph.rho0
+    c = 1.5 * ph.k0
+    if ph.form == "bm2":
+        def fn(rho: float) -> float:
+            x = rho / rho0
+            return c * (x ** (7.0 / 3.0) - x ** (5.0 / 3.0))
+    elif ph.form == "bme3":
+        a = 0.75 * (ph.k0p - 4.0)
+
+        def fn(rho: float) -> float:
+            x = rho / rho0
+            return (c * (x ** (7.0 / 3.0) - x ** (5.0 / 3.0))
+                    * (1.0 + a * (x ** (2.0 / 3.0) - 1.0)))
+    elif ph.form == "bm2_ref":
+        p_ref = ph.p_ref
+
+        def fn(rho: float) -> float:
+            x = rho / rho0
+            return p_ref + c * (x ** (7.0 / 3.0) - x ** (5.0 / 3.0))
+    else:
+        fn = None
+    _PRESSURE_FAST[key] = fn
+    return fn
+
 
 @dataclass(frozen=True)
 class Phase:
@@ -627,6 +668,9 @@ class Phase:
 
     def pressure(self, rho: float) -> float:
         """ρ 에서 P. 정방향은 닫힌 형태라 이쪽이 값싸다."""
+        fast = _pressure_fast(self)            # C137 — bm2 · bme3 · bm2_ref 는 아래와 같은 식의 클로저
+        if fast is not None:
+            return fast(rho)
         if self.form == "polytrope":
             # P = K ρ^(1+1/n). ρ₀ 로 나누지 않으므로 rho0 = 0 이어도 된다.
             return self.k0 * rho ** (1.0 + 1.0 / self.k0p)
@@ -736,13 +780,14 @@ class Phase:
             #   곡선의 최소 압력) 밖이면 이 온도에서 이 상은 없다 — 이름 대고 온도 벽으로 던진다.
             return self._density_tension(p, t)
         rho = self.rho0 * (1.0 + p / self.k0) ** 0.4
+        P = _pressure_fast(self) or self.pressure      # C137 — 같은 식·같은 순서, 사슬만 걷어냄
         for _ in range(60):
-            f = self.pressure(rho) - p
+            f = P(rho) - p
             if abs(f) <= 1e-9 * max(p, 1.0):
                 convergence.note("eos.density_newton", True)
                 return rho
             h = rho * 1e-7
-            dfd = (self.pressure(rho + h) - self.pressure(rho - h)) / (2.0 * h)
+            dfd = (P(rho + h) - P(rho - h)) / (2.0 * h)
             if dfd <= 0.0:
                 break
             step = f / dfd

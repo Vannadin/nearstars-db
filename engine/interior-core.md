@@ -8936,7 +8936,7 @@ call to a whole `solve()` needs the shooting loop's own profile, which this run 
 
 **Code this row points at**: `engine/eos.py@«이 자리가 적분 안쪽 고리라 반복 횟수가 그대로»` — the
 docstring sentence that says why this loop's iteration count is the run time — and
-`engine/eos.py@«dfd = (self.pressure(rho + h) - self.pressure(rho - h)) / (2.0 * h)»`, the two-sided
+`engine/eos.py@«dfd = (P(rho + h) - P(rho - h)) / (2.0 * h)»`, the two-sided
 difference an analytic derivative would delete.
 
 ---

@@ -30,6 +30,7 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("rocky_roster", "_ROWS"): (MEMO, "lazily loaded roster rows", None),
     ("rocky_roster", "_CACHE"): (MEMO, "keyed by name", None),
     ("eos", "_SPINODAL"): (MEMO, "keyed by the phase constants", None),
+    ("eos", "_PRESSURE_FAST"): (MEMO, "pressure closure keyed by the phase constants (C137)", None),
     ("interior", "ADAPTIVE_STATS"): (COUNTER, "step counts", None),
     ("mantle_composition", "TABLE_ASKS"): (COUNTER, "table lookups", None),
     ("eos", "P_EDGE_CALLS"): (COUNTER, "edge-evaluator calls", None),
