@@ -698,6 +698,8 @@ echo "GATE POOL size=${GATE_POOL} rule=\"이름이 test_* 또는 run.py* 인 단
 echo "── 1. 스키마 검증 (db/systems/*.json + curated) ──"
 # 게이트 자신: 시작의 옛 스크래치 정리가 도는 게이트의 풀 · 살아 있는 pid 디렉토리를 안 지우는가 (2026-09-26 버그). ~1 s.
 step "scripts/test_gate_cleanup.sh" bash scripts/test_gate_cleanup.sh
+# 게이트 자신: auto-lane 이 기대 빨강만 있는 full 을 인정하는 규칙(C128)의 합성 로그 시험. ~1 s.
+step "scripts/test_lane_decide.py" bash -c 'python3 scripts/test_lane_decide.py'
 step "scripts/pipeline/validate.py" bash -c 'python3 scripts/pipeline/validate.py'
 step "scripts/refs/validate_plasma_temp.py" bash -c 'python3 scripts/refs/validate_plasma_temp.py'
 
