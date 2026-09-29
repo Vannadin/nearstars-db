@@ -35,6 +35,7 @@ START_POINTS = 5
 MAX_DEPTH = 6
 MIN_INTERVAL_K = 1.0
 JUMP_RATIO = 10.0            # 값 칸 뜀: 두 반쪽 변화의 큰 쪽 / 작은 쪽 (덧붙임 16)
+KINK_MIN_K = 0.25            # 폭 바닥의 꺾임 구간만 이분 두 번 더 (덧붙임 43) — 꺾임의 선형 보간 오차는 폭에 비례
 BELOW_K = 150.0              # 격자 아래 끝 = ⓐ 판 t_m 최저 − 150 K (prereg-structure-grid 덧붙임 7 ③)
 ABOVE_K = 50.0               # 위 끝 = ⓐ 판 t_m 최고 + 50 K, 구조가 거절하면 T_ok 로
 T_OK_WIDTH_K = 1.0
@@ -231,7 +232,7 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
 
     grid = [lo + (hi - lo) * i / (START_POINTS - 1) for i in range(START_POINTS)]
     todo = [(grid[i], grid[i + 1], 0) for i in range(START_POINTS - 1)]
-    done, worst, depth_max, breaks = [], {k: 0.0 for k in FIELDS}, 0, []
+    done, worst, depth_max, breaks, kinks = [], {k: 0.0 for k in FIELDS}, 0, [], []
 
     def ratio(pa, pm, pb, k):
         """(비, 왼쪽이 큰가). 큰 반쪽의 상대 변화가 ε 아래면 잡음 크기라 비 1 (덧붙임 17 절대 바닥)."""
@@ -284,6 +285,14 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             if jump:
                 continue
         if fm != fa or max(err.values()) > eps:
+            # 덧붙임 43 — 폭 바닥에 닿았고 뜀도 지문 불연속도 아니면 꺾임: 그 구간만 0.25 K 까지 더 반으로.
+            #   이 가지는 옛 규칙이 거절하던 자리에서만 열린다(다른 표는 바이트 같음).
+            if fm == fa and (b - a) / 2 >= KINK_MIN_K and (d + 1 > MAX_DEPTH or (b - a) / 2 < MIN_INTERVAL_K):
+                k_worst = max(err, key=err.get)
+                kinks.append([a, b, k_worst, err[k_worst]])
+                todo += [(a, m, d + 1), (m, b, d + 1)]
+                depth_max = max(depth_max, d + 1)
+                continue
             if d + 1 > MAX_DEPTH or (b - a) / 2 < MIN_INTERVAL_K:
                 raise SystemExit(f"{name}: [{a!r}, {b!r}] K 가 깊이 {MAX_DEPTH} · 폭 {MIN_INTERVAL_K} K 안에서 ε {eps!r} 에 "
                                  f"안 든다 (오차 {max(err.values())!r})")
@@ -294,7 +303,7 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             for k in FIELDS:
                 worst[k] = max(worst[k], err[k])
     ts = sorted({t for ab in done for t in ab} | {t for br in breaks for t in br[:2]})
-    return ts, [at(t)[0] for t in ts], [at(t)[1] for t in ts], worst, depth_max, len(cache), breaks
+    return ts, [at(t)[0] for t in ts], [at(t)[1] for t in ts], worst, depth_max, len(cache), breaks, kinks
 
 
 def build(name: str, n: int | None = None, points: list[float] | None = None, t_ok: float | None = None,
@@ -357,7 +366,9 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
     m_kg = body.inputs["mass_earth"] * cf.M_EARTH_KG
     adaptive = {}
     if points is None and n is None:
-        grid, points, prints, worst, depth, solves, breaks = _adaptive(name, solve, lo, hi, eps, m_kg, cmf0)
+        grid, points, prints, worst, depth, solves, breaks, kinks = _adaptive(name, solve, lo, hi, eps, m_kg, cmf0)
+        for a, b, k, e in kinks:     # 덧붙임 43 — 로그에만(표 문서 키는 그대로)
+            print(f"꺾임 — [{a!r}, {b!r}] K 폭 {b - a:.3f} K 를 더 반으로 · 칸 {k} · 오차 {e:.3e}", flush=True)
         adaptive = {"eps": eps, "start_points": START_POINTS, "depth_max": depth, "points": len(grid),
                     "structure_solves": solves, "interp_error_max": worst, "discontinuities": "none",
                     "jumps": [{"t_lo": b[0], "t_hi": b[1], "field": b[2], "relative_size": b[3], "steps": b[4]}
