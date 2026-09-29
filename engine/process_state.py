@@ -59,6 +59,7 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("samuel_model", "DEFAULT_USES"): (COUNTER, "default-parameter uses", None),
     ("interior", "COMPOSITIONS"): (FLAG, "constant table swapped inside one call and restored in finally", None),
     ("parallel_points", "_FN"): (FLAG, "the function the helper is solving now", None),
+    ("interior", "_REOPEN"): (FLAG, "re-entry guard while re-closing melt families inside one solve, reset in finally", None),
     ("structure_grid", "BUILDING"): (FLAG, "table build in progress", None),
     ("structure_grid", "GRID_DIR"): (FLAG, "table directory override", None),
 }
