@@ -1220,6 +1220,7 @@ step "test_interface_jumps.py" bash -c 'cd engine && exec python3 test_interface
 # 구조 표 (prereg-structure-grid). 굳힌 표의 방아쇠 대조(풀이 없음) · 거절 문구 · 보간 · 뜀 칸. ~수 초.
 step "structure_grid.py --check" bash -c 'cd engine && exec python3 structure_grid.py --check'
 step "test_structure_grid.py" bash -c 'cd engine && exec python3 test_structure_grid.py'
+step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
 # 판 2 적분 (열진화 v2-9 ④). 화성 구조 한 번(~65 s) 위에 Λ 20 한 판 — 핵 에너지 폐합 · 식 20 부호 · 천장 불변식과
 # 원자료 없이 나오는 여섯 값 회귀. A0 판정은 싣지 않는다 — 불통과는 v2-9 에 기록돼 있고 게이트는 그것으로 빨개지지 않는다.
 step "test_samuel_run.py" bash -c 'cd engine && exec python3 test_samuel_run.py'

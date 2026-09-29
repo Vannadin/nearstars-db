@@ -220,9 +220,12 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
     def _take(t, r):
         if not r.applicable:
             raise SystemExit(f"{name}: {t!r} K 에서 구조가 거절한다 — 격자 안에서 단조가 아니다: {r.reason}")
-        why = interior.answer_verdict(r)   # C130 — 수렴 표지 False 인 점을 표에 조용히 넣지 않는다
+        tags = []
+        why = interior.answer_verdict(r, tags)   # C130 — 수렴 표지 False 인 점을 표에 조용히 넣지 않는다
         if why is not None:
             raise SystemExit(f"{name}: {t!r} K 에서 받을 답 아님 — {why}")
+        for tag in tags:                        # 덧붙임 4 — 표지는 짓기 로그에만(표 문서 키 무변경)
+            print(f"표지 — {t!r} K · {tag}", flush=True)
         cmf_t = r.inputs.get("core_mass_fraction")
         if cmf_t != cmf0:   # 덧붙임 45 «거절문 전부» 밖 — 격자 한계가 아니라 조성 고정 위반(입력 비트 검사)
             raise SystemExit(f"{name}: {t!r} K 의 cmf {cmf_t!r} 가 S0 {cmf0!r} 와 다르다 — 조성이 고정이 아니다")
@@ -425,9 +428,12 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
         for t, r in zip(grid, _pool_solve(solve, [(t, None) for t in grid])):   # 덧붙임 44 ③ — 힌트 없음 그대로
             if not r.applicable:
                 raise SystemExit(f"{name}: 격자 {t!r} K 에서 구조가 거절한다 — 단조가 아니다: {r.reason}")
-            why = interior.answer_verdict(r)   # C130
+            tags = []
+            why = interior.answer_verdict(r, tags)   # C130
             if why is not None:
                 raise SystemExit(f"{name}: 격자 {t!r} K 에서 받을 답 아님 — {why}")
+            for tag in tags:                          # 덧붙임 4
+                print(f"표지 — {t!r} K · {tag}", flush=True)
             cmf_t = r.inputs.get("core_mass_fraction")
             if cmf_t != cmf0:
                 raise SystemExit(f"{name}: 격자 {t!r} K 의 cmf {cmf_t!r} 가 S0 {cmf0!r} 와 다르다 — 조성이 고정이 아니다")
