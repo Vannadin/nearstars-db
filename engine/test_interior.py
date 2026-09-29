@@ -1258,25 +1258,30 @@ def main() -> int:
         fails.append("새 상한 위 거절이 무엇이 그 위인지 말하지 않는다")
     print(f"  [{'PASS' if deg else 'FAIL'}] 그 위가 전자축퇴임을 말한다")
 
-    print("\n온도 — 기준 포텐셜 온도에서 지구가 **비트까지** 안 움직이는가")
+    print("\n온도 — 기준 포텐셜 온도에서 지구가 안 움직이는가(이중계상 없음 — 상대 ≤ SHOOT_TOL)")
     # 이 작업 전체의 판정선이다. PREM 적합은 뜨거운 실제 지구를 관측한 것이라 지구의
     # 지오섬이 그 유효 ρ₀ 안에 이미 있고, 거기에 300 K 기준의 열팽창을 얹으면 지구를
     # 두 번 데운다 — 직전 세션이 목성에 중원소를 두 번 넣어 반지름을 +0.6 % 에서
     # −9.8 % 로 만든 것과 같은 함정이다. 암석-금속 상들의 기준을 1600 K 단열선으로
     # 잡았으므로 그 온도에서는 ΔT 가 항등적으로 0 이고, 그래서 허용오차가 아니라
     # **같음** 을 검사한다.
+    # ⚠ **같음의 자는 비트가 아니라 SHOOT_TOL** (prereg-structure-grid 덧붙임 47, 동결 61a55db4). warm start · 느슨한
+    #   안쪽 사격 뒤로 on/off 두 풀이는 온도 고리의 유무로 길이 갈려 끝자리가 다르다(관찰 최대 2.0e-9). 이중계상이면
+    #   1e-3 급으로 움직인다 — 1700 K(ΔT 100 K 더)의 픽스처가 넷 모두 8.6e-5 이상으로 갈렸다.
     from eos import EARTH_POTENTIAL_T
+    from interior import SHOOT_TOL
     for name, m, r_pub, cmf, nmoi_pub, f_pub, _src, _nmoi_src in ANCHORS:
         off = solve(m, core_mass_fraction=cmf)
         on = solve(m, core_mass_fraction=cmf,
                    potential_temperature=EARTH_POTENTIAL_T)
-        same = (off.values["nmoi"] == on.values["nmoi"]
-                and off.values["radius"] == on.values["radius"])
+        d_n = abs(on.values["nmoi"] / off.values["nmoi"] - 1.0)
+        d_r = abs(on.values["radius"] / off.values["radius"] - 1.0)
+        same = d_n <= SHOOT_TOL and d_r <= SHOOT_TOL
         if not same:
             fails.append(f"{name}: 기준 온도에서 답이 움직였다 — 이중계상이다 "
                          f"({off.values['nmoi']:.10f} → {on.values['nmoi']:.10f})")
         print(f"  [{'PASS' if same else 'FAIL'}] {name:8} C/MR² {on.values['nmoi']:.6f} · "
-              f"R {on.values['radius']:.6f} — 온도를 끈 답과 비트까지 같다")
+              f"R {on.values['radius']:.6f} — 온도를 끈 답과 상대 {max(d_n, d_r):.1e} ≤ SHOOT_TOL")
     ok = solve(1.0, core_mass_fraction=0.325,
                potential_temperature=EARTH_POTENTIAL_T).grade == "calibrated"
     if not ok:
