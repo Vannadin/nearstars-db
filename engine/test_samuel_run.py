@@ -51,8 +51,11 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 # C118 (prereg-phase-boundary-step, 2026-09-27): the structure step stops at a material's pressure phase boundary, and
 # Mars's Fe-S core crosses 19 GPa, so the profile rows plate 2 reads shift (old → new: 2101.38 → 2101.39 · 1941.67 →
 # 1941.68 · -48.94 → -48.93 · 286.19 → 286.22 · 2044.18 → 2044.21 · 1.2732 → 1.2632 — the peak lands one step earlier).
-FROZEN_L20 = {"T_c today": 2101.39, "T_m today": 1941.68, "T_c(1) − T_c0": -48.93, "T_m(1) − T_m0": 286.22,
-              "T_m peak": 2044.21, "T_m peak time": 1.2632}
+# Speed stack (warm start · levers A/B · value-based staleness · grid addenda 42–46, 2026-09-29): Mars's structure
+# table is rebuilt on the new shot path, so the rows plate 2 reads move at the temperature loop's noise level
+# (old → new: 2101.39 → 2101.23 · 1941.68 → 1941.78 · -48.93 → -49.27 · 286.22 → 285.66 · 2044.21 → 2043.57 · 1.2632 → 1.2632).
+FROZEN_L20 = {"T_c today": 2101.23, "T_m today": 1941.78, "T_c(1) − T_c0": -49.27, "T_m(1) − T_m0": 285.66,
+              "T_m peak": 2043.57, "T_m peak time": 1.2632}
 FROZEN_TOL = {"T_m peak time": 0.0005}  # Gyr; every other value K, to the frozen decimal
 
 

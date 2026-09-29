@@ -78,8 +78,9 @@ v = sr.curve_values(out["rows"])
 # the same pins and widths as test_samuel_run.FROZEN_L20 / FROZEN_TOL (K to the frozen decimal; peak time 0.0005 Gyr)
 # C116: moved with INFER_TOL 5e-7 (Mars's core mass fraction); old values beside FROZEN_L20
 # C118: moved again with the phase-boundary step cut (Mars's Fe-S core crosses 19 GPa); old values beside FROZEN_L20
-for key, want, tol in (("T_c today", 2101.39, 0.005), ("T_m today", 1941.68, 0.005), ("T_c(1) − T_c0", -48.93, 0.005),
-                       ("T_m(1) − T_m0", 286.22, 0.005), ("T_m peak", 2044.21, 0.005), ("T_m peak time", 1.2632, 0.0005)):
+# speed stack (2026-09-29): moved again with Mars's table rebuilt on the new shot path; old values beside FROZEN_L20
+for key, want, tol in (("T_c today", 2101.23, 0.005), ("T_m today", 1941.78, 0.005), ("T_c(1) − T_c0", -49.27, 0.005),
+                       ("T_m(1) − T_m0", 285.66, 0.005), ("T_m peak", 2043.57, 0.005), ("T_m peak time", 1.2632, 0.0005)):
     check(f"R2 — {key} = {want}", abs(v[key] - want) <= tol, f"{v[key]:.6f}")
 
 print(f"  test_thermal_stack — {'모두 통과' if not fails else f'실패 {fails}'}")
