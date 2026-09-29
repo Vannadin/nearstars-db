@@ -700,6 +700,9 @@ echo "── 1. 스키마 검증 (db/systems/*.json + curated) ──"
 step "scripts/test_gate_cleanup.sh" bash scripts/test_gate_cleanup.sh
 # 게이트 자신: auto-lane 이 기대 빨강만 있는 full 을 인정하는 규칙(C128)의 합성 로그 시험. ~1 s.
 step "scripts/test_lane_decide.py" bash -c 'python3 scripts/test_lane_decide.py'
+# 게이트 자신: 추적 test_*.py 가 전부 여기서 불리거나 이름 박힌 제외 목록(까닭)에 있는가 (C129). ~1 s.
+step "scripts/test_check_unwired_tests.py" bash -c 'python3 scripts/test_check_unwired_tests.py'
+step "scripts/check_unwired_tests.py" bash -c 'python3 scripts/check_unwired_tests.py'
 step "scripts/pipeline/validate.py" bash -c 'python3 scripts/pipeline/validate.py'
 step "scripts/refs/validate_plasma_temp.py" bash -c 'python3 scripts/refs/validate_plasma_temp.py'
 
@@ -1018,6 +1021,9 @@ step "test_body_class.py" bash -c 'cd engine && exec python3 test_body_class.py'
 step "test_porosity.py" bash -c 'cd engine && exec python3 test_porosity.py'
 step "test_giant.py" bash -c 'cd engine && exec python3 test_giant.py'
 step "test_mixture.py" bash -c 'cd engine && exec python3 test_mixture.py'
+# 얼음 VII·X French & Redmer 2015 열 세트 · 조석 응답 노드 앵커 — 게이트에 안 엮였던 둘 (C129). 각 ~1 s.
+step "test_ice_fr2015.py" bash -c 'cd engine && exec python3 test_ice_fr2015.py'
+step "test_tidal_response.py" bash -c 'cd engine && exec python3 test_tidal_response.py'
 step "test_rocky_roster.py" bash -c 'cd engine && exec python3 test_rocky_roster.py'
 # 조석 수송 축 (Brief 35). 이오 재현 실패가 측정 불변량으로 고정되어 있다 —
 # 이 테스트가 울리면 실패 서사 자체가 바뀐 것이니 멈추고 추적한다.
