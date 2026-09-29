@@ -23,6 +23,8 @@ START, MEMO, COUNTER, FLAG = "start", "memo", "counter", "flag"
 REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("water_hot", "_LAST_DENSITY"): (START, "previous (P, T, rho): secant starting point (C122)", (0.0, 0.0, 0.0)),
     ("fermi", "_LAST_INVERSE"): (START, "previous (value, eta): Newton starting point", (0.0, 0.0)),
+    ("rtpress", "_LAST_LIQUID"): (MEMO, "returned only for the same (P, T)", None),
+    ("rtpress", "_VMIN_TAB"): (MEMO, "lazily built table, a function of the constants only", None),
     ("ice_fr2015", "_GL_NODES"): (MEMO, "lazily built quadrature nodes", None),
     ("ice_fr2015", "_CACHE"): (MEMO, "keyed by (name, P, T)", None),
     ("fe_liquid", "_CACHE"): (MEMO, "keyed by (name, P, T)", None),
@@ -33,6 +35,8 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("eos", "_PRESSURE_FAST"): (MEMO, "pressure closure keyed by the phase constants (C137)", None),
     ("interior", "ADAPTIVE_STATS"): (COUNTER, "step counts", None),
     ("mantle_composition", "TABLE_ASKS"): (COUNTER, "table lookups", None),
+    ("rtpress", "OUTSIDE"): (COUNTER, "calls outside the calibration window", None),
+    ("rtpress", "CALLS"): (COUNTER, "call count", None),
     ("eos", "P_EDGE_CALLS"): (COUNTER, "edge-evaluator calls", None),
     ("eos", "DENSITY_REACH"): (COUNTER, "density-fit reach", None),
     ("eos", "DENSITY_BELOW_REF"): (COUNTER, "calls below the reference pressure", None),
