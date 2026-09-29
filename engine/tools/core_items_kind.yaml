@@ -420,6 +420,9 @@ items:
   # ⚠ C137 (2026-09-30, 원격 PC) — eos 밀도 역산 특수화(값 무변경 속도). 값이 안 바뀌는 성능이라 tooling.
   C137:
     kind: tooling
+  # C138 (2026-09-30, 병렬석 e5 · 지휘 3d) — 수렴 기록의 False 가 세 뜻(미수렴 · 다른 길 · 버린 시행)을 섞음, 고리 best 가 사격 ok 를 안 봄. 엔진 풀이라 physics.
+  C138:
+    kind: physics
   # ⚠ C139 (2026-09-30, 원격 PC census) — 액체 철 부피가 적합 창 끝에서 잘린 값으로 채택됨. 엔진이 내는 수라 physics.
   C139:
     kind: physics
