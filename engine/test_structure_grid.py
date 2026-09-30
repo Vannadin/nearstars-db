@@ -67,6 +67,85 @@ check("구간 밖 → 보간 그대로", kind == "ok" and all(got[k] == 1.5 for 
 kind, got = _syn.at(1010.5)
 check("구간 끝점 t₊ → 그 점의 값(ok)", kind == "ok" and all(got[k] == 3.0 for k in sg.FIELDS), kind)
 
+# 덧붙임 55 — 이분을 판 단위로 미리 풀기: 풀 크기와 무관한 바이트 · 버린 점은 캐시 밖 · 음성 대조 둘(가짜 풀이)
+import contextlib   # noqa: E402
+import io           # noqa: E402
+import types        # noqa: E402
+
+
+def _fake(t, p_hint=None):
+    """1002.8–1003.4 K 는 받을 답 아님(겉 False) · 값이 힌트를 작은 항으로 탄다(힌트 규칙이 바이트에 보이게)."""
+    x = t - 1000.0
+    bad = 1002.8 < t < 1003.4
+    v = {"radius": 1.0 + 1e-6 * x * x, "core_radius": 0.5, "cmb_pressure": 20.0 + 0.01 * x + 1e-15 * (p_hint or 0.0),
+         "cmb_temperature": 1.5 * t, "core_pressure": 30.0 + 0.001 * x, "converged": None}
+    return types.SimpleNamespace(applicable=True, reason=None, regime="rocky", converged=not bad, notes=(),
+                                 inputs={"core_mass_fraction": 0.3}, values=v)
+
+
+def _build(pool, levels=2, rounds=None):
+    sg.GRID_POOL, sg.SPEC_LEVELS = pool, levels
+    real = sg._spec_rounds
+    if rounds is not None:
+        sg._spec_rounds = rounds
+    try:
+        with contextlib.redirect_stdout(io.StringIO()) as out:
+            got = sg._adaptive("fake", _fake, 1000.0, 1008.0, sg.EPS, 6.4e23, 0.3)
+        return json.dumps(got), out.getvalue(), None
+    except SystemExit as e:
+        return None, "", str(e)
+    finally:
+        sg._spec_rounds = real
+
+
+def _leaky(chains, fetch):
+    """N1 — 보낸 마디를 곧바로 찾아(사슬 사본의 결정으로) 캐시에 넣는 판 — ④ 위반."""
+    chosen = set()
+    while any(c.live() for c in chains):
+        nodes, owner = [], []
+        for c in chains:
+            if not c.live():
+                continue
+            level = [(c.x, c.y, None)]
+            for _ in range(sg.SPEC_LEVELS):
+                nxt = []
+                for a, b, parent in level:
+                    if b - a <= c.width:
+                        continue
+                    m = 0.5 * (a + b)
+                    nodes.append((m, a, b, parent))
+                    owner.append((c, m, a, b))
+                    nxt += [(a, m, m), (m, b, m)]
+                level = nxt
+        fetch(nodes)
+        for c, m, a, b in owner:
+            tmp = copy.copy(c)
+            tmp.x, tmp.y = a, b
+            c.step(tmp, m)
+        for c in chains:
+            for _ in range(sg.SPEC_LEVELS):
+                if not c.live():
+                    break
+                m = 0.5 * (c.x + c.y)
+                chosen.add(m)
+                c.step(c, m)
+    return chosen
+
+
+_levels0, _pool0 = sg.SPEC_LEVELS, sg.GRID_POOL
+b1, log1, e1 = _build(1)
+b3, log3, e3 = _build(3)
+check("덧붙임 55 — 풀 1 · 풀 3 바이트 같음 · 받을 답 없는 구간 있음", e1 is None and b1 == b3
+      and json.loads(b1)[-1] != [], (e1 or e3 or "")[:120])
+_disc = [int(w.split()[1]) for w in log1.split("·") if w.strip().startswith("버림")]
+check("덧붙임 55 — 버린 미리 풀기 > 0", bool(_disc) and _disc[0] > 0, str(_disc))
+bn2a, _, _ = _build(1, levels=1)
+bn2b, _, _ = _build(3, levels=2)
+check("덧붙임 55 음성 N2 — 판 깊이가 풀을 타면 바이트가 갈린다", bn2a is not None and bn2a != bn2b)
+bn1, _, en1 = _build(3, rounds=_leaky)
+check("덧붙임 55 음성 N1 — 찾기 전 캐시에 넣으면 ④ 대조가 떨어진다", bn1 is None and "덧붙임 55 ④" in (en1 or ""), (en1 or "")[:120])
+sg.SPEC_LEVELS, sg.GRID_POOL = _levels0, _pool0
+
 ghost = copy.deepcopy(run.load_body(sg.BODIES_DIR / "earth.yaml")[0])
 ghost.name = "NoSuchBody"
 _, why = sg.load_for(ghost)

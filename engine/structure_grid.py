@@ -36,6 +36,7 @@ MAX_DEPTH = 6
 MIN_INTERVAL_K = 1.0
 JUMP_RATIO = 10.0            # 값 칸 뜀: 두 반쪽 변화의 큰 쪽 / 작은 쪽 (덧붙임 16)
 GRID_POOL = int(os.environ.get("GRID_POOL", "8"))   # 덧붙임 44 — 한 깊이의 가운데 점들을 동시에 푸는 프로세스 수
+SPEC_LEVELS = 2              # 덧붙임 55 — 이분 한 판에 미리 풀 나무 깊이. 풀 크기와 무관한 상수(판 · 풀이 집합이 풀과 무관)
 KINK_MIN_K = 0.25            # 폭 바닥의 꺾임 구간만 이분 두 번 더 (덧붙임 43) — 꺾임의 선형 보간 오차는 폭에 비례
 BELOW_K = 150.0              # 격자 아래 끝 = ⓐ 판 t_m 최저 − 150 K (prereg-structure-grid 덧붙임 7 ③)
 ABOVE_K = 50.0               # 위 끝 = ⓐ 판 t_m 최고 + 50 K, 구조가 거절하면 T_ok 로
@@ -222,6 +223,34 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
     noans = {}                                  # 덧붙임 50 — 받을 답 아닌 점 → 까닭
 
     p_centres = {}
+    spec = {}                                   # 덧붙임 55 ④ — 한 판의 미리 푼 결과(판 끝에 버림, 캐시 · 표 밖)
+    spec_stats = {"dispatched": 0, "used": 0, "discarded": 0, "rounds": 0, "max_round": 0}
+
+    def fetch(nodes):
+        """덧붙임 55 ①–③ — 판의 나무 마디 (t, a, b, 부모) 중 안 푼 것을 한 번에 풀로. 힌트: 가까운 끝점(덧붙임 44 ①),
+        그 끝점이 이 판에서 아직 안 풀렸으면 부모 마디의 힌트."""
+        pending = {t for t, *_ in nodes if t not in cache and t not in noans}
+        hints, jobs = {}, []
+        for t, a, b, parent in nodes:
+            near = a if abs(t - a) <= abs(b - t) else b
+            hints[t] = hints[parent] if near in pending and parent is not None else p_centres.get(near)
+            if t in pending and t not in spec and all(j[0] != t for j in jobs):
+                jobs.append((t, hints[t]))
+        for (t, _h), r in zip(jobs, _pool_solve(solve, jobs) if jobs else []):
+            spec[t] = r
+        spec_stats["dispatched"] += len(jobs)
+        spec_stats["rounds"] += 1
+        spec_stats["max_round"] = max(spec_stats["max_round"], len(jobs))
+
+    def bisect(chains):
+        """덧붙임 55 — 이분 사슬 여럿(서로 독립)을 판 단위로: 판마다 SPEC_LEVELS 깊이 나무를 한 번에 풀고, 결정은 지금 순서대로."""
+        before = set(cache) | set(noans)
+        chosen = _spec_rounds(chains, fetch)
+        spec_stats["discarded"] += len(spec)
+        spec.clear()
+        leaked = (set(cache) | set(noans)) - before - chosen
+        if leaked:     # 덧붙임 55 ④ — 결정이 찾지 않은 점이 캐시에 들면 표가 풀 크기 · 판 모양을 탄다
+            raise SystemExit(f"{name}: 미리 푼 점이 찾기 전에 캐시에 들었다 {sorted(leaked)!r} (덧붙임 55 ④)")
 
     def _take(t, r):
         if not r.applicable:
@@ -245,8 +274,12 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         if t in noans:
             raise _NoAnswer(t, noans[t])
         if t not in cache:
-            near = None if a is None else (a if abs(t - a) <= abs(b - t) else b)
-            _take(t, _pool_solve(solve, [(t, p_centres.get(near) if near is not None else None)])[0])
+            if t in spec:                       # 덧붙임 55 ④ — 이 판에 미리 푼 점은 **찾아올 때** 캐시로(찾는 순서대로)
+                spec_stats["used"] += 1
+                _take(t, spec.pop(t))
+            else:
+                near = None if a is None else (a if abs(t - a) <= abs(b - t) else b)
+                _take(t, _pool_solve(solve, [(t, p_centres.get(near) if near is not None else None)])[0])
             if t in noans:
                 raise _NoAnswer(t, noans[t])
         return cache[t]
@@ -275,16 +308,10 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
 
     def gap_around(a, b, t_bad, why):
         """덧붙임 50 ① — 받을 답인 끝점 a, b 사이의 불수락 점 t_bad 둘레를 0.25 K 까지 이분 → [t₋, t₊]."""
-        lo, hi = a, t_bad
-        while hi - lo > KINK_MIN_K:
-            mid = 0.5 * (lo + hi)
-            lo, hi = (mid, hi) if answered(mid, lo, hi) else (lo, mid)
-        t_minus = lo
-        lo, hi = t_bad, b
-        while hi - lo > KINK_MIN_K:
-            mid = 0.5 * (lo + hi)
-            lo, hi = (lo, mid) if answered(mid, lo, hi) else (mid, hi)
-        return t_minus, hi
+        left = _Chain(a, t_bad, KINK_MIN_K, lambda c, m: c.go(m, c.y) if answered(m, c.x, c.y) else c.go(c.x, m))
+        right = _Chain(t_bad, b, KINK_MIN_K, lambda c, m: c.go(c.x, m) if answered(m, c.x, c.y) else c.go(m, c.y))
+        bisect([left, right])                   # 덧붙임 55 ② — 두 쪽을 한 판에
+        return left.x, right.y
 
     def ratio(pa, pm, pb, k):
         """(비, 왼쪽이 큰가). 큰 반쪽의 상대 변화가 ε 아래면 잡음 크기라 비 1 (덧붙임 17 절대 바닥)."""
@@ -296,15 +323,16 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
 
     def confirm_jump(a, b, k):
         """큰 반쪽을 1 K 까지 이분 — 매 단계 비가 서야 뜀 (덧붙임 16). 뜀 [x, y] 또는 None."""
-        x, y, steps = a, b, 0
-        while y - x > MIN_INTERVAL_K:
-            m = 0.5 * (x + y)
-            r, left_big = ratio(at(x)[0], at(m, x, y)[0], at(y)[0], k)
+        def step(c, m):
+            r, left_big = ratio(at(c.x)[0], at(m, c.x, c.y)[0], at(c.y)[0], k)
             if r <= JUMP_RATIO:
-                return None
-            x, y = (x, m) if left_big else (m, y)
-            steps += 1
-        return x, y, steps
+                c.stopped = True
+                return
+            c.go(c.x, m) if left_big else c.go(m, c.y)
+            c.steps += 1
+        c = _Chain(a, b, MIN_INTERVAL_K, step)
+        bisect([c])
+        return None if c.stopped else (c.x, c.y, c.steps)
     prefetch([(t, None) for t in grid])
     while todo:
         # 덧붙임 44 ② — 쌓인 구간들의 가운데 점을 먼저 한꺼번에(캐시에 없는 것만), 판정은 아래 지금 순서 그대로
@@ -325,13 +353,9 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             todo += [(t_plus, b, d + 1)] if t_plus < b else []
             continue
         if fa != fb:                                  # 불연속 — 이분으로 좁혀 이름 대고 거절
-            x, y = a, b
-            while y - x > MIN_INTERVAL_K:
-                m = 0.5 * (x + y)
-                if at(m, x, y)[1] == fa:
-                    x = m
-                else:
-                    y = m
+            c = _Chain(a, b, MIN_INTERVAL_K, lambda c, m: c.go(m, c.y) if at(m, c.x, c.y)[1] == fa else c.go(c.x, m))
+            bisect([c])                       # 덧붙임 55 — 지문 이분도 같은 판
+            x, y = c.x, c.y
             raise SystemExit(f"{name}: 보간 불가 구간 [{x!r}, {y!r}] K — 지문 {fa} → {at(y)[1]} "
                              f"(걸린 것: 폭 바닥 — 폭 {y - x:.3f} K ≤ MIN_INTERVAL_K {MIN_INTERVAL_K} K, 깊이 {d}/{MAX_DEPTH})")
         m = 0.5 * (a + b)
@@ -374,8 +398,54 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             done.append((a, b))
             for k in FIELDS:
                 worst[k] = max(worst[k], err[k])
+    print(f"미리 풀기(덧붙임 55) — 보냄 {spec_stats['dispatched']} · 씀 {spec_stats['used']} · 버림 {spec_stats['discarded']} · "
+          f"판 {spec_stats['rounds']} · 한 판 최대 {spec_stats['max_round']} 점", flush=True)
     ts = sorted({t for ab in done for t in ab} | {t for br in breaks for t in br[:2]})
     return ts, [at(t)[0] for t in ts], [at(t)[1] for t in ts], worst, depth_max, len(cache), breaks, kinks, gaps
+
+
+class _Chain:
+    """덧붙임 55 — 이분 사슬 하나: 구간 [x, y], 폭 바닥, 결정 `step(사슬, 가운데)`(구간을 `go` 로 옮기거나 `stopped`)."""
+
+    def __init__(self, x, y, width, step):
+        self.x, self.y, self.width, self.step, self.stopped, self.steps = x, y, width, step, False, 0
+
+    def go(self, x, y):
+        self.x, self.y = x, y
+
+    def live(self):
+        return not self.stopped and self.y - self.x > self.width
+
+
+def _spec_rounds(chains, fetch):
+    """덧붙임 55 ① — 판마다 살아 있는 사슬들의 다음 SPEC_LEVELS 깊이 나무 마디를 `fetch` 로 한 번에 보내고,
+    사슬마다 결정을 SPEC_LEVELS 번까지 지금 순서로. 마디: (t, a, b, 부모 t) — 부모는 같은 판 안의 윗마디(없으면 None).
+    돌려주는 값: 결정이 실제로 찾은 가운데 점들(④ 대조용)."""
+    chosen = set()
+    while any(c.live() for c in chains):
+        nodes = []
+        for c in chains:
+            if not c.live():
+                continue
+            level = [(c.x, c.y, None)]
+            for _ in range(SPEC_LEVELS):
+                nxt = []
+                for a, b, parent in level:
+                    if b - a <= c.width:
+                        continue
+                    m = 0.5 * (a + b)
+                    nodes.append((m, a, b, parent))
+                    nxt += [(a, m, m), (m, b, m)]
+                level = nxt
+        fetch(nodes)
+        for c in chains:
+            for _ in range(SPEC_LEVELS):
+                if not c.live():
+                    break
+                m = 0.5 * (c.x + c.y)
+                chosen.add(m)
+                c.step(c, m)
+    return chosen
 
 
 class _NoAnswer(Exception):
@@ -454,14 +524,17 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
     if points is not None:
         pass                                  # 명시 격자(연구판과 같은 점, 덧붙임 9 (가)) — T_ok 도 받은 대로
     elif not top.applicable:
-        a, b = lo, hi
-        while b - a > T_OK_WIDTH_K:
-            mid = 0.5 * (a + b)
-            if solve(mid).applicable:
-                a = mid
-            else:
-                b = mid
-        t_ok, t_no, hi = a, b, a
+        got = {}                              # 덧붙임 55 — T_ok 이분도 같은 판(힌트 없음 그대로, 판 끝에 버림)
+
+        def fetch(nodes):
+            jobs = [(t, None) for t, *_ in nodes if t not in got]
+            for (t, _h), r in zip(jobs, _pool_solve(solve, jobs) if jobs else []):
+                got[t] = r
+        c = _Chain(lo, hi, T_OK_WIDTH_K, lambda c, m: c.go(m, c.y) if got[m].applicable else c.go(c.x, m))
+        _spec_rounds([c], fetch)
+        t_ok, t_no, hi = c.x, c.y, c.x
+    if points is None:
+        print(f"T_ok 가지(덧붙임 55) — 위 끝 {top.applicable and '받음' or '거절 → 이분'} · t_ok {t_ok!r} · t_no {t_no!r}", flush=True)
     m_kg = body.inputs["mass_earth"] * cf.M_EARTH_KG
     adaptive = {}
     gaps = []
