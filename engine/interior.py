@@ -2148,8 +2148,11 @@ def shoot(mass_kg: float, cmf: float, imf: float,
                 if ok:
                     hint["p"] = got.p_center
                 return got, ok, t_now
-            except SpinodalGap:
-                raise            # 스피노달 벽 — 시행 안에서 옮기지 않고 바깥 고리가 벽으로 받는다 (덧붙임 7)
+            except (Unbound, NoCompactRoot, GridExceeded, SpinodalGap) as wall_exc:
+                # 스피노달 벽 — 시행 안에서 옮기지 않고 바깥 고리가 벽으로 받는다 (덧붙임 7). 괄호가 오른 중심 온도를
+                #   매달아 올린다 — 첫 시행의 벽 문장이 요청 온도가 아니라 **도달한** 온도를 적게 (C140).
+                wall_exc.t_center_reached = t_now
+                raise
             except PhaseGap as gap:
                 if not gap.temperature_k:
                     raise        # 온도가 아니라 압력이 막았다. 그건 진짜다
@@ -2173,23 +2176,18 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     # 온도로 비율을 다시 재는데, 실제로 적분된 것은 괄호가 옮긴 온도라 매 통과가 같은
     # 배수만큼 틀리고 고리가 수렴하지 않는다. 통과 횟수를 6 에서 14 로 올렸더니 목성은
     # 붙고 토성은 +2.09 % 에서 +7.06 % 로 흔들린 것이 이 자리였다.
-    # ⚠ **첫 시행의 벽도 온도 고리의 벽 규칙과 같은 꼴로 받는다** (C131 결정 ②). 예전에는 첫 `attempt` 가 try
-    #   밖이라 거기서 난 스피노달 · 묶이지 않음이 시험값인데도 천체의 거절로 새어 나갔다. 아래 고리처럼 그
-    #   온도를 벽으로 적고 ÷1.6 으로 내려 다시 잡는다(`T_BRACKET_TRIES` 까지). 다 써도 못 잡으면 첫 벽의 거절이 답이다.
-    first_wall = None
+    # ⚠ **첫 시행의 벽은 «괄호가 오른 끝(도달 상태)» 의 거절이다** (C140 이 C131 결정 ② 를 바꿈, 덧붙임 251c5638).
+    #   첫 `attempt` 의 온도 괄호는 이미 그 끝까지 올라 도달한 상태이고, 거기서 ÷1.6 로 내려 다시 하면 같은 괄호를
+    #   되풀이할 뿐이다(C140 가름: 같은 온도 사다리 여섯 번, 498 s). 그래서 내려 다시 하지 않고, 같은 종류의 예외에
+    #   «괄호가 오른 끝(중심 T)에서:» 를 앞말로 붙여 그대로 올린다.
     try:
         st, converged, t_c = attempt(t_c)
     except (Unbound, NoCompactRoot, GridExceeded, SpinodalGap) as why:
-        first_wall, first_why = t_c, why
-        for _ in range(T_BRACKET_TRIES):
-            t_c = t_c / 1.6
-            try:
-                st, converged, t_c = attempt(t_c)
-                break
-            except (Unbound, NoCompactRoot, GridExceeded, SpinodalGap):
-                continue
-        else:
-            raise first_why
+        head = f"괄호가 오른 끝(중심 {getattr(why, 't_center_reached', t_c):.0f} K)에서: "
+        why.args = (head + str(why),) + tuple(why.args[1:])
+        if isinstance(why, eos.PhaseGap):
+            why.reason = head + why.reason
+        raise
     # **비례 갱신이 발산하는 천체가 있다.** T_c·T_pot/T_surf 는 T_surf ∝ T_c 를 놓는데, 얇은 외피가
     # 무거운 핵 위에 있으면 지수가 2 를 넘는다 — 외피 바닥이 핵 단열선을 그대로 타고 1 bar 온도는
     # 그 위에서 외피 두께까지 같이 바뀐다 (GJ 1214 b 가스 2 % 에서 2.3). 지수 n 의 비례 갱신은
@@ -2200,8 +2198,6 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     # 같다는 것을 그 경로로 보장한다.
     wall = None                  # 외피가 묶이지 않은 가장 낮은 중심 온도
     wall_why = ""                # 그 온도에서 왜 묶이지 않았는가 (사다리의 문장)
-    if first_wall is not None:   # 첫 시행이 벽에 닿았으면 그것이 첫 벽이다 (C131 결정 ②)
-        wall, wall_why = first_wall, str(first_why)
     lo = hi = None               # (log T_c, log T_surf/T_pot): 아래쪽(차다) · 위쪽(뜨겁다)
     devs: list[float] = []
     bracketed = False
