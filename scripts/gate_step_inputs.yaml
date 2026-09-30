@@ -1,0 +1,220 @@
+# 게이트 단계마다 데이터로 읽는 파일의 선언 — quick 차선의 also 와 full 의 표류 검사가 읽는다 (C136)
+# Measured by the gate-only audit hook (scripts/gate_reads) in the full gate on 495980bd,
+# 2026-10-01, Mac. `hand: true` = declared by hand (the hook cannot see a shell step).
+# Globs: `*` and `?` stay in one directory, `**` crosses. Only pass-class paths (prose, .py)
+# matter; a yaml/json/csv read needs no entry because a change there already forces full.
+# Steps that walk the tree (check_refs, the markdown checks) are declared as `**.md` / `**.py`
+# instead of their 400–800 measured paths; a listed directory D is declared as `D/*`.
+
+"scripts/test_gate_cleanup.sh":  # shell; reads no tracked file as data
+  globs: []
+  hand: true
+"scripts/test_lane_decide.py":
+  globs: []
+"scripts/test_gate_step_inputs.py":
+  globs: []
+"scripts/test_check_unwired_tests.py":
+  globs: []
+"scripts/check_unwired_tests.py":
+  globs: ["**"]
+"scripts/pipeline/validate.py":
+  globs: []
+"scripts/refs/validate_plasma_temp.py":
+  globs: []
+"scripts/check_dead_links.py":
+  globs: ["**.md"]
+"scripts/check_site_links.py":
+  globs: []
+"scripts/check_citation_links.py":
+  globs: ["docs/reference/*", "ko/docs/reference/*"]
+"경로 잔여물 grep":  # shell; git grep over the whole tree
+  globs: ["**"]
+  hand: true
+"scripts/check_language.py":
+  globs: ["**.md"]
+"scripts/check_md_tables.py":
+  globs: ["**.md"]
+"scripts/check_md_dupes.py":
+  globs: ["**.md"]
+"scripts/check_build_freshness.py":
+  globs: []
+"scripts/check_phase4_gate.py":
+  globs: ["phase4/*"]
+"scripts/check_pipeline_flow.py":
+  globs: ["db/systems/*", "docs/phase3/*", "phase4/*"]
+"build_sitemap":
+  globs: []
+"scripts/check_methodology_coverage.py":
+  globs: ["docs/reference/methodology-index.md", "ko/docs/reference/methodology-index.md", "docs/reference/*"]
+"check_via":
+  globs: []
+"check_contracts.py":
+  globs: ["docs/reference/body-class-methodology.md", "docs/reference/core-state-methodology.md", "docs/reference/interior-structure-methodology.md", "docs/reference/internal-heat-luminosity-methodology.md", "docs/reference/mass-radius-relation-methodology.md", "docs/reference/planetary-dynamo-scaling.md", "docs/reference/rocky-planet-dynamo-methodology.md", "docs/reference/tidal-heating-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md", "docs/reference/tidal-response-methodology.md", "engine/body_class.py", "engine/cmb_flux.py", "engine/core_energy.py", "engine/core_entropy.py", "engine/core_history.py", "engine/core_state.py", "engine/dynamo.py", "engine/dynamo_rocky.py", "engine/eos.py", "engine/interior.py", "engine/mantle_composition.py", "engine/mass_radius.py", "engine/radiogenic.py", "engine/tidal_heating.py", "engine/tidal_locking.py", "engine/tidal_response.py", "engine/bodies/*"]
+"check_graph_page":
+  globs: ["engine/build_graph_page.py", "engine/chain-explorer.html", "phase4/*"]
+"test_paleos":
+  globs: []
+"test_paleos_lookup":
+  globs: []
+"test_bands.py":
+  globs: []
+"test_albedo_table.py":
+  globs: ["docs/reference/surface-color-albedo-methodology.md"]
+"test_greenhouse_cases.py":
+  globs: ["docs/reference/greenhouse-warming-methodology.md"]
+"test_sub_neptune_dynamo.py":
+  globs: []
+"test_stellar_wind.py":
+  globs: []
+"test_tidal_locking.py":
+  globs: []
+"test_provisional.py":
+  globs: []
+"test_transfers.py":
+  globs: ["engine/bodies/*"]
+"test_domain.py":
+  globs: []
+"test_boundary_reach.py":
+  globs: ["engine/albedo_table.py", "engine/ammonia_table.py", "engine/backflow.py", "engine/bands.py", "engine/body_class.py", "engine/body_stack.py", "engine/chain.py", "engine/check_contracts.py", "engine/check_refs.py", "engine/check_via.py", "engine/cmb_flux.py", "engine/convergence.py", "engine/core_energy.py", "engine/core_entropy.py", "engine/core_history.py", "engine/core_state.py", "engine/domain.py", "engine/dynamo.py", "engine/dynamo_rocky.py", "engine/eos.py", "engine/fe_liquid.py", "engine/fermi.py", "engine/gate_env.py", "engine/graph.py", "engine/greenhouse_cases.py", "engine/hhe_repair.py", "engine/hhe_table.py", "engine/ice_fr2015.py", "engine/ice_melt_table.py", "engine/interior.py", "engine/mantle_budget.py", "engine/mantle_composition.py", "engine/mantle_flux.py", "engine/mass_radius.py", "engine/paleos.py", "engine/parallel_points.py", "engine/payload.py", "engine/phase_tables.py", "engine/porosity.py", "engine/process_state.py", "engine/provisional.py", "engine/radiogenic.py", "engine/registry.py", "engine/rheology.py", "engine/samuel_layer.py", "engine/samuel_lid.py", "engine/samuel_model.py", "engine/samuel_run.py", "engine/samuel_stack.py", "engine/samuel_structure.py", "engine/samuel_thermal.py", "engine/stagnant_lid.py", "engine/state.py", "engine/steam_if97.py", "engine/stellar_wind.py", "engine/structure_grid.py", "engine/sub_neptune_dynamo.py", "engine/tectonic_regime.py", "engine/thermal_stack.py", "engine/tidal_heating.py", "engine/tidal_locking.py", "engine/tidal_response.py", "engine/tidal_transport.py", "engine/transfers.py", "engine/transitional_lid.py", "engine/water2_table.py", "engine/water_hot.py", "engine/water_table.py", "engine/*"]
+"test_name_collision.py":
+  globs: ["docs/reference/*", "engine/bodies/*"]
+"test_check_refs.py":
+  globs: ["docs/reference/body-class-methodology.md", "docs/reference/core-state-methodology.md", "docs/reference/interior-structure-methodology.md", "docs/reference/internal-heat-luminosity-methodology.md", "docs/reference/mass-radius-relation-methodology.md", "docs/reference/planetary-dynamo-scaling.md", "docs/reference/rocky-planet-dynamo-methodology.md", "docs/reference/tidal-heating-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md", "docs/reference/tidal-response-methodology.md"]
+"engine/check_refs.py":
+  globs: ["**.md", "**.py"]
+"engine/chain.py":
+  globs: []
+"engine/backflow.py":
+  globs: ["phase4/*"]
+"test_backflow.py":
+  globs: ["phase4/*"]
+"test_dynamo.py":
+  globs: []
+"run.py bodies/* (*)":
+  globs: ["engine/core_history.py", "engine/eos.py", "engine/interior.py", "engine/mantle_composition.py", "engine/bodies/*"]
+"test_mass_radius.py":
+  globs: []
+"test_fermi.py":
+  globs: []
+"test_water_hot.py":
+  globs: []
+"test_ammonia.py":
+  globs: []
+"test_water2.py":
+  globs: []
+"test_interior.py":
+  globs: ["engine/interior.py", "engine/*", "scripts/gate_reads/*"]
+"test_interior_ocean.py":
+  globs: []
+"test_ice_giant.py":
+  globs: ["engine/ammonia_table.py", "engine/bands.py", "engine/body_class.py", "engine/cmb_flux.py", "engine/convergence.py", "engine/core_energy.py", "engine/core_entropy.py", "engine/core_history.py", "engine/core_state.py", "engine/domain.py", "engine/dynamo.py", "engine/dynamo_rocky.py", "engine/eos.py", "engine/fe_liquid.py", "engine/fermi.py", "engine/graph.py", "engine/hhe_table.py", "engine/ice_fr2015.py", "engine/ice_melt_table.py", "engine/interior.py", "engine/mantle_budget.py", "engine/mantle_composition.py", "engine/mantle_flux.py", "engine/mass_radius.py", "engine/parallel_points.py", "engine/payload.py", "engine/porosity.py", "engine/process_state.py", "engine/provisional.py", "engine/radiogenic.py", "engine/registry.py", "engine/rheology.py", "engine/run.py", "engine/stagnant_lid.py", "engine/state.py", "engine/steam_if97.py", "engine/structure_grid.py", "engine/tectonic_regime.py", "engine/test_ice_giant.py", "engine/tidal_heating.py", "engine/tidal_locking.py", "engine/tidal_response.py", "engine/transfers.py", "engine/water2_table.py", "engine/water_hot.py", "engine/water_table.py"]
+"test_core_state.py":
+  globs: []
+"test_body_class.py":
+  globs: []
+"test_porosity.py":
+  globs: []
+"test_giant.py":
+  globs: []
+"test_mixture.py":
+  globs: []
+"test_ice_fr2015.py":
+  globs: ["engine/*", "scripts/gate_reads/*"]
+"test_tidal_response.py":
+  globs: []
+"test_process_state.py":
+  globs: ["engine/albedo_table.py", "engine/ammonia_table.py", "engine/backflow.py", "engine/bands.py", "engine/body_class.py", "engine/body_stack.py", "engine/build_graph_page.py", "engine/chain.py", "engine/check_contracts.py", "engine/check_refs.py", "engine/check_via.py", "engine/cmb_flux.py", "engine/convergence.py", "engine/core_energy.py", "engine/core_entropy.py", "engine/core_history.py", "engine/core_state.py", "engine/domain.py", "engine/dynamo.py", "engine/dynamo_rocky.py", "engine/dynamo_table.py", "engine/eos.py", "engine/fe_liquid.py", "engine/fermi.py", "engine/gate_env.py", "engine/graph.py", "engine/greenhouse_cases.py", "engine/hhe_repair.py", "engine/hhe_table.py", "engine/ice_fr2015.py", "engine/ice_melt_table.py", "engine/interior.py", "engine/mantle_budget.py", "engine/mantle_composition.py", "engine/mantle_flux.py", "engine/mass_radius.py", "engine/paleos.py", "engine/parallel_points.py", "engine/payload.py", "engine/phase_tables.py", "engine/porosity.py", "engine/provisional.py", "engine/radiogenic.py", "engine/registry.py", "engine/rheology.py", "engine/rocky_roster.py", "engine/run.py", "engine/samuel_layer.py", "engine/samuel_lid.py", "engine/samuel_model.py", "engine/samuel_run.py", "engine/samuel_stack.py", "engine/samuel_structure.py", "engine/samuel_thermal.py", "engine/stagnant_lid.py", "engine/state.py", "engine/steam_if97.py", "engine/stellar_wind.py", "engine/structure_grid.py", "engine/sub_neptune_dynamo.py", "engine/tectonic_regime.py", "engine/thermal_stack.py", "engine/tidal_heating.py", "engine/tidal_locking.py", "engine/tidal_response.py", "engine/tidal_transport.py", "engine/transfers.py", "engine/transitional_lid.py", "engine/water2_table.py", "engine/water_hot.py", "engine/water_table.py", "engine/*"]
+"test_rocky_roster.py":
+  globs: []
+"test_tidal_transport.py":
+  globs: ["docs/reference/tidal-heating-methodology.md"]
+"test_silicate_melt.py":
+  globs: []
+"test_rheology.py":
+  globs: []
+"test_fe_s.py":
+  globs: []
+"test_mars_sulphur.py":
+  globs: ["engine/eos.py", "engine/interior.py", "engine/mantle_composition.py"]
+"test_eos_joins.py":
+  globs: []
+"test_fe_hcp.py":
+  globs: []
+"test_radiogenic.py":
+  globs: []
+"test_mantle_flux.py":
+  globs: []
+"test_cmb_flux.py":
+  globs: []
+"test_core_energy.py":
+  globs: []
+"test_core_entropy.py":
+  globs: []
+"test_core_history.py":
+  globs: []
+"test_samuel_model.py":
+  globs: []
+"test_samuel_lid.py":
+  globs: []
+"test_samuel_layer.py":
+  globs: []
+"test_samuel_run_layer.py":
+  globs: ["engine/bodies/*"]
+"test_basal_layer.py":
+  globs: []
+"test_thermal_stack.py":
+  globs: ["engine/bodies/*"]
+"test_stack_params.py":
+  globs: ["engine/thermal_stack.py", "engine/bodies/*"]
+"test_body_stack.py":
+  globs: ["engine/bodies/*"]
+"test_preset_override.py":
+  globs: []
+"test_litho_bracket.py":
+  globs: []
+"test_interior_record.py":
+  globs: []
+"test_interface_jumps.py":
+  globs: ["engine/bodies/*"]
+"structure_grid.py --check":
+  globs: ["engine/core_history.py", "engine/eos.py", "engine/interior.py", "engine/mantle_composition.py", "engine/bodies/*", "engine/structure_grid/*"]
+"test_structure_grid.py":
+  globs: ["engine/core_history.py", "engine/eos.py", "engine/interior.py", "engine/mantle_composition.py", "engine/bodies/*", "engine/structure_grid/*"]
+"test_samuel_run.py":
+  globs: ["engine/bodies/*"]
+"test_mantle_budget.py":
+  globs: ["engine/tools/c51_regimes.py"]
+"test_transitional_lid.py":
+  globs: []
+"tools/c51_regimes.py":
+  globs: []
+"tools/core_items.py":
+  globs: ["engine/interior-core.md"]
+"tools/c55_cells.py":
+  globs: []
+"test_payload.py":
+  globs: []
+"test_provenance.py":
+  globs: ["engine/bodies/*"]
+"test_lithosphere.py":
+  globs: ["engine/bodies/*"]
+"test_core_light_elements.py":
+  globs: ["engine/bodies/*"]
+"test_mantle_composition.py":
+  globs: ["engine/*", "engine/bodies/*", "scripts/gate_reads/*"]
+"test_phase_tables.py":
+  globs: []
+"test_tidal_heating.py":
+  globs: []
+"test_stagnant_lid.py":
+  globs: []
+"tools/c47_step4.py":
+  globs: []
+"test_water_column_steam.py":
+  globs: []
+"test_tectonic_regime.py":
+  globs: ["engine/bodies/*"]
+"test_dynamo_rocky.py":
+  globs: []
+"dynamo_table":
+  globs: []
