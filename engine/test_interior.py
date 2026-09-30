@@ -31,6 +31,7 @@ from __future__ import annotations
 import json
 import sys
 
+import gate_env
 import interior
 import math
 from eos import EARTH_POTENTIAL_T as _NL_EARTH_T, FE_S_BAND_WT as _FE_S_BAND_WT
@@ -570,6 +571,9 @@ def _seafreeze_gamma() -> list[str]:
         import numpy as np
         from seafreeze.seafreeze import getProp
     except ImportError:
+        if gate_env.in_gate():         # C134 개정 1 — 게이트 안에서는 같은 문장이 실패다
+            print("  [FAIL] SeaFreeze 가 없다 — γ 항등식 대조는 engine/.venv 에서만 돈다 (게이트 안이라 실패)")
+            return out + ["SeaFreeze 가 없다 — γ 항등식 대조는 engine/.venv 에서만 돈다 (게이트 안이라 실패)"]
         print("  [SKIP] SeaFreeze 가 없다 — γ 항등식 대조는 engine/.venv 에서만 돈다")
         return out
     from eos import H2O
@@ -627,6 +631,9 @@ def _ice_x_crosscheck() -> list[str]:
         import numpy as np
         from seafreeze.seafreeze import defpath, getProp
     except ImportError:
+        if gate_env.in_gate():         # C134 개정 1 — 게이트 안에서는 같은 문장이 실패다
+            print("  [FAIL] SeaFreeze 가 없다 — 얼음 X 적합 대조는 engine/.venv 에서만 돈다 (게이트 안이라 실패)")
+            return ["SeaFreeze 가 없다 — 얼음 X 적합 대조는 engine/.venv 에서만 돈다 (게이트 안이라 실패)"]
         print("  [SKIP] SeaFreeze 가 없다 — 얼음 X 적합 대조는 engine/.venv 에서만 돈다")
         return []
     from eos import H2O, ICE_VII_TO_X, ICE_VII_X_REF_T, ICE_X_P_MAX
@@ -654,6 +661,9 @@ def _seafreeze_crosscheck() -> list[str]:
         import numpy as np
         from seafreeze.seafreeze import defpath, getProp
     except ImportError:
+        if gate_env.in_gate():         # C134 개정 1 — 게이트 안에서는 같은 문장이 실패다
+            print("  [FAIL] SeaFreeze 가 없다. engine/.venv 로 돌리면 이 절이 뛴다 (engine/requirements.txt) (게이트 안이라 실패)")
+            return ["SeaFreeze 가 없다. engine/.venv 로 돌리면 이 절이 뛴다 (engine/requirements.txt) (게이트 안이라 실패)"]
         print("  [SKIP] SeaFreeze 가 없다. engine/.venv 로 돌리면 이 절이 뛴다 "
               "(engine/requirements.txt)")
         return []
@@ -723,6 +733,9 @@ def _water_table_crosscheck() -> list[str]:
     try:
         from seafreeze.seafreeze import getProp
     except ImportError:
+        if gate_env.in_gate():         # C134 개정 1 — 게이트 안에서는 같은 문장이 실패다
+            print("  [FAIL] SeaFreeze 가 없다 — 액체 물 표 대조는 engine/.venv 에서만 돈다 (게이트 안이라 실패)")
+            return ["SeaFreeze 가 없다 — 액체 물 표 대조는 engine/.venv 에서만 돈다 (게이트 안이라 실패)"]
         print("  [SKIP] SeaFreeze 가 없다 — 액체 물 표 대조는 engine/.venv 에서만 돈다")
         return []
     import numpy as np

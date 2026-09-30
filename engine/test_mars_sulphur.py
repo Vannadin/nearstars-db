@@ -18,9 +18,12 @@
 굳히면 다른 쪽은 손으로 적은 수가 된다 — 그러면 자가 아니라 손을 시험한다. 선언된 고정은
 착지 정밀도로(반분 6 회), 다른 고정은 «갈리느냐» 만 보므로 성기게(반분 2 회) 굳힌다.
 """
+import contextlib
 import hashlib
+import io
 import json
 import math
+import os
 import platform
 import sys
 import time
@@ -29,6 +32,7 @@ from pathlib import Path
 import yaml
 
 import interior
+import parallel_points
 # 코드 자는 한 번만 정의한다 — 바이트 자와 다른 질문(«파일이 **하는 일**이 바뀌었나»)이고,
 # 두 벌로 지으면 두 앵커가 서로 다른 자를 쓰게 된다.
 from test_ice_giant import _feed_code
@@ -101,6 +105,23 @@ def _fit(declared: dict, pin: str, halvings: int) -> tuple:
         potential_temperature=declared["potential_temperature"], halvings=halvings,
         basal_iron_number=declared["basal_iron_number"], mantle_composition=declared["mantle_composition"])
     return w_s, res, time.perf_counter() - t0
+
+
+def _fit_captured(declared: dict, pin: str, halvings: int) -> tuple:
+    """`_fit` 을 한 일감으로 — 풀이가 찍는 진행 줄을 모아 함께 돌려준다 (C135, 부모가 순서대로 인쇄)."""
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        w_s, res, seconds = _fit(declared, pin, halvings)
+    return w_s, res, seconds, buf.getvalue()
+
+
+def _inner_pool() -> int:
+    """단계 안 풀 크기 (C135) — 환경변수가 이기고, 없으면 기계 키: `Linux-x86_64` 는 3, 그 밖은 1(옛 동작)."""
+    env = os.environ.get("GATE_INNER_POOL")
+    if env:
+        return max(1, int(env))
+    machine = os.environ.get("GATE_MACHINE") or f"{platform.system()}-{platform.machine()}"
+    return 3 if machine == "Linux-x86_64" else 1
 
 
 def _record(w_s: float, res, halvings: int, declared: dict) -> dict:
@@ -218,9 +239,17 @@ def check() -> int:
     _check_files(frozen, fails)
 
     print("\n굳힌 맞춤 — 같은 코드가 같은 황을 내는가")
-    for pin in sorted(frozen["fixings"]):
+    # ⚠ **맞춤 셋을 먼저 일감으로 푼다** (C135) — 두 고정의 다시 맞춤과 아래 1200 km 목표. 서로 독립이고,
+    #   인쇄와 판정은 아래에서 **예전 순서·예전 문구 그대로** 미리 푼 값을 읽는다. 맞춤이 찍는 진행 줄은
+    #   일감마다 모아 그 맞춤의 판정 줄 바로 앞에 붙인다 — 옛 순차와 같은 자리다.
+    pins = sorted(frozen["fixings"])
+    jobs = [(declared, pin, frozen["fixings"][pin]["halvings"]) for pin in pins]
+    jobs.append(({**declared, "core_plus_layer_radius_km": 1200.0}, declared["light_element_fixing"], 1))
+    sys.stdout.flush()
+    fits = parallel_points.solve_points(_fit_captured, jobs, _inner_pool())
+    for pin, (w_s, res, seconds, printed) in zip(pins, fits[:-1]):
+        sys.stdout.write(printed)
         rec = frozen["fixings"][pin]
-        w_s, res, seconds = _fit(declared, pin, rec["halvings"])
         if w_s is None:
             fails.append(f"{pin}: 다시 풀었더니 값이 안 나왔다 — {(res.reason or '')[:70]}")
             print(f"  [FAIL] {pin:12} 거절 — {(res.reason or '')[:70]}")
@@ -238,8 +267,8 @@ def check() -> int:
     #   레시피의 일이 아니다. 괄호 둘만 풀고 끝나므로 역산 **두 번**이다.
     # ⚠ **선언된 고정으로 묻는다** — 고정 이름을 박아 두면 오너가 선언을 바꾼 날 시험이
     #   **선언이 아니라 옛 결정**을 재게 된다(2026-09-20 게이트에서 실제로 그렇게 빨개졌다).
-    far, res, seconds = _fit({**declared, "core_plus_layer_radius_km": 1200.0},
-                             declared["light_element_fixing"], 1)
+    far, res, seconds, printed = fits[-1]
+    sys.stdout.write(printed)
     ok = far is None
     if not ok:
         fails.append("목표 1200 km 는 이 축이 감싸지 못하는데 값을 냈다 — 감싸지 못하면 거절해야 한다")

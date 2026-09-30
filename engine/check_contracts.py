@@ -20,6 +20,10 @@
 from __future__ import annotations
 
 import ast
+import contextlib
+import io
+import os
+import platform
 import re
 import sys
 from pathlib import Path
@@ -27,8 +31,18 @@ from pathlib import Path
 import yaml
 
 import graph
+import parallel_points
 import registry
 from state import BodyState
+
+
+def _inner_pool() -> int:
+    """단계 안 풀 크기 (C135) — 환경변수가 이기고, 없으면 기계 키: `Linux-x86_64` 는 3, 그 밖은 1(옛 동작)."""
+    env = os.environ.get("GATE_INNER_POOL")
+    if env:
+        return max(1, int(env))
+    machine = os.environ.get("GATE_MACHINE") or f"{platform.system()}-{platform.machine()}"
+    return 3 if machine == "Linux-x86_64" else 1
 
 HERE = Path(__file__).resolve().parent
 DOCS = HERE.parent / "docs" / "reference"
@@ -433,8 +447,22 @@ def main() -> int:
     g = graph.load()
     bodies = sample_bodies()
     import run
-    for body in bodies:
-        run.solve(body, g)
+
+    # ⚠ **몸 하나가 일감 하나다** (C135). 몸 사이 분석(«어느 표본이든») 은 아래에서 전부 모인 뒤에 하므로
+    #   풀이만 가른다. 풀이가 찍는 진행 줄(`[고리]` 등)은 일감마다 모아 **몸 순서대로** 인쇄한다 — 워커가
+    #   공유 stdout 에 바로 쓰면 줄 순서가 스케줄을 따라간다. `GATE_INNER_POOL=1` 이 옛 순차와 같은 길이다.
+    def _solve_body(body):
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            run.solve(body, g)
+        return body, buf.getvalue()
+
+    sys.stdout.flush()
+    solved = parallel_points.solve_points(_solve_body, [(b,) for b in bodies], _inner_pool())
+    bodies = []
+    for body, printed in solved:
+        sys.stdout.write(printed)
+        bodies.append(body)
     fails: list[str] = []
     checked = 0
     #: C45 (b) 클래스 ③ — Needs 인데 로스터 어느 천체도 공급하지 않는 조회. **지금은 FAIL 이 아니다**:

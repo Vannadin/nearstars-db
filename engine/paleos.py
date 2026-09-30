@@ -34,13 +34,20 @@ Access is **streamed**: a binary search over byte offsets, because the rows are 
 from __future__ import annotations
 
 import math
+import os
 import pathlib
 from typing import NamedTuple
 import re
 import time
 
+import gate_env
+
 # 읽기 전용 논문 캐시. ⚠ 이 경로에 **쓰지 않는다** — 워크트리 밖이다.
-PAPERS = pathlib.Path("/Users/vana/Desktop/NearStars/docs/phase3/_papers")
+# ⚠ **환경변수가 먼저다** (C134). 게이트는 띄운 쪽 트리의 `docs/phase3/_papers` 로 이 값을 채워
+#   격리 클론에 넘긴다 — 클론에는 gitignore 된 `_papers` 가 없다. 저장소 상대 기본값은 게이트 밖의
+#   직접 실행을 위한 마지막 수단이다. 예전의 절대 맥 경로는 다른 기계에서 빈 곳을 가리켰다.
+PAPERS_ENV = gate_env.PAPERS_ENV
+PAPERS = gate_env.papers_dir()          # 한 규칙 — test_domain · test_fe_hcp 와 같은 자리를 본다 (C142)
 
 class Table(NamedTuple):
     """한 표의 파일명과 판본. ⚠ **둘을 한 자리에 둔다** — 따로 두면 갈라지고, 이 항목이 고치는
@@ -61,6 +68,11 @@ class Table(NamedTuple):
 TABLES = {"Fe": Table("paleos_iron_eos_table_pt.v130.dat", "1.3.0"),
           "MgSiO3": Table("paleos_mgsio3_eos_table_pt.dat", "1.2.1"),
           "H2O": Table("paleos_water_eos_table_pt.dat", "1.2.1")}
+
+#: 표가 없을 때 이름 댈 출처 — (Zenodo 레코드, 원격 파일명). CC-BY-4.0. Fe 만 원격 이름에 판본이 없다 (C134).
+ZENODO = {"Fe": ("22776069", "paleos_iron_eos_table_pt.dat"),
+          "MgSiO3": ("20084812", "paleos_mgsio3_eos_table_pt.dat"),
+          "H2O": ("20084812", "paleos_water_eos_table_pt.dat")}
 
 # ⚠ 상은 마지막 필드가 아니다 — 물 표는 열이 13 이고 마지막은 `x_d` 라, 마지막 필드를 읽는
 #   코드는 세 파일 중 둘에서만 맞는다 (§6 C). 그리고 **자리도 우리가 적지 않는다**: 머리말이
@@ -174,7 +186,16 @@ class TableFacts:
 
 def facts(table: str) -> TableFacts:
     if table not in _FACTS:
-        _FACTS[table] = TableFacts(table, PAPERS / TABLES[table].file)
+        path = PAPERS / TABLES[table].file
+        if not path.is_file():
+            # ⚠ **없으면 이름 대며 멈춘다** (C134) — 조용한 SKIP 도, 이름 없는 추적 한 덩이도 아니다.
+            record, remote = ZENODO[table]
+            raise FileNotFoundError(
+                f"PALEOS {table} 표가 없다 — {TABLES[table].file} (v{TABLES[table].version}) 를 "
+                f"{path} 에서 찾았다. 경로는 {PAPERS_ENV}="
+                f"{os.environ.get(PAPERS_ENV) or '(unset → 저장소 상대 기본값)'} 가 정한다. "
+                f"출처: Zenodo {record} 의 `{remote}` (md5·크기는 C134 표와 대조)")
+        _FACTS[table] = TableFacts(table, path)
     return _FACTS[table]
 
 

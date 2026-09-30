@@ -23,6 +23,7 @@ from pathlib import Path
 import sys
 
 import eos
+import gate_env
 import ice_fr2015 as F
 
 GPA = 1e9
@@ -114,8 +115,11 @@ def main() -> int:
                      f"K_T {float(out.Kt[0])/1e3:.2f} / {k_pbe:.2f} GPa — ⚠ **shipped column is HSE**, "
                      f"이 대조는 산수 검증이지 논문 검증이 아니다")
     except ImportError:
-        notes.append("  [SKIP] J2 seafreeze 없음 (시스템 파이썬) — venv 에서만 돈다. "
-                     "«안 돌았다» 이고 «통과» 가 아니다")
+        if gate_env.in_gate():         # C134 개정 1 — 게이트 안에서는 같은 문장이 실패다
+            fails.append("J2 seafreeze 없음 (시스템 파이썬) — venv 에서만 돈다. 게이트 안이라 실패다")
+        else:
+            notes.append("  [SKIP] J2 seafreeze 없음 (시스템 파이썬) — venv 에서만 돈다. "
+                         "«안 돌았다» 이고 «통과» 가 아니다")
 
     # ── J3 ────────────────────────────────────────────────────────────────
     h2o = eos.MATERIALS["h2o"]

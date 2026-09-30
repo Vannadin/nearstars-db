@@ -17,6 +17,7 @@ import math
 import sys
 
 import fermi
+import gate_env
 from fermi import ETA_HI, ETA_LO, ETA_STEP, INTERP_WORST
 
 # 굳힌 값이 정의와 어긋나도 되는 폭. 표를 만든 것과 같은 방법으로 다시 만드는 것이므로
@@ -58,7 +59,11 @@ def main() -> int:
 
     print("두 오라클 — 정적분과 폴리로그 항등식이 서로 맞는가")
     if by_quad is None or by_polylog is None:
-        print("  [SKIP] scipy 또는 mpmath 가 없다 — engine/.venv 에서만 도는 절이다")
+        if gate_env.in_gate():         # C134 개정 1 — 게이트 안에서는 같은 문장이 실패다
+            fails.append("scipy 또는 mpmath 가 없다 — engine/.venv 에서만 도는 절이다 (게이트 안이라 실패)")
+            print("  [FAIL] scipy 또는 mpmath 가 없다 — engine/.venv 에서만 도는 절이다 (게이트 안이라 실패)")
+        else:
+            print("  [SKIP] scipy 또는 mpmath 가 없다 — engine/.venv 에서만 도는 절이다")
     else:
         worst, where = 0.0, None
         for j in (0.5, 1.5):
@@ -75,7 +80,11 @@ def main() -> int:
 
     print("\n굳혀 둔 표 — 정의로 다시 만들면 같은 값이 나오는가")
     if by_quad is None:
-        print("  [SKIP] scipy 가 없다")
+        if gate_env.in_gate():         # C134 개정 1
+            fails.append("scipy 가 없다 (게이트 안이라 실패)")
+            print("  [FAIL] scipy 가 없다 (게이트 안이라 실패)")
+        else:
+            print("  [SKIP] scipy 가 없다")
     else:
         n = len(fermi.FD_P12)
         for name, table, j in (("F_-1/2", fermi.FD_M12, -0.5),
@@ -98,7 +107,11 @@ def main() -> int:
     # 얼음 III·V·VI 은 상수 셋이라 굳힌 값이 맞으면 끝이었다. 여기는 함수의 표라서
     # 격자 사이가 새 오차이고, 그 수를 주장이 아니라 측정으로 둔다.
     if by_polylog is None:
-        print("  [SKIP] mpmath 가 없다")
+        if gate_env.in_gate():         # C134 개정 1
+            fails.append("mpmath 가 없다 (게이트 안이라 실패)")
+            print("  [FAIL] mpmath 가 없다 (게이트 안이라 실패)")
+        else:
+            print("  [SKIP] mpmath 가 없다")
     else:
         worst, where = 0.0, None
         for k in range(401):

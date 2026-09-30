@@ -48,6 +48,7 @@ _CONTROL_PROBES = (("fe_eps", 200.0 * GPA, 2000.0),
                    ("h2o", 100.0 * GPA, 500.0))
 _BEFORE = {name: eos.MATERIALS[name].density(p, t, 0.0) for name, p, t in _CONTROL_PROBES}
 
+import gate_env                                                       # noqa: E402
 import paleos                                                         # noqa: E402
 
 # ⚠ **표 셋은 레포 밖에 산다** — `docs/phase3/_papers/` 의 추적되지 않는 파일이고, 그 기계에
@@ -63,8 +64,13 @@ print("  [기록] PALEOS 표 — "
       + " · ".join(f"{name} v{t.version} `{t.file}`" for name, t in sorted(paleos.TABLES.items())))
 _found = [t.file for t in paleos.TABLES.values() if (paleos.PAPERS / t.file).is_file()]
 if len(_found) < len(paleos.TABLES):
-    print(f"  [SKIP] SKIP — PALEOS tables: {len(_found)} of {len(paleos.TABLES)} found "
-          f"({paleos.PAPERS}/*.dat) — 물어볼 표가 없다, 실패가 아니다")
+    # ⚠ **게이트 안에서는 같은 문장이 FAIL 이다** (C134 개정 1) — 기준 기계의 게이트가 데이터 빠짐을 조용히
+    #   넘기지 않게. 손으로 돌리면 예전 그대로 이름 붙인 SKIP 이다 (C96 ⓒ).
+    _what = f"PALEOS tables: {len(_found)} of {len(paleos.TABLES)} found ({paleos.PAPERS}/*.dat) — 물어볼 표가 없다"
+    if gate_env.in_gate():
+        print(f"  [FAIL] {_what}. 게이트 안이라 실패다 (C134 개정 1 · 손으로 돌리면 이름 붙인 SKIP)")
+        raise SystemExit(1)
+    print(f"  [SKIP] SKIP — {_what}, 실패가 아니다")
     raise SystemExit(0)
 
 fails: list[str] = []

@@ -94,13 +94,38 @@ exec 3>&2                     # step() 이 자식의 stderr 를 여기로 빼낸
 #   59.7 분) · 풀 4 39.1 분 · 풀 4 + 아래 «긴 단계 먼저» 36.8 분. 바닥은 가장 긴 단계 하나
 #   (`test_mars_sulphur.py`, 그 판 1 259 s)다. 수는 그 판의 것이고 낡는다 — 새 판에서 다시 잰다.
 GATE_POOL="${GATE_POOL:-4}"
-# ⚠ **긴 단계 먼저** (C104). `scripts/gate_pool_order.txt` 가 있으면 풀 단계를 **바로 띄우지 않고
-#   줄 세웠다가**, 집계 앞 배리어(`step_flush`)에서 그 파일의 순서(지난 정상 판들의 instr 평균
-#   내림차순)대로 띄운다. 파일에 없는 이름은 원래 순서로 뒤에 선다. **파일이 없으면 예전처럼 만나는
+# ── 기계 키와 계측기 (C134) ───────────────────────────────────────────────────────────────
+# ⚠ **기계마다 다른 것은 이 키 하나로 가른다** — `<uname -s>-<uname -m>` (Darwin-arm64 · Linux-x86_64).
+#   풀 순서 파일과 단계 안 풀 크기(C135)가 이 키를 읽는다. 환경변수가 이긴다.
+_GATE_OS=$(uname -s)
+GATE_MACHINE="${GATE_MACHINE:-$_GATE_OS-$(uname -m)}"
+export GATE_MACHINE
+# ⚠ **«게이트 안» 의 표지는 이것 하나다** (C134 개정 1, 지휘 결정). 데이터·도구·의존이 없어 SKIP 하던 시험은
+#   이 표지가 있으면 같은 문장으로 FAIL 한다(손으로 돌리면 예전의 이름 붙인 SKIP). `GATE_MACHINE` 은 사람이
+#   덮어쓰는 노브라 이 뜻을 싣지 않는다 — 게이트가 늘 켜고, 격리 재실행에도 환경으로 넘어간다.
+GATE_RUNNING=1
+export GATE_RUNNING
+# ⚠ **리눅스의 instr·cycles 는 perf 가 센다** (C134). 우분투의 `/usr/bin/perf` 는 커널 판본 래퍼라
+#   WSL 커널에서 «perf not found for kernel …» 만 찍고 **재지 않는다** — 그래서 후보마다 한 번 재 보고
+#   수가 나온 첫 것을 쓴다. 못 찾으면 두 칸이 `—` 다 (없는 칸은 `—` 규칙).
+_GATE_PERF=""
+if [ "$_GATE_OS" != "Darwin" ]; then
+  for _cand in ${GATE_PERF:-} /usr/lib/linux-tools/*/perf $(command -v perf 2>/dev/null); do
+    [ -x "$_cand" ] || continue
+    if "$_cand" stat -x, -e instructions:u -- true 2>&1 >/dev/null | grep -q '^[0-9][0-9]*,'; then
+      _GATE_PERF=$_cand
+      break
+    fi
+  done
+fi
+# ⚠ **긴 단계 먼저** (C104). `scripts/gate_pool_order.<기계 키>.txt` 가 있으면 풀 단계를 **바로 띄우지 않고
+#   줄 세웠다가**, 집계 앞 배리어(`step_flush`)에서 그 파일의 순서(같은 기계 정상 판들의 `[TIME]` 벽시계
+#   평균 내림차순, C135 — 만드는 것은 `scripts/gate_pool_order_build.py`)대로 띄운다. 파일에 없는 이름은
+#   원래 순서로 뒤에 선다. **파일이 없으면 예전처럼 만나는
 #   즉시 띄운다** — 되돌릴 손잡이는 파일 하나다. ⚠ 대가: 직렬 단계가 풀과 겹치지 않고 먼저 다 돈다.
 #   모의에서는 그 손해보다 가장 긴 단계를 맨 먼저 띄우는 이득이 컸다(39.1 → 36.8 분). 판정은 안
 #   바뀐다 — 같은 단계가 같은 명령으로 돌고, 셈(띄움 = 거둠)도 그대로다.
-_POOL_ORDER_FILE="scripts/gate_pool_order.txt"
+_POOL_ORDER_FILE="scripts/gate_pool_order.$GATE_MACHINE.txt"   # 기계별 (C134)
 _pool_defer=0
 [ -f "$_POOL_ORDER_FILE" ] && _pool_defer=1
 _pool_q_n=0
@@ -145,13 +170,26 @@ _pool_alive() {               # 스풀이 살아 있고 쓸 수 있는가 — �
   return 1
 }
 
+# ── 게이트 하한 (C135) — `[TIME]` 을 찍는 두 자리가 가장 긴 단계를 갱신하고, GATE END 앞에 한 줄로 찍는다 ──
+_gate_max_s=-1
+_gate_max_name=""
+_gate_bound() {               # _gate_bound <초> <이름>
+  if [ "$1" -gt "$_gate_max_s" ] 2>/dev/null; then
+    _gate_max_s=$1
+    _gate_max_name=$2
+  fi
+}
+
 _pool_drain() {               # 끝난 단계의 로그를 **완료 순서**로 붙이고 rc 를 센다
-  local f n
+  local f n _tl
   [ -n "$_pool_dir" ] || return 0
   [ -d "$_pool_dir" ] || return 0
   for f in $(ls -1tr "$_pool_dir"/*.done 2>/dev/null); do
     n="${f%.done}"
     cat "$n.log" 2>/dev/null
+    # 풀 단계의 `[TIME]` 은 자식이 로그에 썼다 — 부모가 붙이는 이 자리에서 초와 이름을 읽는다 (C135)
+    _tl=$(sed -n 's/^  \[TIME\] \(.*\) — [0-9:]* → [0-9:]* · \([0-9][0-9]*\) s · RSS.*/\2|\1/p' "$n.log" 2>/dev/null | head -1)
+    [ -n "$_tl" ] && _gate_bound "${_tl%%|*}" "${_tl#*|}"
     if [ "$(cat "$n.rc" 2>/dev/null || echo 1)" != "0" ]; then fail=1; fi
     rm -f "$f" "$n.log" "$n.rc" "$n.pid"
     _pool_drained=$((_pool_drained + 1))
@@ -279,19 +317,65 @@ step_flush() {                # 배리어 — 풀을 비우고, **띄운 수와 
 # ⚠ **`blkin`/`blkout` 의 0 은 «입출력이 없었다»가 아니라 «블록 연산이 세어지지 않았다» 이다** —
 #   `pf`/`pr` 과 같은 모양이다. 그 칸이 «대기를 이름으로 재는» 것은 **0 이 아닐 때뿐**이다.
 # ⚠ **없는 칸은 조용히 빼지 않고 `—` 로 찍는다** — 「측정 안 됨」과 「0」을 로그에서 갈라야 한다.
-_cost_fields() {              # _cost_fields <time -l 통계 파일>
-  awk 'NR==1 {u=$3; s=$5}
-       /involuntary context switches/ {ics=$1}
-       /page faults/ {pf=$1}
-       /page reclaims/ {pr=$1}
-       /instructions retired/ {ins=$1}
-       /cycles elapsed/ {cyc=$1}
-       /block input operations/ {bi=$1}
-       /block output operations/ {bo=$1}
+# ⚠ **C134: 통계 파일은 OS 와 무관한 공통 키다** (`user sys invcsw pf pr instr cycles blkin blkout rss_bytes`).
+#   위 관용구 둘(첫 줄의 자리 읽기 · `involuntary` 매치)은 이제 `_measure` 의 맥 갈래 안에 있고, 이 함수는
+#   키만 읽는다. 인쇄하는 문자열은 한 글자도 안 바뀐다.
+_cost_fields() {              # _cost_fields <_measure 통계 파일>
+  awk '$1 == "user" {u=$2}
+       $1 == "sys" {s=$2}
+       $1 == "invcsw" {ics=$2}
+       $1 == "pf" {pf=$2}
+       $1 == "pr" {pr=$2}
+       $1 == "instr" {ins=$2}
+       $1 == "cycles" {cyc=$2}
+       $1 == "blkin" {bi=$2}
+       $1 == "blkout" {bo=$2}
        END {printf "user %s · sys %s · invcsw %s · pf %s · pr %s · instr %s · cycles %s · blkin %s · blkout %s",
                    (u == "" ? "—" : u), (s == "" ? "—" : s), (ics == "" ? "—" : ics),
                    (pf == "" ? "—" : pf), (pr == "" ? "—" : pr), (ins == "" ? "—" : ins),
                    (cyc == "" ? "—" : cyc), (bi == "" ? "—" : bi), (bo == "" ? "—" : bo)}' "$1"
+}
+
+# ── 계측 한 곳 (C134) ─────────────────────────────────────────────────────────────────────
+# `_measure <통계 파일> <명령...>` — 명령을 돌리고 공통 키를 통계 파일에 쓴다. 종료 코드는 명령의 것이다.
+#   맥: 예전 그대로 `/usr/bin/time -l` 이고, 키로 옮기기만 한다(값 무변경). instr·cycles 는 **직계 태스크만** 센다.
+#   리눅스: 바깥 GNU time(rusage — 자식까지, 맥과 같다) · 안쪽 perf stat. perf 는 **자식을 합친다**(inherit —
+#   C134 결정 1, 기계 사이 instr 비교 금지). `:u` 는 `perf_event_paranoid=2` 아래의 계수 영역이다.
+#   명령의 stderr 는 호출부가 `bash -c` 안에서 이미 돌려 두므로, 이 함수의 stderr 에는 계측기 진단만 남는다.
+_GNU_TIME_FMT=$'user %U\nsys %S\ninvcsw %c\npf %F\npr %R\nblkin %I\nblkout %O\nrss_kb %M'
+_measure() {                  # _measure <통계 파일> <명령...>
+  local _out=$1 _raw _pf _rc
+  shift
+  _raw=$(mktemp "${TMPDIR:-/tmp}/gate-raw.XXXXXX")
+  if [ "$_GATE_OS" = "Darwin" ]; then
+    /usr/bin/time -l "$@" 2>"$_raw"
+    _rc=$?
+    awk 'NR==1 {print "user", $3; print "sys", $5}
+         /involuntary context switches/ {print "invcsw", $1}
+         /page faults/ {print "pf", $1}
+         /page reclaims/ {print "pr", $1}
+         /instructions retired/ {print "instr", $1}
+         /cycles elapsed/ {print "cycles", $1}
+         /block input operations/ {print "blkin", $1}
+         /block output operations/ {print "blkout", $1}
+         /maximum resident set size/ {print "rss_bytes", $1}' "$_raw" > "$_out"
+  else
+    _pf=$(mktemp "${TMPDIR:-/tmp}/gate-perf.XXXXXX")
+    if [ -n "$_GATE_PERF" ]; then
+      /usr/bin/time -o "$_raw" -f "$_GNU_TIME_FMT" \
+        "$_GATE_PERF" stat -x, -o "$_pf" -e instructions:u,cycles:u -- "$@"
+    else
+      /usr/bin/time -o "$_raw" -f "$_GNU_TIME_FMT" "$@"
+    fi
+    _rc=$?
+    # GNU time 은 비0 종료면 «Command exited with non-zero status N» 한 줄을 앞에 쓴다 — 두 낱말 줄만 키다.
+    { awk 'NF == 2 && $1 == "rss_kb" {printf "rss_bytes %.0f\n", $2 * 1024; next} NF == 2 {print}' "$_raw"
+      awk -F, '$1 ~ /^[0-9]+$/ && $3 ~ /^instructions/ {print "instr", $1}
+               $1 ~ /^[0-9]+$/ && $3 ~ /^cycles/ {print "cycles", $1}' "$_pf"; } > "$_out"
+    rm -f "$_pf"
+  fi
+  rm -f "$_raw"
+  return $_rc
 }
 
 
@@ -333,8 +417,8 @@ step() {                      # step <이름> <명령...>
   #   측정 없이 층을 가르면 빠른 층에 느린 시험이 들어간다. 그래서 먼저 재고, 가르는 것은 그
   #   수가 나온 뒤의 별도 브리프다. `SECONDS` 는 bash 내장이라 이 줄이 게이트를 안 늦춘다.
   # ⚠ **최대 RSS 도 함께 찍는다** — 게이트를 둘 동시에 돌려도 되는지를 이 수로 정한다 (예전에
-  #   메모리 부족으로 시험 묶음이 두 번 죽었다). `/usr/bin/time -l` 의 통계는 **자기 stderr** 로
-  #   나가므로, 자식의 stderr 는 fd 3(진짜 stderr)으로 따로 빼서 진단 출력을 잃지 않는다 —
+  #   메모리 부족으로 시험 묶음이 두 번 죽었다). 계측은 `_measure` 가 **통계 파일**에 따로 쓰고(C134),
+  #   자식의 stderr 는 fd 3(진짜 stderr)으로 따로 빼서 진단 출력을 잃지 않는다 —
   #   그 둘을 한 파일에 섞으면 실패한 단계의 오류 문장이 통계 스무 줄에 묻힌다.
   local name=$1; shift
   if [ -n "$_pool_dir" ] && _pool_eligible "$name"; then
@@ -373,13 +457,13 @@ _pool_launch() {              # _pool_launch <이름> <명령...> — 풀 워커
                               #   리다이렉션 실패는 쉘이 토하는 소음이고, 판정은 부모의 셈이 한다.
       _s0=$SECONDS; _k0=$(date "+%H:%M:%S")
       _st=$(mktemp "${TMPDIR:-/tmp}/gate-step.XXXXXX")
-      PYTHONDONTWRITEBYTECODE=1 /usr/bin/time -l bash -c 'exec "$@" 2>&1' _ "$@" \
-        >"$_base.out" 2>"$_st"
+      PYTHONDONTWRITEBYTECODE=1 _measure "$_st" bash -c 'exec "$@" 2>&1' _ "$@" \
+        >"$_base.out"
       _rc=$?
       {
         cat "$_base.out"
         [ "$_rc" = "0" ] || echo "  [FAIL] $name — 비0 종료 (이 단계가 fail=1 을 세웠다)"
-        echo "  [TIME] $name — $_k0 → $(date "+%H:%M:%S") · $((SECONDS - _s0)) s · RSS $(awk '/maximum resident set size/ {printf "%.0f", $1/1048576}' "$_st") MB"
+        echo "  [TIME] $name — $_k0 → $(date "+%H:%M:%S") · $((SECONDS - _s0)) s · RSS $(awk '$1 == "rss_bytes" {printf "%.0f", $2/1048576}' "$_st") MB"
         echo "  [COST] $name — $(_cost_fields "$_st")"
       } > "$_base.log"
       rm -f "$_st" "$_base.out"
@@ -431,13 +515,14 @@ _step_serial() {              # _step_serial <이름> <명령...> — 직렬 단
   #   컸던 이유의 일부가 그것이고, 지켜보는 사람이 «지금 어디» 를 알 수 없었다.
   echo "  [STEP] $name — $_c0 시작"
   _tf=$(mktemp "${TMPDIR:-/tmp}/gate-step.XXXXXX")
-  /usr/bin/time -l bash -c 'exec "$@" 2>&3' _ "$@" 2>"$_tf" \
+  _measure "$_tf" bash -c 'exec "$@" 2>&3' _ "$@" 2>/dev/null \
     || { echo "  [FAIL] $name — 비0 종료 (이 단계가 fail=1 을 세웠다)"; fail=1; }
-  _rss=$(awk '/maximum resident set size/ {printf "%.0f", $1/1048576}' "$_tf")
+  _rss=$(awk '$1 == "rss_bytes" {printf "%.0f", $2/1048576}' "$_tf")
   # ⚠ 직렬 경로는 삭제가 `[TIME]` **앞**이라, 풀 쪽 모양을 그대로 붙이면 **이미 지워진 파일을**
   #   읽는다. `_rss` 처럼 먼저 변수로 잡는다 (C89).
   _cost=$(_cost_fields "$_tf")
   rm -f "$_tf"
+  _gate_bound $((SECONDS - _t0)) "$name"
   echo "  [TIME] $name — $_c0 → $(date "+%H:%M:%S") · $((SECONDS - _t0)) s · RSS ${_rss:-?} MB"
   echo "  [COST] $name — $_cost"
 }
@@ -529,6 +614,10 @@ while [ "$auto_req" = 1 ]; do
   break
 done
 
+# ⚠ **PALEOS 표의 자리는 띄운 쪽 트리가 정한다** (C134, 감사 ec HOLD). 격리 클론에는 gitignore 된
+#   `docs/phase3/_papers` 가 없으므로, 비어 있으면 여기(띄운 트리의 뿌리 — 4 번 줄의 cd)에서 채워 환경으로
+#   넘긴다. 맥·PC 같은 규칙이고, 환경변수를 주면 그것이 이긴다.
+: "${NEARSTARS_PAPERS:=$PWD/docs/phase3/_papers}"; export NEARSTARS_PAPERS
 # ── 격리: sha 를 스크래치에 클론해 거기서 다시 자기를 부른다 ──────────────────────────────
 # `git archive | tar -x` 로는 안 된다. 게이트 본문이 git 을 직접 쓴다 — 첫 줄의 `--show-toplevel`,
 # 5번의 `git grep`, 9a–9e 의 `git ls-files`. 클론이어야 full 층이 격리에서 성립한다 (169, 실측).
@@ -687,6 +776,15 @@ else
 fi
 script_field=" script=${self_hash%"${self_hash#???????}"} matches_tree=$matches_tree"
 echo "GATE START sha=$gate_sha date=$(date "+%F%z") pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field$script_field"
+# C134 — 기계 키와 계측기를 GATE START 와 따로 한 줄씩 (그 줄의 모양은 안 건드린다)
+echo "  [기록] gate_machine: $GATE_MACHINE"
+if [ "$_GATE_OS" != "Darwin" ]; then
+  if [ -n "$_GATE_PERF" ]; then
+    echo "  [기록] perf: $_GATE_PERF"
+  else
+    echo "  [note] perf unavailable — instr/cycles are —"
+  fi
+fi
 # ── 풀을 연다 (브리프 184). `GATE_POOL=1` 이면 예전과 같은 완전 직렬이다 (되돌릴 손잡이). ──
 if [ "$GATE_POOL" -gt 1 ] 2>/dev/null; then
   _pool_dir=$(mktemp -d "${TMPDIR:-/tmp}/gate-pool.XXXXXX")
@@ -1157,6 +1255,7 @@ fi
 if [ "$lane" = "quick" ]; then
   echo "  quick 층 — 돈 단계 $_quick_ran · 건너뛴 단계 $_quick_skipped (합 $((_quick_ran + _quick_skipped)) = 단계 총수) · 단계 밖 건너뛴 덩이 $_quick_skipped_outside (ko 미러 점검) ⚠ 건너뛴 것은 «통과» 가 아니다"
 fi
+[ "$_gate_max_s" -ge 0 ] && echo "  [기록] 게이트 하한 — 가장 긴 단계 $_gate_max_name ${_gate_max_s} s (벽시계 ${SECONDS} s)"
 echo "GATE END sha=$gate_sha date=$(date "+%F%z") pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field$script_field rc=$fail"
 
 # ── ④ 스크래치 정리. rc=0 이면 지우고, **실패면 남긴다** — 재현할 것이 있는 쪽만 보관한다 ──

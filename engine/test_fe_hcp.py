@@ -28,12 +28,16 @@ import sys
 
 import eos
 import fe_liquid
+import gate_env
 
 GPA = 1e9
 
-PAPERS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                      "docs", "phase3", "_papers")
+#: C142 — 격리 게이트에서도 띄운 트리의 캐시를 본다(예전: 저장소 상대만이라 격리 클론에서 J3R·J7 이 한 번도 안 돌았다).
+PAPERS = str(gate_env.papers_dir())
 SI_DOC = os.path.join(PAPERS, "2017NatSR...741863D-si-s1.doc")
+#: 같은 SI 의 텍스트 층(저장소 밖) — 있으면 이것을 먼저 읽는다. 맥은 textutil 출력, 리눅스는 변환기 출력이고,
+#: 두 기계의 합격선은 **텍스트 바이트가 아니라 아래 파싱 행이 같음**이다 (C134 개정 1).
+SI_TXT = os.path.join(PAPERS, "2017NatSR...741863D-si-s1.txt")
 PREM_TXT = os.path.join(PAPERS, "1981PEPI...25..297D-model-prem-burnman-v2.1.txt")
 
 #: Table S3 의 열 이름, 인쇄된 순서. 값은 시험 시점에 파일에서 읽고 여기 적지 않는다.
@@ -48,16 +52,19 @@ def _read_table_s3() -> list[dict]:
     표가 바뀌면 시험이 바뀌고, 우리가 옮겨 적은 수가 조용히 낡는 일이 없다.
     ⚠ `.doc` 은 legacy OLE 이라 macOS 의 `textutil` 로 푼다. 없으면 **건너뛰지 않고 이름을 대고
     비운다** — «도구가 없어서 안 돌았다» 와 «통과했다» 는 다른 사실이다."""
-    if not os.path.exists(SI_DOC):
-        return []
-    try:
-        out = subprocess.run(["textutil", "-convert", "txt", "-stdout", SI_DOC],
-                             capture_output=True, timeout=60)
-    except (OSError, subprocess.SubprocessError):
-        return []
-    if out.returncode != 0:
-        return []
-    text = out.stdout.decode("utf-8", "replace")
+    if os.path.exists(SI_TXT):              # C134 개정 1 — 이식 가능한 길이 먼저
+        text = io.open(SI_TXT, encoding="utf-8", errors="replace").read()
+    else:
+        if not os.path.exists(SI_DOC):
+            return []
+        try:
+            out = subprocess.run(["textutil", "-convert", "txt", "-stdout", SI_DOC],
+                                 capture_output=True, timeout=60)
+        except (OSError, subprocess.SubprocessError):
+            return []
+        if out.returncode != 0:
+            return []
+        text = out.stdout.decode("utf-8", "replace")
     # ⚠ **상은 S-번호가 아니라 문자열로 고른다** (감사석, 2026-09-11). 보유 파일 이름은 논문의
     #   번호와 한 칸 어긋나 있다 — 논문의 «Table S3 = hcp» 인데 파일은 `si-s3-fcc`, `si-s4-hcp`
     #   다. 그래서 여기서는 캡션의 **상 이름**으로 잡고, 잡은 덩어리에 다른 상의 캡션이 섞여
@@ -276,7 +283,10 @@ def main() -> int:
     #   «다른 데이터» 가 아니라 **우리 구현이 다르다** 는 뜻이고, 그것이 이 시험의 내용이다.
     #   허용오차는 값을 보기 전에 정한다: 밀도(x) 0.2 %, 그 밖의 열량 0.5 %.
     s3 = _read_table_s3()
-    if not s3:
+    if not s3 and gate_env.in_gate():       # C134 개정 1 — 게이트 안에서는 같은 문장이 실패다
+        fails.append(f"J3R Table S3 — SI 를 못 읽었다 ({SI_TXT} 도, {SI_DOC} + `textutil` 도 없음). "
+                     "게이트 안이라 실패다 (손으로 돌리면 이름 붙인 SKIP)")
+    elif not s3:
         notes.append("[SKIP] J3R Table S3 — SI 를 못 읽었다 (파일 없음 또는 `textutil` 없음). "
                      "«안 돌았다» 이고 «통과» 가 아니다")
     else:
@@ -339,7 +349,10 @@ def main() -> int:
     #   P = 328.9 GPa). 그래서 PREM 쪽 수가 필요하고, 그것은 보유 모델표에서 읽는다.
     icb = fe_liquid.thermal_at(328.9 * GPA, 5882.0, fe_liquid.HCP)
     prem = _read_prem_icb()
-    if prem is None:
+    if prem is None and gate_env.in_gate():  # C134 개정 1
+        fails.append(f"J7 ICB — PREM 모델표 미보유 ({PREM_TXT}). hcp 밀도 {icb['density']:.1f} kg/m³ — "
+                     "게이트 안이라 실패다 (손으로 돌리면 이름 붙인 SKIP)")
+    elif prem is None:
         notes.append(f"[SKIP] J7 ICB — PREM 모델표 미보유. hcp 밀도 {icb['density']:.1f} kg/m³ "
                      f"인쇄만 하고 판정 안 함")
     else:

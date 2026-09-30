@@ -23,14 +23,14 @@ from __future__ import annotations
 
 import re
 import sys
-from pathlib import Path
 
 import cmb_flux as cf
 import core_history as ch
+import gate_env
 import mantle_flux as mf
 from domain import DOMAIN_REFUSED, Domain, Limit
 
-CACHE = Path(__file__).resolve().parents[1] / "docs" / "phase3" / "_papers"
+CACHE = gate_env.papers_dir()           # C142 — 격리 게이트에서도 띄운 트리의 캐시를 본다 (예전: 저장소 상대만)
 
 
 def main() -> int:
@@ -126,6 +126,9 @@ def main() -> int:
         for rec in (mf.EQ35_DOMAIN, cf.EQ39_DOMAIN):
             for phrase in re.findall(rf"{re.escape(mf.NIMMO_TXT)}@«([^»]+)»", rec.anchor + " " + rec.caveat):
                 ok(body.count(phrase) >= 1, f"5: anchor phrase not in {mf.NIMMO_TXT}: «{phrase}»")
+    elif gate_env.in_gate():                # C134 개정 1 — 게이트 안에서는 같은 문장이 실패다
+        ok(False, f"5: {mf.NIMMO_TXT} not in the gitignored cache ({CACHE}) — anchor phrases not checked; "
+                  "inside the gate this is a failure (C134 amendment 1)")
     else:
         skipped.append(f"5: {mf.NIMMO_TXT} not in the gitignored cache — anchor phrases not checked here")
 
