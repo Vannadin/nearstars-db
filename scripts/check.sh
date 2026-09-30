@@ -419,8 +419,13 @@ _quick_ran=0
 #   (첫 판에서 8 + 67 = 75, 단계는 74 였다 — 감사 ⑤. 단계는 2026-09-18 부터 75 다).
 _quick_skipped_outside=0
 
+_QUICK_ALSO=""                # C136: lane_decide 의 `also=` — 통과시킨 경로를 데이터로 읽는 단계 (줄마다 하나)
+# ⚠ 차선은 격리 클론으로 다시 `exec` 하기 **전에** 정해진다 — 쉘 변수는 exec 를 못 건너므로 환경으로
+#   넘기고, 격리 쪽에서만 읽는다 (첫 끝-끝 대조에서 also 9 를 골라 놓고 0 을 돌렸다).
+[ "${GATE_ISOLATED:-}" = "1" ] && _QUICK_ALSO="${GATE_QUICK_ALSO:-}"
 _in_quick() {                 # _in_quick <단계 이름>
-  printf '%s\n' "$_QUICK_STEPS" | grep -qxF "$1"
+  printf '%s\n' "$_QUICK_STEPS" | grep -qxF "$1" && return 0
+  [ -n "$_QUICK_ALSO" ] && printf '%s\n' "$_QUICK_ALSO" | grep -qxF "$1"
 }
 
 step() {                      # step <이름> <명령...>
@@ -474,7 +479,7 @@ _pool_launch() {              # _pool_launch <이름> <명령...> — 풀 워커
                               #   리다이렉션 실패는 쉘이 토하는 소음이고, 판정은 부모의 셈이 한다.
       _s0=$SECONDS; _k0=$(date "+%H:%M:%S")
       _st=$(mktemp "${TMPDIR:-/tmp}/gate-step.XXXXXX")
-      PYTHONDONTWRITEBYTECODE=1 _measure "$_st" bash -c 'exec "$@" 2>&1' _ "$@" \
+      GATE_STEP="$name" PYTHONDONTWRITEBYTECODE=1 _measure "$_st" bash -c 'exec "$@" 2>&1' _ "$@" \
         >"$_base.out"
       _rc=$?
       {
@@ -532,7 +537,7 @@ _step_serial() {              # _step_serial <이름> <명령...> — 직렬 단
   #   컸던 이유의 일부가 그것이고, 지켜보는 사람이 «지금 어디» 를 알 수 없었다.
   echo "  [STEP] $name — $_c0 시작"
   _tf=$(mktemp "${TMPDIR:-/tmp}/gate-step.XXXXXX")
-  _measure "$_tf" bash -c 'exec "$@" 2>&3' _ "$@" 2>/dev/null \
+  GATE_STEP="$name" _measure "$_tf" bash -c 'exec "$@" 2>&3' _ "$@" 2>/dev/null \
     || { echo "  [FAIL] $name — 비0 종료 (이 단계가 fail=1 을 세웠다)"; fail=1; }
   _rss=$(awk '$1 == "rss_bytes" {printf "%.0f", $2/1048576}' "$_tf")
   # ⚠ 직렬 경로는 삭제가 `[TIME]` **앞**이라, 풀 쪽 모양을 그대로 붙이면 **이미 지워진 파일을**
@@ -617,6 +622,8 @@ while [ "$auto_req" = 1 ]; do
     lane=quick*) _auto="quick" ;;
     *)           _auto="full" ;;
   esac
+  # C136 ⓐ: `also=` 줄의 단계(탭 구분)는 quick 에서도 돈다
+  _QUICK_ALSO=$(printf '%s\n' "$_decided" | grep -m1 '^also=' | sed 's/^also=//' | tr '\t' '\n' | grep -v '^$' || true)
   # ⚠ **호출자가 층을 함께 줘도 더 넓은 쪽이 이긴다** (개정 1 ㉮) — 깃발이 diff 가 번 것보다
   #   좁은 게이트를 사지 못한다. `--quick` 은 자동도 quick 일 때만 살아남는다.
   # 자동이 full 이면 요청이 무엇이든 full. 자동이 quick 이면 요청이 이미 좁을 때만 그 요청이 산다.
@@ -688,7 +695,7 @@ if [ -n "$from_sha" ] && [ "${GATE_ISOLATED:-}" != "1" ]; then
   [ "$lane_req" = "wiring" ] && set -- --wiring
   [ "$lane_req" = "targeted" ] && set -- --targeted
   [ "$lane_req" = "quick" ] && set -- --quick
-  GATE_ISOLATED=1 GATE_TREE_SHA="$tree_sha" GATE_BASE_SHA="$base_sha" GATE_SCRATCH="$dest" GATE_PY="$GATE_PY" exec bash "$dest/scripts/check.sh" "$@"
+  GATE_QUICK_ALSO="$_QUICK_ALSO" GATE_ISOLATED=1 GATE_TREE_SHA="$tree_sha" GATE_BASE_SHA="$base_sha" GATE_SCRATCH="$dest" GATE_PY="$GATE_PY" exec bash "$dest/scripts/check.sh" "$@"
 fi
 
 gate_sha=$(git rev-parse --short HEAD)
@@ -802,6 +809,14 @@ if [ "$_GATE_OS" != "Darwin" ]; then
     echo "  [note] perf unavailable — instr/cycles are —"
   fi
 fi
+# ── C136: full 층은 단계가 데이터로 읽은 파일을 기록한다 (scripts/gate_reads/sitecustomize.py) ──
+#   끝에서 `gate_step_inputs.py check` 가 선언 표와 대조한다 (표류 검사). quick 은 기록하지 않는다.
+if [ "$lane" = "full" ]; then
+  GATE_READS_LOG=$(mktemp "${TMPDIR:-/tmp}/gate-reads.XXXXXX")
+  export GATE_READS_LOG GATE_READS_ROOT="$PWD"
+  export PYTHONPATH="$PWD/scripts/gate_reads${PYTHONPATH:+:$PYTHONPATH}"
+  echo "GATE READS log=$GATE_READS_LOG (C136 — 단계별 데이터 읽기 기록)"
+fi
 # ── 풀을 연다 (브리프 184). `GATE_POOL=1` 이면 예전과 같은 완전 직렬이다 (되돌릴 손잡이). ──
 if [ "$GATE_POOL" -gt 1 ] 2>/dev/null; then
   _pool_dir=$(mktemp -d "${TMPDIR:-/tmp}/gate-pool.XXXXXX")
@@ -815,6 +830,8 @@ echo "── 1. 스키마 검증 (db/systems/*.json + curated) ──"
 step "scripts/test_gate_cleanup.sh" bash scripts/test_gate_cleanup.sh
 # 게이트 자신: auto-lane 이 기대 빨강만 있는 full 을 인정하는 규칙(C128)의 합성 로그 시험. ~1 s.
 step "scripts/test_lane_decide.py" bash -c 'python3 scripts/test_lane_decide.py'
+# 게이트 자신: 입력 선언 차선(C136)의 픽스처 — 후크의 import 거르기 셋 · 표류 · 빠진 단계 · also. ~1 s.
+step "scripts/test_gate_step_inputs.py" bash -c 'python3 scripts/test_gate_step_inputs.py'
 # 게이트 자신: 추적 test_*.py 가 전부 여기서 불리거나 이름 박힌 제외 목록(까닭)에 있는가 (C129). ~1 s.
 step "scripts/test_check_unwired_tests.py" bash -c 'python3 scripts/test_check_unwired_tests.py'
 step "scripts/check_unwired_tests.py" bash -c 'python3 scripts/check_unwired_tests.py'
@@ -1263,6 +1280,14 @@ fi   # lane
 
 step_flush                    # ⚠ **집계 앞의 배리어** — 이 줄이 없으면 아직 도는 단계의 실패가 rc 에 안 든다
 
+if [ "$lane" = "full" ] && [ -n "${GATE_READS_LOG:-}" ]; then
+  echo "── C136 입력 선언 표류 검사 (gate_step_inputs.yaml 대 이번 판의 읽기) ──"
+  # ⚠ 검사기 자신은 기록하지 않는다 — 후크를 끄고 돈다
+  env -u GATE_READS_LOG -u PYTHONPATH "$GATE_PY" scripts/gate_step_inputs.py check "$GATE_READS_LOG" || fail=1
+  cp "$GATE_READS_LOG" "${GATE_LOGS_DIR}/reads-$gate_sha.jsonl" 2>/dev/null || true
+  rm -f "$GATE_READS_LOG"
+fi
+
 echo ""
 if [ $fail -eq 0 ]; then
   echo "──────── 모든 점검 통과 ────────"
@@ -1270,7 +1295,7 @@ else
   echo "──────── 일부 점검 실패 ────────"
 fi
 if [ "$lane" = "quick" ]; then
-  echo "  quick 층 — 돈 단계 $_quick_ran · 건너뛴 단계 $_quick_skipped (합 $((_quick_ran + _quick_skipped)) = 단계 총수) · 단계 밖 건너뛴 덩이 $_quick_skipped_outside (ko 미러 점검) ⚠ 건너뛴 것은 «통과» 가 아니다"
+  echo "  quick 층 — also $(printf '%s\n' "$_QUICK_ALSO" | grep -c . || true) (C136: ran 8 + also) · 돈 단계 $_quick_ran · 건너뛴 단계 $_quick_skipped (합 $((_quick_ran + _quick_skipped)) = 단계 총수) · 단계 밖 건너뛴 덩이 $_quick_skipped_outside (ko 미러 점검) ⚠ 건너뛴 것은 «통과» 가 아니다"
 fi
 [ "$_gate_max_s" -ge 0 ] && echo "  [기록] 게이트 하한 — 가장 긴 단계 $_gate_max_name ${_gate_max_s} s (벽시계 ${SECONDS} s)"
 echo "GATE END sha=$gate_sha date=$(date "+%F%z") pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field$script_field rc=$fail"
