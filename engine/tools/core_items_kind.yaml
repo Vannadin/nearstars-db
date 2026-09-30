@@ -396,3 +396,24 @@ items:
   # ⚠ C131 (2026-09-30, 작업석 ed · 지휘 3d) — 시험 중심압의 거절이 천체의 거절로 새어 나감(C122 일반화). 엔진 풀이라 physics.
   C131:
     kind: physics
+  # ⚠ C132 (2026-09-30, 작업석 ed · 원격 PC) — 바이트 방아쇠가 git 줄끝 변환에 기댐, .gitattributes 로 LF 고정. 저장소 도구라 tooling.
+  C132:
+    kind: tooling
+  # ⚠ C133 (2026-09-30, 작업석 ed) — 값을 내는 창 밑에서 이름 없는 예외, 한 곳의 가드로 이름 댄 거절. 엔진이 내는 수 · 거절이라 physics.
+  C133:
+    kind: physics
+  # ⚠ C134 (2026-09-30, 원격 PC) — 게이트가 macOS 도구 · 절대 경로를 가정. 게이트 도구라 tooling.
+  C134:
+    kind: tooling
+  # ⚠ C135 (2026-09-30, 원격 PC) — 가장 긴 게이트 단계 셋이 직렬. 게이트 도구라 tooling.
+  C135:
+    kind: tooling
+  # ⚠ C136 (2026-09-30, 지휘 3d) — quick lane 이 입력이 바뀐 단계를 건너뜀. 게이트 도구라 tooling.
+  C136:
+    kind: tooling
+  # ⚠ C137 (2026-09-30, 원격 PC) — eos 밀도 역산 특수화(값 무변경 속도). 값이 안 바뀌는 성능이라 tooling.
+  C137:
+    kind: tooling
+  # ⚠ C139 (2026-09-30, 원격 PC census) — 액체 철 부피가 적합 창 끝에서 잘린 값으로 채택됨. 엔진이 내는 수라 physics.
+  C139:
+    kind: physics
