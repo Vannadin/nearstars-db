@@ -56,7 +56,8 @@ def code_digest(blob: bytes, name: str) -> str:
     return hashlib.sha256(walk(compile(blob, name, "exec")).encode()).hexdigest()[:16]
 
 
-def classify(parent: str, target: str) -> tuple[str, list[str], int]:
+def classify(parent: str, target: str, passed: list[str] | None = None) -> tuple[str, list[str], int]:
+    """`passed` (선택) 에 통과시킨 경로를 모은다 — C136 의 also 가 그 경로로 단계를 고른다."""
     # ⚠ **상태까지 읽는다** — 더해지거나 지워지거나 이름이 바뀐 `.py` 는 비교할 짝이 없다.
     rows = [l for l in _sh("git", "diff", "--name-status", f"{parent}..{target}").split("\n") if l]
     if not rows:
@@ -73,6 +74,8 @@ def classify(parent: str, target: str) -> tuple[str, list[str], int]:
             continue
         if PROSE.search(path):
             reasons.append(f"{path} 산문/미러/생성물 → 통과")
+            if passed is not None:
+                passed.append(path)
             continue
         if ALWAYS_FULL.search(path):
             reasons.append(f"{path} 게이트·선언·데이터 → **full**")
@@ -88,6 +91,8 @@ def classify(parent: str, target: str) -> tuple[str, list[str], int]:
                 continue
             if code_digest(a.encode(), path) == code_digest(b.encode(), path):
                 reasons.append(f"{path} 코드 객체 동일(주석 전용) → 통과")
+                if passed is not None:
+                    passed.append(path)
             else:
                 reasons.append(f"{path} 코드 객체 다름(docstring 내용 포함) → **full**")
                 verdict = "full"
@@ -214,13 +219,27 @@ def main() -> int:
     if not had_full:
         print(f"lane=full 이유=오늘({today}) 끝난 full 이 없다 — 안전망, diff 안 봄")
         return 0
-    verdict, reasons, n_files = classify(parent, target)
+    passed: list[str] = []
+    verdict, reasons, n_files = classify(parent, target, passed)
+    extra: list[str] = []
+    if verdict == "quick" and passed:
+        # C136: 통과시킨 경로를 **데이터로 읽는** 단계는 quick 에서도 돈다 (선언 표 gate_step_inputs.yaml)
+        import gate_step_inputs as gsi
+        extra, missing = gsi.also(passed, gsi.load(), gsi.step_names(), gsi.quick_steps())
+        if missing:
+            verdict = "full"
+            reasons.append(f"선언 표에 없는 단계 {len(missing)} ({missing[0]} …) — 무엇을 읽는지 모르니 **full** (C136 §1.3)")
     print(f"lane={verdict} 이유={'모든 변경이 통과' if verdict == 'quick' else '아래 중 하나가 full 을 부름'}"
           f" · 오늘({today}) full 있었음 · 바뀐 파일 {n_files}")
     for r in reasons:
         print(f"  · {r}")
     if verdict == "quick":
-        print("  ⚠ quick 은 여덟 단계뿐이다 — **66 단계는 안 돈다**. 안 돈 것은 «통과» 가 아니다.")
+        # ⚠ **이 줄은 `also=` 로 시작한다** — check.sh 가 그 뒤의 단계 이름을 quick 여덟에 더한다.
+        #   이름에 빈칸이 있으므로 구분자는 탭이다.
+        print("also=" + "\t".join(extra))
+        for n in extra:
+            print(f"  · also: {n} — 통과시킨 경로를 데이터로 읽는다")
+        print(f"  ⚠ quick 은 여덟 단계 + also {len(extra)} 뿐이다 — 나머지는 안 돈다. 안 돈 것은 «통과» 가 아니다.")
     return 0
 
 
