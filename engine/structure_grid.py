@@ -115,6 +115,8 @@ class Grid:
         self.rows = doc["points"]
         self.t_ok = doc.get("t_ok")
         self.breaks = [(float(b[0]), float(b[1])) for b in doc.get("breaks", [])]
+        # 덧붙임 50 — 받을 답 없는 구간: 안에서는 높은 T 쪽 끝(t₊)의 값, 종류 «gap»(냉각 이력)
+        self.no_answer = [(float(g[0]), float(g[1])) for g in doc.get("no_answer", [])]
 
     def at(self, t_m: float):
         """(`"ok"`, 여섯 칸) · (`"hold"`, None) · (`"refused"`, 문구)."""
@@ -125,6 +127,9 @@ class Grid:
             if self.t_ok is not None:
                 return "hold", None
             return "refused", f"구조 표 격자 위 — t_m {t_m!r} K > {self.t[-1]!r} K (외삽 없음)"
+        for lo_g, hi_g in self.no_answer:
+            if lo_g < t_m < hi_g:
+                return "gap", {k: self.rows[self.t.index(hi_g)][k] for k in FIELDS}
         for lo_b, hi_b in self.breaks:           # 뜀 1 K 안 — 보간이 건너지 않고 가까운 끝의 값 (덧붙임 16)
             if lo_b < t_m < hi_b:
                 end = lo_b if t_m - lo_b <= hi_b - t_m else hi_b     # 정확히 가운데는 t₋ 쪽 (덧붙임 17)
@@ -214,6 +219,7 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
     """성긴 5 점에서 시작해 구간 가운데를 풀어 보간 오차가 eps 를 넘는 구간만 반으로 (덧붙임 11 · 12)."""
     import interior
     cache = {}
+    noans = {}                                  # 덧붙임 50 — 받을 답 아닌 점 → 까닭
 
     p_centres = {}
 
@@ -223,7 +229,8 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         tags = []
         why = interior.answer_verdict(r, tags)   # C130 — 수렴 표지 False 인 점을 표에 조용히 넣지 않는다
         if why is not None:
-            raise SystemExit(f"{name}: {t!r} K 에서 받을 답 아님 — {why}")
+            noans[t] = why                     # 덧붙임 50 — 멈추지 않고 표시, 구간 처리가 받을 답 없는 구간으로 가른다
+            return
         for tag in tags:                        # 덧붙임 4 — 표지는 짓기 로그에만(표 문서 키 무변경)
             print(f"표지 — {t!r} K · {tag}", flush=True)
         cmf_t = r.inputs.get("core_mass_fraction")
@@ -235,9 +242,13 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
 
     def at(t, a=None, b=None):
         """t 의 표 칸. (a, b) 는 t 를 가운데로 둔 구간 — 힌트는 가까운 끝점(덧붙임 44 ①), 없으면 힌트 없음."""
+        if t in noans:
+            raise _NoAnswer(t, noans[t])
         if t not in cache:
             near = None if a is None else (a if abs(t - a) <= abs(b - t) else b)
             _take(t, _pool_solve(solve, [(t, p_centres.get(near) if near is not None else None)])[0])
+            if t in noans:
+                raise _NoAnswer(t, noans[t])
         return cache[t]
 
     def prefetch(jobs):
@@ -253,7 +264,27 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
 
     grid = [lo + (hi - lo) * i / (START_POINTS - 1) for i in range(START_POINTS)]
     todo = [(grid[i], grid[i + 1], 0) for i in range(START_POINTS - 1)]
-    done, worst, depth_max, breaks, kinks = [], {k: 0.0 for k in FIELDS}, 0, [], []
+    done, worst, depth_max, breaks, kinks, gaps = [], {k: 0.0 for k in FIELDS}, 0, [], [], []
+
+    def answered(t, a, b):
+        try:
+            at(t, a, b)
+            return True
+        except _NoAnswer:
+            return False
+
+    def gap_around(a, b, t_bad, why):
+        """덧붙임 50 ① — 받을 답인 끝점 a, b 사이의 불수락 점 t_bad 둘레를 0.25 K 까지 이분 → [t₋, t₊]."""
+        lo, hi = a, t_bad
+        while hi - lo > KINK_MIN_K:
+            mid = 0.5 * (lo + hi)
+            lo, hi = (mid, hi) if answered(mid, lo, hi) else (lo, mid)
+        t_minus = lo
+        lo, hi = t_bad, b
+        while hi - lo > KINK_MIN_K:
+            mid = 0.5 * (lo + hi)
+            lo, hi = (lo, mid) if answered(mid, lo, hi) else (mid, hi)
+        return t_minus, hi
 
     def ratio(pa, pm, pb, k):
         """(비, 왼쪽이 큰가). 큰 반쪽의 상대 변화가 ε 아래면 잡음 크기라 비 1 (덧붙임 17 절대 바닥)."""
@@ -279,8 +310,20 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         # 덧붙임 44 ② — 쌓인 구간들의 가운데 점을 먼저 한꺼번에(캐시에 없는 것만), 판정은 아래 지금 순서 그대로
         prefetch([(0.5 * (a_ + b_), a_) for a_, b_, _d in todo])   # 가운데 점 — 힌트는 왼쪽 끝점(덧붙임 44 ①)
         a, b, d = todo.pop(0)
-        pa, fa = at(a)
-        pb, fb = at(b)
+        try:
+            pa, fa = at(a)
+            pb, fb = at(b)
+        except _NoAnswer as na:
+            raise SystemExit(f"{name}: 구간 끝점 {na.t!r} K 가 받을 답 아님 — {na.why} (받을 답 없는 구간은 받을 답인 두 끝점 사이에서만 가른다, 덧붙임 50)")
+        try:
+            at(0.5 * (a + b), a, b)
+        except _NoAnswer as na:
+            t_minus, t_plus = gap_around(a, b, na.t, na.why)
+            gaps.append([t_minus, t_plus, na.why[:160]])
+            print(f"받을 답 없는 구간 — [{t_minus!r}, {t_plus!r}] K 폭 {t_plus - t_minus:.3f} K · {na.why[:100]}", flush=True)
+            todo += [(a, t_minus, d + 1)] if t_minus > a else []
+            todo += [(t_plus, b, d + 1)] if t_plus < b else []
+            continue
         if fa != fb:                                  # 불연속 — 이분으로 좁혀 이름 대고 거절
             x, y = a, b
             while y - x > MIN_INTERVAL_K:
@@ -332,7 +375,15 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             for k in FIELDS:
                 worst[k] = max(worst[k], err[k])
     ts = sorted({t for ab in done for t in ab} | {t for br in breaks for t in br[:2]})
-    return ts, [at(t)[0] for t in ts], [at(t)[1] for t in ts], worst, depth_max, len(cache), breaks, kinks
+    return ts, [at(t)[0] for t in ts], [at(t)[1] for t in ts], worst, depth_max, len(cache), breaks, kinks, gaps
+
+
+class _NoAnswer(Exception):
+    """덧붙임 50 — 이 점은 C130 이 받을 답 아니라고 했다."""
+
+    def __init__(self, t, why):
+        super().__init__(why)
+        self.t, self.why = t, why
 
 
 def _light(r):
@@ -413,8 +464,9 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
         t_ok, t_no, hi = a, b, a
     m_kg = body.inputs["mass_earth"] * cf.M_EARTH_KG
     adaptive = {}
+    gaps = []
     if points is None and n is None:
-        grid, points, prints, worst, depth, solves, breaks, kinks = _adaptive(name, solve, lo, hi, eps, m_kg, cmf0)
+        grid, points, prints, worst, depth, solves, breaks, kinks, gaps = _adaptive(name, solve, lo, hi, eps, m_kg, cmf0)
         for a, b, k, e in kinks:     # 덧붙임 43 — 로그에만(표 문서 키는 그대로)
             print(f"꺾임 — [{a!r}, {b!r}] K 폭 {b - a:.3f} K 를 더 반으로 · 칸 {k} · 오차 {e:.3e}", flush=True)
         adaptive = {"eps": eps, "start_points": START_POINTS, "depth_max": depth, "points": len(grid),
@@ -444,6 +496,8 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
            "breaks": [[j["t_lo"], j["t_hi"], j["field"], j["relative_size"]] for j in adaptive.get("jumps", [])],
            "t_ok": t_ok, "t_no": t_no, "composition": how, "s0_potential_temperature": t_pot0,
            "history_t_m_range": [min(t_ms), max(t_ms)], "triggers": triggers(body.inputs)}
+    if gaps:                                   # 덧붙임 50 ② — 구간이 없는 표는 칸을 안 쓴다(바이트 같음)
+        doc["no_answer"] = gaps
     GRID_DIR.mkdir(exist_ok=True)
     _path_for(body.name).write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     return doc

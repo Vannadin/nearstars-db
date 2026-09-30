@@ -229,6 +229,7 @@ def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: 
     # 구조 표 (prereg-structure-grid 덧붙임 7 ①) — 있으면 매 호출 전에 그 t_m 으로 구조 여섯 칸을 보간한다.
     # 없으면(`grid=None`) 이 함수는 오늘과 한 비트도 다르지 않다.
     held = {"calls": 0, "steps": 0}
+    gapped = {"calls": 0, "steps": 0, "spans": set()}   # 구조 표 덧붙임 50 — 받을 답 없는 구간을 높은 T 쪽 값으로 건넌 호출
     p0 = None
     if grid is not None:
         params = dict(params)             # 호출자의 사전을 걸음마다 덮지 않는다 (sweep 이 같은 사전을 세 번 쓴다)
@@ -244,6 +245,10 @@ def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: 
                 held["steps"] += start
                 params.update(p0)
             else:
+                if kind == "gap":         # 받을 답 없는 구간 — 높은 T 쪽 끝의 값(냉각 이력), 센다
+                    gapped["calls"] += 1
+                    gapped["steps"] += start
+                    gapped["spans"].update(g for g in grid.no_answer if g[0] < tm < g[1])
                 params.update(got)
         return rates(tc, tm, params, t)
 
@@ -303,7 +308,9 @@ def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: 
     return {"rows": rows, "n_steps": n, "step_myr": step_myr, "adaptive": adaptive,
             "h_min_myr": (h_min / MYR_S) if h_min is not None else None,
             "max_h_over_tau": max_ratio if adaptive else None, "extrapolated_steps": extrapolated,
-            "grid_held_steps": held["steps"], "grid_held_calls": held["calls"]}
+            "grid_held_steps": held["steps"], "grid_held_calls": held["calls"],
+            "grid_gap_steps": gapped["steps"], "grid_gap_calls": gapped["calls"],
+            "grid_gap_spans": sorted(gapped["spans"])}
 
 
 def window_summary(rows: list[dict], window_gyr: float = WINDOW_GYR) -> dict:
@@ -514,6 +521,8 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
         # 구조 표 (prereg-structure-grid) — 구조가 거절하는 초기 구간(«못 봄») 에서 S0 에 붙든 걸음 · 호출 수.
         "structure_grid_held_steps": best["hist"].get("grid_held_steps", 0),
         "structure_grid_held_calls": best["hist"].get("grid_held_calls", 0),
+        "structure_grid_gap_steps": best["hist"].get("grid_gap_steps", 0),
+        "structure_grid_gap_calls": best["hist"].get("grid_gap_calls", 0),
     }
     units = {"core_cmb_temperature_present": "K", "mantle_potential_temperature_present": "K",
              "dtc_dt_present_k_per_gyr": "K/Gyr", "q_cmb_present": "W", "q_mantle_present": "W",
@@ -521,7 +530,8 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
              "delta_e_min_3gyr_lo": "W/K", "delta_e_min_3gyr_hi": "W/K", "delta_e_present_lo": "W/K",
              "delta_e_present_hi": "W/K", "entropy_history_verdict": "", "history_converged": "",
              "history_convergence_width": "", "history_steps": "", "loss_law": "",
-             "loss_law_reason": "", "structure_grid_held_steps": "", "structure_grid_held_calls": ""}
+             "loss_law_reason": "", "structure_grid_held_steps": "", "structure_grid_held_calls": "",
+             "structure_grid_gap_steps": "", "structure_grid_gap_calls": ""}
     if converged is None:
         values["history_converged"] = None   # the sweep is on demand (test_core_history.py --sweep); record: 2026-09-04 width 0.001 %
     mw = 1e6
@@ -545,7 +555,8 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
                  f"every step — {hist_['n_steps']} steps, smallest h {hist_['h_min_myr']:.4g} Myr, largest h/τ met "
                  f"{hist_['max_h_over_tau']:.3g} (must be ≤ {STEP_FRACTION:g}); tools/adaptive-step-prereg.md")
     return Result(recipe=RECIPE, version=VERSION, regime="thermal-history", reason=reason, grade="analog",
-                  inputs=inputs, values=values, units=units, refs=REFS, notes=(CONDITION, extrap_note, step_note))
+                  inputs=inputs, values=values, units=units, refs=REFS,
+                  notes=(CONDITION, extrap_note, step_note) + _gap_note(best["hist"]))
 
 
 from registry import recipe  # noqa: E402
@@ -589,3 +600,12 @@ def _from_state(state):
                  surface_temperature_k=state.get_optional("surface_temperature_k"),
                  radiogenic_concentration=state.get_optional("radiogenic_concentration"),
                  grid=grid)
+
+
+def _gap_note(hist) -> tuple:
+    """구조 표 덧붙임 50 ④ — 받을 답 없는 구간을 건넜으면 한 줄(없으면 빈 튜플, 옛 note 그대로)."""
+    if not hist.get("grid_gap_calls"):
+        return ()
+    spans = " · ".join(f"[{a:.2f}, {b:.2f}]" for a, b in hist.get("grid_gap_spans", []))
+    return (f"구조 표의 받을 답 없는 구간 {spans} K 를 높은 T 쪽 값으로 건넘 — {hist['grid_gap_steps']} 걸음 "
+            f"(호출 {hist['grid_gap_calls']}, 냉각 이력, prereg-structure-grid 덧붙임 50)",)

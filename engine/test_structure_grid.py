@@ -56,6 +56,17 @@ for path in tables:
     _, why = sg.load_for(moved)
     check(f"{path.name} — 선언이 움직이면 낡은 표로 거절", why is not None and "potential_temperature" in why, (why or "")[:100])
 
+# 덧붙임 50 — 받을 답 없는 구간: 안에서는 높은 T 쪽 끝(t₊)의 값 · 종류 «gap», 밖은 보간 그대로(합성 표)
+_row = lambda v: {k: float(v) for k in sg.FIELDS}
+_syn = sg.Grid({"t_pot": [1000.0, 1010.0, 1010.5, 1020.0], "points": [_row(1), _row(2), _row(3), _row(4)],
+                "t_ok": None, "no_answer": [[1010.0, 1010.5, "합성"]]})
+kind, got = _syn.at(1010.2)
+check("받을 답 없는 구간 안 → gap · 높은 T 끝 값", kind == "gap" and all(got[k] == 3.0 for k in sg.FIELDS), f"{kind} {got and got['r_b']}")
+kind, got = _syn.at(1005.0)
+check("구간 밖 → 보간 그대로", kind == "ok" and all(got[k] == 1.5 for k in sg.FIELDS), f"{kind} {got and got['r_b']}")
+kind, got = _syn.at(1010.5)
+check("구간 끝점 t₊ → 그 점의 값(ok)", kind == "ok" and all(got[k] == 3.0 for k in sg.FIELDS), kind)
+
 ghost = copy.deepcopy(run.load_body(sg.BODIES_DIR / "earth.yaml")[0])
 ghost.name = "NoSuchBody"
 _, why = sg.load_for(ghost)

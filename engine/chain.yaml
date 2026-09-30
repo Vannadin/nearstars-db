@@ -318,7 +318,8 @@ nodes:
               q_cmb_present, q_mantle_present, inner_core_radius_present_km, inner_core_case,
               inner_core_nucleation_gyr_ago, delta_e_min_3gyr_lo, delta_e_min_3gyr_hi, delta_e_present_lo,
               delta_e_present_hi, entropy_history_verdict, history_converged, history_convergence_width, history_steps,
-              structure_grid_held_steps, structure_grid_held_calls]
+              structure_grid_held_steps, structure_grid_held_calls,
+              structure_grid_gap_steps, structure_grid_gap_calls]
   core_entropy_production:
     layer: "2층. 허브"
     domain: interior
