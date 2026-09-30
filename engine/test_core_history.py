@@ -17,6 +17,8 @@ An adaptive-cap sweep would be a different question and is deliberately not buil
 """
 from __future__ import annotations
 
+import contextlib
+import io
 import sys
 import time
 from pathlib import Path
@@ -84,7 +86,9 @@ H_M_M_NIMMO_W = 23.4e12               # W — Nimmo+ 2004 Table 4, present-day H
 PARAMS_NIMMO = {**PARAMS, "h_core": H_NIMMO, "h_m_present_w": H_M_M_NIMMO_W}
 
 # Mars inputs (⑥ C48) — the same construction, read before the job table below.
-vm = interior_solve(0.1074, core_mass_fraction=0.24, potential_temperature=1600.0).values
+# ⚠ 이 풀이가 찍는 진행 줄(`[고리]`)은 모아 두었다가 옛 자리(⑥ 머리줄 뒤)에서 찍는다 (C135 설계 조건).
+with contextlib.redirect_stdout(io.StringIO()) as _vm_out:
+    vm = interior_solve(0.1074, core_mass_fraction=0.24, potential_temperature=1600.0).values
 MM = 0.1074 * M
 RPM = 0.5320 * RP
 R_BM = vm["cmb_temperature"] / 1600.0
@@ -178,6 +182,8 @@ _FIXTURES = (
 # ── B (C135 개정 3): 무거운 호출 열셋을 먼저 단계 안 풀로 한 번에 푼다 ──────────────────────────────
 # ⚠ 아래 절들은 **옛 순서대로** 찍고, 값은 이 표에서 읽는다. 일감 안에서 난 예외는 값 자리에 담아 두었다가
 #   그 값을 읽는 **옛 자리에서** 다시 던진다 — 앞 절의 줄이 먼저 찍히고, 옛 코드와 같은 곳에서 죽는다.
+# ⚠ 일감이 찍는 줄(`[고리]` 등)은 일감마다 모았다가 그 값을 읽는 옛 자리에서 먼저 찍는다 — 풀이 끝난 순서가
+#   출력에 새지 않는다 (C135 설계 조건: 일감 출력은 모아 입력 순서대로).
 # ⚠ 판정 줄의 초(`… s`)는 그 일감이 자기 일꾼에서 걸린 시간이다. 표는 **긴 일감 먼저** 적는다(풀이 그 순서로 나눈다).
 #   Earth `v`·Mars `vm` 과 거절 둘(`r2`·`r3`)·화성 고정 4 Myr 발산은 가벼워 제자리에서 돈다.
 def _jobs():
@@ -209,17 +215,21 @@ _JOBS = _jobs()
 
 def _job(name):
     t0 = time.perf_counter()
-    try:
-        return _JOBS[name](), time.perf_counter() - t0, None
-    except BaseException as e:           # 옛 자리에서 다시 던진다 (위 ⚠)
-        return None, time.perf_counter() - t0, e
+    with contextlib.redirect_stdout(io.StringIO()) as out:
+        try:
+            val, err = _JOBS[name](), None
+        except BaseException as e:       # 옛 자리에서 다시 던진다 (위 ⚠)
+            val, err = None, e
+    return val, time.perf_counter() - t0, err, out.getvalue()
 
 
+sys.stdout.flush()
 _PRE = dict(zip(_JOBS, parallel_points.solve_points(_job, [(n,) for n in _JOBS], _inner_pool())))
 
 
 def _pre(name):
-    val, _s, err = _PRE[name]
+    val, _s, err, out = _PRE[name]
+    sys.stdout.write(out)
     if err is not None:
         raise err
     return val
@@ -301,6 +311,7 @@ row(not r3.applicable, "거대행성 → 거절")
 # ── Brief 157 / C48 — the Mars divergence was the step, both ways ─────────────────────────────────
 print("⑥ C48 — 화성: 고정 4 Myr 이면 발산, 적응이면 0.25 Myr 스윕값(1382.90 · 3893.07 · 1669.12) 5 K 안 "
       "— 스윕도 재현도 H 1.5 pW/kg 조건이다 (Brief 166 D)")
+sys.stdout.write(_vm_out.getvalue())
 try:
     ch.integrate(PARAMS_M_NIMMO, 4800.0, 4800.0 / R_BM, AGE, adaptive=False)
     row(False, "고정 4 Myr 화성이 발산하지 않았다 — C48 의 기록(T_m −6244 K)과 어긋남")
