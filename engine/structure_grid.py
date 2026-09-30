@@ -221,22 +221,17 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
     import interior
     cache = {}
     noans = {}                                  # 덧붙임 50 — 받을 답 아닌 점 → 까닭
-
-    p_centres = {}
+    aux = {}                                    # 덧붙임 57 — 판정의 T−1 K 보조 점(힌트 없는 풀이) 기억, 값 밖
     spec = {}                                   # 덧붙임 55 ④ — 한 판의 미리 푼 결과(판 끝에 버림, 캐시 · 표 밖)
     spec_stats = {"dispatched": 0, "used": 0, "discarded": 0, "rounds": 0, "max_round": 0}
 
     def fetch(nodes):
-        """덧붙임 55 ①–③ — 판의 나무 마디 (t, a, b, 부모) 중 안 푼 것을 한 번에 풀로. 힌트: 가까운 끝점(덧붙임 44 ①),
-        그 끝점이 이 판에서 아직 안 풀렸으면 부모 마디의 힌트."""
-        pending = {t for t, *_ in nodes if t not in cache and t not in noans}
-        hints, jobs = {}, []
-        for t, a, b, parent in nodes:
-            near = a if abs(t - a) <= abs(b - t) else b
-            hints[t] = hints[parent] if near in pending and parent is not None else p_centres.get(near)
-            if t in pending and t not in spec and all(j[0] != t for j in jobs):
-                jobs.append((t, hints[t]))
-        for (t, _h), r in zip(jobs, _pool_solve(solve, jobs) if jobs else []):
+        """덧붙임 55 ①② — 판의 나무 마디 (t, a, b, 부모) 중 안 푼 것을 한 번에 풀로(표는 힌트 없음, 덧붙임 57 ①)."""
+        jobs = []
+        for t, *_ in nodes:
+            if t not in cache and t not in noans and t not in spec and all(j[0] != t for j in jobs):
+                jobs.append((t, None))
+        for (t, _h), r in zip(jobs, _pool_solve(solve, jobs, aux) if jobs else []):
             spec[t] = r
         spec_stats["dispatched"] += len(jobs)
         spec_stats["rounds"] += 1
@@ -266,11 +261,9 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         if cmf_t != cmf0:   # 덧붙임 45 «거절문 전부» 밖 — 격자 한계가 아니라 조성 고정 위반(입력 비트 검사)
             raise SystemExit(f"{name}: {t!r} K 의 cmf {cmf_t!r} 가 S0 {cmf0!r} 와 다르다 — 조성이 고정이 아니다")
         cache[t] = ({**_params(r.values, t, m_kg), "core_mass_fraction": cmf0}, _fingerprint(r))
-        if r.values.get("core_pressure"):
-            p_centres[t] = r.values["core_pressure"] * 1e9
 
     def at(t, a=None, b=None):
-        """t 의 표 칸. (a, b) 는 t 를 가운데로 둔 구간 — 힌트는 가까운 끝점(덧붙임 44 ①), 없으면 힌트 없음."""
+        """t 의 표 칸. (a, b) 는 t 를 가운데로 둔 구간(덧붙임 57 ① 뒤로 힌트는 안 씀 — 부르는 쪽 모양 그대로)."""
         if t in noans:
             raise _NoAnswer(t, noans[t])
         if t not in cache:
@@ -278,25 +271,23 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
                 spec_stats["used"] += 1
                 _take(t, spec.pop(t))
             else:
-                near = None if a is None else (a if abs(t - a) <= abs(b - t) else b)
-                _take(t, _pool_solve(solve, [(t, p_centres.get(near) if near is not None else None)])[0])
+                _take(t, _pool_solve(solve, [(t, None)], aux)[0])
             if t in noans:
                 raise _NoAnswer(t, noans[t])
         return cache[t]
 
     def prefetch(jobs):
-        """덧붙임 44 ② — 아직 안 푼 (t, 가까운 끝점) 들을 풀로 한꺼번에 — 값은 at() 와 같은 힌트 규칙."""
-        jobs = [(t, near) for t, near in dict.fromkeys(jobs) if t not in cache]
+        """덧붙임 44 ② — 아직 안 푼 점들을 풀로 한꺼번에(표는 힌트 없음, 덧붙임 57 ①)."""
+        jobs = [(t, near) for t, near in dict.fromkeys(jobs) if t not in cache and t not in noans]
         if not jobs:
             return
-        results = _pool_solve(solve, [(t, p_centres.get(near) if near is not None else None) for t, near in jobs])
+        results = _pool_solve(solve, [(t, None) for t, _near in jobs], aux)
         for (t, _near), r in zip(jobs, results):
             if not r.applicable:   # 감사 9f 곁 — 묶음으로 미리 푸니 직렬판과 먼저 만나는 거절 점이 다를 수 있다: 묶음을 찍는다
                 print(f"미리 풀기 묶음 {len(jobs)} 점 중 {t!r} K 가 거절(묶음 {[j[0] for j in jobs]!r})", flush=True)
             _take(t, r)
 
     grid = [lo + (hi - lo) * i / (START_POINTS - 1) for i in range(START_POINTS)]
-    todo = [(grid[i], grid[i + 1], 0) for i in range(START_POINTS - 1)]
     done, worst, depth_max, breaks, kinks, gaps = [], {k: 0.0 for k in FIELDS}, 0, [], [], []
 
     def answered(t, a, b):
@@ -306,10 +297,11 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         except _NoAnswer:
             return False
 
-    def gap_around(a, b, t_bad, why):
-        """덧붙임 50 ① — 받을 답인 끝점 a, b 사이의 불수락 점 t_bad 둘레를 0.25 K 까지 이분 → [t₋, t₊]."""
+    def gap_around(a, b, t_bad, why, t_bad_hi=None):
+        """덧붙임 50 ① — 받을 답인 끝점 a, b 사이의 불수락 점 t_bad(덧붙임 57 ⑤: 잇단 불수락 첫 점들이면 t_bad … t_bad_hi)
+        둘레를 0.25 K 까지 이분 → [t₋, t₊]."""
         left = _Chain(a, t_bad, KINK_MIN_K, lambda c, m: c.go(m, c.y) if answered(m, c.x, c.y) else c.go(c.x, m))
-        right = _Chain(t_bad, b, KINK_MIN_K, lambda c, m: c.go(c.x, m) if answered(m, c.x, c.y) else c.go(m, c.y))
+        right = _Chain(t_bad if t_bad_hi is None else t_bad_hi, b, KINK_MIN_K, lambda c, m: c.go(c.x, m) if answered(m, c.x, c.y) else c.go(m, c.y))
         bisect([left, right])                   # 덧붙임 55 ② — 두 쪽을 한 판에
         return left.x, right.y
 
@@ -334,15 +326,33 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         bisect([c])
         return None if c.stopped else (c.x, c.y, c.steps)
     prefetch([(t, None) for t in grid])
+    # 덧붙임 57 ⑤ — 받을 답 아닌 첫 점은 가운데 점과 같게: 양쪽의 가장 가까운 받을 답 첫 점 사이에서 구간을 찾는다
+    #   (덧붙임 50 의 «끝점은 받을 답» 문장 · 그 SystemExit 을 대신함). 잇단 불수락 첫 점은 한 구간. 격자 끝은 오늘 규칙.
+    for end in (grid[0], grid[-1]):
+        if end in noans:
+            raise SystemExit(f"{name}: 격자 끝 {end!r} K 가 받을 답 아님 — {noans[end]}")
+    ok_pts = [t for t in grid if t not in noans]
+    todo = []
+    for u, v in zip(ok_pts, ok_pts[1:]):
+        bad = [t for t in grid if u < t < v]
+        if not bad:
+            todo.append((u, v, 0))
+            continue
+        t_minus, t_plus = gap_around(u, v, bad[0], noans[bad[0]], bad[-1])
+        gaps.append([t_minus, t_plus, noans[bad[0]][:160]])
+        print(f"받을 답 없는 구간 — [{t_minus!r}, {t_plus!r}] K 폭 {t_plus - t_minus:.3f} K · 첫 점 {bad!r} · "
+              f"{noans[bad[0]][:100]}", flush=True)
+        todo += [(u, t_minus, 1)] if t_minus > u else []
+        todo += [(t_plus, v, 1)] if t_plus < v else []
     while todo:
         # 덧붙임 44 ② — 쌓인 구간들의 가운데 점을 먼저 한꺼번에(캐시에 없는 것만), 판정은 아래 지금 순서 그대로
-        prefetch([(0.5 * (a_ + b_), a_) for a_, b_, _d in todo])   # 가운데 점 — 힌트는 왼쪽 끝점(덧붙임 44 ①)
+        prefetch([(0.5 * (a_ + b_), a_) for a_, b_, _d in todo])   # 가운데 점(힌트 없음, 덧붙임 57 ①)
         a, b, d = todo.pop(0)
         try:
             pa, fa = at(a)
             pb, fb = at(b)
-        except _NoAnswer as na:
-            raise SystemExit(f"{name}: 구간 끝점 {na.t!r} K 가 받을 답 아님 — {na.why} (받을 답 없는 구간은 받을 답인 두 끝점 사이에서만 가른다, 덧붙임 50)")
+        except _NoAnswer as na:   # 덧붙임 57 ⑤ 뒤로 끝점은 늘 받을 답(첫 점 · 구간 끝) — 여기 오면 짓기 규칙 위반
+            raise SystemExit(f"{name}: 구간 끝점 {na.t!r} K 가 받을 답 아님 — {na.why} (덧붙임 57 ⑤ 뒤로 일어나면 안 됨)")
         try:
             at(0.5 * (a + b), a, b)
         except _NoAnswer as na:
@@ -457,19 +467,135 @@ class _NoAnswer(Exception):
 
 
 def _light(r):
-    """풀 일꾼이 돌려주는 가벼운 결과 — 판정에 쓰는 칸만(결과 객체 전체는 피클하지 않음)."""
+    """풀 일꾼이 돌려주는 가벼운 결과 — 판정에 쓰는 칸만(결과 객체 전체는 피클하지 않음). `trail` 은 이 풀이의
+    가족 기록(덧붙임 57, `interior._FAMILY_TRAIL` 사본 — 풀이 바로 뒤 같은 프로세스에서 읽는다)."""
+    import copy
     import types
+    import interior
     return types.SimpleNamespace(applicable=r.applicable, reason=r.reason, regime=r.regime,
                                  converged=r.converged, notes=tuple(r.notes or ()),
                                  inputs={"core_mass_fraction": r.inputs.get("core_mass_fraction")},
-                                 values=dict(r.values) if r.applicable else {})
+                                 values=dict(r.values) if r.applicable else {},
+                                 trail=copy.deepcopy(interior._FAMILY_TRAIL))
 
 
-def _pool_solve(solve, jobs):
-    """덧붙임 44 ② — (t, hint) 들을 공용 도우미로(점마다 `process_state.reset()`), 입력 순서대로."""
+def _solve_raw(solve, jobs):
+    """(t, 힌트, 다시 닫기 입구) 들을 공용 도우미로(점마다 `process_state.reset()`), 입력 순서대로."""
     import parallel_points
-    return parallel_points.solve_points(
-        lambda t, hint: _light(solve(t, p_hint=hint) if hint is not None else solve(t)), jobs, GRID_POOL)
+
+    def one(t, hint, entry):
+        import interior
+        interior._ENTRY[0] = entry
+        try:
+            return _light(solve(t, p_hint=hint) if hint is not None else solve(t))
+        finally:
+            interior._ENTRY[0] = None
+    return parallel_points.solve_points(one, jobs, GRID_POOL)
+
+
+def _families_visited(r) -> list:
+    """풀이의 바깥 시행 가족들(대표, 처음 본 순서) — 덧붙임 57 ②."""
+    import interior
+    reps = []
+    for f, _t, _p in r.trail["trials"]:
+        if all(interior._family_jump(o, f) for o in reps):
+            reps.append(f)
+    return reps
+
+
+def _fires(r) -> bool:
+    """덧붙임 57 ② — 가족 검사: 힌트 없는 풀이가 가족 둘 이상을 거쳤거나 가족 거절 · «답 둘» 로 끝남."""
+    import interior
+    why = interior.answer_verdict(r) if r.applicable else None
+    return len(_families_visited(r)) >= 2 or bool(why) and (why.startswith(interior.FAMILY_OSCILLATION_NOTE)
+                                                            or why.startswith(interior.FAMILY_TWO_NOTE))
+
+
+def _contrib(r) -> list:
+    """덧붙임 57 ④ — 한 멤버가 내놓는 닫힌 가족: 답 → 그 가족 하나 · «답 둘» → 이름 댄 닫힌 갈래들 · 그 밖 → 없음."""
+    import interior
+    why = interior.answer_verdict(r)
+    if why is None:
+        return [r.trail["answer"]]
+    return list(r.trail["closed"]) if why.startswith(interior.FAMILY_TWO_NOTE) else []
+
+
+def _entries(members) -> list:
+    """덧붙임 57 ③(c) — a · b 의 시행 가족 + 닫힌 · 다시 닫은 갈래 + 답 가족을 이어 묶고, 닫히거나 다시 닫힌 적
+    없는 묶음마다 입구 = 그 묶음의 마지막 시행(a 의 시행 다음 b 의 시행 순서)의 (중심 온도, 중심압)."""
+    import interior
+    items = []
+    for r in members:
+        items += [{"family": f, "done": False, "entry": (t, p)} for f, t, p in r.trail["trials"]]
+        items += [{"family": f, "done": True, "entry": None} for f in list(r.trail["closed"]) + list(r.trail["reclosed"])]
+        if interior.answer_verdict(r) is None:
+            items.append({"family": r.trail["answer"], "done": True, "entry": None})
+    out = []
+    for g in interior._family_groups(items):
+        if any(i["done"] for i in g):
+            continue
+        order = [i for i in items if i in g and i["entry"] is not None]    # items 순서 = a 시행 다음 b 시행
+        if order:
+            out.append(order[-1]["entry"])
+    return out
+
+
+def _judge(t, a, b, cs):
+    """덧붙임 57 ④ — 고정 출발 셋의 닫힌 가족 묶음으로 한 판정. 멤버 순서 a, b, c₁ …(같은 어긋남이면 앞)."""
+    import types
+    import interior
+    members = [("a", a)] + ([("b", b)] if b is not None else []) + [(f"c{i + 1}", c) for i, c in enumerate(cs)]
+    items = [{"family": f, "who": k, "r": r} for k, r in members for f in _contrib(r)]
+    groups = interior._family_groups(items)
+    say = " · ".join(f"{k} {'답' if interior.answer_verdict(r) is None else (interior.answer_verdict(r) or '')[:24]}"
+                     for k, r in members)
+    print(f"판정(덧붙임 57) — {t!r} K · 묶음 {len(groups)} · {say}", flush=True)
+    if not groups:
+        return a
+    if len(groups) == 1:
+        order = [k for k, _r in members]
+        cand = [i for i in groups[0] if interior.answer_verdict(i["r"]) is None]
+        best = min(cand, key=lambda i: ((i["r"].trail["dev"] if i["r"].trail["dev"] is not None else math.inf),
+                                        order.index(i["who"])))
+        return best["r"]
+    names = " · ".join("고체" if g[0]["family"] is None else f"[{g[0]['family'][0]:.2f}, {g[0]['family'][1]:.2f}] GPa"
+                       for g in groups)
+    return types.SimpleNamespace(**{**vars(a), "converged": False,
+                                    "notes": (interior.FAMILY_TWO_NOTE + f" — 덧붙임 57 출발 셋({', '.join(k for k, _ in members)})이 "
+                                              f"다른 가족 묶음 {len(groups)} 개로 닫힘(고르지 않음): {names}",)})
+
+
+def _core_p(r):
+    """답인 풀이의 중심압 [Pa] — 덧붙임 57 ③(b) 의 T−1 K 격자 힌트. 받을 답 아니면 None(b 멤버 없음)."""
+    import interior
+    if interior.answer_verdict(r) is not None or not r.values.get("core_pressure"):
+        return None
+    return r.values["core_pressure"] * 1e9
+
+
+def _pool_solve(solve, jobs, aux=None):
+    """표의 점들을 푼다 — 덧붙임 57: 힌트는 버리고(①) 힌트 없는 풀이(a)를 풀로, 가족 검사가 서는 점만 고정 출발 셋
+    (b = T−1 K 격자 힌트 · c = 안 닫힌 가족마다 다시 닫기)을 더 풀어 한 규칙으로 판정. `aux` 는 짓기 한 판의 a 풀이
+    기억(T → 결과, 값은 순서와 무관 — 점마다 초기화 · 힌트 없음)."""
+    aux = {} if aux is None else aux
+    ts = [t for t, _h in jobs]
+    new = [t for t in dict.fromkeys(ts) if t not in aux]
+    for t, r in zip(new, _solve_raw(solve, [(t, None, None) for t in new]) if new else []):
+        aux[t] = r
+    fire = [t for t in dict.fromkeys(ts) if _fires(aux[t])]
+    if not fire:
+        return [aux[t] for t in ts]
+    new = [t - 1.0 for t in fire if t - 1.0 not in aux]
+    for t, r in zip(new, _solve_raw(solve, [(t, None, None) for t in new]) if new else []):
+        aux[t] = r
+    b_jobs = [(t, _core_p(aux[t - 1.0]), None) for t in fire if _core_p(aux[t - 1.0]) is not None]
+    bs = dict(zip([j[0] for j in b_jobs], _solve_raw(solve, b_jobs) if b_jobs else []))
+    c_jobs = [(t, None, e) for t in fire for e in _entries([aux[t]] + ([bs[t]] if t in bs else []))]
+    cs = {t: [] for t in fire}
+    for (t, _h, _e), r in zip(c_jobs, _solve_raw(solve, c_jobs) if c_jobs else []):
+        cs[t].append(r)
+    judged = {t: _judge(t, aux[t], bs.get(t), cs[t]) for t in fire}
+    return [judged.get(t, aux[t]) for t in ts]
 
 
 def build(name: str, n: int | None = None, points: list[float] | None = None, t_ok: float | None = None,

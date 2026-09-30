@@ -141,9 +141,72 @@ _disc = [int(w.split()[1]) for w in log1.split("·") if w.strip().startswith("�
 check("덧붙임 55 — 버린 미리 풀기 > 0", bool(_disc) and _disc[0] > 0, str(_disc))
 bn2a, _, _ = _build(1, levels=1)
 bn2b, _, _ = _build(3, levels=2)
-check("덧붙임 55 음성 N2 — 판 깊이가 풀을 타면 바이트가 갈린다", bn2a is not None and bn2a != bn2b)
+# 덧붙임 57 ① — 표가 힌트를 버려 판 깊이는 벽시계만 바꾼다: 옛 음성 N2(힌트로 갈림)는 이제 같아야 한다
+check("덧붙임 57 ① — 판 깊이 1 · 2, 풀 1 · 3 바이트 같음(힌트 없음)", bn2a is not None and bn2a == bn2b)
 bn1, _, en1 = _build(3, rounds=_leaky)
 check("덧붙임 55 음성 N1 — 찾기 전 캐시에 넣으면 ④ 대조가 떨어진다", bn1 is None and "덧붙임 55 ④" in (en1 or ""), (en1 or "")[:120])
+sg.SPEC_LEVELS, sg.GRID_POOL = _levels0, _pool0
+
+# 덧붙임 57 — 경로와 무관한 판정: 힌트 없으면 두 가족을 오가다 거절, 힌트가 있으면 답인 점(2074 꼴) · 음성 대조
+import interior     # noqa: E402
+
+F1, F2 = (8.0, 17.0), (6.5, 15.4)
+
+
+def _fake57(t, p_hint=None):
+    bad = 2074.5 < t < 2077.5
+    entry = interior._ENTRY[0]
+    if bad and p_hint is None and entry is None:
+        trail = {"trials": [(F1, 3200.0, 3.9e10), (F2, 3201.0, 3.8e10)], "reclosed": [F1, F2], "closed": [], "answer": F2,
+                 "dev": 3e-3}
+        conv, notes = False, (interior.FAMILY_OSCILLATION_NOTE + " — 가짜",)
+    else:
+        trail = {"trials": [(F1, 3200.0, 3.9e10)], "reclosed": [], "closed": [], "answer": F1, "dev": 1e-4}
+        conv, notes = True, ()
+    interior._FAMILY_TRAIL.update(trail)
+    x = t - 2066.0
+    v = {"radius": 0.53 + 1e-6 * x, "core_radius": 0.28, "cmb_pressure": 19.0 + 0.01 * x + 1e-15 * (p_hint or 0.0),
+         "cmb_temperature": 1.5 * t, "core_pressure": 39.4 + 0.001 * x, "converged": None}
+    return types.SimpleNamespace(applicable=True, reason=None, regime="rocky", converged=conv, notes=notes,
+                                 inputs={"core_mass_fraction": 0.3}, values=v)
+
+
+def _rows57(order, pool, hinted=False):
+    sg.GRID_POOL = pool
+    aux, rows, prev = {}, {}, None
+    with contextlib.redirect_stdout(io.StringIO()):
+        for t in order:
+            r = sg._pool_solve(_fake57, [(t, prev if hinted else None)], aux)[0]
+            prev = r.values.get("core_pressure", 0.0) * 1e9
+            rows[t] = (interior.answer_verdict(r), sorted(r.values.items()))
+    return json.dumps(sorted(rows.items()))
+
+
+_ts57 = [float(t) for t in range(2070, 2082)]
+r_up, r_down = _rows57(_ts57, 1), _rows57(_ts57[::-1], 1)
+r_hint, r_pool = _rows57(_ts57, 1, hinted=True), _rows57(_ts57, 3)
+check("덧붙임 57 — 오름 · 내림 · 힌트 · 풀 3 판정 줄 바이트 같음", r_up == r_down == r_hint == r_pool)
+check("덧붙임 57 — 힌트 없으면 거절될 점이 고정 출발 셋으로 답(2075 꼴)", json.loads(r_up)[5][1][0] is None, str(json.loads(r_up)[5][:1]))
+_raw0 = sg._solve_raw
+_last = {"p": None}
+
+
+def _leaky57(solve, jobs):
+    """음성 — 빌드 순서의 직전 중심압을 a 멤버에 흘림(규칙 ① 위반)."""
+    out = []
+    for t, h, e in jobs:
+        r = _raw0(solve, [(t, h if h is not None else (_last["p"] if e is None else None), e)])[0]
+        _last["p"] = r.values.get("core_pressure", 0.0) * 1e9 if interior.answer_verdict(r) is None else _last["p"]
+        out.append(r)
+    return out
+
+
+sg._solve_raw = _leaky57
+try:
+    n_up, n_down = _rows57(_ts57, 1), _rows57(_ts57[::-1], 1)
+finally:
+    sg._solve_raw = _raw0
+check("덧붙임 57 음성 — 힌트가 a 멤버에 새면 오름 · 내림이 갈린다", n_up != n_down)
 sg.SPEC_LEVELS, sg.GRID_POOL = _levels0, _pool0
 
 ghost = copy.deepcopy(run.load_body(sg.BODIES_DIR / "earth.yaml")[0])
