@@ -99,12 +99,13 @@ exec 3>&2                     # step() 이 자식의 stderr 를 여기로 빼낸
 _GATE_OS=$(uname -s)
 GATE_MACHINE="${GATE_MACHINE:-$_GATE_OS-$(uname -m)}"
 export GATE_MACHINE
-# ⚠ **기본 풀은 기계마다 다르다** (C135 개정 1). Linux-x86_64 는 8 — 풀 16 은 단계 안 풀(3 × 3)과 겹쳐
-#   논리 24 스레드를 넘쳐 4(c) 를 못 지켰다(12 도 기본값 두 판 중 하나가 history 에서 넘었다 — 개정 2 불통과).
-#   그 밖(맥)은 위 C104 의 4 그대로다. 환경변수가 이긴다.
+# ⚠ **기본 풀은 기계마다 다르다** (C135 개정 1·3). Linux-x86_64 는 12 — 풀 16 은 단계 안 풀(3 × 3)과 겹쳐
+#   논리 24 스레드를 넘쳐 4(c) 를 못 지켰고, 12 는 history 가 병목이던 동안 한 판이 넘었다(개정 2 불통과).
+#   history 를 일감 표(B)로 푼 뒤 미리 정한 훑기에서 12(단계 안 3)가 두 판 모두 4(c) 를 지키며 8 보다 빨랐다(개정 3).
+#   ⚠ 이제 가장 빠듯한 것은 sulphur 다(두 판 523 · 527 s, 상한 533). 그 밖(맥)은 위 C104 의 4 그대로다. 환경변수가 이긴다.
 if [ -z "${GATE_POOL:-}" ]; then
   case "$GATE_MACHINE" in
-    Linux-x86_64) GATE_POOL=8 ;;
+    Linux-x86_64) GATE_POOL=12 ;;
     *) GATE_POOL=4 ;;
   esac
 fi
