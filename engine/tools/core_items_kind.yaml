@@ -426,3 +426,12 @@ items:
   # ⚠ C146 (2026-09-30, 작업석 ed · 지휘 3d) — 앵커 수락선 ⑤ 가 굳힌 날의 벽시계 초로 매겨짐. 시험 도구의 자라 tooling.
   C146:
     kind: tooling
+  # ⚠ C142 (2026-09-30, 원격 PC · 지휘 3d) — 격리 게이트 사본에 _papers 가 없어 J3R · J7 이 늘 건너뜀. 게이트 도구라 tooling.
+  C142:
+    kind: tooling
+  # ⚠ C143 (2026-09-30, 원격 PC) — 3.12 sum() 보정으로 Khan 합 검사가 ±0.01 끝점에 걸림. 시험의 반올림 끝점이라 tooling.
+  C143:
+    kind: tooling
+  # ⚠ C144 (2026-09-30, 원격 PC) — R2 열 스택 값이 맥 3.9 · WSL 3.12 사이 0.16 K 다름. 엔진이 내는 수라 physics.
+  C144:
+    kind: physics
