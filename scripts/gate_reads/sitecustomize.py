@@ -50,9 +50,13 @@ def _rel(path):
 
 
 def _is_metadata(fn):
-    """`importlib.metadata` (a file on 3.9, a package later), `pkgutil`, `site` — they walk `sys.path`."""
+    """Package-discovery modules that walk `sys.path` (C147 rule 2): `importlib.metadata` (a file on 3.9,
+    a package later), `pkgutil`, `site`, and `pkg_resources` in any copy — setuptools' own or
+    `pip/_vendor` (addendum 1: the Mac's hdf5storage imports it). A new one shows in the census by its
+    `by` and joins this list by an addendum of the same pattern."""
     return (os.sep + "importlib" + os.sep + "metadata" in fn
-            or os.path.basename(fn) in ("pkgutil.py", "site.py"))
+            or os.path.basename(fn) in ("pkgutil.py", "site.py")
+            or fn.endswith(os.sep + "pkg_resources" + os.sep + "__init__.py"))
 
 
 def _is_pathlib(fn):

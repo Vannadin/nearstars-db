@@ -93,6 +93,19 @@ def test_c147_metadata_walk_dropped():
     assert any(r["kind"] == "list" and r["path"] == "sub" and r.get("dropped") for r in recs)
 
 
+def test_c147_pkg_resources_walk_dropped():
+    # L-meta-pr (부록 1): 가짜 pkg_resources 패키지 — 설치와 무관하게 모듈 경로로 걸러지는지. SKIP 없음.
+    tmp = _scratch()
+    (tmp / "sub").mkdir()
+    stub = tmp / "stubs" / "pkg_resources"
+    stub.mkdir(parents=True)
+    (stub / "__init__.py").write_text("import os, sys\nfor _p in list(sys.path):\n"
+                                      "    try: os.listdir(_p)\n    except OSError: pass\n")
+    recs = _hooked(tmp, "import sys; sys.path[:0] = ['stubs', 'sub']; import pkg_resources")
+    assert not _lists(recs, "sub")
+    assert any(r["kind"] == "list" and r["path"] == "sub" and r.get("dropped") for r in recs)
+
+
 def test_c147_pathlib_glob_is_a_pattern():
     # L-pathlib: glob/rglob 아래의 나열은 그 패턴 하나 — `list d` 없음. glob 프레임 없는 iterdir 는 `list d`
     tmp = _scratch()
