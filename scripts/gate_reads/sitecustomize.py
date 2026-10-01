@@ -5,7 +5,10 @@ Active only when `GATE_READS_LOG` is set; `check.sh` puts this directory on `PYT
 full lane, so every Python process a step starts (children included) loads it at start-up.
 
 One JSON line per read, appended to `$GATE_READS_LOG`:
-    {"step": $GATE_STEP, "kind": "open" | "git" | "list" | "gitlist", "path": <repo-relative>}
+    {"step": $GATE_STEP, "kind": "open" | "git" | "list" | "gitlist", "path": <repo-relative>, "by": ...}
+
+`by` on `open` / `git` records is the opener: the innermost repo frame (C149). On `list` records it is
+the innermost frame (C147).
 
 `gitlist` is a `git ls-files` / `git grep` / `git ls-tree` pathspec, as written (`*` for none);
 `glob` is a `glob.glob` pattern, repo-relative (glob's own directory walk is not logged again).
@@ -90,6 +93,20 @@ def _pathlib_glob(f):
     return None
 
 
+def _opener(f):
+    """C149 rule 1: the innermost frame whose file is inside the repo — stdlib, site-packages and frozen
+    frames are skipped, so `Path.read_text()` or a `yaml.safe_load(path)` helper is attributed to the repo
+    module that asked for the bytes. No repo frame on the stack → `<none>` (counts as library)."""
+    while f is not None:
+        fn = f.f_code.co_filename
+        if not fn.startswith("<") and os.sep + "site-packages" + os.sep not in fn:
+            rel = _rel(fn)
+            if rel is not None and not rel.startswith("scripts" + os.sep + "gate_reads" + os.sep):
+                return rel
+        f = f.f_back
+    return "<none>"
+
+
 def _install():
     seen = set()
     recorded_py = set()
@@ -135,7 +152,7 @@ def _install():
                     return
                 if rel.endswith(".py"):
                     recorded_py.add(rel)
-                emit("open", rel)
+                emit("open", rel, by=_opener(sys._getframe(1)))
             elif event in ("os.listdir", "os.scandir"):
                 # ⚠ the import system's `FileFinder` lists every directory on `sys.path` — the same
                 #   innermost-frame rule drops those listings
@@ -202,7 +219,7 @@ def _install():
                                 full = os.path.join(cwd, path) if path.startswith("./") else os.path.join(_ROOT, path)
                                 rel = _rel(full)
                                 if rel is not None:
-                                    emit("git", rel)
+                                    emit("git", rel, by=_opener(sys._getframe(1)))
         except Exception:
             pass
         finally:

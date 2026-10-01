@@ -56,6 +56,11 @@ def code_digest(blob: bytes, name: str) -> str:
     return hashlib.sha256(walk(compile(blob, name, "exec")).encode()).hexdigest()[:16]
 
 
+def _via_also() -> set[str]:
+    import gate_step_inputs
+    return gate_step_inputs.via_also()
+
+
 def classify(parent: str, target: str, passed: list[str] | None = None) -> tuple[str, list[str], int]:
     """`passed` (선택) 에 통과시킨 경로를 모은다 — C136 의 also 가 그 경로로 단계를 고른다."""
     # ⚠ **상태까지 읽는다** — 더해지거나 지워지거나 이름이 바뀐 `.py` 는 비교할 짝이 없다.
@@ -74,6 +79,12 @@ def classify(parent: str, target: str, passed: list[str] | None = None) -> tuple
             continue
         if PROSE.search(path):
             reasons.append(f"{path} 산문/미러/생성물 → 통과")
+            if passed is not None:
+                passed.append(path)
+            continue
+        if path in _via_also():
+            # C149: a data file only gate-only modules read — its declared readers run in `also`
+            reasons.append(f"{path} 게이트 전용 데이터 (gate_data_via_also.txt) → 통과, 읽는 단계는 also")
             if passed is not None:
                 passed.append(path)
             continue

@@ -131,6 +131,91 @@ def test_c147_plain_listdir_keeps_dir_star():
     assert gsi.drift([dict(got[0], step="s")], {"s": {"globs": ["d/*"], "hand": False}}, ["s"]) == []
 
 
+def _repo_like(tmp):
+    """scratch 나무: engine/test_k.py (게이트 전용) · engine/libmod.py (라이브러리) · engine/data.yaml."""
+    eng = tmp / "engine"
+    eng.mkdir()
+    (eng / "data.yaml").write_text("a: 1\n")
+    (eng / "libmod.py").write_text("import pathlib\n"
+                                   "def read(): return pathlib.Path(__file__).with_name('data.yaml').read_text()\n"
+                                   "def load(p):\n    with open(p) as f: return f.read()\n")
+    (eng / "test_k.py").write_text("import pathlib, sys\nsys.path.insert(0, str(pathlib.Path(__file__).parent))\n"
+                                   "import libmod\n"
+                                   "MODE = sys.argv[1]\n"
+                                   "if MODE == 'test': pathlib.Path(__file__).with_name('data.yaml').read_text()\n"
+                                   "if MODE == 'lib': libmod.read()\n"
+                                   "if MODE == 'helper': libmod.load(str(pathlib.Path(__file__).with_name('data.yaml')))\n")
+    return eng
+
+
+def _hooked_script(tmp, *args):
+    log = tmp / "reads.jsonl"
+    log.unlink(missing_ok=True)
+    env = dict(os.environ, GATE_READS_LOG=str(log), GATE_READS_ROOT=str(tmp), GATE_STEP="fixture",
+               PYTHONPATH=str(HERE / "gate_reads"), PYTHONDONTWRITEBYTECODE="1")
+    subprocess.run([sys.executable, *args], cwd=tmp, env=env, check=True)
+    return [json.loads(l) for l in log.read_text().splitlines() if l.strip()]
+
+
+def _openers(recs, path):
+    return {r.get("by") for r in recs if r["kind"] == "open" and r["path"] == path and not r.get("dropped")}
+
+
+def test_c149_opener_is_innermost_repo_frame():
+    # K-opener: (i) 시험이 read_text → 시험 모듈 · (ii) 라이브러리가 read_text → 그 모듈 · (iii) 시험→라이브러리 도우미 → 도우미
+    tmp = _scratch()
+    _repo_like(tmp)
+    assert _openers(_hooked_script(tmp, "engine/test_k.py", "test"), "engine/data.yaml") == {"engine/test_k.py"}
+    assert _openers(_hooked_script(tmp, "engine/test_k.py", "lib"), "engine/data.yaml") == {"engine/libmod.py"}
+    assert _openers(_hooked_script(tmp, "engine/test_k.py", "helper"), "engine/data.yaml") == {"engine/libmod.py"}
+
+
+def test_c149_library_read_of_listed_path_fails():
+    # K-lib: 목록에 오른 파일을 라이브러리가 열면 FAIL, 게이트 전용이 열면 통과
+    listed = {"engine/data.yaml"}
+    ok = [{"step": "s", "kind": "open", "path": "engine/data.yaml", "by": "engine/test_k.py"}]
+    bad = [{"step": "s", "kind": "open", "path": "engine/data.yaml", "by": "engine/libmod.py"}]
+    none = [{"step": "s", "kind": "open", "path": "engine/data.yaml", "by": "<none>"}]
+    assert gsi.via_also_drift(ok, listed) == []
+    assert "read by engine/libmod.py, not gate-only" in gsi.via_also_drift(bad, listed)[0]
+    assert gsi.via_also_drift(none, listed)          # 레포 프레임 없음 = 라이브러리
+
+
+def test_c149_unlisted_data_stays_full(monkeypatch=None):
+    # K-unread: 목록 밖 데이터 경로는 오늘처럼 full
+    import lane_decide as ld
+    real = ld._via_also
+    ld._via_also = lambda: {"engine/tools/core_items_kind.yaml"}
+    try:
+        assert not ld.ALWAYS_FULL.search("docs/x.md")
+        assert "engine/bodies/mars.yaml" not in ld._via_also() and ld.ALWAYS_FULL.search("engine/bodies/mars.yaml")
+    finally:
+        ld._via_also = real
+
+
+def test_c149_import_grep():
+    # K-census grep: 라이브러리가 게이트 전용 모듈을 import 하면 FAIL
+    tmp = _scratch()
+    eng = tmp / "engine"
+    (eng / "tools").mkdir(parents=True)
+    (eng / "tools" / "core_items.py").write_text("X = 1\n")
+    (eng / "test_a.py").write_text("import libok\n")
+    (eng / "libok.py").write_text("import math\n")
+    assert gsi.library_imports_gate_only(tmp) == []
+    (eng / "libbad.py").write_text("from tools import core_items\nimport test_a\n")
+    fails = gsi.library_imports_gate_only(tmp)
+    assert len(fails) == 2 and all("engine/libbad.py imports" in f for f in fails)
+
+
+def test_c149_listed_path_is_pass_class():
+    real = gsi.via_also
+    gsi.via_also = lambda path=None: {"engine/tools/core_items_kind.yaml"}
+    try:
+        assert gsi.pass_class("engine/tools/core_items_kind.yaml") and not gsi.pass_class("engine/bodies/mars.yaml")
+    finally:
+        gsi.via_also = real
+
+
 def test_git_show_recorded():
     tmp = _scratch()
     recs = _hooked(tmp, "import subprocess; subprocess.run(['git', 'show', 'HEAD:table.md'], capture_output=True)")

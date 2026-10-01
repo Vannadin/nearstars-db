@@ -1,0 +1,5 @@
+# 게이트 전용 코드만 읽는 데이터 파일 — 바뀌어도 full 대신 그 파일을 읽는 단계만 also 로 돈다 (C149)
+# One repo-relative path per line. A path enters only when the hooked full gates on both machines
+# show every read of it coming from a gate-only module (engine/tools, engine/test_*, engine/check_*,
+# engine/build_graph_page.py, scripts/) and its reader steps declare it in gate_step_inputs.yaml.
+# Editing this file forces the full lane (it is gate code). Filled from the C149 census.

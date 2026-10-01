@@ -36,9 +36,32 @@ CHECK_SH = HERE / "check.sh"
 STEP_RE = re.compile(r'^\s*(?:step|_step_serial) "([^"]+)"', re.M)
 
 
+VIA_ALSO = HERE / "gate_data_via_also.txt"
+GATE_ONLY = re.compile(r"^(engine/tools/[^/]+\.py|engine/test_[^/]+\.py|engine/check_[^/]+\.py"
+                       r"|engine/build_graph_page\.py|scripts/.+\.py)$")
+
+
+def via_also(path: pathlib.Path = VIA_ALSO) -> set[str]:
+    """C149: data files that only gate-only modules read — they go through `also`, not the full lane.
+    One repo-relative path per line, `#` starts a comment. A missing file is an empty list."""
+    if not path.exists():
+        return set()
+    out = set()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.split("#", 1)[0].strip()
+        if line:
+            out.add(line)
+    return out
+
+
+def gate_only(module: str) -> bool:
+    """C149 rule 2 — a module counts as gate-only by its repo path; `<none>` (no repo frame) is library."""
+    return bool(GATE_ONLY.match(module))
+
+
 def pass_class(path: str) -> bool:
     import lane_decide
-    return bool(lane_decide.PROSE.search(path)) or path.endswith(".py")
+    return bool(lane_decide.PROSE.search(path)) or path.endswith(".py") or path in via_also()
 
 
 def load(path: pathlib.Path = YAML) -> dict[str, dict]:
@@ -215,7 +238,81 @@ def drift(recs: list[dict], table: dict[str, dict], names: list[str]) -> list[st
     return fails
 
 
+def via_also_drift(recs: list[dict], listed: set[str] | None = None) -> list[str]:
+    """C149 rule 5: a listed data file read from a non-gate-only opener is a FAIL (the list entry must go)."""
+    listed = via_also() if listed is None else listed
+    fails, seen = [], set()
+    for r in recs:
+        if r.get("dropped") or r["kind"] not in ("open", "git") or r["path"] not in listed:
+            continue
+        by = r.get("by", "<none>")
+        if not gate_only(by) and (r["path"], by) not in seen:
+            seen.add((r["path"], by))
+            fails.append(f"[FAIL] gate_data_via_also — {r['path']} read by {by}, not gate-only")
+    return fails
+
+
+def library_imports_gate_only(root: pathlib.Path = HERE.parent) -> list[str]:
+    """C149 rule 5 (K-census grep): no library module under engine/ imports a gate-only module — otherwise a
+    «gate-only» opener is reachable from shipped paths."""
+    import ast
+    engine = root / "engine"
+    gate_names = ({p.stem for p in engine.glob("*.py") if gate_only(f"engine/{p.name}")}
+                  | {p.stem for p in (engine / "tools").glob("*.py")})     # `import core_items` via a path insert
+    fails = []
+    for p in sorted(engine.glob("*.py")):
+        rel = f"engine/{p.name}"
+        if gate_only(rel):
+            continue
+        try:
+            tree = ast.parse(p.read_text(encoding="utf-8"))
+        except SyntaxError:
+            continue
+        for node in ast.walk(tree):
+            names = []
+            if isinstance(node, ast.Import):
+                names = [a.name for a in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                names = [node.module if node.module != "tools"
+                         else "tools." + ",".join(a.name for a in node.names)]    # one line per statement
+            for n in names:
+                head = n.split(".")[0]
+                if head == "tools" or head in gate_names:
+                    fails.append(f"[FAIL] gate_data_via_also — {rel} imports {n} (a gate-only module)")
+    return fails
+
+
+def data_census(recs: list[dict], tracked: list[str]) -> list[tuple[str, set, set, bool]]:
+    """C149 K-census: for each tracked always-full data file, its reader steps and openers, and whether every
+    read is gate-only (the admission test of rule 3, before the declaration check)."""
+    import lane_decide
+    rows = []
+    for p in tracked:
+        if not lane_decide.ALWAYS_FULL.search(p) or p.endswith((".py", ".sh")):
+            continue
+        rs = [r for r in recs if not r.get("dropped") and r["kind"] in ("open", "git") and r["path"] == p]
+        steps = {r["step"] for r in rs}
+        by = {r.get("by", "<none>") for r in rs}
+        ok = bool(rs) and all(gate_only(b) for b in by) and not p.startswith("engine/requirements") \
+            and not p.startswith("scripts/")
+        rows.append((p, steps, by, ok))
+    return rows
+
+
 def _main(argv: list[str]) -> int:
+    if argv and argv[0] == "data-census" and len(argv) >= 2:
+        import subprocess
+        recs = [r for lg in argv[1:] for r in read_log(pathlib.Path(lg))]
+        tracked = subprocess.run(["git", "-C", str(HERE.parent), "ls-files"], capture_output=True,
+                                 text=True).stdout.split()
+        rows = data_census(recs, tracked)
+        for p, steps, by, ok in rows:
+            print(f"  {'IN ' if ok else 'out'} {p} — steps {len(steps)} · openers {', '.join(sorted(by)) or '(none: unread)'}")
+        imp = library_imports_gate_only()
+        for f in imp:
+            print(f"  {f}")
+        print(f"[data-census] files {len(rows)} · admitted {sum(1 for r in rows if r[3])} · library→gate-only imports {len(imp)}")
+        return 0
     if len(argv) != 2 or argv[0] not in ("census", "check", "draft"):
         print(__doc__)
         return 2
@@ -252,7 +349,7 @@ def _main(argv: list[str]) -> int:
             print(f'"{step}":\n  globs: {json.dumps(globs, ensure_ascii=False)}')
         return 0
     table = load()
-    fails = drift(recs, table, step_names())
+    fails = drift(recs, table, step_names()) + via_also_drift(recs) + library_imports_gate_only()
     for f in fails:
         print(f"  {f}")
     unread = [(n, g) for n, e in table.items() if not e["hand"] for g in e["globs"]
