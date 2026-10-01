@@ -1236,6 +1236,9 @@ step "test_structure_grid.py" bash -c 'cd engine && exec python3 test_structure_
 step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
 step "test_convergence_meaning.py" bash -c 'cd engine && exec python3 test_convergence_meaning.py'
 step "test_rootfind.py" bash -c 'cd engine && exec python3 test_rootfind.py'
+# 받아들인 적분의 수렴만 AND 에 (C139, prereg-c139-accepted-shot-convergence a5b910cb). 기록기 단위 검사 · 받아들인
+# 적분 안의 False 는 남는다는 음성 대조(암석 1 M⊕ 두 번). ~15 s.
+step "test_accepted_shot_convergence.py" bash -c 'cd engine && exec python3 test_accepted_shot_convergence.py'
 # 판 2 적분 (열진화 v2-9 ④). 화성 구조 한 번(~65 s) 위에 Λ 20 한 판 — 핵 에너지 폐합 · 식 20 부호 · 천장 불변식과
 # 원자료 없이 나오는 여섯 값 회귀. A0 판정은 싣지 않는다 — 불통과는 v2-9 에 기록돼 있고 게이트는 그것으로 빨개지지 않는다.
 step "test_samuel_run.py" bash -c 'cd engine && exec python3 test_samuel_run.py'

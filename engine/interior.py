@@ -658,14 +658,17 @@ def _convergence_values() -> dict:
     tr = convergence.current()
     if tr is None:
         return {"converged": None, "unconverged_solvers": [], "bracket_invalid": [],
-                "substituted_solvers": [], "fallback_solvers": [], "trial_unconverged": []}
+                "substituted_solvers": [], "fallback_solvers": [], "trial_unconverged": [],
+                "trial_bracket_invalid": []}
     return {"converged": tr.converged,
             "unconverged_solvers": tr.unconverged_sites,
             "bracket_invalid": tr.bracket_invalid_sites,
             "substituted_solvers": tr.substituted_sites,
             # C138 — 다른 길(F)과 버린 시행(P)은 AND 밖 따로 칸(늘 있음, 비면 [])
             "fallback_solvers": sorted(tr.fallbacks),
-            "trial_unconverged": sorted(tr.trial_false)}
+            "trial_unconverged": sorted(tr.trial_false),
+            # C139 — 버린 적분의 깨진 진입 괄호(AND 밖, `bracket_invalid` 는 그대로 두고 새 칸)
+            "trial_bracket_invalid": sorted(tr.trial_invalid)}
 
 
 def _core_or_own_gamma(mat, p: float, rho: float, t: float, t_pot: float) -> float:
@@ -935,7 +938,12 @@ def integrate(*args, **kw):
     델타**를 돌려준다. 그래서 «더 안전해 보이는» 것으로 바꾸기 전에 이 문장을 먼저 읽을 것.
     ⚠ 버려진 시도의 칸은 남으므로 `solve` 가 매 풀이 **시작에 비운다**."""
     before = (ice_fr2015.STATS["extrapolated_rho"], ice_fr2015.STATS["below_t_min"])
-    structure = _integrate_raw(*args, **kw)
+    # C139 — 이 적분의 수렴 기록은 하위 기록에 모인다. 끝나면 곧바로 AND 로 합쳐지고(오늘의 답), 답을 낸
+    #   `solve` 만 `convergence.settle` 로 받아들인 적분 하나를 골라 나머지를 시행 칸으로 보낸다.
+    with convergence.shot() as holder:
+        structure = _integrate_raw(*args, **kw)
+        if holder is not None:
+            holder[0] = id(structure)
     _ICE_GRID_DELTA[id(structure)] = (ice_fr2015.STATS["extrapolated_rho"] - before[0],
                                       ice_fr2015.STATS["below_t_min"] - before[1])
     return structure
@@ -4013,6 +4021,7 @@ def solve(mass_earth: float,
         if "ice/envelope" in jumps:
             boundary_temperature_jump = float(jumps.pop("ice/envelope"))
     _ICE_GRID_DELTA.clear()
+    shots_before = convergence.shot_count()      # C139 — 이 풀이의 적분은 여기부터다(중첩 풀이는 바깥 기록을 같이 쓴다)
     _BASAL_INFO.clear()
     _FAMILY_INFO.clear()
     _FAMILY_TRAIL.update(trials=[], reclosed=[], closed=[], answer=None, dev=None, calls=0, returned={}, answer_call=None)
@@ -4491,6 +4500,8 @@ def solve(mass_earth: float,
     notes.extend(preset_overridden)
     reference = _reference_values(st)          # C148 — fe_prem ΔT 와 규산염 메모
     notes.extend(_reference_notes(reference))
+    # C139 (prereg-c139-accepted-shot-convergence a5b910cb) — 받아들인 구조의 적분만 AND 에 남긴다. 값은 안 움직인다.
+    convergence.settle(id(st), shots_before)
     if radius_earth is not None:
         off = (radius_earth - radius) / radius
         notes.append(
@@ -4570,6 +4581,7 @@ def solve(mass_earth: float,
                "substituted_solvers": "",
                "fallback_solvers": "",       # C138 — 다른 길(F) 자리 이름
                "trial_unconverged": "",      # C138 — 버린 시행(P) 자리 이름
+               "trial_bracket_invalid": "",  # C139 — 버린 적분의 깨진 진입 괄호
                "finish_subst_from_tc": "K",  # C152 메모 3
                "finish_subst_to_tc": "K",
                "finish_subst_delta_tc": "K",

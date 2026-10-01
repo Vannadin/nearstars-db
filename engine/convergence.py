@@ -48,11 +48,22 @@ class Trace:
     fallbacks: dict[str, int] = field(default_factory=dict)
     #: C138 — 버린 시행 · 중간 패스의 False(P): 채택 답은 다른 시행일 수 있다. **AND 밖**, 따로 칸.
     trial_false: set[str] = field(default_factory=set)
+    #: C139 — 버린 적분(시행)에서 진입 괄호가 깨진 자리. **AND 밖**, `bracket_invalid` 와 따로 칸.
+    trial_invalid: set[str] = field(default_factory=set)
+    #: C139 — 적분 한 번마다의 하위 기록 `[구조 id | None, 하위 Trace, "and" | "trial"]`. 끝나자마자 이 기록에
+    #: AND 로 합쳐지므로(오늘과 같은 답), `settle` 을 부르지 않는 호출자는 한 비트도 달라지지 않는다.
+    shots: list = field(default_factory=list)
+    #: C139 — 적분 **밖에서** 직접 남긴 `note` 의 사본. `settle` 이 AND 를 다시 지을 때의 바탕이다.
+    own: "Trace | None" = None
+    #: C139 — 이 기록이 적분 한 번의 하위 기록인가(적분은 중첩되지 않는다 — `shot` 이 확인한다).
+    in_shot: bool = False
 
     def note(self, site: str, converged: bool | None,
              bracket_checked: bool = True, bracket_valid: bool | None = None, trial: bool = False) -> None:
         """⚠ **한 자리가 여러 번 불리면 AND 다** — 한 번이라도 안 닫혔으면 안 닫힌 것이다.
         ``trial=True`` 면 버린 시행 · 중간 패스의 기록(C138 P 형) — False 는 `trial_false` 에만, AND 밖."""
+        if self.own is not None:
+            self.own.note(site, converged, bracket_checked, bracket_valid, trial)
         if trial:
             if converged is False:
                 self.trial_false.add(site)
@@ -68,6 +79,58 @@ class Trace:
             self.unchecked.add(site)
         if bracket_valid is False:
             self.invalid.add(site)
+
+    def _merge_and(self, sub: "Trace") -> None:
+        """하위 기록 하나를 `note` 를 다시 부른 것과 같은 규칙으로 합친다(자리별 AND · 합집합)."""
+        for site, v in sub.sites.items():
+            if v is None:
+                self.sites.setdefault(site, None)
+            else:
+                prev = self.sites.get(site)
+                self.sites[site] = v if prev in (None, True) else False
+        self.unchecked |= sub.unchecked
+        self.invalid |= sub.invalid
+        self.trial_false |= sub.trial_false
+
+    def add_shot(self, sid: int | None, sub: "Trace") -> None:
+        """적분 한 번이 끝났다 — 하위 기록을 AND 로 합치고(오늘의 답), 판정 대기 목록에 둔다. AND 밖 칸
+        (`counts` · `fallbacks` · `substituted`)은 그 자리에서 더하고 `settle` 이 다시 건드리지 않는다."""
+        self._merge_and(sub)
+        for k, n in sub.counts.items():
+            self.counts[k] = self.counts.get(k, 0) + n
+        for k, n in sub.fallbacks.items():
+            self.fallbacks[k] = self.fallbacks.get(k, 0) + n
+        self.substituted.update(sub.substituted)
+        self.shots.append([sid, sub, "and"])
+
+    def settle(self, accepted_sid: int, since: int = 0) -> bool:
+        """C139 — `since` 부터의 적분 중 **받아들인 구조의 적분 하나만** AND 에 남기고, 나머지는 시행 칸으로
+        보낸다(`trial_unconverged` · `trial_bracket_invalid`). AND 는 직접 기록(`own`) + 판정된 적분들로 다시 짓는다.
+
+        ⚠ 구조 id 는 살아 있는 객체 사이에서만 유일하다 — 버려진 시행의 구조가 수거된 뒤 같은 id 가 다시
+        나올 수 있다. 받아들인 구조는 `settle` 때 살아 있으므로 **같은 id 의 마지막 적분**이 그것이다.
+        맞는 적분이 없으면 아무것도 옮기지 않고 `False` 를 돌려준다(오늘의 답 그대로)."""
+        if self.own is None:
+            return False
+        hit = None
+        for i in range(len(self.shots) - 1, since - 1, -1):
+            if self.shots[i][0] == accepted_sid:
+                hit = i
+                break
+        if hit is None:
+            return False
+        for i in range(since, len(self.shots)):
+            self.shots[i][2] = "and" if i == hit else "trial"
+        own = self.own
+        self.sites, self.unchecked, self.invalid = dict(own.sites), set(own.unchecked), set(own.invalid)
+        self.trial_false, self.trial_invalid = set(own.trial_false), set()
+        for _sid, sub, status in self.shots:
+            if status == "and":
+                self._merge_and(sub)
+            else:
+                self.trial_false |= {n for n, v in sub.sites.items() if v is False} | sub.trial_false
+                self.trial_invalid |= sub.invalid
+        return True
 
     @property
     def converged(self) -> bool | None:
@@ -143,12 +206,43 @@ def start():
     if tr is not None:
         yield tr
         return
-    tr = Trace()
+    tr = Trace(own=Trace())
     token = _TRACE.set(tr)
     try:
         yield tr
     finally:
         _TRACE.reset(token)
+
+
+@contextlib.contextmanager
+def shot():
+    """C139 — 적분 한 번의 기록을 하위 기록으로 연다. 들고 나가는 칸 `holder[0]` 에 호출자가 구조 id 를
+    적는다(던지면 `None` — 시행이다). 열린 기록이 없으면 `None` 을 내고 아무것도 안 한다."""
+    outer = _TRACE.get()
+    if outer is None:
+        yield None
+        return
+    assert not outer.in_shot, "C139: an integration ran inside another integration"
+    sub = Trace(in_shot=True)
+    token = _TRACE.set(sub)
+    holder = [None]
+    try:
+        yield holder
+    finally:
+        _TRACE.reset(token)
+        outer.add_shot(holder[0], sub)
+
+
+def shot_count() -> int:
+    """지금 열린 기록에 쌓인 적분 수(풀이 시작점을 잡는 데 쓴다). 기록이 없으면 0."""
+    tr = _TRACE.get()
+    return 0 if tr is None else len(tr.shots)
+
+
+def settle(accepted_sid: int, since: int = 0) -> bool:
+    """지금 열린 기록에서 받아들인 적분을 정한다 (`Trace.settle`). 기록이 없으면 `False`."""
+    tr = _TRACE.get()
+    return False if tr is None else tr.settle(accepted_sid, since)
 
 
 def bracket_valid(f_lo: float, f_hi: float) -> bool:

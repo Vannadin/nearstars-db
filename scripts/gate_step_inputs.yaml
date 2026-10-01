@@ -159,6 +159,8 @@
   globs: []
 "test_c143_guard.py":
   globs: ["engine/**.py", "scripts/**.py", "engine/c143_sum_inventory.json"]
+"test_accepted_shot_convergence.py":
+  globs: []
 "test_radiogenic.py":
   globs: []
 "test_mantle_flux.py":
