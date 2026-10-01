@@ -238,6 +238,43 @@ def _fake58(t, p_hint=None):
                                  inputs={"core_mass_fraction": 0.3}, values=v)
 
 
+
+
+def _fake59(t, p_hint=None):
+    """1003 K(시작 구간 [1002, 1004] 의 가운데)에서만 정착 창에 가족 둘 — 답은 한 가족, 값은 매끄러움."""
+    hot = abs(t - 1003.0) < 1e-9 and p_hint is None and interior._ENTRY[0] is None
+    tr = [(F1, 3200.0, 3.9e10, 0), (F2, 3201.0, 3.8e10, 0)] * 2 if hot else [(F1, 3200.0, 3.9e10, 0)]
+    interior._FAMILY_TRAIL.update(trials=tr, reclosed=[F1, F2] if hot else [], closed=[], answer=F1, dev=1e-4,
+                                  calls=1, returned={}, answer_call=0)
+    x = t - 1000.0
+    v = {"radius": 1.0 + 1e-7 * x, "core_radius": 0.5, "cmb_pressure": 20.0 + 0.001 * x, "cmb_temperature": 1.5 * t,
+         "core_pressure": 30.0, "converged": None, "silicate_melt_state": "solid", "basal_silicate_state": "solid"}
+    return types.SimpleNamespace(applicable=True, reason=None, regime="rocky", converged=True, notes=(),
+                                 inputs={"core_mass_fraction": 0.3}, values=v)
+
+
+def _build59(levels=2):
+    sg.GRID_POOL, sg.SPEC_LEVELS = 1, levels
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            return json.dumps(sg._adaptive("fake", _fake59, 1000.0, 1008.0, sg.EPS, 6.4e23, 0.3)), None
+    except SystemExit as e:
+        return None, str(e)
+
+
+_b59, _e59 = _build59()
+_pts59 = json.loads(_b59)[0] if _b59 else []
+check("덧붙임 59 ② — 가운데 점에서만 선 가족 검사도 그 구간을 1 K 까지 쪼갬(1003 이 표 점)", 1003.0 in _pts59, (_e59 or str(_pts59))[:120])
+_hold0 = sg._holds_fire
+sg._holds_fire = lambda a, b, fs: a in fs or b in fs        # 음성 — 덧붙임 58 의 끝점 판
+try:
+    _bn59, _en59 = _build59()
+finally:
+    sg._holds_fire = _hold0
+check("덧붙임 59 음성 — 끝점 판이면 같은 가짜에서 구간이 닫혀 끝 점검이 이름 대고 거절", _bn59 is None and "덧붙임 59 ④" in (_en59 or ""),
+      (_en59 or "")[:120])
+check("덧붙임 59 ① — 미리 풀기 깊이 1 · 2 바이트 같음(버린 미리 풀기는 F 밖)", _build59(1)[0] == _build59(2)[0] == _b59)
+
 sg.GRID_POOL = 1
 try:
     with contextlib.redirect_stdout(io.StringIO()):

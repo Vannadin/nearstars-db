@@ -221,7 +221,7 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
     import interior
     cache = {}
     noans = {}                                  # 덧붙임 50 — 받을 답 아닌 점 → 까닭
-    melt, fired, refines58 = {}, {}, []         # 덧붙임 58 — 점의 용융 상태 · 가족 검사 · 그 때문에 쪼갠 구간
+    melt, fire_set, refines58 = {}, set(), []   # 덧붙임 58 · 59 — 점의 용융 상태 · 가족 검사가 선 찾아간 점 · 쪼갠 구간
     aux = {}                                    # 덧붙임 57 — 판정의 T−1 K 보조 점(힌트 없는 풀이) 기억, 값 밖
     spec = {}                                   # 덧붙임 55 ④ — 한 판의 미리 푼 결과(판 끝에 버림, 캐시 · 표 밖)
     spec_stats = {"dispatched": 0, "used": 0, "discarded": 0, "rounds": 0, "max_round": 0}
@@ -249,6 +249,8 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             raise SystemExit(f"{name}: 미리 푼 점이 찾기 전에 캐시에 들었다 {sorted(leaked)!r} (덧붙임 55 ④)")
 
     def _take(t, r):
+        if getattr(r, "fired", False):
+            fire_set.add(t)                     # 덧붙임 59 ① — 찾아간 점이면 역할 무관(받을 답이든 아니든)
         if not r.applicable:
             raise SystemExit(f"{name}: {t!r} K 에서 구조가 거절한다 — 격자 안에서 단조가 아니다: {r.reason}")
         tags = []
@@ -263,7 +265,6 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             raise SystemExit(f"{name}: {t!r} K 의 cmf {cmf_t!r} 가 S0 {cmf0!r} 와 다르다 — 조성이 고정이 아니다")
         cache[t] = ({**_params(r.values, t, m_kg), "core_mass_fraction": cmf0}, _fingerprint(r))
         melt[t] = (r.values.get("silicate_melt_state"), r.values.get("basal_silicate_state"))   # 덧붙임 58 ①
-        fired[t] = bool(getattr(r, "fired", False))                                              # 덧붙임 58 ③
 
     def at(t, a=None, b=None):
         """t 의 표 칸. (a, b) 는 t 를 가운데로 둔 구간(덧붙임 57 ① 뒤로 힌트는 안 씀 — 부르는 쪽 모양 그대로)."""
@@ -408,10 +409,10 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             todo += [(a, m, d + 1), (m, b, d + 1)]
             depth_max = max(depth_max, d + 1)
         else:
-            # 덧붙임 58 ① · ③ — 보간이 ε 안이어도 두 끝의 용융 상태가 다르면 0.25 K 까지, 끝에서 가족 검사가 섰으면
-            #   두 끝이 다 안 서거나 폭 1 K 까지 반으로(거절하지 않음). 그 밖은 오늘 그대로 끝난 구간.
+            # 덧붙임 58 ① — 보간이 ε 안이어도 두 끝의 용융 상태가 다르면 0.25 K 까지. 덧붙임 59 ② — 구간 [a, b] 안(끝 포함)에
+            #   가족 검사가 선 찾아간 점이 하나라도 있으면(역할 무관) 그런 점이 없거나 폭 1 K 까지 반으로. 거절하지 않음.
             why58 = ("용융 상태" if melt[a] != melt[b] and (b - a) / 2 >= KINK_MIN_K else
-                     "가족 검사" if (fired[a] or fired[b]) and b - a > MIN_INTERVAL_K else None)
+                     "가족 검사" if b - a > MIN_INTERVAL_K and _holds_fire(a, b, fire_set) else None)
             if why58:
                 refines58.append([a, b, why58])
                 todo += [(a, m, d + 1), (m, b, d + 1)]
@@ -420,12 +421,21 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             done.append((a, b))
             for k in FIELDS:
                 worst[k] = max(worst[k], err[k])
+    stale = [(a, b, sorted(t for t in fire_set if a <= t <= b)) for a, b in done
+             if b - a > MIN_INTERVAL_K and any(a <= t <= b for t in fire_set)]
+    if stale:      # 덧붙임 59 ④ — 닫힌 뒤에 찾아간 점이 서면 그 구간은 쪼개지지 않은 채 남는다: 이름 대고 거절
+        raise SystemExit(f"{name}: 닫힌 구간 안에 가족 검사가 선 점이 남았다 (덧붙임 59 ④) — {stale[:5]!r}")
     print(f"덧붙임 58 쪼갬 — 용융 상태 {sum(1 for r in refines58 if r[2] == '용융 상태')} · 가족 검사 "
           f"{sum(1 for r in refines58 if r[2] == '가족 검사')} 구간", flush=True)
     print(f"미리 풀기(덧붙임 55) — 보냄 {spec_stats['dispatched']} · 씀 {spec_stats['used']} · 버림 {spec_stats['discarded']} · "
           f"판 {spec_stats['rounds']} · 한 판 최대 {spec_stats['max_round']} 점", flush=True)
     ts = sorted({t for ab in done for t in ab} | {t for br in breaks for t in br[:2]})
     return ts, [at(t)[0] for t in ts], [at(t)[1] for t in ts], worst, depth_max, len(cache), breaks, kinks, gaps
+
+
+def _holds_fire(a, b, fire_set) -> bool:
+    """덧붙임 59 ② — 구간 [a, b](끝 포함)에 가족 검사가 선 찾아간 점이 있나. 시험이 덧붙임 58 의 끝점 판으로 바꿔 끼운다."""
+    return any(a <= t <= b for t in fire_set)
 
 
 class _Chain:
