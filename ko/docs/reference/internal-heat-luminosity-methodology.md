@@ -173,7 +173,7 @@ dT_c/dt 의 여덟 모서리, `_h0` 는 H = 0 모서리 — 우리 H 밴드의 �
 `q_cmb_present` [W] · `q_mantle_present` [W] · `inner_core_radius_present_km` [km] · `inner_core_case` [—] ·
 `inner_core_nucleation_gyr_ago` [Gyr] · `delta_e_min_3gyr_lo` [W/K] · `delta_e_min_3gyr_hi` [W/K] · `delta_e_present_lo` [W/K] ·
 `delta_e_present_hi` [W/K] · `entropy_history_verdict` [—] · `history_converged` [—] · `history_convergence_width` [—] · `history_steps` [—] ·
-`structure_grid_held_steps` [—] · `structure_grid_held_calls` [—] (그 맨틀 온도에서 구조가 거절해 S0 구조에 붙든 걸음 · 호출 수 — «못 봄», prereg-structure-grid)
+`structure_grid_held_steps` [—] · `structure_grid_held_calls` [—] (그 맨틀 온도에서 구조가 거절해 S0 구조에 붙든 걸음 · 호출 수 — «못 봄», prereg-structure-grid) · `structure_grid_gap_steps` [—] · `structure_grid_gap_calls` [—] (표의 받을 답 없는 구간을 높은 T 쪽 값으로 건넌 걸음 · 호출 수 — prereg-structure-grid 덧붙임 50)
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] · `cmb_temperature` [K] ·
 `potential_temperature` [K] · `radius_earth` [R_earth] · `age_gyr` [Gyr] · `core_initial_temperature` [K] ·
 `mantle_initial_potential_temperature` [K] · `core_material` [—] · `body_class` [—] · `step_myr` [Myr] ·

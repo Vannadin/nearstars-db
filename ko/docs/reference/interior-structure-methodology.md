@@ -51,6 +51,7 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 `figure_relaxation` [—] · `maxwell_time_mantle_top` [yr] · `relaxation_threshold_max` [K] ·
 `integrator_core_gamma_verdict` [—] · `integrator_red_gamma_used` [—] ·
 `converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—] ·
+`fallback_solvers` [—] · `trial_unconverged` [—] ·
 `core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—] ·
 `basal_silicate_state` [—] · `core_plus_layer_radius_solved_km` [km] · `basal_layer_thickness_km` [km]
 
