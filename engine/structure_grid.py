@@ -221,6 +221,7 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
     import interior
     cache = {}
     noans = {}                                  # 덧붙임 50 — 받을 답 아닌 점 → 까닭
+    melt, fired, refines58 = {}, {}, []         # 덧붙임 58 — 점의 용융 상태 · 가족 검사 · 그 때문에 쪼갠 구간
     aux = {}                                    # 덧붙임 57 — 판정의 T−1 K 보조 점(힌트 없는 풀이) 기억, 값 밖
     spec = {}                                   # 덧붙임 55 ④ — 한 판의 미리 푼 결과(판 끝에 버림, 캐시 · 표 밖)
     spec_stats = {"dispatched": 0, "used": 0, "discarded": 0, "rounds": 0, "max_round": 0}
@@ -261,6 +262,8 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         if cmf_t != cmf0:   # 덧붙임 45 «거절문 전부» 밖 — 격자 한계가 아니라 조성 고정 위반(입력 비트 검사)
             raise SystemExit(f"{name}: {t!r} K 의 cmf {cmf_t!r} 가 S0 {cmf0!r} 와 다르다 — 조성이 고정이 아니다")
         cache[t] = ({**_params(r.values, t, m_kg), "core_mass_fraction": cmf0}, _fingerprint(r))
+        melt[t] = (r.values.get("silicate_melt_state"), r.values.get("basal_silicate_state"))   # 덧붙임 58 ①
+        fired[t] = bool(getattr(r, "fired", False))                                              # 덧붙임 58 ③
 
     def at(t, a=None, b=None):
         """t 의 표 칸. (a, b) 는 t 를 가운데로 둔 구간(덧붙임 57 ① 뒤로 힌트는 안 씀 — 부르는 쪽 모양 그대로)."""
@@ -405,9 +408,20 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             todo += [(a, m, d + 1), (m, b, d + 1)]
             depth_max = max(depth_max, d + 1)
         else:
+            # 덧붙임 58 ① · ③ — 보간이 ε 안이어도 두 끝의 용융 상태가 다르면 0.25 K 까지, 끝에서 가족 검사가 섰으면
+            #   두 끝이 다 안 서거나 폭 1 K 까지 반으로(거절하지 않음). 그 밖은 오늘 그대로 끝난 구간.
+            why58 = ("용융 상태" if melt[a] != melt[b] and (b - a) / 2 >= KINK_MIN_K else
+                     "가족 검사" if (fired[a] or fired[b]) and b - a > MIN_INTERVAL_K else None)
+            if why58:
+                refines58.append([a, b, why58])
+                todo += [(a, m, d + 1), (m, b, d + 1)]
+                depth_max = max(depth_max, d + 1)
+                continue
             done.append((a, b))
             for k in FIELDS:
                 worst[k] = max(worst[k], err[k])
+    print(f"덧붙임 58 쪼갬 — 용융 상태 {sum(1 for r in refines58 if r[2] == '용융 상태')} · 가족 검사 "
+          f"{sum(1 for r in refines58 if r[2] == '가족 검사')} 구간", flush=True)
     print(f"미리 풀기(덧붙임 55) — 보냄 {spec_stats['dispatched']} · 씀 {spec_stats['used']} · 버림 {spec_stats['discarded']} · "
           f"판 {spec_stats['rounds']} · 한 판 최대 {spec_stats['max_round']} 점", flush=True)
     ts = sorted({t for ab in done for t in ab} | {t for br in breaks for t in br[:2]})
@@ -493,11 +507,24 @@ def _solve_raw(solve, jobs):
     return parallel_points.solve_points(one, jobs, GRID_POOL)
 
 
+SETTLE_TRIALS = 4             # 덧붙임 58 ② — 가족 검사가 세는 끝 시행 수(melt-window §1.1 의 끝 창과 같은 수)
+
+
+def _settled_trials(r) -> list:
+    """덧붙임 58 ② — 돌려준 구조를 낸 사격 호출의 마지막 SETTLE_TRIALS 시행(그 호출이 짧으면 그 호출 전부, 앞 호출에서
+    빌리지 않음). 돌려준 구조가 없으면(예외로 거절) 거절한 호출 = 마지막으로 시작한 호출 — 덧붙임 58 사전 정리 노트
+    (첫 시행 전에 거절했으면 그 호출의 시행이 없어 창 없음)."""
+    call = r.trail.get("answer_call")
+    if call is None:
+        call = r.trail.get("calls", 0) - 1
+    return [x for x in r.trail["trials"] if x[3] == call][-SETTLE_TRIALS:]
+
+
 def _families_visited(r) -> list:
-    """풀이의 바깥 시행 가족들(대표, 처음 본 순서) — 덧붙임 57 ②."""
+    """풀이의 정착 창 시행 가족들(대표, 처음 본 순서) — 덧붙임 57 ② 를 덧붙임 58 ② 로 좁힘."""
     import interior
     reps = []
-    for f, _t, _p in r.trail["trials"]:
+    for f, *_ in _settled_trials(r):
         if all(interior._family_jump(o, f) for o in reps):
             reps.append(f)
     return reps
@@ -526,7 +553,7 @@ def _entries(members) -> list:
     import interior
     items = []
     for r in members:
-        items += [{"family": f, "done": False, "entry": (t, p)} for f, t, p in r.trail["trials"]]
+        items += [{"family": f, "done": False, "entry": (t, p)} for f, t, p, _c in r.trail["trials"]]
         items += [{"family": f, "done": True, "entry": None} for f in list(r.trail["closed"]) + list(r.trail["reclosed"])]
         if interior.answer_verdict(r) is None:
             items.append({"family": r.trail["answer"], "done": True, "entry": None})
@@ -583,6 +610,10 @@ def _pool_solve(solve, jobs, aux=None):
     for t, r in zip(new, _solve_raw(solve, [(t, None, None) for t in new]) if new else []):
         aux[t] = r
     fire = [t for t in dict.fromkeys(ts) if _fires(aux[t])]
+    for t in dict.fromkeys(ts):           # 덧붙임 58 ② — 점마다 정착 창(호출 번호 · 시행 수 · 가족 수)
+        w = _settled_trials(aux[t])
+        print(f"창(덧붙임 58) — {t!r} K · 호출 {w[0][3] if w else None}(답 호출 {aux[t].trail.get('answer_call')}) · 시행 {len(w)} · 가족 "
+              f"{len(_families_visited(aux[t]))} · 검사 {t in fire}", flush=True)
     if not fire:
         return [aux[t] for t in ts]
     new = [t - 1.0 for t in fire if t - 1.0 not in aux]
@@ -595,6 +626,8 @@ def _pool_solve(solve, jobs, aux=None):
     for (t, _h, _e), r in zip(c_jobs, _solve_raw(solve, c_jobs) if c_jobs else []):
         cs[t].append(r)
     judged = {t: _judge(t, aux[t], bs.get(t), cs[t]) for t in fire}
+    for t in fire:
+        judged[t].fired = True            # 덧붙임 58 ③ — 짓기가 이 점 둘레를 쪼갠다(값 밖 표시)
     return [judged.get(t, aux[t]) for t in ts]
 
 

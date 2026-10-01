@@ -707,9 +707,12 @@ FAMILY_TWO_NOTE = "답 둘"
 _REOPEN = [False]              # 다시 닫는 고리 안에서는 또 다시 닫지 않는다(덧붙임 3 규칙 1)
 #: 구조 표 덧붙임 57 — 한 풀이(solve)의 바깥 온도 고리 기록: 시행마다 (가족, 중심 온도, 중심압), 다시 닫은 가족 ·
 #:   닫힌 갈래 가족, 답의 가족. 풀이마다 비움. 표 짓기가 경로와 무관한 판정의 재료로 읽는다(값 밖).
-_FAMILY_TRAIL: dict = {"trials": [], "reclosed": [], "closed": [], "answer": None, "dev": None}
+_FAMILY_TRAIL: dict = {"trials": [], "reclosed": [], "closed": [], "answer": None, "dev": None,
+                       "calls": 0, "returned": {}, "answer_call": None}
 #: 덧붙임 57 규칙 3(c) — 설정되면 이 풀이의 바깥 사격이 모두 그 (중심 온도, 중심압)에서 다시 닫는 꼴로 선다.
 _ENTRY = [None]
+#: 덧붙임 58 ② — 지금 도는 바깥 사격 호출의 번호(시행에 붙인다). 바깥 `shoot` 입구가 세우고 되돌린다.
+_CALL = [None]
 
 
 def _family_groups(branches):
@@ -2154,8 +2157,18 @@ def _litho_bracket(points: list, radius_at, tol: float):
 def shoot(*args, **kw) -> tuple[Structure, bool]:
     """`_shoot_body` 의 입구. 덧붙임 57 규칙 3(c) 의 다시 닫기 입구(`_ENTRY`)가 걸려 있으면 바깥 사격을 멜트 창
     덧붙임 3 의 다시 닫기와 같은 꼴(`_t_start` · `p_hint` · `_loose=False` · `T_PASSES`, 안에서 또 다시 닫지 않음)로 선다."""
-    if _ENTRY[0] is None or _REOPEN[0]:
+    if _REOPEN[0]:
         return _shoot_body(*args, **kw)
+    if _ENTRY[0] is None:
+        # 덧붙임 58 ② — 바깥 호출마다 번호를 매기고, 돌려준 구조가 어느 호출의 것인지 남긴다(이어 돌기는 안쪽이 먼저 남김)
+        saved, _CALL[0] = _CALL[0], _FAMILY_TRAIL["calls"]
+        _FAMILY_TRAIL["calls"] += 1
+        try:
+            st, ok = _shoot_body(*args, **kw)
+        finally:
+            call, _CALL[0] = _CALL[0], saved
+        _FAMILY_TRAIL["returned"].setdefault(id(st), call)
+        return st, ok
     t0, p0 = _ENTRY[0]
     _REOPEN[0] = True
     try:
@@ -2336,6 +2349,8 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
         fams.append(_melt_family(got))
         fam_t.append(t_now)
         fam_p.append(got.p_center)
+        if not _REOPEN[0]:       # 덧붙임 57 · 58 — 바깥 고리의 시행을 그 자리에서 풀이 기록에(고리 안에서 거절해도 그 호출의 시행이 남음)
+            _FAMILY_TRAIL["trials"].append((fams[-1], t_now, got.p_center, _CALL[0]))
         if got.t_surface <= 0.0:
             return
         d = abs(got.t_surface / t_pot - 1.0)
@@ -2451,8 +2466,6 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
             extensions += 1
         if done:
             break
-    if not _REOPEN[0]:           # 덧붙임 57 — 바깥 고리의 시행을 풀이 기록에(이어 돌기 · 거절 전에)
-        _FAMILY_TRAIL["trials"].extend(zip(fams, fam_t, fam_p))
     if (best is not None and best[1] is not st and best[0] < T_SURFACE_TOL
             and (not _surface_temperature_met(st, t_pot) or not converged)):
         # C138 규칙 2 — 마지막 시행의 사격이 안 닫혔어도(표면은 허용 안이어도) 닫힌 앞 시행이 답.
@@ -3656,7 +3669,7 @@ def solve(mass_earth: float,
     _ICE_GRID_DELTA.clear()
     _BASAL_INFO.clear()
     _FAMILY_INFO.clear()
-    _FAMILY_TRAIL.update(trials=[], reclosed=[], closed=[], answer=None, dev=None)
+    _FAMILY_TRAIL.update(trials=[], reclosed=[], closed=[], answer=None, dev=None, calls=0, returned={}, answer_call=None)
     # 기저층 (prereg-structure-basal-layer) — 두께 0 또는 없음이면 층이 없다(S-B2: 예전 경로 그대로).
     basal = None
     if basal_layer_thickness_km:
@@ -3801,6 +3814,7 @@ def solve(mass_earth: float,
     litho_info = _LITHO_INFO.get(id(st))
     fam_info = _FAMILY_INFO.get(id(st))
     _FAMILY_TRAIL["answer"] = _melt_family(st)   # 덧붙임 57 — 돌려주는 구조의 가족 · 표면 어긋남
+    _FAMILY_TRAIL["answer_call"] = _FAMILY_TRAIL["returned"].get(id(st))   # 덧붙임 58 ② — 그 구조를 낸 사격 호출
     _FAMILY_TRAIL["dev"] = (abs(st.t_surface / potential_temperature - 1.0)
                             if potential_temperature and st.t_surface > 0.0 else None)
     if fam_info is not None and fam_info.get("resolved"):

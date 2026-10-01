@@ -157,11 +157,12 @@ def _fake57(t, p_hint=None):
     bad = 2074.5 < t < 2077.5
     entry = interior._ENTRY[0]
     if bad and p_hint is None and entry is None:
-        trail = {"trials": [(F1, 3200.0, 3.9e10), (F2, 3201.0, 3.8e10)], "reclosed": [F1, F2], "closed": [], "answer": F2,
-                 "dev": 3e-3}
+        trail = {"trials": [(F1, 3200.0, 3.9e10, 0), (F2, 3201.0, 3.8e10, 0)], "reclosed": [F1, F2], "closed": [],
+                 "answer": F2, "dev": 3e-3, "calls": 1, "returned": {}, "answer_call": 0}
         conv, notes = False, (interior.FAMILY_OSCILLATION_NOTE + " — 가짜",)
     else:
-        trail = {"trials": [(F1, 3200.0, 3.9e10)], "reclosed": [], "closed": [], "answer": F1, "dev": 1e-4}
+        trail = {"trials": [(F1, 3200.0, 3.9e10, 0)], "reclosed": [], "closed": [], "answer": F1, "dev": 1e-4,
+                 "calls": 1, "returned": {}, "answer_call": 0}
         conv, notes = True, ()
     interior._FAMILY_TRAIL.update(trail)
     x = t - 2066.0
@@ -207,6 +208,45 @@ try:
 finally:
     sg._solve_raw = _raw0
 check("덧붙임 57 음성 — 힌트가 a 멤버에 새면 오름 · 내림이 갈린다", n_up != n_down)
+
+# 덧붙임 58 — ② 정착 창: 초반에만 헤맨 풀이는 안 섬(음성: 옛 «모든 시행» 은 섬) · ① 용융 상태가 바뀌면 0.25 K 까지 쪼갬
+_wander = types.SimpleNamespace(applicable=True, converged=True, notes=(), values={}, reason=None,
+                                trail={"trials": [(F2, 3100.0, 3.8e10, 0), (None, 3150.0, 3.8e10, 0)]
+                                       + [(F1, 3200.0 + i, 3.9e10, 1) for i in range(5)],
+                                       "answer_call": 1, "calls": 2})
+_all = []
+for f, *_ in _wander.trail["trials"]:
+    if all(interior._family_jump(o, f) for o in _all):
+        _all.append(f)
+check("덧붙임 58 ② — 초반에만 헤맨 풀이는 가족 검사가 안 섬", not sg._fires(_wander))
+check("덧붙임 58 ② 음성 — 같은 풀이를 옛 «모든 시행» 으로 세면 선다", len(_all) >= 2, str(len(_all)))
+_raised = types.SimpleNamespace(applicable=False, converged=None, notes=(), values={}, reason="거절 — 가짜",
+                                trail={"trials": [(F1, 3200.0, 3.9e10, 0), (F2, 3300.0, 3.8e10, 0)], "answer_call": None,
+                                       "calls": 2})
+check("덧붙임 58 노트 — 첫 시행 전에 거절한 호출은 창 없음(앞 호출을 안 빌림)", sg._settled_trials(_raised) == [])
+
+
+def _fake58(t, p_hint=None):
+    """1005.3 K 위에서 바닥 층이 부분 용융 — 값은 매끄러워 보간은 ε 안."""
+    interior._FAMILY_TRAIL.update(trials=[(None, 3000.0, 3e10, 0)], reclosed=[], closed=[], answer=None, dev=1e-4,
+                                  calls=1, returned={}, answer_call=0)
+    x = t - 1000.0
+    v = {"radius": 1.0 + 1e-7 * x, "core_radius": 0.5, "cmb_pressure": 20.0 + 0.001 * x, "cmb_temperature": 1.5 * t,
+         "core_pressure": 30.0, "converged": None, "silicate_melt_state": "molten",
+         "basal_silicate_state": "partial-melt" if t > 1005.3 else "solid"}
+    return types.SimpleNamespace(applicable=True, reason=None, regime="rocky", converged=True, notes=(),
+                                 inputs={"core_mass_fraction": 0.3}, values=v)
+
+
+sg.GRID_POOL = 1
+try:
+    with contextlib.redirect_stdout(io.StringIO()):
+        _g58 = sg._adaptive("fake", _fake58, 1000.0, 1008.0, sg.EPS, 6.4e23, 0.3)
+    _near = [t for t in _g58[0] if abs(t - 1005.3) <= 0.25]
+    check("덧붙임 58 ① — 용융 상태가 바뀌는 구간을 거절 없이 0.25 K 까지 쪼갬", len(_near) >= 1, str(_near))
+except SystemExit as e:
+    check("덧붙임 58 ① — 용융 상태가 바뀌는 구간을 거절 없이 0.25 K 까지 쪼갬", False, str(e)[:120])
+sg.SPEC_LEVELS, sg.GRID_POOL = _levels0, _pool0
 sg.SPEC_LEVELS, sg.GRID_POOL = _levels0, _pool0
 
 ghost = copy.deepcopy(run.load_body(sg.BODIES_DIR / "earth.yaml")[0])
