@@ -176,5 +176,21 @@
    },
    "standalone_reproduces_solve": true
   }
+ },
+ "price": {
+  "Darwin-arm64": {
+   "Uranus": {
+    "instr_u": null,
+    "seconds": 28.0,
+    "load1": null,
+    "note": "C146: copied from the body records (Mac, frozen 2026-09-29 on a quiet day); instr_u was not measured then — the next refresh on this machine records it"
+   },
+   "Neptune": {
+    "instr_u": null,
+    "seconds": 38.8,
+    "load1": null,
+    "note": "C146: copied from the body records (Mac, frozen 2026-09-29 on a quiet day); instr_u was not measured then — the next refresh on this machine records it"
+   }
+  }
  }
 }

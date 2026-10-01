@@ -3,8 +3,9 @@
 
     python3 engine/test_ice_giant.py              전체 풀이 둘 (~1.5 분) + 굳힌 값과 비트 대조
     python3 engine/test_ice_giant.py --fast       적분 한 번 + 경로 지문만 (1 초). 반복 작업용
-    python3 engine/test_ice_giant.py --refresh    전체 재계산 → ice_giant_anchor.json 갱신
+    python3 engine/test_ice_giant.py --refresh    전체 재계산 → ice_giant_anchor.json 갱신 (이 기계의 값도 instr 로)
     python3 engine/test_ice_giant.py --table      문서의 얼음거대행성 표를 다시 낸다
+    python3 engine/test_ice_giant.py --price-check  몸마다 한 프로세스로 instr 를 재어 이 기계의 굳힌 값과 견준다 (C146)
 
 **왜 이 파일이 있나.** 2026-08-28 아침까지 이 두 앵커는 `test_interior.py --icegiant` 뒤에
 있었고 check.sh 는 그것을 돌리지 않았다 — 천왕성 하나가 1038 초였기 때문이다. 그 플래그마저
@@ -53,11 +54,15 @@
 from __future__ import annotations
 
 import ast
+import glob
 import hashlib
 import json
+import os
 import platform
 import re
+import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -66,6 +71,65 @@ from eos import PhaseGap
 from interior import EARTH_MASS_KG, EARTH_RADIUS_M, integrate, solve
 
 ANCHOR_FILE = Path(__file__).with_name("ice_giant_anchor.json")
+
+# ── 수락선 ⑤ 의 값 — 기계 키마다 instr 로 (C146, prereg-c146-price-per-machine 3e4654ce) ────────────────────
+# ⚠ **⑤ 는 문턱이 아니라 값이다** (C88 §4 ⑤: 넓힌 비교의 값을 적는다). 그 값을 벽시계 초로 적으면 굳힌 날의 부하를
+#   적게 된다 — 조용한 날 28.0 · 38.8 s, 부하 아래 108.1 · 112.8 s. 그래서 자는 `instructions:u` 이고 **같은 기계
+#   키 안에서만** 견준다(arm64 와 x86-64 의 명령 수는 서로 다른 자다). 몸 기록의 `seconds` 는 그대로 둔다 — C102 의
+#   키 집합 대조가 그 칸을 본다. 값은 맨 위 `price` 칸에만 있다.
+PRICE_BAND = 1e-3      # §3.4: 같은 기계 키에서 이 안이면 굳힌 instr 를 그대로 둔다 (§4 ①, 측정 0.026 · 0.031 %)
+
+
+def _machine_key() -> str:
+    """C134 의 기계 키 — 게이트가 넘겨준 `GATE_MACHINE` 이 이기고, 없으면 `<uname -s>-<uname -m>`."""
+    return os.environ.get("GATE_MACHINE") or f"{platform.system()}-{platform.machine()}"
+
+
+def _perf():
+    """리눅스에서 사용자 공간 명령을 세는 perf (C134 와 같은 순서: 커널판 래퍼보다 linux-tools 본체), 없으면 None."""
+    for cand in sorted(glob.glob("/usr/lib/linux-tools/*/perf")) + ["perf"]:
+        try:
+            p = subprocess.run([cand, "stat", "-x,", "-e", "instructions:u", "--", "true"],
+                               capture_output=True, text=True, timeout=30)
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        if re.search(r"^\d+,", p.stderr, re.M):
+            return cand
+    return None
+
+
+def _price(name: str) -> dict:
+    """몸 하나의 값 — **새 프로세스 하나**에서 `--price <몸>` 을 C134 의 계측기로 돌린다 (§3.2). 리눅스는 perf
+    (자식 포함), 맥은 `/usr/bin/time -l` 의 «instructions retired» (직계 태스크만 — 풀이가 프로세스 안이라 지금은 같다).
+    벽시계와 시작 때의 1 분 부하는 정보로 함께 적는다."""
+    argv = [sys.executable, str(Path(__file__).resolve()), "--price", name]
+    load1 = round(os.getloadavg()[0], 2)
+    t0 = time.perf_counter()
+    instr = None
+    if platform.system() == "Darwin":
+        p = subprocess.run(["/usr/bin/time", "-l", *argv], capture_output=True, text=True)
+        m = re.search(r"(\d+)\s+instructions retired", p.stderr)
+        instr = int(m.group(1)) if m and p.returncode == 0 else None
+    else:
+        perf = _perf()
+        if perf is not None:
+            with tempfile.NamedTemporaryFile("r", suffix=".perf") as tmp:
+                p = subprocess.run([perf, "stat", "-x,", "-o", tmp.name, "-e", "instructions:u", "--", *argv],
+                                   capture_output=True, text=True)
+                m = re.search(r"^(\d+),", tmp.read(), re.M)
+                instr = int(m.group(1)) if m and p.returncode == 0 else None
+    return {"instr_u": instr, "seconds": round(time.perf_counter() - t0, 1), "load1": load1}
+
+
+def _price_line(frozen: dict) -> str:
+    """수락선 ⑤ — 이 기계 키의 굳힌 값만 (다른 키와는 견주지 않는다, §3.3)."""
+    key = _machine_key()
+    mine = (frozen.get("price") or {}).get(key)
+    if not mine:
+        return f"이 기계({key}) 의 값 없음 — 다음 `--refresh` 가 적는다"
+    return f"이 기계({key}) — " + " · ".join(
+        f"{n} instr_u {v.get('instr_u') if v.get('instr_u') is not None else '미측정'}"
+        f" (벽 {v.get('seconds')} s · 부하 {v.get('load1')})" for n, v in mine.items())
 
 # 얼음거대행성의 앵커. Scheibe+ 2019 Table 1 의 **Mazevet 물 EOS 행** 에서 왔다 —
 # 우리가 쓰는 것과 같은 상태방정식으로 지은 모형이라야 조성을 빌려올 수 있다.
@@ -424,8 +488,36 @@ def refresh() -> int:
         else:
             print(f"  {rec['seconds']:.0f} s · 거절 — {res.reason[:90]}")
         out["bodies"][name] = rec
+    # 수락선 ⑤ 의 값 (C146 §3): 이 기계 키만 새로 재고, 다른 키는 손대지 않는다. 같은 키의 굳힌 instr 와
+    # PRICE_BAND 안이면 그 instr 를 그대로 둔다 — 부하가 다른 날의 refresh 가 값을 다시 쓰지 않는다(§3.4).
+    old = json.loads(ANCHOR_FILE.read_text(encoding="utf-8")) if ANCHOR_FILE.exists() else {}
+    price = dict(old.get("price") or {})
+    key = _machine_key()
+    mine = dict(price.get(key) or {})
+    for name, *_ in ICE_GIANTS:
+        new, prev = _price(name), mine.get(name) or {}
+        if (prev.get("instr_u") and new["instr_u"]
+                and abs(new["instr_u"] - prev["instr_u"]) <= PRICE_BAND * prev["instr_u"]):
+            new["instr_u"] = prev["instr_u"]
+        mine[name] = new
+        print(f"  값 ⑤ {name} ({key}) — instr_u {new['instr_u']} · 벽 {new['seconds']} s · 부하 {new['load1']}")
+    price[key] = mine
+    out["price"] = price
     ANCHOR_FILE.write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"굳혔다 → {ANCHOR_FILE.name}")
+    return 0
+
+
+def price_check() -> int:
+    """§3.3 의 대조를 요청 때만 — 몸마다 새로 재어 이 기계 키의 굳힌 instr 와 Δ % 를 찍는다. 쓰지 않는다."""
+    frozen = json.loads(ANCHOR_FILE.read_text(encoding="utf-8"))
+    key = _machine_key()
+    mine = (frozen.get("price") or {}).get(key) or {}
+    for name, *_ in ICE_GIANTS:
+        new, prev = _price(name), (mine.get(name) or {}).get("instr_u")
+        delta = (f"{(new['instr_u'] / prev - 1) * 100:+.4f} %" if (prev and new["instr_u"]) else "굳힌 값 없음")
+        print(f"  값 ⑤ {name} ({key}) — instr_u {new['instr_u']}, 굳힌 {prev} ({delta}) · "
+              f"벽 {new['seconds']} s · 부하 {new['load1']}")
     return 0
 
 
@@ -891,6 +983,12 @@ def _clamp_invariance(frozen: dict, fails: list[str]) -> None:
 
 
 def main() -> int:
+    if "--price" in sys.argv:
+        # C146: one body's solve alone, in a fresh process, for the measurer to count (§3.2)
+        res = _solve(sys.argv[sys.argv.index("--price") + 1])
+        return 0 if res.applicable else 1
+    if "--price-check" in sys.argv:
+        return price_check()
     if "--refresh" in sys.argv:
         return refresh()
     if "--table" in sys.argv:
@@ -905,8 +1003,8 @@ def main() -> int:
     print("얼음거대행성 앵커 — 천왕성·해왕성이 굳힌 값을 비트까지 다시 내는가")
     print(f"  굳힌 날 {frozen['frozen_at']} · python {frozen['python']} · {frozen.get('steps')} 걸음")
     secs = {n: r.get("seconds") for n, r in frozen["bodies"].items()}
-    print("  굳힐 때 초 — " + " · ".join(f"{n} {v}" for n, v in secs.items())
-          + " (수락선 ⑤: 넓힌 비교의 값이 이 수로 매겨진다)")
+    print("  굳힐 때 초 (정보, 그날의 부하를 탄다) — " + " · ".join(f"{n} {v}" for n, v in secs.items()))
+    print(f"  수락선 ⑤ 넓힌 비교의 값 (C146, instr · 같은 기계 키 안에서만) — {_price_line(frozen)}")
     _inputs(frozen, fails, full="--fast" not in sys.argv)
     _gone_branch_fixture(fails)
     if "--fast" in sys.argv:
