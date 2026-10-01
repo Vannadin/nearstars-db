@@ -103,7 +103,7 @@ def test_c147_pathlib_glob_is_a_pattern():
     assert any(r["kind"] == "glob" and r["path"] == "d/**/*.md" for r in recs)
     assert not _lists(recs, "d")
     recs = _hooked(tmp, "import pathlib; list(pathlib.Path('d').iterdir())")
-    assert _lists(recs, "d") and _lists(recs, "d")[0].get("by", "").startswith("pathlib.py:")
+    assert _lists(recs, "d") and _lists(recs, "d")[0].get("by", "").partition(":")[0] == "pathlib.py"
 
 
 def test_c147_plain_listdir_keeps_dir_star():
