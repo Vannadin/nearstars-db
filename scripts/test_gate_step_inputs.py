@@ -79,6 +79,45 @@ def test_glob_pattern_recorded_not_its_walk():
     assert not any(r["kind"] == "list" for r in recs)
 
 
+def _lists(recs, path):
+    return [r for r in recs if r["kind"] == "list" and r["path"] == path and not r.get("dropped")]
+
+
+def test_c147_metadata_walk_dropped():
+    # L-meta: importlib.metadata 가 sys.path 를 훑는 나열은 import 기계 — 기록 안 됨, raw 에는 dropped
+    tmp = _scratch()
+    (tmp / "sub").mkdir()
+    recs = _hooked(tmp, "import sys, importlib.metadata as m; sys.path.insert(0, 'sub')\n"
+                        "try: m.version('no-such-dist-c147')\nexcept Exception: pass")
+    assert not _lists(recs, "sub")
+    assert any(r["kind"] == "list" and r["path"] == "sub" and r.get("dropped") for r in recs)
+
+
+def test_c147_pathlib_glob_is_a_pattern():
+    # L-pathlib: glob/rglob 아래의 나열은 그 패턴 하나 — `list d` 없음. glob 프레임 없는 iterdir 는 `list d`
+    tmp = _scratch()
+    (tmp / "d").mkdir()
+    (tmp / "d" / "x.py").write_text("")
+    recs = _hooked(tmp, "import pathlib; list(pathlib.Path('d').glob('*.py')); list(pathlib.Path('d').rglob('*.md'))")
+    assert any(r["kind"] == "glob" and r["path"] == "d/*.py" for r in recs)
+    assert any(r["kind"] == "glob" and r["path"] == "d/**/*.md" for r in recs)
+    assert not _lists(recs, "d")
+    recs = _hooked(tmp, "import pathlib; list(pathlib.Path('d').iterdir())")
+    assert _lists(recs, "d") and _lists(recs, "d")[0].get("by", "").startswith("pathlib.py:")
+
+
+def test_c147_plain_listdir_keeps_dir_star():
+    # L-plain: 단계 자신의 os.listdir 는 그대로 `list d` 이고 `d/*` 를 요구한다 (동결 그대로)
+    tmp = _scratch()
+    (tmp / "d").mkdir()
+    recs = _hooked(tmp, "import os; os.listdir('d')")
+    got = _lists(recs, "d")
+    assert got and got[0]["by"] == "<string>:<module>"
+    table = {"s": {"globs": [], "hand": False}}
+    assert gsi.drift([dict(got[0], step="s")], table, ["s"])
+    assert gsi.drift([dict(got[0], step="s")], {"s": {"globs": ["d/*"], "hand": False}}, ["s"]) == []
+
+
 def test_git_show_recorded():
     tmp = _scratch()
     recs = _hooked(tmp, "import subprocess; subprocess.run(['git', 'show', 'HEAD:table.md'], capture_output=True)")

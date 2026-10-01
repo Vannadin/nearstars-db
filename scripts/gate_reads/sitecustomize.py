@@ -49,20 +49,59 @@ def _rel(path):
     return os.path.relpath(p, _ROOT)
 
 
+def _is_metadata(fn):
+    """`importlib.metadata` (a file on 3.9, a package later), `pkgutil`, `site` — they walk `sys.path`."""
+    return (os.sep + "importlib" + os.sep + "metadata" in fn
+            or os.path.basename(fn) in ("pkgutil.py", "site.py"))
+
+
+def _is_pathlib(fn):
+    return os.path.basename(fn) == "pathlib.py" or os.sep + "pathlib" + os.sep in fn
+
+
+def _pattern(base, pattern, recursive):
+    try:
+        rel = _rel(os.fspath(base))
+        pattern = os.fsdecode(os.fspath(pattern))
+    except TypeError:
+        return None
+    if rel is None:
+        return None
+    if recursive and not pattern.startswith("**"):
+        pattern = "**/" + pattern
+    return pattern if rel == "." else os.path.join(rel, pattern)
+
+
+def _pathlib_glob(f):
+    """Walk up from a pathlib listing to the nearest pathlib `glob` / `rglob` frame (C147 rule 3).
+    Keys only on the module and the public method name — never on version-internal walkers."""
+    g = f
+    while g is not None:
+        if _is_pathlib(g.f_code.co_filename) and g.f_code.co_name in ("glob", "rglob"):
+            loc = g.f_locals
+            if "self" in loc and "pattern" in loc:
+                return _pattern(loc["self"], loc["pattern"], g.f_code.co_name == "rglob")
+            return None
+        g = g.f_back
+    return None
+
+
 def _install():
     seen = set()
     recorded_py = set()
     busy = [False]
     write = open(_LOG, "a", encoding="utf-8", buffering=1).write   # opened before the hook exists
 
-    def emit(kind, rel, dropped=False):
-        key = (kind, rel, dropped)
+    def emit(kind, rel, dropped=False, by=None):
+        key = (kind, rel, dropped, by)
         if key in seen:
             return
         seen.add(key)
         rec = {"step": _STEP, "kind": kind, "path": rel}
         if dropped:
             rec["dropped"] = True
+        if by:
+            rec["by"] = by
         write(json.dumps(rec, ensure_ascii=False) + "\n")
 
     def hook(event, args):
@@ -96,14 +135,34 @@ def _install():
             elif event in ("os.listdir", "os.scandir"):
                 # ⚠ the import system's `FileFinder` lists every directory on `sys.path` — the same
                 #   innermost-frame rule drops those listings
-                caller = sys._getframe(1).f_code.co_filename
+                f = sys._getframe(1)
+                caller = f.f_code.co_filename
                 if caller.startswith(_IMPORT_FRAMES):
                     return
                 if caller.endswith(os.sep + "glob.py"):     # glob's own walk — its pattern is logged below
                     return
                 rel = _rel(args[0] if args[0] is not None else ".")
-                if rel is not None:
-                    emit("list", rel)
+                if rel is None:
+                    return
+                by = f"{os.path.basename(caller)}:{f.f_code.co_name}"     # C147 rule 1
+                # C147 rule 2: package-metadata walks over `sys.path` are import machinery
+                if _is_metadata(caller):
+                    if _RAW:
+                        emit("list", rel, dropped=True, by=by)
+                    return
+                # C147 rule 3: a pathlib listing under a glob/rglob frame is that pattern
+                if _is_pathlib(caller):
+                    pat = _pathlib_glob(f)
+                    if pat is not None:
+                        if _RAW:
+                            emit("list", rel, dropped=True, by=by)
+                        emit("glob", pat)
+                        return
+                emit("list", rel, by=by)
+            elif event in ("pathlib.Path.glob", "pathlib.Path.rglob"):     # 3.11+: the method's own event
+                pat = _pattern(args[0], args[1], event.endswith("rglob"))
+                if pat is not None:
+                    emit("glob", pat)
             elif event == "glob.glob":
                 pat = os.fsdecode(args[0])
                 full = pat if os.path.isabs(pat) else os.path.join(os.getcwd(), pat)

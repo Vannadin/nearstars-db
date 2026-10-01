@@ -152,11 +152,13 @@ def observed(recs: list[dict]) -> dict[str, dict[str, set]]:
     for r in recs:
         if r.get("dropped"):
             continue
-        d = out.setdefault(r["step"], {"files": set(), "dirs": set(), "leak": set(), "specs": set()})
+        d = out.setdefault(r["step"], {"files": set(), "dirs": set(), "leak": set(), "specs": set(), "by": set()})
         if r["kind"] in ("open", "git") and pass_class(r["path"]):
             d["files"].add(r["path"])
         elif r["kind"] == "list":
             d["dirs"].add(r["path"])
+            if r.get("by"):
+                d["by"].add((r["path"], r["by"]))          # C147 rule 1 — who listed it
         elif r["kind"] == "leak":
             d["leak"].add(r["path"])
         elif r["kind"] == "gitlist":
@@ -171,7 +173,7 @@ def obs_for(obs: dict[str, dict[str, set]], name: str) -> dict[str, set] | None:
     keys = [k for k in obs if k == name or ("*" in name and fnmatch.fnmatchcase(k, name))]
     if not keys:
         return None
-    return {f: set().union(*(obs[k][f] for k in keys)) for f in ("files", "dirs", "leak", "specs")}
+    return {f: set().union(*(obs[k].get(f, set()) for k in keys)) for f in ("files", "dirs", "leak", "specs", "by")}
 
 
 def dir_covered(d: str, globs: list[str]) -> bool:
@@ -232,7 +234,8 @@ def _main(argv: list[str]) -> int:
             for p in sorted(d["files"]):
                 print(f"      {p}")
             for x in dirs:
-                print(f"      {x}/ (listed)")
+                who = sorted(b for p, b in d["by"] if p == x)
+                print(f"      {x}/ (listed{' by ' + ', '.join(who) if who else ''})")
             for p in sorted(d["leak"]):
                 print(f"      ⚠ also imported by this process: {p}")
         print(f"[census] steps with a non-empty pass-class input set: {n} · steps seen {len(obs)}")
