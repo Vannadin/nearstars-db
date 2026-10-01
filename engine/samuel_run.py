@@ -18,6 +18,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import fold_track as ft                # noqa: E402
 import samuel_layer as lay             # noqa: E402
 import samuel_lid as sl                # noqa: E402
 import samuel_model as sm              # noqa: E402
@@ -72,6 +73,9 @@ class Setup:
         # (t, |Δδ_u| and |Δδ_b| of the last two iterations, m). Recorded, not acted on.
         self.fixed_point_limit_hits: list = []
         self.fixed_point_start: tuple | None = None   # the last converged (δ_u, δ_b) — the warm start
+        #: C145 — the continuation state from the last accepted state (main "nearest" branch only)
+        self.track: ft.Track | None = None
+        self.fold_events: list = []
         self.multi_root_evals = 0
         self.root_jumps: list = []      # (t, old δ_b, new δ_b, T_c − T_b)
         self.root_notes: list = []
@@ -106,15 +110,8 @@ OUTER_SCAN = 32
 ROOT_JUMP_M = 5e3                      # a lost root: the chosen δ_b moves by more than this as roots vanish
 
 
-def solve_layers(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float, prev, branch: str):
-    """(δ_u, δ_b, inner roots, up, lo, T_b, P_m, η_m, note) — no side effects; None if δ_u has no bracket.
-
-    Outer δ_u: bisection on F(δ_u) = G_u(δ_u, δ_b*(δ_u)) − δ_u, in the scanned bracket nearest the previous
-    δ_u. Inner δ_b: every root of G_b(δ_u, ·) − δ_b on [0, shell − δ_u] by scan + bisection, then chosen by
-    `branch` — "nearest" the previous δ_b (v2-17 supplement 1, the main path); "smallest", "largest",
-    "middle" (of three, else nearest) the sensitivity branches (supplement 3 ①). With no previous state,
-    "nearest" takes a root where the iteration map is stable, |∂G_b/∂δ_b| < 1, the smaller of two
-    (supplement 3 ②)."""
+def _layers_fn(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float):
+    """`layers(δ_u, δ_b)` at one state — the closure the bracket solve and the continuation (C145) both use."""
     r_p, r_c, g = s.r_p, s.r_base, s.g
     r_l = r_p - d_l
 
@@ -136,6 +133,73 @@ def solve_layers(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float, pre
                              t_s=st.T_SURFACE_K, delta_b_cap=cap_)
         return up_, lo_, t_b_, p_m_, eta_m_
 
+    return layers
+
+
+def _continued(s: "Setup", layers, r_l: float, r_c: float, tr: ft.Track):
+    """C145 §2.1: δ_u and δ_b by continuation from the last accepted state — the outer root in its local bracket,
+    the inner one in its own at every trial δ_u. Raises `ft.Lost` (fold or left the bracket) — never rescans."""
+    def hb(du):
+        return lambda db: layers(du, db)[1]["delta_b"] - db
+
+    def inner(du):
+        return ft.local_root(hb(du), tr.b, 0.0, max(r_l - du - r_c, 1.0))
+
+    def outer(du):
+        db = inner(du)
+        return math.nan if db is None else layers(du, db)[0]["delta_u"] - du
+
+    d_u = ft.local_root(outer, tr.u, 0.0, r_l - r_c)
+    if d_u is None:
+        if inner(tr.u.x) is None:
+            raise ft.lost(hb(tr.u.x), tr.b, "δ_b")
+        raise ft.lost(outer, tr.u, "δ_u")
+    d_b = inner(d_u)
+    if d_b is None:
+        raise ft.lost(hb(d_u), tr.b, "δ_b")
+    return d_u, d_b
+
+
+def track_at(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float, prev: ft.Track | None,
+             d_u: float, d_b: float) -> ft.Track:
+    """C145: the track at an accepted state — both roots with their neighbours carried from `prev` (None: a cold
+    start or an event, searched afresh) and the hump signs toward the neighbours ahead."""
+    layers = _layers_fn(s, t_c, t_m, d_l, t_l)
+    r_l, r_c = s.r_p - d_l, s.r_base
+    hb = lambda db: layers(d_u, db)[1]["delta_b"] - db  # noqa: E731
+    b = ft.accept(hb, None if prev is None else prev.b, d_b, 0.0, max(r_l - d_u - r_c, 1.0))
+
+    def outer(du):
+        db = ft.local_root(lambda x: layers(du, x)[1]["delta_b"] - x, b, 0.0, max(r_l - du - r_c, 1.0))
+        return math.nan if db is None else layers(du, db)[0]["delta_u"] - du
+    u = ft.accept(outer, None if prev is None else prev.u, d_u, 0.0, r_l - r_c, reach=ft.OUTER_NEIGHBOUR_CELLS)
+    return ft.Track(u, b)
+
+
+def solve_layers(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float, prev, branch: str,
+                 scan: int = INNER_SCAN, dead: tuple | None = None, dead_u: tuple | None = None):
+    """(δ_u, δ_b, inner roots, up, lo, T_b, P_m, η_m, note) — no side effects; None if δ_u has no bracket.
+
+    Outer δ_u: bisection on F(δ_u) = G_u(δ_u, δ_b*(δ_u)) − δ_u, in the scanned bracket nearest the previous
+    δ_u. Inner δ_b: every root of G_b(δ_u, ·) − δ_b on [0, shell − δ_u] by scan + bisection, then chosen by
+    `branch` — "nearest" the previous δ_b (v2-17 supplement 1, the main path); "smallest", "largest",
+    "middle" (of three, else nearest) the sensitivity branches (supplement 3 ①). With no previous state,
+    "nearest" takes a root where the iteration map is stable, |∂G_b/∂δ_b| < 1, the smaller of two
+    (supplement 3 ②).
+
+    C145: on the main branch with a track (`prev` a `ft.Track`), δ_u and δ_b come by continuation and may raise
+    `ft.Lost`. Otherwise the bracket scan below: a cold start (`prev` None), or an event's full scan (`prev` the
+    (δ_u, δ*) pair, `scan` ≥ `ft.FULL_SCAN`, `dead`/`dead_u` the vanished pair's interval) — nearest δ*, larger
+    on a tie."""
+    r_p, r_c = s.r_p, s.r_base
+    r_l = r_p - d_l
+    layers = _layers_fn(s, t_c, t_m, d_l, t_l)
+    if isinstance(prev, ft.Track) and branch == "nearest":
+        d_u, d_b = _continued(s, layers, r_l, r_c, prev)
+        up, lo, t_b, p_m, eta_m = layers(d_u, d_b)
+        rts = [x for x in (prev.b.lo, d_b, prev.b.hi) if x is not None]
+        return d_u, d_b, rts, up, lo, t_b, p_m, eta_m, ""
+
     def bisect(f, a, b, fa):
         for _ in range(BISECT_ITERS):
             m = 0.5 * (a + b)
@@ -150,8 +214,8 @@ def solve_layers(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float, pre
         top = max(r_l - du - r_c, 1.0)
         h = lambda db: layers(du, db)[1]["delta_b"] - db
         roots, a, fa = [], 0.0, h(0.0)
-        for k in range(1, INNER_SCAN + 1):
-            b = top * k / INNER_SCAN
+        for k in range(1, scan + 1):
+            b = top * k / scan
             fb = h(b)
             if (fa > 0) != (fb > 0):
                 roots.append(bisect(h, a, b, fa))
@@ -171,7 +235,7 @@ def solve_layers(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float, pre
         if branch == "middle" and len(rts) == 3:
             return sorted(rts)[1]
         if ref_b is not None:
-            return min(rts, key=lambda x: abs(x - ref_b))
+            return ft.pick_after(rts, ref_b, dead)
         stable = []
         for x in rts:
             e = max(1.0, 1e-6 * x)
@@ -193,7 +257,8 @@ def solve_layers(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float, pre
     grid = [top_u * k / OUTER_SCAN for k in range(OUTER_SCAN + 1)]
     vals = [outer(x) for x in grid]
     brackets = [(grid[k], grid[k + 1], vals[k]) for k in range(OUTER_SCAN)
-                if not (math.isnan(vals[k]) or math.isnan(vals[k + 1])) and (vals[k] > 0) != (vals[k + 1] > 0)]
+                if not (math.isnan(vals[k]) or math.isnan(vals[k + 1])) and (vals[k] > 0) != (vals[k + 1] > 0)
+                and not (dead_u is not None and grid[k + 1] >= dead_u[0] and grid[k] <= dead_u[1])]
     if not brackets:
         return None
     ref_u = prev[0] if prev is not None else None
@@ -217,15 +282,20 @@ def printed_t_b(s: "Setup", t_m: float, d_l: float, d_u: float, d_b: float) -> f
 
 
 def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr: float,
-                lid_gradient: float) -> dict:
-    """Everything the right-hand side needs at one state. Raises `sm.Refused` above the Λ ceiling."""
+                lid_gradient: float, mode: str = "stage") -> dict:
+    """Everything the right-hand side needs at one state. Raises `sm.Refused` above the Λ ceiling.
+
+    C145: on the main branch ("nearest") once a track exists, δ_u and δ_b come by continuation from the last
+    accepted state (`s.track`) and a lost root raises `ft.Lost`. `mode="accept"` marks an accepted state: the
+    track moves here. Stages leave it alone, so one branch holds for the whole RK4 step."""
     r_p, r_c, g = s.r_p, s.r_c, s.g
     r_l = r_p - d_l
     t_l = sm.lid_base_temperature(t_m, s.e_star, st.A_RH, st.R_GAS_J_PER_MOL_K)
     # δ_u, δ_b and T_b depend on each other through ΔR (2021 eq. (14)). Solved by brackets — v2-17
     # supplements 1–3, our choice; see `solve_layers`.
     guard_gap = None
-    prev = s.fixed_point_start
+    tracked = s.root_branch == "nearest" and s.track is not None
+    prev = s.track if tracked else s.fixed_point_start
     sol = solve_layers(s, t_c, t_m, d_l, t_l, prev, s.root_branch)
     if sol is None:
         s.fixed_point_limit_hits.append((t_gyr, math.nan, math.nan))
@@ -235,9 +305,11 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
         s.root_notes.append(f"{t_gyr:.4f} Gyr: {note}")
     if len(rts) > 1:
         s.multi_root_evals += 1
-    if prev is not None and s.last_root_count is not None and len(rts) < s.last_root_count \
+    if not tracked and prev is not None and s.last_root_count is not None and len(rts) < s.last_root_count \
             and abs(d_b - prev[1]) > ROOT_JUMP_M:
         s.root_jumps.append((t_gyr, prev[1], d_b, t_c - t_b))
+    if mode == "accept" and s.root_branch == "nearest":
+        s.track = track_at(s, t_c, t_m, d_l, t_l, s.track, d_u, d_b)
     s.last_root_count = len(rts)
     if s.path_check_every and s.eval_count % s.path_check_every == 0 and len(s.path_checks) < 20:
         cold = solve_layers(s, t_c, t_m, d_l, t_l, None, s.root_branch)
@@ -351,6 +423,33 @@ def _start_layer(s: Setup, t_c: float, t_i: float) -> None:
 STEP_FRACTION = 0.1                    # core_history's h = min(cap, 0.1 τ), Brief 157
 
 
+def switch_branch(s: Setup, y: list, t_gyr: float, ev: ft.Lost) -> None:
+    """C145 §2.4: at a located fold, the new branch is the root nearest δ* (the adopted root here, at the end of
+    the located step) by a full scan of `ft.FULL_SCAN` cells, the larger on a tie. The vanished pair's interval
+    (widened by one cell) is excluded — at t* the pair is closer than the tolerance, and a sign change the scan
+    still sees there is the dying pair, not a branch. The event is recorded and the track restarts from it."""
+    t_c, t_m, d_l = y[0], y[1], y[2]
+    t_l = sm.lid_base_temperature(t_m, s.e_star, st.A_RH, st.R_GAS_J_PER_MOL_K)
+    r_l, r_c = s.r_p - d_l, s.r_base
+    layers = _layers_fn(s, t_c, t_m, d_l, t_l)
+    tr = s.track
+    d_u0, d_b0 = _continued(s, layers, r_l, r_c, tr)
+    dead = dead_u = None
+    if ev.equation == "δ_b":
+        nb, cell = tr.b.ahead(), max(r_l - d_u0 - r_c, 1.0) / ft.FULL_SCAN
+        dead = (min(d_b0, nb) - cell, max(d_b0, nb) + cell)
+    else:
+        nb, cell = tr.u.ahead(), (r_l - r_c) / ft.FULL_SCAN
+        dead_u = (min(d_u0, nb) - cell, max(d_u0, nb) + cell)
+    sol = solve_layers(s, t_c, t_m, d_l, t_l, (d_u0, d_b0), "nearest", scan=ft.FULL_SCAN, dead=dead, dead_u=dead_u)
+    if sol is None or sol[1] is None:
+        raise sm.Refused(f"no branch after the fold of {ev.equation} at t = {t_gyr:.6f} Gyr (C145 §2.4)")
+    d_u1, d_b1, t_b1 = sol[0], sol[1], sol[5]
+    before, after = (d_b0, d_b1) if ev.equation == "δ_b" else (d_u0, d_u1)
+    s.fold_events.append((t_gyr, ev.equation, before, after, ev.tol_s / GYR_S, t_c - t_b1))
+    s.track = track_at(s, t_c, t_m, d_l, t_l, None, d_u1, d_b1)
+
+
 def _tau_s(y: list, f: dict) -> float:
     """The shortest e-folding time among the states that can move fast: T_c, T_m, D_l, and D_cr once it
     is thicker than 1 km (a 1 m seed crust would otherwise set the step)."""
@@ -384,7 +483,7 @@ def run(s: Setup, cap_myr: float) -> dict:
     worst = (0.0, None)
     while True:
         try:
-            f1 = state_terms(s, *y, t, grad)
+            f1 = state_terms(s, *y, t, grad, mode="accept")
         except sm.Refused as e:
             return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
         # v2-9 ③ diagnosis: conduction out of the lid base minus the heat the mantle brings, beside dD_l/dt
@@ -402,21 +501,55 @@ def run(s: Setup, cap_myr: float) -> dict:
         if remaining <= 1e-9 * GYR_S:
             break
         h = min(cap, STEP_FRACTION * _tau_s(y, f1), remaining)
-        h_min = h if h_min is None else min(h_min, h)
-        dt_gyr = h / GYR_S
+        k1 = _rates(f1)
+        tracked = s.track is not None and s.root_branch == "nearest"
+
+        def step(y0, t0, hh):
+            # one RK4 step on the step-start branch; with a track, the end state must keep the root too (C145)
+            dt = hh / GYR_S
+            y2 = [a + 0.5 * hh * b for a, b in zip(y0, k1)]
+            k2 = _rates(state_terms(s, *y2, t0 + 0.5 * dt, grad))
+            y3 = [a + 0.5 * hh * b for a, b in zip(y0, k2)]
+            k3 = _rates(state_terms(s, *y3, t0 + 0.5 * dt, grad))
+            y4 = [a + hh * b for a, b in zip(y0, k3)]
+            k4 = _rates(state_terms(s, *y4, t0 + dt, grad))
+            y_end = [a + hh * (b + 2 * c + 2 * d + e) / 6.0 for a, b, c, d, e in zip(y0, k1, k2, k3, k4)]
+            if tracked:
+                state_terms(s, *y_end, t0 + dt, grad)
+            return y_end
         try:
-            k1 = _rates(f1)
-            y2 = [a + 0.5 * h * b for a, b in zip(y, k1)]
-            k2 = _rates(state_terms(s, *y2, t + 0.5 * dt_gyr, grad))
-            y3 = [a + 0.5 * h * b for a, b in zip(y, k2)]
-            k3 = _rates(state_terms(s, *y3, t + 0.5 * dt_gyr, grad))
-            y4 = [a + h * b for a, b in zip(y, k3)]
-            k4 = _rates(state_terms(s, *y4, t + dt_gyr, grad))
+            if tracked:
+                y_new, h_used, ev = ft.advance(step, y, t, h, GYR_S)
+                if ev is not None or h_used != h:
+                    # trials ran after the kept step; run it once more so the stage side effects (the layer
+                    # grid's T_i, the counters) are the kept step's own
+                    y_new = step(y, t, h_used) if h_used > 0.0 else y
+            else:
+                y_new, h_used, ev = step(y, t, h), h, None
         except sm.Refused as e:
             return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
-        y = [a + h * (b + 2 * c + 2 * d + e) / 6.0 for a, b, c, d, e in zip(y, k1, k2, k3, k4)]
+        except ft.Lost as e:
+            return {"refused": f"the adopted root of {e.equation} left its bracket and halving gave up at "
+                               f"t = {t:.6f} Gyr (C145 §2.1)", "refused_at_gyr": t, "rows": rows, "n_steps": n}
+        if h_used == 0.0:
+            # the fold sits at this very state: switch here and redo the row on the new branch
+            try:
+                switch_branch(s, y, t, ev)
+            except sm.Refused as e:
+                return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
+            rows.pop()
+            continue
+        h = h_used
+        h_min = h if h_min is None else min(h_min, h)
+        dt_gyr = h / GYR_S
+        y = y_new
         t = AGE_GYR if h == remaining else t + dt_gyr
         n += 1
+        if ev is not None:
+            try:
+                switch_branch(s, y, t, ev)
+            except sm.Refused as e:
+                return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
         # the lid profile: one implicit step with the step's end values
         t_l = sm.lid_base_temperature(y[1], s.e_star, st.A_RH, st.R_GAS_J_PER_MOL_K)
         v_sil, v_cr = _shell(s.r_p, s.r_c), _shell(s.r_p, s.r_p - y[3])
@@ -449,6 +582,7 @@ def run(s: Setup, cap_myr: float) -> dict:
             "guard_stage_hits": list(s.guard_stage_hits), "guard_iter_hits": list(s.guard_iter_hits),
             "fixed_point_limit_hits": list(s.fixed_point_limit_hits),
             "multi_root_evals": s.multi_root_evals, "root_jumps": list(s.root_jumps), "root_notes": list(s.root_notes),
+            "fold_events": list(s.fold_events),
             "path_checks": list(s.path_checks), "remesh_loss_j": remesh_loss,
             "layer": None if s.layer_grid is None else {
                 "describe": s.layer_grid.describe(), "margin": s.layer_grid.margin,

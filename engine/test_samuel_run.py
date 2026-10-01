@@ -93,9 +93,11 @@ single = [p for p in out["path_checks"] if p[1] == 1]
 worst = max((max(abs(p[2] - p[4]), abs(p[3] - p[5])) for p in single), default=math.nan)
 check("v2-17 — a cold start gives the same δ_u, δ_b where the inner root is single (≤ 1e-6 m)",
       single and worst <= 1e-6, f"{len(single)} samples, largest difference {worst:.3g} m")
-for j in out["root_jumps"]:
-    print(f"      뜀 @ {j[0]:.4f} Gyr: δ_b {j[1] / 1e3:.1f} → {j[2] / 1e3:.1f} km, T_c − T_b {j[3]:+.3f} K")
-print(f"      근 여럿 평가 {out['multi_root_evals']} · 뜀 {len(out['root_jumps'])}")
+# C145: the main path follows its root by continuation; a fold is an event, not a heuristic «jump» (§2.5).
+for e in out["fold_events"]:
+    print(f"      접힘 @ {e[0]:.6f} Gyr: {e[1]} {e[2] / 1e3:.3f} → {e[3] / 1e3:.3f} km (허용 {e[4]:.1e} Gyr), "
+          f"T_c − T_b {e[5]:+.3f} K")
+print(f"      근 여럿 평가 {out['multi_root_evals']} · 접힘 사건 {len(out['fold_events'])}")
 
 # regression — the six data-free values
 c = sr.curve_values(rows)

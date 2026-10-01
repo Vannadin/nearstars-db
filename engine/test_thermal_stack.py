@@ -72,6 +72,61 @@ check("C113 switch — plate 2's mantle volume becomes the convective one and dT
       p2s_stack.mantle.params["volume"] == "convective" and p2s["dtm"] != p2["dtm"],
       f"dT_m/dt {p2['dtm']:.4e} → {p2s['dtm']:.4e} K/s")
 
+# C145 check 6 — the continuation on synthetic roots driven over time (prereg-c145-fold-continuation §4.6):
+# a close pair tracked down to 0.2 km into a fold (one event at t*, onto the far root), a neighbour 0.2 km
+# behind (no event, no halving loop), and E0's 20 km pair with no fold (no event, no branch change).
+import fold_track as ft                # noqa: E402
+
+FX_LO, FX_HI = 0.0, 1.4e6                                   # a shell of the real size (cells 0.34 km)
+
+
+def fixture_run(h_of, x0, dt, seed=None):
+    t, events, tries, min_gap = 0.0, [], 0, math.inf
+    h0 = h_of(0.0)
+    r = seed if seed is not None else ft.accept(h0, None, min(ft.scan(h0, FX_LO, FX_HI, ft.FULL_SCAN),
+                                                              key=lambda q: abs(q - x0)), FX_LO, FX_HI)
+    if seed is not None:
+        r.g = ft.hump_sign(h0, r)
+    while t < 1.0 - 1e-15:
+        count = [0]
+
+        def step(y, t0, hh, r=r):
+            count[0] += 1
+            hf = h_of(t0 + hh)
+            if ft.local_root(hf, r, FX_LO, FX_HI) is None:
+                raise ft.lost(hf, r, "δ_b")
+            return [t0 + hh]
+        _, used, ev = ft.advance(step, [t], t, min(dt, 1.0 - t), 1.0)
+        tries += count[0]
+        t += used
+        hf = h_of(t)
+        if ev is not None:
+            cell, nb = (FX_HI - FX_LO) / ft.FULL_SCAN, r.ahead()
+            new = ft.pick_after(ft.scan(hf, FX_LO, FX_HI, ft.FULL_SCAN), r.x, (min(r.x, nb) - cell, max(r.x, nb) + cell))
+            events.append((t, new))
+            r = ft.accept(hf, None, new, FX_LO, FX_HI)
+        else:
+            r = ft.accept(hf, r, ft.local_root(hf, r, FX_LO, FX_HI), FX_LO, FX_HI)
+        if r.ahead() is not None:
+            min_gap = min(min_gap, abs(r.ahead() - r.x))
+    return r, events, tries, min_gap
+
+
+C0, FAR, TSTAR = 500e3, 560e3, 0.37
+r, ev, tries, gap = fixture_run(lambda t: (lambda x: ((x - C0) ** 2 - 1e6 * (TSTAR - t) / TSTAR) * (FAR - x)),
+                                C0 - 1000.0, 0.002)
+check("C145 ⑥ close pair into a fold — tracked to ≤ 0.2 km, one event at t*, onto the far root",
+      len(ev) == 1 and abs(ev[0][0] - TSTAR) <= 2 * ft.EVENT_TOL_GYR and abs(ev[0][1] - FAR) < 1.0 and gap <= 200.0,
+      f"events {len(ev)} · t* {ev[0][0] if ev else None!r} · closest tracked gap {gap:.1f} m · tries {tries}")
+r, ev, tries, gap = fixture_run(lambda t: (lambda x: (x - (C0 - 200.0)) * (x - (C0 + 2000.0 * t)) * (FAR - x)),
+                                C0, 0.05, seed=ft.Root(C0, 0.0, C0 - 200.0, FAR))
+check("C145 ⑥ neighbour 0.2 km behind — no event, the adopted root kept, bounded tries",
+      not ev and abs(r.x - (C0 + 2000.0)) < 1.0 and tries <= 40, f"end {r.x:.1f} m · tries {tries} for 20 steps")
+r, ev, tries, gap = fixture_run(lambda t: (lambda x: (x - (C0 + 5000.0 * t)) * (x - (C0 + 20e3 + 5000.0 * t))
+                                           * (FAR + 50e3 - x)), C0 + 20e3, 0.05)
+check("C145 ⑥ E0 window a — a 20 km pair, no fold: no event, no branch change",
+      not ev and abs(r.x - (C0 + 25e3)) < 1.0, f"end {r.x:.1f} m · tries {tries}")
+
 # R2 — plate 2's six regression pins, through the stack.
 out = ts.run(ts.samuel_stack(lam=20.0, profile=prof, g=G), 10.0)
 v = sr.curve_values(out["rows"])

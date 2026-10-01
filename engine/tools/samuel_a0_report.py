@@ -91,10 +91,14 @@ def main() -> int:
                 + f" · 누르기 전 δ_b/껍질 최대 {raw['delta_b_raw_over_shell']:.4f} @ {raw['t']:.4f} Gyr")
 
     def limit_line(out):
-        """v2-17: the bracket solve of δ_u/δ_b — failures, evaluations with several inner roots, root jumps."""
+        """v2-17: the bracket solve of δ_u/δ_b — failures, evaluations with several inner roots, and the branch
+        changes: fold events on the main path (C145), heuristic jumps on the sensitivity branches."""
         jumps = out.get("root_jumps", [])
+        folds = out.get("fold_events", [])
         s_ = (f"괄호 풀이 — 실패 {len(out['fixed_point_limit_hits'])} · 근 여럿 평가 {out.get('multi_root_evals', 0)}"
-              f" · 뜀 {len(jumps)}")
+              f" · 접힘 사건 {len(folds)} · 뜀 {len(jumps)}")
+        for e in folds:
+            s_ += f" [접힘 {e[0]:.6f} Gyr {e[1]} {e[2] / 1e3:.1f}→{e[3] / 1e3:.1f} km, T_c−T_b {e[5]:+.3f} K]"
         for j in jumps:
             s_ += f" [{j[0]:.4f} Gyr δ_b {j[1] / 1e3:.1f}→{j[2] / 1e3:.1f} km, T_c−T_b {j[3]:+.3f} K]"
         return s_
