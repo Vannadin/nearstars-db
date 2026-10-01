@@ -1,6 +1,6 @@
 # 게이트 단계마다 데이터로 읽는 파일의 선언 — quick 차선의 also 와 full 의 표류 검사가 읽는다 (C136 · C147)
-# Measured by the gate-only audit hook (scripts/gate_reads) in the hooked full gate on 3a002fe9, PC WSL, Python 3.12.3,
-# 2026-10-01 (reads blob 37b08d94). Mac cross-check pending; the committed set becomes the union (C147 rule 5). `hand: true` = by hand.
+# Measured by the gate-only audit hook (scripts/gate_reads): hooked full gates on PC WSL, Python 3.12.3 (3a002fe9, reads 37b08d94)
+# and the Mac, Python 3.9 (c002c041, reads 17a4e30d, re-filtered by C147 addendum 1); the committed set is their union (rule 5). `hand: true` = by hand.
 # Globs: `*` and `?` stay in one directory, `**` crosses. Only pass-class paths (prose, .py) matter.
 # Tree walkers are declared as `**.md` / `**.py` instead of their measured paths; a plain listing of D is `D/*`;
 # a pathlib / glob.glob pattern is kept as written (C147).
