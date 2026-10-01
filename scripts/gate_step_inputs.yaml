@@ -121,6 +121,12 @@
   globs: []
 "test_tidal_response.py":
   globs: []
+"test_answer_verdict.py":  # by hand: builds Result objects in memory, reads no tracked file as data (melt-window addendum 4)
+  globs: []
+  hand: true
+"test_convergence_meaning.py":  # by hand: drives convergence notes in memory, reads no tracked file as data (C138)
+  globs: []
+  hand: true
 "test_process_state.py":
   globs: ["engine/*.py", "engine/albedo_table.py", "engine/ammonia_table.py", "engine/backflow.py", "engine/bands.py", "engine/body_class.py", "engine/body_stack.py", "engine/build_graph_page.py", "engine/chain.py", "engine/check_contracts.py", "engine/check_refs.py", "engine/check_via.py", "engine/cmb_flux.py", "engine/convergence.py", "engine/core_energy.py", "engine/core_entropy.py", "engine/core_history.py", "engine/core_state.py", "engine/domain.py", "engine/dynamo.py", "engine/dynamo_rocky.py", "engine/dynamo_table.py", "engine/eos.py", "engine/fe_liquid.py", "engine/fermi.py", "engine/gate_env.py", "engine/graph.py", "engine/greenhouse_cases.py", "engine/hhe_repair.py", "engine/hhe_table.py", "engine/ice_fr2015.py", "engine/ice_melt_table.py", "engine/interior.py", "engine/mantle_budget.py", "engine/mantle_composition.py", "engine/mantle_flux.py", "engine/mass_radius.py", "engine/paleos.py", "engine/parallel_points.py", "engine/payload.py", "engine/phase_tables.py", "engine/porosity.py", "engine/provisional.py", "engine/radiogenic.py", "engine/registry.py", "engine/rheology.py", "engine/rocky_roster.py", "engine/run.py", "engine/samuel_layer.py", "engine/samuel_lid.py", "engine/samuel_model.py", "engine/samuel_run.py", "engine/samuel_stack.py", "engine/samuel_structure.py", "engine/samuel_thermal.py", "engine/stagnant_lid.py", "engine/state.py", "engine/steam_if97.py", "engine/stellar_wind.py", "engine/structure_grid.py", "engine/sub_neptune_dynamo.py", "engine/tectonic_regime.py", "engine/thermal_stack.py", "engine/tidal_heating.py", "engine/tidal_locking.py", "engine/tidal_response.py", "engine/tidal_transport.py", "engine/transfers.py", "engine/transitional_lid.py", "engine/water2_table.py", "engine/water_hot.py", "engine/water_table.py"]
 "test_rocky_roster.py":
