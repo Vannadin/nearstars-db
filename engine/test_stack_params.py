@@ -75,7 +75,9 @@ def evaluate(d: dict):
 
 
 def short_run(d: dict):
-    out = ts.run(build(d), 10.0)
+    s_ = build(d)
+    out = ts.run(s_, 10.0)
+    print(f"  [C145 접힘 사건] short run: {len(s_.fold_events)} — {s_.fold_events}")
     return [(r["t"], r["t_c"], r["t_m"], r["d_l"], r["d_cr"]) for r in out["rows"]]
 
 

@@ -130,12 +130,14 @@ check("C145 ⑥ E0 window a — a 20 km pair, no fold: no event, no branch chang
 # R2 — plate 2's six regression pins, through the stack.
 out = ts.run(ts.samuel_stack(lam=20.0, profile=prof, g=G), 10.0)
 v = sr.curve_values(out["rows"])
+print(f"  [C145 접힘 사건] R2: {len(out['fold_events'])} — {out['fold_events']}")
 # the same pins and widths as test_samuel_run.FROZEN_L20 / FROZEN_TOL (K to the frozen decimal; peak time 0.0005 Gyr)
 # C116: moved with INFER_TOL 5e-7 (Mars's core mass fraction); old values beside FROZEN_L20
 # C118: moved again with the phase-boundary step cut (Mars's Fe-S core crosses 19 GPa); old values beside FROZEN_L20
 # speed stack (2026-09-29): moved again with Mars's table rebuilt on the new shot path; old values beside FROZEN_L20
-for key, want, tol in (("T_c today", 2101.23, 0.005), ("T_m today", 1941.78, 0.005), ("T_c(1) − T_c0", -49.27, 0.005),
-                       ("T_m(1) − T_m0", 285.66, 0.005), ("T_m peak", 2043.57, 0.005), ("T_m peak time", 1.2632, 0.0005)):
+# C145 (2026-10-01): moved with the continuation of the δ_b root (no artefact jump at 0.783 Gyr); old values beside FROZEN_L20
+for key, want, tol in (("T_c today", 2090.23, 0.005), ("T_m today", 1932.40, 0.005), ("T_c(1) − T_c0", -51.17, 0.005),
+                       ("T_m(1) − T_m0", 283.41, 0.005), ("T_m peak", 2038.27, 0.005), ("T_m peak time", 1.1532, 0.0005)):
     check(f"R2 — {key} = {want}", abs(v[key] - want) <= tol, f"{v[key]:.6f}")
 
 print(f"  test_thermal_stack — {'모두 통과' if not fails else f'실패 {fails}'}")

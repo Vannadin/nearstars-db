@@ -54,8 +54,13 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 # Speed stack (warm start · levers A/B · value-based staleness · grid addenda 42–46, 2026-09-29): Mars's structure
 # table is rebuilt on the new shot path, so the rows plate 2 reads move at the temperature loop's noise level
 # (old → new: 2101.39 → 2101.23 · 1941.68 → 1941.78 · -48.93 → -49.27 · 286.22 → 285.66 · 2044.21 → 2043.57 · 1.2632 → 1.2632).
-FROZEN_L20 = {"T_c today": 2101.23, "T_m today": 1941.78, "T_c(1) − T_c0": -49.27, "T_m(1) − T_m0": 285.66,
-              "T_m peak": 2043.57, "T_m peak time": 1.2632}
+# C145 (prereg-c145-fold-continuation, 2026-10-01): the main path follows its δ_b root by continuation. The old path
+# jumped at 0.783 Gyr when the 48-cell scan lost a 20 km root pair inside one cell (E0) — an artefact — so the
+# run now stays on the upper branch and the six move by more than noise (old → new, PC WSL reference):
+# 2101.23 → 2090.23 · 1941.78 → 1932.40 · -49.27 → -51.17 · 285.66 → 283.41 · 2043.57 → 2038.27 · 1.2632 → 1.1532.
+# A 1e-13 shake of the Mars profile now moves T_c today by ≤ 9e-11 K (was up to 0.108 K, C144).
+FROZEN_L20 = {"T_c today": 2090.23, "T_m today": 1932.40, "T_c(1) − T_c0": -51.17, "T_m(1) − T_m0": 283.41,
+              "T_m peak": 2038.27, "T_m peak time": 1.1532}
 FROZEN_TOL = {"T_m peak time": 0.0005}  # Gyr; every other value K, to the frozen decimal
 
 

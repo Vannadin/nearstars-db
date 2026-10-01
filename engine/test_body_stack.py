@@ -99,6 +99,7 @@ for L1, L2 in zip(b2.layers, s2.layers):
 b2.r_p = s2.r_p
 b2.body.update(age_gyr=s2.body["age_gyr"], t_surface=s2.body["t_surface"])
 ra, rb = ts.run(b2, 10.0), ts.run(s2, 10.0)
+print(f"  [C145 접힘 사건] A1-화성-비트: body_stack {b2.fold_events} · samuel_stack {s2.fold_events}")
 key = lambda out: (out.get("refused"), [(r["t"], r["t_c"], r["t_m"], r["d_l"], r["d_cr"]) for r in out["rows"]])
 check("A1-화성-비트 — full run bit-identical to samuel_stack", key(ra) == key(rb),
       f"{len(ra['rows'])} rows · refused {ra.get('refused')}")
@@ -156,6 +157,7 @@ sm.DEFAULT_USES.clear()
 try:
     e = bs.body_stack(FAKE_EARTH)
     out = ts.run(e, 10.0)
+    print(f"  [C145 접힘 사건] A1-끝까지: {len(e.fold_events)} — {e.fold_events}")
     end = out["rows"][-1]["t"] if out["rows"] else None
     ran = out.get("refused") is None and end is not None and abs(end - e.body["age_gyr"]) < 1e-9
     named = out.get("refused") is not None
