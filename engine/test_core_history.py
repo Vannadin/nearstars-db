@@ -349,8 +349,10 @@ neard_t_m = ch.t_at_gyr(hmd["rows"], -3.7)
 # 보간 **1668.68 K**(`core_history.t_at_gyr`). **궤적이 아니라 읽는 규칙이 바뀐 것**이고, 여유는
 # 4.36 → **4.47 K** 가 된다. 위 두 줄의 수는 그 전 세대의 것이다.
 # ⚠ **2026-09-24 re-freeze (radiogenic landing):** 1377.96 → 1380.65 · 3780.60 → 3779.52 · 1668.68 → 1670.60 — Herzberg headroom 4.47 → 2.55 K.
-row(hmd["n_steps"] == 1197 and abs(lastd["t_m"] - 1380.65) < 0.05 and abs(lastd["t_c"] - 3779.52) < 0.05
-    and abs(neard_t_m - 1670.60) < 0.05,
+# ⚠ **2026-10-03 re-freeze (reference switch on the PC; C148 — Mars's core reads against fe_prem's own adiabat):**
+#   1380.65 → 1380.66 · 3779.52 → 3779.57 · 1670.60 → 1670.61 — Herzberg headroom 2.55 → 2.54 K. 걸음 수 1197 은 불변.
+row(hmd["n_steps"] == 1197 and abs(lastd["t_m"] - 1380.66) < 0.05 and abs(lastd["t_c"] - 3779.57) < 0.05
+    and abs(neard_t_m - 1670.61) < 0.05,
     f"선언 H 0.088 화성 → T_p {lastd['t_m']:.2f} · T_c {lastd['t_c']:.2f} · T_p@3.7Ga {neard_t_m:.2f} K · {hmd['n_steps']} 걸음 "
     f"(H 1.5 대비 {lastd['t_m']-lastm['t_m']:+.2f} / {lastd['t_c']-lastm['t_c']:+.2f} / {neard_t_m-nearm_t_m:+.2f} K, {_sec('mars.hmd'):.0f} s) "
     f"— 기준 B: Herzberg [1553.15, 1673.15] K 안 (위끝 여유 {1673.15-neard_t_m:.2f} K)")

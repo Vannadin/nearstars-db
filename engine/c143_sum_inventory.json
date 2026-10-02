@@ -191,6 +191,11 @@
 ],
 [
 "engine/interior.py",
+"_family_oscillation",
+"sum((_family_jump(tail[i - 1], tail[i]) for i in range(1, len(tail))))"
+],
+[
+"engine/interior.py",
 "_shoot_pressure",
 "sum(((hi_f - (stack[i - 1][0] if i else 0.0)) / (mat.rho_seed(mass_kg) * bulk_factor(mat.name, 0.0, phi0, p_cap)) for i, (hi_f, mat) in enumerate(stack)))"
 ],
@@ -208,6 +213,16 @@
 "engine/phase_tables.py",
 "summary",
 "sum((1 for c in cells if c.grade == 'authored'))"
+],
+[
+"engine/rtpress.py",
+"b_of",
+"sum((bn * u ** n for n, bn in enumerate(B)))"
+],
+[
+"engine/rtpress.py",
+"db_of",
+"sum((n * bn * u ** (n - 1) for n, bn in enumerate(B) if n))"
 ],
 [
 "engine/run.py",
@@ -258,6 +273,16 @@
 "engine/stagnant_lid.py",
 "table2_rms",
 "sum((e * e for e in errs))"
+],
+[
+"engine/structure_grid.py",
+"_adaptive",
+"sum((1 for r in refines58 if r[2] == '가족 검사'))"
+],
+[
+"engine/structure_grid.py",
+"_adaptive",
+"sum((1 for r in refines58 if r[2] == '용융 상태'))"
 ],
 [
 "engine/test_ammonia.py",
@@ -543,6 +568,11 @@
 "scripts/gate_pool_order_build.py",
 "main",
 "sum(v)"
+],
+[
+"scripts/gate_step_inputs.py",
+"_main",
+"sum((1 for r in rows if r[3]))"
 ],
 [
 "scripts/phase3/build_bibliography.py",
