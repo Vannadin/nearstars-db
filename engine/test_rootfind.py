@@ -126,8 +126,8 @@ import structure_grid as sg  # noqa: E402
 FA, FB = (6.49, 15.36, 0.39), (6.87, 17.06, 0.39)
 
 
-def _trial(f, t, y, ok=True, call=0):
-    return (f, t, 3.9e10, call, y, ok)
+def _trial(f, t, y, ok=True, call=0, tau=1e-6):
+    return (f, t, 3.9e10, call, y, ok, tau)
 
 
 def _fake_fold(trials, answer_fam):
@@ -188,6 +188,26 @@ check("메모 1 3c — 안 닫힌 사격(ok False)의 가짜 부호는 안 셈",
 good = mono[:3] + [_trial(FA, 3229.0, +0.02), _trial(FA, 3229.1, -0.02)] + mono[3:]
 check("메모 1 3c 음성 — 같은 시행이 닫힌 사격이면 선다(자가 떨어질 수 있음)",
       sg._fold(types.SimpleNamespace(trail={"trials": good, "answer_call": 0, "calls": 1})))
+
+# ⑦ C152 메모 2 — 시행마다 오차 막대(τ ≤ 1e-2 → e = S_max·τ, 그 위는 판단 불가)
+def _fr(trials):
+    return sg._fold(types.SimpleNamespace(trail={"trials": trials, "answer_call": 0, "calls": 1}))
+
+
+edge = [_trial(None, 4549.2, 2e-7, tau=8.6e-8), _trial(None, 4563.5, 0.0023, tau=8.2e-4),
+        _trial(None, 4736.0, 0.0289, tau=8.0e-3), _trial(None, 5131.9, 0.0803, tau=3.85e-3)]
+check("메모 2 ① — 먼 끝 역전이 τ 0.1 시행이면 안 섬(2666 꼴)", not _fr(edge + [_trial(None, 5333.4, 0.0385, tau=0.1)]))
+check("메모 2 ② — 같은 꼴을 모두 정밀하게 쏘면 섬(진짜 먼 끝 추세)", _fr(edge + [_trial(None, 5333.4, 0.0385, tau=1e-4)]))
+base = [_trial(None, 4600.0, 0.010, tau=1e-3), _trial(None, 4700.0, 0.020, tau=1e-3), _trial(None, 4800.0, 0.030, tau=1e-3)]
+inside = 0.030 - (1e-3 + 1e-3 + 1e-3) + 1e-4           # 역전이 e_i + e_j + 띠 = 3e-3 보다 조금 작음
+outside = 0.030 - (1e-3 + 1e-3 + 1e-3) - 1e-4
+check("메모 2 ③ — 오차 + 띠 안쪽 역전은 안 섬", not _fr(base + [_trial(None, 4900.0, inside, tau=1e-3)]))
+check("메모 2 ③ — 오차 + 띠 바깥 역전은 섬", _fr(base + [_trial(None, 4900.0, outside, tau=1e-3)]))
+flipper = [_trial(FA, 3226.0, -0.006), _trial(FA, 3228.0, -0.004), _trial(FB, 3230.3, +0.002), _trial(FB, 3231.0, +0.004)]
+check("메모 2 ④ — 느슨한(τ > 1e-2) 시행의 가짜 부호 바뀜은 무시",
+      not _fr(flipper + [_trial(FB, 3232.0, -0.02, tau=0.05), _trial(FB, 3233.0, +0.006)]))
+check("메모 2 ④ — 같은 시행이 정밀하면 셈(부호 바뀜 2 번)",
+      _fr(flipper + [_trial(FB, 3232.0, -0.02, tau=1e-4), _trial(FB, 3233.0, +0.006)]))
 
 print(f"  test_rootfind — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)

@@ -534,18 +534,32 @@ def _fold_band() -> float:
     return interior.T_SURFACE_TOL
 
 
+FOLD_TAU_LIN = 1e-2          # C152 메모 2 — 질량 허용이 이보다 느슨한 시행은 y 오차가 선형이 아니라(측정) 판단에 못 낀다
+FOLD_S_MAX = 1.0             # C152 메모 2 — |∂y/∂ln m| 의 상한(측정 최대 0.541, 여유 1.85 배)
+
+
 def _fold(r) -> bool:
-    """C152 메모 1 (iii) — 접힘 탐지기(보장 아님): 그 호출의 **사격이 닫힌** 시행을 ln T_c 순으로, |y| < 띠는 «근 위» 로 빼고,
-    부호가 두 번 넘게 바뀌거나(근 ≥ 2) 이웃 사이 역전이 띠보다 크면(꺾임) 선다."""
+    """C152 메모 1 · 2 (iii) — 접힘 탐지기(보장 아님): 그 호출의 **사격이 닫힌** 시행을 ln T_c 순으로. 시행마다 오차
+    e = S_max·τ(τ ≤ τ_lin), τ > τ_lin 은 판단 불가. |y| < 띠는 «근 위». 오차 + 띠를 넘는 부호 바뀜이 두 번 이상이거나,
+    이웃 사이 역전이 두 오차 + 띠보다 크면 선다."""
     band = _fold_band()
-    pts = sorted((x[1], x[4]) for x in _call_trials(r) if len(x) >= 6 and x[5] and x[4] is not None)
-    ys = [y for _t, y in pts if abs(y) >= band]
-    flips = sum(1 for a, b in zip(ys, ys[1:]) if (a < 0.0) != (b < 0.0))
+    pts = []
+    for x in sorted(_call_trials(r), key=lambda x: x[1]):
+        if len(x) < 6 or not x[5] or x[4] is None:
+            continue
+        tau = x[6] if len(x) > 6 and x[6] is not None else None
+        if tau is None or tau > FOLD_TAU_LIN:
+            continue                                   # 판단 불가(메모 2)
+        e = FOLD_S_MAX * tau
+        if abs(x[4]) < band + e:
+            continue                                   # 근 위 · 오차 안
+        pts.append((x[4], e))
+    flips = sum(1 for (a, _ea), (b, _eb) in zip(pts, pts[1:]) if (a < 0.0) != (b < 0.0))
     if flips > 1:
         return True
-    if len(ys) >= 3:
-        trend = ys[-1] - ys[0]
-        return any((b - a) * trend < 0.0 and abs(b - a) > band for a, b in zip(ys, ys[1:]))
+    if len(pts) >= 3:
+        trend = pts[-1][0] - pts[0][0]
+        return any((b - a) * trend < 0.0 and abs(b - a) > ea + eb + band for (a, ea), (b, eb) in zip(pts, pts[1:]))
     return False
 
 

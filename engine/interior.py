@@ -2500,7 +2500,8 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
         fam_p.append(got.p_center)
         if not _REOPEN[0]:       # 덧붙임 57 · 58 — 바깥 고리의 시행을 그 자리에서 풀이 기록에(고리 안에서 거절해도 그 호출의 시행이 남음)
             _FAMILY_TRAIL["trials"].append((fams[-1], t_now, got.p_center, _CALL[0],      # C152 메모 1 — 잔차 · 사격 ok 를 끝에 붙임
-                                            math.log(got.t_surface / t_pot) if got.t_surface > 0.0 else None, bool(ok)))
+                                            math.log(got.t_surface / t_pot) if got.t_surface > 0.0 else None, bool(ok),
+                                            used_tol.get(id(got))))                       # C152 메모 2 — 사격 허용(질량)
         if got.t_surface <= 0.0:
             return
         d = abs(got.t_surface / t_pot - 1.0)
