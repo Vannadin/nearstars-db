@@ -51,5 +51,6 @@ only. Everything that changes a frozen fact goes through one loop.
 - A new required input or state key breaks callers outside the diff (hand-written fixtures, key-set fingerprints). Grep for every caller.
 - Stop jobs only by your own pgid (`kill -TERM -<pgid>`, or SIGSTOP/SIGCONT to pause), then confirm with `pgrep '[p]attern'`. `pkill -f` once killed another seat's run.
 - Long jobs: detach (`setsid` / double fork, or `nohup … & disown`), redirect `> file 2>&1`, never pipe into `tail`. Resumed sessions kill task-bound children after ~13 min.
+- Before a push, re-read the landing registration's own acceptance list yourself (e.g. «owner report sent before the landing commit»). An audit clear's «not blocking» is not a substitute. 2026-10-03: the switch was pushed before its owner report.
 - Noise-level differences are not findings. Precision is already well past need; speed wins.
 - Fix the class, not the instance: when one site is wrong, find every site on the same code path.
