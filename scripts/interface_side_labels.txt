@@ -1,17 +1,18 @@
 # 경계 온도에 한쪽 이름을 단 키·문구의 허용 목록 — 한 줄에 경로 하나·키(또는 문구) 하나 (C153, 후속 노트 1)
 # <path>:<hit> — <reason>; the reason contains one of: «equals the other side unless a jump is declared»,
-# «is the physical side», «names a layer, not an interface side». Lines are per key and per path.
+# «is the physical side», «names a layer, not an interface side». Lines are per key and per path; a text line carries
+# its occurrence count in that file (`<path>:<text> ×N`), so a new side text there needs a reviewed line.
 engine/interior.py:cmb_temperature_core — equals the other side unless a jump is declared (structure convention, no core/rock jump on any body)
 engine/interior.py:cmb_temperature_mantle — equals the other side unless a jump is declared
 engine/interior.py:core_temperature — equals the other side unless a jump is declared (core adiabat from the mantle-side CMB, no D″)
-engine/interior.py:핵 쪽 — equals the other side unless a jump is declared (comments state the convention)
-engine/interior.py:맨틀 쪽 — equals the other side unless a jump is declared
+engine/interior.py:핵 쪽 ×4 — equals the other side unless a jump is declared (comments state the convention)
+engine/interior.py:맨틀 쪽 ×2 — equals the other side unless a jump is declared
 engine/core_state.py:core_cmb_temperature_used — equals the other side unless a jump is declared (melt_bracket and lower_bound without a declaration; declared branch is the physical core side)
 engine/core_state.py:core_center_temperature_used — equals the other side unless a jump is declared (same branches)
-engine/core_state.py:핵 쪽 — equals the other side unless a jump is declared (texts about the declared core side and the lower bound)
-engine/core_state.py:맨틀 쪽 — equals the other side unless a jump is declared
-engine/chain.yaml:핵 쪽 — equals the other side unless a jump is declared (Returns notes state the convention, C153)
-engine/chain.yaml:맨틀 쪽 — equals the other side unless a jump is declared
+engine/core_state.py:핵 쪽 ×8 — equals the other side unless a jump is declared (texts about the declared core side and the lower bound)
+engine/core_state.py:맨틀 쪽 ×4 — equals the other side unless a jump is declared
+engine/chain.yaml:핵 쪽 ×9 — equals the other side unless a jump is declared (Returns notes state the convention, C153)
+engine/chain.yaml:맨틀 쪽 ×2 — equals the other side unless a jump is declared
 engine/radiogenic.py:mantle_temperature_floor_min — names a layer, not an interface side
 engine/radiogenic.py:mantle_temperature_floor_max — names a layer, not an interface side
 engine/radiogenic.py:mantle_temperature_floor_total_min — names a layer, not an interface side
@@ -22,15 +23,15 @@ engine/radiogenic.py:mantle_temperature_width_denominator — names a layer, not
 engine/radiogenic.py:mantle_temperature_width_set — names a layer, not an interface side
 engine/radiogenic.py:mantle_temperature_width_surface — names a layer, not an interface side
 engine/radiogenic.py:mantle_temperature_width_zeta — names a layer, not an interface side
-engine/radiogenic.py:핵 쪽 — is the physical side (core_state's declared core-side CMB temperature, as a consumer)
-engine/check_contracts.py:핵 쪽 — is the physical side (a comment about declaring the core-side CMB temperature)
-engine/core_entropy.py:핵 쪽 — is the physical side (declared or solved core side)
-engine/core_entropy.py:core-side — is the physical side
-engine/dynamo_rocky.py:core-side — is the physical side (core_state's declared core-side CMB temperature)
-engine/test_cmb_flux.py:core-side — is the physical side
-engine/test_core_energy.py:core-side — is the physical side
-engine/test_core_energy.py:mantle side — is the physical side (the mantle base in the energy balance)
-engine/test_core_energy.py:맨틀 쪽 — is the physical side
-engine/test_core_state.py:핵 쪽 — is the physical side (Sinmyo's declared core side)
-engine/test_interface_jumps.py:핵 쪽 — equals the other side unless a jump is declared (the pins of that convention)
-engine/test_interface_jumps.py:맨틀 쪽 — equals the other side unless a jump is declared
+engine/radiogenic.py:핵 쪽 ×1 — is the physical side (core_state's declared core-side CMB temperature, as a consumer)
+engine/check_contracts.py:핵 쪽 ×1 — is the physical side (a comment about declaring the core-side CMB temperature)
+engine/core_entropy.py:핵 쪽 ×1 — is the physical side (declared or solved core side)
+engine/core_entropy.py:core-side ×1 — is the physical side
+engine/dynamo_rocky.py:core-side ×1 — is the physical side (core_state's declared core-side CMB temperature)
+engine/test_cmb_flux.py:core-side ×2 — is the physical side
+engine/test_core_energy.py:core-side ×2 — is the physical side
+engine/test_core_energy.py:mantle side ×2 — is the physical side (the mantle base in the energy balance)
+engine/test_core_energy.py:맨틀 쪽 ×1 — is the physical side
+engine/test_core_state.py:핵 쪽 ×3 — is the physical side (Sinmyo's declared core side)
+engine/test_interface_jumps.py:핵 쪽 ×4 — equals the other side unless a jump is declared (the pins of that convention)
+engine/test_interface_jumps.py:맨틀 쪽 ×5 — equals the other side unless a jump is declared

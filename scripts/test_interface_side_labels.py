@@ -11,6 +11,8 @@ Hits, at the repo root:
 Each hit is fine if its module is on the real-side list (core_history.py, core_energy.py, cmb_flux.py) or if
 scripts/interface_side_labels.txt carries a line `<path>:<hit> — <reason>` for that exact path and hit, whose reason
 contains one of the three exact strings in REASONS. Anything else is a FAIL with its path and hit.
+⚠ Text hits carry their occurrence count (audit e2): the line is `<path>:<text> ×N — <reason>`, and a different
+count in the module FAILs, so a new side text in an already allow-listed module forces a reviewed line.
 Stated non-reach (note 1): keys added by `v.update({…})` or `values[...] = …` are not dict literals under `values`.
 """
 from __future__ import annotations
@@ -55,11 +57,11 @@ def hits(root: pathlib.Path) -> list[tuple[str, str]]:
                         and "temperature" in k.value and SIDE.search(k.value)):
                     keys.add(k.value)
         out += [(rel, k) for k in sorted(keys)]
-        out += [(rel, x) for x in TEXTS if x in src]
+        out += [(rel, f"{x} ×{src.count(x)}") for x in TEXTS if x in src]
     chain = root / "engine" / "chain.yaml"
     if chain.exists():
         src = chain.read_text(encoding="utf-8")
-        out += [("engine/chain.yaml", x) for x in TEXTS if x in src]
+        out += [("engine/chain.yaml", f"{x} ×{src.count(x)}") for x in TEXTS if x in src]
     return out
 
 
@@ -84,6 +86,13 @@ def check(root: pathlib.Path, allow_path: pathlib.Path) -> tuple[list[str], list
             rows.append((p, h, "real-side list"))
             continue
         reason = allow.get((p, h))
+        if reason is None and " ×" in h:
+            text = h.rsplit(" ×", 1)[0]
+            other = [k[1] for k in allow if k[0] == p and k[1].rsplit(" ×", 1)[0] == text]
+            if other:
+                fails.append(f"[FAIL] interface_side_labels — {p}: «{text}» count changed "
+                             f"(allow-list {other[0].rsplit(' ', 1)[1]}, found {h.rsplit(' ', 1)[1]}) — review the new text")
+                continue
         if reason is None:
             fails.append(f"[FAIL] interface_side_labels — {p}: {h} — no side rule")
         elif not any(r in reason for r in REASONS):
@@ -121,6 +130,10 @@ def _fixtures() -> list[str]:
         ("S-guard-layer", {"x.py": 'values = {"mantle_temperature_width": 1}\n'},
          f"engine/x.py{COLON}mantle_temperature_width — names a layer, not an interface side\n", None),
         ("text rule", {"x.py": "# 핵 쪽 경계 온도\n"}, "", "no side rule"),
+        ("text count", {"x.py": "# 핵 쪽 경계 온도\n# 핵 쪽 다시\n"},
+         f"engine/x.py{COLON}핵 쪽 ×1 — is the physical side\n", "count changed"),
+        ("text count ok", {"x.py": "# 핵 쪽 경계 온도\n"},
+         f"engine/x.py{COLON}핵 쪽 ×1 — is the physical side\n", None),
     ]
     for name, files, allow, expect in cases:
         root, a = _scratch(files, allow)
