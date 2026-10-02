@@ -42,6 +42,7 @@ import water_table
 import water2_table
 import steam_if97
 import rtpress             # C120: 녹은 규산염의 액체 끝성분
+import rootfind            # C152: 0 을 사이에 둔 두 시행 안의 근 — 공용 Brent
 from eos import (EARTH_POTENTIAL_T, IAPWS_VII_END, ICE_VII_TO_X,
                  ICE_VII_X_T_MAX, MATERIALS, REINHARDT_P_MAX, SILICATE_PREM_TO_PV,
                  Mixture, PhaseGap, SpinodalGap, core_gamma, mix, water_phase_name,
@@ -826,18 +827,33 @@ def answer_verdict(result, tags: list | None = None) -> str | None:
     return None
 
 
-def _melt_family(st) -> tuple[float, float] | None:
-    """구조의 부분 용융 구간 [p_lo, p_hi] GPa(0 < φ < 1 인 암석 표본의 압력 범위) — 없으면 None."""
+def _melt_family(st) -> tuple[float, float, float] | None:
+    """구조의 부분 용융 구간 [p_lo, p_hi] GPa(0 < φ < 1 인 암석 표본의 압력 범위)와 그 구조의 표본 압력 간격 Δp_s GPa
+    (암석 표본 압력 간격의 중앙값, C152 ⑤) — 없으면 None."""
     part = [p for p, t in st.rock_samples
             if p > 0.0 and t > 0.0 and 0.0 < (eos.silicate_melt_fraction(p, t) or 0.0) < 1.0]
-    return (min(part) / 1e9, max(part) / 1e9) if part else None
+    if not part:
+        return None
+    ps = sorted(p for p, _t in st.rock_samples if p > 0.0)
+    gaps = sorted(b - a for a, b in zip(ps, ps[1:]) if b > a)
+    dps = gaps[len(gaps) // 2] / 1e9 if gaps else 0.0
+    return (min(part) / 1e9, max(part) / 1e9, dps)
 
 
 def _family_jump(a, b) -> bool:
-    """가족이 바뀌었나 — 한쪽만 구간이 있으면 뜀(동결 줄 지휘 결정), 둘 다 있으면 끝 하나라도 0.5 GPa 넘게."""
+    """가족이 바뀌었나 — 한쪽만 구간이 있으면 뜀(동결 줄 지휘 결정), 둘 다 있으면 끝 하나라도 문턱 넘게.
+
+    C152 ⑤ — (a) 있는 쪽이 **표본 하나짜리 실오라기**(폭이 표본 간격 Δp_s 미만)면 있음/없음 차이를 뜀으로 안 센다.
+    (b) 둘 다 있을 때 문턱은 Δp_s ≤ 0.5 GPa 면 0.5 GPa(`FAMILY_JUMP_GPA`, 화성 그대로), 그보다 성기면 1.5 Δp_s."""
     if (a is None) != (b is None):
-        return True
-    return a is not None and (abs(a[0] - b[0]) > FAMILY_JUMP_GPA or abs(a[1] - b[1]) > FAMILY_JUMP_GPA)
+        f = a if a is not None else b
+        dps = f[2] if len(f) > 2 else 0.0
+        return not (f[1] - f[0] < dps or f[1] == f[0])
+    if a is None:
+        return False
+    dps = max(a[2] if len(a) > 2 else 0.0, b[2] if len(b) > 2 else 0.0)
+    thr = FAMILY_JUMP_GPA if dps <= FAMILY_JUMP_GPA else 1.5 * dps
+    return abs(a[0] - b[0]) > thr or abs(a[1] - b[1]) > thr
 
 
 def _family_oscillation(fams: list) -> list | None:
@@ -2211,6 +2227,11 @@ T_DAMPING = 0.5
 T_DAMPING_MAX_DEV = T_DIVERGENCE_MIN
 # 온도 괄호잡기의 시도 횟수. 한 번에 1.6배씩 올린다.
 T_BRACKET_TRIES = 12
+# C152 ④ — 바깥 고리의 재시도가 벽에 막히면, 앞서 풀린 시행과 그 벽 사이에서 벽의 자리를 찾는 이분의 허용 · 예산.
+#   거절에는 벽의 자리만 있으면 되므로 근 정밀도(T_TOL)보다 성기다. 이 사격은 T_PASSES 와 따로 센다.
+T_WALL_TOL = 1e-3
+T_WALL_SHOTS = 10
+WALL_LOCATE_SHOTS = [0]       # C152 ④ — 벽 자리 찾기 사격 수(값 밖 셈, 수락 §3.3)
 #: 표면 암석권 층 바닥 자리의 바깥 고정점 (prereg-surface-lithosphere 덧붙임 2 ①) — |ΔR| 문턱 · 최대 횟수.
 LITHO_R_TOL = 1.0            # m — STEPS 1500 지구 걸음 dr ≈ 3.2 km 의 3e-4
 LITHO_ITERS = 8
@@ -2328,7 +2349,31 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
     loose = _loose and gmf <= 0.0 and envelope_z <= 0.0
     tol_now = {"v": max(SHOOT_TOL, LOOSE_C) if loose else SHOOT_TOL}
     used_tol: dict = {}
-    def attempt(t_try: float) -> tuple[Structure, bool, float]:
+    def locate_wall(anchor, t_wall: float) -> tuple[Structure, bool, float]:
+        """C152 ④ — (풀린 T, 구조, ok) 와 막힌 T 사이 로그 이분. 결과: 벽에 가장 가까운 풀린 시행."""
+        t_ok, got_ok, ok_ok = anchor
+        a, b = math.log(t_ok), math.log(t_wall)
+        shots = 0
+        while abs(b - a) > T_WALL_TOL and shots < T_WALL_SHOTS:
+            shots += 1
+            t_mid = math.exp(0.5 * (a + b))
+            try:
+                got, ok = _shoot_pressure(*args, t_center=t_mid, t_pot=t_pot, p_hint=hint["p"], tol=tol_now["v"], **kw)
+            except PhaseGap as gap:
+                if not gap.temperature_k:
+                    raise
+                b = math.log(t_mid)
+                continue
+            used_tol[id(got)] = tol_now["v"]
+            got.crust_blocked = False
+            if ok:
+                hint["p"] = got.p_center
+            a, t_ok, got_ok, ok_ok = math.log(t_mid), t_mid, got, ok
+        convergence.note("interior._t_wall_locate", abs(b - a) <= T_WALL_TOL)
+        WALL_LOCATE_SHOTS[0] += shots
+        return got_ok, ok_ok, t_ok
+
+    def attempt(t_try: float, anchor=None) -> tuple[Structure, bool, float]:
         """중심 온도 하나로 사격한다. 온도 바닥에 걸리면 올려서 다시 잡는다.
 
         **온도에도 괄호잡기가 필요하다.** 압력 쪽에서 배운 것과 같은 자리다 — 중심
@@ -2371,6 +2416,11 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
                     raise        # 온도가 아니라 압력이 막았다. 그건 진짜다
                 if last is not None and last != gap.too_cold:
                     raise        # 양쪽 벽에 다 부딪혔다. 넓혀서 될 일이 아니다
+                if (anchor is not None and last is None
+                        and (anchor[0] > t_now) == bool(gap.too_cold) and anchor[0] != t_now):
+                    # C152 ④ — 재시도가 벽에 막혔고 앞서 풀린 시행(anchor)이 벽 반대쪽(풀리는 쪽)에 있다: ×1.6 로 건너뛰는
+                    #   대신 둘 사이를 이분해 벽의 자리를 T_WALL_TOL 까지 찾고, 벽에 가장 가까운 풀린 시행을 돌려준다.
+                    return locate_wall(anchor, t_now)
                 last = gap.too_cold
                 if gap.material == CRUST_NAME and not gap.too_cold:
                     crust_hit = True
@@ -2414,6 +2464,8 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
     lo = hi = None               # (log T_c, log T_surf/T_pot): 아래쪽(차다) · 위쪽(뜨겁다)
     devs: list[float] = []
     bracketed = False
+    root = None                  # C152 ② — 0 을 사이에 둔 두 시행이 생기면 그 괄호 안의 Brent 생성기
+    root_t = None                #   그 생성기가 마지막으로 요청한 T_c
     extensions = 0               # 연장 횟수. 좁히는 갈래는 한 번, 진동이 **줄고 있을 때**는 두 번까지
                                  # bracketed 값으로는 못 지킨다 (2026-09-01, 무한 사이클의 원인)
     passes = T_PASSES if _passes is None else _passes
@@ -2474,7 +2526,28 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
         if (len(devs) >= 3 and devs[-1] >= T_CONTRACTION_MIN * devs[-3]
                 and devs[-1] > T_DIVERGENCE_MIN):
             bracketed = True
-        if bracketed and lo is not None and (hi is not None or wall is not None):
+        if lo is not None and hi is not None:
+            # C152 ② — 두 시행이 0 을 사이에 두면 비례 갱신 · 완화 · 띠 문턱과 무관하게 그 괄호 안에서 Brent 로.
+            #   괄호가 걷기로 옮긴 온도(요청한 root_t 와 다름)를 받았으면 지금 괄호로 새로 연다. 허용 · 예산은 오늘 그대로.
+            y_now = math.log(st.t_surface / t_pot)
+            try:
+                if root is not None and t_c == root_t:
+                    x = root.send(y_now)
+                else:
+                    root = rootfind.brent(lo[0], lo[1], hi[0], hi[1], T_TOL)
+                    x = next(root)
+            except StopIteration as fin:
+                x_best, y_best, x_l, x_h = fin.value
+                if _surface_temperature_met(st, t_pot):
+                    break
+                # 괄호가 T_TOL 까지 좁아졌는데 어긋남이 허용 밖 — 근이 아니라 잔차의 뜀을 감쌌다(C152 규칙 2).
+                raise ValueError(
+                    f"표면온도 잔차가 뛴다 — 중심 온도 [{math.exp(x_l):.6g}, {math.exp(x_h):.6g}] K 사이에서 0 을 건너뛴다"
+                    f"(괄호 폭 {x_h - x_l:.2e} ≤ T_TOL {T_TOL:g}, 가까운 끝의 어긋남 {abs(math.expm1(y_best)) * 100:.2f} %). "
+                    "그 사이에 표면 온도가 선언값과 같아지는 해가 없다 (C152).")
+            nxt = math.exp(x)
+            root_t = nxt
+        elif bracketed and lo is not None and (hi is not None or wall is not None):
             if hi is not None:
                 x_lo, y_lo = lo
                 x_hi, y_hi = hi
@@ -2522,7 +2595,7 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
                 nxt = math.sqrt(t_c * wall)
         done = abs(nxt / t_c - 1.0) < T_TOL
         try:
-            got, ok, t_now = attempt(nxt)
+            got, ok, t_now = attempt(nxt, (t_c, st, converged))
         except (Unbound, NoCompactRoot, GridExceeded, SpinodalGap) as why:
             wall, wall_why = nxt, str(why)
             bracketed = True
@@ -4956,8 +5029,16 @@ def infer_three_layer(mass_earth: float, radius_earth: float,
     x1, y1 = b["core_mass_fraction"], b["nmoi"] - nmoi
     best = None
     closed = False
+    # C152 ② — 이웃 두 점이 이미 0 을 사이에 두므로(`pairs`) 할선 대신 그 괄호 안의 Brent. 허용 · 예산(6) 은 그대로.
+    root = rootfind.brent(x0, y0, x1, y1, 1e-12) if (y0 < 0.0) != (y1 < 0.0) and y0 != 0.0 and y1 != 0.0 else None
     for _ in range(6):
-        x = x1 - y1 * (x1 - x0) / (y1 - y0) if y1 != y0 else 0.5 * (x0 + x1)
+        if root is None:
+            x = x1 - y1 * (x1 - x0) / (y1 - y0) if y1 != y0 else 0.5 * (x0 + x1)
+        else:
+            try:
+                x = next(root) if best is None else root.send(y)
+            except StopIteration:
+                break
         got = _solve_ice_for_radius(mass_earth, radius_earth, x,
                                     potential_temperature, tidal_heating)
         if got is None:

@@ -62,6 +62,7 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("parallel_points", "_FN"): (FLAG, "the function the helper is solving now", None),
     ("interior", "_REOPEN"): (FLAG, "re-entry guard while re-closing melt families inside one solve, reset in finally", None),
     ("interior", "_FAMILY_TRAIL"): (MEMO, "one solve's outer-loop family record (addendum 57), cleared at each solve", None),
+    ("interior", "WALL_LOCATE_SHOTS"): (COUNTER, "C152 rule-4 wall-location shots, a count outside values", None),
     ("interior", "_CALL"): (FLAG, "index of the outer shoot call in progress (addendum 58 rule 2), set and restored by shoot()", None),
     ("interior", "_ENTRY"): (FLAG, "re-close entry for one table solve (addendum 57 rule 3c), set and cleared in finally by the caller", None),
     ("structure_grid", "BUILDING"): (FLAG, "table build in progress", None),

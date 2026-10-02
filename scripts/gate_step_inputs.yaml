@@ -124,6 +124,9 @@
 "test_answer_verdict.py":  # by hand: builds Result objects in memory, reads no tracked file as data (melt-window addendum 4)
   globs: []
   hand: true
+"test_rootfind.py":  # by hand: fake residuals and family tuples in memory, reads no tracked file as data (C152)
+  globs: []
+  hand: true
 "test_convergence_meaning.py":  # by hand: drives convergence notes in memory, reads no tracked file as data (C138)
   globs: []
   hand: true
