@@ -29,6 +29,7 @@
 """
 from __future__ import annotations
 
+import bounds              # C154: 범위는 자기가 묶는 방향으로만 판정한다
 import convergence
 import ice_fr2015          # 190 C: 적합 격자 이탈 카운터를 풀이 전후로 읽는다
 import eos                 # 196 B: 밀도 적합의 압력 도달 카운터를 풀이 전후로 읽는다
@@ -3187,6 +3188,7 @@ BASAL_SOLID = "solid"               # 바닥이 솔리더스 아래 — 층이 �
 BASAL_MOLTEN = "molten"             # 바닥이 리퀴더스 위 — 층이 있다
 BASAL_PARTIAL = "partial-melt"      # 부분용융 창 안 — 층이라 부를지 정한 적 없다
 BASAL_OFF_CURVE = "off-curve"       # ⚠ 곡선이 그 압력에 안 닿는다 — «모른다»이지 «안 녹았다»가 아니다
+BASAL_UNDECIDED = "undecided"       # C154 — 140 GPa 위 곡선은 솔리더스의 상계라 «솔리더스 아래» 를 증명하지 못한다
 
 #: 바닥에 층이 있는데 두께를 낼 공급자가 없을 때 겉보기 반지름 자리에 서는 문장.
 #: ⚠ **Khan+ 2023 의 150 ± 15 km 로 채우지 않는다** — 그 수는 대조 대상이지 설치할 상수가
@@ -3218,7 +3220,7 @@ def _basal_silicate_state(st, variant: str,
     ⚠ 두 물음이 같은 답을 주는 일이 흔하지만 같은 물음은 아니다: 얕은 곳만 녹은 기둥은
     «어딘가 녹았다» 이면서 «바닥은 고체» 다."""
     from eos import (silicate_melt_fraction, silicate_melt_refusal, silicate_solidus,
-                     silicate_liquidus, IRON_SHIFT_K_PER_FE_NUMBER, FE_NUMBER_MANTLE)
+                     silicate_liquidus, IRON_SHIFT_K_PER_FE_NUMBER, FE_NUMBER_MANTLE, SILICATE_ROCK_MAX_PA)
     if not st.rock_samples:
         return BASAL_NONE, ""
     # ⚠ **부화는 바닥 표본 하나에만 건다** (사전등록 f68e8156 개정 3 R12, 자 ⓜ).
@@ -3269,6 +3271,15 @@ def _basal_silicate_state(st, variant: str,
                   if cap < gap0 else
                   f" 항의 한계 {cap:.2f} K 이 부화 0 기준 부족분 {gap0:.2f} K 보다 크므로 "
                   f"Fe# {fe_m + gap0 / IRON_SHIFT_K_PER_FE_NUMBER:.1f} 위에서는 닿는다.")
+    if phi <= 0.0 and p_base >= SILICATE_ROCK_MAX_PA:
+        # C154 — 이 압력의 곡선은 순수 MgSiO₃(암석 솔리더스의 **상계**)라 «아래» 는 증명이 아니다.
+        t_sol = silicate_solidus(p_base, variant, d_fe)
+        state, why = bounds.verdict(t_sol - t_base, "upper", 0.0, above=BASAL_SOLID, below=BASAL_PARTIAL,
+                                    undetermined=BASAL_UNDECIDED, name="solidus margin (K)")
+    if phi <= 0.0 and p_base >= SILICATE_ROCK_MAX_PA and state != BASAL_SOLID:
+        return (state,
+                f"**바닥 규산염을 판정하지 않는다** ({p_base / 1e9:.1f} GPa · {t_base:.0f} K) — 140 GPa 위 곡선은 "
+                f"암석 솔리더스의 상계라 φ = 0 이 «안 녹음» 을 증명하지 않는다. {why}.{short}")
     if phi <= 0.0:
         t_sol = silicate_solidus(p_base, variant, d_fe)
         sol_gap = "" if t_sol is None else f" 솔리더스까지 {t_sol - t_base:.2f} K,"
@@ -3322,6 +3333,23 @@ def _silicate_melt_verdict(st, potential_temperature, variant: str) -> tuple[str
         # 전부 φ = 0. 140 GPa 위 표본은 상계 아래라 "미정" 딱지가 붙는다.
         margin = min(silicate_solidus(p, variant) - t for p, t, _ in seen)
         above_rock = any(p >= SILICATE_ROCK_MAX_PA for p, _, _ in seen)
+        # C154 — «고체» 는 기둥 전부를 정확한 곡선으로 봤을 때만 참이다. 140 GPa 위 곡선은 상계(그 여유는 상한)이고,
+        #   못 본 표본이 있으면 거기는 모른다 — 둘 다 «미정» (`_ice_verdict` 와 같은 규율).
+        if above_rock or blind:
+            up_margin = min(silicate_solidus(p, variant) - t for p, t, _ in seen if p >= SILICATE_ROCK_MAX_PA) \
+                if above_rock else margin
+            state, why = bounds.verdict(up_margin, "upper" if above_rock else "exact", 0.0,
+                                        above=SILICATE_STATE_SOLID, below=SILICATE_STATE_PARTIAL,
+                                        undetermined=SILICATE_STATE_UNDECIDED, name="solidus margin above 140 GPa (K)")
+            if blind or state != SILICATE_STATE_SOLID:
+                return (SILICATE_STATE_UNDECIDED, 0.0,
+                        "**암석 기둥의 고체·액체를 판정하지 않는다** — 본 표본은 전부 φ = 0 이지만 "
+                        + ("140 GPa 위 곡선은 암석 솔리더스의 상계라 거기의 '안 녹음' 은 증명이 아니고"
+                           if above_rock else "")
+                        + (" · " if above_rock and blind else "")
+                        + ("곡선이 닿지 않는 구간이 있다" if blind else "")
+                        + " (C154: 범위는 자기가 묶는 방향으로만 판정한다). " + variant_note + "."
+                        + (f" {why}." if why else "") + blind)
         solid_kind = (" 140 GPa 위 구간의 곡선은 순수 MgSiO₃(암석 솔리더스의 상계)라 "
                       "거기의 '안 녹음' 은 미정이다 — 암석은 더 낮게 녹을 수 있다."
                       if above_rock else "")

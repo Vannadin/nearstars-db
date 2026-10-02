@@ -35,6 +35,7 @@ import convergence
 import math
 from dataclasses import replace as _dc_replace
 
+import bounds
 import eos
 from eos import (IRON_LIGHT_ELEMENT_FACTOR, IRON_MELT_MAX, IRON_MELT_SPLICE,
                  CORE_GAMMA_FALLBACK, MATERIALS, CoreGammaMisuse, PhaseGap, core_gamma,
@@ -192,6 +193,26 @@ _NOT_ASKED_WHY = {
                    "없다'였고, 그 고리는 끊겼다.",
     "star": "항성에는 금속 핵이 없다. 자기장은 대류층의 다이나모이고 이 엔진의 몫이 아니다.",
 }
+
+
+def _melt_low(p: float) -> float | None:
+    """Fe–S 융해 괄호의 아래끝(괄호가 없으면 단일 곡선) — `iron_fes_phase_verdict` 가 «고체» 를 가르는 문턱."""
+    band = eos.iron_fes_eutectic_bracket(p)
+    if band is not None:
+        return band[0]
+    return eos.iron_fes_eutectic_t_melt(p)
+
+
+def _bounded_phase(t: float, kind: str, p: float, name: str) -> tuple[str, str]:
+    """`iron_fes_phase_verdict` 에 범위의 방향을 건다 (C154) — 하한으로는 «고체» 를 못 낸다."""
+    v = iron_fes_phase_verdict(t, p)
+    if v != CONDUCTOR_SOLID:
+        return v, ""
+    low = _melt_low(p)
+    if low is None:
+        return v, ""
+    return bounds.verdict(t, kind, low, above=CONDUCTOR_UNDECIDED, below=CONDUCTOR_SOLID,
+                          undetermined=CONDUCTOR_UNDECIDED, name=f"{name} ({p / 1e9:.1f} GPa)")
 
 
 def _gamma_values(material, p_cmb: float, t: float, p_c: float | None = None) -> dict:
@@ -424,8 +445,19 @@ def solve(core_pressure: float,
         t_top = float(core_cmb_temperature) if core_cmb_temperature else cmb_temperature
         # 중심은 단열선을 타고 경계보다 뜨겁다. 경계 온도로 두 자리를 다 판정하는 것은
         # **보수적** 이다 — 중심이 액체가 아니라고 말할 위험만 있고 그 반대는 없다.
-        verdict_cmb = iron_fes_phase_verdict(t_top, p_cmb)
-        verdict_c = iron_fes_phase_verdict(t_top, p_c)
+        # C154 — t_top 는 선언이 없으면 맨틀 쪽 하한이고, 중심에는 **언제나** 하한이다(중심이 단열선을 타고 더 뜨겁다).
+        #   하한은 «액체» 만 증명한다 — «고체» 는 선언된 정확값이 경계에서만 말한다.
+        kind_cmb = "exact" if core_cmb_temperature else "lower"
+        verdict_cmb, bound_cmb = _bounded_phase(t_top, kind_cmb, p_cmb, "경계 온도 t_top")
+        # 중심: 선언이 있으면 그 경계에서 올린 핵 단열선의 중심 온도(정확값)로, 없거나 단열선이 안 서면 t_top(하한)으로.
+        t_c_used, kind_c = t_top, "lower"
+        if core_cmb_temperature:
+            try:
+                t_c_used = _adiabat(material, p_c, p_cmb, t_top, material.density(p_cmb, t_top, 0.0))
+                kind_c = "exact"
+            except (PhaseGap, ValueError, ZeroDivisionError):
+                t_c_used, kind_c = t_top, "lower"
+        verdict_c, bound_c = _bounded_phase(t_c_used, kind_c, p_c, "중심 온도")
         if verdict_cmb == CONDUCTOR_LIQUID and verdict_c == CONDUCTOR_LIQUID:
             phase, grade = CONDUCTOR_LIQUID, "analog"
             reason = (
@@ -436,6 +468,10 @@ def solve(core_pressure: float,
             phase, grade = CONDUCTOR_SOLID, "analog"
             reason = (f"핵 전체가 고체다. {t_top:.0f} K 는 괄호({band_str})의 "
                       "**양끝 모두** 아래다.")
+        elif bound_cmb or bound_c:
+            phase, grade = CONDUCTOR_UNDECIDED, "judgment"
+            reason = (f"판정하지 않는다 — {t_top:.0f} K 는 괄호({band_str}) 아래지만 **하한**이라 "
+                      "«고체» 를 증명하지 못한다 (C154: 범위는 자기가 묶는 방향으로만 판정한다).")
         else:
             phase, grade = CONDUCTOR_UNDECIDED, "judgment"
             reason = (
@@ -447,6 +483,12 @@ def solve(core_pressure: float,
             # C153 — 선언이 없으면 t_top 은 interior_layers 의 맨틀 쪽 값이다. 키 이름(«핵») 과 다르니 이유에 적는다.
             reason += (f" ⚠ 핵 쪽 경계 온도가 선언되지 않아 {t_top:.0f} K 는 interior_layers 의 **맨틀 쪽** CMB 온도"
                        "(핵의 하한)이고, `core_cmb_temperature_used` · `core_center_temperature_used` 둘 다 이 값이다.")
+        for why in (bound_cmb, bound_c):
+            if why:
+                reason += f" ⚠ {why}."
+        if kind_c == "exact" and t_c_used != t_top:
+            reason += (f" 중심은 선언된 경계 {t_top:.0f} K 에서 올린 핵 단열선의 {t_c_used:.0f} K 로 판정했다 "
+                       f"(중심 판정 {verdict_c}, C154).")
         return Result(
             recipe=RECIPE, version=VERSION, regime="melt_bracket", reason=reason,
             grade=grade, inputs=inputs, refs=REFS,

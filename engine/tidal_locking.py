@@ -87,6 +87,7 @@ it reports that the body is in the p:q class and leaves which resonance unanswer
 """
 from __future__ import annotations
 
+import bounds
 import math
 import sys
 from pathlib import Path
@@ -156,6 +157,8 @@ STATE_SYNCHRONOUS = "1:1 synchronous"
 STATE_PSEUDO = "pseudo-synchronous (ω_eq > n; the substellar point drifts)"
 STATE_RESONANCE = "p:q spin-orbit resonance class (which resonance is not decided here)"
 STATE_UNDESPUN = "not despun within the system age"
+#: C154 — 탈회전 시간 띠가 나이를 걸치면 회전 상태는 정해지지 않는다(띠는 한쪽을 증명하지 못한다).
+STATE_UNDETERMINED = "undetermined — the despin-time band straddles the system age"
 
 #: §4 는 'e ≈ 0' 과 '유의미한 e' 로만 가르고 **경계를 인쇄하지 않는다.** 그래서 경계는 문서가 아니라
 #: 문서의 앵커 두 천체가 정한다 — 달은 e = 0.0549 인데 관측 1:1 이고, 수성은 e = 0.206 인데 3:2 다.
@@ -354,14 +357,17 @@ def solve(mass_earth: float | None, radius_earth: float | None, semi_major_axis_
                f"(ω₀ from a {OMEGA0_PERIOD_H:g} h primordial period, this code's working value)",
                "analog", estimates="tau_lock")
 
-    if hi < age_yr:
+    # C154 — 띠(구간)의 판정은 `bounds.interval_verdict` 하나로: 양끝이 같은 쪽일 때만 정한다.
+    side, _why = bounds.interval_verdict(lo, hi, age_yr, above="undespun", below="despun", undetermined=None,
+                                         name="the despin-time band (yr)")
+    if side == "despun":
         locked, state = True, rotation_state(eccentricity or 0.0, permanent_quadrupole)
         verdict = f"despun: even the slow end of the band, {hi:.3g} yr, is under the {age_yr:.3g} yr age"
-    elif lo > age_yr:
+    elif side == "undespun":
         locked, state = False, STATE_UNDESPUN
         verdict = f"not despun: even the fast end, {lo:.3g} yr, exceeds the {age_yr:.3g} yr age"
     else:
-        locked, state = None, STATE_UNDESPUN
+        locked, state = None, STATE_UNDETERMINED
         verdict = (f"cannot say: the band {lo:.3g}–{hi:.3g} yr straddles the {age_yr:.3g} yr age, so "
                    f"the Q/k₂ class alone decides the verdict and the document prints it as a band")
 
