@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import math
 import sys
+from decimal import Decimal
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -51,10 +52,16 @@ for name, value, word in (
     check(f"{name} → 이름 대고 거절", bool(why) and word in why, (why or "")[:80])
 
 print("\n② 원문 표 수 — 합")
-check("W&H Bulk DMM 합 = 100.00(원문 인쇄 합, ± 0.01)", abs(sum(DMM_WH2005.values()) - 100.0) <= 0.01,
-      f"{sum(DMM_WH2005.values()):.3f}")
-check("Khan Table 1 합 = 100(정규화, ± 0.01)", abs(sum(MARS_KHAN2022.values()) - 100.0) <= 0.01,
-      f"{sum(MARS_KHAN2022.values()):.3f}")
+# ⚠ C143 — 원문 표는 소수 둘째 자리로 인쇄돼 있다. 부동소수 합은 그 경계(정확히 99.99)를 마지막 비트로 가르고, 그
+#   비트가 파이썬 판(3.12 보정 합 · 3.9 왼쪽부터)에 따라 달랐다. 인쇄된 자릿수 그대로(`repr`) 십진으로 더한다. 경계는 포함.
+def printed_sum(table):
+    return sum(Decimal(repr(v)) for v in table.values())
+
+
+check("W&H Bulk DMM 합 = 100.00(원문 인쇄 합, ± 0.01)", abs(printed_sum(DMM_WH2005) - 100) <= Decimal("0.01"),
+      f"{printed_sum(DMM_WH2005)}")
+check("Khan Table 1 합 = 100(정규화, ± 0.01)", abs(printed_sum(MARS_KHAN2022) - 100) <= Decimal("0.01"),
+      f"{printed_sum(MARS_KHAN2022)}")
 
 print("\n③ 선언 없는 몸 · 재질 제자리 · 거절")
 import copy                            # noqa: E402

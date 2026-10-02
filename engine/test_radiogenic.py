@@ -23,6 +23,7 @@
 """
 from __future__ import annotations
 
+import math
 import sys
 
 import radiogenic as rg
@@ -37,7 +38,8 @@ def main() -> int:
 
     M = rg.BSE_MASS_STANDARD_KG
     # ── 0. R1 and R3 ───────────────────────────────────────────────────────
-    sums = {el: sum(rg.ISOTOPES[n][1] * rg.ISOTOPES[n][2] for n in rg.ISOTOPES if rg.ELEMENT_OF[n] == el)
+    # C143 — 핀이 붙은 합이다: 판과 무관하게 fsum (U · K 핀은 기준 기계 전환의 다시 굳힘에서 다시 박는다).
+    sums = {el: math.fsum(rg.ISOTOPES[n][1] * rg.ISOTOPES[n][2] for n in rg.ISOTOPES if rg.ELEMENT_OF[n] == el)
             for el in ("U", "Th", "K")}
     for el, pinned in (("U", 9.831432361070902e-05), ("Th", 2.6368e-05), ("K", 3.430136937926238e-09)):
         ok(abs(sums[el] / pinned - 1) < 1e-12, f"R1: {el} nuclide sum {sums[el]!r}, pinned {pinned}")

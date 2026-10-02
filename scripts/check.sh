@@ -1184,6 +1184,10 @@ step "test_fe_hcp.py" bash -c 'cd engine && exec python3 test_fe_hcp.py'
 # fe_prem 의 기준 단열선 (C148, prereg-c148-fe-prem-reference-adiabat 198f3abd). 표가 생성기에서 비트까지 다시
 # 나오는가(수락 9) · 다섯 값 · 마디에서 P_th = 0(수락 10 (c)) · 표 없이 오늘의 꼴 · 기록 세 칸. ~5 s.
 step "test_fe_prem_reference.py" bash -c 'cd engine && exec python3 test_fe_prem_reference.py'
+# C143 가드 (b) (prereg-c143-compensated-sum-boundaries b17dcb5c, 사후 메모 1). 알려진 fsum 자리를 보통 sum() 과
+# 왼쪽부터 sum() 으로 비트까지 대보고, engine/ 의 sum() 호출 목록을 굳힌 목록과 대본다 — 새 호출은 목록 갱신과
+# `scripts/c143_guard.py`(맨 훅 다시 돌리기, 착륙 때 한 번) 를 함께 부른다. ~2 s.
+step "test_c143_guard.py" bash -c 'cd engine && exec python3 test_c143_guard.py'
 # 방사성 예산 (Brief 44). 초안 표의 폐합 세 건·캡션 오독 11.59 TW·과거 방향 3.67 이 앵커다.
 step "test_radiogenic.py" bash -c 'cd engine && exec python3 test_radiogenic.py'
 # 함의 열류 일관성 (Brief 46). Table 2 전사 폐합(42 TW ← 1614 K)과 ζ 양방향 민감도, 판정 라벨이 앵커다.

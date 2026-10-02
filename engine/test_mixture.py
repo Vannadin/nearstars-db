@@ -54,6 +54,9 @@ MERCURY_NMOI = 0.3460
 # 없어서 중원소를 전부 외피에 넣어야 하고, 균질 분포는 실제(희석 핵)보다 더 누른다.
 SATURN_BUDGET_OVERSHOOT = -0.05   # Z 예산 아래 끝에서 이보다 더 작아야 한다
 EXACT = 1e-12            # Z = 0 은 "거의" 가 아니라 정확히 같아야 한다
+#: C143 — 부피 가법 항등식(1/ρ = Σ w/ρ) 하나의 자. 오늘 0e+00, 보정 합의 가장 큰 효과(3.6e-15)의 30 배. `EXACT` 는 목성 검사도
+#: 지키므로 따로 둔다.
+VOLUME_SUM_TOL = 1e-13
 
 
 def _km(res) -> float:
@@ -122,7 +125,7 @@ def main() -> int:
     p = 100e9
     want = 1.0 / (0.4 / si.density(p) + 0.6 / fe.density(p))
     d = abs(m2.density(p) - want) / want
-    ok = d < EXACT
+    ok = d < VOLUME_SUM_TOL
     if not ok:
         fails.append(f"부피 가법 항등식이 {d:.1e} 어긋난다")
     print(f"  [{'PASS' if ok else 'FAIL'}] 1/ρ = Σ w/ρ 가 100 GPa 에서 성립 "

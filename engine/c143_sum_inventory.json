@@ -1,0 +1,462 @@
+[
+[
+"backflow.py",
+"after",
+"sum((1 for i in insts if i['name'] in seen and i['name'] != name))"
+],
+[
+"backflow.py",
+"check",
+"sum((1 for b in fields.values() if b.get('bundled')))"
+],
+[
+"backflow.py",
+"check",
+"sum((1 for b in fields.values() if b.get('derived_from')))"
+],
+[
+"backflow.py",
+"check",
+"sum((1 for b in fields.values() if b.get('kind') not in NON_PHYSICAL))"
+],
+[
+"backflow.py",
+"debt",
+"sum(counts.values())"
+],
+[
+"backflow.py",
+"field",
+"sum((1 for i in instances() if i['name'] == name))"
+],
+[
+"backflow.py",
+"impact",
+"sum((1 for i in r_own + r_cas if fields[i['name']].get('bundled')))"
+],
+[
+"build_graph_page.py",
+"build",
+"sum((1 for e in edges if e['kind'] == k))"
+],
+[
+"chain.py",
+"check",
+"sum((1 for e in edges if e['kind'] == 'influences'))"
+],
+[
+"chain.py",
+"check",
+"sum((1 for e in edges if e['kind'] == 'selects'))"
+],
+[
+"check_contracts.py",
+"main",
+"sum((1 for d in g['nodes'].values() if d.get('kind') == 'computed'))"
+],
+[
+"check_contracts.py",
+"main",
+"sum((1 for row in partial if row[4]))"
+],
+[
+"check_contracts.py",
+"main",
+"sum((len(b.lookups) for b in bodies))"
+],
+[
+"check_contracts.py",
+"main",
+"sum((len(v) for v in class3.values()))"
+],
+[
+"core_energy.py",
+"_integrate_shell",
+"sum((f(i) * 4.0 * math.pi * prof['r'][i] ** 2 * dr for i in range(len(prof['r'])) if r_lo <= prof['r'][i] <= r_hi))"
+],
+[
+"core_entropy.py",
+"solve",
+"sum((1 for v in corners.values() if v > 0.0))"
+],
+[
+"core_entropy.py",
+"solve",
+"sum((1 for v in corners.values() if v > 0.0))"
+],
+[
+"core_history.py",
+"window_summary",
+"sum(vals)"
+],
+[
+"eos.py",
+"__post_init__",
+"sum((w for _m, w in self.parts))"
+],
+[
+"eos.py",
+"c_p",
+"sum((w * m.c_p(p, t, t_pot) for m, w in self.parts if w > 0.0))"
+],
+[
+"eos.py",
+"core_mole_fractions",
+"sum((weights.get(k, 0.0) for k in weights if k != 'Fe'))"
+],
+[
+"eos.py",
+"core_mole_fractions",
+"sum(moles.values())"
+],
+[
+"eos.py",
+"density",
+"sum((w / m.density(p, t, t_pot) for m, w in self.parts if w > 0.0))"
+],
+[
+"eos.py",
+"gruneisen",
+"sum((w * m.gruneisen(p, m.density(p, t, t_pot), t, t_pot) for m, w in self.parts if w > 0.0))"
+],
+[
+"eos.py",
+"iapws_p_melt",
+"sum((a * (1.0 - th ** b) for a, b in zip(IAPWS_IH_A, IAPWS_IH_B)))"
+],
+[
+"eos.py",
+"iapws_p_melt",
+"sum((c * (1.0 - th ** e) for c, e in zip(IAPWS_VII_C, IAPWS_VII_E)))"
+],
+[
+"eos.py",
+"rho0",
+"sum((w / m.rho0 for m, w in self.parts if w > 0.0))"
+],
+[
+"eos.py",
+"rho_seed",
+"sum((w / m.rho_seed(mass_kg) for m, w in self.parts if w > 0.0))"
+],
+[
+"interior.py",
+"_dp",
+"sum((DP45_B4[i] * ks[i][j] for i in range(7)))"
+],
+[
+"interior.py",
+"_dp",
+"sum((DP45_B4[i] * kt[i] for i in range(7)))"
+],
+[
+"interior.py",
+"_dp",
+"sum((DP45_B5[i] * ks[i][j] for i in range(7)))"
+],
+[
+"interior.py",
+"_dp",
+"sum((DP45_B5[i] * kt[i] for i in range(7)))"
+],
+[
+"interior.py",
+"_dp",
+"sum((a[l] * ks[l][0] for l in range(i)))"
+],
+[
+"interior.py",
+"_dp",
+"sum((a[l] * ks[l][1] for l in range(i)))"
+],
+[
+"interior.py",
+"_dp",
+"sum((a[l] * kt[l] for l in range(i)))"
+],
+[
+"interior.py",
+"_dp45_step",
+"sum((DP45_A[i][l] * ks[l][j] for l in range(i)))"
+],
+[
+"interior.py",
+"_dp45_step",
+"sum((DP45_B4[i] * ks[i][j] for i in range(len(ks))))"
+],
+[
+"interior.py",
+"_dp45_step",
+"sum((DP45_B5[i] * ks[i][j] for i in range(len(ks))))"
+],
+[
+"interior.py",
+"_shoot_pressure",
+"sum(((hi_f - (stack[i - 1][0] if i else 0.0)) / (mat.rho_seed(mass_kg) * bulk_factor(mat.name, 0.0, phi0, p_cap)) for i, (hi_f, mat) in enumerate(stack)))"
+],
+[
+"interior.py",
+"_silicate_melt_verdict",
+"sum((1 for _, _, f in seen if f >= 1.0))"
+],
+[
+"mantle_composition.py",
+"select",
+"sum(rock.formula.values())"
+],
+[
+"phase_tables.py",
+"summary",
+"sum((1 for c in cells if c.grade == 'authored'))"
+],
+[
+"run.py",
+"main",
+"sum((1 for d in g['nodes'].values() if d.get('kind') == 'computed'))"
+],
+[
+"samuel_layer.py",
+"_track_margin",
+"sum((wi * p for wi, p in zip(w, self.phi)))"
+],
+[
+"samuel_layer.py",
+"_track_margin",
+"sum(w)"
+],
+[
+"samuel_run.py",
+"a0",
+"sum(((at(rows, 't_c', tt) - v) ** 2 for tt, v in win))"
+],
+[
+"samuel_run.py",
+"a0",
+"sum(((at(rows, 't_m', tt) - v) ** 2 for tt, v in winm))"
+],
+[
+"samuel_run.py",
+"a_layer",
+"sum(((at(rows, 't_c', tt) - v) ** 2 for tt, v in win))"
+],
+[
+"samuel_run.py",
+"a_layer",
+"sum(((at(rows, 't_m', tt) - v) ** 2 for tt, v in winm))"
+],
+[
+"stagnant_lid.py",
+"table2_block_rms",
+"sum((e * e for e in errs))"
+],
+[
+"stagnant_lid.py",
+"table2_block_rms",
+"sum(errs)"
+],
+[
+"stagnant_lid.py",
+"table2_rms",
+"sum((e * e for e in errs))"
+],
+[
+"test_ammonia.py",
+"main",
+"sum((len(iso) for iso in a.ISOTHERMS))"
+],
+[
+"test_body_class.py",
+"main",
+"sum(DEUTERIUM_BAND_MJ)"
+],
+[
+"test_body_class.py",
+"main",
+"sum(HBMM_BAND_MSUN)"
+],
+[
+"test_body_stack.py",
+"<module>",
+"sum((len(v) for v in bs.FIELDS.values()))"
+],
+[
+"test_c143_guard.py",
+"printed_tables",
+"sum((Decimal(repr(v)) for v in t.values()))"
+],
+[
+"test_check_refs.py",
+"main",
+"sum((len(_ks) for _ks in EXEMPT.values()))"
+],
+[
+"test_core_energy.py",
+"integ",
+"sum((f(a + (i + 0.5) * h) * 4 * math.pi * (a + (i + 0.5) * h) ** 2 * h for i in range(n)))"
+],
+[
+"test_core_history.py",
+"<module>",
+"sum((1 for c in ws['per_corner'].values() if c['min'] > 0.0))"
+],
+[
+"test_fe_s.py",
+"<module>",
+"sum(((a * (i + 0.5) * c / steps + b) * (c / steps) for i in range(steps)))"
+],
+[
+"test_interior.py",
+"main",
+"sum((ATOMIC_MASS_U[el] * n for el, n in HILAIRET_FORMULA))"
+],
+[
+"test_mantle_composition.py",
+"printed_sum",
+"sum((Decimal(repr(v)) for v in table.values()))"
+],
+[
+"test_porosity.py",
+"main",
+"sum(small)"
+],
+[
+"test_preset_override.py",
+"<module>",
+"sum((len(lines(x)) for x in inner if getattr(x, 'notes', None)))"
+],
+[
+"test_provenance.py",
+"<module>",
+"sum((1 for path in bodies for name in payload.NEW_PROVENANCE_FIELDS if name in ((yaml.safe_load(path.read_text(encoding='utf-8')) or {}).get('inputs') or {})))"
+],
+[
+"test_rocky_roster.py",
+"main",
+"sum((1 for r in rr.rows() if r['grade'] == rr.ESTIMATED))"
+],
+[
+"test_rocky_roster.py",
+"main",
+"sum((1 for r in rr.rows() if r['grade'] == rr.MASS_ONLY))"
+],
+[
+"test_rocky_roster.py",
+"main",
+"sum((1 for r in rr.rows() if r['name'] in rr._CACHE))"
+],
+[
+"test_samuel_run.py",
+"<module>",
+"sum((0.5 * (a['q_c'] + b['q_c']) * a_c * (b['t'] - a['t']) * sr.GYR_S for a, b in zip(rows, rows[1:])))"
+],
+[
+"test_stagnant_lid.py",
+"main",
+"sum(errs)"
+],
+[
+"test_tidal_heating.py",
+"main",
+"sum((th.transport_mode(f * span) == want for f, want in docs.values()))"
+],
+[
+"test_tidal_heating.py",
+"main",
+"sum((th.transport_mode(f) == want for f, want in docs.values()))"
+],
+[
+"test_tidal_heating.py",
+"main",
+"sum((th.transport_mode(f, c['value']) == want for f, want in controls))"
+],
+[
+"test_tidal_response.py",
+"main",
+"sum((lay.mass for lay in ocean))"
+],
+[
+"tidal_response.py",
+"_love_numbers",
+"sum((c[j] * sols[j][i] for j in range(3)))"
+],
+[
+"tidal_response.py",
+"_solve3",
+"sum((m[r][k] * x[k] for k in range(r + 1, 3)))"
+],
+[
+"tidal_response.py",
+"build_layers",
+"sum((_shell_volume(*bounds[k]) for k in group))"
+],
+[
+"tidal_response.py",
+"elastic_love",
+"sum((c[j] * sols[j][i] for j in range(3)))"
+],
+[
+"tidal_response.py",
+"g_surface_identity",
+"sum((lay.mass for lay in layers))"
+],
+[
+"tidal_response.py",
+"homogeneous_nmoi",
+"sum((8.0 / 15.0 * math.pi * lay.rho * (lay.r_outer ** 5 - lay.r_inner ** 5) for lay in layers))"
+],
+[
+"tools/check_citations.py",
+"scan",
+"sum((n for _, n in rows))"
+],
+[
+"tools/core_items.py",
+"<module>",
+"sum((1 for r in rows if r['kind'] == k))"
+],
+[
+"tools/fe_newton_probe.py",
+"_census",
+"sum((not r['bracket_valid'] for r in bad))"
+],
+[
+"tools/make_aqua_table.py",
+"<module>",
+"sum((1 for i in range(NP) for j in range(NT) if MASK[i][j]))"
+],
+[
+"tools/make_aqua_table.py",
+"<module>",
+"sum((sum(r) for r in MASK))"
+],
+[
+"tools/make_aqua_table.py",
+"<module>",
+"sum(r)"
+],
+[
+"tools/make_hhe_table.py",
+"main",
+"sum(keep_rows)"
+],
+[
+"tools/mars_step_sweep.py",
+"main",
+"sum((1 for x in deltas if x is None))"
+],
+[
+"tools/samuel_a0_report.py",
+"main",
+"sum((r['stefan'] < 0 for r in base['rows']))"
+],
+[
+"tools/samuel_a_report.py",
+"main",
+"sum(r['conditions']['㉡'][0])"
+],
+[
+"tools/samuel_report5.py",
+"rms",
+"sum(((f(sr.at(rows, key, t)) - v) ** 2 for t, v in win))"
+]
+]

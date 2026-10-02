@@ -25,6 +25,8 @@ What the paper does not print, and is chosen here (named so a reader can contest
 """
 from __future__ import annotations
 
+import math
+
 
 def _solve_tridiagonal(a: list, b: list, c: list, d: list) -> list:
     """Thomas algorithm: a[i] x[i-1] + b[i] x[i] + c[i] x[i+1] = d[i]."""
@@ -155,5 +157,6 @@ def _solve4(m: list, v: list) -> list:
                 aug[r][cc] -= f * aug[col][cc]
     x = [0.0] * n
     for r in range(n - 1, -1, -1):
-        x[r] = (aug[r][n] - sum(aug[r][cc] * x[cc] for cc in range(r + 1, n))) / aug[r][r]
+        # C143 — 두 층 경로의 유일한 합. 3.9 의 왼쪽부터 더하기와 3.12 의 보정 합이 끝자리를 가르지 않게 fsum.
+        x[r] = (aug[r][n] - math.fsum(aug[r][cc] * x[cc] for cc in range(r + 1, n))) / aug[r][r]
     return x

@@ -2101,7 +2101,7 @@ def main() -> int:
     from eos import (AVL_ICES_DEVIATION, AVL_ICES_TERNARY_DEVIATION,
                      AVL_VOLUME_DEVIATION, ICE_VII_X_T_MAX,
                      SOLAR_ICE_MASS_FRACTIONS)
-    ok = abs(sum(SOLAR_ICE_MASS_FRACTIONS.values()) - 1.0) < 1e-12
+    ok = abs(math.fsum(SOLAR_ICE_MASS_FRACTIONS.values()) - 1.0) <= 4 * math.ulp(1.0)     # C143 — 판과 무관한 합, ≤ 4 ulp
     if not ok:
         fails.append("태양 조성 얼음 질량분율의 합이 1 이 아니다")
     print(f"  [{'PASS' if ok else 'FAIL'}] 태양 조성 얼음 분율 "

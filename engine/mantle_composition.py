@@ -52,7 +52,7 @@ def read_mantle_composition(decl) -> tuple[dict[str, float] | None, str | None]:
         if not isinstance(v, (int, float)) or isinstance(v, bool) or v < 0.0:
             return None, f"`mantle_composition.{k}` {v!r} 는 0 이상의 수가 아니다"
         wt[k] = float(v)
-    total = sum(wt.values())
+    total = math.fsum(wt.values())       # C143 — 올바르게 반올림된 합: 파이썬 판과 무관한 마지막 비트
     if abs(total - 100.0) > SUM_TOLERANCE_WT:
         return None, f"`mantle_composition` 합 {total:.2f} wt% 가 100 ± {SUM_TOLERANCE_WT:g} 밖"
     missing = [k for k in CFMASNA if k not in wt]
@@ -64,7 +64,7 @@ def read_mantle_composition(decl) -> tuple[dict[str, float] | None, str | None]:
 def cfmasna(wt: dict[str, float]) -> dict[str, float]:
     """CFMASNa 여섯으로 줄여 100 으로 정규화 — Khan+ 2022 Table 1 이 쓴 체계(«normalised to 100%»)."""
     sub = {k: wt[k] for k in CFMASNA}
-    s = sum(sub.values())
+    s = math.fsum(sub.values())          # C143 — 이 값이 표의 지문(`header_key`)으로 들어간다: 판과 무관해야 한다
     return {k: v * 100.0 / s for k, v in sub.items()}
 
 
@@ -335,7 +335,7 @@ class Table:
             if any(x is None and wx > 0.0 for x, wx in zip(q, w)):
                 raise TableMiss(f"({p_pa / 1e9:.4f} GPa, {t_k:.1f} K) 둘레 격자점에 평형 집합이 없다 — "
                                 f"후보 {len(CANDIDATES)} 개가 모두 수렴하지 않았거나 음수 몰분율")
-            out.append(sum(wx * x for x, wx in zip(q, w) if wx > 0.0))
+            out.append(math.fsum(wx * x for x, wx in zip(q, w) if wx > 0.0))     # C143
         return tuple(out)
 
 
