@@ -285,6 +285,11 @@
 "sum((1 for r in refines58 if r[2] == '용융 상태'))"
 ],
 [
+"engine/structure_grid.py",
+"_fold",
+"sum((1 for (a, _ea), (b, _eb) in zip(pts, pts[1:]) if (a < 0.0) != (b < 0.0)))"
+],
+[
 "engine/test_ammonia.py",
 "main",
 "sum((len(iso) for iso in a.ISOTHERMS))"
@@ -383,6 +388,11 @@
 "engine/test_samuel_run.py",
 "<module>",
 "sum((0.5 * (a['q_c'] + b['q_c']) * a_c * (b['t'] - a['t']) * sr.GYR_S for a, b in zip(rows, rows[1:])))"
+],
+[
+"engine/test_stability_walls.py",
+"s_neg",
+"sum((1 for c in CASES if c[3] != 'boils'))"
 ],
 [
 "engine/test_stagnant_lid.py",
@@ -938,6 +948,16 @@
 "scripts/refs/validate_element_colors.py",
 "main",
 "sum((1 for e in data.values() if e['regimes']['atomic_flame']['status'] == 'visible'))"
+],
+[
+"scripts/test_interface_side_labels.py",
+"main",
+"sum((1 for r in rows if r[2] != 'real-side list'))"
+],
+[
+"scripts/test_interface_side_labels.py",
+"main",
+"sum((1 for r in rows if r[2] == 'real-side list'))"
 ],
 [
 "scripts/viz/build_starmap.py",
