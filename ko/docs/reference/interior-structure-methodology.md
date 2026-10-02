@@ -61,6 +61,8 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 `core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—] ·
 `basal_silicate_state` [—] · `core_plus_layer_radius_solved_km` [km] · `basal_layer_thickness_km` [km]
 
+⚠ **경계 온도는 한 관례를 따른다 (C153).** 이 풀이가 경계에서 내는 온도는 그 경계를 지나 이어진 단열선에, 선언된 점프(`interface_temperature_jumps`, 그리고 얼음/외피의 `boundary_temperature_jump`)만 더한 값이다. 한쪽 이름이 붙은 키도 그 경계에 점프가 선언되지 않으면 다른 쪽과 같다. 오늘처럼 어떤 천체도 `core/rock` 점프를 선언하지 않으면 `cmb_temperature` · `cmb_temperature_core` · `cmb_temperature_mantle` 셋이 모두 맨틀 쪽 값이고, `core_temperature` 는 거기서 D″ 층 없이 올린 핵 단열선의 값이다. 물리적인 핵 쪽 CMB 온도는 `core_state` 가 선언으로 받는 `core_cmb_temperature` 이거나 `core_history` 의 T_c 다 (C150 — 여기서 지구가 2546.8 K 로 나오고 Sinmyo+ 2019 의 ≤ 3760 K 와 다른 것은 D″ 층이지 오류가 아니다).
+
 ⚠ **`core_sulphur_wt` 은 핵의 질량분율이고 0–1 이다. wt% 가 아니다.** 황 맞춤이 돌 때만 있다 —
 바디가 `core_plus_layer_radius_km` 와 `light_element_fixing` 을 선언하고 조성은 역산에 맡길 때다. 조성을 직접
 선언한 바디에는 없다. 등급은 `calibrated` 인데, 선언된 핵 반지름을 재현하도록 맞춘 값이기 때문이다.

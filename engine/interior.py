@@ -419,6 +419,9 @@ CRUST_NAME = "crust_primordial"
 
 #: 재료 경계 점프의 어휘 — 경계 이름은 «안쪽 역할/바깥 역할» (prereg-interface-jumps 덧붙임 3 ①).
 #: 상·하부 맨틀 · 내외핵은 층이 아니라 여기 없다(오너 결정: 판 4 뒤).
+# ⚠ **경계 온도의 관례 (C153)**: 구조 풀이가 경계에서 내는 온도는 그 경계를 지나 이어진 단열선에 **선언된 점프만**
+#   더한 것이다. 한 쪽 이름이 붙은 키는 그 경계에 점프가 선언되지 않으면 다른 쪽과 같다 — 실제 핵 쪽 CMB 온도는
+#   `core_state` 의 선언 또는 `core_history` 의 값이다 (interior-structure-methodology.md 같은 문장).
 INTERFACE_ROLES = ("core", "rock", "ice", "crust", "envelope", "lithosphere")   # lithosphere — 이름만, 점프는 아직 거절
 INTERFACE_NAMES = frozenset(f"{a}/{b}" for a in INTERFACE_ROLES for b in INTERFACE_ROLES if a != b)
 
@@ -4391,7 +4394,9 @@ def solve(mass_earth: float,
         values={"nmoi": st.nmoi,
                 "core_temperature": st.t_center,
                 "cmb_temperature": st.t_cmb,
-                # 핵 쪽(= `cmb_temperature`, 뜻 그대로)과 맨틀 바닥 쪽 — `core/rock` 점프만큼 다르다.
+                # 경계의 두 쪽 이름 — 점프가 선언되지 않으면 둘 다 맨틀 쪽(= `cmb_temperature`, 구조 관례)이다.
+                #   `cmb_temperature_core` equals the other side unless a jump is declared: 실제 핵 쪽 CMB 온도는
+                #   `core_state` 의 선언 `core_cmb_temperature` 또는 `core_history` 의 T_c 다 (C153, C150).
                 "cmb_temperature_core": st.t_cmb,
                 "cmb_temperature_mantle": (None if st.t_cmb is None
                                            else st.t_cmb - float(jumps.get("core/rock", 0.0))),

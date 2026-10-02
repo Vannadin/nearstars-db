@@ -211,6 +211,8 @@ nodes:
       (경계 «안쪽 역할/바깥 역할» → K, 층 열의 재료 경계만). ice/envelope 는 위 열경계층
       점프의 경계 이름이라 옛 경로를 그대로 탄다. core/rock 점프가 있으면 cmb_temperature 는
       핵 쪽(뜻 그대로, = cmb_temperature_core)이고 맨틀 바닥 쪽은 cmb_temperature_mantle 이다.
+      core/rock 점프가 없으면(오늘 모든 천체) 세 키가 모두 맨틀 쪽 값으로 같다 — 구조 관례이고,
+      실제 핵 쪽은 core_state 의 선언 core_cmb_temperature 또는 core_history 의 T_c 다 (C153, C150).
       쓰이면 등급이 analog. 없으면 모든 옛 값이 비트까지 같다 (prereg-interface-jumps).
       같은 날 serpentinisation 이 들어왔다 (C10) — 암석층에서 antigorite 가 차지하는
       질량분율, 규산염과 부피 가법으로 섞는 선언 축 하나. 물이 어디까지 갔는가의 이력이라
@@ -240,6 +242,9 @@ nodes:
       이어 그린 것이라 D″ 열경계층과 철의 진짜 단열 기울기가 빠져 있고, 두 편향이 같은
       방향이라 그 값은 **하한** 이다. 하한만으로는 '액체' 만 말할 수 있고 '고체' 는
       말할 수 없다. 핵 쪽 경계 온도를 선언하면 둘 다 말한다.
+      선언이 없으면(melt_bracket · lower_bound 두 갈래) core_cmb_temperature_used 와
+      core_center_temperature_used 는 interior_layers 의 맨틀 쪽 CMB 온도(핵의 하한)이고, melt_bracket 에서는
+      중심에도 같은 값을 쓴다 — 키 이름이 «핵» 이어도 물리적 핵 쪽이 아니다 (C153).
   tidal_response:
     layer: "2층. 허브"
     domain: tidal

@@ -443,6 +443,10 @@ def solve(core_pressure: float,
                 "**걸친다**. 이 창(10–21 GPa)에서 인쇄된 공정온도들이 약 225 K 갈리고 "
                 "(Andrault+ 2009 의 낮은 계보 대 Li+ 2001·Fei+ 2000 의 높은 계보), 어느 쪽을 "
                 "택하는 것이 이 엔진의 일이 아니다. 걸침을 한쪽으로 밀지 않는 것이 괄호의 존재 이유다.")
+        if not core_cmb_temperature:
+            # C153 — 선언이 없으면 t_top 은 interior_layers 의 맨틀 쪽 값이다. 키 이름(«핵») 과 다르니 이유에 적는다.
+            reason += (f" ⚠ 핵 쪽 경계 온도가 선언되지 않아 {t_top:.0f} K 는 interior_layers 의 **맨틀 쪽** CMB 온도"
+                       "(핵의 하한)이고, `core_cmb_temperature_used` · `core_center_temperature_used` 둘 다 이 값이다.")
         return Result(
             recipe=RECIPE, version=VERSION, regime="melt_bracket", reason=reason,
             grade=grade, inputs=inputs, refs=REFS,
