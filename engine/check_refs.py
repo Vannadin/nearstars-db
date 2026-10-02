@@ -45,6 +45,7 @@ escaping. The phrase is matched **verbatim**, including runs of spaces: the heat
 from __future__ import annotations
 
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -238,7 +239,11 @@ def lands_on(doc: str, loc: str, citing: Path) -> str:
     target = target_of(doc, citing)
     if target is None:
         return "a name no file in the repo has"
-    lines = text(target).splitlines()
+    return kind_at(text(target).splitlines(), loc)
+
+
+def kind_at(lines: list[str], loc: str) -> str:
+    """`lands_on`'s test on a given list of lines (today's file, or the file as of a quoted date — C151)."""
     n = int(re.split(r"[-–]", loc)[0])
     if not (1 <= n <= len(lines)):
         return "a line past the end of the document"
@@ -264,6 +269,27 @@ def lands_on(doc: str, loc: str, citing: Path) -> str:
     if section != -1 and before[section:section + 20].startswith("\n## Related") and body.startswith("-"):
         return "a Related list item"
     return "body text"
+
+
+def live_then(doc: str, loc: str, citing: Path, date: str) -> tuple[str | None, str, str]:
+    """C151 (prereg-c151-dated-quotation-landings bd130ff2) — where a citation in a quotation dated `date` landed in the
+    tree as of that date: the last commit on or before it (`git rev-list -1 --before="<date> 23:59:59 +0900" HEAD`),
+    the file at that commit, line N, under `kind_at`. Returns (rev or None, the kind there, that line trimmed)."""
+    target = target_of(doc, citing)
+    if target is None:
+        return None, "a name no file in the repo has", ""
+    r = subprocess.run(["git", "rev-list", "-1", f"--before={date} 23:59:59 +0900", "HEAD"], cwd=ROOT,
+                       capture_output=True, text=True)
+    rev = r.stdout.strip()
+    if r.returncode != 0 or not rev:
+        return None, "no commit on or before the quoted date", ""
+    rel = target.relative_to(ROOT).as_posix()
+    shown = subprocess.run(["git", "show", f"{rev}:{rel}"], cwd=ROOT, capture_output=True, text=True)
+    if shown.returncode != 0:
+        return rev, "a file that did not exist on the quoted date", ""
+    lines = shown.stdout.splitlines()
+    n = int(re.split(r"[-–]", loc)[0])
+    return rev, kind_at(lines, loc), (lines[n - 1].strip() if 1 <= n <= len(lines) else "")
 
 
 CONTRACT = re.compile(r"^## Contract — `([a-z0-9_]+)`")
@@ -377,6 +403,8 @@ def main() -> int:
     unaimed: list[str] = []             # ⑤ whole-document refs: legitimate, but aimed at nothing inside
     preserved = 0                       # citations inside verbatim notes: the record, not a migration target
     quoted_n = 0                        # citations inside quoted material: the quote's, not the note's
+    dead_in_quotes = 0                  # C151 — of those, landing on dead text today
+    quoted_recorded: list[str] = []     # C151 — dead today, live as of the quoted date: recorded, not failed
     quoted: dict[tuple, bool] = {}
     ambig: list[str] = []               # a bare file name that could mean more than one file
     unknown: list[str] = []             # pointers into a file that match no known citation form
@@ -525,7 +553,8 @@ def main() -> int:
                     (note_name if is_preserved(path) else ambig).append(row)
                     continue
                 if in_quote:
-                    quoted[(where0, m.group(1), m.group(2))] = True
+                    # C151 — the quotation's date (on the line, else in the three lines above), for `live_then`
+                    quoted[(where0, m.group(1), m.group(2))] = (re.search(DATE, line) or re.search(DATE, near)).group(0)
                 queue = by_value.get(f"{m.group(1)}:{m.group(2)}")
                 unmigrated.append((where0, m.group(1), m.group(2), path,
                                    queue.pop(0)[0] if queue else ends))
@@ -574,7 +603,21 @@ def main() -> int:
         elif kind in DEAD:
             row = f"{where}: {doc}:{loc} — lands on {kind}, which cannot have been the intent"
             if record:
-                row += " (inside a dated quotation: report, do not rewrite — the quotation stands)"
+                dead_in_quotes += 1
+                # ⚠ C151 — a dated quotation records what the code looked like on its date; every later code move would
+                #   re-break it, and the checker forbids editing the quote. So a dead landing inside one is RECORDED, not
+                #   failed — but only if the citation was live in the tree as of the quoted date (audit e2): a quote that
+                #   was already wrong, or a live cite «parked» in a dated quote, still fails below.
+                rev, then, line_then = live_then(doc, loc, citing, record)
+                if rev is not None and then not in DEAD:
+                    cur = text(target_of(doc, citing)).splitlines()       # `then` resolved, so the file exists today
+                    n_ = int(re.split(r"[-–]", loc)[0])
+                    today = cur[n_ - 1].strip() if 1 <= n_ <= len(cur) else ""
+                    quoted_recorded.append(f"{where}: {doc}:{loc} — lands on {kind}; quoted {record}; live at "
+                                           f"{rev[:8]} («{line_then[:70]}»); the line there today: «{today[:70]}»")
+                    continue
+                row += (f" (inside a dated quotation of {record}, but in the tree as of that date it landed on {then}"
+                        + (f" at {rev[:8]}" if rev else "") + " — the quotation was not live when written)")
             # Only a file that DECLARES itself a preserved record is exempt from failing. A quotation
             # inside a living document is not: the fact that its citation now points at nothing is
             # true whether or not the sentence around it is a quotation.
@@ -633,6 +676,10 @@ def main() -> int:
     print(f"  갈라 쓴 꼴 스윕 — `LINE_REF` 붙은 꼴 {_c['line_attached']}건 · 갈라 쓴 꼴 "
           f"{_c['line_split']}건 · `SELF_LINE` 붙은 꼴 {_c['self_attached']}건 · 갈라 쓴 꼴 "
           f"{_c['self_split']}건 · **이 스윕이 연 파일 {_c['files']}개**")
+    print(f"  인용문 속 인용 {quoted_n}건 · 그중 오늘 죽은 자리에 닿는 것 {dead_in_quotes}건 — 기록 {len(quoted_recorded)}"
+          f" · 실패 {dead_in_quotes - len(quoted_recorded)} (C151)")
+    for r in quoted_recorded:
+        print(f"  [기록] 인용문 속 착지 — {r}")
     for label, rows in (("썩은 앵커", rotten), ("애매한 앵커", ambiguous_a),
                         ("계약 주인 불일치", mismatched), ("있을 수 없는 착지", dead),
                         ("알 수 없는 인용 형식", unknown), ("모호한 문서 이름", ambig)):

@@ -34,6 +34,9 @@ from __future__ import annotations
 
 import io
 import sys
+import os
+import shutil
+import subprocess
 import tempfile
 from contextlib import redirect_stdout
 from pathlib import Path
@@ -179,10 +182,32 @@ def main() -> int:
         # the audit's control experiment: the SAME dead citation, bare and wrapped in a quotation.
         # Wrapping must not turn a failure green — an exemption from being rewritten is not an
         # exemption from being checked — and a quotation without a date is not a record at all.
+        # ⚠ C151 (prereg-c151-dated-quotation-landings bd130ff2): a DATED quotation whose citation was live in the tree
+        #   as of its date is recorded, not failed. The fixture root gets a two-commit history: on 2026-09-01 line 4 does
+        #   not exist yet, on 2026-09-03 it is live, and today (the working tree) it is blank. So the 09-04 quote records
+        #   and the 09-02 quote — dated before its line existed — still fails (audit e2's added control).
         (root / "engine" / "chain.yaml").unlink(missing_ok=True)
+        doc_path = root / "docs" / "reference" / "synthetic-methodology.md"
+        today_doc = doc_path.read_text(encoding="utf-8")
+
+        def git(*args, date=None):
+            env = dict(os.environ, **({"GIT_AUTHOR_DATE": date, "GIT_COMMITTER_DATE": date} if date else {}))
+            subprocess.run(["git", "-c", "user.name=fixture", "-c", "user.email=fixture@example.invalid", *args],
+                           cwd=root, env=env, check=True, capture_output=True)
+        git("init", "-q")
+        doc_path.write_text("# A synthetic document\n\nThe unique sentence lives here and nowhere else.\n",
+                            encoding="utf-8")
+        git("add", "docs/reference/synthetic-methodology.md")
+        git("commit", "-qm", "line 4 does not exist yet", date="2026-09-01T12:00:00+0900")
+        doc_path.write_text("# A synthetic document\n\nThe unique sentence lives here and nowhere else.\n"
+                            "A line that was live on 2026-09-03.\n", encoding="utf-8")
+        git("add", "docs/reference/synthetic-methodology.md")
+        git("commit", "-qm", "line 4 live", date="2026-09-03T12:00:00+0900")
+        doc_path.write_text(today_doc, encoding="utf-8")          # today: line 4 is blank
         for name, body, want_fail in (
                 ("bare.md", "A citation with no quoting: synthetic-methodology.md:4\n", True),
-                ("wrapped.md", 'Quoted with a date, note (2026-09-04): *"synthetic-methodology.md:4"*\n', True),
+                ("wrapped.md", 'Quoted with a date, note (2026-09-04): *"synthetic-methodology.md:4"*\n', False),
+                ("predated.md", 'Quoted with a date, note (2026-09-02): *"synthetic-methodology.md:4"*\n', True),
                 ("nodate.md", 'Quoted with no date: *"synthetic-methodology.md:4"*\n', True)):
             (root / "engine" / name).write_text(body, encoding="utf-8")
             check_refs.SCAN = ((f"engine/{name}",),)
@@ -194,7 +219,11 @@ def main() -> int:
             ok(rc == (1 if want_fail else 0) and ("있을 수 없는 착지" in got) == want_fail,
                f"quote exemption ({name}): a blank-line landing must be reported either way, "
                f"got rc={rc}\n{got}")
+            if not want_fail:      # C151 — the record is printed, with its date, the rev's line and today's line
+                ok("[기록] 인용문 속 착지" in got and "quoted 2026-09-04" in got and "A line that was live" in got,
+                   f"C151 ({name}): the recorded row must name the date, the rev's line and today's line\n{got}")
             (root / "engine" / name).unlink()
+        shutil.rmtree(root / ".git")
 
         # the preserved exemption must not depend on the citation's FORM. The audit's control pair:
         # the same preserved note, the same ambiguous name, once as a line number and once as an
@@ -500,8 +529,8 @@ def main() -> int:
     #   ⚠ 이 수는 소스의 `ok(` 개수가 아니라 **실행된 횟수**다 — 반복문 안의 단정은 여러 번 돈다.
     #   ⚠ **성공 경로에 둔다**: `[PASS]` 를 인쇄하기 직전이라, 앞의 단정들을 **꼬리째** 판정 뒤로
     #   옮기는 사고도 여기서 걸린다 (예전 자리는 자기 위쪽만 지켰다 — 감사석 관찰).
-    if _counter["n"] != 46:
-        print(f"  [FAIL] 도달한 단정 수가 46 이어야 한다 — {_counter['n']} 다. 줄면 어떤 블록이 "
+    if _counter["n"] != 48:   # C151: +2 (the predated fixture and the recorded row)
+        print(f"  [FAIL] 도달한 단정 수가 48 이어야 한다 — {_counter['n']} 다. 줄면 어떤 블록이 "
               f"안 돌고 있다는 뜻이고, 늘면 이 수를 안 올린 것이다 (170 E·171 D 의 사고)")
         return 1
 
