@@ -832,6 +832,8 @@ step "scripts/test_gate_cleanup.sh" bash scripts/test_gate_cleanup.sh
 step "scripts/test_lane_decide.py" bash -c 'python3 scripts/test_lane_decide.py'
 # 게이트 자신: 입력 선언 차선(C136)의 픽스처 — 후크의 import 거르기 셋 · 표류 · 빠진 단계 · also. ~1 s.
 step "scripts/test_gate_step_inputs.py" bash -c 'python3 scripts/test_gate_step_inputs.py'
+# 게이트 자신: 경계 온도에 한쪽 이름을 단 키·문구가 관례 문장 없이 새로 생기지 않는가 (C153). ~1 s.
+step "scripts/test_interface_side_labels.py" bash -c 'python3 scripts/test_interface_side_labels.py'
 # 게이트 자신: 추적 test_*.py 가 전부 여기서 불리거나 이름 박힌 제외 목록(까닭)에 있는가 (C129). ~1 s.
 step "scripts/test_check_unwired_tests.py" bash -c 'python3 scripts/test_check_unwired_tests.py'
 step "scripts/check_unwired_tests.py" bash -c 'python3 scripts/check_unwired_tests.py'

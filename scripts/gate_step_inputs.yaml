@@ -12,6 +12,8 @@
   globs: []
 "scripts/test_gate_step_inputs.py":
   globs: []
+"scripts/test_interface_side_labels.py":  # C153; declared by hand at landing, the next census confirms
+  globs: ["engine/*.py", "engine/chain.yaml"]
 "scripts/test_check_unwired_tests.py":
   globs: []
 "scripts/check_unwired_tests.py":
