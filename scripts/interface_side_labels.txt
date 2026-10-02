@@ -10,7 +10,7 @@ engine/interior.py:맨틀 쪽 ×2 — equals the other side unless a jump is dec
 engine/core_state.py:core_cmb_temperature_used — equals the other side unless a jump is declared (melt_bracket and lower_bound without a declaration; declared branch is the physical core side)
 engine/core_state.py:core_center_temperature_used — equals the other side unless a jump is declared (same branches)
 engine/core_state.py:핵 쪽 ×8 — equals the other side unless a jump is declared (texts about the declared core side and the lower bound)
-engine/core_state.py:맨틀 쪽 ×4 — equals the other side unless a jump is declared
+engine/core_state.py:맨틀 쪽 ×5 — equals the other side unless a jump is declared
 engine/chain.yaml:핵 쪽 ×9 — equals the other side unless a jump is declared (Returns notes state the convention, C153)
 engine/chain.yaml:맨틀 쪽 ×2 — equals the other side unless a jump is declared
 engine/radiogenic.py:mantle_temperature_floor_min — names a layer, not an interface side
