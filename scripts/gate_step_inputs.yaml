@@ -148,7 +148,7 @@
 "test_fe_prem_reference.py":
   globs: []
 "test_c143_guard.py":
-  globs: ["engine/**.py", "engine/c143_sum_inventory.json", "engine/test_mantle_composition.py"]
+  globs: ["engine/**.py", "scripts/**.py", "engine/c143_sum_inventory.json"]
 "test_radiogenic.py":
   globs: []
 "test_mantle_flux.py":

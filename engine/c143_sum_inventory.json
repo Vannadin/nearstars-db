@@ -1,462 +1,987 @@
 [
 [
-"backflow.py",
+"engine/backflow.py",
 "after",
 "sum((1 for i in insts if i['name'] in seen and i['name'] != name))"
 ],
 [
-"backflow.py",
+"engine/backflow.py",
 "check",
 "sum((1 for b in fields.values() if b.get('bundled')))"
 ],
 [
-"backflow.py",
+"engine/backflow.py",
 "check",
 "sum((1 for b in fields.values() if b.get('derived_from')))"
 ],
 [
-"backflow.py",
+"engine/backflow.py",
 "check",
 "sum((1 for b in fields.values() if b.get('kind') not in NON_PHYSICAL))"
 ],
 [
-"backflow.py",
+"engine/backflow.py",
 "debt",
 "sum(counts.values())"
 ],
 [
-"backflow.py",
+"engine/backflow.py",
 "field",
 "sum((1 for i in instances() if i['name'] == name))"
 ],
 [
-"backflow.py",
+"engine/backflow.py",
 "impact",
 "sum((1 for i in r_own + r_cas if fields[i['name']].get('bundled')))"
 ],
 [
-"build_graph_page.py",
+"engine/build_graph_page.py",
 "build",
 "sum((1 for e in edges if e['kind'] == k))"
 ],
 [
-"chain.py",
+"engine/chain.py",
 "check",
 "sum((1 for e in edges if e['kind'] == 'influences'))"
 ],
 [
-"chain.py",
+"engine/chain.py",
 "check",
 "sum((1 for e in edges if e['kind'] == 'selects'))"
 ],
 [
-"check_contracts.py",
+"engine/check_contracts.py",
 "main",
 "sum((1 for d in g['nodes'].values() if d.get('kind') == 'computed'))"
 ],
 [
-"check_contracts.py",
+"engine/check_contracts.py",
 "main",
 "sum((1 for row in partial if row[4]))"
 ],
 [
-"check_contracts.py",
+"engine/check_contracts.py",
 "main",
 "sum((len(b.lookups) for b in bodies))"
 ],
 [
-"check_contracts.py",
+"engine/check_contracts.py",
 "main",
 "sum((len(v) for v in class3.values()))"
 ],
 [
-"core_energy.py",
+"engine/core_energy.py",
 "_integrate_shell",
 "sum((f(i) * 4.0 * math.pi * prof['r'][i] ** 2 * dr for i in range(len(prof['r'])) if r_lo <= prof['r'][i] <= r_hi))"
 ],
 [
-"core_entropy.py",
+"engine/core_entropy.py",
 "solve",
 "sum((1 for v in corners.values() if v > 0.0))"
 ],
 [
-"core_entropy.py",
+"engine/core_entropy.py",
 "solve",
 "sum((1 for v in corners.values() if v > 0.0))"
 ],
 [
-"core_history.py",
+"engine/core_history.py",
 "window_summary",
 "sum(vals)"
 ],
 [
-"eos.py",
+"engine/eos.py",
 "__post_init__",
 "sum((w for _m, w in self.parts))"
 ],
 [
-"eos.py",
+"engine/eos.py",
 "c_p",
 "sum((w * m.c_p(p, t, t_pot) for m, w in self.parts if w > 0.0))"
 ],
 [
-"eos.py",
+"engine/eos.py",
 "core_mole_fractions",
 "sum((weights.get(k, 0.0) for k in weights if k != 'Fe'))"
 ],
 [
-"eos.py",
+"engine/eos.py",
 "core_mole_fractions",
 "sum(moles.values())"
 ],
 [
-"eos.py",
+"engine/eos.py",
 "density",
 "sum((w / m.density(p, t, t_pot) for m, w in self.parts if w > 0.0))"
 ],
 [
-"eos.py",
+"engine/eos.py",
 "gruneisen",
 "sum((w * m.gruneisen(p, m.density(p, t, t_pot), t, t_pot) for m, w in self.parts if w > 0.0))"
 ],
 [
-"eos.py",
+"engine/eos.py",
 "iapws_p_melt",
 "sum((a * (1.0 - th ** b) for a, b in zip(IAPWS_IH_A, IAPWS_IH_B)))"
 ],
 [
-"eos.py",
+"engine/eos.py",
 "iapws_p_melt",
 "sum((c * (1.0 - th ** e) for c, e in zip(IAPWS_VII_C, IAPWS_VII_E)))"
 ],
 [
-"eos.py",
+"engine/eos.py",
 "rho0",
 "sum((w / m.rho0 for m, w in self.parts if w > 0.0))"
 ],
 [
-"eos.py",
+"engine/eos.py",
 "rho_seed",
 "sum((w / m.rho_seed(mass_kg) for m, w in self.parts if w > 0.0))"
 ],
 [
-"interior.py",
+"engine/interior.py",
 "_dp",
 "sum((DP45_B4[i] * ks[i][j] for i in range(7)))"
 ],
 [
-"interior.py",
+"engine/interior.py",
 "_dp",
 "sum((DP45_B4[i] * kt[i] for i in range(7)))"
 ],
 [
-"interior.py",
+"engine/interior.py",
 "_dp",
 "sum((DP45_B5[i] * ks[i][j] for i in range(7)))"
 ],
 [
-"interior.py",
+"engine/interior.py",
 "_dp",
 "sum((DP45_B5[i] * kt[i] for i in range(7)))"
 ],
 [
-"interior.py",
+"engine/interior.py",
 "_dp",
 "sum((a[l] * ks[l][0] for l in range(i)))"
 ],
 [
-"interior.py",
+"engine/interior.py",
 "_dp",
 "sum((a[l] * ks[l][1] for l in range(i)))"
 ],
 [
-"interior.py",
+"engine/interior.py",
 "_dp",
 "sum((a[l] * kt[l] for l in range(i)))"
 ],
 [
-"interior.py",
+"engine/interior.py",
 "_dp45_step",
 "sum((DP45_A[i][l] * ks[l][j] for l in range(i)))"
 ],
 [
-"interior.py",
+"engine/interior.py",
 "_dp45_step",
 "sum((DP45_B4[i] * ks[i][j] for i in range(len(ks))))"
 ],
 [
-"interior.py",
+"engine/interior.py",
 "_dp45_step",
 "sum((DP45_B5[i] * ks[i][j] for i in range(len(ks))))"
 ],
 [
-"interior.py",
+"engine/interior.py",
 "_shoot_pressure",
 "sum(((hi_f - (stack[i - 1][0] if i else 0.0)) / (mat.rho_seed(mass_kg) * bulk_factor(mat.name, 0.0, phi0, p_cap)) for i, (hi_f, mat) in enumerate(stack)))"
 ],
 [
-"interior.py",
+"engine/interior.py",
 "_silicate_melt_verdict",
 "sum((1 for _, _, f in seen if f >= 1.0))"
 ],
 [
-"mantle_composition.py",
+"engine/mantle_composition.py",
 "select",
 "sum(rock.formula.values())"
 ],
 [
-"phase_tables.py",
+"engine/phase_tables.py",
 "summary",
 "sum((1 for c in cells if c.grade == 'authored'))"
 ],
 [
-"run.py",
+"engine/run.py",
 "main",
 "sum((1 for d in g['nodes'].values() if d.get('kind') == 'computed'))"
 ],
 [
-"samuel_layer.py",
+"engine/samuel_layer.py",
 "_track_margin",
 "sum((wi * p for wi, p in zip(w, self.phi)))"
 ],
 [
-"samuel_layer.py",
+"engine/samuel_layer.py",
 "_track_margin",
 "sum(w)"
 ],
 [
-"samuel_run.py",
+"engine/samuel_run.py",
 "a0",
 "sum(((at(rows, 't_c', tt) - v) ** 2 for tt, v in win))"
 ],
 [
-"samuel_run.py",
+"engine/samuel_run.py",
 "a0",
 "sum(((at(rows, 't_m', tt) - v) ** 2 for tt, v in winm))"
 ],
 [
-"samuel_run.py",
+"engine/samuel_run.py",
 "a_layer",
 "sum(((at(rows, 't_c', tt) - v) ** 2 for tt, v in win))"
 ],
 [
-"samuel_run.py",
+"engine/samuel_run.py",
 "a_layer",
 "sum(((at(rows, 't_m', tt) - v) ** 2 for tt, v in winm))"
 ],
 [
-"stagnant_lid.py",
+"engine/stagnant_lid.py",
 "table2_block_rms",
 "sum((e * e for e in errs))"
 ],
 [
-"stagnant_lid.py",
+"engine/stagnant_lid.py",
 "table2_block_rms",
 "sum(errs)"
 ],
 [
-"stagnant_lid.py",
+"engine/stagnant_lid.py",
 "table2_rms",
 "sum((e * e for e in errs))"
 ],
 [
-"test_ammonia.py",
+"engine/test_ammonia.py",
 "main",
 "sum((len(iso) for iso in a.ISOTHERMS))"
 ],
 [
-"test_body_class.py",
+"engine/test_body_class.py",
 "main",
 "sum(DEUTERIUM_BAND_MJ)"
 ],
 [
-"test_body_class.py",
+"engine/test_body_class.py",
 "main",
 "sum(HBMM_BAND_MSUN)"
 ],
 [
-"test_body_stack.py",
+"engine/test_body_stack.py",
 "<module>",
 "sum((len(v) for v in bs.FIELDS.values()))"
 ],
 [
-"test_c143_guard.py",
+"engine/test_c143_guard.py",
+"main",
+"sum(fixture)"
+],
+[
+"engine/test_c143_guard.py",
+"main",
+"sum(fixture)"
+],
+[
+"engine/test_c143_guard.py",
 "printed_tables",
 "sum((Decimal(repr(v)) for v in t.values()))"
 ],
 [
-"test_check_refs.py",
+"engine/test_check_refs.py",
 "main",
 "sum((len(_ks) for _ks in EXEMPT.values()))"
 ],
 [
-"test_core_energy.py",
+"engine/test_core_energy.py",
 "integ",
 "sum((f(a + (i + 0.5) * h) * 4 * math.pi * (a + (i + 0.5) * h) ** 2 * h for i in range(n)))"
 ],
 [
-"test_core_history.py",
+"engine/test_core_history.py",
 "<module>",
 "sum((1 for c in ws['per_corner'].values() if c['min'] > 0.0))"
 ],
 [
-"test_fe_s.py",
+"engine/test_fe_s.py",
 "<module>",
 "sum(((a * (i + 0.5) * c / steps + b) * (c / steps) for i in range(steps)))"
 ],
 [
-"test_interior.py",
+"engine/test_interior.py",
 "main",
 "sum((ATOMIC_MASS_U[el] * n for el, n in HILAIRET_FORMULA))"
 ],
 [
-"test_mantle_composition.py",
+"engine/test_mantle_composition.py",
 "printed_sum",
 "sum((Decimal(repr(v)) for v in table.values()))"
 ],
 [
-"test_porosity.py",
+"engine/test_porosity.py",
 "main",
 "sum(small)"
 ],
 [
-"test_preset_override.py",
+"engine/test_preset_override.py",
 "<module>",
 "sum((len(lines(x)) for x in inner if getattr(x, 'notes', None)))"
 ],
 [
-"test_provenance.py",
+"engine/test_provenance.py",
 "<module>",
 "sum((1 for path in bodies for name in payload.NEW_PROVENANCE_FIELDS if name in ((yaml.safe_load(path.read_text(encoding='utf-8')) or {}).get('inputs') or {})))"
 ],
 [
-"test_rocky_roster.py",
+"engine/test_rocky_roster.py",
 "main",
 "sum((1 for r in rr.rows() if r['grade'] == rr.ESTIMATED))"
 ],
 [
-"test_rocky_roster.py",
+"engine/test_rocky_roster.py",
 "main",
 "sum((1 for r in rr.rows() if r['grade'] == rr.MASS_ONLY))"
 ],
 [
-"test_rocky_roster.py",
+"engine/test_rocky_roster.py",
 "main",
 "sum((1 for r in rr.rows() if r['name'] in rr._CACHE))"
 ],
 [
-"test_samuel_run.py",
+"engine/test_samuel_run.py",
 "<module>",
 "sum((0.5 * (a['q_c'] + b['q_c']) * a_c * (b['t'] - a['t']) * sr.GYR_S for a, b in zip(rows, rows[1:])))"
 ],
 [
-"test_stagnant_lid.py",
+"engine/test_stagnant_lid.py",
 "main",
 "sum(errs)"
 ],
 [
-"test_tidal_heating.py",
+"engine/test_tidal_heating.py",
 "main",
 "sum((th.transport_mode(f * span) == want for f, want in docs.values()))"
 ],
 [
-"test_tidal_heating.py",
+"engine/test_tidal_heating.py",
 "main",
 "sum((th.transport_mode(f) == want for f, want in docs.values()))"
 ],
 [
-"test_tidal_heating.py",
+"engine/test_tidal_heating.py",
 "main",
 "sum((th.transport_mode(f, c['value']) == want for f, want in controls))"
 ],
 [
-"test_tidal_response.py",
+"engine/test_tidal_response.py",
 "main",
 "sum((lay.mass for lay in ocean))"
 ],
 [
-"tidal_response.py",
+"engine/tidal_response.py",
 "_love_numbers",
 "sum((c[j] * sols[j][i] for j in range(3)))"
 ],
 [
-"tidal_response.py",
+"engine/tidal_response.py",
 "_solve3",
 "sum((m[r][k] * x[k] for k in range(r + 1, 3)))"
 ],
 [
-"tidal_response.py",
+"engine/tidal_response.py",
 "build_layers",
 "sum((_shell_volume(*bounds[k]) for k in group))"
 ],
 [
-"tidal_response.py",
+"engine/tidal_response.py",
 "elastic_love",
 "sum((c[j] * sols[j][i] for j in range(3)))"
 ],
 [
-"tidal_response.py",
+"engine/tidal_response.py",
 "g_surface_identity",
 "sum((lay.mass for lay in layers))"
 ],
 [
-"tidal_response.py",
+"engine/tidal_response.py",
 "homogeneous_nmoi",
 "sum((8.0 / 15.0 * math.pi * lay.rho * (lay.r_outer ** 5 - lay.r_inner ** 5) for lay in layers))"
 ],
 [
-"tools/check_citations.py",
+"engine/tools/check_citations.py",
 "scan",
 "sum((n for _, n in rows))"
 ],
 [
-"tools/core_items.py",
+"engine/tools/core_items.py",
 "<module>",
 "sum((1 for r in rows if r['kind'] == k))"
 ],
 [
-"tools/fe_newton_probe.py",
+"engine/tools/fe_newton_probe.py",
 "_census",
 "sum((not r['bracket_valid'] for r in bad))"
 ],
 [
-"tools/make_aqua_table.py",
+"engine/tools/make_aqua_table.py",
 "<module>",
 "sum((1 for i in range(NP) for j in range(NT) if MASK[i][j]))"
 ],
 [
-"tools/make_aqua_table.py",
+"engine/tools/make_aqua_table.py",
 "<module>",
 "sum((sum(r) for r in MASK))"
 ],
 [
-"tools/make_aqua_table.py",
+"engine/tools/make_aqua_table.py",
 "<module>",
 "sum(r)"
 ],
 [
-"tools/make_hhe_table.py",
+"engine/tools/make_hhe_table.py",
 "main",
 "sum(keep_rows)"
 ],
 [
-"tools/mars_step_sweep.py",
+"engine/tools/mars_step_sweep.py",
 "main",
 "sum((1 for x in deltas if x is None))"
 ],
 [
-"tools/samuel_a0_report.py",
+"engine/tools/samuel_a0_report.py",
 "main",
 "sum((r['stefan'] < 0 for r in base['rows']))"
 ],
 [
-"tools/samuel_a_report.py",
+"engine/tools/samuel_a_report.py",
 "main",
 "sum(r['conditions']['㉡'][0])"
 ],
 [
-"tools/samuel_report5.py",
+"engine/tools/samuel_report5.py",
 "rms",
 "sum(((f(sr.at(rows, key, t)) - v) ** 2 for t, v in win))"
+],
+[
+"scripts/build_sitemap.py",
+"build_report",
+"sum((len(v) for v in outbound.values()))"
+],
+[
+"scripts/build_sitemap.py",
+"build_report",
+"sum((len(v) for v in outbound.values()))"
+],
+[
+"scripts/build_sitemap.py",
+"build_report",
+"sum((weight[p] for p in ps))"
+],
+[
+"scripts/build_sitemap.py",
+"build_report",
+"sum(weight.values())"
+],
+[
+"scripts/build_sitemap.py",
+"main",
+"sum(weight.values())"
+],
+[
+"scripts/c143_guard.py",
+"main",
+"sum((1 for x, y in zip(a, b) if x != y))"
+],
+[
+"scripts/c143_guard.py",
+"main",
+"sum((1 for x, y in zip(kinds_a, kinds_b) if x != y))"
+],
+[
+"scripts/check_language.py",
+"hangul_ratio",
+"sum((1 for c in text if 44032 <= ord(c) <= 55203))"
+],
+[
+"scripts/check_language.py",
+"hangul_ratio",
+"sum((1 for c in text if c.isascii() and c.isalpha()))"
+],
+[
+"scripts/check_phase4_gate.py",
+"summarize_legacy",
+"sum((1 for r in rows if isinstance(r, dict) and r.get('axis') and ('.' not in str(r['axis']))))"
+],
+[
+"scripts/check_phase4_gate.py",
+"summarize_legacy",
+"sum((1 for r in rows if isinstance(r, dict) and r.get('status') not in STATUS))"
+],
+[
+"scripts/check_pipeline_flow.py",
+"<module>",
+"sum((1 for cat in FLOORS[cls] if cat in na))"
+],
+[
+"scripts/check_pipeline_flow.py",
+"<module>",
+"sum(floor_gaps_by_cls.values())"
+],
+[
+"scripts/check_unwired_tests.py",
+"audit",
+"sum((t in excluded for t in tests))"
+],
+[
+"scripts/gate_pool_order_build.py",
+"main",
+"sum(v)"
+],
+[
+"scripts/phase3/build_bibliography.py",
+"main",
+"sum((1 for p in papers if p.get('arxiv_id')))"
+],
+[
+"scripts/phase3/build_manual_fetch.py",
+"main",
+"sum((len(s['papers']) for s in bib_auto))"
+],
+[
+"scripts/phase3/build_manual_fetch.py",
+"main",
+"sum((max(0, len(s['data']['A']) - 1) for s in systems))"
+],
+[
+"scripts/phase3/build_manual_fetch.py",
+"main",
+"sum((max(0, len(s['data']['B']) - 1) for s in systems))"
+],
+[
+"scripts/phase3/score_papers.py",
+"score_relevance",
+"sum((1 for r in RELEVANT_TOPICS_COMPILED if r.search(body)))"
+],
+[
+"scripts/phase4/build_phase4_html.py",
+"body_stats",
+"sum((1 for d in rows if (d.get('gate') or {}).get('verdict') == 'documented-divergence'))"
+],
+[
+"scripts/phase4/build_phase4_html.py",
+"body_stats",
+"sum((1 for d in rows if d.get('status') == 'passthrough'))"
+],
+[
+"scripts/phase4/build_phase4_html.py",
+"body_stats",
+"sum((1 for d in rows if d.get('status') in ('gated', 'emitted')))"
+],
+[
+"scripts/phase4/build_phase4_html.py",
+"body_stats",
+"sum((1 for d in rows if d.get('status') in ('open', 'art-directed')))"
+],
+[
+"scripts/phase4/build_phase4_html.py",
+"render_hub",
+"sum((1 for d in rows if (d.get('gate') or {}).get('verdict') == 'documented-divergence'))"
+],
+[
+"scripts/phase4/build_phase4_html.py",
+"render_hub",
+"sum((x[3] for x in boards))"
+],
+[
+"scripts/phase4/build_phase4_html.py",
+"render_hub",
+"sum((x[4] for x in boards))"
+],
+[
+"scripts/phase4/build_phase4_html.py",
+"render_index",
+"sum((1 for b in order for d in bodies[b] if (d.get('gate') or {}).get('verdict') == 'documented-divergence'))"
+],
+[
+"scripts/phase4/build_phase4_html.py",
+"render_index",
+"sum((len(bodies[b]) for b in order))"
+],
+[
+"scripts/pipeline/build_curated_from_ps.py",
+"main",
+"sum((1 for v in doi_cache.values() if v))"
+],
+[
+"scripts/pipeline/build_reports_index.py",
+"main",
+"sum((1 for v in manifest.values() if v.get('phase2')))"
+],
+[
+"scripts/pipeline/build_reports_index.py",
+"main",
+"sum((len(v.get('phase3', {})) for v in manifest.values()))"
+],
+[
+"scripts/pipeline/build_reports_index.py",
+"main",
+"sum((len(v.get('phase4', {})) for v in manifest.values()))"
+],
+[
+"scripts/pipeline/build_systems.py",
+"_mass_weighted_average",
+"sum((m * p[i] for m, p in zip(masses, positions)))"
+],
+[
+"scripts/pipeline/build_systems.py",
+"_mass_weighted_average",
+"sum((m * v[i] for m, v in zip(masses, velocities)))"
+],
+[
+"scripts/pipeline/build_systems.py",
+"_mass_weighted_average",
+"sum(masses)"
+],
+[
+"scripts/pipeline/build_systems.py",
+"resolve_barycenter_state",
+"sum((m * r['dec_deg'] for m, r in zip(masses, recs)))"
+],
+[
+"scripts/pipeline/build_systems.py",
+"resolve_barycenter_state",
+"sum((m * r['parallax_mas'] for m, r in zip(masses, recs)))"
+],
+[
+"scripts/pipeline/build_systems.py",
+"resolve_barycenter_state",
+"sum((m * r['ra_deg'] for m, r in zip(masses, recs)))"
+],
+[
+"scripts/pipeline/build_systems.py",
+"resolve_barycenter_state",
+"sum(masses)"
+],
+[
+"scripts/pipeline/build_systems.py",
+"resolve_binary_component_states",
+"sum((comps_by_name[n]['mass_msun'] for n in inner_members))"
+],
+[
+"scripts/pipeline/fetch_photometry.py",
+"<module>",
+"sum((1 for v in results.values() if v['vmag_v'] is not None))"
+],
+[
+"scripts/pipeline/fetch_planets.py",
+"main",
+"sum((1 for ps in results.values() for p in ps if p.get('omega_deg') is not None))"
+],
+[
+"scripts/pipeline/fetch_planets.py",
+"main",
+"sum((1 for ps in results.values() for p in ps if p.get('tepcat')))"
+],
+[
+"scripts/pipeline/fetch_planets.py",
+"main",
+"sum((1 for ps in results.values() for p in ps if p.get('tperi_bjd') is not None))"
+],
+[
+"scripts/pipeline/fetch_planets.py",
+"main",
+"sum((len(v) for v in results.values()))"
+],
+[
+"scripts/pipeline/fetch_planets_ps.py",
+"main",
+"sum((len(v) for v in result.values()))"
+],
+[
+"scripts/pipeline/fetch_stellar_props.py",
+"main",
+"sum((1 for v in results.values() if v['radius_measurements']))"
+],
+[
+"scripts/pipeline/fetch_stellar_props.py",
+"main",
+"sum((1 for v in results.values() if v['spectype']))"
+],
+[
+"scripts/pipeline/fetch_stellar_props.py",
+"main",
+"sum((1 for v in results.values() if v['teff_k']))"
+],
+[
+"scripts/pipeline/fetch_stellarium_ids.py",
+"main",
+"sum((len(p) for _, p in to_process))"
+],
+[
+"scripts/pipeline/generate_target_list.py",
+"<module>",
+"sum((e['binary'] for e in entries))"
+],
+[
+"scripts/pipeline/generate_target_list.py",
+"<module>",
+"sum((len(e['components']) for e in entries))"
+],
+[
+"scripts/pipeline/resolve_emit_values.py",
+"main",
+"sum((1 for e in r['effective'].values() if e.get('overrides_phase3')))"
+],
+[
+"scripts/pipeline/resolve_emit_values.py",
+"main",
+"sum((1 for e in r['effective'].values() if e['source'] == 'phase4'))"
+],
+[
+"scripts/pipeline/resolve_emit_values.py",
+"main",
+"sum((len(v) for v in r['phase4'].values()))"
+],
+[
+"scripts/pipeline/test_hierarchical.py",
+"_vec_norm",
+"sum((x * x for x in u))"
+],
+[
+"scripts/pipeline/validate.py",
+"<module>",
+"sum((len(v) for v in planets_curated.values()))"
+],
+[
+"scripts/pipeline/validate.py",
+"<module>",
+"sum((len(v.get('disk_measurements', [])) for v in disks_curated.values()))"
+],
+[
+"scripts/pipeline/validate.py",
+"<module>",
+"sum((m * s[0][i] for m, s in zip(m_in, states)))"
+],
+[
+"scripts/pipeline/validate.py",
+"<module>",
+"sum((m * s[1][i] for m, s in zip(m_in, states)))"
+],
+[
+"scripts/pipeline/validate.py",
+"<module>",
+"sum(m_in)"
+],
+[
+"scripts/refs/build_aurora_colors.py",
+"aurora_spectrum",
+"sum((k * comp.get(q, 0.0) * n for q, k in e['quench'].items()))"
+],
+[
+"scripts/refs/build_lte_plasma_colors.py",
+"_partition",
+"sum((l['g'] * math.exp(-l['E_cm'] / kt) for l in levels))"
+],
+[
+"scripts/refs/build_lte_plasma_colors.py",
+"main",
+"sum((1 for v in data.values() if v.get('confidence') == 'low'))"
+],
+[
+"scripts/refs/build_lte_plasma_colors.py",
+"main",
+"sum((1 for v in data.values() if v['status'] == 'visible'))"
+],
+[
+"scripts/refs/build_molecular_db.py",
+"main",
+"sum((1 for m in MOLECULES.values() if m['atoms'] == 2))"
+],
+[
+"scripts/refs/build_molecular_db.py",
+"main",
+"sum((1 for m in MOLECULES.values() if m['atoms'] >= 3))"
+],
+[
+"scripts/refs/emit_atmosphere_color.py",
+"composition_to_atoms",
+"sum(kept.values())"
+],
+[
+"scripts/refs/magnetopause_geometry.py",
+"_capsule_sdf",
+"sum(((p[i] - t * axis[i]) ** 2 for i in range(3)))"
+],
+[
+"scripts/refs/magnetopause_geometry.py",
+"_capsule_sdf",
+"sum((p[i] * axis[i] for i in range(3)))"
+],
+[
+"scripts/refs/magnetopause_geometry.py",
+"alfven_wing_axes",
+"sum((c * c for c in w))"
+],
+[
+"scripts/refs/magnetopause_geometry.py",
+"shue_to_stock",
+"sum(((_width_gen(x, rad, 1.0, ext, waist, smooth) - y) ** 2 for x, y in target))"
+],
+[
+"scripts/refs/magnetopause_geometry.py",
+"wing_path_sdf",
+"sum(((ap[i] - t * ab[i]) ** 2 for i in range(3)))"
+],
+[
+"scripts/refs/magnetopause_geometry.py",
+"wing_path_sdf",
+"sum((ap[i] * ab[i] for i in range(3)))"
+],
+[
+"scripts/refs/magnetopause_geometry.py",
+"wing_path_sdf",
+"sum((c * c for c in ab))"
+],
+[
+"scripts/refs/migrate_element_db_v2.py",
+"main",
+"sum((1 for e in v2.values() if e['regimes']['atomic_flame'].get('hex_basis') == 'canonical_descriptor'))"
+],
+[
+"scripts/refs/migrate_element_db_v2.py",
+"main",
+"sum((1 for e in v2.values() if e['regimes']['atomic_flame'].get('hex_basis') == 'chart_approx'))"
+],
+[
+"scripts/refs/migrate_element_db_v2.py",
+"main",
+"sum((1 for e in v2.values() if e['regimes']['atomic_flame'].get('hex_basis') == 'cie_computed'))"
+],
+[
+"scripts/refs/migrate_element_db_v2.py",
+"main",
+"sum((1 for e in v2.values() if e['regimes']['atomic_flame']['status'] == 'visible'))"
+],
+[
+"scripts/refs/petrova_line_geometry.py",
+"petrova_path",
+"sum((math.dist(a, b) for a, b in zip(pts, pts[1:])))"
+],
+[
+"scripts/refs/render_color_visualizer.py",
+"render_aurora_emitters",
+"sum(e['quench'].values())"
+],
+[
+"scripts/refs/saha_boltzmann.py",
+"partition_fn",
+"sum((l['g'] * math.exp(-l['E_cm'] / kt) for l in levels))"
+],
+[
+"scripts/refs/saha_boltzmann.py",
+"rhs",
+"sum((n_el[el] * S[el] / (ne + S[el]) for el in elems))"
+],
+[
+"scripts/refs/validate_element_colors.py",
+"main",
+"sum((1 for e in data.values() if e['regimes'].get('aurora', {}).get('status') == 'visible'))"
+],
+[
+"scripts/refs/validate_element_colors.py",
+"main",
+"sum((1 for e in data.values() if e['regimes'].get('reentry_plasma', {}).get('status') == 'visible'))"
+],
+[
+"scripts/refs/validate_element_colors.py",
+"main",
+"sum((1 for e in data.values() if e['regimes']['atomic_flame']['status'] == 'visible'))"
+],
+[
+"scripts/viz/build_starmap.py",
+"_accel",
+"sum((c * c for c in dx))"
+],
+[
+"scripts/viz/build_starmap.py",
+"_gal_to_icrs",
+"sum((_GAL2ICRS[i][j] * g[j] for j in range(3)))"
+],
+[
+"scripts/viz/build_starmap.py",
+"_ism_velocity",
+"sum((c * c for c in pos_ly))"
+],
+[
+"scripts/viz/build_starmap.py",
+"_ism_velocity",
+"sum((d[k] * cl['center'][k] for k in range(3)))"
+],
+[
+"scripts/viz/build_starmap.py",
+"_v_norm",
+"sum((c * c for c in a))"
+],
+[
+"scripts/viz/build_starmap.py",
+"build_cluster_obj",
+"sum((c * c for c in off_au))"
+],
+[
+"scripts/viz/build_starmap.py",
+"build_payload",
+"sum((len(r['planets']) for r in recs))"
+],
+[
+"scripts/viz/build_starmap.py",
+"nbody_trajectories",
+"sum((b['M'] * b['p'][k] for b in grp))"
+],
+[
+"scripts/viz/build_starmap.py",
+"nbody_trajectories",
+"sum((b['M'] * b['v'][k] for b in grp))"
+],
+[
+"scripts/viz/build_starmap.py",
+"nbody_trajectories",
+"sum((b['M'] for b in grp))"
+],
+[
+"scripts/viz/build_starmap.py",
+"nbody_trajectories",
+"sum((c * c for c in dr))"
+],
+[
+"scripts/viz/build_starmap.py",
+"nbody_trajectories",
+"sum((c * c for c in dv))"
+],
+[
+"scripts/viz/build_starmap.py",
+"self_check",
+"sum((len(c['components']) for c in payload['clusters'] if not c['is_sol']))"
+],
+[
+"scripts/viz/build_starmap.py",
+"wind_for",
+"sum((c * c for c in v_ism))"
+],
+[
+"scripts/viz/build_starmap.py",
+"wind_for",
+"sum((c * c for c in vrel))"
+],
+[
+"scripts/viz/render_alfven_wing.py",
+"downsample_path",
+"sum((direction[k] * ref_dir[k] for k in range(3)))"
 ]
 ]

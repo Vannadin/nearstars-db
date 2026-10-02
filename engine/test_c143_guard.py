@@ -15,21 +15,27 @@ import builtins
 import json
 import math
 import sys
+import warnings
 from decimal import Decimal
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent
+#: census roots (post-freeze note 1 item 2): the engine and the gate-run scripts
+CENSUS_ROOTS = (HERE, ROOT / "scripts")
 INVENTORY = HERE / "c143_sum_inventory.json"
 fails: list[str] = []
 
 
 def census() -> list[list[str]]:
     out = []
-    for f in sorted(HERE.rglob("*.py")):
-        rel = f.relative_to(HERE)
+    for f in sorted(p for root in CENSUS_ROOTS for p in root.rglob("*.py")):
+        rel = f.relative_to(ROOT)
         if any(part.startswith(".venv") for part in rel.parts):
             continue
-        tree = ast.parse(f.read_text(encoding="utf-8"))
+        with warnings.catch_warnings():              # a script's own escape-sequence warnings are not this test's
+            warnings.simplefilter("ignore", SyntaxWarning)
+            tree = ast.parse(f.read_text(encoding="utf-8"))
         parents = {}
         for node in ast.walk(tree):
             for child in ast.iter_child_nodes(node):
@@ -126,6 +132,22 @@ def main() -> int:
     for s in gone:
         fails.append(f"inventory lists a sum() call that is gone: {s[0]} · {s[1]} · {s[2][:80]} — update the list")
     print(f"  inventory: {len(now)} sum() calls in {len({s[0] for s in now})} files · new {len(new)} · gone {len(gone)}")
+    # negative control (e2): a known compensated ≠ left-to-right sum must differ under the patch on 3.12
+    fixture = [1e16, 1.0, -1e16]
+    shipped_fx = sum(fixture)
+    builtins.sum = naive_sum
+    try:
+        naive_fx = sum(fixture)
+    finally:
+        builtins.sum = _orig_sum
+    vacuous = sys.version_info < (3, 12)
+    if vacuous:
+        print(f"  negative control: {shipped_fx!r} vs {naive_fx!r} — vacuous on {sys.version_info.major}."
+              f"{sys.version_info.minor} (its sum() is already left to right); (b) is a verdict on 3.12 only")
+    elif shipped_fx == naive_fx:
+        fails.append(f"negative control: sum({fixture}) gives {shipped_fx!r} both ways — the patch is not biting")
+    else:
+        print(f"  negative control: sum({fixture}) {shipped_fx!r} shipped vs {naive_fx!r} left to right — the patch bites")
     # 1. sites, shipped sum() against left-to-right sum()
     a, pa = evaluate(), printed_tables()
     builtins.sum = naive_sum
