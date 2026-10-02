@@ -10,7 +10,7 @@
    "anchor": {
     "p_pa": 135272246193.93896,
     "t_k": 2546.804493225199,
-    "how": "this engine's Earth CMB under today's form: solve(1.0, rocky, cmf 0.325, T_pot 1600 K)"
+    "how": "the engine's Earth CMB, mantle side (structure convention: mantle adiabat from T_pot 1600 K to the CMB, no D\u2033 jump)"
    },
    "lnp": [
     18.425555223174175,

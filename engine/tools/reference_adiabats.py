@@ -55,11 +55,11 @@ def build() -> str:
     t_ref = eos.FE_PREM.phases[0].t_ref
     with contextlib.redirect_stdout(io.StringIO()):
         earth = interior.solve(1.0, body_class="rocky", core_mass_fraction=0.325, potential_temperature=t_ref).values
-    p0, t0 = earth["cmb_pressure"] * 1e9, earth["cmb_temperature_core"] or earth["cmb_temperature"]
+    p0, t0 = earth["cmb_pressure"] * 1e9, earth["cmb_temperature"]
     tables = {}
     lnp, t = adiabat(eos.FE_PREM, p0, t0, 0.999 * eos.FE_PREM.p_max, 1e8)
-    tables["fe_prem"] = {"anchor": {"p_pa": p0, "t_k": t0, "how": "this engine's Earth CMB under today's form: "
-                                    "solve(1.0, rocky, cmf 0.325, T_pot 1600 K)"}, "lnp": lnp, "t": t}
+    tables["fe_prem"] = {"anchor": {"p_pa": p0, "t_k": t0, "how": "the engine's Earth CMB, mantle side (structure convention: "
+                                    "mantle adiabat from T_pot 1600 K to the CMB, no D″ jump)"}, "lnp": lnp, "t": t}
     for name in ("silicate", "silicate_chondritic"):
         mat = eos.MATERIALS[name]
         lnp, t = adiabat(mat, 1e5, mat.phases[0].t_ref, 0.999 * mat.p_max, 1.0001e5)
