@@ -3274,7 +3274,7 @@ def _basal_silicate_state(st, variant: str,
     if phi <= 0.0 and p_base >= SILICATE_ROCK_MAX_PA:
         # C154 — 이 압력의 곡선은 순수 MgSiO₃(암석 솔리더스의 **상계**)라 «아래» 는 증명이 아니다.
         t_sol = silicate_solidus(p_base, variant, d_fe)
-        state, why = bounds.verdict(t_sol - t_base, "upper", 0.0, above=BASAL_SOLID, below=BASAL_PARTIAL,
+        state, why = bounds.verdict(t_sol - t_base, "upper", 0.0, above=BASAL_SOLID, below=BASAL_UNDECIDED,
                                     undetermined=BASAL_UNDECIDED, name="solidus margin (K)")
     if phi <= 0.0 and p_base >= SILICATE_ROCK_MAX_PA and state != BASAL_SOLID:
         return (state,

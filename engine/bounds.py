@@ -27,10 +27,12 @@ def verdict(value: float, kind: str, threshold: float, above, below, undetermine
                           f"that {side} cannot prove — undetermined (C154)")
 
 
-def interval_verdict(lo: float, hi: float, threshold: float, above, below, undetermined, name: str = "value"):
-    """`above` if lo > threshold, `below` if hi ≤ threshold, else (the interval straddles) `undetermined`."""
+def interval_verdict(lo: float, hi: float, threshold: float, above, below, undetermined, name: str = "value",
+                     strict_below: bool = False):
+    """`above` if lo > threshold, `below` if hi ≤ threshold (hi < threshold with `strict_below`), else (the interval
+    straddles) `undetermined`. `strict_below` keeps a caller's existing edge where the threshold itself was a straddle."""
     if lo > threshold:
         return above, ""
-    if hi <= threshold:
+    if hi < threshold or (hi == threshold and not strict_below):
         return below, ""
     return undetermined, (f"{name} spans {lo:.6g}–{hi:.6g}, across {threshold:.6g} — undetermined (C154)")

@@ -33,6 +33,9 @@ def b_helper() -> None:
     ok("lower bound" in why and "x" in why, "B-helper: the undetermined reason names the bound")
     iv = lambda lo, hi: bounds.interval_verdict(lo, hi, 10.0, "A", "B", "U")[0]  # noqa: E731
     ok(iv(11, 12) == "A" and iv(8, 9) == "B" and iv(9, 11) == "U", "B-helper: an interval decides only off the threshold")
+    ok(bounds.interval_verdict(5, 10, 10.0, "A", "B", "U")[0] == "B"
+       and bounds.interval_verdict(5, 10, 10.0, "A", "B", "U", strict_below=True)[0] == "U",
+       "B-helper: strict_below keeps hi == threshold a straddle (tidal_locking's edge)")
 
 
 def sites() -> dict:

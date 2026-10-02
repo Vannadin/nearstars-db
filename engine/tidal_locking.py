@@ -359,7 +359,7 @@ def solve(mass_earth: float | None, radius_earth: float | None, semi_major_axis_
 
     # C154 — 띠(구간)의 판정은 `bounds.interval_verdict` 하나로: 양끝이 같은 쪽일 때만 정한다.
     side, _why = bounds.interval_verdict(lo, hi, age_yr, above="undespun", below="despun", undetermined=None,
-                                         name="the despin-time band (yr)")
+                                         name="the despin-time band (yr)", strict_below=True)   # today's edge: hi < age
     if side == "despun":
         locked, state = True, rotation_state(eccentricity or 0.0, permanent_quadrupole)
         verdict = f"despun: even the slow end of the band, {hi:.3g} yr, is under the {age_yr:.3g} yr age"
