@@ -1293,7 +1293,9 @@ def main() -> int:
     # C120 덧붙임 5 C.3 — 뜨거운 풀이 **전체(시행 포함)** 에서 녹은 규산염 액체(`rtpress.liquid`)를 한 번도 안 부른
     #   몸만 판정한다. 부른 몸은 «기록» 행으로 (호출 수 · 수렴 해를 낸 적분의 호출 수 · 켠/끈 차)를 찍고,
     #   수렴 해의 적분이 액체를 불렀으면(곧 수렴 해에 φ > 0 이 있으면) 행 앞에 «⚠ 수렴 해가 녹음».
-    # ⚠ C148 (수락 10): 안 부른 몸의 판정은 지구 ≤ 1e-6, 화성 · 수성 · 달은 ΔT 와 함께 기록 — 위 C148 주석.
+    # ⚠ C148 (수락 10): 수렴 해의 적분이 액체를 안 부른 몸(아래 conv == 0)은 지구 ≤ 1e-6 판정, 화성 · 수성 · 달은 ΔT 와
+    #   함께 기록 — 위 C148 주석. 시행이 부른 횟수(calls)로 가르면 이 바탕에서 넷 모두 기록으로 빠져 지구 판정이 사라진다
+    #   (기준 전환 사후 메모 2). 가르는 자는 C120 자신의 «수렴 해가 녹음» 표지와 같은 conv 다.
     _orig_integrate = _interior.integrate
     _per_integration = []
     def _counting_integrate(*a, **k):
@@ -1312,9 +1314,11 @@ def main() -> int:
         finally:
             _interior.integrate = _orig_integrate
         calls = rtpress.CALLS
+        r_on = on.values["radius"] * EARTH_RADIUS_M
+        conv = min(_per_integration, key=lambda x: abs(x[0] - r_on))[1] if _per_integration else 0
         dt = (f"fe_prem ΔT {on.values['fe_prem_dt_min']:+.2f} … {on.values['fe_prem_dt_max']:+.2f} K"
               if on.values.get("fe_prem_dt_min") is not None else "fe_prem ΔT —")
-        if calls == 0:
+        if conv == 0:
             d_n = abs(on.values["nmoi"] / off.values["nmoi"] - 1.0)
             d_r = abs(on.values["radius"] / off.values["radius"] - 1.0)
             if name == "Earth":
@@ -1328,12 +1332,18 @@ def main() -> int:
                 print(f"  [기록] {name:8} C/MR² {on.values['nmoi']:.6f} · R {on.values['radius']:.6f} — 온도를 끈 답과 "
                       f"상대 {max(d_n, d_r):.1e} · {dt} (C148: 이 핵은 지구의 기준 단열선 위에 있지 않다 — 판정 없음)")
         else:
-            r_on = on.values["radius"] * EARTH_RADIUS_M
-            conv = min(_per_integration, key=lambda x: abs(x[0] - r_on))[1] if _per_integration else 0
-            mark = "⚠ 수렴 해가 녹음 " if conv > 0 else ""
+            mark = "⚠ 수렴 해가 녹음 "
             print(f"  [기록 · C120] {mark}{name:8} 녹은 규산염 액체 호출 {calls}(수렴 해 적분 {conv}) — "
                   f"켠/끈 R 상대 {on.values['radius'] / off.values['radius'] - 1.0:+.2e} · "
                   f"C/MR² 상대 {on.values['nmoi'] / off.values['nmoi'] - 1.0:+.2e} · {dt} (판정 없음)")
+    earth = ANCHORS[0]
+    off = solve(earth[1], core_mass_fraction=earth[3])
+    warm = solve(earth[1], core_mass_fraction=earth[3], potential_temperature=EARTH_POTENTIAL_T + 100.0)
+    d_w = max(abs(warm.values["nmoi"] / off.values["nmoi"] - 1.0), abs(warm.values["radius"] / off.values["radius"] - 1.0))
+    ok = d_w >= 1e-6
+    if not ok:
+        fails.append(f"음성 대조: 지구를 {EARTH_POTENTIAL_T + 100.0:.0f} K 로 켜도 {d_w:.1e} 만 움직였다 — 위 1e-6 자가 실패할 수 없다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 음성 대조 — 지구 {EARTH_POTENTIAL_T + 100.0:.0f} K: 온도를 끈 답과 상대 {d_w:.1e} ≥ 1e-6")
     ok = solve(1.0, core_mass_fraction=0.325,
                potential_temperature=EARTH_POTENTIAL_T).grade == "calibrated"
     if not ok:
