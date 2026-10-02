@@ -520,14 +520,40 @@ def _solve_raw(solve, jobs):
 SETTLE_TRIALS = 4             # 덧붙임 58 ② — 가족 검사가 세는 끝 시행 수(melt-window §1.1 의 끝 창과 같은 수)
 
 
+def _call_trials(r) -> list:
+    """덧붙임 58 ② 노트 — 돌려준 구조를 낸 사격 호출(없으면 거절한 호출)의 시행 전부."""
+    call = r.trail.get("answer_call")
+    if call is None:
+        call = r.trail.get("calls", 0) - 1
+    return [x for x in r.trail["trials"] if x[3] == call]
+
+
+def _fold_band() -> float:
+    """C152 메모 1 — 두 갈래가 같이 쓰는 띠(표면 온도 허용). 시험이 0 으로 바꿔 끼워 띠가 막는지를 본다."""
+    import interior
+    return interior.T_SURFACE_TOL
+
+
+def _fold(r) -> bool:
+    """C152 메모 1 (iii) — 접힘 탐지기(보장 아님): 그 호출의 **사격이 닫힌** 시행을 ln T_c 순으로, |y| < 띠는 «근 위» 로 빼고,
+    부호가 두 번 넘게 바뀌거나(근 ≥ 2) 이웃 사이 역전이 띠보다 크면(꺾임) 선다."""
+    band = _fold_band()
+    pts = sorted((x[1], x[4]) for x in _call_trials(r) if len(x) >= 6 and x[5] and x[4] is not None)
+    ys = [y for _t, y in pts if abs(y) >= band]
+    flips = sum(1 for a, b in zip(ys, ys[1:]) if (a < 0.0) != (b < 0.0))
+    if flips > 1:
+        return True
+    if len(ys) >= 3:
+        trend = ys[-1] - ys[0]
+        return any((b - a) * trend < 0.0 and abs(b - a) > band for a, b in zip(ys, ys[1:]))
+    return False
+
+
 def _settled_trials(r) -> list:
     """덧붙임 58 ② — 돌려준 구조를 낸 사격 호출의 마지막 SETTLE_TRIALS 시행(그 호출이 짧으면 그 호출 전부, 앞 호출에서
     빌리지 않음). 돌려준 구조가 없으면(예외로 거절) 거절한 호출 = 마지막으로 시작한 호출 — 덧붙임 58 사전 정리 노트
     (첫 시행 전에 거절했으면 그 호출의 시행이 없어 창 없음)."""
-    call = r.trail.get("answer_call")
-    if call is None:
-        call = r.trail.get("calls", 0) - 1
-    return [x for x in r.trail["trials"] if x[3] == call][-SETTLE_TRIALS:]
+    return _call_trials(r)[-SETTLE_TRIALS:]
 
 
 def _families_visited(r) -> list:
@@ -544,8 +570,9 @@ def _fires(r) -> bool:
     """덧붙임 57 ② — 가족 검사: 힌트 없는 풀이가 가족 둘 이상을 거쳤거나 가족 거절 · «답 둘» 로 끝남."""
     import interior
     why = interior.answer_verdict(r) if r.applicable else None
-    return len(_families_visited(r)) >= 2 or bool(why) and (why.startswith(interior.FAMILY_OSCILLATION_NOTE)
-                                                            or why.startswith(interior.FAMILY_TWO_NOTE))
+    return (len(_families_visited(r)) >= 2 or bool(why) and (why.startswith(interior.FAMILY_OSCILLATION_NOTE)
+                                                             or why.startswith(interior.FAMILY_TWO_NOTE))
+            or _fold(r))                                                          # C152 메모 1 (iii)
 
 
 def _contrib(r) -> list:
@@ -563,7 +590,7 @@ def _entries(members) -> list:
     import interior
     items = []
     for r in members:
-        items += [{"family": f, "done": False, "entry": (t, p)} for f, t, p, _c in r.trail["trials"]]
+        items += [{"family": f, "done": False, "entry": (t, p)} for f, t, p, *_rest in r.trail["trials"]]
         items += [{"family": f, "done": True, "entry": None} for f in list(r.trail["closed"]) + list(r.trail["reclosed"])]
         if interior.answer_verdict(r) is None:
             items.append({"family": r.trail["answer"], "done": True, "entry": None})

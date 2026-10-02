@@ -118,5 +118,76 @@ check("고리 #3 음성 — 0 을 안 사이에 둔 잔차는 오늘의 할선�
 best, closed = interior._three_layer_close(0.1, -0.02, 0.3, 0.02, lambda x: (0.0, None, (x - 0.2137) * 0.2), 0.33)
 check("고리 #3 양성 — 0 을 사이에 두면 Brent 로 닫힘", closed and abs(best[0] - 0.2137) < 2e-3, str(best and best[0]))
 
+# ⑥ C152 메모 1 — 접힘 탐지기 (iii): 근 셋 → «답 둘», (iii) 끄면 답, 단조(207x 꼴)는 안 섬, 띠(3b) · 안 닫힌 사격(3c)
+import math  # noqa: E402
+
+import structure_grid as sg  # noqa: E402
+
+FA, FB = (6.49, 15.36, 0.39), (6.87, 17.06, 0.39)
+
+
+def _trial(f, t, y, ok=True, call=0):
+    return (f, t, 3.9e10, call, y, ok)
+
+
+def _fake_fold(trials, answer_fam):
+    """trials: a 멤버의 시행 · answer_fam: 힌트 없는 풀이의 답 가족. 입구(c)로 풀면 다른 가족의 답."""
+    def solve(t, p_hint=None):
+        if interior._ENTRY[0] is not None:
+            fam, tr = (FB if answer_fam == FA else FA), [_trial(FB, 3230.0, 0.0)]
+        elif p_hint is not None:
+            fam, tr = answer_fam, [_trial(answer_fam, 3229.0, 0.0)]
+        else:
+            fam, tr = answer_fam, trials
+        interior._FAMILY_TRAIL.update(trials=list(tr), reclosed=[], closed=[], answer=fam, dev=1e-5, calls=1,
+                                      returned={}, answer_call=0)
+        v = {"radius": 0.55, "core_radius": 0.28, "cmb_pressure": 19.0, "cmb_temperature": 1.5 * t,
+             "core_pressure": 39.4, "converged": None}
+        return types.SimpleNamespace(applicable=True, reason=None, regime="rocky", converged=True, notes=(),
+                                     inputs={"core_mass_fraction": 0.3}, values=v)
+    return solve
+
+
+def _verdict(trials, answer_fam=FA):
+    sg.GRID_POOL = 1
+    with contextlib.redirect_stdout(io.StringIO()):
+        r = sg._pool_solve(_fake_fold(trials, answer_fam), [(2076.0, None)], {})[0]
+    return interior.answer_verdict(r)
+
+
+# 근 셋(부호 − + − +), 끝 네 시행은 한 가족(정착 창 (i) 은 안 섬)
+fold = [_trial(FB, 3220.0, -0.01), _trial(FB, 3224.0, +0.01), _trial(FB, 3226.0, -0.01)] + \
+       [_trial(FA, 3228.0 + 0.2 * i, (+0.004 if i % 2 == 0 else +0.003)) for i in range(4)]
+w = _verdict(fold)
+check("메모 1 — 근 셋인 접힘은 (iii) 으로 서서 «답 둘»", bool(w) and w.startswith(interior.FAMILY_TWO_NOTE), str(w)[:80])
+fold0 = sg._fold
+sg._fold = lambda r: False
+try:
+    w0 = _verdict(fold)
+finally:
+    sg._fold = fold0
+check("메모 1 음성 — (iii) 을 끄면 같은 접힘이 한 근으로 닫혀 답", w0 is None, str(w0)[:80])
+# 207x 꼴: 근 하나, 단조, 괄호 두 끝은 다른 «가족», 끝 네 시행 한 가족
+mono = [_trial(FA, 3226.0, -0.006), _trial(FA, 3228.0, -0.004), _trial(FA, 3229.3, -0.0018)] + \
+       [_trial(FB, 3230.3 + 0.3 * i, 0.0013 + 0.001 * i) for i in range(4)]
+check("메모 1 — 단조(207x 꼴)는 (iii) 안 섬", not sg._fold(types.SimpleNamespace(trail={"trials": mono, "answer_call": 0, "calls": 1})))
+# 3b — 근 옆에 몰린 시행 + 허용 밑 잔물결: 띠가 막고, 띠를 0 으로 끄면 선다
+ripple = mono[:3] + [_trial(FB, 3229.45 + 1e-4 * i, (2e-4 if i % 2 else -2e-4)) for i in range(6)] + mono[3:]
+rr = types.SimpleNamespace(trail={"trials": ripple, "answer_call": 0, "calls": 1})
+band0 = sg._fold_band
+check("메모 1 3b — 허용 밑 잔물결로는 안 섬(띠)", not sg._fold(rr))
+sg._fold_band = lambda: 0.0
+try:
+    check("메모 1 3b 음성 — 띠를 0 으로 끄면 같은 잔물결에 선다", sg._fold(rr))
+finally:
+    sg._fold_band = band0
+# 3c — 안 닫힌 사격의 가짜 반대 부호는 안 셈
+bad = mono[:3] + [_trial(FA, 3229.0, +0.02, ok=False), _trial(FA, 3229.1, -0.02, ok=False)] + mono[3:]
+check("메모 1 3c — 안 닫힌 사격(ok False)의 가짜 부호는 안 셈",
+      not sg._fold(types.SimpleNamespace(trail={"trials": bad, "answer_call": 0, "calls": 1})))
+good = mono[:3] + [_trial(FA, 3229.0, +0.02), _trial(FA, 3229.1, -0.02)] + mono[3:]
+check("메모 1 3c 음성 — 같은 시행이 닫힌 사격이면 선다(자가 떨어질 수 있음)",
+      sg._fold(types.SimpleNamespace(trail={"trials": good, "answer_call": 0, "calls": 1})))
+
 print(f"  test_rootfind — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)

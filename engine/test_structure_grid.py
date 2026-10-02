@@ -157,11 +157,11 @@ def _fake57(t, p_hint=None):
     bad = 2074.5 < t < 2077.5
     entry = interior._ENTRY[0]
     if bad and p_hint is None and entry is None:
-        trail = {"trials": [(F1, 3200.0, 3.9e10, 0), (F2, 3201.0, 3.8e10, 0)], "reclosed": [F1, F2], "closed": [],
+        trail = {"trials": [(F1, 3200.0, 3.9e10, 0, None, True), (F2, 3201.0, 3.8e10, 0, None, True)], "reclosed": [F1, F2], "closed": [],
                  "answer": F2, "dev": 3e-3, "calls": 1, "returned": {}, "answer_call": 0}
         conv, notes = False, (interior.FAMILY_OSCILLATION_NOTE + " — 가짜",)
     else:
-        trail = {"trials": [(F1, 3200.0, 3.9e10, 0)], "reclosed": [], "closed": [], "answer": F1, "dev": 1e-4,
+        trail = {"trials": [(F1, 3200.0, 3.9e10, 0, None, True)], "reclosed": [], "closed": [], "answer": F1, "dev": 1e-4,
                  "calls": 1, "returned": {}, "answer_call": 0}
         conv, notes = True, ()
     interior._FAMILY_TRAIL.update(trail)
@@ -211,8 +211,8 @@ check("덧붙임 57 음성 — 힌트가 a 멤버에 새면 오름 · 내림이 
 
 # 덧붙임 58 — ② 정착 창: 초반에만 헤맨 풀이는 안 섬(음성: 옛 «모든 시행» 은 섬) · ① 용융 상태가 바뀌면 0.25 K 까지 쪼갬
 _wander = types.SimpleNamespace(applicable=True, converged=True, notes=(), values={}, reason=None,
-                                trail={"trials": [(F2, 3100.0, 3.8e10, 0), (None, 3150.0, 3.8e10, 0)]
-                                       + [(F1, 3200.0 + i, 3.9e10, 1) for i in range(5)],
+                                trail={"trials": [(F2, 3100.0, 3.8e10, 0, None, True), (None, 3150.0, 3.8e10, 0, None, True)]
+                                       + [(F1, 3200.0 + i, 3.9e10, 1, None, True) for i in range(5)],
                                        "answer_call": 1, "calls": 2})
 _all = []
 for f, *_ in _wander.trail["trials"]:
@@ -221,14 +221,14 @@ for f, *_ in _wander.trail["trials"]:
 check("덧붙임 58 ② — 초반에만 헤맨 풀이는 가족 검사가 안 섬", not sg._fires(_wander))
 check("덧붙임 58 ② 음성 — 같은 풀이를 옛 «모든 시행» 으로 세면 선다", len(_all) >= 2, str(len(_all)))
 _raised = types.SimpleNamespace(applicable=False, converged=None, notes=(), values={}, reason="거절 — 가짜",
-                                trail={"trials": [(F1, 3200.0, 3.9e10, 0), (F2, 3300.0, 3.8e10, 0)], "answer_call": None,
+                                trail={"trials": [(F1, 3200.0, 3.9e10, 0, None, True), (F2, 3300.0, 3.8e10, 0, None, True)], "answer_call": None,
                                        "calls": 2})
 check("덧붙임 58 노트 — 첫 시행 전에 거절한 호출은 창 없음(앞 호출을 안 빌림)", sg._settled_trials(_raised) == [])
 
 
 def _fake58(t, p_hint=None):
     """1005.3 K 위에서 바닥 층이 부분 용융 — 값은 매끄러워 보간은 ε 안."""
-    interior._FAMILY_TRAIL.update(trials=[(None, 3000.0, 3e10, 0)], reclosed=[], closed=[], answer=None, dev=1e-4,
+    interior._FAMILY_TRAIL.update(trials=[(None, 3000.0, 3e10, 0, None, True)], reclosed=[], closed=[], answer=None, dev=1e-4,
                                   calls=1, returned={}, answer_call=0)
     x = t - 1000.0
     v = {"radius": 1.0 + 1e-7 * x, "core_radius": 0.5, "cmb_pressure": 20.0 + 0.001 * x, "cmb_temperature": 1.5 * t,
@@ -243,7 +243,7 @@ def _fake58(t, p_hint=None):
 def _fake59(t, p_hint=None):
     """1003 K(시작 구간 [1002, 1004] 의 가운데)에서만 정착 창에 가족 둘 — 답은 한 가족, 값은 매끄러움."""
     hot = abs(t - 1003.0) < 1e-9 and p_hint is None and interior._ENTRY[0] is None
-    tr = [(F1, 3200.0, 3.9e10, 0), (F2, 3201.0, 3.8e10, 0)] * 2 if hot else [(F1, 3200.0, 3.9e10, 0)]
+    tr = [(F1, 3200.0, 3.9e10, 0, None, True), (F2, 3201.0, 3.8e10, 0, None, True)] * 2 if hot else [(F1, 3200.0, 3.9e10, 0, None, True)]
     interior._FAMILY_TRAIL.update(trials=tr, reclosed=[F1, F2] if hot else [], closed=[], answer=F1, dev=1e-4,
                                   calls=1, returned={}, answer_call=0)
     x = t - 1000.0
