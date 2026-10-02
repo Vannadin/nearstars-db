@@ -105,20 +105,21 @@ def _scratch(files: dict[str, str], allow: str) -> tuple[pathlib.Path, pathlib.P
 
 def _fixtures() -> list[str]:
     bad = []
+    COLON = ":"   # 허용 목록 줄을 조립한다 — «경로.py:» 꼴이 원문에 있으면 인용 검사기가 인용으로 읽는다
     k = 'values={"foo_temperature_core": 1.0}\n'
     cases = [
         ("S-guard: no line", {"x.py": f"f({k})"}, "", "no side rule"),
-        ("S-guard: reason lacks the string", {"x.py": f"f({k})"}, "engine/x.py:foo_temperature_core — because\n",
+        ("S-guard: reason lacks the string", {"x.py": f"f({k})"}, f"engine/x.py{COLON}foo_temperature_core — because\n",
          "reason lacks the rule string"),
         ("S-guard: valid line", {"x.py": f"f({k})"},
-         "engine/x.py:foo_temperature_core — equals the other side unless a jump is declared\n", None),
+         f"engine/x.py{COLON}foo_temperature_core — equals the other side unless a jump is declared\n", None),
         ("S-guard: real-side module", {"core_energy.py": f"f({k})"}, "", None),
         ("S-guard-prefix", {"x.py": 'f(values={"core_foo_temperature_used": 1.0})\n'}, "", "no side rule"),
         ("S-guard-path", {"a.py": 'values = {"x_mantle_temperature_floor": 1}\n',
                           "b.py": 'values = {"x_mantle_temperature_floor": 1}\n'},
-         "engine/a.py:x_mantle_temperature_floor — names a layer, not an interface side\n", "engine/b.py"),
+         f"engine/a.py{COLON}x_mantle_temperature_floor — names a layer, not an interface side\n", "engine/b.py"),
         ("S-guard-layer", {"x.py": 'values = {"mantle_temperature_width": 1}\n'},
-         "engine/x.py:mantle_temperature_width — names a layer, not an interface side\n", None),
+         f"engine/x.py{COLON}mantle_temperature_width — names a layer, not an interface side\n", None),
         ("text rule", {"x.py": "# 핵 쪽 경계 온도\n"}, "", "no side rule"),
     ]
     for name, files, allow, expect in cases:
