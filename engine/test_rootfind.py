@@ -57,5 +57,66 @@ check("가족 — 성긴 표본(0.8 GPa)에서는 문턱 1.2 GPa", not interior.
       and interior._family_jump((7.0, 15.0, 0.8), (8.3, 15.0, 0.8)))
 check("가족 — 207x 의 두 가족(p_hi 15.36 대 17.06)은 여전히 뜀", interior._family_jump((6.49, 15.36, dps), (6.87, 17.06, dps)))
 
+# ⑤ 고리 수준 음성 대조(감사 e2 HOLD 4) — 가짜 사격으로 §1 의 세 고리를 직접 돌린다
+import types  # noqa: E402
+
+import eos  # noqa: E402
+
+T_POT = 1000.0
+
+
+def _fake_st(t_c, t_surf):
+    return types.SimpleNamespace(t_surface=t_surf, p_center=1e11, rock_samples=(), radius_m=6.4e6, mass_kg=6e24,
+                                 floor_truncated=None, p_cmb=None, hot_water_filled=None, crust_blocked=False,
+                                 surface_reached=True, ice_samples=(), t_center=t_c, boiling_flips=None)
+
+
+def _run_shoot(surface, wall=None):
+    """surface(T_c) → T_surf. wall 가 있으면 그 위의 T_c 는 뜨거운 온도 벽(PhaseGap, too_cold False)."""
+    real = interior._shoot_pressure
+
+    def fake(*a, t_center=None, t_pot=None, p_hint=None, tol=None, **k):
+        if wall is not None and t_center > wall:
+            raise eos.PhaseGap("fake_envelope", 1e9, "가짜 뜨거운 벽", temperature_k=t_center, too_cold=False)
+        return _fake_st(t_center, surface(t_center)), True
+    interior._shoot_pressure = fake
+    try:
+        st, ok = interior.shoot(6e24, 0.3, 0.0, "fe_prem", potential_temperature=T_POT)
+        return "answer", (st.t_center, st.t_surface, ok)
+    except (ValueError, eos.PhaseGap) as e:
+        return "refusal", str(e)
+    finally:
+        interior._shoot_pressure = real
+
+
+import contextlib  # noqa: E402
+import io  # noqa: E402
+
+with contextlib.redirect_stdout(io.StringIO()):
+    k_a, v_a = _run_shoot(lambda t: 0.5 * T_POT)                                   # 근 없음(늘 차다), 0 을 안 사이에 둠
+    k_b, v_b = _run_shoot(lambda t: T_POT * t / 1700.0 * (0.999 if t < 1700.0 else 1.001))   # 뜀(근 없음), 좁은 괄호
+    _passes0 = interior.T_PASSES
+    interior.T_PASSES = 4                                                            # 예산을 줄여 괄호 안에서 끝나게
+    try:
+        k_e, v_e = _run_shoot(lambda t: T_POT * (0.99 if t < 1990.0 else 1.01))    # 둘째 시행에서 0 을 사이에 둠
+    finally:
+        interior.T_PASSES = _passes0
+    k_c, v_c = _run_shoot(lambda t: T_POT * 0.5 * t / 1500.0, wall=1500.0)          # 벽 아래로 못 닿음
+    k_d, v_d = _run_shoot(lambda t: T_POT * (t / 1650.0) ** 3)                      # 가파른 근(1650 K)
+check("고리 #1 음성 — 0 을 안 사이에 둔 근 없는 잔차는 오늘의 길(C152 문구 없음)",
+      k_a == "refusal" and "C152" not in str(v_a) or k_a == "answer" and not v_a[2], str(v_a)[:90])
+check("고리 #1 음성 — 0 을 사이에 둔 뜀은 «잔차가 뛴다» 로 이름 대고 거절", k_b == "refusal" and "잔차가 뛴다" in v_b, str(v_b)[:90])
+check("고리 #1 음성 — 괄호 안에서 예산이 끝나면 오늘의 이름 댄 거절에 괄호를 적음", k_e == "refusal" and "0 을 사이에 둔 괄호" in v_e,
+      str(v_e)[:90])
+check("고리 #2 음성 — 재시도가 벽에 막히면 벽을 찾아 «닿는 해가 없다» 로 거절, 벽 자리가 1.6 배 걸음이 아님",
+      k_c == "refusal" and "닿는 해가 없다" in v_c and "1500 K" in v_c, str(v_c)[:120])
+check("고리 #1 양성 — 가파른 근은 닫힘(비례 갱신이 넘나들던 꼴)", k_d == "answer" and abs(v_d[0] - 1650.0) / 1650.0 < 1e-5,
+      str(v_d)[:90])
+# 고리 #3 — 세 층 역산의 좁힘(근 없음: 같은 부호 → 오늘의 할선, 닫히지 않음 · 근 있음: Brent 로 닫힘)
+best, closed = interior._three_layer_close(0.1, 0.02, 0.3, 0.01, lambda x: (0.0, None, 0.01 + 0 * x), 0.33)
+check("고리 #3 음성 — 0 을 안 사이에 둔 잔차는 오늘의 할선으로 닫히지 않음", not closed)
+best, closed = interior._three_layer_close(0.1, -0.02, 0.3, 0.02, lambda x: (0.0, None, (x - 0.2137) * 0.2), 0.33)
+check("고리 #3 양성 — 0 을 사이에 두면 Brent 로 닫힘", closed and abs(best[0] - 0.2137) < 2e-3, str(best and best[0]))
+
 print(f"  test_rootfind — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)

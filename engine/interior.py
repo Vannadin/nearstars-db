@@ -2363,8 +2363,11 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
             try:
                 got, ok = _shoot_pressure(*args, t_center=t_mid, t_pot=t_pot, p_hint=hint["p"], tol=tol_now["v"], **kw)
             except PhaseGap as gap:
-                if not gap.temperature_k:
+                if not gap.temperature_k and not isinstance(gap, SpinodalGap):
                     raise
+                b, why = math.log(t_mid), str(gap)
+                continue
+            except (Unbound, NoCompactRoot, GridExceeded) as gap:   # 감사 e2 — 벽 너머 = «안 풀림», 셈에 넣는다
                 b, why = math.log(t_mid), str(gap)
                 continue
             used_tol[id(got)] = tol_now["v"]
@@ -2421,7 +2424,7 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
                     raise        # 온도가 아니라 압력이 막았다. 그건 진짜다
                 if last is not None and last != gap.too_cold:
                     raise        # 양쪽 벽에 다 부딪혔다. 넓혀서 될 일이 아니다
-                if (anchor is not None and last is None
+                if (anchor is not None and last is None and gap.material != CRUST_NAME
                         and (anchor[0] > t_now) == bool(gap.too_cold) and anchor[0] != t_now):
                     # C152 ④ — 재시도가 벽에 막혔고 앞서 풀린 시행(anchor)이 벽 반대쪽(풀리는 쪽)에 있다: ×1.6 로 건너뛰는
                     #   대신 둘 사이를 이분해 벽의 자리를 T_WALL_TOL 까지 찾고, 벽에 가장 가까운 풀린 시행을 돌려준다.
@@ -2598,7 +2601,8 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
                 nxt = t_c * t_pot / st.t_surface
             if wall is not None and nxt >= wall:
                 nxt = math.sqrt(t_c * wall)
-        done = abs(nxt / t_c - 1.0) < T_TOL
+        # C152 (감사 e2 HOLD 1) — Brent 가 이끄는 동안은 끝을 Brent 의 StopIteration 이 정한다(뜀이면 마지막 걸음이 T_TOL 밑).
+        done = root is None and abs(nxt / t_c - 1.0) < T_TOL
         try:
             got, ok, t_now = attempt(nxt, (t_c, st, converged))
         except (Unbound, NoCompactRoot, GridExceeded, SpinodalGap) as why:
@@ -2653,7 +2657,8 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
         blocked = getattr(st, "crust_blocked", False)
         st, converged = _shoot_pressure(*args, t_center=t_c, t_pot=t_pot, p_hint=st.p_center, tol=SHOOT_TOL, **kw)
         st.crust_blocked = blocked
-        if st.t_surface > 0.0 and not _surface_temperature_met(st, t_pot):
+        if st.t_surface > 0.0 and not _surface_temperature_met(st, t_pot) and not (lo is not None and hi is not None):
+            # C152 — 0 을 사이에 둔 괄호가 있으면 이어 돌기(괄호를 잃는다) 대신 아래의 이름 댄 거절로 간다.
             # 끝맺음 구조의 표면 온도가 허용 밖 — 그 T_c 에서 SHOOT_TOL 로 온도 고리를 **이어** 돈다(지휘 선택 (a)):
             #   남은 통과 예산 · 연장 · 완화 · 대체는 지금 고리 규칙 그대로, 끝은 지금과 같은 판정.
             return shoot(mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z, envelope_z_rock_fraction,
@@ -2662,6 +2667,9 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
                          envelope_z_profile, ammonia_mass_fraction=ammonia_mass_fraction,
                          interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere,
                          p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=max(passes, 1))
+    # C152 규칙 2 (감사 e2 HOLD 2) — 예산이 0 을 사이에 둔 괄호 안에서 끝났으면 아래 거절이 그 괄호를 함께 적는다.
+    straddle_note = (f" (C152: 0 을 사이에 둔 괄호 [{math.exp(lo[0]):.6g}, {math.exp(hi[0]):.6g}] K 안에서 예산이 끝났다)"
+                     if lo is not None and hi is not None else "")
     if wall is not None and not _surface_temperature_met(st, t_pot):
         # **선언된 1 bar 온도에 닿는 중심 온도가 없다.** 벽 아래의 가장 뜨거운 묶인 해와 벽을 둘 다
         # 들고 나간다 — 버린 시험값이 아니라 실제로 도달한 두 상태다.
@@ -2671,14 +2679,15 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
             f"{st.t_surface:.0f} K 이고, 그 위 {wall:.0f} K 에서는 외피가 묶이지 않는다: {wall_why} "
             "1 bar 에서 출발한 단열선이 이 질량이 묶을 수 있는 것보다 뜨겁다는 뜻이다 — 실제 "
             "서브넵튠은 복사층이 깊은 단열선을 더 차게 두는데 이 레시피에는 복사층이 없으므로, "
-            "선언을 낮추거나(복사-대류 경계의 온도) 그 층이 들어와야 한다.")
+            "선언을 낮추거나(복사-대류 경계의 온도) 그 층이 들어와야 한다." + straddle_note)
     # ⚠ **예산을 다 쓰고도 못 닿았으면 이름 대며 거절한다** (브리프 180 D). `converged=False` 를 조용히
     #   내면 그 수가 답처럼 기록되는데, 그것은 **마지막 시행**이고 예산을 바꾸면 함께 움직인다 —
     #   실제로 연장을 넣자 `imf 0.1` 의 반지름이 +0.0033 % 움직였다. 답이 아닌 것은 답의 자리에 두지
     #   않는다. **위의 지각 벽 거절이 먼저다** — 자기 물리를 이미 이름 댄 거절이 일반 거절보다 앞선다.
     # ⚠ **연장이 주어졌다는 것 자체가 «개선 중이었다» 의 증거다** — 연장은 창 검사가 참일 때만 나가므로
     #   여기서 그 검사를 다시 묻지 않는다. 첫 판이 그것을 다시 물어 거절이 **발화하지 않았다**.
-    if extensions and not _surface_temperature_met(st, t_pot):
+    # C152 규칙 2 — 0 을 사이에 둔 괄호 안에서 예산이 끝났으면 연장이 없었어도 같은 이름의 거절(괄호를 적어서).
+    if (extensions or straddle_note) and not _surface_temperature_met(st, t_pot):
         raise ValueError(
             f"표면온도 경계조건이 예산 안에 닫히지 않았다 — 마지막 어긋남 {devs[-1] * 100:.2f} % "
             f"(허용 {T_SURFACE_TOL * 100:.1f} %), 통과 {len(devs)} 걸음, 연장 {extensions} 벌. "
@@ -2690,7 +2699,7 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
             "폴백 통합이 아니라 오너 결정 ① 의 직접 결과다. 마지막 시행의 수는 "
             "답이 아니므로 내보내지 않는다. ⚠ **예산을 더 주는 것은 답이 아니다** — 감쇠율 0.878 에서 "
             "+28 걸음으로도 못 닿았다. 감쇠를 빠르게 하려면 비례 갱신에 완화계수 α < 1 이 필요하고, "
-            "그것은 시행 걸음이 아니라 **갱신 규칙 변경**이라 붙는 천체의 경로도 바꾼다 — **C69 후보**다.")
+            "그것은 시행 걸음이 아니라 **갱신 규칙 변경**이라 붙는 천체의 경로도 바꾼다 — **C69 후보**다." + straddle_note)
     print(f"  [고리] 시행 {len(devs)} 걸음 · 완화 걸린 걸음 {damped_steps} · "
           f"마지막 어긋남 {devs[-1]:.4e}" if devs else "  [고리] 시행 0 걸음")
     reps = _family_oscillation(fams)
@@ -4939,6 +4948,33 @@ def _solve_ice_for_radius(mass_earth: float, radius_earth: float, cmf: float,
     return best
 
 
+def _three_layer_close(x0, y0, x1, y1, evaluate, nmoi):
+    """C/MR² 를 핵질량분율로 좁힌다 — 두 점이 0 을 사이에 두면 그 괄호 안의 Brent(C152 ②), 아니면 오늘의 할선.
+    허용 `THREE_LAYER_NMOI_TOL` · 예산 6 그대로. `evaluate(x)` → (imf, res, y) 또는 None. 결과 (best, closed)."""
+    best = None
+    closed = False
+    root = rootfind.brent(x0, y0, x1, y1, 1e-12) if (y0 < 0.0) != (y1 < 0.0) and y0 != 0.0 and y1 != 0.0 else None
+    y = None
+    for _ in range(6):
+        if root is None:
+            x = x1 - y1 * (x1 - x0) / (y1 - y0) if y1 != y0 else 0.5 * (x0 + x1)
+        else:
+            try:
+                x = next(root) if y is None else root.send(y)
+            except StopIteration:
+                break
+        got = evaluate(x)
+        if got is None:
+            break
+        imf, res, y = got
+        best = (x, imf, res)
+        if abs(y) / nmoi < THREE_LAYER_NMOI_TOL:
+            closed = True
+            break
+        x0, y0, x1, y1 = x1, y1, x, y
+    return best, closed
+
+
 def infer_three_layer(mass_earth: float, radius_earth: float,
                       potential_temperature: float, nmoi: float | None = None,
                       tidal_heating: bool = False,
@@ -5032,29 +5068,13 @@ def infer_three_layer(mass_earth: float, radius_earth: float,
     a, b = pairs[0]
     x0, y0 = a["core_mass_fraction"], a["nmoi"] - nmoi
     x1, y1 = b["core_mass_fraction"], b["nmoi"] - nmoi
-    best = None
-    closed = False
-    # C152 ② — 이웃 두 점이 이미 0 을 사이에 두므로(`pairs`) 할선 대신 그 괄호 안의 Brent. 허용 · 예산(6) 은 그대로.
-    root = rootfind.brent(x0, y0, x1, y1, 1e-12) if (y0 < 0.0) != (y1 < 0.0) and y0 != 0.0 and y1 != 0.0 else None
-    for _ in range(6):
-        if root is None:
-            x = x1 - y1 * (x1 - x0) / (y1 - y0) if y1 != y0 else 0.5 * (x0 + x1)
-        else:
-            try:
-                x = next(root) if best is None else root.send(y)
-            except StopIteration:
-                break
-        got = _solve_ice_for_radius(mass_earth, radius_earth, x,
-                                    potential_temperature, tidal_heating)
+    def evaluate(x):
+        got = _solve_ice_for_radius(mass_earth, radius_earth, x, potential_temperature, tidal_heating)
         if got is None:
-            break
+            return None
         imf, res = got
-        y = res.values["nmoi"] - nmoi
-        best = (x, imf, res)
-        if abs(y) / nmoi < THREE_LAYER_NMOI_TOL:
-            closed = True
-            break
-        x0, y0, x1, y1 = x1, y1, x, y
+        return imf, res, res.values["nmoi"] - nmoi
+    best, closed = _three_layer_close(x0, y0, x1, y1, evaluate, nmoi)
     convergence.note("interior._three_layer_secant", closed)
     if best is None:
         return out_of_domain(
