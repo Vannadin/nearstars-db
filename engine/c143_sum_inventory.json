@@ -521,13 +521,18 @@
 ],
 [
 "scripts/c143_guard.py",
-"main",
+"compare",
 "sum((1 for x, y in zip(a, b) if x != y))"
 ],
 [
 "scripts/c143_guard.py",
+"controls",
+"sum([1e+16, 1.0, -1e+16])"
+],
+[
+"scripts/c143_guard.py",
 "main",
-"sum((1 for x, y in zip(kinds_a, kinds_b) if x != y))"
+"sum((1 for l in a if VERDICT.match(l)))"
 ],
 [
 "scripts/check_language.py",
