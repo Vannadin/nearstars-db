@@ -3,3 +3,7 @@
 # show every read of it coming from a gate-only module (engine/tools, engine/test_*, engine/check_*,
 # engine/build_graph_page.py, scripts/) and its reader steps declare it in gate_step_inputs.yaml.
 # Editing this file forces the full lane (it is gate code). Filled from the C149 census.
+# census: hooked full gates on 069a17ab — Mac (Python 3.9, reads in work-seat scratch, admitted 2)
+# and PC WSL (Python 3.12.3, reads 748765b6898c, admitted 2); the list is the files admitted on both.
+engine/ice_giant_anchor.json        # opened only by engine/test_ice_giant.py, engine/test_interior.py
+engine/tools/core_items_kind.yaml   # opened only by engine/tools/core_items.py
