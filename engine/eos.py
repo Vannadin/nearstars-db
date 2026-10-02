@@ -786,9 +786,16 @@ class Phase:
         rho_s, p_s = self._spinodal()
         if p_cold < p_s:
             convergence.note("eos.density_tension", False, trial=True)   # C138 P/R — 사격 시행이면 벽
-            raise SpinodalGap(self.name, p_cold, (
+            # C155 §1.2 — 이 벽은 이 상의 꼴의 범위 밖이라는 뜻이다(물리 벽이 아님). 문구 · `wall_class` 만 붙고 값은 그대로.
+            pointer = ("고칠 길 C119 — 뜨거운 액체 철" if self.name.startswith("fe")
+                       else "고칠 길 C156 — 뜨거운 내부" if self.name.startswith("mgsio3") else "고칠 길 미등록")
+            gap = SpinodalGap(self.name, p_cold, (
                 f"{self.name}: 열압력을 뺀 냉각 압력 {p_cold / 1e9:.4f} GPa 가 냉각 곡선의 스피노달 "
-                f"{p_s / 1e9:.4f} GPa 밑이다 — 이 온도({t:.0f} K)에서 이 상은 그 압력에 없다"), t, too_cold=False)
+                f"{p_s / 1e9:.4f} GPa 밑이다 — 이 온도({t:.0f} K)에서 이 상은 그 압력에 없다"
+                f" — {self.name} 의 열압력 꼴(냉각 곡선 + 선형 열압력; 팽창 쪽 뒤집기는 등급 판단)의 범위 밖이라는 뜻이지, "
+                f"물질이 거기서 물리적으로 없다는 뜻이 아니다 (C155 범위 벽; {pointer})"), t, too_cold=False)
+            gap.wall_class = "coverage"
+            raise gap
         lo, hi = rho_s, self.rho0
         for _ in range(80):
             mid = 0.5 * (lo + hi)

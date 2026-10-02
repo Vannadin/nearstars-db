@@ -2047,13 +2047,16 @@ def main() -> int:
     # ⚠ **C119 (오너 2026-09-26 «2. A»): 이 몸은 이제 이름 대고 거절한다.** 뜨거운 핵이 7872 K 위에서 fe_prem 의
     #   냉각 곡선 스피노달 밑으로 가고(prereg-thermal-pressure-floor 덧붙임 6–8), 온도 괄호가 그것을 벽으로 받아
     #   1 bar 300 K 에 못 닿는다. 옛 답(R 2.733)은 그 핵에서 rho0 를 조용히 쓴 답이었다. 고침은 액체 철 핵(결정 (A))과 함께.
+    # ⚠ **C155 §1.4 — 벽의 종류가 아니라 기작을 지킨다.** 어느 벽(fe_prem 스피노달 · rtpress)에서 멈추는지는 쌓인
+    #   판(C148 · C152)에 따라 바뀐다. 지키는 것은 «이름 대고 거절 + 벽이 자기 등급을 말한다(C155 문구)» 다.
     reason = gj.reason or ""
-    ok = (not gj.applicable) and "스피노달" in reason and "외피가 묶이는 가장 뜨거운 중심 온도" in reason
+    c155 = next((tag for tag in ("(C155 물리 벽)", "(C155 범위 벽", "(C155 미정)") if tag in reason), None)
+    ok = (not gj.applicable) and "외피가 묶이는 가장 뜨거운 중심 온도" in reason and c155 is not None
     if not ok:
-        fails.append(f"서브넵튠: GJ 1214 b 가 C119 의 이름 대는 거절이 아니다 — "
+        fails.append(f"서브넵튠: GJ 1214 b 가 이름 대고 거절하며 벽의 등급(C155)을 말하지 않는다 — "
                      f"{reason[:80] if not gj.applicable else 'applicable'}")
     print(f"  [{'PASS' if ok else 'FAIL'}] GJ 1214 b (8.41 M⊕ · H/He 2 % · 1 bar 300 K): "
-          + ("이름 대고 거절(스피노달 벽, C119)" if ok else (reason[:80] or "풀림")))
+          + (f"이름 대고 거절, 벽 {c155}" if ok else (reason[:80] or "풀림")))
     # 20 % 는 이제 풀린다 (12.7 R⊕ — 그 선언에 충실한 답이다). 순수 가스 5 M⊕ 가 거절이다: 1 bar
     # 500 K 단열선이 묶이는 가장 뜨거운 치밀한 해가 1 bar 에서 145 K 뿐이라, 그 위는 부푼 가지다.
     hot = solve(5.0, core_mass_fraction=0.0, ice_mass_fraction=0.0, gas_mass_fraction=1.0,

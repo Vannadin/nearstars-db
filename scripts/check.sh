@@ -1045,6 +1045,8 @@ step "test_stellar_wind.py" bash -c 'cd engine && exec python3 test_stellar_wind
 step "test_tidal_locking.py" bash -c 'cd engine && exec python3 test_tidal_locking.py'
 # 범위는 자기가 묶는 방향으로만 판정하는가 — 도우미 · 음성 대조 · 핵 · 암석 · 조석 고정 (C154). ~2 s.
 step "test_bounds.py" bash -c 'cd engine && exec python3 test_bounds.py'
+# 안정성 벽이 자기 등급(끓음 · 범위 · 미정)을 말하는가 — rtpress 증기압 띠 · 스피노달 · 음성 대조 (C155). <1 s.
+step "test_stability_walls.py" bash -c 'cd engine && exec python3 test_stability_walls.py'
 step "test_provisional.py" bash -c 'cd engine && exec python3 test_provisional.py'
 # 전이 기록 (Brief 153). 다른 천체의 값은 기록 없이 못 들어오고, state 인데 derived 면(3040 K 모양) 거절.
 step "test_transfers.py" bash -c 'cd engine && exec python3 test_transfers.py'

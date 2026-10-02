@@ -159,6 +159,55 @@ def derived(v: float, t: float) -> dict:
 
 
 MATERIAL = "rtpress_mgsio3_liquid"
+
+# ── C155: 벽이 무엇인지 말한다 — 규산염 증기압 띠 (prereg-c155-stability-walls, 동결 baa302ba) ──────────────
+# 문구에만 쓴다. 값 · 흐름은 이 블록을 읽지 않는다.
+SILICATE_VAPOUR = {
+    "fits": [(11.8, 45000.0), (12.45, 49420.0)],   # P = exp(A − B/T) MPa
+    "width_mpa": 14.0,                                # the printed two-phase width, «on the order of 10% of the critical pressure» × 140 MPa
+    "p_c_mpa": 140.0, "t_c_low_k": 6450.0, "t_c_high_k": 7000.0,
+    "grade": "literature (printed fit; the band is our reading)",
+    "source": ("Xiao & Stixrude 2018 PNAS 115 5371, PMC6003494 (cache 2018PNAS..115.5371X.html): «The pressure may be "
+               "represented by P = exp(A − B/T) with A = 11.8 ± 2.0 and B = 45,000 ± 14,000 with P in megapascals», the "
+               "experimental extrapolation «A = 12.45 and B = 49,420», «P c = 140 MPa at T c = 6,600 K», «T c = 6,600 ± 150 K»; "
+               "two-phase width «Incongruent vaporization requires that the vapor pressure line is actually a two-phase "
+               "coexistence region of finite width. However, a thermochemical modeling study of the silica system (15) "
+               "indicates that the width of the two-phase region is on the order of 10% of the critical pressure»; T_c upper "
+               "7000 K from PALEOS §3.2 «near 6000–7000 K at approximately 1 kbar» (Caracas & Stewart 2023; Caracas 2024, "
+               "second-hand)"),
+    "counter_evidence_searched": ("PALEOS 2026 §3.2 (cache 2026arXiv260503741A, the sentence «The critical point of MgSiO3 lies near 6000–7000 K at approximately 1 kbar») agrees within ranges; Xiao & "
+                                  "Stixrude 2018 cite the hydrodynamic-impact model's «critical point occurs at 8,800 K» "
+                                  "(higher T_c, not adopted, named here); Caracas & Stewart 2023 / Caracas 2024 originals not "
+                                  "in the cache; the A and B uncertainties (± 2.0, ± 14 000) are quoted and not used as a band, "
+                                  "since they are correlated (the curve is pinned by P_c at T_c and agrees with the "
+                                  "experimental extrapolation «by no more than a few megapascals»)"),
+}
+
+
+def vapour_class(t: float, p_gpa: float) -> tuple[str, str]:
+    """C155 §1.1 — W1 벽의 (T, 목표 P) 를 규칙 1–6 순서로 가른다. (등급, 덧붙일 문구). 등급 ∈ «boils» «stable» «may boil»."""
+    sv = SILICATE_VAPOUR
+    p = p_gpa * 1e3                                   # MPa
+    tail_boil = "RTpress 에는 증기 가지가 없다"
+    stable = (" — 이 (T, P) 에서 실제 규산염은 안정한 액체(또는 초임계 유체)다 ({why}); "
+              "RTpress 꼴의 한계이지 물리 한계가 아니다 (C155 범위 벽)")
+    if p > sv["p_c_mpa"]:                                                       # 1
+        return "stable", stable.format(why=f"임계압 {sv['p_c_mpa']:.0f} MPa 위")
+    if t >= sv["t_c_high_k"]:                                                   # 2
+        return "stable", stable.format(why=f"임계온도 {sv['t_c_high_k']:.0f} K 위")
+    if t >= sv["t_c_low_k"]:                                                    # 3
+        return "may boil", (f" — 이 (T, P) 는 규산염 증기압 근처(임계온도 불확도 {sv['t_c_low_k']:.0f}–"
+                            f"{sv['t_c_high_k']:.0f} K 안)라 끓는지 정하지 않는다; {tail_boil} (C155 미정)")
+    fits = [math.exp(a - b / t) for a, b in sv["fits"]]
+    lo = max(0.0, min(fits) - sv["width_mpa"])
+    hi = max(fits) + sv["width_mpa"]
+    if p < lo:                                                                  # 4
+        return "boils", (f" — 이 (T, P) 는 규산염 증기압(Xiao & Stixrude 2018 두 맞춤 ± 두 상 폭 "
+                         f"{sv['width_mpa']:.0f} MPa: {lo:.1f}–{hi:.1f} MPa) 밑이라 암석이 끓는다; {tail_boil} (C155 물리 벽)")
+    if p > hi:                                                                  # 5
+        return "stable", stable.format(why=f"증기압 {lo:.1f}–{hi:.1f} MPa 위")
+    return "may boil", (f" — 이 (T, P) 는 규산염 증기압 근처(두 맞춤 ± 두 상 폭 {lo:.1f}–{hi:.1f} MPa 안)라 "   # 6
+                        f"끓는지 정하지 않는다; {tail_boil} (C155 미정)")
 N_GRID = 64                   # 덧붙임 2 B.1 — log-uniform V grid on [0.2, 1.6]·V₀ (neighbour ratio 8^(1/63) = 1.034)
 
 
@@ -288,9 +337,13 @@ def volume_full(p: float, t: float) -> float:
             hi = _v_min(t, grid[i - 1], grid[i + 1])
             p_min = pressure(hi, t)
             if p_min > p:
-                raise eos.PhaseGap(MATERIAL, p * 1e9, (
+                wall_class, clause = vapour_class(t, p)
+                gap = eos.PhaseGap(MATERIAL, p * 1e9, (
                     f"rtpress: 이 (P, T) 에 역학적으로 안정한 액체 없음 — 안정 가지의 최저 압력 "
-                    f"P(V_min) = {p_min:.4g} GPa at V/V₀ = {hi / V0:.4f} (T {t:.1f} K, 목표 {p:.4g} GPa)"), t)
+                    f"P(V_min) = {p_min:.4g} GPa at V/V₀ = {hi / V0:.4f} (T {t:.1f} K, 목표 {p:.4g} GPa)"
+                    + clause), t)
+                gap.wall_class = wall_class
+                raise gap
             break
     g_lo, g_hi = pressure(lo, t) - p, pressure(hi, t) - p
     if g_lo * g_hi > 0.0:

@@ -72,6 +72,8 @@
   globs: []
 "test_bounds.py":  # C154; imports only — the next census confirms
   globs: []
+"test_stability_walls.py":  # C155; imports only — the next census confirms
+  globs: []
 "test_provisional.py":
   globs: []
 "test_transfers.py":
