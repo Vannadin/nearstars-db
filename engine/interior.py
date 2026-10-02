@@ -2350,9 +2350,12 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
     tol_now = {"v": max(SHOOT_TOL, LOOSE_C) if loose else SHOOT_TOL}
     used_tol: dict = {}
     def locate_wall(anchor, t_wall: float) -> tuple[Structure, bool, float]:
-        """C152 ④ — (풀린 T, 구조, ok) 와 막힌 T 사이 로그 이분. 결과: 벽에 가장 가까운 풀린 시행."""
+        """C152 ④ — (풀린 T, 구조, ok) 와 막힌 T 사이 로그 이분. 결과: 벽에 가장 가까운 풀린 시행.
+        찾은 벽은 바깥 고리의 `wall` 로 남긴다 — 그 시행으로도 표면 온도가 안 닿으면 고리 끝의 이름 댄 거절이 그 벽을 댄다."""
+        nonlocal wall, wall_why
         t_ok, got_ok, ok_ok = anchor
         a, b = math.log(t_ok), math.log(t_wall)
+        why = ""
         shots = 0
         while abs(b - a) > T_WALL_TOL and shots < T_WALL_SHOTS:
             shots += 1
@@ -2362,7 +2365,7 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
             except PhaseGap as gap:
                 if not gap.temperature_k:
                     raise
-                b = math.log(t_mid)
+                b, why = math.log(t_mid), str(gap)
                 continue
             used_tol[id(got)] = tol_now["v"]
             got.crust_blocked = False
@@ -2371,6 +2374,8 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
             a, t_ok, got_ok, ok_ok = math.log(t_mid), t_mid, got, ok
         convergence.note("interior._t_wall_locate", abs(b - a) <= T_WALL_TOL)
         WALL_LOCATE_SHOTS[0] += shots
+        if anchor[0] < t_wall and (wall is None or math.exp(b) < wall):   # 뜨거운 쪽 벽만 고리의 `wall` 이다
+            wall, wall_why = math.exp(b), why or wall_why
         return got_ok, ok_ok, t_ok
 
     def attempt(t_try: float, anchor=None) -> tuple[Structure, bool, float]:
