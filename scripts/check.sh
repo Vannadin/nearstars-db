@@ -1181,6 +1181,9 @@ step "test_eos_joins.py" bash -c 'cd engine && exec python3 test_eos_joins.py'
 # 부호 · 두 축 등급 · 적분기와 핵 노드의 γ 일치 · **두 재질의 호출 표면이 두 구간 다에서 유한**
 # (C76: 깨끗한 트리에서 `fe_prem.c_p` 가 던지고 있었는데 천체 기준선이 전부 초록이었다). ~1 s.
 step "test_fe_hcp.py" bash -c 'cd engine && exec python3 test_fe_hcp.py'
+# fe_prem 의 기준 단열선 (C148, prereg-c148-fe-prem-reference-adiabat 198f3abd). 표가 생성기에서 비트까지 다시
+# 나오는가(수락 9) · 다섯 값 · 마디에서 P_th = 0(수락 10 (c)) · 표 없이 오늘의 꼴 · 기록 세 칸. ~5 s.
+step "test_fe_prem_reference.py" bash -c 'cd engine && exec python3 test_fe_prem_reference.py'
 # 방사성 예산 (Brief 44). 초안 표의 폐합 세 건·캡션 오독 11.59 TW·과거 방향 3.67 이 앵커다.
 step "test_radiogenic.py" bash -c 'cd engine && exec python3 test_radiogenic.py'
 # 함의 열류 일관성 (Brief 46). Table 2 전사 폐합(42 TW ← 1614 K)과 ζ 양방향 민감도, 판정 라벨이 앵커다.

@@ -1271,7 +1271,7 @@ def main() -> int:
         fails.append("새 상한 위 거절이 무엇이 그 위인지 말하지 않는다")
     print(f"  [{'PASS' if deg else 'FAIL'}] 그 위가 전자축퇴임을 말한다")
 
-    print("\n온도 — 기준 포텐셜 온도에서 지구가 안 움직이는가(이중계상 없음 — 상대 ≤ SHOOT_TOL)")
+    print("\n온도 — 기준 포텐셜 온도에서 지구가 안 움직이는가(이중계상 없음 — C148: 지구 상대 ≤ 1e-6)")
     # 이 작업 전체의 판정선이다. PREM 적합은 뜨거운 실제 지구를 관측한 것이라 지구의
     # 지오섬이 그 유효 ρ₀ 안에 이미 있고, 거기에 300 K 기준의 열팽창을 얹으면 지구를
     # 두 번 데운다 — 직전 세션이 목성에 중원소를 두 번 넣어 반지름을 +0.6 % 에서
@@ -1281,13 +1281,19 @@ def main() -> int:
     # ⚠ **같음의 자는 비트가 아니라 SHOOT_TOL** (prereg-structure-grid 덧붙임 47, 동결 61a55db4). warm start · 느슨한
     #   안쪽 사격 뒤로 on/off 두 풀이는 온도 고리의 유무로 길이 갈려 끝자리가 다르다(관찰 최대 2.0e-9). 이중계상이면
     #   1e-3 급으로 움직인다 — 1700 K(ΔT 100 K 더)의 픽스처가 넷 모두 8.6e-5 이상으로 갈렸다.
+    # ⚠ **C148 이 이 검사를 다시 적었다** (prereg-c148-fe-prem-reference-adiabat 198f3abd, 수락 10). fe_prem 의 ΔT 를 천체의
+    #   T_pot 이 아니라 **자기 기준 단열선**과의 차로 잰 뒤로 «1600 K 에서 ΔT ≡ 0» 은 그 단열선 위에 있는 지구만의 사실이다.
+    #   (a) 지구: 켬/끔 상대 ≤ 1e-6 — 남는 것은 표(ln P 의 RK4)와 적분기(반지름 걸음)의 차 ≤ 2.4 K 이고, 이중계상의
+    #   흔적(+100 K 에서 ≥ 8.6e-5)보다 약 200 배 작다. (b) 화성 · 수성 · 달: 그 핵은 지구의 단열선 위에 있지 않아 물리로
+    #   움직인다(화성 ΔT +132…+155 K → 7e-5) — 인쇄만, 판정 없음. (c) 항등식(표의 마디에서 P_th = 0)은
+    #   `test_fe_prem_reference.py` 가 직접 본다. (d) 음성 대조: 지구를 1700 K 로 켜면 ≥ 1e-6 움직여야 (a) 가 실패할 수 있다.
     from eos import EARTH_POTENTIAL_T
-    from interior import SHOOT_TOL
     import interior as _interior
     import rtpress
     # C120 덧붙임 5 C.3 — 뜨거운 풀이 **전체(시행 포함)** 에서 녹은 규산염 액체(`rtpress.liquid`)를 한 번도 안 부른
-    #   몸만 비트 동일을 단언한다. 부른 몸은 «기록» 행으로 (호출 수 · 수렴 해를 낸 적분의 호출 수 · 켠/끈 차)를 찍고,
+    #   몸만 판정한다. 부른 몸은 «기록» 행으로 (호출 수 · 수렴 해를 낸 적분의 호출 수 · 켠/끈 차)를 찍고,
     #   수렴 해의 적분이 액체를 불렀으면(곧 수렴 해에 φ > 0 이 있으면) 행 앞에 «⚠ 수렴 해가 녹음».
+    # ⚠ C148 (수락 10): 안 부른 몸의 판정은 지구 ≤ 1e-6, 화성 · 수성 · 달은 ΔT 와 함께 기록 — 위 C148 주석.
     _orig_integrate = _interior.integrate
     _per_integration = []
     def _counting_integrate(*a, **k):
@@ -1306,22 +1312,28 @@ def main() -> int:
         finally:
             _interior.integrate = _orig_integrate
         calls = rtpress.CALLS
+        dt = (f"fe_prem ΔT {on.values['fe_prem_dt_min']:+.2f} … {on.values['fe_prem_dt_max']:+.2f} K"
+              if on.values.get("fe_prem_dt_min") is not None else "fe_prem ΔT —")
         if calls == 0:
             d_n = abs(on.values["nmoi"] / off.values["nmoi"] - 1.0)
             d_r = abs(on.values["radius"] / off.values["radius"] - 1.0)
-            same = d_n <= SHOOT_TOL and d_r <= SHOOT_TOL
-            if not same:
-                fails.append(f"{name}: 기준 온도에서 답이 움직였다 — 이중계상이다 "
-                             f"({off.values['nmoi']:.10f} → {on.values['nmoi']:.10f})")
-            print(f"  [{'PASS' if same else 'FAIL'}] {name:8} C/MR² {on.values['nmoi']:.6f} · "
-                  f"R {on.values['radius']:.6f} — 온도를 끈 답과 상대 {max(d_n, d_r):.1e} ≤ SHOOT_TOL")
+            if name == "Earth":
+                same = d_n <= 1e-6 and d_r <= 1e-6
+                if not same:
+                    fails.append(f"{name}: 기준 온도에서 답이 1e-6 넘게 움직였다 — 이중계상이다 "
+                                 f"({off.values['nmoi']:.10f} → {on.values['nmoi']:.10f})")
+                print(f"  [{'PASS' if same else 'FAIL'}] {name:8} C/MR² {on.values['nmoi']:.6f} · "
+                      f"R {on.values['radius']:.6f} — 온도를 끈 답과 상대 {max(d_n, d_r):.1e} ≤ 1e-6 · {dt}")
+            else:
+                print(f"  [기록] {name:8} C/MR² {on.values['nmoi']:.6f} · R {on.values['radius']:.6f} — 온도를 끈 답과 "
+                      f"상대 {max(d_n, d_r):.1e} · {dt} (C148: 이 핵은 지구의 기준 단열선 위에 있지 않다 — 판정 없음)")
         else:
             r_on = on.values["radius"] * EARTH_RADIUS_M
             conv = min(_per_integration, key=lambda x: abs(x[0] - r_on))[1] if _per_integration else 0
             mark = "⚠ 수렴 해가 녹음 " if conv > 0 else ""
             print(f"  [기록 · C120] {mark}{name:8} 녹은 규산염 액체 호출 {calls}(수렴 해 적분 {conv}) — "
                   f"켠/끈 R 상대 {on.values['radius'] / off.values['radius'] - 1.0:+.2e} · "
-                  f"C/MR² 상대 {on.values['nmoi'] / off.values['nmoi'] - 1.0:+.2e} (판정 없음)")
+                  f"C/MR² 상대 {on.values['nmoi'] / off.values['nmoi'] - 1.0:+.2e} · {dt} (판정 없음)")
     ok = solve(1.0, core_mass_fraction=0.325,
                potential_temperature=EARTH_POTENTIAL_T).grade == "calibrated"
     if not ok:

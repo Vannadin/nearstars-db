@@ -509,6 +509,88 @@ def _cold_phases(cmf, imf, core_material, gmf, envelope_z, envelope_z_rock_fract
     return out
 
 
+#: C148 §1.4 — Isaak & Anderson 전개의 2차 항이 1차 항을 넘는 폭 |ΔT| = 2αK/αK′ (fe_prem 의 상수에서, ≈ 3103 K).
+#: §2 의 규산염 메모도 같은 폭을 쓴다.
+REF_DT_WIDTH = 2.0 * eos.FE_PREM.phases[0].alpha_k / eos.FE_PREM.phases[0].alpha_k_dt
+REF_FE_SOURCE = "Isaak & Anderson 2003 thermal-pressure expansion (alpha K, alpha K'), evaluated beyond its reference"
+REF_FE_COUNTER = ("C148 E0 (map_i_merged 77668d12e193): accepted-shot dT per class; the sign is physical under the "
+                  "reference adiabat, the magnitude is outside the expansion's reference; C119 (liquid iron) is the "
+                  "alternative for hot cores")
+REF_SI_NOTE = "today's T_pot-scaled form, over-compressed; see C148 §2"
+REF_SI_SOURCE = ("Seager+ 2007 / Zeng+ 2016 silicate fits with Isaak & Anderson-form thermal pressure, referenced to "
+                 "the body's T_pot")
+REF_SI_COUNTER = "C148 silicate E0, map_isi 97e58d120684"
+_REF_UNITS = {"fe_prem_dt_min": "K", "fe_prem_dt_max": "K", "fe_prem_dt_beyond_steps": "",
+              "fe_prem_thermal_grade": "", "fe_prem_thermal_source": "", "fe_prem_thermal_counter_evidence_searched": "",
+              "silicate_thermal_pressure": "", "silicate_thermal_pressure_steps": "",
+              "silicate_thermal_pressure_gap_min": "K", "silicate_thermal_pressure_grade": "",
+              "silicate_thermal_pressure_source": "", "silicate_thermal_pressure_counter_evidence_searched": ""}
+
+
+def _reference_step(info, mat, p: float, t: float, t_pot: float):
+    """C148 — 한 걸음의 기록. fe_prem: 기준 단열선과의 ΔT(범위)와 |ΔT| > 폭인 걸음 수. 규산염(재질 자신이거나 혼합의
+    성분): 오늘의 꼴 ΔT 가 기준 단열선 ΔT 보다 폭 이상 낮은(눌린) 걸음 수와 가장 깊은 차. 값 경로는 안 건드린다."""
+    for m, w in ((mat, 1.0),) + tuple(getattr(mat, "parts", ())):
+        if w <= 0.0 or not isinstance(m, eos.Material):
+            continue
+        fe, si = m.name in eos.REFERENCE_ADIABAT, m.name in eos.SILICATE_REFERENCE
+        if not (fe or si):
+            continue
+        try:
+            ph = m.phase_at(p)
+        except eos.PhaseGap:
+            continue
+        if ph.t_ref_kind != "adiabat":
+            continue
+        if info is None:
+            info = {"fe_steps": 0, "fe_beyond": 0, "fe_dt_min": math.inf, "fe_dt_max": -math.inf,
+                    "si_steps": 0, "si_gap_min": math.inf}
+        dt = ph.delta_t(t, t_pot, p)
+        if fe:
+            info["fe_steps"] += 1
+            info["fe_dt_min"], info["fe_dt_max"] = min(info["fe_dt_min"], dt), max(info["fe_dt_max"], dt)
+            if abs(dt) > REF_DT_WIDTH:
+                info["fe_beyond"] += 1
+        else:
+            gap = dt - (t - eos.SILICATE_REFERENCE[m.name](p))
+            if gap < -REF_DT_WIDTH:
+                info["si_steps"] += 1
+                info["si_gap_min"] = min(info["si_gap_min"], gap)
+    return info
+
+
+def _reference_values(st) -> dict:
+    """C148 §1.4 · §2 — 받아들인 적분의 기록을 값으로. 넘은 걸음이 있을 때만 세 칸(grade · source · counter)이 찬다."""
+    out = dict.fromkeys(_REF_UNITS)
+    w = _REF_INFO.get(id(st))
+    if w is None:
+        return out
+    if w["fe_steps"]:
+        out.update(fe_prem_dt_min=w["fe_dt_min"], fe_prem_dt_max=w["fe_dt_max"], fe_prem_dt_beyond_steps=w["fe_beyond"])
+        if w["fe_beyond"]:
+            out.update(fe_prem_thermal_grade="analog", fe_prem_thermal_source=REF_FE_SOURCE,
+                       fe_prem_thermal_counter_evidence_searched=REF_FE_COUNTER)
+    if w["si_steps"]:
+        out.update(silicate_thermal_pressure=REF_SI_NOTE, silicate_thermal_pressure_steps=w["si_steps"],
+                   silicate_thermal_pressure_gap_min=w["si_gap_min"], silicate_thermal_pressure_grade="analog",
+                   silicate_thermal_pressure_source=REF_SI_SOURCE,
+                   silicate_thermal_pressure_counter_evidence_searched=REF_SI_COUNTER)
+    return out
+
+
+def _reference_notes(v: dict) -> list[str]:
+    """C148 — 위 값과 같은 수의 산문 줄."""
+    lines = []
+    if v["fe_prem_dt_beyond_steps"]:
+        lines.append(f"fe_prem 열압력: 기준 단열선과의 ΔT {v['fe_prem_dt_min']:+.0f} … {v['fe_prem_dt_max']:+.0f} K, 그중 "
+                     f"{v['fe_prem_dt_beyond_steps']} 걸음이 |ΔT| > {REF_DT_WIDTH:.0f} K(2차 항이 1차 항을 넘는 폭) — "
+                     f"등급 analog: {REF_FE_SOURCE} (C148 §1.4).")
+    if v["silicate_thermal_pressure"]:
+        lines.append(f"규산염 열압력: {REF_SI_NOTE} — {v['silicate_thermal_pressure_steps']} 걸음이 기준 단열선보다 "
+                     f"{REF_DT_WIDTH:.0f} K 넘게 차게 읽혔다(가장 깊은 차 {v['silicate_thermal_pressure_gap_min']:+.0f} K). 등급 analog.")
+    return lines
+
+
 def _integrator_gamma_values(core_material: str, st) -> dict:
     """적분기가 쓴 핵 γ 의 **판정**을 값으로 낸다 (2026-09-11, 결정 ⓐ).
 
@@ -772,6 +854,8 @@ def _family_oscillation(fams: list) -> list | None:
         if all(_family_jump(r, f) for r in reps):
             reps.append(f)
     return reps
+#: C148 — 구조 id → fe_prem ΔT 와 규산염 메모의 걸음 기록(같은 조건, 같은 비우기). 걸음이 없으면 칸이 없다.
+_REF_INFO: dict[int, dict] = {}
 #: 표면 암석권의 자리(prereg-surface-lithosphere) — 구조 id → 층 바닥 반지름 · 그 자리 단열 온도 · 윗끝 · 표면 온도.
 _LITHO_INFO: dict[int, dict] = {}
 
@@ -1089,6 +1173,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
     #   것만으로 뒤 풀이의 비트가 움직일 수 있다). 괄호 밑 걸음의 밀도는 정확히 `RHO_MIN` 이라 질량은 그것으로 센다.
     hw_steps, hw_mass, hw_first = 0, 0.0, None
     bf_flips, bf_last, bf_first = 0, 0, None
+    ref_info = None              # C148 — 기록만. 온도가 흐르지 않거나 해당 재질이 없으면 안 채워진다
     while p > p_stop and steps < MAX_STEPS:
         steps += 1
         prev_layer = layer
@@ -1191,6 +1276,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             rock_samples.append((p, t))
         if p_si_max == 0.0 and _carries_silicate(mat):
             p_si_max = p
+        if t > 0.0 and t_pot > 0.0:
+            ref_info = _reference_step(ref_info, mat, p, t, t_pot)
 
         # 4차 Runge-Kutta. 한 단계 안에서는 재료를 고정한다 — 경계에서 한 단계
         # 어긋나는 오차는 dr/R ~ 3e-4 이라 C/MR² 의 유효숫자 밖이다.
@@ -1637,6 +1724,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
     if lithosphere is not None:
         _LITHO_INFO[id(structure)] = {"r_base": r_litho, "t_base": t_litho_base, "r_top": lithosphere["r_top"],
                                       "t_s": lithosphere["t_s"]}
+    if ref_info is not None:
+        _REF_INFO[id(structure)] = ref_info
     if basal_mat is not None:
         _BASAL_INFO[id(structure)] = {"r_base": core_radius, "r_top": r_basal_top, "p_base": p_basal_base,
                                       "p_top": p_basal_top, "t_base": t_basal_base,
@@ -3670,6 +3759,7 @@ def solve(mass_earth: float,
     _BASAL_INFO.clear()
     _FAMILY_INFO.clear()
     _FAMILY_TRAIL.update(trials=[], reclosed=[], closed=[], answer=None, dev=None, calls=0, returned={}, answer_call=None)
+    _REF_INFO.clear()
     # 기저층 (prereg-structure-basal-layer) — 두께 0 또는 없음이면 층이 없다(S-B2: 예전 경로 그대로).
     basal = None
     if basal_layer_thickness_km:
@@ -4138,6 +4228,8 @@ def solve(mass_earth: float,
               f"결정되므로 자기압축이 C/MR² 에 들어간다.")
 
     notes.extend(preset_overridden)
+    reference = _reference_values(st)          # C148 — fe_prem ΔT 와 규산염 메모
+    notes.extend(_reference_notes(reference))
     if radius_earth is not None:
         off = (radius_earth - radius) / radius
         notes.append(
@@ -4201,6 +4293,7 @@ def solve(mass_earth: float,
                 #   짝이고, 둘이 다른 답을 세는 것이 지금의 사실이다 — 넷이 함께 움직이는 것은
                 #   액체 세트가 채택되는 날이다.
                 **_integrator_gamma_values(core_material, st),
+                **reference,
                 # ⚠ **미수렴을 값으로 낸다** (C71, 브리프 189). 예전에는 `converged` 가
                 #   `Result` 의 칸이라 `state._find` 가 못 읽었고 (선언 입력 → 각 결과의 `values`),
                 #   남는 흔적은 `payload` 의 산문 한 줄뿐이었다. 세 값이 나간다: 판정(`None` 은
@@ -4232,6 +4325,7 @@ def solve(mass_earth: float,
                "radius": "R_earth",
                "core_pressure": "GPa",
                "bulk_porosity": "dimensionless",
+               **_REF_UNITS,
                "integrator_core_gamma_verdict": "",
                "integrator_red_gamma_used": "",
                "voids_expected": ""},

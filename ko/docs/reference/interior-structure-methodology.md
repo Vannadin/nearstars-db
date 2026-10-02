@@ -50,6 +50,11 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 `ocean_thickness` [km] · `ice_shell_thickness` [km] · `bulk_porosity` [—] · `voids_expected` [—] ·
 `figure_relaxation` [—] · `maxwell_time_mantle_top` [yr] · `relaxation_threshold_max` [K] ·
 `integrator_core_gamma_verdict` [—] · `integrator_red_gamma_used` [—] ·
+`fe_prem_dt_min` [K] · `fe_prem_dt_max` [K] · `fe_prem_dt_beyond_steps` [—] · `fe_prem_thermal_grade` [—] ·
+`fe_prem_thermal_source` [—] · `fe_prem_thermal_counter_evidence_searched` [—] ·
+`silicate_thermal_pressure` [—] · `silicate_thermal_pressure_steps` [—] ·
+`silicate_thermal_pressure_gap_min` [K] · `silicate_thermal_pressure_grade` [—] ·
+`silicate_thermal_pressure_source` [—] · `silicate_thermal_pressure_counter_evidence_searched` [—] ·
 `converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—] ·
 `fallback_solvers` [—] · `trial_unconverged` [—] ·
 `core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—] ·

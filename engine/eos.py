@@ -41,7 +41,11 @@
 """
 from __future__ import annotations
 
+import bisect
+import json
 import math
+import os
+from pathlib import Path
 
 import convergence
 import fe_liquid
@@ -84,6 +88,43 @@ class SpinodalGap(PhaseGap):
     """냉각 압력이 냉각 곡선의 스피노달 밑이다 — 이 온도에서 이 상은 그 압력에 없다(prereg-thermal-pressure-floor).
     온도가 막은 것이라 `PhaseGap` 의 온도 벽이지만, 온도 괄호가 시행 안에서 옮기지 않고 바깥 고리가 벽으로 받는다
     (`interior.shoot`, 덧붙임 7) — 시행 안에서 ÷1.6 로 내리면 요청과 다른 온도의 답이 돌아가 할선이 갈피를 잃는다."""
+
+
+class ReferenceAdiabat:
+    """기준 단열선 T_ref(P) — 굳힌 표를 ln P 에서 선형으로 잇는다 (C148, prereg-c148-fe-prem-reference-adiabat 198f3abd).
+
+    ⚠ **마디에서는 마디 값 그대로** 낸다(`bisect_right` 로 마디를 구간의 왼끝에 둔다) — 그래서 T = T_ref(P) 인 마디에서
+    ΔT 가 정확히 0 이고 열압력이 정확히 0 이다(수락 10 (c)). 표 밖은 끝 구간의 직선으로 늘인다."""
+
+    def __init__(self, lnp: list[float], t: list[float]):
+        self.lnp, self.t = lnp, t
+
+    def __call__(self, p: float) -> float:
+        x = math.log(p)
+        i = min(max(bisect.bisect_right(self.lnp, x), 1), len(self.lnp) - 1)
+        x0, x1, y0, y1 = self.lnp[i - 1], self.lnp[i], self.t[i - 1], self.t[i]
+        return y0 + (y1 - y0) * (x - x0) / (x1 - x0)
+
+
+#: C148 — 굳힌 기준 단열선 표의 자리. 만드는 쪽은 `tools/reference_adiabats.py` 하나다.
+REFERENCE_ADIABATS_PATH = Path(__file__).with_name("reference_adiabats.json")
+
+
+def _load_reference_adiabats() -> dict:
+    """표를 읽는다. ⚠ 없으면 **조용히 예전 꼴로 돌지 않고** 던진다 — 표가 빠진 엔진이 C148 이전의 ΔT 로 답하면 아무도
+    모른다. 만드는 스크립트만 `NEARSTARS_REFERENCE_BUILD=1` 로 표 없이 올라온다(그때는 오늘의 꼴이 기준을 만든다)."""
+    if os.environ.get("NEARSTARS_REFERENCE_BUILD") == "1":
+        return {}
+    doc = json.loads(REFERENCE_ADIABATS_PATH.read_text(encoding="utf-8"))
+    return {name: ReferenceAdiabat(tab["lnp"], tab["t"]) for name, tab in doc["tables"].items()}
+
+
+_REFERENCE_TABLES = _load_reference_adiabats()
+#: C148 — ΔT 를 이 표와의 차로 재는 상(이름 → T_ref(P)). **fe_prem 하나뿐**이다(오너 결정 (b)). 음성 대조는 여기서
+#: 항목을 빼는 monkeypatch 다 — 빼면 그 상은 오늘의 꼴(T·(1 − t_ref/T_pot))로 돈다. 출하되는 스위치는 없다.
+REFERENCE_ADIABAT = {k: v for k, v in _REFERENCE_TABLES.items() if k == "fe_prem"}
+#: C148 §2 — 규산염 재질의 기준 단열선. **값에는 안 쓰인다** — 오늘의 꼴이 기준보다 얼마나 눌렸는지 기록에만 쓴다.
+SILICATE_REFERENCE = {k: v for k, v in _REFERENCE_TABLES.items() if k in ("silicate", "silicate_chondritic")}
 
 
 #: 부동소수가 담는 가장 큰 지수 — `math.exp` 인자의 문턱. 둥근 수가 아니라 이 기계의 float 에서 계산한다.
@@ -592,7 +633,7 @@ class Phase:
             return "composition-substitute"
         return "ok"
 
-    def delta_t(self, t: float, t_pot: float = 0.0) -> float:
+    def delta_t(self, t: float, t_pot: float = 0.0, p: float | None = None) -> float:
         """이 상의 **기준** 에서 얼마나 뜨거운가. 열압력이 먹는 것이 이 차분이다.
 
         기준이 두 종류다. 실험실 등온에 맞춘 상(`isotherm`)은 기준이 상수 한 개다.
@@ -614,16 +655,24 @@ class Phase:
         if self.t_ref_kind == "adiabat":
             if t_pot <= 0.0:
                 return 0.0
+            ref = REFERENCE_ADIABAT.get(self.name)
+            if ref is not None:
+                # ⚠ **C148 — 천체의 T_pot 이 아니라 이 상 자신의 기준 단열선과의 차**다. 옛 꼴은 천체의 단열선을
+                #   지구형으로 늘려 비교했고, T_pot 이 1600 K 에서 멀면(얼음거인 50–300 K) ΔT 가 −217 000 K 까지 가서
+                #   2차 항이 열압력을 +25 700 GPa 로 올렸다 — 412 스피노달 거절의 원인 (C148 §0).
+                if p is None:
+                    raise ValueError(f"{self.name}: 기준 단열선 ΔT 는 압력을 요구한다 (C148)")
+                return t - ref(p)
             return t * (1.0 - self.t_ref / t_pot)
         return t - self.t_ref
 
-    def thermal_pressure(self, t: float, t_pot: float = 0.0) -> float:
+    def thermal_pressure(self, t: float, t_pot: float = 0.0, p: float | None = None) -> float:
         """열압력 P_th. 기준 대비 ΔT 의 함수다.
 
         Anderson & Goto 1989 의 근사를 Seager+ 2007 §IV.2.2 가 쓰는 형태 그대로다 —
         Debye 온도 위에서 αK_T 가 부피에 무관하므로 P_th 가 T 에 선형이다. 금속에는
         전자 여기 때문에 2차 항이 하나 더 붙는다 (Isaak & Anderson 2003)."""
-        dt = self.delta_t(t, t_pot)
+        dt = self.delta_t(t, t_pot, p)
         return self.alpha_k * dt + 0.5 * self.alpha_k_dt * dt * dt
 
     def dpdt_v(self, t: float, t_pot: float = 0.0, p: float | None = None) -> float:
@@ -633,7 +682,7 @@ class Phase:
         값을 세트에서 받고, 밀도 경로(`thermal_pressure`)는 상 자신의 상수를 계속 쓴다."""
         ts = self.gamma_set_at(p, t)
         if ts is None:
-            return self.alpha_k + self.alpha_k_dt * self.delta_t(t, t_pot)
+            return self.alpha_k + self.alpha_k_dt * self.delta_t(t, t_pot, p)
         if ts.evaluator:
             return THERMAL_EVALUATORS[ts.evaluator](p, t)["dpdt_v"]
         return ts.alpha_k + ts.alpha_k_dt * self._set_delta_t(ts, t, t_pot)
@@ -764,7 +813,7 @@ class Phase:
         실행시간이다 — 이분법 200회로는 쓸 수 없이 느렸다.
 
         폴리트로프는 뒤집기가 닫힌 형태라 반복이 아예 없다."""
-        p_th = self.thermal_pressure(t, t_pot)
+        p_th = self.thermal_pressure(t, t_pot, p)
         if p_th:
             p = p - p_th
         if self.form == "polytrope":
@@ -965,7 +1014,7 @@ class Material:
         #   언저리가 냉각 1.271 GPa 로 내려가 «밀도가 수렴하지 않는다»). 같은 수를 보게 한 자리에서
         #   다시 잰다. ⚠ 선언이 없는 상(`graded_below_ref = False`)은 이 가지를 안 탄다.
         if ph.graded_below_ref:
-            cold = p - ph.thermal_pressure(t, t_pot)
+            cold = p - ph.thermal_pressure(t, t_pot, p)
             if cold <= 0.0:
                 raise PhaseGap(self.name, p, (
                     f"{p / 1e9:.4f} GPa 에서 열압력을 빼면 냉각 압력이 {cold / 1e9:.4f} GPa 로 "
@@ -974,7 +1023,7 @@ class Material:
                 raise PhaseGap(self.name, p, (
                     f"냉각 압력 {cold / 1e9:.4f} GPa 가 이 적합이 뒤집을 수 있는 아래 끝"
                     f"({ph.p_min / 1e9:.4f} GPa, 적합 자신의 되돌이점) **밑**이다 — 전체 압력은 "
-                    f"{p / 1e9:.4f} GPa 이고 열압력이 {ph.thermal_pressure(t, t_pot) / 1e9:.4f} GPa 다. "
+                    f"{p / 1e9:.4f} GPa 이고 열압력이 {ph.thermal_pressure(t, t_pot, p) / 1e9:.4f} GPa 다. "
                     "가드와 뒤집기가 같은 압력을 본다 (항목 19-b)"))
         # ⚠ **세기만 한다** (196 B) — 반환값은 이 줄 앞뒤로 한 비트도 안 움직인다.
         #   선언이 없는 상은 `density_reach` 가 곧바로 `ok` 를 돌려주고 카운터도 안 는다.

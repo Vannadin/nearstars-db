@@ -49,6 +49,7 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("interior", "_ICE_GRID_DELTA"): (MEMO, "side facts keyed by id(structure), cleared at each solve", None),
     ("interior", "_LITHO_INFO"): (MEMO, "side facts keyed by id(structure), cleared at each solve", None),
     ("interior", "_FAMILY_INFO"): (MEMO, "family-oscillation facts keyed by id(structure), cleared at each solve", None),
+    ("interior", "_REF_INFO"): (MEMO, "side facts keyed by id(structure), cleared at each solve (C148)", None),
     ("mantle_composition", "_TABLES"): (MEMO, "lazily loaded mantle tables, keyed", None),
     ("paleos", "_FACTS"): (MEMO, "lazily read table facts, keyed", None),
     ("provisional", "REGISTRY"): (MEMO, "placeholders registered at import", None),

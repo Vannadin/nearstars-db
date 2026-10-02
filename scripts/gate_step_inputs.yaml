@@ -145,6 +145,8 @@
   globs: []
 "test_fe_hcp.py":
   globs: []
+"test_fe_prem_reference.py":
+  globs: []
 "test_radiogenic.py":
   globs: []
 "test_mantle_flux.py":
