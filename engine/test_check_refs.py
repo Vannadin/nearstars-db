@@ -188,7 +188,7 @@ def main() -> int:
         #   and the 09-02 quote — dated before its line existed — still fails (audit e2's added control).
         (root / "engine" / "chain.yaml").unlink(missing_ok=True)
         doc_path = root / "docs" / "reference" / "synthetic-methodology.md"
-        today_doc = doc_path.read_text(encoding="utf-8")
+        today_doc = DOC          # the fixture was written from DOC above and not touched since (no read: C136 inputs)
 
         def git(*args, date=None):
             env = dict(os.environ, **({"GIT_AUTHOR_DATE": date, "GIT_COMMITTER_DATE": date} if date else {}))
