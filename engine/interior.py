@@ -200,7 +200,7 @@ class Structure:
                  "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab",
                  "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples", "rock_samples",
                  "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached",
-                 "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void", "crust_blocked",
+                 "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void", "crust_blocked", "finish_subst",
                  "r_grad_base", "r_grad_top", "floor_truncated", "hot_water_filled", "boiling_flips")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
@@ -248,6 +248,8 @@ class Structure:
         # 이 구조를 낸 마지막 온도 시도에서 지각이 녹는곡선 위라 던져 괄호가 중심 온도를 내렸는가 (C11).
         # shoot 이 채운다. 표면 온도가 선언에 못 닿은 해에서 이것이 참이면 선언의 자기모순이다.
         self.crust_blocked = False
+        # C152 메모 3 — 마무리 사격이 안 닫혀 닫힌 시행으로 바꿨으면 (고른 T_c, 바꾼 T_c, 그 ln(T_surf/T_pot)). shoot 이 채운다.
+        self.finish_subst = None
         # 적분이 멈춘 압력 [Pa]. 응축상 천체는 0 이다 — 표면이 P = 0 이니까. 기체 외피가
         # 있으면 그 재료의 압력 바닥(1 bar)이고, 발표된 거대행성 반지름이 그 준위의 값이다.
         self.p_surface = p_surface
@@ -626,6 +628,16 @@ def _integrator_gamma_values(core_material: str, st) -> dict:
     #   답을 세는 것이 지금의 사실이고, 이름이 그것을 숨기지 않아야 한다.
     return {"integrator_core_gamma_verdict": verdict,
             "integrator_red_gamma_used": 0 if verdict in ("ok", "composition-substitute") else 1}
+
+
+def _finish_subst_values(st) -> dict:
+    """C152 메모 3 — 마무리 대체의 네 칸. 안 일어났으면 넷 다 None."""
+    if st.finish_subst is None:
+        return {"finish_subst_from_tc": None, "finish_subst_to_tc": None,
+                "finish_subst_delta_tc": None, "finish_subst_y": None}
+    t_fin, t_k, y_k = st.finish_subst
+    return {"finish_subst_from_tc": t_fin, "finish_subst_to_tc": t_k,
+            "finish_subst_delta_tc": t_k - t_fin, "finish_subst_y": y_k}
 
 
 def _convergence_values() -> dict:
@@ -2231,6 +2243,8 @@ T_BRACKET_TRIES = 12
 #   거절에는 벽의 자리만 있으면 되므로 근 정밀도(T_TOL)보다 성기다. 이 사격은 T_PASSES 와 따로 센다.
 T_WALL_TOL = 1e-3
 T_WALL_SHOTS = 10
+# C152 메모 3 — 마무리 사격(SHOOT_TOL)이 안 닫히면 닫힌 시행을 가까운 순으로 이만큼까지 다시 쏴 본다.
+FINISH_SUBST_SHOTS = 3
 WALL_LOCATE_SHOTS = [0]       # C152 ④ — 벽 자리 찾기 사격 수(값 밖 셈, 수락 §3.3)
 #: 표면 암석권 층 바닥 자리의 바깥 고정점 (prereg-surface-lithosphere 덧붙임 2 ①) — |ΔR| 문턱 · 최대 횟수.
 LITHO_R_TOL = 1.0            # m — STEPS 1500 지구 걸음 dr ≈ 3.2 km 의 3e-4
@@ -2491,6 +2505,7 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
     fam_t = []                   # 시행의 중심 온도 — 가족을 다시 닫는 출발점(덧붙임 3)
     fams = []                    # 시행마다 부분 용융 구간(가족) — 가족 오가기 감지(prereg-melt-window-answers §1.1)
     fam_p = []                   # 시행의 중심압 — 덧붙임 57 규칙 3(c) 의 다시 닫기 입구
+    closed_met = []              # C152 메모 3 — 사격이 닫히고 표면 온도가 닿은 시행 (중심 온도, 구조)
 
     def remember(got, ok, t_now):
         nonlocal best, best_attempt, attempts
@@ -2506,6 +2521,8 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
             return
         d = abs(got.t_surface / t_pot - 1.0)
         # C138 규칙 2 — **사격이 닫힌 시행만** 최선 후보(사격 뿌리 없는 T_c 의 시행이 답으로 남지 않게)
+        if ok and d < T_SURFACE_TOL:
+            closed_met.append((t_now, got))
         if ok and (best is None or d < best[0]):
             best = (d, got, ok, t_now)
             best_attempt = attempts - 1     # 0 부터 센다 — 사격 호출 표와 같은 번호
@@ -2659,6 +2676,23 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
         blocked = getattr(st, "crust_blocked", False)
         st, converged = _shoot_pressure(*args, t_center=t_c, t_pot=t_pot, p_hint=st.p_center, tol=SHOOT_TOL, **kw)
         st.crust_blocked = blocked
+        if not converged:
+            # C152 메모 3 — 끝맺음 사격이 안 닫혔다(mass(p_c) 뜀). 닫히고 표면 온도가 닿은 시행을 가까운 순으로 SHOOT_TOL 로
+            #   다시 쏴, 닫히고 여전히 닿는 첫 시행이 답. 예산 끝의 대체가 아니므로 note_substituted 를 안 쓴다(표지·상한 없음).
+            t_fin = t_c
+            near = sorted((c for c in closed_met if c[0] != t_fin), key=lambda c: abs(math.log(c[0] / t_fin)))
+            for t_k, got_k in near[:FINISH_SUBST_SHOTS]:
+                try:
+                    got2, ok2 = _shoot_pressure(*args, t_center=t_k, t_pot=t_pot, p_hint=got_k.p_center, tol=SHOOT_TOL, **kw)
+                except (PhaseGap, Unbound, NoCompactRoot, GridExceeded):
+                    continue
+                if ok2 and _surface_temperature_met(got2, t_pot):
+                    got2.crust_blocked = getattr(got_k, "crust_blocked", False)
+                    got2.finish_subst = (t_fin, t_k, math.log(got2.t_surface / t_pot))
+                    print(f"  [마무리 대체] T_c {t_fin:.6f} K 의 마무리 사격이 안 닫혀 닫힌 시행 {t_k:.6f} K 로 "
+                          f"(|y| {abs(got2.finish_subst[2]):.2e}, 거리 {t_k - t_fin:+.3e} K)")
+                    st, converged, t_c = got2, True, t_k
+                    break
         if st.t_surface > 0.0 and not _surface_temperature_met(st, t_pot) and not (lo is not None and hi is not None):
             # C152 — 0 을 사이에 둔 괄호가 있으면 이어 돌기(괄호를 잃는다) 대신 아래의 이름 댄 거절로 간다.
             # 끝맺음 구조의 표면 온도가 허용 밖 — 그 T_c 에서 SHOOT_TOL 로 온도 고리를 **이어** 돈다(지휘 선택 (a)):
@@ -3962,6 +3996,10 @@ def solve(mass_earth: float,
                       f"{st.ice_shell_thickness_m / 1e3:.0f} km")
     notes = [f"층별 상: {' → '.join(st.phases)}. {' · '.join(bounds)}, "
              f"평균밀도 {rho_bar:.0f} kg/m³.",]
+    if st.finish_subst is not None:
+        t_fin, t_k, y_k = st.finish_subst
+        notes.append(f"마무리 사격이 T_c {t_fin:.6f} K 에서 안 닫혀(mass(p_c) 뜀), 닫힌 시행 T_c {t_k:.6f} K"
+                     f"(|y| {abs(y_k):.2e}, 거리 {t_k - t_fin:+.3e} K)를 답으로 삼음 (C152 메모 3).")
     if initial_porosity > 0:
         notes.append(_porosity_note(st, initial_porosity, mass_earth))
     ice_state, ice_note = _ice_verdict(st, potential_temperature)
@@ -4387,13 +4425,19 @@ def solve(mass_earth: float,
                 #   `Result` 의 칸이라 `state._find` 가 못 읽었고 (선언 입력 → 각 결과의 `values`),
                 #   남는 흔적은 `payload` 의 산문 한 줄뿐이었다. 세 값이 나간다: 판정(`None` 은
                 #   «기준 가지를 가진 자리가 없었다»), 안 닫힌 자리 이름, 진입 괄호가 깨진 자리.
-                **_convergence_values()},
+                **_convergence_values(),
+                # C152 메모 3 — 마무리 대체(늘 있음, 안 일어났으면 None). 예산 끝의 대체(substituted_solvers)와 다른 칸.
+                **_finish_subst_values(st)},
         units={"converged": "",
                "unconverged_solvers": "",
                "bracket_invalid": "",
                "substituted_solvers": "",
                "fallback_solvers": "",       # C138 — 다른 길(F) 자리 이름
                "trial_unconverged": "",      # C138 — 버린 시행(P) 자리 이름
+               "finish_subst_from_tc": "K",  # C152 메모 3
+               "finish_subst_to_tc": "K",
+               "finish_subst_delta_tc": "K",
+               "finish_subst_y": "dimensionless",
                "nmoi": "dimensionless",
                "core_temperature": "K",
                "cmb_temperature": "K",

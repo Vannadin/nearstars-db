@@ -57,6 +57,7 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 `silicate_thermal_pressure_source` [—] · `silicate_thermal_pressure_counter_evidence_searched` [—] ·
 `converged` [—] · `unconverged_solvers` [—] · `bracket_invalid` [—] · `substituted_solvers` [—] ·
 `fallback_solvers` [—] · `trial_unconverged` [—] ·
+`finish_subst_from_tc` [K] · `finish_subst_to_tc` [K] · `finish_subst_delta_tc` [K] · `finish_subst_y` [—] ·
 `core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—] ·
 `basal_silicate_state` [—] · `core_plus_layer_radius_solved_km` [km] · `basal_layer_thickness_km` [km]
 

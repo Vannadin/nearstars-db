@@ -209,5 +209,63 @@ check("메모 2 ④ — 느슨한(τ > 1e-2) 시행의 가짜 부호 바뀜은 �
 check("메모 2 ④ — 같은 시행이 정밀하면 셈(부호 바뀜 2 번)",
       _fr(flipper + [_trial(FB, 3232.0, -0.02, tau=1e-4), _trial(FB, 3233.0, +0.006)]))
 
+# ⑦ C152 메모 3 — 마무리 사격(SHOOT_TOL)이 안 닫히면 닫히고 닿은 가까운 시행으로 바꾼다 · 표지 · 상한 없음
+def _run_finish(fail):
+    """y = 0.9 ln(T_c/1650), 위에서 단조로 다가감(괄호 없음 · C138 대체 없음): 시행 2000 · 1682.05 · 1653.18 K.
+    T_TOL 3e-2 · T_SURFACE_TOL 5e-2 로 고리가 느슨한 시행 1653.18 K 에서 끝나 마무리 사격을 탄다. 닿는 다른 시행은 1682.05 K 뿐.
+    fail(T_c) 이 참이면 SHOOT_TOL 사격이 안 닫힌다(mass(p_c) 뜀의 꼴)."""
+    real, tt, ts = interior._shoot_pressure, interior.T_TOL, interior.T_SURFACE_TOL
+
+    def fake(*a, t_center=None, t_pot=None, p_hint=None, tol=None, **k):
+        st = _fake_st(t_center, T_POT * (t_center / 1650.0) ** 0.9)
+        st.finish_subst = None
+        return st, not (tol <= interior.SHOOT_TOL and fail(t_center))
+    interior._shoot_pressure, interior.T_TOL, interior.T_SURFACE_TOL = fake, 3e-2, 5e-2
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            st, ok = interior.shoot(6e24, 0.3, 0.0, "fe_prem", potential_temperature=T_POT)
+        return "answer", (st.t_center, ok, st.finish_subst)
+    except (ValueError, eos.PhaseGap) as e:
+        return "refusal", str(e)
+    finally:
+        interior._shoot_pressure, interior.T_TOL, interior.T_SURFACE_TOL = real, tt, ts
+
+
+k_n, v_n = _run_finish(lambda t: False)
+check("메모 3 ④ — 마무리 사격이 닫히면 대체 길에 안 들어감", k_n == "answer" and v_n[1] and v_n[2] is None, str(v_n)[:90])
+k_f, v_f = _run_finish(lambda t: t > 1600.0)
+check("메모 3 ② — 닫히는 후보가 없으면 오늘의 결과(미수렴 거절)", k_f == "refusal" or k_f == "answer" and not v_f[1], str(v_f)[:90])
+k_s, v_s = _run_finish(lambda t: t < 1670.0)
+check("메모 3 ③ — 먼 쪽만 닫히면 그 시행이 답, 대체가 기록됨",
+      k_s == "answer" and v_s[1] and v_s[2] is not None and abs(v_s[2][0] - 1653.18) < 0.01 and abs(v_s[2][1] - 1682.05) < 0.01
+      and v_s[0] == v_s[2][1], str(v_s)[:120])
+_kv = interior._finish_subst_values(types.SimpleNamespace(finish_subst=None))
+check("메모 3 — 대체 없으면 네 칸 모두 None", set(_kv) == {"finish_subst_from_tc", "finish_subst_to_tc", "finish_subst_delta_tc",
+                                                    "finish_subst_y"} and all(v is None for v in _kv.values()))
+
+from payload import Result, tagged_with_unconverged  # noqa: E402
+from state import BodyState  # noqa: E402
+
+
+def _consumer(substituted):
+    st = BodyState(name="fixture", kind="planet")
+    vals = {"radius": 1.13, "converged": True, "substituted_solvers": substituted, "trial_unconverged": ["interior._shoot_pressure"],
+            **interior._finish_subst_values(types.SimpleNamespace(finish_subst=(3227.76165, 3227.76004, -9.2e-7)))}
+    st.record("interior_layers", Result(recipe="interior-structure", version="0", regime="solved", reason="fixture",
+                                        grade="calibrated", inputs={}, values=vals, units={k: "" for k in vals}))
+    st.current_node = "tidal_heating"
+    st["radius"]
+    return tagged_with_unconverged(Result(recipe="tidal-heating", version="0", regime="fixed_q", reason="fixture",
+                                          grade="measured", inputs={}, values={"power": 1.0}, units={"power": "W"}), st)
+
+
+_c = _consumer([])
+check("메모 3 ⑦ — 마무리 대체는 «best-of-budget» 표지도 등급 상한도 없음", _c.unconverged_inputs == () and _c.grade == "measured",
+      f"{_c.unconverged_inputs} · {_c.grade}")
+_c = _consumer(["interior._t_loop@시행3"])
+check("메모 3 ⑦ 음성 — 같은 결과를 note_substituted 길로 적으면 표지와 상한이 붙음",
+      _c.unconverged_inputs == ("best-of-budget:interior_layers.radius",) and _c.grade == "judgment",
+      f"{_c.unconverged_inputs} · {_c.grade}")
+
 print(f"  test_rootfind — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)
