@@ -1043,6 +1043,8 @@ step "test_sub_neptune_dynamo.py" bash -c 'cd engine && exec python3 test_sub_ne
 step "test_stellar_wind.py" bash -c 'cd engine && exec python3 test_stellar_wind.py'
 # 임시값 가드레일 다섯. ⑤ 는 레시피가 도착하면 FAIL — 그 발화를 시험이 오늘 증명한다.
 step "test_tidal_locking.py" bash -c 'cd engine && exec python3 test_tidal_locking.py'
+# 범위는 자기가 묶는 방향으로만 판정하는가 — 도우미 · 음성 대조 · 핵 · 암석 · 조석 고정 (C154). ~2 s.
+step "test_bounds.py" bash -c 'cd engine && exec python3 test_bounds.py'
 step "test_provisional.py" bash -c 'cd engine && exec python3 test_provisional.py'
 # 전이 기록 (Brief 153). 다른 천체의 값은 기록 없이 못 들어오고, state 인데 derived 면(3040 K 모양) 거절.
 step "test_transfers.py" bash -c 'cd engine && exec python3 test_transfers.py'
