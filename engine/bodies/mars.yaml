@@ -187,7 +187,7 @@ inputs:
   # ⚠ 이 키가 없으면 맞춤은 **이름 대고 거절한다** — 조용한 기본값을 두지 않는다.
   # 층 있는 화성 (prereg-mars-layered-declaration, 동결 d0f93ea1) — 오너 2026-09-27 «층 있는 화성은 ㄱㄱ».
   # 맨틀 조성 — 표면 – 23.83 GPa 창(화성 맨틀은 거의 전부)의 밀도 · 열 항이 이 조성의 광물 집합 표
-  # (`mantle_tables/25cb82c1607ef8c7.json`, BurnMan SLB 2022, C74-2)에서 온다.
+  # (`mantle_tables/0663e6a031cae4dc.json`, BurnMan SLB 2022, C74-2 · C160 열 규칙 — 표 지문에 `column_rule` 이 들어 옛 25cb82c1607ef8c7 에서 바뀜)에서 온다.
   mantle_composition:
     value: {SiO2: 46.66, Al2O3: 3.49, MgO: 32.81, CaO: 2.66, FeO: 13.68, Na2O: 0.69}
     grade: analog
