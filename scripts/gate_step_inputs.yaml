@@ -203,6 +203,12 @@
   globs: ["engine/core_history.py", "engine/eos.py", "engine/interior.py", "engine/mantle_composition.py"]
 "test_table_triggers.py":  # C159; chain.yaml and eos.py (copies to a temp dir), the body files, and triggers() for Earth (CODE_FILES, sulphur anchor, reference adiabats)
   globs: ["engine/chain.yaml", "engine/eos.py", "engine/interior.py", "engine/core_history.py", "engine/mantle_composition.py", "engine/bodies/*.yaml", "engine/mars_sulphur_anchor.json", "engine/reference_adiabats.json"]
+"engine/tools/reference_adiabats.py --check":  # C148 note 2; declared by hand at landing, the gate_reads hook measures it next census
+  globs: ["engine/reference_adiabats.json", "engine/eos.py", "engine/interior.py", "engine/chain.yaml", "engine/bodies/earth.yaml"]
+  hand: true
+"test_reference_adiabats.py":  # C148 note 2; same reads as the step, plus 88a5931e's table via git show
+  globs: ["engine/reference_adiabats.json", "engine/eos.py", "engine/interior.py", "engine/chain.yaml", "engine/bodies/earth.yaml"]
+  hand: true
 "test_samuel_run.py":
   globs: []
 "test_mantle_budget.py":

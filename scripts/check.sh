@@ -1235,6 +1235,9 @@ step "structure_grid.py --check" bash -c 'cd engine && exec python3 structure_gr
 step "test_structure_grid.py" bash -c 'cd engine && exec python3 test_structure_grid.py'
 # 구조 표 방아쇠가 러너가 읽는 것만 보는가 · 열진화 몸에 표가 없으면 FAIL (C159, prereg-c159-table-trigger-reads e0ab5682). 풀이 없음, 몇 초.
 step "test_table_triggers.py" bash -c 'cd engine && exec python3 test_table_triggers.py'
+# 기준 단열선 표를 오늘의 엔진으로 다시 지어 바이트 대조 (C148 덧붙임 2) — 기준 기계(Linux-x86_64)만 판정, 그 밖은 [기록]. ~10 초.
+step "engine/tools/reference_adiabats.py --check" bash -c 'exec python3 engine/tools/reference_adiabats.py --check'
+step "test_reference_adiabats.py" bash -c 'cd engine && exec python3 test_reference_adiabats.py'
 step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
 step "test_convergence_meaning.py" bash -c 'cd engine && exec python3 test_convergence_meaning.py'
 step "test_rootfind.py" bash -c 'cd engine && exec python3 test_rootfind.py'

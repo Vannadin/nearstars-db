@@ -9,7 +9,8 @@ prereg-c148-fe-prem-reference-adiabat (198f3abd) §1.2–1.3 and §2:
 - Each step is RK4 in ln P with Δln P = 0.005 on dT/d ln P = P · `interior._adiabatic_dtdp(m, P, ρ, T, t_ref)` at
   T_pot = t_ref, so ΔT = 0 and P_th = 0 along it (the E0's rule, `pc/c148/e0_variants.py`, `e0_silicate.py`).
 The engine is imported with `NEARSTARS_REFERENCE_BUILD=1`, so it runs today's form while the table is built.
-`--check` rebuilds in memory and compares byte-for-byte with the committed file (acceptance 9).
+`--check` rebuilds in memory and compares byte-for-byte with the committed file (acceptance 9). Since C148 post-freeze
+note 2 it is a gate step: judged on the reference machine only (`REFERENCE_MACHINE`), a record elsewhere.
 """
 from __future__ import annotations
 
@@ -18,6 +19,7 @@ import io
 import json
 import math
 import os
+import platform
 import sys
 from pathlib import Path
 
@@ -28,6 +30,8 @@ import interior   # noqa: E402
 
 DLNP = 0.005
 OUT = eos.REFERENCE_ADIABATS_PATH
+#: C148 덧붙임 2 — 바이트 대조를 판정하는 기계(기준 기계). 그 밖은 [기록] — 맥 재빌드는 PC 표와 t 칸이 최대 2.7e-9 K 다르다(n2-c).
+REFERENCE_MACHINE = "Linux-x86_64"
 
 
 def adiabat(mat, p0: float, t0: float, p_hi: float, p_lo: float) -> tuple[list[float], list[float]]:
@@ -73,11 +77,31 @@ def build() -> str:
     return json.dumps(doc, indent=1) + "\n"
 
 
+def check(committed: str | None = None) -> bool:
+    """C148 덧붙임 2 — 오늘의 엔진으로 다시 지은 표가 주어진 바이트(없으면 커밋된 파일)와 같은가.
+    `--check` 와 시험이 이 하나를 부른다(시험이 대조를 다시 짜지 않는다)."""
+    if committed is None:
+        committed = OUT.read_text(encoding="utf-8") if OUT.exists() else None
+    return committed is not None and committed == build()
+
+
+def machine() -> str:
+    """C134 의 기계 키 — 게이트가 넘겨준 `GATE_MACHINE` 이 이기고, 없으면 `<uname -s>-<uname -m>`."""
+    return os.environ.get("GATE_MACHINE") or f"{platform.system()}-{platform.machine()}"
+
+
 if __name__ == "__main__":
-    text = build()
     if "--check" in sys.argv:
-        same = OUT.exists() and OUT.read_text(encoding="utf-8") == text
-        print(f"reference_adiabats.json rebuild {'identical' if same else 'DIFFERS'}")
-        sys.exit(0 if same else 1)
+        same, here = check(), machine()
+        print(f"reference_adiabats.json rebuild {'identical' if same else 'DIFFERS'} ({here})")
+        if same:
+            sys.exit(0)
+        if here == REFERENCE_MACHINE:
+            print("  [FAIL] 기준 단열선 표가 오늘의 엔진과 다르다 — PC 에서 다시 굳힌다: "
+                  "`python3 engine/tools/reference_adiabats.py` (Python ≥ 3.10, C148 덧붙임 2)")
+            sys.exit(1)
+        print(f"  [기록] {here} 는 기준 기계({REFERENCE_MACHINE})가 아니다 — 바이트 대조는 기록만 (C148 덧붙임 2, n2-c)")
+        sys.exit(0)
+    text = build()
     OUT.write_text(text, encoding="utf-8", newline="\n")
     print(f"wrote {OUT.name}: " + " · ".join(f"{k} {len(v['lnp'])} rows" for k, v in json.loads(text)["tables"].items()))
