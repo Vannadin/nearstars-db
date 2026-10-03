@@ -1,6 +1,6 @@
 {
  "python": "3.12.3",
- "frozen_at": "2026-10-02",
+ "frozen_at": "2026-10-03",
  "bracket": [
   0.13,
   0.25
@@ -16,15 +16,15 @@
  },
  "files": {
   "interior.py": {
-   "bytes": "7cd116d909f99b2e",
-   "code": "39d7add3515334e5"
+   "bytes": "a474e1ee0cc5fef9",
+   "code": "0c1ba25bcbdc77f3"
   },
   "eos.py": {
-   "bytes": "02179f43d030240e",
-   "code": "10dc02f808e5e4e1"
+   "bytes": "8b0a767d02a2b1cc",
+   "code": "a281ddddf303e333"
   },
   "chain.yaml": {
-   "bytes": "30f579591f94b21b"
+   "bytes": "1b1574d73140be04"
   },
   "mantle_composition.py": {
    "bytes": "8d91fc7a65b7cfe2",
@@ -35,20 +35,20 @@
   "box_ceiling": {
    "halvings": 6,
    "core_sulphur_wt": 0.1534375,
-   "core_radius_km": 1844.6340304284315,
-   "core_radius_fraction": 0.5442406660423135,
-   "core_mass_fraction": 0.2779053718294864,
-   "core_mean_density_gcc": 6.7795639798920675,
-   "nmoi": 0.3570801564923689
+   "core_radius_km": 1844.6341193377316,
+   "core_radius_fraction": 0.5442406962942892,
+   "core_mass_fraction": 0.27790532155839415,
+   "core_mean_density_gcc": 6.779561773215515,
+   "nmoi": 0.35708015278289235
   },
   "box_floor": {
    "halvings": 2,
    "core_sulphur_wt": 0.20500000000000002,
-   "core_radius_km": 1845.7049627456354,
-   "core_radius_fraction": 0.5445566205847323,
-   "core_mass_fraction": 0.27816226514070974,
-   "core_mean_density_gcc": 6.774025786048879,
-   "nmoi": 0.3570350684308361
+   "core_radius_km": 1845.705004490289,
+   "core_radius_fraction": 0.5445566347829324,
+   "core_mass_fraction": 0.2781621764460758,
+   "core_mean_density_gcc": 6.7740231664594965,
+   "nmoi": 0.35703506666646506
   }
  }
 }
