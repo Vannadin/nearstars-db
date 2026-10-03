@@ -155,13 +155,23 @@ def _solve(bulk, cand, start, p_pa, t_k):
 
 
 def select(bulk: dict[str, float], p_pa: float, t_k: float, warm: dict | None = None):
+    """`select_all` 의 깁스 최소 — `(고른 칸 | None, 수렴한 후보 이름들, 고른 것의 상태)`. 예전 모양 그대로."""
+    res = select_all(bulk, p_pa, t_k, warm)
+    if not res:
+        return None, [], None
+    _g, props, st = min(res.values(), key=lambda r: r[0])
+    return props, list(res), st
+
+
+def select_all(bulk: dict[str, float], p_pa: float, t_k: float, warm: dict | None = None) -> dict:
     """(P, T) 에서 후보 집합을 전부 평형시켜 원자당 깁스 최소를 고른다 (덧붙임 3 ①).
 
-    돌려주는 것은 `(고른 칸 | None, 수렴한 후보 이름들, 고른 것의 상태)`. `warm` 은 집합 이름마다 앞 격자점에서
+    돌려주는 것은 수렴한 후보 전부 `{이름: (원자당 깁스, 칸, 상태)}` — 수렴한 차례대로(C160 이 이웃을 고르려고 쓴다).
+    `warm` 은 집합 이름마다 앞 격자점에서
     수렴한 (상 조성들, 상 분율) — 기본 출발점에서 먼저 풀고, 안 되면 그 따뜻한 출발점으로 한 번 더(덧붙임 5).
     ⚠ 둘 다 안 되면 멈춘 자리에서 몰분율 ≤ `DROP_TOL` 인 상을 빼고 남은 상으로 다시(덧붙임 7, `DROP_PHASES` 번까지) —
     참 집합이 후보의 부분집합일 때 경계에서 멈춘 풀이를 버리던 것을 막는다."""
-    best, ok = None, []
+    res: dict = {}
     for cand0 in CANDIDATES:
         queue = [(tuple(cand0), 0)]
         while queue:
@@ -175,10 +185,8 @@ def select(bulk: dict[str, float], p_pa: float, t_k: float, warm: dict | None = 
                     st = _state(rock)
                     if warm is not None:
                         warm[key] = st
-                    ok.append(key)
-                    g = rock.molar_gibbs / sum(rock.formula.values())
-                    if best is None or g < best[0]:
-                        best = (g, _props(rock, key), st)
+                    if key not in res:
+                        res[key] = (rock.molar_gibbs / sum(rock.formula.values()), _props(rock, key), st)
                     stuck = None
                     break
                 if rock is not None:
@@ -186,9 +194,9 @@ def select(bulk: dict[str, float], p_pa: float, t_k: float, warm: dict | None = 
             else:
                 if stuck is not None and depth < DROP_PHASES:
                     keep = tuple(k for k, f in zip(cand, stuck.molar_fractions) if f > DROP_TOL)
-                    if 2 <= len(keep) < len(cand) and "+".join(keep) not in ok:
+                    if 2 <= len(keep) < len(cand) and "+".join(keep) not in res:
                         queue.append((keep, depth + 1))
-    return (None, ok, None) if best is None else (best[1], ok, best[2])
+    return res
 
 
 def frozen(key: str, st: tuple, p_pa: float, t_k: float) -> dict | None:
@@ -211,7 +219,8 @@ def header(wt: dict[str, float]) -> dict:
     return {"composition_cfmasna_wt": {k: round(v, 12) for k, v in cfmasna(wt).items()},
             "candidates": ["+".join(c) for c in CANDIDATES], "slb": "SLB_2022", "burnman": burnman.__version__,
             "grid": {"p_floor": P_FLOOR, "p_ratio": P_RATIO, "p_top": P_TOP, "t_lo": T_LO, "t_hi": T_HI,
-                     "t_step": T_STEP}, "neg_tol": NEG_TOL, "t_seed": T_SEED, "drop_phases": DROP_PHASES}
+                     "t_step": T_STEP}, "neg_tol": NEG_TOL, "t_seed": T_SEED, "drop_phases": DROP_PHASES,
+            "column_rule": COLUMN_RULE}
 
 
 def header_key(h: dict) -> str:
@@ -224,12 +233,34 @@ def header_key(h: dict) -> str:
 T_SEED = 1000.0
 
 
+#: C160 (prereg-c160-column-follows-neighbour, 동결 7adc71fd) — 열이 따르는 규칙의 이름. 표 머리에 들어가 표 지문을 바꾼다.
+COLUMN_RULE = "c160"
+
+
+def _neighbour(prev: str, ok: list[str]) -> tuple[str | list[str] | None, str]:
+    """C160 ② – ④: 앞 점의 승자 `prev` 가 이 점에서 수렴하지 않았을 때 이어 갈 이름과 그 갈래.
+
+    ② 수렴한 후보 가운데 `prev` 의 **진부분집합**(사라진 상만 뺀 것)이 있으면 가장 큰 것 — 상이 나가는 경계.
+    ③ 없으면 `prev` 와 **상 하나만 다른**(하나 바꿈 · 하나 더함) 후보들 — 실제 상전이. 호출부가 깁스로 가른다.
+    ④ 둘 다 없으면 `None` — 이름 대고 굳힌다. ⚠ 덧붙임 5 의 막이는 이 모양으로 지켜진다: `prev` 의 이웃이 아닌 집합
+    (1 bar 의 `plg+ol+opx+cpx` → `wa+gt` 같은)으로는 절대 안 건너간다."""
+    pp = set(prev.split("+"))
+    subs = [k for k in ok if set(k.split("+")) < pp]
+    if subs:
+        return max(subs, key=lambda k: len(k.split("+"))), "subset"
+    nbrs = [k for k in ok if set(k.split("+")) != pp
+            and len(set(k.split("+")) - pp) <= 1 and len(pp - set(k.split("+"))) <= 1]
+    return (nbrs, "neighbour") if nbrs else (None, "frozen")
+
+
 def _column(args):
     """P 한 줄: T_SEED 에서 위로, 다시 T_SEED 에서 아래로 — 앞 점의 수렴을 다음 점의 출발로(덧붙임 5).
 
-    ⚠ **앞 점에서 이긴 집합이 이 점에서 수렴하지 않으면 다른 후보로 갈아타지 않는다** — 그 집합을 굳혀(`frozen`)
-    이 점에 둔다. 저온에서 고용체 끝성분이 0 에 닿아 풀이가 멈추고 두 상짜리 후보만 수렴해 1 bar 에 와즐리아이트를
-    고르던 것(탐침, 덧붙임 5)을 막는 규칙이다. 굳힌 뒤로는 그 줄의 끝까지 굳힌 집합을 이어 간다."""
+    ⚠ **C160: 앞 점에서 이긴 집합이 이 점에서 수렴하지 않으면 수렴한 이웃을 따른다** — 그 집합의 진부분집합(상이
+    나감), 없으면 상 하나만 다른 집합(상전이, 깁스 최소). 둘 다 없을 때만 그 집합을 굳혀(`frozen`) 이 점에 두고, 굳힌
+    뒤로는 그 줄의 끝까지 굳힌 집합을 이어 간다(오늘과 같다). 진단(C124 뿌리 보고, 2026-10-03): 화성 표의 가열 쪽 굳힘
+    시작 242 곳 전부가 상 하나의 몰분율 → 0 이었고 전부 다른 후보가 수렴했다 — 굳힘은 풀이가 아니라 옛 규칙이 만들었다.
+    각 칸은 갈래 이름(`same` · `subset` · `neighbour` · `frozen`)을 `rule` 칸에 들고 나가고, 표는 그 수를 센다."""
     bulk, p, ts = args
     out = {}
     i0 = min(range(len(ts)), key=lambda i: abs(ts[i] - T_SEED))
@@ -239,13 +270,26 @@ def _column(args):
         for i in order:
             if prev is not None and prev[0].endswith("*frozen"):
                 got = frozen(prev[0][:-len("*frozen")], prev[1], p, ts[i])
+                if got:
+                    got["rule"] = "frozen"
             else:
-                got, ok, st = select(bulk, p, ts[i], warm)
-                if prev is not None and prev[0] not in ok:
+                res = select_all(bulk, p, ts[i], warm)
+                if prev is None or prev[0] in res:
+                    pick, why = (min(res, key=lambda k: res[k][0]) if res else None), "same"
+                else:
+                    pick, why = _neighbour(prev[0], list(res))
+                    if isinstance(pick, list):
+                        pick = min(pick, key=lambda k: res[k][0])
+                if pick is not None:
+                    got = dict(res[pick][1], rule=why)
+                    prev = (pick, res[pick][2])
+                elif prev is not None:
                     got = frozen(prev[0], prev[1], p, ts[i])
+                    if got:
+                        got["rule"] = "frozen"
                     prev = (prev[0] + "*frozen", prev[1]) if got else None
-                elif got is not None:
-                    prev = (got["assemblage"], st)
+                else:
+                    got = None
             if i not in out:
                 out[i] = got
     return [out[i] for i in range(len(ts))]
@@ -262,6 +306,13 @@ def build(body: str, wt: dict[str, float], procs: int = 4) -> Path:
     h = header(wt)
     out = {"body": body, "header": h, "key": header_key(h), "p": ps, "t": ts,
            "assemblage": [[c["assemblage"] if c else None for c in row] for row in rows]}
+    # C160 — 칸마다 고른 갈래의 수(same · subset · neighbour · frozen · 빈 칸). 다시 짓기의 앞뒤 대조가 이 칸을 읽는다.
+    counts: dict[str, int] = {}
+    for row in rows:
+        for c in row:
+            k = c.get("rule", "same") if c else "empty"
+            counts[k] = counts.get(k, 0) + 1
+    out["column_rule_counts"] = counts
     for f in FIELDS:
         out[f] = [[c[f] if c else None for c in row] for row in rows]
     TABLE_DIR.mkdir(exist_ok=True)
@@ -344,7 +395,8 @@ def expected_key(wt: dict[str, float]) -> str:
     h = {"composition_cfmasna_wt": {k: round(v, 12) for k, v in cfmasna(wt).items()},
          "candidates": ["+".join(c) for c in CANDIDATES], "slb": "SLB_2022",
          "grid": {"p_floor": P_FLOOR, "p_ratio": P_RATIO, "p_top": P_TOP, "t_lo": T_LO, "t_hi": T_HI,
-                  "t_step": T_STEP}, "neg_tol": NEG_TOL, "t_seed": T_SEED, "drop_phases": DROP_PHASES}
+                  "t_step": T_STEP}, "neg_tol": NEG_TOL, "t_seed": T_SEED, "drop_phases": DROP_PHASES,
+         "column_rule": COLUMN_RULE}
     return header_key(h)
 
 

@@ -225,6 +225,8 @@
   globs: []
 "test_mantle_composition.py":
   globs: []
+"test_column_rule.py":  # C160; imports only (BurnMan SLB data comes from the package) — the next census confirms
+  globs: []
 "test_phase_tables.py":
   globs: []
 "test_tidal_heating.py":

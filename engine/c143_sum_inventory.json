@@ -206,7 +206,7 @@
 ],
 [
 "engine/mantle_composition.py",
-"select",
+"select_all",
 "sum(rock.formula.values())"
 ],
 [
