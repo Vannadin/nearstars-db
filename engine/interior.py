@@ -2249,6 +2249,9 @@ T_WALL_TOL = 1e-3
 T_WALL_SHOTS = 10
 # C152 메모 3 — 마무리 사격(SHOOT_TOL)이 안 닫히면 닫힌 시행을 가까운 순으로 이만큼까지 다시 쏴 본다.
 FINISH_SUBST_SHOTS = 3
+# C152 메모 4 — 시행의 부호는 사격이 닫히고 질량 허용 τ ≤ SIGN_TAU_LIN 이며 |y| > SIGN_S_MAX·τ 일 때만 읽는다(메모 2 의 오차 막대).
+SIGN_TAU_LIN = 1e-2
+SIGN_S_MAX = 1.0
 WALL_LOCATE_SHOTS = [0]       # C152 ④ — 벽 자리 찾기 사격 수(값 밖 셈, 수락 §3.3)
 #: 표면 암석권 층 바닥 자리의 바깥 고정점 (prereg-surface-lithosphere 덧붙임 2 ①) — |ΔR| 문턱 · 최대 횟수.
 LITHO_R_TOL = 1.0            # m — STEPS 1500 지구 걸음 dr ≈ 3.2 km 의 3e-4
@@ -2488,6 +2491,7 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
     wall = None                  # 외피가 묶이지 않은 가장 낮은 중심 온도
     wall_why = ""                # 그 온도에서 왜 묶이지 않았는가 (사다리의 문장)
     lo = hi = None               # (log T_c, log T_surf/T_pot): 아래쪽(차다) · 위쪽(뜨겁다)
+    dlo = dhi = None             # C152 메모 4 — 같은 것을 부호를 읽을 수 있는 시행(decides)만으로. Brent 괄호는 이것
     devs: list[float] = []
     bracketed = False
     root = None                  # C152 ② — 0 을 사이에 둔 두 시행이 생기면 그 괄호 안의 Brent 생성기
@@ -2531,8 +2535,14 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
             best = (d, got, ok, t_now)
             best_attempt = attempts - 1     # 0 부터 센다 — 사격 호출 표와 같은 번호
 
-    def note(t_now, got):
-        nonlocal lo, hi
+    def decides(got, ok):
+        """C152 메모 4 — 이 시행의 잔차 부호를 판단에 쓸 수 있는가."""
+        tau = used_tol.get(id(got), SHOOT_TOL)
+        return (bool(ok) and got.t_surface > 0.0 and tau <= SIGN_TAU_LIN
+                and abs(math.log(got.t_surface / t_pot)) > SIGN_S_MAX * tau)
+
+    def note(t_now, got, ok):
+        nonlocal lo, hi, dlo, dhi
         if got.t_surface <= 0.0:
             return
         pt = (math.log(t_now), math.log(got.t_surface / t_pot))
@@ -2541,8 +2551,15 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
                 lo = pt
         elif hi is None or pt[0] < hi[0]:
             hi = pt
+        if not decides(got, ok):
+            return       # C152 메모 4 — 오늘의 lo/hi(걷기 · regula falsi)에는 들고, Brent 의 괄호에는 안 든다
+        if pt[1] < 0.0:
+            if dlo is None or pt[0] > dlo[0]:
+                dlo = pt
+        elif dhi is None or pt[0] < dhi[0]:
+            dhi = pt
 
-    note(t_c, st)
+    note(t_c, st, converged)
     remember(st, converged, t_c)
     while passes > 0:
         passes -= 1
@@ -2557,15 +2574,26 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
         if (len(devs) >= 3 and devs[-1] >= T_CONTRACTION_MIN * devs[-3]
                 and devs[-1] > T_DIVERGENCE_MIN):
             bracketed = True
-        if lo is not None and hi is not None:
+        if dlo is not None and dhi is not None:
             # C152 ② — 두 시행이 0 을 사이에 두면 비례 갱신 · 완화 · 띠 문턱과 무관하게 그 괄호 안에서 Brent 로.
             #   괄호가 걷기로 옮긴 온도(요청한 root_t 와 다름)를 받았으면 지금 괄호로 새로 연다. 허용 · 예산은 오늘 그대로.
+            if root is not None and t_c == root_t and not decides(st, converged):
+                # C152 메모 4 — Brent 가 요청한 시행의 부호가 오차 안: 같은 T_c 를 SHOOT_TOL 로 다시 쏴서 읽는다.
+                st, converged = _shoot_pressure(*args, t_center=t_c, t_pot=t_pot, p_hint=st.p_center, tol=SHOOT_TOL, **kw)
+                used_tol[id(st)] = SHOOT_TOL
+                note(t_c, st, converged)
+                remember(st, converged, t_c)
+                if converged and _surface_temperature_met(st, t_pot):
+                    break        # (a) 닫히고 닿았다 — 근 위의 시행이다. 그 답으로 끝난다(감사 e2)
+                if not decides(st, converged):
+                    break        # (c) 안 닫혔다 — 고리 뒤의 오늘 단계(C138 최선 · 마무리 · 메모 3 · 괄호를 적은 거절)로
+                # (b) 닫히고 부호를 읽을 수 있다 — 아래에서 Brent 에 보낸다
             y_now = math.log(st.t_surface / t_pot)
             try:
                 if root is not None and t_c == root_t:
                     x = root.send(y_now)
                 else:
-                    root = rootfind.brent(lo[0], lo[1], hi[0], hi[1], T_TOL)
+                    root = rootfind.brent(dlo[0], dlo[1], dhi[0], dhi[1], T_TOL)
                     x = next(root)
             except StopIteration as fin:
                 x_best, y_best, x_l, x_h = fin.value
@@ -2637,7 +2665,7 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
             continue
         stuck = abs(t_now / t_c - 1.0) < 1e-9 if t_c else False
         st, converged, t_c = got, ok, t_now
-        note(t_c, st)
+        note(t_c, st, converged)
         remember(st, converged, t_c)
         if stuck:
             break            # 괄호가 표의 온도 벽에서 같은 온도로 되돌렸다. 더 갈 데가 없다
@@ -2697,7 +2725,7 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
                           f"(|y| {abs(got2.finish_subst[2]):.2e}, 거리 {t_k - t_fin:+.3e} K)")
                     st, converged, t_c = got2, True, t_k
                     break
-        if st.t_surface > 0.0 and not _surface_temperature_met(st, t_pot) and not (lo is not None and hi is not None):
+        if st.t_surface > 0.0 and not _surface_temperature_met(st, t_pot) and not (dlo is not None and dhi is not None):
             # C152 — 0 을 사이에 둔 괄호가 있으면 이어 돌기(괄호를 잃는다) 대신 아래의 이름 댄 거절로 간다.
             # 끝맺음 구조의 표면 온도가 허용 밖 — 그 T_c 에서 SHOOT_TOL 로 온도 고리를 **이어** 돈다(지휘 선택 (a)):
             #   남은 통과 예산 · 연장 · 완화 · 대체는 지금 고리 규칙 그대로, 끝은 지금과 같은 판정.
@@ -2708,8 +2736,8 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
                          interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere,
                          p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=max(passes, 1))
     # C152 규칙 2 (감사 e2 HOLD 2) — 예산이 0 을 사이에 둔 괄호 안에서 끝났으면 아래 거절이 그 괄호를 함께 적는다.
-    straddle_note = (f" (C152: 0 을 사이에 둔 괄호 [{math.exp(lo[0]):.6g}, {math.exp(hi[0]):.6g}] K 안에서 예산이 끝났다)"
-                     if lo is not None and hi is not None else "")
+    straddle_note = (f" (C152: 0 을 사이에 둔 괄호 [{math.exp(dlo[0]):.6g}, {math.exp(dhi[0]):.6g}] K 안에서 예산이 끝났다)"
+                     if dlo is not None and dhi is not None else "")
     if wall is not None and not _surface_temperature_met(st, t_pot):
         # **선언된 1 bar 온도에 닿는 중심 온도가 없다.** 벽 아래의 가장 뜨거운 묶인 해와 벽을 둘 다
         # 들고 나간다 — 버린 시험값이 아니라 실제로 도달한 두 상태다.

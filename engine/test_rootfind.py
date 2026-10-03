@@ -267,5 +267,56 @@ check("메모 3 ⑦ 음성 — 같은 결과를 note_substituted 길로 적으�
       _c.unconverged_inputs == ("best-of-budget:interior_layers.radius",) and _c.grade == "judgment",
       f"{_c.unconverged_inputs} · {_c.grade}")
 
+# ⑧ C152 메모 4 — 부호는 오차 밖에서만 읽는다: 느슨한(τ > τ_lin) 첫 사격의 반대 부호는 Brent 괄호를 못 연다 · 규칙 3/4 선후
+def _run_tol(y_of, wall=None):
+    """y_of(T_c, tol) → ln(T_surf/T_pot). 결과 · Brent 호출 수 · 벽 찾기 사격 수."""
+    real, rb, nb = interior._shoot_pressure, rootfind.brent, [0]
+    w0 = interior.WALL_LOCATE_SHOTS[0]
+
+    def fake(*a, t_center=None, t_pot=None, p_hint=None, tol=None, **k):
+        if wall is not None and t_center > wall:
+            raise eos.PhaseGap("fake_envelope", 1e9, "가짜 뜨거운 벽", temperature_k=t_center, too_cold=False)
+        return _fake_st(t_center, T_POT * math.exp(y_of(t_center, tol))), True
+
+    def bspy(*a, **k):
+        nb[0] += 1
+        return rb(*a, **k)
+    interior._shoot_pressure, rootfind.brent = fake, bspy
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            st, ok = interior.shoot(6e24, 0.3, 0.0, "fe_prem", potential_temperature=T_POT)
+        out = ("answer", (st.t_center, ok))
+    except (ValueError, eos.PhaseGap) as e:
+        out = ("refusal", str(e))
+    finally:
+        interior._shoot_pressure, rootfind.brent = real, rb
+    return out, nb[0], interior.WALL_LOCATE_SHOTS[0] - w0
+
+
+_y = lambda t: 0.9 * math.log(t / 2100.0)                 # 참 근 2100 K, 출발 2000 K 의 위
+(k_w, v_w), nb_w, _ = _run_tol(lambda t, tol: _y(t) + (0.06 if tol > interior.SIGN_TAU_LIN else 0.0))
+check("메모 4 ① — 느슨한 첫 사격의 반대 부호(따뜻한 지구 꼴)는 괄호를 못 열고 참 근에서 답", k_w == "answer" and v_w[1]
+      and abs(v_w[0] / 2100.0 - 1.0) < 1e-5 and nb_w == 0, f"{str(v_w)[:80]} · brent {nb_w}")
+_tl0, _sm0 = interior.SIGN_TAU_LIN, interior.SIGN_S_MAX
+interior.SIGN_TAU_LIN, interior.SIGN_S_MAX = 1.0, 0.0     # 규칙 끔: 느슨한 시행도 부호를 읽음(925e1851 의 꼴)
+try:
+    (k_o, v_o), nb_o, _ = _run_tol(lambda t, tol: _y(t) + (0.06 if tol > _tl0 else 0.0))
+finally:
+    interior.SIGN_TAU_LIN, interior.SIGN_S_MAX = _tl0, _sm0
+check("메모 4 ① 끔 대조 — 같은 꼴에서 τ 규칙을 끄면 가짜 괄호로 «잔차가 뛴다» 거절(규칙이 지키는 것)",
+      k_o == "refusal" and "잔차가 뛴다" in v_o, str(v_o)[:80])
+(k_t, v_t), nb_t, _ = _run_tol(lambda t, tol: _y(t) + (0.06 if t >= 1990.0 else 0.0))
+check("메모 4 ① 음성 — 같은 반대 부호가 정밀한 시행이면 괄호가 열려 «잔차가 뛴다» 로 거절", k_t == "refusal" and "잔차가 뛴다" in v_t
+      and nb_t >= 1, f"{str(v_t)[:80]} · brent {nb_t}")
+(k_r, v_r), nb_r, _ = _run_tol(lambda t, tol: 1.8 * math.log(t / 2100.0))   # 선형 잔차: Brent 첫 걸음이 근에 바로 떨어짐(|y| ≤ S_max·τ)
+check("메모 4 ③ — Brent 요청이 오차 안(근 위)에 떨어지면 SHOOT_TOL 재사격이 닿아 답, 거절 아님",
+      k_r == "answer" and v_r[1] and abs(v_r[0] / 2100.0 - 1.0) < 1e-6 and nb_r >= 1, f"{str(v_r)[:80]} · brent {nb_r}")
+(k_3, v_3), nb_3, ws_3 = _run_tol(lambda t, tol: _y(t))
+check("메모 4 ② — 괄호도 벽도 없는 고리(규칙 3): Brent 0 · 벽 찾기 0", k_3 == "answer" and nb_3 == 0 and ws_3 == 0,
+      f"{str(v_3)[:60]} · brent {nb_3} · 벽 {ws_3}")
+(k_4, v_4), nb_4, ws_4 = _run_tol(lambda t, tol: 0.5 * math.log(t / 3000.0), wall=2050.0)
+check("메모 4 ② — 괄호 없이 벽을 만나면 규칙 4 가 이김: 벽 찾기 사격 > 0", k_4 == "refusal" and nb_4 == 0 and ws_4 > 0,
+      f"{str(v_4)[:60]} · brent {nb_4} · 벽 {ws_4}")
+
 print(f"  test_rootfind — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)

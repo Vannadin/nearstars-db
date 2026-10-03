@@ -534,23 +534,20 @@ def _fold_band() -> float:
     return interior.T_SURFACE_TOL
 
 
-FOLD_TAU_LIN = 1e-2          # C152 메모 2 — 질량 허용이 이보다 느슨한 시행은 y 오차가 선형이 아니라(측정) 판단에 못 낀다
-FOLD_S_MAX = 1.0             # C152 메모 2 — |∂y/∂ln m| 의 상한(측정 최대 0.541, 여유 1.85 배)
-
-
 def _fold(r) -> bool:
     """C152 메모 1 · 2 (iii) — 접힘 탐지기(보장 아님): 그 호출의 **사격이 닫힌** 시행을 ln T_c 순으로. 시행마다 오차
     e = S_max·τ(τ ≤ τ_lin), τ > τ_lin 은 판단 불가. |y| < 띠는 «근 위». 오차 + 띠를 넘는 부호 바뀜이 두 번 이상이거나,
     이웃 사이 역전이 두 오차 + 띠보다 크면 선다."""
+    import interior              # C152 메모 4 — τ_lin · S_max 는 interior.SIGN_* 한 쌍(부호를 읽는 모든 자리가 같이 씀)
     band = _fold_band()
     pts = []
     for x in sorted(_call_trials(r), key=lambda x: x[1]):
         if len(x) < 6 or not x[5] or x[4] is None:
             continue
         tau = x[6] if len(x) > 6 and x[6] is not None else None
-        if tau is None or tau > FOLD_TAU_LIN:
+        if tau is None or tau > interior.SIGN_TAU_LIN:
             continue                                   # 판단 불가(메모 2)
-        e = FOLD_S_MAX * tau
+        e = interior.SIGN_S_MAX * tau
         if abs(x[4]) < band + e:
             continue                                   # 근 위 · 오차 안
         pts.append((x[4], e))
