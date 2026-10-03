@@ -51,7 +51,18 @@ def _shoot_gap(cmf: float, material: str, mass_kg: float = 0.1074 * 5.97219e24):
         interior.shoot(mass_kg, cmf, 0.0, material, potential_temperature=1600.0)
     except eos.PhaseGap as gap:
         return gap
+    except Exception as err:                      # noqa: BLE001 — C157 메모 8: 충돌이 뒤 행을 가리지 않게 [FAIL] 한 줄로
+        row(False, f"_shoot_gap(cmf {cmf}, {material}) 가 PhaseGap 이 아닌 예외로 나갔다 — {type(err).__name__}: {str(err)[:120]}")
+        return _Crashed(f"{type(err).__name__}: {err}")
     return None
+
+
+class _Crashed:
+    """C157 메모 8 — `_shoot_gap` 이 받은 PhaseGap 아닌 예외. None 이 아니므로 «풀린다» 를 기대하는 행은 실패하고,
+    `.reason` 은 «30.0000 GPa» 같은 이름 댄 문구를 안 담으므로 이름을 기대하는 행도 실패한다."""
+
+    def __init__(self, reason: str):
+        self.reason = reason
 
 
 def _shoot_ok(cmf: float, material: str, mass_kg: float = 0.1074 * 5.97219e24) -> bool:
@@ -337,9 +348,52 @@ row(all(_shoot_ok(c, "fe_s_13wt_19gpa", mass_kg=0.5 * 5.97219e24)
     "⚠ 질량 축 — 0.5 M⊕ 는 cmf 0.20·0.30·0.40 이 전부 풀린다 (P_cmb 86.9–72.5 GPa). 바닥 근처가 "
     "아닌 천체에서는 이 규칙이 한 번도 발화하지 않는다")
 _planted = _plant_floor(30.0 * eos.GPA)
-_gap30 = _shoot_gap(0.325, _planted)
-row(_gap30 is not None and "30.0000 GPa" in _gap30.reason,
-    f"ⓒ 심은 `p_min` 30 GPa 재질은 여전히 이름을 대고 거절한다: «{_gap30.reason[:52]}…»")
+# C157 메모 8 — ⓒ 는 **바닥 자체**를 판정한다(고리 경로와 무관한 직접 호출): 심은 바닥 바로 아래는 30.0000 GPa 를 이름 대고
+#   거절하고, 바로 위는 답한다. 풀이 수준의 결과(고리가 닫혀 바닥 PhaseGap 이 나오는가, C152 의 이름 댄 거절이 먼저인가)는
+#   기록만 한다 — PC(WSL2 · Python 3.12.3)에서는 이 심은 재질의 온도 고리가 닫히지 않고 맥(3.9.6)에서는 닫힌다. 원인은 못 박지 않았다.
+_pm = eos.MATERIALS[_planted]
+try:
+    _pm.phase_at(29.9585e9)
+    _floor_txt = ""
+except eos.PhaseGap as _g:
+    _floor_txt = _g.reason
+try:
+    _pm.phase_at(30.1e9)
+    _above_ok = True
+except eos.PhaseGap:
+    _above_ok = False
+row("30.0000 GPa" in _floor_txt and _above_ok,
+    f"ⓒ 심은 `p_min` 30 GPa 재질은 바닥 아래를 이름 대고 거절하고 바닥 위는 답한다(직접 호출): «{_floor_txt[:52]}…»")
+C152_NAMED = ("표면온도 경계조건이 예산 안에 닫히지 않았다", "표면온도 잔차가 뛴다", "사격 질량이 p_c 에서 뛴다")
+try:
+    interior.shoot(0.1074 * 5.97219e24, 0.325, 0.0, _planted, potential_temperature=1600.0)
+    _loop30 = "답(거절 없음)"
+except eos.PhaseGap as _g:
+    _loop30 = f"바닥 PhaseGap «{_g.reason[:60]}…»"
+except ValueError as _e:
+    _named = next((h for h in C152_NAMED if h in str(_e)), None)
+    _loop30 = f"{'이름 댄 거절 «' + _named + '»' if _named else '이름 없는 ValueError'} «{str(_e)[:60]}…»"
+print(f"  [기록] ⓒ 풀이 수준(cmf 0.325, T_pot 1600 K): {_loop30} — 판정하지 않음 (C157 메모 8)")
+# C157 메모 8 음성 대조 — (i) 이름 없는 예외는 _shoot_gap 이 [FAIL] 한 줄로 받고 이름 없는 표지를 돌려준다(뒤 행은 계속 돈다),
+#   (ii) 조용한 답은 None 이라 «거절» 을 기대하는 행이 실패한다, (iii) 바닥을 안 심은 fe_prem 은 같은 압력을 거절하지 않는다.
+_rows_seen, _row0, _shoot0 = [], row, interior.shoot
+try:
+    row = lambda ok, text: _rows_seen.append(ok)          # noqa: E731 — 이 대조 동안만 행을 모은다
+    interior.shoot = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("이름 없는 실패 — 음성 대조"))
+    _neg_crash = _shoot_gap(0.325, _planted)
+    interior.shoot = lambda *a, **k: (None, True)
+    _neg_silent = _shoot_gap(0.325, _planted)
+finally:
+    row, interior.shoot = _row0, _shoot0
+try:
+    eos.MATERIALS["fe_prem"].phase_at(29.9585e9)
+    _unplanted_ok = True
+except eos.PhaseGap:
+    _unplanted_ok = False
+row(_rows_seen == [False] and isinstance(_neg_crash, _Crashed) and "30.0000 GPa" not in _neg_crash.reason
+    and _neg_silent is None and _unplanted_ok,
+    "ⓒ 음성 대조 (C157 메모 8) — 이름 없는 예외는 [FAIL] 한 줄 · 이름 없는 표지로 · 조용한 답은 None(거절 아님) · "
+    "바닥을 안 심은 fe_prem 은 같은 압력을 거절하지 않는다")
 
 print("\n⑫ 다원계 상자 — 인쇄된 도함수로 여덟 끝점을 우리가 다시 계산한다 (C55 2단계, 브리프 183)")
 #: 병렬석 P21 §1 의 표. **받아쓴 것이 아니라 대조 상대**다 — 아래 행은 우리 코드가 낸다.
