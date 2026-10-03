@@ -1043,6 +1043,19 @@ class Material:
         _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return self.phase_at(p).gruneisen(rho, t, t_pot, p)
 
+    def stencil_bounds(self, p: float) -> tuple[float, float]:
+        """C157 메모 1 — `p` 를 담은 피적분 경계 구간 (lo, hi]: 상 경계와 각 상의 열 세트 이음매(γ·c_p 구간의 끝).
+        0 · 무한은 경계가 아니다. 차분 발판은 이 구간을 넘지 않고(`k_t` · `interior._phase_stencil`), 걸음은 lo 에서 잘린다."""
+        lo, hi = 0.0, math.inf
+        for ph in self.phases:
+            for b in (ph.p_min, ph.p_max, *(x for ts in (ph.gamma_sets or ()) for x in (ts.p_min, ts.p_max))):
+                if 0.0 < b < math.inf:
+                    if b < p:
+                        lo = max(lo, b)
+                    else:
+                        hi = min(hi, b)
+        return lo, hi
+
     def k_t(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """등온 체적탄성률 K_T [Pa]. 냉각 곡선의 수치 미분이다.
 
@@ -1059,12 +1072,16 @@ class Material:
         #   `grad_ad` 와 `k_t` 가 거절했다: 19.0000–19.0019 GPa 가 PhaseGap, 19.0020 부터 값.
         #   바닥에서는 한쪽 차분이 된다. 바닥이 0 인 재질에는 이 항이 걸리지 않는다.
         p_lo = max(p - h, 1.0, self.shoot_lo)
-        # C157 ① — 상 경계도 같은 이유로 넘지 않는다: 발판이 다른 상에 닿으면 밀도 뜀이 K_T 에 들어간다.
-        if len(self.phases) > 1:
-            for ph in self.phases:
-                if ph.p_min <= p <= ph.p_max:
-                    p_hi, p_lo = min(p_hi, ph.p_max), max(p_lo, math.nextafter(ph.p_min, math.inf))
-                    break
+        # C157 ① (메모 1 B.4) — 상 경계 · 열 세트 이음매도 같은 이유로 넘지 않고, 잘리면 `interior._phase_stencil` 처럼 폭 2h 로
+        #   다시 넓힌다(한쪽 차분 오차 2.3–4.4e-5 가 잰 폭이 2h 다).
+        lo_b, hi_b = self.stencil_bounds(p)
+        lo_b = math.nextafter(lo_b, math.inf) if lo_b > 0.0 else lo_b
+        if p_hi > hi_b:
+            p_hi = hi_b
+            p_lo = max(min(p_lo, p_hi - 2.0 * h), lo_b)
+        if p_lo < lo_b:
+            p_lo = lo_b
+            p_hi = min(max(p_hi, p_lo + 2.0 * h), hi_b)
         if p_hi <= p_lo:
             return 0.0
         d_hi = self.solid_density(p_hi, t, t_pot)

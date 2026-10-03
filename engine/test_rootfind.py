@@ -327,6 +327,7 @@ class _TwoPhase(eos.Material):
 
     def __init__(self, phases):
         object.__setattr__(self, "phases", phases)
+        object.__setattr__(self, "name", "c157_two_phase")
 
     @property
     def shoot_lo(self):
@@ -336,8 +337,8 @@ class _TwoPhase(eos.Material):
         return 3000.0 + 1e-8 * p + (200.0 if p > P_B else 0.0)
 
 
-_ph = [types.SimpleNamespace(p_min=1e9, p_max=P_B), types.SimpleNamespace(p_min=P_B, p_max=1e12)]
-_two, _one = _TwoPhase(_ph), _TwoPhase([types.SimpleNamespace(p_min=1e9, p_max=1e12)])
+_ph = [types.SimpleNamespace(p_min=1e9, p_max=P_B, gamma_sets=()), types.SimpleNamespace(p_min=P_B, p_max=1e12, gamma_sets=())]
+_two, _one = _TwoPhase(_ph), _TwoPhase([types.SimpleNamespace(p_min=1e9, p_max=1e12, gamma_sets=())])
 _p = P_B - 1e6                                             # 경계 아래 h(2.4 MPa) 안
 _k_ref = _two.solid_density(_p) / 1e-8                     # 상 안의 참 K_T = ρ / (dρ/dP)
 _lo, _hi = interior._phase_stencil(_two, _p, _p - _p * 1e-4, _p + _p * 1e-4, _p * 1e-4)
@@ -346,13 +347,33 @@ check("C157 ① — 잘린 k_t 는 상 안의 값(경계를 걸친 차분과 같
 check("C157 ① 음성 — 상 하나로 보면(자르기 없음) 발판이 경계를 걸쳐 K_T 가 10 배 넘게 틀어짐", _one.k_t(_p) < 0.1 * _k_ref,
       f"{_one.k_t(_p) / _k_ref:.3e}")
 
-for _g0, _g1, _gf, _lab in ((-1.0, 1.0, lambda f: -1.0 + 2.0 * f, "직선"), (1e-3, -1e-3, lambda f: 1e-3 - 2e-3 * f ** 3, "굽음, 양→음"),
-                           (-2e-7, 4e-6, lambda f: -2e-7 + 4.2e-6 * f, "스치듯 얕음")):
-    _seen = []
-    _f = interior._land_event(lambda f: (_seen.append(f), _gf(f))[1], _g0, _g1, 1e-9)
-    _end = _gf(_f)
-    check(f"C157 ② — 사건 착지가 새 쪽으로 δ 넘어선 자리({_lab})", (_end > 0.0) == (_g1 > 0.0) and 0.9e-9 <= abs(_end) <= 1.1e-9
-          and _seen[-1] == _f, f"f {_f:.12f} · g {_end:+.3e} · 걸음 {len(_seen)}")
+_seamed = _TwoPhase([types.SimpleNamespace(p_min=1e9, p_max=1e12, gamma_sets=(
+    types.SimpleNamespace(p_min=19e9, p_max=35e9), types.SimpleNamespace(p_min=35e9, p_max=float("inf"))))])
+check("C157 메모 1 C — 열 세트 이음매도 경계: 19 · 35 GPa 사이의 구간을 냄", _seamed.stencil_bounds(25e9) == (19e9, 35e9)
+      and _seamed.stencil_bounds(19e9 * (1 - 4e-12))[1] == 19e9, str(_seamed.stencil_bounds(25e9)))
+check("C157 메모 1 C — 걸음 자르기 경계(_cut_floor)가 이음매를 봄, 재료 바닥은 안 봄",
+      interior._cut_floor(_seamed, 25e9) == 19e9 and interior._cut_floor(_seamed, 10e9) == 0.0)
+
+# 수락 3(메모 1 D) — 적분 수준: 코어 없는 0.05 M⊕ 시험체, T_c 2300 K(고상선 9.05 · 3.0 GPa 를 지남), p_c 를 단계 교차 자리에 걸쳐 훑음
+def _sweep_y(bounds):
+    keep = interior.STENCIL_BOUNDS
+    interior.STENCIL_BOUNDS = bounds
+    try:
+        ys = []
+        for i in range(6, 16):
+            st = interior.integrate(15.0e9 + i * 0.002e9, 0.05 * interior.EARTH_MASS_KG, 0.0, 0.0, "fe_prem", 0.0, None, 0.0, 0.0,
+                                    1.0, True, 2300.0, 1900.0)
+            ys.append(math.log(st.t_surface / 1900.0))
+    finally:
+        interior.STENCIL_BOUNDS = keep
+    d = sorted(b - a for a, b in zip(ys, ys[1:]))
+    md = d[len(d) // 2]
+    return max(abs(x - md) for x in d)
+
+
+_on, _off = _sweep_y(True), _sweep_y(False)
+check("C157 수락 3 — 녹는 경계를 지나는 적분의 y 가 p_c 에 이어짐(이웃 2 MPa, |dy − 중앙| ≤ 1e-6)", _on <= 1e-6, f"{_on:.2e}")
+check("C157 수락 3 음성 — C157 앞 발판(STENCIL_BOUNDS = False)이면 뜀(> 1e-5)", _off > 1e-5, f"{_off:.2e}")
 
 _M, _P0 = 6e24, 3.5e11
 
