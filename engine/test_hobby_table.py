@@ -131,7 +131,9 @@ def h_quick() -> None:
         with contextlib.redirect_stdout(io.StringIO()) as out:
             bad = sg.check_all()
         sg.GRID_DIR = saved
-    ok(bad == 1 and "mode quick" in out.getvalue(), "H-quick: --check refuses a committed quick table")
+    # C159 규칙 3 — 임시 폴더엔 화성 표만 있어 열진화 선언 천체의 «표 없음» FAIL 이 더해진다. 빠른 판 줄만 본다.
+    quick_line = [l for l in out.getvalue().splitlines() if "[FAIL] mars.json" in l and "mode quick" in l]
+    ok(bad >= 1 and len(quick_line) == 1, "H-quick: --check refuses a committed quick table")
     note = core_history._quick_note(sg.Grid(doc))
     ok(len(note) == 1 and "quick" in note[0] and core_history._quick_note(None) == (),
        "H-quick: a history read through a quick table carries the note; a reference table adds nothing")
