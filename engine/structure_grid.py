@@ -2,6 +2,7 @@
 """Structure grid — the interior solved once on a mantle-potential-temperature grid, stored and reused.
 
     python3 engine/structure_grid.py --refresh earth      # 짓고 굳힌다 (이 단계에서만)
+    python3 engine/structure_grid.py --refresh mars --quick   # 빠른 판: ε 한 판, 자기 검증 없음 (취미용, C161)
     python3 engine/structure_grid.py --check              # 굳힌 표 전부의 방아쇠 대조 (풀이 없음)
 
 Pre-registration: prereg-structure-grid.md (addenda 1 · 2 · 7). Owner decision 2026-09-24: the structure ↔ thermal-history
@@ -306,7 +307,7 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         for t, *_ in nodes:
             if t not in cache and t not in noans and t not in spec and all(j[0] != t for j in jobs):
                 jobs.append((t, None))
-        for (t, _h), r in zip(jobs, _pool_solve(solve, jobs, aux) if jobs else []):
+        for (t, _h), r in zip(jobs, _pool_solve(solve, jobs, aux, kind="bisect") if jobs else []):
             spec[t] = r
         spec_stats["dispatched"] += len(jobs)
         spec_stats["rounds"] += 1
@@ -353,7 +354,7 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
                 spec_stats["used"] += 1
                 _take(t, spec.pop(t))
             else:
-                _take(t, _pool_solve(solve, [(t, None)], aux)[0])
+                _take(t, _pool_solve(solve, [(t, None)], aux, kind="single")[0])
             if t in noans:
                 raise _NoAnswer(t, noans[t])
         return cache[t]
@@ -363,7 +364,7 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         jobs = [(t, near) for t, near in dict.fromkeys(jobs) if t not in cache and t not in noans]
         if not jobs:
             return
-        results = _pool_solve(solve, [(t, None) for t, _near in jobs], aux)
+        results = _pool_solve(solve, [(t, None) for t, _near in jobs], aux, kind="refine")
         for (t, _near), r in zip(jobs, results):
             if not r.applicable:   # 감사 9f 곁 — 묶음으로 미리 푸니 직렬판과 먼저 만나는 거절 점이 다를 수 있다: 묶음을 찍는다
                 print(f"미리 풀기 묶음 {len(jobs)} 점 중 {t!r} K 가 거절(묶음 {[j[0] for j in jobs]!r})", flush=True)
@@ -750,13 +751,22 @@ def _core_p(r):
     return r.values["core_pressure"] * 1e9
 
 
-def _pool_solve(solve, jobs, aux=None):
+#: C161 (3) H-count — 짓기의 구조 풀이를 종류별로 센다(값 밖, 기록만). 부르는 쪽 · 판정 갈래별.
+SOLVE_KINDS: dict[str, int] = {}
+
+
+def _count(kind: str, n: int) -> None:
+    SOLVE_KINDS[kind] = SOLVE_KINDS.get(kind, 0) + n
+
+
+def _pool_solve(solve, jobs, aux=None, kind: str = "single"):
     """표의 점들을 푼다 — 덧붙임 57: 힌트는 버리고(①) 힌트 없는 풀이(a)를 풀로, 가족 검사가 서는 점만 고정 출발 셋
     (b = T−1 K 격자 힌트 · c = 안 닫힌 가족마다 다시 닫기)을 더 풀어 한 규칙으로 판정. `aux` 는 짓기 한 판의 a 풀이
     기억(T → 결과, 값은 순서와 무관 — 점마다 초기화 · 힌트 없음)."""
     aux = {} if aux is None else aux
     ts = [t for t, _h in jobs]
     new = [t for t in dict.fromkeys(ts) if t not in aux]
+    _count(f"a:{kind}", len(new))
     for t, r in zip(new, _solve_raw(solve, [(t, None, None) for t in new]) if new else []):
         aux[t] = r
     fire = [t for t in dict.fromkeys(ts) if _fires(aux[t])]
@@ -767,11 +777,14 @@ def _pool_solve(solve, jobs, aux=None):
     if not fire:
         return [aux[t] for t in ts]
     new = [t - 1.0 for t in fire if t - 1.0 not in aux]
+    _count("judge:T-1", len(new))
     for t, r in zip(new, _solve_raw(solve, [(t, None, None) for t in new]) if new else []):
         aux[t] = r
     b_jobs = [(t, _core_p(aux[t - 1.0]), None) for t in fire if _core_p(aux[t - 1.0]) is not None]
+    _count("judge:b", len(b_jobs))
     bs = dict(zip([j[0] for j in b_jobs], _solve_raw(solve, b_jobs) if b_jobs else []))
     c_jobs = [(t, None, e) for t in fire for e in _entries([aux[t]] + ([bs[t]] if t in bs else []))]
+    _count("judge:c", len(c_jobs))
     cs = {t: [] for t in fire}
     for (t, _h, _e), r in zip(c_jobs, _solve_raw(solve, c_jobs) if c_jobs else []):
         cs[t].append(r)
@@ -798,6 +811,7 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
         rows_cap.setdefault("rows", r.get("rows"))
         return r
     BUILDING, ch.integrate = True, cap
+    SOLVE_KINDS.clear()                     # C161 H-count — 이 판의 풀이만 센다
     try:
         run.solve(body, run.load_chain())
     finally:
@@ -837,7 +851,7 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
 
         def fetch(nodes):
             jobs = [(t, None) for t, *_ in nodes if t not in got]
-            for (t, _h), r in zip(jobs, _pool_solve(solve, jobs) if jobs else []):
+            for (t, _h), r in zip(jobs, _pool_solve(solve, jobs, kind="t_ok") if jobs else []):
                 got[t] = r
         c = _Chain(lo, hi, T_OK_WIDTH_K, lambda c, m: c.go(m, c.y) if got[m].applicable else c.go(c.x, m))
         _spec_rounds([c], fetch)
@@ -859,7 +873,7 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
     else:
         grid = list(points) if points is not None else [lo + (hi - lo) * i / (n - 1) for i in range(n)]
         points = []
-        for t, r in zip(grid, _pool_solve(solve, [(t, None) for t in grid])):   # 덧붙임 44 ③ — 힌트 없음 그대로
+        for t, r in zip(grid, _pool_solve(solve, [(t, None) for t in grid], kind="uniform")):   # 덧붙임 44 ③ — 힌트 없음 그대로
             if not r.applicable:
                 raise SystemExit(f"{name}: 격자 {t!r} K 에서 구조가 거절한다 — 단조가 아니다: {r.reason}")
             tags = []
@@ -878,6 +892,7 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
            "breaks": [[j["t_lo"], j["t_hi"], j["field"], j["relative_size"]] for j in adaptive.get("jumps", [])],
            "t_ok": t_ok, "t_no": t_no, "composition": how, "s0_potential_temperature": t_pot0,
            "history_t_m_range": [min(t_ms), max(t_ms)], "triggers": triggers(body.inputs)}
+    print(f"풀이 종류 (C161 H-count, 기록) — ε {eps!r} · {dict(sorted(SOLVE_KINDS.items()))}", flush=True)
     if gaps:                                   # 덧붙임 50 ② — 구간이 없는 표는 칸을 안 쓴다(바이트 같음)
         doc["no_answer"] = gaps
     GRID_DIR.mkdir(exist_ok=True)
@@ -996,6 +1011,10 @@ def check_all() -> int:
             bad += 1
     for path in sorted(GRID_DIR.glob("*.json")):
         doc = json.loads(path.read_text(encoding="utf-8"))
+        if doc.get("mode") == "quick":          # C161 (1) — 빠른 판은 참조 표 자리에 못 들어온다
+            print(f"  [FAIL] {path.name} — 빠른 판(mode quick)이 참조 표 자리에 있다 — `--refresh {doc['body'].lower()}` 로 다시")
+            bad += 1
+            continue
         body, _ = run.load_body(BODIES_DIR / f"{doc['body'].lower()}.yaml")
         for g in doc.get("no_answer", []):      # C162 ② — 받을 답 없는 구간은 전부 까닭과 함께: 거절은 [WARN], 판정은 [기록]
             tag = "[WARN]" if len(g) > 3 and g[3] == "refusal" else "[기록]"
@@ -1030,7 +1049,23 @@ def check_all() -> int:
     return bad
 
 
+def quick_build(name: str) -> dict:
+    """C161 (1) — 빠른 판: ε 로 한 번만 짓는다(ε/2 자기 검증 없음). 머리에 `mode: quick`, 등급 `adaptive-quick`.
+    취미용이다 — 저장소의 참조 표를 대신하지 않고, `--check` 는 커밋된 빠른 표를 거절한다."""
+    doc = build(name, eps=EPS, grade="adaptive-quick")
+    doc["mode"] = "quick"
+    GRID_DIR.mkdir(exist_ok=True)
+    _path_for(doc["body"]).write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    return doc
+
+
 def main(args: list[str]) -> int:
+    if args[:1] == ["--refresh"] and len(args) == 3 and args[2] == "--quick":
+        d = quick_build(args[1])
+        a = d["adaptive"]
+        print(f"빠른 판 → {_path_for(d['body']).name} · 점 {a['points']} · 풀이 {a.get('structure_solves')} · ε {a['eps']!r} · "
+              f"T_ok {d['t_ok']} · {d['composition']} (mode quick, 자기 검증 없음)")
+        return 0
     if args[:1] == ["--refresh"] and len(args) == 2:
         d = self_checked_build(args[1])
         a = d["adaptive"]

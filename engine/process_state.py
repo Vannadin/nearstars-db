@@ -25,6 +25,8 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("fermi", "_LAST_INVERSE"): (START, "previous (value, eta): Newton starting point", (0.0, 0.0)),
     ("rtpress", "_LAST_LIQUID"): (MEMO, "returned only for the same (P, T)", None),
     ("rtpress", "_VMIN_TAB"): (MEMO, "lazily built table, a function of the constants only", None),
+    ("rtpress", "_VOLUME_WARM"): (START, "previous volume root: the next root-find's first bracket, reset at each structure solve (C161 (4b), (4d))", None),
+    ("rtpress", "WARM_STATS"): (COUNTER, "warm vs cold volume root-finds (C161)", None),
     ("ice_fr2015", "_GL_NODES"): (MEMO, "lazily built quadrature nodes", None),
     ("ice_fr2015", "_CACHE"): (MEMO, "keyed by (name, P, T)", None),
     ("fe_liquid", "_CACHE"): (MEMO, "keyed by (name, P, T)", None),
@@ -69,6 +71,7 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("interior", "_CALL"): (FLAG, "index of the outer shoot call in progress (addendum 58 rule 2), set and restored by shoot()", None),
     ("interior", "_ENTRY"): (FLAG, "re-close entry for one table solve (addendum 57 rule 3c), set and cleared in finally by the caller", None),
     ("structure_grid", "BUILDING"): (FLAG, "table build in progress", None),
+    ("structure_grid", "SOLVE_KINDS"): (COUNTER, "structure solves by kind during a table build (C161 H-count)", None),
     ("structure_grid", "GRID_DIR"): (FLAG, "table directory override", None),
 }
 

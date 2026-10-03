@@ -121,12 +121,42 @@ def _ds_dv(v: float, t: float) -> float:
     return db_of(v) / (M - 1.0) * (f_t1(t) - f_t1(ts)) + gamma0s(v) * c_v(v, ts) / v
 
 
-def pressure(v: float, t: float) -> float:
+def pressure_reference(v: float, t: float) -> float:
     """P = P₀T(V) + ΔP_E + ΔP_S [GPa] — eqs. (13)–(14):
-    ΔP_E = −b′(V)·Δf_T(T₀ → T); ΔP_S = T·(∂S/∂V)_T − T₀·(∂S/∂V)_{T₀}."""
+    ΔP_E = −b′(V)·Δf_T(T₀ → T); ΔP_S = T·(∂S/∂V)_T − T₀·(∂S/∂V)_{T₀}.
+    ⚠ C161: the pre-C161 form, kept as the reference for `test_hobby_table` H-exact; `pressure` below is the one used."""
     dpe = -db_of(v) * (f_t(t) - f_t(T0))
     dps = t * _ds_dv(v, t) - T0 * _ds_dv(v, T0)
     return p0t(v) + (dpe + dps) * PV
+
+
+#: C161 (4a) — 압력식에서 V 에도 T 에도 안 기대는 수(인쇄 상수만의 함수)를 한 번만 계산한다.
+_ETA = 1.5 * (KP0 - 1.0)
+_FT_T0 = (T0 / T0) ** M - 1.0
+_FT1_T0 = (M / T0) * (T0 / T0) ** (M - 1.0)
+
+
+def pressure(v: float, t: float) -> float:
+    """eqs. (13)–(14), the same formula as `pressure_reference`, restructured (C161 (4a), prereg-c161-hobby-table):
+    V-only terms (x, f, T₀S, γ₀S, b, b′) once per call instead of once per sub-function, b and b′ in Horner form, and
+    the two (∂S/∂V) evaluations sharing them. Only floating-point order differs (H-exact bounds it)."""
+    r = v / V0
+    x = r ** (1.0 / 3.0)
+    p0 = 3.0 * K0 * x ** -2 * (1.0 - x) * math.exp(_ETA * (1.0 - x))
+    u = r - 1.0
+    b = B[0] + u * (B[1] + u * (B[2] + u * (B[3] + u * B[4])))
+    db = (B[1] + u * (2.0 * B[2] + u * (3.0 * B[3] + u * (4.0 * B[4])))) / V0
+    f = 0.5 * ((V0 / v) ** (2.0 / 3.0) - 1.0)
+    q = 1.0 + A1 * f + 0.5 * A2 * f * f
+    ts = T0 * math.sqrt(q)
+    g0 = (2.0 * f + 1.0) * (A1 + A2 * f) / (6.0 * q)
+    ft1_ts = (M / T0) * (ts / T0) ** (M - 1.0)
+    tail = g0 * (b * ft1_ts + CV_KIN) / v
+    k = db / (M - 1.0)
+    ds_t = k * ((M / T0) * (t / T0) ** (M - 1.0) - ft1_ts) + tail
+    ds_0 = k * (_FT1_T0 - ft1_ts) + tail
+    dpe = -db * (((t / T0) ** M - 1.0) - _FT_T0)
+    return p0 + (dpe + t * ds_t - T0 * ds_0) * PV
 
 
 def dpdt_v(v: float, t: float) -> float:
@@ -294,6 +324,38 @@ def _false_position(p: float, t: float, lo: float, hi: float) -> float:
     return 0.5 * (lo + hi)
 
 
+#: C161 (4b) — 앞 부피 풀이의 답. 다음 풀이의 첫 괄호로만 쓴다(값은 근 찾기 허용 1e-12·V₀ 안에서만 움직인다).
+#: ⚠ 구조 풀이마다 `reset_solve_state()` 로 지운다 — 남겨 두면 한 점의 끝자리가 그 작업자가 앞서 푼 점에 기대어
+#: 풀 크기마다 표가 갈린다(감사 e2, C161 (4d)). `process_state.REGISTRY` 에 `start` 로 등록.
+_VOLUME_WARM: float | None = None
+WARM_WIDTH = 1e-3                   # 앞 답 둘레 상대 폭 — 근이 그 안에 없으면 오늘의 넓은 괄호로
+WARM_STATS = {"warm": 0, "cold": 0}
+
+
+def reset_solve_state() -> None:
+    """구조 풀이 하나의 시작 — 따뜻한 출발점을 지운다 (C161 (4d))."""
+    global _VOLUME_WARM
+    _VOLUME_WARM = None
+
+
+def _warm_root(p: float, t: float, lo: float, hi: float) -> float:
+    """C161 (4b): 앞 답 V_w 가 있고 [V_w(1 − w), V_w(1 + w)] ∩ [lo, hi] 가 근을 감싸면 그 좁은 괄호로 Illinois,
+    아니면 오늘의 [lo, hi] 로. 끝 판정(괄호 폭 < 1e-12·V₀)은 같아서 답은 그 허용 안에서만 움직인다."""
+    global _VOLUME_WARM
+    vw = _VOLUME_WARM
+    if vw is not None:
+        a, b = max(lo, vw * (1.0 - WARM_WIDTH)), min(hi, vw * (1.0 + WARM_WIDTH))
+        if a < b and (pressure(a, t) - p) * (pressure(b, t) - p) < 0.0:
+            WARM_STATS["warm"] += 1
+            v = _false_position(p, t, a, b)
+            _VOLUME_WARM = v
+            return v
+    WARM_STATS["cold"] += 1
+    v = _false_position(p, t, lo, hi)
+    _VOLUME_WARM = v
+    return v
+
+
 def volume(p: float, t: float) -> float:
     """덧붙임 3: bracket [0.2·V₀, V̂_min] from the V_min(T) table, three checks, false position; any check failing
     sends this call back to `volume_full` (덧붙임 2 B entire, counted as `fallback`). Values equal to `volume_full`
@@ -310,7 +372,7 @@ def volume(p: float, t: float) -> float:
         OUTSIDE["outside"] += 1
     OUTSIDE["loop"] = OUTSIDE.get("loop", 0) + 1
     OUTSIDE.setdefault("loop_first", (p, t))
-    v = _false_position(p, t, lo, vh)
+    v = _warm_root(p, t, lo, vh)
     if not _dpdv(v, t) < 0.0:
         OUTSIDE["fallback"] = OUTSIDE.get("fallback", 0) + 1
         OUTSIDE["calls"] -= 1

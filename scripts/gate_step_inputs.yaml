@@ -227,6 +227,8 @@
   globs: []
 "test_column_rule.py":  # C160; imports only (BurnMan SLB data comes from the package) — the next census confirms
   globs: []
+"test_hobby_table.py":  # C161; reads engine/structure_grid/mars.json and bodies (always-full) — the next census confirms
+  globs: []
 "test_phase_tables.py":
   globs: []
 "test_tidal_heating.py":

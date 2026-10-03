@@ -4038,6 +4038,7 @@ def solve(mass_earth: float,
     _FAMILY_INFO.clear()
     _FAMILY_TRAIL.update(trials=[], reclosed=[], closed=[], answer=None, dev=None, calls=0, returned={}, answer_call=None)
     _REF_INFO.clear()
+    rtpress.reset_solve_state()          # C161 (4d) — 부피 근 찾기의 따뜻한 출발점은 풀이마다 새로(풀 크기와 무관하게)
     # 기저층 (prereg-structure-basal-layer) — 두께 0 또는 없음이면 층이 없다(S-B2: 예전 경로 그대로).
     basal = None
     if basal_layer_thickness_km:

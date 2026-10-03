@@ -556,7 +556,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
                  f"{hist_['max_h_over_tau']:.3g} (must be ≤ {STEP_FRACTION:g}); tools/adaptive-step-prereg.md")
     return Result(recipe=RECIPE, version=VERSION, regime="thermal-history", reason=reason, grade="analog",
                   inputs=inputs, values=values, units=units, refs=REFS,
-                  notes=(CONDITION, extrap_note, step_note) + _gap_note(best["hist"]))
+                  notes=(CONDITION, extrap_note, step_note) + _gap_note(best["hist"]) + _quick_note(grid))
 
 
 from registry import recipe  # noqa: E402
@@ -600,6 +600,13 @@ def _from_state(state):
                  surface_temperature_k=state.get_optional("surface_temperature_k"),
                  radiogenic_concentration=state.get_optional("radiogenic_concentration"),
                  grid=grid)
+
+
+def _quick_note(grid) -> tuple:
+    """C161 (1) — 빠른 표(ε 한 판, ε/2 자기 검증 없음)를 읽었으면 그 사실을 한 줄로. 참조 표면 빈 튜플(옛 note 그대로)."""
+    if grid is None or grid.doc.get("mode") != "quick":
+        return ()
+    return ("구조 표가 빠른 판이다(mode quick: ε 한 판, ε/2 자기 검증 없음 — 취미용, C161). 참조 표가 아니다.",)
 
 
 def _gap_note(hist) -> tuple:
