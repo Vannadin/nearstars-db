@@ -5,7 +5,7 @@ prereg-c159-table-trigger-reads (e0ab5682) §1 and rule 1b. For each body, a sma
 runs into a scratch `STRUCTURE_GRID_DIR`, with
 - an audit hook on `open` recording every file read under `engine/`;
 - `graph.load()` returning access-recording mappings, recording every chain.yaml key path the runner reads.
-Every non-.py file read must be a byte trigger (`structure_grid.BYTE_FILES`) or on `structure_grid.FILE_EXEMPT`, and every chain
+Every data file read anywhere (repository root and outside it; Python and system paths aside) must be a byte trigger (`structure_grid.BYTE_FILES`) or on `structure_grid.FILE_EXEMPT`, and every chain
 key read must lie inside `structure_grid.CHAIN_READS`. Anything else is printed as a stop and the exit code is 1.
 A build that refuses is reported with its reason; the reads up to the refusal are still checked.
 """
@@ -20,17 +20,10 @@ ENGINE = Path(__file__).resolve().parents[1]
 os.environ["STRUCTURE_GRID_DIR"] = tempfile.mkdtemp(prefix="c159_guard_")
 sys.path.insert(0, str(ENGINE))
 
-opened: set[str] = set()
+import structure_grid as _sg  # noqa: E402  (stdlib-only at import; the hook is added before the engine loads)
 
-
-def _hook(event, args):
-    if event == "open" and args and isinstance(args[0], (str, bytes, os.PathLike)):
-        try:
-            p = Path(os.fsdecode(args[0])).resolve()
-        except (OSError, ValueError):
-            return
-        if ENGINE in p.parents:
-            opened.add(p.relative_to(ENGINE).as_posix())
+opened = _sg._READS             # C159 메모 1 — 저장소 전체 · 밖(환경 변수 역할)까지, structure_grid 의 훅과 같은 규칙
+_hook = _sg._reads_hook
 
 
 class _Rec(dict):
@@ -101,12 +94,8 @@ def guard(name: str, n: int) -> int:
         status = f"error {type(e).__name__}: {str(e)[:160]}"
     finally:
         graph.load = real
-    data = sorted(f for f in opened if not f.endswith(".py") and "__pycache__" not in f)
-    bad = []
-    for f in data:
-        if f in sg.BYTE_FILES or f in sg.FILE_EXEMPT or any(f.startswith(k) for k in sg.FILE_EXEMPT if k.endswith("/")):
-            continue
-        bad.append(f)
+    data = sorted(opened)
+    bad = sg.guard_reads(opened)
     bad_keys = sorted(k for k in keys if not _allowed_chain(k))
     print(f"== {name} · {status}")
     print(f"   data files read: {data}")

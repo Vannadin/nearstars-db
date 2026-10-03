@@ -119,13 +119,19 @@ def _check_with(trig, reads):
 
 
 _code_moved = {**_now, "code": {**_now["code"], "eos.py": "0000000000000000"}}
-runs, out = _check_with(_code_moved, {"reference_adiabats.json", "chain.yaml", "bodies/earth.yaml"})
+runs, out = _check_with(_code_moved, {"engine/reference_adiabats.json", "engine/chain.yaml", "engine/bodies/earth.yaml",
+                                     "engine/mantle_tables/x.json", "engine/structure_grid/earth.json"})
 check("메모 1 — 코드가 움직인 표에서 읽기 가드가 돈다(목록 안 읽기면 통과)", runs == 1 and "읽기 가드" not in out, f"runs {runs}")
-runs, out = _check_with(_code_moved, {"reference_adiabats.json", "fake_new_table.csv"})
+runs, out = _check_with(_code_moved, {"engine/reference_adiabats.json", "engine/fake_new_table.csv"})
 check("메모 1 — 코드 움직임 + 방아쇠 밖 데이터 읽기 → 읽기 가드 FAIL", runs == 1 and "읽기 가드" in out and "fake_new_table.csv" in out,
       f"runs {runs}")
+_papers = str(Path(os.environ.get("NEARSTARS_PAPERS", "/nonexistent/papers")).resolve())
+os.environ.setdefault("NEARSTARS_PAPERS", _papers)
+runs, out = _check_with(_code_moved, {"docs/phase3/some_table.csv", f"{_papers}/paleos_table.csv"})
+check("메모 1 (감사 e2) — engine/ 밖 저장소 읽기와 저장소 밖(NEARSTARS_PAPERS 역할) 읽기도 가드가 센다",
+      runs == 1 and "docs/phase3/some_table.csv" in out and "env NEARSTARS_PAPERS" in out, f"runs {runs}")
 _data_moved = {**_now, "bytes": {**_now["bytes"], "reference_adiabats.json": "0000000000000000"}}
-runs, out = _check_with(_data_moved, {"fake_new_table.csv"})
+runs, out = _check_with(_data_moved, {"engine/fake_new_table.csv"})
 check("메모 1 음성 — 데이터만 움직인 표에선 읽기 가드가 안 돈다(이미 낡음 FAIL)", runs == 0 and "데이터 방아쇠" in out, f"runs {runs}")
 
 print(f"  test_table_triggers — {'모두 통과' if not fails else f'실패 {fails}'}")

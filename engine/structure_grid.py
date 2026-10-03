@@ -65,25 +65,44 @@ _READS: set[str] = set()
 GUARD_RUNS = [0]              # 읽기 가드가 돈 횟수(값 밖 셈, 시험이 «코드 움직임에서만 돈다» 를 본다)
 
 
+REPO = HERE.parent
+#: 파이썬 자신 · 시스템이 여는 자리 — 데이터 의존이 아니다(가드가 안 센다).
+_SYSTEM_PARTS = ("site-packages", "/.venv", "/Library/Developer/", "/System/", "/usr/lib/", "/Library/Caches/com.apple.python",
+                 "__pycache__", "/.git/", "/dev/")
+#: C159 메모 1 (감사 e2 · 지휘 e0) — 저장소 **밖**에서 읽히는 데이터는 그 자리를 정하는 환경 변수 역할로 센다. 오늘은 읽히는 것이 없고
+#: (Earth · Mars · Venus 가드), 역할만 이름 붙여 두며 **방아쇠도 예외도 아니다** — 읽히면 가드가 멈춤으로 센다(등록이 정할 때까지).
+OUTSIDE_ROLES = ("NEARSTARS_PAPERS",)
+
+
 def _reads_hook(event, args):
+    """`--check` 동안 열린 파일 전부(저장소 안은 저장소 기준 경로, 밖은 절대 경로) — .py · .pyc · 시스템 자리는 뺀다.
+    ⚠ 프로세스 전체에 쌓인다: 코드가 움직인 표의 가드는 그때까지 이 실행이 읽은 것의 **합집합**을 본다(읽기를 더할 뿐이라 보수적)."""
     if event == "open" and args and isinstance(args[0], (str, bytes, os.PathLike)):
         try:
             p = Path(os.fsdecode(args[0])).resolve()
         except (OSError, ValueError):
             return
-        if HERE in p.parents:
-            _READS.add(p.relative_to(HERE).as_posix())
+        s_ = p.as_posix()
+        if s_.endswith((".py", ".pyc")) or any(x in s_ for x in _SYSTEM_PARTS):
+            return
+        _READS.add(p.relative_to(REPO).as_posix() if REPO in p.parents else s_)
 
 
 def guard_reads(opened) -> list[str]:
-    """C159 규칙 1b — 연 파일 중 .py 밖의 것이 바이트 방아쇠도 예외 목록(`FILE_EXEMPT`)도 아니면 그 목록."""
+    """C159 규칙 1b — 연 데이터 파일 중 바이트 방아쇠도 예외 목록(`FILE_EXEMPT`, engine/ 기준)도 아닌 것. 저장소 안 engine/ 밖과
+    저장소 밖(환경 변수 역할 `OUTSIDE_ROLES` 포함)은 목록에 없으면 전부 멈춤이다."""
     out = []
+    grid = GRID_DIR.resolve()
     for f in sorted(opened):
-        if f.endswith(".py") or "__pycache__" in f or f.startswith("structure_grid/"):
+        p = Path(f) if f.startswith("/") else REPO / f
+        if p.resolve().parent in (grid, (HERE / "structure_grid").resolve()):   # 표 자신(`STRUCTURE_GRID_DIR` 로 옮긴 폴더 포함)
             continue
-        if f in BYTE_FILES or f in FILE_EXEMPT or any(f.startswith(k) for k in FILE_EXEMPT if k.endswith("/")):
-            continue
-        out.append(f)
+        if f.startswith("engine/"):
+            g = f[len("engine/"):]
+            if g in BYTE_FILES or g in FILE_EXEMPT or any(g.startswith(k) for k in FILE_EXEMPT if k.endswith("/")):
+                continue
+        role = next((r for r in OUTSIDE_ROLES if os.environ.get(r) and f.startswith(str(Path(os.environ[r]).resolve()))), None)
+        out.append(f if role is None else f"{f} (env {role})")
     return out
 
 
