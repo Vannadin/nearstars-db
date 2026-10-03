@@ -54,6 +54,50 @@ def h_exact() -> None:
     fl.reset_solve_state()
     v1 = fl.volume_at(300e9, 5000.0); v2 = fl.volume_at(300e9, 5000.0); fl.reset_solve_state()
     ok(v1 == v2 == fl._volume_at(300e9, 5000.0), "H-exact (4a): the fe_liquid volume memo returns the solve's own value")
+    n, same, refusals = _eos_density_exact(rnd)
+    ok(same == n and refusals > 0, f"H-exact (4a): eos Material.density bit-identical to the C160 path on {n} (material, P, T) "
+                                   f"— equal {same}, the same refusals included ({refusals})")
+
+
+def _eos_density_exact(rnd) -> tuple[int, int, int]:
+    """C161 (4a) eos — 상을 한 번 찾고 가드의 열압력을 넘기는 새 `Material.density` 를 C160 의 몸통(아래 `ref`)과 비트로 대조."""
+    import eos
+
+    def ref_solid(m, p, t, t_pot):
+        eos._below_t_window(m.name, p, t)
+        m.check_temperature(p, t)
+        ph = m.phase_at(p)
+        if ph.graded_below_ref:
+            cold = p - ph.thermal_pressure(t, t_pot, p)
+            if cold <= 0.0 or cold < ph.p_min:
+                raise eos.PhaseGap(m.name, p, "ref")
+        return ph.density(p, t, t_pot)
+
+    def ref(m, p, t, t_pot):
+        rho_s = ref_solid(m, p, t, t_pot)
+        phi = m.melt_phi(p, t)
+        if phi <= 0.0:
+            return rho_s
+        rho_l = eos.rtpress.liquid(p, t)[0]
+        return rho_l if phi >= 1.0 else 1.0 / ((1.0 - phi) / rho_s + phi / rho_l)
+
+    def run(fn, *args):
+        try:
+            return fn(*args)
+        except Exception as e:                    # 거절은 종류로 대조(문구는 같은 자리에서 만든다)
+            return type(e).__name__
+    mats = [m for m in eos.MATERIALS.values() if type(m) is eos.Material]
+    n = same = refusals = 0
+    for _ in range(6000):
+        m = rnd.choice(mats)
+        p = 10.0 ** rnd.uniform(5.0, 12.5)
+        t = rnd.choice((0.0, rnd.uniform(200.0, 6000.0)))
+        t_pot = rnd.choice((0.0, 1600.0, rnd.uniform(1200.0, 2600.0)))
+        a, b = run(m.density, p, t, t_pot), run(ref, m, p, t, t_pot)
+        n += 1
+        same += a == b
+        refusals += isinstance(a, str)
+    return n, same, refusals
 
 
 def h_scope() -> None:

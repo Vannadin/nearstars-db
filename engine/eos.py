@@ -813,7 +813,7 @@ class Phase:
         convergence.note("eos.density_tension", True, trial=True)
         return 0.5 * (lo + hi)
 
-    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0, _p_th: float | None = None) -> float:
         """P 에서 ρ. 온도를 주면 열압력을 뺀 **냉각 곡선의** 압력에서 뒤집는다.
 
         전체 압력이 냉각 압력과 열압력의 합이므로(P = P_cold + P_th), 같은 P 를
@@ -826,8 +826,11 @@ class Phase:
         ρ ≈ ρ₀(1 + P/K₀) 이고, 이 자리가 적분 안쪽 고리라 반복 횟수가 그대로
         실행시간이다 — 이분법 200회로는 쓸 수 없이 느렸다.
 
-        폴리트로프는 뒤집기가 닫힌 형태라 반복이 아예 없다."""
-        p_th = self.thermal_pressure(t, t_pot, p)
+        폴리트로프는 뒤집기가 닫힌 형태라 반복이 아예 없다.
+
+        C161 (4a) — `_p_th` 는 부르는 쪽(`Material.solid_density` 의 바닥 가드)이 같은 인자로 이미 잰 열압력이다.
+        다시 재지 않을 뿐 같은 수라 값은 비트까지 같다."""
+        p_th = self.thermal_pressure(t, t_pot, p) if _p_th is None else _p_th
         if p_th:
             p = p - p_th
         if self.form == "polytrope":
@@ -845,9 +848,11 @@ class Phase:
             return self._density_tension(p, t)
         rho = self.rho0 * (1.0 + p / self.k0) ** 0.4
         P = _pressure_fast(self) or self.pressure      # C137 — 같은 식·같은 순서, 사슬만 걷어냄
+        tol = 1e-9 * max(p, 1.0)                       # C161 (4a) — 고리 불변량(같은 수)
+        floor = self.rho0 * 0.5
         for _ in range(60):
             f = P(rho) - p
-            if abs(f) <= 1e-9 * max(p, 1.0):
+            if abs(f) <= tol:
                 convergence.note("eos.density_newton", True)
                 return rho
             h = rho * 1e-7
@@ -856,8 +861,8 @@ class Phase:
                 break
             step = f / dfd
             nxt = rho - step
-            if nxt <= self.rho0 * 0.5:
-                nxt = 0.5 * (rho + self.rho0 * 0.5)
+            if nxt <= floor:
+                nxt = 0.5 * (rho + floor)
             if abs(nxt - rho) <= 1e-12 * rho:
                 convergence.note("eos.density_newton", True)
                 return nxt
@@ -1012,8 +1017,12 @@ class Material:
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """고체 밀도에 녹은 몫만큼 액체 MgSiO₃(RTpress, `rtpress.py`)를 부피 가법으로 섞는다 — 1/ρ = (1 − φ)/ρ_s + φ/ρ_ℓ
         (C120, prereg-c120-melt 1.2). φ = 0 이면 `solid_density` 그대로라 비트까지 같다. 액체는 순수 MgSiO₃ 한 끝성분 — 등급 analog."""
-        rho_s = self.solid_density(p, t, t_pot)
-        phi = self.melt_phi(p, t)
+        if type(self) is Material:                     # C161 (4a) — 상을 한 번만 찾는다(재정의한 하위 클래스는 옛 길)
+            rho_s, ph = self._solid_density_at(p, t, t_pot)
+            phi = 0.0 if t <= 0.0 or ph.melt != "silicate" else (silicate_melt_fraction(p, t, ph.melt_variant) or 0.0)
+        else:
+            rho_s = self.solid_density(p, t, t_pot)
+            phi = self.melt_phi(p, t)
         if phi <= 0.0:
             return rho_s
         rho_l = rtpress.liquid(p, t)[0]
@@ -1021,16 +1030,29 @@ class Material:
 
     def solid_density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """상의 고체 밀도 — C120 앞의 `density` 그대로. 열성질(k_t · c_p · grad_ad)은 이것으로 잰다."""
+        return self._solid_density_at(p, t, t_pot)[0]
+
+    def _solid_density_at(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> tuple[float, "Phase"]:
+        """`solid_density` 의 몸통 — 값과 그 상. C161 (4a): `check_temperature` 를 펼쳐 상을 한 번만 찾는다
+        (같은 거절 · 같은 순서 — 온도가 없으면 그 검사는 상을 안 찾고, 바로 아래 `phase_at` 이 같은 거절을 낸다)."""
         _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
-        self.check_temperature(p, t)
-        ph = self.phase_at(p)
+        if type(self) is Material:
+            ph = self.phase_at(p)
+            if t > 0.0 and ph.t_max and t > ph.t_max:
+                raise PhaseGap(self.name, p, self.t_over_reason.format(
+                    t_k=t, t_max=ph.t_max, phase=ph.name, p_gpa=p / 1e9), t)
+        else:
+            self.check_temperature(p, t)
+            ph = self.phase_at(p)
         # ⚠ **바닥은 뒤집기가 쓰는 압력에 걸어야 한다** (항목 19-b, 2026-09-20). `phase_at` 은
         #   **전체 압력**으로 재고, 아래 `ph.density` 는 **냉각 압력**(`p − P_th`)에서 뒤집는다 —
         #   그래서 가드를 통과한 시행이 가드 **밖**에서 Newton 을 돌리다 발산했다(측정: 전체 6.5 GPa
         #   언저리가 냉각 1.271 GPa 로 내려가 «밀도가 수렴하지 않는다»). 같은 수를 보게 한 자리에서
         #   다시 잰다. ⚠ 선언이 없는 상(`graded_below_ref = False`)은 이 가지를 안 탄다.
+        p_th = None
         if ph.graded_below_ref:
-            cold = p - ph.thermal_pressure(t, t_pot, p)
+            p_th = ph.thermal_pressure(t, t_pot, p)
+            cold = p - p_th
             if cold <= 0.0:
                 raise PhaseGap(self.name, p, (
                     f"{p / 1e9:.4f} GPa 에서 열압력을 빼면 냉각 압력이 {cold / 1e9:.4f} GPa 로 "
@@ -1046,7 +1068,7 @@ class Material:
         ph.density_reach(p)
         ph.note_below_ref(p)   # 항목 19 — 기준 아래 호출의 횟수와 깊이, 같은 자리에서
         ph.model_reach(p)          # P33 B — 모형 구간도 같은 자리에서 센다
-        return ph.density(p, t, t_pot)
+        return ph.density(p, t, t_pot, p_th), ph
 
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
         _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
