@@ -2274,7 +2274,11 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             # C157 ③ — 괄호의 두 끝이 그 사격의 허용보다 큰 질량 차로 갈린 채 닫혔다: 중심압에서 겉질량이 뛴다
             #   (적분 피적분의 불연속). 틀린 y 를 고리로 올리지 않고 이름 대며 거절한다 — 규칙 ①②가 칼날을 없애므로
             #   출하 천체에서 서면 인구조사가 놓친 불연속이다(수락 7: 멈춤).
-            if STENCIL_BOUNDS and last_short is not None and last_long is not None:
+            # C157 메모 2 — 짧은 끝이 **이름 댄 잘림 표지**를 들고 있으면(오늘은 `floor_truncated` 하나: 적합 바닥에서 멈춘 층, C60 (c))
+            #   그 뜀은 찾아진 도메인 경계이고 답 길의 `_refuse_if_below_floor` 가 재료 자신의 이름으로 거절한다 — 뒷받침은 물러나
+            #   오늘처럼 ok False 를 돌려준다. 표지 없이 멈춘 끝(MAX_STEPS 출구 등)은 물러나지 않는다.
+            if (STENCIL_BOUNDS and last_short is not None and last_long is not None
+                    and getattr(last_short, "floor_truncated", None) is None):
                 gap = (last_long.mass_kg - last_short.mass_kg) / mass_kg
                 if gap > tol:
                     raise ValueError(

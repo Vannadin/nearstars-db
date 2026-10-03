@@ -378,16 +378,18 @@ check("C157 수락 3 음성 — C157 앞 발판(STENCIL_BOUNDS = False)이면 �
 _M, _P0 = 6e24, 3.5e11
 
 
-def _jump_integ(jump):
+def _jump_integ(jump, short_marker=None, short_surface=True):
     def f(p, mass_kg, *a, **k):
-        return types.SimpleNamespace(mass_kg=_M * (p / _P0) ** 0.3 * (1.0 + (jump if p > _P0 * 1.0000001 else 0.0)), surface_reached=True,
-                                     p_center=p, floor_truncated=None, t_surface=1000.0)
+        above = p > _P0 * 1.0000001
+        return types.SimpleNamespace(mass_kg=_M * (p / _P0) ** 0.3 * (1.0 + (jump if above else 0.0)),
+                                     surface_reached=True if above else short_surface,
+                                     p_center=p, floor_truncated=None if above else short_marker, t_surface=1000.0)
     return f
 
 
-def _shot(jump, tol):
+def _shot(jump, tol, short_marker=None, short_surface=True):
     real = interior.integrate
-    interior.integrate = _jump_integ(jump)
+    interior.integrate = _jump_integ(jump, short_marker, short_surface)
     try:
         st, ok = interior._shoot_pressure(_M * 1.0000001 ** 0.3 * (1.0 + jump / 2.0), 0.3, 0.0, "fe_prem",
                                           t_center=3000.0, t_pot=1600.0, tol=tol)
@@ -404,6 +406,14 @@ k9, v9 = _shot(0.0, interior.SHOOT_TOL)
 check("C157 ③ 음성 — 같은 함수가 매끄러우면 닫힘", k9 == "answer" and v9 is True, str(v9))
 k9, v9 = _shot(1e-5, 1e-3)
 check("C157 ③ — 허용(1e-3)보다 작은 뜀은 느슨한 사격이 오늘처럼 닫음(문턱은 그 사격의 허용)", k9 == "answer" and v9 is True, str(v9))
+
+# C157 메모 2 — 짧은 끝이 이름 댄 잘림 표지(floor_truncated)를 들면 뒷받침은 물러나 ok False, 표지 없이 멈춘 끝은 그대로 섬
+k9, v9 = _shot(0.25, interior.SHOOT_TOL, short_marker=("fe_core_fit_test", 6.716e9, 0.9986), short_surface=False)
+check("C157 메모 2 — 짧은 끝이 적합 바닥 잘림(floor_truncated)이면 뒷받침이 안 서고 오늘처럼 ok False", k9 == "answer" and v9 is False,
+      str(v9)[:60])
+k9, v9 = _shot(0.25, interior.SHOOT_TOL, short_marker=None, short_surface=False)
+check("C157 메모 2 음성 — 표지 없이 표면 못 닿은 짧은 끝은 여전히 이름 대며 거절", k9 == "refusal" and "사격 질량이 p_c 에서 뛴다" in v9,
+      str(v9)[:60])
 
 # C157 한 스위치(PC 발견: 규칙 3 대상 416) — STENCIL_BOUNDS = False 면 eos.Material.k_t 도 C157 앞 식과 비트까지 같고, 사격 뒷받침도 꺼진다
 def _kt_pre_c157(m, p):
