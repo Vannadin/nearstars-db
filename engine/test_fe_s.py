@@ -327,7 +327,7 @@ row(_low.model_reach(10.0e9)[0] == "model" and _low.model_reach(18.5e9)[0] == "m
     "«측정 구간(1.5–17.5 GPa) 위, 적합 자신의 사거리»")
 row(_shoot_gap(0.9, "fe_s_13wt_19gpa") is not None or True,
     f"⚠ 1.5 GPa **밑**에서는 여전히 거절한다 — 그 문구가 이제 그 수를 이름으로 댄다: "
-    f"«{eos.FE_S_BELOW_REF_REASON.format(p_gpa=1.0)[:58]}…»")
+    f"«{eos.FE_S_BELOW_REF_REASON.format(p_gpa=1.0, min_gpa=1.5)[:58]}…»")
 row(_consumer_ok(0.24, "fe_s_13wt_19gpa") and _consumer_ok(0.24, "fe_s_19wt_19gpa"),
     "⚠ **화성이 실제로 선언한 cmf 0.24 에서는 Fe–S 두 재질이 다 풀린다** — 0.24 는 자름 자리 0.302 "
     "아래다. C60 (b) 가 «선언된 조성은 거절한다» 고 적은 것은 프리셋의 0.325 를 화성의 선언으로 "
@@ -611,9 +611,27 @@ try:
 finally:
     del interior.COMPOSITIONS["_c157n3"]
 _t = _r.reason or ""
-row(not _r.applicable and "Balog" in _t and "수렴한 답의 핵-맨틀 경계가" in _t and _t.index("Balog") < _t.index("수렴한 답의"),
-    f"Fe–S 핵(바닥 9.93 GPa)·cmf 0.75 의 거절이 Balog+ 2003 출처 문장을 앞에, 경계 세부를 뒤에 든다 ({_t[:60]}…)")
+import re as _re                            # noqa: E402
+_m = _re.match(r"([0-9.]+) GPa 는 .*?아래 끝\(([0-9.]+) GPa", _t)
+_p_said, _lim_said = (float(_m.group(1)), float(_m.group(2))) if _m else (None, None)
+_floor = eos.MATERIALS["fe_s19_o4_c5permil_19gpa"].shoot_lo / eos.GPA
+row(not _r.applicable and _m is not None and _p_said < _lim_said and abs(_lim_said - _floor) < 1e-3
+    and "되돌이점" in _t and "수렴한 답의 핵-맨틀 경계가" in _t,
+    f"다원계 Fe–S 핵(적합 바닥 {_floor:.4f} GPa)·cmf 0.75 의 거절이 넘은 그 끝의 값 · 종류(되돌이점)를 앞에, 경계 세부를 뒤에 든다 — "
+    f"인쇄된 p {_p_said} < 인쇄된 끝 {_lim_said} ({_t[:60]}…)")
 import types as _types                      # noqa: E402
+_types_ns = _types.SimpleNamespace
+_tr = None
+try:
+    interior._refuse_if_below_floor(_types_ns(floor_truncated=("fe_s19_o4_c5permil_19gpa", _floor * eos.GPA, 0.998), p_cmb=None),
+                                    "fe_s19_o4_c5permil_19gpa")
+except eos.PhaseGap as gap:
+    _tr = gap.reason
+row(_tr is not None and "닿아 멈춘다" in _tr and "되돌이점" in _tr and " 밑이다" not in _tr.split(" — ")[0],
+    f"잘림 갈래 — 바닥에 «닿아 멈춘다» 로 말하고 거짓 «밑» 비교를 하지 않는다, 종류(되돌이점)를 댄다 ({(_tr or '')[:70]}…)")
+_bal = eos.MATERIALS["fe_s_13wt_19gpa"].under_reason.format(p_gpa=1.0, min_gpa=eos.MATERIALS["fe_s_13wt_19gpa"].shoot_lo / eos.GPA)
+row(_bal.startswith("1.0000 GPa") and "아래 끝(1.5 GPa) **밑**이다 — Balog+ 2003 의 측정자료 적합이 1.5–17.5 GPa" in _bal,
+    f"이원계 Fe–S 의 측정 바닥 문구는 넘은 끝(1.5 GPa)과 그 종류(Balog 측정 범위)를 댄다 ({_bal[:60]}…)")
 interior.MATERIALS["_c157n3_bare"] = _types.SimpleNamespace(shoot_lo=10.0e9)          # under_reason 이 없는 재료
 try:
     interior._refuse_if_below_floor(_types.SimpleNamespace(floor_truncated=None, p_cmb=9.0e9), "_c157n3_bare")

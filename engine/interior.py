@@ -2968,9 +2968,10 @@ def _refuse_if_below_floor(st, core_material: str) -> None:
             f"바닥을 건넌다. 시험값이 아니라 **수렴한 답**이 그렇다.")
     name, p_floor_pa, filled = st.floor_truncated
     mat = MATERIALS.get(name)
-    reason = (mat.under_reason.format(p_gpa=p_floor_pa / 1e9, min_gpa=p_floor_pa / 1e9)
-              if mat is not None and hasattr(mat, "under_reason")
-              else f"{p_floor_pa / 1e9:.4f} GPa 는 이 적합의 기준이다")
+    # C157 메모 3 — 예전엔 여기서 `under_reason` 을 p = 바닥 = 기준으로 채워 «X GPa 는 … 아래 끝(…) 밑이다» 를 인쇄했다. 층은
+    #   바닥에서 **멈췄을** 뿐이라 그 비교는 참이 아니었고(Fe–S 는 1.5 GPa 가 박혀 6.7 GPa 바닥에서 거짓), 바닥의 종류 · 출처를 댄다.
+    source = getattr(mat, "floor_source", "이 적합의 기준") if mat is not None else "이 적합의 기준"
+    reason = f"'{name}' 층이 {source}({p_floor_pa / 1e9:.4f} GPa)에 닿아 멈춘다"
     raise PhaseGap(
         name, p_floor_pa,
         f"{reason} — 이 조성에서는 '{name}' 층이 제 질량 몫의 {filled * 100:.1f} % 만 채운 채 "
@@ -5401,7 +5402,7 @@ SULPHUR_ANCHOR_DECLARATIONS = ("mass_earth", "radius_earth", "core_plus_layer_ra
 def _sulphur_core(w_s: float, pin: str):
     """황 분율 w_s 의 액체 Fe–S–O–C 핵 재질을 `earth_like` 의 핵 자리에 잠시 끼운다 — 맞춤 · 읽기 · 고정 풀이가
     **같은 재질 짓기**를 쓴다(두 벌로 지으면 굳힌 값과 노드 값이 다른 길로 나온다)."""
-    from eos import Material, core_mole_fractions, huang_core_phase, FE_S_BELOW_REF_REASON, MATERIALS
+    from eos import Material, core_mole_fractions, huang_core_phase, FE_S_FIT_FLOOR_REASON, FE_S_FIT_FLOOR_SOURCE, MATERIALS
     w_o = LIGHT_ELEMENT_PINS[pin]["O"]
     w_c = LIGHT_ELEMENT_PINS[pin]["C"]
     x = core_mole_fractions({"S": w_s, "O": w_o, "C": w_c})
@@ -5410,7 +5411,7 @@ def _sulphur_core(w_s: float, pin: str):
         name, f"액체 Fe–S–O–C · S {w_s * 100:.4f} wt% ({pin})",
         (huang_core_phase(x, "19GPa"),), fit_composition="Fe-S-O-C", role="core",
         gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다",
-        under_reason=FE_S_BELOW_REF_REASON)
+        under_reason=FE_S_FIT_FLOOR_REASON, floor_source=FE_S_FIT_FLOOR_SOURCE)
     saved = COMPOSITIONS["earth_like"]
     COMPOSITIONS["earth_like"] = (saved[0], saved[1], saved[2], name)
     try:
@@ -5470,14 +5471,14 @@ def pin_for(spec) -> str | None:
 @contextmanager
 def _declared_light_core(spec, composition: str):
     """선언 수 S · O · C 의 액체 Fe–S–O–C 핵을 조성 `composition` 의 핵 자리에 잠시 끼운다(`_sulphur_core` 와 같은 짓기)."""
-    from eos import Material, core_mole_fractions, huang_core_phase, FE_S_BELOW_REF_REASON, MATERIALS
+    from eos import Material, core_mole_fractions, huang_core_phase, FE_S_FIT_FLOOR_REASON, FE_S_FIT_FLOOR_SOURCE, MATERIALS
     x = core_mole_fractions({"S": spec["S"], "O": spec["O"], "C": spec["C"]})
     name = f"fe_core_decl_s{spec['S'] * 100:.4f}_o{spec['O'] * 100:.4f}_c{spec['C'] * 100:.4f}"
     MATERIALS[name] = Material(
         name, f"액체 Fe–S–O–C · S {spec['S'] * 100:.4f} · O {spec['O'] * 100:.4f} · C {spec['C'] * 100:.4f} wt% (선언)",
         (huang_core_phase(x, "19GPa"),), fit_composition="Fe-S-O-C", role="core",
         gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다",
-        under_reason=FE_S_BELOW_REF_REASON)
+        under_reason=FE_S_FIT_FLOOR_REASON, floor_source=FE_S_FIT_FLOOR_SOURCE)
     saved = COMPOSITIONS[composition]
     COMPOSITIONS[composition] = (saved[0], saved[1], saved[2], name)
     try:

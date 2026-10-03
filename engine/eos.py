@@ -886,6 +886,8 @@ class Material:
     #   `p_min = 0` 이었기 때문이고, 첫 `p_min > 0` 재질이 들어오자 융해 공백 문구가 압력 바닥에서
     #   인쇄되어 기작을 잘못 읽게 만들었다 (C55 의 178 D 정정).
     under_reason: str = ("{p_gpa:.4f} GPa 는 이 적합의 기준 아래({min_gpa:.4f} GPa) — 그 아래에는 뿌리가 없다")
+    # C157 메모 3 — 바닥 잘림 거절이 «무엇의 바닥인가» 를 대는 말(값은 거절 쪽이 붙인다). 비면 일반 문구.
+    floor_source: str = "이 적합의 기준"
     t_over_reason: str = ("{t_k:.0f} K 는 '{phase}' 적합의 상한({t_max:.0f} K) 위다")
 
     @property
@@ -4090,12 +4092,21 @@ H_HE = HydrogenHelium()
 #: Huang 의 적합은 19 GPa 에 기준을 둔 BM2 이고, 그 아래에는 근거가 없다. 두 사실 다 참이지만
 #: **이 자리에서 발화하는 것은 후자**이고, 라벨이 앞의 것을 말하면 기작을 잘못 읽게 만든다.
 FE_S_BELOW_REF_REASON = (
-    "{p_gpa:.4f} GPa 는 이 액체 Fe–S 가 답할 수 있는 아래 끝(1.5 GPa) **밑**이다 — Balog+ 2003 의 "
+    "{p_gpa:.4f} GPa 는 이 액체 Fe–S 가 답할 수 있는 아래 끝({min_gpa:.1f} GPa) **밑**이다 — Balog+ 2003 의 "
     "측정자료 적합이 1.5–17.5 GPa 에 놓여 있고, 그 아래로 끌고 가는 것은 우리 산수이므로 하지 않는다. "
     "⚠ **2026-09-13 (P33 B) 에 이 문장의 압력이 19 → 1.5 GPa 로 내려갔다** — 그 사이 구간은 이제 "
     "거절이 아니라 **모형 등급**으로 답한다(측정이 없는 조성·구간을 두 앵커로 지은 값). 규칙은 "
     "안 바뀌었다 — **아래 끝 밑에서는 값을 내지 않는다**, 그 아래 끝이 옮겨졌을 뿐이다. "
     "⚠ 융해 공백(10–21 GPa, `IRON_FES_GAP_REASON`)은 **다른 사실**이고 다른 자리에서 발화한다")
+
+#: C157 메모 3 — 다원계(Fe–S–O–C) 액체 핵 · 런타임 맞춤 핵의 아래 끝은 **적합 자신의 바닥**(Huang+ 2023 19 GPa 앵커 BM2 의
+#: 되돌이점)이지 Balog 측정 바닥(1.5 GPa)이 아니다. 예전엔 이 재질들도 `FE_S_BELOW_REF_REASON` 을 빌려 «… 아래 끝(1.5 GPa) 밑»
+#: 이라 인쇄했고, 그 비교는 9.9 GPa 같은 바닥에서 거짓이었다(감사 e2). 이 문장은 넘은 그 끝의 값과 종류를 든다.
+FE_S_FIT_FLOOR_REASON = (
+    "{p_gpa:.4f} GPa 는 이 다원계 액체 핵 적합 자신의 아래 끝({min_gpa:.4f} GPa — Huang+ 2023 19 GPa 앵커 BM2 의 되돌이점) "
+    "**밑**이다. 그 아래로 끌고 가지 않는다(항목 19) — 이원계 Fe–S 의 측정 바닥(Balog+ 2003, 1.5 GPa)과는 다른 끝이다.")
+FE_S_FIT_FLOOR_SOURCE = "다원계 액체 핵 적합 자신의 아래 끝(Huang+ 2023 19 GPa 앵커 BM2 의 되돌이점)"
+FE_S_BELOW_REF_SOURCE = "이 액체 Fe–S 의 아래 끝(Balog+ 2003 측정 범위 1.5–17.5 GPa 의 바닥)"
 
 #: 밀도 적합이 «등급 구간» 에서 몇 번 답했는가 (196 B). ⚠ **세기만 한다** — 값을 만드는 식
 #: 어디에도 안 들어가고, 소비처가 풀이 앞뒤로 차이를 읽어 라벨을 붙인다 (190 C 와 같은 모양).
@@ -4286,12 +4297,12 @@ FE_S_13WT = Material("fe_s_13wt_19gpa", "액체 Fe–S 핵 · 13 wt% S (밴드 �
                      (balog_fes_phase(0.13),
                       huang_fes_phase(fe_s_mole_fraction(0.13), "19GPa")),
                      gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
-                     under_reason=FE_S_BELOW_REF_REASON, role="core")
+                     under_reason=FE_S_BELOW_REF_REASON, floor_source=FE_S_BELOW_REF_SOURCE, role="core")
 FE_S_19WT = Material("fe_s_19wt_19gpa", "액체 Fe–S 핵 · 19 wt% S (밴드 위끝, 19 GPa 기준)",
                      (balog_fes_phase(0.19),
                       huang_fes_phase(fe_s_mole_fraction(0.19), "19GPa")),
                      gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
-                     under_reason=FE_S_BELOW_REF_REASON, role="core")
+                     under_reason=FE_S_BELOW_REF_REASON, floor_source=FE_S_BELOW_REF_SOURCE, role="core")
 
 # ── 다원계 액체 핵: 오너 상자의 여덟 끝점 (C55 2단계, 브리프 183) ────────────────────────
 # 오너 결정 2026-09-10: S 13–19 wt% · O 1–4 wt% · C 0.5–1.4 wt% · **H 미선언**(문헌이 여섯 배로
@@ -4322,7 +4333,7 @@ def _core_box_materials() -> dict[str, Material]:
                     gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
                     # ⚠ 이 문구는 이제 **되돌이점 아래**에서만 발화한다 (항목 19). 그 위 ~ 19 GPa 는
                     #   거절이 아니라 «세고 깊이를 남기는» 구간이고, 이원계의 1.5 GPa 규칙은 안 바뀌었다.
-                    under_reason=FE_S_BELOW_REF_REASON)
+                    under_reason=FE_S_FIT_FLOOR_REASON, floor_source=FE_S_FIT_FLOOR_SOURCE)
     return out
 
 
