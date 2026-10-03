@@ -58,6 +58,9 @@ REACH = {
     "structure_grid.py": {"cmb_pressure", "cmb_temperature", "core_plus_layer_radius_km", "core_radius",
                           "core_radius_fraction", "p_cmb", "r_cmb"},
     "tidal_response.py": {"core_radius", "r_cmb"},
+    # C158 덧붙임 — 뚜껑 판정(R3 · R4)의 맨틀 두께 h = R(1 − core_radius_fraction). chain.yaml 간선
+    #   `interior_layers → heat_transport_mode (via core_radius_fraction)` 이 그 읽기를 그린다(사전등록 c158 «g and h»).
+    "tidal_heating.py": {"core_radius_fraction"},
 }
 
 #: Nodes that `chain.yaml` names with a `via` on a boundary quantity and that have no module.
@@ -78,10 +81,9 @@ def measured() -> dict[str, set[str]]:
     return out
 
 
-def main() -> int:
+def compare(got: dict[str, set[str]]) -> list[str]:
+    """측정한 도달과 굳힌 표의 어긋남 — 한 원인이 한 줄. C158 덧붙임의 음성 대조가 같은 함수를 부른다."""
     fails: list[str] = []
-    got = measured()
-
     # ⚠ dynamo_rocky 는 아래 ②가 이름을 대고 잡는다 — 여기서도 잡으면 한 원인이 [FAIL] 두 줄이
     #   되고, 게이트는 [FAIL] 을 **줄 수로** 센다.
     for name in sorted((set(got) | set(REACH)) - {"dynamo_rocky.py"}):
@@ -99,6 +101,16 @@ def main() -> int:
             gained = sorted(have - want)
             lost = sorted(want - have)
             fails.append(f"1: {name} changed — gained {gained}, lost {lost}")
+    return fails
+
+
+def main() -> int:
+    got = measured()
+    fails = compare(got)
+    # C158 덧붙임 음성 대조 — 표에 없는 레시피가 경계를 읽으면 같은 비교가 «표에 없다» 한 줄로 잡는다(심은 모듈, 파일 없음).
+    planted = compare({**got, "planted_reach.py": {"core_radius_fraction"}})
+    if not any(f.startswith("1: planted_reach.py reaches for the boundary and is not in the frozen table") for f in planted):
+        fails.append("4: the census no longer catches an unlisted reach (planted_reach.py) — the negative control broke")
 
     # ⚠ 이 한 줄이 음성 대조의 전부다: 이름이 하나라도 들어오면 위 고리가 «표에 없다» 로 잡는다.
     if "dynamo_rocky.py" in got:
