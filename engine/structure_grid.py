@@ -48,6 +48,9 @@ REFUSAL_SPAN_MAX_K = 2.0
 FIELDS = ("p_cmb", "r_cmb", "r_b", "r_p", "g", "d_mantle_m")
 #: 표를 지을 때만 켠다 — 노드가 표 없이 오늘처럼 돌아 ⓐ 판과 S0 를 준다.
 BUILDING = False
+#: C161 덧붙임 3 — 빠른 판만: 가족 검사가 서도 멤버 a 만(T−1 · b · c 를 안 푼다). `fired` 는 그대로 달아 58 · 59 쪼갬이 같다.
+#: 참조 표(자기 검증 짓기)는 늘 전체 판정. ⚠ a 만인 표는 참조 짓기가 c 의 입구로 «답 둘» 이라 할 자리에서 답한다 — 머리의 `judge` 가 그것을 알린다.
+JUDGE_A_ONLY = False
 
 #: 열진화 선언 — 격자 범위(ⓐ 판의 t_m)를 정하므로 방아쇠에 든다.
 THERMAL_KEYS = ("age_gyr", "core_initial_temperature", "mantle_initial_potential_temperature", "tectonic_regime",
@@ -779,6 +782,10 @@ def _pool_solve(solve, jobs, aux=None, kind: str = "single"):
               f"{len(_families_visited(aux[t]))} · 검사 {t in fire}", flush=True)
     if not fire:
         return [aux[t] for t in ts]
+    if JUDGE_A_ONLY:                      # C161 덧붙임 3 — 빠른 판: a 의 답 · 판정 그대로, 쪼갬 표시만
+        for t in fire:
+            aux[t].fired = True
+        return [aux[t] for t in ts]
     new = [t - 1.0 for t in fire if t - 1.0 not in aux]
     _count("judge:T-1", len(new))
     for t, r in zip(new, _solve_raw(solve, [(t, None, None) for t in new]) if new else []):
@@ -1052,11 +1059,44 @@ def check_all() -> int:
     return bad
 
 
+def judge_compare(full: dict, quick: dict, tol: float | None = None) -> tuple[list[str], float]:
+    """C161 덧붙임 3 J-verdict — 전체 판정 표 대 a 만 표. (판정 차이 목록, 공통 범위 값의 최대 상대 차).
+    판정 = 받을 답 없는 구간(수 · 끝 1 K 안 · 까닭의 앞말) · 뜀 수 · T_ok(T_OK_WIDTH_K 안). 값은 빠른 표의 점마다 전체 표를
+    보간해 여섯 칸을 대조한다(보간 오차 ε 를 품으므로 판정이 아니라 기록 · 허용 `tol` 은 부르는 쪽이)."""
+    import interior
+    tol = interior.T_SURFACE_TOL if tol is None else tol
+    diffs = []
+    gf, gq = full.get("no_answer", []), quick.get("no_answer", [])
+    if len(gf) != len(gq):
+        diffs.append(f"받을 답 없는 구간 수 {len(gf)} → {len(gq)}")
+    for a, b in zip(gf, gq):
+        if abs(a[0] - b[0]) > 1.0 or abs(a[1] - b[1]) > 1.0 or a[2][:12] != b[2][:12]:
+            diffs.append(f"받을 답 없는 구간 [{a[0]:.3f}, {a[1]:.3f}] «{a[2][:24]}» → [{b[0]:.3f}, {b[1]:.3f}] «{b[2][:24]}»")
+    if len(full.get("breaks", [])) != len(quick.get("breaks", [])):
+        diffs.append(f"뜀 수 {len(full.get('breaks', []))} → {len(quick.get('breaks', []))}")
+    tf, tq = full.get("t_ok"), quick.get("t_ok")
+    if (tf is None) != (tq is None) or (tf is not None and abs(tf - tq) > T_OK_WIDTH_K):
+        diffs.append(f"T_ok {tf!r} → {tq!r}")
+    g, worst = Grid(full), 0.0
+    for t, row in zip(quick["t_pot"], quick["points"]):
+        kind, ref = g.at(float(t))
+        if kind != "ok":
+            continue
+        worst = max(worst, max(abs(row[k] - ref[k]) / abs(ref[k]) for k in FIELDS if ref[k]))
+    return diffs, worst
+
+
 def quick_build(name: str) -> dict:
     """C161 (1) — 빠른 판: ε 로 한 번만 짓는다(ε/2 자기 검증 없음). 머리에 `mode: quick`, 등급 `adaptive-quick`.
     취미용이다 — 저장소의 참조 표를 대신하지 않고, `--check` 는 커밋된 빠른 표를 거절한다."""
-    doc = build(name, eps=EPS, grade="adaptive-quick")
+    global JUDGE_A_ONLY
+    JUDGE_A_ONLY = True                   # C161 덧붙임 3 — 판정 멤버는 a 만
+    try:
+        doc = build(name, eps=EPS, grade="adaptive-quick")
+    finally:
+        JUDGE_A_ONLY = False
     doc["mode"] = "quick"
+    doc["judge"] = "a-only"
     GRID_DIR.mkdir(exist_ok=True)
     _path_for(doc["body"]).write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     return doc

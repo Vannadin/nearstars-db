@@ -70,6 +70,7 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("interior", "_CALL"): (FLAG, "index of the outer shoot call in progress (addendum 58 rule 2), set and restored by shoot()", None),
     ("interior", "_ENTRY"): (FLAG, "re-close entry for one table solve (addendum 57 rule 3c), set and cleared in finally by the caller", None),
     ("structure_grid", "BUILDING"): (FLAG, "table build in progress", None),
+    ("structure_grid", "JUDGE_A_ONLY"): (FLAG, "quick build: member a only at firing points, set and cleared in finally by quick_build (C161 note 3)", None),
     ("structure_grid", "SOLVE_KINDS"): (COUNTER, "structure solves by kind during a table build (C161 H-count)", None),
     ("structure_grid", "GRID_DIR"): (FLAG, "table directory override", None),
 }

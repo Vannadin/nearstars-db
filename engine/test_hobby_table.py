@@ -180,9 +180,43 @@ def h_par() -> None:
                                f"pool dispatches {n_old} → {n_new}, largest batch {max(got['old'][1])} → {max(got['new'][1])}")
 
 
+def h_judge() -> None:
+    """C161 덧붙임 3 — J-fire: 빠른 판 a 만 길은 `fired` 를 달고 판정 멤버를 안 푼다. J-neg: 비교가 심은 «답 둘» 을 잡는다."""
+    import copy
+    import interior
+    import structure_grid as sg
+    calls = []
+
+    def fake_raw(solve, jobs):
+        calls.append(len(jobs))
+        return [types.SimpleNamespace(t=t, applicable=True, trail={"answer_call": 0, "trials": []}) for t, _h, _e in jobs]
+    saved = (sg._solve_raw, sg._fires, sg._settled_trials, sg._families_visited, sg.JUDGE_A_ONLY)
+    sg._solve_raw, sg._fires = fake_raw, (lambda r: r.t == 2.0)
+    sg._settled_trials, sg._families_visited = (lambda r: []), (lambda r: [])
+    sg.JUDGE_A_ONLY = True
+    sg.SOLVE_KINDS.clear()
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            out = sg._pool_solve(None, [(1.0, None), (2.0, None), (3.0, None)], {}, kind="refine")
+    finally:
+        sg._solve_raw, sg._fires, sg._settled_trials, sg._families_visited, sg.JUDGE_A_ONLY = saved
+    judged = {k: v for k, v in sg.SOLVE_KINDS.items() if k.startswith("judge")}
+    ok(calls == [3] and not judged and getattr(out[1], "fired", False) and not hasattr(out[0], "fired"),
+       f"J-fire: a-only marks the firing point fired and runs no judge member (pool calls {calls}, judge kinds {judged})")
+    doc = json.loads((sg.GRID_DIR / "mars.json").read_text(encoding="utf-8"))
+    same, worst = sg.judge_compare(doc, copy.deepcopy(doc))
+    full = copy.deepcopy(doc)
+    t0, t1 = doc["t_pot"][10], doc["t_pot"][11]
+    full.setdefault("no_answer", []).append([t0, t1, interior.FAMILY_TWO_NOTE + " — 심은 c 의 둘째 가족"])
+    planted, _ = sg.judge_compare(full, doc)
+    ok(not same and worst == 0.0 and len(planted) == 1 and "구간 수" in planted[0],
+       f"J-neg: the comparison passes identical tables and catches a planted «답 둘» span from member c — {planted}")
+
+
 if __name__ == "__main__":
     h_exact()
     h_par()
+    h_judge()
     h_quick()
     h_scope()
     print(f"{'모두 통과' if not fails else f'{len(fails)} 실패'}")
