@@ -1068,7 +1068,9 @@ class Material:
         ph.density_reach(p)
         ph.note_below_ref(p)   # 항목 19 — 기준 아래 호출의 횟수와 깊이, 같은 자리에서
         ph.model_reach(p)          # P33 B — 모형 구간도 같은 자리에서 센다
-        return ph.density(p, t, t_pot, p_th), ph
+        if p_th is not None and type(ph).density is Phase.density:
+            return ph.density(p, t, t_pot, p_th), ph
+        return ph.density(p, t, t_pot), ph       # density 를 다시 쓴 상(`mantle_composition.TablePhase` 등)은 옛 세 인자 그대로
 
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
         _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap

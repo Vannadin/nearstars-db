@@ -54,9 +54,34 @@ def h_exact() -> None:
     fl.reset_solve_state()
     v1 = fl.volume_at(300e9, 5000.0); v2 = fl.volume_at(300e9, 5000.0); fl.reset_solve_state()
     ok(v1 == v2 == fl._volume_at(300e9, 5000.0), "H-exact (4a): the fe_liquid volume memo returns the solve's own value")
+    found = _phase_density_overrides()
+    ok(found == KNOWN_PHASE_DENSITY_OVERRIDES,
+       f"H-exact (4a): census — Phase subclasses that override density are exactly the known set {sorted(found)} "
+       "(they get the old 3-arg call, no p_th; a new one must be checked against `_solid_density_at`)")
     n, same, refusals = _eos_density_exact(rnd)
     ok(same == n and refusals > 0, f"H-exact (4a): eos Material.density bit-identical to the C160 path on {n} (material, P, T) "
                                    f"— equal {same}, the same refusals included ({refusals})")
+
+
+#: C161 (4a) — `eos.Phase` 를 이어받아 `density` 를 다시 쓴 클래스(파일:클래스). 이들은 `_solid_density_at` 에서 `p_th` 를
+#: 받지 않는다(옛 세 인자 그대로 — 바뀐 동작 없음). 새 하위 클래스가 생기면 이 목록과 어긋나 실패한다: 그 서명을 보고 더한다.
+KNOWN_PHASE_DENSITY_OVERRIDES = {"mantle_composition.py:TablePhase"}
+
+
+def _phase_density_overrides() -> set[str]:
+    """엔진 소스 전부에서 `Phase` / `eos.Phase` 를 밑으로 둔 클래스 중 `density` 를 정의한 것(함수 안 클래스 포함)."""
+    import ast
+    out = set()
+    for path in sorted(HERE.glob("*.py")):
+        if path.name.startswith("test_"):
+            continue
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+            if not isinstance(node, ast.ClassDef):
+                continue
+            bases = {b.id if isinstance(b, ast.Name) else b.attr if isinstance(b, ast.Attribute) else "" for b in node.bases}
+            if "Phase" in bases and any(isinstance(f, ast.FunctionDef) and f.name == "density" for f in node.body):
+                out.add(f"{path.name}:{node.name}")
+    return out
 
 
 def _eos_density_exact(rnd) -> tuple[int, int, int]:
@@ -87,6 +112,15 @@ def _eos_density_exact(rnd) -> tuple[int, int, int]:
         except Exception as e:                    # 거절은 종류로 대조(문구는 같은 자리에서 만든다)
             return type(e).__name__
     mats = [m for m in eos.MATERIALS.values() if type(m) is eos.Material]
+    # density 를 세 인자로 다시 쓴 상(C59 의 `mantle_composition.TablePhase` 꼴)을 든 재질도 — 열압력 넘김이 그 상을 건너야 한다
+    import dataclasses
+
+    class _Override(eos.Phase):
+        def density(self, p, t=0.0, t_pot=0.0):
+            return eos.Phase.density(self, p, t, t_pot)
+    for m in [m for m in mats if any(ph.graded_below_ref for ph in m.phases)][:3]:
+        phs = tuple(_Override(**{f.name: getattr(ph, f.name) for f in dataclasses.fields(ph)}) for ph in m.phases)
+        mats.append(dataclasses.replace(m, name=m.name + "_override", phases=phs))
     n = same = refusals = 0
     for _ in range(6000):
         m = rnd.choice(mats)
