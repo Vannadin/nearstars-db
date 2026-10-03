@@ -107,7 +107,8 @@ STEPS = 1500
 INTERPOLATE_LAYERS = True
 # C157 ① (메모 1) — 차분 발판은 피적분의 어떤 경계(상 · 녹는 경계 · 열 세트 이음매)도 넘지 않고, 걸음은 상 경계 · 이음매를
 #   새 쪽에 착지한다. False 는 **C157 앞의 피적분 경로 전체**다 — 발판 · 이음매 자르기 · 상 경계와 층 경계의 할선 착지가
-#   함께 꺼진다(대조 시험만 끔; dante_fixture 가 False 에서 ac413ae6 와 비트 같음).
+#   함께 꺼진다(대조 시험만 끔). **C157 의 모든 코드 길이 이 하나를 읽는다** — interior 의 발판 · 자르기 · 착지 · 사격 뒷받침(③)과
+#   eos 의 `Material.k_t` 자르기(`eos._c157_bounds_on`). PC 가 잡음: k_t 가 밖에 있어 규칙 3 대상 416 이 False 에서도 달랐다.
 STENCIL_BOUNDS = True
 # C157 셈(값 밖) — 경계 착지(할선) 재걷기 수
 PHASE_CUT_REWALKS = [0]
@@ -2273,7 +2274,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             # C157 ③ — 괄호의 두 끝이 그 사격의 허용보다 큰 질량 차로 갈린 채 닫혔다: 중심압에서 겉질량이 뛴다
             #   (적분 피적분의 불연속). 틀린 y 를 고리로 올리지 않고 이름 대며 거절한다 — 규칙 ①②가 칼날을 없애므로
             #   출하 천체에서 서면 인구조사가 놓친 불연속이다(수락 7: 멈춤).
-            if last_short is not None and last_long is not None:
+            if STENCIL_BOUNDS and last_short is not None and last_long is not None:
                 gap = (last_long.mass_kg - last_short.mass_kg) / mass_kg
                 if gap > tol:
                     raise ValueError(

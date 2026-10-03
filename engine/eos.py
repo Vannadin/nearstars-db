@@ -44,6 +44,7 @@ from __future__ import annotations
 import bisect
 import json
 import math
+import sys
 import os
 from pathlib import Path
 
@@ -219,6 +220,12 @@ def seed_verdict_askings(materials: dict) -> None:
                 if ts.t_min > 0.0:
                     VERDICT_ASKINGS.setdefault((ph.name, ts.p_min, ts.t_min),
                                                {"asked": 0, "below": 0})
+
+
+def _c157_bounds_on() -> bool:
+    """C157 의 한 스위치(`interior.STENCIL_BOUNDS`)를 eos 쪽에서 읽는다. interior 가 안 실렸으면 True."""
+    mod = sys.modules.get("interior")
+    return getattr(mod, "STENCIL_BOUNDS", True) if mod is not None else True
 
 
 @dataclass(frozen=True)
@@ -1073,15 +1080,18 @@ class Material:
         #   바닥에서는 한쪽 차분이 된다. 바닥이 0 인 재질에는 이 항이 걸리지 않는다.
         p_lo = max(p - h, 1.0, self.shoot_lo)
         # C157 ① (메모 1 B.4) — 상 경계 · 열 세트 이음매도 같은 이유로 넘지 않고, 잘리면 `interior._phase_stencil` 처럼 폭 2h 로
-        #   다시 넓힌다(한쪽 차분 오차 2.3–4.4e-5 가 잰 폭이 2h 다).
-        lo_b, hi_b = self.stencil_bounds(p)
-        lo_b = math.nextafter(lo_b, math.inf) if lo_b > 0.0 else lo_b
-        if p_hi > hi_b:
-            p_hi = hi_b
-            p_lo = max(min(p_lo, p_hi - 2.0 * h), lo_b)
-        if p_lo < lo_b:
-            p_lo = lo_b
-            p_hi = min(max(p_hi, p_lo + 2.0 * h), hi_b)
+        #   다시 넓힌다(한쪽 차분 오차 2.3–4.4e-5 가 잰 폭이 2h 다). 스위치는 **하나**, `interior.STENCIL_BOUNDS` 다(PC 발견:
+        #   eos 쪽 자르기가 그 스위치 밖에 있어 False 가 C157 앞 경로를 다 못 되돌렸다) — eos 는 interior 를 import 하지 않으므로
+        #   이미 실린 모듈에서 읽고, interior 가 없으면(eos 만 쓰는 도구) 기본값 True.
+        if _c157_bounds_on():
+            lo_b, hi_b = self.stencil_bounds(p)
+            lo_b = math.nextafter(lo_b, math.inf) if lo_b > 0.0 else lo_b
+            if p_hi > hi_b:
+                p_hi = hi_b
+                p_lo = max(min(p_lo, p_hi - 2.0 * h), lo_b)
+            if p_lo < lo_b:
+                p_lo = lo_b
+                p_hi = min(max(p_hi, p_lo + 2.0 * h), hi_b)
         if p_hi <= p_lo:
             return 0.0
         d_hi = self.solid_density(p_hi, t, t_pot)

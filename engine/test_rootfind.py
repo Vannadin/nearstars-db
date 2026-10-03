@@ -405,5 +405,25 @@ check("C157 ③ 음성 — 같은 함수가 매끄러우면 닫힘", k9 == "answ
 k9, v9 = _shot(1e-5, 1e-3)
 check("C157 ③ — 허용(1e-3)보다 작은 뜀은 느슨한 사격이 오늘처럼 닫음(문턱은 그 사격의 허용)", k9 == "answer" and v9 is True, str(v9))
 
+# C157 한 스위치(PC 발견: 규칙 3 대상 416) — STENCIL_BOUNDS = False 면 eos.Material.k_t 도 C157 앞 식과 비트까지 같고, 사격 뒷받침도 꺼진다
+def _kt_pre_c157(m, p):
+    h = p * 1e-4
+    rho = m.solid_density(p)
+    p_hi, p_lo = min(p + h, m.p_max), max(p - h, 1.0, m.shoot_lo)
+    d_hi, d_lo = m.solid_density(p_hi), m.solid_density(p_lo)
+    return 0.0 if d_hi <= d_lo else rho * (p_hi - p_lo) / (d_hi - d_lo)
+
+
+_keep = interior.STENCIL_BOUNDS
+try:
+    interior.STENCIL_BOUNDS = False
+    _kt_off, _kt_old = _two.k_t(_p), _kt_pre_c157(_two, _p)
+    _shot_off = _shot(1e-5, interior.SHOOT_TOL)
+finally:
+    interior.STENCIL_BOUNDS = _keep
+check("C157 한 스위치 — False 면 발판이 경계를 만나는 자리의 k_t 가 C157 앞 식과 비트까지 같음(eos 쪽 자르기도 꺼짐)",
+      _kt_off == _kt_old and _kt_off != _two.k_t(_p), f"{_kt_off!r} vs {_kt_old!r}")
+check("C157 한 스위치 — False 면 사격 뒷받침도 꺼져 뜀 앞에서 오늘처럼 ok False", _shot_off == ("answer", False), str(_shot_off)[:60])
+
 print(f"  test_rootfind — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)
