@@ -295,8 +295,10 @@ def _fake162(bands, why=_JUMP, cmf_at=None):
     def solve(t, p_hint=None):
         interior._FAMILY_TRAIL.update(trials=[(None, 3000.0, 3e10, 0, None, True)], reclosed=[], closed=[], answer=None,
                                       dev=1e-4, calls=1, returned={}, answer_call=0)
-        if any(lo <= t <= hi for lo, hi in bands):
-            return types.SimpleNamespace(applicable=False, converged=None, notes=(), values={}, reason=why, regime="rocky",
+        hit = next((i for i, (lo, hi) in enumerate(bands) if lo <= t <= hi), None)
+        if hit is not None:
+            w = why[hit] if isinstance(why, (list, tuple)) else why     # C157 메모 7 — 띠마다 다른 문구
+            return types.SimpleNamespace(applicable=False, converged=None, notes=(), values={}, reason=w, regime="rocky",
                                          inputs={"core_mass_fraction": 0.3})
         x = t - 1000.0
         v = {"radius": 1.0 + 1e-7 * x, "core_radius": 0.5, "cmb_pressure": 20.0 + 0.001 * x, "cmb_temperature": 1.5 * t,
@@ -322,7 +324,7 @@ def _build162(solve):
 _r162, _e162, _log162 = _build162(_fake162([(1002.9, 1003.1)]))
 _gaps162 = _r162[8] if _r162 else []
 check("C162 ① — 안쪽 한 점의 C152 거절은 멈춤 없이 «거절» 구간 하나(까닭 · 폭 ≤ 1 K)",
-      len(_gaps162) == 1 and _gaps162[0][3:] == ["refusal"] and _gaps162[0][2].startswith("표면온도 잔차가 뛴다")
+      len(_gaps162) == 1 and _gaps162[0][3] == "refusal" and _gaps162[0][4] is None and _gaps162[0][2].startswith("표면온도 잔차가 뛴다")
       and _gaps162[0][1] - _gaps162[0][0] <= 1.0, (_e162 or str(_gaps162))[:160])
 check("C162 ① — 짓기 로그가 그 구간을 «(거절)» 로 찍음", "받을 답 없는 구간(거절)" in _log162)
 if _r162:
@@ -334,17 +336,39 @@ check("C162 ② — 거절 구간 셋이면 상한(둘) 넘음: 구간 전부를
 _, _ew, _ = _build162(_fake162([(1002.6, 1005.4)]))
 check("C162 ② — 폭 2.0 K 넘는 거절 구간 하나면 멈춤", _ew is not None and "상한" in _ew and "> 2.0 K" in _ew, (_ew or "")[:160])
 # C157 메모 5 §3.1b — 스침 표지가 붙은 거절 구간은 폭 상한만 면제(셈 · 목록 · 폭 인쇄), 표지 없는 3 K 구간은 그대로 멈춤
-_GRAZE = _JUMP + " — " + interior.GRAZE_REASON_HEAD + " — 고상선 · silicate 16.6 GPa (T − T_경계 -0.2 K) · 민감도 S 6522 (가짜)"
+_GRAZE = _JUMP + " — " + interior.format_graze(6522.0, ("고상선", "silicate", 16.6e9, -0.2))   # 메모 7 규칙 4 — 형식기로
 _rg, _eg, _ = _build162(_fake162([(1002.6, 1005.4)], why=_GRAZE))
 _gg = _rg[8] if _rg else []
 check("C157 메모 5 — 스침 표지 3 K 거절 구간은 멈추지 않음(다섯째 칸 onset_graze · 폭 3 K 그대로 기록)",
-      len(_gg) == 1 and _gg[0][3:] == ["refusal", "onset_graze"] and abs(_gg[0][1] - _gg[0][0] - 3.0) < 1e-9, (_eg or str(_gg))[:160])
+      len(_gg) == 1 and _gg[0][3:5] == ["refusal", "onset_graze"] and abs(_gg[0][1] - _gg[0][0] - 3.0) < 1e-9, (_eg or str(_gg))[:160])
 check("C157 메모 5 음성 — 같은 폭의 표지 없는 구간은 멈춤(위 «C162 ② 폭» 과 같은 가짜, 표지만 뺌)", _ew is not None and "> 2.0 K" in _ew)
 _, _eg3, _ = _build162(_fake162([(1000.9, 1001.1), (1002.9, 1003.1), (1004.9, 1005.1)], why=_GRAZE))
 check("C157 메모 5 — 표지 구간도 개수 상한(둘)엔 셈: 셋이면 멈춤", _eg3 is not None and "3 개 > 2" in _eg3, (_eg3 or "")[:120])
 check("C157 메모 5 — 문서 판: 표지 구간은 폭 사유 없음, 표지 없는 같은 폭은 사유",
       sg.refusal_over_cap([[1.0, 4.0, "x", "refusal", "onset_graze"]]) == ""
       and "폭" in sg.refusal_over_cap([[1.0, 4.0, "x", "refusal"]]))
+# C157 메모 7 — 소속으로 표지: 모두 S > GRAZE_SLOPE 이고 하나라도 스침이면 구간 표지. 문구는 interior.format_graze 로만 짓는다
+_STEEP = _JUMP + " — " + interior.format_graze(50.0, None)        # 가파르나 접근 없음
+_FLAT = _JUMP + " — " + interior.format_graze(5.0, None)          # S < GRAZE_SLOPE
+_r7, _e7, _ = _build162(_fake162([(1002.6, 1003.4), (1003.4001, 1005.4)], why=[_GRAZE, _STEEP]))
+_g7 = _r7[8] if _r7 else []
+check("메모 7 — 모두 S > 10 · 스침 하나 이상인 3 K 구간은 표지(폭 면제) · 여섯째 칸 셈",
+      len(_g7) == 1 and _g7[0][4] == "onset_graze" and _g7[0][5]["graze_points"] >= 1
+      and _g7[0][5]["graze_points"] < _g7[0][5]["points"] and _g7[0][5]["s_min"] == 50.0, (_e7 or str(_g7))[:200])
+_, _e7a, _ = _build162(_fake162([(1002.6, 1003.4), (1003.4001, 1005.4)], why=[_GRAZE, _FLAT]))
+check("메모 7 음성 — 거절 한 점이라도 S < GRAZE_SLOPE 면 표지 없음 → 폭 상한에 멈춤", _e7a is not None and "> 2.0 K" in _e7a, (_e7a or "")[:120])
+_, _e7b, _ = _build162(_fake162([(1002.6, 1005.4)], why=_STEEP))
+check("메모 7 음성 — 모두 S > 10 이어도 스침 점이 없으면 표지 없음 → 멈춤", _e7b is not None and "> 2.0 K" in _e7b, (_e7b or "")[:120])
+check("메모 7 규칙 5 — 쌍이 없는(S 없는) 거절 문구는 S None", interior.parse_graze(_JUMP) == (None, None))
+# 메모 7 수락 2b — 실제 풀이의 거절 문구(c157n5 571d1360 지구 표 풀이 T_pot 2081.5667288537124 K, n5-acc1.log 8ecbbbc5 에서 옮김)
+_REAL_2081 = ("적분이 실패했다 — 표면온도 잔차가 뛴다 — 중심 온도 [4052.41, 4052.41] K 사이에서 0 을 건너뛴다(괄호 폭 9.47e-07 ≤ T_TOL 1e-06, "
+              "가까운 끝의 어긋남 0.28 %). 그 사이에 표면 온도가 선언값과 같아지는 해가 없다 (C152). — 경계 스침 — 고상선 · silicate "
+              "16.627 GPa (T − T_경계 -0.206 K) · 민감도 S 6522 (C157 메모 5)")
+_sr, _gr = interior.parse_graze(_REAL_2081)
+check("메모 7 수락 2b — 실제 거절 문구를 같은 파서가 S 6522 · 16.627 GPa 스침으로 읽음", _sr == 6522.0 and _gr is not None and "16.627 GPa" in _gr,
+      f"{_sr} {_gr}")
+_s_rt, _g_rt = interior.parse_graze(interior.format_graze(1.578e4, ("고상선", "silicate", 16.628e9, -0.308)))
+check("메모 7 규칙 4 — 형식기 → 파서 왕복(S 1.578e+04 · 스침)", _s_rt == 15780.0 and _g_rt is not None and "16.628 GPa" in _g_rt, f"{_s_rt} {_g_rt}")
 check("C162 ② — 판정 구간(셋째 칸까지)은 상한에 안 셈",sg.refusal_over_cap([[1.0, 9.0, "판정"]] * 3) == "")
 check("C162 ② — 문서 판: 거절 구간 셋 · 폭 넘는 하나는 상한 사유",
       "3 개" in sg.refusal_over_cap([[1.0, 1.5, "x", "refusal"]] * 3) and "폭" in sg.refusal_over_cap([[1.0, 3.5, "x", "refusal"]]))
@@ -378,9 +402,9 @@ _b1, _o1 = _check162([[1002.75, 1003.25, _JUMP, "refusal"], [1005.0, 1005.5, "�
 check("C162 ② — --check 가 구간 전부를 까닭과 찍음: 거절 [WARN] · 판정 [기록], 상한 안이면 FAIL 없음(표 없는 몸 둘만)",
       "[WARN] earth.json — 거절 구간 [1002.75, 1003.25]" in _o1 and "[기록] earth.json — 받을 답 없는 구간 [1005.0, 1005.5]" in _o1
       and "상한" not in _o1, f"bad {_b1}")
-_bg, _og = _check162([[2073.0, 2091.0, _GRAZE[:160], "refusal", "onset_graze"]])
+_bg, _og = _check162([[2073.0, 2091.0, _GRAZE[:160], "refusal", "onset_graze", {"s_min": 24.99, "graze_points": 15, "points": 19}]])
 check("C157 메모 5 — --check 가 표지 구간을 폭 · 표지와 찍고 FAIL 없음(18 K 띠)",
-      "폭 18.000 K · 경계 스침(폭 상한 면제" in _og and "상한" not in _og.replace("폭 상한 면제", "") and _bg == _b1, f"bad {_bg}")
+      "폭 18.000 K · 경계 스침(폭 상한 면제" in _og and "최소 S 24.99 · 스침 15/19" in _og and "상한" not in _og.replace("폭 상한 면제", "") and _bg == _b1, f"bad {_bg}")
 import core_history  # noqa: E402
 _gn = core_history._gap_note({"grid_gap_calls": 2, "grid_gap_steps": 5, "grid_gap_spans": [(2073.0, 2091.0)]})
 check("C157 메모 5 — 열진화 메모가 건넌 구간의 폭을 찍음", bool(_gn) and "(폭 18.00 K)" in _gn[0], str(_gn)[:120])

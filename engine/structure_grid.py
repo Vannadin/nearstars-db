@@ -423,9 +423,16 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         inside = sorted(t for t in refused if t_minus < t < t_plus)
         if not inside:
             return [t_minus, t_plus, why[:160]]
-        if all(interior.GRAZE_REASON_HEAD in noans[t] for t in inside):   # C157 메모 5 §3.1b — 거절 전부가 스침 표지
-            return [t_minus, t_plus, noans[inside[0]][:160], "refusal", "onset_graze"]
-        return [t_minus, t_plus, noans[inside[0]][:160], "refusal"]
+        # C157 메모 7 — 소속으로 표지: 거절 점 **모두** S > GRAZE_SLOPE 이고 **하나라도** 이름 댄 스침이면 구간 전체가 스침 구간.
+        #   읽기는 interior.parse_graze 하나(문구 형식은 interior.format_graze 하나). 여섯째 칸은 셈(--check 가 찍음).
+        got = [interior.parse_graze(noans[t]) for t in inside]
+        s_vals = [sv for sv, _g in got]
+        n_graze = sum(1 for _sv, g in got if g is not None)
+        steep = all(sv is not None and sv > interior.GRAZE_SLOPE for sv in s_vals)
+        info = {"s_min": min(s_vals) if all(sv is not None for sv in s_vals) else None,
+                "graze_points": n_graze, "points": len(inside)}
+        tag = "onset_graze" if steep and n_graze >= 1 else None
+        return [t_minus, t_plus, noans[inside[0]][:160], "refusal", tag, info]
 
     prefetch([(t, None) for t in grid])
     # 덧붙임 57 ⑤ — 받을 답 아닌 첫 점은 가운데 점과 같게: 양쪽의 가장 가까운 받을 답 첫 점 사이에서 구간을 찾는다
@@ -1038,6 +1045,10 @@ def check_all() -> int:
         for g in doc.get("no_answer", []):      # C162 ② — 받을 답 없는 구간은 전부 까닭과 함께: 거절은 [WARN], 판정은 [기록]
             tag = "[WARN]" if len(g) > 3 and g[3] == "refusal" else "[기록]"
             graze = " · 경계 스침(폭 상한 면제, C157 메모 5)" if g[4:5] == ["onset_graze"] else ""
+            if len(g) > 5 and isinstance(g[5], dict):     # C157 메모 7 — 최소 S · 스침 점 수
+                s_min = g[5].get("s_min")
+                graze += (f" · 최소 S {'없음' if s_min is None else format(s_min, '.4g')} · "
+                          f"스침 {g[5].get('graze_points')}/{g[5].get('points')}")
             print(f"  {tag} {path.name} — {'거절 구간' if tag == '[WARN]' else '받을 답 없는 구간'} [{g[0]!r}, {g[1]!r}] K "
                   f"폭 {g[1] - g[0]:.3f} K{graze} · {g[2]}")
         over = refusal_over_cap(doc.get("no_answer", []))

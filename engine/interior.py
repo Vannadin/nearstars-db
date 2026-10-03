@@ -36,6 +36,7 @@ import eos                 # 196 B: 밀도 적합의 압력 도달 카운터를 
 import mantle_composition  # C74-2: 상부 맨틀 광물 집합 표를 풀이 동안 끼운다
 import json
 import math
+import re
 from contextlib import contextmanager
 
 import water_hot
@@ -119,6 +120,8 @@ BACKSTOP_REASON_HEAD = "사격 질량이 p_c 에서 뛴다"
 GRAZE_K = 1.0
 GRAZE_SLOPE = 10.0
 GRAZE_REASON_HEAD = "경계 스침"
+GRAZE_S_HEAD = "민감도 S "      # C157 메모 7 — 거절마다 싣는 마지막 쌍의 S
+_GRAZE_S_RE = re.compile(r"민감도 S ([0-9][0-9.eE+-]*)")
 _LAST_GRAZE = [None]           # 지금 적분의 접선 접근(`_integrate_raw` 가 쓰고 `integrate` 가 구조에 단다)
 _LOOP_TRIALS = [None]          # 바깥 온도 고리 호출의 시행 [(T_c, T_surf, 접근)] — 고리 밖이면 None
 #: 스침 표지 — 답으로 돌려준 구조 id → 메모 한 줄(위 표들과 같은 꼴, 풀이마다 비움)
@@ -2450,27 +2453,53 @@ def _note_loop_trial(t_center: float, st) -> None:
         seq.append(item)
 
 
-def _graze_tag() -> str:
-    """C157 메모 5 §3.2 — 돌려줄 고리 호출의 **마지막 두 서로 다른 T_c** 로 S = |Δln T_surf / Δln T_c| 를 내고, S > GRAZE_SLOPE
-    이며 그 둘 중 하나의 구조에 경계 접선 접근이 있으면 표지 문구, 아니면 빈 문자열."""
+def _loop_pair():
+    """C157 메모 5 §3.2 — 돌려줄 고리 호출의 **마지막 두 서로 다른 T_c** 로 (S = |Δln T_surf / Δln T_c|, 그 쌍에서 가장 가까운
+    경계 접선 접근 또는 None). 시행이 둘 미만이면 None(메모 7 규칙 5 — S 없음)."""
     seq = _LOOP_TRIALS[0] or []
     if len(seq) < 2:
-        return ""
+        return None
     (tc_a, ts_a, g_a), (tc_b, ts_b, g_b) = seq[-2], seq[-1]
     dx = math.log(tc_b) - math.log(tc_a)
     s_last2 = abs((math.log(ts_b) - math.log(ts_a)) / dx) if dx != 0.0 else 0.0
     near = [g for g in (g_a, g_b) if g is not None]
-    if s_last2 <= GRAZE_SLOPE or not near:
+    return s_last2, (min(near, key=lambda x: abs(x[3])) if near else None)
+
+
+def format_graze(s_last2: float, graze) -> str:
+    """C157 메모 5 · 7 — 스침 문구의 **한 형식**(거절 접미와 답 메모가 같이 쓴다). 표지(S > GRAZE_SLOPE 이고 접근 있음)면
+    «경계 스침 — 곡선 · 재료 P GPa (T − T_경계 g K) · 민감도 S …», 아니면 «민감도 S … (경계 접근 없음 …)». `parse_graze` 가 되읽는다."""
+    if graze is not None and s_last2 > GRAZE_SLOPE:
+        c_name, m_name, p_g, g = graze
+        return (f"{GRAZE_REASON_HEAD} — {c_name} · {m_name} {p_g / 1e9:.3f} GPa (T − T_경계 {g:+.3f} K) · "
+                f"{GRAZE_S_HEAD}{s_last2:.4g} (C157 메모 5)")
+    return f"{GRAZE_S_HEAD}{s_last2:.4g} (경계 접근 없음, C157 메모 7)"
+
+
+def parse_graze(text: str) -> tuple:
+    """C157 메모 7 규칙 4 — 거절 문구에서 (S 또는 None, 스침 부분 문자열 또는 None). 구간 빌더와 `--check` 가 이것 하나로 읽는다."""
+    m = _GRAZE_S_RE.search(text or "")
+    s_val = float(m.group(1)) if m else None
+    k = (text or "").find(GRAZE_REASON_HEAD + " — ")
+    graze = None
+    if k >= 0:
+        rest = text[k + len(GRAZE_REASON_HEAD) + 3:]
+        graze = rest.split(" · " + GRAZE_S_HEAD)[0]
+    return s_val, graze
+
+
+def _graze_tag() -> str:
+    """답에 다는 스침 표지 — S > GRAZE_SLOPE 이며 마지막 쌍에 접근이 있을 때만, 아니면 빈 문자열."""
+    pair = _loop_pair()
+    if pair is None or pair[1] is None or pair[0] <= GRAZE_SLOPE:
         return ""
-    c_name, m_name, p_g, g = min(near, key=lambda x: abs(x[3]))
-    return (f"{GRAZE_REASON_HEAD} — {c_name} · {m_name} {p_g / 1e9:.3f} GPa (T − T_경계 {g:+.3f} K) · "
-            f"민감도 S {s_last2:.4g} (C157 메모 5)")
+    return format_graze(*pair)
 
 
 def _graze_suffix() -> str:
-    """C152 뜀 · 예산 거절 문구 끝에 붙는 스침 표지(없으면 빈 문자열). C162 구간이 이 머리로 표지를 읽는다."""
-    tag = _graze_tag()
-    return f" — {tag}" if tag else ""
+    """C152 뜀 · 예산 거절 문구 끝 — 쌍이 있으면 늘 민감도 S 를 싣고(메모 7 규칙 1), 표지면 스침까지. 쌍이 없으면 빈 문자열."""
+    pair = _loop_pair()
+    return "" if pair is None else " — " + format_graze(*pair)
 
 
 def _shoot_body(*args, **kw) -> tuple[Structure, bool]:
