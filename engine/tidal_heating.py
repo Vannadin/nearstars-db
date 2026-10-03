@@ -236,7 +236,8 @@ def stagnant_lid_ceiling_for(body: str | None = None) -> tuple:
 
 
 def regime_ladder_cell(total_flux_w_m2: float, body: str | None = None) -> tuple:
-    """확정 칸 하나. (칸, 그 칸을 정한 수, 그 수가 `floor` 인지 `ceiling` 인지, 근거).
+    """⚠ **Control only (C158 L-neg); not on the recipe path** — `flux_reading` replaced it on the recipe; do not wire it back.
+    확정 칸 하나. (칸, 그 칸을 정한 수, 그 수가 `floor` 인지 `ceiling` 인지, 근거).
 
     위쪽 칸들은 **바닥**으로 확정하고, 밑바닥의 정체뚜껑은 **천장**으로 확정한다 — 그 칸에
     문헌이 인쇄한 것이 천장뿐이기 때문이다. ⚠ 사다리 규칙은 문헌의 판정이 아니라 우리 것이다."""
@@ -309,7 +310,9 @@ def outcome_regime(flux_w_m2: float) -> str:
 
 
 def transport_mode(total_flux_w_m2: float, stagnant_lid_ceiling: float | None = None) -> str:
-    """§6.2 table, doc @«### 6.2 How the heat actually leaves: the three-mode ladder», read on the total surface flux. Plate tectonics sits at ~0.09 W/m² (Earth 92.1 mW/m²);
+    """⚠ **Control only (C158 L-neg); not on the recipe path** — the exact-flux reading, kept so the fixtures can see
+    what C158's lower-bound reading changed. Do not wire it back; `flux_reading` is the recipe's reading.
+    §6.2 table, doc @«### 6.2 How the heat actually leaves: the three-mode ladder», read on the total surface flux. Plate tectonics sits at ~0.09 W/m² (Earth 92.1 mW/m²);
     the stagnant-lid ceiling is 10–30 mW/m² — **both ends printed**, and which one is in force is
     `STAGNANT_LID_CEILING_CHOICE`, defaulting to the high end; heat pipe from ≥ ~2.5 W/m². Between 0.14 (the plate row read at +50 %, the
     branch below) and 2.5 W/m² the table has no row."""
