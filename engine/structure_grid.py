@@ -60,6 +60,33 @@ FILE_EXEMPT = {
     "mantle_tables/": "선언된 조성의 표 바이트로 `mantle_table` 칸이 덮는다(C74-2)",
     "bodies/": "몸 파일 — 표가 읽는 키는 `declared` 칸이 덮는다",
 }
+#: C159 메모 1 — `--check` 동안 `engine/` 아래에서 열린 파일(감사 훅이 채운다). 코드가 움직인 표를 다시 풀 때 읽기 가드가 이것을 본다.
+_READS: set[str] = set()
+GUARD_RUNS = [0]              # 읽기 가드가 돈 횟수(값 밖 셈, 시험이 «코드 움직임에서만 돈다» 를 본다)
+
+
+def _reads_hook(event, args):
+    if event == "open" and args and isinstance(args[0], (str, bytes, os.PathLike)):
+        try:
+            p = Path(os.fsdecode(args[0])).resolve()
+        except (OSError, ValueError):
+            return
+        if HERE in p.parents:
+            _READS.add(p.relative_to(HERE).as_posix())
+
+
+def guard_reads(opened) -> list[str]:
+    """C159 규칙 1b — 연 파일 중 .py 밖의 것이 바이트 방아쇠도 예외 목록(`FILE_EXEMPT`)도 아니면 그 목록."""
+    out = []
+    for f in sorted(opened):
+        if f.endswith(".py") or "__pycache__" in f or f.startswith("structure_grid/"):
+            continue
+        if f in BYTE_FILES or f in FILE_EXEMPT or any(f.startswith(k) for k in FILE_EXEMPT if k.endswith("/")):
+            continue
+        out.append(f)
+    return out
+
+
 #: C159 — chain.yaml 에서 러너(`graph` · `run`)가 실제로 읽는 칸. 설명(note · layer · domain)과 어휘 절은 안 든다.
 CHAIN_READS = {"node": ("kind", "recipe", "outputs", "status"), "edge": ("from", "to", "kind", "scope"),
                "coupled_core": ("members",)}
@@ -933,6 +960,14 @@ def check_all() -> int:
               f"(최대 상대 차 {worst:.3e} at {where}, ε {EPS:.4e}, 격자점 {len(doc['t_pot'])})"
               + ("" if ok else f" — `--refresh {doc['body'].lower()}`"))
         bad += not ok
+        # C159 메모 1 — 읽기 가드는 **코드가 움직인 표에서만** 돈다: 읽는 파일이 바뀌려면 코드가 바뀌어야 하고, 그때 여기서
+        #   격자점을 어차피 다시 푼다(덧값 없음). 데이터만 움직인 표는 위에서 이미 낡음(FAIL)이다.
+        GUARD_RUNS[0] += 1
+        unlisted = guard_reads(_READS)
+        if unlisted:
+            print(f"  [FAIL] {path.name} — 읽기 가드: 방아쇠도 예외도 아닌 데이터 파일을 읽었다 {unlisted} — "
+                  f"`BYTE_FILES` 에 넣거나 `FILE_EXEMPT` 에 까닭과 함께 (C159 규칙 1b)")
+            bad += 1
     return bad
 
 
@@ -953,6 +988,7 @@ def main(args: list[str]) -> int:
               f"T_ok {d['t_ok']} · {d['composition']}")
         return 0
     if args == ["--check"]:
+        sys.addaudithook(_reads_hook)      # C159 메모 1 — 가져오기 때 읽는 데이터까지 보려면 무엇보다 먼저
         return 1 if check_all() else 0
     print(__doc__)
     return 2

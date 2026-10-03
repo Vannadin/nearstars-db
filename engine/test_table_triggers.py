@@ -91,5 +91,42 @@ present = {p.stem for p in saved.glob("*.json")}
 missing = [b for b in sg.history_bodies() if b not in present]
 print(f"  [기록] 지금 트리에서 표 없는 열진화 몸: {missing} (C159 수락 4 의 «전» 상태 — 금성은 이식의 PC 재굳힘에서 짓는다)")
 
+# C159 메모 1 — 읽기 가드는 check_all 안에서 **코드가 움직인 표에서만** 돈다(데이터만 움직이면 안 돈다)
+import json  # noqa: E402
+import run  # noqa: E402
+
+_body, _ = run.load_body(sg.BODIES_DIR / "earth.yaml")
+_now = sg.triggers(_body.inputs)
+
+
+def _check_with(trig, reads):
+    saved_dir, saved_rc = sg.GRID_DIR, sg._recheck
+    with tempfile.TemporaryDirectory() as d:
+        sg.GRID_DIR = Path(d)
+        (Path(d) / "earth.json").write_text(json.dumps({"body": "Earth", "t_pot": [1.0], "points": [{}], "triggers": trig}),
+                                            encoding="utf-8")
+        sg._recheck = lambda doc, body: (0.0, "stub")
+        sg._READS.clear(); sg._READS.update(reads)
+        n0 = sg.GUARD_RUNS[0]
+        buf2 = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(buf2):
+                sg.check_all()
+        finally:
+            sg.GRID_DIR, sg._recheck = saved_dir, saved_rc
+            sg._READS.clear()
+    return sg.GUARD_RUNS[0] - n0, buf2.getvalue()
+
+
+_code_moved = {**_now, "code": {**_now["code"], "eos.py": "0000000000000000"}}
+runs, out = _check_with(_code_moved, {"reference_adiabats.json", "chain.yaml", "bodies/earth.yaml"})
+check("메모 1 — 코드가 움직인 표에서 읽기 가드가 돈다(목록 안 읽기면 통과)", runs == 1 and "읽기 가드" not in out, f"runs {runs}")
+runs, out = _check_with(_code_moved, {"reference_adiabats.json", "fake_new_table.csv"})
+check("메모 1 — 코드 움직임 + 방아쇠 밖 데이터 읽기 → 읽기 가드 FAIL", runs == 1 and "읽기 가드" in out and "fake_new_table.csv" in out,
+      f"runs {runs}")
+_data_moved = {**_now, "bytes": {**_now["bytes"], "reference_adiabats.json": "0000000000000000"}}
+runs, out = _check_with(_data_moved, {"fake_new_table.csv"})
+check("메모 1 음성 — 데이터만 움직인 표에선 읽기 가드가 안 돈다(이미 낡음 FAIL)", runs == 0 and "데이터 방아쇠" in out, f"runs {runs}")
+
 print(f"  test_table_triggers — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)
