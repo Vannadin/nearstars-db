@@ -318,5 +318,71 @@ check("메모 4 ② — 괄호도 벽도 없는 고리(규칙 3): Brent 0 · 벽
 check("메모 4 ② — 괄호 없이 벽을 만나면 규칙 4 가 이김: 벽 찾기 사격 > 0", k_4 == "refusal" and nb_4 == 0 and ws_4 > 0,
       f"{str(v_4)[:60]} · brent {nb_4} · 벽 {ws_4}")
 
+# ⑨ C157 — 피적분의 불연속은 이어지거나 찾아진다: 차분 발판은 상 경계를 안 넘고 · 사건은 새 쪽에 착지 · 사격은 뜀을 이름 댄다
+P_B = 23.83e9                                              # 가짜 두 상 재료의 경계(지구 en/PREM 자리)
+
+
+class _TwoPhase(eos.Material):
+    """C157 시험용 — 상 둘(경계 P_B 에서 밀도 +200 kg/m³), 각 상 안에서 dρ/dP = 1e-8 로 매끄러움."""
+
+    def __init__(self, phases):
+        object.__setattr__(self, "phases", phases)
+
+    @property
+    def shoot_lo(self):
+        return 0.0
+
+    def solid_density(self, p, t=0.0, t_pot=0.0):
+        return 3000.0 + 1e-8 * p + (200.0 if p > P_B else 0.0)
+
+
+_ph = [types.SimpleNamespace(p_min=1e9, p_max=P_B), types.SimpleNamespace(p_min=P_B, p_max=1e12)]
+_two, _one = _TwoPhase(_ph), _TwoPhase([types.SimpleNamespace(p_min=1e9, p_max=1e12)])
+_p = P_B - 1e6                                             # 경계 아래 h(2.4 MPa) 안
+_k_ref = _two.solid_density(_p) / 1e-8                     # 상 안의 참 K_T = ρ / (dρ/dP)
+_lo, _hi = interior._phase_stencil(_two, _p, _p - _p * 1e-4, _p + _p * 1e-4, _p * 1e-4)
+check("C157 ① — 경계 h 안에서 발판이 상 구간 안으로 잘림", _hi <= P_B and _lo >= _ph[0].p_min and _hi - _lo > 0.0, f"[{_lo:.6e}, {_hi:.6e}]")
+check("C157 ① — 잘린 k_t 는 상 안의 값(경계를 걸친 차분과 같지 않음)", abs(_two.k_t(_p) / _k_ref - 1.0) < 1e-6, f"{_two.k_t(_p) / _k_ref:.9f}")
+check("C157 ① 음성 — 상 하나로 보면(자르기 없음) 발판이 경계를 걸쳐 K_T 가 10 배 넘게 틀어짐", _one.k_t(_p) < 0.1 * _k_ref,
+      f"{_one.k_t(_p) / _k_ref:.3e}")
+
+for _g0, _g1, _gf, _lab in ((-1.0, 1.0, lambda f: -1.0 + 2.0 * f, "직선"), (1e-3, -1e-3, lambda f: 1e-3 - 2e-3 * f ** 3, "굽음, 양→음"),
+                           (-2e-7, 4e-6, lambda f: -2e-7 + 4.2e-6 * f, "스치듯 얕음")):
+    _seen = []
+    _f = interior._land_event(lambda f: (_seen.append(f), _gf(f))[1], _g0, _g1, 1e-9)
+    _end = _gf(_f)
+    check(f"C157 ② — 사건 착지가 새 쪽으로 δ 넘어선 자리({_lab})", (_end > 0.0) == (_g1 > 0.0) and 0.9e-9 <= abs(_end) <= 1.1e-9
+          and _seen[-1] == _f, f"f {_f:.12f} · g {_end:+.3e} · 걸음 {len(_seen)}")
+
+_M, _P0 = 6e24, 3.5e11
+
+
+def _jump_integ(jump):
+    def f(p, mass_kg, *a, **k):
+        return types.SimpleNamespace(mass_kg=_M * (p / _P0) ** 0.3 * (1.0 + (jump if p > _P0 * 1.0000001 else 0.0)), surface_reached=True,
+                                     p_center=p, floor_truncated=None, t_surface=1000.0)
+    return f
+
+
+def _shot(jump, tol):
+    real = interior.integrate
+    interior.integrate = _jump_integ(jump)
+    try:
+        st, ok = interior._shoot_pressure(_M * 1.0000001 ** 0.3 * (1.0 + jump / 2.0), 0.3, 0.0, "fe_prem",
+                                          t_center=3000.0, t_pot=1600.0, tol=tol)
+        return "answer", ok
+    except ValueError as e:
+        return "refusal", str(e)
+    finally:
+        interior.integrate = real
+
+
+k9, v9 = _shot(1e-5, interior.SHOOT_TOL)
+check("C157 ③ — 목표가 겉질량 뜀(1e-5) 안이면 이름 대며 거절", k9 == "refusal" and "사격 질량이 p_c 에서 뛴다" in v9, str(v9)[:80])
+k9, v9 = _shot(0.0, interior.SHOOT_TOL)
+check("C157 ③ 음성 — 같은 함수가 매끄러우면 닫힘", k9 == "answer" and v9 is True, str(v9))
+k9, v9 = _shot(1e-5, 1e-3)
+check("C157 ③ — 허용(1e-3)보다 작은 뜀은 느슨한 사격이 오늘처럼 닫음(문턱은 그 사격의 허용)", k9 == "answer" and v9 is True, str(v9))
+
 print(f"  test_rootfind — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)

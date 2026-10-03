@@ -1059,6 +1059,12 @@ class Material:
         #   `grad_ad` 와 `k_t` 가 거절했다: 19.0000–19.0019 GPa 가 PhaseGap, 19.0020 부터 값.
         #   바닥에서는 한쪽 차분이 된다. 바닥이 0 인 재질에는 이 항이 걸리지 않는다.
         p_lo = max(p - h, 1.0, self.shoot_lo)
+        # C157 ① — 상 경계도 같은 이유로 넘지 않는다: 발판이 다른 상에 닿으면 밀도 뜀이 K_T 에 들어간다.
+        if len(self.phases) > 1:
+            for ph in self.phases:
+                if ph.p_min <= p <= ph.p_max:
+                    p_hi, p_lo = min(p_hi, ph.p_max), max(p_lo, math.nextafter(ph.p_min, math.inf))
+                    break
         if p_hi <= p_lo:
             return 0.0
         d_hi = self.solid_density(p_hi, t, t_pot)

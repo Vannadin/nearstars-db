@@ -105,6 +105,11 @@ STEPS = 1500
 # 이전의 경로(둘 다 걸음 단위 양자화)이고, 격자 대조 검사만 그것을 켠다 — 답이 어느 쪽으로
 # 가는지를 재는 대조 상대로.
 INTERPOLATE_LAYERS = True
+# C157 ② — 규산염 고상선(φ 0 ↔ > 0)을 걸음 안에서 찾아 그 자리까지만 걷는다. False 는 C157 앞의 경로(대조 시험만 켬).
+LOCATE_SOLIDUS = True
+# C157 셈(값 밖) — 고상선 찾기 재걷기 수 · 상 경계 착지(할선) 재걷기 수
+SOLIDUS_REWALKS = [0]
+PHASE_CUT_REWALKS = [0]
 # 얼음 기둥 안에서 국소 (P, T) 가 녹는곡선 위이면 액체 물로 적분한다 (2026-08-29). False 는
 # 판정만 내고 밀도는 고체상으로 두던 2026-08-27 의 경로이고, 바다가 밀도를 실제로 움직이는지를
 # 재는 대조 검사만 그것을 켠다.
@@ -686,6 +691,54 @@ def _core_or_own_gamma(mat, p: float, rho: float, t: float, t_pot: float) -> flo
     return mat.gruneisen(p, rho, t, t_pot)
 
 
+def _land_event(walk, g0: float, g1: float, delta: float) -> float:
+    """C157 ② — 걸음 분율 f ∈ (0, 1) 에서 사건 함수 g 가 새 쪽(g1 의 부호)으로 δ 넘어선 자리를 일리노이 할선으로 찾는다.
+    `walk(f)` 는 그 분율까지 다시 걷고 걸음 끝의 g 를 돌려준다(None 이면 멈춤). G = g − δ·sign(g1), |G| ≤ δ/10 또는 폭 1e-12.
+    마지막으로 걸은 분율을 돌려준다 — 걸음 끝은 늘 그 분율의 것이다."""
+    tgt = delta if g1 > 0.0 else -delta
+    fa, ga, fb, gb, side = 0.0, g0 - tgt, 1.0, g1 - tgt, 0
+    f = 1.0
+    for _ in range(40):
+        f = (fa * gb - fb * ga) / (gb - ga)
+        gf = walk(f)
+        if gf is None:
+            break
+        gf -= tgt
+        if abs(gf) <= 0.1 * delta or fb - fa <= 1e-12:
+            break
+        if (gf > 0.0) == (ga > 0.0):
+            fa, ga = f, gf
+            if side == -1:
+                gb *= 0.5
+            side = -1
+        else:
+            fb, gb = f, gf
+            if side == 1:
+                ga *= 0.5
+            side = 1
+    return f
+
+
+def _phase_stencil(mat, p: float, p_lo: float, p_hi: float, h: float) -> tuple[float, float]:
+    """C157 ① — 차분 발판을 `p` 의 상 구간 [p_min⁺, p_max] 안으로 자른다(재료 바닥 · 상한 자르기와 같은 꼴).
+    발판이 상 경계를 넘으면 밀도 뜀이 K_T 에 들어가 dT/dP 가 튄다(지구 1900 K, 23.83 GPa en/PREM 에서 10 배).
+    경계 h 안에서는 폭 2h 의 한쪽 차분이 되고, 그 차이는 측정 2.3–4.4e-5(상대)다."""
+    phases = getattr(mat, "phases", ()) if isinstance(mat, eos.Material) else ()
+    if len(phases) < 2:
+        return p_lo, p_hi
+    for ph in phases:
+        if ph.p_min <= p <= ph.p_max:
+            lo_b, hi_b = math.nextafter(ph.p_min, math.inf), ph.p_max
+            if p_hi > hi_b:
+                p_hi = hi_b
+                p_lo = max(min(p_lo, p_hi - 2.0 * h), lo_b)
+            if p_lo < lo_b:
+                p_lo = lo_b
+                p_hi = min(max(p_hi, p_lo + 2.0 * h), hi_b)
+            break
+    return p_lo, p_hi
+
+
 def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:
     """단열 기울기 dT/dP = γ T / K_S [K/Pa].
 
@@ -729,6 +782,7 @@ def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:
     if ceiling and p_hi > ceiling:
         p_hi = ceiling
         p_lo = min(p_lo, p_hi - 2.0 * h)
+    p_lo, p_hi = _phase_stencil(mat, p, p_lo, p_hi, h)
     dens = mat.solid_density if phi > 0.0 else mat.density
     d_hi, d_lo = dens(p_hi, t, t_pot), dens(p_lo, t, t_pot)
     if d_hi <= d_lo:
@@ -1589,7 +1643,44 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                 if 0.0 < f < 1.0:
                     h = f * h
                     dm, dp, di, dv = _rk(h)
+                    # C157 ①b — 선형 분율 한 번으로는 걸음 끝이 p_b 근처에 떨어지고 어느 쪽인지가 p_c 에 따라 바뀐다:
+                    #   할선으로 |p + dp − p_b| ≤ 1e-12 p_b 까지(최대 8 번 재걷기).
+                    h0, e0 = 0.0, p_b - p
+                    for _ in range(8):
+                        e1 = p + dp - p_b
+                        if abs(e1) <= 1e-12 * p_b or e1 == e0:
+                            break
+                        h, h0, e0 = h - e1 * (h - h0) / (e1 - e0), h, e1
+                        dm, dp, di, dv = _rk(h)
+                        PHASE_CUT_REWALKS[0] += 1
                     basal_crossed = False
+
+        # C157 ② — 규산염 고상선도 걸음 안에서 찾는다: g = T − T_sol(p) 가 걸음 안에서 부호를 바꾸면 g = 0 자리까지
+        #   같은 RK 로 다시 걷는다(일리노이 할선, |g| ≤ 1e-9 T 또는 분율 폭 1e-12). 고상선에서 dT/dP 가 꺾이는데(C120b 잠열
+        #   · 고체 밀도) 걸음을 거기 안 맞추면 단계가 넘는 자리에 따라 결과가 뛴다(화성 2071 K 주머니). 액상선은 이어진다(측정).
+        if (LOCATE_SOLIDUS and INTERPOLATE_LAYERS and not crossed and dp < 0.0 and t > 0.0 and not grad
+                and litho_a is None and isinstance(mat, eos.Material) and p + dp > 0.0):
+            ph_s = mat.phase_at(p)
+            if ph_s.melt == "silicate":
+                def g_at(pp, tt):
+                    ts = eos.silicate_solidus(pp, ph_s.melt_variant)
+                    return None if ts is None else tt - ts
+                t_end = (lambda: t + dT_last[0]) if adapt_now and dT_last[0] is not None else (lambda: t + dtdp * dp)
+                g0, g1 = g_at(p, t), g_at(p + dp, t_end())
+                # 걸음 끝을 g = 0 이 아니라 **새 쪽으로 δ = 1e-9 T 넘어선 자리**에 둔다 — 다음 걸음은 출발점의 φ 로 기울기를
+                #   고르므로, g ≈ 0 의 어느 쪽에 떨어지느냐가 다시 칼날이 되지 않게 한다(G = g − δ·sign(g1) = 0, |G| ≤ δ/10).
+                delta = 1e-9 * t
+                if (g0 is not None and g1 is not None and g0 != 0.0 and (g0 > 0.0) != (g1 > 0.0)
+                        and abs(g1) > delta):
+                    h_full = h
+
+                    def walk(f):
+                        nonlocal dm, dp, di, dv
+                        dm, dp, di, dv = _rk(f * h_full)
+                        SOLIDUS_REWALKS[0] += 1
+                        return g_at(p + dp, t_end())
+                    f = _land_event(walk, g0, g1, delta)
+                    h = f * h_full
 
         # 표면 암석권 바닥 — 반지름 경계(기저층 꼭대기와 같은 RK4 재걷기). 층 바닥 온도는 걸음 끝의 단열 온도.
         litho_crossed = False
@@ -2168,6 +2259,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             st, x1 = lower_point(x1)
             y1 = math.log(st.mass_kg / mass_kg)
     last_short = None            # 질량이 모자란 마지막 구조 (외피 없는 암석)
+    last_long = None             # C157 ③ — 질량이 넘친 마지막 구조
     for _ in range(SHOOT_ITERS):
         if abs(st.mass_kg - mass_kg) / mass_kg < tol:
             convergence.note("interior._shoot_pressure", True, trial=True)
@@ -2177,6 +2269,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             last_short = st
         else:
             hi = math.exp(x1)
+            last_long = st
             # **괄호가 닫혔는데 뿌리가 없다.** 아래쪽은 표면에 닿은 채 질량이 모자라고 위쪽은
             # 표면에 못 닿은 채 질량이 넘친다면, 그 사이의 어떤 중심압도 겉질량을 목표에 맞추지
             # 못한다 — 외피가 이 온도에서 묶이지 않는 것이고, 시험값의 문제가 아니다.
@@ -2197,6 +2290,16 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             # 없음, 위로 던짐)에 밀려 2000 K 대의 시험을 돌고 그 적분이 하나하나 비쌌던 것이다
             # (antigorite-thermal-context-notes.md). 이 보호는 그 조사 중 발견한 별개의 빈틈이고, 수렴하는
             # 앵커는 여기 오지 않는다.
+            # C157 ③ — 괄호의 두 끝이 그 사격의 허용보다 큰 질량 차로 갈린 채 닫혔다: 중심압에서 겉질량이 뛴다
+            #   (적분 피적분의 불연속). 틀린 y 를 고리로 올리지 않고 이름 대며 거절한다 — 규칙 ①②가 칼날을 없애므로
+            #   출하 천체에서 서면 인구조사가 놓친 불연속이다(수락 7: 멈춤).
+            if last_short is not None and last_long is not None:
+                gap = (last_long.mass_kg - last_short.mass_kg) / mass_kg
+                if gap > tol:
+                    raise ValueError(
+                        f"사격 질량이 p_c 에서 뛴다 (적분 피적분 불연속) — 중심압 {lo / 1e9:.12g} GPa 에서 겉질량이 "
+                        f"목표의 {last_short.mass_kg / mass_kg - 1.0:+.3e} 와 {last_long.mass_kg / mass_kg - 1.0:+.3e} 사이로 "
+                        f"뛴다(질량 차 {gap:.2e}, 사격 허용 {tol:g}), 중심 온도 {t_center:.6g} K (C157).")
             convergence.note("interior._shoot_pressure", False, trial=True)   # C138 P — 채택 사격의 ok 는 겉 표지가 든다
             return st, False
         x0, y0 = x1, y1
