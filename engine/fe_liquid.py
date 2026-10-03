@@ -141,10 +141,26 @@ def _k_t_el(col: Column, v: float, t: float) -> float:
     return _p_el(col, v, t) * (1.0 - col.g_el)
 
 
-def pressure(v: float, t: float, col: Column = LIQUID) -> float:
-    """P(V, T) [Pa]. 기준 온도의 열 항을 빼는 형태가 식 (1) 이다."""
+def pressure_reference(v: float, t: float, col: Column = LIQUID) -> float:
+    """P(V, T) [Pa]. 기준 온도의 열 항을 빼는 형태가 식 (1) 이다.
+    ⚠ C161: the pre-C161 form, kept as the reference for `test_hobby_table` H-exact; `pressure` below is the one used."""
     return (_p_cold(col, v) + _p_th(col, v, t) - _p_th(col, v, col.t_ref)
             + _p_el(col, v, t) - _p_el(col, v, col.t_ref))
+
+
+def pressure(v: float, t: float, col: Column = LIQUID) -> float:
+    """식 (1), `pressure_reference` 와 같은 식을 다시 묶었다 (C161 (4a)): x = V/V₀ 의 거듭제곱 · Θ(V) · γ(V) 를 한 번만
+    계산하고 T 항과 T_ref 항이 나눠 쓴다. 부동소수 순서만 다르다(H-exact 가 묶는다)."""
+    x = v / col.v0
+    xb = x ** col.beta
+    th = col.theta0 * x ** (-col.gamma_inf) * math.exp((col.gamma0 - col.gamma_inf) / col.beta * (1.0 - xb))
+    gam = col.gamma_inf + (col.gamma0 - col.gamma_inf) * xb
+    nr = 3.0 * col.n_atom * R_GAS
+    p_th = nr * gam / v * th * (1.0 / (math.exp(th / t) - 1.0) - 1.0 / (math.exp(th / col.t_ref) - 1.0))
+    p_el = col.g_el / v * 1.5 * col.n_atom * R_GAS * col.e0 * x ** col.g_el * (t * t - col.t_ref * col.t_ref)
+    xx = x ** (1.0 / 3.0)
+    p_cold = 3.0 * col.k0 * xx ** -2 * (1.0 - xx) * math.exp(col.eta * (1.0 - xx))
+    return p_cold + p_th + p_el
 
 
 def k_t(v: float, t: float, col: Column = LIQUID) -> float:
@@ -160,7 +176,28 @@ def k_t(v: float, t: float, col: Column = LIQUID) -> float:
 START_HALVINGS = 8
 
 
+#: C161 (4a) — (열, P, T) → 몰부피. 같은 자리를 다시 물으면 같은 값을 돌려준다(순수 함수의 기억, 값 그대로).
+#: 구조 풀이마다 `reset_solve_state()` 로 비운다(메모리 한도 · 풀 크기와 무관).
+_VOLUME_MEMO: dict[tuple[str, float, float], float] = {}
+
+
+def reset_solve_state() -> None:
+    """구조 풀이 하나의 시작 — 이 모듈의 기억 둘을 비운다 (C161 (4a), (4d))."""
+    _VOLUME_MEMO.clear()
+    _CACHE.clear()
+
+
 def volume_at(p: float, t: float, col: Column = LIQUID) -> float:
+    """`_volume_at` 의 기억 — 같은 (열, P, T) 는 다시 안 푼다 (C161 (4a)). 지구 한 풀이에서 호출의 48 % 가 되물음이었다."""
+    key = (col.name, p, t)
+    got = _VOLUME_MEMO.get(key)
+    if got is None:
+        got = _volume_at(p, t, col)
+        _VOLUME_MEMO[key] = got
+    return got
+
+
+def _volume_at(p: float, t: float, col: Column = LIQUID) -> float:
     """P, T 에서 몰부피 [m³/mol]. P(V) 는 단조감소라 뿌리가 하나다.
 
     ⚠ **이 자리가 적분기의 안쪽 고리다** (브리프 180 C). 첫 판은 200회 이분법이었고, γ 가 걸음마다
@@ -225,7 +262,9 @@ def volume_at(p: float, t: float, col: Column = LIQUID) -> float:
 #: ⚠ **열 이름이 키에 들어간다** — 두 상이 같은 (P, T) 를 묻는데 캐시가 상을 모르면 한쪽의 값이
 #:   다른 쪽에 배달된다.
 _CACHE: dict[tuple[str, float, float], dict] = {}
-_CACHE_MAX = 4096
+#: C161 — 풀이마다 비우므로 한도는 한 풀이의 고유 자리 수 위로 둔다(지구 한 풀이 ≈ 7 만). 옛 4096 은 첫 판에 차서 그 뒤로
+#: 기억이 안 들었다 — 값은 같고(순수 함수) 시간만 달랐다.
+_CACHE_MAX = 400000
 
 
 def thermal_at(p: float, t: float, col: Column = LIQUID) -> dict:

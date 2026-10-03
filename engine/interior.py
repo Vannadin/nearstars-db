@@ -43,6 +43,7 @@ import water_table
 import water2_table
 import steam_if97
 import rtpress             # C120: 녹은 규산염의 액체 끝성분
+import fe_liquid           # C161: 풀이마다 기억을 비운다
 import rootfind            # C152: 0 을 사이에 둔 두 시행 안의 근 — 공용 Brent
 from eos import (EARTH_POTENTIAL_T, IAPWS_VII_END, ICE_VII_TO_X,
                  ICE_VII_X_T_MAX, MATERIALS, REINHARDT_P_MAX, SILICATE_PREM_TO_PV,
@@ -4039,6 +4040,7 @@ def solve(mass_earth: float,
     _FAMILY_TRAIL.update(trials=[], reclosed=[], closed=[], answer=None, dev=None, calls=0, returned={}, answer_call=None)
     _REF_INFO.clear()
     rtpress.reset_solve_state()          # C161 (4d) — 부피 근 찾기의 따뜻한 출발점은 풀이마다 새로(풀 크기와 무관하게)
+    fe_liquid.reset_solve_state()        # C161 (4a) — 철 액체 기억은 풀이마다 비운다
     # 기저층 (prereg-structure-basal-layer) — 두께 0 또는 없음이면 층이 없다(S-B2: 예전 경로 그대로).
     basal = None
     if basal_layer_thickness_km:

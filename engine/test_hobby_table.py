@@ -40,6 +40,19 @@ def h_exact() -> None:
         bound = max(1e-12 * scale, 1e-12)                     # 1e-3 Pa = 1e-12 GPa
         worst = max(worst, abs(a - b) / bound)
     ok(worst <= 1.0, f"H-exact (4a): pressure within the mixed bound on 20 000 (V, T) — worst {worst:.3f} of the bound")
+    import fe_liquid as fl
+    worst_fe = 0.0
+    for col in (fl.LIQUID, fl.HCP):
+        for _ in range(10000):
+            v, t = col.v0 * rnd.uniform(0.3, 1.4), rnd.uniform(300.0, 9000.0)
+            a, b = fl.pressure(v, t, col), fl.pressure_reference(v, t, col)
+            scale = (abs(fl._p_cold(col, v)) + abs(fl._p_th(col, v, t)) + abs(fl._p_th(col, v, col.t_ref))
+                     + abs(fl._p_el(col, v, t)) + abs(fl._p_el(col, v, col.t_ref)))
+            worst_fe = max(worst_fe, abs(a - b) / max(1e-12 * scale, 1e-3))          # Pa
+    ok(worst_fe <= 1.0, f"H-exact (4a): fe_liquid pressure (liquid, hcp) within the mixed bound — worst {worst_fe:.3f}")
+    fl.reset_solve_state()
+    v1 = fl.volume_at(300e9, 5000.0); v2 = fl.volume_at(300e9, 5000.0); fl.reset_solve_state()
+    ok(v1 == v2 == fl._volume_at(300e9, 5000.0), "H-exact (4a): the fe_liquid volume memo returns the solve's own value")
     # (4b): 따뜻한 출발과 차가운 출발이 1e-12·V₀ 안에서 같고, 거절은 같은 점에서
     worst_v, same_ref = 0.0, True
     for _ in range(400):
