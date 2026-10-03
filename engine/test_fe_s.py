@@ -365,14 +365,23 @@ except eos.PhaseGap:
 row("30.0000 GPa" in _floor_txt and _above_ok,
     f"ⓒ 심은 `p_min` 30 GPa 재질은 바닥 아래를 이름 대고 거절하고 바닥 위는 답한다(직접 호출): «{_floor_txt[:52]}…»")
 C152_NAMED = ("표면온도 경계조건이 예산 안에 닫히지 않았다", "표면온도 잔차가 뛴다", "사격 질량이 p_c 에서 뛴다")
-try:
-    interior.shoot(0.1074 * 5.97219e24, 0.325, 0.0, _planted, potential_temperature=1600.0)
-    _loop30 = "답(거절 없음)"
-except eos.PhaseGap as _g:
-    _loop30 = f"바닥 PhaseGap «{_g.reason[:60]}…»"
-except ValueError as _e:
-    _named = next((h for h in C152_NAMED if h in str(_e)), None)
-    _loop30 = f"{'이름 댄 거절 «' + _named + '»' if _named else '이름 없는 ValueError'} «{str(_e)[:60]}…»"
+
+
+def _loop_record(shoot=None) -> str:
+    """ⓒ 풀이 수준의 결과를 이름으로 — 어떤 예외도 기록이 되고 충돌이 되지 않는다(C157 메모 8 규칙 3, 감사 e2)."""
+    try:
+        (shoot or interior.shoot)(0.1074 * 5.97219e24, 0.325, 0.0, _planted, potential_temperature=1600.0)
+        return "답(거절 없음)"
+    except eos.PhaseGap as g:
+        return f"바닥 PhaseGap «{g.reason[:60]}…»"
+    except ValueError as e:
+        named = next((h for h in C152_NAMED if h in str(e)), None)
+        return f"{'이름 댄 거절 «' + named + '»' if named else '이름 없는 ValueError'} «{str(e)[:60]}…»"
+    except Exception as e:                        # noqa: BLE001 — 기록만(판정 아님), 뒤 행을 가리지 않는다
+        return f"이름 없는 예외 {type(e).__name__} «{str(e)[:60]}…»"
+
+
+_loop30 = _loop_record()
 print(f"  [기록] ⓒ 풀이 수준(cmf 0.325, T_pot 1600 K): {_loop30} — 판정하지 않음 (C157 메모 8)")
 # C157 메모 8 음성 대조 — (i) 이름 없는 예외는 _shoot_gap 이 [FAIL] 한 줄로 받고 이름 없는 표지를 돌려준다(뒤 행은 계속 돈다),
 #   (ii) 조용한 답은 None 이라 «거절» 을 기대하는 행이 실패한다, (iii) 바닥을 안 심은 fe_prem 은 같은 압력을 거절하지 않는다.
@@ -390,10 +399,11 @@ try:
     _unplanted_ok = True
 except eos.PhaseGap:
     _unplanted_ok = False
+_rec_crash = _loop_record(shoot=lambda *a, **k: (_ for _ in ()).throw(RuntimeError("기록 길 음성 대조")))
 row(_rows_seen == [False] and isinstance(_neg_crash, _Crashed) and "30.0000 GPa" not in _neg_crash.reason
-    and _neg_silent is None and _unplanted_ok,
+    and _neg_silent is None and _unplanted_ok and _rec_crash.startswith("이름 없는 예외 RuntimeError"),
     "ⓒ 음성 대조 (C157 메모 8) — 이름 없는 예외는 [FAIL] 한 줄 · 이름 없는 표지로 · 조용한 답은 None(거절 아님) · "
-    "바닥을 안 심은 fe_prem 은 같은 압력을 거절하지 않는다")
+    "바닥을 안 심은 fe_prem 은 같은 압력을 거절하지 않는다 · 기록 길의 RuntimeError 는 충돌이 아니라 기록")
 
 print("\n⑫ 다원계 상자 — 인쇄된 도함수로 여덟 끝점을 우리가 다시 계산한다 (C55 2단계, 브리프 183)")
 #: 병렬석 P21 §1 의 표. **받아쓴 것이 아니라 대조 상대**다 — 아래 행은 우리 코드가 낸다.
