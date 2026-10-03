@@ -423,6 +423,8 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         inside = sorted(t for t in refused if t_minus < t < t_plus)
         if not inside:
             return [t_minus, t_plus, why[:160]]
+        if all(interior.GRAZE_REASON_HEAD in noans[t] for t in inside):   # C157 메모 5 §3.1b — 거절 전부가 스침 표지
+            return [t_minus, t_plus, noans[inside[0]][:160], "refusal", "onset_graze"]
         return [t_minus, t_plus, noans[inside[0]][:160], "refusal"]
 
     prefetch([(t, None) for t in grid])
@@ -543,7 +545,7 @@ def refusal_over_cap(gaps) -> str:
     why = []
     if len(ref) > REFUSAL_SPANS_MAX:
         why.append(f"{len(ref)} 개 > {REFUSAL_SPANS_MAX}")
-    wide = [g for g in ref if g[1] - g[0] > REFUSAL_SPAN_MAX_K]
+    wide = [g for g in ref if g[1] - g[0] > REFUSAL_SPAN_MAX_K and g[4:5] != ["onset_graze"]]   # C157 메모 5 §3.1b — 표지 구간은 폭만 면제
     if wide:
         why.append(f"폭 {', '.join(f'{g[1] - g[0]:.3f}' for g in wide)} K > {REFUSAL_SPAN_MAX_K} K")
     return " · ".join(why)
@@ -1035,8 +1037,9 @@ def check_all() -> int:
         body, _ = run.load_body(BODIES_DIR / f"{doc['body'].lower()}.yaml")
         for g in doc.get("no_answer", []):      # C162 ② — 받을 답 없는 구간은 전부 까닭과 함께: 거절은 [WARN], 판정은 [기록]
             tag = "[WARN]" if len(g) > 3 and g[3] == "refusal" else "[기록]"
+            graze = " · 경계 스침(폭 상한 면제, C157 메모 5)" if g[4:5] == ["onset_graze"] else ""
             print(f"  {tag} {path.name} — {'거절 구간' if tag == '[WARN]' else '받을 답 없는 구간'} [{g[0]!r}, {g[1]!r}] K "
-                  f"폭 {g[1] - g[0]:.3f} K · {g[2]}")
+                  f"폭 {g[1] - g[0]:.3f} K{graze} · {g[2]}")
         over = refusal_over_cap(doc.get("no_answer", []))
         if over:
             print(f"  [FAIL] {path.name} — 거절 구간이 상한을 넘는다 ({over}, C162) — `--refresh {doc['body'].lower()}`")

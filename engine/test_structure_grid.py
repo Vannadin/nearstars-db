@@ -333,7 +333,19 @@ check("C162 ② — 거절 구간 셋이면 상한(둘) 넘음: 구간 전부를
       (_e3 or "")[:160])
 _, _ew, _ = _build162(_fake162([(1002.6, 1005.4)]))
 check("C162 ② — 폭 2.0 K 넘는 거절 구간 하나면 멈춤", _ew is not None and "상한" in _ew and "> 2.0 K" in _ew, (_ew or "")[:160])
-check("C162 ② — 판정 구간(셋째 칸까지)은 상한에 안 셈", sg.refusal_over_cap([[1.0, 9.0, "판정"]] * 3) == "")
+# C157 메모 5 §3.1b — 스침 표지가 붙은 거절 구간은 폭 상한만 면제(셈 · 목록 · 폭 인쇄), 표지 없는 3 K 구간은 그대로 멈춤
+_GRAZE = _JUMP + " — " + interior.GRAZE_REASON_HEAD + " — 고상선 · silicate 16.6 GPa (T − T_경계 -0.2 K) · 민감도 S 6522 (가짜)"
+_rg, _eg, _ = _build162(_fake162([(1002.6, 1005.4)], why=_GRAZE))
+_gg = _rg[8] if _rg else []
+check("C157 메모 5 — 스침 표지 3 K 거절 구간은 멈추지 않음(다섯째 칸 onset_graze · 폭 3 K 그대로 기록)",
+      len(_gg) == 1 and _gg[0][3:] == ["refusal", "onset_graze"] and abs(_gg[0][1] - _gg[0][0] - 3.0) < 1e-9, (_eg or str(_gg))[:160])
+check("C157 메모 5 음성 — 같은 폭의 표지 없는 구간은 멈춤(위 «C162 ② 폭» 과 같은 가짜, 표지만 뺌)", _ew is not None and "> 2.0 K" in _ew)
+_, _eg3, _ = _build162(_fake162([(1000.9, 1001.1), (1002.9, 1003.1), (1004.9, 1005.1)], why=_GRAZE))
+check("C157 메모 5 — 표지 구간도 개수 상한(둘)엔 셈: 셋이면 멈춤", _eg3 is not None and "3 개 > 2" in _eg3, (_eg3 or "")[:120])
+check("C157 메모 5 — 문서 판: 표지 구간은 폭 사유 없음, 표지 없는 같은 폭은 사유",
+      sg.refusal_over_cap([[1.0, 4.0, "x", "refusal", "onset_graze"]]) == ""
+      and "폭" in sg.refusal_over_cap([[1.0, 4.0, "x", "refusal"]]))
+check("C162 ② — 판정 구간(셋째 칸까지)은 상한에 안 셈",sg.refusal_over_cap([[1.0, 9.0, "판정"]] * 3) == "")
 check("C162 ② — 문서 판: 거절 구간 셋 · 폭 넘는 하나는 상한 사유",
       "3 개" in sg.refusal_over_cap([[1.0, 1.5, "x", "refusal"]] * 3) and "폭" in sg.refusal_over_cap([[1.0, 3.5, "x", "refusal"]]))
 _, _eb, _ = _build162(_fake162([(1002.9, 1003.1)], why=interior.BACKSTOP_REASON_HEAD + " (적분 피적분 불연속) — 가짜"))
@@ -366,6 +378,12 @@ _b1, _o1 = _check162([[1002.75, 1003.25, _JUMP, "refusal"], [1005.0, 1005.5, "�
 check("C162 ② — --check 가 구간 전부를 까닭과 찍음: 거절 [WARN] · 판정 [기록], 상한 안이면 FAIL 없음(표 없는 몸 둘만)",
       "[WARN] earth.json — 거절 구간 [1002.75, 1003.25]" in _o1 and "[기록] earth.json — 받을 답 없는 구간 [1005.0, 1005.5]" in _o1
       and "상한" not in _o1, f"bad {_b1}")
+_bg, _og = _check162([[2073.0, 2091.0, _GRAZE[:160], "refusal", "onset_graze"]])
+check("C157 메모 5 — --check 가 표지 구간을 폭 · 표지와 찍고 FAIL 없음(18 K 띠)",
+      "폭 18.000 K · 경계 스침(폭 상한 면제" in _og and "상한" not in _og.replace("폭 상한 면제", "") and _bg == _b1, f"bad {_bg}")
+import core_history  # noqa: E402
+_gn = core_history._gap_note({"grid_gap_calls": 2, "grid_gap_steps": 5, "grid_gap_spans": [(2073.0, 2091.0)]})
+check("C157 메모 5 — 열진화 메모가 건넌 구간의 폭을 찍음", bool(_gn) and "(폭 18.00 K)" in _gn[0], str(_gn)[:120])
 _b3, _o3 = _check162([[1000.0 + i, 1000.5 + i, _JUMP, "refusal"] for i in range(3)])
 check("C162 ② — 거절 구간 셋을 든 표는 --check FAIL", "거절 구간이 상한을 넘는다 (3 개 > 2" in _o3 and _b3 == _b1 + 1, f"bad {_b3}")
 

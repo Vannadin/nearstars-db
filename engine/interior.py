@@ -115,6 +115,14 @@ STENCIL_BOUNDS = True
 PHASE_CUT_REWALKS = [0]
 # C157 ③ 뒷받침 거절문의 머리 — C162 가 표 짓기에서 이 거절만 멈춤으로 남기려고 읽는다(규칙 3 «서면 멈춤»)
 BACKSTOP_REASON_HEAD = "사격 질량이 p_c 에서 뛴다"
+# C157 메모 5 — 경계 스침. 접선 접근의 |T − T_경계| 한도 [K] · 고리 마지막 쌍의 민감도 S 한도(§5 0 행 전수가 가름) · 문구 머리.
+GRAZE_K = 1.0
+GRAZE_SLOPE = 10.0
+GRAZE_REASON_HEAD = "경계 스침"
+_LAST_GRAZE = [None]           # 지금 적분의 접선 접근(`_integrate_raw` 가 쓰고 `integrate` 가 구조에 단다)
+_LOOP_TRIALS = [None]          # 바깥 온도 고리 호출의 시행 [(T_c, T_surf, 접근)] — 고리 밖이면 None
+#: 스침 표지 — 답으로 돌려준 구조 id → 메모 한 줄(위 표들과 같은 꼴, 풀이마다 비움)
+_GRAZE_INFO: dict[int, str] = {}
 # 얼음 기둥 안에서 국소 (P, T) 가 녹는곡선 위이면 액체 물로 적분한다 (2026-08-29). False 는
 # 판정만 내고 밀도는 고체상으로 두던 2026-08-27 의 경로이고, 바다가 밀도를 실제로 움직이는지를
 # 재는 대조 검사만 그것을 켠다.
@@ -212,7 +220,8 @@ class Structure:
                  "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples", "rock_samples",
                  "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached",
                  "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void", "crust_blocked", "finish_subst",
-                 "r_grad_base", "r_grad_top", "floor_truncated", "hot_water_filled", "boiling_flips")
+                 "r_grad_base", "r_grad_top", "floor_truncated", "hot_water_filled", "boiling_flips",
+                 "onset_graze")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
@@ -259,6 +268,9 @@ class Structure:
         # 이 구조를 낸 마지막 온도 시도에서 지각이 녹는곡선 위라 던져 괄호가 중심 온도를 내렸는가 (C11).
         # shoot 이 채운다. 표면 온도가 선언에 못 닿은 해에서 이것이 참이면 선언의 자기모순이다.
         self.crust_blocked = False
+        # C157 메모 5 — 기둥이 경계 곡선(고상선 · 물 경계)에 접선으로 가장 가까이 간 자리 (곡선, 재료, P, T − T_경계) · 없으면
+        #   None. `integrate` 가 채운다. 값 밖(스침 표지의 재료만).
+        self.onset_graze = None
         # C152 메모 3 — 마무리 사격이 안 닫혀 닫힌 시행으로 바꿨으면 (고른 T_c, 바꾼 T_c, 그 ln(T_surf/T_pot)). shoot 이 채운다.
         self.finish_subst = None
         # 적분이 멈춘 압력 [Pa]. 응축상 천체는 0 이다 — 표면이 P = 0 이니까. 기체 외피가
@@ -869,6 +881,8 @@ def answer_verdict(result, tags: list | None = None) -> str | None:
     if tags is not None and result.applicable and result.converged is not False \
             and (result.values or {}).get("converged") is False:
         tags.append("속 풀이 미수렴 — " + ", ".join((result.values or {}).get("unconverged_solvers") or ["(이름 없음)"]))
+    if tags is not None and result.applicable and result.converged is not False:
+        tags.extend(n for n in (result.notes or ()) if n.startswith(GRAZE_REASON_HEAD))   # C157 메모 5 — 스침 표지
     if not result.applicable:
         return f"거절 — {(result.reason or '')[:160]}"
     if result.converged is False:
@@ -948,6 +962,8 @@ def integrate(*args, **kw):
         structure = _integrate_raw(*args, **kw)
         if holder is not None:
             holder[0] = id(structure)
+    structure.onset_graze = _LAST_GRAZE[0]
+    _note_loop_trial(kw.get("t_center", args[11] if len(args) > 11 else 0.0), structure)
     _ICE_GRID_DELTA[id(structure)] = (ice_fr2015.STATS["extrapolated_rho"] - before[0],
                                       ice_fr2015.STATS["below_t_min"] - before[1])
     return structure
@@ -1253,6 +1269,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
     # C122 고침 — 기록만. 밀도를 다시 부르지 않는다(`water_hot.density` 는 직전 해를 출발점으로 기억해서, 부르는
     #   것만으로 뒤 풀이의 비트가 움직일 수 있다). 괄호 밑 걸음의 밀도는 정확히 `RHO_MIN` 이라 질량은 그것으로 센다.
     hw_steps, hw_mass, hw_first = 0, 0.0, None
+    g_hist, g_mat, graze = {}, None, None     # C157 메모 5 — 곡선마다 직전 두 (g, P) · 재료 · 가장 가까운 접선 접근
+    _LAST_GRAZE[0] = None
     bf_flips, bf_last, bf_first = 0, 0, None
     ref_info = None              # C148 — 기록만. 온도가 흐르지 않거나 해당 재질이 없으면 안 채워진다
     while p > p_stop and steps < MAX_STEPS:
@@ -1261,6 +1279,26 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
         mat = material_for(m)
         if record is not None:
             record.append((r, p, m, t, mat.name))
+        # C157 메모 5 — 경계 곡선 접선 접근: g = T − T_경계 가 극값(Δg 부호가 바뀜)이고 |g| ≤ GRAZE_K 인 자리 중 가장
+        #   가까운 것. 가로지름(g 가 0 을 극값 없이 지남)은 아니다. 곡선은 재료가 낸다(상 이름 없음). 값 밖.
+        _oc = getattr(mat, "onset_curves", None) if t > 0.0 else None
+        if _oc is not None:
+            if mat.name != g_mat:
+                g_hist.clear()
+                g_mat = mat.name
+            try:
+                _curves = _oc(p, t)
+            except eos.PhaseGap:            # 재료의 근거 구간 밖 — 이 걸음의 판정은 아래 밀도 호출이 이름 대며 낸다(스침은 값 밖)
+                _curves = ()
+            for c_name, t_on in _curves:
+                g = t - t_on
+                h2 = g_hist.get(c_name, ())
+                if len(h2) == 2:
+                    (g_a, _p_a), (g_b, p_b) = h2
+                    if (g_b - g_a) * (g - g_b) < 0.0 and abs(g_b) <= GRAZE_K and (graze is None or abs(g_b) < abs(graze[3])):
+                        graze = (c_name, mat.name, p_b, g_b)
+                        _LAST_GRAZE[0] = graze
+                g_hist[c_name] = (h2[-1], (g, p)) if h2 else ((g, p),)
         if layer != prev_layer:
             note_switch(prev_layer)
             apply_jump(prev_layer)
@@ -2399,7 +2437,61 @@ def shoot(*args, **kw) -> tuple[Structure, bool]:
         _REOPEN[0] = False
 
 
-def _shoot_body(mass_kg: float, cmf: float, imf: float,
+def _note_loop_trial(t_center: float, st) -> None:
+    """C157 메모 5 — 바깥 온도 고리 안의 적분이면 그 T_c 의 마지막 구조를 시행 목록에 둔다(같은 T_c 면 바꿔 씀).
+    §5 0 행 전수(`s_census.py`)가 잰 것과 같은 양 — 고리 시행마다 마지막 적분의 (T_c, T_surf)."""
+    seq = _LOOP_TRIALS[0]
+    if seq is None or not t_center or not getattr(st, "t_surface", 0.0) > 0.0:
+        return
+    item = (t_center, st.t_surface, st.onset_graze)
+    if seq and seq[-1][0] == t_center:
+        seq[-1] = item
+    else:
+        seq.append(item)
+
+
+def _graze_tag() -> str:
+    """C157 메모 5 §3.2 — 돌려줄 고리 호출의 **마지막 두 서로 다른 T_c** 로 S = |Δln T_surf / Δln T_c| 를 내고, S > GRAZE_SLOPE
+    이며 그 둘 중 하나의 구조에 경계 접선 접근이 있으면 표지 문구, 아니면 빈 문자열."""
+    seq = _LOOP_TRIALS[0] or []
+    if len(seq) < 2:
+        return ""
+    (tc_a, ts_a, g_a), (tc_b, ts_b, g_b) = seq[-2], seq[-1]
+    dx = math.log(tc_b) - math.log(tc_a)
+    s_last2 = abs((math.log(ts_b) - math.log(ts_a)) / dx) if dx != 0.0 else 0.0
+    near = [g for g in (g_a, g_b) if g is not None]
+    if s_last2 <= GRAZE_SLOPE or not near:
+        return ""
+    c_name, m_name, p_g, g = min(near, key=lambda x: abs(x[3]))
+    return (f"{GRAZE_REASON_HEAD} — {c_name} · {m_name} {p_g / 1e9:.3f} GPa (T − T_경계 {g:+.3f} K) · "
+            f"민감도 S {s_last2:.4g} (C157 메모 5)")
+
+
+def _graze_suffix() -> str:
+    """C152 뜀 · 예산 거절 문구 끝에 붙는 스침 표지(없으면 빈 문자열). C162 구간이 이 머리로 표지를 읽는다."""
+    tag = _graze_tag()
+    return f" — {tag}" if tag else ""
+
+
+def _shoot_body(*args, **kw) -> tuple[Structure, bool]:
+    """C157 메모 5 — 온도 고리 `_shoot_body_raw` 의 바깥 호출마다 시행 목록을 열고, 답이면 스침 표지를 그 구조에 단다.
+    안쪽(다시 닫기) 호출은 같은 목록을 쓴다 — 전수가 잰 «바깥 호출» 과 같은 경계."""
+    outer = _LOOP_TRIALS[0] is None
+    if outer:
+        _LOOP_TRIALS[0] = []
+    try:
+        st, ok = _shoot_body_raw(*args, **kw)
+        if outer:
+            tag = _graze_tag()
+            if tag:
+                _GRAZE_INFO[id(st)] = tag
+        return st, ok
+    finally:
+        if outer:
+            _LOOP_TRIALS[0] = None
+
+
+def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
           core_material: str, phi0: float = 0.0,
           p_cap: float | None = None, gmf: float = 0.0,
           envelope_z: float = 0.0, envelope_z_rock_fraction: float = 1.0,
@@ -2694,7 +2786,7 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
                 raise ValueError(
                     f"표면온도 잔차가 뛴다 — 중심 온도 [{math.exp(x_l):.6g}, {math.exp(x_h):.6g}] K 사이에서 0 을 건너뛴다"
                     f"(괄호 폭 {x_h - x_l:.2e} ≤ T_TOL {T_TOL:g}, 가까운 끝의 어긋남 {abs(math.expm1(y_best)) * 100:.2f} %). "
-                    "그 사이에 표면 온도가 선언값과 같아지는 해가 없다 (C152).")
+                    "그 사이에 표면 온도가 선언값과 같아지는 해가 없다 (C152)." + _graze_suffix())
             nxt = math.exp(x)
             root_t = nxt
         elif bracketed and lo is not None and (hi is not None or wall is not None):
@@ -2858,7 +2950,8 @@ def _shoot_body(mass_kg: float, cmf: float, imf: float,
             "폴백 통합이 아니라 오너 결정 ① 의 직접 결과다. 마지막 시행의 수는 "
             "답이 아니므로 내보내지 않는다. ⚠ **예산을 더 주는 것은 답이 아니다** — 감쇠율 0.878 에서 "
             "+28 걸음으로도 못 닿았다. 감쇠를 빠르게 하려면 비례 갱신에 완화계수 α < 1 이 필요하고, "
-            "그것은 시행 걸음이 아니라 **갱신 규칙 변경**이라 붙는 천체의 경로도 바꾼다 — **C69 후보**다." + straddle_note)
+            "그것은 시행 걸음이 아니라 **갱신 규칙 변경**이라 붙는 천체의 경로도 바꾼다 — **C69 후보**다." + straddle_note
+            + _graze_suffix())
     print(f"  [고리] 시행 {len(devs)} 걸음 · 완화 걸린 걸음 {damped_steps} · "
           f"마지막 어긋남 {devs[-1]:.4e}" if devs else "  [고리] 시행 0 걸음")
     reps = _family_oscillation(fams)
@@ -4037,6 +4130,7 @@ def solve(mass_earth: float,
     shots_before = convergence.shot_count()      # C139 — 이 풀이의 적분은 여기부터다(중첩 풀이는 바깥 기록을 같이 쓴다)
     _BASAL_INFO.clear()
     _FAMILY_INFO.clear()
+    _GRAZE_INFO.clear()
     _FAMILY_TRAIL.update(trials=[], reclosed=[], closed=[], answer=None, dev=None, calls=0, returned={}, answer_call=None)
     _REF_INFO.clear()
     fe_liquid.reset_solve_state()        # C161 (4a) — 철 액체 기억은 풀이마다 비운다
@@ -4187,6 +4281,8 @@ def solve(mass_earth: float,
     basal_info = _BASAL_INFO.get(id(st))
     litho_info = _LITHO_INFO.get(id(st))
     fam_info = _FAMILY_INFO.get(id(st))
+    if id(st) in _GRAZE_INFO:          # C157 메모 5 — 답에 스침 표지(값 그대로, 메모 한 줄)
+        notes.append(_GRAZE_INFO[id(st)])
     _FAMILY_TRAIL["answer"] = _melt_family(st)   # 덧붙임 57 — 돌려주는 구조의 가족 · 표면 어긋남
     _FAMILY_TRAIL["answer_call"] = _FAMILY_TRAIL["returned"].get(id(st))   # 덧붙임 58 ② — 그 구조를 낸 사격 호출
     _FAMILY_TRAIL["dev"] = (abs(st.t_surface / potential_temperature - 1.0)

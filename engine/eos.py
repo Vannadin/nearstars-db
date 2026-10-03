@@ -963,6 +963,20 @@ class Material:
         """압력 p 에서 이 재료가 녹는 온도 [K]. 곡선이 없으면 None."""
         return self.phase_at(p).t_melt(p)
 
+    def onset_curves(self, p: float, t: float) -> list:
+        """C157 메모 5 — 이 (P, T) 에서 피적분이 체제를 바꾸는 경계 곡선들 [(이름, T_경계 K)]. 적분기의 스침 검출이
+        상 이름 없이 이것만 읽는다. 규산염 녹는 창은 고상선(`melt_phi` 와 같은 곡선 · 변형), 물은 유체 ↔ 얼음 경계
+        (`water_onset_curve`). 그 밖(철 곡선 등 적분기가 체제를 안 바꾸는 곡선)은 없음."""
+        if p <= 0.0 or t <= 0.0:
+            return []
+        ph = self.phase_at(p)
+        if ph.melt == "silicate":
+            t_on = silicate_solidus(p, ph.melt_variant)
+            return [] if t_on is None else [("고상선", t_on)]
+        if ph.melt == "water" and ph.melt_scale == 1.0:
+            return _water_fluid_onset_curves(self, p, t)
+        return []
+
     def t_melt_band(self, p: float) -> tuple[float, float] | None:
         """융해 바운드가 이 압력에서 **괄호로만** 있으면 그 양끝 [K]. 아니면 None.
 
@@ -2943,6 +2957,33 @@ def water_liquid_at(p: float, t: float) -> bool | None:
     return p < iapws_p_melt(name, t)
 
 
+def water_onset_curve(p: float, t: float) -> float | None:
+    """C157 메모 5 — 물 기둥이 유체 ↔ 얼음을 가르는 경계 온도 [K] (적분기의 `liquid_at` 과 같은 선: 20.6 GPa 까지
+    IAPWS 녹는곡선, 그 위 VII′–VII″). 스침 검출만 읽는다(값 밖). IAPWS 분기는 `water_liquid_at` 처럼 뒤집지 않는다 —
+    걸음마다 묻는 자리라 p_melt(T) 를 t 에서 1 차로 펴 T_경계 ≈ t − (p_melt(t) − p)/(dp_melt/dT). 부호는 정확하고
+    크기는 |T − T_경계| 가 작을 때(스침이 보는 띠) 정확하다. 곡선이 없거나 분기 온도 구간 밖이면 None."""
+    if p > IAPWS_VII_END:
+        return water_vii1_vii2_boundary(p)
+    name = _water_branch(p)
+    if name is None or name == "ice_vii_disputed":
+        return None
+    if name == "ice_vii_reinhardt":
+        return _interp_line(REINHARDT_LIQUID, p)
+    if name == "ice_vii":
+        return water_vii_melt_mean(p)
+    lo, hi = (IAPWS_IH_RANGE if name == "ice_ih" else IAPWS_MELT[name][4:6])
+    if not lo < t - 0.01 < t + 0.01 < hi:
+        return None
+    slope = (iapws_p_melt(name, t + 0.01) - iapws_p_melt(name, t - 0.01)) / 0.02
+    return None if slope == 0.0 else t - (iapws_p_melt(name, t) - p) / slope
+
+
+def _water_fluid_onset_curves(self, p: float, t: float) -> list:
+    """C157 메모 5 — 물 기둥의 유체 재료가 내는 경계 곡선(얼음 쪽과 같은 선)."""
+    t_on = water_onset_curve(p, t) if p > 0.0 and t > 0.0 else None
+    return [] if t_on is None else [("물 경계", t_on)]
+
+
 WATER_PHASE_LABELS = {"ice_ih": "얼음 Ih", "ice_iii": "얼음 III", "ice_v": "얼음 V",
                       "ice_vi": "얼음 VI", "ice_vii": "얼음 VII"}
 
@@ -4368,5 +4409,8 @@ MATERIALS: dict[str, Material | HotWater | HydrogenHelium | LiquidWater | DenseL
                         H2O_LIQUID_DENSE, NH3)
 }
 MATERIALS.update(CORE_BOX_MATERIALS)
+# C157 메모 5 — 물 기둥의 유체 재료(얼음과 같은 자리에 꽂히는 표 재료)도 같은 경계 곡선을 낸다
+for _cls in (HotWater, LiquidWater, DenseLiquidWater):
+    _cls.onset_curves = _water_fluid_onset_curves
 # 바닥을 선언한 세트마다 빈 칸을 세운다 — «선언했으나 안 물어짐» 이 «선언 안 함» 과 갈린다.
 seed_verdict_askings(MATERIALS)

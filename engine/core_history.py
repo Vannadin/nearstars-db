@@ -613,6 +613,6 @@ def _gap_note(hist) -> tuple:
     """구조 표 덧붙임 50 ④ — 받을 답 없는 구간을 건넜으면 한 줄(없으면 빈 튜플, 옛 note 그대로)."""
     if not hist.get("grid_gap_calls"):
         return ()
-    spans = " · ".join(f"[{a:.2f}, {b:.2f}]" for a, b in hist.get("grid_gap_spans", []))
-    return (f"구조 표의 받을 답 없는 구간 {spans} K 를 높은 T 쪽 값으로 건넘 — {hist['grid_gap_steps']} 걸음 "
+    spans = " · ".join(f"[{a:.2f}, {b:.2f}] K (폭 {b - a:.2f} K)" for a, b in hist.get("grid_gap_spans", []))   # C157 메모 5 — 폭도
+    return (f"구조 표의 받을 답 없는 구간 {spans} 를 높은 T 쪽 값으로 건넘 — {hist['grid_gap_steps']} 걸음 "
             f"(호출 {hist['grid_gap_calls']}, 냉각 이력, prereg-structure-grid 덧붙임 50)",)
