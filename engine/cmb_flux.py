@@ -82,7 +82,7 @@ PAPER = {"delta_b_km": 140.0, "q_c_tw": 9.0, "q_k_tw": 6.2, "range_tw": (4.5, 9.
 
 NO_JUMP = "cannot-say (no declared core-side CMB temperature — the lower-bound branch has no jump to drive a boundary layer)"
 NO_CORE = "cannot-say (no core — no core radius or no core mass fraction)"
-SUB_ADIABATIC = "Q_CMB (lower bound) below Q_adiabat — the declared lower-bound T_c does not sustain a superadiabatic core at this k; the true Q_CMB is higher"
+SUB_ADIABATIC = "Q_CMB below Q_adiabat — the core is sub-adiabatic at the CMB at this k (Q_CMB read as a value: owner C25 ①, C158 R2 (d))"
 SUPER_ADIABATIC = "Q_CMB above Q_adiabat"
 CONDITION = ("Nimmo+ 2004 eqs 37–39 calibrated at source on present-day Earth; k_b derived (κ_b ρ_m C_pm); "
              "iron k 50 ± 20 W/(m·K) declared; γ = 1.5 solid value on a liquid core; g in eq. 37 is the paper's surface g")
@@ -180,7 +180,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
     over = mantle_km is not None and delta_km >= mantle_km
     ad = adiabatic_flow(core_material, cmb_pressure_gpa * 1e9, t_c, r_cmb, m_core)
     ad_band = (ad["q_ad_w"] * K_CORE_RANGE[0] / K_CORE, ad["q_ad_w"] * K_CORE_RANGE[1] / K_CORE)
-    verdict = SUPER_ADIABATIC if core["q_c_w"] > ad["q_ad_w"] else SUB_ADIABATIC   # on a lower-bound Q_CMB
+    verdict = SUPER_ADIABATIC if core["q_c_w"] > ad["q_ad_w"] else SUB_ADIABATIC   # Q_CMB read as a value (owner C25 ①, C158 R2 (d))
     lo, hi = PAPER["range_tw"]
     inside = lo * 1e12 <= core["q_c_w"] <= hi * 1e12
     # ⚠ **꼴 (ii) — 노드는 계속 답하고, δ_b 를 지나는 일곱만 이름 댄 거절로 나간다.**
@@ -217,7 +217,8 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
         "이 수로 '다이나모 없음' 을 읽지 말 것. 하한을 해로 바꾸는 것은 핵 에너지 수지의 폐합(브리프 62 B)이다.",
         "⚠ C158 R2 (d), 2026-10-03: `q_cmb_in_paper_range` 는 Q_CMB 를 **값**으로 읽는다 — 오너 C25 갈래 ① (2026-09-09: "
         "Sinmyo 의 3760 K 상한을 값으로 받음). 그 읽기에서 4.5–9 TW 와의 비교는 양쪽으로 판정한다. 위 '하한' 문단은 C25 (e) 의 "
-        "기록이고 그대로 둔다; 판정 문자열 `cmb_flux_verdict` 의 '(lower bound)' 는 C158 범위 밖이다(다음 등록).",
+        "기록이고 그대로 둔다; 판정 문자열 `cmb_flux_verdict` 의 '(lower bound)' 는 이 등록으로 값 읽기로 바뀌었다"
+        "(prereg-labels-cmbflux-corecenter).",
         f"핵-맨틀 경계 열류 (Nimmo+ 2004 식 37–39): 핵 쪽 경계온도 {t_c:.0f} K (선언값 — C25 ①) − 맨틀 단열선 밑 {t_m:.0f} K "
         f"= 점프 {t_c - t_m:.0f} K, T_a {(t_c + t_m) / 2:.0f} K → η_b {core['eta_b']:.2e} Pa·s, δ_b {core['delta_b_m'] / 1e3:.0f} km, "
         f"F_b {core['f_b_w_m2']:.4f} W/m², Q_CMB {core['q_c_w'] / 1e12:.2f} TW (ζ ±0.5 × κ_b ±2 밴드 {min(band) / 1e12:.2f}–{max(band) / 1e12:.2f} TW). "

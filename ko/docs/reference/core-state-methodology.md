@@ -15,7 +15,9 @@
 
 **Returns** — `conductor_phase` [—] · `cmb_melt_temperature` [K] ·
 `center_melt_temperature` [K] · `core_cmb_temperature_used` [K] ·
-`core_center_temperature_used` [K] · `icb_pressure` [GPa] ·
+`core_center_temperature_used` [K] (둘 다: `core_cmb_temperature` 선언이 없으면 — 갈래 `lower_bound` · `melt_bracket` —
+interior_layers 의 **맨틀 쪽** CMB 온도, 곧 핵의 하한이고, `melt_bracket` 에서는 중심에도 같은 값을 씁니다; C153) ·
+`icb_pressure` [GPa] ·
 `center_margin` [K] · `cmb_margin` [K] · `center_margin_fraction` [—] · `gamma_flip` [—] ·
 `gamma_flip_in_alfe_range` [—] · `k0_flip` [GPa] · `melt_splice_disagreement` [—] · `margin_condition` [—] · `core_gamma_cmb` [—] · `core_gamma_center` [—] · `core_gamma_material` [—] · `core_gamma_fallback` [—] · `core_gamma_verdict` [—] · `core_gamma_verdict_center` [—] · `core_gamma_density_path` [—] · `core_gamma_partial_repair` [—] · `core_gamma_split` [—]
 **Needs** — `core_pressure` [GPa] · `cmb_pressure` [GPa] · `core_temperature` [K] ·

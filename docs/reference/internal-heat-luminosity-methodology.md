@@ -115,6 +115,8 @@ Earth (declared core-side 3760 K, adiabat base 2526 K) it lands **outside** (≈
 biases point down (`core-state-methodology.md:60`), and η_b is exponential in T_a, so a lower-bound input yields a
 lower-bound flux — the true value is higher, and 2.75 TW must not be read as "no dynamo". Turning the bound into a
 solution is the core energy-balance closure (Brief 62 B, `engine/cmb-heat-flux-context-notes.md` §5).
+Under the owner's C25 ① (Sinmyo's 3760 K taken as the value) the engine reads `q_cmb` as a **value** (C158 R2 (d)), and
+`cmb_flux_verdict` states that reading; the lower-bound paragraph above is the C25 (e) record of the engine's own biases.
 `engine/cmb-heat-flux-context-notes.md`.
 
 ## Contract — `core_energy_balance`

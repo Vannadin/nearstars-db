@@ -102,7 +102,9 @@ T_a 는 핵 쪽 경계온도와 맨틀 밑 **실온**(식 29 — 포텐셜 온�
 떨어지고 조정 없이 보고합니다. ⚠ **`q_cmb` 는 하한입니다**(브리프 62). 선언된 핵 쪽 경계온도 자체가 하한이고
 (`core-state-methodology.md:60`, 이름 붙은 편향 둘이 모두 아래를 가리킴) η_b 가 T_a 에 지수적이라, 하한 입력은 하한
 열류를 냅니다. 참값은 더 높으며 2.75 TW 를 "다이나모 없음" 으로 읽어서는 안 됩니다. 하한을 해로 바꾸는 것은 핵 에너지
-수지의 폐합(브리프 62 B, `engine/cmb-heat-flux-context-notes.md` §5)입니다. `engine/cmb-heat-flux-context-notes.md`.
+수지의 폐합(브리프 62 B, `engine/cmb-heat-flux-context-notes.md` §5)입니다. 오너의 C25 ①(Sinmyo 의 3760 K 를 값으로 받음)
+아래에서 엔진은 `q_cmb` 를 **값**으로 읽고(C158 R2 (d)), `cmb_flux_verdict` 도 그 읽기를 말합니다. 위의 하한 문단은 엔진 자신의
+편향에 대한 C25 (e) 기록입니다. `engine/cmb-heat-flux-context-notes.md`.
 
 ## 계약 — `core_energy_balance`
 
