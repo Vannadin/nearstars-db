@@ -258,7 +258,7 @@ def regime_ladder_cell(total_flux_w_m2: float, body: str | None = None) -> tuple
             f"MORE stagnant, not less. {ceiling_why}")
 
 
-def regime_candidates(total_flux_w_m2: float, radius_earth: float) -> dict:
+def regime_candidates(total_flux_w_m2: float, radius_earth: float, flux_kind: str = "exact") -> dict:
     """이 열류와 **양립 가능한** 체제 집합. 배제는 인쇄된 구간 밖일 때만 한다 (C46 (b)).
 
     반환: {체제: (판정, 이유)} — 판정은 "compatible" · "excluded" · "cannot decide".
@@ -273,6 +273,10 @@ def regime_candidates(total_flux_w_m2: float, radius_earth: float) -> dict:
         bounded_above = hi is not None and all(p[2] is not None for p in parts)
         if lo is None and hi is None:
             out[regime] = ("cannot decide", "no flux value is printed for this regime")
+        elif lo is not None and tw < lo and flux_kind == "lower":
+            # C158 R2 (b) — 하한이 바닥 밑이면 아무것도 증명하지 못한다 (C154 방향 규칙)
+            out[regime] = ("cannot decide", f"{tw:.3g} TW is a lower bound below the printed {lo:g} TW floor — "
+                                            "it proves nothing there (C158)")
         elif lo is not None and tw < lo:
             out[regime] = ("excluded", f"{tw:.3g} TW is below the printed {lo:g} TW floor")
         elif bounded_above and tw > hi:
@@ -324,6 +328,30 @@ def transport_mode(total_flux_w_m2: float, stagnant_lid_ceiling: float | None = 
     return MODE_UNCLASSIFIED
 
 
+#: C158 R2 (a) — 하한 열류가 말할 수 있는 것. 칸 이름은 판정의 방향을 그대로 적는다.
+MODE_NOT_STAGNANT = "not a conducting stagnant lid"
+MODE_UNDECIDED = "not decided by flux"
+
+
+def flux_reading(total_flux_w_m2: float, body: str | None = None) -> tuple[str, str]:
+    """C158 R2 (a): the total surface flux is a LOWER bound (owner, 2026-10-03), so it decides only upward —
+    «≥ a rung's floor ⇒ that rung is reached», «> this body's stagnant-lid ceiling ⇒ not a conducting stagnant lid»,
+    else «not decided by flux». Replaces `transport_mode` and `regime_ladder_cell` on the recipe path; those two stay
+    as the exact-flux reading (C158 acceptance L-neg). No authored edge; the body's own ceiling when one is printed."""
+    passed = [r for r in REGIME_LADDER if r[1].holds(total_flux_w_m2)]
+    if passed:
+        name, rung, _grade, _why = passed[-1]
+        return name, (f"{total_flux_w_m2:.4g} W/m² (a lower bound) is at or above the {name} rung's floor "
+                      f"{rung.value:g} W/m² — that rung is reached (C158)")
+    ceiling, ceiling_why = stagnant_lid_ceiling_for(body)
+    if total_flux_w_m2 > ceiling:
+        return MODE_NOT_STAGNANT, (f"{total_flux_w_m2:.4g} W/m² (a lower bound) is above the {ceiling * 1e3:g} mW/m² "
+                                   f"a stagnant lid conducts away — not a conducting stagnant lid; no rung is reached "
+                                   f"(C158). {ceiling_why}")
+    return MODE_UNDECIDED, (f"{total_flux_w_m2:.4g} W/m² is a lower bound at or below the {ceiling * 1e3:g} mW/m² "
+                            f"ceiling — it proves nothing there (C158). {ceiling_why}")
+
+
 def solve(mass_earth: float, radius_earth: float | None, semi_major_axis_km: float | None,
           perturber_mass_earth: float | None, eccentricity_forced: float | None, k2_over_q: float | None) -> Result:
     # km, not m: this is the key a body declares (`semi_major_axis_km`, e.g. bodies/pandora.yaml), and the contract is
@@ -369,8 +397,15 @@ def solve(mass_earth: float, radius_earth: float | None, semi_major_axis_km: flo
                   refs=REFS, notes=notes)
 
 
-def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radius_earth: float | None) -> Result:
-    inputs = {"surface_flux": surface_flux, "radiogenic_power": radiogenic_power, "radius_earth": radius_earth}
+def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radius_earth: float | None,
+               body: str | None = None, tectonic_regime: dict | None = None, lid_friction: dict | None = None,
+               potential_temperature: float | None = None, surface_temperature_k: float | None = None,
+               mass_earth: float | None = None, core_radius_fraction: float | None = None,
+               body_class: str | None = None) -> Result:
+    inputs = {"surface_flux": surface_flux, "radiogenic_power": radiogenic_power, "radius_earth": radius_earth,
+              "tectonic_regime": tectonic_regime, "lid_friction": lid_friction,
+              "potential_temperature": potential_temperature, "surface_temperature_k": surface_temperature_k,
+              "mass_earth": mass_earth, "core_radius_fraction": core_radius_fraction, "body_class": body_class}
     refs = ("docs/reference/tidal-heating-methodology.md@«A body's surface has exactly three ways to pass internal heat, and they differ by **four orders of magnitude in capacity**.»",)
     if radius_earth is None:
         return out_of_domain(RECIPE, VERSION, "cannot-say (no radius): 총 표면 플럭스를 낼 반지름이 없다", inputs, refs)
@@ -390,10 +425,11 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
     area = 4.0 * math.pi * (radius_earth * R_EARTH_M) ** 2
     radiogenic_flux = (radiogenic_power or 0.0) / area
     total = (surface_flux or 0.0) + radiogenic_flux
-    mode = transport_mode(total)
-    # C46 (b): 우리 칸 이름은 **체제 이름이 아니다.** §6.2 사다리의 칸이고, 문헌 체제는 따로 낸다.
-    cell, bound, bound_kind, rung_why = regime_ladder_cell(total)
-    cand = regime_candidates(total, radius_earth)
+    # ⚠ C158 (owner 2026-10-03, (b)): the total is a LOWER bound on the body's surface heat flow — secular cooling
+    #   is not in it (radiogenic.py «하한이다»). C34 (2026-09-07) chose this quantity because it reproduced 3 of 4 §6.2
+    #   anchor labels; the owner gave that calibration up knowingly. Every verdict below decides only upward.
+    mode, mode_why = flux_reading(total, body)
+    cand = regime_candidates(total, radius_earth, flux_kind="lower")
     compatible = sorted(k for k, (v, _w) in cand.items() if v == "compatible")
     undecided = sorted(k for k, (v, _w) in cand.items() if v == "cannot decide")
     excluded = sorted(k for k, (v, _w) in cand.items() if v == "excluded")
@@ -404,47 +440,55 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
         parts.append(f"radiogenic {radiogenic_flux:.4g}")
     else:
         parts.append("radiogenic absent")
-    ladder_note = (
-        f"⚠ `regime_ladder_cell` = {cell!r}, fixed by its {bound_kind} at {bound * 1e3:g} mW/m². "
-        f"{rung_why} "
-        f"⚠ **The ladder rule is OURS** — not the literature's verdict and not a measured boundary. "
-        f"Above the plate rung it stands on FLOORS, which are what bodies we know actually radiate, so "
-        f"it says *'Earth's worth of heat, Earth's worth of crust'* and nothing stronger. Below that "
-        f"rung it stands on a CEILING instead, because a ceiling is the only thing the literature "
-        f"prints for a stagnant lid (Reese+ 1998, ⚠ `{ABSTRACT_LEVEL}` — body not held) and a stagnant "
-        f"lid has no floor at all. The literature cuts these regimes on mobility and plateness "
-        f"(Lourenço+ 2020 §3.1, §3.3), which are outputs of a 4.5 Gyr simulation. ⚠ Earth coming out "
-        f"`plate tectonics` is therefore **not evidence** — that rung IS Earth, and its margin is "
-        f"0.2 %; the one cell no body of ours anchors is the stagnant one, where the Moon sits.")
-    regime_note = (
-        f"C46: flux is a sieve, not a classifier. Compatible with {len(compatible)} literature regime(s) "
-        f"({', '.join(compatible) or 'none'}); excluded {', '.join(excluded) or 'none'}; "
-        f"flux cannot decide for {', '.join(undecided) or 'none'}. ⚠ `mode` above is the §6.2 LADDER CELL, "
-        f"not a tectonic regime — the literature cuts these on mobility and plateness (Lourenço+ 2020 §3.1, "
-        f"§3.3), which are outputs of a 4.5 Gyr simulation and not observable here. No single regime is "
-        f"emitted while more than one stands.")
+    # C158 R1–R5 — the lid regime: declared wins; R3 heat pipe, R4 Korenaga with the declared μ; else a named refusal.
+    import lid_regime
+    import tectonic_regime as tr
+    reading = tr.declared(tectonic_regime)
+    g = h_m = None
+    if mass_earth and radius_earth:
+        r_m = radius_earth * R_EARTH_M
+        g = G * mass_earth * M_EARTH_KG / r_m ** 2
+        if core_radius_fraction:
+            h_m = r_m * (1.0 - core_radius_fraction)
+    if body_class != "rocky":
+        lid = {"value": None, "source": "not applicable",
+               "why": f"C158 decides the lid regime of rocky bodies; body_class «{body_class}»",
+               "heat_pipe": None, "korenaga": None, "notes": []}
+    elif reading.refusal is not None:
+        lid = {"value": None, "source": "undetermined", "why": f"tectonic_regime: {reading.refusal}",
+               "heat_pipe": None, "korenaga": None, "notes": []}
+    else:
+        t_s = (surface_temperature_k.get("value") if isinstance(surface_temperature_k, dict)
+               else surface_temperature_k)          # 선언 블록 또는 맨 스칼라 (core_history._declared_scalar 와 같은 읽기)
+        lid = lid_regime.resolve(reading.value, total, potential_temperature, t_s, g, h_m,
+                                 lid_friction, override=reading.override is not None)
+    pipe, kor = lid["heat_pipe"] or {}, lid["korenaga"] or {}
     notes = (
-        ladder_note,
-        regime_note,
-        f"§6.2 table read on the TOTAL surface flux {total:.4g} W/m² = {' + '.join(parts)} W/m²; "
+        f"C158: the total surface flux {total:.4g} W/m² = {' + '.join(parts)} W/m² is a LOWER bound (owner, "
+        f"2026-10-03 — secular cooling is not in it). `mode` = {mode!r}: {mode_why}",
+        f"C46/C158: flux is a sieve, not a classifier — compatible with {', '.join(compatible) or 'none'}; "
+        f"excluded {', '.join(excluded) or 'none'} (only above a printed ceiling); flux cannot decide for "
+        f"{', '.join(undecided) or 'none'}. No held source decides a regime from surface flux.",
+        f"lid_regime = {lid['value']!r} ({lid['source']}): {lid['why']}",
+        *lid["notes"],
         f"chain :631 supplies W/m² and :632 supplies W — the W is divided by 4πR² here. {GUIDES}.",
         "resurfacing_rate (chain.yaml outputs) is not emitted: the document prints no formula for it.",
-        "selectors not wired in this version: global_fluid_layer (chain :633, no recipe) and t_eq_stellar (:634) — "
-        "§6.3 names Pandora a global-fluid-layer case, so its selector is the next item.",
     )
     return Result(recipe=RECIPE, version=VERSION, regime=f"mode_{mode.split()[0]}",
-                  reason=f"total surface flux {total:.4g} W/m² → {mode}",
+                  reason=f"total surface flux {total:.4g} W/m² (a lower bound) → {mode}",
                   grade="analog", inputs=inputs,
                   values={"mode": mode, "total_surface_flux": total,
-                          "regime_ladder_cell": cell, "regime_ladder_rung": bound,
-                          "regime_ladder_bound": bound_kind,
                           "regime_candidates": compatible,
                           "regime_flux_cannot_decide": undecided,
-                          "regime_excluded": excluded},
+                          "regime_excluded": excluded,
+                          "lid_regime": lid["value"], "lid_regime_source": lid["source"],
+                          "lid_regime_why": lid["why"],
+                          "lid_heat_pipe_ratio": pipe.get("ratio"), "lid_q_sl_max": pipe.get("q_sl_max"),
+                          "lid_mu_crit": kor.get("mu_crit"), "lid_korenaga": kor.get("verdict") or kor.get("refusal")},
                   units={"mode": "", "total_surface_flux": "W/m2", "regime_candidates": "",
-                         "regime_ladder_cell": "", "regime_ladder_rung": "W/m2",
-                         "regime_ladder_bound": "",
-                         "regime_flux_cannot_decide": "", "regime_excluded": ""},
+                         "regime_flux_cannot_decide": "", "regime_excluded": "",
+                         "lid_regime": "", "lid_regime_source": "", "lid_regime_why": "",
+                         "lid_heat_pipe_ratio": "", "lid_q_sl_max": "W/m2", "lid_mu_crit": "", "lid_korenaga": ""},
                   refs=refs, notes=notes)
 
 
@@ -466,4 +510,12 @@ def _from_state(state):
 def _mode_from_state(state):
     return solve_mode(surface_flux=state.get("surface_flux"),
                       radiogenic_power=state.get("radiogenic_power"),
-                      radius_earth=state.get_optional("radius_earth", state.get_optional("radius")))
+                      radius_earth=state.get_optional("radius_earth", state.get_optional("radius")),
+                      body=state.name,
+                      tectonic_regime=state.get_optional("tectonic_regime"),
+                      lid_friction=state.get_optional("lid_friction"),
+                      potential_temperature=state.get_optional("potential_temperature"),
+                      surface_temperature_k=state.get_optional("surface_temperature_k"),
+                      mass_earth=state.get_optional("mass_earth"),
+                      core_radius_fraction=state.get_optional("core_radius_fraction"),
+                      body_class=state.get_optional("body_class"))

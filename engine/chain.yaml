@@ -97,7 +97,7 @@ nodes:
     layer: "0층. 계산되지 않는 것"
     domain: given
     kind: owner
-    outputs: [tectonic_regime, lid_thickness_km, surface_temperature_k]
+    outputs: [tectonic_regime, lid_thickness_km, surface_temperature_k, lid_friction]
     note: "바디 파일이 선언하는 판구조 영역과, 정체뚜껑 갈래에서만 필요한 뚜껑 두께. ⚠ **어느 레시피의 출력도 아니다** — 그래서 0층에 선다. 이 노드를 세우기 전에는 `dynamo_rocky` 가 `tectonic_regime` 을 읽는데 그 키를 나르는 간선이 없었고 게이트는 초록이었다(2026-09-19 측정). 값은 `bodies/*.yaml` 의 `tectonic_regime`(값·등급·출처 블록, C53)과 `lid_thickness_km` 이다."
 
   orbit_elements:
@@ -434,8 +434,8 @@ nodes:
     domain: tidal
     kind: computed
     recipe: tidal-heating-methodology
-    outputs: [mode, total_surface_flux]
-    note: "C30 (2026-09-04, built — engine/tidal_heating.py, the §6.2 table on the TOTAL surface flux): outputs were [mode, resurfacing_rate]; resurfacing_rate is not emitted (the document prints no formula), total_surface_flux added. Older text kept: 내부 열이 표면까지 어떻게 나오는가. 별빛 열의 재분배는 day_night_contrast 다."
+    outputs: [mode, total_surface_flux, lid_regime, lid_regime_source, lid_regime_why, lid_heat_pipe_ratio, lid_q_sl_max, lid_mu_crit, lid_korenaga]
+    note: "C158 (2026-10-03): the total surface flux is read as a lower bound (owner (b)); `mode` is the one upward-only flux reading, and `lid_*` is the one lid-regime rule — declared wins, then the heat-pipe test, then the Korenaga test with a declared lid_friction, else a named refusal. C30 (2026-09-04, built — engine/tidal_heating.py, the §6.2 table on the TOTAL surface flux): outputs were [mode, resurfacing_rate]; resurfacing_rate is not emitted (the document prints no formula), total_surface_flux added. Older text kept: 내부 열이 표면까지 어떻게 나오는가. 별빛 열의 재분배는 day_night_contrast 다."
   day_night_contrast:
     layer: "3층. 갈래"
     domain: thermal
@@ -761,6 +761,11 @@ edges:
   # 결정 8 (2026-09-19) — 영역이 손실 법칙을 고른다. 공급자는 0층의 `tectonic_declaration` 이다.
   # ⚠ 계산 노드에서 그렸으면 **없는 공급자를 있다고 말하는** 간선이 됐을 것이다 — `body_age` 와 같은 꼴로
   # given 노드를 세워 정직하게 댄다. 그래서 `status: gap` 이 필요 없다.
+  # C158 (2026-10-03) — 뚜껑 체제 규칙이 같은 선언을 읽는다. 선언이 이기고(R1), 표면 온도는 R4 의 찬 끝, lid_friction 은 R4 의 μ.
+  - {from: tectonic_declaration, to: heat_transport_mode, kind: selects, via: tectonic_regime, ref: "tidal-heating-methodology.md@«C158 (2026-10-03, owner (b)): the total surface flux is a lower bound»", note: "declared wins (C158 R1); the computed tests only add a named note where they disagree."}
+  - {from: tectonic_declaration, to: heat_transport_mode, kind: requires, via: surface_temperature_k, ref: "tidal-heating-methodology.md@«C158 (2026-10-03, owner (b)): the total surface flux is a lower bound»", note: "R4's cold end; undeclared → R4 refuses by name. R3 does not need it (q_SL is independent of T_s)."}
+  - {from: tectonic_declaration, to: heat_transport_mode, kind: requires, via: lid_friction, ref: "tidal-heating-methodology.md@«C158 (2026-10-03, owner (b)): the total surface flux is a lower bound»", note: "μ range with its dry / water-weakened basis (owner Q3); undeclared → named refusal for an undeclared body."}
+  - {from: interior_layers, to: heat_transport_mode, kind: requires, via: core_radius_fraction, ref: "tidal-heating-methodology.md@«C158 (2026-10-03, owner (b)): the total surface flux is a lower bound»", note: "mantle thickness h = R(1 − core_radius_fraction) for R3 and R4."}
   - {from: tectonic_declaration, to: core_thermal_history, kind: selects, via: tectonic_regime, ref: "internal-heat-luminosity-methodology.md@«The declared regime selects the loss law»", note: "stagnant → Foley 2018 eq. (3), mobile·미선언 → Nimmo+ 2004 eqs 34–36. 미선언과 선언된 mobile 은 `loss_law_reason` 으로 갈린다. 등급 천장은 맨틀 몫 70 % 선언이고, 법칙을 고르는 행위가 고르는 대상의 등급을 올리지 않는다."}
   - {from: tectonic_declaration, to: core_thermal_history, kind: requires, via: lid_thickness_km, ref: "internal-heat-luminosity-methodology.md@«a named refusal»", note: "정체뚜껑 갈래에서만 필요하다. 선언이 없으면 기본값으로 때우지 않고 이름 대며 거절한다 — 그러지 않으면 자기 영역과 모순되는 법칙으로 식은 수가 아무 표시 없이 나온다. 맨틀 밖 δ 도 같은 문구로 거절한다."}
   - {from: tectonic_declaration, to: core_thermal_history, kind: requires, via: surface_temperature_k, ref: "internal-heat-luminosity-methodology.md@«both laws use it as the cold end of ΔT»", note: "⚠ **두 법칙 다** 쓴다 — Nimmo eqs 34–36 의 `t_s` 와 Foley eq. (3) 의 `T_s` 가 같은 선언을 읽는다. 미선언이면 이름 대며 거절한다: 모듈 기본값(Nimmo 293 K · Foley 273 K)은 둘 다 지구 값이라 다른 천체에 조용히 대입되면 ΔT 가 두 번 들어가는 식에서 바로 값이 된다."}

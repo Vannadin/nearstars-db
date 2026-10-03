@@ -227,6 +227,8 @@
   globs: []
 "test_tidal_heating.py":
   globs: []
+"test_lid_regime.py":  # C158; reads engine/bodies/*.yaml (always-full) — the next census confirms
+  globs: []
 "test_stagnant_lid.py":
   globs: []
 "tools/c47_step4.py":

@@ -54,10 +54,14 @@ Not emitted in v1: `radius_ceiling`, `plains_temperature` (§6.3–6.5, the lid 
 
 ## Contract — `heat_transport_mode`
 
-**Returns** — `mode` [—] · `total_surface_flux` [W/m2] · `regime_ladder_cell` [—] ·
-`regime_ladder_rung` [W/m2] · `regime_ladder_bound` [—] · `regime_candidates` [—] ·
-`regime_flux_cannot_decide` [—] · `regime_excluded` [—]
+**Returns** — `mode` [—] · `total_surface_flux` [W/m2] · `regime_candidates` [—] ·
+`regime_flux_cannot_decide` [—] · `regime_excluded` [—] · `lid_regime` [—] · `lid_regime_source` [—] ·
+`lid_regime_why` [—] · `lid_heat_pipe_ratio` [—] · `lid_q_sl_max` [W/m2] · `lid_mu_crit` [—] · `lid_korenaga` [—]
 **Needs** — `surface_flux` [W/m2] · `radiogenic_power` [W] · `radius_earth` [R_earth]
+
+**Declared-optional** — `tectonic_regime` [block] · `lid_friction` [block] · `potential_temperature` [K] · `surface_temperature_k` [K] · `mass_earth` [M_earth] · `core_radius_fraction` [—] · `body_class` [—] — the lid-regime rule's inputs (C158). Absent, the rule says what it cannot decide by name: no declaration and no `lid_friction` → «lid regime undetermined»; no surface temperature → R4 refuses; no mass or core radius → R3/R4 do not run.
+
+⚠ **C158 (2026-10-03, owner (b)): the total surface flux is a lower bound** — secular cooling is not in it. `mode` is now the one flux reading that decides only upward: a rung reached at or above its floor (plate 0.09, heat pipe 2.5 W/m²), «not a conducting stagnant lid» above the body's own ceiling, else «not decided by flux». `regime_excluded` excludes only above a printed ceiling. `lid_regime` is the declared `tectonic_regime` when one is declared (declared wins), else the heat-pipe test (H above the largest stagnant-lid capacity up to the 1-bar liquidus), else the Korenaga 2010 test with a declared `lid_friction` μ range (dry / water-weakened), else a named refusal.
 **Discriminating keys** — the §6.2 table (plate tectonics · stagnant lid · heat pipe) read on the total surface flux.
 ⚠ **`mode` is that table's ladder cell, not a tectonic regime** (C46, 2026-09-07). The literature's
 regimes are cut on mobility and plateness, which are simulation outputs and not observable here, so the

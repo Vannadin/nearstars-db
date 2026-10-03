@@ -50,10 +50,14 @@ Alpha Centauri A b I~III과 A b V(Dante·Hades·Pandora·Chaos)를 두고 네 �
 
 ## 계약 — `heat_transport_mode`
 
-**Returns** — `mode` [—] · `total_surface_flux` [W/m2] · `regime_ladder_cell` [—] ·
-`regime_ladder_rung` [W/m2] · `regime_ladder_bound` [—] · `regime_candidates` [—] ·
-`regime_flux_cannot_decide` [—] · `regime_excluded` [—]
+**Returns** — `mode` [—] · `total_surface_flux` [W/m2] · `regime_candidates` [—] ·
+`regime_flux_cannot_decide` [—] · `regime_excluded` [—] · `lid_regime` [—] · `lid_regime_source` [—] ·
+`lid_regime_why` [—] · `lid_heat_pipe_ratio` [—] · `lid_q_sl_max` [W/m2] · `lid_mu_crit` [—] · `lid_korenaga` [—]
 **Needs** — `surface_flux` [W/m2] · `radiogenic_power` [W] · `radius_earth` [R_earth]
+
+**Declared-optional** — `tectonic_regime` [block] · `lid_friction` [block] · `potential_temperature` [K] · `surface_temperature_k` [K] · `mass_earth` [M_earth] · `core_radius_fraction` [—] · `body_class` [—] — 뚜껑 체제 규칙의 입력(C158). 없으면 규칙이 무엇을 못 정하는지 이름으로 말한다. 선언도 `lid_friction` 도 없으면 «뚜껑 체제 미정», 표면 온도가 없으면 R4 가 거절, 질량이나 핵 반지름이 없으면 R3·R4 가 돌지 않는다.
+
+⚠ **C158 (2026-10-03, 오너 (b)): 총 표면 플럭스는 하한이다** — 영년 냉각이 빠져 있다. 이제 `mode` 는 위쪽으로만 판정하는 하나의 플럭스 읽기다. 바닥 이상이면 그 칸에 도달(판구조 0.09, 열파이프 2.5 W/m²), 그 천체 자신의 천장보다 크면 «전도하는 정체 뚜껑이 아니다», 그 밖은 «플럭스로 정하지 않는다». `regime_excluded` 는 인쇄된 천장 위일 때만 배제한다. `lid_regime` 은 `tectonic_regime` 이 선언돼 있으면 그 값(선언이 이긴다), 아니면 열파이프 판정(H 가 1 bar 리퀴더스까지의 정체 뚜껑 최대 수송량을 넘는가), 아니면 선언된 `lid_friction` μ 범위(마른 / 물로 약해진)를 쓰는 Korenaga 2010 판정, 그것도 없으면 이름 댄 거절이다.
 **분기키** — §6.2 표(판구조 · 정체 뚜껑 · 열파이프)를 총 표면 플럭스(조석 + 방사성/4πR²)로 읽는다. 모드 사이에 발표된 W/m² 경계는 없다(§6).
 ⚠ **`mode` 는 그 표의 사다리 칸이지 판구조 체제가 아니다**(C46, 2026-09-07). 문헌의 체제는 mobility 와
 plateness 로 갈리는데 둘 다 시뮬레이션 출력이라 여기서는 관측할 수 없다. 그래서 `regime_*` 셋은

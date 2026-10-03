@@ -91,25 +91,10 @@ def derived_stagnant_lid(regime: Any, legacy: Any = None) -> Derived:
                            "옛 키를 새 키로 바꿔라 (C53)")
         return Derived(None, "tectonic_regime 선언이 없다 — 판정 불가는 기본값이 아니다")
 
-    if not isinstance(regime, dict):
-        return _refuse(f"`tectonic_regime` 은 값·등급·출처를 담은 블록이어야 한다 — {type(regime).__name__} "
-                       f"({regime!r}) 이 왔다. 문자열 하나는 등급과 출처를 말하지 않는다 (C53)")
-
-    value = regime.get("value")
-    grade = regime.get("grade")
-    source = regime.get("source")
-    if value not in REGIMES:
-        return _refuse(f"`tectonic_regime.value` «{value}» 는 이 어휘에 없다 — {' · '.join(REGIMES)}")
-    if grade not in GRADES:
-        return _refuse(f"`tectonic_regime.grade` «{grade}» 는 이 어휘에 없다 — {' · '.join(GRADES)}")
-    if not source:
-        return _refuse(f"«{value}» 선언에 `source` 가 없다 — 누가 그렇게 말하는지 없이는 등급이 뜻이 없다")
-    disagree = regime.get("contested")
-    if disagree is not None and not (isinstance(disagree, list) and disagree):
-        return _refuse(f"`tectonic_regime.contested` 는 비지 않은 출처 목록이어야 한다 — {disagree!r}")
-    if (value == "contested") != bool(disagree):
-        return _refuse(f"`value` «{value}» 와 `contested` 칸이 어긋난다 — 값 contested 는 "
-                       "출처 목록 `contested: [...]` 와만 함께 이동한다 (출처들이 인쇄물에서 서로 다르다는 뜻)")
+    bad = _validate(regime)
+    if bad is not None:
+        return _refuse(bad)
+    value, grade, source = regime.get("value"), regime.get("grade"), regime.get("source")
 
     if value in UNMAPPED:
         return _refuse(f"no derived-boolean mapping is declared for regime «{value}» — owner pending "
@@ -120,3 +105,49 @@ def derived_stagnant_lid(regime: Any, legacy: Any = None) -> Derived:
     #   오늘의 출력이 문구까지 바뀌고, 그러면 «소비처는 안 움직였다» 를 회귀로 증명할 수 없다.
     label = CONTESTED_NOTE if value == "contested" else None
     return Derived(DERIVED[value], note, None, label)
+
+
+class Declared(NamedTuple):
+    """C158 R1 — the one reading of a `tectonic_regime` block every consumer shares."""
+
+    value: str | None               # 어휘 안의 값, 또는 None(미선언·거절)
+    refusal: str | None             # 이름 붙은 거절 문구 (블록이 틀렸을 때)
+    override: str | None = None     # `setting_override` — 오너가 물리를 알고도 고른 설정 (C158 Q2)
+
+
+def declared(regime: Any) -> Declared:
+    """`tectonic_regime` 블록을 검증해 값만 낸다 (C158 R1: 파서는 이것 하나다 — `body_stack` 도 이것을 읽는다)."""
+    if regime is None:
+        return Declared(None, None)
+    bad = _validate(regime)
+    if bad is not None:
+        return Declared(None, bad)
+    over = regime.get("setting_override")
+    if over is not None and not (isinstance(over, str) and over.strip()):
+        return Declared(None, f"`tectonic_regime.setting_override` 는 비지 않은 문장이어야 한다 — {over!r}")
+    return Declared(regime["value"], None, over)
+
+
+def _validate(regime: Any) -> str | None:
+    """블록 검증 — 틀렸으면 거절 문구, 맞으면 None. `derived_stagnant_lid` 와 `declared` 가 같이 쓴다."""
+    if not isinstance(regime, dict):
+        return (f"`tectonic_regime` 은 값·등급·출처를 담은 블록이어야 한다 — {type(regime).__name__} "
+                f"({regime!r}) 이 왔다. 문자열 하나는 등급과 출처를 말하지 않는다 (C53)")
+
+    value = regime.get("value")
+    grade = regime.get("grade")
+    source = regime.get("source")
+    if value not in REGIMES:
+        return (f"`tectonic_regime.value` «{value}» 는 이 어휘에 없다 — {' · '.join(REGIMES)}")
+    if grade not in GRADES:
+        return (f"`tectonic_regime.grade` «{grade}» 는 이 어휘에 없다 — {' · '.join(GRADES)}")
+    if not source:
+        return (f"«{value}» 선언에 `source` 가 없다 — 누가 그렇게 말하는지 없이는 등급이 뜻이 없다")
+    disagree = regime.get("contested")
+    if disagree is not None and not (isinstance(disagree, list) and disagree):
+        return (f"`tectonic_regime.contested` 는 비지 않은 출처 목록이어야 한다 — {disagree!r}")
+    if (value == "contested") != bool(disagree):
+        return (f"`value` «{value}» 와 `contested` 칸이 어긋난다 — 값 contested 는 "
+                "출처 목록 `contested: [...]` 와만 함께 이동한다 (출처들이 인쇄물에서 서로 다르다는 뜻)")
+
+    return None

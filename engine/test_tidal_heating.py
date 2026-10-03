@@ -114,15 +114,18 @@ def main() -> int:
     # ⚠ 엔진의 금성 값은 mobile lid 를 배제한다. 그런데 **측정값은 배제하지 않는다.**
     v_engine = th.solve_mode(surface_flux=0.03775, radiogenic_power=None, radius_earth=0.9499)
     v_measured = th.solve_mode(surface_flux=0.078, radiogenic_power=None, radius_earth=0.9499)
-    ok(v_engine.values["regime_excluded"] == ["mobile lid"],
-       f"4d/C46: the engine's own Venus flux (17.4 TW) is the one case that excludes anything; "
-       f"got {v_engine.values['regime_excluded']}")
+    # ⚠ C158 (오너 2026-10-03, (b)): 먹이는 총 플럭스는 **하한**이다 — 바닥 밑의 하한은 아무것도 배제 못 한다.
+    #   옛 판정(값으로 읽기)은 `flux_kind="exact"` 로 그대로 남아 대조가 된다 (C158 L-neg).
+    ok(not v_engine.values["regime_excluded"] and "mobile lid" in v_engine.values["regime_flux_cannot_decide"]
+       and th.regime_candidates(0.03775, 0.9499)["mobile lid"][0] == "excluded",
+       f"4d/C46+C158: the engine's own Venus flux (17.4 TW, a lower bound) no longer excludes mobile lid — "
+       f"cannot decide; read as exact it still would. Got {v_engine.values['regime_excluded']}")
     # ⚠ 정정 2026-09-07: 이 자리에 "측정값을 먹이면 배제가 사라진다" 가 있었고 **틀렸다.**
     # mobile lid 의 총합 40–50 TW 를 그때 못 봤고, 바닥이 35 가 아니라 40 이다. 금성 측정 35.9 TW 는
     # 그 밑이라 **여전히 배제된다** — 그리고 그게 문헌과 맞는다(금성에 판구조 없음).
-    ok(v_measured.values["regime_excluded"] == ["mobile lid"],
-       f"4d/C46: Smrekar's measured Venus is 35.9 TW, under the printed mobile-lid floor of 40 TW, so "
-       f"mobile lid stays excluded; got {v_measured.values['regime_excluded']}")
+    ok(not v_measured.values["regime_excluded"],
+       f"4d/C46+C158: fed through the recipe, 35.9 TW is read as a lower bound, so the 40 TW floor excludes "
+       f"nothing (the exact reading would); got {v_measured.values['regime_excluded']}")
     earth_only = th.solve_mode(surface_flux=0.0902, radiogenic_power=None, radius_earth=1.0)
     ok(not earth_only.values["regime_excluded"],
        "4d/C46: and Earth at 46 TW is the ONE body compatible with mobile lid — the axis separates the "
@@ -176,8 +179,8 @@ def main() -> int:
        f"disagrees with our §6.2 anchor column (which labels Venus a stagnant lid) and agrees with "
        f"Reese+ 1998's own criterion instead")
     both = th.solve_mode(surface_flux=0.0902, radiogenic_power=None, radius_earth=1.0).values
-    ok(both["regime_ladder_cell"] == "plate tectonics" and len(both["regime_candidates"]) == 4,
-       "4e/C46: the one-cell answer travels BESIDE the band, so a reader sees how thin it is")
+    ok(both["mode"] == th.MODE_PLATE and len(both["regime_candidates"]) == 4,
+       "4e/C46+C158: the one flux reading (plate rung reached at ≥ 0.09) travels BESIDE the band")
     # ⚠ 4f. 어제 놓친 줄 — mobile lid 는 총합 양쪽이 인쇄돼 있다. 그래서 위로도 배제된다.
     hot = th.solve_mode(surface_flux=0.147, radiogenic_power=None, radius_earth=0.9499).values
     ok("mobile lid" in hot["regime_excluded"],

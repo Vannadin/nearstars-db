@@ -29,6 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import payload                         # noqa: E402
 import samuel_structure as sst         # noqa: E402
 import samuel_thermal as st            # noqa: E402
+import tectonic_regime                 # noqa: E402
 from thermal_stack import Layer, Stack  # noqa: E402
 
 MOBILE_REFUSAL = ("the layer integrator is a stagnant-lid model — a body with moving plates stays outside it "
@@ -95,7 +96,12 @@ def read(body_path: Path) -> dict:
     """The body file's slot values, or `Refused` naming the first thing missing. No structure is solved here."""
     doc = yaml.safe_load(Path(body_path).read_text(encoding="utf-8"))
     inp = doc.get("inputs") or {}
-    regime = _val(inp, "tectonic_regime", "inputs")
+    if "tectonic_regime" not in inp:
+        raise Refused("`inputs.tectonic_regime` is not declared")
+    reading = tectonic_regime.declared(inp["tectonic_regime"])     # C158 R1 — the one parser
+    if reading.refusal is not None:
+        raise Refused(f"tectonic_regime: {reading.refusal}")
+    regime = reading.value
     if regime != "stagnant":
         raise Refused(f"tectonic_regime «{regime}»: {MOBILE_REFUSAL}")
     te = inp.get("thermal_evolution")

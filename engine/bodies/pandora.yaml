@@ -40,6 +40,7 @@ inputs:
     grade: declared
     source: "owner declaration 2026-09-04 (C29 c), re-declared as a regime 2026-09-09 (C53 (c)); board anchors two lines above"
     note: "fiction body — nothing to measure; the board's own prose says mobile lid, not stagnant"
+    setting_override: "owner 2026-10-03 (C158 Q2 (i)): keep mobile although C158 R3 says heat pipe — the canon orbital period fixes the orbit, the only lever with the range to cut the tidal flux ~500× is the orbit itself (forced e via the neighbour moons, or distance), and material k2/Q cannot go that low for a Pandora-sized rock body"
   # ── 이 아래 보드 인용은 값 행 자체를 앵커로 잡는다. 보드가 그 값을 바꾸면 앵커가 썩는데, provenance 인용에서는
   # 그게 옳은 동작이다 — 인용이 가리키던 근거가 실제로 사라진 것이므로 조용히 다른 줄을 가리키는 편보다 낫다.
   # ── tidal inputs (C30, 2026-09-04). e and k₂/Q are declarations; the board fits k₂/Q to its flux, phase4/alpha_centauri.yaml@«The tidal term needs k₂/Q ≈ 0.0016 at the simulated e ≈ 0.005, which is fitted rather than predicted, but it».

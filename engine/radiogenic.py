@@ -255,7 +255,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
     # Composed here because both ends live here: the budget is this recipe's, the temperature is the
     # declaration interior_layers reads. Nothing in solve()'s physics changes.
     g_body = 6.674e-11 * mass_earth * M_EARTH_KG / r_m ** 2 if r_m > 0.0 else None
-    cons = (mantle_flux.consistency(potential_temperature, b["total_w"], g_body, r_m)
+    cons = (mantle_flux.consistency(potential_temperature, b["total_w"], g_body, r_m, unbudgeted_w=tidal_power)
             if g_body else {"verdict": "cannot-say (no radius)", "delta_t_km": None, "f_t_w_m2": None,
                             "q_m_w": None, "ratio": None, "notes": ("heat-flow consistency: no radius, no flux.",)})
     # Brief 57 — the same budget inverted: the mantle temperature at which the top boundary layer
@@ -375,7 +375,8 @@ def _total_heat(b: dict, b_low: dict, tidal_power: float | None, r_m: float, g_b
     # 라벨 표는 조석 문서의 것이라 그 모듈이 갖는다. 여기서 `doc` 는 이 파일의 RECIPE(열 문서)를 뜻하므로
     # 표의 주인 문서를 이름으로 적는다 — tidal-heating-methodology.md@«### 6.2 How the heat actually leaves: the three-mode ladder»
     import tidal_heating
-    mode = tidal_heating.transport_mode(total_flux) if total_flux is not None else None
+    # C158 R2 (a): the one flux reading — «heat pipe» is the ≥ 2.5 W/m² rung reached, the same condition as before
+    mode = tidal_heating.flux_reading(total_flux)[0] if total_flux is not None else None
     if mode == tidal_heating.MODE_HEAT_PIPE or g_body is None:
         fmin = fmax = None
         verdict = HEAT_PIPE_FLOOR if g_body is not None else "cannot-say (no radius)"

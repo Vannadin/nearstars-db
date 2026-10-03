@@ -213,7 +213,10 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
         "Sinmyo+ 2019 초록은 3760 ± 290 K 를 핵-맨틀 경계 온도의 **상한**(alloy-depressed Fe 융점 5500 ± 220 K "
         "앵커를 단열선으로 내린 값)으로 인쇄한다. 엔진 쪽 논증은 그대로 서고, 논문 라벨만 여기 바로잡아 적는다. 참값은 이보다 높다 — "
         "이 수로 '다이나모 없음' 을 읽지 말 것. 하한을 해로 바꾸는 것은 핵 에너지 수지의 폐합(브리프 62 B)이다.",
-        f"핵-맨틀 경계 열류 (Nimmo+ 2004 식 37–39): 핵 쪽 경계온도 {t_c:.0f} K (선언 하한) − 맨틀 단열선 밑 {t_m:.0f} K "
+        "⚠ C158 R2 (d), 2026-10-03: `q_cmb_in_paper_range` 는 Q_CMB 를 **값**으로 읽는다 — 오너 C25 갈래 ① (2026-09-09: "
+        "Sinmyo 의 3760 K 상한을 값으로 받음). 그 읽기에서 4.5–9 TW 와의 비교는 양쪽으로 판정한다. 위 '하한' 문단은 C25 (e) 의 "
+        "기록이고 그대로 둔다; 판정 문자열 `cmb_flux_verdict` 의 '(lower bound)' 는 C158 범위 밖이다(다음 등록).",
+        f"핵-맨틀 경계 열류 (Nimmo+ 2004 식 37–39): 핵 쪽 경계온도 {t_c:.0f} K (선언값 — C25 ①) − 맨틀 단열선 밑 {t_m:.0f} K "
         f"= 점프 {t_c - t_m:.0f} K, T_a {(t_c + t_m) / 2:.0f} K → η_b {core['eta_b']:.2e} Pa·s, δ_b {core['delta_b_m'] / 1e3:.0f} km, "
         f"F_b {core['f_b_w_m2']:.4f} W/m², Q_CMB {core['q_c_w'] / 1e12:.2f} TW (ζ ±0.5 × κ_b ±2 밴드 {min(band) / 1e12:.2f}–{max(band) / 1e12:.2f} TW). "
         f"논문 자신의 현재 지구 인쇄값은 δ_b 140 km · Q_C 9 TW (4.5–9 TW 범위) 이고, 이 값은 그 범위 "

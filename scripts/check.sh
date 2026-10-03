@@ -1276,6 +1276,8 @@ step "test_mantle_composition.py" bash -c 'cd engine && exec python3 test_mantle
 step "test_phase_tables.py" bash -c 'cd engine && exec python3 test_phase_tables.py'
 # 조석 가열 (C30). 이오 밴드 재현·판도라 보드 45 W/m² 재현(0.75 %)·×Io 규약 R⁵·§6.1/§6.2 라벨 표·거절 넷이 앵커다.
 step "test_tidal_heating.py" bash -c 'cd engine && exec python3 test_tidal_heating.py'
+# 뚜껑 체제 규칙(C158) — 한 파서 · 하한 플럭스 · 음성 대조 · 단조 · 열파이프 · Korenaga · 오너 메모. <1 s.
+step "test_lid_regime.py" bash -c 'cd engine && exec python3 test_lid_regime.py'
 # 정체뚜껑 스케일링 (C47 (f), brief 148 단계 1). Korenaga 2009 Table 2 Δη=1 10행 eq. 29 대조가 앵커다
 # — 이 엔진이 가진 유일한 행별 앵커이고, 절대 스케일에는 앵커가 없다(C47 (c)·(e)).
 step "test_stagnant_lid.py" bash -c 'cd engine && exec python3 test_stagnant_lid.py'

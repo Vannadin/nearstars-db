@@ -78,6 +78,8 @@ SECULAR_RATIO_MAX = 1.0 / UREY_FLOOR       # 3.0
 CONSISTENT = "consistent-within-secular-gap"
 TOO_HOT = "declaration-implies-more-heat-than-secular-cooling-allows"
 TOO_COLD = "declaration-implies-less-than-radiogenic"
+#: C158 R2 (c) — 예산 밖 열원(조석)이 있으면 비율은 참값의 상한이라 TOO_COLD 만 판정된다.
+UNDETERMINED_SUPPLY = "undetermined-unbudgeted-heat-present"
 NO_T = "cannot-say (no potential temperature declared)"
 NO_BUDGET = "cannot-say (no radiogenic budget)"
 CONDITION = ("Nimmo+ 2004 eqs 34–36, calibrated at source on present-day Earth (+ PREM); k_t derived "
@@ -212,7 +214,8 @@ def radiogenic_temperature_band(budgets: dict[str, dict[str, float]], g: float, 
             "widths": widths, "grid": grid}
 
 
-def consistency(t_m_k: float | None, radiogenic_w: float | None, g: float, r_m: float) -> dict:
+def consistency(t_m_k: float | None, radiogenic_w: float | None, g: float, r_m: float,
+                unbudgeted_w: float | None = None) -> dict:
     """The verdict: implied flow at the declared T_m against the radiogenic budget, with the ζ band.
     Returns values + notes; every value labelled by CONDITION."""
     if not t_m_k or t_m_k <= T_S:
@@ -242,6 +245,10 @@ def consistency(t_m_k: float | None, radiogenic_w: float | None, g: float, r_m: 
     out["urey_ratio"] = urey
     if ratio < 1.0:
         verdict = TOO_COLD
+    elif unbudgeted_w and unbudgeted_w > 0.0:
+        # C158 R2 (c): with a heat source outside the budget (tidal), the true supply is larger, so the printed ratio
+        #   is an UPPER bound on the true one — it decides only TOO_COLD (C154). Without one, unchanged.
+        verdict = UNDETERMINED_SUPPLY
     elif ratio > SECULAR_RATIO_MAX:
         verdict = TOO_HOT
     else:
@@ -261,7 +268,10 @@ def consistency(t_m_k: float | None, radiogenic_w: float | None, g: float, r_m: 
                     "radioactivity plus plausible secular cooling supply — the declaration is saying something the "
                     "body cannot do for long. Not a refusal; a flag on the declaration.",
            TOO_COLD: "Below the radiogenic budget alone: the declared temperature is colder than the body's own heat "
-                     "production can sustain — heat would accumulate. Not a refusal; a flag on the declaration."}[verdict]
+                     "production can sustain — heat would accumulate. Not a refusal; a flag on the declaration.",
+           UNDETERMINED_SUPPLY: f"Undetermined (C158): {unbudgeted_w / 1e12 if unbudgeted_w else 0.0:.4g} TW of heat outside "
+                                "the radiogenic budget (tidal) is present, so the true supply is larger and this ratio is an "
+                                "UPPER bound on the true one — it can only show TOO_COLD (C154 direction rule)."}[verdict]
         + f" α_m ± 0.3 moves the implied flow ±4.5 %; T_s = 293 K is declared (Earth's) and a 200 K surface would add +10 %."
         + " " + CONDITION + ".",)
     return out
