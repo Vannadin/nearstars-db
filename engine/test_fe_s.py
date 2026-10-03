@@ -604,5 +604,26 @@ row(_q.density(_cold_ok, _hot, _hot) > 0.0,
     f"같은 온도라도 냉각 압력이 바닥 위면 **답한다** (전체 {_cold_ok/eos.GPA:.4f} GPa) — "
     "가드가 온도를 이유로 구간을 통째로 닫지 않는다")
 
+print("\n⑰ C157 메모 3 — 핵-맨틀 경계가 적합 바닥 아래인 답의 거절이 재료 자신의 출처를 댄다")
+interior.COMPOSITIONS["_c157n3"] = (0.75, 0.0, 0.0, "fe_s19_o4_c5permil_19gpa")       # 바닥 9.93 GPa — 화성 질량 cmf 0.75 가 그 밑에 경계를 둠
+try:
+    _r = interior.solve(0.1074, composition="_c157n3", potential_temperature=1600.0, body_class="rocky")
+finally:
+    del interior.COMPOSITIONS["_c157n3"]
+_t = _r.reason or ""
+row(not _r.applicable and "Balog" in _t and "수렴한 답의 핵-맨틀 경계가" in _t and _t.index("Balog") < _t.index("수렴한 답의"),
+    f"Fe–S 핵(바닥 9.93 GPa)·cmf 0.75 의 거절이 Balog+ 2003 출처 문장을 앞에, 경계 세부를 뒤에 든다 ({_t[:60]}…)")
+import types as _types                      # noqa: E402
+interior.MATERIALS["_c157n3_bare"] = _types.SimpleNamespace(shoot_lo=10.0e9)          # under_reason 이 없는 재료
+try:
+    interior._refuse_if_below_floor(_types.SimpleNamespace(floor_truncated=None, p_cmb=9.0e9), "_c157n3_bare")
+    _bare = "no refusal"
+except eos.PhaseGap as gap:
+    _bare = gap.reason
+finally:
+    del interior.MATERIALS["_c157n3_bare"]
+row(_bare.startswith("수렴한 답의 핵-맨틀 경계가 9.0000 GPa"),
+    f"음성 — `under_reason` 이 없는 재료는 오늘 문구 그대로 ({_bare[:50]}…)")
+
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)
