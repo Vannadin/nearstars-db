@@ -34,7 +34,7 @@ r = subprocess.run([sys.executable, str(HERE / "tools" / "reference_adiabats.py"
 check(r.returncode == 0, f"table rebuild differs: {r.stdout.strip()} {r.stderr.strip()[-300:]}")
 print(f"  acceptance 9: {r.stdout.strip()}")
 ref = eos.REFERENCE_ADIABAT["fe_prem"]
-PINS = {136e9: 2549.82, 330e9: 3132.95, 1000e9: 4063.94, 3000e9: 5114.47, 12000e9: 6487.55}     # K, to 0.01 K (E0 values)
+PINS = {136e9: 2529.40, 330e9: 3108.07, 1000e9: 4031.53, 3000e9: 5072.76, 12000e9: 6432.07}     # K, to 0.01 K (re-pinned at the C157 reference re-freeze; E0 values before)
 for p, t in PINS.items():
     check(abs(ref(p) - t) < 0.01, f"T_ref({p / 1e9:g} GPa) = {ref(p):.4f} K, pinned {t}")
 print("  pins: " + " · ".join(f"{p / 1e9:g} GPa {ref(p):.2f} K" for p in PINS))
