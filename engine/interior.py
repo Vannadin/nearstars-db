@@ -2957,9 +2957,13 @@ def _refuse_if_below_floor(st, core_material: str) -> None:
         lo = getattr(core, "shoot_lo", 0.0) if core is not None else 0.0
         if not lo or st.p_cmb is None or st.p_cmb >= lo:
             return
+        # C157 메모 3 — 이 갈래도 재료 자신의 출처 문장(`under_reason`, Fe–S 면 Balog+ 2003)을 앞에 단다. 예전 그 문장은 옛 발판이
+        #   적합 바닥 아래를 찔러 적분 중에 난 PhaseGap 에서 왔고(칼날 (a) 꼴), C157 규칙 1 이 그 길을 없앴다.
+        head = (core.under_reason.format(p_gpa=st.p_cmb / 1e9, min_gpa=lo / 1e9) + " — "
+                if hasattr(core, "under_reason") else "")
         raise PhaseGap(
             core_material, st.p_cmb,
-            f"수렴한 답의 핵-맨틀 경계가 {st.p_cmb / 1e9:.4f} GPa 로 이 적합의 기준 "
+            f"{head}수렴한 답의 핵-맨틀 경계가 {st.p_cmb / 1e9:.4f} GPa 로 이 적합의 기준 "
             f"({lo / 1e9:.4f} GPa) 아래다 — 핵이 제 질량 몫을 채우기는 하지만 그 마지막 걸음이 "
             f"바닥을 건넌다. 시험값이 아니라 **수렴한 답**이 그렇다.")
     name, p_floor_pa, filled = st.floor_truncated
