@@ -1233,6 +1233,8 @@ step "test_interface_jumps.py" bash -c 'cd engine && exec python3 test_interface
 # 구조 표 (prereg-structure-grid). 굳힌 표의 방아쇠 대조(풀이 없음) · 거절 문구 · 보간 · 뜀 칸. ~수 초.
 step "structure_grid.py --check" bash -c 'cd engine && exec python3 structure_grid.py --check'
 step "test_structure_grid.py" bash -c 'cd engine && exec python3 test_structure_grid.py'
+# 구조 표 방아쇠가 러너가 읽는 것만 보는가 · 열진화 몸에 표가 없으면 FAIL (C159, prereg-c159-table-trigger-reads e0ab5682). 풀이 없음, 몇 초.
+step "test_table_triggers.py" bash -c 'cd engine && exec python3 test_table_triggers.py'
 step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
 step "test_convergence_meaning.py" bash -c 'cd engine && exec python3 test_convergence_meaning.py'
 step "test_rootfind.py" bash -c 'cd engine && exec python3 test_rootfind.py'

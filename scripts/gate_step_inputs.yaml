@@ -201,6 +201,8 @@
   globs: ["engine/core_history.py", "engine/eos.py", "engine/interior.py", "engine/mantle_composition.py"]
 "test_structure_grid.py":
   globs: ["engine/core_history.py", "engine/eos.py", "engine/interior.py", "engine/mantle_composition.py"]
+"test_table_triggers.py":  # C159; reads chain.yaml and eos.py (copies go to a temp dir) and the body files for the history census
+  globs: ["engine/chain.yaml", "engine/eos.py", "engine/interior.py", "engine/bodies/*.yaml"]
 "test_samuel_run.py":
   globs: []
 "test_mantle_budget.py":

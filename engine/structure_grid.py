@@ -49,7 +49,20 @@ BUILDING = False
 THERMAL_KEYS = ("age_gyr", "core_initial_temperature", "mantle_initial_potential_temperature", "tectonic_regime",
                 "lid_thickness_km", "surface_temperature_k", "radiogenic_concentration")
 CODE_FILES = ("interior.py", "core_history.py", "eos.py", "mantle_composition.py")
-BYTE_FILES = ("eos.py", "chain.yaml")     # chain.yaml: 표 짓기가 그래프로 S0 · ⓐ 판을 받는다 (9f, 덧붙임 24 고침)
+#: C159 — 바이트로 해시하는 **데이터** 파일: 표 짓기가 실제로 여는 .py 밖 파일 중 다른 칸이 덮지 않는 것(파일 읽기 가드가 고른다,
+#: `tools/table_reads_guard.py`). eos.py 는 뺐다 — `CODE_FILES` 의 AST 해시가 주석 말고는 다 덮는다.
+#: chain.yaml 도 뺐다 — 바이트가 아니라 러너가 읽는 투영(`CHAIN_READS`)을 해시한다(설명 칸 편집에 표가 낡지 않게).
+BYTE_FILES = ("reference_adiabats.json",)
+#: C159 — 표 짓기가 여는데 바이트 칸에 안 넣는 데이터 파일과 그 까닭(가드가 이 목록 밖의 읽기를 멈춤으로 센다).
+FILE_EXEMPT = {
+    "chain.yaml": "러너가 읽는 투영으로 `chain_reads` 칸이 덮는다",
+    "mars_sulphur_anchor.json": "표가 쓰는 값(`fixings`)으로 `sulphur_fixings` 칸이 덮는다 — 바이트는 코드 해시를 품어 늘 움직인다(덧붙임 24)",
+    "mantle_tables/": "선언된 조성의 표 바이트로 `mantle_table` 칸이 덮는다(C74-2)",
+    "bodies/": "몸 파일 — 표가 읽는 키는 `declared` 칸이 덮는다",
+}
+#: C159 — chain.yaml 에서 러너(`graph` · `run`)가 실제로 읽는 칸. 설명(note · layer · domain)과 어휘 절은 안 든다.
+CHAIN_READS = {"node": ("kind", "recipe", "outputs", "status"), "edge": ("from", "to", "kind", "scope"),
+               "coupled_core": ("members",)}
 #: 황 앵커는 바이트가 아니라 **표가 쓰는 값**(`fixings`)으로 — 그 파일은 코드 해시를 품어 코드를 고칠 때마다 바이트가 바뀐다 (덧붙임 24)
 SULPHUR_ANCHOR = "mars_sulphur_anchor.json"
 
@@ -85,9 +98,20 @@ def _code_digest(path: Path) -> str:
     return hashlib.sha256(ast.dump(tree).encode()).hexdigest()[:16]
 
 
+def chain_reads_digest(path: Path | None = None) -> str:
+    """C159 — chain.yaml 을 러너가 읽는 칸(`CHAIN_READS`)으로 투영해 정규 JSON 의 해시. 설명 칸 편집은 안 움직인다."""
+    import yaml
+    g = yaml.safe_load((path or HERE / "chain.yaml").read_text(encoding="utf-8"))
+    proj = {"nodes": {n: {k: d.get(k) for k in CHAIN_READS["node"]} for n, d in (g.get("nodes") or {}).items()},
+            "edges": [{k: e.get(k) for k in CHAIN_READS["edge"]} for e in (g.get("edges") or [])],
+            "coupled_core": {k: (g.get("coupled_core") or {}).get(k) for k in CHAIN_READS["coupled_core"]}}
+    return hashlib.sha256(json.dumps(proj, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:16]
+
+
 def triggers(inputs: dict) -> dict:
     keys = structure_keys()
     return {"declared": {k: inputs.get(k) for k in keys},
+            "chain_reads": chain_reads_digest(),
             "code": {f: _code_digest(HERE / f) for f in CODE_FILES},
             "bytes": {f: hashlib.sha256((HERE / f).read_bytes()).hexdigest()[:16] for f in BYTE_FILES},
             "sulphur_fixings": json.loads((HERE / SULPHUR_ANCHOR).read_text(encoding="utf-8")).get("fixings"),
@@ -842,6 +866,8 @@ def _moved(then: dict, now: dict) -> tuple[list[str], list[str]]:
         for k in sorted(set(now[part]) | set(then.get(part, {}))):
             if now[part].get(k) != then.get(part, {}).get(k):
                 (code if part == "code" or (part == "bytes" and k.endswith(".py")) else data).append(f"{part}.{k}")
+    if now.get("chain_reads") != then.get("chain_reads"):
+        data.append("chain_reads")              # C159 — 옛 꼴 표(칸 없음)도 여기서 한 번 낡음으로 이름 댄다(규칙 4)
     if now["sulphur_fixings"] != then.get("sulphur_fixings"):
         data.append("sulphur_fixings")
     if now.get("mantle_table") != then.get("mantle_table"):
@@ -868,11 +894,28 @@ def _recheck(doc: dict, body) -> tuple[float, str]:
     return worst, where
 
 
+def history_bodies() -> list[str]:
+    """C159 규칙 3 — 열진화 입력(`core_initial_temperature`)을 선언한 출하 몸. 이 몸은 전부 표가 있어야 한다(예외 목록 없음)."""
+    import yaml
+    out = []
+    for f in sorted(BODIES_DIR.glob("*.yaml")):
+        doc = yaml.safe_load(f.read_text(encoding="utf-8")) or {}
+        if "core_initial_temperature" in (doc.get("inputs") or {}):    # `run.load_body` 와 같은 자리
+            out.append(f.stem)
+    return out
+
+
 def check_all() -> int:
     """방아쇠 대조 — 데이터가 움직이면 낡음(FAIL), **코드만** 움직이면 격자점 전부를 다시 풀어 ε 안이면 통과
-    (prereg-value-based-staleness, 동결 668e1616). 못 봄: 격자점 사이에서만 곡선이 바뀌는 변경."""
+    (prereg-value-based-staleness, 동결 668e1616). 못 봄: 격자점 사이에서만 곡선이 바뀌는 변경.
+    C159 규칙 3 — 열진화 입력을 선언한 출하 몸에 표가 **없으면** FAIL(예전엔 표 파일만 돌아 조용했다: 금성)."""
     import run
     bad = 0
+    for name in history_bodies():
+        if not _path_for(name).exists():
+            print(f"  [FAIL] {name} — 열진화 입력(core_initial_temperature)을 선언했는데 구조 표가 없다: "
+                  f"열진화가 cannot-say 다. `--refresh {name}` (C159 규칙 3)")
+            bad += 1
     for path in sorted(GRID_DIR.glob("*.json")):
         doc = json.loads(path.read_text(encoding="utf-8"))
         body, _ = run.load_body(BODIES_DIR / f"{doc['body'].lower()}.yaml")
