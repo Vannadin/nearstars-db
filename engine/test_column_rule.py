@@ -1,5 +1,5 @@
-# 맨틀 조성 표의 열이 수렴한 이웃을 따르는가 — 규칙 갈래 · 1 bar 와즐리아이트 막이 · 아무것도 안 수렴하면 이름 대고 굳힘 (C160)
-"""prereg-c160-column-follows-neighbour (frozen 7adc71fd): N-rule, N-guard, N-none.
+# 맨틀 조성 표의 열이 수렴한 이웃을 따르는가 — 규칙 갈래 · 1 bar 와즐리아이트 막이 · 이름 대고 굳힘 · 고상선 위는 빈 칸 (C160)
+"""prereg-c160-column-follows-neighbour (frozen 7adc71fd, with post-freeze note 1): N-rule, N-guard, N-none, N-edge.
 
     python3 engine/test_column_rule.py        (BurnMan: the gate venv)
 """
@@ -60,9 +60,25 @@ def n_none() -> None:
        f"N-none: points where nothing converges freeze by name ({len(below)} points, rule {set(below)})")
 
 
+def n_edge() -> None:
+    """덧붙임 1 — 고상선 위 칸은 이름 댄 빈 칸, 그 밑 칸은 채워진다(화성 조성, 10 GPa, 1000–2600 K)."""
+    bulk = mc.atomic_bulk(MARS_KHAN2022)
+    p = 10e9
+    t_sol = mc.solidus_edge(p)
+    ts = [1000.0 + 50.0 * k for k in range(33)]          # 1000 … 2600 K
+    col = mc._column((bulk, p, ts))
+    above = [(t, (c or {}).get("assemblage")) for t, c in zip(ts, col) if t > t_sol and c is not None]
+    below_last = max(t for t in ts if t <= t_sol)
+    sub = col[ts.index(below_last)]
+    ok(not above, f"N-edge: no filled cell above the solidus {t_sol:.0f} K at 10 GPa — {above[:3]}")
+    ok(sub is not None and not sub["assemblage"].endswith("*frozen"),
+       f"N-edge: the last sub-solidus cell ({below_last:.0f} K) still fills — {(sub or {}).get('assemblage')}")
+
+
 if __name__ == "__main__":
     n_rule()
     n_guard()
     n_none()
+    n_edge()
     print(f"{'모두 통과' if not fails else f'{len(fails)} 실패'}")
     sys.exit(1 if fails else 0)

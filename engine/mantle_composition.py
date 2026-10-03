@@ -237,6 +237,17 @@ T_SEED = 1000.0
 COLUMN_RULE = "c160"
 
 
+#: C160 덧붙임 1 — 표가 쓰이는 두 규산염 재질의 녹는곡선 변형. 표는 둘 다에 끼워지므로(`declared`) 더 낮은 쪽을 쓴다.
+SOLIDUS_VARIANTS = ("peridotitic", "chondritic")
+
+
+def solidus_edge(p_pa: float) -> float:
+    """C160 덧붙임 1: 표의 물리적 위쪽 경계 — 이 P 에서 엔진의 규산염 고상선(`silicate_melt_fraction` 이 쓰는 것과
+    같은 함수 · 변형, d_fe 없음). 두 변형의 낮은 쪽. 이 온도 위의 칸은 수렴하든 말든 짓지 않는다(이름 댄 빈 칸)."""
+    import eos
+    return min(eos.silicate_solidus(p_pa, v) for v in SOLIDUS_VARIANTS)
+
+
 def _neighbour(prev: str, ok: list[str]) -> tuple[str | list[str] | None, str]:
     """C160 ② – ④: 앞 점의 승자 `prev` 가 이 점에서 수렴하지 않았을 때 이어 갈 이름과 그 갈래.
 
@@ -263,11 +274,15 @@ def _column(args):
     각 칸은 갈래 이름(`same` · `subset` · `neighbour` · `frozen`)을 `rule` 칸에 들고 나가고, 표는 그 수를 센다."""
     bulk, p, ts = args
     out = {}
+    t_sol = solidus_edge(p)               # C160 덧붙임 1 — 이 위는 짓지 않는다
     i0 = min(range(len(ts)), key=lambda i: abs(ts[i] - T_SEED))
     for order in (range(i0, len(ts)), range(i0, -1, -1)):
         warm: dict = {}
         prev = None                       # (이긴 이름, 그 상태) — 굳히면 이름 끝에 *frozen
         for i in order:
+            if ts[i] > t_sol:
+                out.setdefault(i, None)   # 고상선 위 — 이름 댄 빈 칸(표의 `column_rule_counts["above-solidus"]`)
+                continue
             if prev is not None and prev[0].endswith("*frozen"):
                 got = frozen(prev[0][:-len("*frozen")], prev[1], p, ts[i])
                 if got:
@@ -308,9 +323,10 @@ def build(body: str, wt: dict[str, float], procs: int = 4) -> Path:
            "assemblage": [[c["assemblage"] if c else None for c in row] for row in rows]}
     # C160 — 칸마다 고른 갈래의 수(same · subset · neighbour · frozen · 빈 칸). 다시 짓기의 앞뒤 대조가 이 칸을 읽는다.
     counts: dict[str, int] = {}
-    for row in rows:
-        for c in row:
-            k = c.get("rule", "same") if c else "empty"
+    edges = [solidus_edge(p) for p in ps]
+    for j, row in enumerate(rows):
+        for i, c in enumerate(row):
+            k = c.get("rule", "same") if c else ("above-solidus" if ts[j] > edges[i] else "empty")
             counts[k] = counts.get(k, 0) + 1
     out["column_rule_counts"] = counts
     for f in FIELDS:
