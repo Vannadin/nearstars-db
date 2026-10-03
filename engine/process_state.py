@@ -25,8 +25,6 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("fermi", "_LAST_INVERSE"): (START, "previous (value, eta): Newton starting point", (0.0, 0.0)),
     ("rtpress", "_LAST_LIQUID"): (MEMO, "returned only for the same (P, T)", None),
     ("rtpress", "_VMIN_TAB"): (MEMO, "lazily built table, a function of the constants only", None),
-    ("rtpress", "_VOLUME_WARM"): (START, "previous volume root: the next root-find's first bracket, reset at each structure solve (C161 (4b), (4d))", None),
-    ("rtpress", "WARM_STATS"): (COUNTER, "warm vs cold volume root-finds (C161)", None),
     ("ice_fr2015", "_GL_NODES"): (MEMO, "lazily built quadrature nodes", None),
     ("ice_fr2015", "_CACHE"): (MEMO, "keyed by (name, P, T)", None),
     ("fe_liquid", "_CACHE"): (MEMO, "keyed by (name, P, T), cleared at each structure solve (C161)", None),

@@ -1,4 +1,4 @@
-# 취미용 표 가속(C161)이 값을 안 바꾸는가 — 압력식 재배열 · 따뜻한 근 찾기 · 풀이마다 초기화 · 빠른 판 표시
+# 취미용 표 가속(C161)이 값을 안 바꾸는가 — 압력식 재배열 · 풀이마다 기억 초기화 · 빠른 판 표시
 """prereg-c161-hobby-table (frozen 19d4fd42): H-exact, H-scope, H-quick (the fixtures; wall times are run separately).
 
     python3 engine/test_hobby_table.py
@@ -28,7 +28,7 @@ def ok(cond: bool, label: str) -> None:
 
 
 def h_exact() -> None:
-    """(4a) 압력식: |Δ| ≤ 1e-12 × Σ|항| 또는 1e-3 Pa — 섞은 경계(감사 e2). (4b) 부피: 근 찾기 허용 1e-12·V₀ 안, 같은 거절."""
+    """(4a) 압력식: |Δ| ≤ 1e-12 × Σ|항| 또는 1e-3 Pa — 섞은 경계(감사 e2). (4b) 따뜻한 출발은 철회 (C161 덧붙임 1)."""
     rnd = random.Random(161)
     worst = 0.0
     for _ in range(20000):
@@ -53,26 +53,6 @@ def h_exact() -> None:
     fl.reset_solve_state()
     v1 = fl.volume_at(300e9, 5000.0); v2 = fl.volume_at(300e9, 5000.0); fl.reset_solve_state()
     ok(v1 == v2 == fl._volume_at(300e9, 5000.0), "H-exact (4a): the fe_liquid volume memo returns the solve's own value")
-    # (4b): 따뜻한 출발과 차가운 출발이 1e-12·V₀ 안에서 같고, 거절은 같은 점에서
-    worst_v, same_ref = 0.0, True
-    for _ in range(400):
-        p, t = rnd.uniform(0.0, 200.0), rnd.uniform(2200.0, 9000.0)
-        rtpress.reset_solve_state()
-        try:
-            cold = rtpress.volume(p, t); e_cold = None
-        except Exception as e:
-            cold, e_cold = None, type(e).__name__
-        rtpress._VOLUME_WARM = (cold or rtpress.V0) * (1.0 + 5e-4)
-        try:
-            warm = rtpress.volume(p, t); e_warm = None
-        except Exception as e:
-            warm, e_warm = None, type(e).__name__
-        same_ref &= e_cold == e_warm
-        if cold and warm:
-            worst_v = max(worst_v, abs(warm - cold) / rtpress.V0)
-    rtpress.reset_solve_state()
-    ok(worst_v <= 2e-12 and same_ref, f"H-exact (4b): warm vs cold volume within 2e-12·V₀ (worst {worst_v:.2e}); "
-                                      f"the same refusals at the same points: {same_ref}")
 
 
 def h_scope() -> None:

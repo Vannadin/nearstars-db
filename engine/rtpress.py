@@ -324,38 +324,6 @@ def _false_position(p: float, t: float, lo: float, hi: float) -> float:
     return 0.5 * (lo + hi)
 
 
-#: C161 (4b) — 앞 부피 풀이의 답. 다음 풀이의 첫 괄호로만 쓴다(값은 근 찾기 허용 1e-12·V₀ 안에서만 움직인다).
-#: ⚠ 구조 풀이마다 `reset_solve_state()` 로 지운다 — 남겨 두면 한 점의 끝자리가 그 작업자가 앞서 푼 점에 기대어
-#: 풀 크기마다 표가 갈린다(감사 e2, C161 (4d)). `process_state.REGISTRY` 에 `start` 로 등록.
-_VOLUME_WARM: float | None = None
-WARM_WIDTH = 1e-3                   # 앞 답 둘레 상대 폭 — 근이 그 안에 없으면 오늘의 넓은 괄호로
-WARM_STATS = {"warm": 0, "cold": 0}
-
-
-def reset_solve_state() -> None:
-    """구조 풀이 하나의 시작 — 따뜻한 출발점을 지운다 (C161 (4d))."""
-    global _VOLUME_WARM
-    _VOLUME_WARM = None
-
-
-def _warm_root(p: float, t: float, lo: float, hi: float) -> float:
-    """C161 (4b): 앞 답 V_w 가 있고 [V_w(1 − w), V_w(1 + w)] ∩ [lo, hi] 가 근을 감싸면 그 좁은 괄호로 Illinois,
-    아니면 오늘의 [lo, hi] 로. 끝 판정(괄호 폭 < 1e-12·V₀)은 같아서 답은 그 허용 안에서만 움직인다."""
-    global _VOLUME_WARM
-    vw = _VOLUME_WARM
-    if vw is not None:
-        a, b = max(lo, vw * (1.0 - WARM_WIDTH)), min(hi, vw * (1.0 + WARM_WIDTH))
-        if a < b and (pressure(a, t) - p) * (pressure(b, t) - p) < 0.0:
-            WARM_STATS["warm"] += 1
-            v = _false_position(p, t, a, b)
-            _VOLUME_WARM = v
-            return v
-    WARM_STATS["cold"] += 1
-    v = _false_position(p, t, lo, hi)
-    _VOLUME_WARM = v
-    return v
-
-
 def volume(p: float, t: float) -> float:
     """덧붙임 3: bracket [0.2·V₀, V̂_min] from the V_min(T) table, three checks, false position; any check failing
     sends this call back to `volume_full` (덧붙임 2 B entire, counted as `fallback`). Values equal to `volume_full`
@@ -372,7 +340,7 @@ def volume(p: float, t: float) -> float:
         OUTSIDE["outside"] += 1
     OUTSIDE["loop"] = OUTSIDE.get("loop", 0) + 1
     OUTSIDE.setdefault("loop_first", (p, t))
-    v = _warm_root(p, t, lo, vh)
+    v = _false_position(p, t, lo, vh)
     if not _dpdv(v, t) < 0.0:
         OUTSIDE["fallback"] = OUTSIDE.get("fallback", 0) + 1
         OUTSIDE["calls"] -= 1
