@@ -286,7 +286,90 @@ except SystemExit as e:
 sg.SPEC_LEVELS, sg.GRID_POOL = _levels0, _pool0
 sg.SPEC_LEVELS, sg.GRID_POOL = _levels0, _pool0
 
-ghost = copy.deepcopy(run.load_body(sg.BODIES_DIR / "earth.yaml")[0])
+# C162 — 표 짓기에서 이름 댄 거절은 세는 «거절» 구간(멈춤 아님) · 상한(몸 표마다 둘 · 구간마다 2.0 K) · 음성 대조
+_JUMP = "표면온도 잔차가 뛴다 — 중심 온도 [4052.41, 4052.42] K 사이에서 0 을 건너뛴다 (C152 가짜)"
+
+
+def _fake162(bands, why=_JUMP, cmf_at=None):
+    """`bands` 안의 온도에서만 이름 댄 거절(applicable False) — 값은 _fake58 처럼 매끄러움."""
+    def solve(t, p_hint=None):
+        interior._FAMILY_TRAIL.update(trials=[(None, 3000.0, 3e10, 0, None, True)], reclosed=[], closed=[], answer=None,
+                                      dev=1e-4, calls=1, returned={}, answer_call=0)
+        if any(lo <= t <= hi for lo, hi in bands):
+            return types.SimpleNamespace(applicable=False, converged=None, notes=(), values={}, reason=why, regime="rocky",
+                                         inputs={"core_mass_fraction": 0.3})
+        x = t - 1000.0
+        v = {"radius": 1.0 + 1e-7 * x, "core_radius": 0.5, "cmb_pressure": 20.0 + 0.001 * x, "cmb_temperature": 1.5 * t,
+             "core_pressure": 30.0, "converged": None, "silicate_melt_state": "solid", "basal_silicate_state": "solid"}
+        cmf = 0.31 if cmf_at is not None and abs(t - cmf_at) < 1e-9 else 0.3
+        return types.SimpleNamespace(applicable=True, reason=None, regime="rocky", converged=True, notes=(),
+                                     inputs={"core_mass_fraction": cmf}, values=v)
+    return solve
+
+
+def _build162(solve):
+    sg.GRID_POOL = 1
+    try:
+        with contextlib.redirect_stdout(io.StringIO()) as out:
+            res = sg._adaptive("fake", solve, 1000.0, 1008.0, sg.EPS, 6.4e23, 0.3)
+        return res, None, out.getvalue()
+    except SystemExit as e:
+        return None, str(e), ""
+    finally:
+        sg.GRID_POOL = _pool0
+
+
+_r162, _e162, _log162 = _build162(_fake162([(1002.9, 1003.1)]))
+_gaps162 = _r162[8] if _r162 else []
+check("C162 ① — 안쪽 한 점의 C152 거절은 멈춤 없이 «거절» 구간 하나(까닭 · 폭 ≤ 1 K)",
+      len(_gaps162) == 1 and _gaps162[0][3:] == ["refusal"] and _gaps162[0][2].startswith("표면온도 잔차가 뛴다")
+      and _gaps162[0][1] - _gaps162[0][0] <= 1.0, (_e162 or str(_gaps162))[:160])
+check("C162 ① — 짓기 로그가 그 구간을 «(거절)» 로 찍음", "받을 답 없는 구간(거절)" in _log162)
+if _r162:
+    _g162 = sg.Grid({"t_pot": _r162[0], "points": _r162[1], "no_answer": _gaps162})
+    check("C162 ① — 읽기는 그대로: 구간 안은 gap", _g162.at(1003.0)[0] == "gap", str(_g162.at(1003.0)[0]))
+_, _e3, _ = _build162(_fake162([(1000.9, 1001.1), (1002.9, 1003.1), (1004.9, 1005.1)]))
+check("C162 ② — 거절 구간 셋이면 상한(둘) 넘음: 구간 전부를 이름 대고 멈춤", _e3 is not None and "상한" in _e3 and _e3.count("폭") >= 3,
+      (_e3 or "")[:160])
+_, _ew, _ = _build162(_fake162([(1002.6, 1005.4)]))
+check("C162 ② — 폭 2.0 K 넘는 거절 구간 하나면 멈춤", _ew is not None and "상한" in _ew and "> 2.0 K" in _ew, (_ew or "")[:160])
+check("C162 ② — 판정 구간(셋째 칸까지)은 상한에 안 셈", sg.refusal_over_cap([[1.0, 9.0, "판정"]] * 3) == "")
+check("C162 ② — 문서 판: 거절 구간 셋 · 폭 넘는 하나는 상한 사유",
+      "3 개" in sg.refusal_over_cap([[1.0, 1.5, "x", "refusal"]] * 3) and "폭" in sg.refusal_over_cap([[1.0, 3.5, "x", "refusal"]]))
+_, _eb, _ = _build162(_fake162([(1002.9, 1003.1)], why=interior.BACKSTOP_REASON_HEAD + " (적분 피적분 불연속) — 가짜"))
+check("C162 음성 — C157 뒷받침 거절은 멈춤 그대로(규칙 3)", _eb is not None and interior.BACKSTOP_REASON_HEAD in _eb, (_eb or "")[:120])
+_, _el, _ = _build162(_fake162([(999.0, 1000.1)]))
+check("C162 음성 — 아래 끝 거절은 멈춤(격자 끝)", _el is not None and "격자 끝" in _el, (_el or "")[:120])
+_, _ec, _ = _build162(_fake162([], cmf_at=1004.0))
+check("C162 음성 — cmf 어긋남은 멈춤", _ec is not None and "조성이 고정이 아니다" in _ec, (_ec or "")[:120])
+
+
+def _check162(no_answer):
+    """방아쇠가 지금 그대로인 가짜 earth 표 하나로 --check(check_all) 를 돌려 (FAIL 수, 출력)."""
+    import tempfile
+    body = run.load_body(sg.BODIES_DIR / "earth.yaml")[0]
+    saved = sg.GRID_DIR
+    with tempfile.TemporaryDirectory() as d:
+        sg.GRID_DIR = Path(d)
+        (Path(d) / "earth.json").write_text(json.dumps({"body": "Earth", "t_pot": [1.0], "points": [{}],
+                                                        "triggers": sg.triggers(body.inputs), "no_answer": no_answer}),
+                                            encoding="utf-8")
+        try:
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                bad = sg.check_all()
+        finally:
+            sg.GRID_DIR = saved
+    return bad, out.getvalue()
+
+
+_b1, _o1 = _check162([[1002.75, 1003.25, _JUMP, "refusal"], [1005.0, 1005.5, "판정 — 가짜"]])
+check("C162 ② — --check 가 구간 전부를 까닭과 찍음: 거절 [WARN] · 판정 [기록], 상한 안이면 FAIL 없음(표 없는 몸 둘만)",
+      "[WARN] earth.json — 거절 구간 [1002.75, 1003.25]" in _o1 and "[기록] earth.json — 받을 답 없는 구간 [1005.0, 1005.5]" in _o1
+      and "상한" not in _o1, f"bad {_b1}")
+_b3, _o3 = _check162([[1000.0 + i, 1000.5 + i, _JUMP, "refusal"] for i in range(3)])
+check("C162 ② — 거절 구간 셋을 든 표는 --check FAIL", "거절 구간이 상한을 넘는다 (3 개 > 2" in _o3 and _b3 == _b1 + 1, f"bad {_b3}")
+
+ghost =copy.deepcopy(run.load_body(sg.BODIES_DIR / "earth.yaml")[0])
 ghost.name = "NoSuchBody"
 _, why = sg.load_for(ghost)
 check("표가 없는 바디 → 이름 대고 거절", why is not None and "구조 표가 없다" in why, (why or "")[:100])

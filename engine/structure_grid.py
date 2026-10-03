@@ -41,6 +41,9 @@ KINK_MIN_K = 0.25            # 폭 바닥의 꺾임 구간만 이분 두 번 더
 BELOW_K = 150.0              # 격자 아래 끝 = ⓐ 판 t_m 최저 − 150 K (prereg-structure-grid 덧붙임 7 ③)
 ABOVE_K = 50.0               # 위 끝 = ⓐ 판 t_m 최고 + 50 K, 구조가 거절하면 T_ok 로
 T_OK_WIDTH_K = 1.0
+# C162 — 표 짓기에서 이름 댄 거절은 멈춤이 아니라 세는 «거절» 구간. 몸 표 하나에 둘까지, 구간마다 폭 2.0 K 까지(지휘 e0 값)
+REFUSAL_SPANS_MAX = 2
+REFUSAL_SPAN_MAX_K = 2.0
 FIELDS = ("p_cmb", "r_cmb", "r_b", "r_p", "g", "d_mantle_m")
 #: 표를 지을 때만 켠다 — 노드가 표 없이 오늘처럼 돌아 ⓐ 판과 S0 를 준다.
 BUILDING = False
@@ -291,6 +294,7 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
     import interior
     cache = {}
     noans = {}                                  # 덧붙임 50 — 받을 답 아닌 점 → 까닭
+    refused = set()                             # C162 — noans 중 이름 댄 거절(applicable False)에서 온 점
     melt, fire_set, refines58 = {}, set(), []   # 덧붙임 58 · 59 — 점의 용융 상태 · 가족 검사가 선 찾아간 점 · 쪼갠 구간
     aux = {}                                    # 덧붙임 57 — 판정의 T−1 K 보조 점(힌트 없는 풀이) 기억, 값 밖
     spec = {}                                   # 덧붙임 55 ④ — 한 판의 미리 푼 결과(판 끝에 버림, 캐시 · 표 밖)
@@ -322,7 +326,11 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         if getattr(r, "fired", False):
             fire_set.add(t)                     # 덧붙임 59 ① — 찾아간 점이면 역할 무관(받을 답이든 아니든)
         if not r.applicable:
-            raise SystemExit(f"{name}: {t!r} K 에서 구조가 거절한다 — 격자 안에서 단조가 아니다: {r.reason}")
+            if (r.reason or "").startswith(interior.BACKSTOP_REASON_HEAD):   # C162 — C157 규칙 3: 뒷받침이 서면 멈춤
+                raise SystemExit(f"{name}: {t!r} K 에서 구조가 거절한다 — 격자 안에서 단조가 아니다: {r.reason}")
+            noans[t] = r.reason or "거절(까닭 없음)"     # C162 — 이름 댄 거절은 받을 답 없는 점(덧붙임 50 과 같은 구간 처리)
+            refused.add(t)
+            return
         tags = []
         why = interior.answer_verdict(r, tags)   # C130 — 수렴 표지 False 인 점을 표에 조용히 넣지 않는다
         if why is not None:
@@ -399,6 +407,13 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         c = _Chain(a, b, MIN_INTERVAL_K, step)
         bisect([c])
         return None if c.stopped else (c.x, c.y, c.steps)
+    def span(t_minus, t_plus, why):
+        """덧붙임 50 의 구간 칸. C162 — 안에 이름 댄 거절 점이 있으면 넷째 칸 "refusal" 과 그 거절의 까닭(판정 구간은 오늘 그대로 셋)."""
+        inside = sorted(t for t in refused if t_minus < t < t_plus)
+        if not inside:
+            return [t_minus, t_plus, why[:160]]
+        return [t_minus, t_plus, noans[inside[0]][:160], "refusal"]
+
     prefetch([(t, None) for t in grid])
     # 덧붙임 57 ⑤ — 받을 답 아닌 첫 점은 가운데 점과 같게: 양쪽의 가장 가까운 받을 답 첫 점 사이에서 구간을 찾는다
     #   (덧붙임 50 의 «끝점은 받을 답» 문장 · 그 SystemExit 을 대신함). 잇단 불수락 첫 점은 한 구간. 격자 끝은 오늘 규칙.
@@ -413,9 +428,9 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             todo.append((u, v, 0))
             continue
         t_minus, t_plus = gap_around(u, v, bad[0], noans[bad[0]], bad[-1])
-        gaps.append([t_minus, t_plus, noans[bad[0]][:160]])
-        print(f"받을 답 없는 구간 — [{t_minus!r}, {t_plus!r}] K 폭 {t_plus - t_minus:.3f} K · 첫 점 {bad!r} · "
-              f"{noans[bad[0]][:100]}", flush=True)
+        gaps.append(span(t_minus, t_plus, noans[bad[0]]))
+        print(f"받을 답 없는 구간{'(거절)' if len(gaps[-1]) > 3 else ''} — [{t_minus!r}, {t_plus!r}] K 폭 "
+              f"{t_plus - t_minus:.3f} K · 첫 점 {bad!r} · {gaps[-1][2][:100]}", flush=True)
         todo += [(u, t_minus, 1)] if t_minus > u else []
         todo += [(t_plus, v, 1)] if t_plus < v else []
     while todo:
@@ -431,8 +446,9 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             at(0.5 * (a + b), a, b)
         except _NoAnswer as na:
             t_minus, t_plus = gap_around(a, b, na.t, na.why)
-            gaps.append([t_minus, t_plus, na.why[:160]])
-            print(f"받을 답 없는 구간 — [{t_minus!r}, {t_plus!r}] K 폭 {t_plus - t_minus:.3f} K · {na.why[:100]}", flush=True)
+            gaps.append(span(t_minus, t_plus, na.why))
+            print(f"받을 답 없는 구간{'(거절)' if len(gaps[-1]) > 3 else ''} — [{t_minus!r}, {t_plus!r}] K 폭 "
+                  f"{t_plus - t_minus:.3f} K · {gaps[-1][2][:100]}", flush=True)
             todo += [(a, t_minus, d + 1)] if t_minus > a else []
             todo += [(t_plus, b, d + 1)] if t_plus < b else []
             continue
@@ -499,8 +515,24 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
           f"{sum(1 for r in refines58 if r[2] == '가족 검사')} 구간", flush=True)
     print(f"미리 풀기(덧붙임 55) — 보냄 {spec_stats['dispatched']} · 씀 {spec_stats['used']} · 버림 {spec_stats['discarded']} · "
           f"판 {spec_stats['rounds']} · 한 판 최대 {spec_stats['max_round']} 점", flush=True)
+    over = refusal_over_cap(gaps)
+    if over:       # C162 ② — 거절 구간이 상한을 넘으면 패턴이다: 구간 전부를 이름 대고 멈춘다
+        raise SystemExit(f"{name}: 거절 구간이 상한을 넘는다 ({over}) — " + " · ".join(
+            f"[{g[0]!r}, {g[1]!r}] K 폭 {g[1] - g[0]:.3f} K: {g[2][:80]}" for g in gaps if len(g) > 3))
     ts = sorted({t for ab in done for t in ab} | {t for br in breaks for t in br[:2]})
     return ts, [at(t)[0] for t in ts], [at(t)[1] for t in ts], worst, depth_max, len(cache), breaks, kinks, gaps
+
+
+def refusal_over_cap(gaps) -> str:
+    """C162 ② — 거절 구간(넷째 칸 "refusal")이 몸 표 하나의 상한(개수 · 구간마다 폭)을 넘으면 그 까닭, 아니면 빈 문자열."""
+    ref = [g for g in gaps if len(g) > 3 and g[3] == "refusal"]
+    why = []
+    if len(ref) > REFUSAL_SPANS_MAX:
+        why.append(f"{len(ref)} 개 > {REFUSAL_SPANS_MAX}")
+    wide = [g for g in ref if g[1] - g[0] > REFUSAL_SPAN_MAX_K]
+    if wide:
+        why.append(f"폭 {', '.join(f'{g[1] - g[0]:.3f}' for g in wide)} K > {REFUSAL_SPAN_MAX_K} K")
+    return " · ".join(why)
 
 
 def _holds_fire(a, b, fire_set) -> bool:
@@ -965,6 +997,14 @@ def check_all() -> int:
     for path in sorted(GRID_DIR.glob("*.json")):
         doc = json.loads(path.read_text(encoding="utf-8"))
         body, _ = run.load_body(BODIES_DIR / f"{doc['body'].lower()}.yaml")
+        for g in doc.get("no_answer", []):      # C162 ② — 받을 답 없는 구간은 전부 까닭과 함께: 거절은 [WARN], 판정은 [기록]
+            tag = "[WARN]" if len(g) > 3 and g[3] == "refusal" else "[기록]"
+            print(f"  {tag} {path.name} — {'거절 구간' if tag == '[WARN]' else '받을 답 없는 구간'} [{g[0]!r}, {g[1]!r}] K "
+                  f"폭 {g[1] - g[0]:.3f} K · {g[2]}")
+        over = refusal_over_cap(doc.get("no_answer", []))
+        if over:
+            print(f"  [FAIL] {path.name} — 거절 구간이 상한을 넘는다 ({over}, C162) — `--refresh {doc['body'].lower()}`")
+            bad += 1
         data, code = _moved(doc["triggers"], triggers(body.inputs))
         if data:
             print(f"  [FAIL] {path.name} — 데이터 방아쇠 {data} 가 움직였다 — `--refresh {doc['body'].lower()}`")

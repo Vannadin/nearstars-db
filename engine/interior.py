@@ -112,6 +112,8 @@ INTERPOLATE_LAYERS = True
 STENCIL_BOUNDS = True
 # C157 셈(값 밖) — 경계 착지(할선) 재걷기 수
 PHASE_CUT_REWALKS = [0]
+# C157 ③ 뒷받침 거절문의 머리 — C162 가 표 짓기에서 이 거절만 멈춤으로 남기려고 읽는다(규칙 3 «서면 멈춤»)
+BACKSTOP_REASON_HEAD = "사격 질량이 p_c 에서 뛴다"
 # 얼음 기둥 안에서 국소 (P, T) 가 녹는곡선 위이면 액체 물로 적분한다 (2026-08-29). False 는
 # 판정만 내고 밀도는 고체상으로 두던 2026-08-27 의 경로이고, 바다가 밀도를 실제로 움직이는지를
 # 재는 대조 검사만 그것을 켠다.
@@ -2282,7 +2284,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                 gap = (last_long.mass_kg - last_short.mass_kg) / mass_kg
                 if gap > tol:
                     raise ValueError(
-                        f"사격 질량이 p_c 에서 뛴다 (적분 피적분 불연속) — 중심압 {lo / 1e9:.12g} GPa 에서 겉질량이 "
+                        f"{BACKSTOP_REASON_HEAD} (적분 피적분 불연속) — 중심압 {lo / 1e9:.12g} GPa 에서 겉질량이 "
                         f"목표의 {last_short.mass_kg / mass_kg - 1.0:+.3e} 와 {last_long.mass_kg / mass_kg - 1.0:+.3e} 사이로 "
                         f"뛴다(질량 차 {gap:.2e}, 사격 허용 {tol:g}), 중심 온도 {t_center:.6g} K (C157).")
             convergence.note("interior._shoot_pressure", False, trial=True)   # C138 P — 채택 사격의 ok 는 겉 표지가 든다
