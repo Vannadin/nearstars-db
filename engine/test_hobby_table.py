@@ -8,6 +8,7 @@ from __future__ import annotations
 import contextlib
 import io
 import json
+import math
 import random
 import sys
 import tempfile
@@ -92,8 +93,52 @@ def h_quick() -> None:
        "H-quick: a history read through a quick table carries the note; a reference table adds nothing")
 
 
+def _fake_result(t: float):
+    """가짜 풀이 — 매끈한 곡선 + 꺾임(1900 K) + 뜀(2400 K, r_b) + 받을 답 없는 띠(2101–2104 K) + 가족 검사 점 + 용융 상태 갈림."""
+    rad = 0.53 + 2e-5 * (t - 1500.0) + (3e-6 * (t - 1900.0) if t > 1900.0 else 0.0) + 1e-7 * math.sin(t / 37.0)
+    t_cmb = 1.15 * t + (0.5 * t if t > 2400.0 else 0.0)
+    values = {"radius": rad, "core_radius": 0.27 + 1e-6 * t, "cmb_pressure": 19.0 + 1e-3 * t + 0.5 * math.sin(t / 40.0),
+              "cmb_temperature": t_cmb, "silicate_melt_state": "partial" if t > 2250.0 else "solid",
+              "basal_silicate_state": None, "ice_column_state": None, "core_status": "liquid"}
+    bad = 2101.0 < t < 2104.0
+    return types.SimpleNamespace(applicable=True, reason=None, regime="rocky", converged=False if bad else True,
+                                 notes=(), inputs={"core_mass_fraction": 0.25}, values=values,
+                                 fired=2600.0 < t < 2620.0)
+
+
+def h_par() -> None:
+    """(7) 판 단위 정밀화가 옛 차례 루프와 바이트까지 같은 표를 낸다 — 가짜 풀이로 4766ca7a 의 `_adaptive` 와 대조."""
+    import structure_grid as sg
+    import subprocess
+    src = subprocess.run(["git", "show", "4766ca7a:engine/structure_grid.py"], cwd=HERE, capture_output=True,
+                         text=True, check=True).stdout
+    old = types.ModuleType("structure_grid_4766ca7a")
+    old.__file__ = str(HERE / "structure_grid.py")
+    exec(compile(src, "structure_grid@4766ca7a", "exec"), old.__dict__)
+    got = {}
+    for tag, mod in (("old", old), ("new", sg)):
+        batches = []
+
+        def fake_pool(solve, jobs, aux=None, kind="single", _b=batches):
+            _b.append(len(jobs))
+            return [_fake_result(t) for t, _h in jobs]
+        saved = mod._pool_solve
+        mod._pool_solve = fake_pool
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):
+                out = mod._adaptive("fake", None, 1500.0, 2900.0, mod.EPS, 6.4e23, 0.25)
+        finally:
+            mod._pool_solve = saved
+        got[tag] = (json.dumps(out, sort_keys=True), batches)
+    same = got["old"][0] == got["new"][0]
+    n_old, n_new = len(got["old"][1]), len(got["new"][1])
+    ok(same and n_new < n_old, f"H-par (7, fixture): rounds give the byte-identical table ({same}); "
+                               f"pool dispatches {n_old} → {n_new}, largest batch {max(got['old'][1])} → {max(got['new'][1])}")
+
+
 if __name__ == "__main__":
     h_exact()
+    h_par()
     h_quick()
     h_scope()
     print(f"{'모두 통과' if not fails else f'{len(fails)} 실패'}")

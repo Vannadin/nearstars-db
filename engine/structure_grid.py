@@ -435,79 +435,82 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
         todo += [(u, t_minus, 1)] if t_minus > u else []
         todo += [(t_plus, v, 1)] if t_plus < v else []
     while todo:
-        # 덧붙임 44 ② — 쌓인 구간들의 가운데 점을 먼저 한꺼번에(캐시에 없는 것만), 판정은 아래 지금 순서 그대로
-        prefetch([(0.5 * (a_ + b_), a_) for a_, b_, _d in todo])   # 가운데 점(힌트 없음, 덧붙임 57 ①)
-        a, b, d = todo.pop(0)
-        try:
-            pa, fa = at(a)
-            pb, fb = at(b)
-        except _NoAnswer as na:   # 덧붙임 57 ⑤ 뒤로 끝점은 늘 받을 답(첫 점 · 구간 끝) — 여기 오면 짓기 규칙 위반
-            raise SystemExit(f"{name}: 구간 끝점 {na.t!r} K 가 받을 답 아님 — {na.why} (덧붙임 57 ⑤ 뒤로 일어나면 안 됨)")
-        try:
-            at(0.5 * (a + b), a, b)
-        except _NoAnswer as na:
-            t_minus, t_plus = gap_around(a, b, na.t, na.why)
-            gaps.append(span(t_minus, t_plus, na.why))
-            print(f"받을 답 없는 구간{'(거절)' if len(gaps[-1]) > 3 else ''} — [{t_minus!r}, {t_plus!r}] K 폭 "
-                  f"{t_plus - t_minus:.3f} K · {gaps[-1][2][:100]}", flush=True)
-            todo += [(a, t_minus, d + 1)] if t_minus > a else []
-            todo += [(t_plus, b, d + 1)] if t_plus < b else []
-            continue
-        if fa != fb:                                  # 불연속 — 이분으로 좁혀 이름 대고 거절
-            c = _Chain(a, b, MIN_INTERVAL_K, lambda c, m: c.go(m, c.y) if at(m, c.x, c.y)[1] == fa else c.go(c.x, m))
-            bisect([c])                       # 덧붙임 55 — 지문 이분도 같은 판
-            x, y = c.x, c.y
-            raise SystemExit(f"{name}: 보간 불가 구간 [{x!r}, {y!r}] K — 지문 {fa} → {at(y)[1]} "
-                             f"(걸린 것: 폭 바닥 — 폭 {y - x:.3f} K ≤ MIN_INTERVAL_K {MIN_INTERVAL_K} K, 깊이 {d}/{MAX_DEPTH})")
-        m = 0.5 * (a + b)
-        pm, fm = at(m, a, b)
-        err = {k: abs(0.5 * (pa[k] + pb[k]) - pm[k]) / abs(pm[k]) for k in FIELDS}
-        if max(err.values()) > eps and fm == fa:
-            jump = None
-            for k in FIELDS:
-                r, _ = ratio(pa, pm, pb, k)
-                if r > JUMP_RATIO:
-                    jump = confirm_jump(a, b, k)
-                    if jump:
-                        x, y, steps = jump
-                        size = (at(y)[0][k] - at(x)[0][k]) / abs(at(x)[0][k])
-                        breaks.append([x, y, k, size, steps])
-                        todo += [(a, x, d + 1), (y, b, d + 1)]
-                        depth_max = max(depth_max, d + 1)
-                        break
-            if jump:
+        # C161 (7) — 한 판 = 지금 쌓인 구간 전부. 그 가운데 점을 한 번에 풀로 보내고(덧붙임 44 ②), 판정은 쌓인 순서 그대로.
+        #   대기열은 앞에서 꺼내 뒤에 쌓는 차례(FIFO)라 판으로 묶어도 판정 순서가 같다. 자식 가운데 점은 부모 구간 안이라
+        #   같은 판 다른 구간의 판정(가족 검사 점 · 받을 답 아님)에 닿지 않는다. 전에는 판마다 새 자식 1–2 점만 보냈다.
+        round_, todo = todo, []
+        prefetch([(0.5 * (a_ + b_), a_) for a_, b_, _d in round_])   # 가운데 점(힌트 없음, 덧붙임 57 ①)
+        for a, b, d in round_:
+            try:
+                pa, fa = at(a)
+                pb, fb = at(b)
+            except _NoAnswer as na:   # 덧붙임 57 ⑤ 뒤로 끝점은 늘 받을 답(첫 점 · 구간 끝) — 여기 오면 짓기 규칙 위반
+                raise SystemExit(f"{name}: 구간 끝점 {na.t!r} K 가 받을 답 아님 — {na.why} (덧붙임 57 ⑤ 뒤로 일어나면 안 됨)")
+            try:
+                at(0.5 * (a + b), a, b)
+            except _NoAnswer as na:
+                t_minus, t_plus = gap_around(a, b, na.t, na.why)
+                gaps.append(span(t_minus, t_plus, na.why))
+                print(f"받을 답 없는 구간{'(거절)' if len(gaps[-1]) > 3 else ''} — [{t_minus!r}, {t_plus!r}] K 폭 "
+                      f"{t_plus - t_minus:.3f} K · {gaps[-1][2][:100]}", flush=True)
+                todo += [(a, t_minus, d + 1)] if t_minus > a else []
+                todo += [(t_plus, b, d + 1)] if t_plus < b else []
                 continue
-        if fm != fa or max(err.values()) > eps:
-            # 덧붙임 43 — 폭 바닥에 닿았고 뜀도 지문 불연속도 아니면 꺾임: 그 구간만 0.25 K 까지 더 반으로.
-            #   이 가지는 옛 규칙이 거절하던 자리에서만 열린다(다른 표는 바이트 같음).
-            if fm == fa and (b - a) / 2 >= KINK_MIN_K and (d + 1 > MAX_DEPTH or (b - a) / 2 < MIN_INTERVAL_K):
-                k_worst = max(err, key=err.get)
-                kinks.append([a, b, k_worst, err[k_worst]])
+            if fa != fb:                                  # 불연속 — 이분으로 좁혀 이름 대고 거절
+                c = _Chain(a, b, MIN_INTERVAL_K, lambda c, m: c.go(m, c.y) if at(m, c.x, c.y)[1] == fa else c.go(c.x, m))
+                bisect([c])                       # 덧붙임 55 — 지문 이분도 같은 판
+                x, y = c.x, c.y
+                raise SystemExit(f"{name}: 보간 불가 구간 [{x!r}, {y!r}] K — 지문 {fa} → {at(y)[1]} "
+                                 f"(걸린 것: 폭 바닥 — 폭 {y - x:.3f} K ≤ MIN_INTERVAL_K {MIN_INTERVAL_K} K, 깊이 {d}/{MAX_DEPTH})")
+            m = 0.5 * (a + b)
+            pm, fm = at(m, a, b)
+            err = {k: abs(0.5 * (pa[k] + pb[k]) - pm[k]) / abs(pm[k]) for k in FIELDS}
+            if max(err.values()) > eps and fm == fa:
+                jump = None
+                for k in FIELDS:
+                    r, _ = ratio(pa, pm, pb, k)
+                    if r > JUMP_RATIO:
+                        jump = confirm_jump(a, b, k)
+                        if jump:
+                            x, y, steps = jump
+                            size = (at(y)[0][k] - at(x)[0][k]) / abs(at(x)[0][k])
+                            breaks.append([x, y, k, size, steps])
+                            todo += [(a, x, d + 1), (y, b, d + 1)]
+                            depth_max = max(depth_max, d + 1)
+                            break
+                if jump:
+                    continue
+            if fm != fa or max(err.values()) > eps:
+                # 덧붙임 43 — 폭 바닥에 닿았고 뜀도 지문 불연속도 아니면 꺾임: 그 구간만 0.25 K 까지 더 반으로.
+                #   이 가지는 옛 규칙이 거절하던 자리에서만 열린다(다른 표는 바이트 같음).
+                if fm == fa and (b - a) / 2 >= KINK_MIN_K and (d + 1 > MAX_DEPTH or (b - a) / 2 < MIN_INTERVAL_K):
+                    k_worst = max(err, key=err.get)
+                    kinks.append([a, b, k_worst, err[k_worst]])
+                    todo += [(a, m, d + 1), (m, b, d + 1)]
+                    depth_max = max(depth_max, d + 1)
+                    continue
+                if d + 1 > MAX_DEPTH or (b - a) / 2 < MIN_INTERVAL_K:
+                    # 덧붙임 45 — 걸린 한계를 수로. 꺾임 가지가 안 열린 까닭(지문 다름 · 반폭 바닥)도 한 낱말로.
+                    hit = ("꺾임 반폭 바닥" if fm == fa and (b - a) / 2 < KINK_MIN_K else
+                           "지문 다름" if fm != fa else "깊이 상한" if d + 1 > MAX_DEPTH else "폭 바닥")
+                    raise SystemExit(f"{name}: [{a!r}, {b!r}] K 가 ε {eps!r} 에 안 든다 (오차 {max(err.values())!r}) — "
+                                     f"걸린 것: {hit} · 깊이 {d}/{MAX_DEPTH} · 폭 {b - a:.3f} K · 폭 바닥 {MIN_INTERVAL_K} K · "
+                                     f"꺾임 반폭 바닥 {KINK_MIN_K} K")
                 todo += [(a, m, d + 1), (m, b, d + 1)]
                 depth_max = max(depth_max, d + 1)
-                continue
-            if d + 1 > MAX_DEPTH or (b - a) / 2 < MIN_INTERVAL_K:
-                # 덧붙임 45 — 걸린 한계를 수로. 꺾임 가지가 안 열린 까닭(지문 다름 · 반폭 바닥)도 한 낱말로.
-                hit = ("꺾임 반폭 바닥" if fm == fa and (b - a) / 2 < KINK_MIN_K else
-                       "지문 다름" if fm != fa else "깊이 상한" if d + 1 > MAX_DEPTH else "폭 바닥")
-                raise SystemExit(f"{name}: [{a!r}, {b!r}] K 가 ε {eps!r} 에 안 든다 (오차 {max(err.values())!r}) — "
-                                 f"걸린 것: {hit} · 깊이 {d}/{MAX_DEPTH} · 폭 {b - a:.3f} K · 폭 바닥 {MIN_INTERVAL_K} K · "
-                                 f"꺾임 반폭 바닥 {KINK_MIN_K} K")
-            todo += [(a, m, d + 1), (m, b, d + 1)]
-            depth_max = max(depth_max, d + 1)
-        else:
-            # 덧붙임 58 ① — 보간이 ε 안이어도 두 끝의 용융 상태가 다르면 0.25 K 까지. 덧붙임 59 ② — 구간 [a, b] 안(끝 포함)에
-            #   가족 검사가 선 찾아간 점이 하나라도 있으면(역할 무관) 그런 점이 없거나 폭 1 K 까지 반으로. 거절하지 않음.
-            why58 = ("용융 상태" if melt[a] != melt[b] and (b - a) / 2 >= KINK_MIN_K else
-                     "가족 검사" if b - a > MIN_INTERVAL_K and _holds_fire(a, b, fire_set) else None)
-            if why58:
-                refines58.append([a, b, why58])
-                todo += [(a, m, d + 1), (m, b, d + 1)]
-                depth_max = max(depth_max, d + 1)
-                continue
-            done.append((a, b))
-            for k in FIELDS:
-                worst[k] = max(worst[k], err[k])
+            else:
+                # 덧붙임 58 ① — 보간이 ε 안이어도 두 끝의 용융 상태가 다르면 0.25 K 까지. 덧붙임 59 ② — 구간 [a, b] 안(끝 포함)에
+                #   가족 검사가 선 찾아간 점이 하나라도 있으면(역할 무관) 그런 점이 없거나 폭 1 K 까지 반으로. 거절하지 않음.
+                why58 = ("용융 상태" if melt[a] != melt[b] and (b - a) / 2 >= KINK_MIN_K else
+                         "가족 검사" if b - a > MIN_INTERVAL_K and _holds_fire(a, b, fire_set) else None)
+                if why58:
+                    refines58.append([a, b, why58])
+                    todo += [(a, m, d + 1), (m, b, d + 1)]
+                    depth_max = max(depth_max, d + 1)
+                    continue
+                done.append((a, b))
+                for k in FIELDS:
+                    worst[k] = max(worst[k], err[k])
     stale = [(a, b, sorted(t for t in fire_set if a <= t <= b)) for a, b in done
              if b - a > MIN_INTERVAL_K and any(a <= t <= b for t in fire_set)]
     if stale:      # 덧붙임 59 ④ — 닫힌 뒤에 찾아간 점이 서면 그 구간은 쪼개지지 않은 채 남는다: 이름 대고 거절
