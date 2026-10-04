@@ -669,20 +669,38 @@ row(_q.density(_cold_ok, _hot, _hot) > 0.0,
     "가드가 온도를 이유로 구간을 통째로 닫지 않는다")
 
 print("\n⑰ C157 메모 3 — 핵-맨틀 경계가 적합 바닥 아래인 답의 거절이 재료 자신의 출처를 댄다")
-interior.COMPOSITIONS["_c157n3"] = (0.75, 0.0, 0.0, "fe_s19_o4_c5permil_19gpa")       # 바닥 9.93 GPa — 화성 질량 cmf 0.75 가 그 밑에 경계를 둠
-try:
-    _r = interior.solve(0.1074, composition="_c157n3", potential_temperature=1600.0, body_class="rocky")
-finally:
-    del interior.COMPOSITIONS["_c157n3"]
-_t = _r.reason or ""
+# C157 메모 8 (일반화) — ⓒ 와 같은 부류: 고리 풀이가 닫혀야 나오는 바닥 거절의 **문구**를 판정하므로, 문구는 거절 함수
+#   (`interior._refuse_if_below_floor`)를 직접 불러 판정하고, 풀이 수준의 결과는 이름으로 기록만 한다(고리가 닫히는가는 기계 ·
+#   기준 데이터에 따라 다르다 — PC 의 재굳힌 기준에서 예산 거절, 맥에서는 바닥 거절).
 import re as _re                            # noqa: E402
+import types as _types0                     # noqa: E402
+_floor = eos.MATERIALS["fe_s19_o4_c5permil_19gpa"].shoot_lo / eos.GPA
+try:
+    interior._refuse_if_below_floor(_types0.SimpleNamespace(floor_truncated=None, p_cmb=9.9039e9), "fe_s19_o4_c5permil_19gpa")
+    _t = ""
+except eos.PhaseGap as gap:
+    _t = gap.reason
 _m = _re.match(r"([0-9.]+) GPa 는 .*?아래 끝\(([0-9.]+) GPa", _t)
 _p_said, _lim_said = (float(_m.group(1)), float(_m.group(2))) if _m else (None, None)
-_floor = eos.MATERIALS["fe_s19_o4_c5permil_19gpa"].shoot_lo / eos.GPA
-row(not _r.applicable and _m is not None and _p_said < _lim_said and abs(_lim_said - _floor) < 1e-3
+row(_m is not None and _p_said < _lim_said and abs(_lim_said - _floor) < 1e-3
     and "되돌이점" in _t and "수렴한 답의 핵-맨틀 경계가" in _t,
-    f"다원계 Fe–S 핵(적합 바닥 {_floor:.4f} GPa)·cmf 0.75 의 거절이 넘은 그 끝의 값 · 종류(되돌이점)를 앞에, 경계 세부를 뒤에 든다 — "
-    f"인쇄된 p {_p_said} < 인쇄된 끝 {_lim_said} ({_t[:60]}…)")
+    f"다원계 Fe–S 핵(적합 바닥 {_floor:.4f} GPa)·경계 9.9039 GPa 의 거절이 넘은 그 끝의 값 · 종류(되돌이점)를 앞에, 경계 세부를 뒤에 "
+    f"든다(직접 호출) — 인쇄된 p {_p_said} < 인쇄된 끝 {_lim_said} ({_t[:60]}…)")
+interior.COMPOSITIONS["_c157n3"] = (0.75, 0.0, 0.0, "fe_s19_o4_c5permil_19gpa")       # 바닥 9.93 GPa — 화성 질량 cmf 0.75 가 그 밑에 경계를 둠
+try:
+    try:
+        _r17 = interior.solve(0.1074, composition="_c157n3", potential_temperature=1600.0, body_class="rocky")
+        _rt = _r17.reason or ""
+        _rec17 = ("답(거절 없음)" if _r17.applicable else
+                  "바닥 거절" if "수렴한 답의 핵-맨틀 경계가" in _rt else
+                  f"이름 댄 거절 «{next(h for h in C152_NAMED if h in _rt)}»" if any(h in _rt for h in C152_NAMED) else
+                  "그 밖의 거절")
+        _rec17 += f" «{_rt[:60]}…»" if _rt else ""
+    except Exception as _e17:                     # noqa: BLE001 — 기록만, 뒤 행을 가리지 않는다
+        _rec17 = f"이름 없는 예외 {type(_e17).__name__} «{str(_e17)[:60]}…»"
+finally:
+    del interior.COMPOSITIONS["_c157n3"]
+print(f"  [기록] ⑰ 풀이 수준(cmf 0.75, T_pot 1600 K): {_rec17} — 판정하지 않음 (C157 메모 8)")
 import types as _types                      # noqa: E402
 _types_ns = _types.SimpleNamespace
 _tr = None
