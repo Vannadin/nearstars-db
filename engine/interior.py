@@ -139,6 +139,12 @@ OCEAN_LAYER = True
 # 최대 9 bar (해왕성) 의 열 배 위라, 앵커는 이 갈래를 한 번도 타지 않는다.
 FLOOR_EXTRAPOLATION_MAX = 100.0
 MAX_STEPS = 40000
+#: C164 규칙 3 — 압력 0 아래로 나간 표면 반 걸음도 그 온도의 1 bar 밀도로(차가운 rho0 로 뛰지 않게). False 는 C164 앞(대조만).
+SURF_RHO = True
+#: C164 규칙 3 셈(값 밖) — 표면 반 걸음이 PhaseGap 으로 rho0 에 물러난 횟수. 0 이 아니면 그 몸의 R 에 옛 표면 톱니가 남는다.
+SURF_RHO_FALLBACKS = [0]
+#: C164 메모 1 칼날 1 — 상 경계 착지 걸음의 단계 밀도를 옛 상 쪽에 묶는다(False 는 C164 앞, 대조만)
+CUT_STAGE_OLD_SIDE = True
 # ── 적응 걸음 (prereg-adaptive-rk45, 동결 975c1447 — 뼈대, 아직 안 켬) ──────────────────────────
 #: False 면 고정 걸음 RK4 그대로(비교 · 되돌림용 손잡이). 계수표는 원문 대조를 마쳤다(DP45_* 주석).
 #: 오너 2026-09-28 «ㅇㅇ» — 값 이동(지구 CMB −21 K · 판도라 −13 K, 고정 1500 이 격자 수렴 띠보다 치우친 쪽이 고쳐짐)을 받음.
@@ -1473,6 +1479,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             그래서 프로파일에 기록되는 압력은 결코 바닥 아래가 아니다."""
             return _lo_mat if (_lo_mat and pp_eval < _lo_mat) else pp_eval
 
+        stage_pmin = [0.0]       # C164 메모 — 상 경계 착지 걸음의 단계 밀도를 옛 상 쪽에 묶는 압력 하한(착지 걸음 동안만)
+
         def deriv(rr, mm, pp, tt=None):
             if rr <= 0.0:
                 return 0.0, 0.0, 0.0, 0.0
@@ -1490,8 +1498,17 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                 rr_rho = COLUMN_STEAM.density(pp, t)
             else:
                 t_rho = (t if tt is None else tt) if litho_a is None else litho_a / rr + litho_b
-                rr_rho = (mat.density(_at_floor(max(pp, p_stop)), t_rho, t_pot) if pp > 0.0
-                          else mat.rho0)
+                if pp > 0.0:
+                    rr_rho = mat.density(_at_floor(max(pp, p_stop, stage_pmin[0])), t_rho, t_pot)
+                elif SURF_RHO:
+                    # C164 규칙 3 — 표면 밖 반 걸음도 그 온도의 1 bar 밀도(차가운 rho0 로 뛰면 p = 0 에 피적분 뜀 · R 톱니)
+                    try:
+                        rr_rho = mat.density(_at_floor(max(1.0e5, p_stop)), t_rho, t_pot)
+                    except eos.PhaseGap:
+                        SURF_RHO_FALLBACKS[0] += 1
+                        rr_rho = mat.rho0
+                else:
+                    rr_rho = mat.rho0
             phi = porosity_at(mat, pp, phi0, p_cap)
             rr_rho *= 1.0 - phi
             return (4.0 * math.pi * rr * rr * rr_rho,
@@ -1719,6 +1736,9 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                 f = (p - p_b) / (-dp)
                 if 0.0 < f < 1.0:
                     h = f * h
+                    # C164 메모 — 착지 걸음의 RK4 단계는 끝까지 옛 상(경계 위 압력)의 밀도로: 새 쪽 착지점의 마지막 단계(k4)가
+                    #   새 상 밀도를 읽으면 착지 걸음 길이에 비례하는 반지름 오차가 남았다(등온 지구 en/PREM, 1500 걸음 +57 m)
+                    stage_pmin[0] = p_b * (1.0 + 4e-12) if CUT_STAGE_OLD_SIDE else 0.0
                     dm, dp, di, dv = _rk(h)
                     # C157 ①b — 선형 분율 한 번으로는 걸음 끝이 p_b 근처에 떨어지고 어느 쪽인지가 p_c 에 따라 바뀐다:
                     #   할선으로 **새 쪽**의 p_t = p_b(1 − 4e-12) 에 |p + dp − p_t| ≤ 1e-12 p_b 까지(최대 8 번) — 다음 걸음의
@@ -1732,6 +1752,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                         h, h0, e0 = h - e1 * (h - h0) / (e1 - e0), h, e1
                         dm, dp, di, dv = _rk(h)
                         PHASE_CUT_REWALKS[0] += 1
+                    stage_pmin[0] = 0.0
                     basal_crossed = False
 
         # 표면 암석권 바닥 — 반지름 경계(기저층 꼭대기와 같은 RK4 재걷기). 층 바닥 온도는 걸음 끝의 단열 온도.
@@ -4390,6 +4411,7 @@ def solve(mass_earth: float,
     shots_before = convergence.shot_count()      # C139 — 이 풀이의 적분은 여기부터다(중첩 풀이는 바깥 기록을 같이 쓴다)
     _BASAL_INFO.clear()
     _FAMILY_INFO.clear()
+    surf_fallbacks0 = SURF_RHO_FALLBACKS[0]     # C164 규칙 3 — 이 풀이의 표면 반 걸음 rho0 물러남 셈의 시작점
     _GRAZE_INFO.clear()
     _FAMILY_TRAIL.update(trials=[], reclosed=[], closed=[], answer=None, dev=None, calls=0, returned={}, answer_call=None)
     _REF_INFO.clear()
@@ -4545,6 +4567,9 @@ def solve(mass_earth: float,
         notes.append(_GRAZE_INFO[id(st)])
     if st.plateau_band:                # C152 메모 8 ③ — 답에 평탄 띠(바깥 끝 가운데의 구조가 들고 온 메모 한 줄)
         notes.append(st.plateau_band)
+    if SURF_RHO_FALLBACKS[0] > surf_fallbacks0:   # C164 규칙 3 — 조용한 차가운 표면은 없다: 셈을 메모로
+        notes.append(f"표면 반 걸음이 그 온도의 1 bar 밀도를 못 내 차가운 rho0 로 물러남 {SURF_RHO_FALLBACKS[0] - surf_fallbacks0} 번 "
+                     "(C164 규칙 3) — 이 풀이의 반지름에 옛 표면 톱니가 남을 수 있다")
     _FAMILY_TRAIL["answer"] = _melt_family(st)   # 덧붙임 57 — 돌려주는 구조의 가족 · 표면 어긋남
     _FAMILY_TRAIL["answer_call"] = _FAMILY_TRAIL["returned"].get(id(st))   # 덧붙임 58 ② — 그 구조를 낸 사격 호출
     _FAMILY_TRAIL["dev"] = (abs(st.t_surface / potential_temperature - 1.0)

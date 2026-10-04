@@ -79,6 +79,7 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("interior", "_GRAZE_INFO"): (MEMO, "C157 note 5 onset-graze tag keyed by id(structure), cleared at each solve", None),
     ("interior", "_LAST_GRAZE"): (FLAG, "C157 note 5 closest onset approach of the integration in progress, reset at each integration", None),
     ("interior", "_LOOP_TRIALS"): (FLAG, "C157 note 5 trial list of the outer temperature-loop call in progress, reset to None in finally", None),
+    ("interior", "SURF_RHO_FALLBACKS"): (COUNTER, "C164 rule 3 surface half-steps that fell back to the cold rho0, a count outside values", None),
     ("interior", "PHASE_CUT_REWALKS"): (COUNTER, "C157 secant re-walks landing a step on a phase, seam or layer boundary, a count outside values", None),
     ("interior", "_CALL"): (FLAG, "index of the outer shoot call in progress (addendum 58 rule 2), set and restored by shoot()", None),
     ("interior", "_ENTRY"): (FLAG, "re-close entry for one table solve (addendum 57 rule 3c), set and cleared in finally by the caller", None),
