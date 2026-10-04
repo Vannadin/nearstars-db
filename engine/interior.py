@@ -849,6 +849,23 @@ _ICE_GRID_DELTA: dict[int, tuple[int, int]] = {}
 #: 구조 표 덧붙임 60 후속 — 이 풀이에서 적분한 구조 전부(`integrate` 가 넣고, id 키 표들과 같은 자리에서 비운다).
 #:   붙잡혀 있는 동안 수거되지 않으므로 한 풀이 안의 id 키가 서로 겹치지 않는다 — 값은 안 바뀌고 메모리만 쓴다.
 _ALIVE: list = []
+#: 덧붙임 60 후속(감사석 조건 1) — 지금 살아 있는 `solve` 의 겹 수. `_ALIVE` 는 가장 바깥 풀이만 놓는다 — 안쪽 풀이가
+#:   놓으면 바깥 풀이의 구조가 수거되어 id 재사용이 다시 열린다(오늘 그런 호출부는 없다 · 미리 막음).
+_SOLVE_DEPTH = [0]
+
+
+def _depth_counted(fn):
+    """`solve` 의 겹 수를 세는 입구(`_SOLVE_DEPTH`, finally 로 되돌림)."""
+    import functools
+
+    @functools.wraps(fn)
+    def wrapper(*a, **k):
+        _SOLVE_DEPTH[0] += 1
+        try:
+            return fn(*a, **k)
+        finally:
+            _SOLVE_DEPTH[0] -= 1
+    return wrapper
 #: 기저층 기록 — `Structure` 가 `__slots__` 라 위 표와 같은 꼴로 id 에 단다(같은 조건, 같은 비우기).
 _BASAL_INFO: dict[int, dict] = {}
 #: 가족 오가기 기록 — 온도 고리가 부분 용융 구간의 가족 사이를 오가며 끝난 구조(prereg-melt-window-answers a703f21a §1.1).
@@ -3746,6 +3763,7 @@ ICE_GIANT_CLASSES = ("ice_giant",)
 _UNSET = object()
 
 
+@_depth_counted
 @convergence.traced
 def solve(mass_earth: float,
           core_mass_fraction: float | None = None,
@@ -4167,7 +4185,8 @@ def solve(mass_earth: float,
         if "ice/envelope" in jumps:
             boundary_temperature_jump = float(jumps.pop("ice/envelope"))
     _ICE_GRID_DELTA.clear()
-    _ALIVE.clear()                       # 덧붙임 60 후속 — id 키 표들과 같은 자리에서 놓는다
+    if _SOLVE_DEPTH[0] <= 1:
+        _ALIVE.clear()                   # 덧붙임 60 후속 — id 키 표들과 같은 자리에서, 가장 바깥 풀이만 놓는다
     shots_before = convergence.shot_count()      # C139 — 이 풀이의 적분은 여기부터다(중첩 풀이는 바깥 기록을 같이 쓴다)
     _BASAL_INFO.clear()
     _FAMILY_INFO.clear()

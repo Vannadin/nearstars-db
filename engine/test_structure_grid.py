@@ -543,5 +543,47 @@ _got0, _want0, _reused0 = _id_reuse(False)
 check("덧붙임 60 후속 음성 — 붙잡기를 끄면 id 가 재사용되고 기록이 옛 호출 번호를 돌려준다(시험이 그 길을 밟는다)",
       _reused0 and _got0 != _want0, f"{_got0} vs {_want0} · 재사용 {_reused0}")
 
+# 덧붙임 60 후속(감사석 조건 3) — 이력 무관: 지구 선언 몸 2062 K 를 앞선 이력 둘(없음 · S0 T_c 고정 풀이 한 번)
+#   뒤에 풀어 값 · 바깥 호출 기록이 비트까지 같다. 음성 — 둘째 이력에만 id 충돌을 심으면(호출 1 이후 구조의 id 에 호출 0 을
+#   먼저 적어 둠 = 수거된 시행의 id 를 물려받은 꼴) 답 호출이 갈라져 이 시험이 잡는다.
+def _hist_solve(plant=False):
+    _b = copy.deepcopy(_EARTH60); _b.results = {}; _b.inputs["potential_temperature"] = 2062.0
+    _orig = interior._shoot_body
+
+    def _planted(*a, **k):
+        st, ok = _orig(*a, **k)
+        if interior._CALL[0]:
+            interior._FAMILY_TRAIL["returned"].setdefault(id(st), 0)
+        return st, ok
+    if plant:
+        interior._shoot_body = _planted
+    try:
+        process_state.reset()
+        with contextlib.redirect_stdout(io.StringIO()):
+            r = interior._solve_from_state(_b, None)
+    finally:
+        interior._shoot_body = _orig
+    tr = interior._FAMILY_TRAIL
+    return (r.values if r.applicable else r.reason), (tr["calls"], tr["answer_call"], list(tr["trials"]))
+
+
+import process_state  # noqa: E402
+_EARTH60, _ = run.load_body(sg.BODIES_DIR / "earth.yaml")
+_hA = _hist_solve()
+_pin_from = _hA[0] if isinstance(_hA[0], dict) else {}
+with contextlib.redirect_stdout(io.StringIO()):
+    _bp = copy.deepcopy(_EARTH60); _bp.results = {}; _bp.inputs["potential_temperature"] = 2062.0
+    interior._PIN[0] = (float(_pin_from.get("core_temperature", 4000.0)), float(_pin_from.get("core_pressure", 360.0)) * 1e9)
+    try:
+        interior._solve_from_state(_bp, None)
+    finally:
+        interior._PIN[0] = None
+_hB = _hist_solve()
+check("덧붙임 60 후속 — 이력 무관: 고정 풀이 한 번 뒤에도 지구 2062 K 의 값 · 바깥 호출 기록이 비트까지 같다",
+      _hA == _hB and _hA[1][1] not in (None, 0), f"답 호출 {_hA[1][1]} 대 {_hB[1][1]} · 값 같음 {_hA[0] == _hB[0]}")
+_hN = _hist_solve(plant=True)
+check("덧붙임 60 후속 음성 — 둘째 이력에 id 충돌을 심으면 답 호출이 갈라져 잡힌다", _hN[1][1] != _hA[1][1],
+      f"심음 {_hN[1][1]} 대 {_hA[1][1]}")
+
 print(f"  test_structure_grid — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)
