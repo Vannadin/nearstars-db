@@ -765,11 +765,20 @@ def _settled_trials(r) -> list:
     return _call_trials(r)[-SETTLE_TRIALS:]
 
 
+def _on_root(x) -> bool:
+    """C163 — 시행이 답의 기준을 스스로 만족하는가: |y| < T_SURFACE_TOL. y 가 없는 시행(거절한 사격)은 아니다."""
+    import interior
+    return len(x) > 4 and x[4] is not None and abs(x[4]) < interior.T_SURFACE_TOL
+
+
 def _families_visited(r) -> list:
-    """풀이의 정착 창 시행 가족들(대표, 처음 본 순서) — 덧붙임 57 ② 를 덧붙임 58 ② 로 좁힘."""
+    """풀이의 정착 창 시행 가족들(대표, 처음 본 순서) — 덧붙임 57 ② 를 덧붙임 58 ② 로 좁힘.
+    C163 — 창을 먼저 잡고(마지막 SETTLE_TRIALS), 그 안에서 답의 기준(|y| < T_SURFACE_TOL)을 만족하는 시행만 견준다.
+    고상선을 스치는 자리에서 수렴 도중의 시행(답에서 수 K ~ 수십 K)이 띠의 연속 이동으로 «다른 가족» 처럼 읽히던 것을
+    막는다. 접힘 탐지기(`_fold`)와 답 판정의 가족 문구 갈래는 그대로다."""
     import interior
     reps = []
-    for f, *_ in _settled_trials(r):
+    for f, *_ in [x for x in _settled_trials(r) if _on_root(x)]:
         if all(interior._family_jump(o, f) for o in reps):
             reps.append(f)
     return reps

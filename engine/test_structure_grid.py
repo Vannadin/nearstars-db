@@ -243,7 +243,9 @@ def _fake58(t, p_hint=None):
 def _fake59(t, p_hint=None):
     """1003 K(시작 구간 [1002, 1004] 의 가운데)에서만 정착 창에 가족 둘 — 답은 한 가족, 값은 매끄러움."""
     hot = abs(t - 1003.0) < 1e-9 and p_hint is None and interior._ENTRY[0] is None
-    tr = [(F1, 3200.0, 3.9e10, 0, None, True), (F2, 3201.0, 3.8e10, 0, None, True)] * 2 if hot else [(F1, 3200.0, 3.9e10, 0, None, True)]
+    # C163 — 가족 검사는 답의 기준(|y| < tol)을 만족하는 시행만 견준다: 여기 두 가족은 근 위 시행이어야 검사가 선다(y ±1e-4).
+    tr = ([(F1, 3200.0, 3.9e10, 0, 1e-4, True), (F2, 3201.0, 3.8e10, 0, -1e-4, True)] * 2 if hot
+          else [(F1, 3200.0, 3.9e10, 0, None, True)])
     interior._FAMILY_TRAIL.update(trials=tr, reclosed=[F1, F2] if hot else [], closed=[], answer=F1, dev=1e-4,
                                   calls=1, returned={}, answer_call=0)
     x = t - 1000.0
@@ -669,6 +671,26 @@ if _mars_cmf is not None and abs(_mars_cmf - 0.2125286604878228) < 1e-9:
           _rn.applicable and not _bandn, f"띠 {len(_bandn)} 줄")
 else:
     print(f"  [기록] C152 메모 8 화성 1782 · 1771.5 K 네 줄 — 층 판 황 앵커가 아니다(box_ceiling cmf {_mars_cmf!r}): 이 창에 안 놓여 해당 없음")
+
+# C163 F-planted — 가족 검사는 답의 기준(|y| < T_SURFACE_TOL)을 만족하는 정착 창 시행만 견준다.
+#   시행 꼴 (가족, T_c, p, 호출, y, 닫힘, τ). 띠 1 GPa 차는 문턱 0.5 GPa 를 넘는다.
+import types as _types                                                   # noqa: E402
+_A, _B = (2.0, 7.0, 0.41), (3.0, 8.0, 0.41)
+def _r(trials):
+    return _types.SimpleNamespace(applicable=False, trail={"answer_call": 0, "trials": trials})
+_planted = _r([(_A, 3150.0, 3.5e11, 0, 5e-3, True, 1e-3), (_A, 3160.0, 3.5e11, 0, 2e-3, True, 5e-4),
+               (_A, 3171.0, 3.5e11, 0, 5e-4, True, 1e-5), (_B, 3172.0, 3.5e11, 0, -3e-4, True, 1e-8)])
+check("C163 F-planted — 근 위 두 시행(|y| 5e-4 · 3e-4 < tol)이 다른 띠면 가족 둘(진짜 «답 둘» 은 여전히 선다)",
+      len(sg._families_visited(_planted)) == 2, str(sg._families_visited(_planted)))
+_companion = _r([(_B, 3150.0, 3.5e11, 0, 5e-3, True, 1e-3), (_A, 3160.0, 3.5e11, 0, 2e-3, True, 5e-4),
+                 (_A, 3171.0, 3.5e11, 0, 5e-4, True, 1e-5), (_A, 3172.0, 3.5e11, 0, -3e-4, True, 1e-8)])
+_unfiltered = []
+for _x in sg._settled_trials(_companion):
+    if all(interior._family_jump(_o, _x[0]) for _o in _unfiltered):
+        _unfiltered.append(_x[0])
+check("C163 F-planted 짝 — 먼 띠가 근 밖 시행(|y| 5e-3)에만 있으면 가족 하나(거르지 않으면 둘 — 거르기가 일한다)",
+      len(sg._families_visited(_companion)) == 1 and len(_unfiltered) == 2,
+      f"걸러서 {len(sg._families_visited(_companion))} · 안 걸러서 {len(_unfiltered)}")
 
 print(f"  test_structure_grid — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)
