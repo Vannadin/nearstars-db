@@ -843,8 +843,12 @@ class BasalConstDensity:
 #:   **호출마다** 뜨고, 사격기가 실제로 돌려주는 구조의 것만 읽는다. 풀이 전후로 한 번 뜨면
 #:   시도 전부가 더해져 «가는 길에 어디를 지났나» 가 되고, 그건 등급이 말할 것이 아니다.
 #: ⚠ 키는 `id(구조)` 다 — `Structure` 는 `__slots__` 라 필드를 붙일 수 없다. 같은 풀이 안에서만
-#:   읽고 다음 풀이 시작 때 비우므로 id 재사용이 답을 섞지 않는다.
+#:   읽고 다음 풀이 시작 때 비운다. 풀이 **안에서** 버려진 시행 구조가 수거되면 그 id 를 새 구조가 물려받을 수 있으므로
+#:   (구조 표 덧붙임 60 후속 — `returned.setdefault` 가 옛 호출 번호를 남겼다), 아래 `_ALIVE` 가 풀이 동안 구조를 붙잡는다.
 _ICE_GRID_DELTA: dict[int, tuple[int, int]] = {}
+#: 구조 표 덧붙임 60 후속 — 이 풀이에서 적분한 구조 전부(`integrate` 가 넣고, id 키 표들과 같은 자리에서 비운다).
+#:   붙잡혀 있는 동안 수거되지 않으므로 한 풀이 안의 id 키가 서로 겹치지 않는다 — 값은 안 바뀌고 메모리만 쓴다.
+_ALIVE: list = []
 #: 기저층 기록 — `Structure` 가 `__slots__` 라 위 표와 같은 꼴로 id 에 단다(같은 조건, 같은 비우기).
 _BASAL_INFO: dict[int, dict] = {}
 #: 가족 오가기 기록 — 온도 고리가 부분 용융 구간의 가족 사이를 오가며 끝난 구조(prereg-melt-window-answers a703f21a §1.1).
@@ -972,6 +976,7 @@ def integrate(*args, **kw):
     _note_loop_trial(kw.get("t_center", args[11] if len(args) > 11 else 0.0), structure)
     _ICE_GRID_DELTA[id(structure)] = (ice_fr2015.STATS["extrapolated_rho"] - before[0],
                                       ice_fr2015.STATS["below_t_min"] - before[1])
+    _ALIVE.append(structure)             # 덧붙임 60 후속 — 풀이 동안 붙잡아 id 가 재사용되지 않게
     return structure
 
 
@@ -4162,6 +4167,7 @@ def solve(mass_earth: float,
         if "ice/envelope" in jumps:
             boundary_temperature_jump = float(jumps.pop("ice/envelope"))
     _ICE_GRID_DELTA.clear()
+    _ALIVE.clear()                       # 덧붙임 60 후속 — id 키 표들과 같은 자리에서 놓는다
     shots_before = convergence.shot_count()      # C139 — 이 풀이의 적분은 여기부터다(중첩 풀이는 바깥 기록을 같이 쓴다)
     _BASAL_INFO.clear()
     _FAMILY_INFO.clear()

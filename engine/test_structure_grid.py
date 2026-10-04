@@ -508,5 +508,40 @@ if _old_src:
         _crashed_f = False
     check("덧붙임 61 음성 — 고치기 전 코드는 지문 이분에서도 _NoAnswer 로 죽는다", _crashed_f)
 
+# 덧붙임 60 후속 — 한 풀이 안에서 버려진 시행 구조의 id 를 새 구조가 물려받아도 «그 구조를 낸 사격 호출» 기록이 섞이지 않는다.
+#   진짜 길(shoot → integrate)을 밟고 적분 알맹이만 가짜. 음성 — 붙잡기를 끄면 id 가 재사용되고 setdefault 가 옛 호출 번호를 남긴다.
+class _NoKeep(list):
+    def append(self, _x):
+        pass
+
+
+def _id_reuse(keep):
+    """사격 여덟 번, 매번 구조를 버린다 → (마지막 구조의 기록된 호출, 실제 호출, id 재사용이 있었나)."""
+    saved = (interior._integrate_raw, interior._shoot_body, interior._ALIVE)
+    interior._FAMILY_TRAIL.update(trials=[], reclosed=[], closed=[], answer=None, dev=None, calls=0, returned={},
+                                  answer_call=None)
+    interior._integrate_raw = lambda *a, **k: interior.Structure(1.0, 1.0, 0.33, 0.5, 1.0, 1.0, 0.0, [])
+    interior._shoot_body = lambda *a, **k: (interior.integrate(), True)
+    interior._ALIVE = [] if keep else _NoKeep()
+    try:
+        ids = []
+        for _ in range(8):
+            st, _ok = interior.shoot()
+            ids.append(id(st))
+            if _ < 7:
+                del st
+        return interior._FAMILY_TRAIL["returned"].get(id(st)), 7, len(set(ids)) < len(ids)
+    finally:
+        interior._integrate_raw, interior._shoot_body, interior._ALIVE = saved
+        interior._FAMILY_TRAIL.update(calls=0, returned={}, answer_call=None)
+
+
+_got, _want, _reused = _id_reuse(True)
+check("덧붙임 60 후속 — 풀이 동안 구조를 붙잡으면 id 가 안 겹치고 마지막 구조의 호출 번호가 맞다", _got == _want and not _reused,
+      f"{_got} vs {_want} · 재사용 {_reused}")
+_got0, _want0, _reused0 = _id_reuse(False)
+check("덧붙임 60 후속 음성 — 붙잡기를 끄면 id 가 재사용되고 기록이 옛 호출 번호를 돌려준다(시험이 그 길을 밟는다)",
+      _reused0 and _got0 != _want0, f"{_got0} vs {_want0} · 재사용 {_reused0}")
+
 print(f"  test_structure_grid — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)
