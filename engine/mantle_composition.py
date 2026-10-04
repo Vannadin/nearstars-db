@@ -365,6 +365,7 @@ class Table:
             tops.append(top if top is not None else -math.inf)
         self.edge = [min(tops[max(i - 1, 0):i + 2]) for i in range(len(tops))]
         self.edge_ys = [e if math.isfinite(e) else None for e in self.edge]   # C157 메모 10 — 보간용(빈 열은 없는 점)
+        self._st_cache = {}      # C157 메모 10 — 행 계수 캐시(표는 고정이라 같은 산술 · 같은 값)
 
     def edge_at(self, p_pa: float) -> float:
         """표 위쪽 가장자리 E(P) — `edge` 를 ln P 로 보간(덧붙임 6 ①; C157 메모 10 부터 단조 3 차, MODE «linear» 면 선형)."""
@@ -399,7 +400,8 @@ class Table:
         for f in FIELDS:
             c = self.cols[f]
             try:
-                out.append(smooth_table.cubic2(x, t_k, self.lnp, self.t, lambda ka, kb, c=c: c[kb][ka], i, j))
+                out.append(smooth_table.cubic2(x, t_k, self.lnp, self.t, lambda ka, kb, c=c: c[kb][ka], i, j,
+                                               self._st_cache.setdefault(f, {})))
             except smooth_table.CellMissing:
                 raise TableMiss(f"({p_pa / 1e9:.4f} GPa, {t_k:.1f} K) 둘레 격자점에 평형 집합이 없다 — "
                                 f"후보 {len(CANDIDATES)} 개가 모두 수렴하지 않았거나 음수 몰분율") from None

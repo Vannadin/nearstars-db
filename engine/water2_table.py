@@ -307,6 +307,7 @@ def in_domain(p_pa, t_k):
 
 _XP = [LOGP_LO + k * LOGP_STEP for k in range(NP)]   # C157 메모 10 — 격자점 좌표(보간 축)
 _XT = [T_LO_K + k * T_STEP_K for k in range(NT)]
+_CACHE: dict = {}      # C157 메모 10 — 표마다 행 계수 캐시(표는 고정)
 
 
 def _cell(p_pa, t_k):
@@ -326,7 +327,8 @@ def _bilinear(table, p_pa, t_k):
         return ((1.0 - u) * ((1.0 - v) * r0[j] + v * r0[j + 1])
                 + u * ((1.0 - v) * r1[j] + v * r1[j + 1]))
     return smooth_table.cubic2(math.log10(p_pa / 1e9), t_k, _XP, _XT,
-                               lambda kp, kt: table[kt][kp] if kp < len(table[kt]) else None, j, i)
+                               lambda kp, kt: table[kt][kp] if kp < len(table[kt]) else None, j, i,
+                               _CACHE.setdefault(id(table), {}))
 
 
 def density(p_pa, t_k):

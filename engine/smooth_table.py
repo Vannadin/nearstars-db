@@ -48,12 +48,48 @@ def _inner_slope(h0: float, h1: float, d0: float, d1: float) -> float:
     return (w1 + w2) / (w1 / d0 + w2 / d1)
 
 
+def _coeffs(xs, ys, i: int):
+    """(x0, h, y0, y1, m0, m1) of cell i — node values and PCHIP node slopes. Raises CellMissing if a corner is missing."""
+    y0, y1 = ys[i], ys[i + 1]
+    if y0 is None or y1 is None:
+        raise CellMissing(i)
+    x0, x1 = xs[i], xs[i + 1]
+    h = x1 - x0
+    d = (y1 - y0) / h
+    has_l = i - 1 >= 0 and ys[i - 1] is not None
+    has_r = i + 2 < len(xs) and ys[i + 2] is not None
+    if has_l:
+        hl = x0 - xs[i - 1]
+        m0 = _inner_slope(hl, h, (y0 - ys[i - 1]) / hl, d)
+    elif has_r:
+        hr = xs[i + 2] - x1
+        m0 = _end_slope(h, hr, d, (ys[i + 2] - y1) / hr)
+    else:
+        m0 = d
+    if has_r:
+        hr = xs[i + 2] - x1
+        m1 = _inner_slope(h, hr, d, (ys[i + 2] - y1) / hr)
+    elif has_l:
+        hl = x0 - xs[i - 1]
+        m1 = _end_slope(h, hl, d, (y0 - ys[i - 1]) / hl)
+    else:
+        m1 = d
+    return x0, h, y0, y1, m0, m1
+
+
+def _hermite(x: float, c) -> float:
+    x0, h, y0, y1, m0, m1 = c
+    t = (x - x0) / h
+    t2, t3 = t * t, t * t * t
+    return ((2.0 * t3 - 3.0 * t2 + 1.0) * y0 + (t3 - 2.0 * t2 + t) * h * m0
+            + (-2.0 * t3 + 3.0 * t2) * y1 + (t3 - t2) * h * m1)
+
+
 def cubic1(x: float, xs, ys, i: int) -> float:
     """Value at x in [xs[i], xs[i+1]]. `ys` is indexable with None for missing nodes; xs strictly increasing."""
     y0, y1 = ys[i], ys[i + 1]
     x0, x1 = xs[i], xs[i + 1]
-    h = x1 - x0
-    t = (x - x0) / h
+    t = (x - x0) / (x1 - x0)
     # 무게 0 인 끝은 안 본다 — 격자선 위의 물음이 옆 빈 칸 때문에 거절되지 않게(오늘의 쌍선형과 같은 규칙)
     if t == 0.0 and y0 is not None:
         return y0
@@ -63,34 +99,13 @@ def cubic1(x: float, xs, ys, i: int) -> float:
         raise CellMissing(i)
     if MODE == "linear":
         return y0 + (y1 - y0) * t
-    d = (y1 - y0) / h
-    has_l = i - 1 >= 0 and ys[i - 1] is not None
-    has_r = i + 2 < len(xs) and ys[i + 2] is not None
-    if has_l:
-        hl = x0 - xs[i - 1]
-        dl = (y0 - ys[i - 1]) / hl
-        m0 = _inner_slope(hl, h, dl, d)
-    elif has_r:
-        hr = xs[i + 2] - x1
-        m0 = _end_slope(h, hr, d, (ys[i + 2] - y1) / hr)
-    else:
-        m0 = d
-    if has_r:
-        hr = xs[i + 2] - x1
-        dr = (ys[i + 2] - y1) / hr
-        m1 = _inner_slope(h, hr, d, dr)
-    elif has_l:
-        hl = x0 - xs[i - 1]
-        m1 = _end_slope(h, hl, d, (y0 - ys[i - 1]) / hl)
-    else:
-        m1 = d
-    t2, t3 = t * t, t * t * t
-    return ((2.0 * t3 - 3.0 * t2 + 1.0) * y0 + (t3 - 2.0 * t2 + t) * h * m0
-            + (-2.0 * t3 + 3.0 * t2) * y1 + (t3 - t2) * h * m1)
+    return _hermite(x, _coeffs(xs, ys, i))
 
 
-def cubic2(xa: float, xb: float, xs_a, xs_b, val, ia: int, ib: int) -> float:
-    """Value at (xa, xb) in cell [ia, ia+1] x [ib, ib+1]. `val(ka, kb)` returns the node value or None."""
+def cubic2(xa: float, xb: float, xs_a, xs_b, val, ia: int, ib: int, cache: dict | None = None) -> float:
+    """Value at (xa, xb) in cell [ia, ia+1] x [ib, ib+1]. `val(ka, kb)` returns the node value or None.
+    `cache` (optional, per static table and field): the second-axis Hermite coefficients of a stencil row depend only on
+    the table, so they are kept by (row, cell, required) — the same arithmetic, so the same values, read once."""
     if MODE == "linear":
         q = (val(ia, ib), val(ia + 1, ib), val(ia, ib + 1), val(ia + 1, ib + 1))
         u = (xa - xs_a[ia]) / (xs_a[ia + 1] - xs_a[ia])
@@ -103,11 +118,28 @@ def cubic2(xa: float, xb: float, xs_a, xs_b, val, ia: int, ib: int) -> float:
     rows = {}
     for ka in range(ia - 1, ia + 3):
         if 0 <= ka < na:
-            col = _Col(val, ka, len(xs_b), ib, ka in (ia, ia + 1))
-            try:
-                rows[ka] = cubic1(xb, xs_b, col, ib)
-            except CellMissing:
-                pass                       # 빈 행 — 바깥 보간이 그 행이 필요하면(무게 > 0) 거기서 CellMissing
+            req = ka in (ia, ia + 1)
+            key = (ka, ib, req)
+            hit = cache.get(key) if cache is not None else None
+            if hit is not None:
+                c, nx = hit
+                EXTRAPOLATED_READS[0] += nx         # 읽기마다 센다(캐시 채움마다가 아니라) — 셈의 뜻 그대로
+            else:
+                nx0 = EXTRAPOLATED_READS[0]
+                col = _Col(val, ka, len(xs_b), ib, req)
+                x0, x1 = xs_b[ib], xs_b[ib + 1]
+                tb = (xb - x0) / (x1 - x0)
+                if tb in (0.0, 1.0) and col[ib + (tb == 1.0)] is not None:
+                    rows[ka] = col[ib + (tb == 1.0)]       # 격자선 위 — 오늘의 «무게 0 끝» 규칙(캐시 안 함)
+                    continue
+                try:
+                    c = _coeffs(xs_b, col, ib)
+                except CellMissing:
+                    c = False                  # 빈 행 — 바깥 보간이 그 행이 필요하면(무게 > 0) 거기서 CellMissing
+                if cache is not None:
+                    cache[key] = (c, EXTRAPOLATED_READS[0] - nx0)
+            if c:
+                rows[ka] = _hermite(xb, c)
     return cubic1(xa, xs_a, _Sparse(rows, na), ia)
 
 
