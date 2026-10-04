@@ -437,5 +437,76 @@ _ok_t, _line_t = sg._self_check(_v0, {**_v0, "core_temperature": 2440.18 * (1 + 
 check("덧붙임 60 음성 — 고정 T_c 를 1e-6 흔들면 실패(고정이 안 잡혔다)", not _ok_t and "고정이 안 잡혔다" in _line_t, _line_t[:120])
 check("덧붙임 60 — 고정 풀이가 답을 안 내면 실패", not sg._self_check(_v0, None)[0])
 
+# 덧붙임 61 — 이분(뜀 확인)이 받을 답 없는 점에 닿아도 짓기가 죽지 않고 그 둘레를 구간으로 싣는다(PC landing 2 의 충돌 꼴)
+import contextlib as _ctx                                                # noqa: E402
+import io as _io                                                         # noqa: E402
+import subprocess as _sp                                                 # noqa: E402
+def _fake61(t):
+    bad = 2401.5 < t < 2401.6                    # 뜀 확인 이분의 다섯째 가운데 점(2401.5625)만 닿는 받을 답 없는 띠
+    #                                              — 격자 · 가운데 점 길은 이 띠를 안 밟는다(PC landing 2 의 충돌 꼴)
+    v = {"radius": 0.53 + 2e-5 * (t - 1500.0), "core_radius": 0.27, "cmb_pressure": 19.0 + 1e-3 * t,
+         "cmb_temperature": 1.15 * t + (0.5 * t if t > 2400.0 else 0.0), "silicate_melt_state": "solid",
+         "basal_silicate_state": None, "ice_column_state": None, "core_status": "liquid"}
+    return types.SimpleNamespace(applicable=True, reason=None, regime="rocky", converged=False if bad else True,
+                                 notes=(), inputs={"core_mass_fraction": 0.25}, values=v)
+def _run61(mod):
+    saved = mod._pool_solve
+    mod._pool_solve = lambda solve, jobs, aux=None, kind="single": [_fake61(t) for t, _h in jobs]
+    try:
+        with _ctx.redirect_stdout(_io.StringIO()):
+            return mod._adaptive("fake61", None, 2300.0, 2500.0, mod.EPS, 6.4e23, 0.25)
+    finally:
+        mod._pool_solve = saved
+try:
+    _out61 = _run61(sg)
+    _gaps61 = _out61[8]
+    _ok61 = any(g[0] <= 2401.5625 <= g[1] for g in _gaps61)
+except BaseException as _e:                   # noqa: BLE001 — 죽으면 그 자체가 실패
+    _ok61, _gaps61 = False, f"{type(_e).__name__}: {_e}"
+check("덧붙임 61 — 뜀 확인 이분이 받을 답 없는 점에 닿으면 그 둘레를 구간으로 싣고 끝난다(죽지 않음)", _ok61, str(_gaps61)[:120])
+_old_src = _sp.run(["git", "show", "e9e8ab3f:engine/structure_grid.py"], cwd=Path(__file__).resolve().parent,
+                   capture_output=True, text=True).stdout
+if _old_src:
+    _old = types.ModuleType("structure_grid_e9e8ab3f"); _old.__file__ = str(Path(__file__).resolve().parent / "structure_grid.py")
+    exec(compile(_old_src, "structure_grid@e9e8ab3f", "exec"), _old.__dict__)
+    try:
+        _run61(_old)
+        _crashed = False
+    except _old._NoAnswer:
+        _crashed = True
+    check("덧붙임 61 음성 — 고치기 전 코드(e9e8ab3f)는 같은 가짜에서 _NoAnswer 로 죽는다(시험이 그 길을 밟는다)", _crashed)
+
+# 덧붙임 61 — 같은 부류의 둘째 자리: 지문 불연속 이분(core_status 가 2400 K 위에서 바뀜)이 같은 띠에 닿는다
+def _fake61f(t):
+    r = _fake61(t)
+    r.values["cmb_temperature"] = 1.15 * t
+    r.values["core_status"] = "liquid" if t <= 2400.0 else "solid"
+    return r
+def _run61f(mod):
+    saved = mod._pool_solve
+    mod._pool_solve = lambda solve, jobs, aux=None, kind="single": [_fake61f(t) for t, _h in jobs]
+    try:
+        with _ctx.redirect_stdout(_io.StringIO()):
+            return mod._adaptive("fake61f", None, 2300.0, 2500.0, mod.EPS, 6.4e23, 0.25)
+    finally:
+        mod._pool_solve = saved
+# 진짜 지문 불연속(2400 K)은 등록된 이름 댄 멈춤(«보간 불가 구간»)이 맞다 — 시험하는 것은 그 앞에서 _NoAnswer 로 죽지 않는 것
+try:
+    _run61f(sg)
+    _ok61f, _g61f = True, "끝까지 지음"
+except SystemExit as _e:
+    _ok61f, _g61f = "보간 불가 구간" in str(_e), str(_e)[:90]
+except BaseException as _e:                   # noqa: BLE001
+    _ok61f, _g61f = False, f"{type(_e).__name__}: {str(_e)[:80]}"
+check("덧붙임 61 — 지문 불연속 이분이 받을 답 없는 점에 닿아도 _NoAnswer 로 죽지 않는다(등록된 지문 멈춤까지 간다)", _ok61f, _g61f)
+if _old_src:
+    try:
+        _run61f(_old); _crashed_f = False
+    except _old._NoAnswer:
+        _crashed_f = True
+    except SystemExit:
+        _crashed_f = False
+    check("덧붙임 61 음성 — 고치기 전 코드는 지문 이분에서도 _NoAnswer 로 죽는다", _crashed_f)
+
 print(f"  test_structure_grid — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)

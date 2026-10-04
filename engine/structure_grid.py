@@ -409,7 +409,12 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
     def confirm_jump(a, b, k):
         """큰 반쪽을 1 K 까지 이분 — 매 단계 비가 서야 뜀 (덧붙임 16). 뜀 [x, y] 또는 None."""
         def step(c, m):
-            r, left_big = ratio(at(c.x)[0], at(m, c.x, c.y)[0], at(c.y)[0], k)
+            try:
+                pm_ = at(m, c.x, c.y)[0]
+            except _NoAnswer as na:      # 덧붙임 61 — 이분이 받을 답 없는 점에 닿으면 멈추고 그 점을 넘긴다(죽지 않음)
+                c.stopped, c.noans = True, na
+                return
+            r, left_big = ratio(at(c.x)[0], pm_, at(c.y)[0], k)
             if r <= JUMP_RATIO:
                 c.stopped = True
                 return
@@ -417,7 +422,18 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             c.steps += 1
         c = _Chain(a, b, MIN_INTERVAL_K, step)
         bisect([c])
+        if getattr(c, "noans", None) is not None:
+            return c.noans
         return None if c.stopped else (c.x, c.y, c.steps)
+    def route_gap(a, b, d, na):
+        """덧붙임 50 · C162 · 61 — 구간 [a, b] 안에서 이분이 받을 답 없는 점 na.t 에 닿았다: 그 둘레를 0.25 K 까지 좁힌 구간을
+        `gaps` 에 싣고(이름 댄 거절이면 C162 의 센 거절), 남은 양쪽을 대기열 몫으로 돌려준다. 가운데 점 · 뜀 확인 · 지문 이분이 같이 쓴다."""
+        t_minus, t_plus = gap_around(a, b, na.t, na.why)
+        gaps.append(span(t_minus, t_plus, na.why))
+        print(f"받을 답 없는 구간{'(거절)' if len(gaps[-1]) > 3 else ''} — [{t_minus!r}, {t_plus!r}] K 폭 "
+              f"{t_plus - t_minus:.3f} K · {gaps[-1][2][:100]}", flush=True)
+        return ([(a, t_minus, d + 1)] if t_minus > a else []) + ([(t_plus, b, d + 1)] if t_plus < b else [])
+
     def span(t_minus, t_plus, why):
         """덧붙임 50 의 구간 칸. C162 — 안에 이름 댄 거절 점이 있으면 넷째 칸 "refusal" 과 그 거절의 까닭(판정 구간은 오늘 그대로 셋)."""
         inside = sorted(t for t in refused if t_minus < t < t_plus)
@@ -468,16 +484,21 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
             try:
                 at(0.5 * (a + b), a, b)
             except _NoAnswer as na:
-                t_minus, t_plus = gap_around(a, b, na.t, na.why)
-                gaps.append(span(t_minus, t_plus, na.why))
-                print(f"받을 답 없는 구간{'(거절)' if len(gaps[-1]) > 3 else ''} — [{t_minus!r}, {t_plus!r}] K 폭 "
-                      f"{t_plus - t_minus:.3f} K · {gaps[-1][2][:100]}", flush=True)
-                todo += [(a, t_minus, d + 1)] if t_minus > a else []
-                todo += [(t_plus, b, d + 1)] if t_plus < b else []
+                todo += route_gap(a, b, d, na)
                 continue
             if fa != fb:                                  # 불연속 — 이분으로 좁혀 이름 대고 거절
-                c = _Chain(a, b, MIN_INTERVAL_K, lambda c, m: c.go(m, c.y) if at(m, c.x, c.y)[1] == fa else c.go(c.x, m))
+                def fp_step(c, m):
+                    try:
+                        same = at(m, c.x, c.y)[1] == fa
+                    except _NoAnswer as na:   # 덧붙임 61 — 지문 이분도 받을 답 없는 점에서 멈추고 그 점을 넘긴다
+                        c.stopped, c.noans = True, na
+                        return
+                    c.go(m, c.y) if same else c.go(c.x, m)
+                c = _Chain(a, b, MIN_INTERVAL_K, fp_step)
                 bisect([c])                       # 덧붙임 55 — 지문 이분도 같은 판
+                if getattr(c, "noans", None) is not None:
+                    todo += route_gap(a, b, d, c.noans)
+                    continue
                 x, y = c.x, c.y
                 raise SystemExit(f"{name}: 보간 불가 구간 [{x!r}, {y!r}] K — 지문 {fa} → {at(y)[1]} "
                                  f"(걸린 것: 폭 바닥 — 폭 {y - x:.3f} K ≤ MIN_INTERVAL_K {MIN_INTERVAL_K} K, 깊이 {d}/{MAX_DEPTH})")
@@ -490,6 +511,9 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
                     r, _ = ratio(pa, pm, pb, k)
                     if r > JUMP_RATIO:
                         jump = confirm_jump(a, b, k)
+                        if isinstance(jump, _NoAnswer):   # 덧붙임 61 — 뜀 확인 이분이 받을 답 없는 점에 닿음 → 구간
+                            todo += route_gap(a, b, d, jump)
+                            break
                         if jump:
                             x, y, steps = jump
                             size = (at(y)[0][k] - at(x)[0][k]) / abs(at(x)[0][k])
