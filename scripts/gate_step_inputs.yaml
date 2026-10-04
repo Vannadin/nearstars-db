@@ -113,7 +113,7 @@
 "test_interior_ocean.py":
   globs: []
 "test_ice_giant.py":
-  globs: ["engine/ammonia_table.py", "engine/bands.py", "engine/body_class.py", "engine/cmb_flux.py", "engine/convergence.py", "engine/core_energy.py", "engine/core_entropy.py", "engine/core_history.py", "engine/core_state.py", "engine/domain.py", "engine/dynamo.py", "engine/dynamo_rocky.py", "engine/eos.py", "engine/fe_liquid.py", "engine/fermi.py", "engine/graph.py", "engine/hhe_table.py", "engine/ice_fr2015.py", "engine/ice_melt_table.py", "engine/interior.py", "engine/mantle_budget.py", "engine/mantle_composition.py", "engine/mantle_flux.py", "engine/mass_radius.py", "engine/parallel_points.py", "engine/payload.py", "engine/porosity.py", "engine/process_state.py", "engine/provisional.py", "engine/radiogenic.py", "engine/registry.py", "engine/rheology.py", "engine/rtpress.py", "engine/run.py", "engine/stagnant_lid.py", "engine/state.py", "engine/steam_if97.py", "engine/structure_grid.py", "engine/tectonic_regime.py", "engine/test_ice_giant.py", "engine/tidal_heating.py", "engine/tidal_locking.py", "engine/tidal_response.py", "engine/transfers.py", "engine/water2_table.py", "engine/water_hot.py", "engine/water_table.py", "engine/ice_giant_anchor.json"]
+  globs: ["engine/ammonia_table.py", "engine/bands.py", "engine/body_class.py", "engine/bounds.py", "engine/cmb_flux.py", "engine/convergence.py", "engine/core_energy.py", "engine/core_entropy.py", "engine/core_history.py", "engine/core_state.py", "engine/domain.py", "engine/dynamo.py", "engine/dynamo_rocky.py", "engine/eos.py", "engine/fe_liquid.py", "engine/fermi.py", "engine/graph.py", "engine/hhe_table.py", "engine/ice_fr2015.py", "engine/ice_melt_table.py", "engine/interior.py", "engine/lid_regime.py", "engine/mantle_budget.py", "engine/mantle_composition.py", "engine/mantle_flux.py", "engine/mass_radius.py", "engine/parallel_points.py", "engine/payload.py", "engine/porosity.py", "engine/process_state.py", "engine/provisional.py", "engine/radiogenic.py", "engine/registry.py", "engine/rheology.py", "engine/rootfind.py", "engine/rtpress.py", "engine/run.py", "engine/stagnant_lid.py", "engine/state.py", "engine/steam_if97.py", "engine/structure_grid.py", "engine/tectonic_regime.py", "engine/test_ice_giant.py", "engine/tidal_heating.py", "engine/tidal_locking.py", "engine/tidal_response.py", "engine/transfers.py", "engine/water2_table.py", "engine/water_hot.py", "engine/water_table.py", "engine/ice_giant_anchor.json"]
 "test_core_state.py":
   globs: []
 "test_body_class.py":
@@ -227,8 +227,8 @@
   globs: []
 "test_tidal_heating.py":
   globs: []
-"test_lid_regime.py":  # C158; reads engine/bodies/*.yaml (always-full) — the next census confirms
-  globs: []
+"test_lid_regime.py":  # C158; walks engine/*.py (HERE.glob) for lid_regime readers — measured by the PC gate ec45c3e7 (C158 note 2)
+  globs: ["engine/*.py"]
 "test_stagnant_lid.py":
   globs: []
 "tools/c47_step4.py":

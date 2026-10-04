@@ -442,7 +442,13 @@ def main() -> int:
               "tidal_response": {"composition_intent", "core_mass_fraction",
                                  "crust_thickness", "ice_mass_fraction",
                                  "ice_shell_thickness", "ocean_thickness"},
-              "tidal_locking": {"permanent_quadrupole"}}
+              "tidal_locking": {"permanent_quadrupole"},
+              # ⚠ C158 (2026-10-03) 뚜껑 판정 규칙의 입력 일곱 — 전부 **선언**이고 없는 것이 정상 상태다. 없으면 규칙이
+              #   판단 못 함을 이름으로 말한다(선언도 lid_friction 도 없으면 «lid regime undetermined», 표면 온도가 없으면
+              #   R4 거절, 질량 · 핵 반지름이 없으면 R3/R4 가 안 돈다 — 계약 tidal-heating-methodology 의 Declared-optional).
+              #   C158 착지가 이 집합을 같이 안 고쳐 PC 게이트 ec45c3e7 에서 떨어졌다(C158 덧붙임 2).
+              "heat_transport_mode": {"body_class", "core_radius_fraction", "lid_friction", "mass_earth",
+                                      "potential_temperature", "surface_temperature_k", "tectonic_regime"}}
     _got, _dyn = {}, {}
     for _node in sorted(_reg.registered()):
         _slug = _g["nodes"][_node].get("recipe")
