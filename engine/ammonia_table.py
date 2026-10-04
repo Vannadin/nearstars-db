@@ -37,6 +37,8 @@ N_POINTS = 93
 N_FLAGGED = 5
 
 import math
+
+import smooth_table
 import convergence
 
 # 등온선 온도 [K].
@@ -210,10 +212,53 @@ def _interp_iso(iso, rho_gcc):
     raise ValueError
 
 
+_ISO_LNR = [[math.log(r) for r, _p, _u, _f in iso] for iso in ISOTHERMS]     # C157 메모 10 — 등온선 격자점(ln ρ)
+_ISO_LNP = [[math.log(p) for _r, p, _u, _f in iso] for iso in ISOTHERMS]
+_ISO_U = [[u for _r, _p, u, _f in iso] for iso in ISOTHERMS]
+
+
+def _iso_smooth(k, lnr, extend):
+    """등온선 k 의 (ln p, u) at ln ρ — 단조 3 차 에르미트. 범위 밖은 extend 면 끝 PCHIP 기울기로 곧게(이웃 등온선의 기울기
+    추정용 · 값은 안 쓴다), 아니면 ValueError."""
+    xs, lp, uu = _ISO_LNR[k], _ISO_LNP[k], _ISO_U[k]
+    if lnr < xs[0] or lnr > xs[-1]:
+        if not extend:
+            raise ValueError(f"rho outside isotherm {T_K[k]:.0f} K of {SOURCE}")
+        smooth_table.EXTRAPOLATED_READS[0] += 1
+        right = lnr > xs[-1]
+        x0 = xs[-1] if right else xs[0]
+        return tuple((ys[-1] if right else ys[0]) + smooth_table.end_slope(xs, ys, right) * (lnr - x0) for ys in (lp, uu))
+    import bisect
+    i = min(max(bisect.bisect_right(xs, lnr) - 1, 0), len(xs) - 2)
+    return smooth_table.cubic1(lnr, xs, lp, i), smooth_table.cubic1(lnr, xs, uu, i)
+
+
 def _eval(rho_kgm3, t_k):
     """(p [GPa], u [kJ/g], flagged) at (rho, T). Raises ValueError outside the table."""
     i, j = _bracket_t(t_k)
     r = rho_kgm3 / 1e3
+    if smooth_table.MODE != "linear":
+        # C157 메모 10 — 등온선마다 ln ρ 로 PCHIP, 등온선 사이는 T 로 PCHIP(이웃 등온선 넷, 범위 밖 이웃은 끝 기울기로 곧게).
+        #   «별표 격자점에 닿았나» 표지는 오늘처럼 감싸는 두 등온선의 칸에서.
+        _p0, _u0, f0 = _interp_iso(ISOTHERMS[i], r)
+        f1 = f0 if i == j else _interp_iso(ISOTHERMS[j], r)[2]
+        lnr = math.log(r)
+        for k in {i, j}:                       # 격자 끝의 반올림 한 비트는 안으로(_interp_iso 와 같은 규칙)
+            lo, hi = _ISO_LNR[k][0], _ISO_LNR[k][-1]
+            if lo - 1e-12 <= lnr < lo:
+                lnr = lo
+            elif hi < lnr <= hi + 1e-12:
+                lnr = hi
+        if i == j:
+            lp, u = _iso_smooth(i, lnr, False)
+            return math.exp(lp), u, f0
+        vals = {}
+        for k in range(i - 1, j + 2):
+            if 0 <= k < len(T_K):
+                vals[k] = _iso_smooth(k, lnr, k not in (i, j))
+        lp = smooth_table.cubic1(t_k, T_K, [vals[k][0] if k in vals else None for k in range(len(T_K))], i)
+        u = smooth_table.cubic1(t_k, T_K, [vals[k][1] if k in vals else None for k in range(len(T_K))], i)
+        return math.exp(lp), u, f0 or f1
     p0, u0, f0 = _interp_iso(ISOTHERMS[i], r)
     if i == j:
         return p0, u0, f0

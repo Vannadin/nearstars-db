@@ -39,6 +39,7 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("rtpress", "OUTSIDE"): (COUNTER, "calls outside the calibration window", None),
     ("rtpress", "CALLS"): (COUNTER, "call count", None),
     ("eos", "P_EDGE_CALLS"): (COUNTER, "edge-evaluator calls", None),
+    ("smooth_table", "EXTRAPOLATED_READS"): (COUNTER, "C157 note 10 stencil nodes extrapolated next to a ragged table edge (slope estimation only), a count outside values", None),
     ("eos", "DENSITY_REACH"): (COUNTER, "density-fit reach", None),
     ("eos", "DENSITY_BELOW_REF"): (COUNTER, "calls below the reference pressure", None),
     ("eos", "FE_S_MODEL_ASKS"): (COUNTER, "Fe-S model asks", None),

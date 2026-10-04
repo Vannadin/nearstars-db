@@ -42,6 +42,8 @@
 from __future__ import annotations
 
 import bisect
+
+import smooth_table
 import json
 import math
 import sys
@@ -102,9 +104,17 @@ class ReferenceAdiabat:
 
     def __call__(self, p: float) -> float:
         x = math.log(p)
-        i = min(max(bisect.bisect_right(self.lnp, x), 1), len(self.lnp) - 1)
-        x0, x1, y0, y1 = self.lnp[i - 1], self.lnp[i], self.t[i - 1], self.t[i]
-        return y0 + (y1 - y0) * (x - x0) / (x1 - x0)
+        if smooth_table.MODE == "linear":
+            i = min(max(bisect.bisect_right(self.lnp, x), 1), len(self.lnp) - 1)
+            x0, x1, y0, y1 = self.lnp[i - 1], self.lnp[i], self.t[i - 1], self.t[i]
+            return y0 + (y1 - y0) * (x - x0) / (x1 - x0)
+        # C157 메모 10 — 표 안은 단조 3 차 에르미트(ln P), 표 밖은 끝 PCHIP 기울기로 곧게(C¹; 오늘은 끝 할선으로 곧게)
+        if x <= self.lnp[0]:
+            return self.t[0] + smooth_table.end_slope(self.lnp, self.t, False) * (x - self.lnp[0])
+        if x >= self.lnp[-1]:
+            return self.t[-1] + smooth_table.end_slope(self.lnp, self.t, True) * (x - self.lnp[-1])
+        i = min(max(bisect.bisect_right(self.lnp, x) - 1, 0), len(self.lnp) - 2)
+        return smooth_table.cubic1(x, self.lnp, self.t, i)
 
 
 #: C148 — 굳힌 기준 단열선 표의 자리. 만드는 쪽은 `tools/reference_adiabats.py` 하나다.

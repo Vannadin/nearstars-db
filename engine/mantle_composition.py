@@ -24,6 +24,8 @@ import os
 import sys
 from pathlib import Path
 
+import smooth_table
+
 HERE = Path(__file__).resolve().parent
 TABLE_DIR = Path(os.environ["MANTLE_TABLE_DIR"]) if os.environ.get("MANTLE_TABLE_DIR") else HERE / "mantle_tables"
 
@@ -362,18 +364,19 @@ class Table:
                 top = self.t[j]
             tops.append(top if top is not None else -math.inf)
         self.edge = [min(tops[max(i - 1, 0):i + 2]) for i in range(len(tops))]
+        self.edge_ys = [e if math.isfinite(e) else None for e in self.edge]   # C157 메모 10 — 보간용(빈 열은 없는 점)
 
     def edge_at(self, p_pa: float) -> float:
-        """표 위쪽 가장자리 E(P) — `edge` 를 ln P 로 선형 보간(덧붙임 6 ①)."""
+        """표 위쪽 가장자리 E(P) — `edge` 를 ln P 로 보간(덧붙임 6 ①; C157 메모 10 부터 단조 3 차, MODE «linear» 면 선형)."""
         x = math.log(max(p_pa, P_FLOOR))
         if x >= self.lnp[-1]:
             return self.edge[-1]
         i = min(max(bisect.bisect_right(self.lnp, x) - 1, 0), len(self.lnp) - 2)
-        u = (x - self.lnp[i]) / (self.lnp[i + 1] - self.lnp[i])
         a, b = self.edge[i], self.edge[i + 1]
         if not (math.isfinite(a) and math.isfinite(b)):
             return -math.inf
-        return a + u * (b - a)
+        # C157 메모 10 — 가장자리도 ln P 에서 C¹(섞임 무게 w 가 P 격자점에서 꺾이지 않게). 무한(빈 열) 이웃은 없는 점으로.
+        return smooth_table.cubic1(x, self.lnp, self.edge_ys, i)
 
     def frozen_near(self, p_pa: float, t_k: float) -> bool:
         """이 점을 둘러싼 네 격자점 가운데 굳힌 집합(`*frozen`)이 있는가 — 덧붙임 5 의 계수기."""
@@ -384,25 +387,22 @@ class Table:
         return any((a[jj][ii] or "").endswith("*frozen") for jj in (j, j + 1) for ii in (i, i + 1))
 
     def at(self, p_pa: float, t_k: float) -> tuple[float, float, float, float]:
-        """(ρ, αK_T, c_V, γ) — (ln P, T) 쌍선형. 1e5 Pa 밑은 첫 점. 네 이웃 중 빈 칸이면 `TableMiss`."""
+        """(ρ, αK_T, c_V, γ) — (ln P, T) 에서 단조 3 차 에르미트(C157 메모 10, `smooth_table`; MODE «linear» 면 오늘의 쌍선형).
+        1e5 Pa 밑은 첫 점. 묻는 칸의 모서리(무게 > 0)가 비면 `TableMiss`."""
         x = math.log(max(p_pa, P_FLOOR))
         if x > self.lnp[-1] or not (self.t[0] <= t_k <= self.t[-1]):
             raise TableMiss(f"({p_pa / 1e9:.4f} GPa, {t_k:.1f} K) 가 표 격자(≤ {P_TOP / 1e9:g} GPa, "
                             f"{self.t[0]:g}–{self.t[-1]:g} K) 밖")
         i = min(max(bisect.bisect_right(self.lnp, x) - 1, 0), len(self.lnp) - 2)
         j = min(max(bisect.bisect_right(self.t, t_k) - 1, 0), len(self.t) - 2)
-        u = (x - self.lnp[i]) / (self.lnp[i + 1] - self.lnp[i])
-        v = (t_k - self.t[j]) / (self.t[j + 1] - self.t[j])
-        w = ((1 - u) * (1 - v), u * (1 - v), (1 - u) * v, u * v)
         out = []
         for f in FIELDS:
             c = self.cols[f]
-            q = (c[j][i], c[j][i + 1], c[j + 1][i], c[j + 1][i + 1])
-            # ⚠ 무게 0 인 이웃은 안 본다 — 격자점 위의 물음이 옆 빈 칸 때문에 거절되지 않게(A′-배관이 잡음)
-            if any(x is None and wx > 0.0 for x, wx in zip(q, w)):
+            try:
+                out.append(smooth_table.cubic2(x, t_k, self.lnp, self.t, lambda ka, kb, c=c: c[kb][ka], i, j))
+            except smooth_table.CellMissing:
                 raise TableMiss(f"({p_pa / 1e9:.4f} GPa, {t_k:.1f} K) 둘레 격자점에 평형 집합이 없다 — "
-                                f"후보 {len(CANDIDATES)} 개가 모두 수렴하지 않았거나 음수 몰분율")
-            out.append(math.fsum(wx * x for x, wx in zip(q, w) if wx > 0.0))     # C143
+                                f"후보 {len(CANDIDATES)} 개가 모두 수렴하지 않았거나 음수 몰분율") from None
         return tuple(out)
 
 
