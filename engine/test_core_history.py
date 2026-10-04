@@ -257,7 +257,13 @@ else:
     # ⚠ **2026-09-27 re-freeze (C118 (prereg-phase-boundary-step): the structure step now stops at a material's pressure phase boundary).** Earth: adaptive 1152 → 1151 steps · Nimmo row 1586.452 → 1586.721 ·
     #   4004.202 → 3998.428 · declared-H row 1519.86 → 1520.22 · 3910.45 → 3904.70. Earth's CMB and core run ≈ 20–25 K hotter
     #   in the structure the history reads; the Mars row (1197 steps) does not move.
-    row(hist["n_steps"] == 1151 and abs(hist["step_myr"] - 4.0) < 0.01 and abs(hist["max_h_over_tau"] - 0.1) < 1e-9,
+    # ⚠ **2026-10-04 re-freeze.** Cause: C157 aca43d57 (the K_T stencil no longer straddles Earth's 23.83 GPa phase
+    #   boundary; Earth's CMB −20.40 K) and the reference_adiabats.json re-frozen from it (blob 24107c20e2a8), which the
+    #   Earth table the history reads was built against. Measured: the rows return to their pre-C118 values. Reading:
+    #   C118's ≈ 20–25 K was that same stencil spike. Values: adaptive 1151 → 1152 steps · Nimmo row 1586.721 → 1586.455 · 3998.428 → 4004.146 ·
+    #   declared-H row 1520.22 → 1519.860 · 3904.70 → 3910.391. Only these four anchors and n_steps change; the 0.005 K
+    #   tolerances stay. The Mars rows do not move.
+    row(hist["n_steps"] == 1152 and abs(hist["step_myr"] - 4.0) < 0.01 and abs(hist["max_h_over_tau"] - 0.1) < 1e-9,
         f"단일 실행 h ≤ {hist['step_myr']:.2f} Myr (적응, 최대 h/τ {hist['max_h_over_tau']:.3f}) · {hist['n_steps']} 걸음 · 최소 h {hist['h_min_myr']:.3f} Myr ({_sec('earth.hist'):.0f} s)")
     fixed_n = _pre("earth.fixed_n")
     fx_n = fixed_n["rows"][-1]
@@ -265,14 +271,14 @@ else:
     #   3911.29 → 3910.45. Nimmo row: mantle heating switched to Table 4's printed H_m M_m 23.4 TW (was our
     #   mantle_w 15.22 TW, crust removed), so 1525.46 → 1586.452 · 4027.43 → 4004.202;
     #   pinned to three decimals.
-    row(fixed_n["n_steps"] == 1135 and abs(fx_n["t_m"] - 1586.721) < 0.005 and abs(fx_n["t_c"] - 3998.428) < 0.005,
-        f"고정 4 Myr — Nimmo 현재 H_m M_m(Table 4) · 이력 우리 벌 · 핵 Table 4 조건 (H 1.5 pW/kg) — 재현 아님, 우리 핀(Table 4 Tm 1613 · Tc 4155 K 대 −27 · −151 K): {fixed_n['n_steps']} 걸음 (앵커 1135) · T_p {fx_n['t_m']:.2f} K (앵커 1586.721) · "
-        f"T_c {fx_n['t_c']:.2f} K (앵커 3998.428)")
+    row(fixed_n["n_steps"] == 1135 and abs(fx_n["t_m"] - 1586.455) < 0.005 and abs(fx_n["t_c"] - 4004.146) < 0.005,
+        f"고정 4 Myr — Nimmo 현재 H_m M_m(Table 4) · 이력 우리 벌 · 핵 Table 4 조건 (H 1.5 pW/kg) — 재현 아님, 우리 핀(Table 4 Tm 1613 · Tc 4155 K 대 −27 · −151 K): {fixed_n['n_steps']} 걸음 (앵커 1135) · T_p {fx_n['t_m']:.2f} K (앵커 1586.455) · "
+        f"T_c {fx_n['t_c']:.2f} K (앵커 4004.146)")
     fixed = _pre("earth.fixed")
-    row(fixed["n_steps"] == 1135 and abs(fixed["rows"][-1]["t_m"] - 1520.22) < 0.005 and abs(fixed["rows"][-1]["t_c"] - 3904.70) < 0.005
+    row(fixed["n_steps"] == 1135 and abs(fixed["rows"][-1]["t_m"] - 1519.860) < 0.005 and abs(fixed["rows"][-1]["t_c"] - 3910.391) < 0.005
         and abs(fixed["rows"][-1]["t_m"] - hist["rows"][-1]["t_m"]) < 0.01,
-        f"선언 H 0.088 pW/kg (오너 결정 ⑤ · 브리프 166 E 환산 정정): 1135 걸음 · T_p {fixed['rows'][-1]['t_m']:.2f} K (앵커 1520.22) · "
-        f"T_c {fixed['rows'][-1]['t_c']:.2f} K (앵커 3904.70) · 적응과의 차 {hist['rows'][-1]['t_m'] - fixed['rows'][-1]['t_m']:+.4f} K")
+        f"선언 H 0.088 pW/kg (오너 결정 ⑤ · 브리프 166 E 환산 정정): 1135 걸음 · T_p {fixed['rows'][-1]['t_m']:.2f} K (앵커 1519.860) · "
+        f"T_c {fixed['rows'][-1]['t_c']:.2f} K (앵커 3910.391) · 적응과의 차 {hist['rows'][-1]['t_m'] - fixed['rows'][-1]['t_m']:+.4f} K")
 ws = ch.window_summary(hist["rows"])
 last = hist["rows"][-1]
 
