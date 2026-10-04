@@ -2410,6 +2410,10 @@ FINISH_SUBST_SHOTS = 3
 SIGN_TAU_LIN = 1e-2
 SIGN_S_MAX = 1.0
 WALL_LOCATE_SHOTS = [0]       # C152 ④ — 벽 자리 찾기 사격 수(값 밖 셈, 수락 §3.3)
+#: C152 메모 6 — 느슨한 허용의 시행이 Brent 괄호 끝인 채로 뜀 · 괄호 예산 거절에 닿아 SHOOT_TOL 고리로 다시 돈 횟수(값 밖 셈)
+TIGHT_RECHECKS = [0]
+#: C152 메모 6 한 스위치 — False 면 메모 6 앞(느슨한 괄호 끝 · 물려받은 예산의 거절이 그대로 선다). 시험의 음성 대조용.
+TIGHT_RERUN = True
 #: 표면 암석권 층 바닥 자리의 바깥 고정점 (prereg-surface-lithosphere 덧붙임 2 ①) — |ΔR| 문턱 · 최대 횟수.
 LITHO_R_TOL = 1.0            # m — STEPS 1500 지구 걸음 dr ≈ 3.2 km 의 3e-4
 LITHO_ITERS = 8
@@ -2563,7 +2567,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
           lithosphere: dict | None = None,
           p_hint: float | None = None,
           _t_start: float | None = None, _loose: bool = True,
-          _passes: int | None = None) -> tuple[Structure, bool]:
+          _passes: int | None = None, _inherited: bool = False) -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
 
     `_t_start` · `_loose` · `_passes` 는 끝맺음 뒤 이어 돌기(prereg-shoot-warm-start 덧붙임 2 HOLD 반영) 전용 —
@@ -2732,6 +2736,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
     wall_why = ""                # 그 온도에서 왜 묶이지 않았는가 (사다리의 문장)
     lo = hi = None               # (log T_c, log T_surf/T_pot): 아래쪽(차다) · 위쪽(뜨겁다)
     dlo = dhi = None             # C152 메모 4 — 같은 것을 부호를 읽을 수 있는 시행(decides)만으로. Brent 괄호는 이것
+    dlo_tau = dhi_tau = None     # C152 메모 6 — 그 두 끝 시행의 사격 허용
     devs: list[float] = []
     bracketed = False
     root = None                  # C152 ② — 0 을 사이에 둔 두 시행이 생기면 그 괄호 안의 Brent 생성기
@@ -2782,7 +2787,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
                 and abs(math.log(got.t_surface / t_pot)) > SIGN_S_MAX * tau)
 
     def note(t_now, got, ok):
-        nonlocal lo, hi, dlo, dhi
+        nonlocal lo, hi, dlo, dhi, dlo_tau, dhi_tau
         if got.t_surface <= 0.0:
             return
         pt = (math.log(t_now), math.log(got.t_surface / t_pot))
@@ -2795,9 +2800,28 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
             return       # C152 메모 4 — 오늘의 lo/hi(걷기 · regula falsi)에는 들고, Brent 의 괄호에는 안 든다
         if pt[1] < 0.0:
             if dlo is None or pt[0] > dlo[0]:
-                dlo = pt
+                dlo, dlo_tau = pt, used_tol.get(id(got), SHOOT_TOL)
         elif dhi is None or pt[0] < dhi[0]:
-            dhi = pt
+            dhi, dhi_tau = pt, used_tol.get(id(got), SHOOT_TOL)
+
+    def tight_rerun(t0, p0, what):
+        """C152 메모 6 — 괄호 끝 하나라도 느슨한 허용으로 쏜 시행이면 그 뜀 · 예산은 이 허용에서 판정되지 않은 것이다
+        (끝 시행의 부호가 질량 오차 S·τ 안 — 화성 1850 K: S 147 · τ 3.0e-3 에서 y −0.0087 이 SHOOT_TOL 로는 양수).
+        거절하지 않고 t0 에서 SHOOT_TOL 고리로 다시 돈다(덧붙임 2 A 의 이어 돌기와 같은 입구). 그 고리의 판정만 남는다."""
+        TIGHT_RECHECKS[0] += 1
+        print(f"  [C152 메모 6] {what} — 괄호 끝 허용 {dlo_tau!r} · {dhi_tau!r}, 물려받은 예산 {_inherited}: "
+              f"T_c {t0:.6f} K 에서 SHOOT_TOL 로, 통과 {T_PASSES} 로 다시")
+        return shoot(mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z, envelope_z_rock_fraction,
+                     differentiated, potential_temperature, boundary_temperature_jump, mantle_rock_fraction,
+                     serpentinisation, differentiation_front, crust_rock_fraction, crust_porosity,
+                     envelope_z_profile, ammonia_mass_fraction=ammonia_mass_fraction,
+                     interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere,
+                     p_hint=p0, _t_start=t0, _loose=False, _passes=T_PASSES)
+
+    def bracket_loose():
+        """C152 메모 6 — 0 을 사이에 둔 괄호가 있고 그 끝 하나라도 SHOOT_TOL 보다 성긴 사격이었나(느슨한 고리에서만)."""
+        return (TIGHT_RERUN and loose and dlo is not None and dhi is not None
+                and max(dlo_tau, dhi_tau) > SHOOT_TOL)
 
     note(t_c, st, converged)
     remember(st, converged, t_c)
@@ -2839,7 +2863,10 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
                 x_best, y_best, x_l, x_h = fin.value
                 if _surface_temperature_met(st, t_pot):
                     break
+                if bracket_loose():
+                    return tight_rerun(math.exp(x_best), st.p_center, "뜀")
                 # 괄호가 T_TOL 까지 좁아졌는데 어긋남이 허용 밖 — 근이 아니라 잔차의 뜀을 감쌌다(C152 규칙 2).
+                #   C152 메모 6 — 여기 닿는 것은 두 괄호 끝이 SHOOT_TOL 로 쏜 시행일 때뿐이다(빡빡한 허용에서 선 뜀).
                 raise ValueError(
                     f"표면온도 잔차가 뛴다 — 중심 온도 [{math.exp(x_l):.6g}, {math.exp(x_h):.6g}] K 사이에서 0 을 건너뛴다"
                     f"(괄호 폭 {x_h - x_l:.2e} ≤ T_TOL {T_TOL:g}, 가까운 끝의 어긋남 {abs(math.expm1(y_best)) * 100:.2f} %). "
@@ -2974,7 +3001,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
                          serpentinisation, differentiation_front, crust_rock_fraction, crust_porosity,
                          envelope_z_profile, ammonia_mass_fraction=ammonia_mass_fraction,
                          interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere,
-                         p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=max(passes, 1))
+                         p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=max(passes, 1), _inherited=True)
     # C152 규칙 2 (감사 e2 HOLD 2) — 예산이 0 을 사이에 둔 괄호 안에서 끝났으면 아래 거절이 그 괄호를 함께 적는다.
     straddle_note = (f" (C152: 0 을 사이에 둔 괄호 [{math.exp(dlo[0]):.6g}, {math.exp(dhi[0]):.6g}] K 안에서 예산이 끝났다)"
                      if dlo is not None and dhi is not None else "")
@@ -2995,6 +3022,11 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
     # ⚠ **연장이 주어졌다는 것 자체가 «개선 중이었다» 의 증거다** — 연장은 창 검사가 참일 때만 나가므로
     #   여기서 그 검사를 다시 묻지 않는다. 첫 판이 그것을 다시 물어 거절이 **발화하지 않았다**.
     # C152 규칙 2 — 0 을 사이에 둔 괄호 안에서 예산이 끝났으면 연장이 없었어도 같은 이름의 거절(괄호를 적어서).
+    # C152 메모 6 — 예산 거절은 SHOOT_TOL 고리가 제 예산을 다 쓰고서만 선다: 괄호 끝이 느슨했거나(위와 같은 까닭),
+    #   이 고리가 느슨한 고리의 남은 예산만 물려받은 이어 돌기(`_inherited`, 덧붙임 2 A)였으면 새 예산으로 한 번 다시.
+    if ((extensions or straddle_note) and not _surface_temperature_met(st, t_pot)
+            and ((straddle_note and bracket_loose()) or (TIGHT_RERUN and _inherited))):
+        return tight_rerun(t_c, st.p_center, "예산")
     if (extensions or straddle_note) and not _surface_temperature_met(st, t_pot):
         raise ValueError(
             f"표면온도 경계조건이 예산 안에 닫히지 않았다 — 마지막 어긋남 {devs[-1] * 100:.2f} % "

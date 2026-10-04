@@ -66,6 +66,7 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("parallel_points", "_FN"): (FLAG, "the function the helper is solving now", None),
     ("interior", "_REOPEN"): (FLAG, "re-entry guard while re-closing melt families inside one solve, reset in finally", None),
     ("interior", "_FAMILY_TRAIL"): (MEMO, "one solve's outer-loop family record (addendum 57), cleared at each solve", None),
+    ("interior", "TIGHT_RECHECKS"): (COUNTER, "C152 note 6: loose-bracket jump or budget refusals re-run as a SHOOT_TOL loop, a count outside values", None),
     ("interior", "WALL_LOCATE_SHOTS"): (COUNTER, "C152 rule-4 wall-location shots, a count outside values", None),
     ("structure_grid", "_READS"): (MEMO, "C159 note 1: files opened during one --check run, filled by the audit hook, read by the in-check read guard", None),
     ("structure_grid", "GUARD_RUNS"): (COUNTER, "C159 note 1: how many times the in-check read guard ran, a count outside values", None),

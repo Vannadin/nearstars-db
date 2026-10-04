@@ -299,10 +299,17 @@ check("메모 4 ① — 느슨한 첫 사격의 반대 부호(따뜻한 지구 �
       and abs(v_w[0] / 2100.0 - 1.0) < 1e-5 and nb_w == 0, f"{str(v_w)[:80]} · brent {nb_w}")
 _tl0, _sm0 = interior.SIGN_TAU_LIN, interior.SIGN_S_MAX
 interior.SIGN_TAU_LIN, interior.SIGN_S_MAX = 1.0, 0.0     # 규칙 끔: 느슨한 시행도 부호를 읽음(925e1851 의 꼴)
+_tr0 = interior.TIGHT_RERUN
+interior.TIGHT_RERUN = False                              # C152 메모 6 도 끔 — 이 대조는 메모 4 만의 몫을 본다
 try:
     (k_o, v_o), nb_o, _ = _run_tol(lambda t, tol: _y(t) + (0.06 if tol > _tl0 else 0.0))
+    interior.TIGHT_RERUN = True
+    (k_o8, v_o8), _nb_o8, _ = _run_tol(lambda t, tol: _y(t) + (0.06 if tol > _tl0 else 0.0))
 finally:
     interior.SIGN_TAU_LIN, interior.SIGN_S_MAX = _tl0, _sm0
+    interior.TIGHT_RERUN = _tr0
+check("메모 4 ① 끔 · 메모 6 켬 [기록] — 메모 4 를 꺼도 메모 6 이 그 가짜 괄호를 SHOOT_TOL 고리로 다시 돌려 답(두 규칙이 겹쳐 지킴)",
+      k_o8 == "answer" and abs(v_o8[0] / 2100.0 - 1.0) < 1e-5, str(v_o8)[:60])
 check("메모 4 ① 끔 대조 — 같은 꼴에서 τ 규칙을 끄면 가짜 괄호로 «잔차가 뛴다» 거절(규칙이 지키는 것)",
       k_o == "refusal" and "잔차가 뛴다" in v_o, str(v_o)[:80])
 (k_t, v_t), nb_t, _ = _run_tol(lambda t, tol: _y(t) + (0.06 if t >= 1990.0 else 0.0))
@@ -317,6 +324,41 @@ check("메모 4 ② — 괄호도 벽도 없는 고리(규칙 3): Brent 0 · 벽
 (k_4, v_4), nb_4, ws_4 = _run_tol(lambda t, tol: 0.5 * math.log(t / 3000.0), wall=2050.0)
 check("메모 4 ② — 괄호 없이 벽을 만나면 규칙 4 가 이김: 벽 찾기 사격 > 0", k_4 == "refusal" and nb_4 == 0 and ws_4 > 0,
       f"{str(v_4)[:60]} · brent {nb_4} · 벽 {ws_4}")
+
+# ⑩ C152 메모 6 — 느슨한 통과 · 빡빡한 놓침: 뜀 · 예산 거절은 SHOOT_TOL 고리만 낸다. 빡빡한 y 는 매끈(근 2100 K, 기울기 S),
+#   느슨한 시행은 −B·τ 로 치우친다(화성 1850 K: S 147 · τ 3.0e-3 에서 −0.0107). J 는 빡빡해도 남는 진짜 뜀.
+def _y8(S, B, J=0.0):
+    return lambda t, tol: (0.3 * math.tanh(S * math.log(t / 2100.0) / 0.3) + (J if t > 2100.0 else -J)
+                           - (B * tol if tol > interior.SHOOT_TOL else 0.0))
+
+
+def _run8(y_of, on=True):
+    keep, k0 = interior.TIGHT_RERUN, interior.TIGHT_RECHECKS[0]
+    interior.TIGHT_RERUN = on
+    try:
+        out, _nb, _ws = _run_tol(y_of)
+    finally:
+        interior.TIGHT_RERUN = keep
+    return out, interior.TIGHT_RECHECKS[0] - k0
+
+
+(k8, v8), n8 = _run8(_y8(30.0, 3.5))
+check("메모 6 ① — 느슨한 끝이 괄호를 잘못 잡은 «뜀» 은 SHOOT_TOL 고리로 다시 돌아 참 근에서 답",
+      k8 == "answer" and v8[1] and abs(v8[0] / 2100.0 - 1.0) < 1e-5 and n8 == 1, f"{str(v8)[:60]} · 다시 {n8}")
+(k8o, v8o), n8o = _run8(_y8(30.0, 3.5), on=False)
+check("메모 6 ① 끔 대조 — 같은 꼴에서 스위치를 끄면 «잔차가 뛴다» 거절(실제 화성 1850 K 의 꼴)",
+      k8o == "refusal" and "잔차가 뛴다" in v8o and n8o == 0, str(v8o)[:60])
+(k8b, v8b), n8b = _run8(_y8(100.0, 2.0))
+check("메모 6 ② — 느슨한 고리의 남은 예산만 물려받은 이어 돌기의 예산 거절은 새 예산의 SHOOT_TOL 고리로 다시 돌아 답",
+      k8b == "answer" and v8b[1] and abs(v8b[0] / 2100.0 - 1.0) < 1e-5 and n8b == 1, f"{str(v8b)[:60]} · 다시 {n8b}")
+(k8bo, v8bo), _ = _run8(_y8(100.0, 2.0), on=False)
+check("메모 6 ② 끔 대조 — 스위치를 끄면 예산 거절", k8bo == "refusal" and "예산 안에" in v8bo, str(v8bo)[:60])
+(k8j, v8j), n8j = _run8(_y8(100.0, 2.0, J=0.01))
+check("메모 6 음성 — 빡빡해도 남는 뜀(±1 %)은 SHOOT_TOL 고리로 다시 돈 뒤에도 «잔차가 뛴다» 로 거절",
+      k8j == "refusal" and "잔차가 뛴다" in v8j and n8j == 1, f"{str(v8j)[:60]} · 다시 {n8j}")
+(k8t, v8t), n8t = _run8(_y8(30.0, 3.5, J=0.01))
+check("메모 6 음성 — 괄호 두 끝이 이미 SHOOT_TOL 시행이면 다시 돌지 않고 그대로 거절",
+      k8t == "refusal" and "잔차가 뛴다" in v8t and n8t == 0, f"{str(v8t)[:60]} · 다시 {n8t}")
 
 # ⑨ C157 — 피적분의 불연속은 이어지거나 찾아진다: 차분 발판은 상 경계를 안 넘고 · 사건은 새 쪽에 착지 · 사격은 뜀을 이름 댄다
 P_B = 23.83e9                                              # 가짜 두 상 재료의 경계(지구 en/PREM 자리)
