@@ -1,7 +1,8 @@
 # C148 수락 9 · 10 (c) · 4 의 모양 — 기준 단열선 표가 생성기에서 비트까지 다시 나오는가, 다섯 값, 마디에서 열압력이 정확히 0 인가, 기록 세 칸이 엔진의 검사를 통과하는가
 """python3 engine/test_fe_prem_reference.py   (prereg-c148-fe-prem-reference-adiabat 198f3abd)
 
-- Acceptance 9: `tools/reference_adiabats.py --check` rebuilds `reference_adiabats.json` byte-for-byte (fresh process,
+- Acceptance 9: the generator's `check()` rebuilds `reference_adiabats.json` byte-for-byte, judged on the reference
+  machine only since C148 note 2 (fresh process,
   ~5 s); five fe_prem values are pinned.
 - Acceptance 10 (c): at every node of fe_prem's table, T = T_ref(P) gives ΔT = 0 and P_th = 0 exactly.
 - Placement: only fe_prem reads the table; the silicate phases keep today's form; without the table entry (the negative
@@ -29,10 +30,23 @@ def check(cond: bool, msg: str) -> None:
 
 
 # ── acceptance 9: rebuild and pins ──
-r = subprocess.run([sys.executable, str(HERE / "tools" / "reference_adiabats.py"), "--check"],
+# C148 덧붙임 2 의 뒤따름 — 생성기 자신의 `check()` 를 **새 프로세스**에서 부른다(생성기는 NEARSTARS_REFERENCE_BUILD=1 을
+#   세운 뒤에 엔진을 올려야 하는데 이 시험은 eos 를 먼저 올렸다). 바이트 판정은 기준 기계에서만, 그 밖은 [기록] —
+#   맥 재빌드는 PC 표와 t 칸이 최대 2.7e-9 K 다르다(n2-c).
+r = subprocess.run([sys.executable, "-c",
+                    "import sys; sys.path.insert(0, 'tools'); import reference_adiabats as ra; "
+                    "print(ra.check(), ra.machine(), ra.REFERENCE_MACHINE)"],
                    capture_output=True, text=True, cwd=HERE)
-check(r.returncode == 0, f"table rebuild differs: {r.stdout.strip()} {r.stderr.strip()[-300:]}")
-print(f"  acceptance 9: {r.stdout.strip()}")
+_last = (r.stdout.strip().splitlines() or [""])[-1]       # 엔진이 무엇을 찍든 마지막 줄이 check() 의 답이다
+_same, _here, _ref = (_last.split() + ["?", "?", "?"])[:3]
+if _here == _ref:
+    check(r.returncode == 0 and _same == "True", f"table rebuild differs on the reference machine {_here}: "
+                                                 f"{r.stdout.strip()} {r.stderr.strip()[-300:]}")
+    print(f"  acceptance 9: rebuild {'identical' if _same == 'True' else 'DIFFERS'} ({_here}, judged)")
+else:
+    check(r.returncode == 0 and _same in ("True", "False"), f"check() did not run: {r.stderr.strip()[-300:]}")
+    print(f"  [기록] acceptance 9: rebuild {'identical' if _same == 'True' else 'DIFFERS'} on {_here} "
+          f"(judged only on {_ref}, C148 note 2)")
 ref = eos.REFERENCE_ADIABAT["fe_prem"]
 PINS = {136e9: 2529.40, 330e9: 3108.07, 1000e9: 4031.53, 3000e9: 5072.76, 12000e9: 6432.07}     # K, to 0.01 K (re-pinned at the C157 reference re-freeze; E0 values before)
 for p, t in PINS.items():
