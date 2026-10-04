@@ -416,5 +416,26 @@ ghost.name = "NoSuchBody"
 _, why = sg.load_for(ghost)
 check("표가 없는 바디 → 이름 대고 거절", why is not None and "구조 표가 없다" in why, (why or "")[:100])
 
+import math                                                              # noqa: E402
+# 덧붙임 60 — 자기 점검은 S0 의 T_c 에 고정한 조성 고정 풀이로, 여섯 칸 모두 SHOOT_TOL
+_v0 = {"radius": 0.53, "nmoi": 0.3625, "core_radius": 0.27, "core_radius_fraction": 0.51, "cmb_pressure": 19.0,
+       "cmb_temperature": 1961.18, "core_temperature": 2440.18, "core_pressure": 39.93}
+_seen = {}
+def _fake_pin_solve(t, p_hint=None):
+    _seen.update(pin=interior._PIN[0], t=t)
+    return types.SimpleNamespace(applicable=True, values=dict(_v0))
+_pin0 = interior._PIN[0]
+_pr = sg._pinned_solve(_fake_pin_solve, 1600.0, _v0)
+check("덧붙임 60 — 고정 풀이는 호출 동안만 interior._PIN 에 (S0 T_c · 중심압) 을 걸고 지운다",
+      _seen == {"pin": (2440.18, 39.93e9), "t": 1600.0} and interior._PIN[0] == _pin0, str(_seen))
+_ok, _line = sg._self_check(_v0, dict(_v0))
+check("덧붙임 60 — 같은 T_c 의 같은 풀이는 통과(칸마다 SHOOT_TOL 대비 비율을 찍음)", _ok and "cmb_temperature 0" in _line, _line[:120])
+_ok_r, _line_r = sg._self_check(_v0, {**_v0, "radius": 0.53 * (1 + 10 * interior.SHOOT_TOL)})
+check("덧붙임 60 음성 — 심은 조성 불일치(반지름 SHOOT_TOL 의 10 배)는 고정 T_c 에서 실패", not _ok_r and "가장 큰 칸 radius" in _line_r, _line_r[:120])
+_ok_t, _line_t = sg._self_check(_v0, {**_v0, "core_temperature": 2440.18 * (1 + 1e-6),
+                                      "cmb_temperature": 1961.18 * (1 + 1e-6)})
+check("덧붙임 60 음성 — 고정 T_c 를 1e-6 흔들면 실패(고정이 안 잡혔다)", not _ok_t and "고정이 안 잡혔다" in _line_t, _line_t[:120])
+check("덧붙임 60 — 고정 풀이가 답을 안 내면 실패", not sg._self_check(_v0, None)[0])
+
 print(f"  test_structure_grid — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)

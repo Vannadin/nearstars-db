@@ -558,6 +558,42 @@ def refusal_over_cap(gaps) -> str:
     return " · ".join(why)
 
 
+#: 덧붙임 42 · 46 · 60 — 자기 점검 여섯 칸. 전부 SHOOT_TOL — 판정 풀이를 S0 의 T_c 에 고정하므로 온도 고리의 끝자리 흩어짐이 없다.
+SELF_CHECK_KEYS = ("radius", "nmoi", "core_radius", "core_radius_fraction", "cmb_pressure", "cmb_temperature")
+
+
+def _pinned_solve(solve, t_pot: float, s0_values: dict):
+    """덧붙임 60 — 조성 고정 풀이를 S0 의 (T_c, 중심압)에 고정해 한 번. `interior._PIN` 이 걸려 있는 동안 `_shoot_body` 는
+    온도 고리 없이 그 T_c 에서 사격 한 번(SHOOT_TOL)만 한다. finally 로 지운다. 결과 경로(여섯 칸을 내는 길)는 보통 풀이와 같다."""
+    import interior
+    saved = interior._PIN[0]
+    interior._PIN[0] = (float(s0_values["core_temperature"]), float(s0_values["core_pressure"]) * 1e9)
+    try:
+        return solve(t_pot)
+    finally:
+        interior._PIN[0] = saved
+
+
+def _self_check(a_vals: dict, b_vals: dict | None) -> tuple[bool, str]:
+    """덧붙임 42 · 46 · 60 — S0 대 고정 T_c 의 조성 고정 풀이. (통과, 인쇄 줄). 여섯 칸 모두 상대 ≤ SHOOT_TOL(0 칸은 절대 0),
+    그리고 고정이 실제로 잡혔는지(돌려받은 core_temperature 가 S0 의 것과 같은지). 칸마다 SHOOT_TOL 대비 비율을 찍는다."""
+    import interior
+    if b_vals is None:
+        return False, "고정 T_c 풀이가 답을 안 냈다"
+    if b_vals.get("core_temperature") != a_vals.get("core_temperature"):
+        return False, (f"고정이 안 잡혔다 — 돌려받은 T_c {b_vals.get('core_temperature')!r} K 대 S0 "
+                       f"{a_vals.get('core_temperature')!r} K")
+    ratios = {}
+    for k in SELF_CHECK_KEYS:
+        a, b = a_vals.get(k), b_vals.get(k)
+        d = 0.0 if a == b else (abs(b - a) / abs(a) if a and b is not None else math.inf)
+        ratios[k] = d / interior.SHOOT_TOL
+    worst = max(ratios, key=ratios.get)
+    line = ("SHOOT_TOL 대비 " + " · ".join(f"{k} {v:.3g}" for k, v in ratios.items())
+            + f" (가장 큰 칸 {worst}, 허용 1)")
+    return ratios[worst] <= 1.0, line
+
+
 def _holds_fire(a, b, fire_set) -> bool:
     """덧붙임 59 ② — 구간 [a, b](끝 포함)에 가족 검사가 선 찾아간 점이 있나. 시험이 덧붙임 58 의 끝점 판으로 바꿔 끼운다."""
     return any(a <= t <= b for t in fire_set)
@@ -853,20 +889,16 @@ def build(name: str, n: int | None = None, points: list[float] | None = None, t_
     #   구조를 바꾸지 않음» 을 본다(«출발이 달라도 같은 답» 은 안 봄 — 그 흔들림은 T_TOL 급, 표 ε 의 1000 배 밑).
     p_c0 = s0.values.get("core_pressure")
     check = solve(t_pot0, p_hint=p_c0 * 1e9 if p_c0 else None)
-    keys = ("radius", "nmoi", "core_radius", "core_radius_fraction", "cmb_pressure", "cmb_temperature")
-    # 덧붙임 42 — 비트가 아니라 엔진 자신의 수렴 허용(SHOOT_TOL, 겉질량의 선을 여섯 칸에 옮긴 judgment) 안이면 같은 풀이다. 단계 벽 폴백(RK45 덧붙임 2)이
-    #   S0 의 역산 시행과 조성 고정 풀이에서 다른 횟수로 밟혀 끝자리가 갈린다(화성 5.1e-11). 0 칸은 절대 0.
     import interior
-    worst, where = 0.0, ""
-    for k in keys:
-        a, b = s0.values.get(k), check.values.get(k) if check.applicable else None
-        d = 0.0 if a == b else (abs(b - a) / abs(a) if a and b is not None else math.inf)
-        if d > worst:
-            worst, where = d, k
-    if not check.applicable or worst > interior.SHOOT_TOL:
-        raise SystemExit(f"{name}: 조성 고정 풀이가 선언 온도에서 S0 과 다르다 ({how}; 최대 상대 차 {worst:.3e} at {where}, "
-                         f"허용 SHOOT_TOL {interior.SHOOT_TOL:.0e}) — 표를 못 짓는다")
-    print(f"자기 점검 — 조성 고정 풀이 대 S0 최대 상대 차 {worst:.3e} at {where or '-'} (허용 SHOOT_TOL {interior.SHOOT_TOL:.0e})")
+    # 덧붙임 60 — 판정은 S0 의 T_c 에 고정한 조성 고정 풀이로(여섯 칸 모두 SHOOT_TOL). 위의 자유 고리 풀이는 기록만.
+    pinned = _pinned_solve(solve, t_pot0, s0.values)
+    ok_, line = _self_check(s0.values, pinned.values if pinned.applicable else None)
+    free_tc = check.values.get("core_temperature") if check.applicable else None
+    print(f"  [기록] 자유 고리 — 조성 고정 풀이의 T_c {free_tc!r} K 대 S0 {s0.values.get('core_temperature')!r} K "
+          f"(두 고리가 각자 |y| < T_SURFACE_TOL {interior.T_SURFACE_TOL:.0e} 에서 멈춘 자리, 판정 안 함 · 덧붙임 60)")
+    if not ok_:
+        raise SystemExit(f"{name}: 조성 고정 풀이가 S0 의 T_c 에서 S0 과 다르다 ({how}; {line}) — 표를 못 짓는다")
+    print(f"자기 점검 — S0 의 T_c 에 고정한 조성 고정 풀이 대 S0 · {line}")
     lo, hi = min(t_ms) - BELOW_K, max(t_ms) + ABOVE_K
     t_no = None
     top = solve(hi) if points is None else None

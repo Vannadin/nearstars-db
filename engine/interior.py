@@ -860,6 +860,9 @@ _FAMILY_TRAIL: dict = {"trials": [], "reclosed": [], "closed": [], "answer": Non
                        "calls": 0, "returned": {}, "answer_call": None}
 #: 덧붙임 57 규칙 3(c) — 설정되면 이 풀이의 바깥 사격이 모두 그 (중심 온도, 중심압)에서 다시 닫는 꼴로 선다.
 _ENTRY = [None]
+#: 구조 표 덧붙임 60 — 표 짓기 자기 점검의 고정 (T_c [K], 중심압 [Pa]). 걸려 있으면 `_shoot_body` 가 온도 고리 없이 그 T_c 에서
+#: 사격 한 번(SHOOT_TOL)만 한다. 부르는 쪽(`structure_grid._pinned_solve`)이 걸고 finally 로 지운다.
+_PIN = [None]
 #: 덧붙임 58 ② — 지금 도는 바깥 사격 호출의 번호(시행에 붙인다). 바깥 `shoot` 입구가 세우고 되돌린다.
 _CALL = [None]
 
@@ -2570,6 +2573,9 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
     if not potential_temperature:
         return _shoot_pressure(*args, p_hint=p_hint, **kw)
     t_pot = float(potential_temperature)
+    if _PIN[0] is not None:          # 구조 표 덧붙임 60 — 자기 점검의 고정 T_c: 고리 없이 그 T_c 에서 사격 한 번
+        t_pin, p_pin = _PIN[0]
+        return _shoot_pressure(*args, t_center=t_pin, t_pot=t_pot, p_hint=p_pin, tol=SHOOT_TOL, **kw)
     t_c = t_pot * 2.0 if _t_start is None else float(_t_start)   # 첫 추측. 비율로 다시 재므로 값 자체는 중요하지 않다
 
     # 직전 통과의 중심압을 괄호의 출발점으로 물려준다(prereg-shoot-warm-start, 동결 `f0122297`).
