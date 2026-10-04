@@ -684,10 +684,12 @@ check("C163 F-planted — 근 위 두 시행(|y| 5e-4 · 3e-4 < tol)이 다른 �
       len(sg._families_visited(_planted)) == 2, str(sg._families_visited(_planted)))
 _companion = _r([(_B, 3150.0, 3.5e11, 0, 5e-3, True, 1e-3), (_A, 3160.0, 3.5e11, 0, 2e-3, True, 5e-4),
                  (_A, 3171.0, 3.5e11, 0, 5e-4, True, 1e-5), (_A, 3172.0, 3.5e11, 0, -3e-4, True, 1e-8)])
-_unfiltered = []
-for _x in sg._settled_trials(_companion):
-    if all(interior._family_jump(_o, _x[0]) for _o in _unfiltered):
-        _unfiltered.append(_x[0])
+_saved_on_root = sg._on_root
+sg._on_root = lambda x: True          # 거르기만 끄고 같은 함수를 부른다 — 묶는 고리 자체의 변화도 이 줄이 본다
+try:
+    _unfiltered = sg._families_visited(_companion)
+finally:
+    sg._on_root = _saved_on_root
 check("C163 F-planted 짝 — 먼 띠가 근 밖 시행(|y| 5e-3)에만 있으면 가족 하나(거르지 않으면 둘 — 거르기가 일한다)",
       len(sg._families_visited(_companion)) == 1 and len(_unfiltered) == 2,
       f"걸러서 {len(sg._families_visited(_companion))} · 안 걸러서 {len(_unfiltered)}")
