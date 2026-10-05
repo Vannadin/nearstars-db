@@ -992,7 +992,10 @@ def integrate(*args, **kw):
     델타**를 돌려준다. 그래서 «더 안전해 보이는» 것으로 바꾸기 전에 이 문장을 먼저 읽을 것.
     ⚠ 버려진 시도의 칸은 남으므로 `solve` 가 매 풀이 **시작에 비운다**."""
     before = (ice_fr2015.STATS["extrapolated_rho"], ice_fr2015.STATS["below_t_min"])
-    hw_before, water_hot.CLAMPED["first"] = water_hot.CLAMPED["n"], None
+    # 클램프 기록의 «첫» 칸은 적분마다 — 바깥 적분의 칸을 저장했다가 끝에서 되돌린다(감사석 가드: 적분이 겹쳐도
+    #   안쪽이 바깥의 첫 칸을 지우지 않게. 오늘 겹치는 호출부는 없다 — C139 `convergence.shot` 이 겹침을 assert 로 막는다).
+    hw_before, hw_saved = water_hot.CLAMPED["n"], water_hot.CLAMPED["first"]
+    water_hot.CLAMPED["first"] = None
     # C139 — 이 적분의 수렴 기록은 하위 기록에 모인다. 끝나면 곧바로 AND 로 합쳐지고(오늘의 답), 답을 낸
     #   `solve` 만 `convergence.settle` 로 받아들인 적분 하나를 골라 나머지를 시행 칸으로 보낸다.
     with convergence.shot() as holder:
@@ -1000,8 +1003,11 @@ def integrate(*args, **kw):
         if holder is not None:
             holder[0] = id(structure)
     structure.onset_graze = _LAST_GRAZE[0]
+    hw_first = water_hot.CLAMPED["first"]
     if water_hot.CLAMPED["n"] > hw_before:      # 이 적분 안의 클램프 — 어느 경로든(직접 · 혼합 · 외피)
-        structure.hot_water_clamped = (water_hot.CLAMPED["n"] - hw_before,) + water_hot.CLAMPED["first"]
+        structure.hot_water_clamped = ((water_hot.CLAMPED["n"] - hw_before,)
+                                       + (hw_first if hw_first is not None else ("?", float("nan"), float("nan"))))
+    water_hot.CLAMPED["first"] = hw_saved if hw_saved is not None else hw_first
     _note_loop_trial(kw.get("t_center", args[11] if len(args) > 11 else 0.0), structure)
     _ICE_GRID_DELTA[id(structure)] = (ice_fr2015.STATS["extrapolated_rho"] - before[0],
                                       ice_fr2015.STATS["below_t_min"] - before[1])

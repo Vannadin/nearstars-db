@@ -216,6 +216,32 @@ def main() -> int:
         fails.append("클램프 없는 답이 거절됐다")
     print(f"  [{'PASS' if ok else 'FAIL'}] 음성 — 클램프 없는 답은 그대로")
 
+    # 감사석 가드 — 적분이 겹쳐도(바깥 적분 안에서 안쪽 적분) 바깥 도장이 제 첫 클램프를 든다(TypeError 로 죽지 않음).
+    real_raw = interior._integrate_raw
+    depth = [0]
+
+    def nested_raw(*a, **k):
+        depth[0] += 1
+        try:
+            if depth[0] == 1:
+                w.density(p_vap, t_vap)                      # 바깥: 클램프 한 번
+                interior.integrate()                         # 안쪽: 클램프 없음
+            return interior.Structure(1.0, 1.0, 0.33, 0.5, 1.0, 1.0, 0.0, [])
+        finally:
+            depth[0] -= 1
+    interior._integrate_raw = nested_raw
+    try:
+        outer = interior.integrate()
+        stamp, err = outer.hot_water_clamped, None
+    except Exception as e:
+        stamp, err = None, f"{type(e).__name__}: {e}"
+    finally:
+        interior._integrate_raw = real_raw
+    ok = stamp is not None and stamp[0] == 1 and stamp[1] == "RHO_MIN" and stamp[3] == t_vap
+    if not ok:
+        fails.append(f"겹친 적분에서 바깥 도장이 틀렸다 ({stamp}, {err})")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 겹친 적분 — 바깥 도장 {stamp} (안쪽이 첫 칸을 지우지 않음)" + (f" · {err}" if err else ""))
+
     if fails:
         print(f"\n실패 {len(fails)}건")
         for f in fails:
