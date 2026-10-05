@@ -694,5 +694,31 @@ check("C163 F-planted 짝 — 먼 띠가 근 밖 시행(|y| 5e-3)에만 있으�
       len(sg._families_visited(_companion)) == 1 and len(_unfiltered) == 2,
       f"걸러서 {len(sg._families_visited(_companion))} · 안 걸러서 {len(_unfiltered)}")
 
+# C157 메모 11 — 경계 곡선은 갈아 끼운 **뒤의** 재료에서 읽는다. 뜨거운 물(물기둥에서 `material_for` 의 얼음 사다리를 갈아
+#   끼우는 재료)에만 곡선 하나를 심고(ln P = ln 100 GPa 에서 g 극소 0.5 K), 천왕성 수렴점에서 적분 한 번(굳힌 앵커 입력,
+#   0.4 s). 맨 물기둥이면 스침이 h2o_hot 에, 암석 20 % 를 섞으면 혼합 h2o_hot_rock 에 붙는다(혼합이 성분 곡선을 모은다).
+#   고치기 전(갈아 끼우기 전 재료를 읽음)에는 두 줄 다 스침이 없었다 — 그 사본에서 잰 대조.
+import eos                    # noqa: E402
+import test_ice_giant as _tig  # noqa: E402
+_sa = json.loads(_tig.ANCHOR_FILE.read_text(encoding="utf-8"))["bodies"]["Uranus"]["standalone"]
+_u = _tig._body("Uranus")
+_uimf, _ugmf = _tig._fractions(_u[1], _u[3], _u[4])
+_had = getattr(eos.HotWater, "onset_curves", None)
+eos.HotWater.onset_curves = lambda self, p, t: [("심은 곡선", t - 0.5 - math.log(p / 1.0e11) ** 2)]
+try:
+    _og = {}
+    for _rock in (0.0, 0.2):
+        with contextlib.redirect_stdout(io.StringIO()):
+            _og[_rock] = interior.integrate(float(_sa["p_center_pa"]), _u[1] * interior.EARTH_MASS_KG, 0.0, _uimf, "fe_prem",
+                                            gmf=_ugmf, t_center=float(_sa["t_center"]), t_pot=_u[5],
+                                            mantle_rock_fraction=_rock).onset_graze
+finally:
+    eos.HotWater.onset_curves = _had
+for _rock, _mat in ((0.0, "h2o_hot"), (0.2, "h2o_hot_rock")):
+    _gz = _og[_rock]
+    check(f"C157 메모 11 — 심은 뜨거운 물 곡선의 스침이 실제로 밟은 재료 {_mat} 에 붙는다(암석 {_rock:.0%})",
+          _gz is not None and _gz[0] == "심은 곡선" and _gz[1] == _mat and abs(_gz[3] - 0.5) < 1e-3
+          and abs(math.log(_gz[2] / 1.0e11)) < 0.05, str(_gz))
+
 print(f"  test_structure_grid — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)
