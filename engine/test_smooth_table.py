@@ -276,5 +276,64 @@ check("(ii) S_linear ≥ 100 × S_floor — linear 톱니가 바닥 위의 실�
 print(f"  [기록 · FAILED at its claim, 노트 10 덧붙임 1] (iii) S_pchip ≤ 10 × S_floor — {s_pc / max(s_floor, 1e-300):.1f} × "
       "(자료의 꺾임은 C¹ 보간이 기울기 뜀은 없애도 곡률 뜀은 못 없앤다; (i) 의 감소는 위 줄)")
 
+print("C157 메모 10 — 캐시(0bdd514e)가 캐시 없는 길과 비트까지 같은가(감사 e2: 비용 막대를 캐시가 짊어지므로 판정 행)")
+import water_table as _w1  # noqa: E402
+import water2_table as _w2  # noqa: E402
+random.seed(11)
+n_bad, n_all = 0, 0
+if _mt.exists():
+    for _ in range(4000):
+        pp = math.exp(random.uniform(math.log(2e5), math.log(2.4e10)))
+        tt = random.uniform(250.0, 2400.0)
+        try:
+            a_cached = tab.at(pp, tt)
+        except Exception as e:  # noqa: BLE001
+            a_cached = type(e).__name__
+        x = math.log(max(pp, mc.P_FLOOR))
+        i = min(max(bisect.bisect_right(tab.lnp, x) - 1, 0), len(tab.lnp) - 2)
+        j = min(max(bisect.bisect_right(tab.t, tt) - 1, 0), len(tab.t) - 2)
+        try:
+            if x > tab.lnp[-1] or not (tab.t[0] <= tt <= tab.t[-1]):
+                raise mc.TableMiss("out")
+            a_plain = tuple(st.cubic2(x, tt, tab.lnp, tab.t, lambda ka, kb, c=tab.cols[f]: c[kb][ka], i, j, None)
+                            for f in mc.FIELDS)
+        except (st.CellMissing, mc.TableMiss) as e:
+            a_plain = "TableMiss" if isinstance(e, (st.CellMissing, mc.TableMiss)) else type(e).__name__
+        n_all += 1
+        n_bad += a_cached != a_plain
+for mod, xp, gen in ((_w1, lambda p: p, lambda: (random.uniform(0, 2.2e9), random.uniform(245, 495))),
+                     (_w2, lambda p: math.log10(p / 1e9), lambda: (10 ** random.uniform(-0.9, 1.0) * 1e9, random.uniform(370, 1080)))):
+    for _ in range(2000):
+        pp, tt = gen()
+        if hasattr(mod, "in_domain") and not mod.in_domain(pp, tt):
+            continue
+        ii, jj, _u, _v = mod._cell(pp, tt)
+        for table in (mod.RHO, mod.DTDP_S, mod.C_P):
+            got = mod._bilinear(table, pp, tt)
+            plain = st.cubic2(xp(pp), tt, mod._XP, mod._XT,
+                              lambda kp, kt, table=table: table[kt][kp] if kp < len(table[kt]) else None, jj, ii, None)
+            n_all += 1
+            n_bad += got != plain
+check("캐시한 읽기 = 캐시 없는 읽기(비트 동일, 맨틀 4000 · water1 · water2 무작위 점)", n_bad == 0 and n_all > 1000,
+      f"{n_bad} 불일치 / {n_all} 읽기")
+# 음성 대조(지휘석): 낡은 캐시 칸 하나를 심으면 같은 비교가 잡아야 한다 — 그 뒤 캐시를 비워 되돌린다
+if _mt.exists():
+    pq, tq = 5e9, 1200.0
+    xq = math.log(pq)
+    iq = min(max(bisect.bisect_right(tab.lnp, xq) - 1, 0), len(tab.lnp) - 2)
+    jq = min(max(bisect.bisect_right(tab.t, tq) - 1, 0), len(tab.t) - 2)
+    tab.at(pq, tq)                                   # 캐시를 채운다
+    cache_rho = tab._st_cache["rho"]
+    key = (iq, jq, True)
+    (c0, nx0) = cache_rho[key]
+    cache_rho[key] = ((c0[0], c0[1], c0[2] * (1.0 + 1e-9), c0[3], c0[4], c0[5]), nx0)   # 낡은 칸: y0 를 1e-9 만큼
+    stale = tab.at(pq, tq)[0]
+    plain = st.cubic2(xq, tq, tab.lnp, tab.t, lambda ka, kb, c=tab.cols["rho"]: c[kb][ka], iq, jq, None)
+    tab._st_cache.clear()
+    check("음성 대조 — 심은 낡은 캐시 칸(ρ 의 y0 × (1 + 1e-9))을 비교가 잡는다", stale != plain,
+          f"낡은 {stale!r} vs 캐시 없는 {plain!r}")
+    check("캐시를 비우면 다시 캐시 없는 값과 같다", tab.at(pq, tq)[0] == plain)
+
+
 print(f"  test_smooth_table — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)
