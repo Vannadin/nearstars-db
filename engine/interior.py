@@ -2414,6 +2414,9 @@ WALL_LOCATE_SHOTS = [0]       # C152 ④ — 벽 자리 찾기 사격 수(값 �
 TIGHT_RECHECKS = [0]
 #: C152 메모 6 한 스위치 — False 면 메모 6 앞(느슨한 괄호 끝 · 물려받은 예산의 거절이 그대로 선다). 시험의 음성 대조용.
 TIGHT_RERUN = True
+#: C152 메모 7 — 다시 돈 고리의 뜀 · 예산 거절 문구 머리(이 둘에만 바꾼 느슨한 고리의 쌍 기록을 덧붙인다)와 그 덧붙임의 머리
+TIGHT_REFUSAL_HEADS = ("표면온도 잔차가 뛴다", "표면온도 경계조건이 예산 안에 닫히지 않았다")
+LOOSE_PAIR_HEAD = " · 바꾼 느슨한 고리의 마지막 쌍(C152 메모 7): "
 #: 표면 암석권 층 바닥 자리의 바깥 고정점 (prereg-surface-lithosphere 덧붙임 2 ①) — |ΔR| 문턱 · 최대 횟수.
 LITHO_R_TOL = 1.0            # m — STEPS 1500 지구 걸음 dr ≈ 3.2 km 의 3e-4
 LITHO_ITERS = 8
@@ -2567,7 +2570,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
           lithosphere: dict | None = None,
           p_hint: float | None = None,
           _t_start: float | None = None, _loose: bool = True,
-          _passes: int | None = None, _inherited: bool = False) -> tuple[Structure, bool]:
+          _passes: int | None = None) -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
 
     `_t_start` · `_loose` · `_passes` 는 끝맺음 뒤 이어 돌기(prereg-shoot-warm-start 덧붙임 2 HOLD 반영) 전용 —
@@ -2807,10 +2810,22 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
     def tight_rerun(t0, p0, what):
         """C152 메모 6 — 괄호 끝 하나라도 느슨한 허용으로 쏜 시행이면 그 뜀 · 예산은 이 허용에서 판정되지 않은 것이다
         (끝 시행의 부호가 질량 오차 S·τ 안 — 화성 1850 K: S 147 · τ 3.0e-3 에서 y −0.0087 이 SHOOT_TOL 로는 양수).
-        거절하지 않고 t0 에서 SHOOT_TOL 고리로 다시 돈다(덧붙임 2 A 의 이어 돌기와 같은 입구). 그 고리의 판정만 남는다."""
+        거절하지 않고 t0 에서 SHOOT_TOL 고리로 다시 돈다(덧붙임 2 A 의 이어 돌기와 같은 입구). 그 고리의 판정만 남는다.
+        C152 메모 7 — 다시 돈 고리도 뜀 · 예산으로 거절하면, 그 거절에 **바꾼 느슨한 고리의 마지막 쌍** 기록(S · 스침)을 덧붙인다.
+        스침은 전이의 성질이고(지구 2081 K: 느슨한 쌍 −0.31 · +0.86 K, 빡빡한 뜀 쌍은 1 K 창 밖), 두 근거를 다 찍어 출처가
+        보이게 한다. `parse_graze` 는 첫 S(빡빡한 쌍)와 첫 스침을 읽는다 — 메모 7 의 자는 그대로."""
         TIGHT_RECHECKS[0] += 1
-        print(f"  [C152 메모 6] {what} — 괄호 끝 허용 {dlo_tau!r} · {dhi_tau!r}, 물려받은 예산 {_inherited}: "
+        loose_pair = _loop_pair()
+        print(f"  [C152 메모 6] {what} — 괄호 끝 허용 {dlo_tau!r} · {dhi_tau!r}: "
               f"T_c {t0:.6f} K 에서 SHOOT_TOL 로, 통과 {T_PASSES} 로 다시")
+        try:
+            return _rerun(t0, p0)
+        except ValueError as e:
+            if loose_pair is None or not str(e).startswith(TIGHT_REFUSAL_HEADS):
+                raise
+            raise ValueError(f"{e}{LOOSE_PAIR_HEAD}{format_graze(*loose_pair)}") from None
+
+    def _rerun(t0, p0):
         return shoot(mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z, envelope_z_rock_fraction,
                      differentiated, potential_temperature, boundary_temperature_jump, mantle_rock_fraction,
                      serpentinisation, differentiation_front, crust_rock_fraction, crust_porosity,
@@ -3001,7 +3016,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
                          serpentinisation, differentiation_front, crust_rock_fraction, crust_porosity,
                          envelope_z_profile, ammonia_mass_fraction=ammonia_mass_fraction,
                          interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere,
-                         p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=max(passes, 1), _inherited=True)
+                         p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=max(passes, 1))
     # C152 규칙 2 (감사 e2 HOLD 2) — 예산이 0 을 사이에 둔 괄호 안에서 끝났으면 아래 거절이 그 괄호를 함께 적는다.
     straddle_note = (f" (C152: 0 을 사이에 둔 괄호 [{math.exp(dlo[0]):.6g}, {math.exp(dhi[0]):.6g}] K 안에서 예산이 끝났다)"
                      if dlo is not None and dhi is not None else "")
@@ -3022,10 +3037,9 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
     # ⚠ **연장이 주어졌다는 것 자체가 «개선 중이었다» 의 증거다** — 연장은 창 검사가 참일 때만 나가므로
     #   여기서 그 검사를 다시 묻지 않는다. 첫 판이 그것을 다시 물어 거절이 **발화하지 않았다**.
     # C152 규칙 2 — 0 을 사이에 둔 괄호 안에서 예산이 끝났으면 연장이 없었어도 같은 이름의 거절(괄호를 적어서).
-    # C152 메모 6 — 예산 거절은 SHOOT_TOL 고리가 제 예산을 다 쓰고서만 선다: 괄호 끝이 느슨했거나(위와 같은 까닭),
-    #   이 고리가 느슨한 고리의 남은 예산만 물려받은 이어 돌기(`_inherited`, 덧붙임 2 A)였으면 새 예산으로 한 번 다시.
-    if ((extensions or straddle_note) and not _surface_temperature_met(st, t_pot)
-            and ((straddle_note and bracket_loose()) or (TIGHT_RERUN and _inherited))):
+    # C152 메모 6 — 0 을 사이에 둔 괄호 안의 예산 거절도 괄호 끝이 느슨했으면 SHOOT_TOL 고리로 한 번 다시(위와 같은 까닭).
+    #   메모 7 — 물려받은 예산(덧붙임 2 A 의 이어 돌기) 갈래는 뺐다: 잰 집합에서 살린 점 없이 비용만(화성 S0 다시 돌기 2).
+    if straddle_note and not _surface_temperature_met(st, t_pot) and bracket_loose():
         return tight_rerun(t_c, st.p_center, "예산")
     if (extensions or straddle_note) and not _surface_temperature_met(st, t_pot):
         raise ValueError(

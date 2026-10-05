@@ -585,5 +585,31 @@ _hN = _hist_solve(plant=True)
 check("덧붙임 60 후속 음성 — 둘째 이력에 id 충돌을 심으면 답 호출이 갈라져 잡힌다", _hN[1][1] != _hA[1][1],
       f"심음 {_hN[1][1]} 대 {_hA[1][1]}")
 
+# C152 메모 7 — 진짜 풀이: 지구 2081 K(경계 스침 띠)는 SHOOT_TOL 로 다시 돈 뒤에도 거절하고, 그 거절이 이름 댄 스침
+#   (곡선 · 압력 · g)을 싣는다(바꾼 느슨한 고리의 쌍 기록). 음성 — 검출기를 끄면(GRAZE_K = 0) 스침이 없다.
+def _refusal2081():
+    _b = copy.deepcopy(_EARTH60); _b.results = {}; _b.inputs["potential_temperature"] = 2081.0
+    process_state.reset()
+    with contextlib.redirect_stdout(io.StringIO()):
+        r = interior._solve_from_state(_b, None)
+    return None if r.applicable else (r.reason or "")
+
+
+_k0 = interior.TIGHT_RECHECKS[0]
+_w81 = _refusal2081()
+_s81, _g81 = interior.parse_graze(_w81 or "")
+check("C152 메모 7 — 지구 2081 K: SHOOT_TOL 로 다시 돈 뒤의 «잔차가 뛴다» 거절이 이름 댄 스침(고상선 · GPa · g)과 빡빡한 쌍의 S 를 싣는다",
+      _w81 is not None and "잔차가 뛴다" in _w81 and _g81 is not None and "고상선" in _g81 and "GPa" in _g81
+      and _s81 is not None and _s81 > interior.GRAZE_SLOPE and interior.TIGHT_RECHECKS[0] - _k0 >= 1
+      and interior.LOOSE_PAIR_HEAD.strip() in _w81, f"S {_s81} · 스침 {_g81} · 다시 {interior.TIGHT_RECHECKS[0] - _k0}")
+_gk0 = interior.GRAZE_K
+interior.GRAZE_K = 0.0
+try:
+    _w81n = _refusal2081()
+finally:
+    interior.GRAZE_K = _gk0
+check("C152 메모 7 음성 — 스침 검출기를 끄면(GRAZE_K 0) 같은 거절에 이름 댄 스침이 없다(시험이 검출기를 읽는다)",
+      _w81n is not None and "잔차가 뛴다" in _w81n and interior.parse_graze(_w81n)[1] is None, (_w81n or "")[-120:])
+
 print(f"  test_structure_grid — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)
