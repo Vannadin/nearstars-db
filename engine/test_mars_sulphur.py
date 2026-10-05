@@ -351,7 +351,13 @@ def check() -> int:
         if not ok:
             fails.append(f"구조 표 짓기가 괄호 밖 고정 `{pin_miss}` 에서 이름 대고 멈추지 않는다 — {stop!r}")
         print(f"  [{'PASS' if ok else 'FAIL'}] 구조 표 짓기도 `{pin_miss}` 에서 이름 대고 멈춤 — {(stop or '')[:60]}")
+    elif _layered(declared):
+        # ⚠ **막아 둔 줄이 못 돌면 그것은 빠진 음성이다** (감사석, 2026-10-06) — 층 판이면 덧붙임 2 ② 가 괄호 밖 기록을
+        #   요구한다. 기록이 없으면 위 줄들이 조용히 건너뛰므로(0963d0f1 → landing 2 까지 한 번도 안 돈 까닭) 여기서 실패.
+        fails.append("층 판인데 괄호 밖 기록이 없다 — 덧붙임 2 ②")
+        print("  [FAIL] 층 판인데 괄호 밖 기록이 없다 — 덧붙임 2 ② (괄호 밖 줄들이 돌 수 없다)")
     else:
+        print("  [기록] 층 없는 판 — 괄호 밖 줄 해당 없음 (덧붙임 2 ② 는 층 판의 둘째 고정)")
         apart = abs(frozen["fixings"]["box_floor"]["core_sulphur_wt"]
                     - frozen["fixings"]["box_ceiling"]["core_sulphur_wt"])
         ok = apart > APART_MIN_WT
