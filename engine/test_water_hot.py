@@ -164,6 +164,58 @@ def main() -> int:
         print(f"  [{'PASS' if ok else 'FAIL'}] {rho / 1e3:.1f} g/cc {t:5.0f} K → "
               f"γ = {g:.4f}")
 
+    print("\n클램프 기록 — 밀도 괄호 끝에 맞춘 읽기는 어느 경로로 와도 세고, 답 구조에 있으면 이름 대고 거절 (C122 R1 의 모든 경로)")
+    import eos
+    import interior
+    p_vap, t_vap = 1.0e6, 1500.0                  # 1 MPa · 1500 K — P(RHO_MIN, T) 밑, 증기 쪽(심은 범위 밖 읽기)
+    p_in = w.pressure(3.0e3, t_vap)               # 같은 T 의 괄호 안 압력
+    routes = [("직접", lambda p, t: w.density(p, t)),
+              ("혼합(물 + 암석)", lambda p, t: eos.mix("hw_rock_fx", "시험", (eos.MATERIALS["h2o_hot"], 0.5),
+                                                        (eos.MATERIALS["silicate"], 0.5)).density(p, t)),
+              ("외피 물", lambda p, t: interior._EnvelopeWater().density(p, t))]
+    for label, f in routes:
+        n0 = w.CLAMPED["n"]; w.CLAMPED["first"] = None
+        try:
+            f(p_vap, t_vap)
+            err = None
+        except Exception as e:                    # 다른 칸의 이름 댄 거절이면 이 경로는 클램프에 안 닿는다
+            err = f"{type(e).__name__}: {str(e)[:80]}"
+        got = w.CLAMPED["n"] - n0
+        ok = got >= 1 and (w.CLAMPED["first"] or ("", 0, 0))[0] == "RHO_MIN"
+        if not ok:
+            fails.append(f"{label} 경로의 클램프가 안 세어졌다 ({got}, {err})")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {label} 경로 — 범위 밖 읽기 {got} 번 기록 · 첫 {w.CLAMPED['first']}"
+              + (f" · {err}" if err else ""))
+    n0 = w.CLAMPED["n"]; w.density(p_in, t_vap)
+    ok = w.CLAMPED["n"] == n0
+    if not ok:
+        fails.append("괄호 안 읽기가 클램프로 세어졌다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 음성 — 괄호 안 읽기(ρ 3 g/cc 의 압력)는 세지 않는다")
+
+    class _St:                                    # 답 구조의 칸만 — `_refuse_if_water_filled` 가 읽는 넷
+        hot_water_filled = None
+        boiling_flips = None
+        mass_kg = 1.0
+    st = _St(); st.hot_water_clamped = (3, "RHO_MIN", p_vap, t_vap)
+    try:
+        interior._refuse_if_water_filled(st)
+        why = None
+    except eos.PhaseGap as e:
+        why = str(e)
+    ok = why is not None and "RHO_MIN" in why and "1500 K" in why and "3 번" in why
+    if not ok:
+        fails.append(f"클램프를 든 답이 이름 대고 거절되지 않았다 ({why})")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 클램프를 든 답은 끝 · (P, T) · 횟수를 대며 거절 — {(why or '')[-110:]}")
+    st2 = _St(); st2.hot_water_clamped = None
+    try:
+        interior._refuse_if_water_filled(st2)
+        ok = True
+    except eos.PhaseGap:
+        ok = False
+    if not ok:
+        fails.append("클램프 없는 답이 거절됐다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 음성 — 클램프 없는 답은 그대로")
+
     if fails:
         print(f"\n실패 {len(fails)}건")
         for f in fails:

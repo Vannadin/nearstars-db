@@ -229,7 +229,7 @@ class Structure:
                  "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples", "rock_samples",
                  "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached",
                  "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void", "crust_blocked", "finish_subst",
-                 "r_grad_base", "r_grad_top", "floor_truncated", "hot_water_filled", "boiling_flips",
+                 "r_grad_base", "r_grad_top", "floor_truncated", "hot_water_filled", "boiling_flips", "hot_water_clamped",
                  "onset_graze", "plateau_band")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
@@ -242,6 +242,7 @@ class Structure:
         # C122 고침(prereg-c122-fix 3db41d5f): 물 걸음의 **기록만** — 시행에서는 읽지 않고 답에서만 거절한다.
         #   hot_water_filled = (걸음 수, 질량 kg, 첫 (P, T)) · boiling_flips = (뒤집힘 수, 첫 (P, T, P_sat)).
         self.hot_water_filled = hot_water_filled
+        self.hot_water_clamped = None    # (클램프 수, 끝, P, T) — 경로 무관 기록, `integrate` 가 단다
         self.boiling_flips = boiling_flips
         # 어느 층이 **자기 적합의 바닥**에 걸려 질량 몫을 못 채우고 끝났는가 — 그 재료와 압력
         # (C60 (c), 브리프 181 B). 시행에서는 값이고(질량이 모자란 괄호 점), **답에서는 거절**이다.
@@ -991,6 +992,7 @@ def integrate(*args, **kw):
     델타**를 돌려준다. 그래서 «더 안전해 보이는» 것으로 바꾸기 전에 이 문장을 먼저 읽을 것.
     ⚠ 버려진 시도의 칸은 남으므로 `solve` 가 매 풀이 **시작에 비운다**."""
     before = (ice_fr2015.STATS["extrapolated_rho"], ice_fr2015.STATS["below_t_min"])
+    hw_before, water_hot.CLAMPED["first"] = water_hot.CLAMPED["n"], None
     # C139 — 이 적분의 수렴 기록은 하위 기록에 모인다. 끝나면 곧바로 AND 로 합쳐지고(오늘의 답), 답을 낸
     #   `solve` 만 `convergence.settle` 로 받아들인 적분 하나를 골라 나머지를 시행 칸으로 보낸다.
     with convergence.shot() as holder:
@@ -998,6 +1000,8 @@ def integrate(*args, **kw):
         if holder is not None:
             holder[0] = id(structure)
     structure.onset_graze = _LAST_GRAZE[0]
+    if water_hot.CLAMPED["n"] > hw_before:      # 이 적분 안의 클램프 — 어느 경로든(직접 · 혼합 · 외피)
+        structure.hot_water_clamped = (water_hot.CLAMPED["n"] - hw_before,) + water_hot.CLAMPED["first"]
     _note_loop_trial(kw.get("t_center", args[11] if len(args) > 11 else 0.0), structure)
     _ICE_GRID_DELTA[id(structure)] = (ice_fr2015.STATS["extrapolated_rho"] - before[0],
                                       ice_fr2015.STATS["below_t_min"] - before[1])
@@ -3306,6 +3310,14 @@ def _refuse_if_water_filled(st) -> None:
               f"[{water_hot.RHO_MIN:.0f}, …] kg/m³ 밑이다 — 이 (P, T) 의 물은 증기 쪽이고, 이 풀이는 그 자리를 "
               f"{water_hot.RHO_MIN:.0f} kg/m³ 로 채우지 않는다. 채웠을 걸음 {n} 개 · 질량 몫 {m_fill / st.mass_kg:.3e}. "
               "시험값이 아니라 **수렴한 답**이 그렇다.", t0)
+    if getattr(st, "hot_water_clamped", None) is not None:
+        n, edge, p0, t0 = st.hot_water_clamped
+        raise PhaseGap(
+            "h2o_hot", p0,
+            _HOT_WATER_PREAMBLE
+            + f"{p0 / 1e9:.4g} GPa · {t0:.0f} K 에서 뜨거운 물 적합(Mazevet+ 2019)의 밀도 괄호 끝 {edge} "
+              f"({getattr(water_hot, edge):.0f} kg/m³)에 맞춘 읽기가 이 답에 {n} 번 있다(혼합 · 외피 경로 포함) — 그 자리의 "
+              "물은 적합 밖이고 이 풀이는 끝값으로 채우지 않는다. 시험값이 아니라 **수렴한 답**이 그렇다.", t0)
     if st.boiling_flips is not None and st.boiling_flips[0] >= 2:
         n, (p0, t0, p_sat) = st.boiling_flips
         sat = f" · P_sat({t0:.0f} K) {p_sat / 1e6:.4g} MPa" if p_sat is not None else ""

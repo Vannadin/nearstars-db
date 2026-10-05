@@ -209,6 +209,16 @@ def gruneisen(rho: float, t: float) -> float:
 
 
 _LAST_DENSITY = (0.0, 0.0, 0.0)   # 직전 (P, T, ρ). 출발점일 뿐이다
+#: 밀도 괄호 끝에 맞춘(클램프한) 호출의 기록 — 경로와 무관하게 여기서 센다(직접 · 혼합 · 외피 어느 길로 와도).
+#:   `n` 누적 수 · `first` 마지막 비움 뒤 첫 (끝, P, T). 값은 그대로 끝값(시행은 값, C122); 답 구조에 하나라도 있으면
+#:   `interior._refuse_if_water_filled` 가 이름 대고 거절한다. `interior.integrate` 가 적분마다 `first` 를 비우고 읽는다.
+CLAMPED = {"n": 0, "first": None}
+
+
+def _clamped(edge: str, p: float, t: float) -> None:
+    CLAMPED["n"] += 1
+    if CLAMPED["first"] is None:
+        CLAMPED["first"] = (edge, p, t)
 
 
 def density(p: float, t: float) -> float:
@@ -221,9 +231,11 @@ def density(p: float, t: float) -> float:
     lo, hi = RHO_MIN, RHO_MAX
     p_lo = pressure(lo, t)
     if p_lo >= p:
+        _clamped("RHO_MIN", p, t)
         return lo
     p_hi = pressure(hi, t)
     if p_hi <= p:
+        _clamped("RHO_MAX", p, t)
         return hi
     # log-log 는 거의 직선이다 (P ~ ρ^n, n ≈ 1~3). 두 끝점이 괄호이고, 출발점은
     # **직전 호출의 해** 를 쓴다 — 적분기가 매끄럽게 행진하므로 대개 한두 번이면 붙는다.

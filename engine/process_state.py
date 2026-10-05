@@ -76,6 +76,7 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("structure_grid", "GUARD_RUNS"): (COUNTER, "C159 note 1: how many times the in-check read guard ran, a count outside values", None),
     ("interior", "_ALIVE"): (MEMO, "structure-grid addendum 60 follow-up: every structure integrated in one solve, held so id keys cannot be reused, cleared at each solve", None),
     ("interior", "_SOLVE_DEPTH"): (FLAG, "structure-grid addendum 60 follow-up: nesting depth of live interior.solve calls, restored in finally; only the outermost releases _ALIVE", None),
+    ("water_hot", "CLAMPED"): (COUNTER, "density-bracket clamps on any route, a count outside values; integrate reads the first per integration", None),
     ("interior", "_GRAZE_INFO"): (MEMO, "C157 note 5 onset-graze tag keyed by id(structure), cleared at each solve", None),
     ("interior", "_LAST_GRAZE"): (FLAG, "C157 note 5 closest onset approach of the integration in progress, reset at each integration", None),
     ("interior", "_LOOP_TRIALS"): (FLAG, "C157 note 5 trial list of the outer temperature-loop call in progress, reset to None in finally", None),
