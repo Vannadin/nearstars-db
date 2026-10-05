@@ -429,5 +429,45 @@ for _i, (_name, _over, _want) in enumerate(_FIXTURES):
         + ("" if _hit else f" · 기대 문구 «{_want}» 못 찾음"))
 
 
+# ── T_a 시작 과도 허용 (지휘 결정 2026-10-05 · 감사석 조건 셋) ────────────────────────────────
+# 시작 맨틀 바닥이 핵보다 뜨거운(T̃_m = r_b·T_m > T_c) 시작: Q_C = 0 동안 핵이 제 방사열로 시작 4800 K 위로 오르고, 바닥층이
+# 켜지는 첫 걸음의 T_a ≈ T_c 가 끝 위에 놓인다(화성, a2f289a7: T_a 4800.002169396601 · 시작 위 상승 5.37 mK).
+def check(text, ok, detail=""):
+    row(ok, f"{text} — {detail}" if detail else text)
+
+
+_hot = ch.integrate(PARAMS_M, 4800.0, 1.025 * 4800.0 / R_BM, AGE)
+check("시작 과도 ① — 시작 맨틀 바닥이 핵보다 뜨거운 화성 꼴이 끝까지 풀리고, 시작 위 상승과 상한을 싣는다",
+      "refused" not in _hot and 0.0 < _hot["start_rise_k"] < ch.START_RISE_CAP_K and _hot["start_rise_cap_k"] == ch.START_RISE_CAP_K,
+      f"rise {_hot.get('start_rise_k')!r} K · cap {_hot.get('start_rise_cap_k')} · 받은 호출 {_hot.get('start_admitted_calls')} · "
+      f"{(_hot.get('refused') or '')[:80]}")
+_rise = 0.005370562328              # 화성 a2f289a7 의 시작 위 상승(T_c 4800.005370562328 K 의 4800 위)
+_d = 0.0064                         # 켜진 첫 걸음의 T_c − T̃_m (같은 실행)
+
+
+def _onset_rates(t_a, rise=_rise, engaged=True):
+    """켜진 뒤(engaged) 시작 위 상승 rise 로 굳은 상태에서, T_a = t_a 가 되게 T_c · T_m 을 놓고 rates 를 한 번."""
+    t_c = t_a + 0.5 * _d
+    on = {"rise": rise, "engaged": engaged, "admitted": 0, "max_over": 0.0}
+    return ch.rates(t_c, (t_c - _d) / PARAMS_M["r_b"], PARAMS_M, -4.5, on)
+
+
+_ok = _onset_rates(4800.002169396601)
+check("시작 과도 ② — 오늘의 화성 첫 걸음(T_a 4800.002169396601, 상승 5.37 mK)은 거절 없이 이름 댄 메모로 받는다",
+      "refused" not in _ok and any("start transient" in n for n in _ok["start_notes"]), str(_ok.get("start_notes") or _ok.get("refused"))[:140])
+_bad = _onset_rates(4800.0 + _rise + 0.01)
+check("시작 과도 ③ 음성 — 켜진 뒤 끝 + 상승 위 0.01 K 의 T_a 는 이름 대고 거절(허용은 그 상승만큼만)",
+      "refused" in _bad and "start allowance" in _bad["refused"], (_bad.get("refused") or "")[:140])
+_stop = ch.rates(4800.0 + ch.START_RISE_CAP_K + 0.5, 4900.0, PARAMS_M, -4.5,
+                 {"rise": float("-inf"), "engaged": False, "admitted": 0, "max_over": 0.0})
+check("시작 과도 ④ 음성 — 켜지기 전 상승이 상한(START_RISE_CAP_K)을 넘으면 «시작 상태 불일치» 로 멈춘다",
+      "refused" in _stop and "시작 상태 불일치" in _stop["refused"], (_stop.get("refused") or "")[:120])
+_raised = False
+try:
+    mf.EQ35_DOMAIN.__class__("x [K]", None, 1.0, "f@«p»").in_domain(1.5, start_allowance=1.0)
+except ValueError:
+    _raised = True
+check("시작 과도 ⑤ — 시작 상태가 아닌 끝(start_edge False)에 허용을 주면 ValueError(조용히 넓히지 않음)", _raised)
+
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)

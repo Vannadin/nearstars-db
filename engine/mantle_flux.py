@@ -115,7 +115,7 @@ def implied_flux(t_m_k: float, g: float, r_m: float, zeta: float = ZETA, t_s: fl
 # call is allowed and NOTED as declared extrapolation; above 4800 K the callee refuses by name (domain.py).
 NIMMO_TXT = "2004GeoJI.156..363N.txt"      # gitignored cache text layer (pdftotext -layout, 2026-09-08)
 EQ35_DOMAIN = Domain(
-    quantity="T_m [K] (eqs 34–36)", lo=None, hi=4800.0, expansion=T_0,
+    quantity="T_m [K] (eqs 34–36)", lo=None, hi=4800.0, expansion=T_0, start_edge=True,
     anchor=f"{NIMMO_TXT}@«conditions are that T c = T m = 4800 K»",
     caveat=("paper prints no lower usage limit; expansion point T_0 = 1573 K "
             f"({NIMMO_TXT}@«1573 K for T 0»); the paper's own lowest use is present-day 1603 K "

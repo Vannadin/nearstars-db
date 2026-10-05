@@ -48,6 +48,8 @@ class Domain:
     caveat: str = ""              # the source's own sentence about behaviour near the edge
     expansion: float | None = None   # the law's expansion point, when it is one (eq. 35's T_0, eq. 39's T_1):
                                      # below it a call is NOT refused — it is noted as declared extrapolation
+    start_edge: bool = False         # the upper edge is the SOURCE'S START STATE (the highest value the source integrates
+                                     # from), not a printed validity bound. Only such an edge admits a per-run start allowance.
 
     def __post_init__(self) -> None:
         if self.lo is None and self.hi is None:
@@ -57,10 +59,17 @@ class Domain:
         if "@«" not in self.anchor:
             raise ValueError(f"{self.quantity}: anchor must be a file@«phrase» citation, got {self.anchor!r}")
 
-    def in_domain(self, x: float) -> bool:
+    def in_domain(self, x: float, start_allowance: float = 0.0) -> bool:
+        """Closed on both printed edges (x == edge is inside). `start_allowance` [same unit] widens a start-state upper
+        edge by the run's own measured rise above the source's start (a caller computes it; never a constant here)."""
+        if start_allowance:
+            if not self.start_edge:
+                raise ValueError(f"{self.quantity}: a start allowance is only for an edge that is the source's start state")
+            if start_allowance < 0.0:
+                raise ValueError(f"{self.quantity}: start allowance {start_allowance!r} < 0")
         if self.lo is not None and x < self.lo:
             return False
-        if self.hi is not None and x > self.hi:
+        if self.hi is not None and x > self.hi + start_allowance:
             return False
         return True
 
@@ -69,13 +78,21 @@ class Domain:
         hi = "open" if self.hi is None else f"{self.hi:g}"
         return f"[{lo}, {hi}]"
 
-    def refusal(self, x: float) -> str | None:
+    def refusal(self, x: float, start_allowance: float = 0.0) -> str | None:
         """The named refusal a callee returns for x, or None inside."""
-        if self.in_domain(x):
+        if self.in_domain(x, start_allowance):
             return None
         side = "below" if (self.lo is not None and x < self.lo) else "above"
-        return (f"{DOMAIN_REFUSED}: {self.quantity} = {x:g} is {side} the declared domain {self.edges()} "
+        allow = (f" plus this run's start allowance {start_allowance:.6g}" if start_allowance else "")
+        return (f"{DOMAIN_REFUSED}: {self.quantity} = {x!r} is {side} the declared domain {self.edges()}{allow} "
                 f"({self.anchor}){'; ' + self.caveat if self.caveat else ''}")
+
+    def start_note(self, x: float, start_allowance: float) -> str | None:
+        """Above a start-state edge but within the run's allowance: a note naming both numbers, not a refusal."""
+        if self.hi is None or not (self.hi < x) or not self.in_domain(x, start_allowance):
+            return None
+        return (f"{self.quantity} = {x!r} is {x - self.hi:.3g} above the source's start {self.hi:g}, within this run's "
+                f"pre-onset rise {start_allowance:.3g} above it — admitted as the run's own start transient ({self.anchor})")
 
     def extrapolation_note(self, x: float) -> str | None:
         """Inside the domain but below the expansion point: a note, not a refusal (the D6/D11 shape).

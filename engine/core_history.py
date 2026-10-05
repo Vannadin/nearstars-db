@@ -99,22 +99,46 @@ def _core_side(material: str, p_cmb: float, t_c: float, r_cmb: float, m_core: fl
             "core_status": unit.get("core_status", "inner_core")}
 
 
-def rates(t_c: float, t_m: float, p: dict, t_gyr_from_present: float) -> dict:
-    """dT_c/dt and dT_m/dt [K/s] at state (T_c, T_m) and epoch t (Gyr, negative = past)."""
+#: 시작 과도(T_a 시작 끝 허용, 지휘 결정 2026-10-05 · 감사석 조건 2) — Q_C = 0 인 시작 구간(t₀ → 바닥층이 켜지는 걸음)에서
+#:   핵이 자기 방사열로 Nimmo 의 시작 4800 K 위로 오른 양이 이만큼을 넘으면 허용이 아니라 멈춤(시작 상태 불일치). judgment ·
+#:   화성 실측 5.4–5.6 mK 의 약 200 배. 시작 상태 항목(C20, landing 3 뒤)이 착지하면 이 허용과 함께 지운다.
+START_RISE_CAP_K = 1.0
+
+
+def rates(t_c: float, t_m: float, p: dict, t_gyr_from_present: float, onset: dict | None = None) -> dict:
+    """dT_c/dt and dT_m/dt [K/s] at state (T_c, T_m) and epoch t (Gyr, negative = past).
+
+    `onset` (integrate 가 실행마다 넘김, 없으면 오늘 그대로) — 시작 과도: 바닥층이 켜지기 전(Q_C = 0 정확히) 핵 T_c 가
+    eqs 37–39 의 시작 끝(EQ39_DOMAIN.hi, Nimmo 의 시작 상태) 위로 오른 최대량 `rise` 를 재고, 켜진 뒤로는 그 값에 굳힌다.
+    켜진 T_a 는 끝 + rise 까지 이름 댄 메모로 받고 그 위는 거절. rise 가 START_RISE_CAP_K 를 넘으면 멈춤."""
     t_m_base = p["r_b"] * t_m
     side = _core_side(p["material"], p["p_cmb"], t_c, p["r_cmb"], p["m_core"])
     # Nimmo starts both at 4800 K (Fig. 2 caption): zero jump at t = 0. F_b ∝ ΔT^(4/3) → 0 continuously (eqs 37–38),
     # so Q_C = 0 for ΔT ≤ 0 is the continuous limit, not a patch. The mantle cools first; the core follows.
     notes = []
+    start_notes = []
     if t_c > t_m_base:
-        bl = cf.bottom_layer(t_c, t_m_base, p["r_cmb"])
+        allowance = 0.0
+        if onset is not None:
+            onset["engaged"] = True               # 시작 구간 끝 — rise 는 여기서 굳는다
+            allowance = max(0.0, onset["rise"])
+        bl = cf.bottom_layer(t_c, t_m_base, p["r_cmb"], start_allowance=allowance)
         if bl["domain_refusal"] is not None:      # Brief 155: the callee refused; the integrator stops here by name
             return {"refused": bl["domain_refusal"]}
         q_c = bl["q_c_w"]
         if bl["extrapolation_note"]:
             notes.append(bl["extrapolation_note"])
+        if bl.get("start_note"):
+            start_notes.append(bl["start_note"])
     else:
         q_c = 0.0
+        if onset is not None and not onset["engaged"] and cf.EQ39_DOMAIN.hi is not None:
+            onset["rise"] = max(onset["rise"], t_c - cf.EQ39_DOMAIN.hi)
+            if onset["rise"] > START_RISE_CAP_K:
+                return {"refused": (f"시작 상태 불일치 — 바닥층이 켜지기 전(Q_C = 0) 핵이 Nimmo 의 시작 "
+                                    f"{cf.EQ39_DOMAIN.hi:g} K 위로 {onset['rise']:.4g} K 올랐다(상한 START_RISE_CAP_K "
+                                    f"{START_RISE_CAP_K:g} K). 시작 맨틀 바닥 T̃_m = r_b·T_m 이 T_c 보다 높아 핵이 자기 방사열로 "
+                                    f"데워진다 — 원전의 «T_c = T_m» 과 다른 시작이다 (C20 시작 상태 항목)")}
     q_r = side["m_core"] * p["h_core"]
     dtc = -(q_c - q_r) / side["q_tilde"]          # K/s; negative = cooling
     # 결정 8 — 맨틀이 위로 버리는 열을 **그 바디의 영역이 고른 법칙**으로 낸다. 법칙 이름은
@@ -144,7 +168,7 @@ def rates(t_c: float, t_m: float, p: dict, t_gyr_from_present: float) -> dict:
     h_m = p["h_m_present_w"] * rg.history_factor(t_gyr_from_present, conc=p.get("radiogenic_conc"))
     dtm = (h_m - q_m + q_c) / (p["m_mantle"] * mf.C_PM * math.sqrt(p["r_b"]))
     return {"dtc": dtc, "dtm": dtm, "q_c": q_c, "q_m": q_m, "h_m": h_m, "q_r": q_r, "side": side,
-            "extrapolation_notes": tuple(notes)}
+            "extrapolation_notes": tuple(notes), "start_notes": tuple(start_notes)}
 
 
 def t_at_gyr(rows: list[dict], t_gyr: float, key: str = "t_m") -> float:
@@ -218,6 +242,7 @@ def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: 
     t_now = -age_gyr                                  # Gyr from present (≤ 0)
     rows = []
     extrapolated = {"eqs 34–36": 0, "eqs 37–39": 0}
+    onset = {"rise": float("-inf"), "engaged": False, "admitted": 0, "max_over": 0.0}   # 시작 과도 (rates 의 onset)
     n = 0
     h_min = None
     max_ratio = 0.0
@@ -250,7 +275,10 @@ def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: 
                     gapped["steps"] += start
                     gapped["spans"].update(g for g in grid.no_answer if g[0] < tm < g[1])
                 params.update(got)
-        return rates(tc, tm, params, t)
+        out = rates(tc, tm, params, t, onset)
+        for note in out.get("start_notes", ()):
+            onset["admitted"] += 1
+        return out
 
     while True:
         r1 = step_rates(t_c, t_m, t_now, start=True)
@@ -310,7 +338,9 @@ def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: 
             "max_h_over_tau": max_ratio if adaptive else None, "extrapolated_steps": extrapolated,
             "grid_held_steps": held["steps"], "grid_held_calls": held["calls"],
             "grid_gap_steps": gapped["steps"], "grid_gap_calls": gapped["calls"],
-            "grid_gap_spans": sorted(gapped["spans"])}
+            "grid_gap_spans": sorted(gapped["spans"]),
+            "start_rise_k": max(0.0, onset["rise"]), "start_rise_cap_k": START_RISE_CAP_K,
+            "start_admitted_calls": onset["admitted"]}
 
 
 def window_summary(rows: list[dict], window_gyr: float = WINDOW_GYR) -> dict:
@@ -551,12 +581,16 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
                    f"edge is 4800 K above and open below ({mf.EQ35_DOMAIN.anchor}); below the expansion point the paper "
                    "prints no limit, so the call is allowed and counted here rather than refused.")
     hist_ = best["hist"]
+    start_note = (f"start transient (C20 시작 상태 항목까지의 허용, 2026-10-05): Q_C = 0 인 시작 구간에서 핵이 Nimmo 의 시작 "
+                  f"{cf.EQ39_DOMAIN.hi:g} K 위로 오른 양 {hist_.get('start_rise_k', 0.0):.4g} K (상한 {START_RISE_CAP_K:g} K); "
+                  f"eqs 37–39 의 T_a 를 시작 끝 + 그 양까지 받은 호출 {hist_.get('start_admitted_calls', 0)} 번. "
+                  "시작 상태(T̃_m = r_b·T_m > T_c)가 원전의 «T_c = T_m» 과 다르기 때문이고, 그 항목이 착지하면 이 허용을 지운다.")
     step_note = (f"step (Brief 157): h = min({hist_['step_myr']:g} Myr, {STEP_FRACTION:g}·τ) with τ = C_eff/(dQ_m/dT_m) recomputed "
                  f"every step — {hist_['n_steps']} steps, smallest h {hist_['h_min_myr']:.4g} Myr, largest h/τ met "
                  f"{hist_['max_h_over_tau']:.3g} (must be ≤ {STEP_FRACTION:g}); tools/adaptive-step-prereg.md")
     return Result(recipe=RECIPE, version=VERSION, regime="thermal-history", reason=reason, grade="analog",
                   inputs=inputs, values=values, units=units, refs=REFS,
-                  notes=(CONDITION, extrap_note, step_note) + _gap_note(best["hist"]) + _quick_note(grid))
+                  notes=(CONDITION, extrap_note, start_note, step_note) + _gap_note(best["hist"]) + _quick_note(grid))
 
 
 from registry import recipe  # noqa: E402

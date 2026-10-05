@@ -58,7 +58,7 @@ T_1 = 3400.0                      # K, reference temperature appropriate for the
 # T_1 = 3400 K is the expansion point, and the paper's own lowest use is present-day T_a ≈ 3428 K. Below T_1 a
 # call is allowed and noted as declared extrapolation — Mars's deep mantle lives there (C48 observation).
 EQ39_DOMAIN = Domain(
-    quantity="T_a [K] (eqs 37–39)", lo=None, hi=4800.0, expansion=T_1,
+    quantity="T_a [K] (eqs 37–39)", lo=None, hi=4800.0, expansion=T_1, start_edge=True,
     anchor=f"{mf.NIMMO_TXT}@«conditions are that T c = T m = 4800 K»",
     caveat=("paper prints no lower usage limit; expansion point T_1 = 3400 K "
             f"({mf.NIMMO_TXT}@«above is about 3400 K. We adopt this value for T 1»); the paper's own lowest use "
@@ -94,22 +94,24 @@ def eta_b(t_a_k: float, zeta: float = mf.ZETA) -> float:
 
 
 def bottom_layer(t_c: float, t_m_base: float, r_cmb: float,
-                 zeta: float = mf.ZETA, kappa_b: float = KAPPA_B, g: float = mf.EARTH_G) -> dict:
+                 zeta: float = mf.ZETA, kappa_b: float = KAPPA_B, g: float = mf.EARTH_G,
+                 start_allowance: float = 0.0) -> dict:
     """eqs 37–38 at a core-side CMB temperature t_c and the mantle's real base temperature t_m_base.
     Returns δ_b [m], η_b [Pa·s], F_b [W/m²], Q_C [W]. Raises on t_c ≤ t_m_base (no jump)."""
     if t_c <= t_m_base:
         raise ValueError(f"T_c {t_c} K ≤ T̃_m {t_m_base} K — no superadiabatic jump, eq. 37 undefined")
     t_a = 0.5 * (t_c + t_m_base)
-    refusal = EQ39_DOMAIN.refusal(t_a)
+    refusal = EQ39_DOMAIN.refusal(t_a, start_allowance)
     if refusal is not None:     # the callee keeps the domain (Brief 155, D5)
         return {"delta_b_m": None, "eta_b": None, "f_b_w_m2": None, "q_c_w": None,
-                "domain_refusal": refusal, "extrapolation_note": None}
+                "domain_refusal": refusal, "extrapolation_note": None, "start_note": None}
     eta = eta_b(t_a, zeta)
     d_b = (mf.RA_C * kappa_b * eta / (mf.RHO_M * g * mf.ALPHA_M * (t_c - t_m_base))) ** (1.0 / 3.0)
     k_b = kappa_b * mf.RHO_M * mf.C_PM
     f_b = k_b * (t_c - t_m_base) / d_b
     return {"delta_b_m": d_b, "eta_b": eta, "f_b_w_m2": f_b, "q_c_w": f_b * 4.0 * math.pi * r_cmb ** 2,
-            "domain_refusal": None, "extrapolation_note": EQ39_DOMAIN.extrapolation_note(t_a)}
+            "domain_refusal": None, "extrapolation_note": EQ39_DOMAIN.extrapolation_note(t_a),
+            "start_note": EQ39_DOMAIN.start_note(t_a, start_allowance)}
 
 
 def adiabatic_flow(material_name: str, p_cmb: float, t_c: float, r_cmb: float, m_core: float,
