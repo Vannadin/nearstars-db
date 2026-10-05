@@ -308,11 +308,34 @@ def check() -> int:
             fails.append(f"괄호 밖 기록 {misses} 가 층 없는 판이거나 선언 고정이다 — 덧붙임 2 ① 밖")
         print(f"  [{'PASS' if ok else 'FAIL'}] 둘째 고정 {misses} 는 괄호 밖(층 판) — 두 고정 갈림 단언을 대신함")
         pin_miss = misses[0]
+        # ⚠ **선언 검사가 먼저다** (2026-10-06, landing 2 의 층 앵커에서 처음 돈 줄): 굳힌 맞춤은 선언
+        #   `light_element_fixing` 에 묶여 있으므로(SULPHUR_ANCHOR_DECLARATIONS) 고정만 바꾼 선언에는 «움직였다» 가 옳은
+        #   첫 답이다 — 괄호 밖 거절까지 가지 않는다. 0963d0f1(09-27)이 이 줄을 «괄호 밖» 으로 썼지만 그때 커밋된 앵커에는
+        #   괄호 밖 기록이 없어(층 없는 판) 줄이 한 번도 안 돌았다.
         _w, _n, why = interior.read_sulphur_anchor({**declared, "light_element_fixing": pin_miss})
+        ok = _w is None and bool(why) and "`light_element_fixing` 가 움직였다" in why
+        if not ok:
+            fails.append(f"굳힘과 다른 고정 `{pin_miss}` 를 선언한 읽기가 «움직였다» 거절이 아니다 — {why!r}")
+        print(f"  [{'PASS' if ok else 'FAIL'}] `{pin_miss}` 를 선언하면 읽기가 선언 움직임으로 먼저 거절 — {(why or '')[:60]}")
+        # 괄호 밖 길은 **그 고정으로 굳힌 앵커**에서 잰다 — 같은 기록의 사본에 선언 고정만 `pin_miss` 로 적어 읽게 한다
+        #   (선언 검사를 통과하고 괄호 밖 칸에 닿는 유일한 꼴; 사본은 임시 파일, 트리의 앵커는 안 건드린다).
+        import json as _json
+        import tempfile as _tempfile
+        _copy = _json.loads(interior.SULPHUR_ANCHOR_FILE.read_text(encoding="utf-8"))
+        _copy["declared"]["light_element_fixing"] = pin_miss
+        _keep = interior.SULPHUR_ANCHOR_FILE
+        with _tempfile.TemporaryDirectory() as _d:
+            _tmp = Path(_d) / _keep.name
+            _tmp.write_text(_json.dumps(_copy), encoding="utf-8")
+            interior.SULPHUR_ANCHOR_FILE = _tmp
+            try:
+                _w, _n, why = interior.read_sulphur_anchor({**declared, "light_element_fixing": pin_miss})
+            finally:
+                interior.SULPHUR_ANCHOR_FILE = _keep
         ok = _w is None and bool(why) and "괄호 밖" in why
         if not ok:
-            fails.append(f"괄호 밖 고정 `{pin_miss}` 를 선언한 읽기가 이름 댄 거절이 아니다 — {why!r}")
-        print(f"  [{'PASS' if ok else 'FAIL'}] `{pin_miss}` 를 선언하면 읽기가 이름 대고 거절 — {(why or '')[:60]}")
+            fails.append(f"괄호 밖 고정 `{pin_miss}` 로 굳힌 앵커의 읽기가 이름 댄 거절이 아니다 — {why!r}")
+        print(f"  [{'PASS' if ok else 'FAIL'}] `{pin_miss}` 로 굳힌 앵커를 읽으면 «괄호 밖» 으로 이름 대고 거절 — {(why or '')[:60]}")
         # 구조 표 짓기(`structure_grid._solver`)도 같은 기록에서 이름 대고 멈추는가(9f 권고 — 읽는 자리 둘 다)
         import types
         import run
