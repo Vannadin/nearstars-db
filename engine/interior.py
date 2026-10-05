@@ -1325,26 +1325,6 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
         mat = material_for(m)
         if record is not None:
             record.append((r, p, m, t, mat.name))
-        # C157 메모 5 — 경계 곡선 접선 접근: g = T − T_경계 가 극값(Δg 부호가 바뀜)이고 |g| ≤ GRAZE_K 인 자리 중 가장
-        #   가까운 것. 가로지름(g 가 0 을 극값 없이 지남)은 아니다. 곡선은 재료가 낸다(상 이름 없음). 값 밖.
-        _oc = getattr(mat, "onset_curves", None) if t > 0.0 else None
-        if _oc is not None:
-            if mat.name != g_mat:
-                g_hist.clear()
-                g_mat = mat.name
-            try:
-                _curves = _oc(p, t)
-            except eos.PhaseGap:            # 재료의 근거 구간 밖 — 이 걸음의 판정은 아래 밀도 호출이 이름 대며 낸다(스침은 값 밖)
-                _curves = ()
-            for c_name, t_on in _curves:
-                g = t - t_on
-                h2 = g_hist.get(c_name, ())
-                if len(h2) == 2:
-                    (g_a, _p_a), (g_b, p_b) = h2
-                    if (g_b - g_a) * (g - g_b) < 0.0 and abs(g_b) <= GRAZE_K and (graze is None or abs(g_b) < abs(graze[3])):
-                        graze = (c_name, mat.name, p_b, g_b)
-                        _LAST_GRAZE[0] = graze
-                g_hist[c_name] = (h2[-1], (g, p)) if h2 else ((g, p),)
         if layer != prev_layer:
             note_switch(prev_layer)
             apply_jump(prev_layer)
@@ -1400,6 +1380,29 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             # 아니거니와 바다 표가 c_P 를 안 들고 있어 혼합의 ∇_ad 를 가중할 수도 없다.
             # 암모니아(C22)도 같은 자리, 같은 이유 — 표의 바닥이 500 K 라 얕은 얼음·바다에는 없다.
             mat = with_rock(with_ices(mat))
+
+        # C157 메모 5 — 경계 곡선 접선 접근: g = T − T_경계 가 극값(Δg 부호가 바뀜)이고 |g| ≤ GRAZE_K 인 자리 중 가장
+        #   가까운 것. 가로지름(g 가 0 을 극값 없이 지남)은 아니다. 곡선은 재료가 낸다(상 이름 없음). 값 밖.
+        #   C157 메모 11 — 모든 갈아 끼움(기저층 · 물기둥의 액체/뜨거운 물 · 암석/암모니아 혼합) **뒤에** 읽는다: 이 걸음이
+        #   실제로 밟는 재료의 곡선이어야 한다(전에는 `material_for` 의 재료를 읽어 기저층 · 혼합을 못 봤다).
+        _oc = getattr(mat, "onset_curves", None) if t > 0.0 else None
+        if _oc is not None:
+            if mat.name != g_mat:
+                g_hist.clear()
+                g_mat = mat.name
+            try:
+                _curves = _oc(p, t)
+            except eos.PhaseGap:            # 재료의 근거 구간 밖 — 이 걸음의 판정은 아래 밀도 호출이 이름 대며 낸다(스침은 값 밖)
+                _curves = ()
+            for c_name, t_on in _curves:
+                g = t - t_on
+                h2 = g_hist.get(c_name, ())
+                if len(h2) == 2:
+                    (g_a, _p_a), (g_b, p_b) = h2
+                    if (g_b - g_a) * (g - g_b) < 0.0 and abs(g_b) <= GRAZE_K and (graze is None or abs(g_b) < abs(graze[3])):
+                        graze = (c_name, mat.name, p_b, g_b)
+                        _LAST_GRAZE[0] = graze
+                g_hist[c_name] = (h2[-1], (g, p)) if h2 else ((g, p),)
 
         # **기체에는 P = 0 인 표면이 없다.** 밀도가 압력과 함께 0 으로 가므로 적분이
         # 어디서 끝나는지를 재료가 말해야 하고, 그 자리가 발표된 반지름이 재어진

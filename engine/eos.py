@@ -1396,6 +1396,20 @@ class Mixture:
         여기서는 답하지 않는다. 미분화 천체와 중원소 섞인 외피가 이 자리에 온다."""
         return None
 
+    def onset_curves(self, p: float, t: float) -> list:
+        """C157 메모 11 — 성분들의 경계 곡선을 모은다(같은 이름은 한 번). 섞인 층의 피적분은 성분 하나라도 체제를 바꾸면
+        바뀌므로, 스침 검출이 혼합에서 눈을 감지 않게 한다. 곡선을 내지 않는 성분(onset_curves 가 없는 것)은 보태는 것이 없다."""
+        out, seen = [], set()
+        for m, w in self.parts:
+            oc = getattr(m, "onset_curves", None) if w > 0.0 else None
+            if oc is None:
+                continue
+            for name, t_on in oc(p, t):
+                if name not in seen:
+                    seen.add(name)
+                    out.append((name, t_on))
+        return out
+
     def check_temperature(self, p: float, t: float) -> None:
         for m, w in self.parts:
             if w > 0.0:
