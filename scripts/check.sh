@@ -864,6 +864,17 @@ echo "── 3. Markdown dead-link 스캔 ──"
 step "scripts/check_dead_links.py" bash -c 'python3 scripts/check_dead_links.py'
 
 echo ""
+# 가드 행 센서스 (2026-10-06) — 사이트가 없어 건너뛰는 세 검사(3b · 7 · 11)를 이름 대고 세어 요약 줄에 싣는다.
+#   docs/index.html 은 gitignore 라 **격리 실행(--from)에서는 늘 없다** — 그때는 «빌드하라» 가 아니라 «이 실행에서는 안 돈다» 다.
+_site_skipped=0
+_site_skip() {
+  _site_skipped=$((_site_skipped + 1))
+  if [ "${GATE_ISOLATED:-}" = "1" ]; then
+    echo "  [SKIP] $1 — 격리 실행(--from): 클론에는 빌드된 사이트가 없다(docs/index.html 은 gitignore). 이 실행에서 이 검사는 돌지 않았다"
+  else
+    echo "  [SKIP] $1 — 사이트가 빌드되지 않은 트리 — run_pipeline.sh 후 다시 확인"
+  fi
+}
 echo "── 3b. 사이트 내부 링크 (docs/ 404) ──"
 # 생성 HTML 은 gh-pages 가 정본이라 main 에서 추적하지 않는다(.gitignore 참고).
 # 갓 클론했거나 새 워크트리라면 docs/ 에 사이트가 없고, 그때 이 게이트는
@@ -872,7 +883,7 @@ echo "── 3b. 사이트 내부 링크 (docs/ 404) ──"
 if [ -f docs/index.html ]; then
   step "scripts/check_site_links.py" bash -c 'python3 scripts/check_site_links.py'
 else
-  echo "  [SKIP] 사이트가 빌드되지 않은 트리 — run_pipeline.sh 후 다시 확인"
+  _site_skip "3b 사이트 내부 링크"
 fi
 
 echo ""
@@ -948,7 +959,7 @@ echo "── 7. 빌드 산출물 신선도 + 매니페스트 커버리지 ──
 if [ -f docs/index.html ]; then
   step "scripts/check_build_freshness.py" bash -c 'python3 scripts/check_build_freshness.py'
 else
-  echo "  [SKIP] 사이트가 빌드되지 않은 트리"
+  _site_skip "7 빌드 산출물 신선도"
 fi
 
 echo ""
@@ -1000,7 +1011,7 @@ echo "── 11. 사이트맵 연결성 게이트 (신규 고아 페이지 감�
 if [ -f docs/index.html ]; then
   step "build_sitemap" python3 scripts/build_sitemap.py --audit-only
 else
-  echo "  [SKIP] 사이트가 빌드되지 않은 트리"
+  _site_skip "11 사이트맵 연결성"
 fi
 
 echo ""
@@ -1330,6 +1341,7 @@ fi
 if [ "$lane" = "quick" ]; then
   echo "  quick 층 — also $(printf '%s\n' "$_QUICK_ALSO" | grep -c . || true) (C136: ran 8 + also) · 돈 단계 $_quick_ran · 건너뛴 단계 $_quick_skipped (합 $((_quick_ran + _quick_skipped)) = 단계 총수) · 단계 밖 건너뛴 덩이 $_quick_skipped_outside (ko 미러 점검) ⚠ 건너뛴 것은 «통과» 가 아니다"
 fi
+[ "$_site_skipped" -gt 0 ] && echo "  [기록] 사이트 검사 건너뜀 $_site_skipped (3b · 7 · 11 중$([ "${GATE_ISOLATED:-}" = "1" ] && echo ' — 격리 실행이라 늘 건너뛴다')) ⚠ 건너뛴 것은 «통과» 가 아니다"
 [ "$_gate_max_s" -ge 0 ] && echo "  [기록] 게이트 하한 — 가장 긴 단계 $_gate_max_name ${_gate_max_s} s (벽시계 ${SECONDS} s)"
 echo "GATE END sha=$gate_sha date=$(date "+%F%z") pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field$script_field rc=$fail"
 
