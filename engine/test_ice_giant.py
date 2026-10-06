@@ -1013,6 +1013,9 @@ def main() -> int:
         _fingerprint(frozen, fails, full=True)
         _live(frozen, fails)
         _clamp_invariance(frozen, fails)
+        # 가드 행 센서스 H1 (2026-10-06) — C5 선언 두 행은 `--fast` 에서만 불려 게이트(전체 모드)가 한 번도 안 돌렸다.
+        #   굳힌 수렴점에서 적분 두 번(초 단위)이라 전체 모드에도 싣는다.
+        _declarations(frozen, fails)
     _published_nmoi(frozen, fails)
     if CODE_MOVED:
         print(f"  [{'PASS' if not fails else 'FAIL'}] 코드 움직임 {len(CODE_MOVED)} 자리 · 값 "
