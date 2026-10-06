@@ -235,6 +235,9 @@
   globs: []
 "test_hobby_table.py":  # C161; reads engine/structure_grid/mars.json and bodies (always-full) — the next census confirms
   globs: []
+"test_smooth_table.py":  # C157 note 10; reads the Mars mantle table (MANTLE_TABLE_DIR or engine/mantle_tables) and the water / ammonia tables through their modules — declared by hand, the next census confirms
+  globs: ["engine/mantle_tables/*.json"]
+  hand: true
 "test_phase_tables.py":
   globs: []
 "test_tidal_heating.py":

@@ -1281,6 +1281,9 @@ step "test_mantle_composition.py" bash -c 'cd engine && exec python3 test_mantle
 step "test_column_rule.py" bash -c 'cd engine && exec python3 test_column_rule.py'
 # 취미용 표 가속이 값을 안 바꾸는가 — 압력식 재배열 · 따뜻한 근 찾기 · 풀이마다 초기화 · 빠른 판 (C161). ~21 s.
 step "test_hobby_table.py" bash -c 'cd engine && exec python3 test_hobby_table.py'
+# 공용 표 보간(smooth_table)의 판정 행 — 격자점 그대로 · 넘침 없음 · C¹(들쭉날쭉한 가장자리 포함) · 꺾인 표의 계단 (C157 메모 10 §3 행 5–6).
+#   97c8031c 부터 있었으나 이 단계가 없어 C129(check_unwired_tests)가 빨갛게 잡았다 — 가드 행 센서스 H4.
+step "test_smooth_table.py" bash -c 'cd engine && exec python3 test_smooth_table.py'
 # 상 곁표 (2026-09-04, 오너 채택 패턴). 키 집합 = eos 가 내는 상, 채운 칸은 등급·출처, authored 는 두 표지, 채움/전체를 출력한다.
 step "test_phase_tables.py" bash -c 'cd engine && exec python3 test_phase_tables.py'
 # 조석 가열 (C30). 이오 밴드 재현·판도라 보드 45 W/m² 재현(0.75 %)·×Io 규약 R⁵·§6.1/§6.2 라벨 표·거절 넷이 앵커다.
