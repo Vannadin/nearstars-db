@@ -928,6 +928,54 @@ def answer_verdict(result, tags: list | None = None) -> str | None:
     return None
 
 
+
+class Verdict(tuple):
+    """판정 한 줄 — (kind, text). kind 는 VERDICT_KINDS 넷 중 하나, str 은 집계가 인쇄하는 줄(착지 3 verdict_of, 7f2d8d2e §1)."""
+    __slots__ = ()
+
+    def __new__(cls, kind: str, text: str = ""):
+        return super().__new__(cls, (kind, text))
+
+    @property
+    def kind(self) -> str:
+        return self[0]
+
+    @property
+    def text(self) -> str:
+        return self[1]
+
+    def __str__(self) -> str:
+        return self[0] if not self[1] else f"{self[0]} — {self[1]}"
+
+
+#: 넷이지 셋이 아니다 — 속 미수렴 답은 **답**(C130 이 받고 표지를 단다), 겉 미수렴은 **답이 아니다**. 한 이름으로 합치면 결함이 한 층 아래로 돌아온다.
+VERDICT_KINDS = ("답", "답(속 미수렴)", "불수락", "거절")
+
+
+def verdict_of(r) -> Verdict:
+    """결과 하나의 판정 — 도구 · 시험 · 집계가 쓰는 한 읽기(착지 3, 초안 7f2d8d2e). 새 규칙은 없다: `answer_verdict` 를 부르고
+    속 기록 둘(interior 의 `values["converged"]` · C71 의 `unconverged_inputs`)을 읽을 뿐이고, 빌드의 `answer_verdict` 호출은 그대로다.
+    interior 결과와 `payload.Result` 둘 다 받는다 — 순환 밖 `payload.Result` 는 converged None(«순환 위가 아님»)이라 applicable 만이 가른다."""
+    if not r.applicable:
+        return Verdict("거절", r.reason or "")
+    if getattr(r, "cycles", ()) and r.converged is False:
+        return Verdict("불수락", "미수렴 1차 통과값")          # Result.evidence 자신의 말
+    why = answer_verdict(r)
+    if why is not None:
+        return Verdict("불수락", why)
+    tags: list = []
+    answer_verdict(r, tags)
+    inner = [t for t in tags if t.startswith("속 풀이 미수렴")]
+    inner += [f"unconverged input: {s}" for s in (getattr(r, "unconverged_inputs", ()) or ())]
+    if inner:
+        return Verdict("답(속 미수렴)", " · ".join(inner))
+    return Verdict("답")
+
+
+def is_answer(r) -> bool:
+    """답으로 셀 수 있나 — 답을 세는 집계는 이것만 쓴다(`.applicable` 을 판정으로 읽지 않는다)."""
+    return verdict_of(r).kind in ("답", "답(속 미수렴)")
+
 def _melt_family(st) -> tuple[float, float, float] | None:
     """구조의 부분 용융 구간 [p_lo, p_hi] GPa(0 < φ < 1 인 암석 표본의 압력 범위)와 그 구조의 표본 압력 간격 Δp_s GPa
     (암석 표본 압력 간격의 중앙값, C152 ⑤) — 없으면 None."""

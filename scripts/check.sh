@@ -837,6 +837,10 @@ step "scripts/test_interface_side_labels.py" bash -c 'python3 scripts/test_inter
 # 게이트 자신: 추적 test_*.py 가 전부 여기서 불리거나 이름 박힌 제외 목록(까닭)에 있는가 (C129). ~1 s.
 step "scripts/test_check_unwired_tests.py" bash -c 'python3 scripts/test_check_unwired_tests.py'
 step "scripts/check_unwired_tests.py" bash -c 'python3 scripts/check_unwired_tests.py'
+# 게이트 자신: 결과의 `.applicable` 을 판정(답인가)으로 읽는 자리가 기준표보다 늘지 않는가 — 새 읽기는 verdict_of / is_answer 로,
+#   지금 있는 자리는 옮겨 가며 기준표를 낮춘다 (착지 3, verdict_of 초안 7f2d8d2e §2). AST 훑기, ~2 s.
+step "scripts/test_check_verdict_reads.py" bash -c 'python3 scripts/test_check_verdict_reads.py'
+step "scripts/check_verdict_reads.py" bash -c 'python3 scripts/check_verdict_reads.py'
 step "scripts/pipeline/validate.py" bash -c 'python3 scripts/pipeline/validate.py'
 step "scripts/refs/validate_plasma_temp.py" bash -c 'python3 scripts/refs/validate_plasma_temp.py'
 
@@ -1299,6 +1303,8 @@ step "test_smooth_table.py" bash -c 'cd engine && exec python3 test_smooth_table
 #   이름 없는 실패 없이 걷는가 (C164 메모 1 · 5). 풀이 3 + 고정 p_c 적분 약 27 번 — 가벼운 시험(등록본이 «light test» 로 둠).
 #   5585f6e2 가 들였으나 이 단계가 없어 C129(check_unwired_tests)가 빨갛게 잡았다.
 step "test_c164_knives.py" bash -c 'cd engine && exec python3 test_c164_knives.py'
+# 판정 한 읽기(verdict_of)의 네 종류 — 답(지구 풀이 한 번) · 답(속 미수렴) · 불수락 · 거절(심은 사본과 작은 Result) (착지 3).
+step "test_verdict_of.py" bash -c 'cd engine && exec python3 test_verdict_of.py'
 # 상 곁표 (2026-09-04, 오너 채택 패턴). 키 집합 = eos 가 내는 상, 채운 칸은 등급·출처, authored 는 두 표지, 채움/전체를 출력한다.
 step "test_phase_tables.py" bash -c 'cd engine && exec python3 test_phase_tables.py'
 # 조석 가열 (C30). 이오 밴드 재현·판도라 보드 45 W/m² 재현(0.75 %)·×Io 규약 R⁵·§6.1/§6.2 라벨 표·거절 넷이 앵커다.

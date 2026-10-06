@@ -1,0 +1,174 @@
+{
+ "engine/check_contracts.py": {
+  "c68_merge_rule": 1,
+  "main": 3
+ },
+ "engine/dynamo_rocky.py": {
+  "_from_state": 1
+ },
+ "engine/dynamo_table.py": {
+  "<module>": 1
+ },
+ "engine/interior.py": {
+  "_from_state": 1,
+  "_infer_from_state": 1,
+  "_porous_rock_verdict": 4,
+  "_solve_from_state": 1,
+  "_solve_ice_for_radius": 3,
+  "fit_sulphur_to_core_radius": 3,
+  "infer_composition": 8,
+  "infer_composition.at": 2,
+  "infer_composition.f": 1
+ },
+ "engine/mass_radius.py": {
+  "_from_state": 1,
+  "assign": 1,
+  "density_gate": 1
+ },
+ "engine/payload.py": {
+  "Result.evidence": 1
+ },
+ "engine/rocky_roster.py": {
+  "_outcome": 1,
+  "rows": 1
+ },
+ "engine/run.py": {
+  "solve": 1
+ },
+ "engine/samuel_structure.py": {
+  "mars_profile": 1
+ },
+ "engine/state.py": {
+  "BodyState._find": 1,
+  "BodyState._producer": 1,
+  "BodyState.declined": 1,
+  "BodyState.report": 1,
+  "BodyState.resolved": 1
+ },
+ "engine/structure_grid.py": {
+  "_adaptive._take": 1,
+  "_adaptive.prefetch": 1,
+  "_fires": 1,
+  "_light": 2,
+  "_node_verdict": 1,
+  "_recheck": 1,
+  "_solve_raw.one": 1,
+  "build": 8
+ },
+ "engine/test_basal_layer.py": {
+  "<module>": 4
+ },
+ "engine/test_body_class.py": {
+  "main": 3
+ },
+ "engine/test_cmb_flux.py": {
+  "main": 4
+ },
+ "engine/test_core_energy.py": {
+  "main": 7
+ },
+ "engine/test_core_entropy.py": {
+  "main": 7
+ },
+ "engine/test_core_history.py": {
+  "<module>": 3
+ },
+ "engine/test_core_light_elements.py": {
+  "<module>": 8
+ },
+ "engine/test_core_state.py": {
+  "main": 5
+ },
+ "engine/test_dynamo.py": {
+  "<module>": 3
+ },
+ "engine/test_dynamo_rocky.py": {
+  "main": 7
+ },
+ "engine/test_fe_s.py": {
+  "<module>": 6,
+  "_consumer_ok": 1
+ },
+ "engine/test_giant.py": {
+  "main": 11,
+  "table": 1
+ },
+ "engine/test_ice_giant.py": {
+  "<module>": 1,
+  "_clamp_invariance": 1,
+  "_live": 3,
+  "_record": 2,
+  "main": 1,
+  "refresh": 1
+ },
+ "engine/test_interface_jumps.py": {
+  "<module>": 8
+ },
+ "engine/test_interior.py": {
+  "ice_mass_ceiling": 2,
+  "icy_table": 2,
+  "main": 23,
+  "mass_ceiling": 1,
+  "print_middle_rung_bands": 1,
+  "print_serpentine_bands": 1,
+  "roster_table": 1
+ },
+ "engine/test_interior_ocean.py": {
+  "main": 1
+ },
+ "engine/test_lithosphere.py": {
+  "<module>": 5
+ },
+ "engine/test_mantle_composition.py": {
+  "<module>": 3
+ },
+ "engine/test_mantle_flux.py": {
+  "main": 4
+ },
+ "engine/test_mars_sulphur.py": {
+  "_bracket_miss": 1,
+  "check": 1,
+  "refresh": 1
+ },
+ "engine/test_mass_radius.py": {
+  "main": 7
+ },
+ "engine/test_mixture.py": {
+  "main": 10,
+  "table": 1
+ },
+ "engine/test_porosity.py": {
+  "_kbo_rows": 2,
+  "main": 2,
+  "transition_mass": 1
+ },
+ "engine/test_preset_override.py": {
+  "<module>": 7
+ },
+ "engine/test_radiogenic.py": {
+  "main": 21
+ },
+ "engine/test_rocky_roster.py": {
+  "main": 2
+ },
+ "engine/test_structure_grid.py": {
+  "<module>": 8,
+  "_hist_solve": 1,
+  "_refusal2081": 1
+ },
+ "engine/test_tectonic_regime.py": {
+  "<module>": 2
+ },
+ "engine/test_tidal_heating.py": {
+  "main": 8
+ },
+ "engine/test_water_column_steam.py": {
+  "<module>": 1
+ },
+ "engine/tools/basal_sulphur_scan.py": {
+  "_one": 3
+ },
+ "engine/tools/c55_cells.py": {
+  "consumer_cell": 1
+ }
+}

@@ -19,6 +19,12 @@
   globs: []
 "scripts/check_unwired_tests.py":
   globs: ["**"]
+"scripts/test_check_verdict_reads.py":  # by hand: synthetic sources in memory, reads no tracked file as data
+  globs: []
+  hand: true
+"scripts/check_verdict_reads.py":  # by hand: parses every tracked engine/*.py, engine/tools/*.py, scripts/*.py and reads the baseline
+  globs: ["engine/*.py", "engine/tools/*.py", "scripts/*.py", "scripts/verdict_reads_baseline.json"]
+  hand: true
 "scripts/pipeline/validate.py":
   globs: []
 "scripts/refs/validate_plasma_temp.py":
@@ -239,6 +245,9 @@
   globs: ["engine/mantle_tables/*.json"]
   hand: true
 "test_c164_knives.py":  # by hand: solves and integrates through interior / eos modules (.py), reads no tracked data file (C164 notes 1, 5)
+  globs: []
+  hand: true
+"test_verdict_of.py":  # by hand: one Earth solve through interior / eos modules (.py), reads no tracked data file
   globs: []
   hand: true
 "test_phase_tables.py":
