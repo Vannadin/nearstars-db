@@ -1295,6 +1295,10 @@ step "test_hobby_table.py" bash -c 'cd engine && exec python3 test_hobby_table.p
 # 공용 표 보간(smooth_table)의 판정 행 — 격자점 그대로 · 넘침 없음 · C¹(들쭉날쭉한 가장자리 포함) · 꺾인 표의 계단 (C157 메모 10 §3 행 5–6).
 #   97c8031c 부터 있었으나 이 단계가 없어 C129(check_unwired_tests)가 빨갛게 잡았다 — 가드 행 센서스 H4.
 step "test_smooth_table.py" bash -c 'cd engine && exec python3 test_smooth_table.py'
+# C164 판정 행 — 남긴 고침 둘(상 경계 착지 걸음의 옛 상 밀도 · 뜨거운 표면 반 걸음)을 끄면 톱니가 되살아나고 켜면 사라지는가, 상수 밀도 층을
+#   이름 없는 실패 없이 걷는가 (C164 메모 1 · 5). 풀이 3 + 고정 p_c 적분 약 27 번 — 가벼운 시험(등록본이 «light test» 로 둠).
+#   5585f6e2 가 들였으나 이 단계가 없어 C129(check_unwired_tests)가 빨갛게 잡았다.
+step "test_c164_knives.py" bash -c 'cd engine && exec python3 test_c164_knives.py'
 # 상 곁표 (2026-09-04, 오너 채택 패턴). 키 집합 = eos 가 내는 상, 채운 칸은 등급·출처, authored 는 두 표지, 채움/전체를 출력한다.
 step "test_phase_tables.py" bash -c 'cd engine && exec python3 test_phase_tables.py'
 # 조석 가열 (C30). 이오 밴드 재현·판도라 보드 45 W/m² 재현(0.75 %)·×Io 규약 R⁵·§6.1/§6.2 라벨 표·거절 넷이 앵커다.

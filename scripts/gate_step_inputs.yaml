@@ -238,6 +238,9 @@
 "test_smooth_table.py":  # C157 note 10; reads the Mars mantle table (MANTLE_TABLE_DIR or engine/mantle_tables) and the water / ammonia tables through their modules — declared by hand, the next census confirms
   globs: ["engine/mantle_tables/*.json"]
   hand: true
+"test_c164_knives.py":  # by hand: solves and integrates through interior / eos modules (.py), reads no tracked data file (C164 notes 1, 5)
+  globs: []
+  hand: true
 "test_phase_tables.py":
   globs: []
 "test_tidal_heating.py":
