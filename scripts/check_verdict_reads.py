@@ -21,6 +21,15 @@ means the baseline is stale and is lowered in the same commit.
 `--write-baseline` writes the current sites but **refuses any site that rises** against the baseline committed at
 HEAD (audit 89): the baseline only shrinks, as reads migrate to `verdict_of` / `is_answer` or get a reason.
 Report mode (`--root DIR --report`): print the counts for any tree (the artifacts repo's kits), rc 0.
+
+**Raising the baseline is a registration** (as with `gate_expected_red.yaml`: «칸을 더하거나 빼는 것은 등록»). The gate
+compares only to the committed file, and an isolated archive has no HEAD to diff, so a hand-raised baseline would pass.
+Every diff of `verdict_reads_baseline.json` goes to audit. A fall is written by `--write-baseline` in the commit that
+removes the read.
+
+Stated limit: a swap between textually identical sites in one function passes. Removing one `if r.applicable:` and
+adding another `if r.applicable:` in the same function leaves the key «r.applicable» at the same count. The key is
+text, not position, so that a moved line still matches.
 """
 from __future__ import annotations
 
