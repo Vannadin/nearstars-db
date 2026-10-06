@@ -224,7 +224,7 @@ class Structure:
                  "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached",
                  "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void", "crust_blocked", "finish_subst",
                  "r_grad_base", "r_grad_top", "floor_truncated", "hot_water_filled", "boiling_flips",
-                 "onset_graze")
+                 "onset_graze", "plateau_band")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
@@ -274,6 +274,7 @@ class Structure:
         # C157 메모 5 — 기둥이 경계 곡선(고상선 · 물 경계)에 접선으로 가장 가까이 간 자리 (곡선, 재료, P, T − T_경계) · 없으면
         #   None. `integrate` 가 채운다. 값 밖(스침 표지의 재료만).
         self.onset_graze = None
+        self.plateau_band = None         # C152 메모 8 ③ — 평탄 띠 메모(이 구조가 바깥 끝 가운데의 답일 때만), 구조에 붙여 id 키 표가 없다
         # C152 메모 3 — 마무리 사격이 안 닫혀 닫힌 시행으로 바꿨으면 (고른 T_c, 바꾼 T_c, 그 ln(T_surf/T_pot)). shoot 이 채운다.
         self.finish_subst = None
         # 적분이 멈춘 압력 [Pa]. 응축상 천체는 0 이다 — 표면이 P = 0 이니까. 기체 외피가
@@ -910,6 +911,7 @@ def answer_verdict(result, tags: list | None = None) -> str | None:
         tags.append("속 풀이 미수렴 — " + ", ".join((result.values or {}).get("unconverged_solvers") or ["(이름 없음)"]))
     if tags is not None and result.applicable and result.converged is not False:
         tags.extend(n for n in (result.notes or ()) if n.startswith(GRAZE_REASON_HEAD))   # C157 메모 5 — 스침 표지
+        tags.extend(n for n in (result.notes or ()) if n.startswith(PLATEAU_BAND_HEAD))   # C152 메모 8 ③ — 평탄 띠
     if not result.applicable:
         return f"거절 — {(result.reason or '')[:160]}"
     if result.converged is False:
@@ -2398,6 +2400,28 @@ T_DAMPING = 0.5
 # 그 상수를 옮기는 항목(둘째 축)이 완화 범위까지 옮길지 **고를 수 있게** 하려고 이름을 따로 둔다.
 # 띠 위(예: 지각 케이스의 12.50 %)는 괄호·regula falsi 갈래가 이미 답하던 자리다.
 T_DAMPING_MAX_DEV = T_DIVERGENCE_MIN
+# C152 메모 8 ② — **이름 댄 출구 뒤의 이어 돌기 한 벌.** 오늘 고리가 괄호 · 연장 없이 예산을 다 써 표면 온도가 허용 밖으로 끝나면
+#   (아래 STALL_REASON_HEAD 자리), 마지막 T_c · 중심압에서 T_PASSES 통과를 새로 한 벌 더 돈다(완화도 새로). 표면 바로 밑 부분
+#   용융 창이 dT_s/dT_c 를 평소의 1/30 로 눕혀 비례 갱신이 기다가 예산이 끝나는 자리(화성 1773–1782 K)에서 그 한 벌이 근에 닿는다.
+#   오늘 고리가 답하는 곳은 그 출구에 안 닿으므로 비트 그대로다. 이어 돌기 안에서 또 닿으면 다시 안 돌고 거절한다(재귀 없음).
+#   ⚠ 할선(기는 갈래)은 뺐다(지휘 2026-10-06 (b)): 화성 아홉 점에서 할선이 둘을 살리고 하나(1780.5 K, C157 질량 뜀)를 잃어
+#   거절 구간 수가 같았고, 갈래가 하나 적고, C157 뜀이 갈래 경로가 아니라 그 T_c 의 성질로 남는다.
+#: C152 메모 8 ② — 이어 돌기 스위치(FLAG). 끄면 그 출구가 곧바로 이름 댄 거절(STALL_REASON_HEAD) — 시험의 음성 대조.
+STALL_CONTINUATION = True
+#: C152 메모 8 — 예산이 괄호 · 연장 없이 끝나 표면 온도가 허용 밖이면 내는 이름 댄 거절의 앞머리(예전: 이름 없는 converged=False)
+STALL_REASON_HEAD = "표면온도 고리가 예산 안에 근을 못 만났다"
+# C152 메모 8 ③ — **평탄 띠.** 답(닫히고 표면 온도가 닿은 시행)이 나오면 ln T_c ± PLATEAU_DELTA 에서 SHOOT_TOL 사격 둘을 더 쏜다.
+#   한쪽이라도 표면 온도 허용 안이면 허용을 만족하는 T_c 집합이 정상 고리(d ln T_s / d ln T_c ≈ 1, 허용 폭 ±T_SURFACE_TOL)의 열 배
+#   넘게 넓다 — 선언 허용에서 중심 온도가 하나로 안 정해진다(화성 1770.5–1772 K: 바깥 끝 사이 약 165 K). 그때는 답의 T_c 에서
+#   양쪽으로 PLATEAU_GRID_K 걸음씩 걸어 **평탄 전체**의 바깥 끝(허용 안인 가장 먼 T_c)을 찾는다 — 근이 든 조각만 보면 모호함을
+#   5–7 배 작게 본다(출렁임이 집합을 조각낸다, 측정 2b6a7bb §6). |y| 가 PLATEAU_EXIT 를 넘거나 사격이 안 풀리면 그쪽 걷기를 멈춘다.
+#   바깥 끝 가운데에서 다시 풀어 그 구조를 답으로 내고, 띠(T_c 아래 · 위 끝, 폭, r_b 퍼짐)를 메모 한 줄로 단다(오너 승인 2026-10-06).
+PLATEAU_PROBE = True       # FLAG — 끄면 평탄 띠만 빠진다(시험의 음성 대조)
+PLATEAU_DELTA = 10.0 * T_SURFACE_TOL   # judgment — 정상 허용 폭의 열 배(측정 전에 고정, 2026-10-06)
+PLATEAU_GRID_K = 4.0       # 오너 승인 — 평탄 훑기 걸음(바깥 끝 ±4 K)
+PLATEAU_EXIT = 3.0 * T_SURFACE_TOL     # judgment — 출렁임(표준편차 ≤ 3.5e-4)의 여덟 배 넘게 밖이면 평탄을 벗어난 것
+PLATEAU_SCAN_MAX = 0.2     # judgment — 한쪽 걷기의 ln T_c 상한(≈ 20 %, 화성 평탄 약 6 % 의 세 배 넘게)
+PLATEAU_BAND_HEAD = "판정 불가 띠 — 표면온도 평탄(plateau)"
 # 온도 괄호잡기의 시도 횟수. 한 번에 1.6배씩 올린다.
 T_BRACKET_TRIES = 12
 # C152 ④ — 바깥 고리의 재시도가 벽에 막히면, 앞서 풀린 시행과 그 벽 사이에서 벽의 자리를 찾는 이분의 허용 · 예산.
@@ -2412,6 +2436,10 @@ SIGN_S_MAX = 1.0
 WALL_LOCATE_SHOTS = [0]       # C152 ④ — 벽 자리 찾기 사격 수(값 밖 셈, 수락 §3.3)
 #: C152 메모 6 — 느슨한 허용의 시행이 Brent 괄호 끝인 채로 뜀 · 괄호 예산 거절에 닿아 SHOOT_TOL 고리로 다시 돈 횟수(값 밖 셈)
 TIGHT_RECHECKS = [0]
+PLATEAU_PROBES = [0]          # C152 메모 8 ③ — 평탄 판정 사격 수(값 밖 셈, 비용 줄). 답이 난 바깥 고리마다 2(지구는 암석권 고정점 반복마다)
+PLATEAU_SCANS = [0]           # C152 메모 8 ③ — 평탄 띠 훑기(바깥 끝 찾기)가 돈 횟수(값 밖 셈)
+STALL_CONTINUATIONS = [0]     # C152 메모 8 ② — 이름 댄 출구 뒤 이어 돌기가 걸린 횟수(값 밖 셈)
+PLATEAU_REOPEN_SKIPS = [0]    # C152 메모 8 ③ — 가족 다시 닫기(_REOPEN) 안의 답이라 평탄 판정을 건너뛴 횟수(값 밖 셈, 감사 89)
 #: C152 메모 6 한 스위치 — False 면 메모 6 앞(느슨한 괄호 끝 · 물려받은 예산의 거절이 그대로 선다). 시험의 음성 대조용.
 TIGHT_RERUN = True
 #: C152 메모 7 — 다시 돈 고리의 뜀 · 예산 거절 문구 머리(이 둘에만 바꾼 느슨한 고리의 쌍 기록을 덧붙인다)와 그 덧붙임의 머리
@@ -2528,6 +2556,34 @@ def _graze_tag() -> str:
     return format_graze(*pair)
 
 
+def _stall_reason(t_pot: float) -> str:
+    """C152 메모 8 — 예산이 괄호 · 연장 없이 끝난 고리의 이름 댄 거절: 바깥 호출의 시행(`_LOOP_TRIALS`) 수, 잔차 부호,
+    ln T_s 대 ln T_c 의 최소제곱 기울기와 그 둘레 출렁임(표준편차), 마지막 시행. 시행이 셋 미만이면 기울기 없이."""
+    seq = _LOOP_TRIALS[0] or []
+    xs = [math.log(tc) for tc, ts, _g in seq]
+    ys = [math.log(ts / t_pot) for tc, ts, _g in seq]
+    n = len(ys)
+    head = f"{STALL_REASON_HEAD} — 시행 {n} 번"
+    if n == 0:
+        return head + " (C152 메모 8)"
+    pos = sum(1 for y in ys if y > 0.0)
+    tail = f", 잔차 부호 + {pos} · − {n - pos}, 마지막 T_c {seq[-1][0]:.6g} K 에서 y {ys[-1]:+.3e}"
+    k = n - 1                    # 기울기 · 출렁임은 마지막 시행과 부호가 같은 꼬리 구간에서만(첫 추측 같은 먼 시행이 끌지 않게)
+    while k > 0 and (ys[k - 1] > 0.0) == (ys[-1] > 0.0):
+        k -= 1
+    xs, ys = xs[k:], ys[k:]
+    n = len(ys)
+    tail += f", 같은 부호 꼬리 {n} 시행"
+    if n >= 3 and max(xs) > min(xs):
+        mx, my = sum(xs) / n, sum(ys) / n
+        sxx = sum((x - mx) ** 2 for x in xs)
+        sl = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sxx
+        wig = math.sqrt(sum((y - my - sl * (x - mx)) ** 2 for x, y in zip(xs, ys)) / n)
+        tail += (f", 기울기 d ln T_s / d ln T_c {sl:.3g}(평소 ≈ 1) · 그 둘레 출렁임 {wig:.2e} "
+                 f"(허용 {T_SURFACE_TOL:g})")
+    return head + tail + " (C152 메모 8)" + _graze_suffix()
+
+
 def _graze_suffix() -> str:
     """C152 뜀 · 예산 거절 문구 끝 — 쌍이 있으면 늘 민감도 S 를 싣고(메모 7 규칙 1), 표지면 스침까지. 쌍이 없으면 빈 문자열."""
     pair = _loop_pair()
@@ -2570,7 +2626,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
           lithosphere: dict | None = None,
           p_hint: float | None = None,
           _t_start: float | None = None, _loose: bool = True,
-          _passes: int | None = None) -> tuple[Structure, bool]:
+          _passes: int | None = None, _cont: bool = False) -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
 
     `_t_start` · `_loose` · `_passes` 는 끝맺음 뒤 이어 돌기(prereg-shoot-warm-start 덧붙임 2 HOLD 반영) 전용 —
@@ -3016,7 +3072,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
                          serpentinisation, differentiation_front, crust_rock_fraction, crust_porosity,
                          envelope_z_profile, ammonia_mass_fraction=ammonia_mass_fraction,
                          interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere,
-                         p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=max(passes, 1))
+                         p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=max(passes, 1), _cont=_cont)
     # C152 규칙 2 (감사 e2 HOLD 2) — 예산이 0 을 사이에 둔 괄호 안에서 끝났으면 아래 거절이 그 괄호를 함께 적는다.
     straddle_note = (f" (C152: 0 을 사이에 둔 괄호 [{math.exp(dlo[0]):.6g}, {math.exp(dhi[0]):.6g}] K 안에서 예산이 끝났다)"
                      if dlo is not None and dhi is not None else "")
@@ -3106,7 +3162,101 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
     _refuse_if_below_floor(st, core_material)
     _refuse_if_water_filled(st)
     met = _surface_temperature_met(st, t_pot)
+    if not met and reps is None and st.t_surface > 0.0:
+        # C152 메모 8 — 괄호도 연장도 없이 예산이 끝나 표면 온도가 허용 밖: 이름 없는 converged=False 대신 이름 댄 거절.
+        #   이어 돌기(덧붙임 2 A)의 안쪽 호출이 여기 닿으면 바깥 호출의 시행까지(_LOOP_TRIALS) 세어 적는다.
+        if STALL_CONTINUATION and not _cont:
+            # 이 고리의 미달은 이어 돌기에 넘기는 시행이다 — AND 밖(trial)으로 적어, 이어 돌기가 답하면 그 답이 «속 미수렴» 표지를 안 단다.
+            convergence.note("interior._surface_temperature", False, trial=True)
+            STALL_CONTINUATIONS[0] += 1
+            # C152 메모 8 ② — 오늘 고리가 여기(이름 댄 출구)에 닿은 뒤에만 이어 돌기 한 벌: 마지막 T_c · 중심압에서 T_PASSES 통과(완화도 새로).
+            #   오늘 고리가 답하는 곳은 이 줄에 안 닿으므로 비트 그대로다.
+            #   이어 돌기 안(_cont=True)에서 또 여기 닿으면 다시 돌지 않고 거절한다(재귀 없음).
+            return shoot(mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z, envelope_z_rock_fraction,
+                         differentiated, potential_temperature, boundary_temperature_jump, mantle_rock_fraction,
+                         serpentinisation, differentiation_front, crust_rock_fraction, crust_porosity,
+                         envelope_z_profile, ammonia_mass_fraction=ammonia_mass_fraction,
+                         interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere,
+                         p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=T_PASSES, _cont=True)
+        convergence.note("interior._surface_temperature", met)   # C138 — 이름 없던 2367 행 길(T 형)
+        raise ValueError(_stall_reason(t_pot))
     convergence.note("interior._surface_temperature", met)   # C138 — 이름 없던 2367 행 길(T 형)
+    if met and converged and reps is None and PLATEAU_PROBE and _REOPEN[0]:
+        PLATEAU_REOPEN_SKIPS[0] += 1
+    if met and converged and reps is None and PLATEAU_PROBE and not _REOPEN[0]:
+        # C152 메모 8 ③ — 평탄 띠. 시행 기록(_LOOP_TRIALS — 스침 표지가 읽음)은 그대로 둔다.
+        saved = list(_LOOP_TRIALS[0]) if _LOOP_TRIALS[0] is not None else None
+
+        traces = []              # (사격이 낸 구조, 그 사격의 따로 연 기록) — 받아들인 구조와 «같은 객체» 인 짝만 adopt(감사 89: T_c 키는 겹친다)
+
+        def pshot(t_p, p_h):
+            # 감사 89 — 판정 · 훑기 사격의 직접 기록(_narrow_bracket 등)과 적분이 답의 AND 에 안 섞이게 따로 연 기록에서 쏜다.
+            PLATEAU_PROBES[0] += 1
+            with convergence.isolated() as sub:
+                try:
+                    got_p, ok_p = _shoot_pressure(*args, t_center=t_p, t_pot=t_pot, p_hint=p_h, tol=SHOOT_TOL, **kw)
+                except (PhaseGap, Unbound, NoCompactRoot, GridExceeded):
+                    return None
+            traces.append((got_p, sub))
+            return got_p if ok_p and got_p.t_surface > 0.0 else None
+
+        try:
+            probes = [pshot(t_c * math.exp(sg_ * PLATEAU_DELTA), st.p_center) for sg_ in (-1.0, 1.0)]
+            # 판정: 사격 하나라도 허용 안이면 평탄. 허용 밖이어도 |y| < PLATEAU_EXIT 면(평탄을 확실히 벗어나지 않음) 훑어 본다 —
+            #   출렁임이 허용 안 집합을 조각내 ±δ 가 빈틈에 떨어질 수 있다(화성 1772.0 K: 근 2823 K, 2851 K 는 빈틈).
+            #   훑은 뒤 허용 안 격자점이 근에서 δ 넘게 떨어져 있어야 평탄 띠다. 보통 근은 ±δ 에서 |y| ≈ 10·허용이라 사격 둘로 끝난다.
+            near_flat = any(g is not None and abs(math.log(g.t_surface / t_pot)) < PLATEAU_EXIT for g in probes)
+            if near_flat:
+                PLATEAU_SCANS[0] += 1
+                inside = {t_c: st}
+                ends = []
+                for sg_ in (-1.0, 1.0):
+                    far, hint_p, k = t_c, st.p_center, 0
+                    while True:
+                        k += 1
+                        t_k = t_c + sg_ * k * PLATEAU_GRID_K
+                        if t_k <= 0.0 or abs(math.log(t_k / t_c)) > PLATEAU_SCAN_MAX:
+                            break
+                        g = pshot(t_k, hint_p)
+                        if g is None:
+                            break
+                        hint_p = g.p_center
+                        if _surface_temperature_met(g, t_pot):
+                            far, inside[t_k] = t_k, g
+                        elif abs(math.log(g.t_surface / t_pot)) >= PLATEAU_EXIT:
+                            break
+                    ends.append(far)
+                lo_t, hi_t = ends
+            if near_flat and max(abs(math.log(lo_t / t_c)), abs(math.log(hi_t / t_c))) >= PLATEAU_DELTA:
+                t_mid = 0.5 * (lo_t + hi_t)
+                g_mid = pshot(t_mid, inside[min(inside, key=lambda x: abs(x - t_mid))].p_center)
+                how = "가운데에서 다시 풂"
+                if g_mid is None or not _surface_temperature_met(g_mid, t_pot):
+                    t_mid = min(inside, key=lambda x: (abs(x - t_mid), x))
+                    g_mid, how = inside[t_mid], "가운데가 출렁임에 허용 밖 — 가장 가까운 허용 안 격자점"
+                # 띠 안 허용 격자점의 구조 표 여섯 칸 아래 · 위 끝(structure_grid._params 와 같은 칸, 훑기가 이미 푼 구조에서 — 사격 없음).
+                #   점 + 띠 계약(오너 결정 2026-10-06: 모든 층 출력은 점 + 띠).
+                def _six(g_):
+                    return {"p_cmb": g_.p_cmb or 0.0, "r_cmb": g_.core_radius_m, "r_b": g_.t_cmb / t_pot,
+                            "r_p": g_.radius_m, "g": G * mass_kg / g_.radius_m ** 2, "d_mantle_m": g_.radius_m - g_.core_radius_m}
+                sixes = [_six(g_) for g_ in inside.values() if g_.t_cmb > 0.0 and g_.radius_m > 0.0]
+                rb_txt = ("; 여섯 칸 띠 " + " · ".join(
+                    f"{k} {min(x[k] for x in sixes):.6g}–{max(x[k] for x in sixes):.6g}" for k in sixes[0])
+                    if len(sixes) >= 2 else "")
+                print(f"  [평탄 띠] T_c [{lo_t:.6g}, {hi_t:.6g}] K · 답 {t_mid:.6g} K ({how}) · 허용 안 격자점 {len(inside)}")
+                # 답이 되는 사격의 기록은 받아들인 길이다 — 바깥 기록에 합친다(그래야 답의 AND 가 그 사격의 미수렴을 안 숨긴다).
+                #   짝은 T_c 가 아니라 구조 객체로 찾는다 — 가운데 다시 풀기가 격자점 · 근과 같은 T_c 일 수 있다. 답이 고리의
+                #   근 그 자체(inside 의 첫 칸)면 짝이 없고 그 기록은 이미 바깥에 있다.
+                convergence.adopt(next((sb for g_, sb in traces if g_ is g_mid), None))
+                st, t_c = g_mid, t_mid
+                st.plateau_band = (
+                    f"{PLATEAU_BAND_HEAD} — 허용 {T_SURFACE_TOL:g} 를 만족하는 T_c 가 [{lo_t:.6g}, {hi_t:.6g}] K (폭 "
+                    f"{hi_t - lo_t:.4g} K, {PLATEAU_GRID_K:g} K 격자)이고 값은 그 가운데 T_c {t_mid:.6g} K 의 구조다({how}){rb_txt}. "
+                    "표면 밑 부분 용융 창의 잠열이 단열선 윗끝을 붙잡아 선언 포텐셜 온도가 중심 온도를 이 폭 안으로만 정한다 "
+                    "(C152 메모 8 ③, 오너 승인 2026-10-06)")
+        finally:
+            if saved is not None:
+                _LOOP_TRIALS[0][:] = saved
     return st, converged and met
 
 
@@ -4389,6 +4539,8 @@ def solve(mass_earth: float,
     fam_info = _FAMILY_INFO.get(id(st))
     if id(st) in _GRAZE_INFO:          # C157 메모 5 — 답에 스침 표지(값 그대로, 메모 한 줄)
         notes.append(_GRAZE_INFO[id(st)])
+    if st.plateau_band:                # C152 메모 8 ③ — 답에 평탄 띠(바깥 끝 가운데의 구조가 들고 온 메모 한 줄)
+        notes.append(st.plateau_band)
     _FAMILY_TRAIL["answer"] = _melt_family(st)   # 덧붙임 57 — 돌려주는 구조의 가족 · 표면 어긋남
     _FAMILY_TRAIL["answer_call"] = _FAMILY_TRAIL["returned"].get(id(st))   # 덧붙임 58 ② — 그 구조를 낸 사격 호출
     _FAMILY_TRAIL["dev"] = (abs(st.t_surface / potential_temperature - 1.0)

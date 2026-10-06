@@ -233,6 +233,54 @@ def shot():
         outer.add_shot(holder[0], sub)
 
 
+@contextlib.contextmanager
+def isolated():
+    """C152 메모 8 ③ — 평탄 띠 사격(판정 · 훑기)의 기록을 따로 연다: 그 안의 직접 기록 · 적분은 바깥 기록의 AND · 셈에 안 섞인다.
+    받아들인 사격(띠의 가운데 점)만 `adopt` 로 바깥에 합친다. 열린 기록이 없으면 `None` 을 내고 아무것도 안 한다."""
+    outer = _TRACE.get()
+    if outer is None:
+        yield None
+        return
+    sub = Trace(own=Trace())
+    token = _TRACE.set(sub)
+    try:
+        yield sub
+    finally:
+        _TRACE.reset(token)
+
+
+def adopt(sub: "Trace | None") -> None:
+    """`isolated` 로 연 기록을 **받아들인 길**로 바깥 기록에 합친다 — 직접 기록은 `note` 를 다시 부른 것처럼(own 에도),
+    적분은 `add_shot` 그대로(그래서 `settle` 이 그 적분을 고를 수 있다), 직접 남긴 셈 · 대체 길은 더한다(적분의 몫은
+    `add_shot` 이 더하므로 빼고). 기록이 없거나 `sub` 가 `None` 이면 아무것도 안 한다."""
+    tr = _TRACE.get()
+    if tr is None or sub is None:
+        return
+    own = sub.own or Trace()
+    for site, v in own.sites.items():
+        tr.note(site, v, bracket_checked=site not in own.unchecked,
+                bracket_valid=False if site in own.invalid else None)
+    for site in own.trial_false:
+        tr.note(site, False, trial=True)
+    tr.trial_invalid |= own.trial_invalid
+    tr.substituted.update(own.substituted)           # 오늘 _shoot_pressure 는 note_substituted 를 안 부른다 — 갈 길만 둔다
+    shot_counts: dict[str, int] = {}
+    shot_fallbacks: dict[str, int] = {}
+    for _sid, s2, _status in sub.shots:
+        for k, n in s2.counts.items():
+            shot_counts[k] = shot_counts.get(k, 0) + n
+        for k, n in s2.fallbacks.items():
+            shot_fallbacks[k] = shot_fallbacks.get(k, 0) + n
+    for k, n in sub.counts.items():
+        if n - shot_counts.get(k, 0):
+            tr.counts[k] = tr.counts.get(k, 0) + n - shot_counts.get(k, 0)
+    for k, n in sub.fallbacks.items():
+        if n - shot_fallbacks.get(k, 0):
+            tr.fallbacks[k] = tr.fallbacks.get(k, 0) + n - shot_fallbacks.get(k, 0)
+    for sid, s2, _status in sub.shots:
+        tr.add_shot(sid, s2)
+
+
 def shot_count() -> int:
     """지금 열린 기록에 쌓인 적분 수(풀이 시작점을 잡는 데 쓴다). 기록이 없으면 0."""
     tr = _TRACE.get()

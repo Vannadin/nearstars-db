@@ -611,5 +611,64 @@ finally:
 check("C152 메모 7 음성 — 스침 검출기를 끄면(GRAZE_K 0) 같은 거절에 이름 댄 스침이 없다(시험이 검출기를 읽는다)",
       _w81n is not None and "잔차가 뛴다" in _w81n and interior.parse_graze(_w81n)[1] is None, (_w81n or "")[-120:])
 
+# C152 메모 8 — 진짜 풀이: 화성 1782 K(층 판 표의 평평한 잔차 창, 03 흔적 5b78efac). 이어 돌기를 끄면(STALL_CONTINUATION False)
+#   예산이 괄호 · 연장 없이 끝나 이름 댄 거절(STALL_REASON_HEAD, 같은 부호 꼬리 · 기울기 · 출렁임)이 나오고 — 예전엔 이름 없는
+#   converged=False — 켜면 같은 점이 그 출구 뒤의 이어 돌기 한 벌로 답한다. 층 판 황 앵커(굳힌 box_ceiling 의 cmf)일 때만 이 창에 놓인다.
+import re                              # noqa: E402
+import types as _types                 # noqa: E402
+_mars_body, _ = run.load_body(sg.BODIES_DIR / "mars.yaml")
+_mars_fix = json.loads(interior.SULPHUR_ANCHOR_FILE.read_text(encoding="utf-8"))["fixings"].get("box_ceiling", {})
+_mars_cmf = _mars_fix.get("core_mass_fraction")
+if _mars_cmf is not None and abs(_mars_cmf - 0.2125286604878228) < 1e-9:
+    _solve82, _how82, _ = sg._solver(_mars_body, _types.SimpleNamespace(values={"core_mass_fraction": _mars_cmf}))
+
+    def _mars1782():
+        process_state.reset()
+        with contextlib.redirect_stdout(io.StringIO()):
+            try:
+                return _solve82(1782.0), None
+            except ValueError as e:
+                return None, str(e)
+
+    _cb0 = interior.STALL_CONTINUATION
+    interior.STALL_CONTINUATION = False
+    try:
+        _r82n, _e82n = _mars1782()
+    finally:
+        interior.STALL_CONTINUATION = _cb0
+    _w82n = _e82n or ("" if _r82n is None or _r82n.applicable else (_r82n.reason or ""))
+    check("C152 메모 8 — 화성 1782 K, 이어 돌기 끔: 예산 끝이 이름 댄 거절(같은 부호 꼬리 · 기울기 · 출렁임)",
+          interior.STALL_REASON_HEAD in _w82n and "같은 부호 꼬리" in _w82n and "기울기" in _w82n, _w82n[:200])
+    _r82, _e82 = _mars1782()
+    _t82 = []
+    _v82 = None if _r82 is None else interior.answer_verdict(_r82, _t82)
+    check("C152 메모 8 — 화성 1782 K, 이어 돌기 켬: 같은 점이 이어 돌기로 답한다(속 미수렴 표지 없이)",
+          _r82 is not None and _v82 is None and not any(t.startswith("속 풀이 미수렴") for t in _t82),
+          f"{_v82} {_e82 or ''} · 표지 {_t82} · T_c {None if _r82 is None else _r82.values.get('core_temperature')}")
+    # C152 메모 8 ③ — 화성 1771.5 K(평탄 창, 바깥 끝 사이 약 165 K): 답이 평탄 띠 메모(T_c 아래 · 위 끝 · 폭)를 달고 바깥 끝 가운데의
+    #   구조를 낸다. 음성 — 평탄 띠를 끄면(PLATEAU_PROBE False) 같은 점의 답에 띠 메모가 없다(시험이 띠를 읽는다).
+    def _mars_at(t, probe):
+        _pp0 = interior.PLATEAU_PROBE
+        interior.PLATEAU_PROBE = probe
+        try:
+            process_state.reset()
+            with contextlib.redirect_stdout(io.StringIO()):
+                _r = _solve82(t)
+        finally:
+            interior.PLATEAU_PROBE = _pp0
+        return _r, [n for n in (_r.notes or ()) if n.startswith(interior.PLATEAU_BAND_HEAD)]
+
+    _rb, _band = _mars_at(1771.5, True)
+    _m_band = re.search(r"\[([0-9.]+), ([0-9.]+)\] K \(폭", _band[0]) if _band else None
+    _w_band = float(_m_band.group(2)) - float(_m_band.group(1)) if _m_band else None
+    check("C152 메모 8 ③ — 화성 1771.5 K: 답(답 판정)이 평탄 띠 메모를 달고 띠 폭이 100 K 넘다(측정 164 K)",
+          interior.answer_verdict(_rb) is None and _w_band is not None and _w_band > 100.0,
+          f"{interior.answer_verdict(_rb)} · 폭 {_w_band} · T_c {_rb.values.get('core_temperature') if _rb.applicable else None}")
+    _rn, _bandn = _mars_at(1771.5, False)
+    check("C152 메모 8 ③ 음성 — 평탄 띠를 끄면 같은 점의 답에 띠 메모가 없다",
+          _rn.applicable and not _bandn, f"띠 {len(_bandn)} 줄")
+else:
+    print(f"  [기록] C152 메모 8 화성 1782 · 1771.5 K 네 줄 — 층 판 황 앵커가 아니다(box_ceiling cmf {_mars_cmf!r}): 이 창에 안 놓여 해당 없음")
+
 print(f"  test_structure_grid — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)

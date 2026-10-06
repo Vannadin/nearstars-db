@@ -533,6 +533,19 @@ def _adaptive(name, solve, lo, hi, eps, m_kg, cmf0):
                     depth_max = max(depth_max, d + 1)
                     continue
                 if d + 1 > MAX_DEPTH or (b - a) / 2 < MIN_INTERVAL_K:
+                    # C152 메모 8 ④ — 표지 구간(스침)에 맞닿은 칸이 ε 에 안 들면 짓기를 멈추지 않고 그 구간에 든다:
+                    #   구간 끝을 칸의 먼 끝으로 옮기고 이름 대고 적는다. 맞닿음 = 칸의 한 끝이 그 구간의 끝과 같은 점.
+                    near = [g for g in gaps if g[4:5] == ["onset_graze"] and (g[0] == b or g[1] == a)]
+                    if near:
+                        g = near[0]
+                        if g[0] == b:
+                            g[0] = a
+                        else:
+                            g[1] = b
+                        g[5]["joined_cells"] = g[5].get("joined_cells", 0) + 1
+                        print(f"ε 칸이 표지 구간에 듦(C152 메모 8 ④) — [{a!r}, {b!r}] K (오차 {max(err.values())!r}) → "
+                              f"{g[4]} 구간 [{g[0]!r}, {g[1]!r}] K", flush=True)
+                        continue
                     # 덧붙임 45 — 걸린 한계를 수로. 꺾임 가지가 안 열린 까닭(지문 다름 · 반폭 바닥)도 한 낱말로.
                     hit = ("꺾임 반폭 바닥" if fm == fa and (b - a) / 2 < KINK_MIN_K else
                            "지문 다름" if fm != fa else "깊이 상한" if d + 1 > MAX_DEPTH else "폭 바닥")
