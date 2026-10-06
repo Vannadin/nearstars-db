@@ -126,6 +126,9 @@ def main() -> int:
            f"6: Dante 측정값 이동 — ({dm['internal_temperature']['value_K']:.1f} K, "
            f"{dm['lithosphere_thickness']['value_m']/1e3:.2f} km), 기록 (2122.2, 146.80)")
     hm = meas.get("Hades (A b II)", {})
+    # 가드 행 센서스 H2 (2026-10-06) — Dante 처럼 근이 있음을 먼저 판정한다. 없으면 아래 두 행이 말없이 사라졌다.
+    ok(hm.get("internal_temperature") is not None,
+       "6: Hades 가 근이 없다 — 측정값(1843.9 K, 224.08 km)과 다르다")
     if hm.get("internal_temperature"):
         ok(abs(hm["internal_temperature"]["value_K"] - 1843.9) < 0.5
            and abs(hm["lithosphere_thickness"]["value_m"] - 224.08e3) < 0.5e3,
