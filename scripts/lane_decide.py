@@ -27,7 +27,7 @@ ALWAYS_FULL = re.compile(
     r"(^scripts/.*\.sh$)|(^engine/chain\.yaml$)|(^engine/requirements\.txt$)"
     r"|(^engine/ice_giant_anchor\.json$)|(^engine/bodies/.*\.(yaml|json)$)"
     r"|(^engine/.*\.(yaml|json|csv|tsv|txt)$)|(^scripts/.*\.py$)"
-    r"|(^scripts/gate_expected_red\.yaml$)")
+    r"|(^scripts/gate_expected_red\.yaml$)|(^scripts/verdict_reads_baseline\.json$)")   # 판정 읽기 기준표(착지 3) — 손으로 올린 기준표가 quick 을 못 탄다
 #: 기대 빨강 목록 (C128) — 이 칸과 정확히 같은 빨강만 있는 `rc≠0` full 을 인정한다.
 EXPECTED_RED = pathlib.Path(__file__).with_name("gate_expected_red.yaml")
 #: 산문·미러·생성 페이지. 계산에 안 들어간다.

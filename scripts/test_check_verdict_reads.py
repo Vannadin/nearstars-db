@@ -22,27 +22,28 @@ EMPTY = 'def f(r):\n    print(r.applicable)  # verdict-ok:\n'
 
 
 def test_edge_flagged():
-    assert [(ln, q) for ln, q, _ in reads(EDGE)] == [(2, "f")]
+    assert [(ln, q) for ln, q, _w, _s in reads(EDGE)] == [(2, "f")]
 
 
 def test_getattr_flagged():
-    assert [(ln, w) for ln, _, w in reads(TIGHT54)] == [(2, "getattr")]
+    assert [(ln, w) for ln, _q, w, _s in reads(TIGHT54)] == [(2, "getattr")]
 
 
 def test_return_source_and_callers_flagged():
     got = reads(TIGHT108)
-    assert (3, "answers", "getattr") in got
-    callers = [(ln, q) for ln, q, w in got if w.startswith("answers()")]
+    assert (3, "answers", "getattr") in [r[:3] for r in got]
+    callers = [(ln, q) for ln, q, w, _s in got if w.startswith("answers()")]
     assert callers == [(5, "g"), (7, "g")], callers
 
 
 def test_negative_polarity_flagged():
-    assert [(ln, q) for ln, q, _ in reads(NEG)] == [(4, "f")]
+    assert [(ln, q) for ln, q, _w, _s in reads(NEG)] == [(4, "f")]
+    assert reads(NEG)[0][3] == "notres.applicable"     # 복합 문장(if)의 자리 열쇠는 머리 식
 
 
 def test_empty_escape_is_a_fail():
     res = c.scan_source(EMPTY)
-    assert res["empty_ok"] == [2] and res["reads"] == [(2, "f", ".applicable")] and res["escaped"] == []
+    assert res["empty_ok"] == [2] and [r[:3] for r in res["reads"]] == [(2, "f", ".applicable")] and res["escaped"] == []
 
 
 def test_rewrites_pass():
@@ -62,7 +63,23 @@ def test_escaped_source_does_not_propagate():
 def test_exempt_bodies():
     src = ('def answer_verdict(r, tags=None):\n    if not r.applicable:\n        return "거절"\n'
            'def verdict_of(r):\n    return r.applicable\ndef is_answer(r):\n    return r.applicable\n')
-    assert reads(src) == []
+    assert c.scan_source(src, c.EXEMPT_FILE)["reads"] == []
+    # 감사 89 — 면제는 engine/interior.py 의 그 셋뿐: 다른 파일의 같은 이름 도우미는 읽기를 숨기지 못한다
+    assert len(c.scan_source(src, "engine/tools/x.py")["reads"]) == 3
+
+
+def test_swap_is_a_rise():
+    """감사 89 ① — 한 함수 안에서 읽기 하나를 빼고 다른 읽기를 넣으면 함수별 셈은 같지만 자리 열쇠는 늘어난다."""
+    old = c.sites({"a.py": c.scan_source('def f(r, s):\n    if r.applicable:\n        pass\n')})
+    new = c.sites({"a.py": c.scan_source('def f(r, s):\n    ok = s.applicable\n')})
+    assert any("새 판정 읽기" in f for f in c.compare(new, old))
+    assert [k[0][2] for k in c.rises(new, old)] == ["ok=s.applicable"]
+
+
+def test_moved_line_still_matches():
+    old = c.sites({"a.py": c.scan_source('def f(r):\n    if r.applicable:\n        pass\n')})
+    new = c.sites({"a.py": c.scan_source('def f(r):\n    x = 1\n\n    if (r.applicable):\n        x = 2\n')})
+    assert c.compare(new, old) == [] and c.rises(new, old) == []
 
 
 def test_loose_listed_not_flagged():
@@ -75,11 +92,12 @@ def test_store_not_flagged():
 
 
 def test_compare_exact():
-    base = {"a.py": {"f": 2}}
-    assert c.compare({"a.py": {"f": 2}}, base) == []
-    assert any("새 판정 읽기" in f for f in c.compare({"a.py": {"f": 3}}, base))
-    assert any("기준표가 낡음" in f for f in c.compare({"a.py": {"f": 1}}, base))
-    assert any("새 판정 읽기 b.py" in f for f in c.compare({"a.py": {"f": 2}, "b.py": {"<module>": 1}}, base))
+    base = {"a.py": {"f": {"s": 2}}}
+    assert c.compare({"a.py": {"f": {"s": 2}}}, base) == []
+    assert any("새 판정 읽기" in f for f in c.compare({"a.py": {"f": {"s": 3}}}, base))
+    assert any("기준표가 낡음" in f for f in c.compare({"a.py": {"f": {"s": 1}}}, base))
+    assert any("새 판정 읽기 b.py" in f for f in c.compare({"a.py": {"f": {"s": 2}}, "b.py": {"<module>": {"t": 1}}}, base))
+    assert c.rises({"a.py": {"f": {"s": 1}}}, base) == []         # 줄기는 쓰기를 막지 않는다
 
 
 if __name__ == "__main__":
