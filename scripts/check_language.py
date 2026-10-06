@@ -22,6 +22,9 @@ Heuristic:
 
 Output:
     For each violation: <path>: <hangul%> hangul (<hangul>/<ascii_alpha>)
+    A tracked file that cannot be read as UTF-8 is a FAIL, named with its error (it used to be dropped
+    silently: guarded-row census H3). A tracked file deleted in the working tree is named as a SKIP and
+    counted in the PASS line.
     Exit code 0 if clean, 1 otherwise.
 """
 from __future__ import annotations
@@ -82,13 +85,19 @@ def main() -> int:
     ).strip().splitlines()
 
     violations = []
+    unreadable = []   # 가드 행 센서스 H3 (2026-10-06) — 못 읽은 추적 파일을 말없이 빼지 않는다
+    deleted = []      # 워크트리에서 지웠으나 아직 커밋하지 않은 추적 파일 — 이름 대고 센다(판정 밖)
     scanned = 0
     for rel in files:
         if excluded(rel) or allowlisted(rel):
             continue
         try:
             text = (repo_root / rel).read_text(encoding="utf-8")
-        except Exception:
+        except FileNotFoundError:
+            deleted.append(rel)
+            continue
+        except (OSError, UnicodeDecodeError) as e:
+            unreadable.append((rel, f"{type(e).__name__}: {e}"))
             continue
         hangul, ascii_alpha, ratio = hangul_ratio(text)
         if hangul + ascii_alpha < MIN_LETTERS:
@@ -97,16 +106,24 @@ def main() -> int:
         if ratio >= THRESHOLD:
             violations.append((rel, hangul, ascii_alpha, ratio))
 
+    for rel in deleted:
+        print(f"  [SKIP] {rel}: tracked but deleted in the working tree (not committed) — not scanned")
+    if unreadable:
+        print(f"[FAIL] {len(unreadable)} tracked .md file(s) could not be read as UTF-8 — not scanned:")
+        for rel, why in unreadable:
+            print(f"  {rel}: {why}")
     if violations:
         print(f"[FAIL] {len(violations)} file(s) over {THRESHOLD*100:.0f}% hangul threshold "
               f"(scanned {scanned} English-source .md):")
         for rel, h, a, r in sorted(violations, key=lambda x: -x[3]):
             print(f"  {rel}: {r*100:.1f}% hangul ({h}/{a})")
+    if violations or unreadable:
         return 1
 
     if not quiet:
         print(f"[PASS] scanned {scanned} English-source .md file(s), "
-              f"no Korean-dominant content.")
+              f"no Korean-dominant content"
+              + (f" ({len(deleted)} deleted in the working tree, not scanned)." if deleted else "."))
     return 0
 
 
