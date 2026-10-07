@@ -419,10 +419,13 @@ def main() -> int:
               #   선언됐을 때만 읽는 윗끝 온도라 같이 면제다.
               # ⚠ `core_light_elements` 는 핵 경원소의 **선언**이다 (2026-09-26, prereg-core-light-elements).
               #   없는 것이 정상 상태다 — 조성 이름의 핵 재질 그대로, 옛 값이 비트까지 같다.
+              # ⚠ `mantle_composition` 은 맨틀 산화물 조성의 **선언**이다 (C74-2; 계약 문서에는 0a272bbb 가 층 있는
+              #   화성 C59 와 함께 더했고 이 집합은 그때 같이 안 고쳐 PC 게이트 801f04d0 에서 떨어졌다). 없는 것이
+              #   정상 상태다 — 계약 문서 «Absent means the default silicate phases and every old value bit-identical».
               "interior_layers": {"basal_iron_number", "core_light_elements", "differentiated", "envelope_z",
                                   "gas_mass_fraction", "ice_allowed", "ice_mass_fraction",
                                   "initial_porosity", "interface_temperature_jumps", "lithosphere_thickness_km",
-                                  "porosity_cap", "surface_temperature_k"},
+                                  "mantle_composition", "porosity_cap", "surface_temperature_k"},
               # ⚠ `radiogenic_concentration` (both nodes) is a **declaration** added by the radiogenic
               #   landing (2026-09-24): absent = the Earth default set, graded «default».
               "internal_heat_nontidal": {"ice_mass_fraction", "radiogenic_concentration"},
