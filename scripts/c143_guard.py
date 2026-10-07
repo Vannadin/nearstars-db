@@ -44,6 +44,7 @@ ROWS = [
     ("test_interior.py", r"^전선 1\.0 = 지각 없음: 기본 풀이와 비트까지 같다", "same-run"),
     ("test_mixture.py", r"^목성 envelope_z=0 이 기본 호출과 비트까지 같다", "same-run"),
     ("test_mantle_composition.py", r"^선언 없는 지구 — 입구 대 몸통 값 비트 동일", "same-run"),
+    ("test_structure_grid.py", r"^덧붙임 60 후속 — 이력 무관: 고정 풀이 한 번 뒤에도 지구 2062 K ", "same-run"),   # _hA 대 _hB, 한 실행 안의 두 풀이
     # --controls 의 픽스처 (note 2 §4)
     ("<controls>", r"^c143 control — 앵커와 비트 동일", "frozen"),
 ]
