@@ -1,6 +1,6 @@
 {
  "python": "3.12.3",
- "frozen_at": "2026-10-03",
+ "frozen_at": "2026-10-07",
  "bracket": [
   0.13,
   0.25
@@ -12,43 +12,56 @@
   "light_element_fixing": "box_ceiling",
   "potential_temperature": 1600.0,
   "basal_iron_number": 75.0,
-  "mantle_composition": null
+  "mantle_composition": {
+   "SiO2": 46.66,
+   "Al2O3": 3.49,
+   "MgO": 32.81,
+   "CaO": 2.66,
+   "FeO": 13.68,
+   "Na2O": 0.69
+  },
+  "basal_layer_thickness_km": 150.0,
+  "basal_layer_density": 4050.0
  },
  "files": {
   "interior.py": {
-   "bytes": "a474e1ee0cc5fef9",
-   "code": "0c1ba25bcbdc77f3"
+   "bytes": "a6af0cf73a14ce44",
+   "code": "21125e5d8dfe7cd6"
   },
   "eos.py": {
-   "bytes": "8b0a767d02a2b1cc",
-   "code": "a281ddddf303e333"
+   "bytes": "042a2d4bc455ef36",
+   "code": "7fc88bbdade3a0fe"
   },
   "chain.yaml": {
    "bytes": "1b1574d73140be04"
   },
   "mantle_composition.py": {
-   "bytes": "8d91fc7a65b7cfe2",
-   "code": "3331d5a6d4fd0cda"
+   "bytes": "6505772035c64fe5",
+   "code": "1524ec364dad1355"
+  },
+  "mantle_tables/0663e6a031cae4dc.json": {
+   "bytes": "e49e6ea6bc4311c8"
   }
  },
  "fixings": {
   "box_ceiling": {
    "halvings": 6,
-   "core_sulphur_wt": 0.1534375,
-   "core_radius_km": 1844.6341193377316,
-   "core_radius_fraction": 0.5442406962942892,
-   "core_mass_fraction": 0.27790532155839415,
-   "core_mean_density_gcc": 6.779561773215515,
-   "nmoi": 0.35708015278289235
+   "core_sulphur_wt": 0.1890625,
+   "core_radius_km": 1695.3076946821961,
+   "core_radius_fraction": 0.500183376991923,
+   "core_mass_fraction": 0.2125286604878228,
+   "core_mean_density_gcc": 6.6789374544484,
+   "nmoi": 0.3626266824608388
   },
   "box_floor": {
+   "bracket_miss": true,
    "halvings": 2,
-   "core_sulphur_wt": 0.20500000000000002,
-   "core_radius_km": 1845.705004490289,
-   "core_radius_fraction": 0.5445566347829324,
-   "core_mass_fraction": 0.2781621764460758,
-   "core_mean_density_gcc": 6.7740231664594965,
-   "nmoi": 0.35703506666646506
+   "bracket": [
+    0.13,
+    0.25
+   ],
+   "target_km": 1845.0,
+   "reason": "축이 목표를 안 감싼다 — S 괄호 안에서 핵+층이 목표에 못 닿음"
   }
  }
 }
