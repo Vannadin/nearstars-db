@@ -52,8 +52,10 @@ REACH = {
     "core_state.py": {"cmb_pressure", "cmb_temperature", "p_cmb", "t_cmb"},
     # ⚠ 선언 사슬이 `core_plus_layer_radius_km` 로 갈라진 뒤 `interior.py` 는 `core_radius_km` 을
     #   더는 안 든다 — 그 이름은 이제 **풀이 출력** 쪽에만 산다 (앵커 `fixings`, `test_mars_sulphur`).
+    # ⚠ `r_cmb` 은 c9f48415 (C152 노트 8) 의 평탄 띠 여섯 칸 표지다 — `_six` 가 core_radius_m 에 structure_grid._params
+    #   의 이름을 붙여 띠 문장에 인쇄할 뿐, 어느 노드도 그 값을 안 읽는다. 착지 2 는 PLATEAU_PROBE = False 라 그 길이 죽어 있다.
     "interior.py": {"cmb_pressure", "cmb_temperature", "core_radius", "core_radius_fraction",
-                    "core_plus_layer_radius_km", "p_cmb", "t_cmb"},
+                    "core_plus_layer_radius_km", "p_cmb", "r_cmb", "t_cmb"},
     # 구조 표는 풀이 출력(p_cmb · r_cmb …)을 격자로 굳히고 방아쇠에 선언 키를 든다 — 경계 값을 만들지 않는다.
     "structure_grid.py": {"cmb_pressure", "cmb_temperature", "core_plus_layer_radius_km", "core_radius",
                           "core_radius_fraction", "p_cmb", "r_cmb"},
