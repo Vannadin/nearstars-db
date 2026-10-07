@@ -112,8 +112,8 @@
   globs: ["engine/interior.py", "engine/ice_giant_anchor.json"]
 "test_interior_ocean.py":
   globs: []
-"test_ice_giant.py":
-  globs: ["engine/ammonia_table.py", "engine/bands.py", "engine/body_class.py", "engine/bounds.py", "engine/cmb_flux.py", "engine/convergence.py", "engine/core_energy.py", "engine/core_entropy.py", "engine/core_history.py", "engine/core_state.py", "engine/domain.py", "engine/dynamo.py", "engine/dynamo_rocky.py", "engine/eos.py", "engine/fe_liquid.py", "engine/fermi.py", "engine/graph.py", "engine/hhe_table.py", "engine/ice_fr2015.py", "engine/ice_melt_table.py", "engine/interior.py", "engine/lid_regime.py", "engine/mantle_budget.py", "engine/mantle_composition.py", "engine/mantle_flux.py", "engine/mass_radius.py", "engine/parallel_points.py", "engine/payload.py", "engine/porosity.py", "engine/process_state.py", "engine/provisional.py", "engine/radiogenic.py", "engine/registry.py", "engine/rheology.py", "engine/rootfind.py", "engine/rtpress.py", "engine/run.py", "engine/stagnant_lid.py", "engine/state.py", "engine/steam_if97.py", "engine/structure_grid.py", "engine/tectonic_regime.py", "engine/test_ice_giant.py", "engine/tidal_heating.py", "engine/tidal_locking.py", "engine/tidal_response.py", "engine/transfers.py", "engine/water2_table.py", "engine/water_hot.py", "engine/water_table.py", "engine/ice_giant_anchor.json"]
+"test_ice_giant.py":  # smooth_table.py by hand (C157 note 10 PCHIP read; gate 801f04d0 C136 drift), the next census confirms
+  globs: ["engine/ammonia_table.py", "engine/bands.py", "engine/body_class.py", "engine/bounds.py", "engine/cmb_flux.py", "engine/convergence.py", "engine/core_energy.py", "engine/core_entropy.py", "engine/core_history.py", "engine/core_state.py", "engine/domain.py", "engine/dynamo.py", "engine/dynamo_rocky.py", "engine/eos.py", "engine/fe_liquid.py", "engine/fermi.py", "engine/graph.py", "engine/hhe_table.py", "engine/ice_fr2015.py", "engine/ice_melt_table.py", "engine/interior.py", "engine/lid_regime.py", "engine/mantle_budget.py", "engine/mantle_composition.py", "engine/mantle_flux.py", "engine/mass_radius.py", "engine/parallel_points.py", "engine/payload.py", "engine/porosity.py", "engine/process_state.py", "engine/provisional.py", "engine/radiogenic.py", "engine/registry.py", "engine/rheology.py", "engine/rootfind.py", "engine/rtpress.py", "engine/run.py", "engine/smooth_table.py", "engine/stagnant_lid.py", "engine/state.py", "engine/steam_if97.py", "engine/structure_grid.py", "engine/tectonic_regime.py", "engine/test_ice_giant.py", "engine/tidal_heating.py", "engine/tidal_locking.py", "engine/tidal_response.py", "engine/transfers.py", "engine/water2_table.py", "engine/water_hot.py", "engine/water_table.py", "engine/ice_giant_anchor.json"]
 "test_core_state.py":
   globs: []
 "test_body_class.py":
@@ -199,8 +199,8 @@
   globs: []
 "structure_grid.py --check":
   globs: ["engine/core_history.py", "engine/eos.py", "engine/interior.py", "engine/mantle_composition.py"]
-"test_structure_grid.py":
-  globs: ["engine/core_history.py", "engine/eos.py", "engine/interior.py", "engine/mantle_composition.py"]
+"test_structure_grid.py":  # structure_grid.py by hand (gate 801f04d0 C136 drift), the next census confirms
+  globs: ["engine/core_history.py", "engine/eos.py", "engine/interior.py", "engine/mantle_composition.py", "engine/structure_grid.py"]
 "test_table_triggers.py":  # C159; chain.yaml and eos.py (copies to a temp dir), the body files, and triggers() for Earth (CODE_FILES, sulphur anchor, reference adiabats)
   globs: ["engine/chain.yaml", "engine/eos.py", "engine/interior.py", "engine/core_history.py", "engine/mantle_composition.py", "engine/bodies/*.yaml", "engine/mars_sulphur_anchor.json", "engine/reference_adiabats.json"]
 "engine/tools/reference_adiabats.py --check":  # C148 note 2; declared by hand at landing, the gate_reads hook measures it next census
@@ -233,8 +233,8 @@
   globs: []
 "test_column_rule.py":  # C160; imports only (BurnMan SLB data comes from the package) — the next census confirms
   globs: []
-"test_hobby_table.py":  # C161; reads engine/structure_grid/mars.json and bodies (always-full) — the next census confirms
-  globs: []
+"test_hobby_table.py":  # C161; reads engine/structure_grid/mars.json and bodies (always-full); engine/*.py is the H-exact (4a) census `_phase_density_overrides` (AST of every non-test engine module; gate 801f04d0 C136 drift) — the next census confirms
+  globs: ["engine/*.py"]
 "test_smooth_table.py":  # C157 note 10; reads the Mars mantle table (MANTLE_TABLE_DIR or engine/mantle_tables) and the water / ammonia tables through their modules — declared by hand, the next census confirms
   globs: ["engine/mantle_tables/*.json"]
   hand: true
