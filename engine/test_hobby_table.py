@@ -187,14 +187,16 @@ def _fake_result(t: float):
 
 
 def h_par() -> None:
-    """(7) 판 단위 정밀화가 옛 차례 루프와 바이트까지 같은 표를 낸다 — 가짜 풀이로 4766ca7a 의 `_adaptive` 와 대조."""
+    """(7) 판 단위 정밀화가 옛 차례 루프와 바이트까지 같은 표를 낸다 — 가짜 풀이로 옛 `_adaptive` 와 대조.
+
+    옛 판은 239d5328 의 structure_grid.py — 이 행이 처음 맞댄 4766ca7a(C160 가지, 착지 2 밖)의 것과 같은 blob bf8644c2."""
     import structure_grid as sg
     import subprocess
-    src = subprocess.run(["git", "show", "4766ca7a:engine/structure_grid.py"], cwd=HERE, capture_output=True,
+    src = subprocess.run(["git", "show", "239d5328:engine/structure_grid.py"], cwd=HERE, capture_output=True,
                          text=True, check=True).stdout
-    old = types.ModuleType("structure_grid_4766ca7a")
+    old = types.ModuleType("structure_grid_239d5328")
     old.__file__ = str(HERE / "structure_grid.py")
-    exec(compile(src, "structure_grid@4766ca7a", "exec"), old.__dict__)
+    exec(compile(src, "structure_grid@239d5328", "exec"), old.__dict__)
     got = {}
     for tag, mod in (("old", old), ("new", sg)):
         batches = []
