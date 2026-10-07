@@ -205,6 +205,36 @@
 "sum((1 for _, _, f in seen if f >= 1.0))"
 ],
 [
+"engine/interior.py",
+"_stall_reason",
+"sum(((x - mx) * (y - my) for x, y in zip(xs, ys)))"
+],
+[
+"engine/interior.py",
+"_stall_reason",
+"sum(((x - mx) ** 2 for x in xs))"
+],
+[
+"engine/interior.py",
+"_stall_reason",
+"sum(((y - my - sl * (x - mx)) ** 2 for x, y in zip(xs, ys)))"
+],
+[
+"engine/interior.py",
+"_stall_reason",
+"sum((1 for y in ys if y > 0.0))"
+],
+[
+"engine/interior.py",
+"_stall_reason",
+"sum(xs)"
+],
+[
+"engine/interior.py",
+"_stall_reason",
+"sum(ys)"
+],
+[
 "engine/mantle_composition.py",
 "select_all",
 "sum(rock.formula.values())"
@@ -288,6 +318,11 @@
 "engine/structure_grid.py",
 "_fold",
 "sum((1 for (a, _ea), (b, _eb) in zip(pts, pts[1:]) if (a < 0.0) != (b < 0.0)))"
+],
+[
+"engine/structure_grid.py",
+"span",
+"sum((1 for _sv, g in got if g is not None))"
 ],
 [
 "engine/test_ammonia.py",
@@ -388,6 +423,26 @@
 "engine/test_samuel_run.py",
 "<module>",
 "sum((0.5 * (a['q_c'] + b['q_c']) * a_c * (b['t'] - a['t']) * sr.GYR_S for a, b in zip(rows, rows[1:])))"
+],
+[
+"engine/test_smooth_table.py",
+"saw",
+"sum(((x - mx) * (y - my) for x, y in zip(ns, ys6)))"
+],
+[
+"engine/test_smooth_table.py",
+"saw",
+"sum(((x - mx) ** 2 for x in ns))"
+],
+[
+"engine/test_smooth_table.py",
+"saw",
+"sum(ns)"
+],
+[
+"engine/test_smooth_table.py",
+"saw",
+"sum(ys6)"
 ],
 [
 "engine/test_stability_walls.py",
@@ -503,6 +558,11 @@
 "engine/tools/samuel_report5.py",
 "rms",
 "sum(((f(sr.at(rows, key, t)) - v) ** 2 for t, v in win))"
+],
+[
+"engine/tools/table_reads_guard.py",
+"main",
+"sum((guard(nm, n) for nm in names))"
 ],
 [
 "scripts/build_sitemap.py",
