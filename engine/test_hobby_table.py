@@ -63,9 +63,9 @@ def h_exact() -> None:
                                    f"— equal {same}, the same refusals included ({refusals})")
 
 
-#: C161 (4a) — `eos.Phase` 를 이어받아 `density` 를 다시 쓴 클래스(파일:클래스). 이들은 `_solid_density_at` 에서 `p_th` 를
+#: C161 (4a) — `eos.Phase` 를 이어받아 `density` 를 다시 쓴 클래스(파일::클래스 — check_refs 가 인용으로 읽지 않는 기호 꼴). 이들은 `_solid_density_at` 에서 `p_th` 를
 #: 받지 않는다(옛 세 인자 그대로 — 바뀐 동작 없음). 새 하위 클래스가 생기면 이 목록과 어긋나 실패한다: 그 서명을 보고 더한다.
-KNOWN_PHASE_DENSITY_OVERRIDES = {"mantle_composition.py:TablePhase"}
+KNOWN_PHASE_DENSITY_OVERRIDES = {"mantle_composition.py::TablePhase"}
 
 
 def _phase_density_overrides() -> set[str]:
@@ -80,7 +80,7 @@ def _phase_density_overrides() -> set[str]:
                 continue
             bases = {b.id if isinstance(b, ast.Name) else b.attr if isinstance(b, ast.Attribute) else "" for b in node.bases}
             if "Phase" in bases and any(isinstance(f, ast.FunctionDef) and f.name == "density" for f in node.body):
-                out.add(f"{path.name}:{node.name}")
+                out.add(f"{path.name}::{node.name}")
     return out
 
 
