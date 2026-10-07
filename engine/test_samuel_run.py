@@ -86,6 +86,12 @@ bad = [r for r in live if (r["ddl"] > 0) != (r["lid_net"] + r["crust_term"] > 0)
 check("2019 SI eq. (20) — dD_l/dt has the sign of (outflow − q_m + crust term) at every step", not bad,
       f"{len(bad)} of {len(live)} steps differ")
 
+# 거절된 판은 아래 칸(천장 · v2-17 · 접힘 사건 · 회귀 여섯)을 안 낸다 — KeyError 로 죽지 않고 이름 댄 FAIL 하나로 찍고 멈춘다(줄은 빨강 그대로).
+if "refused" in out:
+    check("Λ 20 rows after the run (ceiling · v2-17 · fold events · six regression values) — not judged, the run refused", False,
+          f"refused at {out['refused_at_gyr']:.6f} Gyr — {out['refused'][:200]}")
+    print(f"  test_samuel_run — 실패 {fails}")
+    sys.exit(1)
 # ③ the ceiling
 worst, when = out["max_lambda_over_ceiling"]
 check("v2-4 ③ — Λ 20 stays under its ceiling", worst < 1.0, f"largest Λ/ceiling {worst:.3f} at {when:.3f} Gyr")

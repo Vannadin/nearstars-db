@@ -129,6 +129,12 @@ check("C145 ⑥ E0 window a — a 20 km pair, no fold: no event, no branch chang
 
 # R2 — plate 2's six regression pins, through the stack.
 out = ts.run(ts.samuel_stack(lam=20.0, profile=prof, g=G), 10.0)
+# 거절된 판은 접힘 사건 · 여섯 핀 칸이 없다 — KeyError 로 죽지 않고 거절 까닭을 이름 댄 FAIL 로 찍는다(줄은 빨강 그대로).
+if "refused" in out:
+    check("R2 — the stack runs to 4.5 Gyr (the six pins need a full run)", False,
+          f"refused at {out['refused_at_gyr']:.6f} Gyr — {out['refused'][:200]}")
+    print(f"  test_thermal_stack — 실패 {fails}")
+    sys.exit(1)
 v = sr.curve_values(out["rows"])
 print(f"  [C145 접힘 사건] R2: {len(out['fold_events'])} — {out['fold_events']}")
 # the same pins and widths as test_samuel_run.FROZEN_L20 / FROZEN_TOL (K to the frozen decimal; peak time 0.0005 Gyr)
