@@ -21,11 +21,13 @@ only. Everything that changes a frozen fact goes through one loop.
 2. **Audit clears a blob, not a file.** The audit seat hashes the draft (`git hash-object -w`),
    reads that blob, and sends one message: HOLD *or* clear `<blob>`. Clear messages always cc the
    directing seat.
-3. **Directing freezes.** `tools/freeze.py` in the artifacts repo does the hash check, the copy or
+3. **The drafting seat freezes; directing verifies and pushes.** On a clear, the seat that wrote the
+   draft runs `tools/freeze.py` (directing may run it instead, e.g. for a PC draft). Directing checks the
+   Frozen/Appended line and the blobs, then pushes. `freeze.py` does the hash check, the copy or
    append, the Frozen/Appended line, and a commit of only that file in one step:
    ```
    python3 ~/Desktop/NearStars-artifacts/tools/freeze.py freeze --src DRAFT --dest prereg-x.md \
-     --blob CLEAR --seat "directing <addr>" --label "C150 registration" --source "audit <addr> clear blob"
+     --blob CLEAR --seat "<role> <addr>" --label "C150 registration" --source "audit <addr> clear blob"
    python3 ~/Desktop/NearStars-artifacts/tools/freeze.py append --src NOTE --dest prereg-x.md \
      --blob CLEAR --dest-blob CURRENT --seat ... --label "C150 post-freeze note 1" --source 'remote-PC `pc/c150/note-1.md`'
    ```
