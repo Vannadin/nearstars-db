@@ -3164,8 +3164,10 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
     _refuse_if_below_floor(st, core_material)
     _refuse_if_water_filled(st)
     met = _surface_temperature_met(st, t_pot)
-    if not met and reps is None and st.t_surface > 0.0:
+    if not met and reps is None and st.t_surface > 0.0 and not st.crust_blocked:
         # C152 메모 8 — 괄호도 연장도 없이 예산이 끝나 표면 온도가 허용 밖: 이름 없는 converged=False 대신 이름 댄 거절.
+        #   C152 메모 10 — 지각 벽에 막힌 괄호(st.crust_blocked)는 빼서 옛 길(converged=False)로 보낸다. 그래야 solve 의
+        #   C11 거절(«녹는곡선 위»)이 그 이름을 낸다. 지각을 선언한 출하 몸은 없다(지구 · 금성 · 화성 그대로).
         #   이어 돌기(덧붙임 2 A)의 안쪽 호출이 여기 닿으면 바깥 호출의 시행까지(_LOOP_TRIALS) 세어 적는다.
         if STALL_CONTINUATION and not _cont:
             # 이 고리의 미달은 이어 돌기에 넘기는 시행이다 — AND 밖(trial)으로 적어, 이어 돌기가 답하면 그 답이 «속 미수렴» 표지를 안 단다.
