@@ -3,6 +3,10 @@
 # values 는 등록 때의 어긋남 값(엔진 · 보드) — 값이 바뀌면 인정하되 한 줄 알림.
 - id: C59
   step: "run.py bodies/mars.yaml (출하값 대조)"
-  mismatch_keys: [nmoi]
-  values: {nmoi: [0.3571, 0.3634]}
-  registered: f47fc14b
+  # 재등록(오너 2026-10-07 «철 핵을 계속 비교»): 층 있는 화성(db3c73b4 · c5db582b, 착지 2 전 55ae0a7e · 0963d0f1)이 핵 위에
+  #   150 km 녹은 규산염 층(Khan+ 2023)을 얹어 철 핵이 1695 km 가 됐다(핵 + 층 1845 km). 보드 1830 km 는 Stähler+ 2021 의
+  #   지진파 «핵» 반지름이라 층 있는 해석에선 층 꼭대기다 — 빨강이 nmoi(이제 0.3626 대 0.3634, 허용 안)에서 이 칸으로 옮겼다.
+  #   비교 대상(핵 대 핵 + 층)은 정리 목록 B9 에서 정한다. 옛 칸: [nmoi] {nmoi: [0.3571, 0.3634]}, registered f47fc14b.
+  mismatch_keys: [core_radius_fraction]
+  values: {core_radius_fraction: [0.5002, 0.5398]}
+  registered: "owner 2026-10-07 via directing; artifacts pc/landing2/final-5da01160/gate-801f04d0.log (blob 361c4145) lines 4086-4089"
