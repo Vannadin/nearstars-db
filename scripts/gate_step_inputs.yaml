@@ -22,8 +22,8 @@
 "scripts/test_check_verdict_reads.py":  # by hand: synthetic sources in memory, reads no tracked file as data
   globs: []
   hand: true
-"scripts/check_verdict_reads.py":  # by hand: parses every tracked engine/*.py, engine/tools/*.py, scripts/*.py and reads the baseline
-  globs: ["engine/*.py", "engine/tools/*.py", "scripts/*.py", "scripts/verdict_reads_baseline.json"]
+"scripts/check_verdict_reads.py":  # by hand: `git ls-files "*.py"` lists every tracked .py (then keeps engine/*.py, engine/tools/*.py, scripts/*.py) and reads the baseline; L3 gate C136 drift
+  globs: ["**.py", "scripts/verdict_reads_baseline.json"]
   hand: true
 "scripts/pipeline/validate.py":
   globs: []
@@ -205,8 +205,8 @@
   globs: []
 "structure_grid.py --check":
   globs: ["engine/core_history.py", "engine/eos.py", "engine/interior.py", "engine/mantle_composition.py"]
-"test_structure_grid.py":  # structure_grid.py by hand (gate 801f04d0 C136 drift), the next census confirms
-  globs: ["engine/core_history.py", "engine/eos.py", "engine/interior.py", "engine/mantle_composition.py", "engine/structure_grid.py"]
+"test_structure_grid.py":  # structure_grid.py by hand (gate 801f04d0 C136 drift); ice_giant_anchor.json by hand (L3 gate C136 drift), the next census confirms
+  globs: ["engine/core_history.py", "engine/eos.py", "engine/interior.py", "engine/mantle_composition.py", "engine/structure_grid.py", "engine/ice_giant_anchor.json"]
 "test_table_triggers.py":  # C159; chain.yaml and eos.py (copies to a temp dir), the body files, and triggers() for Earth (CODE_FILES, sulphur anchor, reference adiabats)
   globs: ["engine/chain.yaml", "engine/eos.py", "engine/interior.py", "engine/core_history.py", "engine/mantle_composition.py", "engine/bodies/*.yaml", "engine/mars_sulphur_anchor.json", "engine/reference_adiabats.json"]
 "engine/tools/reference_adiabats.py --check":  # C148 note 2; declared by hand at landing, the gate_reads hook measures it next census
