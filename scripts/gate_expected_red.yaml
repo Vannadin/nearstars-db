@@ -9,4 +9,4 @@
   #   비교 대상(핵 대 핵 + 층)은 정리 목록 B9 에서 정한다. 옛 칸: [nmoi] {nmoi: [0.3571, 0.3634]}, registered f47fc14b.
   mismatch_keys: [core_radius_fraction]
   values: {core_radius_fraction: [0.5002, 0.5398]}
-  registered: "owner 2026-10-07 via directing; artifacts pc/landing2/final-5da01160/gate-801f04d0.log (blob 361c4145) lines 4086-4089"
+  registered: "owner 2026-10-07 via directing; artifacts 37824fc pc/landing3/final/gate-c8a2cbb7.log (blob cbfb5136) line 4252"
