@@ -15,9 +15,7 @@
 
 **Returns** — `conductor_phase` [—] · `cmb_melt_temperature` [K] ·
 `center_melt_temperature` [K] · `core_cmb_temperature_used` [K] ·
-`core_center_temperature_used` [K] (둘 다: `core_cmb_temperature` 선언이 없으면 — 갈래 `lower_bound` · `melt_bracket` —
-interior_layers 의 **맨틀 쪽** CMB 온도, 곧 핵의 하한이고, `melt_bracket` 에서는 중심에도 같은 값을 씁니다; C153) ·
-`icb_pressure` [GPa] ·
+`core_center_temperature_used` [K] · `icb_pressure` [GPa] ·
 `center_margin` [K] · `cmb_margin` [K] · `center_margin_fraction` [—] · `gamma_flip` [—] ·
 `gamma_flip_in_alfe_range` [—] · `k0_flip` [GPa] · `melt_splice_disagreement` [—] · `margin_condition` [—] · `core_gamma_cmb` [—] · `core_gamma_center` [—] · `core_gamma_material` [—] · `core_gamma_fallback` [—] · `core_gamma_verdict` [—] · `core_gamma_verdict_center` [—] · `core_gamma_density_path` [—] · `core_gamma_partial_repair` [—] · `core_gamma_split` [—]
 **Needs** — `core_pressure` [GPa] · `cmb_pressure` [GPa] · `core_temperature` [K] ·
@@ -28,6 +26,10 @@ interior_layers 의 **맨틀 쪽** CMB 온도, 곧 핵의 하한이고, `melt_br
 **등급** — 아무리 좋아도 **analog** 이고, 판정이 `undecided` 인 자리에서는 **judgment**
 로 내려갑니다. 어느 경로든 이 레시피가 도출할 수 없는 온도에 기댑니다. 선언이 있으면 그
 값을 그대로 쓰고, 없으면 다른 레시피의 지오섬을 하한으로 읽습니다.
+
+`core_cmb_temperature_used` · `core_center_temperature_used` 둘 다: `core_cmb_temperature` 선언이 없으면 — 갈래
+`lower_bound` · `melt_bracket` — interior_layers 의 **맨틀 쪽** CMB 온도, 곧 핵의 하한이고, `melt_bracket` 에서는
+중심에도 같은 값을 씁니다(C153).
 
 `conductor_phase` 는 `liquid` · `solid` · `liquid_outer_solid_inner` · `undecided` 중
 하나입니다. `icb_pressure` 는 핵 안에 내핵 경계가 없으면 0 입니다.
