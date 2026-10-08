@@ -16,7 +16,7 @@ Gate mode (default, engine repo): every read is keyed by its **site**, (file, en
 statement it sits in), and the count per site must equal `scripts/verdict_reads_baseline.json`. The statement is
 the read's simple statement, or for a compound one (if / while / for / with) its header expression, as
 `ast.unparse` with parentheses and whitespace dropped, so a moved line still matches and a 3.9 / 3.12
-formatting difference does not. A rise is a new verdict read, including one swapped in for a removed one; a fall
+formatting difference does not (quotes are folded to `'` too, since 3.12 picks other f-string quotes). A rise is a new verdict read, including one swapped in for a removed one; a fall
 means the baseline is stale and is lowered in the same commit.
 `--write-baseline` writes the current sites but **refuses any site that rises** against the baseline committed at
 HEAD (audit 89): the baseline only shrinks, as reads migrate to `verdict_of` / `is_answer` or get a reason.
@@ -80,7 +80,8 @@ def _is_loose(node: ast.AST) -> bool:
 
 
 def _norm(text: str) -> str:
-    return re.sub(r"[()\s]", "", text)
+    # 따옴표도 하나로 — 3.12 의 ast.unparse 는 f-문자열 바깥 따옴표를 3.9 와 달리 고른다(착지 3 게이트, test_tidal_heating :39–40)
+    return re.sub(r"[()\s]", "", text).replace('"', "'")
 
 
 def _site(node: ast.AST, parents: dict) -> str:

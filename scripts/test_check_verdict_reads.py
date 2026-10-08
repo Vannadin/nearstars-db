@@ -100,6 +100,15 @@ def test_compare_exact():
     assert c.rises({"a.py": {"f": {"s": 1}}}, base) == []         # 줄기는 쓰기를 막지 않는다
 
 
+def test_quote_styles_one_key():
+    """착지 3 게이트 — 3.12 의 unparse 는 f-문자열 바깥 따옴표를 3.9 와 달리 고른다: 두 꼴이 한 열쇠, 늘면 여전히 FAIL."""
+    k1 = c._norm('ok(r.applicable, f"F {d.get(\'x\')} W")')
+    k2 = c._norm("ok(r.applicable, f'F {d.get(\"x\")} W')")
+    assert k1 == k2
+    base = {"a.py": {"f": {k1: 1}}}
+    assert c.compare({"a.py": {"f": {k2: 1}}}, base) == []
+    assert any("새 판정 읽기" in f for f in c.compare({"a.py": {"f": {k2: 2}}}, base))
+
 if __name__ == "__main__":
     n = 0
     for name, fn in list(globals().items()):

@@ -141,7 +141,7 @@
     "nots0.applicableandhist.applicableandrows_cap.get'rows'": 2,
     "nottop.applicable": 1,
     "ok_,line=_self_checks0.values,pinned.valuesifpinned.applicableelseNone": 1,
-    "printf\"T_ok가지덧붙임55—위끝{top.applicableand'받음'or'거절→이분'}·t_ok{t_ok!r}·t_no{t_no!r}\",flush=True": 1
+    "printf'T_ok가지덧붙임55—위끝{top.applicableand'받음'or'거절→이분'}·t_ok{t_ok!r}·t_no{t_no!r}',flush=True": 1
    }
   },
   "engine/test_basal_layer.py": {
@@ -160,7 +160,7 @@
   },
   "engine/test_cmb_flux.py": {
    "main": {
-    "okearth.applicableand2.6<v['q_cmb']/1000000000000.0<2.9andnotv['q_cmb_in_paper_range'],f\"5:engineEarthQ_CMB{v.get'q_cmb',0/1000000000000.0:.2f}TWmustlandoutside4.5–9branch②\"": 1,
+    "okearth.applicableand2.6<v['q_cmb']/1000000000000.0<2.9andnotv['q_cmb_in_paper_range'],f'5:engineEarthQ_CMB{v.get'q_cmb',0/1000000000000.0:.2f}TWmustlandoutside4.5–9branch②'": 1,
     "oknotgiant.applicable,'4:giantoutofdomain'": 1,
     "oknotinverted.applicableand'점프'ininverted.reason,'4:T_c≤T̃_mmustrefuse'": 1,
     "oknotnodecl.applicableandcf.NO_JUMPinnodecl.reason,'4:undeclaredcore-sidetemperaturemustrefusebyname'": 1
@@ -172,7 +172,7 @@
     "oknotgiant.applicable,'4:giantoutofdomain'": 1,
     "oknotnodecl.applicableandce.NO_INPUTSinnodecl.reason,'4:undeclaredcore-sidetemperaturemustrefusebyname'": 1,
     "okres.applicable,f'2:engineEarthmustsolve—{res.reason}'": 1,
-    "printf\"[{'PASS'ifnotnodecl.applicableandnotgiant.applicableelse'FAIL'}]미선언→이름대며거절·거대행성→도메인밖\"": 2,
+    "printf'[{'PASS'ifnotnodecl.applicableandnotgiant.applicableelse'FAIL'}]미선언→이름대며거절·거대행성→도메인밖'": 2,
     "res.applicable": 1
    }
   },
@@ -182,7 +182,7 @@
     "oknotgiant.applicable,'4:giantoutofdomain'": 1,
     "oknotnone.applicableandcp.NO_INPUTinnone.reason,'4:nosolvedT_c→refusebyname'": 1,
     "okres.applicable,f'2:C15mustsolve—{res.reason}'": 1,
-    "printf\"[{'PASS'ifnotnone.applicableandnotgiant.applicableelse'FAIL'}]풀린T_c없음→이름대며거절·거대행성→도메인밖\"": 2,
+    "printf'[{'PASS'ifnotnone.applicableandnotgiant.applicableelse'FAIL'}]풀린T_c없음→이름대며거절·거대행성→도메인밖'": 2,
     "res.applicable": 1
    }
   },
@@ -190,16 +190,16 @@
    "<module>": {
     "rownotr2.applicableand'initial'inr2.reason,'초기온도미선언→이름붙여거절'": 1,
     "rownotr3.applicable,'거대행성→거절'": 1,
-    "rowres.applicableandres.values['inner_core_case']=='never'andres.values['history_converged']isNone,f\"solve:{res.regime}·{res.values['entropy_history_verdict'][:40]}…·수렴필드None스윕은온디맨드\"": 1
+    "rowres.applicableandres.values['inner_core_case']=='never'andres.values['history_converged']isNone,f'solve:{res.regime}·{res.values['entropy_history_verdict'][:40]}…·수렴필드None스윕은온디맨드'": 1
    }
   },
   "engine/test_core_light_elements.py": {
    "<module>": {
     "check'관측핵반지름없는몸의Sfit→이름대고거절',notr.applicableand'핵반지름'inr.reasonor'',r.reasonor''[:80]": 1,
-    "check'새칸+옛칸=옛칸만값비트',both.applicableanddictboth.values==dictonly_old.values,f\"core_sulphur_wt{both.values.get'core_sulphur_wt'!r}\"": 1,
+    "check'새칸+옛칸=옛칸만값비트',both.applicableanddictboth.values==dictonly_old.values,f'core_sulphur_wt{both.values.get'core_sulphur_wt'!r}'": 1,
     "check'새칸만=옛칸만값비트',only_new.applicableanddictonly_new.values==dictonly_old.values": 1,
     "check'옛칸과새칸이어긋남→이름대고거절',notr.applicableand'어긋난다'inr.reasonor'',r.reasonor''[:80]": 1,
-    "check'지구에S0.15·O0.02·C0.01→풀리거나이름대고거절,옛답과다름',got.applicableandgot.values.get'radius'!=base.values.get'radius'ornotgot.applicableandboolgot.reason,f\"R{base.values.get'radius':.6f}→{got.values.get'radius':.6f}\"ifgot.applicableelsegot.reasonor''[:80]": 3,
+    "check'지구에S0.15·O0.02·C0.01→풀리거나이름대고거절,옛답과다름',got.applicableandgot.values.get'radius'!=base.values.get'radius'ornotgot.applicableandboolgot.reason,f'R{base.values.get'radius':.6f}→{got.values.get'radius':.6f}'ifgot.applicableelsegot.reasonor''[:80]": 3,
     "check'핀밖O·C→이름대고거절새앵커는이판밖',notr.applicableand'새황앵커'inr.reasonor'',r.reasonor''[:80]": 1
    }
   },
@@ -221,9 +221,9 @@
   },
   "engine/test_dynamo_rocky.py": {
    "main": {
-    "okdecl.applicableanddecl.values['dynamo_alive']==dr.ALIVEanddecl.values['b_eq']isnotNoneand'alivebyownerdeclaration'in''.joindecl.notes,f\"4b/C29c:undecidedcore+declaredalivemustpassthegatewiththedeclarationprinted;got{decl.values.get'dynamo_alive'}\"": 1,
+    "okdecl.applicableanddecl.values['dynamo_alive']==dr.ALIVEanddecl.values['b_eq']isnotNoneand'alivebyownerdeclaration'in''.joindecl.notes,f'4b/C29c:undecidedcore+declaredalivemustpassthegatewiththedeclarationprinted;got{decl.values.get'dynamo_alive'}'": 1,
     "okgot.applicable,f'6/C37:탐침이도메인안이어야이시험이뜻을갖는다—{got.regime}'": 1,
-    "oknotgiant.applicable,\"4:agiantisoutofdomainheredynamo_giant'srecipe\"": 1,
+    "oknotgiant.applicable,'4:agiantisoutofdomainheredynamo_giant'srecipe'": 1,
     "oknotgiant_state.applicableand'암석사다리밖'ingiant_state.reasonand'compositionpreset'notingiant_state.reason,'5/C28:agiantwithnocomposition_intentkeepstheclass-gaterefusal,notapresetrefusalauditholdonb8d86b68'": 1,
     "oknotrefused.applicableand'nocompositionpreset'inrefused.reason,'5/C28:_from_staterefusesanunknownpresetbyname'": 1,
     "okund.applicableandund.values['dynamo_alive']==dr.UNDECIDED_COREandund.values['dipole_moment']isNone,'2:undecidedconductormustbecannot-saywithnomoment'": 1,
@@ -235,7 +235,7 @@
     "_rec17='답거절없음'if_r17.applicableelse'바닥거절'if'수렴한답의핵-맨틀경계가'in_rtelsef'이름댄거절«{nexthforhinC152_NAMEDifhin_rt}»'ifanyhin_rtforhinC152_NAMEDelse'그밖의거절'": 1,
     "row_consumer_ok0.24,'fe_s_13wt_19gpa'and_consumer_ok0.24,'fe_s_19wt_19gpa','⚠**화성이실제로선언한cmf0.24에서는Fe–S두재질이다풀린다**—0.24는자름자리0.302아래다.C60b가«선언된조성은거절한다»고적은것은프리셋의0.325를화성의선언으로읽은탓이다C59a'": 2,
     "row_consumer_ok0.302and_consumer_ok0.303,'⚠소비경로`solve`도같이열렸다—두층의CMB가0.5kPa어긋나는것은그대로이지만,19GPa바로아래가더이상거절이아니라그폭이**판정을못가른다**옛줄은0.302/0.303에서갈렸다'": 2,
-    "row_r.applicableand_r.values.get'core_gamma_fallback'==1,f\"⚠**p_cmb25GPa의이원계핵**괄호창위라선언갈래로내려간다이예외가아니라값을낸다—`{_r.regime}`·폴백카운트{_r.values.get'core_gamma_fallback'}.`_adiabat`이`core_gamma`를try없이부르던자리이고,그천체가노드를터뜨렸다\"": 1
+    "row_r.applicableand_r.values.get'core_gamma_fallback'==1,f'⚠**p_cmb25GPa의이원계핵**괄호창위라선언갈래로내려간다이예외가아니라값을낸다—`{_r.regime}`·폴백카운트{_r.values.get'core_gamma_fallback'}.`_adiabat`이`core_gamma`를try없이부르던자리이고,그천체가노드를터뜨렸다'": 1
    },
    "_consumer_ok": {
     "returnboolres.applicable": 1
@@ -244,13 +244,13 @@
   "engine/test_giant.py": {
    "main": {
     "_giantJUPITER_MASS_EARTH,mid.applicable": 1,
-    "fails.appendf\"{label}:거절하며'{keyword}'를이름대야한다—{res.reason[:60]ifnotres.applicableelse'풀렸다'}\"": 1,
+    "fails.appendf'{label}:거절하며'{keyword}'를이름대야한다—{res.reason[:60]ifnotres.applicableelse'풀렸다'}'": 1,
     "named=notover.applicableand'silicate'inover.reasonand'13500'inover.reason": 1,
     "notres.applicable": 3,
     "ok=notfar.applicableornotfar.converged": 1,
     "ok=notres.applicableandkeywordinres.reason": 1,
     "ok=res.applicableand'h_he'notinres.notes[0]ifres.noteselse''": 1,
-    "printf\"[{'PASS'ifokelse'FAIL'}]1bar에3000K를요구하면{'거절'ifnotfar.applicableelse'converged=False'}다\"": 1,
+    "printf'[{'PASS'ifokelse'FAIL'}]1bar에3000K를요구하면{'거절'ifnotfar.applicableelse'converged=False'}다'": 1,
     "res.applicable": 1
    },
    "table": {
@@ -265,7 +265,7 @@
     "notres.applicable": 1
    },
    "_live": {
-    "fails.appendf\"{name}:굳힌것은거절인데지금은{'다른이유로거절한다'ifnotres.applicableelse'풀린다'}—의도한변화면--refresh\"": 1,
+    "fails.appendf'{name}:굳힌것은거절인데지금은{'다른이유로거절한다'ifnotres.applicableelse'풀린다'}—의도한변화면--refresh'": 1,
     "notres.applicable": 1,
     "same=notres.applicableandres.reason==rec['reason']": 1
    },
@@ -283,8 +283,8 @@
   "engine/test_interface_jumps.py": {
    "<module>": {
     "check'역산갈래화성에선언→이름대고거절',notr.applicableand'역산'inr.reasonor'',r.reasonor''[:90]": 1,
-    "check'점프판—핵쪽−맨틀쪽=500K비트',hot.applicableandhv['cmb_temperature_core']-hv['cmb_temperature_mantle']==500.0andhv['cmb_temperature']==hv['cmb_temperature_core'],f\"핵쪽{hv.get'cmb_temperature_core'!r}·맨틀쪽{hv.get'cmb_temperature_mantle'!r}\"": 1,
-    "check'점프판—핵쪽이점프없는판보다400K넘게뜨겁다맨틀쪽은같은T_pot에묶임',hot.applicableandhv['cmb_temperature_core']>bv['cmb_temperature']+400.0,f\"{hv['cmb_temperature_core']-bv['cmb_temperature']:+.2f}K·맨틀쪽차{hv['cmb_temperature_mantle']-bv['cmb_temperature']:+.2f}K\"": 1,
+    "check'점프판—핵쪽−맨틀쪽=500K비트',hot.applicableandhv['cmb_temperature_core']-hv['cmb_temperature_mantle']==500.0andhv['cmb_temperature']==hv['cmb_temperature_core'],f'핵쪽{hv.get'cmb_temperature_core'!r}·맨틀쪽{hv.get'cmb_temperature_mantle'!r}'": 1,
+    "check'점프판—핵쪽이점프없는판보다400K넘게뜨겁다맨틀쪽은같은T_pot에묶임',hot.applicableandhv['cmb_temperature_core']>bv['cmb_temperature']+400.0,f'{hv['cmb_temperature_core']-bv['cmb_temperature']:+.2f}K·맨틀쪽차{hv['cmb_temperature_mantle']-bv['cmb_temperature']:+.2f}K'": 1,
     "check'해왕성점프100K—두이름이같은적용여부·등급·값비트',old.applicable==new.applicableandold.grade==new.gradeandsamedictold.values,dictnew.valuesandold.applicableorold.reason==new.reason,f'applicable{old.applicable}·grade{old.grade}·값{lenold.values}칸'": 4,
     "checkf'{name}→이름대고거절',notr.applicableandwordinr.reasonor'',r.reasonor''[:90]": 1
    }
@@ -296,12 +296,12 @@
    },
    "icy_table": {
     "notres.applicable": 1,
-    "two_s=f\"{two.values['nmoi']:.4f}\"iftwo.applicableelse'declined'": 1
+    "two_s=f'{two.values['nmoi']:.4f}'iftwo.applicableelse'declined'": 1
    },
    "main": {
     "fails.append'200K유로파형의지각풀이가거절됐다:'+'/'.joinr.reasonor''[:80]forrinref,crust,porousifnotr.applicable": 1,
-    "fails.appendf\"서브넵튠:5M⊕·순수가스·500K가'묶이지않는외피'로거절해야하는데{'풀렸다'ifhot.applicableelsehot.reason[:80]}\"": 1,
-    "fails.appendf\"서브넵튠:GJ1214b가이름대고거절하며벽의등급C155을말하지않는다—{reason[:80]ifnotgj.applicableelse'applicable'}\"": 1,
+    "fails.appendf'서브넵튠:5M⊕·순수가스·500K가'묶이지않는외피'로거절해야하는데{'풀렸다'ifhot.applicableelsehot.reason[:80]}'": 1,
+    "fails.appendf'서브넵튠:GJ1214b가이름대고거절하며벽의등급C155을말하지않는다—{reason[:80]ifnotgj.applicableelse'applicable'}'": 1,
     "named=notover.applicableand'silicate'inover.reasonand'13500'inover.reason": 1,
     "notres.applicable": 2,
     "ok=allnotr.applicableforrinbad": 1,
@@ -315,7 +315,7 @@
     "ok=ref.applicableandcrust.applicableandporous.applicable": 3,
     "ok=res.applicable": 1,
     "ok=zero.applicableandzero.values['nmoi']==base_off.values['nmoi']": 1,
-    "printf\"[{'PASS'ifokelse'FAIL'}]5M⊕·순수가스·1bar500K:\"+'풀렸다거절해야한다'ifhot.applicableelse'거절하며묶이는가장뜨거운해와벽을인용한다—천장이아니다'": 1,
+    "printf'[{'PASS'ifokelse'FAIL'}]5M⊕·순수가스·1bar500K:'+'풀렸다거절해야한다'ifhot.applicableelse'거절하며묶이는가장뜨거운해와벽을인용한다—천장이아니다'": 1,
     "real=notover.applicableand'h2o'inover.reason": 1,
     "res.applicable": 1,
     "wired=r_dante.applicableandr_dante.regime=='inferred_initial_porosity'andr_dante.values.get'voids_expected'isFalse": 1
@@ -327,7 +327,7 @@
     "res.applicable": 1
    },
    "print_serpentine_bands": {
-    "tops.appendf\"{res.values['nmoi_high']:.4f}\"ifres.applicableelse'declined'": 1
+    "tops.appendf'{res.values['nmoi_high']:.4f}'ifres.applicableelse'declined'": 1
    },
    "roster_table": {
     "res.applicable": 1
@@ -356,9 +356,9 @@
   },
   "engine/test_mantle_flux.py": {
    "main": {
-    "okearth.applicableandabsearth.values['implied_surface_heat_flow']/earth.values['radiogenic_power']-1.803<0.03,f\"4:EarthratioonthedeclaredR⊕mustbe1.803,got{earth.values['implied_surface_heat_flow']/earth.values['radiogenic_power']:.3f}\"": 1,
-    "okearth.applicableandearth.values['heat_flow_consistency']==mf.CONSISTENTand55.0<earth.values['mantle_top_boundary_layer']<62.0,f\"4:recipeEarth→{earth.values.get'heat_flow_consistency'},δ_t{earth.values.get'mantle_top_boundary_layer'}\"": 1,
-    "okio.applicableandio.values['mantle_temperature_floor_verdict']==mf.BAND_OPEN_BELOWandio.values['mantle_temperature_floor_min']isNoneandio.values['mantle_temperature_floor_max']isnotNone,f\"5:Io-massbody:partofthefamilyunderthefloor→openbelow,got{io.values.get'mantle_temperature_floor_verdict'}\"": 1,
+    "okearth.applicableandabsearth.values['implied_surface_heat_flow']/earth.values['radiogenic_power']-1.803<0.03,f'4:EarthratioonthedeclaredR⊕mustbe1.803,got{earth.values['implied_surface_heat_flow']/earth.values['radiogenic_power']:.3f}'": 1,
+    "okearth.applicableandearth.values['heat_flow_consistency']==mf.CONSISTENTand55.0<earth.values['mantle_top_boundary_layer']<62.0,f'4:recipeEarth→{earth.values.get'heat_flow_consistency'},δ_t{earth.values.get'mantle_top_boundary_layer'}'": 1,
+    "okio.applicableandio.values['mantle_temperature_floor_verdict']==mf.BAND_OPEN_BELOWandio.values['mantle_temperature_floor_min']isNoneandio.values['mantle_temperature_floor_max']isnotNone,f'5:Io-massbody:partofthefamilyunderthefloor→openbelow,got{io.values.get'mantle_temperature_floor_verdict'}'": 1,
     "okpandora.applicableandpandora.values['heat_flow_consistency']==mf.NO_T,'4:abodywithoutadeclaredpotentialtemperaturemustsaycannot-say⑤,notdefault'": 1
    }
   },
@@ -375,12 +375,12 @@
   },
   "engine/test_mass_radius.py": {
    "main": {
-    "detail=f\"ρ{res.values['density']/5.513:.3f}ρ⊕\"ifres.applicableelseres.reason[:56]": 1,
+    "detail=f'ρ{res.values['density']/5.513:.3f}ρ⊕'ifres.applicableelseres.reason[:56]": 1,
     "notr.applicable": 1,
     "ok=notr.applicable": 1,
     "ok=res.applicableiswant_ok": 1,
     "ok=valley.applicableandvalley.regime=='radius_valley'andvalley.grade=='judgment'": 1,
-    "printf\"[알림]문서§7의1.2ρ⊕기각근거:이게이트는{'기각'ifnotdoc_claim.applicableelse'통과'}시킨다그질량의순철한계는{limit_rho:.2f}ρ⊕\"": 1,
+    "printf'[알림]문서§7의1.2ρ⊕기각근거:이게이트는{'기각'ifnotdoc_claim.applicableelse'통과'}시킨다그질량의순철한계는{limit_rho:.2f}ρ⊕'": 1,
     "r.applicableandr.regime=='radius_valley'": 1
    }
   },
@@ -420,15 +420,15 @@
     "check'PO-줄③/⑤nocompositionpassed,onlyafraction→noline',r.applicableandnotlinesr": 1,
     "check'PO-줄④earth_like+cmf0.4→onecore_mass_fractionline',r.applicableandlengot==1and'core_mass_fraction'ingot[0],got[0]ifgotelse'none'": 1,
     "check'PO-줄④twofieldsoverridden→twolines',r.applicableandlenlinesr==2,strlenlinesr": 1,
-    "check'anexplicitNoneisstillrefusedbyname,asbefore',notr.applicableand\"'None'\"inr.reasonor'',r.reasonor''[:80]": 1
+    "check'anexplicitNoneisstillrefusedbyname,asbefore',notr.applicableand''None''inr.reasonor'',r.reasonor''[:80]": 1
    }
   },
   "engine/test_radiogenic.py": {
    "main": {
     "okdd_pair.applicableanddd_pair.values['radiogenic_power_low']isNoneand'싣지않는다'in''.joindd_pair.notes,'addendum9:adeclareddefaultpairisrecordedandnotused'": 1,
-    "okearth.applicableand'선언'in''.joinearth.notesand'Ruedas2017'in''.joinearth.notes,\"4:thelabelmustsaytheset/splitaredeclaredandnametheconstants'sourceRuedas2017\"": 1,
-    "okearth.applicableand20.5<earth.values['radiogenic_power']/1000000000000.0<22.0,f\"4:Earthradiogenicpower{earth.values.get'radiogenic_power',0/1000000000000.0:.2f}TW,expected~21\"": 1,
-    "okearth.applicableand28.0<earth.values['t_int']<31.0,f\"4:Earthradiogenic-onlyt_int{earth.values.get't_int'}K,expected~29\"": 1,
+    "okearth.applicableand'선언'in''.joinearth.notesand'Ruedas2017'in''.joinearth.notes,'4:thelabelmustsaytheset/splitaredeclaredandnametheconstants'sourceRuedas2017'": 1,
+    "okearth.applicableand20.5<earth.values['radiogenic_power']/1000000000000.0<22.0,f'4:Earthradiogenicpower{earth.values.get'radiogenic_power',0/1000000000000.0:.2f}TW,expected~21'": 1,
+    "okearth.applicableand28.0<earth.values['t_int']<31.0,f'4:Earthradiogenic-onlyt_int{earth.values.get't_int'}K,expected~29'": 1,
     "okearth.applicableandabsearth.values['mantle_radiogenic_power']/earth.values['radiogenic_power']-0.7<1e-09,'4:mantlesharemustbethedeclared0.70'": 1,
     "okearth.applicableandearth.grade=='analog','4:grademustbeanalog—theconcentrationsandthesplitaredeclarations'": 1,
     "okicy.applicableandabsicy.values['radiogenic_power']/rocky_same_mass.values['radiogenic_power']-0.5/0.9<1e-09,'4:a40%icebodymustcarry1−0.10−0.40/1−0.10ofthesame-massrockybudget'": 1,
@@ -462,7 +462,7 @@
     "_w81=_refusal2081": 1,
     "_w81n=_refusal2081": 1,
     "_w82n=_e82nor''if_r82nisNoneor_r82n.applicableelse_r82n.reasonor''": 1,
-    "check'C152메모8③—화성1771.5K:답답판정이평탄띠메모를달고띠폭이100K넘다측정164K',interior.answer_verdict_rbisNoneand_w_bandisnotNoneand_w_band>100.0,f\"{interior.answer_verdict_rb}·폭{_w_band}·T_c{_rb.values.get'core_temperature'if_rb.applicableelseNone}\"": 1,
+    "check'C152메모8③—화성1771.5K:답답판정이평탄띠메모를달고띠폭이100K넘다측정164K',interior.answer_verdict_rbisNoneand_w_bandisnotNoneand_w_band>100.0,f'{interior.answer_verdict_rb}·폭{_w_band}·T_c{_rb.values.get'core_temperature'if_rb.applicableelseNone}'": 1,
     "check'C152메모8③음성—평탄띠를끄면같은점의답에띠메모가없다',_rn.applicableandnot_bandn,f'띠{len_bandn}줄'": 1
    },
    "_hist_solve": {
@@ -481,12 +481,12 @@
   "engine/test_tidal_heating.py": {
    "main": {
     "okmode.applicableandabsmode.values['total_surface_flux']-45.337+13744000000000.0/4*math.pi*5724000.0**2<0.01,'2:totalfluxmustaddtheradiogenicW/4πR²'": 1,
-    "okmode.applicableandmode.values['mode']==th.MODE_HEAT_PIPE,f\"2:Pandoratotalflux→heatpipe,got{mode.values.get'mode'}\"": 1,
+    "okmode.applicableandmode.values['mode']==th.MODE_HEAT_PIPE,f'2:Pandoratotalflux→heatpipe,got{mode.values.get'mode'}'": 1,
     "oknotth.solve1.0,1.0,None,None,None,0.01.applicableand'noorbit'inth.solve1.0,1.0,None,None,None,0.01.reason,'5:noorbitrefusesbyname'": 1,
-    "okpan.applicableandabspan.values['io_power_ratio']-186.7<0.2,f\"2:Pandora×Iooutput{pan.values.get'io_power_ratio'},expected186.7\"": 1,
-    "okpan.applicableandabspan.values['orbital_period']-31.9987<0.001,f\"2:PandoraP_orb{pan.values.get'orbital_period'}h,expected31.9987\"": 1,
-    "okpan.applicableandabspan.values['surface_flux']-45.337<0.01,f\"2:PandoraFshouldbe45.337W/m²tidal_check,got{pan.values.get'surface_flux'}\"": 1,
-    "okpan.applicableandabspan.values['surface_flux']/45.0-1.0<0.0075,f\"2:PandoraF{pan.values.get'surface_flux'}W/m²vsboard45tol0.75%\"": 1,
+    "okpan.applicableandabspan.values['io_power_ratio']-186.7<0.2,f'2:Pandora×Iooutput{pan.values.get'io_power_ratio'},expected186.7'": 1,
+    "okpan.applicableandabspan.values['orbital_period']-31.9987<0.001,f'2:PandoraP_orb{pan.values.get'orbital_period'}h,expected31.9987'": 1,
+    "okpan.applicableandabspan.values['surface_flux']-45.337<0.01,f'2:PandoraFshouldbe45.337W/m²tidal_check,got{pan.values.get'surface_flux'}'": 1,
+    "okpan.applicableandabspan.values['surface_flux']/45.0-1.0<0.0075,f'2:PandoraF{pan.values.get'surface_flux'}W/m²vsboard45tol0.75%'": 1,
     "okpan.applicableandpan.values['heat_transport_regime']==th.REGIME_VIGOROUS,'2:Pandoraregimemustbethe§6.1toprow'": 1
    }
   },
