@@ -1,6 +1,6 @@
 {
  "python": "3.12.3",
- "frozen_at": "2026-10-07",
+ "frozen_at": "2026-10-08",
  "bracket": [
   0.13,
   0.25
@@ -25,12 +25,12 @@
  },
  "files": {
   "interior.py": {
-   "bytes": "241eb87e3c1e962f",
-   "code": "c8891334b04c8e97"
+   "bytes": "b9ae82bc82de9664",
+   "code": "9f25187fd393b2d0"
   },
   "eos.py": {
-   "bytes": "042a2d4bc455ef36",
-   "code": "7fc88bbdade3a0fe"
+   "bytes": "3c74d308cc1df7f0",
+   "code": "d78b24d9e3d2c1ce"
   },
   "chain.yaml": {
    "bytes": "1b1574d73140be04"
@@ -47,11 +47,11 @@
   "box_ceiling": {
    "halvings": 6,
    "core_sulphur_wt": 0.1890625,
-   "core_radius_km": 1695.3076946821961,
-   "core_radius_fraction": 0.500183376991923,
-   "core_mass_fraction": 0.2125286604878228,
-   "core_mean_density_gcc": 6.6789374544484,
-   "nmoi": 0.3626266824608388
+   "core_radius_km": 1695.3103895291877,
+   "core_radius_fraction": 0.500184234941122,
+   "core_mass_fraction": 0.21252966875505383,
+   "core_mean_density_gcc": 6.6789372899103485,
+   "nmoi": 0.3626265628050738
   },
   "box_floor": {
    "bracket_miss": true,
