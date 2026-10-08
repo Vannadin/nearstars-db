@@ -360,6 +360,11 @@
 "sum((Decimal(repr(v)) for v in t.values()))"
 ],
 [
+"engine/test_c164_knives.py",
+"<module>",
+"sum((1 for row in rec if info['r_base'] <= row[0] < info['r_top']))"
+],
+[
 "engine/test_check_refs.py",
 "main",
 "sum((len(_ks) for _ks in EXEMPT.values()))"
