@@ -1,7 +1,7 @@
 {
  "python": "3.12.3",
- "path_fingerprint": "9456dcbe0aacac45",
- "frozen_at": "2026-10-07",
+ "path_fingerprint": "07b13b1047622dc4",
+ "frozen_at": "2026-10-08",
  "steps": 1500,
  "inputs": {
   "ammonia_table.py": "96a9b5c4f3368313",
@@ -9,39 +9,39 @@
   "body_class.py": "a33bf101d4a44d2b",
   "bounds.py": "1bf717571c8e24b3",
   "chain.yaml": "1b1574d73140be04",
-  "cmb_flux.py": "50dae13044a73b76",
+  "cmb_flux.py": "140da6bccb74c601",
   "convergence.py": "557d60d38c8abe64",
   "core_energy.py": "ee101dac762b4b08",
   "core_entropy.py": "09cdf66e68778bcb",
   "core_history.py": "26ed9cb6cf6a5db8",
   "core_state.py": "d963048d45424e6f",
   "domain.py": "be26595d0b499f6f",
-  "eos.py": "042a2d4bc455ef36",
+  "eos.py": "3c74d308cc1df7f0",
   "fe_liquid.py": "2d0377f22725fb27",
   "fermi.py": "7bb499bb4eab88b1",
   "hhe_table.py": "4e8c1b003e69b834",
   "ice_fr2015.py": "ff4bfefe8553a1a7",
   "ice_melt_table.py": "edf7d6476c3ae64f",
-  "interior.py": "241eb87e3c1e962f",
+  "interior.py": "b9ae82bc82de9664",
   "mantle_composition.py": "6505772035c64fe5",
   "mantle_flux.py": "7cf7bb526eb83f77",
-  "mars_sulphur_anchor.json": "722d468363a98a60",
+  "mars_sulphur_anchor.json": "a58ac5899aa4abfd",
   "payload.py": "4190fe99856ad6a1",
   "porosity.py": "ca33b581de6e49bc",
   "radiogenic.py": "51e5d2e798d00c42",
-  "reference_adiabats.json": "ee727039d2430eec",
+  "reference_adiabats.json": "56e873bf1d6cc2db",
   "registry.py": "7031b25acd49c432",
   "rheology.py": "84b57ff4bc38ca16",
   "rootfind.py": "8896bade25e89e60",
   "rtpress.py": "4cc1c0792ce3c473",
   "smooth_table.py": "45f9cf4315dd09b1",
   "steam_if97.py": "6e1d779f9a269cb8",
-  "test_ice_giant.py": "8f906b05a0572523",
+  "test_ice_giant.py": "2dc39aac0019fe9c",
   "tidal_heating.py": "a28f5df4b740550b",
   "tidal_locking.py": "11b26318f6a77655",
   "tidal_response.py": "31e7e6768267a843",
   "water2_table.py": "731365cb6d6c9980",
-  "water_hot.py": "9483e265a5186644",
+  "water_hot.py": "3cdf64e900f918b0",
   "water_table.py": "c1c7600cd457cb59"
  },
  "inputs_code": {
@@ -49,20 +49,20 @@
   "bands.py": "fea4beaaccea7d80",
   "body_class.py": "b743621fe568dbfa",
   "bounds.py": "db2a54e603008f63",
-  "cmb_flux.py": "8c77a113ff4b0f9f",
+  "cmb_flux.py": "333999c02d256658",
   "convergence.py": "bf7c4c6f6143e39e",
   "core_energy.py": "cbf673feb11584ca",
   "core_entropy.py": "c9584ed29097a9ca",
   "core_history.py": "b49b53b77928f0bf",
   "core_state.py": "50f3ada555726749",
   "domain.py": "2cb74e1129cc0f2d",
-  "eos.py": "7fc88bbdade3a0fe",
+  "eos.py": "d78b24d9e3d2c1ce",
   "fe_liquid.py": "3a8df23d0c6389a5",
   "fermi.py": "0f998dc410c31668",
   "hhe_table.py": "aa5778ef0102e0a6",
   "ice_fr2015.py": "04e70109b8e53900",
   "ice_melt_table.py": "182e9a6426ad8b99",
-  "interior.py": "c8891334b04c8e97",
+  "interior.py": "9f25187fd393b2d0",
   "mantle_composition.py": "1524ec364dad1355",
   "mantle_flux.py": "a095a5afbe261bac",
   "payload.py": "f65f061b8b2d9508",
@@ -74,17 +74,17 @@
   "rtpress.py": "eb2119fd84ee0a8b",
   "smooth_table.py": "a4220cce387c4c78",
   "steam_if97.py": "898c5a9fa73b103b",
-  "test_ice_giant.py": "bd9b70b594fa5b0b",
+  "test_ice_giant.py": "0f3bd0037a76220f",
   "tidal_heating.py": "ad6f3028e1a550c6",
   "tidal_locking.py": "e11cfb54e5244a0c",
   "tidal_response.py": "87003efc4ef31a4a",
   "water2_table.py": "25b2c2036d89e0dc",
-  "water_hot.py": "5dbf1682216c6917",
+  "water_hot.py": "3abdfd5f4fd66387",
   "water_table.py": "8b3dcb5c7ac76014"
  },
  "bodies": {
   "Uranus": {
-   "seconds": 90.7,
+   "seconds": 104.2,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -154,7 +154,7 @@
    "standalone_reproduces_solve": true
   },
   "Neptune": {
-   "seconds": 95.8,
+   "seconds": 110.1,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -240,13 +240,13 @@
   "Linux-x86_64": {
    "Uranus": {
     "instr_u": 1615538354264,
-    "seconds": 94.2,
-    "load1": 1.0
+    "seconds": 122.8,
+    "load1": 2.13
    },
    "Neptune": {
     "instr_u": 1652178812692,
-    "seconds": 94.5,
-    "load1": 1.0
+    "seconds": 107.7,
+    "load1": 11.63
    }
   }
  }
