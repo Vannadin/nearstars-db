@@ -45,7 +45,7 @@ check("답(속 미수렴) — 속 기록 False 를 심은 사본: 답으로 센�
 
 planted_outer = dataclasses.replace(earth, converged=False)
 v = interior.verdict_of(planted_outer)
-# G2-2, post-result: spec 7f2d8d2e says answer_verdict's reason; the cycle branch shadows it for interior Results (interior.py:961–963); helper defect on the rewrite list
+# G2-2, post-result: spec 7f2d8d2e says answer_verdict's reason; the cycle branch shadows it for interior Results (interior.py@«if getattr(r, "cycles", ()) and r.converged is False:»); helper defect on the rewrite list
 check("불수락 — 겉 수렴 표지 False 를 심은 사본(옛 1782.0 의 꼴): 답이 아니다",
       v.kind == "불수락" and not interior.is_answer(planted_outer)
       and planted_outer.applicable, str(v))  # verdict-ok: 불수락이 거절이 아님을(applicable 은 참) 시험이 확인한다
