@@ -235,20 +235,25 @@ class MaterialBytes(unittest.TestCase):
     them, and the process's history (what was solved before) does not."""
 
     def test_changed_engine_byte_changes_digest(self):
+        """A tracked engine data file modified in the working tree moves the digest; an untracked file does not."""
         import os
         from solver import legacy_materials as lm
-        p = os.path.join(lm._ENGINE, "zz_material_bytes_probe.json")
+        tracked = os.path.join(lm._ENGINE, "ice_giant_anchor.json")
+        untracked = os.path.join(lm._ENGINE, "zz_material_bytes_probe.json")
+        original = open(tracked, "rb").read()
+        a = lm.material_bytes()
         try:
-            with open(p, "w") as fh:
+            with open(untracked, "w") as fh:
                 fh.write('{"rho": 1.0}')
-            a = lm.material_bytes()
-            with open(p, "w") as fh:
-                fh.write('{"rho": 2.0}')
-            c = lm.material_bytes()
-            self.assertNotEqual(a, c)
-            self.assertEqual(c, lm.material_bytes())        # control: unchanged bytes, same digest
+            self.assertEqual(lm.material_bytes(), a)            # untracked: no effect (r2)
+            with open(tracked, "wb") as fh:
+                fh.write(original + b" ")
+            self.assertNotEqual(lm.material_bytes(), a)         # a tracked byte changed: a new digest
         finally:
-            os.remove(p)
+            with open(tracked, "wb") as fh:
+                fh.write(original)
+            os.remove(untracked)
+        self.assertEqual(lm.material_bytes(), a)                # control: restored, the same digest
 
     def test_history_does_not_move_solve_id(self):
         """Earth alone vs Earth after Venus in one process: the same solve_id."""

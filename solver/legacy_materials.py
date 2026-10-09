@@ -27,35 +27,40 @@ _ENGINE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 if _ENGINE not in sys.path:
     sys.path.insert(0, _ENGINE)
 
-#: Files of the engine tree that make up the «material data bytes» of solve_id (design §A6; r2 S7 note-4 HOLDs):
-#: every engine Python module and every engine data file, minus what is not material data — the body files (the Body
-#: is hashed on its own), test fixtures and tests, tools, requirements and prose. A fixed function of the tree: it does
-#: not depend on what this process has opened or in which order, and paths are repo-relative, so Mac and PC agree.
+#: «Material data bytes» of solve_id (design §A6; r2 S7 note-4 HOLDs): the engine tree as git tracks it — the blob ids
+#: of every tracked engine file outside bodies/, test fixtures, tests, tools, requirements and prose (r2: untracked and
+#: generated files must not count). A tracked file modified in the working tree adds its path and content hash, so a
+#: dirty tree gets its own id. A fixed function of the tree: no process history, no machine paths, no file reads beyond
+#: git's own (r2: no per-solve re-read of every table).
 _DATA_SUFFIXES = (".py", ".json", ".yaml", ".yml", ".csv", ".txt", ".npz", ".npy", ".dat", ".h5")
-_NOT_DATA_DIRS = ("bodies", "test_fixtures", "__pycache__", "tools")
+_NOT_DATA_PARTS = ("engine/bodies/", "engine/test_fixtures/", "engine/tools/", "/__pycache__/")
 
 
-def _engine_files() -> list:
-    out = []
-    for root, dirs, files in os.walk(_ENGINE):
-        dirs[:] = sorted(d for d in dirs if d not in _NOT_DATA_DIRS and not d.startswith("."))
-        for f in sorted(files):
-            if f.endswith(_DATA_SUFFIXES) and not f.startswith(("test_", "requirements")):
-                out.append(os.path.join(root, f))
-    return sorted(out)
+def _counts(path: str) -> bool:
+    base = path.rsplit("/", 1)[-1]
+    return (path.endswith(_DATA_SUFFIXES) and not base.startswith(("test_", "requirements"))
+            and not any(x in path for x in _NOT_DATA_PARTS))
 
 
 def material_bytes() -> bytes:
-    """sha256 over (repo-relative path, sha256 of content) for every file of `_engine_files()`, sorted. Conservative:
-    any change to engine code or data moves solve_id (a trace key only; R-RUL-26 keeps staleness by value).
-    Deterministic: independent of process history, scheduling and machine."""
+    """sha256 over the tracked engine files' (path, blob id) lines of `git ls-files -s`, plus (path, content sha256) of
+    every such file modified in the working tree."""
     import hashlib
+    import subprocess
     repo = os.path.dirname(_ENGINE)
+    ls = subprocess.run(["git", "-C", repo, "ls-files", "-s", "--", "engine"], capture_output=True, text=True,
+                        check=True).stdout.splitlines()
     h = hashlib.sha256()
-    for p in _engine_files():
-        h.update(os.path.relpath(p, repo).replace(os.sep, "/").encode())
-        with open(p, "rb") as fh:
-            h.update(hashlib.sha256(fh.read()).digest())
+    for line in sorted(ls):
+        meta, path = line.split("\t", 1)
+        if _counts(path):
+            h.update(f"{path} {meta.split()[1]}\n".encode())
+    dirty = subprocess.run(["git", "-C", repo, "diff", "--name-only", "--", "engine"], capture_output=True, text=True,
+                           check=True).stdout.split()
+    for path in sorted(p for p in dirty if _counts(p)):
+        full = os.path.join(repo, path)
+        content = open(full, "rb").read() if os.path.isfile(full) else b"<deleted>"
+        h.update(f"dirty {path} ".encode() + hashlib.sha256(content).digest())
     return h.digest()
 
 
