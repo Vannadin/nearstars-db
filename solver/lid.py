@@ -24,12 +24,13 @@ from solver import stepper as st
 class LidResult:
     m: float
     y: tuple                     # the base state, T = T_b = T_ad (continuous into the adiabatic layer below)
-    t_b: float
-    a: float
+    t_b: float                   # the converged base temperature (T_ad at the base)
+    a: float                     # the profile coefficients the last pass was integrated with (T = a/r + b)
     b: float
+    t_profile_base: float        # the stepped T at the base node of that pass (= a/r_b + b to the stepper's rtol)
     trail: tuple                 # T_b iterates
     path: tuple
-    counters: st.Counters
+    counters: dict               # summed over every pass of the fixed point
 
 
 def _lid_rhs(view, a: float | None, b: float | None):
@@ -60,23 +61,37 @@ def _coeffs(radius: float, r_b: float, t_s: float, t_b: float):
     return a, t_s - a / radius
 
 
-def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s: float, t_pot: float,
+def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_pot: float,
              r_scale: float, opt: rhs.PassOptions = rhs.PassOptions(), lid_iters: int = 8,
-             lid_t_tol: float = 1e-9, t_b_seed: float | None = None):
-    """Integrate the lid from the surface to its base. Returns a LidResult, or a Stop: the pass's own stop, or
-    Stop("lid_unconverged", {"trail", "iters", "tol"}). `t_b_seed` replaces T_b⁰ (a test control)."""
+             lid_t_tol: float = 1e-9, t_b_seed: float | None = None, layer_id: str = "lid", events=()):
+    """Integrate the lid from the surface to its base. Returns a LidResult, or a Stop:
+    - Stop("lid_input", {layer_id, field, value}) for R-LITHO-6's input refusals (depth ≤ 0 or ≥ R, no T_s);
+    - the pass's own stop, with layer_id added;
+    - Stop("lid_unconverged", {layer_id, trail, iters, tol}).
+    `t_b_seed` replaces T_b⁰ (a test control). `events` are the layer's S5 events (seams, onset curves)."""
+    if t_s is None:
+        return st.Stop("lid_input", {"layer_id": layer_id, "field": "surface_temperature_k", "value": None})
+    if not (0.0 < depth < radius):
+        return st.Stop("lid_input", {"layer_id": layer_id, "field": "depth", "value": depth})
     r_b = radius - depth
     sopt = st.Options(rtol=opt.rtol, floors=rhs.floors(mass, r_scale), h0=1e-3 * mass,
                       h_min=1e-15 * mass, h_max=mass / 20.0, max_steps=opt.max_steps,
                       event_min_progress=opt.event_min_progress * mass,
                       event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_run)
     base = st.Event("lid_base", lambda m, y: y[0] - r_b, scale=r_scale)
+    counters: dict = {}
 
     def run(a, b):
         t0 = t_pot if a is None else t_s
-        res = st.run(_lid_rhs(view, a, b), mass, (radius, p_s, t_pot, t0, 0.0), 0.0, sopt, [base])
-        if res.stop.kind != "event":
-            return res.stop if res.stop.kind != "end" else st.Stop("lid_base_not_reached", {"m": res.x})
+        res = st.run(_lid_rhs(view, a, b), mass, (radius, p_s, t_pot, t0, 0.0), 0.0, sopt, [base, *events])
+        for k, v in vars(res.counters).items():
+            counters[k] = counters.get(k, 0) + v
+        if res.stop.kind != "event" or res.event != "lid_base":
+            rec = res.stop.record if isinstance(res.stop.record, dict) else {"record": res.stop.record}
+            if res.stop.kind in ("end", "event"):
+                return st.Stop("lid_base_not_reached", {"layer_id": layer_id, "m": res.x})
+            return st.Stop(res.stop.kind, {**rec, "layer_id": layer_id}) if res.stop.kind != "refused" \
+                else res.stop
         return res
 
     first = run(None, None)
@@ -92,8 +107,9 @@ def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s: fl
         t_new = res.y[2]
         trail.append(t_new)
         if abs(t_new - t_b) <= lid_t_tol * abs(t_new):
-            a, b = _coeffs(radius, r_b, t_s, t_new)
-            r, p, t_ad, _t, i_moi = res.y
-            return LidResult(res.x, (r, p, t_ad, t_new, i_moi), t_new, a, b, tuple(trail), res.path, res.counters)
+            r, p, t_ad, t_prof, i_moi = res.y
+            return LidResult(res.x, (r, p, t_ad, t_new, i_moi), t_new, a, b, t_prof, tuple(trail), res.path,
+                             counters)
         t_b = t_new
-    return st.Stop("lid_unconverged", {"trail": tuple(trail), "iters": lid_iters, "tol": lid_t_tol})
+    return st.Stop("lid_unconverged", {"layer_id": layer_id, "trail": tuple(trail), "iters": lid_iters,
+                                       "tol": lid_t_tol})

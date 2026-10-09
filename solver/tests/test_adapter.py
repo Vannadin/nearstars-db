@@ -210,3 +210,55 @@ class WaterNotPorted(unittest.TestCase):
     def test_control_silicate_resolves(self):
         from solver import body as b
         self.assertIsNotNone(lm.resolve(b.Layer("m", "mantle", "silicate"), 1600.0, 0.0))
+
+
+class AtRestStrict(unittest.TestCase):
+    """r2 S4-fix: a keyed cache holding a falsy value is not at rest; a counter filled before import fails too."""
+
+    def _fresh(self, plant):
+        import subprocess, sys
+        code = f"import sys; sys.path.insert(0, 'engine'); {plant}; import solver.legacy_materials"
+        return subprocess.run([sys.executable, "-c", code], capture_output=True, text=True)
+
+    def test_falsy_value_in_keyed_cache_fails(self):
+        r = self._fresh("import fe_liquid; fe_liquid._CACHE[('x', 0.0, 0.0)] = 0")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("fe_liquid._CACHE", r.stderr)
+
+    def test_counter_filled_before_import_fails(self):
+        r = self._fresh("import interior; interior.SURF_RHO_FALLBACKS[0] = 7")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("interior.SURF_RHO_FALLBACKS", r.stderr)
+
+    def test_control_clean_import_works(self):
+        r = self._fresh("pass")
+        self.assertEqual(r.returncode, 0, r.stderr)
+
+
+class ExcludedSetLiteral(unittest.TestCase):
+    """r2 S4-fix N6: the excluded set written out, not recomputed with the adapter's own filter."""
+
+    def test_excluded(self):
+        self.assertEqual(set(lm.IMPORT_REGISTRIES), {("provisional", "REGISTRY"), ("registry", "_REGISTRY")})
+        self.assertEqual(set(lm.CONSTANT_MEMOS), {
+            ("rtpress", "_VMIN_TAB"), ("ice_fr2015", "_GL_NODES"), ("mantle_composition", "_TABLE_PHASE"),
+            ("mantle_composition", "_TABLES"), ("rocky_roster", "_ROWS"), ("eos", "_SPINODAL"),
+            ("eos", "_PRESSURE_FAST"), ("water_table", "_CACHE"), ("water2_table", "_CACHE"), ("paleos", "_FACTS"),
+            ("check_refs", "BASENAMES"), ("check_refs", "CACHE")})
+        flags = {k for k, v in process_state.REGISTRY.items() if v[0] == process_state.FLAG}
+        self.assertEqual(flags, {("interior", "COMPOSITIONS"), ("parallel_points", "_FN"), ("interior", "_REOPEN"),
+                                 ("interior", "_SOLVE_DEPTH"), ("interior", "_LAST_GRAZE"), ("interior", "_LOOP_TRIALS"),
+                                 ("interior", "_CALL"), ("interior", "_ENTRY"), ("interior", "_PIN"),
+                                 ("structure_grid", "BUILDING"), ("structure_grid", "JUDGE_A_ONLY"),
+                                 ("structure_grid", "GRID_DIR")})
+
+
+class WaterMixture(unittest.TestCase):
+    def test_mixture_with_water_refuses(self):
+        wet = eos.mix("rock_ice_test", "test", (interior.MATERIALS["silicate"], 0.5), (interior.MATERIALS["h2o"], 0.5))
+        self.assertTrue(lm._has_water(wet))
+
+    def test_control_dry_mixture_resolves(self):
+        dry = eos.mix("rock_iron_test", "test", (interior.MATERIALS["silicate"], 0.5),
+                      (interior.MATERIALS["fe_prem"], 0.5))
+        self.assertFalse(lm._has_water(dry))

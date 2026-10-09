@@ -88,6 +88,18 @@ def _at_rest(key, v) -> bool:
     return isinstance(v, tuple) and all(x is None for x in v)
 
 
+def _counter_at_rest(v) -> bool:
+    """A counter's zero form as written in its source: 0, None, an empty container, a list of zeros, or a dict whose
+    values are all at rest (eos.DENSITY_BELOW_REF = {"lowest_pa": None, …}, rtpress.OUTSIDE = {"calls": 0, …})."""
+    if v is None or (isinstance(v, (int, float)) and v == 0):
+        return True
+    if isinstance(v, (list, set, tuple)):
+        return all(_counter_at_rest(x) for x in v)
+    if isinstance(v, dict):
+        return all(_counter_at_rest(x) for x in v.values())
+    return False
+
+
 #: Snapshot at the adapter's import (deep copies) of the per-solve MEMOs and the COUNTERs. Restoring a COUNTER keeps
 #: its keys (e.g. eos.DENSITY_BELOW_REF["lowest_pa"]); restoring a MEMO gives its empty form, checked here: a memo
 #: filled before this import makes the import fail by name (r2). START entries are not snapshotted: they go back to
@@ -97,8 +109,10 @@ _PRISTINE = {(mod, name): copy.deepcopy(getattr(m, name)) for mod, name, k, m in
 _NOT_AT_REST = sorted(f"{mod}.{name}" for mod, name, k, m in _registry_entries()
                       if k == process_state.MEMO and (mod, name) not in CONSTANT_MEMOS
                       and not _at_rest((mod, name), getattr(m, name)))
+_NOT_AT_REST += sorted(f"{mod}.{name}" for mod, name, k, m in _registry_entries()
+                      if k == process_state.COUNTER and not _counter_at_rest(getattr(m, name)))
 if _NOT_AT_REST:
-    raise ImportError("solver.legacy_materials imported after engine memos were filled: " + ", ".join(_NOT_AT_REST))
+    raise ImportError("solver.legacy_materials imported after engine memos or counters were filled: " + ", ".join(_NOT_AT_REST))
 
 
 def reset_engine_state() -> list:
@@ -238,6 +252,13 @@ BASAL_CONST = "silicate_basal_const"
 NOT_PORTED = frozenset(interior.VOLATILE_NAMES)
 
 
+def _has_water(mat) -> bool:
+    """A water-family material, or a mixture holding one (with_rock / with_ices / envelope water)."""
+    if getattr(mat, "name", "") in NOT_PORTED or interior._volatile(mat):
+        return True
+    return any(w > 0.0 and _has_water(m) for m, w in (getattr(mat, "parts", None) or ()))
+
+
 def resolve(layer, t_pot: float, p_stop: float, column_steam: bool = False):
     """The view of one layer (S7). Plain ids are engine MATERIALS keys (eos.py:4431 + CORE_BOX_MATERIALS); the basal
     constant-density layer is `silicate_basal_const` with params.density. Composition-built materials (declared or
@@ -253,7 +274,7 @@ def resolve(layer, t_pot: float, p_stop: float, column_steam: bool = False):
     if layer.material in NOT_PORTED or layer.material.startswith(("h2o", "steam")):
         return None
     mat = interior.MATERIALS.get(layer.material)
-    if mat is None:
+    if mat is None or _has_water(mat):
         return None
     phi0 = params.get("porosity_phi0")
     p_cap = params.get("porosity_p_cap")

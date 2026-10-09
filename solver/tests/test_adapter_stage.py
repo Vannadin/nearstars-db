@@ -68,7 +68,7 @@ def _capture(run):
     return rows
 
 
-def _seam_near(mat, p, rel=0.01):
+def _seam_near(mat, p, rel=1e-9):
     lo, hi = mat.stencil_bounds(p) if hasattr(mat, "stencil_bounds") else (0.0, float("inf"))
     return any(0.0 < b < float("inf") and abs(p - b) <= rel * b for b in (lo, hi))
 
@@ -76,8 +76,8 @@ def _seam_near(mat, p, rel=0.01):
 def _check(tc, rows, t_pot, p_stop, column_steam=False):
     """Every stage matches bit for bit, except the old landing-step clamp (C164 `stage_pmin`, interior.py:1569:
     a stage of a step that lands on a phase or seam boundary is read on the old side). The new solver lands every
-    step on such a boundary (events), so it has no such stage; each clamped stage must lie within 1 % of a
-    boundary of its material, and is counted."""
+    step on such a boundary (events), so it has no such stage; each clamped stage must be read within 1e-9 of a
+    boundary of its material (measured: boundary × (1 + 4e-12)), and they are counted (measured 0.04–0.4 %)."""
     n, clamped = 0, 0
     for mat, owner, pp, t, rho_old, phi0, p_cap, p_eval in rows:
         if owner is interior.COLUMN_STEAM and not column_steam:
@@ -126,14 +126,29 @@ class OldStage(unittest.TestCase):
         self.assertGreater(n, 100)
         self.assertTrue(any(r[2] <= 0.0 for r in rows))
 
+    def _envelope_rows(self):
+        # an Earth-mass body with a 2 % h_he envelope: the run reaches the envelope (≈ 6e4 h_he stages)
+        return _capture(lambda: interior._integrate_raw(2.0e11, M_E, 0.05, 0.0, "fe_prem", gmf=0.02,
+                                                         t_center=6000.0, t_pot=0.0))
+
     def test_gas_envelope_p_stop(self):
-        hhe = interior.MATERIALS["h_he"]
-        p_stop = hhe.p_floor
+        p_stop = interior.MATERIALS["h_he"].p_floor
         self.assertGreater(p_stop, 0.0)
-        rows = _capture(lambda: interior._integrate_raw(4.0e12, 317.8 * M_E, 0.03, 0.0, "fe_prem", gmf=0.9,
-                                                         t_center=20000.0, t_pot=0.0))
-        n = _check(self, rows, 0.0, p_stop)
-        self.assertGreater(n, 100)
+        rows = self._envelope_rows()
+        self.assertGreater(sum(1 for r in rows if getattr(r[0], "name", "") == "h_he"), 1000)
+        # stages with 0 < pp < p_stop: the p_stop clamp is what the old stage applies there
+        self.assertGreater(sum(1 for r in rows if 0.0 < r[2] < p_stop), 0)
+        self.assertGreater(_check(self, rows, 0.0, p_stop), 1000)
+
+    def test_mutation_without_p_stop_fails(self):
+        p_stop = interior.MATERIALS["h_he"].p_floor
+        rows = [r for r in self._envelope_rows() if 0.0 < r[2] < p_stop]
+        bad = 0
+        for mat, owner, pp, t, rho_old, phi0, p_cap, p_eval in rows:
+            v = lm.LegacyView("x", mat, 0.0, 0.0, phi0=phi0, p_cap=p_cap)     # p_stop dropped
+            if v.density(pp, t) != rho_old:
+                bad += 1
+        self.assertGreater(bad, 0)
 
     def test_control_wrong_p_stop_differs(self):
         rows = _capture(lambda: interior._integrate_raw(3.6e11, M_E, 0.325, 0.0, "fe_prem",
@@ -147,3 +162,34 @@ class OldStage(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class BranchesNotReachedByOldRuns(unittest.TestCase):
+    """r2 S4-fix B3: the floor clamp and the hot-surface ρ₀ fallback are not reached by plausible old integrations
+    (a hot rocky surface refuses with SpinodalGap deeper first; a stage below a fit floor ends the old step first).
+    They are pinned here against the old lines (interior.py:1533–1542 `_at_floor`, :1570–1577 SURF_RHO at 097a8aa3),
+    each with a mutation that fails."""
+
+    def test_at_floor(self):
+        mat = interior.MATERIALS["fe_s_13wt_19gpa"]
+        lo = mat.shoot_lo
+        view = lm.LegacyView("fe_s_13wt_19gpa", mat, 1600.0)
+        p = 0.5 * lo
+        self.assertEqual(view.density(p, 2000.0), mat.density(lo, 2000.0, 1600.0))
+        mutant = lm.LegacyView("fe_s_13wt_19gpa", mat, 1600.0)
+        mutant._at_floor = lambda q: q                                   # the clamp removed
+        got = mutant.density(p, 2000.0)
+        self.assertTrue(not isinstance(got, float) or got != mat.density(lo, 2000.0, 1600.0))
+
+    def test_surface_fallback(self):
+        mat = interior.MATERIALS["silicate"]
+        view = lm.LegacyView("silicate", mat, 1600.0)
+        self.assertEqual(view.density(0.0, 5500.0), mat.rho0)
+        saved = interior.SURF_RHO
+        try:
+            interior.SURF_RHO = False                                    # the old knob off: ρ₀ directly
+            self.assertEqual(lm.LegacyView("silicate", mat, 1600.0).density(0.0, 1600.0), mat.rho0)
+        finally:
+            interior.SURF_RHO = saved
+        cool = lm.LegacyView("silicate", mat, 1600.0).density(0.0, 1600.0)
+        self.assertNotEqual(cool, mat.rho0)                              # mutation-like: the 1 bar read is used

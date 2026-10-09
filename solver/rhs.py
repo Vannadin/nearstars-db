@@ -12,7 +12,7 @@ State y = (r, P, T_ad, T, I); independent variable m, running inward from M; I a
     dI/dm = −(2/3) r²                       (I grows inward from 0 at the surface; the shell's moment, for C/MR²)
 
 A material view is any object with
-    state(P, T, guess_rho) -> (rho, dTdP_ad) | stepper.Stop
+    state(P, T, guess_rho) -> (rho, dTdP_ad[, notes]) | stepper.Stop      (only the first two are read here)
 and, only where ρ(P_s) → 0 (a polytrope), surface_shell(P_start, g_surface, R) -> (shell_mass, depth): the mass
 and depth of the spherical shell above the start pressure, from the material's own near-surface series (§A1.2).
 """
@@ -69,8 +69,10 @@ class PassResult:
 
 
 def floors(mass: float, r_scale: float) -> tuple:
-    """Error-scale floors of (r, P, T_ad, T, I) (registration note 2 item 9; I as the old engine's moi floor)."""
-    return (1e-12 * r_scale, 1e5, 10.0, 10.0, 1e-12 * mass * r_scale ** 2)
+    """Error-scale floors of (r, P, T_ad, T, I) (registration note 2 item 9). I's floor is infinite: the moment of
+    inertia is a quadrature carried along, kept **out** of the step-size error norm, so adding it moves no step
+    (r2 S4-fix: with it inside, 302 vs 303 steps)."""
+    return (1e-12 * r_scale, 1e5, 10.0, 10.0, math.inf)
 
 
 def r_scale_of(mass: float, rho_mean: float) -> float:
