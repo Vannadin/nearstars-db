@@ -24,21 +24,11 @@ class LoadError(Exception):
         self.kind, self.detail, self.key, self.line = kind, detail, key, line
 
 
-class Loader(yaml.SafeLoader):
-    pass
-
-
 _KEEP = ("tag:yaml.org,2002:null", "tag:yaml.org,2002:str")
-Loader.yaml_implicit_resolvers = {
-    ch: [(tag, rx) for tag, rx in rs if tag in _KEEP]
-    for ch, rs in yaml.SafeLoader.yaml_implicit_resolvers.items()}
 _INT_RE = re.compile(r"^(?:[-+]?[0-9]+|0o[0-7]+|0x[0-9a-fA-F]+)$")
 _FLOAT_RE = re.compile(r"^(?:[-+]?(?:\.[0-9]+|[0-9]+(?:\.[0-9]*)?)(?:[eE][-+]?[0-9]+)?|[-+]?\.(?:inf|Inf|INF)"
                        r"|\.(?:nan|NaN|NAN))$")
-Loader.add_implicit_resolver("tag:yaml.org,2002:bool", re.compile(r"^(?:true|True|TRUE|false|False|FALSE)$"),
-                             list("tTfF"))
-Loader.add_implicit_resolver("tag:yaml.org,2002:int", _INT_RE, list("-+0123456789"))
-Loader.add_implicit_resolver("tag:yaml.org,2002:float", _FLOAT_RE, list("-+0123456789."))
+_BOOL_RE = re.compile(r"^(?:true|True|TRUE|false|False|FALSE)$")
 
 
 def _int(loader, node):
@@ -68,26 +58,36 @@ def _map(loader, node):
     return out
 
 
-Loader.add_constructor("tag:yaml.org,2002:int", _int)
-Loader.add_constructor("tag:yaml.org,2002:map", _map)
-
-
 def _refuse_tag(loader, node):
     raise LoadError("bad_tag", f"tag {node.tag} is not allowed (YAML 1.2 core only)", key=node.tag,
                     line=node.start_mark.line + 1)
 
 
-# Explicit tags outside the 1.2 core (`!!timestamp`, `!!binary`, `!!set`, `!!omap`, `!!pairs`, `!!merge`) would build
-# non-plain types (a date reaching Body breaks canonical(), solve_id's path; r2 fix-s3 B2): refused by name.
-for _tag in ("timestamp", "binary", "set", "omap", "pairs", "merge", "value"):
-    Loader.add_constructor(f"tag:yaml.org,2002:{_tag}", _refuse_tag)
-Loader.add_constructor(None, _refuse_tag)
+def _loader() -> type:
+    """A fresh loader class per parse: the resolver and constructor tables PyYAML keeps on the class are built here,
+    not configured at import, so the module holds no mutable state (phase1-design §T A6 guard)."""
+    class Loader(yaml.SafeLoader):
+        pass
+    Loader.yaml_implicit_resolvers = {
+        ch: [(tag, rx) for tag, rx in rs if tag in _KEEP]
+        for ch, rs in yaml.SafeLoader.yaml_implicit_resolvers.items()}
+    Loader.add_implicit_resolver("tag:yaml.org,2002:bool", _BOOL_RE, list("tTfF"))
+    Loader.add_implicit_resolver("tag:yaml.org,2002:int", _INT_RE, list("-+0123456789"))
+    Loader.add_implicit_resolver("tag:yaml.org,2002:float", _FLOAT_RE, list("-+0123456789."))
+    Loader.add_constructor("tag:yaml.org,2002:int", _int)
+    Loader.add_constructor("tag:yaml.org,2002:map", _map)
+    # Explicit tags outside the 1.2 core (`!!timestamp`, `!!binary`, `!!set`, `!!omap`, `!!pairs`, `!!merge`) would
+    # build non-plain types (a date reaching Body breaks canonical(), solve_id's path; r2 fix-s3 B2): refused by name.
+    for tag in ("timestamp", "binary", "set", "omap", "pairs", "merge", "value"):
+        Loader.add_constructor(f"tag:yaml.org,2002:{tag}", _refuse_tag)
+    Loader.add_constructor(None, _refuse_tag)
+    return Loader
 
 
 def parse(text: str):
     """Parse YAML text with the project loader. Raises `LoadError` only."""
     try:
-        return yaml.load(text, Loader=Loader)
+        return yaml.load(text, Loader=_loader())
     except LoadError:
         raise
     except yaml.YAMLError as e:
