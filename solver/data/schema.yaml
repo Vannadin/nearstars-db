@@ -1,0 +1,89 @@
+# 천체 파일 스키마(v2) — 닫힌 키 목록: 꼴 · 단위 · 범위 · 출처 요구 · 읽는 곳 (phase1-design D-A7-3, D-A2-7).
+# Every key a v2 body file may carry. A key not listed here is refused by name (input.unknown_key).
+#
+# shape:     number | bool | text | enum | block (scalar-with-provenance: value + grade, source, and
+#            counter_evidence_searched or note) | record (a component record with its own field list)
+# number_or_block: the key may be a bare number or a block.
+# unit:      the schema unit; a stated unit must equal it (D-A2-7). "1" = dimensionless.
+# domain:    gt / ge / lt / le bounds on the value; absent = any finite value.
+# provenance: true = the trio grade · source · counter_evidence_searched is required (R-A1-12, R-MLD-4).
+# consumer:  solver | history (in-scope post-processors: core nodes, internal heat, thermal history) | later-tools.
+#            Readers at 097a8aa3 are named per key (r2 H6).
+version: 2
+
+top:
+  name:   {shape: text, required: true}
+  kind:   {shape: enum, values: [planet, moon, brown_dwarf, star, fixture], required: true}
+  parent: {shape: text}                 # optional; absent = free-floating (null is refused)
+  inputs: {shape: mapping, required: true}
+  layers: {shape: list, required: true}
+  closure: {shape: mapping, required: true}
+  jumps:  {shape: mapping}
+
+inputs:
+  mass_earth:            {shape: number_or_block, unit: M_earth, domain: {gt: 0}, required: true, consumer: solver}
+  radius_earth:          {shape: number_or_block, unit: R_earth, domain: {gt: 0}, consumer: solver}          # observation / closure target
+  potential_temperature: {shape: number_or_block, unit: K, domain: {gt: 0}, consumer: solver}
+  surface_temperature_k: {shape: number_or_block, unit: K, domain: {gt: 0}, consumer: solver}                 # lid (R-LITHO-3), R-RUL-5
+  surface_pressure_pa:   {shape: number_or_block, unit: Pa, domain: {ge: 0}, consumer: solver}                # declared P_s (§Q2), optional
+  tidal_heating:         {shape: bool, consumer: solver}                                                     # voids_expected, interior.py:4953 (r2 H6)
+  age_gyr:               {shape: number_or_block, unit: Gyr, domain: {gt: 0}, consumer: history}              # radiogenic at age (R-RUL-17)
+  body_class:            {shape: enum, values: [rocky, sub_neptune, ice_giant, gas_giant, giant, brown_dwarf, star], consumer: history}   # body_class.LADDER + alias giant
+  core_cmb_temperature:  {shape: number_or_block, unit: K, domain: {gt: 0}, consumer: history}               # core_state
+  core_initial_temperature:             {shape: number_or_block, unit: K, domain: {gt: 0}, consumer: history}
+  mantle_initial_potential_temperature: {shape: number_or_block, unit: K, domain: {gt: 0}, consumer: history}
+  lid_thickness_km:      {shape: block, unit: km, domain: {gt: 0}, consumer: history}
+  tectonic_regime:       {shape: block, value_shape: enum, values: [stagnant, mobile, transitional, episodic, heat_pipe], consumer: history,
+                          extra_fields: [setting_override, contested]}      # REGIMES, tectonic_regime.py:39; «contested» is a field, not a value (R-GV-5)
+  radiogenic_concentration: {shape: record, consumer: history,
+                             fields: {U_ppb: {shape: number, unit: ppb, domain: {ge: 0}}, Th_ppb: {shape: number, unit: ppb, domain: {ge: 0}},
+                                      K_ppm: {shape: number, unit: ppm, domain: {ge: 0}}},
+                             meta: [grade, source, note, alternative, override, default, counter_evidence_searched]}   # R-GV-4
+  thermal_evolution:     {shape: record, consumer: history, fields: {mantle: {shape: any}, crust: {shape: any}, core: {shape: any}, melting: {shape: any}},
+                          leaf_provenance: true}                            # R-A1-1: every leaf block carries the trio
+  # later-tools keys (D-A2-7 reader table): carried through, never read by the solver
+  k2_over_q:             {shape: number_or_block, unit: "1", domain: {gt: 0}, consumer: later-tools}          # tidal_heating, tidal_locking → power → IHN
+  perturber_mass_earth:  {shape: number_or_block, unit: M_earth, domain: {gt: 0}, consumer: later-tools}
+  semi_major_axis_km:    {shape: number_or_block, unit: km, domain: {gt: 0}, consumer: later-tools}
+  eccentricity_forced:   {shape: number_or_block, unit: "1", domain: {ge: 0, lt: 1}, consumer: later-tools}
+  eccentricity:          {shape: number_or_block, unit: "1", domain: {ge: 0, lt: 1}, consumer: later-tools}  # tidal_locking
+  rotation_period_h:     {shape: number_or_block, unit: h, domain: {gt: 0}, consumer: later-tools}            # dynamo, dynamo_rocky, tidal_locking
+  dynamo_alive:          {shape: bool, consumer: later-tools}                                                # dynamo_rocky
+  luminosity_lsun:       {shape: number_or_block, unit: L_sun, domain: {gt: 0}, consumer: later-tools}        # dynamo
+  isolated:              {shape: bool, consumer: later-tools}                                                # dynamo
+  radius_rj:             {shape: number_or_block, unit: R_jup, domain: {gt: 0}, consumer: later-tools}        # body_class:414 (LT), dynamo
+  radius_rj_min:         {shape: number_or_block, unit: R_jup, domain: {gt: 0}, consumer: later-tools}
+  radius_rj_max:         {shape: number_or_block, unit: R_jup, domain: {gt: 0}, consumer: later-tools}
+
+layer:
+  id:          {shape: text, required: true}
+  role:        {shape: text, required: true}           # checked against roles.yaml
+  material:    {shape: text, required: true}           # checked by the material resolver when one is given
+  extent:      {shape: mapping}                        # one of the forms below; absent = remainder (or the closure's layer)
+  thermal:     {shape: enum, values: [adiabatic, conductive, isothermal]}
+  t_declared:  {shape: number, unit: K, domain: {gt: 0}}
+  system:      {shape: text}
+  composition: {shape: block, value_shape: mapping, provenance: true}
+  params:      {shape: mapping}                        # name → block with the trio
+
+extent:
+  mass_fraction:      {unit: "1", domain: {ge: 0, le: 1}}
+  radius_from_centre: {unit: km, domain: {gt: 0}}
+  depth_from_surface: {unit: km, domain: {gt: 0}}
+  thickness_above:    {unit: km, domain: {ge: 0}, ref: layer}    # basal-layer pattern only; 0 is valid (R-BL-7)
+  phase:              {ref: event}
+
+closure:
+  kinds:
+    R:             {default: [0.05, 30.0], unit: R_earth}
+    boundary_mass: {default: [0.001, 0.999], unit: "1"}
+    composition:   {unit: "1", defaults: {S: [0.13, 0.25]}}          # SULPHUR_FIT_BRACKET, interior.py:5843
+
+jump: {unit: K, domain: {ge: 0}}                                     # R-IJ-3
+
+tolerances:
+  mass_fraction_sum: 1.0e-9                                          # the one named tolerance (X13)
+
+grades:
+  input: [measured, literature, analog, derived, judgment, declared, inherited, authored]   # INPUT_GRADES (R-GV-1)
+  forbidden: [owner-override, declared-default, contested, calibrated, guessed]              # R-GV-6

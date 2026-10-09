@@ -72,6 +72,7 @@ _INPUT = (
     Entry("input.closure_count", ("count", "free"), "풀 미지수가 하나여야 하는데 {count} 개다 — {free}"),
     Entry("input.layer_order", ("pair", "rule"), "층 순서가 규칙을 어긴다 — {pair}: {rule}"),
     Entry("input.duplicate_layer_id", ("layer_id",), "층 id '{layer_id}' 가 두 번 나온다"),
+    Entry("input.unknown_material", ("layer_id", "material"), "층 '{layer_id}' 의 물질 '{material}' 을(를) 물질 목록에서 찾지 못했다"),
     Entry("input.unknown_role", ("layer_id", "role"), "층 '{layer_id}' 의 역할 '{role}' 이(가) 역할 사전에 없다"),
     Entry("input.extent_invalid", ("layer_id", "why"), "층 '{layer_id}' 의 범위 선언이 맞지 않는다 — {why}"),
     Entry("input.mass_fraction_sum", ("total", "tol"), "질량 몫의 합 {total} 이(가) 1 에서 허용 {tol} 보다 멀다"),

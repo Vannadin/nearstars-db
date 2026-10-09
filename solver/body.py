@@ -251,8 +251,11 @@ class Body:
         ids = [l.id for l in self.layers]
         if len(set(ids)) != len(ids):
             raise ValueError(f"Body({self.name}) repeats a layer id: {ids}")
-        if sum(l.extent is None for l in self.layers) > 1:
-            raise ValueError(f"Body({self.name}) has more than one layer without an extent")
+        # one remainder layer, plus the closure's own layer when its mass is the free scalar (D-A2-8, Venus)
+        free = [l.id for l in self.layers if l.extent is None
+                and not (self.closure.kind == "boundary_mass" and l.id == self.closure.layer)]
+        if len(free) > 1:
+            raise ValueError(f"Body({self.name}) has more than one remainder layer: {free}")
         bad = order_violations(self.layers)
         if bad:
             raise ValueError(f"Body({self.name}) layer order: {bad}")
