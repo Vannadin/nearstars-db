@@ -42,6 +42,7 @@ class SeamLanding(unittest.TestCase):
 class Synthetic:
     """ρ constant, dT/dP constant; one onset curve T_on(P) given as a function."""
     name = "synthetic"
+    onset_curve_names = ("curve",)
 
     def __init__(self, t_on, dtdp=2e-8):
         self.t_on, self.k = t_on, dtdp
@@ -62,10 +63,10 @@ class OnsetLanding(unittest.TestCase):
     def test_crossing_lands(self):
         view = Synthetic(lambda p: 1600.0 + 1e3 + 1e-8 * p)       # T rises faster (2e-8) than the curve (1e-8)
         res = _run(view, events.onset_event(view))
-        hits = [y for name, _m, y in res.events if name == "onset"]
+        hits = [y for name, _m, y in res.events if name == "onset:curve"]
         self.assertEqual(len(hits), 1)
         g = hits[0][3] - view.t_on(hits[0][1])
-        self.assertLessEqual(abs(g), 1e-12 * 1.0e3)
+        self.assertLessEqual(abs(g), 1e-12 * events.ONSET_SCALE)
 
     def test_control_without_event_no_landing(self):
         view = Synthetic(lambda p: 1600.0 + 1e3 + 1e-8 * p)
@@ -91,10 +92,12 @@ class GrazeRecord(unittest.TestCase):
         self.assertTrue(events.onset_graze_tag(mon.best, 20.0))
         self.assertFalse(events.onset_graze_tag(mon.best, 5.0))
 
-    def test_control_no_monitor_no_record(self):
-        view = self._view()
-        res = _run(view, events.onset_event(view))
-        self.assertEqual([e for e in res.events if e[0] == "onset"], [])   # no crossing, so no event either
+    def test_control_far_curve_is_not_a_graze(self):
+        # the same shape 5 K away: the extremum is outside GRAZE_K, so no record
+        view = Synthetic(lambda p: 1600.0 + 2e-8 * p - 5.0 - 1e-21 * (p - self.P0) ** 2)
+        mon = events.GrazeMonitor(view)
+        _run(view, events.onset_event(view), mon)
+        self.assertIsNone(mon.best)
 
 
 class Chatter(unittest.TestCase):
@@ -124,3 +127,43 @@ class Ammonia(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RealSilicate(unittest.TestCase):
+    """r2's p11 as a test: real silicate passes at 1–8 M⊕ and T_pot 1400–2600 K end the same way with events on
+    and off, and never in chatter (S5 B1/B2)."""
+
+    def test_events_on_match_off(self):
+        mat = lm.interior.MATERIALS["silicate"]
+        landed = 0
+        for mf in (1.0, 3.0, 8.0):
+            for tp in (1400.0, 1800.0, 2200.0, 2600.0):
+                M = mf * 5.972e24
+                R = (3 * M / (4 * math.pi * 4500.0)) ** (1 / 3)
+                on = rhs.inward_pass(lm.LegacyView("silicate", mat, tp), M, R, 0.0, tp, 4500.0,
+                                     events=events.layer_events(mat))
+                off = rhs.inward_pass(lm.LegacyView("silicate", mat, tp), M, R, 0.0, tp, 4500.0)
+                self.assertNotEqual(on.stop.kind, "chatter", (mf, tp, on.stop.record))
+                self.assertEqual(on.stop.kind, off.stop.kind, (mf, tp))
+                landed += len(on.events)
+        self.assertGreater(landed, 0)
+
+    def test_solidus_seams_are_seams(self):
+        mat = lm.interior.MATERIALS["silicate"]
+        names = [e.name for e in events.seam_events(mat)]
+        for p_b in (20e9, 140e9, 500e9):
+            self.assertIn(f"seam:{p_b:.9g}", names)
+        self.assertEqual(events.curve_seams(lm.interior.MATERIALS["fe_prem"]), set())     # control: no solidus
+
+
+class AmmoniaLanding(unittest.TestCase):
+    def test_isotherm_lands_in_t_ad(self):
+        nh3 = lm.interior.MATERIALS["nh3"]
+        evs = [e for e in events.ammonia_events(nh3) if e.name == "nh3_isotherm:1000"]
+        view = Synthetic(lambda p: 0.0)
+        view.onset_curve_names = ()
+        r = (3 * M / (4 * math.pi * 5000.0)) ** (1 / 3)
+        res = rhs.inward_pass(view, M, r, 0.0, 900.0, 5000.0, events=evs)
+        hits = [y for name, _m, y in res.events if name == "nh3_isotherm:1000"]
+        self.assertEqual(len(hits), 1)
+        self.assertLessEqual(abs(hits[0][2] - 1000.0), 1e-12 * 1000.0)

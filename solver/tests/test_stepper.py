@@ -181,3 +181,13 @@ class Refusal(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class HminRecord(unittest.TestCase):
+    def test_h_min_stop_carries_registry_fields(self):
+        f = lambda x, y: (1.0 / (x - 0.5) ** 2 if x != 0.5 else 1e300,)     # a pole: the step can't pass it
+        r = st.run(f, 0.0, (0.0,), 1.0, _opts(h0=0.1, h_min=1e-9))
+        self.assertEqual(r.stop.kind, "h_min")
+        for k in ("h", "h_min", "m_at", "err_norm", "rejected_in_row"):
+            self.assertIn(k, r.stop.record)
+        self.assertGreater(r.stop.record["rejected_in_row"], 0)

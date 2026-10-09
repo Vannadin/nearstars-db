@@ -55,6 +55,8 @@ class Event:
     g: Callable[[float, Vec], float]
     scale: float = 1.0
     terminal: bool = True
+    seam: bool = False            # a fixed boundary of the integrand (phase, thermal-set seam, a curve's own seam):
+                                  # landed first, so a curve whose branch changes there is never read across it
 
 
 @dataclass(frozen=True)
@@ -130,19 +132,21 @@ def next_h(h: float, en: float, accepted: bool) -> float:
 def _land(f, ev: Event, x: float, y: Vec, k1: Vec, s_hi: float, out_hi, g0: float, opt: Options, cnt: Counters):
     """Locate g = 0 inside a step of signed length s_hi from (x, y), g(x, y) = g0, and land just past it.
     Secant/Illinois on real DP steps of length s (no interpolant), at most `event_rewalks` re-steps; `out_hi` is
-    the full step already taken. Returns (x_e, y_e, k_e) on the new side with |g| ≤ event_tol·scale, or a Stop:
-    "event_unlanded" when the re-step budget ends first (r2 N1), or the refusal of a re-step."""
+    the full step already taken. Convergence is judged on the **true** g of the new-side iterate, never on the
+    Illinois-halved value (r2 S5 N). Returns ((x_e, y_e, k_e), (s_lo, out_lo)) — the landed new-side node and the
+    last old-side re-step (None if none was taken) — or a Stop: "event_unlanded", or a re-step's refusal."""
     lo, g_lo = 0.0, g0
     hi = s_hi
-    g_hi = ev.g(x + hi, out_hi[0])
+    g_hi = g_hi_true = ev.g(x + hi, out_hi[0])
     best = (hi, out_hi)
+    old_side = None
     side = 0
     tol = opt.event_tol * ev.scale
-    for _ in range(opt.event_rewalks + 1):
-        if abs(g_hi) <= tol and g_hi * g0 <= 0.0:
-            s, (y_e, _err, k_e) = best
-            return x + s, y_e, k_e
-        if _ == opt.event_rewalks:
+    for it in range(opt.event_rewalks + 1):
+        if g_hi_true is not None and abs(g_hi_true) <= tol and g_hi_true * g0 <= 0.0:
+            s_e, (y_e, _err, k_e) = best
+            return (x + s_e, y_e, k_e), old_side
+        if it == opt.event_rewalks:
             break
         s = hi - g_hi * (hi - lo) / (g_hi - g_lo)
         if not (min(lo, hi) < s < max(lo, hi)):
@@ -152,22 +156,29 @@ def _land(f, ev: Event, x: float, y: Vec, k1: Vec, s_hi: float, out_hi, g0: floa
         if isinstance(o, Stop):
             return o
         gs = ev.g(x + s, o[0])
+        if gs is None:
+            return Stop("event_unlanded", {"event": ev.name, "g": None, "tol": tol, "rewalks": it, "x": x + s})
         if gs * g0 > 0.0:                     # still on the old side
             lo, g_lo = s, gs
+            old_side = (s, o)
             if side == -1:
-                g_hi *= 0.5                    # Illinois
+                g_hi *= 0.5                    # Illinois (the secant weight only)
             side = -1
         else:
             hi, g_hi = s, gs
+            g_hi_true = gs
             best = (s, o)
             if side == 1:
                 g_lo *= 0.5
             side = 1
-    return Stop("event_unlanded", {"event": ev.name, "g": g_hi, "tol": tol, "rewalks": opt.event_rewalks,
+    return Stop("event_unlanded", {"event": ev.name, "g": g_hi_true, "tol": tol, "rewalks": opt.event_rewalks,
                                    "x": x + hi})
 
 
-def _crossed(g0: float, g1: float) -> bool:
+def _crossed(g0, g1) -> bool:
+    """A sign change of g; an event whose g is undefined at either end (None: no curve there) does not cross."""
+    if g0 is None or g1 is None:
+        return False
     return g0 * g1 < 0.0 or (g1 == 0.0 and g0 != 0.0)
 
 
@@ -231,23 +242,48 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
         x_new = x + h
         g_new = {ev.name: ev.g(x_new, y_new) for ev in events}
         crossing = [ev for ev in events if _crossed(g_prev[ev.name], g_new[ev.name])]
-        for ev in crossing:
-            xe = last_fire.get(ev.name)
-            if xe is not None and abs(x_new - xe) < opt.event_min_progress:
-                return stop("chatter", {"event": ev.name, "count": run_events, "cap_name": "EVENT_MIN_PROGRESS",
-                                        "cap_value": opt.event_min_progress})
         if crossing:
+            # seams first (r2 S5 B2): land the earliest seam crossed in this step; other events are then tested only
+            # on the old side of it, so a curve whose branch changes at the seam is never read across it
+            seams = [ev for ev in crossing if ev.seam]
+            limit = None                              # (s_lo, out_lo): the old-side end the other events may use
             best = None
-            for ev in crossing:
+            for ev in seams:
                 got = _land(f, ev, x, y, k1, h, out, g_prev[ev.name], opt, cnt)
                 if isinstance(got, Stop):
-                    if got.kind == "event_unlanded":       # runaway location is the chatter guard's fourth cap
+                    if got.kind == "event_unlanded":
                         return stop("chatter", {**got.record, "count": run_events, "cap_name": "EVENT_REWALKS",
                                                 "cap_value": opt.event_rewalks})
                     return stop("refused", got)
-                if best is None or abs(got[0] - x) < abs(best[1][0] - x):
-                    best = (ev, got)
+                node, lo_side = got
+                if best is None or abs(node[0] - x) < abs(best[1][0] - x):
+                    best, limit = (ev, node), lo_side
+            others = [ev for ev in events if not ev.seam]
+            if best is not None:
+                if limit is None:
+                    others = []                       # the seam sits at the step start: nothing lies before it
+                else:
+                    s_lo, out_lo = limit
+                    others = [ev for ev in others if _crossed(g_prev[ev.name], ev.g(x + s_lo, out_lo[0]))]
+                    s_end, out_end = s_lo, out_lo
+            else:
+                others = [ev for ev in crossing]
+                s_end, out_end = h, out
+            for ev in others:
+                got = _land(f, ev, x, y, k1, s_end, out_end, g_prev[ev.name], opt, cnt)
+                if isinstance(got, Stop):
+                    if got.kind == "event_unlanded":
+                        return stop("chatter", {**got.record, "count": run_events, "cap_name": "EVENT_REWALKS",
+                                                "cap_value": opt.event_rewalks})
+                    return stop("refused", got)
+                node, _lo = got
+                if best is None or abs(node[0] - x) < abs(best[1][0] - x):
+                    best = (ev, node)
             fired, (x_e, y_e, k_e) = best
+            xe = last_fire.get(fired.name)
+            if xe is not None and abs(x_e - xe) < opt.event_min_progress:
+                return stop("chatter", {"event": fired.name, "count": run_events, "cap_name": "EVENT_MIN_PROGRESS",
+                                        "cap_value": opt.event_min_progress})
             run_events += 1
             in_row += 1
             if in_row > opt.event_restarts_step:

@@ -153,3 +153,25 @@ class MaterialWall(unittest.TestCase):
         self.assertLess(abs(out.roots[0] - r_true) / r_true, 1e-10)
         self.assertGreaterEqual(len(out.walls), 1)
         self.assertEqual(escalating(F, 0.5 * r_true, 2.0 * r_true).kind, "refused")   # control: escalation fails here
+
+
+class MaxSplits(unittest.TestCase):
+    def test_split_budget_gives_unconverged(self):
+        import solver.closure as c
+        scan = set(c.scan_points(1.0, 10.0))
+        # inside (1.5, 3) only the scan points solve: Brent's first probe in the bracket around the root 2.0 refuses
+        F = lambda x: x - 2.0 if (x in scan or not 1.5 < x < 3.0) else st.Stop("domain", {})
+        saved = c.MAX_SPLITS
+        try:
+            c.MAX_SPLITS = 0
+            out = c.solve_scalar(F, 1.0, 10.0)
+            self.assertEqual((out.kind, out.detail.get("budget")), ("unconverged", "MAX_SPLITS"))
+            c.MAX_SPLITS = 16                            # control: with budget, the split is walled and searched
+            out = c.solve_scalar(F, 1.0, 10.0)
+            self.assertNotEqual(out.kind, "unconverged")
+        finally:
+            c.MAX_SPLITS = saved
+
+    def test_budget_name_is_registered(self):
+        from solver import refusals
+        self.assertIn("MAX_SPLITS", refusals.NO_ANSWER_BUDGETS)
