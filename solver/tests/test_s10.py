@@ -243,5 +243,24 @@ class ReadCheckControls(unittest.TestCase):
             self.chain.body.lookups.pop()
 
 
+class RulingsA3A7(unittest.TestCase):
+    """Comparator rulings 225888af: A3 core_radius_fraction (all bodies with a CMB) and A7 Dante's bulk_porosity."""
+
+    def test_core_radius_fraction(self):
+        e, _ = from_v1.load_v1("engine/bodies/earth.yaml")
+        q = {x.key: x.point for x in sv.solve(e, context.Options(sensitivity_dt=0.0))[0].quantities}
+        self.assertEqual(q["core_radius_fraction"], q["core_radius"] / q["radius"])
+
+    def test_dante_bulk_porosity_near_the_old(self):
+        """The old engine (097a8aa3, interior_layers on dante_fixture, run on the Mac) gave 0.18724686102568214 at its
+        own φ₀ 0.39045639; the rewrite's φ₀ is 0.39043. Agreement within 1e-3 relative (a check of the definition,
+        not the oracle comparison). Control: a body without porosity emits no bulk_porosity."""
+        d, _ = from_v1.load_v1("engine/bodies/dante_fixture.yaml")
+        q = {x.key: x.point for x in sv.solve(d, context.Options(sensitivity_dt=0.0))[0].quantities}
+        self.assertLess(abs(q["bulk_porosity"] - 0.18724686102568214) / 0.18724686102568214, 1e-3)
+        e, _ = from_v1.load_v1("engine/bodies/earth.yaml")
+        self.assertNotIn("bulk_porosity", {x.key for x in sv.solve(e, context.Options(sensitivity_dt=0.0))[0].quantities})
+
+
 if __name__ == "__main__":
     unittest.main()

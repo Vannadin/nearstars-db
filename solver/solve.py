@@ -324,7 +324,7 @@ def _to_refusal(stop: st.Stop, where: str, x, kind: str, pass_kind: str):
     raise RuntimeError(f"unmapped solver stop {stop.kind!r}: {rec!r}")
 
 
-def _quantities(body, p: PassOut, sid: str, x):
+def _quantities(body, p: PassOut, sid: str, x, views=None):
     M, R = body.mass, p.R
     prov = result.Provenance("judgment", result.SolverInfo(sid, counters=tuple(sorted(p.counters.items()))),
                              consumed_observations=(("radius",) if body.closure.kind != "R" else ()))
@@ -336,6 +336,10 @@ def _quantities(body, p: PassOut, sid: str, x):
     p_c = p_e + 2.0 * math.pi / 3.0 * rhs.G * p.rho_end ** 2 * r_e ** 2       # constant-density centre series
     i_tot = i_e + 0.4 * m_e * r_e ** 2
     has_t = body.surface.t_pot is not None       # no declared T_pot: no temperature path, no T quantities (c8)
+    if views is not None and any(getattr(v, "phi0", 0.0) > 0.0 for v in views.values()):
+        out_bp = _bulk_porosity(body, views, p)                 # comparator rulings 225888af A7 (Dante)
+    else:
+        out_bp = None
     out = [q("radius", "m", R, body_w), q("nmoi", "1", i_tot / (M * R * R), body_w),
            q("core_pressure", "Pa", p_c, body_w)]
     if has_t:
@@ -352,10 +356,34 @@ def _quantities(body, p: PassOut, sid: str, x):
         if cmb is not None and name == cmb.name:
             bw = result.Where("boundary", cmb.name, "upper")
             out += [q("core_radius", "m", r_b, bw), q("cmb_pressure", "Pa", p_b, bw),
-                    q("core_mass_fraction", "1", m_b / M, body_w)]
+                    q("core_mass_fraction", "1", m_b / M, body_w),
+                    q("core_radius_fraction", "1", r_b / R, body_w)]        # comparator rulings 225888af A3
             if has_t:
                 out.append(q("cmb_temperature", "K", t_up, bw))
+    if out_bp is not None:
+        out.append(q("bulk_porosity", "1", out_bp, body_w))
     return tuple(out)
+
+
+def _bulk_porosity(body, views, p) -> float:
+    """V_pore / V (interior.Structure.phi_bulk at 097a8aa3): dV_pore/dm = φ(P) / ρ_eff, by the trapezoid rule on each
+    porous layer's accepted nodes. The centre ball below m_ε is left out (its porosity is crushed to ~0)."""
+    v_pore = 0.0
+    for lid, path in p.profiles.items():
+        view = views[lid]
+        phi0 = getattr(view, "phi0", 0.0)
+        if phi0 <= 0.0 or len(path) < 2:
+            continue
+        def g(node):
+            m_, y_ = node[0], node[1]
+            phi = lm.interior.porosity_at(view.mat, y_[1], phi0, view.p_cap)
+            rho = view.density(y_[1], y_[3])
+            return phi / rho
+        xs = [n[0] for n in path]
+        gs = [g(n) for n in path]
+        for i in range(len(xs) - 1):
+            v_pore += 0.5 * (gs[i] + gs[i + 1]) * (xs[i] - xs[i + 1])      # m runs inward: x_i > x_{i+1}
+    return v_pore / (4.0 / 3.0 * math.pi * p.R ** 3)
 
 
 def _not_yet(body):
@@ -534,7 +562,7 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
                     for lid, path in acc.profiles.items()}
         # solve_id after the accepted pass, so every data file the solve opened is in the material bytes
         sid = context.solve_id_of(_canonical(body), _material_bytes(views), options)
-        qs = _quantities(body, acc, sid, x)
+        qs = _quantities(body, acc, sid, x, views)
         if body.surface.t_pot is not None and options.sensitivity_dt > 0.0:
             qs, sens_note = _with_sensitivity(body, views, x, options, acc, qs, supplied=supplied, ctx=ctx)
             if sens_note is not None:
