@@ -36,6 +36,7 @@ class PassOut:
     profiles: dict = field(default_factory=dict)        # layer id → path tuple
     graze: object = None
     floor_end: bool = False
+    entered: list = field(default_factory=list)          # layer ids the pass integrated, top to bottom
     counters: dict = field(default_factory=dict)
     R: float = 0.0
     r_scale: float = 0.0
@@ -128,6 +129,7 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
         if isinstance(got, st.Stop):
             return got
         m, y = got.m, got.y
+        out.entered.append(lt.id)
         out.profiles[lt.id] = got.path
         for k, v in got.counters.items():
             out.counters[k] = out.counters.get(k, 0) + v
@@ -147,6 +149,7 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
                                            "expected": f"base mass {end[1]:.6g} below the top {m:.6g}",
                                            "got_m": m, "got_r": y[0]})
         graze_mon = events.GrazeMonitor(view.mat, getattr(view, "p_stop", 0.0))
+        out.entered.append(layer.id)
         res = _segment(view, M, m, y, end, rs, opt, graze_mon)
         out.profiles[layer.id] = res.path
         if graze_mon.best is not None and (out.graze is None or abs(graze_mon.best.g) < abs(out.graze.g)):
@@ -160,7 +163,10 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
         if kind == "event" and res.event == "r_floor":
             out.floor_end = True
             break
-        reached = (kind == "event" and res.event == "layer_end") or (kind == "end" and j > 0)
+        # the base is reached at its radius event, or at its mass level (x1); reaching the centre end (m_ε) while
+        # waiting for a radius event is not the base (that layer below is then never entered)
+        reached = (kind == "event" and res.event == "layer_end") or (kind == "end" and end is not None
+                                                                      and end[0] == "m")
         if j > 0 and not reached:
             break                                 # the pass reached the centre end before this layer's base
         if j > 0:
@@ -279,6 +285,15 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
             if hasattr(v, "surface_fallbacks"):
                 v.surface_fallbacks = 0
         acc = inward(body, views, x, options)
+        if not isinstance(acc, st.Stop):
+            missing = [l.id for l in body.layers if l.id not in acc.entered]
+            if missing:
+                # r2 (note 3): at x* every declared layer must have been entered; a residual of 0 reached with a
+                # layer never entered is a structurally wrong answer, refused by name
+                lyr = missing[-1]
+                return refusals.make("solve.layer_order", where, layer_id=lyr, rule="entered",
+                                     expected="every declared layer entered at the root", got_m=acc.m,
+                                     got_r=acc.y[0], x=x, closure_kind=kind, pass_kind="accepted"), x
         acc_fb = sum(getattr(v, "surface_fallbacks", 0) for v in views.values())
         if not isinstance(acc, st.Stop):
             acc.counters["surface_rho0_fallbacks"] = acc_fb

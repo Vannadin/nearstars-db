@@ -129,3 +129,24 @@ class Knobs(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class EveryLayerEntered(unittest.TestCase):
+    """Note 3 (r2): at the root every declared layer must have been entered, else solve.layer_order at x*."""
+
+    def _body(self, r_core):
+        M = 5.0e24
+        layers = (b.Layer("core", "core", "x", b.Extent("radius_from_centre", r_core)), b.Layer("mantle", "mantle", "y"))
+        body = b.Body("fixture", "planet", b.SurfaceState(M, t_pot=0.0), layers, b.Closure("R", 1e5, 1e8))
+        return body, {"core": Uniform(9000.0), "mantle": Uniform(3000.0)}
+
+    def test_core_never_entered_is_refused(self):
+        body, views = self._body(1.0e3)        # below the mantle's own centre end: the core is never reached
+        out, _ = sv.solve(body, views=views)
+        self.assertIsInstance(out, result.Refusal)
+        self.assertEqual((out.id, out.evidence["layer_id"], out.evidence["rule"]), ("solve.layer_order", "core", "entered"))
+
+    def test_control_core_entered(self):
+        body, views = self._body(3.0e6)
+        out, _ = sv.solve(body, views=views)
+        self.assertIsInstance(out, result.Answer, getattr(out, "text", None))
