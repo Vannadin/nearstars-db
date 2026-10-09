@@ -253,6 +253,10 @@ class LegacyView:
         except eos.PhaseGap as exc:
             return self._refusal(exc, p, t)
 
+    def porosity(self, p: float) -> float:
+        """φ(P) of the declared porosity law (0 without one), as the old stage applies it (interior.porosity_at)."""
+        return interior.porosity_at(self.mat, p, self.phi0, self.p_cap) if self.phi0 > 0.0 else 0.0
+
     def state(self, p: float, t: float, guess_rho=None):
         """(ρ, (dT/dP)_ad, notes) or a Stop. `guess_rho` is accepted for the X4 signature and unused: the old
         materials keep their own inversion start. Notes: «surface_rho0_fallback» when the hot-surface rule fell back

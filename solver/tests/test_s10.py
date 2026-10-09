@@ -253,11 +253,13 @@ class RulingsA3A7(unittest.TestCase):
 
     def test_dante_bulk_porosity_near_the_old(self):
         """The old engine (097a8aa3, interior_layers on dante_fixture, run on the Mac) gave 0.18724686102568214 at its
-        own φ₀ 0.39045639; the rewrite's φ₀ is 0.39043. Agreement within 1e-3 relative (a check of the definition,
-        not the oracle comparison). Control: a body without porosity emits no bulk_porosity."""
+        own φ₀ 0.39045639; the rewrite's φ₀ is 0.39043. V_p is integrated in the state, at stepper order. Agreement
+        within 1e-5 relative (a check of the definition, not the oracle comparison). Control: a body without
+        porosity emits no bulk_porosity."""
         d, _ = from_v1.load_v1("engine/bodies/dante_fixture.yaml")
         q = {x.key: x.point for x in sv.solve(d, context.Options(sensitivity_dt=0.0))[0].quantities}
-        self.assertLess(abs(q["bulk_porosity"] - 0.18724686102568214) / 0.18724686102568214, 1e-3)
+        # with V_p in the state (r2 on 973b89ef) the gap is the φ₀ difference's effect only: measured 1e-6 relative
+        self.assertLess(abs(q["bulk_porosity"] - 0.18724686102568214) / 0.18724686102568214, 1e-5)
         e, _ = from_v1.load_v1("engine/bodies/earth.yaml")
         self.assertNotIn("bulk_porosity", {x.key for x in sv.solve(e, context.Options(sensitivity_dt=0.0))[0].quantities})
 

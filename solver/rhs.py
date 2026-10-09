@@ -4,7 +4,8 @@
 Frozen design: rewrite/phase1-design.frozen.md §A1.1 (equations), §A1.2 (surface start), §A1.5 (residual).
 Registration: rewrite/phase1-a1-impl.frozen.md, step S2. The multi-layer pass is solve.py's (S7).
 
-State y = (r, P, T_ad, T, I); independent variable m, running inward from M; I accumulates (2/3) r² dm.
+State y = (r, P, T_ad, T, I, V_p); independent variable m, running inward from M; I accumulates (2/3) r² dm and
+V_p the pore volume (dV_p/dm = −φ dV/dm, growing inward from 0, r2 on 973b89ef), both quadratures kept out of the error norm.
     dr/dm = 1 / (4π r² ρ)
     dP/dm = −G m / (4π r⁴)
     dT_ad/dm = (dT/dP)_ad · dP/dm          (dT/dP)_ad from the material view, not from a formula here
@@ -40,7 +41,8 @@ def make_rhs(view):
         drdm = 1.0 / (FOUR_PI * r * r * rho)
         dpdm = -G * m / (FOUR_PI * r ** 4)
         dtdm = dtdp * dpdm
-        return (drdm, dpdm, dtdm, dtdm, -2.0 / 3.0 * r * r)
+        por = view.porosity(p) if hasattr(view, "porosity") else 0.0
+        return (drdm, dpdm, dtdm, dtdm, -2.0 / 3.0 * r * r, -por * drdm * FOUR_PI * r * r)
     return f
 
 
@@ -72,7 +74,7 @@ def floors(mass: float, r_scale: float) -> tuple:
     """Error-scale floors of (r, P, T_ad, T, I) (registration note 2 item 9). I's floor is infinite: the moment of
     inertia is a quadrature carried along, kept **out** of the step-size error norm, so adding it moves no step
     (r2 S4-fix: with it inside, 302 vs 303 steps)."""
-    return (1e-12 * r_scale, 1e5, 10.0, 10.0, math.inf)
+    return (1e-12 * r_scale, 1e5, 10.0, 10.0, math.inf, math.inf)
 
 
 def r_scale_of(mass: float, rho_mean: float) -> float:
@@ -108,7 +110,7 @@ def inward_pass(view, mass: float, radius: float, p_s: float, t_pot: float, rho_
                       event_min_progress=opt.event_min_progress * mass,
                       event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_run)
     floor_ev = st.Event("r_floor", lambda m, y: y[0] - opt.r_floor_frac * rs, scale=rs)
-    res = st.run(f, m0, (r0, p0, t_pot, t_pot, 0.0), m_end, sopt, [floor_ev, *events], on_accept=on_accept)
+    res = st.run(f, m0, (r0, p0, t_pot, t_pot, 0.0, 0.0), m_end, sopt, [floor_ev, *events], on_accept=on_accept)
     if res.stop.kind not in ("end", "event"):
         return PassResult(res.x, res.y, float("nan"), None, res.stop, rs, res.path, res.counters, res.events)
     got = view.state(res.y[1], res.y[2], None)

@@ -52,7 +52,8 @@ def _lid_rhs(view, a: float | None, b: float | None):
         dpdm = -rhs.G * m / (rhs.FOUR_PI * r ** 4)
         dtad = dtdp_ad * dpdm
         dt = dtad if a is None else -a / (r * r) * drdm
-        return (drdm, dpdm, dtad, dt, -2.0 / 3.0 * r * r)
+        por = view.porosity(p) if hasattr(view, "porosity") else 0.0
+        return (drdm, dpdm, dtad, dt, -2.0 / 3.0 * r * r, -por * drdm * rhs.FOUR_PI * r * r)
     return f
 
 
@@ -83,7 +84,7 @@ def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_
 
     def run(a, b):
         t0 = t_pot if a is None else t_s
-        res = st.run(_lid_rhs(view, a, b), mass, (radius, p_s, t_pot, t0, 0.0), 0.0, sopt, [base, *events])
+        res = st.run(_lid_rhs(view, a, b), mass, (radius, p_s, t_pot, t0, 0.0, 0.0), 0.0, sopt, [base, *events])
         for k, v in vars(res.counters).items():
             counters[k] = counters.get(k, 0) + v
         if res.stop.kind != "event" or res.event != "lid_base":
@@ -107,8 +108,8 @@ def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_
         t_new = res.y[2]
         trail.append(t_new)
         if abs(t_new - t_b) <= lid_t_tol * abs(t_new):
-            r, p, t_ad, t_prof, i_moi = res.y
-            return LidResult(res.x, (r, p, t_ad, t_new, i_moi), t_new, a, b, t_prof, tuple(trail), res.path,
+            r, p, t_ad, t_prof, i_moi, v_pore = res.y
+            return LidResult(res.x, (r, p, t_ad, t_new, i_moi, v_pore), t_new, a, b, t_prof, tuple(trail), res.path,
                              counters)
         t_b = t_new
     return st.Stop("lid_unconverged", {"layer_id": layer_id, "trail": tuple(trail), "iters": lid_iters,

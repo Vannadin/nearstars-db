@@ -117,7 +117,7 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
     t_pot = sf.t_pot or 0.0
     out = PassOut(None, M, (), float("nan"), None, R=R, r_scale=rs)
     layers = body.layers
-    m, y = M, (R, p_s, t_pot, t_pot, 0.0)
+    m, y = M, (R, p_s, t_pot, t_pot, 0.0, 0.0)
     start = len(layers) - 1
     if layers[-1].thermal == "conductive":
         lt = layers[-1]
@@ -177,7 +177,7 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
             jump = _jump(body, below, layer)
             out.boundaries.append((f"{below.id}/{layer.id}", "layer", m, y[0], y[1], y[3], y[3] + jump))
             if jump:
-                y = (y[0], y[1], y[2] + jump, y[3] + jump, y[4])
+                y = (y[0], y[1], y[2] + jump, y[3] + jump, *y[4:])
     bottom = views[layers[0].id]
     got = bottom.state(y[1], y[2], None)
     if isinstance(got, st.Stop):
@@ -332,12 +332,12 @@ def _quantities(body, p: PassOut, sid: str, x, views=None):
     def q(key, unit, val, where):
         return result.Quantity(key, unit, val, "exact", "direct", where, prov, band_reason=result.BAND_NOT_MEASURED)
     body_w = result.Where("body")
-    m_e, (r_e, p_e, tad_e, t_e, i_e) = p.m, p.y
+    m_e, (r_e, p_e, tad_e, t_e, i_e, v_pore) = p.m, p.y
     p_c = p_e + 2.0 * math.pi / 3.0 * rhs.G * p.rho_end ** 2 * r_e ** 2       # constant-density centre series
     i_tot = i_e + 0.4 * m_e * r_e ** 2
     has_t = body.surface.t_pot is not None       # no declared T_pot: no temperature path, no T quantities (c8)
     if views is not None and any(getattr(v, "phi0", 0.0) > 0.0 for v in views.values()):
-        out_bp = _bulk_porosity(body, views, p)                 # comparator rulings 225888af A7 (Dante)
+        out_bp = v_pore / (4.0 / 3.0 * math.pi * R ** 3)       # comparator rulings 225888af A7 (Dante); V_p in the state
     else:
         out_bp = None
     out = [q("radius", "m", R, body_w), q("nmoi", "1", i_tot / (M * R * R), body_w),
@@ -363,27 +363,6 @@ def _quantities(body, p: PassOut, sid: str, x, views=None):
     if out_bp is not None:
         out.append(q("bulk_porosity", "1", out_bp, body_w))
     return tuple(out)
-
-
-def _bulk_porosity(body, views, p) -> float:
-    """V_pore / V (interior.Structure.phi_bulk at 097a8aa3): dV_pore/dm = φ(P) / ρ_eff, by the trapezoid rule on each
-    porous layer's accepted nodes. The centre ball below m_ε is left out (its porosity is crushed to ~0)."""
-    v_pore = 0.0
-    for lid, path in p.profiles.items():
-        view = views[lid]
-        phi0 = getattr(view, "phi0", 0.0)
-        if phi0 <= 0.0 or len(path) < 2:
-            continue
-        def g(node):
-            m_, y_ = node[0], node[1]
-            phi = lm.interior.porosity_at(view.mat, y_[1], phi0, view.p_cap)
-            rho = view.density(y_[1], y_[3])
-            return phi / rho
-        xs = [n[0] for n in path]
-        gs = [g(n) for n in path]
-        for i in range(len(xs) - 1):
-            v_pore += 0.5 * (gs[i] + gs[i + 1]) * (xs[i] - xs[i + 1])      # m runs inward: x_i > x_{i+1}
-    return v_pore / (4.0 / 3.0 * math.pi * p.R ** 3)
 
 
 def _not_yet(body):
