@@ -26,6 +26,21 @@ CLOSE_ITERS = 100            # Brent iterations per root (fixed by the S2 dated 
 # wall, and the solved shot joins the search.
 CONFIRM_FRAC = 0.01
 CONFIRM_MIN = 1e-9
+CONFIRM_MAX = 4              # confirming shots per refusal chain (r2 on d031605b: the reason must match)
+
+
+def reason(stop: st.Stop) -> tuple:
+    """A refusal's reason, as fine as the registry id or finer: the stop kind, the cap for event_chatter, and for a
+    refused stage the inner refusal's kind and material."""
+    r = stop.record
+    if stop.kind == "chatter" and isinstance(r, dict):
+        return ("chatter", r.get("cap_name"))
+    if stop.kind == "refused":
+        inner = r.record if isinstance(r, st.Stop) else r
+        if isinstance(inner, st.Stop):
+            return ("refused", inner.kind)
+        return ("refused", type(inner).__name__, getattr(inner, "kind", None), getattr(inner, "material_id", None))
+    return (stop.kind,)
 
 
 @dataclass(frozen=True)
@@ -129,6 +144,22 @@ def _confirm(F, x_bad: float, x_ok: float, lo: float, hi: float, trials: list):
     return xc, v
 
 
+def _confirm_chain(F, x_bad: float, stop_bad: st.Stop, x_ok: float, lo: float, hi: float, trials: list):
+    """A wall only when a confirming shot refuses for the same reason (r2): a solved shot isolates x_bad
+    (→ ("solved", x_c, value)); a shot refusing for another reason isolates x_bad and becomes the candidate, confirmed
+    again (at most CONFIRM_MAX shots); a matching reason confirms the candidate (→ ("wall", x, stop))."""
+    for _ in range(CONFIRM_MAX):
+        xc, vc = _confirm(F, x_bad, x_ok, lo, hi, trials)
+        if not isinstance(vc, st.Stop):
+            _isolate(trials, x_bad, stop_bad)
+            return "solved", xc, vc
+        if reason(vc) == reason(stop_bad):
+            return "wall", x_bad, stop_bad
+        _isolate(trials, x_bad, stop_bad)
+        x_bad, stop_bad = xc, vc
+    return "wall", x_bad, stop_bad                    # budget spent: the last candidate stands, unconfirmed
+
+
 def _isolate(trials: list, x: float, stop: st.Stop):
     """Re-label the refusing trial at x as isolated (kept as a record, out of the wall and stretch logic)."""
     for n, t in enumerate(trials):
@@ -144,11 +175,10 @@ def _locate_wall(F, x_ok: float, x_bad: float, stop_bad: st.Stop, trials: list, 
         v = _value(F, xm)
         if isinstance(v, st.Stop):
             trials.append(Trial(xm, None, v, "wall"))
-            xc, vc = _confirm(F, xm, x_ok, lo, hi, trials)
-            if isinstance(vc, st.Stop):
-                x_bad, stop_bad = xm, v
+            what, xc, vc = _confirm_chain(F, xm, v, x_ok, lo, hi, trials)
+            if what == "wall":
+                x_bad, stop_bad = xc, vc
             else:                                        # isolated: the solved shot beyond it moves the ok side
-                _isolate(trials, xm, v)
                 x_ok = xc if abs(xc - x_bad) < abs(x_ok - x_bad) else x_ok
         else:
             trials.append(Trial(xm, v, None, "wall"))
@@ -177,9 +207,7 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
         nbr = [u for u in (trials[n - 1] if n > 0 else None, trials[n + 1] if n + 1 < len(xs) else None)
                if u is not None and u.F is not None]
         if nbr:
-            xc, vc = _confirm(F, t.x, nbr[0].x, lo, hi, trials)
-            if not isinstance(vc, st.Stop):
-                _isolate(trials, t.x, t.stop)
+            _confirm_chain(F, t.x, t.stop, nbr[0].x, lo, hi, trials)
     walls: list = []
     done_pairs: set = set()
     closed: dict = {}            # (a.x, b.x) → root or problem
@@ -209,9 +237,7 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
                     roots.append(x)
                 elif prob[0] == "refused_inside":
                     split = True
-                    _xc, vc = _confirm(F, prob[1], a.x, lo, hi, trials)
-                    if not isinstance(vc, st.Stop):        # an isolated refusal inside the bracket (impl note 8)
-                        _isolate(trials, prob[1], prob[2])
+                    _confirm_chain(F, prob[1], prob[2], a.x, lo, hi, trials)   # impl note 8
                 else:
                     problems.append(prob)
         if pts and pts[-1].F == 0.0:

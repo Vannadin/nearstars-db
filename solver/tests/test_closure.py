@@ -246,3 +246,63 @@ class IsolatedRefusal(unittest.TestCase):
             closure.CONFIRM_FRAC, closure.CONFIRM_MIN = orig
         self.assertNotIn("isolated", [t.kind for t in out.trials])
         self.assertTrue(any(abs(w.x - iso) <= 1e-5 * iso for w in out.walls))
+
+
+class _Mat:
+    """A stand-in for legacy_materials.MaterialRefusal (kind, material_id)."""
+    def __init__(self):
+        self.kind, self.material_id = "PhaseGap", "planted"
+
+
+class ReasonMustMatch(unittest.TestCase):
+    """r2 on d031605b: a wall needs a confirming shot refusing for the same reason. A landing failure (chatter) just
+    above a genuine material wall (refused, PhaseGap), within δ of it, so that the confirming shot lands in the wall,
+    is isolated, and the located wall carries the material reason. Controls: without reason matching the failure is
+    the wall again; a genuine chatter-only wall still stands with its chatter reason."""
+
+    def _plant(self):
+        """(iso, wall): iso is the first wall-bisection shot that would solve above a wall at 2; the genuine wall is
+        then moved just below iso, within the confirming step, so the confirming shot from iso refuses."""
+        xs = closure.scan_points(1.0, 10.0)
+        bad, ok = max(x for x in xs if x < 2.0), min(x for x in xs if x >= 2.0)
+        while True:
+            xm = 0.5 * (bad + ok)
+            if xm < 2.0:
+                bad = xm
+                continue
+            return xm, xm - 0.1 * closure.CONFIRM_FRAC * (ok - xm)
+
+    def _F(self, iso, wall, below):
+        def F(x):
+            if x < wall:
+                return below
+            if x == iso:
+                return st.Stop("chatter", {"cap_name": "EVENT_REWALKS"})
+            return x - 5.0
+        return F
+
+    def test_wall_carries_the_material_reason(self):
+        iso, wall = self._plant()
+        out = closure.solve_scalar(self._F(iso, wall, st.Stop("refused", _Mat())), 1.0, 10.0)
+        self.assertEqual(out.kind, "root")
+        self.assertIn("isolated", [t.kind for t in out.trials if t.x == iso])
+        walls = [w for w in out.walls if w.located]
+        self.assertTrue(walls and all(abs(w.x - wall) <= 1e-5 * wall for w in walls), walls)
+        self.assertTrue(all(closure.reason(w.stop)[0] == "refused" for w in walls), [w.stop for w in walls])
+
+    def test_control_without_reason_matching_the_failure_is_the_wall(self):
+        iso, wall = self._plant()
+        orig = closure.reason
+        closure.reason = lambda stop: ()                   # every refusal «matches»: d031605b's behaviour
+        try:
+            out = closure.solve_scalar(self._F(iso, wall, st.Stop("refused", _Mat())), 1.0, 10.0)
+        finally:
+            closure.reason = orig
+        self.assertTrue(any(w.x == iso and w.stop.kind == "chatter" for w in out.walls), out.walls)
+
+    def test_control_genuine_chatter_wall_stands(self):
+        iso, wall = self._plant()
+        out = closure.solve_scalar(self._F(iso, wall, st.Stop("chatter", {"cap_name": "EVENT_REWALKS"})), 1.0, 10.0)
+        walls = [w for w in out.walls if w.located]
+        self.assertTrue(walls and all(closure.reason(w.stop) == ("chatter", "EVENT_REWALKS") for w in walls))
+        self.assertEqual(out.kind, "root")
