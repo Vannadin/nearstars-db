@@ -27,43 +27,37 @@ _ENGINE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 if _ENGINE not in sys.path:
     sys.path.insert(0, _ENGINE)
 
-#: Data files the process has opened since this import (r2 S7 note-4 HOLD; the C159 read-guard idea): every file opened
-#: through `open` that is not Python source, bytecode or a system/venv path. It only grows (a union over the process),
-#: so it may name more files than one solve read, never fewer. It is an audit record and never feeds a value; the §T
-#: AST guard exempts it by name, as it does `_PRISTINE`.
-_OPENED: set = set()
-_SYSTEM_PARTS = ("site-packages", "/.venv", "/Library/Developer/", "/System/", "/usr/lib/", "/Library/Caches/",
-                 "__pycache__", "/.git/", "/dev/", "/opt/homebrew/")
+#: Files of the engine tree that make up the «material data bytes» of solve_id (design §A6; r2 S7 note-4 HOLDs):
+#: every engine Python module and every engine data file, minus what is not material data — the body files (the Body
+#: is hashed on its own), test fixtures and tests, tools, requirements and prose. A fixed function of the tree: it does
+#: not depend on what this process has opened or in which order, and paths are repo-relative, so Mac and PC agree.
+_DATA_SUFFIXES = (".py", ".json", ".yaml", ".yml", ".csv", ".txt", ".npz", ".npy", ".dat", ".h5")
+_NOT_DATA_DIRS = ("bodies", "test_fixtures", "__pycache__", "tools")
 
 
-def _open_hook(event, args):
-    if event == "open" and args and isinstance(args[0], (str, bytes, os.PathLike)):
-        try:
-            p = os.path.realpath(os.fsdecode(args[0]))
-        except (OSError, ValueError):
-            return
-        if p.endswith((".py", ".pyc")) or any(x in p for x in _SYSTEM_PARTS):
-            return
-        _OPENED.add(p)
-
-
-sys.addaudithook(_open_hook)          # before the engine imports, so data read at import time is seen too
+def _engine_files() -> list:
+    out = []
+    for root, dirs, files in os.walk(_ENGINE):
+        dirs[:] = sorted(d for d in dirs if d not in _NOT_DATA_DIRS and not d.startswith("."))
+        for f in sorted(files):
+            if f.endswith(_DATA_SUFFIXES) and not f.startswith(("test_", "requirements")):
+                out.append(os.path.join(root, f))
+    return sorted(out)
 
 
 def material_bytes() -> bytes:
-    """«Material data bytes» of solve_id (design §A6; r2 S7 note-4 HOLD): sha256 over every engine module loaded in
-    this process (its source bytes) and every data file opened so far (`_OPENED`), each with its path, sorted.
-    A changed table byte or a changed module on the density / dT/dP path gives a new id."""
+    """sha256 over (repo-relative path, sha256 of content) for every file of `_engine_files()`, sorted. Conservative:
+    any change to engine code or data moves solve_id (a trace key only; R-RUL-26 keeps staleness by value).
+    Deterministic: independent of process history, scheduling and machine."""
     import hashlib
-    paths = {os.path.realpath(m.__file__) for m in list(sys.modules.values())
-             if getattr(m, "__file__", None) and os.path.realpath(m.__file__).startswith(os.path.realpath(_ENGINE))}
-    paths |= {p for p in _OPENED if os.path.isfile(p)}
+    repo = os.path.dirname(_ENGINE)
     h = hashlib.sha256()
-    for p in sorted(paths):
-        h.update(p.encode())
+    for p in _engine_files():
+        h.update(os.path.relpath(p, repo).replace(os.sep, "/").encode())
         with open(p, "rb") as fh:
             h.update(hashlib.sha256(fh.read()).digest())
     return h.digest()
+
 
 import eos            # noqa: E402  (engine/, 097a8aa3)
 import interior       # noqa: E402

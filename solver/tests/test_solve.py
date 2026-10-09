@@ -231,24 +231,33 @@ class UnlocatedWall(unittest.TestCase):
 
 
 class MaterialBytes(unittest.TestCase):
-    """r2 note-4 HOLD: a changed data byte that the process read gives a new material-bytes digest (hence solve_id)."""
+    """r2 note-4 HOLDs: the material bytes are a function of the engine tree only — a changed engine data byte moves
+    them, and the process's history (what was solved before) does not."""
 
-    def test_changed_table_byte_changes_digest(self):
+    def test_changed_engine_byte_changes_digest(self):
         import os
-        import tempfile
         from solver import legacy_materials as lm
-        d = tempfile.mkdtemp()
-        p = os.path.join(d, "table.json")
-        with open(p, "w") as fh:
-            fh.write('{"rho": 1.0}')
-        with open(p) as fh:                       # read through open(): the audit hook records it
-            fh.read()
-        a = lm.material_bytes()
-        with open(p, "w") as fh:
-            fh.write('{"rho": 2.0}')
-        b2 = lm.material_bytes()
-        self.assertNotEqual(a, b2)
-        self.assertEqual(b2, lm.material_bytes())       # control: unchanged bytes, same digest
+        p = os.path.join(lm._ENGINE, "zz_material_bytes_probe.json")
+        try:
+            with open(p, "w") as fh:
+                fh.write('{"rho": 1.0}')
+            a = lm.material_bytes()
+            with open(p, "w") as fh:
+                fh.write('{"rho": 2.0}')
+            c = lm.material_bytes()
+            self.assertNotEqual(a, c)
+            self.assertEqual(c, lm.material_bytes())        # control: unchanged bytes, same digest
+        finally:
+            os.remove(p)
+
+    def test_history_does_not_move_solve_id(self):
+        """Earth alone vs Earth after Venus in one process: the same solve_id."""
+        first, _ = sv.solve(earth())
+        venus, _ = from_v1.load_v1("engine/bodies/venus.yaml")
+        sv.solve(venus)
+        again, _ = sv.solve(earth())
+        sid = lambda a: a.quantities[0].provenance.solver.solve_id
+        self.assertEqual(sid(first), sid(again))
 
 
 if __name__ == "__main__":
