@@ -48,7 +48,11 @@ class Outcome:
 
 
 def scan_points(lo: float, hi: float, n: int = N_SCAN) -> list:
-    return [lo * (hi / lo) ** (i / (n - 1)) for i in range(n)]
+    """Log-spaced for lo > 0 (R, boundary masses); linear when lo = 0 (a composition axis such as Dante's φ₀ ∈
+    [0, 0.60], r2 S7 B3)."""
+    if lo > 0.0:
+        return [lo * (hi / lo) ** (i / (n - 1)) for i in range(n)]
+    return [lo + (hi - lo) * i / (n - 1) for i in range(n)]
 
 
 def _brent(F, a: float, fa: float, b: float, fb: float, trials: list):
@@ -108,7 +112,7 @@ def _value(F, x: float):
 
 def _locate_wall(F, x_ok: float, x_bad: float, stop_bad: st.Stop, trials: list) -> Wall:
     for _ in range(WALL_SHOTS):
-        if abs(x_bad - x_ok) <= WALL_TOL * abs(x_ok):
+        if abs(x_bad - x_ok) <= WALL_TOL * max(abs(x_ok), abs(x_bad)):
             break
         xm = 0.5 * (x_ok + x_bad)
         v = _value(F, xm)
@@ -118,7 +122,7 @@ def _locate_wall(F, x_ok: float, x_bad: float, stop_bad: st.Stop, trials: list) 
         else:
             trials.append(Trial(xm, v, None, "wall"))
             x_ok = xm
-    return Wall(x_bad, stop_bad, x_ok, abs(x_bad - x_ok) <= WALL_TOL * abs(x_ok))
+    return Wall(x_bad, stop_bad, x_ok, abs(x_bad - x_ok) <= WALL_TOL * max(abs(x_ok), abs(x_bad)))
 
 
 MAX_SPLITS = 16              # refusals met inside a Brent bracket, each splitting it (then re-searched)
@@ -130,7 +134,7 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
 
     A refusal met by Brent inside a solved bracket is a wall like any other (r2 B3): it is located from both
     bracket ends with the wall budget, the solved trials join the search (N4) and the search is re-run."""
-    assert 0.0 < lo < hi, (lo, hi)
+    assert 0.0 <= lo < hi, (lo, hi)
     trials: list = []
     for x in scan_points(lo, hi, n_scan):
         v = _value(F, x)

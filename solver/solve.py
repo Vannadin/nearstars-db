@@ -248,43 +248,128 @@ def _quantities(body, p: PassOut, sid: str, x):
     m_e, (r_e, p_e, tad_e, t_e, i_e) = p.m, p.y
     p_c = p_e + 2.0 * math.pi / 3.0 * rhs.G * p.rho_end ** 2 * r_e ** 2       # constant-density centre series
     i_tot = i_e + 0.4 * m_e * r_e ** 2
+    has_t = body.surface.t_pot is not None       # no declared T_pot: no temperature path, no T quantities (c8)
     out = [q("radius", "m", R, body_w), q("nmoi", "1", i_tot / (M * R * R), body_w),
-           q("core_pressure", "Pa", p_c, body_w), q("core_temperature", "K", t_e, body_w)]
+           q("core_pressure", "Pa", p_c, body_w)]
+    if has_t:
+        out.append(q("core_temperature", "K", t_e, body_w))
     cmb = body.interface("cmb")
     for name, _k, m_b, r_b, p_b, t_up, t_lo in p.boundaries:
         if cmb is not None and name == cmb.name:
             bw = result.Where("boundary", cmb.name, "upper")
             out += [q("core_radius", "m", r_b, bw), q("cmb_pressure", "Pa", p_b, bw),
-                    q("cmb_temperature", "K", t_up, bw), q("core_mass_fraction", "1", m_b / M, body_w)]
+                    q("core_mass_fraction", "1", m_b / M, body_w)]
+            if has_t:
+                out.append(q("cmb_temperature", "K", t_up, bw))
     return tuple(out)
+
+
+def _not_yet(body):
+    """(rule, detail) for a declaration phase 1 does not implement, else None (r2 S7 B2/B3). Each is a named
+    refusal until its step lands, never a silent misreading."""
+    for i, l in enumerate(body.layers):
+        if l.thermal == "isothermal":
+            return ("thermal_isothermal_not_in_phase1",
+                    f"layer '{l.id}' declares an isothermal profile; phase 1 integrates adiabatic layers and one "
+                    "conductive top lid only")
+        if l.thermal == "conductive" and i != len(body.layers) - 1:
+            return ("conductive_not_top", f"layer '{l.id}' is conductive but not the top layer")
+        if l.thermal == "conductive" and (l.extent is None or l.extent.kind != "depth_from_surface"):
+            return ("conductive_extent", f"the conductive top layer '{l.id}' must be bounded by depth_from_surface")
+    if body.closure.kind == "composition":
+        return ("composition_closure_not_yet",
+                f"closure on {body.closure.layer}.{body.closure.name} lands with S10 (Mars, Dante)")
+    return None
+
+
+def _canonical(body) -> dict:
+    """The Body as plain, ordered data for solve_id: repr of every field, which is deterministic for the frozen types
+    (mappingproxies keep insertion order)."""
+    return {"repr": repr(body)}
+
+
+def _material_bytes(views) -> bytes:
+    """«Material data bytes» of solve_id (design §A6, r2 S7 B1): for each layer view (sorted by layer id), its material
+    id and the bytes of the source file that defines the material's class, plus engine/eos.py and engine/interior.py
+    (the adapter's dT/dP and density paths). A view without a material (a test fixture) contributes its repr."""
+    import hashlib
+    import inspect
+    files = {inspect.getsourcefile(lm.eos), inspect.getsourcefile(lm.interior)}
+    h = hashlib.sha256()
+    for lid in sorted(views):
+        v = views[lid]
+        mat = getattr(v, "mat", None)
+        h.update(lid.encode())
+        h.update(repr(getattr(v, "material_id", type(v).__name__)).encode())
+        if mat is not None:
+            try:
+                files.add(inspect.getsourcefile(type(mat)))
+            except TypeError:
+                pass
+        else:
+            h.update(repr(vars(v)).encode())
+    for f in sorted(x for x in files if x):
+        with open(f, "rb") as fh:
+            h.update(hashlib.sha256(fh.read()).digest())
+    return h.digest()
+
+
+def _regions(out) -> list:
+    """Solved stretches of the scan, split at every refusing trial."""
+    regs, cur = [], []
+    for t in sorted(out.trials, key=lambda t: t.x):
+        if t.F is None:
+            if cur:
+                regs.append([cur[0], cur[-1]])
+            cur = []
+        else:
+            cur.append(t.x)
+    if cur:
+        regs.append([cur[0], cur[-1]])
+    return regs
 
 
 def solve(body, options: context.Options = context.Options(), warm=None, views=None):
     """Returns (Outcome, warm). Outcome is result.Answer, result.Refusal or result.NoAnswer.
     `views` (layer id → material view) replaces the adapter's resolution; it exists for physics fixtures only and is
     not reachable from Body, options or the context."""
-    views = _views(body) if views is None else dict(views)
+    where = f"{body.name}.solve"
+    nyi = _not_yet(body)                              # r2 S7 B2/B3: refuse by name what phase 1 does not implement
+    if nyi is not None:
+        return refusals.make("input.cross_field", where, rule=nyi[0], detail=nyi[1]), warm
+    if views is None:
+        lm.reset_engine_state()                      # reset before any material is touched (r2 S7)
+        views = _views(body)
+    else:
+        views = dict(views)
     if isinstance(views, result.Refusal):
         return views, warm
-    ctx = context.build(options, views, warm, reset_legacy=any(isinstance(v, lm.LegacyView) for v in views.values()))
+    sid = context.solve_id_of(_canonical(body), _material_bytes(views), options)
+    ctx = context.build(options, views, warm, solve_id=sid,
+                        reset_legacy=any(isinstance(v, lm.LegacyView) for v in views.values()))
     kind = body.closure.kind
-    where = f"{body.name}.solve"
 
     def F(x):
         got = inward(body, views, x, options)
         if isinstance(got, st.Stop):
-            ctx.record("trial", x=x, stop=got.kind)
             return got
-        ctx.record("trial", x=x, F=got.F, floor_end=got.floor_end)
         return got.F if got.F is not None else st.Stop("no_residual", {"x": x})
 
     out = cl.solve_scalar(F, body.closure.lo, body.closure.hi, options.n_scan)
+    for t in out.trials:                              # design §A1.5: passes tagged scan / wall / brent
+        ctx.record(t.kind, x=t.x, F=t.F, stop=None if t.stop is None else t.stop.kind)
+    unlocated = [w for w in out.walls if not w.located]
+    if out.kind != "root" and unlocated:
+        # note 2 item 8: a wall whose position WALL_SHOTS could not fix leaves the search incomplete
+        return refusals.no_answer("unconverged", where, budget_name="WALL_SHOTS", budget_value=cl.WALL_SHOTS,
+                                  last_residual=None, x=unlocated[0].x, pass_kind="wall"), warm
     if out.kind == "root":
         x = out.roots[0]
         for v in views.values():                      # count only the accepted pass's fallbacks (M1)
             if hasattr(v, "surface_fallbacks"):
                 v.surface_fallbacks = 0
         acc = inward(body, views, x, options)
+        ctx.record("accepted", x=x, F=getattr(acc, "F", None), stop=getattr(acc, "kind", None))
         if not isinstance(acc, st.Stop):
             missing = [l.id for l in body.layers if l.id not in acc.entered]
             if missing:
@@ -309,22 +394,34 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
                                                                          "p": g.p, "g": g.g}))
         lbs = tuple(result.LocatedBoundary(n, k, m_b, r_b, p_b, t_up) for n, k, m_b, r_b, p_b, t_up, _t in
                     acc.boundaries)
-        ans = result.Answer(_quantities(body, acc, ctx.solve_id, x), lbs, {}, (), tuple(notes))
+        if body.surface.t_pot is None:
+            notes.append(result.Note("no_temperature_path", "no potential temperature is declared, so the structure "
+                                     "has no temperature path and no temperature quantity is emitted", {}))
+        profiles = {lid: {"m": tuple(n[0] for n in path), "r": tuple(n[1][0] for n in path),
+                          "P": tuple(n[1][1] for n in path), "T": tuple(n[1][3] for n in path)}
+                    for lid, path in acc.profiles.items()}
+        ans = result.Answer(_quantities(body, acc, ctx.solve_id, x), lbs, profiles, (), tuple(notes))
         return ans, x
     if out.kind == "two_roots":
         return refusals.make("solve.two_roots", where, x=None, closure_kind=kind, pass_kind="scan",
                              roots=list(out.roots), F_scan=[[t.x, t.F] for t in out.trials if t.F is not None],
                              n_scan=options.n_scan), warm
     if out.kind == "unconverged":
-        return refusals.no_answer("unconverged", where, budget_name=out.detail.get("budget", "CLOSE_ITERS"),
-                                  budget_value=options.close_iters, last_residual=None), warm
-    walls = [{"x": w.x, "outcome_kind": "refusal", "id_or_reason": w.stop.kind, "state": None, "located": w.located}
-             for w in out.walls]
+        budget = out.detail.get("budget", "CLOSE_ITERS")
+        value = cl.MAX_SPLITS if budget == "MAX_SPLITS" else cl.CLOSE_ITERS
+        last = next((t.F for t in reversed(out.trials) if t.F is not None), None)
+        return refusals.no_answer("unconverged", where, budget_name=budget, budget_value=value,
+                                  last_residual=last), warm
+    walls = []
+    for w in out.walls:
+        mapped = _to_refusal(w.stop, where, w.x, kind, "wall")
+        is_na = isinstance(mapped, result.NoAnswer)
+        walls.append({"x": w.x, "outcome_kind": "no_answer" if is_na else "refusal",
+                      "id_or_reason": mapped.reason if is_na else mapped.id, "state": None, "located": w.located})
     if out.kind == "no_solved":
         first = min(out.trials, key=lambda t: t.x)
         return _to_refusal(first.stop, where, first.x, kind, "scan"), warm
     solved = sorted((t for t in out.trials if t.F is not None), key=lambda t: t.x)
     return refusals.make("solve.no_bracket", where, x=None, closure_kind=kind, pass_kind="scan",
                          x_lo=body.closure.lo, x_hi=body.closure.hi, F_lo=solved[0].F, F_hi=solved[-1].F,
-                         n_scan=options.n_scan, walls=walls,
-                         solved_regions=[[solved[0].x, solved[-1].x]]), warm
+                         n_scan=options.n_scan, walls=walls, solved_regions=_regions(out)), warm

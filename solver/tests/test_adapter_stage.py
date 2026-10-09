@@ -160,9 +160,6 @@ class OldStage(unittest.TestCase):
         self.assertNotEqual(view.density(pp, t), rho_old)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class BranchesNotReachedByOldRuns(unittest.TestCase):
     """r2 S4-fix B3: the floor clamp and the hot-surface ρ₀ fallback are not reached by plausible old integrations
@@ -193,3 +190,6 @@ class BranchesNotReachedByOldRuns(unittest.TestCase):
             interior.SURF_RHO = saved
         cool = lm.LegacyView("silicate", mat, 1600.0).density(0.0, 1600.0)
         self.assertNotEqual(cool, mat.rho0)                              # mutation-like: the 1 bar read is used
+
+if __name__ == "__main__":
+    unittest.main()

@@ -166,9 +166,6 @@ class Reset(unittest.TestCase):
         self.assertEqual(ctx.trace[0]["kind"], "legacy_reset")
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class StartFilledBeforeImport(unittest.TestCase):
     def test_start_goes_back_to_registry_initial(self):
@@ -262,3 +259,6 @@ class WaterMixture(unittest.TestCase):
         dry = eos.mix("rock_iron_test", "test", (interior.MATERIALS["silicate"], 0.5),
                       (interior.MATERIALS["fe_prem"], 0.5))
         self.assertFalse(lm._has_water(dry))
+
+if __name__ == "__main__":
+    unittest.main()

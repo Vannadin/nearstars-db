@@ -127,9 +127,6 @@ class Knobs(unittest.TestCase):
         self.assertNotIn("use_wall_trials", {f.name for f in dataclasses.fields(context.Options)})
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class EveryLayerEntered(unittest.TestCase):
     """Note 3 (r2): at the root every declared layer must have been entered, else solve.layer_order at x*."""
@@ -150,3 +147,88 @@ class EveryLayerEntered(unittest.TestCase):
         body, views = self._body(3.0e6)
         out, _ = sv.solve(body, views=views)
         self.assertIsInstance(out, result.Answer, getattr(out, "text", None))
+
+
+class NotYetImplemented(unittest.TestCase):
+    """r2 S7 B2/B3: what phase 1 does not implement is refused by name, never misread."""
+
+    def _body(self, **kw):
+        M = 5.0e24
+        core = kw.get("core", b.Layer("core", "core", "x", b.Extent("mass_fraction", 0.3)))
+        top = kw.get("top", b.Layer("mantle", "mantle", "y"))
+        closure = kw.get("closure", b.Closure("R", 1e5, 1e8))
+        return b.Body("fixture", "planet", b.SurfaceState(M, t_pot=1600.0, t_s=300.0), (core, top), closure)
+
+    def _refused(self, body, rule):
+        out, _ = sv.solve(body, views={"core": Uniform(9000.0), "mantle": Uniform(3000.0)})
+        self.assertIsInstance(out, result.Refusal)
+        self.assertEqual((out.id, out.evidence["rule"]), ("input.cross_field", rule))
+
+    def test_isothermal(self):
+        core = b.Layer("core", "core", "x", b.Extent("mass_fraction", 0.3), thermal="isothermal", t_declared=5000.0)
+        self._refused(self._body(core=core), "thermal_isothermal_not_in_phase1")
+
+    def test_conductive_not_top(self):
+        core = b.Layer("core", "core", "x", b.Extent("mass_fraction", 0.3), thermal="conductive")
+        self._refused(self._body(core=core), "conductive_not_top")
+
+    def test_conductive_top_needs_depth(self):
+        top = b.Layer("mantle", "mantle", "y", b.Extent("mass_fraction", 0.7), thermal="conductive")
+        self._refused(self._body(top=top), "conductive_extent")
+
+    def test_composition_closure(self):
+        self._refused(self._body(closure=b.Closure("composition", 0.0, 0.6, "core", "S")),
+                      "composition_closure_not_yet")
+
+
+class SolveId(unittest.TestCase):
+    """r2 S7 B1: solve_id is set, deterministic, and moves with the body."""
+
+    def test_set_and_deterministic_and_sensitive(self):
+        body, views = _two_layer(6000.0)
+        a, _ = sv.solve(body, views=views)
+        c, _ = sv.solve(body, views=views)
+        sid = a.quantities[0].provenance.solver.solve_id
+        self.assertEqual(len(sid), 64)
+        self.assertEqual(sid, c.quantities[0].provenance.solver.solve_id)
+        body2, views2 = _two_layer(6100.0)
+        d, _ = sv.solve(body2, views=views2)
+        self.assertNotEqual(sid, d.quantities[0].provenance.solver.solve_id)   # control: another material
+
+
+class NoTemperaturePath(unittest.TestCase):
+    def test_no_t_pot_no_temperature_quantities(self):
+        body, views = _two_layer(6000.0)
+        b2 = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=None))
+        out, _ = sv.solve(b2, views=views)
+        keys = {q.key for q in out.quantities}
+        self.assertFalse({"core_temperature", "cmb_temperature"} & keys)
+        self.assertIn("no_temperature_path", [n.kind for n in out.notes])
+
+    def test_control_with_t_pot(self):
+        body, views = _two_layer(6000.0)
+        b2 = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=1600.0))
+        out, _ = sv.solve(b2, views=views)
+        self.assertIn("core_temperature", {q.key for q in out.quantities})
+
+
+class UnlocatedWall(unittest.TestCase):
+    def test_wall_shots_exhausted_is_no_answer(self):
+        import solver.closure as c
+
+        class Capped(Uniform):
+            def state(self, p, t, guess):
+                return st.Stop("domain", {"p": p}) if p > 1e10 else (self.rho, 0.0, ())
+        body, _v = _two_layer(6000.0)
+        saved = c.WALL_SHOTS
+        try:
+            c.WALL_SHOTS = 1
+            out, _ = sv.solve(body, views={"core": Capped(1e5), "mantle": Capped(3000.0)})
+        finally:
+            c.WALL_SHOTS = saved
+        self.assertIsInstance(out, result.NoAnswer, getattr(out, "text", out))
+        self.assertEqual(out.evidence["budget_name"], "WALL_SHOTS")
+
+
+if __name__ == "__main__":
+    unittest.main()

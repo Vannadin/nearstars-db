@@ -125,9 +125,6 @@ class Ammonia(unittest.TestCase):
         self.assertEqual(events.ammonia_events(lm.interior.MATERIALS["fe_prem"]), [])
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class RealSilicate(unittest.TestCase):
     """r2's p11 as a test: real silicate passes at 1–8 M⊕ and T_pot 1400–2600 K end the same way with events on
@@ -167,3 +164,6 @@ class AmmoniaLanding(unittest.TestCase):
         hits = [y for name, _m, y in res.events if name == "nh3_isotherm:1000"]
         self.assertEqual(len(hits), 1)
         self.assertLessEqual(abs(hits[0][2] - 1000.0), 1e-12 * 1000.0)
+
+if __name__ == "__main__":
+    unittest.main()

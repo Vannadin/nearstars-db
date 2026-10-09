@@ -179,9 +179,6 @@ class Refusal(unittest.TestCase):
         self.assertLessEqual(r.x, wall)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class HminRecord(unittest.TestCase):
     def test_h_min_stop_carries_registry_fields(self):
@@ -191,3 +188,6 @@ class HminRecord(unittest.TestCase):
         for k in ("h", "h_min", "m_at", "err_norm", "rejected_in_row"):
             self.assertIn(k, r.stop.record)
         self.assertGreater(r.stop.record["rejected_in_row"], 0)
+
+if __name__ == "__main__":
+    unittest.main()

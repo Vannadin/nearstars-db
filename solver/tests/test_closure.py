@@ -82,9 +82,6 @@ class N4(unittest.TestCase):
         self.assertEqual(out.kind, "no_bracket")
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class BrentRefusal(unittest.TestCase):
     """A refusal met inside a Brent bracket is a wall: located, split, re-searched (r2 B3)."""
@@ -175,3 +172,15 @@ class MaxSplits(unittest.TestCase):
     def test_budget_name_is_registered(self):
         from solver import refusals
         self.assertIn("MAX_SPLITS", refusals.NO_ANSWER_BUDGETS)
+
+
+class ZeroLowerEnd(unittest.TestCase):
+    def test_linear_scan_from_zero(self):
+        out = closure.solve_scalar(lambda x: x - 0.39, 0.0, 0.6)
+        self.assertEqual(out.kind, "root")
+        self.assertAlmostEqual(out.roots[0], 0.39, delta=1e-12)
+        pts = closure.scan_points(0.0, 0.6)
+        self.assertEqual((pts[0], pts[-1]), (0.0, 0.6))
+
+if __name__ == "__main__":
+    unittest.main()
