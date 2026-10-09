@@ -18,6 +18,9 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 MUTABLE_CALLS = {"list", "dict", "set", "bytearray", "defaultdict", "OrderedDict", "Counter", "deque", "ChainMap",
                  "sorted"}
 
+#: Decorators that keep a memo on the function object (r2).
+MEMO_DECORATORS = {"lru_cache", "cache", "cached_property"}
+
 #: Findings that are known and owned, each removed by its owner's commit. An entry that no longer fires fails the
 #: test (stale), so the list only shrinks. (file, line text start) → owner and reason.
 KNOWN = {
@@ -50,7 +53,8 @@ def _local_factory_call(v, local_defs) -> bool:
 
 def findings(source: str, name: str) -> list:
     """(file, target, line, what) for each module-level mutable assignment, module-level binding of a same-module
-    function's result (r2), module-level augmented assignment, and `global` statement anywhere in `source`."""
+    function's result (r2), module-level augmented assignment, `global` statement, mutable default argument, memo
+    decorator and mutable class attribute anywhere in `source` (the last three r2, on 0244a471)."""
     tree = ast.parse(source)
     out = []
     local_defs = {n.name for n in tree.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))}
@@ -68,6 +72,23 @@ def findings(source: str, name: str) -> list:
     for n in ast.walk(tree):
         if isinstance(n, ast.Global):
             out += [(name, g, n.lineno, "global statement") for g in n.names]
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):       # r2: defaults persist per def
+            label = getattr(n, "name", "<lambda>")
+            for d in list(n.args.defaults) + [d for d in n.args.kw_defaults if d is not None]:
+                if _mutable(d):
+                    out.append((name, label, n.lineno, "mutable default argument"))
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)):                   # r2: a memo on the function
+            for dec in n.decorator_list:
+                f = dec.func if isinstance(dec, ast.Call) else dec
+                dn = f.id if isinstance(f, ast.Name) else f.attr if isinstance(f, ast.Attribute) else None
+                if dn in MEMO_DECORATORS:
+                    out.append((name, n.name, n.lineno, "memo decorator"))
+        if isinstance(n, ast.ClassDef):                                              # r2: class attributes persist
+            for c in n.body:
+                v = getattr(c, "value", None)
+                if isinstance(c, (ast.Assign, ast.AnnAssign)) and v is not None and _mutable(v):
+                    tg = c.targets[0] if isinstance(c, ast.Assign) else c.target
+                    out.append((name, f"{n.name}.{_target_name(tg)}", c.lineno, "mutable class attribute"))
     return out
 
 
@@ -141,6 +162,14 @@ class PlantedControls(unittest.TestCase):
                           ("Loader.table = {k: 1 for k in 'ab'}", "mutable module-level assignment"),
                           ("_N = 0\n_N += 1", "module-level augmented assignment"),
                           ("def f():\n    global _N\n    _N = 1", "global statement"),
+                          ("@functools.lru_cache(maxsize=None)\ndef f(x):\n    return x", "memo decorator"),
+                          ("@cache\ndef f(x):\n    return x", "memo decorator"),
+                          ("class C:\n    @cached_property\n    def p(self):\n        return 1", "memo decorator"),
+                          ("def f(x, _m={}):\n    return x", "mutable default argument"),
+                          ("class C:\n    def m(self, *, acc=[]):\n        return acc", "mutable default argument"),
+                          ("g = lambda x, s=set(): x", "mutable default argument"),
+                          ("class C:\n    table = {}", "mutable class attribute"),
+                          ("class C:\n    seen: list = []", "mutable class attribute"),
                           ("def _make():\n    memo = {}\n    return lambda k: memo.setdefault(k, k)\nget = _make()",
                            "module-level binding of a local function's result")):
             with self.subTest(src=src):
@@ -159,6 +188,9 @@ class PlantedControls(unittest.TestCase):
 
     def test_immutable_forms_pass(self):
         for src in ("_X = (1, 2)", "_X = frozenset({1})", "_X = types.MappingProxyType({'a': 1})", "_X = 'a'",
+                    "def f(x, k=(1, 2), *, n=None):\n    return x",
+                    "@dataclasses.dataclass\nclass C:\n    xs: list = dataclasses.field(default_factory=list)",
+                    "class C:\n    NAMES = ('a', 'b')",
                     "def f():\n    x = {}\n    x['a'] = 1", "class C:\n    pass"):
             with self.subTest(src=src):
                 self.assertEqual(findings(src, "planted.py"), [])
