@@ -141,7 +141,7 @@ class EveryLayerEntered(unittest.TestCase):
         return body, {"core": Uniform(9000.0), "mantle": Uniform(3000.0)}
 
     def test_core_never_entered_is_refused(self):
-        body, views = self._body(1.0e3)        # below the mantle's own centre end: the core is never reached
+        body, views = self._body(5.0e4)        # 50 km: above the r floor (~7 km), below the mantle's centre end (~74 km)
         out, _ = sv.solve(body, views=views)
         self.assertIsInstance(out, result.Refusal)
         self.assertEqual((out.id, out.evidence["layer_id"], out.evidence["rule"]), ("solve.layer_order", "core", "entered"))
