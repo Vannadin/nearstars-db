@@ -110,16 +110,62 @@ class Events(unittest.TestCase):
         self.assertEqual([e[0] for e in r.events], ["mid"])
         self.assertLessEqual(abs(r.events[0][1] - 0.5), 1e-12)
 
-    def test_chatter_guard_trips(self):
+    def test_earliest_crossing_wins_even_if_listed_later(self):
         f = lambda x, y: (1.0,)
-        ev = st.Event("buzz", lambda x, y: math.sin(1e4 * x) + 1e-3, terminal=False)
-        r = st.run(f, 0.0, (0.0,), 1.0, _opts(h0=1e-2, h_max=1e-2, event_restarts_run=50), [ev])
-        self.assertEqual(r.stop.kind, "chatter")
+        a = st.Event("A", lambda x, y: y[0] - 0.45, terminal=False)
+        b = st.Event("B", lambda x, y: y[0] - 0.40, terminal=True)
+        r = st.run(f, 0.0, (0.0,), 1.0, _opts(h0=0.3, h_max=0.3), [a, b])
+        self.assertEqual((r.stop.kind, r.event), ("event", "B"))
+        self.assertLessEqual(abs(r.y[0] - 0.40), 1e-12)
 
-    def test_control_raised_caps_still_stop(self):
+    def test_both_crossings_in_one_step_land_in_order(self):
         f = lambda x, y: (1.0,)
-        ev = st.Event("buzz", lambda x, y: math.sin(1e4 * x) + 1e-3, terminal=False)
-        r = st.run(f, 0.0, (0.0,), 1.0, _opts(h0=1e-2, h_max=1e-2, event_restarts_run=5000, max_steps=80), [ev])
+        a = st.Event("A", lambda x, y: y[0] - 0.45, terminal=False)
+        b = st.Event("B", lambda x, y: y[0] - 0.40, terminal=False)
+        r = st.run(f, 0.0, (0.0,), 1.0, _opts(h0=0.3, h_max=0.3), [a, b])
+        self.assertEqual([e[0] for e in r.events], ["B", "A"])
+
+
+def _cap(r):
+    return r.stop.kind, (r.stop.record or {}).get("cap_name")
+
+
+class Guard(unittest.TestCase):
+    """Each cap of the event guard trips with its own name, and each has a control that does not trip (r2 B2)."""
+    f = staticmethod(lambda x, y: (1.0,))
+
+    def test_min_progress(self):
+        ev = st.Event("double", lambda x, y: (y[0] - 0.5) * (y[0] - 0.505), terminal=False)
+        r = st.run(self.f, 0.0, (0.0,), 1.0, _opts(h0=3e-3, h_max=3e-3, event_min_progress=1e-2), [ev])
+        self.assertEqual(_cap(r), ("chatter", "EVENT_MIN_PROGRESS"))
+        r = st.run(self.f, 0.0, (0.0,), 1.0, _opts(h0=3e-3, h_max=3e-3, event_min_progress=0.0), [ev])
+        self.assertEqual(r.stop.kind, "end")
+        self.assertEqual(len(r.events), 2)                      # control: both crossings land, none skipped
+
+    def test_restarts_step(self):
+        evs = [st.Event(f"e{k}", (lambda x, y, c=0.40 + 0.01 * k: y[0] - c), terminal=False) for k in range(6)]
+        r = st.run(self.f, 0.0, (0.0,), 1.0, _opts(h0=0.3, h_max=0.3, event_restarts_step=4), evs)
+        self.assertEqual(_cap(r), ("chatter", "EVENT_RESTARTS_STEP"))
+        r = st.run(self.f, 0.0, (0.0,), 1.0, _opts(h0=0.3, h_max=0.3, event_restarts_step=10), evs)
+        self.assertEqual((r.stop.kind, len(r.events)), ("end", 6))
+
+    def test_restarts_solve(self):
+        evs = [st.Event(f"e{k}", (lambda x, y, c=(k + 0.5) / 60: y[0] - c), terminal=False) for k in range(60)]
+        r = st.run(self.f, 0.0, (0.0,), 1.0, _opts(h0=1e-3, h_max=1e-3, event_restarts_run=50), evs)
+        self.assertEqual(_cap(r), ("chatter", "EVENT_RESTARTS_SOLVE"))
+        r = st.run(self.f, 0.0, (0.0,), 1.0, _opts(h0=1e-3, h_max=1e-3, event_restarts_run=100), evs)
+        self.assertEqual((r.stop.kind, len(r.events)), ("end", 60))
+
+    def test_rewalks(self):
+        ev = st.Event("curved", lambda x, y: math.tanh(50 * (y[0] - 0.4123)), terminal=False)
+        r = st.run(self.f, 0.0, (0.0,), 1.0, _opts(h0=0.3, h_max=0.3, event_rewalks=1), [ev])
+        self.assertEqual(_cap(r), ("chatter", "EVENT_REWALKS"))
+        r = st.run(self.f, 0.0, (0.0,), 1.0, _opts(h0=0.3, h_max=0.3, event_rewalks=40), [ev])
+        self.assertEqual(r.stop.kind, "end")
+        self.assertLessEqual(abs(r.events[0][2][0] - 0.4123), 1e-12)
+
+    def test_max_steps_is_a_stop(self):
+        r = st.run(self.f, 0.0, (0.0,), 1.0, _opts(h0=1e-3, h_max=1e-3, max_steps=80))
         self.assertEqual(r.stop.kind, "max_steps")
 
 

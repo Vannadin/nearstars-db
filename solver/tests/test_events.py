@@ -102,6 +102,8 @@ class Chatter(unittest.TestCase):
         view = Synthetic(lambda p: 1600.0 + 2e-8 * p - 1e-3 * math.sin(p / 1e3))   # g = 1e-3 sin(P/1 kPa)
         res = _run(view, events.onset_event(view), opt=rhs.PassOptions(event_restarts_run=50))
         self.assertEqual(res.stop.kind, "chatter")
+        self.assertIn(res.stop.record["cap_name"], ("EVENT_RESTARTS_SOLVE", "EVENT_RESTARTS_STEP", "EVENT_REWALKS",
+                                                    "EVENT_MIN_PROGRESS"))
 
     def test_control_smooth_curve_does_not_trip(self):
         view = Synthetic(lambda p: 1600.0 + 1e3 + 1e-8 * p)

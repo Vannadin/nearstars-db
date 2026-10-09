@@ -84,3 +84,72 @@ class N4(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class BrentRefusal(unittest.TestCase):
+    """A refusal met inside a Brent bracket is a wall: located, split, re-searched (r2 B3)."""
+
+    @staticmethod
+    def island(lo, hi, f):
+        return lambda x: st.Stop("domain", {"x": x}) if lo < x < hi else f(x)
+
+    def test_island_around_the_only_root(self):
+        F = self.island(4.00, 4.05, lambda x: x - 4.02)
+        out = closure.solve_scalar(F, 1.0, 10.0)
+        self.assertNotEqual(out.kind, "root")          # the root sits inside the refusing island: not solvable
+        self.assertEqual(out.roots, [])
+        self.assertGreaterEqual(len(out.walls), 2)      # both island edges located
+        self.assertTrue(all(w.located for w in out.walls))
+
+    def test_island_beside_a_root_and_a_clean_root(self):
+        F = self.island(4.03, 4.06, lambda x: (x - 4.02) * (x - 8.0))
+        out = closure.solve_scalar(F, 1.0, 10.0)
+        self.assertEqual(out.kind, "two_roots")
+        self.assertAlmostEqual(min(out.roots), 4.02, delta=1e-10)
+        self.assertAlmostEqual(max(out.roots), 8.0, delta=1e-10)
+
+
+class NonFinite(unittest.TestCase):
+    def test_none_residual_is_a_wall_not_solved(self):
+        F = lambda x: None if x >= WALL else x - 2.0
+        out = closure.solve_scalar(F, 1.0, 10.0)
+        self.assertEqual(out.kind, "root")
+        w = out.walls[0]
+        self.assertLess(w.solved_side, WALL)
+        self.assertGreaterEqual(w.x, WALL)
+        self.assertEqual(w.stop.kind, "no_residual")
+
+    def test_wall_shots_exhausted_is_flagged(self):
+        import solver.closure as c
+        saved = c.WALL_SHOTS
+        try:
+            c.WALL_SHOTS = 2
+            out = c.solve_scalar(refusing_above(lambda x: x - 2.0), 1.0, 10.0)
+            self.assertFalse(out.walls[0].located)
+        finally:
+            c.WALL_SHOTS = saved
+
+
+class MaterialWall(unittest.TestCase):
+    """S3 through the real chain: a material refusing above a pressure, rhs → stepper → closure (r2 N7)."""
+
+    def test_root_found_beside_a_pressure_wall(self):
+        import math
+        from solver import rhs
+        M, rho0 = 5.0e24, 5000.0
+        r_true = (3 * M / (4 * math.pi * rho0)) ** (1 / 3)
+        p_c = 3 * rhs.G * M ** 2 / (8 * math.pi * r_true ** 4)
+
+        class Capped:
+            def state(self, p, t, guess):
+                return st.Stop("domain", {"p": p}) if p > 1.5 * p_c else (rho0, 0.0)
+
+        def F(R):
+            res = rhs.inward_pass(Capped(), M, R, 0.0, 0.0, rho0)
+            return res.F if res.F is not None else res.stop
+
+        out = closure.solve_scalar(F, 0.5 * r_true, 2.0 * r_true)
+        self.assertEqual(out.kind, "root")
+        self.assertLess(abs(out.roots[0] - r_true) / r_true, 1e-10)
+        self.assertGreaterEqual(len(out.walls), 1)
+        self.assertEqual(escalating(F, 0.5 * r_true, 2.0 * r_true).kind, "refused")   # control: escalation fails here

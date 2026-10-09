@@ -62,7 +62,8 @@ class UniformSphere(unittest.TestCase):
         p_exact = 2 * math.pi / 3 * rhs.G * self.rho0 ** 2 * (R * R - r_end * r_end)
         self.assertLess(abs(p_end - p_exact) / p_exact, 1e-9)       # rtol 1e-10 accumulated over the pass
         p_c = 3 * rhs.G * M ** 2 / (8 * math.pi * R ** 4)
-        # P_c = 3GM²/(8πR⁴) at the solved R vs the exact sphere's (2π/3)Gρ²R_true²: R to 1e-10 gives P_c to 4e-10
+        # P_c = 3GM²/(8πR⁴) at the solved R vs the exact sphere's (2π/3)Gρ²R_true². This only restates the R check
+        # (R to 1e-10 gives P_c to 4e-10, r2 N7); the pressure check proper is p_end against the exact profile above.
         self.assertLess(abs(p_c - 2 * math.pi / 3 * rhs.G * self.rho0 ** 2 * r_true ** 2) / p_c, 5e-10)
 
     def test_control_perturbed_density_fails(self):
@@ -100,8 +101,8 @@ class BrentAgainstScipy(unittest.TestCase):
         r_true = (3 * M / (4 * math.pi * rho0)) ** (1 / 3)
         F = lambda R: rhs.inward_pass(Uniform(rho0), M, R, 0.0, 0.0, rho0).F
         ours = closure.solve_scalar(F, 0.5 * r_true, 2.0 * r_true).roots[0]
-        ref = brentq(F, 0.5 * r_true, 2.0 * r_true, xtol=1e-12 * r_true)
-        self.assertLess(abs(ours - ref) / ref, 1e-11)
+        ref = brentq(F, 0.5 * r_true, 2.0 * r_true, xtol=1e-13 * r_true)
+        self.assertLess(abs(ours - ref) / ref, 2 * closure.CLOSE_TOL)   # ours to CLOSE_TOL, scipy's 10× tighter
 
 
 if __name__ == "__main__":

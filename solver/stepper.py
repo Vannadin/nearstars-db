@@ -127,21 +127,22 @@ def next_h(h: float, en: float, accepted: bool) -> float:
     return h * max(0.2, 0.9 * en ** -0.25)
 
 
-def _land(f, ev: Event, x: float, y: Vec, k1: Vec, s_hi: float, g0: float, opt: Options, cnt: Counters):
+def _land(f, ev: Event, x: float, y: Vec, k1: Vec, s_hi: float, out_hi, g0: float, opt: Options, cnt: Counters):
     """Locate g = 0 inside a step of signed length s_hi from (x, y), g(x, y) = g0, and land just past it.
-    Secant/Illinois on real DP steps of length s (no interpolant), at most `event_rewalks` re-steps.
-    Returns (x_e, y_e, k_e) on the new side, or a Stop."""
+    Secant/Illinois on real DP steps of length s (no interpolant), at most `event_rewalks` re-steps; `out_hi` is
+    the full step already taken. Returns (x_e, y_e, k_e) on the new side with |g| ≤ event_tol·scale, or a Stop:
+    "event_unlanded" when the re-step budget ends first (r2 N1), or the refusal of a re-step."""
     lo, g_lo = 0.0, g0
     hi = s_hi
-    out = step(f, x, y, hi, k1)
-    if isinstance(out, Stop):
-        return out
-    g_hi = ev.g(x + hi, out[0])
-    best = (hi, out)
+    g_hi = ev.g(x + hi, out_hi[0])
+    best = (hi, out_hi)
     side = 0
     tol = opt.event_tol * ev.scale
-    for _ in range(opt.event_rewalks):
+    for _ in range(opt.event_rewalks + 1):
         if abs(g_hi) <= tol and g_hi * g0 <= 0.0:
+            s, (y_e, _err, k_e) = best
+            return x + s, y_e, k_e
+        if _ == opt.event_rewalks:
             break
         s = hi - g_hi * (hi - lo) / (g_hi - g_lo)
         if not (min(lo, hi) < s < max(lo, hi)):
@@ -162,14 +163,28 @@ def _land(f, ev: Event, x: float, y: Vec, k1: Vec, s_hi: float, g0: float, opt: 
             if side == 1:
                 g_lo *= 0.5
             side = 1
-    s, (y_e, _err, k_e) = best
-    return x + s, y_e, k_e
+    return Stop("event_unlanded", {"event": ev.name, "g": g_hi, "tol": tol, "rewalks": opt.event_rewalks,
+                                   "x": x + hi})
+
+
+def _crossed(g0: float, g1: float) -> bool:
+    return g0 * g1 < 0.0 or (g1 == 0.0 and g0 != 0.0)
 
 
 def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] = (),
         disabled_until: dict | None = None, on_accept: Callable[[float, Vec], None] | None = None) -> Result:
     """Integrate from x0 to x1 (either direction). Stops at x1, at the first terminal event, or with a Stop.
-    `on_accept(x, y)` is called at every accepted node, the start included (e.g. the graze monitor, §A1.3)."""
+    `on_accept(x, y)` is called at every accepted node, the start included (e.g. the graze monitor, §A1.3).
+
+    Events (r2 B1, B2): of all events that change sign inside an accepted step, the **earliest** crossing is landed
+    (each candidate is located, the nearest to x wins) and the integration restarts there; the rest of the step is
+    re-taken from the event, so a later crossing is seen again. The event guard stops with kind "chatter" and the
+    cap that tripped: EVENT_REWALKS (a crossing not landed to |g| ≤ event_tol·scale within event_rewalks re-steps),
+    EVENT_MIN_PROGRESS (an event changes sign again before |x − x_last| ≥ event_min_progress —
+    a real crossing is never skipped), EVENT_RESTARTS_STEP (more than event_restarts_step landings in a row with no
+    plain step between them), EVENT_RESTARTS_SOLVE (more than event_restarts_run landings in the run).
+    After a landing the controller restarts from the event with h = min(|h of the crossing step|, h_max) and no
+    error history (the step-size rule has none)."""
     cnt = Counters()
     direction = 1.0 if x1 >= x0 else -1.0
     x, y = x0, tuple(y0)
@@ -183,86 +198,94 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
     landed = []
     last_fire = dict(disabled_until or {})          # event name → x of its last landing
     run_events = 0
+    in_row = 0                                      # landings since the last plain accepted step
+    rejected_in_row = 0
     g_prev = {ev.name: ev.g(x, y) for ev in events}
 
-    def armed(ev, xx):
-        xe = last_fire.get(ev.name)
-        return xe is None or abs(xx - xe) >= opt.event_min_progress
+    def stop(kind, record=None):
+        return Result(x, y, Stop(kind, record), h_last=h, path=tuple(path), events=tuple(landed), counters=cnt)
 
     while True:
         if cnt.accepted + cnt.rejected >= opt.max_steps:
-            return Result(x, y, Stop("max_steps", opt.max_steps), h_last=h, path=tuple(path),
-                          events=tuple(landed), counters=cnt)
+            return stop("max_steps", {"budget": opt.max_steps})
         if direction * (x + h - x1) > 0.0:
             h = x1 - x
         out = step(f, x, y, h, k1)
         if isinstance(out, Stop):
             cnt.refused_stage += 1
             if abs(h) <= opt.h_min:
-                return Result(x, y, Stop("refused", out), h_last=h, path=tuple(path),
-                              events=tuple(landed), counters=cnt)
+                return stop("refused", out)
             h = direction * max(abs(h) * 0.25, opt.h_min)
             continue
         y_new, err, k7 = out
         en = err_norm(err, y, y_new, opt.rtol, opt.floors)
         if en > 1.0:
             cnt.rejected += 1
+            rejected_in_row += 1
             if abs(h) <= opt.h_min:
-                return Result(x, y, Stop("h_min", {"h": h, "err_norm": en}), h_last=h, path=tuple(path),
-                              events=tuple(landed), counters=cnt)
+                return stop("h_min", {"h": h, "h_min": opt.h_min, "m_at": x, "err_norm": en,
+                                      "rejected_in_row": rejected_in_row})
             h = direction * max(abs(next_h(h, en, False)), opt.h_min)
             continue
-        # accepted unless an armed event changes sign inside the step
+        rejected_in_row = 0
         x_new = x + h
-        fired = None
-        restarts = 0
-        for ev in events:
-            if not armed(ev, x_new):
-                continue
-            g1 = ev.g(x_new, y_new)
-            if g_prev[ev.name] * g1 < 0.0 or (g1 == 0.0 and g_prev[ev.name] != 0.0):
-                fired = ev
-                break
-        if fired is not None:
-            restarts += 1
+        g_new = {ev.name: ev.g(x_new, y_new) for ev in events}
+        crossing = [ev for ev in events if _crossed(g_prev[ev.name], g_new[ev.name])]
+        for ev in crossing:
+            xe = last_fire.get(ev.name)
+            if xe is not None and abs(x_new - xe) < opt.event_min_progress:
+                return stop("chatter", {"event": ev.name, "count": run_events, "cap_name": "EVENT_MIN_PROGRESS",
+                                        "cap_value": opt.event_min_progress})
+        if crossing:
+            best = None
+            for ev in crossing:
+                got = _land(f, ev, x, y, k1, h, out, g_prev[ev.name], opt, cnt)
+                if isinstance(got, Stop):
+                    if got.kind == "event_unlanded":       # runaway location is the chatter guard's fourth cap
+                        return stop("chatter", {**got.record, "count": run_events, "cap_name": "EVENT_REWALKS",
+                                                "cap_value": opt.event_rewalks})
+                    return stop("refused", got)
+                if best is None or abs(got[0] - x) < abs(best[1][0] - x):
+                    best = (ev, got)
+            fired, (x_e, y_e, k_e) = best
             run_events += 1
-            if restarts > opt.event_restarts_step or run_events > opt.event_restarts_run:
-                return Result(x, y, Stop("chatter", {"event": fired.name, "count": run_events}), h_last=h,
-                              path=tuple(path), events=tuple(landed), counters=cnt)
-            got = _land(f, fired, x, y, k1, h, g_prev[fired.name], opt, cnt)
-            if isinstance(got, Stop):
-                return Result(x, y, Stop("refused", got), h_last=h, path=tuple(path),
-                              events=tuple(landed), counters=cnt)
-            x_e, y_e, k_e = got
+            in_row += 1
+            if in_row > opt.event_restarts_step:
+                return stop("chatter", {"event": fired.name, "count": in_row, "cap_name": "EVENT_RESTARTS_STEP",
+                                        "cap_value": opt.event_restarts_step})
+            if run_events > opt.event_restarts_run:
+                return stop("chatter", {"event": fired.name, "count": run_events,
+                                        "cap_name": "EVENT_RESTARTS_SOLVE", "cap_value": opt.event_restarts_run})
             cnt.accepted += 1
             cnt.events += 1
-            path.append((x_e, y_e, k_e))
-            if on_accept is not None:
-                on_accept(x_e, y_e)
-            last_fire[fired.name] = x_e
-            if fired.terminal:
-                return Result(x_e, y_e, Stop("event"), event=fired.name, h_last=h, path=tuple(path),
-                              events=tuple(landed), counters=cnt)
-            landed.append((fired.name, x_e, y_e))
             x, y, k1 = x_e, y_e, k_e
+            path.append((x, y, k1))
+            if on_accept is not None:
+                on_accept(x, y)
+            last_fire[fired.name] = x
+            if fired.terminal:
+                return Result(x, y, Stop("event"), event=fired.name, h_last=h, path=tuple(path),
+                              events=tuple(landed), counters=cnt)
+            landed.append((fired.name, x, y))
             g_prev = {ev.name: ev.g(x, y) for ev in events}
-            h = direction * min(abs(h), opt.h_max)      # controller restarts from the event with the last h
+            h = direction * min(abs(h), opt.h_max)
             continue
+        in_row = 0
         cnt.accepted += 1
         x, y, k1 = x_new, y_new, k7
         path.append((x, y, k1))
         if on_accept is not None:
             on_accept(x, y)
-        g_prev = {ev.name: ev.g(x, y) for ev in events}
+        g_prev = g_new
         if direction * (x - x1) >= 0.0:
             return Result(x, y, Stop("end"), h_last=h, path=tuple(path), events=tuple(landed), counters=cnt)
         h = direction * min(max(abs(next_h(h, en, True)), opt.h_min), opt.h_max)
 
 
 def dense(path: Sequence[tuple], x: float) -> Vec:
-    """Dense output: cubic Hermite through the bracketing accepted nodes (y and f at both ends; 3rd order).
-    Used only to report values between nodes (e.g. a merged internal boundary, design §A1.3); events are landed
-    by real re-steps (`_land`), never on this interpolant."""
+    """Dense output: cubic Hermite through the bracketing accepted nodes (y and f at both ends; 3rd order, local
+    error h⁴/384·|y⁗|). **No solver path reads it** (registration note 2): events, internal boundaries and the graze
+    record use accepted or landed nodes only. It serves display and tests."""
     lo, hi = path[0][0], path[-1][0]
     if not (min(lo, hi) <= x <= max(lo, hi)):
         raise ValueError(f"dense({x}) outside the path [{lo}, {hi}]")

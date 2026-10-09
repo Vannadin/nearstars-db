@@ -35,6 +35,7 @@ class Wall:
     x: float                     # the located wall (first refusing x next to a solved one)
     stop: st.Stop
     solved_side: float           # the nearest solved x
+    located: bool = True         # False when WALL_SHOTS ran out before WALL_TOL (NoAnswer budget WALL_SHOTS)
 
 
 @dataclass
@@ -85,7 +86,7 @@ def _brent(F, a: float, fa: float, b: float, fb: float, trials: list):
             d = e = m
         a, fa = b, fb
         b = b + (d if abs(d) > tol else math.copysign(tol, m))
-        v = F(b)
+        v = _value(F, b)
         if isinstance(v, st.Stop):
             trials.append(Trial(b, None, v, "brent"))
             return None, ("refused_inside", b, v)
@@ -94,59 +95,91 @@ def _brent(F, a: float, fa: float, b: float, fb: float, trials: list):
     return None, ("unconverged", b, fb)
 
 
+def _value(F, x: float):
+    """F(x) as a finite float, or a Stop. A non-finite or missing residual (e.g. a stopped pass's F = None) is a
+    refusal of that trial, never a solved value (r2 N5)."""
+    v = F(x)
+    if isinstance(v, st.Stop):
+        return v
+    if v is None or not math.isfinite(v):
+        return st.Stop("no_residual", {"x": x, "value": v})
+    return float(v)
+
+
 def _locate_wall(F, x_ok: float, x_bad: float, stop_bad: st.Stop, trials: list) -> Wall:
     for _ in range(WALL_SHOTS):
         if abs(x_bad - x_ok) <= WALL_TOL * abs(x_ok):
             break
         xm = 0.5 * (x_ok + x_bad)
-        v = F(xm)
+        v = _value(F, xm)
         if isinstance(v, st.Stop):
             trials.append(Trial(xm, None, v, "wall"))
             x_bad, stop_bad = xm, v
         else:
             trials.append(Trial(xm, v, None, "wall"))
             x_ok = xm
-    return Wall(x_bad, stop_bad, x_ok)
+    return Wall(x_bad, stop_bad, x_ok, abs(x_bad - x_ok) <= WALL_TOL * abs(x_ok))
+
+
+MAX_SPLITS = 16              # refusals met inside a Brent bracket, each splitting it (then re-searched)
 
 
 def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials: bool = True) -> Outcome:
     """`use_wall_trials` exists only for N4's negative control (False drops the wall-location trials from the
-    sign-change search, i.e. the behaviour N4 forbids)."""
+    sign-change search, i.e. the behaviour N4 forbids). Not reachable from Body, options or the solve context.
+
+    A refusal met by Brent inside a solved bracket is a wall like any other (r2 B3): it is located from both
+    bracket ends with the wall budget, the solved trials join the search (N4) and the search is re-run."""
+    assert 0.0 < lo < hi, (lo, hi)
     trials: list = []
     for x in scan_points(lo, hi, n_scan):
-        v = F(x)
+        v = _value(F, x)
         trials.append(Trial(x, None, v, "scan") if isinstance(v, st.Stop) else Trial(x, v, None, "scan"))
-    walls = []
-    scan = sorted(trials, key=lambda t: t.x)
-    for a, b in zip(scan, scan[1:]):
-        if (a.F is None) != (b.F is None):
-            ok, bad = (a, b) if a.F is not None else (b, a)
-            walls.append(_locate_wall(F, ok.x, bad.x, bad.stop, trials))
-    pts = sorted((t for t in trials if t.F is not None and (use_wall_trials or t.kind != "wall")),
-                 key=lambda t: t.x)
+    walls: list = []
+    done_pairs: set = set()
+    closed: dict = {}            # (a.x, b.x) → root or problem
+    for _round in range(MAX_SPLITS + 1):
+        order = sorted(trials, key=lambda t: t.x)
+        for a, b in zip(order, order[1:]):
+            if (a.F is None) != (b.F is None) and (a.x, b.x) not in done_pairs:
+                done_pairs.add((a.x, b.x))
+                ok, bad = (a, b) if a.F is not None else (b, a)
+                walls.append(_locate_wall(F, ok.x, bad.x, bad.stop, trials))
+        pts = sorted((t for t in trials if t.F is not None and (use_wall_trials or t.kind != "wall")),
+                     key=lambda t: t.x)
+        refused = sorted(t.x for t in trials if t.F is None)
+        roots, problems, split = [], [], False
+        for a, b in zip(pts, pts[1:]):
+            if any(a.x < w < b.x for w in refused):
+                continue                                  # not one solved stretch
+            if a.F == 0.0:
+                roots.append(a.x)
+                continue
+            if a.F * b.F < 0.0:
+                key = (a.x, b.x)
+                if key not in closed:
+                    closed[key] = _brent(F, a.x, a.F, b.x, b.F, trials)
+                x, prob = closed[key]
+                if x is not None:
+                    roots.append(x)
+                elif prob[0] == "refused_inside":
+                    split = True
+                else:
+                    problems.append(prob)
+        if pts and pts[-1].F == 0.0:
+            roots.append(pts[-1].x)
+        if not split:
+            break
+    else:
+        return Outcome("unconverged", roots=roots, walls=walls, trials=trials,
+                       detail={"budget": "MAX_SPLITS", "lo": lo, "hi": hi, "n_scan": n_scan})
     if not pts:
         return Outcome("no_solved", walls=walls, trials=trials)
-    wall_xs = sorted(w.x for w in walls) + sorted(t.x for t in trials if t.F is None)
-    roots, problems = [], []
-    for a, b in zip(pts, pts[1:]):
-        if any(min(a.x, b.x) < w < max(a.x, b.x) for w in wall_xs):
-            continue                                  # not one solved stretch
-        if a.F == 0.0:
-            roots.append(a.x)
-            continue
-        if a.F * b.F < 0.0:
-            x, prob = _brent(F, a.x, a.F, b.x, b.F, trials)
-            if x is not None:
-                roots.append(x)
-            else:
-                problems.append(prob)
-    if pts[-1].F == 0.0:
-        roots.append(pts[-1].x)
     detail = {"problems": problems, "lo": lo, "hi": hi, "n_scan": n_scan}
     if len(roots) == 1 and not problems:
         return Outcome("root", roots=roots, walls=walls, trials=trials, detail=detail)
     if len(roots) >= 2:
         return Outcome("two_roots", roots=roots, walls=walls, trials=trials, detail=detail)
-    if any(p[0] == "unconverged" for p in problems):
+    if problems:
         return Outcome("unconverged", roots=roots, walls=walls, trials=trials, detail=detail)
     return Outcome("no_bracket", roots=roots, walls=walls, trials=trials, detail=detail)
