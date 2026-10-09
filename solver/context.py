@@ -27,7 +27,7 @@ class Options:
     wall_tol: float = 1e-6
     wall_shots: int = 24
     lid_iters: int = 8
-    lid_t_tol: float = 1e-9            # × T_b
+    lid_t_tol: float = 1e-7            # × T_b (registration note 3: the fixed-point map jitters at ~1e-8 in the melt window)
     basal_iters: int = 8
     basal_tol: float = 1e-9            # × R
     event_min_progress: float = 1e-9   # × M
