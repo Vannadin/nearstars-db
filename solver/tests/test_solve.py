@@ -176,9 +176,6 @@ class NotYetImplemented(unittest.TestCase):
         top = b.Layer("mantle", "mantle", "y", b.Extent("mass_fraction", 0.7), thermal="conductive")
         self._refused(self._body(top=top), "conductive_extent")
 
-    def test_composition_closure(self):
-        self._refused(self._body(closure=b.Closure("composition", 0.0, 0.6, "core", "S")),
-                      "composition_closure_not_yet")
 
 
 class SolveId(unittest.TestCase):

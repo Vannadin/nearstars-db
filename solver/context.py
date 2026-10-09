@@ -35,6 +35,7 @@ class Options:
     event_restarts_solve: int = 2000
     max_steps_solve: int = 200000      # per pass
     band_pass: bool = False            # owner Q4 ②: the rtol/10 band only in sample checks or on demand
+    sensitivity_dt: float = 10.0       # K, the warm T_pot + δ solve (registration note 5 item 3f); 0 switches it off
 
 
 @dataclass(frozen=True)

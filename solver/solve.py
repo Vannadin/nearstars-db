@@ -17,6 +17,7 @@ is the outcome.
 """
 from __future__ import annotations
 
+import dataclasses
 import math
 from dataclasses import dataclass, field
 
@@ -184,20 +185,75 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
     return out
 
 
-def _views(body):
-    sf = body.surface
-    p_stop = 0.0
+def _comp(layer) -> dict:
+    v = getattr(layer.composition, "value", None) if layer.composition is not None else None
+    return dict(v) if v is not None else {}
+
+
+def _param(layer, name):
+    v = (layer.params or {}).get(name)
+    return getattr(v, "value", v)
+
+
+def _view_for(body, layer, x, p_stop):
+    """One layer's view; `x` is the closure value when the closure acts on this layer (note 5 item 3a). Returns a view,
+    or (None, why) for a material the adapter cannot build."""
+    t_pot = body.surface.t_pot or 0.0
+    on_me = body.closure.kind == "composition" and body.closure.layer == layer.id
+    if layer.material == "fe_core_light":                       # note 5 item 3b
+        comp = _comp(layer)
+        s = x if (on_me and body.closure.name == "S") else comp.get("S")
+        if not isinstance(s, (int, float)):
+            return None, "core S neither declared nor the closure axis"
+        mat = lm.build_fe_core_light(float(s), float(comp.get("O", 0.0)), float(comp.get("C", 0.0)))
+        return lm.LegacyView(mat.name, mat, t_pot, p_stop), None
+    if layer.material == "silicate_decl":                      # note 5 item 3c
+        mat, why = lm.build_silicate_decl(_comp(layer))
+        if mat is None:
+            return None, why
+        return lm.LegacyView("silicate_decl", mat, t_pot, p_stop), None
+    if on_me and body.closure.name == "initial_porosity":      # note 5 item 3d (Dante)
+        mat = lm.interior.MATERIALS.get(layer.material)
+        if mat is None:
+            return None, "unknown material"
+        cap = _param(layer, "porosity_p_cap")
+        return lm.LegacyView(layer.material, mat, t_pot, p_stop, phi0=float(x),
+                             p_cap=None if cap is None else float(cap)), None
+    if on_me:
+        return None, f"no fit axis {body.closure.name!r} on material {layer.material!r}"
+    v = lm.resolve(layer, t_pot, p_stop)
+    return (v, None) if v is not None else (None, "unknown material")
+
+
+def _p_stop(body) -> float:
     top = lm.interior.MATERIALS.get(body.layers[-1].material)
-    if top is not None:
-        p_stop = getattr(top, "p_floor", 0.0) or 0.0
+    return (getattr(top, "p_floor", 0.0) or 0.0) if top is not None else 0.0
+
+
+def _views(body, x=None):
     out = {}
+    p_stop = _p_stop(body)
     for l in body.layers:
-        v = lm.resolve(l, sf.t_pot or 0.0, p_stop)
+        on_closure = body.closure.kind == "composition" and body.closure.layer == l.id
+        v, why = _view_for(body, l, body.closure.lo if (on_closure and x is None) else x, p_stop)
         if v is None:
             return refusals.make("input.unknown_material", f"{body.name}.layers.{l.id}", layer_id=l.id,
                                  material=l.material)
         out[l.id] = v
     return out
+
+
+def _views_at(body, views, x):
+    """The views for trial x: only the closure's own layer is rebuilt (composition closure)."""
+    if body.closure.kind != "composition":
+        return views
+    layer = next(l for l in body.layers if l.id == body.closure.layer)
+    if hasattr(views.get(layer.id), "at"):           # a fixture view that knows its own x-dependence
+        return {**views, layer.id: views[layer.id].at(x)}
+    v, why = _view_for(body, layer, x, _p_stop(body))
+    if v is None:
+        return st.Stop("refused", st.Stop("no_fit_axis", {"why": why}))
+    return {**views, layer.id: v}
 
 
 def _state(y, m):
@@ -257,6 +313,13 @@ def _quantities(body, p: PassOut, sid: str, x):
            q("core_pressure", "Pa", p_c, body_w)]
     if has_t:
         out.append(q("core_temperature", "K", t_e, body_w))
+    basal = next((l for l in body.layers if l.role == "basal_layer"), None)
+    if basal is not None:                             # note 5 item 3g (R-C100-9/10 as the located layer)
+        r_base = next((b[3] for b in p.boundaries if b[0].endswith(f"/{basal.id}")), None)
+        r_top = next((b[3] for b in p.boundaries if b[0].startswith(f"{basal.id}/")), None)
+        if r_base is not None and r_top is not None:
+            out += [q("basal_layer_thickness_km", "km", (r_top - r_base) / 1e3, result.Where("layer", basal.id)),
+                    q("core_plus_layer_radius_solved_km", "km", r_top / 1e3, result.Where("layer", basal.id))]
     cmb = body.interface("cmb")
     for name, _k, m_b, r_b, p_b, t_up, t_lo in p.boundaries:
         if cmb is not None and name == cmb.name:
@@ -280,9 +343,6 @@ def _not_yet(body):
             return ("conductive_not_top", f"layer '{l.id}' is conductive but not the top layer")
         if l.thermal == "conductive" and (l.extent is None or l.extent.kind != "depth_from_surface"):
             return ("conductive_extent", f"the conductive top layer '{l.id}' must be bounded by depth_from_surface")
-    if body.closure.kind == "composition":
-        return ("composition_closure_not_yet",
-                f"closure on {body.closure.layer}.{body.closure.name} lands with S10 (Mars, Dante)")
     return None
 
 
@@ -305,6 +365,51 @@ def _material_bytes(views) -> bytes:
         if getattr(v, "mat", None) is None:
             h.update(repr(vars(v)).encode())
     return h.digest()
+
+
+SENSITIVE_KEYS = ("core_temperature", "cmb_temperature", "radius")
+
+
+def _with_sensitivity(body, views, x, opt, acc, qs):
+    """Note 5 item 3f: one warm solve at T_pot + δ (δ = opt.sensitivity_dt), forward differences d q / d T_pot on
+    SENSITIVE_KEYS. Omitted, with a note, when the located-boundary set changes between the two states (r2) or the
+    warm solve does not answer."""
+    dt = opt.sensitivity_dt
+    b2 = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=body.surface.t_pot + dt))
+    v2 = _views(b2, x)
+    if isinstance(v2, result.Refusal):
+        return qs, result.Note("sensitivity_not_measured", "the T_pot + δ views could not be built", {"dt": dt})
+
+    def F2(xx):
+        vx = _views_at(b2, v2, xx)
+        if isinstance(vx, st.Stop):
+            return vx
+        got = inward(b2, vx, xx, opt)
+        return got if isinstance(got, st.Stop) else got.F
+    span = 1e-2 * abs(x) if x else 1e-3
+    lo, hi = max(b2.closure.lo, x - span), min(b2.closure.hi, x + span)
+    out = cl.solve_scalar(F2, lo, hi, 5)
+    if out.kind != "root":
+        out = cl.solve_scalar(F2, b2.closure.lo, b2.closure.hi, opt.n_scan)
+    if out.kind != "root":
+        return qs, result.Note("sensitivity_not_measured", f"the T_pot + δ solve gave {out.kind}", {"dt": dt})
+    x2 = out.roots[0]
+    acc2 = inward(b2, _views_at(b2, v2, x2), x2, opt)
+    if isinstance(acc2, st.Stop):
+        return qs, result.Note("sensitivity_not_measured", f"the T_pot + δ pass stopped: {acc2.kind}", {"dt": dt})
+    names1 = [b[0] for b in acc.boundaries]
+    names2 = [b[0] for b in acc2.boundaries]
+    if names1 != names2 or (acc.graze is None) != (acc2.graze is None):
+        return qs, result.Note("sensitivity_across_boundary_change", "the located-boundary set differs at T_pot + δ",
+                               {"dt": dt, "at": names1, "at_plus": names2})
+    q2 = {q.key: q.point for q in _quantities(b2, acc2, "", x2)}
+    new = []
+    for q in qs:
+        if q.key in SENSITIVE_KEYS and q.key in q2 and not (q.key == "radius" and body.closure.kind != "R"):
+            new.append(dataclasses.replace(q, sensitivity=(q2[q.key] - q.point) / dt))
+        else:
+            new.append(q)
+    return tuple(new), None
 
 
 def _regions(out) -> list:
@@ -342,7 +447,10 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
     kind = body.closure.kind
 
     def F(x):
-        got = inward(body, views, x, options)
+        vx = _views_at(body, views, x)
+        if isinstance(vx, st.Stop):
+            return vx
+        got = inward(body, vx, x, options)
         if isinstance(got, st.Stop):
             return got
         return got.F if got.F is not None else st.Stop("no_residual", {"x": x})
@@ -360,6 +468,7 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
         for v in views.values():                      # count only the accepted pass's fallbacks (M1)
             if hasattr(v, "surface_fallbacks"):
                 v.surface_fallbacks = 0
+        views = _views_at(body, views, x)
         acc = inward(body, views, x, options)
         ctx.record("accepted", x=x, F=getattr(acc, "F", None), stop=getattr(acc, "kind", None))
         if not isinstance(acc, st.Stop):
@@ -395,7 +504,12 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
                     for lid, path in acc.profiles.items()}
         # solve_id after the accepted pass, so every data file the solve opened is in the material bytes
         sid = context.solve_id_of(_canonical(body), _material_bytes(views), options)
-        ans = result.Answer(_quantities(body, acc, sid, x), lbs, profiles, (), tuple(notes))
+        qs = _quantities(body, acc, sid, x)
+        if body.surface.t_pot is not None and options.sensitivity_dt > 0.0:
+            qs, sens_note = _with_sensitivity(body, views, x, options, acc, qs)
+            if sens_note is not None:
+                notes.append(sens_note)
+        ans = result.Answer(qs, lbs, profiles, (), tuple(notes))
         return ans, x
     if out.kind == "two_roots":
         return refusals.make("solve.two_roots", where, x=None, closure_kind=kind, pass_kind="scan",

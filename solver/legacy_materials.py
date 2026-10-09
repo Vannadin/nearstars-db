@@ -319,3 +319,37 @@ def resolve(layer, t_pot: float, p_stop: float, column_steam: bool = False):
                       phi0=float(getattr(phi0, "value", phi0) or 0.0),
                       p_cap=None if p_cap is None else float(getattr(p_cap, "value", p_cap)),
                       column_steam=column_steam)
+
+
+# ── S10 builders (registration note 5 item 3b/3c): composition-built materials, made as the old context managers make
+#    them, but never registered in MATERIALS and never swapping COMPOSITIONS (FLAG state) ──────────────────────────────
+
+def _pin_of(o: float, c: float) -> str:
+    for pin, v in interior.LIGHT_ELEMENT_PINS.items():
+        if v["O"] == o and v["C"] == c:
+            return pin
+    return f"o{o}_c{c}"
+
+
+def build_fe_core_light(s: float, o: float, c: float):
+    """The liquid Fe–S–O–C core material at S = s, O = o, C = c (mass fractions), as `interior._sulphur_core` builds it
+    at 097a8aa3 (interior.py:5859 ff.: core_mole_fractions → huang_core_phase(x, "19GPa") in a Material with the fit-floor
+    reasons)."""
+    x = eos.core_mole_fractions({"S": s, "O": o, "C": c})
+    name = f"fe_core_fit_s{s * 100:.4f}_{_pin_of(o, c)}"
+    return eos.Material(
+        name, f"액체 Fe–S–O–C · S {s * 100:.4f} wt% ({_pin_of(o, c)})",
+        (eos.huang_core_phase(x, "19GPa"),), fit_composition="Fe-S-O-C", role="core",
+        gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다",
+        under_reason=eos.FE_S_FIT_FLOOR_REASON, floor_source=eos.FE_S_FIT_FLOOR_SOURCE)
+
+
+def build_silicate_decl(wt: dict):
+    """The declared-mantle silicate for oxide wt% `wt`: the object `mantle_composition.declared(wt)` installs as
+    MATERIALS["silicate"] (table_material over the base silicate), built without the swap. Returns None with the old
+    refusal text when the table is missing."""
+    import mantle_composition
+    tab, why = mantle_composition.load(dict(wt))
+    if why:
+        return None, why
+    return mantle_composition.table_material(interior.MATERIALS["silicate"], tab.key), None
