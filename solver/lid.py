@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from solver import rhs
+from solver import fixed_grid, rhs
 from solver import stepper as st
 
 
@@ -84,7 +84,15 @@ def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_
 
     def run(a, b):
         t0 = t_pot if a is None else t_s
-        res = st.run(_lid_rhs(view, a, b), mass, (radius, p_s, t_pot, t0, 0.0, 0.0), 0.0, sopt, [base, *events])
+        if opt.fixed_dr > 0.0:
+            res = fixed_grid.run_r(_lid_rhs(view, a, b), mass, (radius, p_s, t_pot, t0, 0.0, 0.0), 0.0, r_b,
+                                   "lid_base", opt.fixed_dr, events, max_steps=opt.max_steps,
+                                   event_min_progress=opt.event_min_progress * r_scale,
+                                   event_restarts_step=opt.event_restarts_step,
+                                   event_restarts_run=opt.event_restarts_run, m_scale=mass)
+        else:
+            res = st.run(_lid_rhs(view, a, b), mass, (radius, p_s, t_pot, t0, 0.0, 0.0), 0.0, sopt,
+                         [base, *events])
         for k, v in vars(res.counters).items():
             counters[k] = counters.get(k, 0) + v
         if res.stop.kind != "event" or res.event != "lid_base":

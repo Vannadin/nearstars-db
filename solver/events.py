@@ -75,7 +75,8 @@ def curve_seams(mat) -> set:
 
 
 def seam_events(mat) -> list:
-    return [st.Event(f"seam:{p_b:.9g}", (lambda m, y, p_b=p_b: y[1] - p_b), scale=p_b, terminal=False, seam=True)
+    return [st.Event(f"seam:{p_b:.9g}", (lambda m, y, p_b=p_b: y[1] - p_b), scale=p_b, terminal=False, seam=True,
+                     component=1)
             for p_b in sorted(_material_seams(mat) | curve_seams(mat))]
 
 
@@ -85,7 +86,7 @@ def ammonia_events(mat) -> list:
     from solver.legacy_materials import ammonia_isotherms
     # the integrand reads the material at T_ad (rhs.make_rhs), so the isotherm is crossed in T_ad (y[2])
     return [st.Event(f"nh3_isotherm:{t_k:g}", (lambda m, y, t_k=t_k: y[2] - t_k), scale=t_k, terminal=False,
-                     seam=True) for t_k in ammonia_isotherms()]
+                     seam=True, component=2) for t_k in ammonia_isotherms()]
 
 
 #: Onset-event landing scale [K]: |g| ≤ event_tol · ONSET_SCALE = 1e-9 K, well above T's ulp (~5e-13 K at 4000 K);

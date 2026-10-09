@@ -55,6 +55,7 @@ class PassOptions:
     event_min_progress: float = 1e-9  # × M (registration §6)
     event_restarts_step: int = 4
     event_restarts_run: int = 2000
+    fixed_dr: float = 0.0             # m; > 0: fixed_grid.run_r (T2 method-term registration)
 
 
 @dataclass(frozen=True)

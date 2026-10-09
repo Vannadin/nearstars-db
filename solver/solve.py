@@ -23,6 +23,7 @@ from dataclasses import dataclass, field
 
 from solver import closure as cl
 from solver import context, events, legacy_materials as lm, lid, refusals, result, rhs
+from solver import fixed_grid
 from solver import stepper as st
 
 
@@ -99,6 +100,14 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
     elif end is not None:
         m_end = end[1]
     evs += events.layer_events(view.mat, getattr(view, "p_stop", 0.0)) + list(extra_events)
+    if opt.fixed_dr > 0.0:
+        r_end, name = (end[1], "layer_end") if end is not None and end[0] == "r" else \
+            (opt.r_floor_frac * r_scale, "r_floor")
+        return fixed_grid.run_r(rhs.make_rhs(view), m0, y0, m_end, r_end, name, opt.fixed_dr, evs[1:] if
+                                end is None or end[0] != "r" else evs[2:], on_accept=monitor,
+                                max_steps=opt.max_steps_solve, event_min_progress=opt.event_min_progress * r_scale,
+                                event_restarts_step=opt.event_restarts_step,
+                                event_restarts_run=opt.event_restarts_solve, m_scale=mass)
     sopt = st.Options(rtol=opt.rtol, floors=rhs.floors(mass, r_scale), h0=1e-3 * mass, h_min=1e-15 * mass,
                       h_max=mass / 20.0, max_steps=opt.max_steps_solve,
                       event_min_progress=opt.event_min_progress * mass,
@@ -124,7 +133,7 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
         got = lid.lid_pass(views[lt.id], M, R, lt.extent.value, p_s, sf.t_s, t_pot, rs,
                            rhs.PassOptions(rtol=opt.rtol, eps=opt.eps, r_floor_frac=opt.r_floor_frac,
                                            max_steps=opt.max_steps_solve,
-                                           event_min_progress=opt.event_min_progress),
+                                           event_min_progress=opt.event_min_progress, fixed_dr=opt.fixed_dr),
                            lid_iters=opt.lid_iters, lid_t_tol=opt.lid_t_tol, layer_id=lt.id,
                            events=events.layer_events(views[lt.id].mat, getattr(views[lt.id], "p_stop", 0.0))
                            if getattr(views[lt.id], "mat", None) is not None else ())

@@ -16,6 +16,7 @@ re-checks against scipy). B5 = b̂ (5th order, propagated), B4 = b (4th order, e
 """
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 from fractions import Fraction as Fr
 from typing import Callable, Sequence
@@ -57,6 +58,8 @@ class Event:
     terminal: bool = True
     seam: bool = False            # a fixed boundary of the integrand (phase, thermal-set seam, a curve's own seam):
                                   # landed first, so a curve whose branch changes there is never read across it
+    component: int | None = None  # g = y[component] − const (a seam in one state component): in the fixed mode the
+                                  # landing re-steps read their stages on the old side (fixed_grid.py, C164 rule)
 
 
 @dataclass(frozen=True)
@@ -72,6 +75,10 @@ class Options:
     event_min_progress: float = 0.0   # same event may not fire again before |x − x_event| ≥ this
     event_restarts_step: int = 4
     event_restarts_run: int = 2000
+    fixed: bool = False           # fixed-step classical RK4 (`step_rk4`): h = h0 every step, no error control, a refusing
+                                  # stage stops the run (the T2 method term, rewrite/oracle/t2-method-term-registration.md)
+    frozen: tuple = ()            # fixed mode: components held at their step-start value through the stages …
+    frozen_ref: int = 0           # … and advanced by (k1[j] / k1[ref]) · Δy[ref] (the old engine's T: Euler in P)
 
 
 @dataclass
@@ -115,6 +122,73 @@ def step(f, x: float, y: Vec, h: float, k1: Vec):
     return y_new, err, ks[6]
 
 
+def step_rk4(f, x: float, y: Vec, h: float, k1: Vec, frozen: tuple = (), ref: int = 0, stage_f=None):
+    """One classical RK4 step (Kutta 1901: weights 1/6, 1/3, 1/3, 1/6) from (x, y) with k1 = f(x, y), in the form of
+    interior.py's fixed path at 097a8aa3 (`_rk`): components in `frozen` keep their step-start value in every stage and
+    are advanced after the step by (k1[j] / k1[ref]) · Δy[ref]. Returns (y_new, zero err, f(x + h, y_new)) or a Stop.
+    `stage_f` (a landing re-step's old-side reading) replaces f in stages 2–4 only; the end derivative is f's."""
+    fs = f if stage_f is None else stage_f
+
+    def at(w):
+        return tuple(y[j] if j in frozen else y[j] + w[j] for j in range(len(y)))
+    k2 = fs(x + 0.5 * h, at(tuple(0.5 * h * k for k in k1)))
+    if isinstance(k2, Stop):
+        return k2
+    k3 = fs(x + 0.5 * h, at(tuple(0.5 * h * k for k in k2)))
+    if isinstance(k3, Stop):
+        return k3
+    k4 = fs(x + h, at(tuple(h * k for k in k3)))
+    if isinstance(k4, Stop):
+        return k4
+    inc = [h / 6.0 * (a + 2.0 * b + 2.0 * c + d) for a, b, c, d in zip(k1, k2, k3, k4)]
+    for j in frozen:
+        inc[j] = k1[j] / k1[ref] * inc[ref] if k1[ref] != 0.0 else h * k1[j]
+    y_new = tuple(a + b for a, b in zip(y, inc))
+    k_end = f(x + h, y_new)
+    if isinstance(k_end, Stop):
+        return k_end
+    return y_new, tuple(0.0 for _ in y), k_end
+
+
+def _new_side_k1(f, ev: Event, x: float, y: Vec, k1: Vec, g0: float):
+    """Fixed mode, after landing a seam: k1 read on the new side. A landed node may sit exactly on the seam (g = 0),
+    where the material reads its old branch; the full fixed step that follows weights that k1 by 1/6, so a density
+    jump at the seam would put an O(Δρ/ρ · dr / 6) error into r (Earth 23.83 GPa at 1369 K: −84 m, 3717 vs 4407
+    kg/m³). The old engine starts the step after a phase landing on the opposite phase (interior.py «다음 걸음은 판정
+    없이 반대 상으로 시작한다»); here the derivative is read one ulp past the seam. The state is not moved."""
+    c = ev.component
+    g = ev.g(x, y)
+    if g is None or g * g0 < 0.0:
+        return k1
+    toward = math.inf if g0 < 0.0 else -math.inf
+    v = y[c] - g                                    # the seam value
+    yy = tuple(math.nextafter(v, toward) if j == c else w for j, w in enumerate(y))
+    while (ev.g(x, yy) or 0.0) * g0 >= 0.0:
+        yy = tuple(math.nextafter(w, toward) if j == c else w for j, w in enumerate(yy))
+    return f(x, yy)
+
+
+def _stepper(opt, stage_f=None):
+    if not opt.fixed:
+        return step
+    return lambda f, x, y, h, k1: step_rk4(f, x, y, h, k1, opt.frozen, opt.frozen_ref, stage_f)
+
+
+def _old_side(f, ev: Event, g0: float):
+    """f read with ev's component held on g0's side of the seam (at the seam when a stage crosses it): the old
+    engine's landing step (interior.py CUT_STAGE_OLD_SIDE, C164 note 1 blade 1: «the stage density of a phase-boundary
+    landing step is bound to the old phase side»). Without it a full fixed step crossing a density jump makes the
+    re-step's end state jump in s, and the secant cannot land (Earth's 23.83 GPa seam: |g| stuck at 2.4e6 Pa)."""
+    c = ev.component
+
+    def fo(x, y):
+        g = ev.g(x, y)
+        if g is not None and g * g0 < 0.0:
+            y = tuple(v - g if j == c else v for j, v in enumerate(y))
+        return f(x, y)
+    return fo
+
+
 def err_norm(err: Vec, y0: Vec, y1: Vec, rtol: float, floors: tuple) -> float:
     return max(abs(e) / (rtol * max(abs(a), abs(b), fl)) for e, a, b, fl in zip(err, y0, y1, floors))
 
@@ -137,6 +211,7 @@ def _land(f, ev: Event, x: float, y: Vec, k1: Vec, s_hi: float, out_hi, g0: floa
     last old-side re-step (None if none was taken) — or a Stop: "event_unlanded", or a re-step's refusal."""
     lo, g_lo = 0.0, g0
     hi = s_hi
+    stepf = _stepper(opt, _old_side(f, ev, g0) if opt.fixed and ev.component is not None and g0 else None)
     g_hi = g_hi_true = ev.g(x + hi, out_hi[0])
     best = (hi, out_hi)
     old_side = None
@@ -152,7 +227,7 @@ def _land(f, ev: Event, x: float, y: Vec, k1: Vec, s_hi: float, out_hi, g0: floa
         if not (min(lo, hi) < s < max(lo, hi)):
             s = 0.5 * (lo + hi)
         cnt.rewalks += 1
-        o = step(f, x, y, s, k1)
+        o = stepf(f, x, y, s, k1)
         if isinstance(o, Stop):
             return o
         gs = ev.g(x + s, o[0])
@@ -197,6 +272,7 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
     After a landing the controller restarts from the event with h = min(|h of the crossing step|, h_max) and no
     error history (the step-size rule has none)."""
     cnt = Counters()
+    stepf = _stepper(opt)
     direction = 1.0 if x1 >= x0 else -1.0
     x, y = x0, tuple(y0)
     k1 = f(x, y)
@@ -221,15 +297,15 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             return stop("max_steps", {"budget": opt.max_steps})
         if direction * (x + h - x1) > 0.0:
             h = x1 - x
-        out = step(f, x, y, h, k1)
+        out = stepf(f, x, y, h, k1)
         if isinstance(out, Stop):
             cnt.refused_stage += 1
-            if abs(h) <= opt.h_min:
+            if opt.fixed or abs(h) <= opt.h_min:
                 return stop("refused", out)
             h = direction * max(abs(h) * 0.25, opt.h_min)
             continue
         y_new, err, k7 = out
-        en = err_norm(err, y, y_new, opt.rtol, opt.floors)
+        en = 0.0 if opt.fixed else err_norm(err, y, y_new, opt.rtol, opt.floors)
         if en > 1.0:
             cnt.rejected += 1
             rejected_in_row += 1
@@ -295,6 +371,10 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             cnt.accepted += 1
             cnt.events += 1
             x, y, k1 = x_e, y_e, k_e
+            if opt.fixed and fired.component is not None:
+                k1 = _new_side_k1(f, fired, x, y, k1, g_prev[fired.name])
+                if isinstance(k1, Stop):
+                    return stop("refused", k1)
             path.append((x, y, k1))
             if on_accept is not None:
                 on_accept(x, y)
