@@ -78,7 +78,8 @@ def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_
     sopt = st.Options(rtol=opt.rtol, floors=rhs.floors(mass, r_scale), h0=1e-3 * mass,
                       h_min=1e-15 * mass, h_max=mass / 20.0, max_steps=opt.max_steps,
                       event_min_progress=opt.event_min_progress * mass,
-                      event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_run)
+                      event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_run,
+                      event_rewalks=opt.event_rewalks)
     base = st.Event("lid_base", lambda m, y: y[0] - r_b, scale=r_scale)
     counters: dict = {}
 

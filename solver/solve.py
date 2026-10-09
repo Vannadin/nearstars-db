@@ -111,7 +111,8 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
     sopt = st.Options(rtol=opt.rtol, floors=rhs.floors(mass, r_scale), h0=1e-3 * mass, h_min=1e-15 * mass,
                       h_max=mass / 20.0, max_steps=opt.max_steps_solve,
                       event_min_progress=opt.event_min_progress * mass,
-                      event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_solve)
+                      event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_solve,
+                      event_rewalks=opt.event_rewalks)
     return st.run(rhs.make_rhs(view), m0, y0, m_end, sopt, evs, on_accept=monitor)
 
 
@@ -133,7 +134,8 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
         got = lid.lid_pass(views[lt.id], M, R, lt.extent.value, p_s, sf.t_s, t_pot, rs,
                            rhs.PassOptions(rtol=opt.rtol, eps=opt.eps, r_floor_frac=opt.r_floor_frac,
                                            max_steps=opt.max_steps_solve,
-                                           event_min_progress=opt.event_min_progress, fixed_dr=opt.fixed_dr),
+                                           event_min_progress=opt.event_min_progress, fixed_dr=opt.fixed_dr,
+                                           event_rewalks=opt.event_rewalks),
                            lid_iters=opt.lid_iters, lid_t_tol=opt.lid_t_tol, layer_id=lt.id,
                            events=events.layer_events(views[lt.id].mat, getattr(views[lt.id], "p_stop", 0.0))
                            if getattr(views[lt.id], "mat", None) is not None else ())

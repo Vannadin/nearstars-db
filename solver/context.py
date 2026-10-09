@@ -33,6 +33,8 @@ class Options:
     event_min_progress: float = 1e-9   # × M
     event_restarts_step: int = 4
     event_restarts_solve: int = 2000
+    event_rewalks: int = 32            # secant re-steps per event landing (A1 impl note 8: 8 left an isolated onset
+                                       # landing unlanded at Earth 2064.76 K and turned it into a false wall)
     max_steps_solve: int = 200000      # per pass
     band_pass: bool = False            # owner Q4 ②: the rtol/10 band only in sample checks or on demand
     sensitivity_dt: float = 10.0       # K, the warm T_pot + δ solve (registration note 5 item 3f); 0 switches it off

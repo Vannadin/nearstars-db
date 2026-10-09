@@ -55,6 +55,7 @@ class PassOptions:
     event_min_progress: float = 1e-9  # × M (registration §6)
     event_restarts_step: int = 4
     event_restarts_run: int = 2000
+    event_rewalks: int = 32           # A1 impl note 8
     fixed_dr: float = 0.0             # m; > 0: fixed_grid.run_r (T2 method-term registration)
 
 
@@ -109,7 +110,8 @@ def inward_pass(view, mass: float, radius: float, p_s: float, t_pot: float, rho_
     sopt = st.Options(rtol=opt.rtol, floors=floors(mass, rs), h0=1e-3 * mass,
                       h_min=1e-15 * mass, h_max=mass / 20.0, max_steps=opt.max_steps,
                       event_min_progress=opt.event_min_progress * mass,
-                      event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_run)
+                      event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_run,
+                      event_rewalks=opt.event_rewalks)
     floor_ev = st.Event("r_floor", lambda m, y: y[0] - opt.r_floor_frac * rs, scale=rs)
     res = st.run(f, m0, (r0, p0, t_pot, t_pot, 0.0, 0.0), m_end, sopt, [floor_ev, *events], on_accept=on_accept)
     if res.stop.kind not in ("end", "event"):

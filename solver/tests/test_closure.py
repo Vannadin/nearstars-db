@@ -184,3 +184,65 @@ class ZeroLowerEnd(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class IsolatedRefusal(unittest.TestCase):
+    """A1 impl note 8 (directing 2026-10-10): a refusal is a wall only when a confirming shot further from the solved
+    side also refuses. Plants mirror Earth 2064.76 K: one unlanded event at a single x inside a solved stretch.
+    Controls: a genuine wall is still located and still refuses; with CONFIRM_FRAC 0 (no confirming step) the planted
+    point becomes a wall again."""
+
+    WALL = 2.0                                    # genuine: every x < 2 refuses
+    ROOT = 5.0
+
+    def _F(self, isolated):
+        def F(x):
+            if x < self.WALL or x == isolated:
+                return st.Stop("chatter", {"x": x})
+            return x - self.ROOT
+        return F
+
+    def test_isolated_scan_point_beside_root(self):
+        xs = closure.scan_points(1.0, 10.0)
+        iso = min((x for x in xs if x > self.ROOT), key=lambda x: x - self.ROOT)
+        out = closure.solve_scalar(self._F(iso), 1.0, 10.0)
+        self.assertEqual(out.kind, "root")
+        self.assertAlmostEqual(out.roots[0], self.ROOT, delta=1e-9)
+        self.assertIn("isolated", [t.kind for t in out.trials if t.x == iso])
+        self.assertTrue(any(abs(w.x - self.WALL) <= 1e-5 * self.WALL for w in out.walls))   # control: genuine wall
+
+    def test_isolated_bisection_shot_above_the_wall(self):
+        xs = closure.scan_points(1.0, 10.0)
+        bad = max(x for x in xs if x < self.WALL)
+        ok = min(x for x in xs if x >= self.WALL)
+        while True:                               # the first bisection shot that would solve: plant the failure there
+            xm = 0.5 * (bad + ok)
+            if xm < self.WALL:
+                bad = xm
+                continue
+            iso = xm
+            break
+        out = closure.solve_scalar(self._F(iso), 1.0, 10.0)
+        self.assertEqual(out.kind, "root")
+        self.assertIn("isolated", [t.kind for t in out.trials if t.x == iso])
+        walls = [w for w in out.walls if w.located]
+        self.assertTrue(walls and all(abs(w.x - self.WALL) <= 1e-5 * self.WALL for w in walls), walls)
+        orig = closure.CONFIRM_FRAC, closure.CONFIRM_MIN    # control: unconfirmed, the wall lands on the planted point
+        closure.CONFIRM_FRAC, closure.CONFIRM_MIN = 0.0, 0.0
+        try:
+            out0 = closure.solve_scalar(self._F(iso), 1.0, 10.0)
+        finally:
+            closure.CONFIRM_FRAC, closure.CONFIRM_MIN = orig
+        self.assertTrue(any(abs(w.x - iso) <= 1e-5 * iso for w in out0.walls), out0.walls)
+
+    def test_control_without_confirmation_the_point_is_a_wall(self):
+        xs = closure.scan_points(1.0, 10.0)
+        iso = min((x for x in xs if x > self.ROOT), key=lambda x: x - self.ROOT)
+        orig = closure.CONFIRM_FRAC, closure.CONFIRM_MIN
+        closure.CONFIRM_FRAC, closure.CONFIRM_MIN = 0.0, 0.0       # the confirming shot is the same x: it refuses
+        try:
+            out = closure.solve_scalar(self._F(iso), 1.0, 10.0)
+        finally:
+            closure.CONFIRM_FRAC, closure.CONFIRM_MIN = orig
+        self.assertNotIn("isolated", [t.kind for t in out.trials])
+        self.assertTrue(any(abs(w.x - iso) <= 1e-5 * iso for w in out.walls))

@@ -20,6 +20,12 @@ WALL_TOL = 1e-6
 WALL_SHOTS = 24
 CLOSE_TOL = 1e-12
 CLOSE_ITERS = 100            # Brent iterations per root (fixed by the S2 dated line)
+# A1 impl note 8 (directing, 2026-10-10): a refusing shot is a wall only when confirmed by a second shot a little
+# further from the solved side (CONFIRM_FRAC of the gap, at least CONFIRM_MIN·|x|). If that shot solves, the refusal
+# is isolated (e.g. one unlanded event at Earth 2064.76 K, x = 6437400.24 m): recorded as kind "isolated", never a
+# wall, and the solved shot joins the search.
+CONFIRM_FRAC = 0.01
+CONFIRM_MIN = 1e-9
 
 
 @dataclass(frozen=True)
@@ -27,7 +33,7 @@ class Trial:
     x: float
     F: float | None              # None for a wall
     stop: st.Stop | None
-    kind: str                    # "scan" | "wall" | "brent"
+    kind: str                    # "scan" | "wall" | "brent" | "confirm" | "isolated"
 
 
 @dataclass(frozen=True)
@@ -110,7 +116,27 @@ def _value(F, x: float):
     return float(v)
 
 
-def _locate_wall(F, x_ok: float, x_bad: float, stop_bad: st.Stop, trials: list) -> Wall:
+def _confirm(F, x_bad: float, x_ok: float, lo: float, hi: float, trials: list):
+    """The confirming shot for a refusal at x_bad, further from the solved side x_ok (inside [lo, hi]; toward x_ok
+    when x_bad is at the range end). Returns (x_c, value)."""
+    step = max(CONFIRM_FRAC * abs(x_bad - x_ok), CONFIRM_MIN * abs(x_bad))
+    d = 1.0 if x_bad >= x_ok else -1.0
+    xc = x_bad + d * step
+    if not (lo <= xc <= hi):
+        xc = x_bad - d * step
+    v = _value(F, xc)
+    trials.append(Trial(xc, None, v, "confirm") if isinstance(v, st.Stop) else Trial(xc, v, None, "confirm"))
+    return xc, v
+
+
+def _isolate(trials: list, x: float, stop: st.Stop):
+    """Re-label the refusing trial at x as isolated (kept as a record, out of the wall and stretch logic)."""
+    for n, t in enumerate(trials):
+        if t.x == x and t.F is None and t.kind != "isolated":
+            trials[n] = Trial(x, None, stop, "isolated")
+
+
+def _locate_wall(F, x_ok: float, x_bad: float, stop_bad: st.Stop, trials: list, lo: float, hi: float) -> Wall:
     for _ in range(WALL_SHOTS):
         if abs(x_bad - x_ok) <= WALL_TOL * max(abs(x_ok), abs(x_bad)):
             break
@@ -118,7 +144,12 @@ def _locate_wall(F, x_ok: float, x_bad: float, stop_bad: st.Stop, trials: list) 
         v = _value(F, xm)
         if isinstance(v, st.Stop):
             trials.append(Trial(xm, None, v, "wall"))
-            x_bad, stop_bad = xm, v
+            xc, vc = _confirm(F, xm, x_ok, lo, hi, trials)
+            if isinstance(vc, st.Stop):
+                x_bad, stop_bad = xm, v
+            else:                                        # isolated: the solved shot beyond it moves the ok side
+                _isolate(trials, xm, v)
+                x_ok = xc if abs(xc - x_bad) < abs(x_ok - x_bad) else x_ok
         else:
             trials.append(Trial(xm, v, None, "wall"))
             x_ok = xm
@@ -136,22 +167,32 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
     bracket ends with the wall budget, the solved trials join the search (N4) and the search is re-run."""
     assert 0.0 <= lo < hi, (lo, hi)
     trials: list = []
-    for x in scan_points(lo, hi, n_scan):
+    xs = scan_points(lo, hi, n_scan)
+    for x in xs:
         v = _value(F, x)
         trials.append(Trial(x, None, v, "scan") if isinstance(v, st.Stop) else Trial(x, v, None, "scan"))
+    for n, t in enumerate(list(trials)):                 # a refusing scan point next to a solved one is confirmed
+        if t.F is not None:
+            continue
+        nbr = [u for u in (trials[n - 1] if n > 0 else None, trials[n + 1] if n + 1 < len(xs) else None)
+               if u is not None and u.F is not None]
+        if nbr:
+            xc, vc = _confirm(F, t.x, nbr[0].x, lo, hi, trials)
+            if not isinstance(vc, st.Stop):
+                _isolate(trials, t.x, t.stop)
     walls: list = []
     done_pairs: set = set()
     closed: dict = {}            # (a.x, b.x) → root or problem
     for _round in range(MAX_SPLITS + 1):
-        order = sorted(trials, key=lambda t: t.x)
+        order = sorted((t for t in trials if t.kind != "isolated"), key=lambda t: t.x)
         for a, b in zip(order, order[1:]):
             if (a.F is None) != (b.F is None) and (a.x, b.x) not in done_pairs:
                 done_pairs.add((a.x, b.x))
                 ok, bad = (a, b) if a.F is not None else (b, a)
-                walls.append(_locate_wall(F, ok.x, bad.x, bad.stop, trials))
+                walls.append(_locate_wall(F, ok.x, bad.x, bad.stop, trials, lo, hi))
         pts = sorted((t for t in trials if t.F is not None and (use_wall_trials or t.kind != "wall")),
                      key=lambda t: t.x)
-        refused = sorted(t.x for t in trials if t.F is None)
+        refused = sorted(t.x for t in trials if t.F is None and t.kind != "isolated")
         roots, problems, split = [], [], False
         for a, b in zip(pts, pts[1:]):
             if any(a.x < w < b.x for w in refused):
@@ -168,6 +209,9 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
                     roots.append(x)
                 elif prob[0] == "refused_inside":
                     split = True
+                    _xc, vc = _confirm(F, prob[1], a.x, lo, hi, trials)
+                    if not isinstance(vc, st.Stop):        # an isolated refusal inside the bracket (impl note 8)
+                        _isolate(trials, prob[1], prob[2])
                 else:
                     problems.append(prob)
         if pts and pts[-1].F == 0.0:
