@@ -1,53 +1,78 @@
 # 오라클 대조용 풀이 드라이버 — 천체 v1 파일과 점 목록을 받아 (천체, 상태)마다 비교기 계약 JSON 하나를 쓴다 (비교기 등록 §4)
 """Rewrite side of the regression-oracle comparison (c8's comparator registration §4; b9 registration S10).
 
-    solver/.venv/bin/python -m solver.run_oracle BODY_YAML POINTS_JSON OUT_DIR
+    solver/.venv/bin/python -m solver.run_oracle BODY_YAML POINTS_JSON OUT_DIR [--sensitivity-dt K]
 
 - BODY_YAML: a v1 body file (engine/bodies/<stem>.yaml).
 - POINTS_JSON: rewrite/oracle/points.py's gen() output [[body, t_pot, tag], …], or «-» for the declared state only.
-  The declared state is always written; each row of POINTS_JSON whose body is this file's stem adds one state.
-- OUT_DIR: one JSON per (body, state), named <stem>__declared.json or <stem>__<repr(t_pot)>.json.
+  The declared state is always written; each distinct T_pot of POINTS_JSON whose body is this stem adds one state.
+- OUT_DIR: must be absent or empty (no stale files). One JSON per (body, state), <stem>__declared.json or
+  <stem>__<repr(t_pot)>.json, written to a temporary directory first and moved into place only when every state ran.
+- --sensitivity-dt: the §A1.7 sensitivity δ in K (default 10; 0 switches the field off). It is in each header's options.
+Exit 0 on success; 2 on any STOP (bad arguments, a non-empty OUT_DIR, an exception), with nothing written.
 
 A T_pot state overrides the potential temperature in memory, on both sides: the Body's SurfaceState for the solve, and
-the old BodyState's `potential_temperature` input for legacy_view's chain. Floats are written by repr; the record
-fields are fixed by the registration (a missing field is the comparator's STOP).
+the old BodyState's `potential_temperature` for legacy_view's chain. A body that declares no T_pot gets no T_pot state:
+such a row is a refusal record (rule `t_pot_state_without_t_pot`). On a refusal or no-answer the old chain still runs,
+with the refusal injected as interior_layers' out-of-domain result, so the old nodes decline as they did (r2 B3).
 """
 from __future__ import annotations
 
 import dataclasses
 import json
 import os
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 from solver import context, from_v1, legacy_view as lv, result, solve as sv
 from solver import legacy_materials as lm
 
 interior = lm.interior
+ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
+REPO = Path(lm._ENGINE).parent
+
+
+def _git(*args) -> str:
+    r = subprocess.run(["git", "-C", str(REPO), *args], capture_output=True, text=True)
+    return r.stdout.strip() if r.returncode == 0 else ""
 
 
 def _header(options, solve_id):
     import numpy
     import scipy
-    tree = subprocess.run(["git", "-C", str(Path(__file__).resolve().parent.parent), "rev-parse", "HEAD"],
-                          capture_output=True, text=True).stdout.strip()
-    return {"tree": tree, "venv": sys.prefix, "python": sys.version.split()[0], "numpy": numpy.__version__,
-            "scipy": scipy.__version__, "options": result.plain(dataclasses.asdict(options)), "solve_id": solve_id}
+    engine_same = subprocess.run(["git", "-C", str(REPO), "diff", "--quiet", ORACLE_TREE, "--", "engine"]).returncode == 0
+    return {"tree": _git("rev-parse", "HEAD"), "venv": sys.prefix, "python": sys.version.split()[0],
+            "numpy": numpy.__version__, "scipy": scipy.__version__,
+            "options": result.plain(dataclasses.asdict(options)), "solve_id": solve_id,
+            "engine_identical_to_oracle_tree": engine_same, "oracle_tree": ORACLE_TREE,
+            "dirty": bool(_git("status", "--porcelain", "--", "solver", "engine"))}
 
 
-def _legacy_nodes(chain) -> dict:
+def _committed_blob(rel_path: str) -> str:
+    return _git("rev-parse", f"{ORACLE_TREE}:{rel_path}")
+
+
+def _legacy(rec, chain):
     out = {}
     for node, r in chain.body.results.items():
         if node == "interior_layers":
             continue
         out[node] = {"verdict_kind": interior.verdict_of(r).kind, "applicable": bool(r.applicable),
                      "values": result.plain(dict(r.values)), "units": dict(r.units)}
-    return out
+    rec["legacy_nodes"] = out
+    # table_read: the history actually read O3's table, i.e. load_for returned a grid from a file whose blob equals the
+    # oracle tree's committed table (t2 note 2's frozen-table mode; r2 run_oracle B1)
+    rec["table_read"] = any(ok and blob is not None and blob == _committed_blob(path) for path, blob, ok in
+                            chain.table_reads)
 
 
-def _with_t_pot(body, t_pot):
-    return dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=t_pot))
+def _sid(body, options, answer=None) -> str:
+    if answer is not None and answer.quantities:
+        return answer.quantities[0].provenance.solver.solve_id
+    return context.solve_id_of(sv._canonical(body), lm.material_bytes(), options) if body is not None else ""
 
 
 def one(body_yaml: str, state, options=context.Options()) -> dict:
@@ -57,48 +82,83 @@ def one(body_yaml: str, state, options=context.Options()) -> dict:
     body = got[0] if isinstance(got, tuple) else got
     rec = {"header": None, "body": stem, "state": state, "outcome_kind": None, "quantities": [], "boundaries": [],
            "refusal": None, "no_answer": None, "legacy_nodes": {}, "table_read": False}
+    t_pot = None if state == "declared" else float(state)
     if isinstance(body, result.Refusal):
         rec.update(header=_header(options, ""), outcome_kind="refusal",
                    refusal={"id": body.id, "evidence": result.plain(dict(body.evidence))})
+        _legacy(rec, lv.run_chain(body_yaml, None, refusal_text=body.text, t_pot=t_pot))
         return rec
-    if state != "declared":
-        body = _with_t_pot(body, float(state))
+    if t_pot is not None and body.surface.t_pot is None:
+        rec.update(header=_header(options, _sid(body, options)), outcome_kind="refusal",
+                   refusal={"id": "input.cross_field", "evidence": {
+                       "rule": "t_pot_state_without_t_pot",
+                       "detail": f"{stem} declares no potential temperature; a T_pot state has no meaning for it"}})
+        return rec
+    if t_pot is not None:
+        body = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=t_pot))
     out, _warm = sv.solve(body, options)
     if isinstance(out, result.Answer):
-        sid = out.quantities[0].provenance.solver.solve_id if out.quantities else ""
-        rec.update(header=_header(options, sid), outcome_kind="answer",
+        rec.update(header=_header(options, _sid(body, options, out)), outcome_kind="answer",
                    quantities=[result.plain(q) for q in out.quantities],
                    boundaries=[result.plain(b) for b in out.boundaries])
-        chain = lv.run_chain(body_yaml, out, t_pot=None if state == "declared" else float(state))
-        rec["legacy_nodes"] = _legacy_nodes(chain)
-        r = chain.body.results.get("core_thermal_history")
-        rec["table_read"] = bool(r is not None and r.applicable)
+        _legacy(rec, lv.run_chain(body_yaml, out, t_pot=t_pot))
     elif isinstance(out, result.NoAnswer):
-        rec.update(header=_header(options, ""), outcome_kind="no_answer",
+        rec.update(header=_header(options, _sid(body, options)), outcome_kind="no_answer",
                    no_answer={"reason": out.reason, "evidence": result.plain(dict(out.evidence))})
+        _legacy(rec, lv.run_chain(body_yaml, None, refusal_text=out.text, t_pot=t_pot))
     else:
-        rec.update(header=_header(options, ""), outcome_kind="refusal",
+        rec.update(header=_header(options, _sid(body, options)), outcome_kind="refusal",
                    refusal={"id": out.id, "evidence": result.plain(dict(out.evidence))})
+        _legacy(rec, lv.run_chain(body_yaml, None, refusal_text=out.text, t_pot=t_pot))
     return rec
 
 
+def states_for(stem: str, points_json: str) -> list:
+    states = ["declared"]
+    if points_json != "-":
+        rows = json.loads(Path(points_json).read_text(encoding="utf-8"))
+        for b, t, _tag in rows:
+            if b == stem and float(t) not in states:
+                states.append(float(t))
+    return states
+
+
 def main(argv=None) -> int:
-    argv = sys.argv[1:] if argv is None else argv
+    argv = list(sys.argv[1:] if argv is None else argv)
+    dt = 10.0
+    if "--sensitivity-dt" in argv:
+        i = argv.index("--sensitivity-dt")
+        try:
+            dt = float(argv[i + 1])
+        except (IndexError, ValueError):
+            print("STOP: --sensitivity-dt needs a number")
+            return 2
+        del argv[i:i + 2]
     if len(argv) != 3:
         print(__doc__)
         return 2
     body_yaml, points_json, out_dir = argv
+    out = Path(out_dir)
+    if out.exists() and any(out.iterdir()):
+        print(f"STOP: {out} is not empty (stale files would mix into the comparison)")
+        return 2
+    options = context.Options(sensitivity_dt=dt)
     stem = Path(body_yaml).stem
-    states = ["declared"]
-    if points_json != "-":
-        rows = json.loads(Path(points_json).read_text(encoding="utf-8"))
-        states += [float(t) for b, t, _tag in rows if b == stem]
-    os.makedirs(out_dir, exist_ok=True)
-    for state in states:
-        rec = one(body_yaml, state)
-        name = f"{stem}__{'declared' if state == 'declared' else repr(state)}.json"
-        Path(out_dir, name).write_text(json.dumps(rec, ensure_ascii=False, allow_nan=False, indent=1) + "\n",
-                                       encoding="utf-8")
+    tmp = Path(tempfile.mkdtemp(prefix=f"run_oracle_{stem}_"))
+    try:
+        for state in states_for(stem, points_json):
+            rec = one(body_yaml, state, options)
+            name = f"{stem}__{'declared' if state == 'declared' else repr(state)}.json"
+            (tmp / name).write_text(json.dumps(rec, ensure_ascii=False, allow_nan=False, indent=1) + "\n",
+                                    encoding="utf-8")
+    except Exception as exc:                         # a STOP: nothing is written to OUT_DIR
+        shutil.rmtree(tmp, ignore_errors=True)
+        print(f"STOP: {type(exc).__name__}: {exc}")
+        return 2
+    out.mkdir(parents=True, exist_ok=True)
+    for f in sorted(tmp.iterdir()):
+        shutil.move(str(f), out / f.name)
+    tmp.rmdir()
     return 0
 
 

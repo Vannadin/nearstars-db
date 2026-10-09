@@ -41,16 +41,19 @@ def _q(answer, key):
 
 
 def old_values(answer, declared_imf: float | None = None) -> tuple[dict, dict]:
-    """(values, units) of the injected interior_layers Result, in the old units (interior.py:5002–5073)."""
+    """(values, units) of the injected interior_layers Result, in the old units (interior.py:5002–5073). Where the
+    Answer has no such quantity (a coreless body; no temperature path), the old engine wrote 0 into the slot, and so
+    does this (comparator post-freeze note 1, «zero means absent»; r2 run_oracle B2)."""
+    z = lambda v: 0.0 if v is None else v
     r = _q(answer, "radius")
-    rc = _q(answer, "core_radius")
-    t_cmb = _q(answer, "cmb_temperature")
-    vals = {"nmoi": _q(answer, "nmoi"), "core_temperature": _q(answer, "core_temperature"),
+    rc = z(_q(answer, "core_radius"))
+    t_cmb = z(_q(answer, "cmb_temperature"))
+    vals = {"nmoi": _q(answer, "nmoi"), "core_temperature": z(_q(answer, "core_temperature")),
             "cmb_temperature": t_cmb, "cmb_temperature_core": t_cmb, "cmb_temperature_mantle": t_cmb,
-            "cmb_pressure": _q(answer, "cmb_pressure") / 1e9, "core_radius": rc / EARTH_RADIUS_M,
+            "cmb_pressure": z(_q(answer, "cmb_pressure")) / 1e9, "core_radius": rc / EARTH_RADIUS_M,
             "core_radius_fraction": rc / r, "radius": r / EARTH_RADIUS_M,
             "core_pressure": _q(answer, "core_pressure") / 1e9, "converged": True,
-            "core_mass_fraction": _q(answer, "core_mass_fraction"),
+            "core_mass_fraction": z(_q(answer, "core_mass_fraction")),
             "ice_mass_fraction": 0.0 if declared_imf is None else declared_imf}
     units = {"nmoi": "dimensionless", "core_temperature": "K", "cmb_temperature": "K",
              "cmb_temperature_core": "K", "cmb_temperature_mantle": "K", "cmb_pressure": "GPa",
@@ -65,10 +68,12 @@ class ChainRun:
     body: object            # the old BodyState after the chain ran
     injected: object        # the injected interior_layers Result
     declared_keys: frozenset = frozenset()   # the v1 body's own declared input keys, before any control edits
+    table_reads: tuple = ()                   # (path, blob, grid returned?) of every structure_grid.load_for call
 
 
 def run_chain(v1_yaml: str | os.PathLike, answer, serve_cmf_from_declared: bool = False,
-              t_pot: float | None = None, serve_from_declared: tuple = ()) -> ChainRun:
+              t_pot: float | None = None, serve_from_declared: tuple = (), refusal_text: str | None = None
+              ) -> ChainRun:
     """Run the old chain on the new structure. `t_pot` overrides the old body's potential temperature in memory (an
     O9 state; the solve used the same value). `serve_cmf_from_declared` is a negative control only (S8): it puts the
     rewrite's CMF into the declared inputs instead of the interior_layers output."""
@@ -80,6 +85,9 @@ def run_chain(v1_yaml: str | os.PathLike, answer, serve_cmf_from_declared: bool 
         body.inputs["potential_temperature"] = ({**cur, "value": t_pot} if isinstance(cur, dict) else t_pot)
     imf = body.inputs.get("ice_mass_fraction")
     imf = getattr(imf, "get", lambda k, d=None: None)("value") if isinstance(imf, dict) else imf
+    if refusal_text is not None:
+        injected = payload.out_of_domain("interior-structure-methodology", "rewrite-phase1", refusal_text, inputs={})
+        return _run(body, injected, declared_keys)
     vals, units = old_values(answer, imf)
     for k in (("core_mass_fraction",) if serve_cmf_from_declared else ()) + tuple(serve_from_declared):
         body.inputs[k] = vals.pop(k)                 # negative controls only: a structure key moved to the inputs
@@ -87,13 +95,36 @@ def run_chain(v1_yaml: str | os.PathLike, answer, serve_cmf_from_declared: bool 
     injected = payload.Result(recipe="interior-structure-methodology", version="rewrite-phase1", regime="rewrite",
                               reason="rewrite solver Answer (solver.legacy_view)", grade="judgment", inputs={},
                               values=vals, units=units, converged=True)
+    return _run(body, injected, declared_keys)
+
+
+def _run(body, injected, declared_keys) -> ChainRun:
+    """The old chain with interior_layers replaced by `injected` (an Answer as an old Result, or the rewrite's refusal
+    as an out-of-domain Result, so the old nodes decline as they did; r2 run_oracle B3). Every structure_grid.load_for
+    call is recorded with the table file's git blob, so «table read» is what was actually read (r2 B1)."""
+    import hashlib
+    import structure_grid
+    reads = []
+    orig_load = structure_grid.load_for
+
+    def load_for(state):
+        path = structure_grid._path_for(state.name)
+        blob = None
+        if path.exists():
+            data = path.read_bytes()
+            blob = hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+        got = orig_load(state)
+        reads.append((str(path.relative_to(Path(lm._ENGINE).parent)), blob, got[0] is not None))
+        return got
     orig_get = registry.get
     registry.get = lambda node: (lambda b: injected) if node == "interior_layers" else orig_get(node)
+    structure_grid.load_for = load_for
     try:
         run.solve(body, run.load_chain())
     finally:
         registry.get = orig_get
-    return ChainRun(body, injected, declared_keys)
+        structure_grid.load_for = orig_load
+    return ChainRun(body, injected, declared_keys, tuple(reads))
 
 
 def reads(chain: ChainRun) -> dict:
