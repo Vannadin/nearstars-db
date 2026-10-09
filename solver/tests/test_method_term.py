@@ -25,8 +25,33 @@ class Terms(unittest.TestCase):
         p = Path(tempfile.mkdtemp(), "t.jsonl")
         p.write_text("".join(json.dumps(r) + "\n" for r in rows))
         t = mt.terms([str(p)])
-        self.assertEqual(t["terms"]["b"]["k"], {"term": 3e-4, "count": 2, "at": 1500.0})
+        self.assertEqual(t["terms"]["b"]["k"], {"term": 3e-4, "count": 2, "at": 1500.0, "use": True})
         self.assertEqual(t["flagged"], [["b", 1600.0, "outcome_differs"]])
+
+
+class TermsMarks(unittest.TestCase):
+    """r2 N1: Mars and Earth's class-R keys are in terms.json with use false and a reason; others use true."""
+
+    def test_marks(self):
+        rows = [{"body": "mars", "state": "declared", "d": {"nmoi": 1e-5}, "flags": {}},
+                {"body": "earth", "state": "declared", "d": {"core_energy_balance.balance_residual": 1.1, "nmoi": 2e-7},
+                 "flags": {}}]
+        p = Path(tempfile.mkdtemp(), "t.jsonl")
+        p.write_text("".join(json.dumps(r) + "\n" for r in rows))
+        t = mt.terms([str(p)])["terms"]
+        self.assertEqual((t["mars"]["nmoi"]["use"], t["mars"]["nmoi"]["why"][:6]), (False, "note 5"))
+        self.assertFalse(t["earth"]["core_energy_balance.balance_residual"]["use"])
+        self.assertEqual(t["earth"]["nmoi"]["use"], True)                 # control
+        self.assertNotIn("why", t["earth"]["nmoi"])
+
+
+class Resume(unittest.TestCase):
+    def test_partial_last_line_dropped(self):
+        p = Path(tempfile.mkdtemp(), "t.jsonl")
+        p.write_text(json.dumps({"body": "dante_fixture", "state": "declared"}) + "\n" + '{"body": "dan')
+        mt.run("engine/bodies/dante_fixture.yaml", "-", str(p))     # declared is done: nothing re-runs
+        self.assertEqual(p.read_text().count("\n"), 1)
+        self.assertEqual(json.loads(p.read_text())["state"], "declared")
 
 
 class Crosscheck(unittest.TestCase):

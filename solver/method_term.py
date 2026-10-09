@@ -132,7 +132,12 @@ def run(body_yaml: str, points_json: str, out_jsonl: str, steps: int = STEPS) ->
     out = Path(out_jsonl)
     done = set()
     if out.exists():
-        for line in out.read_text(encoding="utf-8").splitlines():
+        text = out.read_text(encoding="utf-8")
+        lines = text.splitlines(keepends=True)
+        if lines and not lines[-1].endswith("\n"):            # a kill mid-write: drop the partial last line
+            out.write_text("".join(lines[:-1]), encoding="utf-8")
+            lines = lines[:-1]
+        for line in lines:
             r = json.loads(line)
             done.add((r["body"], repr(r["state"])))
     header = ro._header(context.Options(sensitivity_dt=0.0), "")
@@ -148,6 +153,17 @@ def run(body_yaml: str, points_json: str, out_jsonl: str, steps: int = STEPS) ->
     return 0
 
 
+#: recorded, never a band (r2 N1): marked in terms.json so a table quoting it cannot pick them up
+EVIDENCE_ONLY_BODIES = {"mars": "note 5: Mars has no T2 band"}
+CLASS_R_KEYS = {("earth", "core_energy_balance.balance_residual"): "class R (tolerance-classes note 2)",
+                ("earth", "core_energy_balance.core_profile_mass_residual"): "class R (tolerance-classes note 2)"}
+
+
+def _use(body: str, key: str):
+    why = EVIDENCE_ONLY_BODIES.get(body) or CLASS_R_KEYS.get((body, key))
+    return (False, why) if why else (True, None)
+
+
 def terms(paths) -> dict:
     per: dict = {}
     flagged: list = []
@@ -160,7 +176,9 @@ def terms(paths) -> dict:
             for k, d in r["d"].items():
                 if d is None:
                     continue
-                e = per.setdefault(r["body"], {}).setdefault(k, {"term": 0.0, "count": 0, "at": None})
+                use, why = _use(r["body"], k)
+                e = per.setdefault(r["body"], {}).setdefault(k, {"term": 0.0, "count": 0, "at": None, "use": use,
+                                                                 **({"why": why} if why else {})})
                 e["count"] += 1
                 if abs(d) > e["term"] or e["at"] is None:
                     e["term"], e["at"] = max(abs(d), e["term"]), r["state"]
@@ -181,8 +199,11 @@ def controls(body_yaml: str) -> dict:
     a, _ = sv.solve(body, opt)
     va = {q.key: q.point for q in a.quantities}
     dr, rho_c = grid_dr(body, a, STEPS)
-    runs = [{q.key: q.point for q in sv.solve(body, dataclasses.replace(opt, fixed_dr=d))[0].quantities}
-            for d in (dr, dr, dr / 2.0)]
+    outs = [sv.solve(body, dataclasses.replace(opt, fixed_dr=d))[0] for d in (dr, dr, dr / 2.0)]
+    if not all(isinstance(o, result.Answer) for o in outs):
+        return {"body": Path(body_yaml).stem, "dr": dr, "rho_c": rho_c, "fixed_not_answer": [_kind(o) for o in outs],
+                "null_identical": False, "order_holds": False, "holds": False}
+    runs = [{q.key: q.point for q in o.quantities} for o in outs]
     null = runs[0] == runs[1]
     ratios = {k: (runs[0][k] - va[k]) / (runs[2][k] - va[k]) for k in ORDER_KEYS
               if k in va and runs[2][k] != va[k]}
@@ -192,7 +213,9 @@ def controls(body_yaml: str) -> dict:
 
 
 RHO_RANGE = (0.5, 2.0)               # r2 on the registration, (2): outside it the term is not representative
-OLD_UNIT_SCALE = {"R_earth": 6.371e6, "GPa": 1e9}     # old interior_layers units → the rewrite's SI
+# old interior_layers units → the rewrite's SI. No «km»: the rewrite emits its km keys (basal_layer_thickness_km,
+# core_plus_layer_radius_solved_km) in km, so km ↔ km is factor 1 (r2 N3; compare_map's km → m row is for other keys)
+OLD_UNIT_SCALE = {"R_earth": 6.371e6, "GPa": 1e9}
 
 
 def _old_flat(cap: dict) -> dict:
