@@ -228,13 +228,17 @@ def _to_refusal(stop: st.Stop, where: str, x, kind: str, pass_kind: str):
             return refusals.make("input.missing_key", where, key="surface_temperature_k")
         return refusals.make("input.extent_invalid", where, layer_id=rec["layer_id"],
                              why=f"conductive layer depth {rec['value']!r} must lie in (0, R) (R-LITHO-6)")
+    if stop.kind == "lid_base_not_reached":
+        return refusals.make("solve.layer_order", where, layer_id=rec["layer_id"], rule="depth_from_surface",
+                             expected="the lid base reached before the centre end", got_m=rec["m"],
+                             got_r=float("nan"), **common)
     if stop.kind == "layer_order":
         return refusals.make("solve.layer_order", where, **rec, **common)
     if stop.kind == "max_steps":
         return refusals.no_answer("unconverged", where, budget_name="MAX_STEPS_SOLVE",
                                   budget_value=rec["budget"], last_residual=None, x=x, pass_kind=pass_kind)
-    return refusals.make("solve.material_domain", where, material_id="?", axis="?", bound=float("nan"),
-                         bound_kind="unknown", source=stop.kind, message_old=repr(rec), **common)
+    # an unmapped stop kind is a bug in this mapping, not a refusal (design A3: exceptions mean bugs only; r2 S7)
+    raise RuntimeError(f"unmapped solver stop {stop.kind!r}: {rec!r}")
 
 
 def _quantities(body, p: PassOut, sid: str, x):
@@ -347,7 +351,7 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
     for t in out.trials:                              # design §A1.5: passes tagged scan / wall / brent
         ctx.record(t.kind, x=t.x, F=t.F, stop=None if t.stop is None else t.stop.kind)
     unlocated = [w for w in out.walls if not w.located]
-    if out.kind != "root" and unlocated:
+    if out.kind in ("no_bracket", "no_solved") and unlocated:
         # note 2 item 8: a wall whose position WALL_SHOTS could not fix leaves the search incomplete
         return refusals.no_answer("unconverged", where, budget_name="WALL_SHOTS", budget_value=cl.WALL_SHOTS,
                                   last_residual=None, x=unlocated[0].x, pass_kind="wall"), warm
@@ -386,7 +390,8 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
             notes.append(result.Note("no_temperature_path", "no potential temperature is declared, so the structure "
                                      "has no temperature path and no temperature quantity is emitted", {}))
         profiles = {lid: {"m": tuple(n[0] for n in path), "r": tuple(n[1][0] for n in path),
-                          "P": tuple(n[1][1] for n in path), "T": tuple(n[1][3] for n in path)}
+                          "P": tuple(n[1][1] for n in path),
+                          **({"T": tuple(n[1][3] for n in path)} if body.surface.t_pot is not None else {})}
                     for lid, path in acc.profiles.items()}
         # solve_id after the accepted pass, so every data file the solve opened is in the material bytes
         sid = context.solve_id_of(_canonical(body), _material_bytes(views), options)

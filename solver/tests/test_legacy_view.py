@@ -40,6 +40,14 @@ class Earth(unittest.TestCase):
         decl = set().union(*(d["declared"] for d in self.reads.values()))
         self.assertTrue(decl <= set(self.chain.body.inputs), decl - set(self.chain.body.inputs))
 
+    def test_check_reads_clean(self):
+        self.assertEqual(lv.check_reads(self.chain), [])
+
+    def test_control_structure_key_from_declared_fails(self):
+        """r2 S8-2: the declared-side rule can fail — core_radius served as an input is caught."""
+        bad = lv.run_chain("engine/bodies/earth.yaml", self.ans, serve_from_declared=("core_radius",))
+        self.assertIn("structure key served from the declared side", [v[2] for v in lv.check_reads(bad)])
+
 
 class Venus(unittest.TestCase):
     """The inverse body: CMF is the solver's, so it must be read from the outputs side and equal the rewrite's."""
@@ -61,6 +69,10 @@ class Venus(unittest.TestCase):
         _ans, bad = _run("venus", serve_cmf_from_declared=True)
         r = lv.reads(bad)
         self.assertTrue(any("core_mass_fraction" in d["declared"] for d in r.values()))
+        self.assertIn("structure key served from the declared side", [v[2] for v in lv.check_reads(bad)])
+
+    def test_check_reads_clean(self):
+        self.assertEqual(lv.check_reads(self.chain), [])
 
 
 if __name__ == "__main__":

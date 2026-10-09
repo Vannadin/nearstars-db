@@ -64,24 +64,26 @@ def old_values(answer, declared_imf: float | None = None) -> tuple[dict, dict]:
 class ChainRun:
     body: object            # the old BodyState after the chain ran
     injected: object        # the injected interior_layers Result
+    declared_keys: frozenset = frozenset()   # the v1 body's own declared input keys, before any control edits
 
 
 def run_chain(v1_yaml: str | os.PathLike, answer, serve_cmf_from_declared: bool = False,
-              t_pot: float | None = None) -> ChainRun:
+              t_pot: float | None = None, serve_from_declared: tuple = ()) -> ChainRun:
     """Run the old chain on the new structure. `t_pot` overrides the old body's potential temperature in memory (an
     O9 state; the solve used the same value). `serve_cmf_from_declared` is a negative control only (S8): it puts the
     rewrite's CMF into the declared inputs instead of the interior_layers output."""
     registry.load_all()                              # import every recipe module (as run.py / dump.py do)
     body, _expected = run.load_body(Path(v1_yaml))
+    declared_keys = frozenset(body.inputs)
     if t_pot is not None:
         cur = body.inputs.get("potential_temperature")
         body.inputs["potential_temperature"] = ({**cur, "value": t_pot} if isinstance(cur, dict) else t_pot)
     imf = body.inputs.get("ice_mass_fraction")
     imf = getattr(imf, "get", lambda k, d=None: None)("value") if isinstance(imf, dict) else imf
     vals, units = old_values(answer, imf)
-    if serve_cmf_from_declared:
-        body.inputs["core_mass_fraction"] = vals.pop("core_mass_fraction")
-        units.pop("core_mass_fraction")
+    for k in (("core_mass_fraction",) if serve_cmf_from_declared else ()) + tuple(serve_from_declared):
+        body.inputs[k] = vals.pop(k)                 # negative controls only: a structure key moved to the inputs
+        units.pop(k)
     injected = payload.Result(recipe="interior-structure-methodology", version="rewrite-phase1", regime="rewrite",
                               reason="rewrite solver Answer (solver.legacy_view)", grade="judgment", inputs={},
                               values=vals, units=units, converged=True)
@@ -91,7 +93,7 @@ def run_chain(v1_yaml: str | os.PathLike, answer, serve_cmf_from_declared: bool 
         run.solve(body, run.load_chain())
     finally:
         registry.get = orig_get
-    return ChainRun(body, injected)
+    return ChainRun(body, injected, declared_keys)
 
 
 def reads(chain: ChainRun) -> dict:
@@ -107,3 +109,28 @@ def reads(chain: ChainRun) -> dict:
         side = "declared" if prod is None else ("outputs" if prod == "interior_layers" else "other")
         out.setdefault(reader, {"outputs": set(), "declared": set(), "other": set()})[side].add(key)
     return out
+
+
+#: The «other» bucket (registration note 5): keys an in-scope reader takes from another old node (e.g. core_state's
+#: core_cmb_temperature_used). They belong to the old chain, not to the structure contract, and are not judged here.
+STRUCTURE_KEYS = frozenset(OUTPUT_KEYS) | {"nmoi", "cmb_temperature_core", "cmb_temperature_mantle",
+                                          "core_radius_fraction"}
+
+
+def check_reads(chain: ChainRun) -> list:
+    """Violations of registration §3 as amended by note 5, empty when the chain reads as registered:
+    - an output read (answered by the injected interior_layers) outside OUTPUT_KEYS;
+    - a structure key read from the declared side, unless the v1 body itself declares it (Earth's CMF);
+    - a registered output key an in-scope reader asked for and missed (no producer answered it)."""
+    bad = []
+    body = chain.body
+    for reader, sides in reads(chain).items():
+        for k in sorted(sides["outputs"] - set(OUTPUT_KEYS)):
+            bad.append((reader, k, "output read outside the registered set"))
+        for k in sorted(sides["declared"] & STRUCTURE_KEYS):
+            if k not in chain.declared_keys:
+                bad.append((reader, k, "structure key served from the declared side"))
+    for reader, key, kind in body.lookups:
+        if reader in IN_SCOPE_READERS and kind.endswith("miss") and key in OUTPUT_KEYS:
+            bad.append((reader, key, "registered output missed"))
+    return bad
