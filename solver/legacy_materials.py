@@ -60,40 +60,60 @@ def _registry_entries():
             yield (mod, name, kind, m)
 
 
-def _at_rest(v) -> bool:
-    """A memo's empty form as written in its module source: None, an empty container, a tuple of Nones
-    (rtpress._LAST_LIQUID = (None, None, None)), or a record dict whose fields are all at rest
-    (interior._FAMILY_TRAIL = {"trials": [], …, "answer": None, "calls": 0, …})."""
-    if v is None or v == 0 or (isinstance(v, (list, set)) and len(v) == 0):     # 0: a record's call count
+#: MEMOs that are functions of constants or static data by their own REGISTRY text («lazily built table, a function
+#: of the constants only», «keyed by the phase constants», «… same arithmetic, same values», «lazily loaded …»), plus
+#: the tooling-only checker memos. They cannot carry one solve's state into the next, so they are neither checked
+#: nor reset (clearing them would only cost a rebuild).
+CONSTANT_MEMOS = frozenset({
+    ("rtpress", "_VMIN_TAB"), ("ice_fr2015", "_GL_NODES"), ("mantle_composition", "_TABLE_PHASE"),
+    ("mantle_composition", "_TABLES"), ("rocky_roster", "_ROWS"), ("eos", "_SPINODAL"), ("eos", "_PRESSURE_FAST"),
+    ("water_table", "_CACHE"), ("water2_table", "_CACHE"), ("paleos", "_FACTS"),
+    ("check_refs", "BASENAMES"), ("check_refs", "CACHE")})
+
+#: Record-shaped MEMOs: a dict with fixed fields, at rest when every field is empty, None or 0.
+RECORD_MEMOS = frozenset({("interior", "_FAMILY_TRAIL")})
+
+
+def _empty(v) -> bool:
+    return v is None or v == 0 or (isinstance(v, (list, set, dict, tuple)) and len(v) == 0)
+
+
+def _at_rest(key, v) -> bool:
+    """A per-solve memo's empty form: None, an empty container (keyed caches must be **empty**, r2 N4), a tuple of
+    Nones (rtpress._LAST_LIQUID = (None, None, None)), or a RECORD_MEMOS dict whose fields are all empty."""
+    if key in RECORD_MEMOS and isinstance(v, dict):
+        return all(_empty(x) for x in v.values())
+    if v is None or (isinstance(v, (list, set, dict)) and len(v) == 0):
         return True
-    if isinstance(v, tuple):
-        return all(x is None for x in v)
-    if isinstance(v, dict):
-        return all(_at_rest(x) for x in v.values())
-    return False
+    return isinstance(v, tuple) and all(x is None for x in v)
 
 
-#: Each resettable entry's value at the adapter's import (deep copies). Restoring a COUNTER keeps its keys (e.g.
-#: eos.DENSITY_BELOW_REF["lowest_pa"]); restoring a MEMO gives its empty form. So that a memo filled before this
-#: import cannot become the «reset» state (r2), every MEMO must be at rest here; otherwise the import fails by name.
-_PRISTINE = {(mod, name): copy.deepcopy(getattr(m, name)) for mod, name, _k, m in _registry_entries()}
+#: Snapshot at the adapter's import (deep copies) of the per-solve MEMOs and the COUNTERs. Restoring a COUNTER keeps
+#: its keys (e.g. eos.DENSITY_BELOW_REF["lowest_pa"]); restoring a MEMO gives its empty form, checked here: a memo
+#: filled before this import makes the import fail by name (r2). START entries are not snapshotted: they go back to
+#: their REGISTRY initial, which equals the source value for both (r2 S4 B1).
+_PRISTINE = {(mod, name): copy.deepcopy(getattr(m, name)) for mod, name, k, m in _registry_entries()
+             if k != process_state.START and (mod, name) not in CONSTANT_MEMOS}
 _NOT_AT_REST = sorted(f"{mod}.{name}" for mod, name, k, m in _registry_entries()
-                      if k == process_state.MEMO and not _at_rest(getattr(m, name)))
+                      if k == process_state.MEMO and (mod, name) not in CONSTANT_MEMOS
+                      and not _at_rest((mod, name), getattr(m, name)))
 if _NOT_AT_REST:
     raise ImportError("solver.legacy_materials imported after engine memos were filled: " + ", ".join(_NOT_AT_REST))
 
 
 def reset_engine_state() -> list:
-    """Reset every resettable entry of engine/process_state.REGISTRY (r2 M11), not a hand-picked list, to its value
-    at the adapter's import: START seeds, MEMOs empty (checked at rest when snapshotted), COUNTERs with their keys.
-    Containers are restored in place, so other modules holding a reference see the reset. Not touched:
-    - FLAG entries: a flag is set and restored in `finally` by its owner (e.g. interior.COMPOSITIONS, a constant
-      table swapped inside one call); `flags_snapshot` checks that they are at rest;
-    - the two import-time registries (IMPORT_REGISTRIES).
-    Returns [(module, name, kind)] of the entries reset."""
+    """Reset the per-solve entries of engine/process_state.REGISTRY (r2 M11):
+    - START → its REGISTRY initial value (equal to the source value);
+    - per-solve MEMO → its empty form (snapshotted at rest at import), in place;
+    - COUNTER → its value at import, in place (keys kept).
+    Not touched: FLAG entries (set and restored in `finally` by their owner, e.g. interior.COMPOSITIONS), the two
+    import-time registries (IMPORT_REGISTRIES) and the CONSTANT_MEMOS. Returns [(module, name, kind)] reset."""
     done = []
+    initial = {(mod, name): init for (mod, name), (_k, _w, init) in process_state.REGISTRY.items()}
     for mod, name, kind, m in _registry_entries():
-        fresh = copy.deepcopy(_PRISTINE.get((mod, name)))
+        if (mod, name) in CONSTANT_MEMOS:
+            continue
+        fresh = copy.deepcopy(initial[(mod, name)] if kind == process_state.START else _PRISTINE.get((mod, name)))
         cur = getattr(m, name)
         if isinstance(cur, dict) and isinstance(fresh, dict):
             cur.clear()
@@ -140,6 +160,7 @@ class LegacyView:
         self.p_cap = p_cap
         self.column_steam = column_steam
         self.lo = getattr(material, "shoot_lo", 0.0)
+        self.surface_fallbacks = 0      # SURF_RHO falls back to rho0 (§A1.2): counted here, read into the trace
         self.p_floor = getattr(material, "p_floor", 0.0)
         self._dense = eos.MATERIALS["h2o_liquid_dense"]
 
@@ -161,7 +182,8 @@ class LegacyView:
                 try:
                     rho = mat.density(self._at_floor(max(1.0e5, self.p_stop)), t, self.t_pot)
                 except eos.PhaseGap:
-                    rho = mat.rho0          # counted by the caller's trace, not a module counter (design §A1.2)
+                    rho = mat.rho0          # counted on this view (owned by the solve's context), not a module dict
+                    self.surface_fallbacks += 1
             else:
                 rho = mat.rho0
         except eos.PhaseGap as exc:
@@ -181,13 +203,23 @@ class LegacyView:
             return self._refusal(exc, p, t)
 
     def state(self, p: float, t: float, guess_rho=None):
+        """(ρ, (dT/dP)_ad, notes) or a Stop. `guess_rho` is accepted for the X4 signature and unused: the old
+        materials keep their own inversion start. Notes: «surface_rho0_fallback» when the hot-surface rule fell back
+        to ρ₀ (then (dT/dP)_ad is 0 there: the material refuses the surface state, so it has no gradient);
+        «no_thermal_constants» when the material carries none (the old engine's 0-with-note branch)."""
+        before = self.surface_fallbacks
         rho = self.density(p, t)
         if isinstance(rho, st.Stop):
             return rho
+        if self.surface_fallbacks != before:
+            return (rho, 0.0, ("surface_rho0_fallback",))
         g = self.dtdp(p, t)
         if isinstance(g, st.Stop):
             return g
-        return (rho, g)
+        has = getattr(self.mat, "has_thermal", None)          # a property on eos.Material
+        has = has() if callable(has) else has
+        notes = ("no_thermal_constants",) if (t > 0.0 and has is False) else ()
+        return (rho, g, notes)
 
 
 def ammonia_isotherms() -> tuple:
@@ -195,3 +227,37 @@ def ammonia_isotherms() -> tuple:
     switches isotherm pair there, so the integrand has a kink in T (located as events, design §A1.3)."""
     import ammonia_table
     return tuple(float(t) for t in ammonia_table.T_K)
+
+
+BASAL_CONST = "silicate_basal_const"
+
+
+#: Water-family materials (interior.VOLATILE_NAMES at 097a8aa3). The old integrator chooses among them per step
+#: (liquid_material, with_rock / with_ices, the liquid-crust refusal); that dispatch is not in the phase-1 adapter
+#: (registration note 2), so a layer of one of them is a named refusal until it is ported.
+NOT_PORTED = frozenset(interior.VOLATILE_NAMES)
+
+
+def resolve(layer, t_pot: float, p_stop: float, column_steam: bool = False):
+    """The view of one layer (S7). Plain ids are engine MATERIALS keys (eos.py:4431 + CORE_BOX_MATERIALS); the basal
+    constant-density layer is `silicate_basal_const` with params.density. Composition-built materials (declared or
+    fitted cores, declared mantles) are built inside their old contexts by the caller per trial (not here).
+    Returns a LegacyView, or None for an id this adapter cannot build (the caller refuses input.unknown_material)."""
+    params = layer.params or {}
+    if layer.material == BASAL_CONST:
+        rho = params.get("density")
+        rho = getattr(rho, "value", rho)
+        if rho is None:
+            return None
+        return LegacyView(BASAL_CONST, interior.BasalConstDensity(float(rho)), t_pot, p_stop)
+    if layer.material in NOT_PORTED or layer.material.startswith(("h2o", "steam")):
+        return None
+    mat = interior.MATERIALS.get(layer.material)
+    if mat is None:
+        return None
+    phi0 = params.get("porosity_phi0")
+    p_cap = params.get("porosity_p_cap")
+    return LegacyView(layer.material, mat, t_pot, p_stop,
+                      phi0=float(getattr(phi0, "value", phi0) or 0.0),
+                      p_cap=None if p_cap is None else float(getattr(p_cap, "value", p_cap)),
+                      column_steam=column_steam)

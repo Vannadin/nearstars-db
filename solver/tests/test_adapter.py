@@ -57,6 +57,8 @@ def _grid_ref(mat):
         got = view.state(p, t)
         if isinstance(got, st.Stop):
             got = ("refused", got.record.kind, got.record.message_old)
+        else:
+            got = got[:2]
         rows.append((p, t, got, _ref(mat, p, t)))
     return rows
 
@@ -81,8 +83,8 @@ class SameAsOldStage(unittest.TestCase):
         # the silicate's thermal pressure is referenced to the body's T_pot (W-L11-02); fe_prem's is not
         mat = interior._stack(0.325, 0.0, "fe_prem")[1][1]
         view = lm.LegacyView("silicate", mat, T_POT + 100.0)
-        diffs = sum(1 for p, t in _grid() if view.state(p, t) != _ref(mat, p, t)
-                    and not isinstance(view.state(p, t), st.Stop))
+        diffs = sum(1 for p, t in _grid() if not isinstance(view.state(p, t), st.Stop)
+                    and view.state(p, t)[:2] != _ref(mat, p, t))
         self.assertGreater(diffs, 0)
 
 
@@ -106,6 +108,8 @@ class Reset(unittest.TestCase):
         expected = set()
         for (m, n), (kind, why, _i) in process_state.REGISTRY.items():
             if kind == process_state.FLAG:
+                continue
+            if (m, n) in lm.CONSTANT_MEMOS:
                 continue
             if (m, n) in lm.IMPORT_REGISTRIES:
                 self.assertIn("at import", why)          # the exclusion is exactly the import-time registries
@@ -137,7 +141,8 @@ class Reset(unittest.TestCase):
             except ImportError:
                 continue
             if hasattr(mod, n):
-                self.assertTrue(lm._at_rest(getattr(mod, n)), (m, n))
+                if (m, n) not in lm.CONSTANT_MEMOS:
+                    self.assertTrue(lm._at_rest((m, n), getattr(mod, n)), (m, n))
 
     def test_control_snapshot_refuses_filled_memo(self):
         """Importing the adapter after a memo was filled must fail by name (fresh interpreter)."""
@@ -163,3 +168,45 @@ class Reset(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class StartFilledBeforeImport(unittest.TestCase):
+    def test_start_goes_back_to_registry_initial(self):
+        """r2 S4 B1: a START value set before the adapter's import must not become the reset value."""
+        import subprocess, sys
+        code = ("import sys; sys.path.insert(0, 'engine'); import water_hot; water_hot._LAST_DENSITY = (1.0, 2.0, 3.0);"
+                " import solver.legacy_materials as lm; lm.reset_engine_state();"
+                " import water_hot as w; print(w._LAST_DENSITY)")
+        r = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(r.stdout.strip().splitlines()[-1], "(0.0, 0.0, 0.0)")
+
+
+class SurfaceFallback(unittest.TestCase):
+    def test_fallback_is_counted_and_noted(self):
+        mat = interior._stack(0.325, 0.0, "fe_prem")[1][1]
+        view = lm.LegacyView("silicate", mat, 1600.0)
+        got = view.state(0.0, 5500.0)
+        self.assertNotIsInstance(got, st.Stop)
+        self.assertEqual(got[0], mat.rho0)
+        self.assertEqual(got[2], ("surface_rho0_fallback",))
+        self.assertEqual(view.surface_fallbacks, 1)
+
+    def test_control_cool_surface_no_fallback(self):
+        mat = interior._stack(0.325, 0.0, "fe_prem")[1][1]
+        view = lm.LegacyView("silicate", mat, 1600.0)
+        got = view.state(0.0, 1600.0)
+        self.assertEqual(view.surface_fallbacks, 0)
+        self.assertNotIn("surface_rho0_fallback", got[2])
+
+
+class WaterNotPorted(unittest.TestCase):
+    def test_water_layer_refuses(self):
+        from solver import body as b
+        for name in ("h2o", "h2o_liquid", "h2o_hot"):
+            layer = b.Layer("ice", "ice" if "ice" in b.ROLES["roles"] else "mantle", name)
+            self.assertIsNone(lm.resolve(layer, 300.0, 0.0), name)
+
+    def test_control_silicate_resolves(self):
+        from solver import body as b
+        self.assertIsNotNone(lm.resolve(b.Layer("m", "mantle", "silicate"), 1600.0, 0.0))

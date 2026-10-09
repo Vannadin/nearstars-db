@@ -4,11 +4,12 @@
 Frozen design: rewrite/phase1-design.frozen.md §A1.1 (equations), §A1.2 (surface start), §A1.5 (residual).
 Registration: rewrite/phase1-a1-impl.frozen.md, step S2. The multi-layer pass is solve.py's (S7).
 
-State y = (r, P, T_ad, T); independent variable m, running inward from M.
+State y = (r, P, T_ad, T, I); independent variable m, running inward from M; I accumulates (2/3) r² dm.
     dr/dm = 1 / (4π r² ρ)
     dP/dm = −G m / (4π r⁴)
     dT_ad/dm = (dT/dP)_ad · dP/dm          (dT/dP)_ad from the material view, not from a formula here
     dT/dm = dT_ad/dm                        (adiabatic layers; the conductive lid is lid.py's)
+    dI/dm = −(2/3) r²                       (I grows inward from 0 at the surface; the shell's moment, for C/MR²)
 
 A material view is any object with
     state(P, T, guess_rho) -> (rho, dTdP_ad) | stepper.Stop
@@ -29,17 +30,17 @@ FOUR_PI = 4.0 * math.pi
 def make_rhs(view):
     """dy/dm for one adiabatic material. Returns a Stop from the view unchanged (a refusal at that state)."""
     def f(m: float, y: tuple):
-        r, p, t_ad, t = y
+        r, p, t_ad, t = y[:4]
         if r <= 0.0:
             return st.Stop("centre_crossed", {"m": m, "r": r})
         got = view.state(p, t_ad, None)
         if isinstance(got, st.Stop):
             return got
-        rho, dtdp = got
+        rho, dtdp = got[0], got[1]
         drdm = 1.0 / (FOUR_PI * r * r * rho)
         dpdm = -G * m / (FOUR_PI * r ** 4)
         dtdm = dtdp * dpdm
-        return (drdm, dpdm, dtdm, dtdm)
+        return (drdm, dpdm, dtdm, dtdm, -2.0 / 3.0 * r * r)
     return f
 
 
@@ -65,6 +66,11 @@ class PassResult:
     path: tuple
     counters: st.Counters
     events: tuple = ()
+
+
+def floors(mass: float, r_scale: float) -> tuple:
+    """Error-scale floors of (r, P, T_ad, T, I) (registration note 2 item 9; I as the old engine's moi floor)."""
+    return (1e-12 * r_scale, 1e5, 10.0, 10.0, 1e-12 * mass * r_scale ** 2)
 
 
 def r_scale_of(mass: float, rho_mean: float) -> float:
@@ -95,12 +101,12 @@ def inward_pass(view, mass: float, radius: float, p_s: float, t_pot: float, rho_
     m0, r0, p0 = surface_start(view, mass, radius, p_s, t_pot)
     m_end = opt.eps * mass
     f = make_rhs(view)
-    sopt = st.Options(rtol=opt.rtol, floors=(1e-12 * rs, 1e5, 10.0, 10.0), h0=1e-3 * mass,
+    sopt = st.Options(rtol=opt.rtol, floors=floors(mass, rs), h0=1e-3 * mass,
                       h_min=1e-15 * mass, h_max=mass / 20.0, max_steps=opt.max_steps,
                       event_min_progress=opt.event_min_progress * mass,
                       event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_run)
     floor_ev = st.Event("r_floor", lambda m, y: y[0] - opt.r_floor_frac * rs, scale=rs)
-    res = st.run(f, m0, (r0, p0, t_pot, t_pot), m_end, sopt, [floor_ev, *events], on_accept=on_accept)
+    res = st.run(f, m0, (r0, p0, t_pot, t_pot, 0.0), m_end, sopt, [floor_ev, *events], on_accept=on_accept)
     if res.stop.kind not in ("end", "event"):
         return PassResult(res.x, res.y, float("nan"), None, res.stop, rs, res.path, res.counters, res.events)
     got = view.state(res.y[1], res.y[2], None)
