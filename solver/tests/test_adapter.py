@@ -124,6 +124,30 @@ class Reset(unittest.TestCase):
         self.assertEqual(lm.flags_snapshot(), before)
         self.assertIsInstance(interior.COMPOSITIONS["earth_like"], tuple)
 
+    def test_memo_filled_before_import_does_not_survive(self):
+        import fe_liquid
+        fe_liquid._CACHE[("stale-from-before", 0.0, 0.0)] = 1.0
+        lm.reset_engine_state()
+        self.assertNotIn(("stale-from-before", 0.0, 0.0), fe_liquid._CACHE)
+        for (m, n), (kind, _w, init) in process_state.REGISTRY.items():
+            if kind != process_state.MEMO or (m, n) in lm.IMPORT_REGISTRIES:
+                continue
+            try:
+                mod = __import__(m)
+            except ImportError:
+                continue
+            if hasattr(mod, n):
+                self.assertTrue(lm._at_rest(getattr(mod, n)), (m, n))
+
+    def test_control_snapshot_refuses_filled_memo(self):
+        """Importing the adapter after a memo was filled must fail by name (fresh interpreter)."""
+        import subprocess, sys
+        code = ("import sys; sys.path.insert(0, 'engine'); import fe_liquid; fe_liquid._CACHE[('x', 0.0, 0.0)] = 1;"
+                " import solver.legacy_materials")
+        r = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("fe_liquid._CACHE", r.stderr)
+
     def test_control_start_only_reset_leaves_memos(self):
         mods = self._plant()
         process_state.reset()                      # the old hand-picked reset: START entries only

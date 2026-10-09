@@ -60,15 +60,33 @@ def _registry_entries():
             yield (mod, name, kind, m)
 
 
-#: Each resettable entry's value right after import (deep copies). Resetting restores these, so a counter dict keeps
-#: its keys (e.g. eos.DENSITY_BELOW_REF's "lowest_pa"), a memo returns to empty, a start value to its seed.
+def _at_rest(v) -> bool:
+    """A memo's empty form as written in its module source: None, an empty container, a tuple of Nones
+    (rtpress._LAST_LIQUID = (None, None, None)), or a record dict whose fields are all at rest
+    (interior._FAMILY_TRAIL = {"trials": [], …, "answer": None, "calls": 0, …})."""
+    if v is None or v == 0 or (isinstance(v, (list, set)) and len(v) == 0):     # 0: a record's call count
+        return True
+    if isinstance(v, tuple):
+        return all(x is None for x in v)
+    if isinstance(v, dict):
+        return all(_at_rest(x) for x in v.values())
+    return False
+
+
+#: Each resettable entry's value at the adapter's import (deep copies). Restoring a COUNTER keeps its keys (e.g.
+#: eos.DENSITY_BELOW_REF["lowest_pa"]); restoring a MEMO gives its empty form. So that a memo filled before this
+#: import cannot become the «reset» state (r2), every MEMO must be at rest here; otherwise the import fails by name.
 _PRISTINE = {(mod, name): copy.deepcopy(getattr(m, name)) for mod, name, _k, m in _registry_entries()}
+_NOT_AT_REST = sorted(f"{mod}.{name}" for mod, name, k, m in _registry_entries()
+                      if k == process_state.MEMO and not _at_rest(getattr(m, name)))
+if _NOT_AT_REST:
+    raise ImportError("solver.legacy_materials imported after engine memos were filled: " + ", ".join(_NOT_AT_REST))
 
 
 def reset_engine_state() -> list:
-    """Reset every resettable entry of engine/process_state.REGISTRY (r2 M11), not a hand-picked list, to its
-    value right after import (START seeds, empty MEMOs, zero COUNTERs with their keys). Containers are restored in
-    place, so other modules holding a reference see the reset. Not touched:
+    """Reset every resettable entry of engine/process_state.REGISTRY (r2 M11), not a hand-picked list, to its value
+    at the adapter's import: START seeds, MEMOs empty (checked at rest when snapshotted), COUNTERs with their keys.
+    Containers are restored in place, so other modules holding a reference see the reset. Not touched:
     - FLAG entries: a flag is set and restored in `finally` by its owner (e.g. interior.COMPOSITIONS, a constant
       table swapped inside one call); `flags_snapshot` checks that they are at rest;
     - the two import-time registries (IMPORT_REGISTRIES).
