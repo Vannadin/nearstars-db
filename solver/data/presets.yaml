@@ -1,0 +1,10 @@
+# 조성 프리셋 — v1 `composition_intent` 이름을 층 목록으로 펼친다; 선언이 프리셋 칸을 이긴다 (phase1-design D-A2-6).
+# Values are interior.COMPOSITIONS at 097a8aa3 (interior.py:94–100): (core mass fraction, ice, gas, core material).
+# A preset is data: it expands to layers[], and a declared field overrides a preset field with a typed note (R-PO-1..3).
+# Only the presets the 8 v1 bodies use are written as layer lists here; the others are listed so `from_v1` can name
+# them, and a body using one is refused (input.v1_unmapped) until its layer list is registered.
+earth_like:
+  layers:
+    - {id: core, role: core, material: fe_prem, extent: {mass_fraction: 0.325}}
+    - {id: mantle, role: mantle, material: silicate}
+not_expanded: [iron, silicate, water, gas_giant]

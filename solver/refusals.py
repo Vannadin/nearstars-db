@@ -11,7 +11,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from types import MappingProxyType
 
-from solver.result import NO_ANSWER_REASONS, NoAnswer, Refusal
+from solver.body import CLOSURE_KINDS
+from solver.result import NO_ANSWER_REASONS, NoAnswer, Refusal, Where
 
 
 @dataclass(frozen=True)
@@ -21,13 +22,20 @@ class Entry:
     template: str          # str.format over the evidence fields and `where`
     optional: tuple = ()   # evidence fields that may be absent
     preamble: str = ""     # lay sentence put before the technical one (R-C122-4)
+    solve: bool = False    # a solver refusal: carries the common solve fields, checked below
 
 
 #: Common fields of every `solve.*` id (b9): the closure scalar's trial or root value (or None), the closure kind,
 #: the pass kind, and the reached state {m, r, P, T, layer_id} where one exists.
 SOLVE_COMMON = ("x", "closure_kind", "pass_kind")
-SOLVE_OPTIONAL = ("state",)
+#: Optional on every solve.* id: the reached state, the scan trace, and the walls and solved regions (§A1.5: «the
+#: refusal at the lowest-x wall is the Outcome, with the scan in the evidence»; b9 2026-10-09).
+SOLVE_OPTIONAL = ("state", "scan", "walls", "solved_regions")
 PASS_KINDS = ("scan", "wall", "brent", "accepted", "band")
+#: A wall record (b9 2026-10-09): the trial x, what stopped it (a refusal id or a NoAnswer reason), the reached state,
+#: and whether the wall's position was located.
+WALL_FIELDS = ("x", "outcome_kind", "id_or_reason", "state", "located")
+EVENT_CAPS = ("EVENT_MIN_PROGRESS", "EVENT_RESTARTS_STEP", "EVENT_RESTARTS_SOLVE", "EVENT_REWALKS")
 
 _SOLVE = (
     Entry("solve.no_bracket", ("x_lo", "x_hi", "F_lo", "F_hi", "n_scan", "walls", "solved_regions"),
@@ -39,7 +47,7 @@ _SOLVE = (
     Entry("solve.unlocated_discontinuity", ("h", "h_min", "m_at", "err_norm", "rejected_in_row"),
           "걸음이 h_min {h_min} 밑으로 줄었는데 그 자리(m {m_at})에 찾은 경계가 없다 — 오차 {err_norm}, 연속 기각 {rejected_in_row}"),
     Entry("solve.event_chatter", ("event_name", "count", "cap_name", "cap_value"),
-          "경계 사건 '{event_name}' 이(가) {count} 번 되풀이돼 {cap_name} {cap_value} 에 걸렸다"),
+          "경계 사건 '{event_name}' 이(가) {count} 번 되풀이돼 {cap_name} {cap_value} 에 걸렸다", optional=("g", "tol")),
     Entry("solve.layer_order", ("layer_id", "rule", "expected", "got_m", "got_r"),
           "층 '{layer_id}' 의 경계({rule})가 순서를 어긴다 — 기대 {expected}, 실제 m {got_m} · r {got_r}"),
     Entry("solve.lid_unconverged", ("layer_id", "trail", "iters", "tol"),
@@ -84,13 +92,17 @@ _INPUT = (
     Entry("input.cross_field", ("rule", "detail"), "선언 사이가 맞지 않는다 — {rule}: {detail}"),
     Entry("input.duplicate_name", ("name", "paths"), "천체 이름 '{name}' 이(가) 여러 파일에 있다 — {paths}"),
     Entry("input.v1_unmapped", ("key", "detail"), "옛 꼴(v1) 키 '{key}' 에 층 목록 뜻이 없다 — {detail}"),
+    Entry("input.composition_undeclared", ("body_class", "looked_for"),
+          "조성이 선언되지 않았다 — {looked_for} 가 없고, '{body_class}' 는 반지름으로 조성을 역산할 수 있는 무리가 아니다. 선언이 필요하다"),
+    Entry("input.class_out_of_scope", ("body_class", "why"), "'{body_class}' 는 이 내부구조 솔버 밖이다 — {why}"),
 )
 
 #: NoAnswer evidence sets (D-A3-2). `unconverged`: b9's set; GridExceeded maps to MAX_STEPS_SOLVE (r2 N3).
-NO_ANSWER_BUDGETS = ("CLOSE_ITERS", "MAX_STEPS_SOLVE", "WALL_SHOTS")
+NO_ANSWER_BUDGETS = ("CLOSE_ITERS", "MAX_STEPS_SOLVE", "WALL_SHOTS", "MAX_SPLITS")
 _NO_ANSWER = (
     Entry("unconverged", ("budget_name", "budget_value", "last_residual"),
-          "예산 {budget_name} = {budget_value} 안에 닫히지 않았다 — 마지막 잔차 {last_residual} (값 아님)"),
+          "예산 {budget_name} = {budget_value} 안에 닫히지 않았다 — 마지막 잔차 {last_residual} (값 아님)",
+          optional=("x", "pass_kind", "state", "scan", "m_at")),
     Entry("span_too_long", ("t_lo", "t_hi", "width", "bound"),
           "[{t_lo}, {t_hi}] 폭 {width} 이(가) 잇기 한도 {bound} 보다 길어 빈 칸으로 둔다"),
 )
@@ -105,10 +117,11 @@ def _index(entries: tuple) -> MappingProxyType:
     return MappingProxyType(out)
 
 
-REGISTRY = _index(tuple(Entry(e.id, SOLVE_COMMON + e.fields, e.template, SOLVE_OPTIONAL + e.optional, e.preamble)
-                        for e in _SOLVE) + _INPUT)
+REGISTRY = _index(tuple(Entry(e.id, SOLVE_COMMON + e.fields, e.template, SOLVE_OPTIONAL + e.optional, e.preamble,
+                              solve=True) for e in _SOLVE) + _INPUT)
 NO_ANSWER_REGISTRY = _index(_NO_ANSWER)
-assert tuple(NO_ANSWER_REGISTRY) == NO_ANSWER_REASONS
+if tuple(NO_ANSWER_REGISTRY) != NO_ANSWER_REASONS:      # not an assert: it must hold under python -O too
+    raise ImportError("NoAnswer registry and NO_ANSWER_REASONS disagree")
 
 
 def _check_fields(e: Entry, evidence: dict) -> None:
@@ -123,23 +136,38 @@ def render(e: Entry, where: str, evidence: dict) -> str:
     return f"{e.preamble} {body}" if e.preamble else body
 
 
-def make(id: str, where: str, **evidence) -> Refusal:
-    """A `Refusal` of a registered id. Unknown ids and missing or undeclared fields raise (a bug, not a refusal)."""
+def _check_vocab(e: Entry, ev: dict) -> None:
+    if "pass_kind" in ev and ev["pass_kind"] not in PASS_KINDS:
+        raise ValueError(f"{e.id}: pass_kind {ev['pass_kind']!r} not in {PASS_KINDS}")
+    if e.solve and ev["closure_kind"] not in CLOSURE_KINDS:
+        raise ValueError(f"{e.id}: closure_kind {ev['closure_kind']!r} not in {CLOSURE_KINDS}")
+    if e.id == "solve.event_chatter" and ev["cap_name"] not in EVENT_CAPS:
+        raise ValueError(f"{e.id}: cap_name {ev['cap_name']!r} not in {EVENT_CAPS}")
+    if e.id == "unconverged" and ev["budget_name"] not in NO_ANSWER_BUDGETS:
+        raise ValueError(f"unconverged: budget_name {ev['budget_name']!r} not in {NO_ANSWER_BUDGETS}")
+    for w in ev.get("walls") or ():
+        if not isinstance(w, dict) or set(w) != set(WALL_FIELDS):
+            raise ValueError(f"{e.id}: a wall is {{{', '.join(WALL_FIELDS)}}}, got {w!r}")
+        if w["outcome_kind"] not in ("refusal", "no_answer") or not isinstance(w["located"], bool):
+            raise ValueError(f"{e.id}: bad wall {w!r}")
+
+
+def make(id: str, where: str, at: Where | None = None, **evidence) -> Refusal:
+    """A `Refusal` of a registered id. Unknown ids, missing or undeclared fields and out-of-vocabulary values raise
+    (a bug, not a refusal)."""
     e = REGISTRY.get(id)
     if e is None:
         raise ValueError(f"unregistered refusal id {id!r}")
     _check_fields(e, evidence)
-    if id.startswith("solve.") and evidence["pass_kind"] not in PASS_KINDS:
-        raise ValueError(f"{id}: pass_kind {evidence['pass_kind']!r} not in {PASS_KINDS}")
-    return Refusal(id=id, where=where, evidence=evidence, text=render(e, where, evidence))
+    _check_vocab(e, evidence)
+    return Refusal(id=id, where=where, evidence=evidence, text=render(e, where, evidence), at=at)
 
 
-def no_answer(reason: str, where: str, **evidence) -> NoAnswer:
-    """A `NoAnswer` of a registered reason, with the same field checks as `make`."""
+def no_answer(reason: str, where: str, at: Where | None = None, **evidence) -> NoAnswer:
+    """A `NoAnswer` of a registered reason, with the same checks as `make`."""
     e = NO_ANSWER_REGISTRY.get(reason)
     if e is None:
         raise ValueError(f"unregistered no-answer reason {reason!r}")
     _check_fields(e, evidence)
-    if reason == "unconverged" and evidence["budget_name"] not in NO_ANSWER_BUDGETS:
-        raise ValueError(f"unconverged: budget_name {evidence['budget_name']!r} not in {NO_ANSWER_BUDGETS}")
-    return NoAnswer(reason=reason, where=where, evidence=evidence, text=render(e, where, evidence))
+    _check_vocab(e, evidence)
+    return NoAnswer(reason=reason, where=where, evidence=evidence, text=render(e, where, evidence), at=at)

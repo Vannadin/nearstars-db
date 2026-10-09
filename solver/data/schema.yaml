@@ -5,6 +5,9 @@
 #            counter_evidence_searched or note) | record (a component record with its own field list)
 # number_or_block: the key may be a bare number or a block.
 # unit:      the schema unit; a stated unit must equal it (D-A2-7). "1" = dimensionless.
+# si:        factor to SI; the converted value must stay finite (r2 S2-B1).
+# A block (number_or_block given as a mapping, block, extent block) needs grade, source, and counter_evidence_searched
+# or note; provenance: true asks for the full trio.
 # domain:    gt / ge / lt / le bounds on the value; absent = any finite value.
 # provenance: true = the trio grade · source · counter_evidence_searched is required (R-A1-12, R-MLD-4).
 # consumer:  solver | history (in-scope post-processors: core nodes, internal heat, thermal history) | later-tools.
@@ -21,21 +24,24 @@ top:
   jumps:  {shape: mapping}
 
 inputs:
-  mass_earth:            {shape: number_or_block, unit: M_earth, domain: {gt: 0}, required: true, consumer: solver}
-  radius_earth:          {shape: number_or_block, unit: R_earth, domain: {gt: 0}, consumer: solver}          # observation / closure target
+  mass_earth:            {shape: number_or_block, unit: M_earth, si: 5.972e24, domain: {gt: 0}, required: true, consumer: solver}
+  radius_earth:          {shape: number_or_block, unit: R_earth, si: 6.371e6, domain: {gt: 0}, consumer: solver}          # observation / closure target
   potential_temperature: {shape: number_or_block, unit: K, domain: {gt: 0}, consumer: solver}
   surface_temperature_k: {shape: number_or_block, unit: K, domain: {gt: 0}, consumer: solver}                 # lid (R-LITHO-3), R-RUL-5
   surface_pressure_pa:   {shape: number_or_block, unit: Pa, domain: {ge: 0}, consumer: solver}                # declared P_s (§Q2), optional
   tidal_heating:         {shape: bool, consumer: solver}                                                     # voids_expected, interior.py:4953 (r2 H6)
   age_gyr:               {shape: number_or_block, unit: Gyr, domain: {gt: 0}, consumer: history}              # radiogenic at age (R-RUL-17)
-  body_class:            {shape: enum, values: [rocky, sub_neptune, ice_giant, gas_giant, giant, brown_dwarf, star], consumer: history}   # body_class.LADDER + alias giant
+  body_class:            {shape: enum, values: [rocky, sub_neptune, ice_giant, gas_giant, giant, brown_dwarf, star], consumer: solver,
+                          out_of_scope: {brown_dwarf: "중수소가 탄다 — 13 M_J 위는 광도가 시간에 따라 변하고(Spiegel+ 2011) 이 솔버에는 그 열이력이 없다",
+                                         star: "수소가 탄다 — 별의 구조는 이 솔버 밖이다"}}   # body_class.LADDER + alias giant; FLUID_CLASSES interior.py:4033/:4149 (c8 note 1)
+  basal_iron_number:     {shape: number_or_block, unit: "Fe#, molar, 0–100", domain: {ge: 0, le: 100}, consumer: solver}   # C100, read by solve (c8 note 1 §3)
   core_cmb_temperature:  {shape: number_or_block, unit: K, domain: {gt: 0}, consumer: history}               # core_state
   core_initial_temperature:             {shape: number_or_block, unit: K, domain: {gt: 0}, consumer: history}
   mantle_initial_potential_temperature: {shape: number_or_block, unit: K, domain: {gt: 0}, consumer: history}
-  lid_thickness_km:      {shape: block, unit: km, domain: {gt: 0}, consumer: history}
+  lid_thickness_km:      {shape: block, unit: km, si: 1.0e3, domain: {gt: 0}, consumer: history}
   tectonic_regime:       {shape: block, value_shape: enum, values: [stagnant, mobile, transitional, episodic, heat_pipe], consumer: history,
                           extra_fields: [setting_override, contested]}      # REGIMES, tectonic_regime.py:39; «contested» is a field, not a value (R-GV-5)
-  radiogenic_concentration: {shape: record, consumer: history,
+  radiogenic_concentration: {shape: record, consumer: history, rule: declared_needs_override,
                              fields: {U_ppb: {shape: number, unit: ppb, domain: {ge: 0}}, Th_ppb: {shape: number, unit: ppb, domain: {ge: 0}},
                                       K_ppm: {shape: number, unit: ppm, domain: {ge: 0}}},
                              meta: [grade, source, note, alternative, override, default, counter_evidence_searched]}   # R-GV-4
@@ -61,7 +67,7 @@ layer:
   material:    {shape: text, required: true}           # checked by the material resolver when one is given
   extent:      {shape: mapping}                        # one of the forms below; absent = remainder (or the closure's layer)
   thermal:     {shape: enum, values: [adiabatic, conductive, isothermal]}
-  t_declared:  {shape: number, unit: K, domain: {gt: 0}}
+  t_declared:  {shape: number_or_block, unit: K, domain: {gt: 0}}
   system:      {shape: text}
   composition: {shape: block, value_shape: mapping, provenance: true}
   params:      {shape: mapping}                        # name → block with the trio
@@ -73,11 +79,16 @@ extent:
   thickness_above:    {unit: km, domain: {ge: 0}, ref: layer}    # basal-layer pattern only; 0 is valid (R-BL-7)
   phase:              {ref: event}
 
+# A composition closure's default range is the old engine's fit bracket, kept for oracle parity even where it runs
+# past the material's declared window (S [0.13, 0.25] vs CORE_BOX_WT S ≤ 0.19, eos.py:4402; the old engine applies
+# the box only to a declared S). A root outside the window is recorded by the solve as an extrapolation
+# (R-RUL-10/10a), never silent (r2 S2-N1; rule recorded here, the solve's record is b9's MaterialView).
 closure:
   kinds:
-    R:             {default: [0.05, 30.0], unit: R_earth}
-    boundary_mass: {default: [0.001, 0.999], unit: "1"}
-    composition:   {unit: "1", defaults: {S: [0.13, 0.25]}}          # SULPHUR_FIT_BRACKET, interior.py:5843
+    R:             {default: [0.05, 30.0], unit: R_earth, domain: {gt: 0}, fields: []}
+    boundary_mass: {default: [0.001, 0.999], unit: "1", domain: {gt: 0, lt: 1}, fields: [layer]}
+    composition:   {unit: "1", domain: {ge: 0}, fields: [layer, name], defaults: {S: [0.13, 0.25],                       # SULPHUR_FIT_BRACKET, interior.py:5843
+                                          initial_porosity: [0.0, 0.60]}}      # PHI0_NOMINAL, porosity.py:68 (c8 note 1 §2)
 
 jump: {unit: K, domain: {ge: 0}}                                     # R-IJ-3
 
@@ -87,3 +98,17 @@ tolerances:
 grades:
   input: [measured, literature, analog, derived, judgment, declared, inherited, authored]   # INPUT_GRADES (R-GV-1)
   forbidden: [owner-override, declared-default, contested, calibrated, guessed]              # R-GV-6
+
+# Where each layer-forming v1 key lands (r2 S2-B5; c8 note 1 §3). These keys are not v2 inputs: from_v1 consumes them.
+v1_layer_keys:
+  composition_intent:        "the preset's layer list (presets.yaml)"
+  core_mass_fraction:        "core layer extent mass_fraction"
+  core_material:             "core layer material"
+  ice_mass_fraction:         "an ice layer; 0.0 = no ice layer (selects the porosity axis on Dante)"
+  lithosphere_thickness_km:  "lid layer, thermal conductive, extent depth_from_surface (block kept)"
+  mantle_composition:        "mantle layer composition, system silicate"
+  core_light_elements:       "core layer composition, system iron_alloy; S fit → closure composition core.S"
+  light_element_fixing:      "v1-only: cross-checked against core_light_elements (R-CLE-4), then dropped"
+  core_plus_layer_radius_km: "basal layer extent radius_from_centre (block kept, uncertainty_km → uncertainty ±)"
+  basal_layer_thickness_km:  "basal layer params.thickness_km; core extent = core_plus_layer − thickness"
+  basal_layer_density:       "basal layer params.density"

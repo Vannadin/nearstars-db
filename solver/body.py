@@ -9,12 +9,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from types import MappingProxyType
 from typing import Mapping
 
-import yaml
-
-from solver.result import check_finite, check_in
+from solver.result import Note, check_finite, check_in, freeze
+from solver.yamlio import load_data
 
 EXTENT_KINDS = ("mass_fraction", "radius_from_centre", "depth_from_surface", "phase", "thickness_above")  # §A1.3
 THERMAL_KINDS = ("adiabatic", "conductive", "isothermal")      # D-A2-2
@@ -26,21 +24,25 @@ ROLES_PATH = Path(__file__).resolve().parent / "data" / "roles.yaml"
 
 
 def _ro(m) -> Mapping:
-    return MappingProxyType(dict(m or {}))
+    return freeze(dict(m or {}))
 
 
 def _load_roles(path: Path) -> Mapping:
-    doc = yaml.safe_load(path.read_text(encoding="utf-8"))
-    fams = tuple(doc["families"])
-    roles = {}
+    """The role registry, parsed with the project loader (duplicate keys refused) and checked for consistency."""
+    doc = load_data(path)
+    fams = doc["families"]
     for name, entry in doc["roles"].items():
         check_in(f"role {name} family", entry["family"], fams)
-        roles[name] = MappingProxyType(dict(entry))
-    return MappingProxyType({"families": fams, "roles": MappingProxyType(roles),
-                             "order": MappingProxyType({k: tuple(tuple(x) if isinstance(x, list) else x for x in v)
-                                                        for k, v in doc["order"].items()}),
-                             "interfaces": MappingProxyType({k: MappingProxyType(v)
-                                                             for k, v in doc["interfaces"].items()})})
+    for k, v in doc["order"].items():
+        for item in v:
+            for x in (item if isinstance(item, tuple) else (item,)):
+                if x not in fams and x not in doc["roles"]:
+                    raise ValueError(f"roles.yaml order {k}: {x!r} is neither a family nor a role")
+    for k, rule in doc["interfaces"].items():
+        for key, x in rule.items():
+            if x not in fams and x not in doc["roles"]:
+                raise ValueError(f"roles.yaml interface {k}.{key}: {x!r} is neither a family nor a role")
+    return doc
 
 
 #: The role registry, read once at import and immutable afterwards (D-A2-3).
@@ -65,21 +67,22 @@ class Declared:
     band: tuple | None = None
     uncertainty: float | None = None
     uncertainty_basis: str | None = None
+    extra: Mapping = field(default_factory=dict)    # schema-listed extra fields (e.g. tectonic_regime.setting_override)
 
     def __post_init__(self):
-        if isinstance(self.value, Mapping):
-            object.__setattr__(self, "value", _ro(self.value))
-        elif isinstance(self.value, float):
-            check_finite("Declared.value", self.value)
+        object.__setattr__(self, "value", freeze(self.value))
+        if isinstance(self.value, float):
+            object.__setattr__(self, "value", check_finite("Declared.value", self.value))
         if self.band is not None:
             lo, hi = self.band
-            check_finite("Declared.band lo", lo)
-            check_finite("Declared.band hi", hi)
+            lo, hi = check_finite("Declared.band lo", lo), check_finite("Declared.band hi", hi)
             if lo > hi:
                 raise ValueError(f"Declared.band lo {lo!r} > hi {hi!r}")
+            object.__setattr__(self, "band", (lo, hi))
         if self.uncertainty is not None:
-            check_finite("Declared.uncertainty", self.uncertainty)
+            object.__setattr__(self, "uncertainty", check_finite("Declared.uncertainty", self.uncertainty))
             check_in("Declared.uncertainty_basis", self.uncertainty_basis, UNCERTAINTY_BASES)
+        object.__setattr__(self, "extra", freeze(dict(self.extra)))
 
 
 @dataclass(frozen=True)
@@ -89,6 +92,7 @@ class Extent:
     kind: str
     value: float | None = None
     ref: str | None = None
+    declared: "Declared | None" = None    # the declaration the value came from, with its provenance (e.g. R-LITHO-1)
 
     def __post_init__(self):
         check_in("Extent.kind", self.kind, EXTENT_KINDS)
@@ -96,7 +100,7 @@ class Extent:
             if not self.ref:
                 raise ValueError("Extent(phase) needs the event name in ref")
         else:
-            check_finite(f"Extent({self.kind}).value", self.value)
+            object.__setattr__(self, "value", check_finite(f"Extent({self.kind}).value", self.value))
             if self.value < 0:
                 raise ValueError(f"Extent({self.kind}).value {self.value!r} < 0")
         if self.kind == "thickness_above" and not self.ref:
@@ -125,7 +129,7 @@ class Layer:
         if (self.thermal == "isothermal") != (self.t_declared is not None):
             raise ValueError(f"Layer({self.id}): t_declared goes with thermal 'isothermal' and only with it")
         if self.t_declared is not None:
-            check_finite(f"Layer({self.id}).t_declared", self.t_declared)
+            object.__setattr__(self, "t_declared", check_finite(f"Layer({self.id}).t_declared", self.t_declared))
         if self.composition is not None and not self.system:
             raise ValueError(f"Layer({self.id}): composition needs a system")
         object.__setattr__(self, "params", _ro(self.params))
@@ -141,7 +145,7 @@ class SurfaceState:
     t_pot: float | None = None    # K
 
     def __post_init__(self):
-        check_finite("SurfaceState.m", self.m)
+        object.__setattr__(self, "m", check_finite("SurfaceState.m", self.m))
         if self.m <= 0:
             raise ValueError(f"SurfaceState.m {self.m!r} <= 0")
         check_in("SurfaceState.p_s_source", self.p_s_source, P_S_SOURCES)
@@ -150,7 +154,7 @@ class SurfaceState:
         for k in ("p_s", "t_s", "t_pot"):
             v = getattr(self, k)
             if v is not None:
-                check_finite(f"SurfaceState.{k}", v)
+                object.__setattr__(self, k, check_finite(f"SurfaceState.{k}", v))
 
 
 @dataclass(frozen=True)
@@ -164,10 +168,14 @@ class Closure:
 
     def __post_init__(self):
         check_in("Closure.kind", self.kind, CLOSURE_KINDS)
-        check_finite("Closure.lo", self.lo)
-        check_finite("Closure.hi", self.hi)
+        object.__setattr__(self, "lo", check_finite("Closure.lo", self.lo))
+        object.__setattr__(self, "hi", check_finite("Closure.hi", self.hi))
         if not self.lo < self.hi:
             raise ValueError(f"Closure range [{self.lo!r}, {self.hi!r}] is empty")
+        # R and a boundary mass are strictly positive; a composition axis may start at 0 (Dante's φ₀ ∈ [0, 0.60],
+        # porosity.py:68). b9's scan spacing must handle lo = 0 for composition axes.
+        if self.lo < 0 or (self.kind != "composition" and self.lo <= 0):
+            raise ValueError(f"Closure({self.kind}) lo {self.lo!r} out of range")
         if self.kind == "R" and (self.layer or self.name):
             raise ValueError("Closure(R) takes no layer and no name")
         if self.kind == "boundary_mass" and (not self.layer or self.name):
@@ -185,6 +193,9 @@ class Boundary:
     roles: tuple
     name: str
     interface: str | None = None
+
+    def __post_init__(self):
+        object.__setattr__(self, "roles", tuple(self.roles))
 
 
 def derive_boundaries(layers: tuple) -> tuple:
@@ -242,6 +253,7 @@ class Body:
     declarations: Mapping = field(default_factory=dict)   # body-wide: age, regime, radiogenic, thermal block, …
     solver_flags: Mapping = field(default_factory=dict)   # solver keys outside the layer list, e.g. tidal_heating
     later_tools: Mapping = field(default_factory=dict)    # carried through, never read by the solver (D-A2-7)
+    surface_declared: Mapping = field(default_factory=dict)   # the declarations behind `surface`/`radius`, with grades
     notes: tuple = ()                               # typed notes, e.g. from_v1 normalisations
     boundaries: tuple = field(init=False)
 
@@ -267,8 +279,12 @@ class Body:
         for j in self.jumps:
             if j not in names:
                 raise ValueError(f"Body({self.name}) jump at unknown boundary {j!r}")
-        for k in ("jumps", "declarations", "solver_flags", "later_tools"):
+        for k in ("jumps", "declarations", "solver_flags", "later_tools", "surface_declared"):
             object.__setattr__(self, k, _ro(getattr(self, k)))
+        object.__setattr__(self, "notes", tuple(self.notes))
+        for n in self.notes:
+            if not isinstance(n, Note):
+                raise ValueError(f"Body({self.name}).notes holds {n!r}, not a Note")
 
     def interface(self, name: str) -> Boundary | None:
         """The named interface (`cmb`, `icb`), looked up by role (W-L15-02)."""

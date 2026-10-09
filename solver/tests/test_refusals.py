@@ -3,35 +3,67 @@
 
 Run from the worktree root:  solver/.venv/bin/python -m unittest solver.tests.test_refusals
 """
-import re
+import ast
+import math
 import string
 import unittest
-from pathlib import Path
+from unittest import mock
 
 from solver import refusals as rf
 from solver import result as rs
+from solver.tests.test_types import solver_sources
 
-ROOT = Path(__file__).resolve().parents[2]
 SOLVE_IDS = ("solve.no_bracket", "solve.two_roots", "solve.material_domain", "solve.unlocated_discontinuity",
              "solve.event_chatter", "solve.layer_order", "solve.lid_unconverged", "solve.basal_unconverged",
              "solve.basal_not_attached")
+#: Names that hold reason text. X3: no consumer decides control flow from them.
+TEXT_NAMES = ("text", "reason", "message_old", "why")
+STR_METHODS = ("startswith", "endswith", "find", "rfind", "index", "rindex", "split", "count", "__contains__",
+               "partition", "rpartition")
+RE_FUNCS = ("search", "match", "fullmatch", "findall", "finditer", "sub", "subn", "split")
 
-#: X3: no consumer decides control flow from a reason string. These forms are what the old engine did
-#: (`startswith(TIGHT_REFUSAL_HEADS)`, `"…" in r.reason`, regex over a reason).
-PARSE_PATTERNS = (
-    re.compile(r"\.(text|reason)\s*\.\s*(startswith|endswith|find|index|split)\s*\("),
-    re.compile(r"""["'][^"']*["']\s+(not\s+)?in\s+[\w.]*\.(text|reason)\b"""),
-    re.compile(r"\bre\.\w+\([^)]*\.(text|reason)\b"),
-)
+
+def _texty(node) -> bool:
+    """A reason-text expression: x.text / x.reason / x.message_old / *_reason, x.evidence["message_old"], str(x)."""
+    if isinstance(node, ast.Attribute):
+        return node.attr in TEXT_NAMES or node.attr.endswith("_reason")
+    if isinstance(node, ast.Name):
+        return node.id in TEXT_NAMES or node.id.endswith("_reason")
+    if isinstance(node, ast.Subscript):
+        key = node.slice.value if isinstance(node.slice, ast.Constant) else None
+        return key in ("message_old",) or (_texty(node.value) and not isinstance(key, str))
+    if isinstance(node, ast.Call) and getattr(node.func, "id", None) == "str":
+        return True
+    return False
 
 
 def parse_hits(source: str) -> list:
-    return [(i, line.strip()) for i, line in enumerate(source.splitlines(), 1)
-            if any(p.search(line) for p in PARSE_PATTERNS)]
+    """X3 (r2 N5): reason text used under ==/!=/in, as a str-method receiver, or as a regex argument. A line marked
+    «# x3-ok: <why>» is a construction guard on the type's own field, not control flow on a refusal, and is skipped."""
+    lines = source.splitlines()
+    hits = []
+    for node in ast.walk(ast.parse(source)):
+        if isinstance(node, ast.Compare) and any(isinstance(op, (ast.In, ast.NotIn, ast.Eq, ast.NotEq))
+                                                 for op in node.ops):
+            if any(_texty(x) for x in [node.left] + list(node.comparators)):
+                hits.append((node.lineno, "compare"))
+        elif isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if node.func.attr in STR_METHODS and _texty(node.func.value):
+                hits.append((node.lineno, f".{node.func.attr}"))
+            elif node.func.attr in RE_FUNCS and any(_texty(a) for a in node.args):
+                hits.append((node.lineno, f"re.{node.func.attr}"))
+    return [h for h in hits if "# x3-ok:" not in lines[h[0] - 1]]
 
 
 def _evidence(entry):
     return {f: 0 for f in entry.fields}
+
+
+def _solve_ev(**kw):
+    ev = dict(x=None, closure_kind="R", pass_kind="scan", x_lo=1, x_hi=2, F_lo=1, F_hi=1, n_scan=8,
+              walls=[], solved_regions=[])
+    ev.update(kw)
+    return ev
 
 
 class TRegistry(unittest.TestCase):
@@ -40,7 +72,8 @@ class TRegistry(unittest.TestCase):
             self.assertIn(i, rf.REGISTRY)
             for f in rf.SOLVE_COMMON:
                 self.assertIn(f, rf.REGISTRY[i].fields)
-            self.assertIn("state", rf.REGISTRY[i].optional)
+            for f in ("state", "scan"):
+                self.assertIn(f, rf.REGISTRY[i].fields + rf.REGISTRY[i].optional)
 
     def test_unknown_id(self):
         with self.assertRaises(ValueError):
@@ -57,26 +90,46 @@ class TRegistry(unittest.TestCase):
         self.assertEqual(r.id, "input.unknown_key")
         self.assertEqual(rs.outcome_kind(r), "refusal")
 
-    def test_check_control(self):
-        # control: with the field check disabled, an undeclared field gets through
-        saved = rf._check_fields
-        rf._check_fields = lambda e, ev: None
-        try:
-            rf.make("input.unknown_key", "f.yaml", key="k", nearest="n", extra=1)
-        finally:
-            rf._check_fields = saved
-
-    def test_pass_kind_and_budget(self):
-        ev = dict(x=None, closure_kind="R", pass_kind="guess", x_lo=1, x_hi=2, F_lo=1, F_hi=1, n_scan=8,
-                  walls=[], solved_regions=[])
+    def test_check_control_on_a_non_templated_field(self):
+        # `walls` is required on no_bracket but not read by its template: only the field check refuses its absence
+        ev = _solve_ev()
+        del ev["walls"]
         with self.assertRaises(ValueError):
             rf.make("solve.no_bracket", "solve", **ev)
-        ev["pass_kind"] = "scan"
-        rf.make("solve.no_bracket", "solve", **ev)
+        with mock.patch.object(rf, "_check_fields", lambda e, ev: None):          # control
+            rf.make("solve.no_bracket", "solve", **ev)
+
+    def test_b9_evidence_fields(self):
+        # §A1.5: the scan rides on any solve.* refusal; a MAX_STEPS wall's NoAnswer carries its trial
+        rf.make("solve.material_domain", "solve", x=1.0, closure_kind="R", pass_kind="wall", material_id="fe_prem",
+                axis="P", bound=1e12, bound_kind="upper", source="s", message_old="m", scan=[[1.0, 0.1]])
+        n = rf.no_answer("unconverged", "solve", budget_name="MAX_STEPS_SOLVE", budget_value=1e5,
+                         last_residual=0.1, x=1.0, pass_kind="wall", state={"m": 1.0}, scan=[], m_at=0.5)
+        self.assertEqual(n.evidence["pass_kind"], "wall")
+        rf.make("solve.event_chatter", "solve", x=1.0, closure_kind="R", pass_kind="brent", event_name="solidus",
+                count=9, cap_name="EVENT_REWALKS", cap_value=8, g=1e-11, tol=1e-12)
+        for budget in ("CLOSE_ITERS", "MAX_STEPS_SOLVE", "WALL_SHOTS", "MAX_SPLITS"):
+            rf.no_answer("unconverged", "solve", budget_name=budget, budget_value=1, last_residual=0.0)
+
+    def test_vocabularies(self):
+        with self.assertRaises(ValueError):
+            rf.make("solve.no_bracket", "solve", **_solve_ev(pass_kind="guess"))
+        with self.assertRaises(ValueError):
+            rf.make("solve.no_bracket", "solve", **_solve_ev(closure_kind="radius"))
         with self.assertRaises(ValueError):
             rf.no_answer("unconverged", "solve", budget_name="T_PASSES", budget_value=8, last_residual=1e-3)
-        n = rf.no_answer("unconverged", "solve", budget_name="CLOSE_ITERS", budget_value=60, last_residual=1e-3)
-        self.assertEqual(rs.outcome_kind(n), "no_answer")
+        with self.assertRaises(ValueError):
+            rf.make("solve.event_chatter", "solve", x=1.0, closure_kind="R", pass_kind="brent", event_name="e",
+                    count=9, cap_name="EVENT_FOREVER", cap_value=8)
+        rf.make("solve.no_bracket", "solve", **_solve_ev())
+
+    def test_wall_records(self):
+        good = {"x": 1.0, "outcome_kind": "no_answer", "id_or_reason": "unconverged", "state": {}, "located": False}
+        rf.make("solve.no_bracket", "solve", **_solve_ev(walls=[good]))
+        for bad in ({**good, "located": "no"}, {**good, "outcome_kind": "crash"}, {k: v for k, v in good.items()
+                                                                                 if k != "located"}):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                rf.make("solve.no_bracket", "solve", **_solve_ev(walls=[bad]))
 
     def test_every_template_renders_from_its_fields_alone(self):
         for reg in (rf.REGISTRY, rf.NO_ANSWER_REGISTRY):
@@ -90,19 +143,37 @@ class TRegistry(unittest.TestCase):
         with self.assertRaises(ValueError):
             rf._index((rf.Entry("a", (), "t"), rf.Entry("a", (), "t")))
 
+    def test_evidence_frozen_and_typed_at(self):
+        r = rf.make("solve.no_bracket", "solve", at=rs.Where("layer", "core"), **_solve_ev(walls=[]))
+        self.assertIsInstance(r.evidence["walls"], tuple)
+        self.assertEqual(r.at.id, "core")
+        n = rf.no_answer("unconverged", "solve", budget_name="CLOSE_ITERS", budget_value=1, last_residual=math.inf)
+        self.assertIn("inf", rs.canonical(n))
+
 
 class TNoReasonParsing(unittest.TestCase):
     def test_solver_has_no_reason_parsing(self):
         hits = []
-        for p in sorted((ROOT / "solver").glob("*.py")):
+        for p in solver_sources():
             hits += [(p.name, *h) for h in parse_hits(p.read_text(encoding="utf-8"))]
         self.assertEqual(hits, [], "X3: control flow must read Refusal.id / evidence, not text")
 
     def test_planted_control(self):
-        planted = ('if r.text.startswith("표면온도"):\n    pass\n'
-                   'ok = "답 둘" in result.reason\n'
-                   'm = re.search("x", why.text)\n')
-        self.assertEqual(len(parse_hits(planted)), 3)
+        planted = '\n'.join([
+            'if r.text.startswith("표면온도"): pass',
+            'ok = "답 둘" in result.reason',
+            'm = re.search("x", why.text)',
+            'any(h in r.text for h in HEADS)',
+            'if r.text == "답 둘": pass',
+            'PAT.search(r.text)',
+            'str(r).find("x")',
+            'r.evidence["message_old"].startswith("x")',
+            'x = (\n  r.reason\n  .startswith("y"))',
+            'if solver_reason == BAND_NOT_MEASURED: pass',
+            'if self.solver_reason == X: pass  # x3-ok: construction guard',
+        ])
+        self.assertEqual(len(parse_hits(planted)), 10)
+        self.assertEqual(parse_hits('if r.id == "solve.no_bracket": pass\nn = len(r.evidence)\n'), [])
 
 
 if __name__ == "__main__":
