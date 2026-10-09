@@ -109,7 +109,9 @@ def _locate_wall(F, x_ok: float, x_bad: float, stop_bad: st.Stop, trials: list) 
     return Wall(x_bad, stop_bad, x_ok)
 
 
-def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN) -> Outcome:
+def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials: bool = True) -> Outcome:
+    """`use_wall_trials` exists only for N4's negative control (False drops the wall-location trials from the
+    sign-change search, i.e. the behaviour N4 forbids)."""
     trials: list = []
     for x in scan_points(lo, hi, n_scan):
         v = F(x)
@@ -120,7 +122,8 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN) -> Outcome:
         if (a.F is None) != (b.F is None):
             ok, bad = (a, b) if a.F is not None else (b, a)
             walls.append(_locate_wall(F, ok.x, bad.x, bad.stop, trials))
-    pts = sorted((t for t in trials if t.F is not None), key=lambda t: t.x)
+    pts = sorted((t for t in trials if t.F is not None and (use_wall_trials or t.kind != "wall")),
+                 key=lambda t: t.x)
     if not pts:
         return Outcome("no_solved", walls=walls, trials=trials)
     wall_xs = sorted(w.x for w in walls) + sorted(t.x for t in trials if t.F is None)
