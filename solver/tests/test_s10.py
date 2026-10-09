@@ -22,10 +22,11 @@ def _pts(n=200):
 
 
 def _dens(m, p, t):
-    try:
-        return m.density(p, t, 1600.0)
-    except eos.PhaseGap as e:
-        return ("refused", type(e).__name__, str(e))
+    """density and (dT/dP)_ad through the adapter's view (the spec's «density and dT/dP», r2 S10)."""
+    got = lm.LegacyView(getattr(m, "name", "?"), m, 1600.0).state(p, t)
+    if isinstance(got, st.Stop):
+        return ("refused", got.record.kind, got.record.message_old)
+    return got[:2]
 
 
 class Builders(unittest.TestCase):
@@ -91,7 +92,7 @@ class CompositionClosure(unittest.TestCase):
                       b.Closure("composition", 0.0, 1.0, "mantle", "Q"), radius=b.Declared(6.0e6, "m"))
         out, _ = sv.solve(body)
         self.assertIsInstance(out, result.Refusal)
-        self.assertEqual(out.id, "input.unknown_material")
+        self.assertEqual((out.id, out.evidence["rule"]), ("input.cross_field", "closure_axis"))
 
 
 class Mars(unittest.TestCase):
@@ -157,6 +158,89 @@ class Sensitivity(unittest.TestCase):
     def test_control_wrong_divisor_fails(self):
         tol, fd = self._tol("cmb_temperature", 5.0)
         self.assertGreater(abs(self.field["cmb_temperature"].sensitivity - fd) / abs(fd), tol)
+
+
+class BasalBase(unittest.TestCase):
+    """r2 S10 B1: the basal layer's thermal side is the declared mantle, as in the old `_mantle` swap."""
+
+    PTS = [(p * 1e9, t) for p in (17.0, 18.5, 19.5, 20.5) for t in (1800.0, 2000.0, 2200.0)]
+
+    def test_basal_state_matches_the_old_swapped_context(self):
+        body, _ = from_v1.load_v1("engine/bodies/mars.yaml")
+        basal = next(l for l in body.layers if l.id == "basal")
+        view, why = sv._view_for(body, basal, None, 0.0)
+        self.assertIsNone(why)
+        with I._mantle(MARS_OXIDES):
+            old = lm.LegacyView("silicate_basal_const", I.BasalConstDensity(4050.0), 1600.0, 0.0)
+            ref = [old.state(p, t)[:2] for p, t in self.PTS]
+        self.assertEqual([view.state(p, t)[:2] for p, t in self.PTS], ref)
+
+    def test_control_plain_silicate_base_differs(self):
+        plain = lm.LegacyView("silicate_basal_const", I.BasalConstDensity(4050.0), 1600.0, 0.0)
+        with I._mantle(MARS_OXIDES):
+            old = lm.LegacyView("silicate_basal_const", I.BasalConstDensity(4050.0), 1600.0, 0.0)
+            ref = [old.state(p, t)[:2] for p, t in self.PTS]
+        self.assertNotEqual([plain.state(p, t)[:2] for p, t in self.PTS], ref)
+
+
+class OnsetMat:
+    """r2's fixture: onset curve T_on(P) = 1605 K + P / 1 GPa — not reached at T_pot 1600 K, crossed at 1610 K."""
+    name = "fx_onset"
+    phases = ()
+    onset_curve_names = ("fx",)
+
+    def onset_curves(self, p, t):
+        return [("fx", 1605.0 + p / 1e9)]
+
+
+class OnsetMantle:
+    def __init__(self):
+        self.mat, self.p_floor, self.p_stop = OnsetMat(), 0.0, 0.0
+
+    def state(self, p, t, g):
+        return (3000.0 * (0.9 if t > 1605.0 + p / 1e9 else 1.0), 0.0, ())
+
+
+class SensitivityAcrossEvents(unittest.TestCase):
+    """r2 S10 B2: an onset crossing that appears between T_pot and T_pot + δ makes the sensitivity omitted, noted."""
+
+    def _body(self, t_pot):
+        layers = (b.Layer("core", "core", "x", b.Extent("mass_fraction", 0.3)), b.Layer("mantle", "mantle", "y"))
+        return b.Body("fx", "planet", b.SurfaceState(5.0e24, t_pot=t_pot), layers, b.Closure("R", 3.0e6, 2.0e7))
+
+    def test_event_set_change_omits(self):
+        out, _ = sv.solve(self._body(1600.0), views={"core": Uniform(9000.0), "mantle": OnsetMantle()})
+        self.assertIsInstance(out, result.Answer, getattr(out, "text", out))
+        self.assertIn("sensitivity_across_boundary_change", [n.kind for n in out.notes])
+        self.assertIsNone(next(q for q in out.quantities if q.key == "radius").sensitivity)
+
+    def test_control_no_crossing_keeps_the_field(self):
+        out, _ = sv.solve(self._body(1500.0), views={"core": Uniform(9000.0), "mantle": OnsetMantle()})
+        self.assertNotIn("sensitivity_across_boundary_change", [n.kind for n in out.notes])
+        self.assertIsNotNone(next(q for q in out.quantities if q.key == "radius").sensitivity)
+
+
+class ReadCheckControls(unittest.TestCase):
+    """r2 S10: negative controls for check_reads rules 1 (output outside the set) and 3 (registered output missed)."""
+
+    @classmethod
+    def setUpClass(cls):
+        e, _ = from_v1.load_v1("engine/bodies/earth.yaml")
+        cls.chain = lv.run_chain("engine/bodies/earth.yaml", sv.solve(e, context.Options(sensitivity_dt=0.0))[0])
+
+    def test_rule1_output_outside_the_set(self):
+        self.chain.body.lookups.append(("core_state", "nmoi", "derived hit"))
+        try:
+            self.assertIn("output read outside the registered set", [v[2] for v in lv.check_reads(self.chain)])
+        finally:
+            self.chain.body.lookups.pop()
+
+    def test_rule3_registered_output_missed(self):
+        self.chain.body.lookups.append(("core_state", "core_radius", "derived miss"))
+        try:
+            self.assertIn("registered output missed", [v[2] for v in lv.check_reads(self.chain)])
+        finally:
+            self.chain.body.lookups.pop()
 
 
 if __name__ == "__main__":
