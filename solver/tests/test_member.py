@@ -48,7 +48,7 @@ class OldMember(unittest.TestCase):
         old = next(p for p in json.loads((O4O9 / "venus.json").read_text())["points"]
                    if p.get("entry", "").startswith("A ") and p["t_pot"] == self.T)["values"]["radius"] * 6.371e6
         body, _ = from_v1.load_v1("engine/bodies/venus.yaml")
-        fb, _info = mb.member_for("engine/bodies/venus.yaml", body)
+        fb, _info = mb.member_of(body)
         f, _ = sv.solve(dataclasses.replace(fb, surface=dataclasses.replace(fb.surface, t_pot=self.T)), OPT)
         self.assertLess(abs(_q(f, "radius") - old) / old, 2e-5)
         inv, _ = sv.solve(dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=self.T)), OPT)
@@ -58,7 +58,7 @@ class OldMember(unittest.TestCase):
 class ForwardUntouched(unittest.TestCase):
     def test_earth_has_no_member(self):
         body, _ = from_v1.load_v1("engine/bodies/earth.yaml")
-        self.assertIsNone(mb.member_for("engine/bodies/earth.yaml", body))
+        self.assertIsNone(mb.member_of(body))
 
     def test_run_oracle_records_the_member(self):
         rec = ro.one("engine/bodies/venus.yaml", 1723.2542652588522, OPT, chain=False)

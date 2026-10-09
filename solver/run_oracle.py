@@ -77,15 +77,16 @@ def _sid(body, options, answer=None) -> str:
     return context.solve_id_of(sv._canonical(body), lm.material_bytes(), options) if body is not None else ""
 
 
-def one(body_yaml: str, state, options=context.Options(), chain: bool = True) -> dict:
+def one(body_yaml: str, state, options=context.Options(), chain: bool = True, member=None) -> dict:
     """The comparator record of one (body, state). `state` is «declared» or a T_pot float. `chain` False skips the old
-    chain (legacy_nodes stays {}), for O9 states only (--no-chain-for-points)."""
-    rec = _one(body_yaml, state, options, chain if state != "declared" else True)
+    chain (legacy_nodes stays {}), for O9 states only (--no-chain-for-points). `member`: member.member_of(body),
+    solved once by a caller with many states; None solves it here when the body is inverse."""
+    rec = _one(body_yaml, state, options, chain if state != "declared" else True, member)
     rec["header"]["chain"] = chain or state == "declared"
     return rec
 
 
-def _one(body_yaml: str, state, options, chain: bool) -> dict:
+def _one(body_yaml: str, state, options, chain: bool, member=None) -> dict:
     stem = Path(body_yaml).stem
     got = from_v1.load_v1(body_yaml)
     body = got[0] if isinstance(got, tuple) else got
@@ -104,7 +105,7 @@ def _one(body_yaml: str, state, options, chain: bool) -> dict:
                        "detail": f"{stem} declares no potential temperature; a T_pot state has no meaning for it"}})
         return rec
     if t_pot is not None:
-        got_m = mb.member_for(body_yaml, body)         # an inverse body's T_pot state is its forward member (ruling)
+        got_m = member if member is not None else mb.member_of(body)   # an inverse body's T_pot state: its member
         if got_m is not None:
             fb, info = got_m
             rec["member"] = result.plain(info)
@@ -169,8 +170,15 @@ def main(argv=None) -> int:
     stem = Path(body_yaml).stem
     tmp = Path(tempfile.mkdtemp(prefix=f"run_oracle_{stem}_"))
     try:
-        for state in states_for(stem, points_json):
-            rec = one(body_yaml, state, options, chain)
+        states = states_for(stem, points_json)
+        member = None
+        if len(states) > 1:                          # one declared solve per body for all its T_pot states
+            got = from_v1.load_v1(body_yaml)
+            body = got[0] if isinstance(got, tuple) else got
+            if not isinstance(body, result.Refusal):
+                member = mb.member_of(body)
+        for state in states:
+            rec = one(body_yaml, state, options, chain, member)
             name = f"{stem}__{'declared' if state == 'declared' else repr(state)}.json"
             (tmp / name).write_text(json.dumps(rec, ensure_ascii=False, allow_nan=False, indent=1) + "\n",
                                     encoding="utf-8")

@@ -178,6 +178,28 @@ class NotYetImplemented(unittest.TestCase):
 
 
 
+class ThicknessAboveNotInPhase1(unittest.TestCase):
+    """A1 impl note 7 (r2): a thickness_above layer is refused by name, not by whichever base the pass misses.
+    Control: the same body with the layer bounded by radius is not refused by this rule."""
+
+    def _body(self, extent):
+        M = 5.0e24
+        layers = (b.Layer("core", "core", "x", b.Extent("mass_fraction", 0.3)),
+                  b.Layer("basal", "basal_layer", "y", extent), b.Layer("mantle", "mantle", "y"))
+        return b.Body("fixture", "planet", b.SurfaceState(M, t_pot=0.0), layers, b.Closure("R", 1e5, 1e8)), \
+            {"core": Uniform(9000.0), "basal": Uniform(4000.0), "mantle": Uniform(3000.0)}
+
+    def test_refused_by_name(self):
+        body, views = self._body(b.Extent("thickness_above", 1.5e5, ref="core"))
+        out, _ = sv.solve(body, views=views)
+        self.assertEqual((out.id, out.evidence["rule"]), ("input.cross_field", "thickness_above_not_in_phase1"))
+
+    def test_control_radius_extent(self):
+        body, views = self._body(b.Extent("radius_from_centre", 3.5e6))
+        out, _ = sv.solve(body, views=views)
+        self.assertNotEqual(getattr(out, "evidence", {}).get("rule"), "thickness_above_not_in_phase1")
+
+
 class SolveId(unittest.TestCase):
     """r2 S7 B1: solve_id is set, deterministic, and moves with the body."""
 

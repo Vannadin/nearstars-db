@@ -22,6 +22,7 @@ import math
 import sys
 import time
 from pathlib import Path
+from types import MappingProxyType
 
 from solver import context, from_v1, member as mb, result, run_oracle as ro, solve as sv
 
@@ -69,14 +70,14 @@ def _diff(a: dict, f: dict) -> tuple:
     return d, flags
 
 
-def _body_at(body_yaml, t_pot):
+def _body_at(body_yaml, t_pot, member=None):
     """(body at the state, member record or None); an inverse body's T_pot state is its forward member (run_oracle's
     rule). The body is None when the declared state has no answer, so there is no member."""
     got = from_v1.load_v1(body_yaml)
     body = got[0] if isinstance(got, tuple) else got
     info = None
     if t_pot is not None and not isinstance(body, result.Refusal):
-        got_m = mb.member_for(body_yaml, body)
+        got_m = member if member is not None else mb.member_of(body)
         if got_m is not None:
             body, info = got_m
             if body is None:
@@ -85,9 +86,9 @@ def _body_at(body_yaml, t_pot):
     return body, info
 
 
-def one_state(body_yaml: str, state, tag: str, steps: int = STEPS) -> dict:
+def one_state(body_yaml: str, state, tag: str, steps: int = STEPS, member=None) -> dict:
     t_pot = None if state == "declared" else float(state)
-    body, info = _body_at(body_yaml, t_pot)
+    body, info = _body_at(body_yaml, t_pot, member)
     rec = {"body": Path(body_yaml).stem, "state": state, "tag": tag, "steps": steps}
     if isinstance(body, result.Refusal):
         return {**rec, "kind_adaptive": "refusal", "kind_fixed": None, "flag": "input_refusal"}
@@ -154,11 +155,15 @@ def run(body_yaml: str, points_json: str, out_jsonl: str, steps: int = STEPS) ->
             done.add((r["body"], repr(r["state"])))
     header = ro._header(context.Options(sensitivity_dt=0.0), "")
     stem = Path(body_yaml).stem
+    states = [(s, t) for s, t in _states(stem, points_json) if (stem, repr(s)) not in done]
+    member = None
+    if any(s != "declared" for s, _t in states):     # one declared solve per body for all its T_pot states
+        body0, _i = _body_at(body_yaml, None)
+        if not isinstance(body0, result.Refusal):
+            member = mb.member_of(body0)
     with out.open("a", encoding="utf-8") as fh:
-        for state, tag in _states(stem, points_json):
-            if (stem, repr(state)) in done:
-                continue
-            rec = one_state(body_yaml, state, tag, steps)
+        for state, tag in states:
+            rec = one_state(body_yaml, state, tag, steps, member)
             rec["header"] = header
             fh.write(json.dumps(result.plain(rec), ensure_ascii=True, allow_nan=False) + "\n")
             fh.flush()
@@ -166,9 +171,10 @@ def run(body_yaml: str, points_json: str, out_jsonl: str, steps: int = STEPS) ->
 
 
 #: recorded, never a band (r2 N1): marked in terms.json so a table quoting it cannot pick them up
-EVIDENCE_ONLY_BODIES = {"mars": "note 5: Mars has no T2 band"}
-CLASS_R_KEYS = {("earth", "core_energy_balance.balance_residual"): "class R (tolerance-classes note 2)",
-                ("earth", "core_energy_balance.core_profile_mass_residual"): "class R (tolerance-classes note 2)"}
+EVIDENCE_ONLY_BODIES = MappingProxyType({"mars": "note 5: Mars has no T2 band"})
+CLASS_R_KEYS = MappingProxyType({
+    ("earth", "core_energy_balance.balance_residual"): "class R (tolerance-classes note 2)",
+    ("earth", "core_energy_balance.core_profile_mass_residual"): "class R (tolerance-classes note 2)"})
 
 
 def _use(body: str, key: str):
@@ -227,7 +233,7 @@ def controls(body_yaml: str) -> dict:
 RHO_RANGE = (0.5, 2.0)               # r2 on the registration, (2): outside it the term is not representative
 # old interior_layers units → the rewrite's SI. No «km»: the rewrite emits its km keys (basal_layer_thickness_km,
 # core_plus_layer_radius_solved_km) in km, so km ↔ km is factor 1 (r2 N3; compare_map's km → m row is for other keys)
-OLD_UNIT_SCALE = {"R_earth": 6.371e6, "GPa": 1e9}
+OLD_UNIT_SCALE = MappingProxyType({"R_earth": 6.371e6, "GPa": 1e9})
 
 
 def _old_flat(cap: dict) -> dict:

@@ -382,6 +382,10 @@ def _not_yet(body):
             return ("thermal_isothermal_not_in_phase1",
                     f"layer '{l.id}' declares an isothermal profile; phase 1 integrates adiabatic layers and one "
                     "conductive top lid only")
+        if l.extent is not None and l.extent.kind == "thickness_above":
+            return ("thickness_above_not_in_phase1",
+                    f"layer '{l.id}' is bounded by thickness_above('{l.extent.ref}'); §A1.6's basal fixed point is "
+                    "not implemented in phase 1 (A1 impl note 7)")
         if l.thermal == "conductive" and i != len(body.layers) - 1:
             return ("conductive_not_top", f"layer '{l.id}' is conductive but not the top layer")
         if l.thermal == "conductive" and (l.extent is None or l.extent.kind != "depth_from_surface"):
