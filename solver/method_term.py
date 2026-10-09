@@ -4,6 +4,7 @@
     solver/.venv/bin/python -m solver.method_term run BODY_YAML POINTS_JSON OUT_JSONL [--steps N]
     solver/.venv/bin/python -m solver.method_term terms OUT_JSONL... > terms.json
     solver/.venv/bin/python -m solver.method_term controls BODY_YAML > controls.json
+    solver/.venv/bin/python -m solver.method_term crosscheck CAP_O1_DIR OUT_JSONL... > crosscheck.json
 
 run: one JSON line per (body, state), appended to OUT_JSONL as each state finishes; states already in the file are
 skipped (resume). The declared state runs run_oracle.one in both modes (interior quantities and the legacy nodes, with
@@ -190,6 +191,55 @@ def controls(body_yaml: str) -> dict:
             "order_range": list(ORDER_RANGE), "order_holds": order, "holds": null and order}
 
 
+RHO_RANGE = (0.5, 2.0)               # r2 on the registration, (2): outside it the term is not representative
+OLD_UNIT_SCALE = {"R_earth": 6.371e6, "GPa": 1e9}     # old interior_layers units → the rewrite's SI
+
+
+def _old_flat(cap: dict) -> dict:
+    """Numeric values of an O1 capture, in the keys of `_flat`: interior_layers by key (converted to SI), the other
+    nodes as «node.key» (old units on both sides: the rewrite's legacy nodes are the old code)."""
+    out = {}
+    for node, r in cap["results"].items():
+        vals, units = r.get("values") or {}, r.get("units") or {}
+        for k, v in vals.items():
+            if not _num(v):
+                continue
+            if node == "interior_layers":
+                out[k] = v * OLD_UNIT_SCALE.get(units.get(k), 1.0)
+            else:
+                out[f"{node}.{k}"] = v
+    return out
+
+
+def crosscheck(cap_dir: str, paths) -> dict:
+    """Control 3 as a classifier (r2): at each O1 declared state, per key, ρ = |old − adaptive| / |fixed − adaptive|.
+    A key with ρ outside RHO_RANGE (or fixed = adaptive ≠ old) is «term not representative»: listed for directing, so
+    a later T2 verdict on it is not read as evidence about the method. The term itself never uses old − adaptive."""
+    rows, odd = [], []
+    for p in paths:
+        for line in Path(p).read_text(encoding="utf-8").splitlines():
+            r = json.loads(line)
+            if r["state"] != "declared" or r.get("flag"):
+                continue
+            capf = Path(cap_dir) / f"{r['body']}.json"
+            if not capf.exists():
+                continue
+            old = _old_flat(json.loads(capf.read_text(encoding="utf-8")))
+            for k, va in sorted(r["adaptive"].items()):
+                vf, vo = r["fixed"].get(k), old.get(k)
+                if not (_num(va) and _num(vf) and _num(vo)):
+                    continue
+                go, gf = abs(vo - va), abs(vf - va)
+                rho = (go / gf) if gf else (None if go == 0.0 else math.inf)
+                ok = rho is None or RHO_RANGE[0] <= rho <= RHO_RANGE[1]
+                row = {"body": r["body"], "key": k, "old_minus_adaptive": vo - va, "fixed_minus_adaptive": vf - va,
+                       "rho": rho if rho is None or math.isfinite(rho) else "inf", "representative": ok}
+                rows.append(row)
+                if not ok:
+                    odd.append([r["body"], k, row["rho"]])
+    return {"rho_range": list(RHO_RANGE), "rows": rows, "not_representative": odd}
+
+
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     steps = STEPS
@@ -203,6 +253,9 @@ def main(argv=None) -> int:
         c = controls(argv[1])
         print(json.dumps(c, indent=1, ensure_ascii=True, allow_nan=False))
         return 0 if c["holds"] else 1
+    if argv[:1] == ["crosscheck"] and len(argv) >= 3:
+        print(json.dumps(crosscheck(argv[1], argv[2:]), indent=1, ensure_ascii=True, allow_nan=False))
+        return 0
     if argv[:1] == ["terms"] and len(argv) >= 2:
         print(json.dumps(terms(argv[1:]), indent=1, ensure_ascii=True, allow_nan=False))
         return 0

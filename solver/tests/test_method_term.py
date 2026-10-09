@@ -29,5 +29,25 @@ class Terms(unittest.TestCase):
         self.assertEqual(t["flagged"], [["b", 1600.0, "outcome_differs"]])
 
 
+class Crosscheck(unittest.TestCase):
+    def test_rho_classifies(self):
+        cap = {"results": {"interior_layers": {"values": {"radius": 1.0, "cmb_temperature": 2499.0, "nmoi": 0.33},
+                                               "units": {"radius": "R_earth", "cmb_temperature": "K"}},
+                           "core_state": {"values": {"margin": 10.0}}}}
+        rec = {"body": "b", "state": "declared",
+               "adaptive": {"radius": 6.371e6, "cmb_temperature": 2500.0, "nmoi": 0.33, "core_state.margin": 10.0},
+               "fixed": {"radius": 6.371e6, "cmb_temperature": 2501.0, "nmoi": 0.3300001, "core_state.margin": 10.5}}
+        d = Path(tempfile.mkdtemp())
+        (d / "b.json").write_text(json.dumps(cap))
+        (d / "t.jsonl").write_text(json.dumps(rec) + "\n")
+        c = mt.crosscheck(str(d), [str(d / "t.jsonl")])
+        by = {r["key"]: r for r in c["rows"]}
+        self.assertEqual(by["cmb_temperature"]["rho"], 1.0)              # symmetric: representative
+        self.assertTrue(by["cmb_temperature"]["representative"])
+        self.assertIsNone(by["radius"]["rho"])                           # R_earth converted; all three equal
+        self.assertEqual(by["core_state.margin"]["rho"], 0.0)            # control: old = adaptive, fixed moves
+        self.assertEqual(sorted(k for _b, k, _r in c["not_representative"]), ["core_state.margin", "nmoi"])
+
+
 if __name__ == "__main__":
     unittest.main()
