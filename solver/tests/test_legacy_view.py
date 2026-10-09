@@ -19,6 +19,25 @@ def _run(stem, **kw):
     return ans, lv.run_chain(f"engine/bodies/{stem}.yaml", ans, **kw)
 
 
+class CorelessCmf(unittest.TestCase):
+    """Directing 2026-10-10 «Dante internal_heat_nontidal verdict»: a body with no core_mass_fraction in its Answer
+    injects none (as the old interior_layers did), so internal_heat_nontidal declines by the old reason. Control:
+    Venus declares no CMF either but infers one; it is injected and the node answers, as at 097a8aa3 (O1)."""
+
+    def test_dante_ihn_declines(self):
+        ans, chain = _run("dante_fixture")
+        self.assertNotIn("core_mass_fraction", chain.injected.values)
+        r = chain.body.results["internal_heat_nontidal"]
+        self.assertFalse(r.applicable)
+        self.assertIn("core_mass_fraction 이 선언되지 않아", r.reason)
+
+    def test_control_venus_inferred_cmf_answers(self):
+        ans, chain = _run("venus")
+        self.assertNotIn("core_mass_fraction", chain.declared_keys)
+        self.assertIn("core_mass_fraction", chain.injected.values)
+        self.assertTrue(chain.body.results["internal_heat_nontidal"].applicable)
+
+
 class Earth(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

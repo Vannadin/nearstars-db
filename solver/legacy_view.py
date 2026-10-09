@@ -60,6 +60,12 @@ def old_values(answer, declared_imf: float | None = None) -> tuple[dict, dict]:
              "core_radius": "R_earth", "core_radius_fraction": "dimensionless", "radius": "R_earth",
              "core_pressure": "GPa", "converged": "", "core_mass_fraction": "dimensionless",
              "ice_mass_fraction": "dimensionless"}
+    if _q(answer, "core_mass_fraction") is None:
+        # the old interior_layers wrote no core_mass_fraction for a body without one (O1 dante_fixture at 097a8aa3:
+        # the key is absent), so internal_heat_nontidal read None and declined («core_mass_fraction 이 선언되지 않아
+        # …»). A 0 here made it answer (T0 flip, c8). Verdict parity: directing 2026-10-10 ~00:00 «Dante
+        # internal_heat_nontidal verdict». A body whose CMF is inferred (Venus, Mars) still carries it, as the old did.
+        del vals["core_mass_fraction"], units["core_mass_fraction"]
     return vals, units
 
 
