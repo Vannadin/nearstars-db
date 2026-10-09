@@ -41,7 +41,7 @@ inputs:
   lid_thickness_km:      {shape: block, unit: km, si: 1.0e3, domain: {gt: 0}, consumer: history}
   tectonic_regime:       {shape: block, value_shape: enum, values: [stagnant, mobile, transitional, episodic, heat_pipe], consumer: history,
                           extra_fields: [setting_override, contested]}      # REGIMES, tectonic_regime.py:39; «contested» is a field, not a value (R-GV-5)
-  radiogenic_concentration: {shape: record, consumer: history, rule: declared_needs_override,
+  radiogenic_concentration: {shape: record, consumer: history, check: declared_needs_override,
                              fields: {U_ppb: {shape: number, unit: ppb, domain: {ge: 0}}, Th_ppb: {shape: number, unit: ppb, domain: {ge: 0}},
                                       K_ppm: {shape: number, unit: ppm, domain: {ge: 0}}},
                              meta: [grade, source, note, alternative, override, default, counter_evidence_searched]}   # R-GV-4

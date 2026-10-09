@@ -17,7 +17,7 @@ from solver.result import freeze
 
 
 class LoadError(Exception):
-    """A document the loader refuses: `kind` ∈ {duplicate_key, bad_key, unreadable}; `key`/`line` where known."""
+    """A document the loader refuses: `kind` ∈ {duplicate_key, bad_key, bad_tag, unreadable}; `key`/`line` where known."""
 
     def __init__(self, kind: str, detail: str, key=None, line=None):
         super().__init__(detail)
@@ -70,6 +70,18 @@ def _map(loader, node):
 
 Loader.add_constructor("tag:yaml.org,2002:int", _int)
 Loader.add_constructor("tag:yaml.org,2002:map", _map)
+
+
+def _refuse_tag(loader, node):
+    raise LoadError("bad_tag", f"tag {node.tag} is not allowed (YAML 1.2 core only)", key=node.tag,
+                    line=node.start_mark.line + 1)
+
+
+# Explicit tags outside the 1.2 core (`!!timestamp`, `!!binary`, `!!set`, `!!omap`, `!!pairs`, `!!merge`) would build
+# non-plain types (a date reaching Body breaks canonical(), solve_id's path; r2 fix-s3 B2): refused by name.
+for _tag in ("timestamp", "binary", "set", "omap", "pairs", "merge", "value"):
+    Loader.add_constructor(f"tag:yaml.org,2002:{_tag}", _refuse_tag)
+Loader.add_constructor(None, _refuse_tag)
 
 
 def parse(text: str):

@@ -61,6 +61,29 @@ class TEightBodies(unittest.TestCase):
                 self.assertIsInstance(r, Refusal)
                 self.assertEqual(r.id, want)
 
+    def test_note_fields(self):
+        b, _ = fv.load_v1(BODIES / "mars.yaml")
+        by = {n.kind: n for n in b.notes}
+        self.assertEqual(dict(by["v1_core_radius_derived"].fields), {"r_top_km": 1845.0, "thickness_km": 150.0,
+                                                                     "r_core_km": 1695.0})
+        self.assertEqual(by["v1_unit_assumed"].fields["key"], "core_cmb_temperature")
+        self.assertEqual(by["v1_fixing_checked"].fields["pin"], "box_ceiling")
+        self.assertEqual(dict(by["v1_field_dropped"].fields), {"key": "core_light_elements", "field": "fit"})
+        b, _ = fv.load_v1(BODIES / "pandora.yaml")
+        self.assertEqual(sorted(n.fields["key"] for n in b.notes if n.kind == "v1_unit_alias"),
+                         ["eccentricity", "eccentricity_forced", "k2_over_q"])
+
+    def test_simple_layers(self):
+        for name in ("venus", "pandora", "earth"):
+            b, _ = fv.load_v1(BODIES / f"{name}.yaml")
+            with self.subTest(body=name):
+                self.assertEqual([(l.id, l.role, l.material) for l in b.layers[:2]],
+                                 [("core", "core", "fe_prem"), ("mantle", "mantle", "silicate")])
+        b, _ = fv.load_v1(BODIES / "pandora.yaml")
+        self.assertEqual(b.layers[0].extent.value, 0.325)
+        b, _ = fv.load_v1(BODIES / "earth.yaml")
+        self.assertEqual(b.layers[2].material, "silicate")
+
     def test_mars_layers(self):
         b, _ = fv.load_v1(BODIES / "mars.yaml")
         core, basal, mantle = b.layers
@@ -117,6 +140,21 @@ class TRules(unittest.TestCase):
         d["inputs"]["potental_temperature"] = 1600.0
         raw, _notes, _aside = fv.from_v1(d)
         self.assertEqual(vd.validate(raw).id, "input.unknown_key")
+
+    def test_unconsumed_layer_key(self):
+        d = v1("venus")
+        d["inputs"]["mantle_composition"] = {"value": {"SiO2": 45.0}, "grade": "analog", "source": "s",
+                                             "counter_evidence_searched": "c"}
+        r = fv.from_v1(d)
+        self.assertEqual((r.id, r.evidence["key"]), ("input.v1_unmapped", "mantle_composition"))
+
+    def test_malformed_v1_never_raises(self):
+        for mutate in (lambda d: d.update(inputs=[1]), lambda d: d.update(units=[1]),
+                       lambda d: d["inputs"].update(core_light_elements=5),
+                       lambda d: d["inputs"].update(core_plus_layer_radius_km={"value": "x"})):
+            d = v1("mars")
+            mutate(d)
+            self.assertIsInstance(fv.from_v1(d), Refusal)
 
     def test_layer_keys_match_schema_map(self):
         self.assertEqual(sorted(vd.SCHEMA["v1_layer_keys"]), sorted(fv.LAYER_KEYS))

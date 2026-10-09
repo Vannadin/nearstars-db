@@ -168,12 +168,13 @@ def _block(v, key, where, spec, value_check) -> bd.Declared:
         b = v["band"]
         if not isinstance(b, Mapping) or set(b) != {"lo", "hi"}:
             _no("input.cross_field", where, rule="band is {lo, hi}", detail=f"{key}: {b!r}"[:120])
-        band = (_number(b["lo"], f"{key}.band.lo", where), _number(b["hi"], f"{key}.band.hi", where))
+        si = spec.get("si", 1.0)
+        band = (_number(b["lo"], f"{key}.band.lo", where, None, si), _number(b["hi"], f"{key}.band.hi", where, None, si))
         if band[0] > band[1]:
             _no("input.cross_field", where, rule="band lo ≤ hi", detail=f"{key}: {band}")
     unc = basis = None
     if "uncertainty" in v or "uncertainty_basis" in v:
-        unc = _number(v.get("uncertainty"), f"{key}.uncertainty", where, {"ge": 0})
+        unc = _number(v.get("uncertainty"), f"{key}.uncertainty", where, {"ge": 0}, spec.get("si", 1.0))
         basis = _enum(v.get("uncertainty_basis"), f"{key}.uncertainty_basis", where, bd.UNCERTAINTY_BASES)
     ex = {f: v[f] for f in extra if f in v}
     return bd.Declared(value=value, unit=spec.get("unit"), grade=v.get("grade"), source=v.get("source"),
@@ -250,7 +251,7 @@ def _input(key, v, spec, where):
         if "grade" in v:
             _grade(v["grade"], key, where)
         _walk(v, key, where, 0, bool(spec.get("leaf_provenance")))
-        if spec.get("rule") == "declared_needs_override" and v.get("grade") == "declared" and "override" not in v:
+        if spec.get("check") == "declared_needs_override" and v.get("grade") == "declared" and "override" not in v:
             _no("input.cross_field", where, rule="a radiogenic «declared» grade has its override block (R-GV-4)",
                 detail=key)
         return bd.Declared(value=v)
@@ -395,8 +396,9 @@ def _closure(raw, layers, has_radius, where) -> bd.Closure:
                 free=[f"boundary_mass({layer}) needs exactly one other layer without extent, has {others}"])
     default = spec.get("defaults", {}).get(name) if kind == "composition" else spec.get("default")
     dom = spec.get("domain")
-    lo = _number(raw["lo"], "closure.lo", where, dom) if "lo" in raw else (default[0] if default else None)
-    hi = _number(raw["hi"], "closure.hi", where, dom) if "hi" in raw else (default[1] if default else None)
+    scale = EARTH_RADIUS_M if kind == "R" else 1.0       # the SI value must stay finite too (r2 fix-s3 B1)
+    lo = _number(raw["lo"], "closure.lo", where, dom, scale) if "lo" in raw else (default[0] if default else None)
+    hi = _number(raw["hi"], "closure.hi", where, dom, scale) if "hi" in raw else (default[1] if default else None)
     if lo is None or hi is None:
         _no("input.missing_key", where, key="closure.lo/hi (no schema default for this axis)")
     if not lo < hi:
@@ -533,6 +535,8 @@ def load(path, materials: Materials | None = None) -> bd.Body | Refusal:
             return rf.make("input.duplicate_key", where, key=str(e.key), line=e.line)
         if e.kind == "bad_key":
             return rf.make("input.not_text", where, key=f"line {e.line} key", got=str(e.key)[:80])
+        if e.kind == "bad_tag":
+            return rf.make("input.not_text", where, key=f"line {e.line} tag", got=str(e.key)[:80])
         return rf.make("input.unreadable", where, path=str(path), error=e.detail)
     return validate(raw, where, materials)
 

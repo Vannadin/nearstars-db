@@ -202,6 +202,32 @@ class TBoundaryTable(unittest.TestCase):
         d["layers"][0]["extent"] = {"radius_from_centre": 1e306}
         refused(self, vd.validate(d), "input.out_of_domain")
 
+    def test_si_after_range(self):
+        # r2 fix-s3 B1: converted to SI after the range check, the SI value must stay finite
+        refused(self, vd.validate(doc(closure={"kind": "R", "lo": 0.5, "hi": 1e303})), "input.out_of_domain")
+        refused(self, vd.validate(with_input("radius_earth", {"value": 1.0, "band": {"lo": 0.5, "hi": 1e303}, **BLOCK})),
+                "input.out_of_domain")
+        refused(self, vd.validate(with_input("radius_earth", {"value": 1.0, "uncertainty": 1e303,
+                                                              "uncertainty_basis": "±", **BLOCK})), "input.out_of_domain")
+
+    def test_more_slots(self):
+        # r2 fix-s3 coverage: composition closure range and block forms of extents and jumps
+        core = {"id": "core", "role": "core", "material": "fe", "extent": {"mass_fraction": 0.2}, "system": "iron_alloy",
+                "composition": {"value": {"S": "fit"}, "grade": "declared", "source": "s", "counter_evidence_searched": "c"}}
+        for bad, want in ((math.nan, "input.non_finite"), (-0.1, "input.out_of_domain"), ("x", "input.not_number")):
+            d = doc(layers=[core, {"id": "m", "role": "mantle", "material": "s"}],
+                    closure={"kind": "composition", "layer": "core", "name": "S", "lo": bad, "hi": 0.2})
+            d["inputs"]["radius_earth"] = 0.5
+            with self.subTest(slot="closure.composition.lo", bad=bad):
+                refused(self, vd.validate(d), want)
+        for bad, want in ((math.nan, "input.non_finite"), (-1.0, "input.out_of_domain")):
+            d = doc()
+            d["layers"][0]["extent"] = {"radius_from_centre": {"value": bad, **BLOCK}}
+            with self.subTest(slot="extent block", bad=bad):
+                refused(self, vd.validate(d), want)
+            with self.subTest(slot="jump block", bad=bad):
+                refused(self, vd.validate(doc(jumps={"cmb": {"value": bad, **BLOCK}})), want)
+
     def test_1e400_from_text(self):
         text = yaml.safe_dump(doc()).replace("mass_earth: 1.0", "mass_earth: 1e400")
         refused(self, vd.validate(yamlio.parse(text)), "input.non_finite", key="mass_earth")
@@ -273,7 +299,11 @@ class TNeverRaises(unittest.TestCase):
                  ("complex.yaml", "? [1, 2]\n: x\n".encode(), "input.not_text"),
                  ("date.yaml", b"name: 2024-13-45\n", "input.missing_key"),        # a date is a string now
                  ("nest.yaml", ("[" * 3000).encode(), "input.unreadable"),
-                 ("tab.yaml", b"name:\t- x\n  :", "input.unreadable")]
+                 ("tab.yaml", b"name:\t- x\n  :", "input.unreadable"),
+                 ("ts.yaml", b"name: !!timestamp 2020-01-01\n", "input.not_text"),           # r2 fix-s3 B2
+                 ("bin.yaml", b"name: !!binary aGk=\n", "input.not_text"),
+                 ("set.yaml", b"name: !!set {x}\n", "input.not_text"),
+                 ("py.yaml", b"name: !!python/object:os.system x\n", "input.not_text")]
         with tempfile.TemporaryDirectory() as tmp:
             for name, data, want in cases:
                 with self.subTest(file=name):

@@ -18,6 +18,9 @@ SOLVE_IDS = ("solve.no_bracket", "solve.two_roots", "solve.material_domain", "so
              "solve.basal_not_attached")
 #: Names that hold reason text. X3: no consumer decides control flow from them.
 TEXT_NAMES = ("text", "reason", "message_old", "why")
+TEXT_KEYS = ("message_old", "why", "detail", "error", "rule")          # evidence fields that hold prose
+CASE_METHODS = ("lower", "upper", "casefold", "strip", "lstrip", "rstrip")
+X3_OK_MARKERS = 1             # pinned: result.py's construction guard; a new marker needs this number changed
 STR_METHODS = ("startswith", "endswith", "find", "rfind", "index", "rindex", "split", "count", "__contains__",
                "partition", "rpartition")
 RE_FUNCS = ("search", "match", "fullmatch", "findall", "finditer", "sub", "subn", "split")
@@ -31,9 +34,16 @@ def _texty(node) -> bool:
         return node.id in TEXT_NAMES or node.id.endswith("_reason")
     if isinstance(node, ast.Subscript):
         key = node.slice.value if isinstance(node.slice, ast.Constant) else None
-        return key in ("message_old",) or (_texty(node.value) and not isinstance(key, str))
-    if isinstance(node, ast.Call) and getattr(node.func, "id", None) == "str":
-        return True
+        return key in TEXT_KEYS or (_texty(node.value) and not isinstance(key, str))
+    if isinstance(node, ast.Call):
+        if getattr(node.func, "id", None) == "str":
+            return True
+        if isinstance(node.func, ast.Attribute):
+            if node.func.attr == "get" and node.args and isinstance(node.args[0], ast.Constant) \
+                    and node.args[0].value in TEXT_KEYS:
+                return True                                   # evidence.get("message_old")
+            if node.func.attr in CASE_METHODS and _texty(node.func.value):
+                return True                                   # r.text.lower()
     return False
 
 
@@ -171,8 +181,15 @@ class TNoReasonParsing(unittest.TestCase):
             'x = (\n  r.reason\n  .startswith("y"))',
             'if solver_reason == BAND_NOT_MEASURED: pass',
             'if self.solver_reason == X: pass  # x3-ok: construction guard',
+            'r.evidence.get("message_old").startswith("x")',
+            'if r.evidence["detail"] == "y": pass',
+            'r.text.lower().startswith("z")',
         ])
-        self.assertEqual(len(parse_hits(planted)), 10)
+        self.assertEqual(len(parse_hits(planted)), 13)
+
+    def test_x3_ok_markers_pinned(self):
+        n = sum(p.read_text(encoding="utf-8").count("# x3-ok:") for p in solver_sources())
+        self.assertEqual(n, X3_OK_MARKERS, "a new x3-ok marker must be reviewed and pinned here")
         self.assertEqual(parse_hits('if r.id == "solve.no_bracket": pass\nn = len(r.evidence)\n'), [])
 
 

@@ -23,7 +23,7 @@ import yaml
 from solver import refusals as rf
 from solver import validate as vd
 from solver.body import Body
-from solver.result import Note, Refusal
+from solver.result import Note, Refusal, freeze
 from solver.yamlio import load_data
 
 PRESETS = load_data(Path(__file__).resolve().parent / "data" / "presets.yaml")
@@ -38,7 +38,7 @@ def thaw(x):
     return x
 
 #: interior.LIGHT_ELEMENT_PINS at 097a8aa3 (interior.py:5838–5839): the owner box's fixed O · C ends (R-CLE-6).
-LIGHT_ELEMENT_PINS = MappingProxyType({"box_floor": {"O": 0.01, "C": 0.005}, "box_ceiling": {"O": 0.04, "C": 0.014}})
+LIGHT_ELEMENT_PINS = freeze({"box_floor": {"O": 0.01, "C": 0.005}, "box_ceiling": {"O": 0.04, "C": 0.014}})
 #: porosity.P_LAB_MAX at 097a8aa3 (porosity.py:84): the compaction experiments' highest pressure (Durham+ 2005). The
 #: old porous-rock inversion reads the porosity law only below it (interior.py:5180–5236; c8 note 1 §2 (a)).
 P_LAB_MAX_PA = 150.0e6
@@ -57,11 +57,11 @@ LAYER_KEYS = ("composition_intent", "core_mass_fraction", "core_material", "ice_
               "lithosphere_thickness_km", "mantle_composition", "core_light_elements", "light_element_fixing",
               "core_plus_layer_radius_km", "basal_layer_thickness_km", "basal_layer_density")
 #: Units of the layer-forming v1 keys (their v2 home is a layer, not the schema's inputs table).
-LAYER_UNITS = {"core_mass_fraction": "1", "ice_mass_fraction": "1", "lithosphere_thickness_km": "km",
-               "core_plus_layer_radius_km": "km", "basal_layer_thickness_km": "km", "basal_layer_density": "kg/m3"}
+LAYER_UNITS = freeze({"core_mass_fraction": "1", "ice_mass_fraction": "1", "lithosphere_thickness_km": "km",
+                      "core_plus_layer_radius_km": "km", "basal_layer_thickness_km": "km", "basal_layer_density": "kg/m3"})
 #: v1 unit spellings mapped to the schema's (D-A2-7). The prose unit is matched exactly, never by pattern.
-UNIT_ALIASES = {"dimensionless": "1",
-                "Fe#(=100·Fe/(Fe+Mg), 몰비) — 0–100 이지 0–1 이 아니다": "Fe#, molar, 0–100"}
+UNIT_ALIASES = freeze({"dimensionless": "1",
+                       "Fe#(=100·Fe/(Fe+Mg), 몰비) — 0–100 이지 0–1 이 아니다": "Fe#, molar, 0–100"})
 
 
 class _Refuse(Exception):
@@ -214,17 +214,29 @@ def _mars(inp, where, notes):
     return layers, {"kind": "composition", "layer": "core", "name": "S"}
 
 
+#: The layer-forming keys each branch consumes; any other layer-forming key present is refused.
+BRANCH_KEYS = freeze({
+    "declared": ("composition_intent", "core_mass_fraction", "core_material", "ice_mass_fraction",
+                 "lithosphere_thickness_km"),
+    "Venus": ("lithosphere_thickness_km",),
+    "Dante (fixture)": ("ice_mass_fraction", "lithosphere_thickness_km"),
+    "Mars": ("mantle_composition", "core_light_elements", "light_element_fixing", "core_plus_layer_radius_km",
+             "basal_layer_thickness_km", "basal_layer_density", "lithosphere_thickness_km"),
+})
+
 #: The old engine's inversion axis per v1 body, from the Mac run at 097a8aa3 (c8 note 1 §2). Re-checked against
 #: O1 when the PC capture lands; a mismatch is a STOP.
 INVERSION_TABLE = MappingProxyType({"Venus": _venus, "Dante (fixture)": _dante, "Mars": _mars})
 
 
 def from_v1(doc, where: str = "<v1>"):
-    """A v1 document → (v2 raw document, notes, aside), or a Refusal."""
+    """A v1 document → (v2 raw document, notes, aside), or a Refusal. Never raises on input."""
     try:
         return _from_v1(doc, where)
     except _Refuse as r:
         return r.refusal
+    except (TypeError, AttributeError, KeyError, ValueError) as e:     # a malformed v1 shape (r2 fix-s3 non-blocking)
+        return rf.make("input.v1_unmapped", where, key="<document>", detail=f"{type(e).__name__}: {str(e)[:120]}")
 
 
 def _from_v1(doc, where):
@@ -240,7 +252,11 @@ def _from_v1(doc, where):
     _keys = set(doc) - {"name", "kind", "parent", "inputs", "units", "expected", "transfers"}
     if _keys:
         _no("input.v1_unmapped", where, key=sorted(_keys)[0], detail="unknown v1 top-level section")
-    inp = dict(doc.get("inputs") or {})
+    if not isinstance(doc.get("inputs"), Mapping):
+        _no("input.v1_unmapped", where, key="inputs", detail="v1 inputs is not a mapping")
+    if not isinstance(doc.get("units") or {}, Mapping):
+        _no("input.v1_unmapped", where, key="units", detail="v1 units is not a mapping")
+    inp = dict(doc["inputs"])
     _units(doc, inp, where, notes)
     cls = inp.get("body_class")
     if cls in FLUID_CLASSES:
@@ -259,6 +275,10 @@ def _from_v1(doc, where):
             _no("input.v1_unmapped", where, key="composition",
                 detail="the inversion axis needs a solve (core, ice or porosity); declare the closure")
         layers, closure = row(inp, where, notes)
+    used = BRANCH_KEYS["declared" if declared else doc.get("name")]
+    unused = sorted(k for k in LAYER_KEYS if k in inp and k not in used)
+    if unused:                 # a layer-forming key this branch would not consume is refused, never dropped (r2)
+        _no("input.v1_unmapped", where, key=unused[0], detail="a layer-forming v1 key this branch does not consume")
     if "lithosphere_thickness_km" in inp:
         if not declared:
             _no("input.v1_unmapped", where, key="lithosphere_thickness_km",
