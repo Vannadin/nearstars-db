@@ -1,0 +1,13 @@
+# solver/ venv pins (Python >= 3.11; reference: the PC on 3.12.3). Built by: python3.11 -m venv solver/.venv && solver/.venv/bin/pip install -r solver/requirements.txt
+# numpy and scipy: scipy is used in tests only (second oracle for RK45 and brentq).
+numpy==1.26.4
+scipy==1.13.1
+# PyYAML: c8's body loader (validate.py / from_v1).
+PyYAML==6.0.3
+# The engine/requirements.txt set at 097a8aa3, needed by solver/legacy_materials.py to import engine/eos.py.
+h5py==3.14.0
+hdf5storage==0.1.19
+psutil==7.2.2
+SeaFreeze==1.1.0
+mpmath==1.3.0
+burnman==2.1.0
