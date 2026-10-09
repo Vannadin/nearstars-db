@@ -66,11 +66,16 @@ class ChainRun:
     injected: object        # the injected interior_layers Result
 
 
-def run_chain(v1_yaml: str | os.PathLike, answer, serve_cmf_from_declared: bool = False) -> ChainRun:
-    """Run the old chain on the new structure. `serve_cmf_from_declared` is a negative control only (S8): it puts
-    the rewrite's CMF into the declared inputs instead of the interior_layers output."""
+def run_chain(v1_yaml: str | os.PathLike, answer, serve_cmf_from_declared: bool = False,
+              t_pot: float | None = None) -> ChainRun:
+    """Run the old chain on the new structure. `t_pot` overrides the old body's potential temperature in memory (an
+    O9 state; the solve used the same value). `serve_cmf_from_declared` is a negative control only (S8): it puts the
+    rewrite's CMF into the declared inputs instead of the interior_layers output."""
     registry.load_all()                              # import every recipe module (as run.py / dump.py do)
     body, _expected = run.load_body(Path(v1_yaml))
+    if t_pot is not None:
+        cur = body.inputs.get("potential_temperature")
+        body.inputs["potential_temperature"] = ({**cur, "value": t_pot} if isinstance(cur, dict) else t_pot)
     imf = body.inputs.get("ice_mass_fraction")
     imf = getattr(imf, "get", lambda k, d=None: None)("value") if isinstance(imf, dict) else imf
     vals, units = old_values(answer, imf)
