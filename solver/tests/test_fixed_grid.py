@@ -125,6 +125,45 @@ class SeamLanding(unittest.TestCase):
         self.assertGreater(abs(rf - ra), 0.01 * dr)
 
 
+class CurveSeamNewBranchAtSeam(SeamLanding):
+    """The seam's own value reads the NEW branch (as the 20 GPa Monteux join does): the old-side clamp must sit just
+    off the seam (OLD_SIDE_MARGIN, the old p_b(1 ± 4e-12)). Control: with the margin 0 the landing chatters."""
+
+    class Jump(SeamLanding.Jump):
+        def state(self, p, t, guess):
+            return (3700.0 if p < self.P_B else 4400.0, 0.0, ())
+
+    def _ends(self):
+        M, R = 4.0e24, 6.0e6
+        view = self.Jump(0.0)
+        f = rhs.make_rhs(view)
+        seam = st.Event("seam", lambda m, y: y[1] - self.Jump.P_B, scale=self.Jump.P_B, terminal=False, seam=True,
+                        component=1)
+        y0 = (R, 1e5, 0.0, 0.0, 0.0, 0.0)
+        fx = fixed_grid.run_r(f, M, y0, 0.5 * M, 1e3, "floor", R / 1500.0, [seam], m_scale=M)
+        opt = st.Options(rtol=1e-10, floors=rhs.floors(M, R), h0=1e-3 * M, h_min=1e-15 * M, h_max=M / 20.0,
+                         max_steps=200000)
+        ad = st.run(f, M, y0, 0.5 * M, opt, [seam])
+        return fx, ad, R / 1500.0
+
+    def test_matches_adaptive_after_the_seam(self):
+        fx, ad, dr = self._ends()
+        self.assertEqual(fx.stop.kind, "end")
+        self.assertLess(abs(fx.y[0] - ad.y[0]), 1e-3 * dr)
+
+    def test_control_k1_on_the_seam_loses_radius(self):
+        pass                                           # the parent's control; here the margin is the point
+
+    def test_control_no_margin_chatters(self):
+        orig = st.OLD_SIDE_MARGIN
+        st.OLD_SIDE_MARGIN = 0.0
+        try:
+            fx, _ad, _dr = self._ends()
+        finally:
+            st.OLD_SIDE_MARGIN = orig
+        self.assertEqual(fx.stop.kind, "chatter")
+
+
 class SolveWiring(unittest.TestCase):
     """context.Options.fixed_dr reaches every segment: a uniform two-layer body answers with the same radius in both
     modes (uniform density has no truncation error worth the name), and a radius-ended core is entered."""

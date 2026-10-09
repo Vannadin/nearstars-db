@@ -174,6 +174,12 @@ def _stepper(opt, stage_f=None):
     return lambda f, x, y, h, k1: step_rk4(f, x, y, h, k1, opt.frozen, opt.frozen_ref, stage_f)
 
 
+#: relative margin of the old-side stage clamp (interior.py's p_b(1 + 4e-12) for its outward pass, r2's H5 audit item 12).
+#: At exactly the seam value a curve seam (the 20 GPa Monteux join, −1 K) reads its new branch, so a clamp onto the seam
+#: itself left P(s) discontinuous and the landing chattered at |g| ≈ 20 Pa (Earth 2067–2131 K, 88 O9 points, fc0edb3a).
+OLD_SIDE_MARGIN = 4e-12
+
+
 def _old_side(f, ev: Event, g0: float):
     """f read with ev's component held on g0's side of the seam (at the seam when a stage crosses it): the old
     engine's landing step (interior.py CUT_STAGE_OLD_SIDE, C164 note 1 blade 1: «the stage density of a phase-boundary
@@ -183,8 +189,10 @@ def _old_side(f, ev: Event, g0: float):
 
     def fo(x, y):
         g = ev.g(x, y)
-        if g is not None and g * g0 < 0.0:
-            y = tuple(v - g if j == c else v for j, v in enumerate(y))
+        if g is not None and g * g0 <= 0.0:
+            v = y[c] - g                                # the seam value; the stage sits just on the old side of it,
+            v += math.copysign(OLD_SIDE_MARGIN * abs(v), g0)    # as the old clamp p_b(1 ± 4e-12): a curve seam's
+            y = tuple(v if j == c else w for j, w in enumerate(y))   # own branch at exactly p_b may be the new one
         return f(x, y)
     return fo
 
