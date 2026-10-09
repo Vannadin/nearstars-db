@@ -25,30 +25,36 @@ from solver import body as bd
 R_RANGE = (0.8, 1.25)                  # × the declared answer's radius (see the module note)
 
 
-_CACHE: dict = {}
-
-
 def is_inverse(body) -> bool:
     return body.closure.kind != "R"
 
 
-def member_for(body_yaml: str, body):
-    """(member body, record) for an inverse body with a temperature path, from its declared-state answer (solved once
-    per process, sensitivity off); None for a forward body. A declared state that does not answer gives
-    (None, record): its T_pot states are then refused by name (run_oracle)."""
-    if not is_inverse(body) or body.surface.t_pot is None:
-        return None
-    key = str(body_yaml)
-    if key not in _CACHE:
-        from solver import context, result, solve as sv
-        a, x = sv.solve(body, context.Options(sensitivity_dt=0.0))
-        if not isinstance(a, result.Answer):
-            _CACHE[key] = (None, {"declared_outcome": type(a).__name__, "x": None})
-        else:
-            fb = forward_member(body, a, x)
-            _CACHE[key] = (fb, {"x": x, "closure": body.closure.kind, "R_range": [fb.closure.lo, fb.closure.hi],
-                                "fractions": {l.id: l.extent.value for l in fb.layers if l.extent is not None}})
-    return _CACHE[key]
+def _member_for():
+    """The per-process memo lives in this closure, not at module level (§A6; c8, r2): it only spares the repeated
+    declared solve and never feeds a value that a fresh solve would not give."""
+    cache = {}
+
+    def member_for(body_yaml: str, body):
+        """(member body, record) for an inverse body with a temperature path, from its declared-state answer (solved
+        once per process, sensitivity off); None for a forward body. A declared state that does not answer gives
+        (None, record): its T_pot states are then refused by name (run_oracle)."""
+        if not is_inverse(body) or body.surface.t_pot is None:
+            return None
+        key = str(body_yaml)
+        if key not in cache:
+            from solver import context, result, solve as sv
+            a, x = sv.solve(body, context.Options(sensitivity_dt=0.0))
+            if not isinstance(a, result.Answer):
+                cache[key] = (None, {"declared_outcome": type(a).__name__, "x": None})
+            else:
+                fb = forward_member(body, a, x)
+                cache[key] = (fb, {"x": x, "closure": body.closure.kind, "R_range": [fb.closure.lo, fb.closure.hi],
+                                   "fractions": {l.id: l.extent.value for l in fb.layers if l.extent is not None}})
+        return cache[key]
+    return member_for
+
+
+member_for = _member_for()
 
 
 def forward_member(body, answer, x):

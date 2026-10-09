@@ -70,29 +70,31 @@ def _diff(a: dict, f: dict) -> tuple:
 
 
 def _body_at(body_yaml, t_pot):
-    """The body at a state; an inverse body's T_pot state is its forward member (run_oracle's rule)."""
+    """(body at the state, member record or None); an inverse body's T_pot state is its forward member (run_oracle's
+    rule). The body is None when the declared state has no answer, so there is no member."""
     got = from_v1.load_v1(body_yaml)
     body = got[0] if isinstance(got, tuple) else got
+    info = None
     if t_pot is not None and not isinstance(body, result.Refusal):
         got_m = mb.member_for(body_yaml, body)
         if got_m is not None:
-            if got_m[0] is None:
-                return None                                # no declared answer, so no member: flagged by one_state
-            body = got_m[0]
+            body, info = got_m
+            if body is None:
+                return None, info
         body = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=t_pot))
-    return body
+    return body, info
 
 
 def one_state(body_yaml: str, state, tag: str, steps: int = STEPS) -> dict:
     t_pot = None if state == "declared" else float(state)
-    body = _body_at(body_yaml, t_pot)
+    body, info = _body_at(body_yaml, t_pot)
     rec = {"body": Path(body_yaml).stem, "state": state, "tag": tag, "steps": steps}
     if isinstance(body, result.Refusal):
         return {**rec, "kind_adaptive": "refusal", "kind_fixed": None, "flag": "input_refusal"}
     if body is None:
         return {**rec, "kind_adaptive": None, "kind_fixed": None, "flag": "member_unavailable"}
-    if t_pot is not None and mb._CACHE.get(str(body_yaml)):
-        rec["member"] = result.plain(mb._CACHE[str(body_yaml)][1])
+    if info is not None:
+        rec["member"] = result.plain(info)
     c0 = time.process_time()
     a, _ = sv.solve(body, context.Options(sensitivity_dt=0.0))
     rec["cpu_adaptive_s"] = time.process_time() - c0
@@ -204,7 +206,7 @@ ORDER_RANGE = (1.6, 2.4)
 def controls(body_yaml: str) -> dict:
     """Registration controls 1 and 2 at the declared state: the fixed solve twice gives identical values (null), and
     STEPS 2N halves the temperature keys' d (ratio d(N)/d(2N) within ORDER_RANGE: Euler in P, first order)."""
-    body = _body_at(body_yaml, None)
+    body, _info = _body_at(body_yaml, None)
     opt = context.Options(sensitivity_dt=0.0)
     a, _ = sv.solve(body, opt)
     va = {q.key: q.point for q in a.quantities}
