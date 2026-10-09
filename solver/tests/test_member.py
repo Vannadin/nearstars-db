@@ -2,13 +2,16 @@
 """solver.member (owner-direction «O9 for inverse bodies: compare like for like»; o9-forward-member-note.md)."""
 import dataclasses
 import json
+import os
 import unittest
 from pathlib import Path
 
 from solver import context, from_v1, member as mb, result, run_oracle as ro, solve as sv
 
 OPT = context.Options(sensitivity_dt=0.0)
-O4O9 = Path(__file__).resolve().parents[4] / "NearStars-artifacts/rewrite/oracle/097a8aa3/O4O9"
+# the artifacts checkout: NEARSTARS_ARTIFACTS (the PC batch sets it), else beside the worktree on the Mac
+O4O9 = Path(os.environ.get("NEARSTARS_ARTIFACTS") or Path(__file__).resolve().parents[4] / "NearStars-artifacts") \
+    / "rewrite/oracle/097a8aa3/O4O9"
 
 
 def _q(a, k):
