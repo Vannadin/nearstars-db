@@ -27,6 +27,44 @@ _ENGINE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 if _ENGINE not in sys.path:
     sys.path.insert(0, _ENGINE)
 
+#: Data files the process has opened since this import (r2 S7 note-4 HOLD; the C159 read-guard idea): every file opened
+#: through `open` that is not Python source, bytecode or a system/venv path. It only grows (a union over the process),
+#: so it may name more files than one solve read, never fewer. It is an audit record and never feeds a value; the §T
+#: AST guard exempts it by name, as it does `_PRISTINE`.
+_OPENED: set = set()
+_SYSTEM_PARTS = ("site-packages", "/.venv", "/Library/Developer/", "/System/", "/usr/lib/", "/Library/Caches/",
+                 "__pycache__", "/.git/", "/dev/", "/opt/homebrew/")
+
+
+def _open_hook(event, args):
+    if event == "open" and args and isinstance(args[0], (str, bytes, os.PathLike)):
+        try:
+            p = os.path.realpath(os.fsdecode(args[0]))
+        except (OSError, ValueError):
+            return
+        if p.endswith((".py", ".pyc")) or any(x in p for x in _SYSTEM_PARTS):
+            return
+        _OPENED.add(p)
+
+
+sys.addaudithook(_open_hook)          # before the engine imports, so data read at import time is seen too
+
+
+def material_bytes() -> bytes:
+    """«Material data bytes» of solve_id (design §A6; r2 S7 note-4 HOLD): sha256 over every engine module loaded in
+    this process (its source bytes) and every data file opened so far (`_OPENED`), each with its path, sorted.
+    A changed table byte or a changed module on the density / dT/dP path gives a new id."""
+    import hashlib
+    paths = {os.path.realpath(m.__file__) for m in list(sys.modules.values())
+             if getattr(m, "__file__", None) and os.path.realpath(m.__file__).startswith(os.path.realpath(_ENGINE))}
+    paths |= {p for p in _OPENED if os.path.isfile(p)}
+    h = hashlib.sha256()
+    for p in sorted(paths):
+        h.update(p.encode())
+        with open(p, "rb") as fh:
+            h.update(hashlib.sha256(fh.read()).digest())
+    return h.digest()
+
 import eos            # noqa: E402  (engine/, 097a8aa3)
 import interior       # noqa: E402
 import process_state  # noqa: E402

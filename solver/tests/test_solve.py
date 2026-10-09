@@ -230,5 +230,26 @@ class UnlocatedWall(unittest.TestCase):
         self.assertEqual(out.evidence["budget_name"], "WALL_SHOTS")
 
 
+class MaterialBytes(unittest.TestCase):
+    """r2 note-4 HOLD: a changed data byte that the process read gives a new material-bytes digest (hence solve_id)."""
+
+    def test_changed_table_byte_changes_digest(self):
+        import os
+        import tempfile
+        from solver import legacy_materials as lm
+        d = tempfile.mkdtemp()
+        p = os.path.join(d, "table.json")
+        with open(p, "w") as fh:
+            fh.write('{"rho": 1.0}')
+        with open(p) as fh:                       # read through open(): the audit hook records it
+            fh.read()
+        a = lm.material_bytes()
+        with open(p, "w") as fh:
+            fh.write('{"rho": 2.0}')
+        b2 = lm.material_bytes()
+        self.assertNotEqual(a, b2)
+        self.assertEqual(b2, lm.material_bytes())       # control: unchanged bytes, same digest
+
+
 if __name__ == "__main__":
     unittest.main()

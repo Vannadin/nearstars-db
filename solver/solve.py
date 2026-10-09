@@ -289,28 +289,17 @@ def _canonical(body) -> dict:
 
 
 def _material_bytes(views) -> bytes:
-    """«Material data bytes» of solve_id (design §A6, r2 S7 B1): for each layer view (sorted by layer id), its material
-    id and the bytes of the source file that defines the material's class, plus engine/eos.py and engine/interior.py
-    (the adapter's dT/dP and density paths). A view without a material (a test fixture) contributes its repr."""
+    """«Material data bytes» of solve_id: the adapter's record of engine modules and data files read
+    (`legacy_materials.material_bytes`), plus each layer's view id and material id; a fixture view without a material
+    contributes its repr."""
     import hashlib
-    import inspect
-    files = {inspect.getsourcefile(lm.eos), inspect.getsourcefile(lm.interior)}
-    h = hashlib.sha256()
+    h = hashlib.sha256(lm.material_bytes())
     for lid in sorted(views):
         v = views[lid]
-        mat = getattr(v, "mat", None)
         h.update(lid.encode())
         h.update(repr(getattr(v, "material_id", type(v).__name__)).encode())
-        if mat is not None:
-            try:
-                files.add(inspect.getsourcefile(type(mat)))
-            except TypeError:
-                pass
-        else:
+        if getattr(v, "mat", None) is None:
             h.update(repr(vars(v)).encode())
-    for f in sorted(x for x in files if x):
-        with open(f, "rb") as fh:
-            h.update(hashlib.sha256(fh.read()).digest())
     return h.digest()
 
 
@@ -344,8 +333,7 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
         views = dict(views)
     if isinstance(views, result.Refusal):
         return views, warm
-    sid = context.solve_id_of(_canonical(body), _material_bytes(views), options)
-    ctx = context.build(options, views, warm, solve_id=sid,
+    ctx = context.build(options, views, warm,
                         reset_legacy=any(isinstance(v, lm.LegacyView) for v in views.values()))
     kind = body.closure.kind
 
@@ -400,7 +388,9 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
         profiles = {lid: {"m": tuple(n[0] for n in path), "r": tuple(n[1][0] for n in path),
                           "P": tuple(n[1][1] for n in path), "T": tuple(n[1][3] for n in path)}
                     for lid, path in acc.profiles.items()}
-        ans = result.Answer(_quantities(body, acc, ctx.solve_id, x), lbs, profiles, (), tuple(notes))
+        # solve_id after the accepted pass, so every data file the solve opened is in the material bytes
+        sid = context.solve_id_of(_canonical(body), _material_bytes(views), options)
+        ans = result.Answer(_quantities(body, acc, sid, x), lbs, profiles, (), tuple(notes))
         return ans, x
     if out.kind == "two_roots":
         return refusals.make("solve.two_roots", where, x=None, closure_kind=kind, pass_kind="scan",
