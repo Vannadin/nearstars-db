@@ -1,0 +1,26 @@
+# 역할 사전 — 층 역할을 코드가 아닌 자료로 둔다: 무리(family), 순서 규칙, 이름 붙은 경계 (phase1-design D-A2-3).
+# Order rules realise R-LAYERGEN-2: core-family layers are contiguous at the centre; envelope-family layers are
+# outermost, and only envelope-family layers may follow one. Within the core, core.inner lies below core.outer.
+# A new role is a line here, not code.
+families: [core, silicate, crust, ice, ocean, envelope]
+roles:
+  core:        {family: core}
+  core.inner:  {family: core}
+  core.outer:  {family: core}
+  basal_layer: {family: silicate}
+  mantle:      {family: silicate}
+  lid:         {family: silicate}
+  crust:       {family: crust}
+  ice:         {family: ice}
+  ocean:       {family: ocean}
+  envelope:    {family: envelope}
+order:
+  centre_contiguous: [core]
+  outermost: [envelope]
+  below: [[core.inner, core.outer]]
+# Named interfaces, found by role and never by stack index (W-L15-02).
+#   cmb — the boundary above the outermost core-family layer, when a non-core layer lies above it;
+#   icb — the boundary between core.inner and core.outer.
+interfaces:
+  cmb: {below_family: core, above_not_family: core}
+  icb: {below_role: core.inner, above_role: core.outer}
