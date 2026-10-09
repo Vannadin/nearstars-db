@@ -9,6 +9,8 @@
 - OUT_DIR: must be absent or empty (no stale files). One JSON per (body, state), <stem>__declared.json or
   <stem>__<repr(t_pot)>.json, written to a temporary directory first and moved into place only when every state ran.
 - --sensitivity-dt: the §A1.7 sensitivity δ in K (default 10; 0 switches the field off). It is in each header's options.
+- --no-chain-for-points: T_pot states skip the old chain (legacy_nodes {}, table_read false; header «chain» false). The
+  O9 comparison reads interior_layers and the verdict only (compare.py judge_point); declared states keep the chain.
 Exit 0 on success; 2 on any STOP (bad arguments, a non-empty OUT_DIR, an exception), with nothing written.
 
 A T_pot state overrides the potential temperature in memory, on both sides: the Body's SurfaceState for the solve, and
@@ -75,8 +77,15 @@ def _sid(body, options, answer=None) -> str:
     return context.solve_id_of(sv._canonical(body), lm.material_bytes(), options) if body is not None else ""
 
 
-def one(body_yaml: str, state, options=context.Options()) -> dict:
-    """The comparator record of one (body, state). `state` is «declared» or a T_pot float."""
+def one(body_yaml: str, state, options=context.Options(), chain: bool = True) -> dict:
+    """The comparator record of one (body, state). `state` is «declared» or a T_pot float. `chain` False skips the old
+    chain (legacy_nodes stays {}), for O9 states only (--no-chain-for-points)."""
+    rec = _one(body_yaml, state, options, chain if state != "declared" else True)
+    rec["header"]["chain"] = chain or state == "declared"
+    return rec
+
+
+def _one(body_yaml: str, state, options, chain: bool) -> dict:
     stem = Path(body_yaml).stem
     got = from_v1.load_v1(body_yaml)
     body = got[0] if isinstance(got, tuple) else got
@@ -86,7 +95,7 @@ def one(body_yaml: str, state, options=context.Options()) -> dict:
     if isinstance(body, result.Refusal):
         rec.update(header=_header(options, ""), outcome_kind="refusal",
                    refusal={"id": body.id, "evidence": result.plain(dict(body.evidence))})
-        _legacy(rec, lv.run_chain(body_yaml, None, refusal_text=body.text, t_pot=t_pot))
+        chain and _legacy(rec, lv.run_chain(body_yaml, None, refusal_text=body.text, t_pot=t_pot))
         return rec
     if t_pot is not None and body.surface.t_pot is None:
         rec.update(header=_header(options, _sid(body, options)), outcome_kind="refusal",
@@ -101,15 +110,15 @@ def one(body_yaml: str, state, options=context.Options()) -> dict:
         rec.update(header=_header(options, _sid(body, options, out)), outcome_kind="answer",
                    quantities=[result.plain(q) for q in out.quantities],
                    boundaries=[result.plain(b) for b in out.boundaries])
-        _legacy(rec, lv.run_chain(body_yaml, out, t_pot=t_pot))
+        chain and _legacy(rec, lv.run_chain(body_yaml, out, t_pot=t_pot))
     elif isinstance(out, result.NoAnswer):
         rec.update(header=_header(options, _sid(body, options)), outcome_kind="no_answer",
                    no_answer={"reason": out.reason, "evidence": result.plain(dict(out.evidence))})
-        _legacy(rec, lv.run_chain(body_yaml, None, refusal_text=out.text, t_pot=t_pot))
+        chain and _legacy(rec, lv.run_chain(body_yaml, None, refusal_text=out.text, t_pot=t_pot))
     else:
         rec.update(header=_header(options, _sid(body, options)), outcome_kind="refusal",
                    refusal={"id": out.id, "evidence": result.plain(dict(out.evidence))})
-        _legacy(rec, lv.run_chain(body_yaml, None, refusal_text=out.text, t_pot=t_pot))
+        chain and _legacy(rec, lv.run_chain(body_yaml, None, refusal_text=out.text, t_pot=t_pot))
     return rec
 
 
@@ -134,6 +143,9 @@ def main(argv=None) -> int:
             print("STOP: --sensitivity-dt needs a number")
             return 2
         del argv[i:i + 2]
+    chain = "--no-chain-for-points" not in argv
+    if not chain:
+        argv.remove("--no-chain-for-points")
     if len(argv) != 3:
         print(__doc__)
         return 2
@@ -147,7 +159,7 @@ def main(argv=None) -> int:
     tmp = Path(tempfile.mkdtemp(prefix=f"run_oracle_{stem}_"))
     try:
         for state in states_for(stem, points_json):
-            rec = one(body_yaml, state, options)
+            rec = one(body_yaml, state, options, chain)
             name = f"{stem}__{'declared' if state == 'declared' else repr(state)}.json"
             (tmp / name).write_text(json.dumps(rec, ensure_ascii=False, allow_nan=False, indent=1) + "\n",
                                     encoding="utf-8")

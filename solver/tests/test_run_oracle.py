@@ -63,6 +63,22 @@ class RefusingBody(unittest.TestCase):
                 self.assertFalse(rec["legacy_nodes"][node]["applicable"], node)
 
 
+class NoChainForPoints(unittest.TestCase):
+    """--no-chain-for-points: a T_pot state skips the old chain (O9 reads interior_layers only); the declared state
+    keeps it (control)."""
+
+    def test_point_has_no_legacy_nodes(self):
+        rec = ro.one("engine/bodies/earth.yaml", 2093.0, context.Options(sensitivity_dt=0.0), chain=False)
+        self.assertEqual((rec["outcome_kind"], rec["legacy_nodes"], rec["table_read"], rec["header"]["chain"]),
+                         ("answer", {}, False, False))
+        self.assertEqual(set(rec), FIELDS)
+
+    def test_control_declared_keeps_the_chain(self):
+        rec = ro.one("engine/bodies/dante_fixture.yaml", "declared", context.Options(sensitivity_dt=0.0), chain=False)
+        self.assertTrue(rec["legacy_nodes"])
+        self.assertTrue(rec["header"]["chain"])
+
+
 class Cli(unittest.TestCase):
     def test_non_empty_out_dir_stops(self):
         d = tempfile.mkdtemp()
