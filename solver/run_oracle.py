@@ -29,7 +29,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from solver import context, from_v1, legacy_view as lv, result, solve as sv
+from solver import context, from_v1, legacy_view as lv, member as mb, result, solve as sv
 from solver import legacy_materials as lm
 
 interior = lm.interior
@@ -104,6 +104,17 @@ def _one(body_yaml: str, state, options, chain: bool) -> dict:
                        "detail": f"{stem} declares no potential temperature; a T_pot state has no meaning for it"}})
         return rec
     if t_pot is not None:
+        got_m = mb.member_for(body_yaml, body)         # an inverse body's T_pot state is its forward member (ruling)
+        if got_m is not None:
+            fb, info = got_m
+            rec["member"] = result.plain(info)
+            if fb is None:
+                rec.update(header=_header(options, _sid(body, options)), outcome_kind="refusal",
+                           refusal={"id": "input.cross_field", "evidence": {
+                               "rule": "member_needs_declared_answer",
+                               "detail": f"{stem}'s declared state did not answer, so it has no forward member"}})
+                return rec
+            body = fb
         body = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=t_pot))
     out, _warm = sv.solve(body, options)
     if isinstance(out, result.Answer):

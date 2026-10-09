@@ -23,7 +23,7 @@ import sys
 import time
 from pathlib import Path
 
-from solver import context, from_v1, result, run_oracle as ro, solve as sv
+from solver import context, from_v1, member as mb, result, run_oracle as ro, solve as sv
 
 STEPS = 1500                       # interior.STEPS at 097a8aa3
 
@@ -70,9 +70,15 @@ def _diff(a: dict, f: dict) -> tuple:
 
 
 def _body_at(body_yaml, t_pot):
+    """The body at a state; an inverse body's T_pot state is its forward member (run_oracle's rule)."""
     got = from_v1.load_v1(body_yaml)
     body = got[0] if isinstance(got, tuple) else got
     if t_pot is not None and not isinstance(body, result.Refusal):
+        got_m = mb.member_for(body_yaml, body)
+        if got_m is not None:
+            if got_m[0] is None:
+                return None                                # no declared answer, so no member: flagged by one_state
+            body = got_m[0]
         body = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=t_pot))
     return body
 
@@ -83,6 +89,10 @@ def one_state(body_yaml: str, state, tag: str, steps: int = STEPS) -> dict:
     rec = {"body": Path(body_yaml).stem, "state": state, "tag": tag, "steps": steps}
     if isinstance(body, result.Refusal):
         return {**rec, "kind_adaptive": "refusal", "kind_fixed": None, "flag": "input_refusal"}
+    if body is None:
+        return {**rec, "kind_adaptive": None, "kind_fixed": None, "flag": "member_unavailable"}
+    if t_pot is not None and mb._CACHE.get(str(body_yaml)):
+        rec["member"] = result.plain(mb._CACHE[str(body_yaml)][1])
     c0 = time.process_time()
     a, _ = sv.solve(body, context.Options(sensitivity_dt=0.0))
     rec["cpu_adaptive_s"] = time.process_time() - c0
