@@ -153,7 +153,9 @@ class LegacyView:
     def dtdp(self, p: float, t: float):
         if t <= 0.0:
             return 0.0
-        pe = max(p, self.p_stop)
+        # at the surface start P = 0 the old engine never evaluated dT/dP (its pass ended there); the start is read at
+        # the same pressure as the hot-surface density rule (SURF_RHO): max(1 bar, p_stop)
+        pe = max(p, self.p_stop) if p > 0.0 else max(1.0e5, self.p_stop)
         try:
             rho = self.mat.density(self._at_floor(pe), t, self.t_pot)
             return interior._adiabatic_dtdp(self.mat, pe, rho, t, self.t_pot)
@@ -168,3 +170,10 @@ class LegacyView:
         if isinstance(g, st.Stop):
             return g
         return (rho, g)
+
+
+def ammonia_isotherms() -> tuple:
+    """The ammonia table's isotherm nodes [K] (Bethkenhagen+ 2013 Table I, engine/ammonia_table.T_K): interpolation
+    switches isotherm pair there, so the integrand has a kink in T (located as events, design §A1.3)."""
+    import ammonia_table
+    return tuple(float(t) for t in ammonia_table.T_K)

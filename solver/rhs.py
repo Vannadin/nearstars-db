@@ -49,6 +49,9 @@ class PassOptions:
     eps: float = 1e-6                 # the pass ends at m_ε = ε·M
     r_floor_frac: float = 1e-3        # terminal event r = r_floor_frac · r_scale (see `residual`)
     max_steps: int = 200000           # MAX_STEPS_SOLVE (per pass; fixed by the S2 dated line)
+    event_min_progress: float = 1e-9  # × M (registration §6)
+    event_restarts_step: int = 4
+    event_restarts_run: int = 2000
 
 
 @dataclass(frozen=True)
@@ -61,6 +64,7 @@ class PassResult:
     r_scale: float
     path: tuple
     counters: st.Counters
+    events: tuple = ()
 
 
 def r_scale_of(mass: float, rho_mean: float) -> float:
@@ -85,20 +89,24 @@ def surface_start(view, mass: float, radius: float, p_s: float, t_pot: float):
 
 
 def inward_pass(view, mass: float, radius: float, p_s: float, t_pot: float, rho_mean: float,
-                opt: PassOptions = PassOptions()) -> PassResult:
+                opt: PassOptions = PassOptions(), events=(), on_accept=None) -> PassResult:
     """One single-material pass from the surface to the centre end, with the centre residual."""
     rs = r_scale_of(mass, rho_mean)
     m0, r0, p0 = surface_start(view, mass, radius, p_s, t_pot)
     m_end = opt.eps * mass
     f = make_rhs(view)
     sopt = st.Options(rtol=opt.rtol, floors=(1e-12 * rs, 1e5, 10.0, 10.0), h0=1e-3 * mass,
-                      h_min=1e-15 * mass, h_max=mass / 20.0, max_steps=opt.max_steps)
+                      h_min=1e-15 * mass, h_max=mass / 20.0, max_steps=opt.max_steps,
+                      event_min_progress=opt.event_min_progress * mass,
+                      event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_run)
     floor_ev = st.Event("r_floor", lambda m, y: y[0] - opt.r_floor_frac * rs, scale=rs)
-    res = st.run(f, m0, (r0, p0, t_pot, t_pot), m_end, sopt, [floor_ev])
+    res = st.run(f, m0, (r0, p0, t_pot, t_pot), m_end, sopt, [floor_ev, *events], on_accept=on_accept)
     if res.stop.kind not in ("end", "event"):
-        return PassResult(res.x, res.y, float("nan"), None, res.stop, rs, res.path, res.counters)
+        return PassResult(res.x, res.y, float("nan"), None, res.stop, rs, res.path, res.counters, res.events)
     got = view.state(res.y[1], res.y[2], None)
     if isinstance(got, st.Stop):
-        return PassResult(res.x, res.y, float("nan"), None, st.Stop("refused", got), rs, res.path, res.counters)
+        return PassResult(res.x, res.y, float("nan"), None, st.Stop("refused", got), rs, res.path, res.counters,
+                          res.events)
     rho = got[0]
-    return PassResult(res.x, res.y, rho, residual(res.x, res.y[0], rho, rs), res.stop, rs, res.path, res.counters)
+    return PassResult(res.x, res.y, rho, residual(res.x, res.y[0], rho, rs), res.stop, rs, res.path, res.counters,
+                      res.events)

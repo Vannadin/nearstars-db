@@ -167,8 +167,9 @@ def _land(f, ev: Event, x: float, y: Vec, k1: Vec, s_hi: float, g0: float, opt: 
 
 
 def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] = (),
-        disabled_until: dict | None = None) -> Result:
-    """Integrate from x0 to x1 (either direction). Stops at x1, at the first terminal event, or with a Stop."""
+        disabled_until: dict | None = None, on_accept: Callable[[float, Vec], None] | None = None) -> Result:
+    """Integrate from x0 to x1 (either direction). Stops at x1, at the first terminal event, or with a Stop.
+    `on_accept(x, y)` is called at every accepted node, the start included (e.g. the graze monitor, §A1.3)."""
     cnt = Counters()
     direction = 1.0 if x1 >= x0 else -1.0
     x, y = x0, tuple(y0)
@@ -177,6 +178,8 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
         return Result(x, y, Stop("refused", k1), counters=cnt)
     h = direction * min(abs(opt.h0), opt.h_max)
     path = [(x, y, k1)]
+    if on_accept is not None:
+        on_accept(x, y)
     landed = []
     last_fire = dict(disabled_until or {})          # event name → x of its last landing
     run_events = 0
@@ -234,6 +237,8 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             cnt.accepted += 1
             cnt.events += 1
             path.append((x_e, y_e, k_e))
+            if on_accept is not None:
+                on_accept(x_e, y_e)
             last_fire[fired.name] = x_e
             if fired.terminal:
                 return Result(x_e, y_e, Stop("event"), event=fired.name, h_last=h, path=tuple(path),
@@ -246,6 +251,8 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
         cnt.accepted += 1
         x, y, k1 = x_new, y_new, k7
         path.append((x, y, k1))
+        if on_accept is not None:
+            on_accept(x, y)
         g_prev = {ev.name: ev.g(x, y) for ev in events}
         if direction * (x - x1) >= 0.0:
             return Result(x, y, Stop("end"), h_last=h, path=tuple(path), events=tuple(landed), counters=cnt)
