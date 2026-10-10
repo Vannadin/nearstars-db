@@ -51,6 +51,21 @@ DEMANDS = (
     # impl P6: hand-over band sampling declared before measuring; library pin (owner db20e171 (b))
     ("impl P6", "band.sampling", False), ("impl note 1.6", "library.version", True),
     ("impl note 1.6", "library.sha256", True),
+    # impl note 3 Part A and note 4: sources, joins, gate, taper, precedence
+    ("note 3 A8", "phase.sources", False), ("note 3 A8", "phase.joins_within", False),
+    ("note 3 A6.1", "source_entry.basis", True), ("note 3 A1", "source_entry.data_range", True),
+    ("note 3 A3", "source_entry.sigma", True), ("note 3 A3", "source_entry.sigma_kind", True),
+    ("note 3 A3", "sigma.kind", True), ("note 4.4", "sigma.correlation", False),
+    ("note 3 A8", "join_within.kind", True), ("note 3 A3", "join_within.shared_data", False),
+    ("note 3 A3", "join_within.k", False), ("note 3 A2", "join_within.disclosures", False),
+    ("note 4.1", "join_within.edge_p", False), ("note 4.1", "join_within.width", False),
+    ("note 4.1", "taper_width.reason", True), ("note 4.1", "taper_width.declared_before_comparison", True),
+    ("note 4.1.4", "join_within.t_extrapolation", False), ("note 4.3", "phase.precedence", False),
+    ("note 4.3", "precedence.rule", True),
+    # impl note 3 Part B: direct tables, sourced or user-declared
+    ("note 3 B1", "eos.table", False), ("note 3 B1", "table.interpolation", True),
+    ("note 3 B2", "table.source", True), ("note 3 B2", "source.user_declared", False),
+    ("note 3 B3", "table.maxwell_tolerance", False),
 )
 
 
@@ -85,6 +100,9 @@ class MaterialSchema(unittest.TestCase):
         self.assertEqual(tuple(self.s["record"]["kind"]["values"]), ("single", "branched", "assemblage", "hand_over"))
         self.assertEqual(tuple(self.s["kinds"]), tuple(self.s["record"]["kind"]["values"]))
         self.assertEqual(tuple(self.s["boundary"]["kind"]["values"]), ("solid_solid", "melting"))
+        self.assertIn("table", self.s["eos"]["form"]["values"])
+        self.assertEqual(tuple(self.s["join_within"]["kind"]["values"]), ("blend", "taper", "seam", "cross_check"))
+        self.assertEqual(tuple(self.s["join_within"]["weight"]["values"]), ("smoothstep_p",))   # P only (note 3 A4)
         # bme4 is not built until a cached source prints its formula (impl P3)
         self.assertNotIn("bme4", self.s["eos"]["form"]["values"])
 

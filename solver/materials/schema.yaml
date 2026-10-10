@@ -33,18 +33,34 @@ phase:
   window:      {shape: record, of: box, required: true}    # the EOS validity window
   edges:       {shape: record, of: edges, required: true}  # behaviour where the field passes the window (D-M2)
   porosity:    {shape: record, of: porosity}
+  sources:     {shape: list, of: source_entry}           # impl note 3 A8: each source the phase reads, with its data range
+  joins_within: {shape: list, of: join_within}          # impl notes 3 A4–A5, 4: blend / taper / seam / cross_check
+  precedence:  {shape: record, of: precedence}           # impl note 4 item 3: fixed before any comparison
 
 eos:
-  form:      {shape: enum, values: [bm2, bme3, vinet, library], required: true}   # bme4: not built (impl P3; papers-to-fetch)
+  form:      {shape: enum, values: [bm2, bme3, vinet, library, table], required: true}   # bme4: not built (impl P3; papers-to-fetch)
   params:    {shape: mapping, of: constant}                # bm2/bme3/vinet: rho0, k0, [k0p]; each a constant
   reference: {shape: record, of: reference, required: true}
   library:   {shape: record, of: library}                  # form library only (SeaFreeze, owner db20e171 (b))
+  table:     {shape: record, of: table}                    # form table only (impl note 3 B1, note 4 item 5)
+
+# A direct table (impl note 3 B1–B3, note 4 item 5). Its edges are its window; outside it the record refuses.
+table:
+  axes:          {shape: enum, values: [P_T, rho_T], required: true}
+  first:         {shape: list, required: true}             # P [Pa] or ρ [kg/m³] nodes, increasing
+  t:             {shape: list, required: true}             # T [K] nodes, increasing
+  columns:       {shape: mapping, required: true}          # name → rows over (first × t): rho or P, and alpha, c_p, k_t where given
+  interpolation: {shape: enum, values: [bilinear_lnp_t, c1], required: true}   # bilinear needs alpha and k_t columns (note 4 item 5)
+  maxwell_tolerance: {shape: number}                       # where the columns allow the Maxwell check (B3)
+  alpha_range:   {shape: list}                             # [lo, hi] 1/K: the declared sane range for α (B3)
+  source:        {shape: source, required: true}           # sourced, or {user_declared: <reason>} (B2)
 
 reference:
   kind:  {shape: enum, values: [state, path], required: true}   # D-M1: a path is allowed (r2 N5, «PREM path»)
   p:     {shape: constant}                                   # kind state
   t:     {shape: constant}                                   # kind state
-  path:  {shape: text}                                       # kind path: its name, e.g. «PREM path»
+  path:  {shape: text}                                       # kind path: its name, e.g. «PREM path»; `t` is then the
+                                                             # temperature the thermal model applies against (an adiabat's T_p)
   t_ref_kind: {shape: enum, values: [isotherm, adiabat]}     # how the thermal model applies against the reference
 
 library:
@@ -149,6 +165,9 @@ source:
   where:   {shape: text}                                     # table / equation / text anchor
   sha256:  {shape: text}                                     # of the cached file; required with cache
   library: {shape: text}                                     # name@version
+  user_declared: {shape: text}                               # no source: a one-line reason; grade «declared», counted (note 3 B2)
+  formula:  {shape: text}                                    # a value computed from a stated formula and inputs, e.g. Dulong–Petit
+                                                             # «3R/M, R = 8.314462618 J/mol/K, M = 0.055845 kg/mol»; grade declared
   doi:     {shape: text}                                     # doi:…
   cites:   {shape: text}                                     # «A cites B»: B is never the source
   abstract_only: {shape: bool}                               # a value seen only in an abstract
@@ -165,6 +184,52 @@ constant:
 # Grades of a constant: read = as printed on the cited page; derived = our arithmetic on read values (stated in
 # `conversion`); declared = a labelled convention with its reason in `note`; held = the cache PROVENANCE says HELD
 # (route unknown), carried onto the constant (c8 item 4).
+
+# One source a phase reads (impl note 3 A1, A3, A6.1; note 4 item 4).
+source_entry:
+  id:         {shape: text, required: true}
+  source:     {shape: source, required: true}
+  basis:      {shape: enum, values: [measured, computed], required: true}   # measured includes fits to measurements
+  data_range: {shape: record, of: box, required: true}     # where the source has data; the overlap is the intersection
+  data_range_where: {shape: text, required: true}          # the page/table that states the data range
+  sigma:      {shape: record, of: sigma, required: true}
+  sigma_kind: {shape: enum, values: [1sigma, ci68, ci90, ci95, not_applicable], required: true}   # converted to 1σ by the checker
+
+sigma:
+  kind:        {shape: enum, values: [propagated, constant, not_printed], required: true}
+  from:        {shape: mapping}                            # propagated: parameter → its printed σ
+  correlation: {shape: enum, values: [printed, not_printed]}   # propagated: required (note 4 item 4)
+  matrix:      {shape: mapping}                            # correlation printed: the printed matrix, with `where`
+  value:       {shape: number}                             # constant: relative σ of ρ
+  reduction:   {shape: text}                               # constant: how a varying σ was reduced (e.g. «max over the box»)
+  where:       {shape: text}                               # page/table of the printed σ, or of the statement that none is printed
+
+join_within:
+  between:     {shape: list, required: true}               # [preferred source id, other source id]
+  kind:        {shape: enum, values: [blend, taper, seam, cross_check], required: true}
+  overlap:     {shape: record, of: box}                    # blend / cross_check: the data-range intersection (A1)
+  weight:      {shape: enum, values: [smoothstep_p]}       # blend / taper: P only (A4)
+  shared_data: {shape: text}                               # with page: one source's fit includes the other's points (A3)
+  k:           {shape: number}                             # 2 (A3); a different k is a recorded change
+  edge_p:      {shape: number, unit: Pa}                   # taper: P_e, the measured source's data edge
+  side:        {shape: enum, values: [upper, lower]}       # taper: P_e → 1.5·P_e (upper) or P_e/1.5 → P_e (lower)
+  width:       {shape: record, of: taper_width}            # taper: absent = the default rule
+  t_extrapolation: {shape: record, of: t_extrapolation}    # a T edge (note 4 item 1.4)
+  disclosures: {shape: list}                               # cross_check: «cross-check disagrees beyond 2σ at …»
+
+taper_width:
+  p_end:       {shape: number, unit: Pa, required: true}
+  reason:      {shape: text, required: true}
+  declared_before_comparison: {shape: text, required: true}   # the date; the width is never chosen after seeing values
+
+t_extrapolation:
+  to:          {shape: enum, values: [field_limit], required: true}
+  band_origin: {shape: text, required: true}
+
+precedence:
+  rule:        {shape: enum, values: [basis, declared, frozen], required: true}   # measured over computed first (note 4 item 3)
+  declared_before_comparison: {shape: text}                # rule declared: the date
+  ref:         {shape: text}                               # rule frozen: the frozen record that fixed it
 
 formula_check:
   quantity:   {shape: text, required: true}                  # what is printed
