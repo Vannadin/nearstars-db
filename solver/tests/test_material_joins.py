@@ -10,6 +10,7 @@ import unittest
 
 from solver import material_joins as mj
 from solver import material_view as mv
+from solver import stepper as st
 from solver.tests.test_material_registry import CITE, GOOD, const
 
 
@@ -128,6 +129,26 @@ class Taper(unittest.TestCase):
             with self.subTest(edge=edge):
                 lo, hi = self.v.state(edge * (1 - 1e-9), 400.0)[0], self.v.state(edge * (1 + 1e-9), 400.0)[0]
                 self.assertLess(abs(hi - lo) / lo, 1e-6)
+
+    def test_t_extrapolation_is_graded_and_banded(self):
+        """Note 4 item 1.4: below P_e and outside the measured T range (a's data_range 300–450 K here), a's thermal
+        model is extrapolated, graded and banded by its difference from b at the same state."""
+        d = rec_taper()
+        d["phases"][0]["sources"][0]["data_range"].update(t_min=300.0, t_max=450.0)
+        v = mv.RecordView(d, 300.0)
+        rho, _g, notes = v.state(8.0e9, 500.0)
+        self.assertEqual(rho, v.source_density(0, "a", 8.0e9, 500.0))
+        self.assertEqual(len(notes), 1)
+        self.assertIn("extrapolated in T", notes[0].grade)
+        ra, rb = v.source_density(0, "a", 8.0e9, 500.0), v.source_density(0, "b", 8.0e9, 500.0)
+        self.assertAlmostEqual(notes[0].error, abs(rb - ra) / ra)
+        self.assertEqual(v.state(8.0e9, 400.0)[2], ())               # inside the data T range: no note
+
+    def test_t_extrapolation_refuses_where_the_other_source_cannot_answer(self):
+        d = rec_taper()
+        d["phases"][0]["sources"][0]["data_range"].update(t_min=300.0, t_max=450.0)
+        s = mv.RecordView(d, 300.0).state(3.0e9, 800.0)            # F&R below its ρ bracket there
+        self.assertIsInstance(s, st.Stop)
 
     def test_taper_side_without_c_p_stops(self):
         from solver import material_registry as mr

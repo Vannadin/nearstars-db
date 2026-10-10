@@ -137,6 +137,14 @@ def taper_state(view, pi, join, p, t):
     lo, hi, upper = taper_zone(join, _src(view, pi, a))
     s = (p - lo) / (hi - lo)
     w = _smoothstep(s if upper else 1.0 - s)            # weight of the other source b
+    t_note = None
+    if w < 1.0:                                         # the measured source is read here: is T inside its data range?
+        dr = _src(view, pi, a)["data_range"]
+        t_lo, t_hi = dr.get("t_min", -math.inf), dr.get("t_max", math.inf)
+        if not (t_lo <= t <= t_hi):
+            t_note = t_extrapolation(view, pi, a, b, p, t)
+            if isinstance(t_note, st.Stop):
+                return t_note
     def vol(sid, tt):
         r = view.source_density(pi, sid, p, tt)
         return r if isinstance(r, st.Stop) else 1.0 / r
@@ -158,4 +166,29 @@ def taper_state(view, pi, join, p, t):
     if 0.0 < w < 1.0:
         ra, rb = view.source_density(pi, a, p, t), view.source_density(pi, b, p, t)
         note = {"grade": f"blended ({a} extrapolated, {b})", "band": abs(rb - ra) / ra}
+    if t_note is not None and (note is None or t_note["band"] > note["band"]):
+        note = t_note
+    if not (cp > 0.0) or not math.isfinite(alpha):
+        return st.Stop("refused", _refusal(view, p, t, f"taper state fails the physical checks (c_P {cp}, α {alpha})"))
     return rho, alpha * t / (rho * cp), note
+
+
+def _refusal(view, p, t, why):
+    from solver import material_view as mv
+    return mv.RecordRefusal(view.material_id, p, t, "input.material_out_of_data", why)
+
+
+def t_extrapolation(view, pi, a, b, p, t):
+    """Note 4 item 1.4: the measured source a read outside its data T range. Graded «extrapolated in T»; the band is
+    its relative ρ difference from source b at the same state (b must answer there, else refuse); the B3 checks at
+    the point (ρ rising with P) refuse on failure. Error method: owner-direction (directing, 2026-10-11, c8's
+    proposal)."""
+    ra, rb = view.source_density(pi, a, p, t), view.source_density(pi, b, p, t)
+    if isinstance(ra, st.Stop):
+        return ra
+    if isinstance(rb, st.Stop):
+        return st.Stop("refused", _refusal(view, p, t, f"{a} extrapolated in T has no band here: {b} cannot answer"))
+    up = view.source_density(pi, a, p * (1.0 + 1e-4), t)
+    if isinstance(up, st.Stop) or not up > ra:
+        return st.Stop("refused", _refusal(view, p, t, f"{a} extrapolated in T fails ρ rising with P"))
+    return {"grade": f"{a} extrapolated in T", "band": abs(rb - ra) / ra}

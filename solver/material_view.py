@@ -925,8 +925,11 @@ class RecordView:
                     return got
                 rho, dtdp, note = got
                 if note is not None:
-                    self.notes.append(BandNote(self.material_id, f"{ph.id} taper zone", "relative", note["band"],
-                                               None, note["grade"], "full |Δρ|/ρ across the taper zone (note 4)"))
+                    origin = ("full |Δρ|/ρ across the taper zone (note 4)" if "blended" in note["grade"] else
+                              "extrapolation in T beyond the measured data range; error = its difference from the "
+                              "other source at the same state (note 4 item 1.4)")
+                    self.notes.append(BandNote(self.material_id, f"{ph.id} taper", "relative", note["band"],
+                                               None, note["grade"], origin))
                 return (rho, dtdp, tuple(self.notes))
         rho = self.density(p, t)
         if isinstance(rho, st.Stop):
