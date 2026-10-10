@@ -42,6 +42,8 @@ phases:
           constants:
             alpha_k: {value: 10904400.000000002, unit: Pa/K, grade: derived, printed: "α 6.99E−05 K⁻¹, K_T 156 GPa (CMB 19 GPa / 2100 K)", conversion: "α × K_T, ×1e9", source: {cache: "2023GeoRL..5002271H-pub.pdf", page: "7", where: "Table 1, liquid Fe, CMB column", sha256: 653cbb0690f690eaca8d8450029ecedd0495c7bdb4263421e5320c85a0f60af6}}
             c_v: {value: 494.0, unit: J/kg/K, grade: read, printed: "C_V 494 J/kg/K", source: {cache: "2023GeoRL..5002271H-pub.pdf", page: "7", where: "Table 1, liquid Fe, CMB column", sha256: 653cbb0690f690eaca8d8450029ecedd0495c7bdb4263421e5320c85a0f60af6}}
+          t_ref: {value: 2100.0, unit: K, grade: read, printed: "CMB (19 GPa/2100 K)", source: {cache: "2023GeoRL..5002271H-pub.pdf", page: "7", where: "Table 1, column heading", sha256: 653cbb0690f690eaca8d8450029ecedd0495c7bdb4263421e5320c85a0f60af6}}
+          t_ref_kind: isotherm
         - window: {p_min: 35.0e9, p_max: 1.2e13}
           source_state: liquid
           source_composition: pure-Fe-liquid

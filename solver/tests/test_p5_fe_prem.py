@@ -30,7 +30,6 @@ NOT_CARRIED = {
     "melt": "G1: the melting curve is core-energy history data, not in phase 2",
     "melt_scale": "G1", "melt_ref": "G1", "melt_variant": "G1",
     "join": "G1: prose", "join_note": "G1: prose",
-    "huang.t_ref": "the 19 GPa set's anchor temperature (2100 K, isotherm): no schema slot (G5, raised to 7c)",
 }
 
 
@@ -82,6 +81,7 @@ class ConstantDiff(unittest.TestCase):
             ("sets[0].window.p_max", float(sets[0]["window"]["p_max"]), huang.p_max),
             ("sets[0].constants.alpha_k", _v(sets[0]["constants"]["alpha_k"]), huang.alpha_k),
             ("sets[0].constants.c_v", _v(sets[0]["constants"]["c_v"]), huang.c_v_ref),
+            ("sets[0].t_ref", _v(sets[0]["t_ref"]), huang.t_ref),
             ("sets[1].window.p_min", float(sets[1]["window"]["p_min"]), doro.p_min),
         ]
 
@@ -97,6 +97,9 @@ class ConstantDiff(unittest.TestCase):
 
     def test_alpha_k_is_the_corrected_value(self):
         self.assertAlmostEqual(_v(self.rec["thermal"]["pressure"]["alpha_k"]) / self.ph.alpha_k, 10.0, places=12)
+
+    def test_huang_set_reference_kind(self):
+        self.assertEqual(self.rec["thermal"]["sets"][0]["t_ref_kind"], self.ph.gamma_sets[0].t_ref_kind)
 
     def test_dorogokupets_set_is_bounded_by_the_phase_window(self):
         # legacy runs the set to ∞; the record bounds it at the phase window (12 TPa, D-M2: γ has its own window)
