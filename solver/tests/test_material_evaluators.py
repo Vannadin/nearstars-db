@@ -42,6 +42,26 @@ class FrenchRedmer(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.ev.at(5e9, 800.0)
 
+    def test_evaluator_form_phase_gives_rho_and_dtdp(self):
+        """c8: form evaluator — the view's ρ and (dT/dP)_S come from the potential; outside the bracket it refuses."""
+        import copy
+        from solver import stepper as st
+        from solver.tests.test_material_registry import GOOD
+        d = copy.deepcopy(GOOD)
+        ph = d["phases"][0]
+        ph["eos"] = {"form": "evaluator", "reference": ph["eos"]["reference"],
+                     "evaluator": {"name": "french_redmer2015", "source": {"formula": "toy"}, "params": legacy_params()}}
+        for k in ("sets", "gamma_window", "phase_constants"):
+            ph["thermal"].pop(k, None)
+        ph["window"] = {"p_min": 1.0e9, "p_max": 1.0e11, "t_min": 250.0, "t_max": 2000.0}
+        v = mv.RecordView(d, 300.0)
+        rho, dtdp, _n = v.state(60e9, 800.0)
+        x = L.thermal_at(60e9, 800.0)
+        self.assertEqual(rho, x["density"])
+        ks = x["k_t"] + x["dpdt_v"] * x["gruneisen"] * 800.0
+        self.assertEqual(dtdp, x["gruneisen"] * 800.0 / ks)
+        self.assertIsInstance(v.state(5e9, 800.0), st.Stop)               # outside the ρ bracket: a named Stop
+
     def test_missing_param_refuses(self):
         p = legacy_params()
         p.pop("gamma_3_m2")

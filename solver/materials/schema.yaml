@@ -43,7 +43,9 @@ phase:
   precedence:  {shape: record, of: precedence}           # impl note 4 item 3: fixed before any comparison
 
 eos:
-  form:      {shape: enum, values: [bm2, bme3, vinet, library, table], required: true}   # bme4: not built (impl P3; papers-to-fetch)
+  form:      {shape: enum, values: [bm2, bme3, vinet, library, table, evaluator], required: true}   # bme4: not built
+  evaluator: {shape: record, of: evaluator}                # form evaluator only: a potential gives ρ and its derivatives
+                                                           # (French & Redmer 2015); no sets, no gamma_window, as library
   params:    {shape: mapping, of: constant}                # bm2/bme3/vinet: rho0, k0, [k0p]; each a constant
   reference: {shape: record, of: reference, required: true}
   library:   {shape: record, of: library}                  # form library only (SeaFreeze, owner db20e171 (b)); γ and

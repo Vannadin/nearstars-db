@@ -263,7 +263,7 @@ def _library_thermal(ph: Mapping, file):
     """68 on 6c7bb337: a library-form phase takes γ and dT/dP from the library, so it carries no thermal sets and no
     gamma_window (fields read by nothing would claim a decision lives there); every other phase needs gamma_window."""
     th = ph["thermal"]
-    if ph["eos"]["form"] == "library":
+    if ph["eos"]["form"] in ("library", "evaluator"):
         extra = [k for k in ("sets", "gamma_window", "phase_constants") if k in th]
         if extra:
             raise _Stop("material.kind_rule", file=file,
@@ -273,7 +273,7 @@ def _library_thermal(ph: Mapping, file):
 
 
 def _gamma(ph: Mapping, file):
-    if ph["eos"]["form"] == "library":
+    if ph["eos"]["form"] in ("library", "evaluator"):
         return
     gw = ph["thermal"]["gamma_window"]
     for i, ts in enumerate(ph["thermal"].get("sets", ())):
@@ -303,7 +303,7 @@ def _gamma_tiling(ph: Mapping, file):
     """68 N19: inside the γ window, the sets ([p_min, p_max)) and the declared phase_constants span cover every P."""
     th = ph["thermal"]
     sets = th.get("sets", ())
-    if not sets or ph["eos"]["form"] == "library":
+    if not sets or ph["eos"]["form"] in ("library", "evaluator"):
         return                                    # a phase with no sets: its constants are the γ source throughout
     gw = th["gamma_window"]
     spans = sorted([(s["window"]["p_min"], s["window"]["p_max"]) for s in sets]
@@ -349,7 +349,10 @@ EVALUATOR_PARAMS = MappingProxyType({
 
 
 def _evaluators(ph: Mapping, file):
-    for i, ts in enumerate(ph["thermal"].get("sets", ())):
+    eos_ev = ph["eos"].get("evaluator")
+    if ph["eos"]["form"] == "evaluator" and eos_ev is None:
+        raise _Stop("material.kind_rule", file=file, why=f"phase {ph['id']}: an evaluator form names its evaluator")
+    for i, ts in enumerate(list(ph["thermal"].get("sets", ())) + ([{"evaluator": eos_ev}] if eos_ev else [])):
         ev = ts.get("evaluator")
         if ev is None:
             continue

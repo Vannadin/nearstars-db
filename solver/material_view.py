@@ -357,6 +357,22 @@ EVALUATORS = MappingProxyType({"dorogokupets2017_liquid_fe": Dorogokupets2017Liq
                                "french_redmer2015": FrenchRedmer2015})
 
 
+class _EvaluatorPhase:
+    """An evaluator used as a phase's EOS: the same face as the library adapter (ρ, dT/dP), from the evaluator's ρ,
+    γ, K_T and (∂P/∂T)_V: (dT/dP)_S = γT/K_S, K_S = K_T + (∂P/∂T)_V·γ·T. A failure is LibraryOutOfRange."""
+
+    def __init__(self, ev):
+        self.ev = ev
+
+    def at(self, p, t):
+        try:
+            x = self.ev.at(p, t)
+        except (ValueError, ZeroDivisionError, OverflowError) as e:
+            raise ml.LibraryOutOfRange(str(e)) from e
+        k_s = x["k_t"] + x["dpdt_v"] * x["gruneisen"] * t
+        return {"rho": x["density"], "dtdp": x["gruneisen"] * t / max(k_s, 1.0), "k_t": x["k_t"], "g": math.nan}
+
+
 # ── the view ────────────────────────────────────────────────────────────────────────────────────────────────────────
 @dataclass
 class _Set:
@@ -425,6 +441,8 @@ class RecordView:
         lib = None
         if form == "library":                       # note 1 §6: the pinned installed library, evaluated at runtime
             lib, cold = ml.SeaFreezePhase(eos["library"]["submodel"]), None
+        elif form == "evaluator":                   # a potential gives ρ and its derivatives (c8: French & Redmer)
+            lib, cold = _EvaluatorPhase(EVALUATORS[eos["evaluator"]["name"]](eos["evaluator"].get("params", {}))), None
         else:
             k0p = _v(pr["k0p"]) if "k0p" in pr else 4.0
             cold = _cold_pressure(form, _v(pr["rho0"]), _v(pr["k0"]), 4.0 if form == "bm2" else k0p)
