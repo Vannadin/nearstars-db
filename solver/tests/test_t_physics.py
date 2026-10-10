@@ -15,6 +15,7 @@ from solver.tests.test_events import M as M_SYN, Synthetic
 
 OPT = context.Options(sensitivity_dt=0.0)
 T1 = 1e-9
+T_KEYS = ("core_temperature", "cmb_temperature")      # the temperatures a lid's fixed point sets (EVC note 6 item 1)
 
 
 def _q(a):
@@ -63,7 +64,10 @@ class SplitInvariance(unittest.TestCase):
         e = _earth()
         cls.base = _q(sv.solve(e, OPT)[0])
         fine = _q(sv.solve(e, dataclasses.replace(OPT, rtol=OPT.rtol / 10.0))[0])
-        cls.bound = {k: max(T1, abs(fine[k] - v) / abs(v)) for k, v in cls.base.items() if v}
+        # design note 7: T keys of a lidded body carry the lid fixed point's own tolerance, which the rtol pair cannot see
+        lidded = any(l.thermal == "conductive" for l in e.layers)
+        floor = {k: (OPT.lid_t_tol if lidded and k in T_KEYS else 0.0) for k in cls.base}
+        cls.bound = {k: max(T1, abs(fine[k] - v) / abs(v), floor[k]) for k, v in cls.base.items() if v}
         cls.e = e
 
     def _split(self, jumps=None):

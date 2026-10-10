@@ -19,18 +19,25 @@ def _q(a, k):
 
 
 class Identity(unittest.TestCase):
-    """At the declared T_pot the member is the declared answer again: R, CMF and the located boundaries to the closure
-    tolerance. Venus (boundary_mass) and Mars (S, radius-declared core and basal) each exercise one closure kind."""
+    """At the declared T_pot the member is the declared answer again: R, CMF and the located boundaries within the two
+    solves' measured resolution. Venus (boundary_mass) and Mars (S, radius-declared core and basal) each exercise one
+    closure kind. Bound per key (o9-forward-member-note amendment 1): max(1e-8, r_inverse + r_forward), each r the
+    solve's |y(rtol) − y(rtol/10)| measured here on this machine; 1e-8 alone sat at the forward solve's own resolution."""
 
     def _check(self, stem, keys):
         body, _ = from_v1.load_v1(f"engine/bodies/{stem}.yaml")
+        o10 = dataclasses.replace(OPT, rtol=OPT.rtol / 10.0)
         a, x = sv.solve(body, OPT)
+        a10, _ = sv.solve(body, o10)
         fb = mb.forward_member(body, a, x)
         self.assertEqual(fb.closure.kind, "R")
         f, _ = sv.solve(fb, OPT)
+        f10, _ = sv.solve(fb, o10)
         self.assertIsInstance(f, result.Answer, getattr(f, "text", None))
         for k in keys:
-            self.assertLess(abs(_q(f, k) - _q(a, k)) / abs(_q(a, k)), 1e-8, k)
+            y = abs(_q(a, k))
+            r = abs(_q(a10, k) - _q(a, k)) / y + abs(_q(f10, k) - _q(f, k)) / abs(_q(f, k))
+            self.assertLessEqual(abs(_q(f, k) - _q(a, k)) / y, max(1e-8, r), k)
 
     def test_venus(self):
         self._check("venus", ("radius", "core_mass_fraction", "core_radius", "nmoi", "cmb_temperature"))
