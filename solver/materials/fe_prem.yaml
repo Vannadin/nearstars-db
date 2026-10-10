@@ -51,12 +51,27 @@ phases:
           evaluator:
             name: dorogokupets2017_liquid_fe
             source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, liquid Fe; thermal Grüneisen eq. (18)", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}
+            params:
+              u0: {value: -100204.0, unit: "J/mol", grade: read, printed: "U0 −100.204 kJ mol⁻¹", conversion: "×1e3", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
+              v0: {value: 7.957e-06, unit: "m3/mol", grade: read, printed: "V0 7.957 cm³ mol⁻¹ (superscript 84 is a reference)", conversion: "×1e-6", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
+              k0: {value: 83700000000.0, unit: "Pa", grade: read, printed: "K0 83.7 GPa", conversion: "×1e9", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
+              k0p: {value: 5.97, unit: "1", grade: read, printed: "K0′ 5.97", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
+              theta0: {value: 263.0, unit: "K", grade: read, printed: "Θ0 263 K", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
+              gamma0: {value: 2.033, unit: "1", grade: read, printed: "γ0 2.033", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
+              beta: {value: 1.168, unit: "1", grade: read, printed: "β 1.168", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
+              gamma_inf: {value: 0.0, unit: "1", grade: read, printed: "γ∞ 0", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
+              e0: {value: 0.000198, unit: "1/K", grade: read, printed: "e0 198 (10⁻⁶ K⁻¹)", conversion: "×1e-6", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
+              g_el: {value: 0.884, unit: "1", grade: read, printed: "g 0.884", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
+              a_s: {value: 2.12, unit: "1", grade: read, printed: "a_S 2.12", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
+              t_ref: {value: 1811.0, unit: "K", grade: read, printed: "T0 = 1811 K (column heading)", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
+          printed_scope: {p_max: 350.0e9, source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "section heading «EoSs for solid and liquid Fe to 350 GPa»; title p.1", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
           edge_above:
             band:
               form: relative
-              method: "max(gamma_spread(sets[1] @ P=35.0e9, T=2400.0 ; printed=2.66), dpdt_spread(sets[1] @ P=35.0e9, T=2400.0 ; printed=5.31e-5 * 215.0e9)) — printed: Huang+ 2023 p.7 Table 1, 2,789 km (35 GPa/2400 K) column"
+              method: "max(gamma_spread(sets[1] @ P=35.0e9, T=2400.0 ; printed=2.66), dpdt_spread(sets[1] @ P=35.0e9, T=2400.0 ; printed=5.31e-5 * 215.0e9))"
               grade: "extrapolated beyond printed scope"
               origin: "extrapolation of the printed fit"
+              source: {cache: "2023GeoRL..5002271H-pub.pdf", page: "7", where: "Table 1, liquid Fe, 2,789 km (35 GPa/2400 K) column: γ 2.66, α 5.31E−05 K⁻¹, K_T 215 GPa", sha256: 653cbb0690f690eaca8d8450029ecedd0495c7bdb4263421e5320c85a0f60af6}
             limit: 12000000000000.0
             limit_reason: "the phase's density path (Zeng BM2, phase window) ends at 12 TPa; γ is not asked where the density has no source"
       gamma_window: {p_min: 0.0, p_max: 350.0e9}

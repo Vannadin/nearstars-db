@@ -26,7 +26,19 @@ GPA = 1.0e9
 
 #: record path → legacy value differs, by finding (note 1 §4)
 EXPECTED_DIFF = {"phase.thermal.pressure.alpha_k": "W-L1-01: I&A print 12.1e-3 GPa/K; legacy 0.00121 (Seager+ 2007)",
-                 "sets[1].window.p_max": "G4 (owner-direction 8b86499): printed scope 350 GPa; legacy ∞"}
+                 "sets[1].window.p_max": "G4 (owner-direction 8b86499): printed scope 350 GPa; legacy ∞",
+                 "sets[1].evaluator.params.v0": "P5-F1: Table 1 prints V0 7.957 with reference superscript 84; "
+                                                "legacy 7.95784e-6 glued the superscript on"}
+
+#: legacy fe_liquid.LIQUID (Column) fields the record's evaluator params do not carry, with the reason
+COLUMN_NOT_CARRIED = {
+    "name": "the record's evaluator.name",
+    "ref": "prose; each param carries its source",
+    "n_atom": "atoms per formula unit, 1 for Fe; not a Table 1 parameter (the evaluator's formula unit)",
+}
+#: Table 1 liquid values the record carries that legacy's Column has no slot for
+PARAMS_NOT_IN_LEGACY = {"u0": "U0, energy offset; γ and (∂P/∂T)_V do not read it",
+                        "a_s": "a_S, printed for liquid only; legacy dropped it (7c a1917882, N6)"}
 
 #: legacy Phase / ThermalSet fields the record does not carry, with the reason
 NOT_CARRIED = {
@@ -74,6 +86,8 @@ class ConstantDiff(unittest.TestCase):
         cls.rec = _record()["phases"][0]
         cls.eos = _legacy()
         cls.ph = cls.eos.FE_PREM.phases[0]
+        import fe_liquid
+        cls.column = fe_liquid.LIQUID
 
     def pairs(self):
         r, ph = self.rec, self.ph
@@ -96,7 +110,18 @@ class ConstantDiff(unittest.TestCase):
             ("sets[0].t_ref", _v(sets[0]["t_ref"]), huang.t_ref),
             ("sets[1].window.p_min", float(sets[1]["window"]["p_min"]), doro.p_min),
             ("sets[1].window.p_max", float(sets[1]["window"]["p_max"]), doro.p_max),
-        ]
+        ] + [(f"sets[1].evaluator.params.{n}", _v(c), getattr(self.column, n))
+             for n, c in sets[1]["evaluator"]["params"].items() if n not in PARAMS_NOT_IN_LEGACY]
+
+    def test_evaluator_params_close(self):
+        import dataclasses
+        params = self.rec["thermal"]["sets"][1]["evaluator"]["params"]
+        missing = [f.name for f in dataclasses.fields(self.column)
+                   if f.name not in params and f.name not in COLUMN_NOT_CARRIED]
+        self.assertEqual(missing, [])
+        self.assertEqual(sorted(set(params) - {f.name for f in dataclasses.fields(self.column)}),
+                         sorted(PARAMS_NOT_IN_LEGACY))
+        self.assertEqual(self.column.n_atom, 1.0)
 
     def test_set_fields_close(self):
         import dataclasses
@@ -142,6 +167,8 @@ class ConstantDiff(unittest.TestCase):
         self.assertEqual(edge["band"]["grade"], "extrapolated beyond printed scope")
         self.assertEqual(edge["band"]["origin"], "extrapolation of the printed fit")
         self.assertNotIn("error", edge["band"])                          # the checker computes it (method)
+        self.assertEqual(edge["band"]["source"]["page"], "7")
+        self.assertEqual(float(rec["printed_scope"]["p_max"]), 350.0 * GPA)
 
     def test_edge_band_method_value(self):
         # the method evaluated here on legacy's evaluator (P3's checker replaces this): the set against Huang's
