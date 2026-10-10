@@ -1,0 +1,935 @@
+# h2o — 물과 얼음 (SeaFreeze 1.1.0 액체·Ih–VI, French & Redmer 2015 VII/VII*/X) (phase-2 impl P6); rewrite/phase2-records/gen_h2o.py 가 썼다, 손으로 고치지 않는다
+id: h2o
+label: Water and its ices (SeaFreeze 1.1.0 liquid and Ih–VI; French & Redmer 2015 VII/VII*/X)
+kind: branched
+system: H2O
+fit_composition: pure H2O
+role_hint: ice
+choice: field
+phases:
+- id: water1
+  label: liquid water (Bollengier et al. 2019, SeaFreeze water1)
+  state: liquid
+  eos:
+    form: library
+    reference:
+      kind: state
+      p:
+        value: 0.0
+        unit: Pa
+        source:
+          library: SeaFreeze@1.1.0
+        grade: declared
+        note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
+      t:
+        value: 273.16
+        unit: K
+        source:
+          library: SeaFreeze@1.1.0
+        grade: declared
+        note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
+    library:
+      name: SeaFreeze
+      version: 1.1.0
+      sha256: 0fb040a8ed939416b19c8a1bdbd967e74e7059f5bec2015c0edf201dca1a71e1
+      submodel: water1
+  thermal:
+    source_state: liquid
+    source_composition: pure H2O
+  field:
+    kind: gibbs
+    source: &id001
+      library: SeaFreeze@1.1.0
+    grade: derived from the source's Gibbs surfaces at the pin (note 1 §6)
+  window:
+    p_min: 0.0
+    p_max: 2300000000.0
+    t_min: 238.99999999999991
+    t_max: 500.0
+  edges:
+    p_min:
+      refusal: input.material_out_of_data
+    p_max:
+      refusal: input.material_out_of_data
+    t_min:
+      refusal: input.material_out_of_data
+    t_max:
+      refusal: input.material_out_of_data
+- id: Ih
+  label: ice Ih (Feistel & Wagner 2006, SeaFreeze)
+  state: solid
+  eos:
+    form: library
+    reference:
+      kind: state
+      p:
+        value: 0.0
+        unit: Pa
+        source:
+          library: SeaFreeze@1.1.0
+        grade: declared
+        note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
+      t:
+        value: 273.16
+        unit: K
+        source:
+          library: SeaFreeze@1.1.0
+        grade: declared
+        note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
+    library:
+      name: SeaFreeze
+      version: 1.1.0
+      sha256: 0fb040a8ed939416b19c8a1bdbd967e74e7059f5bec2015c0edf201dca1a71e1
+      submodel: Ih
+  thermal:
+    source_state: solid
+    source_composition: pure H2O
+  field:
+    kind: gibbs
+    source: *id001
+    grade: derived from the source's Gibbs surfaces at the pin (note 1 §6)
+  window:
+    p_min: 0.0
+    p_max: 400000000.0
+    t_min: 1.0
+    t_max: 300.99999999999983
+  edges:
+    p_min:
+      refusal: input.material_out_of_data
+    p_max:
+      refusal: input.material_out_of_data
+    t_min:
+      refusal: input.material_out_of_data
+    t_max:
+      refusal: input.material_out_of_data
+- id: II
+  label: ice II (Journaux et al. 2020, SeaFreeze)
+  state: solid
+  eos:
+    form: library
+    reference:
+      kind: state
+      p:
+        value: 0.0
+        unit: Pa
+        source:
+          library: SeaFreeze@1.1.0
+        grade: declared
+        note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
+      t:
+        value: 273.16
+        unit: K
+        source:
+          library: SeaFreeze@1.1.0
+        grade: declared
+        note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
+    library:
+      name: SeaFreeze
+      version: 1.1.0
+      sha256: 0fb040a8ed939416b19c8a1bdbd967e74e7059f5bec2015c0edf201dca1a71e1
+      submodel: II
+  thermal:
+    source_state: solid
+    source_composition: pure H2O
+  field:
+    kind: gibbs
+    source: *id001
+    grade: derived from the source's Gibbs surfaces at the pin (note 1 §6)
+  window:
+    p_min: 0.0
+    p_max: 900000000.0
+    t_min: 0.0
+    t_max: 270.00000000000006
+  edges:
+    p_min:
+      refusal: input.material_out_of_data
+    p_max:
+      refusal: input.material_out_of_data
+    t_min:
+      refusal: input.material_out_of_data
+    t_max:
+      refusal: input.material_out_of_data
+- id: III
+  label: ice III (Journaux et al. 2020, SeaFreeze)
+  state: solid
+  eos:
+    form: library
+    reference:
+      kind: state
+      p:
+        value: 0.0
+        unit: Pa
+        source:
+          library: SeaFreeze@1.1.0
+        grade: declared
+        note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
+      t:
+        value: 273.16
+        unit: K
+        source:
+          library: SeaFreeze@1.1.0
+        grade: declared
+        note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
+    library:
+      name: SeaFreeze
+      version: 1.1.0
+      sha256: 0fb040a8ed939416b19c8a1bdbd967e74e7059f5bec2015c0edf201dca1a71e1
+      submodel: III
+  thermal:
+    source_state: solid
+    source_composition: pure H2O
+  field:
+    kind: gibbs
+    source: *id001
+    grade: derived from the source's Gibbs surfaces at the pin (note 1 §6)
+  window:
+    p_min: 0.0
+    p_max: 500000000.0
+    t_min: 0.0
+    t_max: 270.00000000000006
+  edges:
+    p_min:
+      refusal: input.material_out_of_data
+    p_max:
+      refusal: input.material_out_of_data
+    t_min:
+      refusal: input.material_out_of_data
+    t_max:
+      refusal: input.material_out_of_data
+- id: V
+  label: ice V (Journaux et al. 2020, SeaFreeze)
+  state: solid
+  eos:
+    form: library
+    reference:
+      kind: state
+      p:
+        value: 0.0
+        unit: Pa
+        source:
+          library: SeaFreeze@1.1.0
+        grade: declared
+        note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
+      t:
+        value: 273.16
+        unit: K
+        source:
+          library: SeaFreeze@1.1.0
+        grade: declared
+        note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
+    library:
+      name: SeaFreeze
+      version: 1.1.0
+      sha256: 0fb040a8ed939416b19c8a1bdbd967e74e7059f5bec2015c0edf201dca1a71e1
+      submodel: V
+  thermal:
+    source_state: solid
+    source_composition: pure H2O
+  field:
+    kind: gibbs
+    source: *id001
+    grade: derived from the source's Gibbs surfaces at the pin (note 1 §6)
+  window:
+    p_min: 0.0
+    p_max: 1000000000.0
+    t_min: 0.0
+    t_max: 300.0000000000001
+  edges:
+    p_min:
+      refusal: input.material_out_of_data
+    p_max:
+      refusal: input.material_out_of_data
+    t_min:
+      refusal: input.material_out_of_data
+    t_max:
+      refusal: input.material_out_of_data
+- id: VI
+  label: ice VI (Journaux et al. 2020, SeaFreeze)
+  state: solid
+  eos:
+    form: library
+    reference:
+      kind: state
+      p:
+        value: 0.0
+        unit: Pa
+        source:
+          library: SeaFreeze@1.1.0
+        grade: declared
+        note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
+      t:
+        value: 273.16
+        unit: K
+        source:
+          library: SeaFreeze@1.1.0
+        grade: declared
+        note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
+    library:
+      name: SeaFreeze
+      version: 1.1.0
+      sha256: 0fb040a8ed939416b19c8a1bdbd967e74e7059f5bec2015c0edf201dca1a71e1
+      submodel: VI
+  thermal:
+    source_state: solid
+    source_composition: pure H2O
+  field:
+    kind: gibbs
+    source: *id001
+    grade: derived from the source's Gibbs surfaces at the pin (note 1 §6)
+  window:
+    p_min: 0.0
+    p_max: 2300000000.0
+    t_min: 0.0
+    t_max: 400.0000000000001
+  edges:
+    p_min:
+      refusal: input.material_out_of_data
+    p_max:
+      refusal: input.material_out_of_data
+    t_min:
+      refusal: input.material_out_of_data
+    t_max:
+      refusal: input.material_out_of_data
+- id: vii_x
+  label: ice VII / VII* / X (French & Redmer 2015, one potential, HSE)
+  state: solid
+  eos:
+    form: evaluator
+    reference:
+      kind: state
+      p:
+        value: 0.0
+        unit: Pa
+        source: &id002
+          cache: 2015PhRvB..91a4308F.pdf
+          page: 5–7
+          where: eqs. (6), (9), (11), (14), (15); Tables I (HSE), II, III
+          sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+        grade: declared
+        note: 'evaluator form: the potential is absolute'
+      t:
+        value: 295.0
+        unit: K
+        source: &id003
+          cache: 2015PhRvB..91a4308F.pdf
+          page: '3'
+          where: '§II: «densities were varied between 1.6 and 4.25 g/cm3, and the temperatures were chosen from 295 up to
+            2000 K»'
+          sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+        grade: declared
+        note: 'evaluator form: the potential is absolute'
+    evaluator:
+      name: french_redmer2015
+      source: *id002
+      params:
+        a0:
+          value: -16.8923
+          unit: kJ/g (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '5'
+            where: Table I, HSE column (eq. (9))
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: a0 -16.8923
+        a1:
+          value: -85.0197
+          unit: kJ/g (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '5'
+            where: Table I, HSE column (eq. (9))
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: a1 -85.0197
+        a2:
+          value: 8.33865
+          unit: kJ/g (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '5'
+            where: Table I, HSE column (eq. (9))
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: a2 8.33865
+        a3:
+          value: -0.150425
+          unit: kJ/g (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '5'
+            where: Table I, HSE column (eq. (9))
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: a3 -0.150425
+        a4:
+          value: 59.9442
+          unit: kJ/g (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '5'
+            where: Table I, HSE column (eq. (9))
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: a4 59.9442
+        a5:
+          value: 38.2224
+          unit: kJ/g (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '5'
+            where: Table I, HSE column (eq. (9))
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: a5 38.2224
+        b0:
+          value: 2.08
+          unit: kJ/g (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '7'
+            where: Table III (eq. (15))
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: b0 2.08
+        b1:
+          value: 0.272
+          unit: kJ/g (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '7'
+            where: Table III (eq. (15))
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: b1 0.272
+        b2:
+          value: 0.096
+          unit: kJ/g (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '7'
+            where: Table III (eq. (15))
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: b2 0.096
+        b3:
+          value: 0.788
+          unit: kJ/g (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '7'
+            where: Table III (eq. (15))
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: b3 0.788
+        b4:
+          value: 2.54e-05
+          unit: kJ/g (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '7'
+            where: Table III (eq. (15))
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: b4 2.54e-05
+        t_d:
+          value: 700.0
+          unit: K
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: text below eq. (14)
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: T_D = 700 K
+        t_e:
+          value: 1000.0
+          unit: K
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: text below eq. (14)
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: T_E = 1000 K
+        a_d:
+          value: 2.0
+          unit: '1'
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: text below eq. (14)
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: a_D = 2
+        a_e:
+          value: 2.0
+          unit: '1'
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: text below eq. (14)
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: a_E = 2
+        k0:
+          value: 3.0
+          unit: '1'
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: text below eq. (14)
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: k0 = 3
+        alpha_0_m4:
+          value: 0.006869192
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: α0,-4 0.00686919
+        alpha_0_m3:
+          value: -0.003919234
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: α0,-3 -0.00391923
+        alpha_0_m2:
+          value: 6.790631e-05
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: α0,-2 6.79063e-05
+        gamma_0_m4:
+          value: -0.02604037
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: γ0,-4 -0.0260404
+        gamma_0_m3:
+          value: 0.0210406
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: γ0,-3 0.0210406
+        gamma_0_m2:
+          value: -0.001515928
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: γ0,-2 -0.00151593
+        gamma_1_m4:
+          value: 0.06721305
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: γ1,-4 0.067213
+        gamma_1_m3:
+          value: -0.1158057
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: γ1,-3 -0.115806
+        gamma_1_m2:
+          value: 0.05234025
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: γ1,-2 0.0523402
+        gamma_2_m4:
+          value: -0.1178112
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: γ2,-4 -0.117811
+        gamma_2_m3:
+          value: 0.1754266
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: γ2,-3 0.175427
+        gamma_2_m2:
+          value: -0.06213482
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: γ2,-2 -0.0621348
+        gamma_3_m4:
+          value: 0.1206828
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: γ3,-4 0.120683
+        gamma_3_m3:
+          value: -0.191082
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: γ3,-3 -0.191082
+        gamma_3_m2:
+          value: 0.07712887
+          unit: kJ/g/K (ρ in g/cm³)
+          source:
+            cache: 2015PhRvB..91a4308F.pdf
+            page: '6'
+            where: Table II
+            sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+          grade: read
+          printed: γ3,-2 0.0771289
+        rho_search_min:
+          value: 1600.0
+          unit: kg/m3
+          source: *id003
+          grade: declared
+          printed: 1.6 g/cm³
+          note: the inversion bracket is the MD grid, so nothing past it is reached
+        rho_search_max:
+          value: 4250.0
+          unit: kg/m3
+          source: *id003
+          grade: declared
+          printed: 4.25 g/cm³
+          note: the inversion bracket is the MD grid, so nothing past it is reached
+  thermal:
+    source_state: solid
+    source_composition: pure H2O (DFT-MD, HSE)
+  field:
+    kind: sourced
+    source:
+      cache: 2015PhRvB..91a4308F.pdf
+      page: '4'
+      where: '§III A: one potential for VII, VII* and X; «A rigorous determination of a sharp transition between ices VII*
+        and X is thus extremely difficult to infer»'
+      sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
+    grade: 'one phase VII/VII*/X: no VII–X curve (directing 2026-10-11)'
+  window:
+    p_min: 2140000000.0
+    p_max: .inf
+    t_min: 295.0
+    t_max: 2000.0
+  edges:
+    p_min:
+      refusal: input.material_out_of_data
+    p_max:
+      refusal: input.material_out_of_data
+    t_min:
+      refusal: input.material_out_of_data
+    t_max:
+      refusal: input.material_out_of_data
+boundaries:
+- between:
+  - water1
+  - vii_x
+  kind: melting
+  curve:
+    form: ln_sum
+    p_star:
+      value: 2216000000.0
+      unit: Pa
+      source: &id004
+        cache: IAPWS-R14-08-2011.pdf
+        page: -5-
+        where: '§3.5, eq. (5): ice VII melting pressure'
+        sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+      grade: read
+      printed: p* = 2216 MPa
+    t_star:
+      value: 355.0
+      unit: K
+      source: *id004
+      grade: read
+      printed: T* = 355 K
+    terms:
+    - a:
+        value: 1.73683
+        unit: '1'
+        source: *id004
+        grade: read
+      b:
+        value: -1.0
+        unit: '1'
+        source: *id004
+        grade: read
+    - a:
+        value: -0.0544606
+        unit: '1'
+        source: *id004
+        grade: read
+      b:
+        value: 5.0
+        unit: '1'
+        source: *id004
+        grade: read
+    - a:
+        value: 8.06106e-08
+        unit: '1'
+        source: *id004
+        grade: read
+      b:
+        value: 22.0
+        unit: '1'
+        source: *id004
+        grade: read
+    t_min:
+      value: 355.0
+      unit: K
+      source: *id004
+      grade: read
+      printed: temperature range from 355 K to 715 K
+    t_max:
+      value: 715.0
+      unit: K
+      source: *id004
+      grade: read
+      printed: temperature range from 355 K to 715 K
+    source: *id004
+refusals:
+- id: input.material_out_of_data
+  box:
+    p_min: 2140000000.0
+    p_max: 2300000000.0
+    t_min: 0.0
+    t_max: 355.0
+  reason: 'VI–VII boundary not cached (Bridgman 1937, Pistorius et al. 1968, Journaux et al. 2013 on papers-to-fetch); bounded
+    only by declared edges: Bezacier 2014''s lowest VII point (2.14 GPa, Table I), SeaFreeze VI''s window top and the R14-08
+    VII melting curve (directing 2026-10-11). Any column crossing ~2.2 GPa refuses until then'
+- id: input.material_out_of_data
+  box:
+    p_min: 2140000000.0
+    p_max: 2300000000.0
+    t_min: 355.0
+    t_max: 400.0000000000001
+  lower:
+  - form: ln_sum
+    p_star:
+      value: 2216000000.0
+      unit: Pa
+      source: &id005
+        cache: IAPWS-R14-08-2011.pdf
+        page: -5-
+        where: '§3.5, eq. (5): ice VII melting pressure'
+        sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+      grade: read
+      printed: p* = 2216 MPa
+    t_star:
+      value: 355.0
+      unit: K
+      source: *id005
+      grade: read
+      printed: T* = 355 K
+    terms:
+    - a:
+        value: 1.73683
+        unit: '1'
+        source: *id005
+        grade: read
+      b:
+        value: -1.0
+        unit: '1'
+        source: *id005
+        grade: read
+    - a:
+        value: -0.0544606
+        unit: '1'
+        source: *id005
+        grade: read
+      b:
+        value: 5.0
+        unit: '1'
+        source: *id005
+        grade: read
+    - a:
+        value: 8.06106e-08
+        unit: '1'
+        source: *id005
+        grade: read
+      b:
+        value: 22.0
+        unit: '1'
+        source: *id005
+        grade: read
+    t_min:
+      value: 355.0
+      unit: K
+      source: *id005
+      grade: read
+      printed: temperature range from 355 K to 715 K
+    t_max:
+      value: 715.0
+      unit: K
+      source: *id005
+      grade: read
+      printed: temperature range from 355 K to 715 K
+    source: *id005
+  reason: 'VI–VII boundary not cached (Bridgman 1937, Pistorius et al. 1968, Journaux et al. 2013 on papers-to-fetch); bounded
+    only by declared edges: Bezacier 2014''s lowest VII point (2.14 GPa, Table I), SeaFreeze VI''s window top and the R14-08
+    VII melting curve (directing 2026-10-11). Any column crossing ~2.2 GPa refuses until then; above 355 K only above the
+    melting curve'
+triple_points:
+- phases:
+  - water1
+  - VI
+  - vii_x
+  p:
+    value: 2216000000.0
+    unit: Pa
+    source: &id006
+      cache: IAPWS-R14-08-2011.pdf
+      page: -5-
+      where: 'Table 1: ice VI – ice VII – liquid, 355 K / 2216 MPa'
+      sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+    grade: read
+    printed: 2216 MPa
+  t:
+    value: 355.0
+    unit: K
+    source: *id006
+    grade: read
+    printed: 355 K
+  tolerance:
+    dp: 56000000.0
+    dt: 2.8
+    reason: 'set before measuring: the spread of reported locations, 352.2–355 K and 2,160–2,216 MPa (Journaux et al. 2020
+      p.11)'
+  unchecked: inside the declared VI–VII refusal region (no VI–VII curve until its source is cached)
+field_probe:
+  box:
+    p_min: 0.0
+    p_max: 3000000000.0
+    t_min: 240.0
+    t_max: 500.0
+  dp: 20000000.0
+  dt: 5.0
+formula_checks:
+- quantity: R14-08 eq. (5), ice VII melting pressure at 550 K
+  state: {}
+  expected: 6308710000.0
+  unit: Pa
+  tolerance: 5000.0
+  tolerance_reason: printed to 0.01 MPa
+  expression: curve(boundaries[0] @ T=550.0)
+  source:
+    cache: IAPWS-R14-08-2011.pdf
+    page: -7-
+    where: §7 Table 3, eq. (5) ice VII – liquid, 550.0 K
+    sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+- quantity: SeaFreeze Ih–water1 melting pressure at 260 K against R14-08
+  state: {}
+  expected: 138268000.0
+  unit: Pa
+  tolerance: 2765360.0000000005
+  tolerance_reason: 'R14-08 Table 2: 2% for the Ih–liquid equation, set before measuring'
+  expression: melt_p(Ih, water1 @ T=260.0)
+  source:
+    cache: IAPWS-R14-08-2011.pdf
+    page: -7-
+    where: §7 Table 3, ice Ih – liquid, 260.0 K
+    sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+- quantity: SeaFreeze III–water1 melting pressure at 254 K against R14-08
+  state: {}
+  expected: 268685000.0
+  unit: Pa
+  tolerance: 8060549.999999999
+  tolerance_reason: 'R14-08 Table 2: 3% for the III–liquid equation, set before measuring'
+  expression: melt_p(III, water1 @ T=254.0)
+  source:
+    cache: IAPWS-R14-08-2011.pdf
+    page: -7-
+    where: §7 Table 3, ice III – liquid, 254.0 K
+    sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+  disclosed_fail:
+    source:
+      cache: 2020JGRE..12506176J.pdf
+      page: '11'
+      where: '§3.2.3: «Although the ice III melting curve of Wagner et al. (2011) has larger curvature than the current prediction,
+        both lie within the 0.6 K uncertainty range»'
+      sha256: 32be1644a63fa452a5fcd273d893185a065243577d0084ac7b0df2197615deff
+    why: 'SeaFreeze III–L at 254 K lies 3.5 % above R14-08 eq. (2) in P (a steep line: ~0.3 K in T); Journaux 2020 p.11 prints
+      this disagreement'
+- quantity: SeaFreeze V–water1 melting pressure at 265 K against R14-08
+  state: {}
+  expected: 479640000.0
+  unit: Pa
+  tolerance: 14389199.999999998
+  tolerance_reason: 'R14-08 Table 2: 3% for the V–liquid equation, set before measuring'
+  expression: melt_p(V, water1 @ T=265.0)
+  source:
+    cache: IAPWS-R14-08-2011.pdf
+    page: -7-
+    where: §7 Table 3, ice V – liquid, 265.0 K
+    sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+- quantity: SeaFreeze VI–water1 melting pressure at 320 K against R14-08
+  state: {}
+  expected: 1356760000.0
+  unit: Pa
+  tolerance: 40702800.0
+  tolerance_reason: 'R14-08 Table 2: 3% for the VI–liquid equation, set before measuring'
+  expression: melt_p(VI, water1 @ T=320.0)
+  source:
+    cache: IAPWS-R14-08-2011.pdf
+    page: -7-
+    where: §7 Table 3, ice VI – liquid, 320.0 K
+    sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+note: SeaFreeze 1.1.0 is the PyPI sdist (sha256 c7574f3e9b9628d2eac6ca7f049d54c5c027928930cdb4b13a6988c5700bda8c, enforced
+  at install by pip --require-hashes); library.sha256 is the installed package tree (material_library.tree_sha256). Windows
+  are the spline knot domains at the pin ∩ the printed validity (≤ 2,300 MPa; water1 ≤ 500 K). Liquid above water1's window
+  and the vapour refuse by name until IAPWS-IF97 lands (owner-direction 2026-10-11, scope change). Any icy column crossing
+  ~2.2 GPa refuses until a VI–VII boundary source is cached (directing 2026-10-11). French & Redmer 2015 prints no point value
+  of its potential; its transcription is checked against legacy ice_fr2015 (test_material_evaluators) and against SeaFreeze's
+  VII_X_French, the same potential (P6 test, directing).
