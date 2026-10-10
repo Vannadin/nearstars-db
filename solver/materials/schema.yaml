@@ -315,3 +315,10 @@ formula_check:
   tolerance_reason: {shape: text, required: true}
   expression: {shape: text, required: true}                  # over the stored constants, evaluated by the view
   source:     {shape: source, required: true}
+  disclosed_fail: {shape: record, of: disclosed_fail}        # a known miss, printed by a cached source (directing, III–L)
+
+# A formula check that fails by a disagreement a cached source itself prints (directing, 2026-10-11: only then). The
+# suite passes it and lists the disclosure; a disclosed check that starts to pass fails the suite (stale disclosure).
+disclosed_fail:
+  source: {shape: source, required: true}                    # where the disagreement is printed (cache with page)
+  why:    {shape: text, required: true}

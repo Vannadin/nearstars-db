@@ -443,6 +443,15 @@ def _reference_and_sets(ph: Mapping, file):
                         why=f"phase {ph['id']} set {i}: an adiabat kind or a T² term needs the set's own t_ref")
 
 
+def _disclosures(rec: Mapping, file):
+    """A disclosed fail cites a cached source (page) that prints the disagreement; no other source kind will do."""
+    for i, fc in enumerate(rec["formula_checks"]):
+        d = fc.get("disclosed_fail")
+        if d is not None and "cache" not in d["source"]:
+            raise _Stop("material.bad_cite", file=file, path=f"record.formula_checks[{i}].disclosed_fail.source",
+                        why="a disclosed fail cites the cached source that prints the disagreement")
+
+
 def _curves(rec: Mapping, file):
     """68 N32: a clapeyron boundary declares its printed T range (t_min, t_max), as a table's nodes do."""
     for i, b in enumerate(rec.get("boundaries", ())):
@@ -599,6 +608,7 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
             raise _Stop("material.id_mismatch", file=file, id=raw["id"])
         _kind(raw, file)
         _curves(raw, file)
+        _disclosures(raw, file)
         _bands(raw, "record", file)
         for ph in raw["phases"]:
             _edges(ph, file)

@@ -178,11 +178,13 @@ class Generated(unittest.TestCase):
                         self.assertEqual(s.record.refusal, e["refusal"])
 
     def test_formula_checks(self):
+        """Each check within tolerance, or a disclosed fail (a cached source prints the disagreement) that still
+        misses; a disclosed check that passes is stale and fails."""
         for rid, rec in self.recs.items():
             for r in mc.run_formula_checks(rec, mv.RecordView(rec, T_POT)):
                 with self.subTest(record=rid, check=r["quantity"]):
                     self.assertNotIn("stop", r, r.get("stop"))
-                    self.assertTrue(r["passed"], r)
+                    self.assertTrue(r["passed"], ("stale disclosure: " if r.get("disclosed") else "") + repr(r))
 
     def test_band_methods_evaluate(self):
         """68 N26: every band method in a shipped record evaluates through the grammar, so a broken method fails the
@@ -276,6 +278,20 @@ class Controls(unittest.TestCase):
         rec["phases"][0]["edges"]["t_max"] = {"refusal": "input.material_out_of_data"}
         with self.assertRaises(AssertionError):
             list(edge_probes(rec))
+
+    def test_disclosed_fail_passes_and_goes_stale(self):
+        rec = _records()["fe_prem"]
+        fc = rec["formula_checks"][0]
+        fc["disclosed_fail"] = {"source": {"cache": "x.pdf", "page": "1", "where": "p", "sha256": "0" * 64},
+                                "why": "toy"}
+        self.assertFalse(mc.run_formula_checks(rec)[0]["passed"])          # within tolerance: stale disclosure
+        fc["expected"] = float(fc["expected"]) * 10.0
+        r = mc.run_formula_checks(rec)[0]
+        self.assertTrue(r["passed"])
+        self.assertEqual(r["disclosed"], "toy")
+        fc["disclosed_fail"]["source"] = {"doi": "doi:10.1/x"}
+        self.assertEqual(mr.check_record(rec, "fe_prem.yaml", frozenset(
+            s for _p, _n, s in _cache_cites(rec))).id, "material.bad_cite")
 
     def test_undeclared_edge_stops_at_load(self):
         rec = copy.deepcopy(_records()["fe_prem"])

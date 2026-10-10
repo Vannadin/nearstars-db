@@ -233,6 +233,10 @@ def run_formula_checks(record: Mapping, view=None) -> list:
             out.append({"quantity": fc["quantity"], "stop": got})
             continue
         exp, tol = float(fc["expected"]), float(fc["tolerance"])
+        within = abs(got - exp) <= tol
+        disc = fc.get("disclosed_fail")
         out.append({"quantity": fc["quantity"], "got": got, "expected": exp, "tolerance": tol,
-                    "passed": abs(got - exp) <= tol})
+                    "within": within, "disclosed": None if disc is None else disc["why"],
+                    # a disclosed miss passes; a disclosed check that is within tolerance is a stale disclosure
+                    "passed": within if disc is None else not within})
     return out
