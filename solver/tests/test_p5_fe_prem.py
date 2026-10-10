@@ -37,8 +37,12 @@ COLUMN_NOT_CARRIED = {
     "n_atom": "atoms per formula unit, 1 for Fe; not a Table 1 parameter (the evaluator's formula unit)",
 }
 #: Table 1 liquid values the record carries that legacy's Column has no slot for
-PARAMS_NOT_IN_LEGACY = {"u0": "U0, energy offset; γ and (∂P/∂T)_V do not read it",
-                        "a_s": "a_S, printed for liquid only; legacy dropped it (7c a1917882, N6)"}
+PARAMS_NOT_IN_LEGACY = {
+    "u0": "U0, the constant term of eq. (22); no V or T derivative (P, (∂P/∂T)_V, C_V, γ) reads it",
+    "a_s": "a_S enters eq. (22) only as −a_S R (T − T0), V-independent («in the first approximation», p.3) and "
+           "linear in T: it adds a_S R to S and nothing to P, (∂P/∂T)_V, C_V or γ, so legacy's evaluator is the "
+           "printed model for what the set supplies (68 N13)",
+}
 
 #: legacy Phase / ThermalSet fields the record does not carry, with the reason
 NOT_CARRIED = {
