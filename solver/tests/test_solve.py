@@ -285,8 +285,9 @@ class MaterialBytes(unittest.TestCase):
 
 
 class ClosureDiscontinuous(unittest.TestCase):
-    """Phase-1 design note 8: a root must meet tol_F (a) and lie on one line with F at x* ± δ (a′). Planted steps of F
-    on the two-layer uniform fixture (R closure) and on its boundary_mass inverse (r2 CB1)."""
+    """Phase-1 design notes 8–9: a root must meet tol_F (a), and each side's F at x* ± δ, ± 2δ must lie on one line
+    through F(x*) (a″). Planted steps of F on the two-layer uniform fixture (R closure) and on its boundary_mass
+    inverse (r2 CB1), and a planted slope kink at the root that must pass (r2 on note 9)."""
 
     def _bodies(self):
         body, views = _two_layer(6000.0)
@@ -297,18 +298,22 @@ class ClosureDiscontinuous(unittest.TestCase):
                      radius=b.Declared(x0, "m"))
         return (body, views, x0), (inv, views)
 
-    def _slope_sign(self, body, views, x):
+    def _slope(self, body, views, x):
         lo, hi = (sv.inward(body, sv._views_at(body, views, xx), xx, context.Options()).F for xx in
                   (x * (1 - 1e-4), x * (1 + 1e-4)))
-        return math.copysign(1.0, hi - lo)
+        return (hi - lo) / (2e-4 * x)
 
-    def _with_step(self, body, views, x_step, jump):
+    def _slope_sign(self, body, views, x):
+        return math.copysign(1.0, self._slope(body, views, x))
+
+    def _with_step(self, body, views, x_step, jump, kink=0.0):
+        """F + jump past x_step; with `kink`, F + kink·(x − x_step) past x_step instead (a slope change, no jump)."""
         orig = sv.inward
 
         def stepped(bd, vw, x, opt):
             got = orig(bd, vw, x, opt)
             if not isinstance(got, st.Stop) and got.F is not None and x > x_step:
-                got.F += jump
+                got.F += jump + kink * (x - x_step)
             return got
         sv.inward = stepped
         try:
@@ -331,6 +336,10 @@ class ClosureDiscontinuous(unittest.TestCase):
                 self.assertIsInstance(got, result.Refusal)
                 self.assertEqual(got.id, "solve.closure_discontinuous")
                 self.assertEqual(got.evidence["check"], "probe")
+            with self.subTest(closure=name, control="(v) a 50 % slope change at the root passes (note 9, r2)"):
+                got, x = self._with_step(body, vw, x0, 0.0, kink=0.5 * self._slope(body, vw, x0))
+                self.assertIsInstance(got, result.Answer, getattr(got, "text", None))
+                self.assertLess(abs(x / x0 - 1.0), 1e-12)          # Brent's path differs; the root does not
             with self.subTest(closure=name, control="(iv) a step below tol_F fires nothing"):
                 got, x = self._with_step(body, vw, x0 * (1 + 1e-9), sg * 1e-11)
                 self.assertIsInstance(got, result.Answer, getattr(got, "text", None))

@@ -478,31 +478,57 @@ def _regions(out) -> list:
     return regs
 
 
-PROBE_SPAN = 50.0           # phase-1 design note 8 (a′): δ = PROBE_SPAN·tol_F/s, so the smooth chord s·2δ = 100·tol_F
+PROBE_SPAN = 50.0           # phase-1 design notes 8–9: δ = PROBE_SPAN·tol_F/s, so a side's chord s·2δ = 100·tol_F
 
 
 def _root_tolerance(x, acc, options, bracket, trials) -> dict:
-    """Phase-1 design note 8 at the root x, in the closure's own variable (any closure kind).
+    """Phase-1 design notes 8–9 at the root x, in the closure's own variable (any closure kind).
     tol_F = 3·N_acc·rtol + 2·s·tol_x: 3·N_acc·rtol bounds the accepted pass's integration error in
     F = (r³ − …)/r_s³ with r_s = R (rho_mean is the bulk density at the pass's R, so r ≤ r_s and each accepted step
     moves r³/r_s³ by at most 3·rtol); 2·s·tol_x is Brent's stop bracket times the scan secant s.
-    (a′): δ = PROBE_SPAN·tol_F/s (capped at a quarter of the scan bracket), so a smooth F moves by 100·tol_F over the
-    chord; the chord's own curvature allowance is ½·|F″|·δ² with F″ the scan's second divided difference."""
+    δ = PROBE_SPAN·tol_F/s, capped at an eighth of the scan bracket so x* ± 2δ stays inside it."""
     xa, fa, xb, fb = bracket["scan"]
     s = abs(fb - fa) / abs(xb - xa)
     tol_x = 2.0 * 2.2e-16 * abs(x) + 0.5 * cl.CLOSE_TOL * abs(x)
     tol_f = 3.0 * acc.counters.get("accepted", 0) * options.rtol + 2.0 * s * tol_x
-    delta = min(PROBE_SPAN * tol_f / s, 0.25 * abs(xb - xa)) if s > 0.0 else 0.25 * abs(xb - xa)
-    pts = sorted({t.x: t.F for t in trials if t.kind == "scan" and t.F is not None}.items())
-    i = next((k for k, (xx, _f) in enumerate(pts) if xx == xa), None)
-    f2 = 0.0
-    if i is not None:
-        trio = pts[max(0, i - 1):max(0, i - 1) + 3] if i + 1 < len(pts) else pts[-3:]
-        if len(trio) == 3:
-            (x0, y0), (x1, y1), (x2, y2) = trio
-            f2 = abs(2.0 * ((y2 - y1) / (x2 - x1) - (y1 - y0) / (x1 - x0)) / (x2 - x0))
-    return {"tol_F": tol_f, "s": s, "sign": math.copysign(1.0, fb - fa), "delta": delta,
-            "curvature": 0.5 * f2 * delta * delta}
+    cap = 0.125 * min(abs(x - xa), abs(xb - x)) if xa != x != xb else 0.125 * abs(xb - xa)
+    delta = min(PROBE_SPAN * tol_f / s, cap) if s > 0.0 else cap
+    # each side's reference point: the nearest solved trial of the solve at least 4δ off the root (a scan point, a
+    # wall-location shot or a Brent trial; Venus's member root is itself a scan point with only walls below it)
+    solved = sorted((t.x, t.F) for t in trials if t.F is not None and abs(t.x - x) >= 4.0 * delta)
+    left = [p for p in solved if p[0] < x]
+    right = [p for p in solved if p[0] > x]
+    far = (left[-1] if left else None, right[0] if right else None)
+    return {"tol_F": tol_f, "s": s, "delta": delta, "far": far}
+
+
+def _side_check(F, x, f_root, side, rt) -> dict:
+    """Phase-1 design note 9 (a″): one side of the root, both sides always (the rule, not the result, picks them).
+    F at x + side·δ and x + side·2δ must lie on one line through F(x*) within 2·tol_F + ½·|F″_side|·δ², F″_side the
+    second divided difference over (the side's reference point, x + side·2δ, x*), the reference being the nearest
+    solved trial at least 4δ off the root on that side; the chord's slope must have the sign of the secant from x* to
+    that point. A side with no solved trial is refused by name (its probes are not anchored). F has a slope change at its root by construction (the m_ε end for F > 0, the
+    r-floor event for F < 0; rhs.residual), so a chord never straddles it."""
+    d = rt["delta"]
+    x1, x2 = x + side * d, x + side * 2.0 * d
+    f1, f2 = cl._value(F, x1), cl._value(F, x2)
+    out = {"side": side, "x1": x1, "x2": x2, "F1": None if isinstance(f1, st.Stop) else f1,
+           "F2": None if isinstance(f2, st.Stop) else f2,
+           "stop": next((z.kind for z in (f1, f2) if isinstance(z, st.Stop)), None)}
+    if out["stop"] is not None:
+        out["ok"] = False
+        return out
+    ref = rt["far"][1 if side > 0 else 0]
+    if ref is None:
+        out.update(ok=False, stop="no_solved_reference")
+        return out
+    xe, fe = ref
+    curv = abs(2.0 * ((fe - f2) / (xe - x2) - (f2 - f_root) / (x2 - x)) / (xe - x))
+    out["deviation"] = abs(f1 - 0.5 * (f_root + f2))
+    out["allowed"] = 2.0 * rt["tol_F"] + 0.5 * curv * d * d
+    secant = (fe - f_root) / (xe - x)
+    out["ok"] = out["deviation"] <= out["allowed"] and (f2 - f_root) / (x2 - x) * secant > 0.0
+    return out
 
 
 def solve(body, options: context.Options = context.Options(), warm=None, views=None):
@@ -525,8 +551,10 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
                         reset_legacy=any(isinstance(v, lm.LegacyView) for v in views.values()))
     kind = body.closure.kind
 
+    views_all = views                                 # F keeps the unbound views: the probes run after `views` is bound to x*
+
     def F(x):
-        vx = _views_at(body, views, x)
+        vx = _views_at(body, views_all, x)
         if isinstance(vx, st.Stop):
             return vx
         got = inward(body, vx, x, options)
@@ -598,20 +626,13 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
             qs, sens_note = _with_sensitivity(body, views, x, options, acc, qs, supplied=supplied, ctx=ctx)
             if sens_note is not None:
                 notes.append(sens_note)
-        if guard:                                        # note 8 (a′): F at x* ± δ on one line through F(x*)
-            delta, allowed = rt["delta"], 2.0 * tol_f + rt["curvature"]
-            fm, fp = cl._value(F, x - delta), cl._value(F, x + delta)
-            ctx.record("probe", x=x - delta, F=None if isinstance(fm, st.Stop) else fm,
-                       stop=fm.kind if isinstance(fm, st.Stop) else None)
-            ctx.record("probe", x=x + delta, F=None if isinstance(fp, st.Stop) else fp,
-                       stop=fp.kind if isinstance(fp, st.Stop) else None)
-            stopped = isinstance(fm, st.Stop) or isinstance(fp, st.Stop)
-            dev = None if stopped else abs(acc.F - 0.5 * (fp + fm))
-            if stopped or dev > allowed or (fp - fm) * rt["sign"] <= 0.0:
-                probes = {"delta": delta, "F_minus": None if isinstance(fm, st.Stop) else fm, "F_root": acc.F,
-                          "F_plus": None if isinstance(fp, st.Stop) else fp, "deviation": dev,
-                          "allowed": allowed,
-                          "stop": next((z.kind for z in (fm, fp) if isinstance(z, st.Stop)), None)}
+        if guard:                                        # note 9 (a″): one-sided chords on both sides of x*
+            sides = [_side_check(F, x, acc.F, -1.0, rt), _side_check(F, x, acc.F, 1.0, rt)]
+            for sd in sides:
+                for xx, ff in ((sd["x1"], sd["F1"]), (sd["x2"], sd["F2"])):
+                    ctx.record("probe", x=xx, F=ff, stop=sd["stop"])
+            if not all(sd["ok"] for sd in sides):
+                probes = {"delta": rt["delta"], "F_root": acc.F, "sides": sides}
                 return refusals.make("solve.closure_discontinuous", where, x=x, closure_kind=kind,
                                      pass_kind="probe", check="probe", F_root=acc.F, tol_F=tol_f,
                                      n_acc=acc.counters.get("accepted", 0), rtol=options.rtol,
