@@ -339,3 +339,13 @@ formula_check:
 disclosed_fail:
   source: {shape: source, required: true}                    # where the disagreement is printed (cache with page)
   why:    {shape: text, required: true}
+  bound:  {shape: record, of: disclosure_bound}              # the printed size of the disagreement (44ff625); required
+                                                             # once h2o carries it (step 3)
+
+# The printed disagreement as a bound on the miss. In the check's own unit (unit = the check's unit), or in K for a
+# check on a pressure, converted with the record's own curve slope at the check's T: `slope` is a C4 expression for
+# dP/dT there (e.g. a finite difference of melt_p). No printed size → no disclosure.
+disclosure_bound:
+  value:  {shape: number, required: true}
+  unit:   {shape: text, required: true}
+  slope:  {shape: text}

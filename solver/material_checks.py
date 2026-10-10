@@ -219,6 +219,21 @@ def view_record_fns(view):
     return {"curve": curve, "melt_p": melt_p}
 
 
+def _disclosure_allowance(bound, fc, phase, state, view, pi):
+    """The allowed miss in the check's unit: the bound as given, or a bound in K times |dP/dT| from the record's own
+    slope expression at the check's T."""
+    if bound["unit"] == fc["unit"]:
+        return float(bound["value"])
+    if bound["unit"] == "K" and bound.get("slope"):
+        slope = evaluate(bound["slope"], phase, state, None if view is None else view_spread(view, pi),
+                         None if view is None else view_record_fns(view))
+        if isinstance(slope, CheckStop):
+            return slope
+        return float(bound["value"]) * abs(slope)
+    return CheckStop("material.check_grammar", f"disclosure bound in {bound['unit']} needs the check's unit "
+                                               f"({fc['unit']}) or K with a slope")
+
+
 def run_formula_checks(record: Mapping, view=None) -> list:
     """Each formula check of a record: {quantity, got, expected, tolerance, passed} or {quantity, stop}. A check is read
     against the first phase unless its state names `phase` (an index)."""
@@ -235,8 +250,20 @@ def run_formula_checks(record: Mapping, view=None) -> list:
         exp, tol = float(fc["expected"]), float(fc["tolerance"])
         within = abs(got - exp) <= tol
         disc = fc.get("disclosed_fail")
-        out.append({"quantity": fc["quantity"], "got": got, "expected": exp, "tolerance": tol,
-                    "within": within, "disclosed": None if disc is None else disc["why"],
-                    # a disclosed miss passes; a disclosed check that is within tolerance is a stale disclosure
-                    "passed": within if disc is None else not within})
+        row = {"quantity": fc["quantity"], "got": got, "expected": exp, "tolerance": tol,
+               "within": within, "disclosed": None if disc is None else disc["why"]}
+        if disc is None:
+            row["passed"] = within
+        else:                                               # owner-direction 44ff625: stale, or beyond the bound, fails
+            if "bound" not in disc:                         # step 1 of 44ff625: until records carry it (then required)
+                row["passed"] = not within
+                out.append(row)
+                continue
+            allowed = _disclosure_allowance(disc["bound"], fc, record["phases"][pi], state, view, pi)
+            if isinstance(allowed, CheckStop):
+                out.append({"quantity": fc["quantity"], "stop": allowed})
+                continue
+            row["allowed_miss"] = allowed
+            row["passed"] = (not within) and abs(got - exp) <= allowed
+        out.append(row)
     return out

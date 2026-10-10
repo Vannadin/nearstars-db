@@ -282,13 +282,21 @@ class Controls(unittest.TestCase):
     def test_disclosed_fail_passes_and_goes_stale(self):
         rec = _records()["fe_prem"]
         fc = rec["formula_checks"][0]
+        exp0 = float(fc["expected"])
         fc["disclosed_fail"] = {"source": {"cache": "x.pdf", "page": "1", "where": "p", "sha256": "0" * 64},
-                                "why": "toy"}
+                                "why": "toy", "bound": {"value": 2.0e9, "unit": fc["unit"]}}
         self.assertFalse(mc.run_formula_checks(rec)[0]["passed"])          # within tolerance: stale disclosure
-        fc["expected"] = float(fc["expected"]) * 10.0
+        fc["expected"] = exp0 + 1.0e9                                       # a miss inside the printed bound
         r = mc.run_formula_checks(rec)[0]
-        self.assertTrue(r["passed"])
+        self.assertTrue(r["passed"], r)
         self.assertEqual(r["disclosed"], "toy")
+        fc["expected"] = exp0 + 5.0e9                                       # a miss beyond the printed bound fails
+        self.assertFalse(mc.run_formula_checks(rec)[0]["passed"])
+        fc["disclosed_fail"]["bound"] = {"value": 0.6, "unit": "K", "slope": "3.0e9"}   # 0.6 K × 3 GPa/K = 1.8 GPa
+        fc["expected"] = exp0 + 1.0e9
+        self.assertTrue(mc.run_formula_checks(rec)[0]["passed"])
+        fc["disclosed_fail"]["bound"] = {"value": 0.6, "unit": "K"}                     # K without a slope: no way
+        self.assertIn("stop", mc.run_formula_checks(rec)[0])
         fc["disclosed_fail"]["source"] = {"doi": "doi:10.1/x"}
         self.assertEqual(mr.check_record(rec, "fe_prem.yaml", frozenset(
             s for _p, _n, s in _cache_cites(rec))).id, "material.bad_cite")
