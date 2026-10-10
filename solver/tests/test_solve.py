@@ -472,6 +472,25 @@ class GuardRedTeam(unittest.TestCase):
         self.assertLess(abs(x / self.x0 - 1.0), 1e-12)
         self.assertLess(abs(self.rt[-1]["s"] / s0 - 1.0), 0.5)          # the local slope, not the jump across the wall
 
+    def test_a_wall_between_the_probes_and_the_reference(self):
+        """r2 GB2: trials from 0.5·x0 to x0 − 5·δ_clean refuse and F is offset by 10 beyond them; no solved trial ≥ 4δ
+        below lies inside the stretch, so the lower side refuses «no_solved_reference» and never reads past the wall."""
+        lo_w, hi_w = 0.5 * self.x0, self.x0 - 5.0 * self.delta0         # 2δ < 5·δ0 < 4δ here (δ ≈ 1.6·δ0)
+        sg = math.copysign(1.0, self._f_at(1.001 * self.x0) - self._f_at(0.9995 * self.x0))
+
+        def alter(xx, f):
+            if lo_w <= xx <= hi_w:
+                return st.Stop("refused", {"planted": "wall band", "x": xx})
+            return f - 10.0 * sg if xx < lo_w else f
+        self.rt.clear()
+        ans, x = self._solve(alter)
+        d = self.rt[-1]["delta"]
+        self.assertTrue(2.0 * d < self.x0 - hi_w < 4.0 * d, (d, self.x0 - hi_w))   # the case is the one meant
+        self.assertIsInstance(ans, result.Refusal, getattr(ans, "quantities", None))
+        self.assertEqual((ans.id, ans.evidence["check"]), ("solve.closure_discontinuous", "probe"))
+        lower = next(sd for sd in ans.evidence["probes"]["sides"] if sd["side"] < 0)
+        self.assertEqual(lower["stop"], "no_solved_reference")
+
     def test_very_flat_and_very_steep_F(self):
         """F scaled by 1e-3 and 1e3: δ follows the slope (capped by the scan pair), and the root is unchanged."""
         for k in (1e-3, 1e3):

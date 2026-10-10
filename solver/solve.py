@@ -486,25 +486,27 @@ def _root_tolerance(x, acc, options, bracket, trials) -> dict:
     tol_F = 3·N_acc·rtol + 2·s·tol_x: 3·N_acc·rtol bounds the accepted pass's integration error in
     F = (r³ − …)/r_s³ with r_s = R (rho_mean is the bulk density at the pass's R, so r ≤ r_s and each accepted step
     moves r³/r_s³ by at most 3·rtol); 2·s·tol_x is Brent's stop bracket times the slope s.
-    s is the secant of the points around the root: on each side the nearest scan point (a scan point at x itself is
-    skipped), else the farthest solved trial of that side's solved stretch. Note 10: a sign-change bracket can be a hair wide (a Brent or wall trial next to
+    s is the secant of the points around the root: on each side, inside its solved stretch, the nearest scan point (a
+    scan point at x itself is skipped), else the farthest solved trial (note 11). Note 10: a sign-change bracket can be a hair wide (a Brent or wall trial next to
     a scan point), where noise sets its secant and δ collapsed below the noise (Mars member at rtol/10, δ 5.5e-5 m).
     δ = PROBE_SPAN·tol_F/s, capped at an eighth of the scan pair's width."""
     scan = sorted((t.x, t.F) for t in trials if t.kind == "scan" and t.F is not None)
     solved = sorted((t.x, t.F) for t in trials if t.F is not None)
     refused = sorted(t.x for t in trials if t.F is None and t.kind != "isolated")
 
-    def side_point(sgn):
-        """Inside that side's solved stretch (no refused trial between it and x; r2 GB1): the nearest scan point;
-        with none, the farthest solved trial; so the secant never rests on a hair-wide pair nor spans a wall."""
+    def inside(q, sgn):
+        """q lies on that side of x inside its solved stretch: no refused trial between q and x (r2 GB1, GB2). Every
+        consumer of the solve's trials (the slope's points and each side's reference) goes through it."""
         wall = min((w for w in refused if (w - x) * sgn > 0.0), key=lambda w: abs(w - x), default=None)
+        return (q[0] - x) * sgn > 0.0 and (wall is None or abs(q[0] - x) < abs(wall - x))
 
-        def inside(q):
-            return (q[0] - x) * sgn > 0.0 and (wall is None or abs(q[0] - x) < abs(wall - x))
-        sc = [q for q in scan if inside(q)]
+    def side_point(sgn):
+        """Inside that side's solved stretch: the nearest scan point; with none, the farthest solved trial; so the
+        secant never rests on a hair-wide pair nor spans a wall."""
+        sc = [q for q in scan if inside(q, sgn)]
         if sc:
             return min(sc, key=lambda q: abs(q[0] - x))
-        stretch = [q for q in solved if inside(q)]
+        stretch = [q for q in solved if inside(q, sgn)]
         return max(stretch, key=lambda q: abs(q[0] - x)) if stretch else None
 
     lo_pt, hi_pt = side_point(-1.0), side_point(1.0)
@@ -517,11 +519,11 @@ def _root_tolerance(x, acc, options, bracket, trials) -> dict:
     # a probe that leaves the solved stretch (a wall within 2δ) refuses the solve by design (r2 on 55117864 (b))
     cap = 0.125 * abs(xb - xa)
     delta = min(PROBE_SPAN * tol_f / s, cap) if s > 0.0 else cap
-    # each side's reference point: the nearest solved trial of the solve at least 4δ off the root (a scan point, a
-    # wall-location shot or a Brent trial; Venus's member root is itself a scan point with only walls below it)
-    solved = sorted((t.x, t.F) for t in trials if t.F is not None and abs(t.x - x) >= 4.0 * delta)
-    left = [q for q in solved if q[0] < x]
-    right = [q for q in solved if q[0] > x]
+    # each side's reference point: the nearest solved trial at least 4δ off the root inside that side's solved
+    # stretch (r2 GB2: never beyond a wall); none → the side refuses «no_solved_reference»
+    off = [q for q in solved if abs(q[0] - x) >= 4.0 * delta]
+    left = [q for q in off if inside(q, -1.0)]
+    right = [q for q in off if inside(q, 1.0)]
     far = (left[-1] if left else None, right[0] if right else None)
     return {"tol_F": tol_f, "s": s, "delta": delta, "far": far}
 
