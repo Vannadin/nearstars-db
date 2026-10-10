@@ -902,6 +902,10 @@ formula_checks:
       sha256: 32be1644a63fa452a5fcd273d893185a065243577d0084ac7b0df2197615deff
     why: 'SeaFreeze III–L at 254 K lies 3.5 % above R14-08 eq. (2) in P (a steep line: ~0.3 K in T); Journaux 2020 p.11 prints
       this disagreement'
+    bound:
+      value: 0.6
+      unit: K
+      slope: (melt_p(III, water1 @ T=254.5) - melt_p(III, water1 @ T=253.5)) / 1.0
 - quantity: SeaFreeze V–water1 melting pressure at 265 K against R14-08
   state: {}
   expected: 479640000.0
