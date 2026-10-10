@@ -210,3 +210,37 @@ def t_extrapolation(view, pi, a, b, p, t):
     if not isinstance(ea, st.Stop) and not isinstance(eb, st.Stop):
         band = max(band, abs(eb - ea) / ea)
     return {"grade": f"{a} extrapolated in T", "band": band}
+
+
+def taper_zone_checks(view, pi, join, temps, n=21) -> dict:
+    """r2 on 48770cb0 (1): the B3 checks on the blended zone itself. At each T in `temps`, walk n P nodes across the
+    zone (ends included): ρ must rise with P (which gives K_T > 0), and the zone's effective K_T is compared with the
+    sources' own, recorded as the max distortion factor. Returns {failures: [(P, T, why)], max_kt_factor}."""
+    a, b = join["between"]
+    lo, hi, _up = taper_zone(join, _src(view, pi, a))
+    fails, worst = [], 1.0
+    for t in temps:
+        ps = [lo + (hi - lo) * i / (n - 1) for i in range(n)]
+        rho = []
+        for p in ps:
+            got = taper_state(view, pi, join, p, t)
+            if isinstance(got, st.Stop):
+                fails.append((p, t, got.record.why))
+                rho.append(None)
+                continue
+            rho.append(got[0])
+        for i in range(1, n):
+            if rho[i] is None or rho[i - 1] is None:
+                continue
+            if not rho[i] > rho[i - 1]:
+                fails.append((ps[i], t, "ρ does not rise with P across the taper zone"))
+                continue
+            kt_zone = rho[i] * (ps[i] - ps[i - 1]) / (rho[i] - rho[i - 1])
+            ka = [view.source_density(pi, s, ps[i], t) for s in (a, b)]
+            kb = [view.source_density(pi, s, ps[i - 1], t) for s in (a, b)]
+            if any(isinstance(x, st.Stop) for x in ka + kb):
+                continue
+            kts = [ka[j] * (ps[i] - ps[i - 1]) / (ka[j] - kb[j]) for j in (0, 1) if ka[j] > kb[j]]
+            if kts:
+                worst = max(worst, max(kt_zone / k for k in kts), max(k / kt_zone for k in kts))
+    return {"failures": fails, "max_kt_factor": worst}

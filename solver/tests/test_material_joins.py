@@ -161,6 +161,23 @@ class Taper(unittest.TestCase):
         self.assertIn("blended", notes[0].grade)
         self.assertIn("extrapolated in T", notes[0].grade)
 
+    def test_zone_checks_pass_and_catch_a_planted_inversion(self):
+        """r2 (1): the toy zone rises with P and records a K_T distortion ≥ 1; a planted 10 % denser measured source
+        over a narrow declared zone makes ρ fall with P somewhere, and the check names it."""
+        v = mv.RecordView(rec_taper(), 300.0)
+        j = v.record["phases"][0]["joins_within"][0]
+        ok = mj.taper_zone_checks(v, 0, j, [400.0])
+        self.assertEqual(ok["failures"], [])
+        self.assertGreaterEqual(ok["max_kt_factor"], 1.0)
+        d = rec_taper()
+        d["phases"][0]["sources"][0]["eos"]["params"]["rho0"] = const(1442.4 * 1.10, "kg/m3")   # a denser than b:
+        # going up in P the blend moves toward the lighter b, and over a narrow zone that outruns compression
+        d["phases"][0]["joins_within"][0]["width"] = {"p_end": 10.3e9, "reason": "toy narrow",
+                                                      "declared_before_comparison": "2026-10-11"}
+        v2 = mv.RecordView(d, 300.0)
+        bad = mj.taper_zone_checks(v2, 0, v2.record["phases"][0]["joins_within"][0], [400.0])
+        self.assertTrue(any("rise" in f[2] for f in bad["failures"]), bad)
+
     def test_alpha_outside_its_declared_range_refuses(self):
         """r2 XB1: α of the extrapolated source outside the declared range refuses (11.58e-5 /K against a max of
         5e-5)."""

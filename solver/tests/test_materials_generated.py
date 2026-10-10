@@ -222,6 +222,24 @@ class Generated(unittest.TestCase):
                     self.assertGreater(n, 0)
                     self.assertEqual(bad, [])
 
+    def test_taper_zones_pass_their_physical_checks(self):
+        """r2 on 48770cb0 (1): every shipped taper zone, walked at its measured source's data-range T ends and
+        midpoint, has ρ rising with P; a failure means the join must be declared a seam (note 4 item 1.5)."""
+        from solver import material_joins as mj
+        for rid, rec in self.recs.items():
+            v = mv.RecordView(rec, T_POT)
+            for pi, ph in enumerate(rec["phases"]):
+                for j in ph.get("joins_within", ()):
+                    if j["kind"] != "taper":
+                        continue
+                    a = next(s for s in ph["sources"] if s["id"] == j["between"][0])
+                    dr = a["data_range"]
+                    temps = [float(dr["t_min"]), 0.5 * (float(dr["t_min"]) + float(dr["t_max"])), float(dr["t_max"])] \
+                        if "t_min" in dr and "t_max" in dr else [T_POT]
+                    with self.subTest(record=rid, phase=ph["id"], join=tuple(j["between"])):
+                        out = mj.taper_zone_checks(v, pi, j, temps)
+                        self.assertEqual([f for f in out["failures"] if "rise" in f[2]], [], out["max_kt_factor"])
+
     def test_cache_cites_exist_with_their_hash(self):
         if not PAPERS.is_dir():
             self.fail(f"paper cache not found at {PAPERS}; set NEARSTARS_PAPERS, or NEARSTARS_PAPERS_ABSENT=declared")

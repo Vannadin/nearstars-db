@@ -853,8 +853,9 @@ class RecordView:
         ph = self._phase_at(p, t)
         if isinstance(ph, st.Stop):
             return ph
-        if self._taper_join(ph) is not None:              # 68 N44: a joined phase answers from its join everywhere
-            got = self.state(p, t)
+        if self._taper_join(ph) is not None:              # 68 N44: a joined phase answers from its join everywhere;
+            got = self.state(p, t)                         # state() resets self.notes (68 on 2fb7cacf): read notes
+                                                           # from state()'s own return, never after density()
             return got if isinstance(got, st.Stop) else got[0]
         return self._phase_density(ph, p, t)
 
