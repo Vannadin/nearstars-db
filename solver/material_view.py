@@ -43,6 +43,11 @@ def _v(c) -> float:
     return float(c["value"])
 
 
+def t_of_p_lnsqrt(curve, p) -> float:
+    """T_b(P) [K] = x1 + x2·P + x3·ln P + x4·√P with P in Pa (AQUA 2020 eq. (22))."""
+    return (_v(curve["x1"]) + _v(curve["x2"]) * p + _v(curve["x3"]) * math.log(p) + _v(curve["x4"]) * math.sqrt(p))
+
+
 @dataclass(frozen=True)
 class RecordRefusal:
     """A declared refusal from a record's edge (D-M2): which record, where, and the registry id it declared."""
@@ -569,6 +574,24 @@ class RecordView:
                 return None
             th = t / _v(curve["t_star"])
             return _v(curve["p_star"]) * math.exp(sum(_v(x["a"]) * (1.0 - th ** _v(x["b"])) for x in curve["terms"]))
+        if form == "t_of_p_lnsqrt":                    # c8: AQUA 2020 eq. (22), T(P) inverted by bisection
+            if t < _v(curve["t_min"]) or t > _v(curve["t_max"]):
+                return None
+            lo, hi = _v(curve["p_min"]), _v(curve["p_max"])
+            f = lambda p: t_of_p_lnsqrt(curve, p) - t                     # noqa: E731
+            flo = f(lo)
+            if flo == 0.0:
+                return lo
+            for _ in range(200):
+                mid = 0.5 * (lo + hi)
+                if mid in (lo, hi):
+                    break
+                fm = f(mid)
+                if (fm > 0.0) == (flo > 0.0):
+                    lo, flo = mid, fm
+                else:
+                    hi = mid
+            return 0.5 * (lo + hi)
         if form == "clapeyron":                        # 68 N32: only inside its printed T range
             if ("t_min" in curve and t < _v(curve["t_min"])) or ("t_max" in curve and t > _v(curve["t_max"])):
                 return None

@@ -162,14 +162,20 @@ field:
   grade:  {shape: text}
 
 curve:
-  form:  {shape: enum, values: [clapeyron, scaled, table, library, ln_sum], required: true}
+  form:  {shape: enum, values: [clapeyron, scaled, table, library, ln_sum, t_of_p_lnsqrt], required: true}
   p0:    {shape: constant}                                   # clapeyron: P_b(T) = p0 + slope·(T − t0)
   t0:    {shape: constant}
   slope: {shape: constant}
   p_star: {shape: constant}                                  # ln_sum: P_b(T) = p*·exp(Σ a_i (1 − θ^b_i)), θ = T/T*
   t_star: {shape: constant}                                  # (IAPWS R14-08 eqs (1)–(5), Simon-type melting lines)
   terms:  {shape: list, of: ln_term}
-  t_min: {shape: constant}                                   # clapeyron, ln_sum: the printed T range; outside it the curve is
+  x1:    {shape: constant}                                   # t_of_p_lnsqrt: T_b(P) = x1 + x2·P + x3·ln P + x4·√P, P in Pa
+  x2:    {shape: constant}                                   # (AQUA 2020 eq. (22)); P_b(T) by bisection over [p_min, p_max],
+  x3:    {shape: constant}                                   # where T_b must be strictly monotone (checked at load)
+  x4:    {shape: constant}
+  p_min: {shape: constant}
+  p_max: {shape: constant}
+  t_min: {shape: constant}                                   # clapeyron, ln_sum, t_of_p_lnsqrt: the printed T range; outside it the curve is
   t_max: {shape: constant}                                   # absent and a query refuses (68 N32), as a table does
   t_min_end: {shape: record, of: curve_end}                  # impl note 7 item 1: what the low-T end is (default data)
   t_max_end: {shape: record, of: curve_end}                  # … and the high-T end

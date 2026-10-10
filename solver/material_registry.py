@@ -510,10 +510,30 @@ def _disclosures(rec: Mapping, file):
                         why="a disclosed fail cites the cached source that prints the disagreement")
 
 
+CURVE_SAMPLES = 2000     # nodes on which a T(P) curve's monotonicity is checked at load
+
+
 def _curves(rec: Mapping, file):
     """68 N32: a clapeyron boundary declares its printed T range (t_min, t_max), as a table's nodes do."""
     for i, b in enumerate(rec.get("boundaries", ())):
         c = b["curve"]
+        if c["form"] == "t_of_p_lnsqrt":              # c8: AQUA 2020 eq. (22); P_b(T) inverts it, so it is monotone
+            gone = [k for k in ("x1", "x2", "x3", "x4", "p_min", "p_max", "t_min", "t_max") if k not in c]
+            if gone:
+                raise _Stop("material.kind_rule", file=file, why=f"boundary {i}: a t_of_p_lnsqrt curve needs {gone}")
+            from solver import material_view as mv
+            lo, hi = float(c["p_min"]["value"]), float(c["p_max"]["value"])
+            if not 0.0 < lo < hi:
+                raise _Stop("material.kind_rule", file=file, why=f"boundary {i}: needs 0 < p_min < p_max")
+            ts = [mv.t_of_p_lnsqrt(c, lo + (hi - lo) * k / CURVE_SAMPLES) for k in range(CURVE_SAMPLES + 1)]
+            if not (_increasing(ts) or _increasing(ts[::-1])):
+                raise _Stop("material.kind_rule", file=file,
+                            why=f"boundary {i}: T_b(P) is not strictly monotone on [p_min, p_max]; P_b(T) is not one value")
+            t_lo, t_hi = min(ts[0], ts[-1]), max(ts[0], ts[-1])
+            if not t_lo <= float(c["t_min"]["value"]) < float(c["t_max"]["value"]) <= t_hi:
+                raise _Stop("material.kind_rule", file=file,
+                            why=f"boundary {i}: [t_min, t_max] lies outside T_b over [p_min, p_max] "
+                                f"({t_lo:.6g}–{t_hi:.6g} K)")
         if c["form"] in ("clapeyron", "ln_sum") and not ("t_min" in c and "t_max" in c):
             raise _Stop("material.kind_rule", file=file,
                         why=f"boundary {i}: a {c['form']} curve declares t_min and t_max")
@@ -595,7 +615,7 @@ def _field_record(rec: Mapping, ids: list, pairs: list, file):
         if a not in ids or b not in ids:
             raise _Stop("material.kind_rule", file=file, why=f"boundary {a}–{b} names a phase the record lacks")
     for bnd in rec.get("boundaries", ()):
-        if bnd["curve"]["form"] not in ("clapeyron", "table", "ln_sum"):
+        if bnd["curve"]["form"] not in ("clapeyron", "table", "ln_sum", "t_of_p_lnsqrt"):
             raise _Stop("material.kind_rule", file=file,
                         why=f"boundary {tuple(bnd['between'])}: a field record's boundary is a declared curve")
 

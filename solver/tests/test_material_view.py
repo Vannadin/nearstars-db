@@ -189,6 +189,41 @@ class Branched(unittest.TestCase):
         self.assertIsNone(v.boundary_pressure(curve, 354.0))
         self.assertIsNone(v.boundary_pressure(curve, 716.0))
 
+    @staticmethod
+    def _aqua(**over):
+        """AQUA 2020 eq. (22), Table 2 (c8's readings): ice VI–VII, T_b(P) = x1 + x2·P + x3·ln P + x4·√P."""
+        from solver.tests.test_material_registry import const
+        c = {"form": "t_of_p_lnsqrt", "x1": const(-1.4699e5, "K"), "x2": const(6.10791e-6, "K/Pa"),
+             "x3": const(8.1529e3, "K"), "x4": const(-8.8439e-1, "K/Pa^0.5"), "p_min": const(1.3e9, "Pa"),
+             "p_max": const(2.3e9, "Pa"), "t_min": const(160.0, "K"), "t_max": const(355.0, "K")}
+        c.update({k: const(v, "1") for k, v in over.items()})
+        return c
+
+    def test_t_of_p_curve_aqua_vi_vii(self):
+        """c8: T_b at 1.6 / 2.0 / 2.216 GPa is 193.66 / 280.57 / 355.0 K; P_b(T) inverts it; absent outside t range."""
+        curve = self._aqua()
+        v = mv.RecordView(self._rec(), T_POT)
+        for p, t in ((1.6e9, 193.66), (2.0e9, 280.57), (2.216e9, 355.0)):
+            with self.subTest(p=p):
+                self.assertAlmostEqual(mv.t_of_p_lnsqrt(curve, p), t, delta=0.005)
+                pb = v.boundary_pressure(curve, mv.t_of_p_lnsqrt(curve, p))
+                self.assertAlmostEqual(pb / p, 1.0, delta=1e-12)
+        self.assertIsNone(v.boundary_pressure(curve, 159.0))
+        self.assertIsNone(v.boundary_pressure(curve, 355.5))
+
+    def test_t_of_p_curve_load_rules(self):
+        from solver import material_registry as mr
+        mr._curves({"boundaries": [{"curve": self._aqua()}]}, "toy.yaml")
+        for name, curve, word in (
+                ("a missing term", {k: x for k, x in self._aqua().items() if k != "x4"}, "needs"),
+                ("not monotone", self._aqua(x2=-1.0e-5, p_min=1.0e8), "monotone"),
+                ("t range past T_b(p_max)", self._aqua(t_max=400.0), "outside"),
+                ("p_min not above 0", self._aqua(p_min=0.0), "0 < p_min")):
+            with self.subTest(name), self.assertRaises(mr._Stop) as cm:
+                mr._curves({"boundaries": [{"curve": curve}]}, "toy.yaml")
+            self.assertEqual(cm.exception.stop.id, "material.kind_rule")
+            self.assertIn(word, repr(cm.exception.stop))
+
     def test_table_curve_outside_its_nodes_refuses(self):
         rec = self._rec()
         rec["boundaries"][0]["curve"] = {"form": "table", "nodes": [[500.0, 9.0e9], [1500.0, 11.0e9]]}
