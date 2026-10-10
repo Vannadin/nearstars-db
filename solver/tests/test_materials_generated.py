@@ -16,6 +16,7 @@ import copy
 import hashlib
 import math
 import os
+import sys
 import tempfile
 import unittest
 from collections.abc import Mapping
@@ -238,7 +239,12 @@ class Generated(unittest.TestCase):
                         if "t_min" in dr and "t_max" in dr else [T_POT]
                     with self.subTest(record=rid, phase=ph["id"], join=tuple(j["between"])):
                         out = mj.taper_zone_checks(v, pi, j, temps)
-                        self.assertEqual([f for f in out["failures"] if "rise" in f[2]], [], out["max_kt_factor"])
+                        # 68 N51: the K_T distortion is printed for every taper, passing or not
+                        sys.stderr.write(f"\n[P4] taper {rid}/{ph['id']} {tuple(j['between'])}: "
+                                         f"max K_T distortion ×{out['max_kt_factor']:.3g} over T {temps}\n")
+                        # 68 N50: a refusal inside the zone fails too, unless a declared refusal region holds it
+                        bad = [f for f in out["failures"] if v.refusal_region_at(f[0], f[1]) is None]
+                        self.assertEqual(bad, [])
 
     def test_cache_cites_exist_with_their_hash(self):
         if not PAPERS.is_dir():
