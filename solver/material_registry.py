@@ -381,12 +381,25 @@ def _sources_and_joins(ph: Mapping, file):
     for sid, x in srcs.items():
         sg = x["sigma"]
         need = {"propagated": ("from", "correlation"), "constant": ("value", "reduction"),
-                "not_printed": ("where",)}[sg["kind"]]
+                "not_printed": ("where",), "by_region": ("regions", "else")}[sg["kind"]]
         gone = [f for f in need if f not in sg]
         if gone:
             raise _Stop("material.sigma_rule", file=file, phase=ph["id"], source=sid,
                         why=f"sigma kind {sg['kind']} needs {gone}")
-        if (x["sigma_kind"] == "not_applicable") != (sg["kind"] == "not_printed"):   # 68 N47
+        if sg["kind"] == "by_region":                     # c8: IAPWS-06 Table 7 prints σ by region
+            sub = sg["else"]
+            if not sg["regions"] or any(float(r["value"]) <= 0.0 for r in sg["regions"]):
+                raise _Stop("material.sigma_rule", file=file, phase=ph["id"], source=sid,
+                            why="by_region lists at least one box, each with a printed σ > 0")
+            if sub["kind"] not in ("constant", "not_printed") or (sub["kind"] == "not_printed" and "value" in sub) \
+                    or [f for f in {"constant": ("value", "reduction"), "not_printed": ("where",)}[sub["kind"]]
+                        if f not in sub]:
+                raise _Stop("material.sigma_rule", file=file, phase=ph["id"], source=sid,
+                            why="by_region's else is a constant σ (value, reduction) or not_printed (where, no value)")
+            if x["sigma_kind"] == "not_applicable":
+                raise _Stop("material.sigma_rule", file=file, phase=ph["id"], source=sid,
+                            why="a by_region σ is printed somewhere, so its sigma_kind says which kind")
+        elif (x["sigma_kind"] == "not_applicable") != (sg["kind"] == "not_printed"):   # 68 N47
             raise _Stop("material.sigma_rule", file=file, phase=ph["id"], source=sid,
                         why="sigma_kind not_applicable goes with an unprinted σ, and only with it")
         if sg["kind"] == "not_printed" and "value" in sg:

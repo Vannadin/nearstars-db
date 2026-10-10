@@ -10,7 +10,9 @@ An expression is arithmetic (+ − × ÷ **, unary −, numbers, parentheses), `
   `material.check_ambiguous` names the candidates, so a reader never has to guess which one was meant.
 Two view functions read a thermal set at a state and compare it with a printed value:
 `gamma_spread(sets[i] @ P=…, T=… ; printed=…)` and `dpdt_spread(…)`, each |X_set(P, T)/printed − 1| (c8's definition).
-Nothing else is callable; anything else is `material.check_grammar`.
+`curve(boundaries[i] @ T=…)` and `melt_p(a, b @ T=…)` read a boundary; `rho(<phase id> @ P=…, T=…)` is the view's
+density there, which must be the named phase's answer (through its preferred source if it has one; c8: IAPWS-06
+Table 11). Nothing else is callable; anything else is `material.check_grammar`.
 """
 from __future__ import annotations
 
@@ -38,8 +40,10 @@ class _Stop(Exception):
 _SPREAD_CALL = "__spread__"
 _CURVE_CALL = "__curve__"
 _MELT_CALL = "__melt__"
+_RHO_CALL = "__rho__"
 _CURVE = re.compile(r"curve\(\s*boundaries\[(\d+)\]\s*@\s*T\s*=\s*([^)]*)\)")
 _MELT = re.compile(r"melt_p\(\s*([A-Za-z_][\w]*)\s*,\s*([A-Za-z_][\w]*)\s*@\s*T\s*=\s*([^)]*)\)")
+_RHO = re.compile(r"(?<![\w.])rho\(\s*([A-Za-z_][\w]*)\s*@\s*P\s*=\s*([^,]*),\s*T\s*=\s*([^)]*)\)")
 _SPREAD = re.compile(r"(gamma_spread|dpdt_spread)\(\s*(sets\[\d+\])\s*@\s*([^;]*);\s*printed\s*=\s*([^)]*)\)")
 _OPS = MappingProxyType({ast.Add: lambda a, b: a + b, ast.Sub: lambda a, b: a - b, ast.Mult: lambda a, b: a * b,
                          ast.Div: lambda a, b: a / b, ast.Pow: lambda a, b: a ** b})
@@ -120,11 +124,13 @@ class _Eval:
                 if (f == "abs" and len(args) != 1) or not args:                # 68 G2: arity
                     raise _Stop("material.check_grammar", f"{f} takes {'one argument' if f == 'abs' else 'arguments'}")
                 return {"max": max, "min": min, "abs": abs}[f](*args)
-            if f in (_CURVE_CALL, _MELT_CALL):
+            if f in (_CURVE_CALL, _MELT_CALL, _RHO_CALL):
                 if self.record_fns is None:
-                    raise _Stop("material.check_grammar", "curve / melt_p need the record's view")
+                    raise _Stop("material.check_grammar", "curve / melt_p / rho need the record's view")
                 if f == _CURVE_CALL:
                     return self.record_fns["curve"](node.args[0].value, self(node.args[1]))
+                if f == _RHO_CALL:
+                    return self.record_fns["rho"](node.args[0].value, self(node.args[1]), self(node.args[2]))
                 return self.record_fns["melt_p"](node.args[0].value, node.args[1].value, self(node.args[2]))
             if f == _SPREAD_CALL:
                 kind_s, set_i = node.args[0].value, node.args[1].value
@@ -148,10 +154,11 @@ def _rewrite_spreads(expr: str) -> str:
         if set(kv) != {"P", "T"}:
             raise _Stop("material.check_grammar", f"{kind} takes «@ P=…, T=…», got {at!r}")
         return f'{_SPREAD_CALL}("{kind}", {int(s[5:-1])}, ({kv["P"]}), ({kv["T"]}), ({printed}))'
-    for internal in (_SPREAD_CALL, _CURVE_CALL, _MELT_CALL):    # 68 G1: internal calls are not spellable by a record
+    for internal in (_SPREAD_CALL, _CURVE_CALL, _MELT_CALL, _RHO_CALL):    # 68 G1: internal calls are not spellable by a record
         if internal in expr:
             raise _Stop("material.check_grammar", f"«{internal}» is internal")
     expr = _CURVE.sub(lambda m: f"{_CURVE_CALL}({int(m.group(1))}, ({m.group(2)}))", expr)
+    expr = _RHO.sub(lambda m: f'{_RHO_CALL}("{m.group(1)}", ({m.group(2)}), ({m.group(3)}))', expr)
     expr = _MELT.sub(lambda m: f'{_MELT_CALL}("{m.group(1)}", "{m.group(2)}", ({m.group(3)}))', expr)
     return _SPREAD.sub(sub, expr)
 
@@ -216,7 +223,17 @@ def view_record_fns(view):
         except Exception as e:
             raise _Stop("material.check_grammar", f"melt_p could not evaluate: {e}") from e
         return 0.5 * (lo + hi)
-    return {"curve": curve, "melt_p": melt_p}
+    def rho(name, p, t):
+        from solver import stepper as st
+        ph = view._phase_at(p, t)
+        if isinstance(ph, st.Stop) or ph.id != name:
+            got = getattr(ph.record, "why", ph.record) if isinstance(ph, st.Stop) else f"phase {ph.id}"
+            raise _Stop("material.check_grammar", f"rho({name} @ {p:g} Pa, {t:g} K): the view answers {got}")
+        d = view.density(p, t)
+        if isinstance(d, st.Stop):
+            raise _Stop("material.check_grammar", f"rho({name} @ {p:g} Pa, {t:g} K): {getattr(d.record, 'why', d.record)}")
+        return d
+    return {"curve": curve, "melt_p": melt_p, "rho": rho}
 
 
 def _disclosure_allowance(bound, fc, phase, state, view, pi):

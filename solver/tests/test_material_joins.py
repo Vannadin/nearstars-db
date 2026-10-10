@@ -199,27 +199,80 @@ class Taper(unittest.TestCase):
             self.assertEqual(e.stop.id, "material.join_rule")
 
 
+def rec_preferred():
+    """rec_two_sources with b (K0 +1 %) preferred, and c_P from a SeaFreeze VI source a (c_p_from)."""
+    d = rec_two_sources()
+    ph = d["phases"][0]
+    ph["joins_within"][0]["between"] = ["b", "a"]
+    for s in ph["sources"]:
+        s["c_p_from"] = "a"
+    ph["sources"][0]["eos"] = {"form": "library", "reference": ph["sources"][0]["eos"]["reference"],
+                               "library": {"name": "SeaFreeze", "version": "1.1.0", "sha256": "0" * 64,
+                                           "submodel": "VI"}}
+    return d
+
+
 class PreferredSource(unittest.TestCase):
     """c8 (IAPWS-06 Ih): a phase whose cross-check's preferred source declares an eos other than the phase's own
     answers from that source; a declared note rides in its box."""
 
     def test_answers_from_the_preferred_source_with_its_note(self):
-        d = rec_two_sources()
-        ph = d["phases"][0]
-        ph["joins_within"][0]["between"] = ["b", "a"]                     # b (K0 +1 %) preferred
-        ph["notes"] = [{"box": {"p_min": 1.0e9, "p_max": 2.0e9, "t_min": 0.0, "t_max": 320.0},
-                        "text": "toy caveat", "source": dict(CITE)}]
-        for s in ph["sources"]:
-            s["c_p_from"] = "a"
-        ph["sources"][0]["eos"] = {"form": "library", "reference": ph["sources"][0]["eos"]["reference"],
-                                   "library": {"name": "SeaFreeze", "version": "1.1.0", "sha256": "0" * 64,
-                                               "submodel": "VI"}}
+        d = rec_preferred()
+        d["phases"][0]["notes"] = [{"box": {"p_min": 1.0e9, "p_max": 2.0e9, "t_min": 0.0, "t_max": 320.0},
+                                    "text": "toy caveat", "source": dict(CITE)}]
         v = mv.RecordView(d, 300.0)
         rho, dtdp, notes = v.state(1.5e9, 300.0)
         self.assertEqual(rho, v.source_density(0, "b", 1.5e9, 300.0))
         self.assertGreater(dtdp, 0.0)
         self.assertEqual([n.text for n in notes], ["toy caveat"])
         self.assertEqual(v.state(1.5e9, 330.0)[2], ())                   # outside the note's box
+
+    def test_outside_the_preferred_sources_data_range_refuses(self):
+        """68 N57: the preferred source never answers bare outside its data_range."""
+        d = rec_preferred()
+        d["phases"][0]["sources"][1]["data_range"] = {"p_min": 1.0e9, "p_max": 2.2e9, "t_min": 250.0, "t_max": 310.0}
+        v = mv.RecordView(d, 300.0)
+        self.assertIsInstance(v.state(1.5e9, 300.0), tuple)
+        for p, t in ((1.5e9, 315.0), (2.25e9, 300.0)):
+            with self.subTest(p=p, t=t):
+                s = v.state(p, t)
+                self.assertIsInstance(s, st.Stop)
+                self.assertIn("data_range", s.record.why)
+                self.assertIsInstance(v.density(p, t), st.Stop)
+
+    def test_an_evaluator_source_gives_alpha_and_cp_analytically(self):
+        """68 N58: IAPWS-06 as the preferred source answers down to 0 K without a T difference below zero."""
+        from solver.tests.test_material_evaluators import IAPWS06
+        d = rec_two_sources()
+        ph = d["phases"][0]
+        ph["sources"][1]["eos"] = {"form": "evaluator", "reference": ph["sources"][1]["eos"]["reference"],
+                                   "evaluator": {"name": "iapws06_ih",
+                                                 "params": {k: {"value": x} for k, x in IAPWS06.items()}}}
+        ph["sources"][1].pop("thermal_model")
+        ph["sources"][1]["data_range"] = {"p_min": 0.0, "p_max": 2.1e8, "t_min": 0.0, "t_max": 273.16}
+        ph["joins_within"][0]["between"] = ["b", "a"]
+        v = mv.RecordView(d, 300.0)
+        x = mv.Iapws06Ih({k: {"value": y} for k, y in IAPWS06.items()}).at(1.0e8, 100.0)
+        got = mj.source_state(v, 0, "b", 1.0e8, 100.0)
+        self.assertEqual(got, (x["density"], x["alpha"] * 100.0 / (x["density"] * x["c_p"])))
+        for t in (0.3, 0.0):
+            with self.subTest(t=t):
+                rho, dtdp = mj.source_state(v, 0, "b", 1.0e8, t)
+                self.assertTrue(math.isfinite(rho) and math.isfinite(dtdp) and dtdp >= 0.0)
+
+    def test_by_region_sigma_takes_the_smallest_holding_box(self):
+        """c8 / IAPWS-06 Table 7: σ by region; overlapping boxes give the smallest; outside every box, else."""
+        sig = {"kind": "by_region", "regions": [
+            {"box": {"p_min": 0.0, "p_max": 2.0e9, "t_min": 238.0, "t_max": 273.0}, "value": 0.002, "where": "T7"},
+            {"box": {"p_min": 0.0, "p_max": 1.6e9, "t_min": 268.0, "t_max": 273.0}, "value": 0.0002, "where": "T7"}],
+            "else": {"kind": "not_printed", "where": "Fig. 8"}}
+        d = rec_two_sources(sigma_b=sig)
+        d["phases"][0]["sources"][1]["sigma_kind"] = "1sigma"
+        v = mv.RecordView(d, 300.0)
+        for p, t, want in ((1.5e9, 250.0, 0.002), (1.5e9, 270.0, 0.0002), (1.8e9, 270.0, 0.002),
+                           (1.5e9, 300.0, 0.0)):
+            with self.subTest(p=p, t=t):
+                self.assertEqual(mj.source_sigma(v, 0, "b", p, t), want)
 
 
 if __name__ == "__main__":

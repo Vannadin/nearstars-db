@@ -10,7 +10,10 @@ nodes with r > k are the ones the record must disclose by name and value.
 - propagated: ρ recomputed with each listed parameter moved by its σ, combined in quadrature (correlation not
   printed: independent, which the record discloses as overstating for K0–K′ fits);
 - constant: the stated relative σ;
-- not_printed: 0, never a stand-in.
+- not_printed: 0, never a stand-in;
+- by_region: the printed values by (P, T) box (directing (a); c8: IAPWS-06 Table 7). Where several boxes hold
+  the node, the smallest printed value: the finer statement, and never a looser gate. Outside every box, `else`
+  (constant or not_printed).
 sigma_kind converts to 1σ: ci90 ÷ 1.645, ci95 ÷ 1.960, ci68 and 1sigma ÷ 1. σ_allow = max(σ1, σ2) with shared data,
 else √(σ1² + σ2²).
 """
@@ -29,10 +32,19 @@ def _src(view, pi, sid):
     return next(s for s in view.record["phases"][pi]["sources"] if s["id"] == sid)
 
 
+def _box_holds(box, p, t) -> bool:
+    """Closed box; an absent T bound is open."""
+    return (float(box["p_min"]) <= p <= float(box["p_max"])
+            and float(box.get("t_min", -math.inf)) <= t <= float(box.get("t_max", math.inf)))
+
+
 def source_sigma(view, pi, sid, p, t) -> float:
     """Relative 1σ of ρ for source `sid` at (P, T)."""
     src = _src(view, pi, sid)
     sg = src["sigma"]
+    if sg["kind"] == "by_region":
+        held = [float(r["value"]) for r in sg["regions"] if _box_holds(r["box"], p, t)]
+        sg = {"kind": "constant", "value": min(held)} if held else sg["else"]
     if sg["kind"] == "not_printed":
         return 0.0
     if sg["kind"] == "constant":
@@ -271,8 +283,30 @@ def _same_eos(a, b):
 
 
 def source_state(view, pi, sid, p, t):
-    """ρ and (dT/dP)_S = αT/(ρc_P) of one source: α by a centred T difference of its ρ, c_P from source_cp."""
+    """ρ and (dT/dP)_S = αT/(ρc_P) of one source, inside its data_range only (68 N57: outside it the phase refuses by
+    name; a preferred source is never extrapolated bare). An evaluator that returns α and c_P gives them analytically
+    (68 N58: no T difference reaching below 0 K); otherwise α by a centred T difference of ρ, c_P from source_cp."""
+    src = _src(view, pi, sid)
+    if not _box_holds(src["data_range"], p, t):
+        return st.Stop("refused", _refusal(view, p, t, f"source {sid} answers only inside its data_range "
+                                                       f"{dict(src['data_range'])} ({src['data_range_where']})"))
+    eos = src.get("eos") or {}
+    if eos.get("form") == "evaluator":
+        try:
+            x = view.source_engine(pi, sid).ev.at(p, t)
+        except (ValueError, ZeroDivisionError, OverflowError) as e:
+            return st.Stop("refused", _refusal(view, p, t, f"source {sid}: {e}"))
+        if "alpha" in x and "c_p" in x and "c_p_from" not in src:
+            rho, alpha, cp = x["density"], x["alpha"], x["c_p"]
+            if t == 0.0 and cp == 0.0 and alpha == 0.0:            # the T → 0 limit: αT/c_P → 0
+                return rho, 0.0
+            if not (cp > 0.0) or not math.isfinite(alpha):
+                return st.Stop("refused", _refusal(view, p, t, f"source {sid} fails the physical checks "
+                                                               f"(c_P {cp}, α {alpha})"))
+            return rho, alpha * t / (rho * cp)
     rho = view.source_density(pi, sid, p, t)
+    if t - DT_ALPHA < 0.0:
+        return st.Stop("refused", _refusal(view, p, t, f"source {sid}: α by a T difference needs T ≥ {DT_ALPHA} K"))
     vh, vl = view.source_density(pi, sid, p, t + DT_ALPHA), view.source_density(pi, sid, p, t - DT_ALPHA)
     cp = source_cp(view, pi, sid, p, t)
     for x in (rho, vh, vl, cp):

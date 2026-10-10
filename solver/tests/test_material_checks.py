@@ -53,5 +53,28 @@ class Grammar(unittest.TestCase):
                                           rec["phases"][0], {}), mc.CheckStop)      # no view, no spread
 
 
+class RhoTerm(unittest.TestCase):
+    """c8 (IAPWS-06 Table 11): rho(<phase> @ P=…, T=…) is the view's density there, from the named phase only."""
+
+    def test_rho_reads_the_view_and_names_the_phase(self):
+        from solver.tests.test_material_joins import rec_preferred
+        d = rec_preferred()
+        v = mv.RecordView(d, 300.0)
+        ph = d["phases"][0]
+        fns = mc.view_record_fns(v)
+        got = mc.evaluate(f"rho({ph['id']} @ P=1.5e9, T=300) / 1000", ph, {}, None, fns)
+        self.assertEqual(got, v.density(1.5e9, 300.0) / 1000)
+        self.assertEqual(mc.evaluate("rho * 2", ph, {"rho": 3.0}, None, fns), 6.0)    # the state name still reads
+        for expr, word in (("rho(other @ P=1.5e9, T=300)", "answers phase"),
+                           (f"rho({ph['id']} @ P=1.5e9, T=50)", "rho("),
+                           ("__rho__(1, 2, 3)", "internal")):
+            with self.subTest(expr=expr):
+                s = mc.evaluate(expr, ph, {}, None, fns)
+                self.assertIsInstance(s, mc.CheckStop)
+                self.assertEqual(s.id, "material.check_grammar")
+                self.assertIn(word, s.why)
+        self.assertIsInstance(mc.evaluate(f"rho({ph['id']} @ P=1.5e9, T=300)", ph, {}), mc.CheckStop)
+
+
 if __name__ == "__main__":
     unittest.main()

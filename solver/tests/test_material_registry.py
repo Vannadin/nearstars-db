@@ -132,6 +132,19 @@ def _set(d, name, i, row):
     col(d, name)[i] = row
 
 
+def _region_sigma(d, drop=None, regions=None, other=None, kind="1sigma"):
+    """A by_region σ on the second source of the joined base (c8: IAPWS-06 Table 7), with one part broken."""
+    joined(d)
+    sg = {"kind": "by_region", "where": "T7",
+          "regions": [{"box": {"p_min": 0.0, "p_max": 2.0e8, "t_min": 238.0, "t_max": 273.0}, "value": 0.002,
+                       "where": "T7"}] if regions is None else regions,
+          "else": other or {"kind": "not_printed", "where": "Fig. 8"}}
+    if drop:
+        sg.pop(drop)
+    PH(d)["sources"][1]["sigma"] = sg
+    PH(d)["sources"][1]["sigma_kind"] = kind
+
+
 #: Planted bad records for the notes-3/4 rules, each on its good base.
 CONTROLS_JOINS = (
     ("σ propagated without correlation", lambda d: (joined(d), PH(d)["sources"][0]["sigma"].pop("correlation")),
@@ -139,6 +152,15 @@ CONTROLS_JOINS = (
     ("a stand-in for an unprinted σ", lambda d: (joined(d), PH(d)["sources"][1]["sigma"].update(value=0.01)),
      "material.sigma_rule"),
     ("missing sigma_kind", lambda d: (joined(d), PH(d)["sources"][0].pop("sigma_kind")), "material.missing_key"),
+    ("by_region without else", lambda d: _region_sigma(d, drop="else"), "material.sigma_rule"),
+    ("by_region with an empty region list", lambda d: _region_sigma(d, regions=[]), "material.sigma_rule"),
+    ("by_region's else is by_region", lambda d: _region_sigma(d, other={"kind": "by_region", "regions": [],
+                                                                         "else": {"kind": "not_printed", "where": "§"}}),
+     "material.sigma_rule"),
+    ("by_region's else unprinted with a stand-in", lambda d: _region_sigma(d, other={"kind": "not_printed",
+                                                                                     "where": "§", "value": 0.01}),
+     "material.sigma_rule"),
+    ("by_region as not_applicable", lambda d: _region_sigma(d, kind="not_applicable"), "material.sigma_rule"),
     ("join names an unknown source", lambda d: (joined(d), PH(d)["joins_within"][0].update(between=["meas", "x"])),
      "material.join_rule"),
     ("k other than 2", lambda d: (joined(d), PH(d)["joins_within"][0].update(k=1)), "material.join_rule"),

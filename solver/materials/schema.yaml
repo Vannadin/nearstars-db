@@ -314,13 +314,21 @@ rho_range:
   t_max:   {shape: number, unit: K, required: true}
 
 sigma:
-  kind:        {shape: enum, values: [propagated, constant, not_printed], required: true}
+  kind:        {shape: enum, values: [propagated, constant, not_printed, by_region], required: true}
   from:        {shape: mapping}                            # propagated: parameter → its printed σ
   correlation: {shape: enum, values: [printed, not_printed]}   # propagated: required (note 4 item 4)
   matrix:      {shape: mapping}                            # correlation printed: the printed matrix, with `where`
   value:       {shape: number}                             # constant: relative σ of ρ
   reduction:   {shape: text}                               # constant: how a varying σ was reduced (e.g. «max over the box»)
   where:       {shape: text}                               # page/table of the printed σ, or of the statement that none is printed
+  regions:     {shape: list, of: sigma_region}             # by_region: printed σ by box; overlap → the smallest value
+  else:        {shape: record, of: sigma}                  # by_region: outside every box (constant or not_printed)
+
+sigma_region:
+  box:         {shape: record, of: box, required: true}
+  value:       {shape: number, required: true}             # relative σ of ρ in this box
+  reduction:   {shape: text}                               # how a varying σ was reduced to one value, if it was
+  where:       {shape: text, required: true}               # page/table of the printed value
 
 join_within:
   between:     {shape: list, required: true}               # [preferred source id, other source id]
