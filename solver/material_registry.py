@@ -403,6 +403,14 @@ def _sources_and_joins(ph: Mapping, file):
         if "k" in j and j["k"] != K_GATE:
             raise _Stop("material.join_rule", file=file, phase=ph["id"], join=i,
                         why=f"k is {K_GATE:g} (impl note 3 A3); a different k is a recorded change")
+        if kind == "taper":                                       # note 3 A4 item 3: c_P on both sides of a taper
+            for sid in j["between"]:
+                x = srcs[sid]
+                native = (x.get("eos") or {}).get("form") in ("library", "evaluator")
+                via = x.get("c_p_from")
+                if not native and not (via in srcs and (srcs[via].get("eos") or {}).get("form") in ("library", "evaluator")):
+                    raise _Stop("material.join_rule", file=file, phase=ph["id"], join=i,
+                                why=f"taper side {sid} has no c_P: give it a library/evaluator eos or c_p_from")
         if kind == "taper" and "width" in j:
             w, pe = j["width"]["p_end"], j["edge_p"]
             if (j["side"] == "upper" and w <= pe) or (j["side"] == "lower" and w >= pe):

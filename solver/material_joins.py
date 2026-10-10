@@ -81,3 +81,81 @@ def cross_check(view, pi, join) -> dict:
     return {"nodes": nodes, "band": max((n["rel"] for n in good), default=math.nan),
             "max_r": max((n["r"] for n in good), default=math.nan), "k": k,
             "over_k": [(n["p"], n["t"], n["r"]) for n in good if n["r"] > k]}
+
+
+# ── the taper zone (impl note 4 item 1; note 3 A4) ─────────────────────────────────────────────────────────────────
+DT_ALPHA = 0.5          # K: the centred step for α = (1/V)(∂V/∂T)_P of a source or of the blend
+
+
+def source_cp(view, pi, sid, p, t):
+    """c_P [J/kg/K] of a source: its own (library c_p; evaluator c_V + T(∂P/∂T)_V²/(ρK_T)), or the source it names in
+    c_p_from. A Stop where none can be had."""
+    from solver import material_library as ml
+    from solver import material_view as mv
+    src = _src(view, pi, sid)
+    eos = src.get("eos")
+    if eos is not None and eos["form"] == "library":
+        try:
+            return ml.SeaFreezePhase(eos["library"]["submodel"]).at(p, t)["c_p"]
+        except ml.LibraryOutOfRange as e:
+            return st.Stop("refused", mv.RecordRefusal(view.material_id, p, t, "input.material_out_of_data", str(e)))
+    if eos is not None and eos["form"] == "evaluator":
+        try:
+            x = mv.EVALUATORS[eos["evaluator"]["name"]](eos["evaluator"].get("params", {})).at(p, t)
+        except ValueError as e:
+            return st.Stop("refused", mv.RecordRefusal(view.material_id, p, t, "input.material_out_of_data", str(e)))
+        return x["c_v"] + t * x["dpdt_v"] ** 2 / (x["density"] * x["k_t"])
+    if "c_p_from" in src:
+        return source_cp(view, pi, src["c_p_from"], p, t)
+    return st.Stop("refused", mv.RecordRefusal(view.material_id, p, t, "input.material_out_of_data",
+                                               f"source {sid} has no c_P and names no c_p_from"))
+
+
+def _smoothstep(s):
+    s = min(max(s, 0.0), 1.0)
+    return s * s * (3.0 - 2.0 * s)
+
+
+def taper_zone(join, src_a) -> tuple:
+    """(P_lo, P_hi, upper) of a taper: from P_e to 1.5·P_e (upper side) or P_e/1.5 to P_e (lower), or the declared
+    width (impl note 4 item 1; lower side owner-direction after adfc584)."""
+    pe = float(join["edge_p"])
+    upper = join["side"] == "upper"
+    if "width" in join:
+        end = float(join["width"]["p_end"])
+    else:
+        end = 1.5 * pe if upper else pe / 1.5
+    return (pe, end, True) if upper else (end, pe, False)
+
+
+def taper_state(view, pi, join, p, t):
+    """ρ and (dT/dP)_S across a taper join at (P, T): the measured source (between[0]) on its side of the zone, the
+    other beyond it, and in the zone the V-direct blend with a P-only C¹ weight: V = (1 − w)V_a + w·V_b, α from the
+    blended V by a centred T difference, c_P blended directly, (dT/dP)_S = αT/(ρ c_P) (note 3 A4). Returns
+    (ρ, dtdp, note) where note carries the full |Δρ|/ρ in the zone (the band, note 4 item 1), or a Stop."""
+    a, b = join["between"]
+    lo, hi, upper = taper_zone(join, _src(view, pi, a))
+    s = (p - lo) / (hi - lo)
+    w = _smoothstep(s if upper else 1.0 - s)            # weight of the other source b
+    def vol(sid, tt):
+        r = view.source_density(pi, sid, p, tt)
+        return r if isinstance(r, st.Stop) else 1.0 / r
+    parts = [(a, 1.0 - w), (b, w)]
+    v = vt_hi = vt_lo = 0.0
+    cp = 0.0
+    for sid, wt in parts:
+        if wt == 0.0:
+            continue
+        v0, vh, vl = vol(sid, t), vol(sid, t + DT_ALPHA), vol(sid, t - DT_ALPHA)
+        c = source_cp(view, pi, sid, p, t)
+        for x in (v0, vh, vl, c):
+            if isinstance(x, st.Stop):
+                return x
+        v, vt_hi, vt_lo, cp = v + wt * v0, vt_hi + wt * vh, vt_lo + wt * vl, cp + wt * c
+    alpha = (vt_hi - vt_lo) / (2.0 * DT_ALPHA * v)
+    rho = 1.0 / v
+    note = None
+    if 0.0 < w < 1.0:
+        ra, rb = view.source_density(pi, a, p, t), view.source_density(pi, b, p, t)
+        note = {"grade": f"blended ({a} extrapolated, {b})", "band": abs(rb - ra) / ra}
+    return rho, alpha * t / (rho * cp), note

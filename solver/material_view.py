@@ -906,8 +906,28 @@ class RecordView:
     def porosity(self, p: float) -> float:
         return 0.0
 
+    def _taper_join(self, ph):
+        pi = self.phases.index(ph)
+        for j in self.record["phases"][pi].get("joins_within", ()):
+            if j["kind"] == "taper":
+                return pi, j
+        return None
+
     def state(self, p: float, t: float, guess_rho=None):
         self.notes.clear()
+        ph = self._phase_at(max(p, self.p_stop) if p > 0.0 else max(1.0e5, self.p_stop), t)
+        if not isinstance(ph, st.Stop):
+            tj = self._taper_join(ph)
+            if tj is not None:                             # impl note 4 item 1: the phase's value comes from its sources
+                from solver import material_joins as mj
+                got = mj.taper_state(self, tj[0], tj[1], p, t)
+                if isinstance(got, st.Stop):
+                    return got
+                rho, dtdp, note = got
+                if note is not None:
+                    self.notes.append(BandNote(self.material_id, f"{ph.id} taper zone", "relative", note["band"],
+                                               None, note["grade"], "full |Δρ|/ρ across the taper zone (note 4)"))
+                return (rho, dtdp, tuple(self.notes))
         rho = self.density(p, t)
         if isinstance(rho, st.Stop):
             return rho

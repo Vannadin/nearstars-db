@@ -282,6 +282,8 @@ source_entry:
   eos:        {shape: record, of: eos}                      # how this source gives ρ(P, T); absent = the phase's own EOS
   thermal_model: {shape: record, of: thermal_model}        # with a cold-curve eos: how T enters ρ
   data_range_rho: {shape: record, of: rho_range}           # a source printing its range in ρ (F&R): instead of P
+  c_p_from:   {shape: text}                                # a source with no c_P of its own names the source that gives
+                                                           # it (note 3 A4 item 3; c8: Bezacier prints no c_P)
 
 # How T enters a source's ρ with a cold-curve eos (c8: Bezacier 2014 eq. (2), read literally):
 # exp_alpha: V(P, T) = V_cold(P) · exp(α0 (T − T0)), one constant α at every P, the zero-P volume not shifted.

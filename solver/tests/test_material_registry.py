@@ -89,6 +89,13 @@ CONTROLS = (
 )
 
 
+def _fr_params():
+    """The F&R evaluator's params as full constants (value, unit, source, grade) so the registry accepts them."""
+    from solver.tests.test_material_evaluators import legacy_params
+    return {k: {"value": v["value"], "unit": "1", "source": dict(CITE), "grade": "read"}
+            for k, v in legacy_params().items()}
+
+
 def joined(d):
     """GOOD with two sources and a taper join (impl note 3 A8, note 4 items 1, 3)."""
     PH(d)["sources"] = [
@@ -97,7 +104,10 @@ def joined(d):
                                                  "correlation": "not_printed"}, "sigma_kind": "1sigma"},
         {"id": "dft", "source": {"doi": "doi:10.1103/PhysRevB.91.054112"}, "basis": "computed",
          "data_range": {"p_min": 3.3e9, "p_max": 1.0e11}, "data_range_where": "Fig. 1",
+         "eos": {"form": "evaluator", "reference": {"kind": "state", "p": const(0.0, "Pa"), "t": const(300.0, "K")},
+                 "evaluator": {"name": "french_redmer2015", "source": {"formula": "toy"}, "params": _fr_params()}},
          "sigma": {"kind": "not_printed", "where": "§VI"}, "sigma_kind": "not_applicable"}]
+    PH(d)["sources"][0]["c_p_from"] = "dft"           # a taper needs c_P on both sides (note 3 A4 item 3)
     PH(d)["joins_within"] = [{"between": ["meas", "dft"], "kind": "taper", "edge_p": 1.01e10, "side": "upper",
                               "weight": "smoothstep_p", "k": 2}]
     PH(d)["precedence"] = {"by": "basis"}
@@ -139,6 +149,7 @@ CONTROLS_JOINS = (
         width={"p_end": 9.0e9, "reason": "r", "declared_before_comparison": "2026-10-10"})), "material.join_rule"),
     ("taper width without reason", lambda d: (joined(d), PH(d)["joins_within"][0].update(
         width={"p_end": 1.3e10, "declared_before_comparison": "2026-10-10"})), "material.missing_key"),
+    ("taper side without c_P", lambda d: (joined(d), PH(d)["sources"][0].pop("c_p_from")), "material.join_rule"),
     ("no precedence", lambda d: (joined(d), PH(d).pop("precedence")), "material.precedence"),
     ("computed preferred over measured", lambda d: (joined(d), PH(d)["joins_within"][0].update(
         between=["dft", "meas"])), "material.precedence"),

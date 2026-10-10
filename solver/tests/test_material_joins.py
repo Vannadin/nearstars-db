@@ -77,5 +77,68 @@ class CrossCheck(unittest.TestCase):
         self.assertEqual(mj.source_sigma(mv.RecordView(rec_two_sources(), 300.0), 0, "b", 1.5e9, 300.0), 0.0)
 
 
+def rec_taper():
+    """A toy VII: measured side a = BM2 + exp_alpha (Bezacier-like, c_P from b), computed side b = the F&R evaluator;
+    taper from P_e 10.1 GPa to 15.15 GPa (the default 1.5·P_e)."""
+    from solver.tests.test_material_evaluators import legacy_params
+    d = copy.deepcopy(GOOD)
+    ph = d["phases"][0]
+    ph["sources"] = [
+        {"id": "a", "source": dict(CITE), "basis": "measured", "data_range": {"p_min": 2.2e9, "p_max": 10.1e9},
+         "data_range_where": "t", "c_p_from": "b",
+         "eos": {"form": "bm2", "params": {"rho0": const(1442.4, "kg/m3"), "k0": const(20.15e9, "Pa")},
+                 "reference": {"kind": "state", "p": const(1e5, "Pa"), "t": const(300.0, "K")}},
+         "thermal_model": {"kind": "exp_alpha", "alpha0": const(11.58e-5, "1/K"), "t0": const(300.0, "K")},
+         "sigma": {"kind": "not_printed", "where": "§"}, "sigma_kind": "not_applicable"},
+        {"id": "b", "source": dict(CITE), "basis": "computed", "data_range": {"p_min": 3.3e9, "p_max": 1.0e12},
+         "data_range_where": "t",
+         "eos": {"form": "evaluator", "reference": {"kind": "state", "p": const(1e5, "Pa"), "t": const(300.0, "K")},
+                 "evaluator": {"name": "french_redmer2015", "source": {"formula": "toy"}, "params": legacy_params()}},
+         "sigma": {"kind": "not_printed", "where": "§"}, "sigma_kind": "not_applicable"}]
+    ph["joins_within"] = [{"between": ["a", "b"], "kind": "taper", "edge_p": 10.1e9, "side": "upper",
+                           "weight": "smoothstep_p", "k": 2}]
+    ph["precedence"] = {"by": "basis"}
+    ph["window"]["p_max"] = 1.0e11
+    ph["field"]["box"]["p_max"] = 1.0e11
+    return d
+
+
+class Taper(unittest.TestCase):
+    def setUp(self):
+        self.v = mv.RecordView(rec_taper(), 300.0)
+
+    def test_measured_below_computed_above(self):
+        for p, sid in ((8.0e9, "a"), (20.0e9, "b")):
+            with self.subTest(p=p):
+                rho, _g, notes = self.v.state(p, 400.0)
+                self.assertEqual(rho, self.v.source_density(0, sid, p, 400.0))
+                self.assertEqual(notes, ())
+
+    def test_zone_blends_and_carries_the_band(self):
+        rho, dtdp, notes = self.v.state(12.6e9, 400.0)
+        ra, rb = self.v.source_density(0, "a", 12.6e9, 400.0), self.v.source_density(0, "b", 12.6e9, 400.0)
+        self.assertTrue(min(ra, rb) < rho < max(ra, rb))
+        self.assertEqual(len(notes), 1)
+        self.assertAlmostEqual(notes[0].error, abs(rb - ra) / ra)
+        self.assertIn("blended (a extrapolated, b)", notes[0].grade)
+        self.assertGreater(dtdp, 0.0)
+
+    def test_continuous_at_the_zone_ends(self):
+        for edge in (10.1e9, 15.15e9):
+            with self.subTest(edge=edge):
+                lo, hi = self.v.state(edge * (1 - 1e-9), 400.0)[0], self.v.state(edge * (1 + 1e-9), 400.0)[0]
+                self.assertLess(abs(hi - lo) / lo, 1e-6)
+
+    def test_taper_side_without_c_p_stops(self):
+        from solver import material_registry as mr
+        d = rec_taper()
+        d["phases"][0]["sources"][0].pop("c_p_from")
+        try:
+            mr._sources_and_joins(d["phases"][0], "toy.yaml")
+            self.fail("no STOP")
+        except mr._Stop as e:
+            self.assertEqual(e.stop.id, "material.join_rule")
+
+
 if __name__ == "__main__":
     unittest.main()
