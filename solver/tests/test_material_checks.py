@@ -30,7 +30,12 @@ class Grammar(unittest.TestCase):
                  ("nothing * 2", "material.check_unknown_name"),
                  ("__import__('os')", "material.check_grammar"),
                  ("pressure.alpha_k if T else 0", "material.check_grammar"),
-                 ("gamma_spread(sets[1] @ P=35e9 ; printed=2.66)", "material.check_grammar"))
+                 ("gamma_spread(sets[1] @ P=35e9 ; printed=2.66)", "material.check_grammar"),
+                 ("__spread__(T, 0, 1, 2, 3)", "material.check_grammar"),          # 68 G1
+                 ("abs(1, 2)", "material.check_grammar"),                          # 68 G2
+                 ("max()", "material.check_grammar"),
+                 ("(-8)**(1/3)", "material.check_grammar"),                        # 68 G3: complex
+                 ("10.0**400", "material.check_grammar"))
         for expr, id_ in cases:
             with self.subTest(expr=expr):
                 got = mc.evaluate(expr, ph, {"T": 1.0})

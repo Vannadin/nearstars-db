@@ -35,6 +35,7 @@ class _Stop(Exception):
         self.stop = CheckStop(id_, why)
 
 
+_SPREAD_CALL = "__spread__"
 _SPREAD = re.compile(r"(gamma_spread|dpdt_spread)\(\s*(sets\[\d+\])\s*@\s*([^;]*);\s*printed\s*=\s*([^)]*)\)")
 _OPS = MappingProxyType({ast.Add: lambda a, b: a + b, ast.Sub: lambda a, b: a - b, ast.Mult: lambda a, b: a * b,
                          ast.Div: lambda a, b: a / b, ast.Pow: lambda a, b: a ** b})
@@ -100,7 +101,10 @@ class _Eval:
         if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)) and not isinstance(node.value, bool):
             return float(node.value)
         if isinstance(node, ast.BinOp) and type(node.op) in _OPS:
-            return _OPS[type(node.op)](self(node.left), self(node.right))
+            x = _OPS[type(node.op)](self(node.left), self(node.right))
+            if not isinstance(x, float) or not math.isfinite(x):          # 68 G3: a complex or non-finite result
+                raise _Stop("material.check_grammar", f"«{ast.unparse(node)[:60]}»: arithmetic left the reals")
+            return x
         if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.USub, ast.UAdd)):
             x = self(node.operand)
             return -x if isinstance(node.op, ast.USub) else x
@@ -108,9 +112,13 @@ class _Eval:
             f = node.func.id
             if f in ("max", "min", "abs"):
                 args = [self(a) for a in node.args]
-                return {"max": max, "min": min, "abs": lambda x: abs(x)}[f](*args)
-            if f == "_spread":
+                if (f == "abs" and len(args) != 1) or not args:                # 68 G2: arity
+                    raise _Stop("material.check_grammar", f"{f} takes {'one argument' if f == 'abs' else 'arguments'}")
+                return {"max": max, "min": min, "abs": abs}[f](*args)
+            if f == _SPREAD_CALL:
                 kind_s, set_i = node.args[0].value, node.args[1].value
+                if kind_s not in ("gamma_spread", "dpdt_spread"):
+                    raise _Stop("material.check_grammar", f"unknown spread {kind_s!r}")
                 p, t, printed_v = self(node.args[2]), self(node.args[3]), self(node.args[4])
                 if self.spread is None:
                     raise _Stop("material.check_grammar", f"{kind_s} needs a view of the record")
@@ -128,7 +136,9 @@ def _rewrite_spreads(expr: str) -> str:
         kv = dict(x.split("=", 1) for x in (y.strip() for y in at.split(",")) if x)
         if set(kv) != {"P", "T"}:
             raise _Stop("material.check_grammar", f"{kind} takes «@ P=…, T=…», got {at!r}")
-        return f'_spread("{kind}", {int(s[5:-1])}, ({kv["P"]}), ({kv["T"]}), ({printed}))'
+        return f'{_SPREAD_CALL}("{kind}", {int(s[5:-1])}, ({kv["P"]}), ({kv["T"]}), ({printed}))'
+    if _SPREAD_CALL in expr:                                   # 68 G1: the internal call is not spellable by a record
+        raise _Stop("material.check_grammar", f"«{_SPREAD_CALL}» is internal; write gamma_spread / dpdt_spread")
     return _SPREAD.sub(sub, expr)
 
 
@@ -142,7 +152,7 @@ def evaluate(expr: str, phase: Mapping, state: Mapping, spread=None) -> float | 
         return s.stop
     except SyntaxError as e:
         return CheckStop("material.check_grammar", f"not an expression: {e.msg}")
-    except (ZeroDivisionError, OverflowError, ValueError) as e:
+    except (ZeroDivisionError, OverflowError, ValueError, TypeError) as e:
         return CheckStop("material.check_grammar", f"arithmetic failed: {e}")
 
 
