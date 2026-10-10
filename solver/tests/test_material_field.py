@@ -148,8 +148,15 @@ class RefusalRegion(unittest.TestCase):
                               "dp": 0.05e9, "dt": 10.0}
         self.assertEqual(probe_overlaps(rec)[1], [])
         self.assertEqual(empty_refusal_regions(rec), [])
-        rec["refusals"][0]["box"]["p_min"] = 2.31e9                       # a region off the grid is flagged empty
+        rec["refusals"][0]["box"].update(p_min=2.31e9, p_max=2.4e9)       # a region off the grid is flagged empty
         self.assertEqual(len(empty_refusal_regions(rec)), 1)
+        rec.pop("field_probe")                                           # several boxes, each its own grid (c8)
+        rec["field_probes"] = [{"box": {"p_min": 2.0e9, "p_max": 2.2e9, "t_min": 290.0, "t_max": 310.0},
+                                "dp": 0.05e9, "dt": 10.0},
+                               {"box": {"p_min": 2.3e9, "p_max": 2.4e9, "t_min": 300.0, "t_max": 300.0},
+                                "dp": 0.1e9, "dt": 10.0}]
+        self.assertEqual(len(empty_refusal_regions(rec)), 0)            # the second box reaches the moved region
+        self.assertGreater(probe_overlaps(rec)[0], 0)
 
     def test_unchecked_triple_point_needs_a_region(self):
         from solver import material_registry as mr

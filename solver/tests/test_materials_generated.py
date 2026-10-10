@@ -104,45 +104,50 @@ def cite_problems(recs, papers: Path = None) -> tuple:
     return n, bad
 
 
-def probe_overlaps(rec) -> tuple:
-    """Impl note 6 item 5: walk a field record's declared probe grid; every node must give one phase or a declared
-    refusal, and an overlap anywhere is a failure. Returns (nodes walked, [overlap nodes])."""
-    pr = rec.get("field_probe")
-    if not pr:
-        return 0, []
-    v = mv.RecordView(rec, T_POT)
+def probe_grids(rec) -> list:
+    """The record's declared probe grids: field_probe (one) and field_probes (several boxes, own dp/dt each)."""
+    return ([rec["field_probe"]] if rec.get("field_probe") else []) + list(rec.get("field_probes") or ())
+
+
+def _walk(pr):
     box = pr["box"]
     p_lo, p_hi, t_lo, t_hi = (float(box[k]) for k in ("p_min", "p_max", "t_min", "t_max"))
     dp, dt = float(pr["dp"]), float(pr["dt"])
-    n, bad = 0, []
     p = p_lo
     while p <= p_hi + 1e-9 * dp:
         t = t_lo
         while t <= t_hi + 1e-9 * dt:
+            yield p, t
+            t += dt
+        p += dp
+
+
+def probe_overlaps(rec) -> tuple:
+    """Impl note 6 item 5: walk a field record's declared probe grids; every node must give one phase or a declared
+    refusal, and an overlap anywhere is a failure. Returns (nodes walked, [overlap nodes])."""
+    grids = probe_grids(rec)
+    if not grids:
+        return 0, []
+    v = mv.RecordView(rec, T_POT)
+    n, bad = 0, []
+    for pr in grids:
+        for p, t in _walk(pr):
             got = v._phase_at(p, t)
             n += 1
             if isinstance(got, st.Stop) and got.record.refusal == "material.field_overlap":
                 bad.append((p, t, got.record.why))
-            t += dt
-        p += dp
     return n, bad
 
 
 def empty_refusal_regions(rec) -> list:
-    """Ids/reasons of declared refusal regions that hold no node of the probe grid."""
-    pr = rec["field_probe"]
+    """Ids/reasons of declared refusal regions that hold no node of any probe grid."""
     v = mv.RecordView(rec, T_POT)
-    box = pr["box"]
     hit = set()
-    p = float(box["p_min"])
-    while p <= float(box["p_max"]) + 1e-9 * float(pr["dp"]):
-        t = float(box["t_min"])
-        while t <= float(box["t_max"]) + 1e-9 * float(pr["dt"]):
+    for pr in probe_grids(rec):
+        for p, t in _walk(pr):
             r = v.refusal_region_at(p, t)
             if r is not None:
                 hit.add(r["reason"])
-            t += float(pr["dt"])
-        p += float(pr["dp"])
     return [r["reason"] for r in rec["refusals"] if r["reason"] not in hit]
 
 
@@ -211,14 +216,14 @@ class Generated(unittest.TestCase):
             if not regions:
                 continue
             with self.subTest(record=rid):
-                self.assertIn("field_probe", rec)
+                self.assertTrue(probe_grids(rec))
                 self.assertEqual(empty_refusal_regions(rec), [])
 
     def test_field_records_have_no_overlap_on_their_probe_grid(self):
         for rid, rec in self.recs.items():
             if rec.get("kind") == "branched" and rec.get("choice") == "field":
                 with self.subTest(record=rid):
-                    self.assertIn("field_probe", rec, "a field record declares its probe grid (impl note 6 item 5)")
+                    self.assertTrue(probe_grids(rec), "a field record declares its probe grid(s) (impl note 6 item 5)")
                     n, bad = probe_overlaps(rec)
                     self.assertGreater(n, 0)
                     self.assertEqual(bad, [])

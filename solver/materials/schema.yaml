@@ -22,6 +22,7 @@ record:
   choice:          {shape: enum, values: [chain, field]}   # branched: how the phase at (P, T) is chosen (impl note 6)
   triple_points:   {shape: list, of: triple_point}         # field: mixed triple points, as printed (impl note 6 item 4)
   field_probe:     {shape: record, of: sampling}           # field: the grid P4 walks for overlaps and gaps (note 6 item 5)
+  field_probes:    {shape: list, of: sampling}             # … or several boxes, each with its own dp/dt (c8, h2o)
   refusals:        {shape: list, of: refusal_region}       # declared refusal regions (frozen P6: a region with no cached
                                                            # source is a named refusal); they win over every field
   joins:           {shape: list, of: join}                 # hand_over: required (D-P1, r2 N7)
