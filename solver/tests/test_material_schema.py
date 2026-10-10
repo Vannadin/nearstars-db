@@ -31,7 +31,7 @@ DEMANDS = (
     ("D-M1", "phase.window", True), ("D-M1", "phase.edges", True), ("D-M2", "edge.refusal", False),
     ("D-M2", "edge.band", False),
     # a band states its error's origin (r2 N10)
-    ("D-M2", "band.origin", True), ("D-M2", "band.error", True), ("D-M2", "band.grade", True),
+    ("D-M2", "band.origin", True), ("D-M2", "band.error", False), ("G4", "band.method", False), ("D-M2", "band.grade", True),
     # γ has its own window
     ("D-M2", "thermal.gamma_window", True),
     # provenance per constant: source, page/table/equation, printed units and conversion, grade
@@ -67,6 +67,8 @@ DEMANDS = (
     ("note 3 B2", "table.source", True), ("note 3 B2", "source.user_declared", False),
     ("note 3 B3", "table.maxwell_tolerance", False),
     # legacy C148: a path reference's own adiabat table (c8 P5)
+    ("G4", "thermal_set.edge_above", False), ("G4", "set_edge.band", True), ("G4", "set_edge.limit", True),
+    ("G4", "set_edge.limit_reason", True),
     ("C148", "reference.adiabat", False), ("C148", "reference_adiabat.lnp", True),
     ("C148", "reference_adiabat.interpolation", True), ("C148", "reference_adiabat.source", True),
 )

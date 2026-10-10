@@ -149,6 +149,16 @@ CONTROLS_JOINS = (
      "material.table_check"),
     ("table: bilinear without α/K_T", lambda d: (tabled(d), PH(d)["eos"]["table"]["columns"].pop("k_t")),
      "material.table_check"),
+    ("set edge limit below the set window", lambda d: PH(d)["thermal"]["sets"][0].update(edge_above={
+        "band": {"form": "relative", "method": "gamma_spread", "grade": "extrapolated", "origin": "o"},
+        "limit": 4.0e10, "limit_reason": "r"}), "material.gamma_window"),
+    ("set edge past the γ window", lambda d: PH(d)["thermal"]["sets"][0].update(edge_above={
+        "band": {"form": "relative", "method": "gamma_spread", "grade": "extrapolated", "origin": "o"},
+        "limit": 2.0e11, "limit_reason": "r"}), "material.gamma_window"),
+    ("band with both error and method", lambda d: PH(d)["edges"]["t_max"]["band"].update(method="m"),
+     "material.bad_shape"),
+    ("band with neither error nor method", lambda d: PH(d)["edges"]["t_max"]["band"].pop("error"),
+     "material.bad_shape"),
     ("table: ragged column", lambda d: (tabled(d), _set(d, "rho", 0, [4000.0])), "material.table_check"),
 )
 
@@ -173,6 +183,12 @@ class TRegistry(unittest.TestCase):
                 out = self._load(plant(edit))
                 self.assertIsInstance(out, mr.LoadStop, rule)
                 self.assertEqual(out.id, id_, dict(out.evidence))
+
+    def test_set_edge_loads(self):
+        rec = plant(lambda d: PH(d)["thermal"]["sets"][0].update(edge_above={
+            "band": {"form": "relative", "method": "gamma_spread", "grade": "extrapolated beyond printed scope",
+                     "origin": "extrapolation of the printed fit"}, "limit": 1.0e11, "limit_reason": "EOS window"}))
+        self.assertIsInstance(self._load(rec), mr.Registry)
 
     def test_notes_3_4_good_bases_load(self):
         for name, edit in (("taper join", joined), ("user-declared table", tabled)):

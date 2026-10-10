@@ -246,9 +246,27 @@ def _gamma(ph: Mapping, file):
     gw = ph["thermal"]["gamma_window"]
     for i, ts in enumerate(ph["thermal"].get("sets", ())):
         w = ts["window"]
-        if w["p_min"] < gw["p_min"] or w["p_max"] > gw["p_max"]:
+        top = ts["edge_above"]["limit"] if "edge_above" in ts else w["p_max"]
+        if w["p_min"] < gw["p_min"] or w["p_max"] > gw["p_max"] or top > gw["p_max"]:
             raise _Stop("material.gamma_window", file=file, phase=ph["id"], set=i,
-                        why=f"set [{w['p_min']}, {w['p_max']}] Pa outside γ window [{gw['p_min']}, {gw['p_max']}]")
+                        why=f"set [{w['p_min']}, {w['p_max']}] Pa (edge limit {top}) outside γ window "
+                            f"[{gw['p_min']}, {gw['p_max']}]")
+        if "edge_above" in ts and not top > w["p_max"]:
+            raise _Stop("material.gamma_window", file=file, phase=ph["id"], set=i,
+                        why="edge_above's limit must lie above the set window's p_max")
+
+
+def _bands(x, path, file):
+    """Every band states exactly one of error / method (a method is evaluated by the checker, never hand-written)."""
+    if isinstance(x, Mapping):
+        if {"origin", "form", "grade"} <= set(x) and (("error" in x) == ("method" in x)):
+            raise _Stop("material.bad_shape", file=file, path=path, expected="a band with exactly one of error / method",
+                        got=repr(sorted(x))[:60])
+        for k, v in x.items():
+            _bands(v, f"{path}.{k}", file)
+    elif isinstance(x, (list, tuple)):
+        for i, v in enumerate(x):
+            _bands(v, f"{path}[{i}]", file)
 
 
 K_GATE = 2.0        # impl note 3 A3: fixed; a different k is a recorded change, never a per-record choice
@@ -424,6 +442,7 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
         if raw["id"] != Path(file).stem:
             raise _Stop("material.id_mismatch", file=file, id=raw["id"])
         _kind(raw, file)
+        _bands(raw, "record", file)
         for ph in raw["phases"]:
             _edges(ph, file)
             _gamma(ph, file)
