@@ -85,6 +85,14 @@ class Edges(unittest.TestCase):
         notes = self.v.state(351.0e9, 5400.0)[2]
         self.assertEqual(len(notes), 1)
         self.assertEqual(notes[0].grade, "extrapolated beyond printed scope")
+        self.assertAlmostEqual(notes[0].error, 0.47418, places=5)        # the method, evaluated from the record
+
+    def test_band_method_that_does_not_evaluate_refuses(self):
+        rec = fe_prem(False)
+        rec["phases"][0]["thermal"]["sets"][1]["edge_above"]["band"]["method"] = "nothing * 2"
+        s = mv.RecordView(rec, T_POT).state(351.0e9, 5400.0)
+        self.assertIsInstance(s, st.Stop)
+        self.assertIn("check_unknown_name", s.record.why)
 
     def test_seams(self):
         self.assertEqual(self.v.seams(), (19.0e9, 35.0e9, 1.2e13))     # 350 GPa is a band edge, not a seam

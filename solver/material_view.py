@@ -20,6 +20,7 @@ from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import Mapping
 
+from solver import material_checks as mc
 from solver import material_registry as mr
 from solver import stepper as st
 
@@ -283,7 +284,9 @@ class RecordView:
         self.kind = record["kind"]
         self.boundaries = tuple(record.get("boundaries", ()))
         self.phases = [self._phase(ph) for ph in record["phases"]]
+        self.record = record
         self.notes: list = []
+        self._band_errors: dict = {}             # (phase index, set index) → the method's value, evaluated once
 
     # construction ─────────────────────────────────────────────────────────────────────────────────────────────────
     def _phase(self, ph):
@@ -403,6 +406,20 @@ class RecordView:
         return st.Stop("refused", RecordRefusal(self.material_id, p, t, rid,
                                                 f"{ph.id}: γ asked at {p:g} Pa, outside its window and every set"))
 
+    def _band_error(self, ph, s):
+        """A band's error: as declared, or its method evaluated from the record through the C4 grammar (once per view).
+        A method that cannot be evaluated refuses; a band never rides without its number."""
+        if s.edge_band.get("error") is not None:
+            return float(s.edge_band["error"])
+        pi, si = self.phases.index(ph), ph.sets.index(s)
+        if (pi, si) not in self._band_errors:
+            got = mc.evaluate(s.edge_band["method"], self.record["phases"][pi], {}, mc.view_spread(self, pi))
+            if isinstance(got, mc.CheckStop):
+                got = st.Stop("refused", RecordRefusal(self.material_id, s.p_max, 0.0, "input.material_out_of_data",
+                                                       f"{ph.id}: band method does not evaluate ({got.id}: {got.why})"))
+            self._band_errors[(pi, si)] = got
+        return self._band_errors[(pi, si)]
+
     def _dpdt_v(self, ph, t, p):
         s = self._set_at(ph, p)
         if s is None:
@@ -418,9 +435,11 @@ class RecordView:
         s = self._set_at(ph, p)
         if s is not None:
             if s.edge_limit is not None and p >= s.p_max and s.edge_band is not None:
+                err = self._band_error(ph, s)
+                if isinstance(err, st.Stop):
+                    return err
                 self.notes.append(BandNote(self.material_id, f"{ph.id} γ set past {s.p_max:g} Pa", s.edge_band["form"],
-                                           s.edge_band.get("error"), s.edge_band.get("method"),
-                                           s.edge_band["grade"], s.edge_band["origin"]))
+                                           err, s.edge_band.get("method"), s.edge_band["grade"], s.edge_band["origin"]))
             if s.evaluator is not None:
                 return s.evaluator.at(p, t)["gruneisen"]
             if s.c_v <= 0.0 or rho <= 0.0:
