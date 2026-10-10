@@ -92,7 +92,14 @@ class Edges(unittest.TestCase):
         rec["phases"][0]["thermal"]["sets"][1]["edge_above"]["band"]["method"] = "nothing * 2"
         s = mv.RecordView(rec, T_POT).state(351.0e9, 5400.0)
         self.assertIsInstance(s, st.Stop)
-        self.assertIn("check_unknown_name", s.record.why)
+        self.assertEqual(s.record.refusal, "material.check_unknown_name")
+
+    def test_view_holds_its_own_copy(self):
+        """68 N27: changing the caller's record after construction does not reach the view."""
+        rec = fe_prem(False)
+        v = mv.RecordView(rec, T_POT)
+        rec["phases"][0]["thermal"]["sets"][1]["edge_above"]["band"]["method"] = "nothing * 2"
+        self.assertAlmostEqual(v.state(351.0e9, 5400.0)[2][0].error, 0.47418, places=5)
 
     def test_seams(self):
         self.assertEqual(self.v.seams(), (19.0e9, 35.0e9, 1.2e13))     # 350 GPa is a band edge, not a seam

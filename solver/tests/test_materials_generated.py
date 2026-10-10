@@ -131,6 +131,23 @@ class Generated(unittest.TestCase):
                     self.assertNotIn("stop", r, r.get("stop"))
                     self.assertTrue(r["passed"], r)
 
+    def test_band_methods_evaluate(self):
+        """68 N26: every band method in a shipped record evaluates through the grammar, so a broken method fails the
+        suite before any solve meets it."""
+        n = 0
+        for rid, rec in self.recs.items():
+            v = mv.RecordView(rec, T_POT)
+            for pi, ph in enumerate(rec["phases"]):
+                for si, s in enumerate(ph["thermal"].get("sets", ())):
+                    band = (s.get("edge_above") or {}).get("band") or {}
+                    if "method" not in band:
+                        continue
+                    with self.subTest(record=rid, phase=pi, set=si):
+                        got = mc.evaluate(band["method"], ph, {}, mc.view_spread(v, pi))
+                        self.assertNotIsInstance(got, mc.CheckStop, got)
+                        n += 1
+        self.assertGreater(n, 0)
+
     def test_cache_cites_exist_with_their_hash(self):
         if not PAPERS.is_dir():
             self.fail(f"paper cache not found at {PAPERS}; set NEARSTARS_PAPERS, or NEARSTARS_PAPERS_ABSENT=declared")

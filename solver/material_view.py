@@ -15,6 +15,7 @@ Evaluators: dorogokupets2017_liquid_fe (Sci. Rep. 7, 41863, eqs (1), (2), (9)–
 """
 from __future__ import annotations
 
+import copy
 import math
 from dataclasses import dataclass, field
 from types import MappingProxyType
@@ -23,8 +24,18 @@ from typing import Mapping
 from solver import material_checks as mc
 from solver import material_registry as mr
 from solver import stepper as st
+from solver.result import freeze
 
 R_GAS = 8.314462618          # J/(mol·K), the value legacy fe_liquid uses (a formula input, not a read source)
+
+
+def thaw_plain(x):
+    """Plain dicts and lists from a record that may be frozen (mappingproxy / tuple) or plain."""
+    if isinstance(x, Mapping):
+        return {k: thaw_plain(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [thaw_plain(v) for v in x]
+    return x
 
 
 def _v(c) -> float:
@@ -282,9 +293,10 @@ class RecordView:
         self.t_pot = float(t_pot)
         self.p_stop = float(p_stop)
         self.kind = record["kind"]
-        self.boundaries = tuple(record.get("boundaries", ()))
-        self.phases = [self._phase(ph) for ph in record["phases"]]
-        self.record = record
+        # 68 N27: the view reads only its own frozen copy, so a later change by the caller cannot reach it
+        self.record = freeze(copy.deepcopy(thaw_plain(record)))
+        self.boundaries = tuple(self.record.get("boundaries", ()))
+        self.phases = [self._phase(ph) for ph in self.record["phases"]]
         self.notes: list = []
         self._band_errors: dict = {}             # (phase index, set index) → the method's value, evaluated once
 
@@ -414,9 +426,9 @@ class RecordView:
         pi, si = self.phases.index(ph), ph.sets.index(s)
         if (pi, si) not in self._band_errors:
             got = mc.evaluate(s.edge_band["method"], self.record["phases"][pi], {}, mc.view_spread(self, pi))
-            if isinstance(got, mc.CheckStop):
-                got = st.Stop("refused", RecordRefusal(self.material_id, s.p_max, 0.0, "input.material_out_of_data",
-                                                       f"{ph.id}: band method does not evaluate ({got.id}: {got.why})"))
+            if isinstance(got, mc.CheckStop):                # 68 N26: the grammar's own id, not the data-gap id
+                got = st.Stop("refused", RecordRefusal(self.material_id, s.p_max, 0.0, got.id,
+                                                       f"{ph.id}: band method does not evaluate: {got.why}"))
             self._band_errors[(pi, si)] = got
         return self._band_errors[(pi, si)]
 
