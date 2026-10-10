@@ -43,6 +43,8 @@ PARAMS_NOT_IN_LEGACY = {
            "linear in T: it adds a_S R to S and nothing to P, (∂P/∂T)_V, C_V or γ, so legacy's evaluator is the "
            "printed model for what the set supplies (68 N13)",
 }
+#: evaluator params legacy holds as fe_liquid module constants, not Column fields
+PARAMS_LEGACY_MODULE = {"molar_mass": "MOLAR_MASS"}
 
 #: legacy Phase / ThermalSet fields the record does not carry, with the reason
 NOT_CARRIED = {
@@ -91,7 +93,7 @@ class ConstantDiff(unittest.TestCase):
         cls.eos = _legacy()
         cls.ph = cls.eos.FE_PREM.phases[0]
         import fe_liquid
-        cls.column = fe_liquid.LIQUID
+        cls.column, cls.fe_liquid = fe_liquid.LIQUID, fe_liquid
 
     def pairs(self):
         r, ph = self.rec, self.ph
@@ -114,7 +116,8 @@ class ConstantDiff(unittest.TestCase):
             ("sets[0].t_ref", _v(sets[0]["t_ref"]), huang.t_ref),
             ("sets[1].window.p_min", float(sets[1]["window"]["p_min"]), doro.p_min),
             ("sets[1].window.p_max", float(sets[1]["window"]["p_max"]), doro.p_max),
-        ] + [(f"sets[1].evaluator.params.{n}", _v(c), getattr(self.column, n))
+        ] + [(f"sets[1].evaluator.params.{n}", _v(c),
+              getattr(self.fe_liquid, PARAMS_LEGACY_MODULE[n]) if n in PARAMS_LEGACY_MODULE else getattr(self.column, n))
              for n, c in sets[1]["evaluator"]["params"].items() if n not in PARAMS_NOT_IN_LEGACY]
 
     def test_evaluator_params_close(self):
@@ -124,7 +127,7 @@ class ConstantDiff(unittest.TestCase):
                    if f.name not in params and f.name not in COLUMN_NOT_CARRIED]
         self.assertEqual(missing, [])
         self.assertEqual(sorted(set(params) - {f.name for f in dataclasses.fields(self.column)}),
-                         sorted(PARAMS_NOT_IN_LEGACY))
+                         sorted(set(PARAMS_NOT_IN_LEGACY) | set(PARAMS_LEGACY_MODULE)))
         self.assertEqual(self.column.n_atom, 1.0)
 
     def test_set_fields_close(self):

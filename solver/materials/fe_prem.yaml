@@ -64,6 +64,7 @@ phases:
               g_el: {value: 0.884, unit: "1", grade: read, printed: "g 0.884", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
               a_s: {value: 2.12, unit: "1", grade: read, printed: "a_S 2.12", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
               t_ref: {value: 1811.0, unit: "K", grade: read, printed: "T0 = 1811 K (column heading)", source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, Liquid Fe column", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
+              molar_mass: {value: 0.055845, unit: "kg/mol", grade: declared, note: "standard atomic weight of Fe; the evaluator's per-mole to per-kg factor (legacy fe_liquid.MOLAR_MASS)", source: {formula: "M = 0.055845 kg/mol, the M of c_v's 3R/M"}}
           printed_scope: {p_max: 350.0e9, source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "section heading «EoSs for solid and liquid Fe to 350 GPa»; title p.1", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}}
           edge_above:
             band:
