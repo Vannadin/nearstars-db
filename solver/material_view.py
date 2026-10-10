@@ -239,7 +239,122 @@ class Dorogokupets2017Liquid:
         return out
 
 
-EVALUATORS = MappingProxyType({"dorogokupets2017_liquid_fe": Dorogokupets2017Liquid})
+class FrenchRedmer2015:
+    """French & Redmer 2015 (2015PhRvB..91a4308F) ices VII/X: f(ρ,T) = u_e(ρ) + u_n(ρ) + f_t(ρ,T), eqs (6), (9), (11),
+    (12), (14), (15), Tables I (HSE), II, III. Coefficients are in the fit's own units as printed (ρ g/cm³, f kJ/g);
+    this boundary converts: ρ in kg/m³ → g/cm³, p GPa → Pa, c_V kJ/(g·K) → J/(kg·K). The same arithmetic as legacy
+    ice_fr2015 at 097a8aa3: 32-node Gauss–Legendre Debye integral, central differences (ΔT 1e-3·max(1, T/1000) K,
+    Δρ 1e-6·max(1, ρ) g/cm³), the guarded-secant inversion to 1e-10 relative. The proton entropy s_p (eq. 10) is
+    constant in ρ and left out (c8). Per-view state only (nodes, cache)."""
+
+    NEEDS = mr.EVALUATOR_PARAMS["french_redmer2015"]
+    CACHE_MAX = 65536
+
+    def __init__(self, params: Mapping):
+        missing = [k for k in self.NEEDS if k not in params]
+        if missing:
+            raise ValueError(f"french_redmer2015 needs params {missing}")
+        g = {k: _v(params[k]) for k in self.NEEDS}
+        self.ue = tuple(g[f"a{i}"] for i in range(6))
+        self.un = tuple(g[f"b{i}"] for i in range(5))
+        self.alpha = {(0, -k): g[f"alpha_0_m{k}"] for k in (4, 3, 2)}
+        self.gamma = {(j, -k): g[f"gamma_{j}_m{k}"] for j in range(4) for k in (4, 3, 2)}
+        self.t_d, self.t_e, self.a_d, self.a_e, self.k0 = g["t_d"], g["t_e"], g["a_d"], g["a_e"], g["k0"]
+        self.rho_lo, self.rho_hi = g["rho_search_min"] / 1e3, g["rho_search_max"] / 1e3     # g/cm³
+        self.nodes = self._gl_nodes(32)
+        self.cache: dict = {}
+
+    @staticmethod
+    def _gl_nodes(n):
+        out = []
+        for k in range(n):
+            x = math.cos(math.pi * (k + 0.75) / (n + 0.5))
+            for _ in range(60):
+                p0, p1 = 1.0, 0.0
+                for j in range(n):
+                    p0, p1 = ((2 * j + 1) * x * p0 - j * p1) / (j + 1), p0
+                dp = n * (x * p0 - p1) / (x * x - 1.0)
+                dx = -p0 / dp
+                x += dx
+                if abs(dx) < 1e-15:
+                    break
+            out.append((x, 2.0 / ((1.0 - x * x) * dp * dp)))
+        return tuple(out)
+
+    def _debye(self, z):
+        if z <= 0.0:
+            return 1.0
+        total = 0.0
+        for x, w in self.nodes:
+            t = 0.5 * z * (x + 1.0)
+            total += 0.5 * z * w * (t ** 3 / math.expm1(t) if t > 0 else 0.0)
+        return 3.0 * total / z ** 3
+
+    def f(self, rho, t):                                   # kJ/g at ρ [g/cm³], T [K]
+        a0, a1, a2, a3, a4, a5 = self.ue
+        ln = math.log(rho)
+        ue = a0 + a1 * rho + a2 * rho ** 2 + a3 * rho ** 3 + a4 * ln + a5 * ln ** 2
+        b0, b1, b2, b3, b4 = self.un
+        un = b0 + b1 * rho + b2 * rho ** 2 + b3 * math.exp(-b4 * rho ** 10)
+        ft = 0.0
+        for (i, k), a in self.alpha.items():
+            ti = self.t_d * self.a_d ** i
+            ft += a * t * (3.0 * math.log(-math.expm1(-ti / t)) - self._debye(ti / t)) * rho ** (k / self.k0)
+        for (j, k), gm in self.gamma.items():
+            tj = self.t_e * self.a_e ** j
+            ft += gm * t * math.log(-math.expm1(-tj / t)) * rho ** (k / self.k0)
+        return ue + un + ft
+
+    def _p(self, rho, t):                                  # GPa
+        h = 1e-6 * max(1.0, rho)
+        return rho ** 2 * (self.f(rho + h, t) - self.f(rho - h, t)) / (2.0 * h)
+
+    def _rho(self, p_gpa, t):
+        lo, hi = self.rho_lo, self.rho_hi
+        f_lo, f_hi = self._p(lo, t) - p_gpa, self._p(hi, t) - p_gpa
+        if f_lo > 0.0 or f_hi < 0.0:
+            return None                                    # outside the search bracket: the caller refuses
+        a, b, fa = lo, hi, f_lo
+        x0, f0, x1, f1 = lo, f_lo, hi, f_hi
+        for _ in range(60):
+            x2 = x1 - f1 * (x1 - x0) / (f1 - f0) if f1 != f0 else 0.5 * (a + b)
+            if not (a < x2 < b):
+                x2 = 0.5 * (a + b)
+            f2 = self._p(x2, t) - p_gpa
+            if (fa < 0.0) != (f2 < 0.0):
+                b = x2
+            else:
+                a, fa = x2, f2
+            done = f2 == 0.0 or abs(x2 - x1) <= 1e-10 * abs(x2)
+            x0, f0, x1, f1 = x1, f1, x2, f2
+            if done:
+                break
+        return x1
+
+    def at(self, p, t) -> dict:
+        key = (p, t)
+        hit = self.cache.get(key)
+        if hit is not None:
+            return hit
+        rho = self._rho(p / 1e9, t)
+        if rho is None:
+            raise ValueError(f"french_redmer2015: {p:g} Pa at {t:g} K is outside the ρ search bracket")
+        ht = 1e-3 * max(1.0, t * 1e-3)
+        f0 = self.f(rho, t)
+        cv = -t * (self.f(rho, t + ht) - 2.0 * f0 + self.f(rho, t - ht)) / ht ** 2
+        dpdt = (self._p(rho, t + ht) - self._p(rho, t - ht)) / (2.0 * ht)
+        hr = 1e-6 * max(1.0, rho)
+        kt = rho * (self._p(rho + hr, t) - self._p(rho - hr, t)) / (2.0 * hr)
+        out = {"dpdt_v": dpdt * 1e9, "c_v": cv * 1e6, "gruneisen": 0.0 if cv <= 0.0 else dpdt / (rho * cv),
+               "k_t": kt * 1e9, "density": rho * 1e3}
+        if len(self.cache) >= self.CACHE_MAX:
+            self.cache.clear()
+        self.cache[key] = out
+        return out
+
+
+EVALUATORS = MappingProxyType({"dorogokupets2017_liquid_fe": Dorogokupets2017Liquid,
+                               "french_redmer2015": FrenchRedmer2015})
 
 
 # ── the view ────────────────────────────────────────────────────────────────────────────────────────────────────────

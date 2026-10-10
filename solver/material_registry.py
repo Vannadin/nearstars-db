@@ -333,6 +333,14 @@ def _bands(x, path, file):
 EVALUATOR_PARAMS = MappingProxyType({
     "dorogokupets2017_liquid_fe": ("v0", "k0", "k0p", "theta0", "gamma0", "beta", "gamma_inf", "e0", "g_el", "t_ref",
                                    "molar_mass"),
+    # French & Redmer 2015 (2015PhRvB..91a4308F) eqs (6), (9), (11), (12), (14), (15); coefficients in the fit's own
+    # units (ρ in g/cm³, f in kJ/g), as printed (c8); the evaluator converts at its boundary. rho_search_min/max: the
+    # inversion bracket (legacy 1.6 and 5.75 g/cm³), declared in the record.
+    "french_redmer2015": ("a0", "a1", "a2", "a3", "a4", "a5", "b0", "b1", "b2", "b3", "b4", "t_d", "t_e", "a_d", "a_e",
+                          "k0", "alpha_0_m4", "alpha_0_m3", "alpha_0_m2",
+                          "gamma_0_m4", "gamma_0_m3", "gamma_0_m2", "gamma_1_m4", "gamma_1_m3", "gamma_1_m2",
+                          "gamma_2_m4", "gamma_2_m3", "gamma_2_m2", "gamma_3_m4", "gamma_3_m3", "gamma_3_m2",
+                          "rho_search_min", "rho_search_max"),
 })
 
 
