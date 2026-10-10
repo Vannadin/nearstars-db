@@ -455,6 +455,23 @@ class GuardRedTeam(unittest.TestCase):
         self.assertIsInstance(ans, result.Refusal)
         self.assertEqual((ans.id, ans.evidence["check"]), ("solve.closure_discontinuous", "probe"))
 
+    def test_a_wall_between_the_root_and_its_scan_point(self):
+        """r2 GB1: the trials from 0.5·x0 to 0.999·x0 refuse (the nearest scan point below among them) and F jumps by 10
+        beyond them; the slope must come from inside the solved stretch, not from the scan point across the wall."""
+        s0 = self.rt[-1]["s"]
+        lo_w, hi_w = 0.5 * self.x0, 0.999 * self.x0
+        sg = math.copysign(1.0, self._f_at(1.001 * self.x0) - self._f_at(0.9995 * self.x0))
+
+        def alter(xx, f):
+            if lo_w <= xx <= hi_w:
+                return st.Stop("refused", {"planted": "wall band", "x": xx})
+            return f - 10.0 * sg if xx < lo_w else f                 # away from zero: no second root
+        self.rt.clear()
+        ans, x = self._solve(alter)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.assertLess(abs(x / self.x0 - 1.0), 1e-12)
+        self.assertLess(abs(self.rt[-1]["s"] / s0 - 1.0), 0.5)          # the local slope, not the jump across the wall
+
     def test_very_flat_and_very_steep_F(self):
         """F scaled by 1e-3 and 1e3: δ follows the slope (capped by the scan pair), and the root is unchanged."""
         for k in (1e-3, 1e3):

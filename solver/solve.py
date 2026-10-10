@@ -495,13 +495,16 @@ def _root_tolerance(x, acc, options, bracket, trials) -> dict:
     refused = sorted(t.x for t in trials if t.F is None and t.kind != "isolated")
 
     def side_point(sgn):
-        """The scan point next to x on that side; with none, the farthest solved trial on that side inside the
-        solved stretch (no refusal between it and x), so the secant never rests on a hair-wide pair."""
-        sc = [q for q in scan if (q[0] - x) * sgn > 0.0]
+        """Inside that side's solved stretch (no refused trial between it and x; r2 GB1): the nearest scan point;
+        with none, the farthest solved trial; so the secant never rests on a hair-wide pair nor spans a wall."""
+        wall = min((w for w in refused if (w - x) * sgn > 0.0), key=lambda w: abs(w - x), default=None)
+
+        def inside(q):
+            return (q[0] - x) * sgn > 0.0 and (wall is None or abs(q[0] - x) < abs(wall - x))
+        sc = [q for q in scan if inside(q)]
         if sc:
             return min(sc, key=lambda q: abs(q[0] - x))
-        wall = min((w for w in refused if (w - x) * sgn > 0.0), key=lambda w: abs(w - x), default=None)
-        stretch = [q for q in solved if (q[0] - x) * sgn > 0.0 and (wall is None or abs(q[0] - x) < abs(wall - x))]
+        stretch = [q for q in solved if inside(q)]
         return max(stretch, key=lambda q: abs(q[0] - x)) if stretch else None
 
     lo_pt, hi_pt = side_point(-1.0), side_point(1.0)
