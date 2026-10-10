@@ -609,7 +609,7 @@ phases:
   window:
     p_min: 0.0
     p_max: 2300000000.0
-    t_min: 130.0
+    t_min: 150.0
     t_max: 400.0000000000001
   edges:
     p_min:
@@ -1501,7 +1501,7 @@ phases:
       where: 'abstract: «covering the ranges 0–273.16 K and 0 Pa–210 MPa»'
       sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
     upper:
-    - &id015
+    - &id017
       form: clapeyron
       p0:
         value: 130845314.03276083
@@ -1646,84 +1646,80 @@ boundaries:
       reason: «the highest temperature for which measurements exist and not the end of the melting curve of ice VII»
       source: *id013
     source: *id013
-refusals:
-- id: input.material_out_of_data
-  box:
-    p_min: 2140000000.0
-    p_max: 2300000000.0
-    t_min: 130.0
-    t_max: 355.0
-  reason: 'VI–VII boundary not cached (Bridgman 1937, Pistorius et al. 1968, Journaux et al. 2013 on papers-to-fetch); bounded
-    only by declared edges: Bezacier 2014''s lowest VII point (2.14 GPa, Table I), SeaFreeze VI''s window top and the R14-08
-    VII melting curve (directing 2026-10-11). Any column crossing ~2.2 GPa refuses until then'
-- id: input.material_out_of_data
-  box:
-    p_min: 2140000000.0
-    p_max: 2300000000.0
-    t_min: 355.0
-    t_max: 400.0000000000001
-  lower:
-  - form: ln_sum
-    p_star:
-      value: 2216000000.0
-      unit: Pa
+- between:
+  - VI
+  - vii_x
+  kind: solid_solid
+  curve:
+    form: t_of_p_lnsqrt
+    x1:
+      value: -146990.0
+      unit: K
       source: &id014
-        cache: IAPWS-R14-08-2011.pdf
-        page: -5-
-        where: '§3.5, eq. (5): ice VII melting pressure'
-        sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+        cache: 2020A_A...643A.105H.pdf
+        page: '4'
+        where: eq. (22) and Table 2, «ice-VI/ice-VII» column
+        sha256: baf891e8361e8da9432bc06f7502fb34bc9f5ef8b614bd7e7a985d1aa7a5b02c
       grade: read
-      printed: p* = 2216 MPa
-    t_star:
-      value: 355.0
+      printed: x1 -146990 K
+    x2:
+      value: 6.10791e-06
+      unit: K/Pa
+      source: *id014
+      grade: read
+      printed: x2 6.10791e-06 K
+    x3:
+      value: 8152.9
       unit: K
       source: *id014
       grade: read
-      printed: T* = 355 K
-    terms:
-    - a:
-        value: 1.73683
-        unit: '1'
-        source: *id014
-        grade: read
-      b:
-        value: -1.0
-        unit: '1'
-        source: *id014
-        grade: read
-    - a:
-        value: -0.0544606
-        unit: '1'
-        source: *id014
-        grade: read
-      b:
-        value: 5.0
-        unit: '1'
-        source: *id014
-        grade: read
-    - a:
-        value: 8.06106e-08
-        unit: '1'
-        source: *id014
-        grade: read
-      b:
-        value: 22.0
-        unit: '1'
-        source: *id014
-        grade: read
+      printed: x3 8152.9 K
+    x4:
+      value: -0.88439
+      unit: K/Pa^0.5
+      source: *id014
+      grade: read
+      printed: x4 -0.88439 K
+    p_min:
+      value: 1200000000.0
+      unit: Pa
+      source: *id014
+      grade: declared
+      note: 'the inversion interval: covers T_b 150–355 K'
+    p_max:
+      value: 2300000000.0
+      unit: Pa
+      source: *id014
+      grade: declared
+      note: 'the inversion interval: covers T_b 150–355 K'
     t_min:
+      value: 150.0
+      unit: K
+      source:
+        cache: 2020A_A...643A.105H.pdf
+        page: '1'
+        where: 'abstract: «150 K to 10⁵ K»'
+        sha256: baf891e8361e8da9432bc06f7502fb34bc9f5ef8b614bd7e7a985d1aa7a5b02c
+      grade: declared
+      note: eq. (22) states no lower end; AQUA's whole range (directing 2026-10-11)
+    t_max:
       value: 355.0
       unit: K
-      source: *id014
+      source:
+        cache: 2020A_A...643A.105H.pdf
+        page: '4'
+        where: «up to the triple point at 2.216 GPa»
+        sha256: baf891e8361e8da9432bc06f7502fb34bc9f5ef8b614bd7e7a985d1aa7a5b02c
       grade: read
-      printed: temperature range from 355 K to 715 K
-    t_max:
-      value: 715.0
-      unit: K
-      source: *id014
-      grade: read
-      printed: temperature range from 355 K to 715 K
     t_min_end:
+      kind: data
+      reason: AQUA's whole EoS starts at 150 K; eq. (22) states no lower end
+      source:
+        cache: 2020A_A...643A.105H.pdf
+        page: '1'
+        where: abstract
+        sha256: baf891e8361e8da9432bc06f7502fb34bc9f5ef8b614bd7e7a985d1aa7a5b02c
+    t_max_end:
       kind: physical
       reason: the L–VI–VII triple point
       source:
@@ -1731,15 +1727,179 @@ refusals:
         page: -5-
         where: 'Table 1: ice VI – ice VII – liquid, 355 K / 2216 MPa'
         sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
-    t_max_end:
-      kind: data
-      reason: «the highest temperature for which measurements exist and not the end of the melting curve of ice VII»
-      source: *id014
     source: *id014
-  reason: 'VI–VII boundary not cached (Bridgman 1937, Pistorius et al. 1968, Journaux et al. 2013 on papers-to-fetch); bounded
-    only by declared edges: Bezacier 2014''s lowest VII point (2.14 GPa, Table I), SeaFreeze VI''s window top and the R14-08
-    VII melting curve (directing 2026-10-11). Any column crossing ~2.2 GPa refuses until then; above 355 K only above the
-    melting curve'
+refusals:
+- id: input.material_out_of_data
+  box:
+    p_min: 0.0
+    p_max: 2140000000.0
+    t_min: 150.0
+    t_max: 326.41535530474357
+  lower:
+  - form: t_of_p_lnsqrt
+    x1:
+      value: -146990.0
+      unit: K
+      source: &id015
+        cache: 2020A_A...643A.105H.pdf
+        page: '4'
+        where: eq. (22) and Table 2, «ice-VI/ice-VII» column
+        sha256: baf891e8361e8da9432bc06f7502fb34bc9f5ef8b614bd7e7a985d1aa7a5b02c
+      grade: read
+      printed: x1 -146990 K
+    x2:
+      value: 6.10791e-06
+      unit: K/Pa
+      source: *id015
+      grade: read
+      printed: x2 6.10791e-06 K
+    x3:
+      value: 8152.9
+      unit: K
+      source: *id015
+      grade: read
+      printed: x3 8152.9 K
+    x4:
+      value: -0.88439
+      unit: K/Pa^0.5
+      source: *id015
+      grade: read
+      printed: x4 -0.88439 K
+    p_min:
+      value: 1200000000.0
+      unit: Pa
+      source: *id015
+      grade: declared
+      note: 'the inversion interval: covers T_b 150–355 K'
+    p_max:
+      value: 2300000000.0
+      unit: Pa
+      source: *id015
+      grade: declared
+      note: 'the inversion interval: covers T_b 150–355 K'
+    t_min:
+      value: 150.0
+      unit: K
+      source:
+        cache: 2020A_A...643A.105H.pdf
+        page: '1'
+        where: 'abstract: «150 K to 10⁵ K»'
+        sha256: baf891e8361e8da9432bc06f7502fb34bc9f5ef8b614bd7e7a985d1aa7a5b02c
+      grade: declared
+      note: eq. (22) states no lower end; AQUA's whole range (directing 2026-10-11)
+    t_max:
+      value: 355.0
+      unit: K
+      source:
+        cache: 2020A_A...643A.105H.pdf
+        page: '4'
+        where: «up to the triple point at 2.216 GPa»
+        sha256: baf891e8361e8da9432bc06f7502fb34bc9f5ef8b614bd7e7a985d1aa7a5b02c
+      grade: read
+    t_min_end:
+      kind: data
+      reason: AQUA's whole EoS starts at 150 K; eq. (22) states no lower end
+      source:
+        cache: 2020A_A...643A.105H.pdf
+        page: '1'
+        where: abstract
+        sha256: baf891e8361e8da9432bc06f7502fb34bc9f5ef8b614bd7e7a985d1aa7a5b02c
+    t_max_end:
+      kind: physical
+      reason: the L–VI–VII triple point
+      source:
+        cache: IAPWS-R14-08-2011.pdf
+        page: -5-
+        where: 'Table 1: ice VI – ice VII – liquid, 355 K / 2216 MPa'
+        sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+    source: *id015
+  reason: ice VII between the VI–VII line (AQUA 2020 eq. (22)) and its sources' floor, 2.14 GPa (Bezacier 2014's lowest VII
+    point, Table I), below T₆₇(2.14 GPa) = 326.4 K
+- id: input.material_out_of_data
+  box:
+    p_min: 0.0
+    p_max: .inf
+    t_min: 150.0
+    t_max: 294.99999999999994
+  lower:
+  - form: t_of_p_lnsqrt
+    x1:
+      value: -146990.0
+      unit: K
+      source: &id016
+        cache: 2020A_A...643A.105H.pdf
+        page: '4'
+        where: eq. (22) and Table 2, «ice-VI/ice-VII» column
+        sha256: baf891e8361e8da9432bc06f7502fb34bc9f5ef8b614bd7e7a985d1aa7a5b02c
+      grade: read
+      printed: x1 -146990 K
+    x2:
+      value: 6.10791e-06
+      unit: K/Pa
+      source: *id016
+      grade: read
+      printed: x2 6.10791e-06 K
+    x3:
+      value: 8152.9
+      unit: K
+      source: *id016
+      grade: read
+      printed: x3 8152.9 K
+    x4:
+      value: -0.88439
+      unit: K/Pa^0.5
+      source: *id016
+      grade: read
+      printed: x4 -0.88439 K
+    p_min:
+      value: 1200000000.0
+      unit: Pa
+      source: *id016
+      grade: declared
+      note: 'the inversion interval: covers T_b 150–355 K'
+    p_max:
+      value: 2300000000.0
+      unit: Pa
+      source: *id016
+      grade: declared
+      note: 'the inversion interval: covers T_b 150–355 K'
+    t_min:
+      value: 150.0
+      unit: K
+      source:
+        cache: 2020A_A...643A.105H.pdf
+        page: '1'
+        where: 'abstract: «150 K to 10⁵ K»'
+        sha256: baf891e8361e8da9432bc06f7502fb34bc9f5ef8b614bd7e7a985d1aa7a5b02c
+      grade: declared
+      note: eq. (22) states no lower end; AQUA's whole range (directing 2026-10-11)
+    t_max:
+      value: 355.0
+      unit: K
+      source:
+        cache: 2020A_A...643A.105H.pdf
+        page: '4'
+        where: «up to the triple point at 2.216 GPa»
+        sha256: baf891e8361e8da9432bc06f7502fb34bc9f5ef8b614bd7e7a985d1aa7a5b02c
+      grade: read
+    t_min_end:
+      kind: data
+      reason: AQUA's whole EoS starts at 150 K; eq. (22) states no lower end
+      source:
+        cache: 2020A_A...643A.105H.pdf
+        page: '1'
+        where: abstract
+        sha256: baf891e8361e8da9432bc06f7502fb34bc9f5ef8b614bd7e7a985d1aa7a5b02c
+    t_max_end:
+      kind: physical
+      reason: the L–VI–VII triple point
+      source:
+        cache: IAPWS-R14-08-2011.pdf
+        page: -5-
+        where: 'Table 1: ice VI – ice VII – liquid, 355 K / 2216 MPa'
+        sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+    source: *id016
+  reason: 'ice VII below 295 K: French & Redmer''s MD grid starts at 295 K and Bezacier''s data at 300.5 K'
 - id: input.material_out_of_data
   box:
     p_min: 0.0
@@ -1747,7 +1907,7 @@ refusals:
     t_min: 0.0
     t_max: 129.99999999999997
   lower:
-  - *id015
+  - *id017
   reason: 'below 130 K and above ice Ih''s cap P_low(T): the Ih–II boundary is not sourced below 130 K (P_low is a lower envelope
     of it, owner-direction 2026-10-11), and ices II, III, V, VI have no source below SeaFreeze''s printed validity, «130–500
     K to 2,300 MPa» (Journaux 2020 p.1) (68 N59)'
@@ -1764,7 +1924,7 @@ triple_points:
   p:
     value: 2216000000.0
     unit: Pa
-    source: &id016
+    source: &id018
       cache: IAPWS-R14-08-2011.pdf
       page: -5-
       where: 'Table 1: ice VI – ice VII – liquid, 355 K / 2216 MPa'
@@ -1774,7 +1934,7 @@ triple_points:
   t:
     value: 355.0
     unit: K
-    source: *id016
+    source: *id018
     grade: read
     printed: 355 K
   tolerance:
@@ -1782,7 +1942,6 @@ triple_points:
     dt: 2.8
     reason: 'set before measuring: the spread of reported locations, 352.2–355 K and 2,160–2,216 MPa (Journaux et al. 2020
       p.11)'
-  unchecked: inside the declared VI–VII refusal region (no VI–VII curve until its source is cached)
 field_probes:
 - box:
     p_min: 0.0
@@ -1969,9 +2128,11 @@ note: 'SeaFreeze 1.1.0 is the PyPI sdist (sha256 c7574f3e9b9628d2eac6ca7f049d54c
   at install by pip --require-hashes); library.sha256 is the installed package tree (material_library.tree_sha256). Windows
   are the spline knot domains at the pin ∩ the printed validity (130–500 K to 2,300 MPa, Journaux 2020 p.1; water1 ≤ 500 K).
   Below 130 K the ices refuse by name until directing rules on an extrapolation band (68 H1). Liquid above water1''s window
-  and the vapour refuse by name until IAPWS-IF97 lands (owner-direction 2026-10-11, scope change). Any icy column crossing
-  ~2.2 GPa refuses until a VI–VII boundary source is cached (directing 2026-10-11). Ice VII from 2.3 GPa (VI''s window top)
-  to F&R''s ρ = 1600 kg/m³ edge (~3.3 GPa at 300 K) refuses by name: Bezacier gives ρ there but prints no c_P, and the c_P
-  it borrows from F&R is outside F&R''s ρ bracket; it waits on a measured ice VII c_P source (h2o-sources.md; 68 N53). French
-  & Redmer 2015 prints no point value of its potential; its transcription is checked against legacy ice_fr2015 (test_material_evaluators)
-  and against SeaFreeze''s VII_X_French, the same potential (P6 test, directing).'
+  and the vapour refuse by name until IAPWS-IF97 lands (owner-direction 2026-10-11, scope change). The VI–VII boundary is
+  AQUA 2020 eq. (22) (owner-direction 2b82493), graded «model-derived boundary, not measured»: AQUA''s Gibbs intersection
+  of SeaFreeze VI and French & Redmer VII, gauge-aligned at Wagner 2011''s triple point; it runs 150–355 K, and ice VI starts
+  at 150 K so no VI–VII ambiguity exists below it. Ice VII from 2.3 GPa (VI''s window top) to F&R''s ρ = 1600 kg/m³ edge (~3.3
+  GPa at 300 K) refuses by name: Bezacier gives ρ there but prints no c_P, and the c_P it borrows from F&R is outside F&R''s
+  ρ bracket; it waits on a measured ice VII c_P source (h2o-sources.md; 68 N53). French & Redmer 2015 prints no point value
+  of its potential; its transcription is checked against legacy ice_fr2015 (test_material_evaluators) and against SeaFreeze''s
+  VII_X_French, the same potential (P6 test, directing).'
