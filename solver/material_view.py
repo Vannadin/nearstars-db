@@ -264,6 +264,7 @@ class _Phase:
     adiabat: tuple | None
     sets: list = field(default_factory=list)
     gamma_window: tuple = (0.0, math.inf)
+    constants_span: tuple | None = None
     edges: Mapping = field(default_factory=dict)
 
 
@@ -322,7 +323,9 @@ class RecordView:
                       t_ref=_v(ref["t"]) if "t" in ref else 0.0,
                       adiabat=None if ad is None else (tuple(float(x) for x in ad["lnp"]),
                                                        tuple(float(x) for x in ad["t"])),
-                      sets=sets, gamma_window=(_num(gw["p_min"]), _num(gw["p_max"])), edges=ph["edges"])
+                      sets=sets, gamma_window=(_num(gw["p_min"]), _num(gw["p_max"])), edges=ph["edges"],
+                      constants_span=None if "phase_constants" not in th else
+                      (_num(th["phase_constants"]["p_min"]), _num(th["phase_constants"]["p_max"])))
 
     # edges (D-M2) ─────────────────────────────────────────────────────────────────────────────────────────────────
     def _phase_at(self, p, t):
@@ -388,7 +391,10 @@ class RecordView:
         """68 H2: past the γ window with no set covering P, γ is never the phase's constants (P2: no silent fallback).
         The Stop carries the declared edge refusal of the set this P lies past, else input.material_out_of_data."""
         g_lo, g_hi = ph.gamma_window
-        if g_lo <= p <= g_hi:
+        # inside the γ window the phase's constants answer only where no sets exist at all, or inside the declared
+        # phase_constants span (68 N19); any other uncovered P is a gap and refuses
+        if g_lo <= p <= g_hi and (not ph.sets or (ph.constants_span is not None
+                                                   and ph.constants_span[0] <= p <= ph.constants_span[1])):
             return None
         rid = "input.material_out_of_data"
         for s in ph.sets:

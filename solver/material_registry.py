@@ -267,6 +267,26 @@ def _gamma(ph: Mapping, file):
                         why="edge_above's limit must lie above the set window's p_max")
 
 
+def _gamma_tiling(ph: Mapping, file):
+    """68 N19: inside the γ window, the sets ([p_min, p_max)) and the declared phase_constants span cover every P."""
+    th = ph["thermal"]
+    sets = th.get("sets", ())
+    if not sets:
+        return                                    # a phase with no sets: its constants are the γ source throughout
+    gw = th["gamma_window"]
+    spans = sorted([(s["window"]["p_min"], s["window"]["p_max"]) for s in sets]
+                   + ([(th["phase_constants"]["p_min"], th["phase_constants"]["p_max"])] if "phase_constants" in th else []))
+    at = gw["p_min"]
+    for lo, hi in spans:
+        if lo > at:
+            break
+        at = max(at, hi)
+    if at < gw["p_max"]:
+        raise _Stop("material.gamma_window", file=file, phase=ph["id"], set=-1,
+                    why=f"γ window [{gw['p_min']}, {gw['p_max']}] Pa is not covered from {at} Pa: declare the span "
+                        "in thermal.phase_constants or add a set")
+
+
 def _bands(x, path, file):
     """Every band states exactly one of error / method (a method is evaluated by the checker, never hand-written)."""
     if isinstance(x, Mapping):
@@ -497,6 +517,7 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
         for ph in raw["phases"]:
             _edges(ph, file)
             _gamma(ph, file)
+            _gamma_tiling(ph, file)
             _sources_and_joins(ph, file)
             _reference_and_sets(ph, file)
             _evaluators(ph, file)

@@ -111,6 +111,13 @@ class Edges(unittest.TestCase):
         self.assertIsInstance(s, st.Stop)
         self.assertEqual(s.record.refusal, "solve.toy_gamma_limit")
 
+    def test_undeclared_gap_inside_the_gamma_window_refuses(self):
+        """68 N19: without the declared 0–19 GPa phase-constants span, 10 GPa is a gap no set covers; γ refuses."""
+        rec = fe_prem(False)
+        self.assertIsInstance(mv.RecordView(rec, T_POT).state(10e9, 2000.0), tuple)
+        rec["phases"][0]["thermal"].pop("phase_constants")
+        self.assertIsInstance(mv.RecordView(rec, T_POT).state(10e9, 2000.0), st.Stop)
+
     def test_band_edge_refuses_until_bands_are_evaluated(self):
         rec = fe_prem(False)
         rec["phases"][0]["edges"]["p_max"] = {"band": {"form": "relative", "error": 0.1, "grade": "g", "origin": "o"}}

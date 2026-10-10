@@ -35,7 +35,8 @@ GOOD = {
                     "pressure": {"alpha_k": const(1.0e6, "Pa/K")},
                     "sets": [{"window": {"p_min": 0.0, "p_max": 5.0e10}, "source_state": "solid",
                               "source_composition": "toy", "constants": {"c_v": const(1000.0, "J/kg/K")}}],
-                    "gamma_window": {"p_min": 0.0, "p_max": 1.0e11}},
+                    "gamma_window": {"p_min": 0.0, "p_max": 1.0e11},
+                    "phase_constants": {"p_min": 5.0e10, "p_max": 1.0e11, "reason": "toy: above the set"}},
         "field": {"kind": "sourced", "box": {"p_min": 0.0, "p_max": 1.0e11}, "source": dict(CITE)},
         "window": {"p_min": 0.0, "p_max": 1.0e11, "t_min": 100.0, "t_max": 3000.0},
         "edges": {"t_min": {"refusal": "input.material_out_of_data"},
@@ -179,6 +180,7 @@ CONTROLS_JOINS = (
      "material.kind_rule"),
     ("evaluator not registered", lambda d: PH(d)["thermal"]["sets"][0].update(evaluator={
         "name": "toy_evaluator", "source": dict(CITE)}), "material.kind_rule"),
+    ("γ window not tiled (68 N19)", lambda d: PH(d)["thermal"].pop("phase_constants"), "material.gamma_window"),
     ("table: ragged column", lambda d: (tabled(d), _set(d, "rho", 0, [4000.0])), "material.table_check"),
 )
 
