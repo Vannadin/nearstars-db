@@ -355,7 +355,9 @@ class RecordView:
         read piecewise-linearly in T (no extrapolation: outside the nodes the curve is absent, None). Other forms are
         not built yet (None)."""
         form = curve["form"]
-        if form == "clapeyron":
+        if form == "clapeyron":                        # 68 N32: only inside its printed T range
+            if ("t_min" in curve and t < _v(curve["t_min"])) or ("t_max" in curve and t > _v(curve["t_max"])):
+                return None
             return _v(curve["p0"]) + _v(curve["slope"]) * (t - _v(curve["t0"]))
         if form == "table":
             nodes = [(float(a), float(b)) for a, b in curve["nodes"]]

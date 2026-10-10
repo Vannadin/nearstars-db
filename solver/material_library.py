@@ -91,7 +91,7 @@ class SeaFreezePhase:
 
     def at(self, p: float, t: float) -> dict:
         import numpy as np
-        from seafreeze.seafreeze import getProp
+        from seafreeze.seafreeze import getProp       # 68 N33: an ImportError is its own error, never «out of data»
         pt = np.empty((1,), dtype=object)
         pt[0] = (p / 1e6, t)
         try:
@@ -104,6 +104,8 @@ class SeaFreezePhase:
                 return x
             rho, alpha, cp = one("rho"), one("alpha"), one("Cp")
             kt, js = one("Kt"), one("Js")
+        except (ImportError, ModuleNotFoundError):
+            raise
         except Exception as e:                      # 68 N28: whatever SeaFreeze raises becomes one named outcome
             raise LibraryOutOfRange(f"{self.submodel} at ({p:g} Pa, {t:g} K): {type(e).__name__}: {e}") from e
         dtdp = alpha * t / (rho * cp)

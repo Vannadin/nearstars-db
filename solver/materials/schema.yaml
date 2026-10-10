@@ -151,6 +151,8 @@ curve:
   p0:    {shape: constant}                                   # clapeyron: P_b(T) = p0 + slope·(T − t0)
   t0:    {shape: constant}
   slope: {shape: constant}
+  t_min: {shape: constant}                                   # clapeyron: the printed T range; outside it the curve is
+  t_max: {shape: constant}                                   # absent and a query refuses (68 N32), as a table does
   base:  {shape: text}                                       # scaled: a named curve times `factor`
   factor: {shape: constant}
   nodes: {shape: list}                                       # table: [[T, P], …] as printed

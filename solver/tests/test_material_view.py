@@ -156,7 +156,8 @@ class Branched(unittest.TestCase):
         d["kind"] = "branched"
         d["boundaries"] = [{"between": ["lo", "hi"], "kind": "solid_solid",
                             "curve": {"form": "clapeyron", "p0": const(1.0e10, "Pa"), "t0": const(1000.0, "K"),
-                                      "slope": const(3.0e6, "Pa/K")}}]
+                                      "slope": const(3.0e6, "Pa/K"), "t_min": const(300.0, "K"),
+                                      "t_max": const(2500.0, "K")}}]
         return d
 
     def test_side_of_the_curve(self):
@@ -167,6 +168,10 @@ class Branched(unittest.TestCase):
         self.assertEqual(v._phase_at(12.0e9, 2000.0).id, "lo")          # the same P, hotter: still the low-P phase
         self.assertEqual(v._phase_at(13.1e9, 2000.0).id, "hi")
         self.assertEqual(len(v.transitions()), 1)
+
+    def test_clapeyron_outside_its_printed_range_refuses(self):
+        """68 N32."""
+        self.assertIsInstance(mv.RecordView(self._rec(), T_POT)._phase_at(12.0e9, 3000.0), st.Stop)
 
     def test_table_curve_outside_its_nodes_refuses(self):
         rec = self._rec()

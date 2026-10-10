@@ -428,6 +428,14 @@ def _reference_and_sets(ph: Mapping, file):
                         why=f"phase {ph['id']} set {i}: an adiabat kind or a T² term needs the set's own t_ref")
 
 
+def _curves(rec: Mapping, file):
+    """68 N32: a clapeyron boundary declares its printed T range (t_min, t_max), as a table's nodes do."""
+    for i, b in enumerate(rec.get("boundaries", ())):
+        c = b["curve"]
+        if c["form"] == "clapeyron" and not ("t_min" in c and "t_max" in c):
+            raise _Stop("material.kind_rule", file=file, why=f"boundary {i}: a clapeyron curve declares t_min and t_max")
+
+
 def _increasing(xs) -> bool:
     return all(_is_number(x) for x in xs) and all(b > a for a, b in zip(xs, xs[1:]))
 
@@ -541,6 +549,7 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
         if raw["id"] != Path(file).stem:
             raise _Stop("material.id_mismatch", file=file, id=raw["id"])
         _kind(raw, file)
+        _curves(raw, file)
         _bands(raw, "record", file)
         for ph in raw["phases"]:
             _edges(ph, file)
