@@ -44,14 +44,22 @@ phases:
             c_v: {value: 494.0, unit: J/kg/K, grade: read, printed: "C_V 494 J/kg/K", source: {cache: "2023GeoRL..5002271H-pub.pdf", page: "7", where: "Table 1, liquid Fe, CMB column", sha256: 653cbb0690f690eaca8d8450029ecedd0495c7bdb4263421e5320c85a0f60af6}}
           t_ref: {value: 2100.0, unit: K, grade: read, printed: "CMB (19 GPa/2100 K)", source: {cache: "2023GeoRL..5002271H-pub.pdf", page: "7", where: "Table 1, column heading", sha256: 653cbb0690f690eaca8d8450029ecedd0495c7bdb4263421e5320c85a0f60af6}}
           t_ref_kind: isotherm
-        - window: {p_min: 35.0e9, p_max: 1.2e13}
+        - window: {p_min: 35.0e9, p_max: 350.0e9}
           source_state: liquid
           source_composition: pure-Fe-liquid
-          grade: "disagrees with Huang+ 2023 19/35 GPa points by ~40 % in C_V, α, γ (legacy graded-disagreement); printed scope «to 350 GPa», above it extrapolation (G4, directing)"
+          grade: "disagrees with Huang+ 2023 19/35 GPa points by ~40 % in C_V, α, γ (legacy graded-disagreement); the window is the printed scope «to 350 GPa»; above it the edge band (G4, owner-direction 8b86499)"
           evaluator:
             name: dorogokupets2017_liquid_fe
             source: {cache: "2017NatSR...741863D-pub.pdf", page: "4", where: "Table 1, liquid Fe; thermal Grüneisen eq. (18)", sha256: 9adbadf9c083a529a155fa886e9cabd992a8af0695366762e759c4381e28f96e}
-      gamma_window: {p_min: 0.0, p_max: 1.2e13}
+          edge_above:
+            band:
+              form: relative
+              method: "max(gamma_spread(sets[1] @ P=35.0e9, T=2400.0 ; printed=2.66), dpdt_spread(sets[1] @ P=35.0e9, T=2400.0 ; printed=5.31e-5 * 215.0e9)) — printed: Huang+ 2023 p.7 Table 1, 2,789 km (35 GPa/2400 K) column"
+              grade: "extrapolated beyond printed scope"
+              origin: "extrapolation of the printed fit"
+            limit: 12000000000000.0
+            limit_reason: "the phase's density path (Zeng BM2, phase window) ends at 12 TPa; γ is not asked where the density has no source"
+      gamma_window: {p_min: 0.0, p_max: 350.0e9}
     field:
       kind: declared
       reason: "the PREM core path through the inner core, one structure phase (impl note 1 §2); the liquid/hcp split is history data, not a structure phase"
@@ -89,4 +97,6 @@ note: >-
   not build; they are not in this record (G1). W-L20-01: Zeng's BM2 path derivative is taken as K_T with
   (∂P/∂T)_V·γ·T added (legacy treatment); the finding stays open. W-L1-01: alpha_k is I&A's printed
   12.1×10⁻³ GPa/K (legacy 0.00121). The reference adiabat is legacy's table as computed with legacy's
-  thermal model, so below 19 GPa it carries legacy's α (W-L1-01) until it is regenerated.
+  thermal model, so below 19 GPa it carries legacy's α (W-L1-01) until it is regenerated. G4: the
+  Dorogokupets set and the γ window end at the printed 350 GPa; between 350 GPa and 12 TPa only the set's
+  declared edge band speaks, and above 12 TPa the record refuses.

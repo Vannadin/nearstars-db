@@ -5,7 +5,9 @@
 2. The constant diff (note 1 §4, «closure of the list»): every numeric constant of the record's structure path is
    compared with the legacy `eos.FE_PREM` objects. Each difference must be on the expected list with its finding id,
    and each legacy field the record does not carry must be on the not-carried list with its reason, or the test fails.
-   Expected differences: W-L1-01 (alpha_k) only; W-L20-01 takes the legacy treatment, so it has no override.
+   Expected differences: W-L1-01 (alpha_k) and G4 (the Dorogokupets set ends at its printed 350 GPa, legacy ∞);
+   W-L20-01 takes the legacy treatment, so it has no override. The closure covers each legacy ThermalSet's fields
+   too (68 N6): every field is compared or listed with its reason.
 3. The reference adiabat is legacy's table, node for node.
 4. The formula checks, evaluated here on the record's own constants, as printed (I&A P_TH and its nonlinear part,
    Huang's γ). The planted control: alpha_k = 0.00121 GPa/K (Seager's transcription, W-L1-01) fails the P_TH check.
@@ -23,13 +25,23 @@ from solver import material_registry as mr
 GPA = 1.0e9
 
 #: record path → legacy value differs, by finding (note 1 §4)
-EXPECTED_DIFF = {"phase.thermal.pressure.alpha_k": "W-L1-01: I&A print 12.1e-3 GPa/K; legacy 0.00121 (Seager+ 2007)"}
+EXPECTED_DIFF = {"phase.thermal.pressure.alpha_k": "W-L1-01: I&A print 12.1e-3 GPa/K; legacy 0.00121 (Seager+ 2007)",
+                 "sets[1].window.p_max": "G4 (owner-direction 8b86499): printed scope 350 GPa; legacy ∞"}
 
 #: legacy Phase / ThermalSet fields the record does not carry, with the reason
 NOT_CARRIED = {
     "melt": "G1: the melting curve is core-energy history data, not in phase 2",
     "melt_scale": "G1", "melt_ref": "G1", "melt_variant": "G1",
     "join": "G1: prose", "join_note": "G1: prose",
+}
+
+#: legacy ThermalSet fields compared below (pairs / string pairs), or not carried with the reason (68 N6)
+SET_CARRIED = {"p_min", "p_max", "alpha_k", "c_v_ref", "t_ref", "t_ref_kind", "source_state", "source_composition",
+               "evaluator", "alpha_k_dt", "t_max", "t_min", "p_edge"}
+SET_NOT_CARRIED = {
+    "ref": "prose; the record's source carries cache, page, where and sha256 instead",
+    "grade_note": "prose; the record's set grade carries it (checked to name the disagreement)",
+    "grade_kind": "legacy delivery rule; the record's grade text and edge band grade carry the kind",
 }
 
 
@@ -83,12 +95,29 @@ class ConstantDiff(unittest.TestCase):
             ("sets[0].constants.c_v", _v(sets[0]["constants"]["c_v"]), huang.c_v_ref),
             ("sets[0].t_ref", _v(sets[0]["t_ref"]), huang.t_ref),
             ("sets[1].window.p_min", float(sets[1]["window"]["p_min"]), doro.p_min),
+            ("sets[1].window.p_max", float(sets[1]["window"]["p_max"]), doro.p_max),
         ]
+
+    def test_set_fields_close(self):
+        import dataclasses
+        sets = self.rec["thermal"]["sets"]
+        for i, ts in enumerate(self.ph.gamma_sets):
+            missing = [f.name for f in dataclasses.fields(ts)
+                       if f.name not in SET_CARRIED and f.name not in SET_NOT_CARRIED]
+            self.assertEqual(missing, [], f"set {i}")
+            r = sets[i]
+            self.assertEqual((r["source_state"], r["source_composition"]), (ts.source_state, ts.source_composition))
+            self.assertEqual(r.get("evaluator", {}).get("name", ""), ts.evaluator)
+            # zero / empty in legacy means «none»: the record carries none of these
+            self.assertEqual((ts.alpha_k_dt, ts.t_max, ts.t_min, ts.p_edge), (0.0, 0.0, 0.0, ""))
+            self.assertFalse({"alpha_k_dt", "t_max", "t_min", "p_edge"} & (set(r.get("constants", {})) | set(r)))
+        self.assertIn("disagree", sets[1]["grade"])
+        self.assertEqual(self.ph.gamma_sets[1].grade_kind, "disagreement")
 
     def test_every_difference_is_named(self):
         unnamed = []
         for path, new, old in self.pairs():
-            same = new == old or (old != 0 and abs(new - old) <= 1e-12 * abs(old))
+            same = new == old or (old != 0 and math.isfinite(old) and abs(new - old) <= 1e-12 * abs(old))
             if not same and path not in EXPECTED_DIFF:
                 unnamed.append((path, new, old))
             if same and path in EXPECTED_DIFF:
@@ -101,12 +130,29 @@ class ConstantDiff(unittest.TestCase):
     def test_huang_set_reference_kind(self):
         self.assertEqual(self.rec["thermal"]["sets"][0]["t_ref_kind"], self.ph.gamma_sets[0].t_ref_kind)
 
-    def test_dorogokupets_set_is_bounded_by_the_phase_window(self):
-        # legacy runs the set to ∞; the record bounds it at the phase window (12 TPa, D-M2: γ has its own window)
-        doro = self.ph.gamma_sets[1]
+    def test_dorogokupets_set_ends_at_its_printed_scope(self):
+        # G4 (owner-direction 8b86499): the set and the γ window end at 350 GPa; only the edge band reaches the
+        # phase window's 12 TPa, and above it the record refuses
+        doro, rec = self.ph.gamma_sets[1], self.rec["thermal"]["sets"][1]
         self.assertEqual(doro.p_max, math.inf)
-        self.assertEqual(float(self.rec["thermal"]["sets"][1]["window"]["p_max"]), self.ph.p_max)
-        self.assertEqual(self.rec["thermal"]["sets"][1]["evaluator"]["name"], doro.evaluator)
+        self.assertEqual(float(rec["window"]["p_max"]), 350.0 * GPA)
+        self.assertEqual(float(self.rec["thermal"]["gamma_window"]["p_max"]), 350.0 * GPA)
+        edge = rec["edge_above"]
+        self.assertEqual(float(edge["limit"]), self.ph.p_max)
+        self.assertEqual(edge["band"]["grade"], "extrapolated beyond printed scope")
+        self.assertEqual(edge["band"]["origin"], "extrapolation of the printed fit")
+        self.assertNotIn("error", edge["band"])                          # the checker computes it (method)
+
+    def test_edge_band_method_value(self):
+        # the method evaluated here on legacy's evaluator (P3's checker replaces this): the set against Huang's
+        # printed 35 GPa / 2400 K point; γ 1.3987 vs 2.66, (∂P/∂T)_V 7.494e6 vs 1.1417e7 Pa/K
+        import fe_liquid
+        got = fe_liquid.thermal_at(35.0 * GPA, 2400.0)
+        g = abs(got["gruneisen"] / 2.66 - 1)
+        d = abs(got["dpdt_v"] / (5.31e-5 * 215.0 * GPA) - 1)
+        self.assertAlmostEqual(g, 0.4742, places=3)
+        self.assertAlmostEqual(d, 0.3436, places=3)
+        self.assertIn("printed=2.66", self.rec["thermal"]["sets"][1]["edge_above"]["band"]["method"])
 
     def test_not_carried_fields_are_listed(self):
         import dataclasses
