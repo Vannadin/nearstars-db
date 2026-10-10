@@ -444,8 +444,11 @@ def _curves(rec: Mapping, file):
     """68 N32: a clapeyron boundary declares its printed T range (t_min, t_max), as a table's nodes do."""
     for i, b in enumerate(rec.get("boundaries", ())):
         c = b["curve"]
-        if c["form"] == "clapeyron" and not ("t_min" in c and "t_max" in c):
-            raise _Stop("material.kind_rule", file=file, why=f"boundary {i}: a clapeyron curve declares t_min and t_max")
+        if c["form"] in ("clapeyron", "ln_sum") and not ("t_min" in c and "t_max" in c):
+            raise _Stop("material.kind_rule", file=file,
+                        why=f"boundary {i}: a {c['form']} curve declares t_min and t_max")
+        if c["form"] == "ln_sum" and not ("p_star" in c and "t_star" in c and c.get("terms")):
+            raise _Stop("material.kind_rule", file=file, why=f"boundary {i}: an ln_sum curve needs p_star, t_star, terms")
 
 
 def _increasing(xs) -> bool:
@@ -522,7 +525,7 @@ def _field_record(rec: Mapping, ids: list, pairs: list, file):
         if a not in ids or b not in ids:
             raise _Stop("material.kind_rule", file=file, why=f"boundary {a}–{b} names a phase the record lacks")
     for bnd in rec.get("boundaries", ()):
-        if bnd["curve"]["form"] not in ("clapeyron", "table"):
+        if bnd["curve"]["form"] not in ("clapeyron", "table", "ln_sum"):
             raise _Stop("material.kind_rule", file=file,
                         why=f"boundary {tuple(bnd['between'])}: a field record's boundary is a declared curve")
 

@@ -173,6 +173,22 @@ class Branched(unittest.TestCase):
         """68 N32."""
         self.assertIsInstance(mv.RecordView(self._rec(), T_POT)._phase_at(12.0e9, 3000.0), st.Stop)
 
+    def test_ln_sum_curve_iapws_r14_vii(self):
+        """IAPWS R14-08 eq. (5), ice VII melting, with c8's printed constants; P_b at 355/400/500/600/715 K against
+        c8's computed values (MPa), and absent outside 355–715 K."""
+        from solver.tests.test_material_registry import const
+        curve = {"form": "ln_sum", "p_star": const(2216.0e6, "Pa"), "t_star": const(355.0, "K"),
+                 "terms": [{"a": const(1.73683, "1"), "b": const(-1.0, "1")},
+                           {"a": const(-0.0544606, "1"), "b": const(5.0, "1")},
+                           {"a": const(0.806106e-7, "1"), "b": const(22.0, "1")}],
+                 "t_min": const(355.0, "K"), "t_max": const(715.0, "K")}
+        v = mv.RecordView(self._rec(), T_POT)
+        for t, mpa in ((355.0, 2216.0), (400.0, 2816.6), (500.0, 4695.6), (600.0, 8964.0), (715.0, 20617.8)):
+            with self.subTest(t=t):
+                self.assertAlmostEqual(v.boundary_pressure(curve, t) / 1e6, mpa, delta=0.1)
+        self.assertIsNone(v.boundary_pressure(curve, 354.0))
+        self.assertIsNone(v.boundary_pressure(curve, 716.0))
+
     def test_table_curve_outside_its_nodes_refuses(self):
         rec = self._rec()
         rec["boundaries"][0]["curve"] = {"form": "table", "nodes": [[500.0, 9.0e9], [1500.0, 11.0e9]]}

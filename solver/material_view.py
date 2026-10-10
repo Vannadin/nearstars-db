@@ -470,6 +470,11 @@ class RecordView:
         read piecewise-linearly in T (no extrapolation: outside the nodes the curve is absent, None). Other forms are
         not built yet (None)."""
         form = curve["form"]
+        if form == "ln_sum":                           # IAPWS R14-08 Simon-type melting line, only in its printed range
+            if t < _v(curve["t_min"]) or t > _v(curve["t_max"]):
+                return None
+            th = t / _v(curve["t_star"])
+            return _v(curve["p_star"]) * math.exp(sum(_v(x["a"]) * (1.0 - th ** _v(x["b"])) for x in curve["terms"]))
         if form == "clapeyron":                        # 68 N32: only inside its printed T range
             if ("t_min" in curve and t < _v(curve["t_min"])) or ("t_max" in curve and t > _v(curve["t_max"])):
                 return None
