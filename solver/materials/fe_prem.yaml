@@ -76,6 +76,7 @@ phases:
             limit: 12000000000000.0
             limit_reason: "the phase's density path (Zeng BM2, phase window) ends at 12 TPa; γ is not asked where the density has no source"
       gamma_window: {p_min: 0.0, p_max: 350.0e9}
+      phase_constants: {p_min: 0.0, p_max: 19.0e9, reason: "below Huang+ 2023's 19 GPa set, γ comes from the phase's own constants (I&A αK_T, Dulong–Petit c_v) as in legacy; carried under the thermal grade (solid hcp constants on a liquid-fit phase)"}
     field:
       kind: declared
       reason: "the PREM core path through the inner core, one structure phase (impl note 1 §2); the liquid/hcp split is history data, not a structure phase"
