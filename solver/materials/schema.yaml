@@ -23,6 +23,7 @@ record:
   triple_points:   {shape: list, of: triple_point}         # field: mixed triple points, as printed (impl note 6 item 4)
   field_probe:     {shape: record, of: sampling}           # field: the grid P4 walks for overlaps and gaps (note 6 item 5)
   field_probes:    {shape: list, of: sampling}             # … or several boxes, each with its own dp/dt (c8, h2o)
+  primary_family:  {shape: record, of: primary_family}    # design note 4: the one self-consistent family
   source_seams:    {shape: list, of: source_seam}          # a source seam in T inside one physical phase, split as two
                                                            # phases of one family with a nil step (design note 5)
   refusals:        {shape: list, of: refusal_region}       # declared refusal regions (frozen P6: a region with no cached
@@ -39,6 +40,7 @@ phase:
   thermal:     {shape: record, of: thermal, required: true}
   field:       {shape: record, of: field, required: true}  # D-M2: every phase, single records included (r2 B6)
   window:      {shape: record, of: box, required: true}    # the EOS validity window
+  multi_source_reason: {shape: record, of: multi_source_reason}   # design note 4: a non-family source answers here
   edges:       {shape: record, of: edges, required: true}  # behaviour where the field passes the window (D-M2)
   porosity:    {shape: record, of: porosity}
   sources:     {shape: list, of: source_entry}           # impl note 3 A8: each source the phase reads, with its data range
@@ -232,6 +234,18 @@ refusal_region:
   upper:  {shape: list, of: curve}                         # … and at P < each upper curve, inside the box
   reason: {shape: text, required: true}
   source: {shape: source}
+
+# Design note 4 item 3 (r2): the family as data. `sources` are family keys: a library pin (SeaFreeze@1.1.0) or a cached
+# file (2006JPCRD..35.1021F.pdf). A phase where a source outside it answers warns (material.multi_source) unless the
+# phase gives multi_source_reason.
+primary_family:
+  name:    {shape: text, required: true}
+  sources: {shape: list, required: true, min: 1}
+  reason:  {shape: text, required: true}
+
+multi_source_reason:
+  reach: {shape: enum, values: [beyond_primary, whole_phase], required: true}
+  text:  {shape: text, required: true}
 
 # Phase-2 design note 5 (r2 SB1): legal only between two phases of one family (one formulation or a cited refit) whose
 # measured step at t is nil against the global thresholds SEAM_NIL (registry); `nil` must equal them. `between` lists

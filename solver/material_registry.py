@@ -97,6 +97,11 @@ STOPS = MappingProxyType({
                                    "At a declared mixed triple point the declared curves and the min-G boundary must "
                                    "pass within the tolerance set before measuring; correct the curve or the printed "
                                    "point (impl note 6 item 4), never widen the tolerance after seeing the miss."),
+    "material.multi_source": (("file", "phase", "sources", "family"),
+                              "A source outside the record's primary family answers in this phase. Use it only beyond "
+                              "the family's reach (taper rules) or for a whole phase, and say which in the phase's "
+                              "multi_source_reason {reach: beyond_primary | whole_phase, text} (design note 4); this "
+                              "is a warning, never a STOP."),
     "material.source_seam": (("file", "seam", "why"),
                              "A source seam in T joins two phases of one family, lower-T first, whose windows meet at "
                              "t, with its sampling inside both and its nil equal to the global SEAM_NIL (phase-2 "
@@ -134,6 +139,7 @@ class Registry:
     records: Mapping            # id → the record, deep-frozen
     unavailable: Mapping = field(default_factory=lambda: MappingProxyType({}))   # id → LoadStop: a library pin
                                                                                    # that does not match (note 1 §6)
+    warnings: tuple = ()        # LoadStop-shaped warnings that never block a load (design note 4 item 3)
 
     def declared(self) -> tuple:
         """Ids of records carrying a user-declared source anywhere (impl note 3 B2): counted on boards and gates."""
@@ -766,7 +772,76 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None) -> Regis
         if miss is not None:
             return miss
         out[rec["id"]] = rec
-    return Registry(MappingProxyType(out), MappingProxyType(unavailable))
+    warns = tuple(w for rec in out.values() for w in multi_source_warnings(rec, f"{rec['id']}.yaml"))
+    return Registry(MappingProxyType(out), MappingProxyType(unavailable), warns)
+
+
+def _source_key(cite) -> str | None:
+    """A cite's family key: the library pin «name@version» for {library: …}, the cached file for {cache: …}."""
+    if isinstance(cite, Mapping):
+        if "library" in cite:
+            return str(cite["library"])
+        if "cache" in cite:
+            return str(cite["cache"])
+    return None
+
+
+def _eos_keys(eos: Mapping) -> set:
+    """The family keys an eos answers from: its library pin «name@version», else every cached file its constants
+    cite."""
+    if eos.get("form") == "library":
+        return {f"{eos['library']['name']}@{eos['library']['version']}"}
+    keys = set()
+
+    def walk(x):
+        if isinstance(x, Mapping):
+            k = _source_key(x.get("source")) if "source" in x else None
+            if k is not None:
+                keys.add(k)
+            for v in x.values():
+                walk(v)
+        elif isinstance(x, (list, tuple)):
+            for v in x:
+                walk(v)
+    walk(eos)
+    return keys
+
+
+def answering_keys(ph: Mapping) -> set:
+    """Design note 4 item 3: the family keys of every source that answers values in a phase: its own eos, both sides
+    of a taper / blend / seam join, and a cross-check's preferred side when it declares an eos other than the
+    phase's own. Cross-check sources that never answer do not count."""
+    keys = set(_eos_keys(ph["eos"]))
+    srcs = {s["id"]: s for s in ph.get("sources", ())}
+    for j in ph.get("joins_within", ()):
+        if j["kind"] in ("taper", "blend", "seam"):
+            ids = j["between"]
+        elif j["kind"] == "cross_check" and srcs[j["between"][0]].get("eos") is not None \
+                and srcs[j["between"][0]]["eos"] != ph["eos"]:
+            ids = j["between"][:1]
+        else:
+            ids = []
+        for sid in ids:
+            s = srcs[sid]
+            keys |= _eos_keys(s["eos"]) if s.get("eos") is not None else {_source_key(s["source"])} - {None}
+    return keys
+
+
+def multi_source_warnings(rec: Mapping, file: str) -> list:
+    """Design note 4 item 3: a phase where a source outside the record's primary_family answers, with no
+    multi_source_reason, is a `material.multi_source` warning (never a STOP). A record without primary_family is not
+    checked yet (it becomes a STOP from P7's guide onward)."""
+    fam = rec.get("primary_family")
+    if fam is None:
+        return []
+    family = set(fam["sources"])
+    out = []
+    for ph in rec["phases"]:
+        outside = sorted(answering_keys(ph) - family)
+        if outside and "multi_source_reason" not in ph:
+            out.append(LoadStop("material.multi_source", MappingProxyType(
+                {"file": file, "phase": ph["id"], "sources": tuple(outside), "family": fam["name"]})))
+    return out
 
 
 def triple_point_misses(rec: Mapping, file: str) -> LoadStop | None:

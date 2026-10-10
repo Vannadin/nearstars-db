@@ -294,5 +294,38 @@ class TRegistry(unittest.TestCase):
         self.assertIsInstance(out, mr.Registry, getattr(out, "evidence", None))
 
 
+class MultiSource(unittest.TestCase):
+    """Design note 4 item 3: a non-family source answering in a phase warns (never STOPs), unless the phase gives
+    multi_source_reason; a non-family cross-check does not."""
+
+    @staticmethod
+    def _phase(eos_cite, joins=(), sources=(), reason=None):
+        ph = {"id": "p", "eos": {"form": "bm2", "params": {"rho0": {"value": 1.0, "source": {"cache": eos_cite}}}},
+              "sources": list(sources), "joins_within": list(joins)}
+        if reason:
+            ph["multi_source_reason"] = {"reach": "beyond_primary", "text": reason}
+        return ph
+
+    def _warns(self, ph, family=("fam.pdf",)):
+        rec = {"id": "toy", "primary_family": {"name": "fam", "sources": list(family), "reason": "r"}, "phases": [ph]}
+        return mr.multi_source_warnings(rec, "toy.yaml")
+
+    def test_family_and_controls(self):
+        other = {"id": "o", "source": {"cache": "other.pdf"}}
+        mine = {"id": "m", "source": {"cache": "fam.pdf"}}
+        self.assertEqual(self._warns(self._phase("fam.pdf")), [])
+        got = self._warns(self._phase("other.pdf"))                         # the phase's own eos is outside
+        self.assertEqual((got[0].id, got[0].evidence["sources"]), ("material.multi_source", ("other.pdf",)))
+        taper = {"between": ["m", "o"], "kind": "taper"}
+        self.assertEqual(len(self._warns(self._phase("fam.pdf", [taper], [mine, other]))), 1)
+        self.assertEqual(self._warns(self._phase("fam.pdf", [taper], [mine, other], reason="above SLB's range")), [])
+        check = {"between": ["m", "o"], "kind": "cross_check"}                # a non-family cross-check: no warning
+        self.assertEqual(self._warns(self._phase("fam.pdf", [check], [mine, other])), [])
+        lib = self._phase("x")
+        lib["eos"] = {"form": "library", "library": {"name": "SeaFreeze", "version": "1.1.0"}}
+        self.assertEqual(self._warns(lib, family=("SeaFreeze@1.1.0",)), [])
+        self.assertEqual(mr.multi_source_warnings({"id": "toy", "phases": [self._phase("other.pdf")]}, "t"), [])
+
+
 if __name__ == "__main__":
     unittest.main()
