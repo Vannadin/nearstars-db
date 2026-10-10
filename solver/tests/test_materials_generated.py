@@ -124,6 +124,24 @@ def probe_overlaps(rec) -> tuple:
     return n, bad
 
 
+def empty_refusal_regions(rec) -> list:
+    """Ids/reasons of declared refusal regions that hold no node of the probe grid."""
+    pr = rec["field_probe"]
+    v = mv.RecordView(rec, T_POT)
+    box = pr["box"]
+    hit = set()
+    p = float(box["p_min"])
+    while p <= float(box["p_max"]) + 1e-9 * float(pr["dp"]):
+        t = float(box["t_min"])
+        while t <= float(box["t_max"]) + 1e-9 * float(pr["dt"]):
+            r = v.refusal_region_at(p, t)
+            if r is not None:
+                hit.add(r["reason"])
+            t += float(pr["dt"])
+        p += float(pr["dp"])
+    return [r["reason"] for r in rec["refusals"] if r["reason"] not in hit]
+
+
 class Generated(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -171,6 +189,16 @@ class Generated(unittest.TestCase):
                         self.assertNotIsInstance(got, mc.CheckStop, got)
                         n += 1
         self.assertGreater(n, 0)
+
+    def test_declared_refusal_regions_are_not_empty(self):
+        """c8: each declared refusal region holds at least one node of the record's probe grid."""
+        for rid, rec in self.recs.items():
+            regions = rec.get("refusals") or ()
+            if not regions:
+                continue
+            with self.subTest(record=rid):
+                self.assertIn("field_probe", rec)
+                self.assertEqual(empty_refusal_regions(rec), [])
 
     def test_field_records_have_no_overlap_on_their_probe_grid(self):
         for rid, rec in self.recs.items():

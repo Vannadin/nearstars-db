@@ -22,6 +22,8 @@ record:
   choice:          {shape: enum, values: [chain, field]}   # branched: how the phase at (P, T) is chosen (impl note 6)
   triple_points:   {shape: list, of: triple_point}         # field: mixed triple points, as printed (impl note 6 item 4)
   field_probe:     {shape: record, of: sampling}           # field: the grid P4 walks for overlaps and gaps (note 6 item 5)
+  refusals:        {shape: list, of: refusal_region}       # declared refusal regions (frozen P6: a region with no cached
+                                                           # source is a named refusal); they win over every field
   joins:           {shape: list, of: join}                 # hand_over: required (D-P1, r2 N7)
   formula_checks:  {shape: list, of: formula_check, required: true, min: 1}
   note:            {shape: text}
@@ -195,8 +197,17 @@ boundary:
   curve:   {shape: record, of: curve, required: true}
   delta_rho: {shape: constant}                               # the per-side ruler checks the step equals this (P4)
 
+refusal_region:
+  id:     {shape: text, required: true}                    # a refusal id, e.g. input.material_out_of_data
+  box:    {shape: record, of: box, required: true}
+  lower:  {shape: list, of: curve}                         # the region is at P ≥ each lower curve …
+  upper:  {shape: list, of: curve}                         # … and at P < each upper curve, inside the box
+  reason: {shape: text, required: true}
+  source: {shape: source}
+
 triple_point:
   phases:    {shape: list, required: true}                 # the three phase ids
+  unchecked: {shape: text}                                 # only when a declared refusal region holds the point: why
   p:         {shape: constant, required: true}
   t:         {shape: constant, required: true}
   tolerance: {shape: record, of: tp_tolerance, required: true}

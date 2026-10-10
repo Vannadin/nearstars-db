@@ -659,6 +659,10 @@ def triple_point_misses(rec: Mapping, file: str) -> LoadStop | None:
 
         def stop(why):
             return LoadStop("material.triple_point_miss", MappingProxyType({"file": file, "phases": names, "why": why}))
+        if "unchecked" in tp:                         # listed, not checked: only inside a declared refusal region (c8)
+            if view.refusal_region_at(p0, t0) is None:
+                return stop("marked unchecked but no declared refusal region holds the point")
+            continue
         for b in rec.get("boundaries", ()):
             if set(b["between"]) <= set(names):
                 pb = view.boundary_pressure(b["curve"], t0)

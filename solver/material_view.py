@@ -505,6 +505,24 @@ class RecordView:
             cur = by_id[hi]
         return cur
 
+    def refusal_region_at(self, p, t):
+        """The declared refusal region holding (P, T), or None. Inside its box; at P ≥ every lower curve and P < every
+        upper curve (half-open, as fields). A curve absent at T leaves the region not holding there."""
+        for r in self.record.get("refusals", ()):
+            b = r["box"]
+            if not (b["p_min"] <= p <= b["p_max"] and b.get("t_min", -math.inf) <= t <= b.get("t_max", math.inf)):
+                continue
+            ok = True
+            for c in r.get("lower", ()):
+                pb = self.boundary_pressure(c, t)
+                ok = ok and pb is not None and p >= pb
+            for c in r.get("upper", ()):
+                pb = self.boundary_pressure(c, t)
+                ok = ok and pb is not None and p < pb
+            if ok:
+                return r
+        return None
+
     def _sides_hold(self, ph, p, t):
         """Note 6 FB1: ph lies on its own side of every declared boundary naming it; half-open (FB2): a boundary point
         belongs to the high-P phase (the second id). Returns True, False, or a Stop for a curve absent at T."""
@@ -527,6 +545,9 @@ class RecordView:
         """Impl note 6: the phase whose stability field holds (P, T). A gibbs phase also needs the lowest G among the
         record's gibbs phases whose window holds (one source; G never compared across sources); a tie goes to the
         higher-P phase (later in phase order). None → «no phase here»; two or more → overlap; never a guess."""
+        hit = self.refusal_region_at(p, t)
+        if hit is not None:                                # a declared refusal region wins over every field
+            return st.Stop("refused", RecordRefusal(self.material_id, p, t, hit["id"], hit["reason"]))
         kinds = {ph.id: self.record["phases"][i]["field"]["kind"] for i, ph in enumerate(self.phases)}
         gibbs = [ph for ph in self.phases if kinds[ph.id] == "gibbs" and ph.library is not None
                  and self._in_window(ph, p, t)]

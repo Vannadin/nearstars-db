@@ -86,6 +86,49 @@ class Field(unittest.TestCase):
         self.assertIn("fields overlap", s.record.why)
 
 
+class RefusalRegion(unittest.TestCase):
+    """c8 (h2o's VI–VII before Bridgman/Pistorius): a declared refusal region wins over the fields it covers, so an
+    unsourced boundary band is a named refusal, not an overlap."""
+
+    def _rec(self):
+        rec = field_record()
+        rec["boundaries"] = rec["boundaries"][1:]                        # no VI–VII line: VI and VII overlap above
+        rec["refusals"] = [{"id": "input.material_out_of_data", "reason": "VI–VII boundary not cached (toy)",
+                            "box": {"p_min": 2.14e9, "p_max": 2.3e9, "t_min": 250.0, "t_max": 350.0}}]
+        return rec
+
+    def test_region_refuses_by_its_id_and_reason(self):
+        s = mv.RecordView(self._rec(), T)._phase_at(2.2e9, T)
+        self.assertIsInstance(s, st.Stop)
+        self.assertEqual(s.record.refusal, "input.material_out_of_data")
+        self.assertIn("not cached", s.record.why)
+
+    def test_without_the_region_it_is_an_overlap(self):
+        rec = self._rec()
+        rec.pop("refusals")
+        self.assertIn("fields overlap", mv.RecordView(rec, T)._phase_at(2.2e9, T).record.why)
+
+    def test_probe_sees_no_overlap_and_the_region_is_not_empty(self):
+        from solver.tests.test_materials_generated import empty_refusal_regions, probe_overlaps
+        rec = self._rec()
+        rec["field_probe"] = {"box": {"p_min": 2.0e9, "p_max": 2.3e9, "t_min": 290.0, "t_max": 310.0},
+                              "dp": 0.05e9, "dt": 10.0}
+        self.assertEqual(probe_overlaps(rec)[1], [])
+        self.assertEqual(empty_refusal_regions(rec), [])
+        rec["refusals"][0]["box"]["p_min"] = 2.31e9                       # a region off the grid is flagged empty
+        self.assertEqual(len(empty_refusal_regions(rec)), 1)
+
+    def test_unchecked_triple_point_needs_a_region(self):
+        from solver import material_registry as mr
+        rec = self._rec()
+        rec["triple_points"] = [{"phases": ["water1", "VI", "VII"], "p": const(2.2e9, "Pa"), "t": const(300.0, "K"),
+                                 "unchecked": "inside the declared VI–VII refusal band",
+                                 "tolerance": {"dp": 0.02e9, "dt": 1.0, "reason": "toy"}}]
+        self.assertIsNone(mr.triple_point_misses(rec, "toy.yaml"))
+        rec["refusals"] = []
+        self.assertEqual(mr.triple_point_misses(rec, "toy.yaml").id, "material.triple_point_miss")
+
+
 class TriplePoint(unittest.TestCase):
     """Impl note 6 item 4: at a declared mixed triple point the declared curves and the min-G boundary meet within the
     tolerance set before measuring. Toy point: water1–VI–VII at 354 K, 2.2 GPa (SeaFreeze's water1–VI crossing there
