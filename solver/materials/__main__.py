@@ -185,7 +185,10 @@ def add_source(pdf: Path, citation: str, label: str | None, manifest: Path = mr.
     name = label or pdf.name
     today = datetime.date.today().isoformat()
     stub = pdf.with_name(pdf.name + ".PROVENANCE.txt")
-    if not stub.exists():
+    existing = pdf.with_name(pdf.stem + ".PROVENANCE.txt")      # the paper cache's own naming
+    if existing.exists():
+        stub = existing
+    elif not stub.exists():
         stub.write_text(f"file: {pdf.name}\nsha256: {sha}\nsize: {pdf.stat().st_size} B\nlabel: {name}\n"
                         f"citation: {citation}\nroute: user-supplied\nregistered: {today} by "
                         "`python -m solver.materials add-source`\n", encoding="utf-8")
@@ -196,11 +199,12 @@ def add_source(pdf: Path, citation: str, label: str | None, manifest: Path = mr.
     q = lambda x: '"' + x.replace("\\", "\\\\").replace('"', '\\"') + '"'          # noqa: E731
     body += (f"  - {{name: {q(name)}, sha256: {sha}, citation: {q(citation)}, route: user-supplied, "
              f"date: {q(today)}}}\n")
-    manifest.write_text(body, encoding="utf-8")
-    again = mr.read_manifest(manifest)
-    if isinstance(again, mr.LoadStop) or sha not in again:
-        print("sources.yaml did not read back after the write; restore it from git and report this")
+    again = mr.manifest_shas(body)                    # checked in memory first; the file is written only if it reads back
+    if isinstance(again, mr.LoadStop) or sha not in again or not have <= again:
+        print("sources.yaml: the new row would not read back (is there content after the sources list?); "
+              "nothing was written — add the row by hand under `sources:`")
         return 1
+    manifest.write_text(body, encoding="utf-8")
     print(f"{pdf.name}: registered, sha256 {sha}\n  cite it as: {{cache: {pdf.name}, page: <printed page>, "
           f"where: <table or eq.>, sha256: {sha}}}\n  provenance stub: {stub}")
     return 0

@@ -393,9 +393,19 @@ def read_manifest(path: Path = MANIFEST) -> frozenset | LoadStop:
     if not Path(path).exists():
         return frozenset()
     try:
-        doc = parse(Path(path).read_text(encoding="utf-8"))
-    except (LoadError, OSError) as e:
+        text = Path(path).read_text(encoding="utf-8")
+    except OSError as e:
         return LoadStop("material.unreadable", MappingProxyType({"file": Path(path).name, "detail": str(e)[:200]}))
+    return manifest_shas(text, Path(path).name)
+
+
+def manifest_shas(text: str, name: str = "sources.yaml") -> frozenset | LoadStop:
+    """The registered sha256 set from manifest text (also used to check a new manifest before it is written)."""
+    try:
+        doc = parse(text)
+    except LoadError as e:
+        return LoadStop("material.unreadable", MappingProxyType({"file": name, "detail": str(e)[:200]}))
+    path = Path(name)
     rows = (doc or {}).get("sources", []) if isinstance(doc, Mapping) else None
     if not isinstance(rows, list) or not all(isinstance(r, Mapping) and _is_sha(r.get("sha256")) for r in rows):
         return LoadStop("material.unreadable", MappingProxyType(

@@ -114,6 +114,19 @@ class TCheckAndSource(unittest.TestCase):
             self.assertIn(sha, mr.read_manifest(d / "sources.yaml"))
             self.assertEqual(self._run([d / "toy.yaml"], d)[0], 0)
 
+    def test_add_source_never_writes_a_manifest_that_does_not_read_back(self):
+        """r2 on fa438fad: with content after the sources list, the append would land in the wrong place; nothing is
+        written."""
+        with tempfile.TemporaryDirectory() as tmp:
+            pdf = Path(tmp, "paper.pdf")
+            pdf.write_bytes(b"%PDF-1.4 another toy\n")
+            man = Path(tmp, "sources.yaml")
+            before = "sources:\n  - {name: a.pdf, sha256: " + "1" * 64 + "}\nother: 1\n"
+            man.write_text(before, encoding="utf-8")
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(cli.add_source(pdf, "Toy", None, man), 1)
+            self.assertEqual(man.read_text(encoding="utf-8"), before)
+
 
 if __name__ == "__main__":
     unittest.main()
