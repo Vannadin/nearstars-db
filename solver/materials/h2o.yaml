@@ -90,9 +90,9 @@ phases:
     grade: derived from the source's Gibbs surfaces at the pin (note 1 §6)
   window:
     p_min: 0.0
-    p_max: 210000000.0
+    p_max: 400000000.0
     t_min: 130.0
-    t_max: 273.16
+    t_max: 300.99999999999983
   edges:
     p_min:
       refusal: input.material_out_of_data
@@ -103,6 +103,24 @@ phases:
     t_max:
       refusal: input.material_out_of_data
   sources:
+  - id: seafreeze_ih
+    source: *id001
+    basis: measured
+    data_range:
+      p_min: 0.0
+      p_max: 210000000.0
+      t_min: 130.0
+      t_max: 273.16
+    data_range_where: SeaFreeze Ih is «a direct LBF parametrization of the Feistel and Wagner (2006) equation of state» (Journaux
+      2020 p.11); its range here is the window ∩ IAPWS-06's
+    sigma:
+      kind: not_printed
+      where: Journaux 2020 prints no σ of ρ for ice Ih
+    sigma_kind: not_applicable
+    eos:
+      form: library
+      reference: *id002
+      library: *id003
   - id: iapws06
     source:
       cache: 2006JPCRD..35.1021F.pdf
@@ -386,33 +404,15 @@ phases:
               sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
             grade: read
             printed: p0 101325
-  - id: seafreeze_ih
-    source: *id001
-    basis: measured
-    data_range:
-      p_min: 0.0
-      p_max: 210000000.0
-      t_min: 130.0
-      t_max: 273.16
-    data_range_where: SeaFreeze Ih is «a direct LBF parametrization of the Feistel and Wagner (2006) equation of state» (Journaux
-      2020 p.11); its range here is the window ∩ IAPWS-06's
-    sigma:
-      kind: not_printed
-      where: Journaux 2020 prints no σ of ρ for ice Ih
-    sigma_kind: not_applicable
-    eos:
-      form: library
-      reference: *id002
-      library: *id003
   precedence:
     by: declared
     declared_before_comparison: '2026-10-11'
-    ref: 'owner-direction 2026-10-11 (89ffc3a, clarified): IAPWS-06 is the dedicated international standard for ice Ih; SeaFreeze
-      Ih is the cross-check'
+    ref: 'owner-direction 2026-10-11, latest Ih entry (owner preference): SeaFreeze 1.1.0 at T ≥ 130 K, IAPWS-06 below; SeaFreeze
+      Ih is an LBF fit of Feistel & Wagner 2006 (Journaux 2020 p.11, p.13), so IAPWS-06 is its cross-check here'
   joins_within:
   - between:
-    - iapws06
     - seafreeze_ih
+    - iapws06
     kind: cross_check
     overlap:
       p_min: 0.0
@@ -1210,6 +1210,10 @@ phases:
       form: evaluator
       reference: *id010
       evaluator: *id011
+  multi_source_reason:
+    reach: beyond_primary
+    text: ice VII/VII*/X lies beyond SeaFreeze's printed 2,300 MPa (Journaux 2020 p.1); Bezacier 2014 (measured) and French
+      & Redmer 2015 (computed) are the cached sources there (impl notes 3 A7, 4)
   precedence:
     by: basis
   joins_within:
@@ -1543,7 +1547,7 @@ phases:
     p_min: 0.0
     p_max: 210000000.0
     t_min: 0.0
-    t_max: 129.99999999999997
+    t_max: 130.0
   edges:
     p_min:
       refusal: input.material_out_of_data
@@ -1915,6 +1919,51 @@ refusals:
     cache: 2020JGRE..12506176J.pdf
     page: '1'
     where: 'abstract: «(130–500 K to 2,300 MPa)»'
+    sha256: 32be1644a63fa452a5fcd273d893185a065243577d0084ac7b0df2197615deff
+primary_family:
+  name: SeaFreeze 1.1.0 (with IAPWS-06, the parent of its ice Ih)
+  sources:
+  - SeaFreeze@1.1.0
+  - 2006JPCRD..35.1021F.pdf
+  reason: SeaFreeze is one Gibbs family for water1 and Ih–VI; its Ih is «a direct LBF parametrization of the Feistel and Wagner
+    (2006) equation of state» (Journaux 2020 p.11), so IAPWS-06 below SeaFreeze's 130 K continues the same Ih
+source_seams:
+- between:
+  - ih_cold
+  - Ih
+  t:
+    value: 130.0
+    unit: K
+    source:
+      cache: 2020JGRE..12506176J.pdf
+      page: '1'
+      where: 'abstract: «130–500 K»'
+      sha256: 32be1644a63fa452a5fcd273d893185a065243577d0084ac7b0df2197615deff
+    grade: read
+  sampling:
+    p_min: 100000.0
+    p_max: 130000000.0
+    dp: 10000000.0
+  declared_before_comparison: '2026-10-11'
+  family:
+    text: SeaFreeze Ih is «a direct LBF parametrization of the Feistel and Wagner (2006) equation of state» (IAPWS-06)
+    source:
+      cache: 2020JGRE..12506176J.pdf
+      page: '11'
+      where: §3.2.3; also p.13 «(converted to the LBF format)»
+      sha256: 32be1644a63fa452a5fcd273d893185a065243577d0084ac7b0df2197615deff
+  nil:
+    rho: 1.0e-09
+    alpha: 1.0e-06
+    c_p: 1.0e-06
+    reason: the global SEAM_NIL (phase-2 design note 5)
+  band:
+    form: relative
+    method: seam_delta
+  source:
+    cache: 2020JGRE..12506176J.pdf
+    page: '11'
+    where: §3.2.3
     sha256: 32be1644a63fa452a5fcd273d893185a065243577d0084ac7b0df2197615deff
 triple_points:
 - phases:
