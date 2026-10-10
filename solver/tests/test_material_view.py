@@ -99,6 +99,26 @@ class Edges(unittest.TestCase):
         self.assertEqual(self.v._set_delta_t(s, 3000.0), 3000.0 - s.t_ref)
         self.assertNotEqual(self.v._delta_t(ph, 3000.0, 25e9), 3000.0 - s.t_ref)
 
+    def test_gamma_past_a_lower_edge_limit_refuses_by_its_id(self):
+        """68 H2: a set edge whose limit is below the phase window; above the limit γ refuses by the declared id, never
+        the phase constants."""
+        rec = fe_prem(False)
+        th = rec["phases"][0]["thermal"]
+        th["sets"][1]["edge_above"]["limit"] = 400e9
+        th["sets"][1]["edge_above"]["refusal"] = "solve.toy_gamma_limit"
+        v = mv.RecordView(rec, T_POT)
+        self.assertIsInstance(v.state(399e9, 5600.0), tuple)
+        s = v.state(401e9, 5600.0)
+        self.assertIsInstance(s, st.Stop)
+        self.assertEqual(s.record.refusal, "solve.toy_gamma_limit")
+
+    def test_band_edge_refuses_until_bands_are_evaluated(self):
+        rec = fe_prem(False)
+        rec["phases"][0]["edges"]["p_max"] = {"band": {"form": "relative", "error": 0.1, "grade": "g", "origin": "o"}}
+        s = mv.RecordView(rec, T_POT).state(1.3e13, 6000.0)
+        self.assertIsInstance(s, st.Stop)
+        self.assertIn("band evaluation not built", s.record.why)
+
 
 if __name__ == "__main__":
     unittest.main()

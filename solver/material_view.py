@@ -144,6 +144,7 @@ class Dorogokupets2017Liquid:
     one formula unit per molar mass. The per-view cache is owned by the view (no module state)."""
 
     NEEDS = ("v0", "k0", "k0p", "theta0", "gamma0", "beta", "gamma_inf", "e0", "g_el", "t_ref", "molar_mass")
+    CACHE_MAX = 65536
 
     def __init__(self, params: Mapping):
         missing = [k for k in self.NEEDS if k not in params]
@@ -218,6 +219,8 @@ class Dorogokupets2017Liquid:
         c_el = 3.0 * R_GAS * self.e0 * x ** self.g_el * t
         dpdt = self._gamma(x) * c_th / v + self.g_el * c_el / v
         out = {"dpdt_v": dpdt, "c_v": (c_th + c_el) / self.molar_mass, "gruneisen": dpdt * v / (c_th + c_el)}
+        if len(self.cache) >= self.CACHE_MAX:            # 68 N17: bounded; values are pure, so clearing only costs time
+            self.cache.clear()
         self.cache[key] = out
         return out
 
@@ -232,6 +235,7 @@ class _Set:
     p_max: float
     edge_limit: float | None
     edge_band: Mapping | None
+    edge_refusal: str | None
     alpha_k: float
     alpha_k_dt: float
     c_v: float
@@ -298,6 +302,7 @@ class RecordView:
             sets.append(_Set(p_min=_num(s["window"]["p_min"]), p_max=_num(s["window"]["p_max"]),
                              edge_limit=None if e is None else _num(e["limit"]),
                              edge_band=None if e is None else e["band"],
+                             edge_refusal=None if e is None else e.get("refusal"),
                              alpha_k=_v(k["alpha_k"]) if "alpha_k" in k else 0.0,
                              alpha_k_dt=_v(k["alpha_k_dt"]) if "alpha_k_dt" in k else 0.0,
                              c_v=_v(k["c_v"]) if "c_v" in k else 0.0,
@@ -320,7 +325,7 @@ class RecordView:
 
     # edges (D-M2) ─────────────────────────────────────────────────────────────────────────────────────────────────
     def _phase_at(self, p, t):
-        """The phase whose window holds p (p_min < p ≤ p_max, as legacy), or the edge's declared outcome."""
+        """The phase whose window holds p (p_min ≤ p ≤ p_max, as legacy Material.phase_at), or the edge's outcome."""
         for ph in self.phases:
             if ph.p_min <= p <= ph.p_max:
                 if t > 0.0 and ph.t_max and t > ph.t_max:
@@ -336,7 +341,10 @@ class RecordView:
         if e is None or "refusal" in e:
             rid = "input.material_out_of_data" if e is None else e["refusal"]
             return st.Stop("refused", RecordRefusal(self.material_id, p, t, rid, f"{ph.id}: past {name}"))
-        return ph            # a band edge: the value is given and a Note goes with it (P3 later step: band evaluation)
+        # 68 N15: a band edge would give a value with a Note; until bands are evaluated (a later P3 step) it refuses, so no
+        # record gets a bare value past its window meanwhile
+        return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
+                                                f"{ph.id}: band edge {name} (band evaluation not built yet)"))
 
     # thermal ──────────────────────────────────────────────────────────────────────────────────────────────────────
     def _delta_t(self, ph, t, p):
@@ -375,9 +383,25 @@ class RecordView:
                 return s
         return None
 
+    def _gamma_gap(self, ph, p, t):
+        """68 H2: past the γ window with no set covering P, γ is never the phase's constants (P2: no silent fallback).
+        The Stop carries the declared edge refusal of the set this P lies past, else input.material_out_of_data."""
+        g_lo, g_hi = ph.gamma_window
+        if g_lo <= p <= g_hi:
+            return None
+        rid = "input.material_out_of_data"
+        for s in ph.sets:
+            if s.edge_limit is not None and p >= s.edge_limit and s.edge_refusal:
+                rid = s.edge_refusal
+        return st.Stop("refused", RecordRefusal(self.material_id, p, t, rid,
+                                                f"{ph.id}: γ asked at {p:g} Pa, outside its window and every set"))
+
     def _dpdt_v(self, ph, t, p):
         s = self._set_at(ph, p)
         if s is None:
+            gap = self._gamma_gap(ph, p, t)
+            if gap is not None:
+                return gap
             return ph.alpha_k + ph.alpha_k_dt * self._delta_t(ph, t, p)
         if s.evaluator is not None:
             return s.evaluator.at(p, t)["dpdt_v"]
@@ -395,6 +419,9 @@ class RecordView:
             if s.c_v <= 0.0 or rho <= 0.0:
                 return 0.0
             return self._dpdt_v(ph, t, p) / (rho * s.c_v)
+        gap = self._gamma_gap(ph, p, t)
+        if gap is not None:
+            return gap
         if not ph.alpha_k or rho <= 0.0:
             return 0.0
         return self._dpdt_v(ph, t, p) / (rho * ph.c_v)
@@ -462,6 +489,8 @@ class RecordView:
         if isinstance(rho, st.Stop):
             return rho
         gamma = self.gruneisen(ph, pe, rho, t)
+        if isinstance(gamma, st.Stop):
+            return gamma
         if gamma <= 0.0:
             return 0.0
         h = pe * 1e-4
@@ -484,7 +513,10 @@ class RecordView:
         if d_hi <= d_lo:
             return 0.0
         k_t = rho * (p_hi - p_lo) / (d_hi - d_lo)
-        k_s = k_t + self._dpdt_v(ph, t, pe) * gamma * t
+        dpdt = self._dpdt_v(ph, t, pe)
+        if isinstance(dpdt, st.Stop):
+            return dpdt
+        k_s = k_t + dpdt * gamma * t
         return gamma * t / max(k_s, 1.0)
 
     def porosity(self, p: float) -> float:
