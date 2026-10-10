@@ -169,7 +169,7 @@ class ConstantDiff(unittest.TestCase):
         edge = rec["edge_above"]
         self.assertEqual(float(edge["limit"]), self.ph.p_max)
         self.assertEqual(edge["band"]["grade"], "extrapolated beyond printed scope")
-        self.assertEqual(edge["band"]["origin"], "extrapolation of the printed fit")
+        self.assertEqual(edge["band"]["origin"], "declared stand-in: model disagreement at 35 GPa carried above the printed scope; not an extrapolation estimate")  # D1, directing
         self.assertNotIn("error", edge["band"])                          # the checker computes it (method)
         self.assertEqual(edge["band"]["source"]["page"], "7")
         self.assertEqual(float(rec["printed_scope"]["p_max"]), 350.0 * GPA)

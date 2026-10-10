@@ -70,7 +70,7 @@ phases:
               form: relative
               method: "max(gamma_spread(sets[1] @ P=35.0e9, T=2400.0 ; printed=2.66), dpdt_spread(sets[1] @ P=35.0e9, T=2400.0 ; printed=5.31e-5 * 215.0e9))"
               grade: "extrapolated beyond printed scope"
-              origin: "extrapolation of the printed fit"
+              origin: "declared stand-in: model disagreement at 35 GPa carried above the printed scope; not an extrapolation estimate"
               source: {cache: "2023GeoRL..5002271H-pub.pdf", page: "7", where: "Table 1, liquid Fe, 2,789 km (35 GPa/2400 K) column: γ 2.66, α 5.31E−05 K⁻¹, K_T 215 GPa", sha256: 653cbb0690f690eaca8d8450029ecedd0495c7bdb4263421e5320c85a0f60af6}
             limit: 12000000000000.0
             limit_reason: "the phase's density path (Zeng BM2, phase window) ends at 12 TPa; γ is not asked where the density has no source"
