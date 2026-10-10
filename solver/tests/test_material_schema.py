@@ -68,7 +68,9 @@ DEMANDS = (
     ("note 3 B3", "table.maxwell_tolerance", False),
     # legacy C148: a path reference's own adiabat table (c8 P5)
     ("G4", "thermal_set.edge_above", False), ("G4", "set_edge.band", True), ("G4", "set_edge.limit", True),
-    ("G4", "set_edge.limit_reason", True),
+    ("G4", "set_edge.limit_reason", True), ("68 N10", "set_edge.refusal", False),
+    ("68 N9", "thermal_set.printed_scope", False), ("68 N9", "printed_scope.source", True),
+    ("c8 N6", "evaluator.params", False), ("c8 G4", "band.source", False), ("legacy grade", "thermal_set.grade", False),
     ("C148", "reference.adiabat", False), ("C148", "reference_adiabat.lnp", True),
     ("C148", "reference_adiabat.interpolation", True), ("C148", "reference_adiabat.source", True),
 )

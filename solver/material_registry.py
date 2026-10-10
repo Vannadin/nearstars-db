@@ -249,6 +249,18 @@ def _gamma(ph: Mapping, file):
         if w["p_min"] < gw["p_min"] or w["p_max"] > gw["p_max"]:
             raise _Stop("material.gamma_window", file=file, phase=ph["id"], set=i,
                         why=f"set [{w['p_min']}, {w['p_max']}] Pa outside γ window [{gw['p_min']}, {gw['p_max']}]")
+        sc = ts.get("printed_scope")
+        if sc is not None and w["p_max"] > sc["p_max"]:            # 68 N9: a window is not widened by declaration
+            raise _Stop("material.gamma_window", file=file, phase=ph["id"], set=i,
+                        why=f"set p_max {w['p_max']} Pa past its printed scope {sc['p_max']} Pa; use edge_above")
+        if "edge_above" in ts:
+            ea, pw = ts["edge_above"], ph["window"]["p_max"]
+            if ea["limit"] > pw:                                     # 68 N11
+                raise _Stop("material.gamma_window", file=file, phase=ph["id"], set=i,
+                            why=f"edge_above limit {ea['limit']} Pa past the phase window's p_max {pw} Pa")
+            if ea["limit"] < pw and "refusal" not in ea:             # 68 N10: the Stop above the limit has an id
+                raise _Stop("material.gamma_window", file=file, phase=ph["id"], set=i,
+                            why="edge_above below the phase window's p_max declares its refusal id")
         # past the γ window only through a declared edge band to a stated limit (G4): γ never falls back silently
         if "edge_above" in ts and not ts["edge_above"]["limit"] > w["p_max"]:
             raise _Stop("material.gamma_window", file=file, phase=ph["id"], set=i,

@@ -166,6 +166,14 @@ CONTROLS_JOINS = (
                  "anchor": {"p_pa": 1.0e9}, "source": {"formula": "toy"}}), "material.kind_rule"),
     ("adiabat-kind set without t_ref", lambda d: PH(d)["thermal"]["sets"][0].update(t_ref_kind="adiabat"),
      "material.kind_rule"),
+    ("set past its printed scope", lambda d: PH(d)["thermal"]["sets"][0].update(printed_scope={
+        "p_max": 4.0e10, "source": dict(CITE)}), "material.gamma_window"),
+    ("edge limit past the phase window", lambda d: PH(d)["thermal"]["sets"][0].update(edge_above={
+        "band": {"form": "relative", "error": 0.4, "grade": "g", "origin": "o"},
+        "limit": 2.0e11, "limit_reason": "r"}), "material.gamma_window"),
+    ("edge limit inside the phase window without a refusal id", lambda d: PH(d)["thermal"]["sets"][0].update(
+        edge_above={"band": {"form": "relative", "error": 0.4, "grade": "g", "origin": "o"},
+                    "limit": 8.0e10, "limit_reason": "r"}), "material.gamma_window"),
     ("table: ragged column", lambda d: (tabled(d), _set(d, "rho", 0, [4000.0])), "material.table_check"),
 )
 
@@ -194,8 +202,11 @@ class TRegistry(unittest.TestCase):
     def test_set_edge_loads(self):
         rec = plant(lambda d: PH(d)["thermal"]["sets"][0].update(edge_above={
             "band": {"form": "relative", "method": "gamma_spread", "grade": "extrapolated beyond printed scope",
-                     "origin": "extrapolation of the printed fit"}, "limit": 1.2e13, "limit_reason": "EOS window"}))
-        self.assertIsInstance(self._load(rec), mr.Registry)          # the edge band reaches past the γ window
+                     "origin": "extrapolation of the printed fit", "source": dict(CITE)},
+            "limit": 8.0e10, "limit_reason": "r", "refusal": "input.material_out_of_data"},
+            printed_scope={"p_max": 5.0e10, "source": dict(CITE)},
+            evaluator={"name": "toy", "source": dict(CITE), "params": {"v0": const(1.0e-5, "m3/mol")}}))
+        self.assertIsInstance(self._load(rec), mr.Registry, getattr(self._load(rec), "evidence", None))
 
     def test_notes_3_4_good_bases_load(self):
         for name, edit in (("taper join", joined), ("user-declared table", tabled)):

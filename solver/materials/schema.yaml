@@ -98,7 +98,12 @@ thermal_set:
   t_ref:     {shape: constant}                               # the set's own reference T for its ΔT (legacy ThermalSet.t_ref)
   t_ref_kind: {shape: enum, values: [isotherm, adiabat]}
   edge_above: {shape: record, of: set_edge}                # past the set's printed p_max: a band up to a stated limit
+  printed_scope: {shape: record, of: printed_scope}         # the source's printed range; the set window stays inside it
   grade:     {shape: text}
+
+printed_scope:
+  p_max:  {shape: number, unit: Pa, required: true}
+  source: {shape: source, required: true}
 
 # A thermal set's upper edge (G4, directing 2026-10-10): the set and the γ window end at the source's printed scope;
 # between the set's p_max and `limit` the set is evaluated with this band, the declared edge D-M2 asks for (γ never
@@ -107,10 +112,13 @@ set_edge:
   band:         {shape: record, of: band, required: true}
   limit:        {shape: number, unit: Pa, required: true}
   limit_reason: {shape: text, required: true}
+  refusal:      {shape: text}                              # the Stop id above `limit`; required when limit is below the
+                                                           # phase window's p_max (else the phase's own p_max edge applies)
 
 evaluator:
   name:   {shape: text, required: true}                      # the view's registered evaluator
   source: {shape: source, required: true}
+  params: {shape: mapping, of: constant}                     # the printed parameters the evaluator reads, each as read
 
 box:
   p_min: {shape: number, unit: Pa, required: true}
@@ -157,6 +165,7 @@ band:
   grade:  {shape: text, required: true}
   origin: {shape: text, required: true}                      # source or method of the error (D-M2, r2 N10)
   sampling: {shape: record, of: sampling}                    # hand-over bands: declared before measuring (c8 on rev 2)
+  source: {shape: source}                                     # where the printed values a method compares against were read
 
 sampling:
   box:  {shape: record, of: box, required: true}
