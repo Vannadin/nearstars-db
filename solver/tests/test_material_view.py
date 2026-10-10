@@ -22,10 +22,9 @@ NODES = [(10e9, 2000.0), (19.0e9, 2100.0), (25e9, 2300.0), (35.0e9, 2400.0), (13
 
 def fe_prem(legacy_constants: bool):
     """The shipped record; with `legacy_constants` the constants a finding moved are put back (stage (a) fixtures:
-    W-L1-01 αK_T, P5-F1 Dorogokupets V0). The evaluator's molar mass is added where the record does not carry it."""
+    W-L1-01 αK_T, P5-F1 Dorogokupets V0). Every other value comes from the record (68 H1)."""
     rec = thaw(mr.load()["fe_prem"])
     ev = rec["phases"][0]["thermal"]["sets"][1]["evaluator"]
-    ev["params"].setdefault("molar_mass", {"value": 0.055845, "unit": "kg/mol"})
     if legacy_constants:
         rec["phases"][0]["thermal"]["pressure"]["alpha_k"] = {"value": 0.00121e9, "unit": "Pa/K"}
         ev["params"]["v0"] = {"value": 7.95784e-6, "unit": "m3/mol"}

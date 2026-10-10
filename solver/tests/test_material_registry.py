@@ -174,6 +174,11 @@ CONTROLS_JOINS = (
     ("edge limit inside the phase window without a refusal id", lambda d: PH(d)["thermal"]["sets"][0].update(
         edge_above={"band": {"form": "relative", "error": 0.4, "grade": "g", "origin": "o"},
                     "limit": 8.0e10, "limit_reason": "r"}), "material.gamma_window"),
+    ("evaluator missing a param it needs", lambda d: PH(d)["thermal"]["sets"][0].update(evaluator={
+        "name": "dorogokupets2017_liquid_fe", "source": dict(CITE), "params": {"v0": const(7.957e-6, "m3/mol")}}),
+     "material.kind_rule"),
+    ("evaluator not registered", lambda d: PH(d)["thermal"]["sets"][0].update(evaluator={
+        "name": "toy_evaluator", "source": dict(CITE)}), "material.kind_rule"),
     ("table: ragged column", lambda d: (tabled(d), _set(d, "rho", 0, [4000.0])), "material.table_check"),
 )
 
@@ -204,8 +209,7 @@ class TRegistry(unittest.TestCase):
             "band": {"form": "relative", "method": "gamma_spread", "grade": "extrapolated beyond printed scope",
                      "origin": "extrapolation of the printed fit", "source": dict(CITE)},
             "limit": 8.0e10, "limit_reason": "r", "refusal": "input.material_out_of_data"},
-            printed_scope={"p_max": 5.0e10, "source": dict(CITE)},
-            evaluator={"name": "toy", "source": dict(CITE), "params": {"v0": const(1.0e-5, "m3/mol")}}))
+            printed_scope={"p_max": 5.0e10, "source": dict(CITE)}))
         self.assertIsInstance(self._load(rec), mr.Registry, getattr(self._load(rec), "evidence", None))
 
     def test_notes_3_4_good_bases_load(self):

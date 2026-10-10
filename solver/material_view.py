@@ -20,6 +20,7 @@ from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import Mapping
 
+from solver import material_registry as mr
 from solver import stepper as st
 
 R_GAS = 8.314462618          # J/(mol·K), the value legacy fe_liquid uses (a formula input, not a read source)
@@ -143,7 +144,7 @@ class Dorogokupets2017Liquid:
     (each a constant as read). Supplies (∂P/∂T)_V, c_V and γ at (P, T). Same arithmetic as legacy fe_liquid at 097a8aa3,
     one formula unit per molar mass. The per-view cache is owned by the view (no module state)."""
 
-    NEEDS = ("v0", "k0", "k0p", "theta0", "gamma0", "beta", "gamma_inf", "e0", "g_el", "t_ref", "molar_mass")
+    NEEDS = mr.EVALUATOR_PARAMS["dorogokupets2017_liquid_fe"]
     CACHE_MAX = 65536
 
     def __init__(self, params: Mapping):

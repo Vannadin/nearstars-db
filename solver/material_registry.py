@@ -280,6 +280,29 @@ def _bands(x, path, file):
             _bands(v, f"{path}[{i}]", file)
 
 
+#: The params each registered evaluator reads (68 H1 on 6c735c86): a value the solver needs comes from the record, so a
+#: record lacking one STOPs at load, not at view construction. The view reads its list from here.
+EVALUATOR_PARAMS = MappingProxyType({
+    "dorogokupets2017_liquid_fe": ("v0", "k0", "k0p", "theta0", "gamma0", "beta", "gamma_inf", "e0", "g_el", "t_ref",
+                                   "molar_mass"),
+})
+
+
+def _evaluators(ph: Mapping, file):
+    for i, ts in enumerate(ph["thermal"].get("sets", ())):
+        ev = ts.get("evaluator")
+        if ev is None:
+            continue
+        need = EVALUATOR_PARAMS.get(ev["name"])
+        if need is None:
+            raise _Stop("material.kind_rule", file=file,
+                        why=f"phase {ph['id']} set {i}: evaluator {ev['name']!r} is not registered {sorted(EVALUATOR_PARAMS)}")
+        gone = [k for k in need if k not in (ev.get("params") or {})]
+        if gone:
+            raise _Stop("material.kind_rule", file=file,
+                        why=f"phase {ph['id']} set {i}: evaluator {ev['name']} needs params {gone}")
+
+
 K_GATE = 2.0        # impl note 3 A3: fixed; a different k is a recorded change, never a per-record choice
 
 
@@ -476,6 +499,7 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
             _gamma(ph, file)
             _sources_and_joins(ph, file)
             _reference_and_sets(ph, file)
+            _evaluators(ph, file)
             _table(ph, file)
     except _Stop as s:
         return s.stop
