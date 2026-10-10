@@ -389,6 +389,9 @@ def _evaluators(ph: Mapping, file):
 K_GATE = 2.0        # impl note 3 A3: fixed; a different k is a recorded change, never a per-record choice
 #: Phase-2 design note 5 (r2 SB1, binding): the nil step of a source seam in T, global like K_GATE. A record's `nil`
 #: must equal it; changing it is a recorded change.
+#: 68 N61: the Maxwell α check's floor [1/K], so a table whose α passes through 0 (water near its density maximum,
+#: Ih at low T) is compared against max(|α_col|, |α_fd|, ALPHA_FLOOR) and not against a vanishing |α|.
+ALPHA_FLOOR = 1.0e-6
 SEAM_NIL = MappingProxyType({"rho": 1e-9, "alpha": 1e-6, "c_p": 1e-6})
 
 
@@ -616,7 +619,8 @@ def _increasing(xs) -> bool:
 
 def _maxwell(tb: Mapping, no):
     """Impl note 3 B3: Maxwell consistency where the columns allow it, within the declared maxwell_tolerance.
-    - α against ρ: α = −(∂ ln ρ/∂T)_P, by differences along each isobar (needs α, ρ and ≥ 2 T nodes);
+    - α against ρ: α = −(∂ ln ρ/∂T)_P, by differences along each isobar (needs α, ρ and ≥ 2 T nodes), scaled by
+      max(|α_col|, |α_fd|, ALPHA_FLOOR) (68 N61);
     - c_P against v = 1/ρ: (∂c_P/∂P)_T = −T(∂²v/∂T²)_P per unit mass, with ∂v/∂T = αv (needs c_P, α, ρ, ≥ 2 P and
       ≥ 2 T nodes); compared against max(|lhs|, |rhs|, c_P/P) so a vanishing side does not divide by zero.
     A table whose columns allow a check and that declares no tolerance STOPs; the tolerance is never chosen after
@@ -635,7 +639,7 @@ def _maxwell(tb: Mapping, no):
         for k in range(n_t):
             k0, k1 = (k - 1 if k > 0 else k), (k + 1 if k + 1 < n_t else k)
             a_fd = -(math.log(rho[i][k1]) - math.log(rho[i][k0])) / (ts[k1] - ts[k0])
-            if abs(a_fd - al[i][k]) > tol * abs(al[i][k]):
+            if abs(a_fd - al[i][k]) > tol * max(abs(al[i][k]), abs(a_fd), ALPHA_FLOOR):
                 no(f"Maxwell: α {al[i][k]:.4g} against −∂lnρ/∂T {a_fd:.4g} at node ({first[i]}, {ts[k]}), "
                    f"beyond the declared {tol:g}")
     if can_c:

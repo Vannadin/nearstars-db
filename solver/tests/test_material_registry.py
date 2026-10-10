@@ -358,6 +358,12 @@ class DirectTable(TRegistry):
                 got = self._load(self._rec(change))
                 self.assertEqual(got.id, "material.table_check", dict(getattr(got, "evidence", {})))
                 self.assertIn(word, got.evidence["why"])
+        # 68 N61: α through 0 (water near its density maximum) passes against the floor, not a vanishing |α|
+        def through_zero(d):
+            col(d, "alpha")[:] = [[-2.0e-8, 2.0e-8] for _ in range(3)]       # fails without the floor (5e-2·2e-8)
+            PH(d)["eos"]["table"]["alpha_range"] = [-1.0e-4, 1.0e-4]
+            col(d, "rho")[:] = [[r[0], r[0]] for r in col(d, "rho")]
+        self.assertIsInstance(self._load(self._rec(through_zero)), mr.Registry)
         got = self._load(self._rec(lambda d: PH(d)["eos"]["table"].update(axes="rho_T")))
         self.assertEqual(got.id, "material.kind_rule")                          # not built in phase 2
 
