@@ -95,6 +95,8 @@ thermal_set:
   source_composition: {shape: text, required: true}
   constants: {shape: mapping, of: constant}                  # alpha_k, c_v (piecewise constant)
   evaluator: {shape: record, of: evaluator}                  # a printed formula evaluated (e.g. Dorogokupets 2017)
+  t_ref:     {shape: constant}                               # the set's own reference T for its ΔT (legacy ThermalSet.t_ref)
+  t_ref_kind: {shape: enum, values: [isotherm, adiabat]}
   grade:     {shape: text}
 
 evaluator:
