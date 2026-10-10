@@ -163,9 +163,19 @@ curve:
   terms:  {shape: list, of: ln_term}
   t_min: {shape: constant}                                   # clapeyron, ln_sum: the printed T range; outside it the curve is
   t_max: {shape: constant}                                   # absent and a query refuses (68 N32), as a table does
+  t_min_end: {shape: record, of: curve_end}                  # impl note 7 item 1: what the low-T end is (default data)
+  t_max_end: {shape: record, of: curve_end}                  # … and the high-T end
   base:  {shape: text}                                       # scaled: a named curve times `factor`
   factor: {shape: constant}
   nodes: {shape: list}                                       # table: [[T, P], …] as printed
+  source: {shape: source}
+
+# A curve end (impl note 7, r2 NB1). physical: the boundary itself ends (a triple point); beyond it the curve is inert;
+# it carries its reason and source and must match a declared triple point. data: the source stops printing; beyond it
+# the query refuses by name wherever either named phase's window holds. An undeclared end is data.
+curve_end:
+  kind:   {shape: enum, values: [physical, data], required: true}
+  reason: {shape: text}
   source: {shape: source}
 
 # One entry per window edge the field passes (D-M2). Each is a refusal or a band; neither is a load STOP.
@@ -339,8 +349,8 @@ formula_check:
 disclosed_fail:
   source: {shape: source, required: true}                    # where the disagreement is printed (cache with page)
   why:    {shape: text, required: true}
-  bound:  {shape: record, of: disclosure_bound}              # the printed size of the disagreement (44ff625); required
-                                                             # once h2o carries it (step 3)
+  bound:  {shape: record, of: disclosure_bound, required: true}   # the printed size of the disagreement (44ff625):
+                                                                  # no printed size, no disclosure
 
 # The printed disagreement as a bound on the miss. In the check's own unit (unit = the check's unit), or in K for a
 # check on a pressure, converted with the record's own curve slope at the check's T: `slope` is a C4 expression for

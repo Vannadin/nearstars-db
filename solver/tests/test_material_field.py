@@ -73,17 +73,38 @@ class Field(unittest.TestCase):
         self.assertIsInstance(s, st.Stop)
         self.assertIn("curve is absent", s.record.why)
 
-    def test_boundary_is_inert_where_the_other_phase_cannot_be(self):
-        """c8: the liquid–VII curve printed only above 355 K must not refuse VII at 4 GPa / 300 K, where the liquid's
-        window (to 2.3 GPa) cannot reach; where both are candidates a missing curve still refuses."""
+    def test_curve_ends_physical_and_data(self):
+        """Impl note 7 (r2 NB1): R14-08's liquid–VII line, printed 355–715 K. Below 355 K (physical: the L–VI–VII
+        triple point) the curve is inert and VII at 4 GPa / 300 K is VII; above 715 K (data) the boundary goes on
+        unprinted, so VII's window does not hand out VII there — it refuses."""
         rec = field_record()
-        rec["boundaries"][1]["curve"]["t_min"] = const(355.0, "K")
-        rec["boundaries"][1]["curve"]["t_max"] = const(715.0, "K")
+        c = rec["boundaries"][1]["curve"]
+        c["t_min"], c["t_max"] = const(355.0, "K"), const(715.0, "K")
+        rec["phases"][2]["window"]["t_max"] = 2000.0
+        c["t_min_end"] = {"kind": "physical", "reason": "the L–VI–VII triple point", "source": {"formula": "toy"}}
+        c["t_max_end"] = {"kind": "data"}
         v = mv.RecordView(rec, T)
         self.assertEqual(v._phase_at(4.0e9, 300.0).id, "VII")
-        s = v._phase_at(2.25e9, 300.0)                     # liquid's window holds here too: the curve is needed
+        s = v._phase_at(4.0e9, 800.0)
         self.assertIsInstance(s, st.Stop)
         self.assertIn("curve is absent", s.record.why)
+        c.pop("t_min_end")                                 # undeclared: data, so below 355 K it refuses too
+        self.assertIsInstance(mv.RecordView(rec, T)._phase_at(4.0e9, 300.0), st.Stop)
+
+    def test_physical_end_must_match_a_triple_point(self):
+        from solver import material_registry as mr
+        rec = field_record()
+        c = rec["boundaries"][1]["curve"]
+        c["t_min_end"] = {"kind": "physical", "reason": "toy", "source": {"formula": "toy"}}   # t_min 250 K
+        stop = None
+        try:
+            mr._curve_ends(rec, "toy.yaml")
+        except mr._Stop as e:
+            stop = e.stop
+        self.assertIsNotNone(stop)
+        rec["triple_points"] = [{"phases": ["water1", "VI", "VII"], "p": const(2.2e9, "Pa"), "t": const(250.5, "K"),
+                                 "tolerance": {"dp": 1e7, "dt": 1.0, "reason": "toy"}}]
+        mr._curve_ends(rec, "toy.yaml")                     # now it matches within dt
 
     def test_no_phase_and_overlap_refuse(self):
         rec = field_record()

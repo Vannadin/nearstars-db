@@ -581,9 +581,9 @@ class RecordView:
     def _sides_hold(self, ph, p, t):
         """Note 6 FB1: ph lies on its own side of every declared boundary naming it; half-open (FB2): a boundary point
         belongs to the high-P phase (the second id). Returns True, False, or a Stop for a curve absent at T. A curve
-        absent at T refuses only where the other phase's window also holds (P, T); where the other phase cannot be,
-        there is nothing to separate and the absent curve is inert (c8, h2o liquid–VII printed only above 355 K). A
-        curve present at T always bounds both phases (FB1)."""
+        absent at T (impl note 7, r2 NB1): beyond a declared physical end it is inert; beyond a data end (the default)
+        the query refuses by name — this phase's window holds here, since only candidates are asked. A curve present
+        at T always bounds both phases (FB1)."""
         by_id = {x.id: x for x in self.phases}
         for b in self.boundaries:
             lo, hi = b["between"]
@@ -591,14 +591,24 @@ class RecordView:
                 continue
             pb = self.boundary_pressure(b["curve"], t)
             if pb is None:
-                other = by_id.get(hi if ph.id == lo else lo)
-                if other is None or not self._in_window(other, p, t):
-                    continue
+                if self._curve_end_kind(b["curve"], t) == "physical":
+                    continue                               # impl note 7: beyond a physical end the curve is inert
                 return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
                                                         f"boundary {lo}–{hi}: its curve is absent at {t:g} K"))
             if (ph.id == hi and p < pb) or (ph.id == lo and p >= pb):
                 return False
         return True
+
+    @staticmethod
+    def _curve_end_kind(curve, t):
+        """Which end of its printed T range a curve is absent beyond at T: the declared kind, default «data»."""
+        if curve["form"] == "table":
+            lo_t, hi_t = float(curve["nodes"][0][0]), float(curve["nodes"][-1][0])
+        else:
+            lo_t = _v(curve["t_min"]) if "t_min" in curve else -math.inf
+            hi_t = _v(curve["t_max"]) if "t_max" in curve else math.inf
+        end = curve.get("t_min_end") if t < lo_t else curve.get("t_max_end") if t > hi_t else None
+        return "data" if end is None else end["kind"]
 
     def _in_window(self, ph, p, t):
         return ph.p_min <= p <= ph.p_max and not (ph.t_max and t > ph.t_max) and not (ph.t_min and t < ph.t_min)

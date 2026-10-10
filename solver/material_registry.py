@@ -443,6 +443,29 @@ def _reference_and_sets(ph: Mapping, file):
                         why=f"phase {ph['id']} set {i}: an adiabat kind or a T² term needs the set's own t_ref")
 
 
+def _curve_ends(rec: Mapping, file):
+    """Impl note 7: a physical curve end carries its reason and source, and (r2) matches a declared triple point:
+    same T within that point's dt, and the triple names both phases of the curve."""
+    tps = rec.get("triple_points") or ()
+    for i, b in enumerate(rec.get("boundaries", ())):
+        c = b["curve"]
+        for key, tkey in (("t_min_end", "t_min"), ("t_max_end", "t_max")):
+            end = c.get(key)
+            if end is None or end["kind"] != "physical":
+                continue
+            if not end.get("reason") or "source" not in end:
+                raise _Stop("material.kind_rule", file=file, why=f"boundary {i} {key}: a physical end gives reason and source")
+            if c["form"] == "table":
+                t_end = float(c["nodes"][0 if key == "t_min_end" else -1][0])
+            else:
+                t_end = float(c[tkey]["value"])
+            ok = any(set(b["between"]) <= set(tp["phases"])
+                     and abs(float(tp["t"]["value"]) - t_end) <= float(tp["tolerance"]["dt"]) for tp in tps)
+            if not ok:
+                raise _Stop("material.kind_rule", file=file,
+                            why=f"boundary {i} {key} at {t_end:g} K is physical but matches no declared triple point")
+
+
 def _disclosures(rec: Mapping, file):
     """A disclosed fail cites a cached source (page) that prints the disagreement; no other source kind will do."""
     for i, fc in enumerate(rec["formula_checks"]):
@@ -609,6 +632,7 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
         _kind(raw, file)
         _curves(raw, file)
         _disclosures(raw, file)
+        _curve_ends(raw, file)
         _bands(raw, "record", file)
         for ph in raw["phases"]:
             _edges(ph, file)
