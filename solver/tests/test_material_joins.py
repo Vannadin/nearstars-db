@@ -275,5 +275,72 @@ class PreferredSource(unittest.TestCase):
                 self.assertEqual(mj.source_sigma(v, 0, "b", p, t), want)
 
 
+class BlendGate(unittest.TestCase):
+    """Impl note 3 A3–A4: the conflict gate runs on blends only, pointwise at k = 2; a blend answers a P-only V-blend."""
+
+    @staticmethod
+    def _blend(sigma, shared=True, kind="blend"):
+        d = rec_two_sources(shared=shared)
+        ph = d["phases"][0]
+        for src in ph["sources"]:
+            src["sigma"] = {"kind": "constant", "value": sigma, "reduction": "toy"}
+            src["sigma_kind"] = "1sigma"
+        j = ph["joins_within"][0]
+        j["kind"] = kind
+        if kind == "blend":
+            j["weight"] = "smoothstep_p"
+        return d
+
+    def test_gate_fires_just_above_k_and_passes_just_below(self):
+        """r2 JB3: a planted max r of 1.01·k fails and 0.99·k passes."""
+        from solver import material_registry as mr
+        v = mv.RecordView(self._blend(1.0), 300.0)
+        band = mj.cross_check(v, 0, v.record["phases"][0]["joins_within"][0])["band"]
+        for factor, fires in ((1.01, True), (0.99, False)):
+            with self.subTest(factor=factor):
+                got = mr.source_conflicts(self._blend(band / (factor * mr.K_GATE)), "toy.yaml")
+                self.assertEqual(got is not None, fires)
+                if fires:
+                    self.assertEqual(got.id, "material.source_conflict")
+                    self.assertAlmostEqual(got.evidence["max_r"], factor * mr.K_GATE, places=9)
+                    self.assertEqual(got.evidence["sigma_allow_formed"], "max (shared data)")
+
+    def test_shared_data_and_quadrature_give_different_verdicts(self):
+        """Shared data uses max(σ1, σ2), independent sources √(σ1² + σ2²): with equal σ, r differs by √2."""
+        from solver import material_registry as mr
+        v = mv.RecordView(self._blend(1.0), 300.0)
+        band = mj.cross_check(v, 0, v.record["phases"][0]["joins_within"][0])["band"]
+        sigma = band / (1.2 * mr.K_GATE)              # shared: r = 2.4 (fails); quadrature: r = 2.4/√2 = 1.70 (passes)
+        self.assertIsNotNone(mr.source_conflicts(self._blend(sigma, shared=True), "toy.yaml"))
+        self.assertIsNone(mr.source_conflicts(self._blend(sigma, shared=False), "toy.yaml"))
+
+    def test_a_cross_check_is_never_gated(self):
+        """A2: the same failing pair declared as a cross-check is not gated (it is banded and disclosed)."""
+        from solver import material_registry as mr
+        v = mv.RecordView(self._blend(1.0), 300.0)
+        band = mj.cross_check(v, 0, v.record["phases"][0]["joins_within"][0])["band"]
+        self.assertIsNotNone(mr.source_conflicts(self._blend(band / 4.0), "toy.yaml"))
+        self.assertIsNone(mr.source_conflicts(self._blend(band / 4.0, kind="cross_check"), "toy.yaml"))
+
+    def test_blend_is_a_p_only_v_blend(self):
+        """A4: inside the overlap V = (1 − w)V_a + w·V_b with w the C¹ smoothstep in P over the overlap's P span; the
+        answer is graded «blended (a, b)» with the full |Δρ|/ρ as its band; below the overlap a alone answers."""
+        d = rec_preferred()
+        ph = d["phases"][0]
+        ph["joins_within"][0].update(kind="blend", weight="smoothstep_p")
+        v = mv.RecordView(d, 300.0)
+        lo, hi = 1.3e9, 2.2e9
+        for p in (1.5e9, 1.75e9, 2.0e9):
+            with self.subTest(p=p):
+                s_ = (p - lo) / (hi - lo)
+                w = s_ * s_ * (3 - 2 * s_)
+                a, b = ph["joins_within"][0]["between"]
+                ra, rb = v.source_density(0, a, p, 300.0), v.source_density(0, b, p, 300.0)
+                rho, _dtdp, notes = v.state(p, 300.0)
+                self.assertAlmostEqual(rho, 1.0 / ((1 - w) / ra + w / rb), places=9)
+                self.assertIn(f"blended ({a}, {b})", notes[-1].grade)
+                self.assertAlmostEqual(notes[-1].error, abs(rb - ra) / ra, places=12)
+
+
 if __name__ == "__main__":
     unittest.main()

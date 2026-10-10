@@ -134,6 +134,8 @@ def _smoothstep(s):
 def taper_zone(join, src_a) -> tuple:
     """(P_lo, P_hi, upper) of a taper: from P_e to 1.5·P_e (upper side) or P_e/1.5 to P_e (lower), or the declared
     width (impl note 4 item 1; lower side owner-direction after adfc584)."""
+    if join["kind"] == "blend":                         # note 3 A4: the weight runs over the overlap's P span
+        return float(join["overlap"]["p_min"]), float(join["overlap"]["p_max"]), True
     pe = float(join["edge_p"])
     upper = join["side"] == "upper"
     if "width" in join:
@@ -153,7 +155,7 @@ def taper_state(view, pi, join, p, t):
     s = (p - lo) / (hi - lo)
     w = _smoothstep(s if upper else 1.0 - s)            # weight of the other source b
     t_note = None
-    if w < 1.0:                                         # the measured source is read here: is T inside its data range?
+    if w < 1.0 and join["kind"] == "taper":             # the measured source is read here: is T inside its data range?
         dr = _src(view, pi, a)["data_range"]
         t_lo, t_hi = dr.get("t_min", -math.inf), dr.get("t_max", math.inf)
         if not (t_lo <= t <= t_hi):
@@ -180,7 +182,8 @@ def taper_state(view, pi, join, p, t):
     note = None
     if 0.0 < w < 1.0:
         ra, rb = view.source_density(pi, a, p, t), view.source_density(pi, b, p, t)
-        note = {"grade": f"blended ({a} extrapolated, {b})", "band": abs(rb - ra) / ra}
+        note = {"grade": f"blended ({a} extrapolated, {b})" if join["kind"] == "taper" else f"blended ({a}, {b})",
+                "band": abs(rb - ra) / ra}
     if t_note is not None:                                    # 68 N49: both facts ride; the band is the larger
         note = t_note if note is None else {"grade": f"{note['grade']}; {t_note['grade']}",
                                             "band": max(note["band"], t_note["band"])}

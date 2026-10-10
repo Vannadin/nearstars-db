@@ -1031,7 +1031,7 @@ class RecordView:
     def _taper_join(self, ph):
         pi = self.phases.index(ph)
         for j in self.record["phases"][pi].get("joins_within", ()):
-            if j["kind"] == "taper":
+            if j["kind"] in ("taper", "blend"):              # note 3 A4: both are a P-only V-blend
                 return pi, j
         return None
 

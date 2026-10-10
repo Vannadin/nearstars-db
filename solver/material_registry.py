@@ -97,6 +97,12 @@ STOPS = MappingProxyType({
                                    "At a declared mixed triple point the declared curves and the min-G boundary must "
                                    "pass within the tolerance set before measuring; correct the curve or the printed "
                                    "point (impl note 6 item 4), never widen the tolerance after seeing the miss."),
+    "material.source_conflict": (("file", "phase", "sources", "quantity", "max_r", "node", "sigma_allow",
+                                  "sigma_allow_formed", "k"),
+                                 "Two sources declared as a blend disagree beyond k σ_allow at a node of the overlap "
+                                 "grid. Choose one of impl note 3 A6: measured beats computed inside the measured "
+                                 "range (source seams at its edges), a different source, or a narrower window; never "
+                                 "a column picked after the comparison."),
     "material.multi_source": (("file", "phase", "sources", "family"),
                               "A source outside the record's primary family answers in this phase. Use it only beyond "
                               "the family's reach (taper rules) or for a whole phase, and say which in the phase's "
@@ -428,7 +434,8 @@ def _sources_and_joins(ph: Mapping, file):
             raise _Stop("material.join_rule", file=file, phase=ph["id"], join=i,
                         why=f"between names two of the phase's sources {sorted(srcs)}; unknown {bad}")
         kind = j["kind"]
-        need = {"blend": ("overlap", "weight"), "cross_check": ("overlap",), "taper": ("edge_p", "side", "weight"),
+        need = {"blend": ("overlap", "weight", "sampling"), "cross_check": ("overlap",),
+                "taper": ("edge_p", "side", "weight"),
                 "seam": ()}[kind]
         gone = [f for f in need if f not in j]
         if gone:
@@ -436,14 +443,14 @@ def _sources_and_joins(ph: Mapping, file):
         if "k" in j and j["k"] != K_GATE:
             raise _Stop("material.join_rule", file=file, phase=ph["id"], join=i,
                         why=f"k is {K_GATE:g} (impl note 3 A3); a different k is a recorded change")
-        if kind == "taper":                                       # note 3 A4 item 3: c_P on both sides of a taper
+        if kind in ("taper", "blend"):                            # note 3 A4 item 3: c_P on both sides of a V-blend
             for sid in j["between"]:
                 x = srcs[sid]
                 native = (x.get("eos") or {}).get("form") in ("library", "evaluator")
                 via = x.get("c_p_from")
                 if not native and not (via in srcs and (srcs[via].get("eos") or {}).get("form") in ("library", "evaluator")):
                     raise _Stop("material.join_rule", file=file, phase=ph["id"], join=i,
-                                why=f"taper side {sid} has no c_P: give it a library/evaluator eos or c_p_from")
+                                why=f"{kind} side {sid} has no c_P: give it a library/evaluator eos or c_p_from")
         if kind == "taper" and "width" in j:
             w, pe = j["width"]["p_end"], j["edge_p"]
             if (j["side"] == "upper" and w <= pe) or (j["side"] == "lower" and w >= pe):
@@ -771,6 +778,9 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None) -> Regis
         miss = triple_point_misses(rec, f.name)
         if miss is not None:
             return miss
+        conflict = source_conflicts(rec, f.name)
+        if conflict is not None:
+            return conflict
         out[rec["id"]] = rec
     warns = tuple(w for rec in out.values() for w in multi_source_warnings(rec, f"{rec['id']}.yaml"))
     return Registry(MappingProxyType(out), MappingProxyType(unavailable), warns)
@@ -842,6 +852,32 @@ def multi_source_warnings(rec: Mapping, file: str) -> list:
             out.append(LoadStop("material.multi_source", MappingProxyType(
                 {"file": file, "phase": ph["id"], "sources": tuple(outside), "family": fam["name"]})))
     return out
+
+
+def source_conflicts(rec: Mapping, file: str) -> LoadStop | None:
+    """Impl note 3 A3: the conflict gate, for blends only (a cross-check is banded, never gated; A2). On the join's
+    declared grid inside the overlap box, r = |Δρ|/σ_allow per node; any node with r > K_GATE is the load STOP
+    material.source_conflict, naming the sources, the max r and its node, σ_allow and how it was formed, and k. A grid
+    with no valid node is the same STOP (the gate cannot pass unseen)."""
+    gated = [(pi, j) for pi, ph in enumerate(rec["phases"]) for j in ph.get("joins_within", ()) if j["kind"] == "blend"]
+    if not gated:
+        return None
+    from solver import material_joins as mj
+    from solver import material_view as mv
+    from solver import stepper as st
+    view = mv.RecordView(rec, 0.0)
+    for pi, j in gated:
+        out = mj.cross_check(view, pi, j)
+        ev = {"file": file, "phase": rec["phases"][pi]["id"], "sources": tuple(j["between"]), "quantity": "rho",
+              "k": K_GATE, "sigma_allow_formed": "max (shared data)" if "shared_data" in j else "quadrature"}
+        if isinstance(out, st.Stop):
+            return LoadStop("material.source_conflict", MappingProxyType(
+                {**ev, "max_r": None, "node": None, "sigma_allow": None}))
+        if out["max_r"] > K_GATE:
+            n = max((x for x in out["nodes"] if "r" in x), key=lambda x: x["r"])
+            return LoadStop("material.source_conflict", MappingProxyType(
+                {**ev, "max_r": n["r"], "node": (n["p"], n["t"]), "sigma_allow": n["sigma_allow"]}))
+    return None
 
 
 def triple_point_misses(rec: Mapping, file: str) -> LoadStop | None:
