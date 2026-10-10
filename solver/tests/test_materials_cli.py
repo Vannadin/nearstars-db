@@ -79,8 +79,8 @@ class TCheckAndSource(unittest.TestCase):
     def test_check_good_and_bad(self):
         with tempfile.TemporaryDirectory() as tmp:
             d = self._dir(tmp, GOOD)
-            code, text = self._run([d / "toy.yaml"], d)
-            self.assertEqual((code, text.strip()), (0, "toy.yaml: loads"))
+            code, text = self._run([d / "toy.yaml"], d, Path(tmp) / "no-cache")
+            self.assertEqual((code, text.strip()), (0, "toy.yaml: loads\ntoy.yaml: generated checks and formula checks pass"))
         bad = copy.deepcopy(GOOD)
         bad["phases"][0]["edges"].pop("t_min")
         with tempfile.TemporaryDirectory() as tmp:
@@ -89,6 +89,30 @@ class TCheckAndSource(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("phase toy_solid: edge undeclared — edge = t_min", text)
         self.assertIn("how to fix: The stability field reaches past this window edge", text)
+
+    def test_check_runs_the_generated_checks(self):
+        """Impl note 3 C2 (P7 cold run): a record that loads but answers nowhere (no thermal model), and one whose
+        formula check misses, each fail `check` with the problem and its fix."""
+        cold = copy.deepcopy(GOOD)
+        th = cold["phases"][0]["thermal"]
+        for k in ("pressure", "sets", "phase_constants"):
+            th.pop(k, None)
+        th["gamma_window"] = {"p_min": 0.0, "p_max": 0.0}
+        off = copy.deepcopy(GOOD)
+        off["formula_checks"][0]["expected"] = 2.1e11
+        for rec, word in ((cold, "answers nowhere"), (off, "formula check «K0 as printed»")):
+            with self.subTest(word), tempfile.TemporaryDirectory() as tmp:
+                d = self._dir(tmp, rec)
+                code, text = self._run([d / "toy.yaml"], d, Path(tmp) / "no-cache")
+                self.assertEqual(code, 1, text)
+                self.assertIn(word, text)
+                self.assertIn("how to fix:", text)
+
+    def test_scaffold_fills_params(self):
+        """P7 cold run: a cold-curve scaffold carries rho0, k0, k0p as FILL lines, not commented out."""
+        text = cli.scaffold("single", "toy")
+        for k in ("rho0", "k0", "k0p"):
+            self.assertIn(f"        {k}: {{value: FILL", text)
 
     def test_add_source_registers_and_the_cite_then_loads(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -112,7 +136,7 @@ class TCheckAndSource(unittest.TestCase):
             self.assertIn("already registered", buf.getvalue())
             self.assertTrue(Path(tmp, "paper.pdf.PROVENANCE.txt").exists())
             self.assertIn(sha, mr.read_manifest(d / "sources.yaml"))
-            self.assertEqual(self._run([d / "toy.yaml"], d)[0], 0)
+            self.assertEqual(self._run([d / "toy.yaml"], d, Path(tmp) / "no-cache")[0], 0)   # the manifest is the point
 
     def test_add_source_never_writes_a_manifest_that_does_not_read_back(self):
         """r2 on fa438fad: with content after the sources list, the append would land in the wrong place; nothing is

@@ -108,8 +108,14 @@ def scaffold(kind: str, material_id: str) -> str:
         over = {"form": "table"} if kind == "table" else {}
         _emit("phase", "    ", lines, comments, only=("id", "label", "state"))
         lines.append("    eos:")
-        _emit("eos", "      ", lines, comments, only=("form", "params", "reference") + (("table",) if kind == "table" else ()),
+        _emit("eos", "      ", lines, comments, only=("form", "reference") + (("table",) if kind == "table" else ()),
               overrides=over)
+        if kind != "table":                            # C7 cold run: every cold-curve form needs these (commented out
+            lines.append("      params:   # bm2 / bme3 / vinet; delete for library or evaluator forms")   # before)
+            for k, what in (("rho0", "kg/m3, the zero-pressure density"), ("k0", "Pa, the bulk modulus"),
+                            ("k0p", "1, K0′ (bme3 and vinet; bm2 fixes it at 4)")):
+                lines.append(f"        {k}: {{value: FILL, unit: {what.split(',')[0]}, grade: read, printed: \"FILL: as "
+                             f"printed\", source: {{cache: FILL, page: FILL, where: FILL, sha256: FILL}}}}   # {what}")
         if kind == "table":
             lines.append("      table:")
             _emit("table", "        ", lines, comments)
@@ -143,7 +149,7 @@ def _what(stop: mr.LoadStop) -> str:
     return f"{where or '(record)'}: {stop.id.split('.', 1)[1].replace('_', ' ')}{f' — {rest}' if rest else ''}"
 
 
-def check(paths: list, directory: Path = mr.MATERIALS_DIR) -> int:
+def check(paths: list, directory: Path = mr.MATERIALS_DIR, papers: Path | None = None) -> int:
     registered = mr.read_manifest(directory / "sources.yaml")
     if isinstance(registered, mr.LoadStop):
         print(f"sources.yaml: {_what(registered)}\n  how to fix: {registered.fix}")
@@ -166,6 +172,22 @@ def check(paths: list, directory: Path = mr.MATERIALS_DIR) -> int:
     if isinstance(whole, mr.LoadStop) and not bad:
         print(f"registry: {_what(whole)}\n  how to fix: {whole.fix}")
         bad += 1
+    if isinstance(whole, mr.Registry):                 # impl note 3 C2: then the record's generated checks
+        from solver import material_p4 as p4
+        from solver.from_v1 import thaw
+        for f in paths:
+            rid = Path(f).stem
+            if rid not in whole.records:
+                continue
+            probs = p4.record_problems(thaw(whole.records[rid]), papers)
+            for what, fix in probs:
+                print(f"{Path(f).name}: {what}\n  how to fix: {fix}")
+            if probs:
+                bad += 1
+            else:
+                print(f"{Path(f).name}: generated checks and formula checks pass")
+        for w in whole.warnings:                       # design note 4 item 3: a warning, never a failure
+            print(f"{w.evidence.get('file', '?')}: warning — {_what(w)}\n  how to fix: {w.fix}")
     return 1 if bad else 0
 
 

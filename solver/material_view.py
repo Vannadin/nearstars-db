@@ -949,6 +949,9 @@ class RecordView:
             return gap
         if not ph.alpha_k or rho <= 0.0:
             return 0.0
+        if not ph.c_v > 0.0:                         # the registry STOPs this; never a ZeroDivisionError here
+            return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
+                                                    f"{ph.id}: γ from constants needs c_v > 0"))
         return self._dpdt_v(ph, t, p) / (rho * ph.c_v)
 
     # density ──────────────────────────────────────────────────────────────────────────────────────────────────────

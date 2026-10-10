@@ -315,6 +315,28 @@ def _gamma(ph: Mapping, file):
                         why="edge_above's limit must lie above the set window's p_max")
 
 
+def _gamma_constants(ph: Mapping, file):
+    """P7 cold run: where γ comes from constants (the phase's own over phase_constants or a set-less phase, or a set
+    with no evaluator), both alpha_k and c_v are present and c_v > 0; otherwise γ = αK_T/(ρc_V) has no value (the
+    view crashed on c_v = 0) and no silent 0 is taken."""
+    th = ph["thermal"]
+    if ph["eos"]["form"] in ("library", "evaluator", "table"):
+        return
+
+    def need(consts, where):
+        gone = [k for k in ("alpha_k", "c_v") if k not in consts]
+        cv = consts.get("c_v")
+        if gone or not float(cv["value"] if isinstance(cv, Mapping) else cv) > 0.0:
+            raise _Stop("material.gamma_window", file=file, phase=ph["id"], set=-1,
+                        why=f"{where} gives γ from constants: it needs alpha_k and c_v > 0 (missing {gone})")
+    gw = th.get("gamma_window") or {}
+    if "phase_constants" in th or (not th.get("sets") and float(gw.get("p_max", 0.0)) > float(gw.get("p_min", 0.0))):
+        need(th.get("pressure") or {}, "thermal.pressure")
+    for i, s in enumerate(th.get("sets", ())):
+        if "evaluator" not in s:
+            need(s.get("constants") or {}, f"thermal set {i}")
+
+
 def _gamma_tiling(ph: Mapping, file):
     """68 N19: inside the γ window, the sets ([p_min, p_max)) and the declared phase_constants span cover every P."""
     th = ph["thermal"]
@@ -820,6 +842,7 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
             _library_thermal(ph, file)
             _gamma(ph, file)
             _gamma_tiling(ph, file)
+            _gamma_constants(ph, file)
             _sources_and_joins(ph, file)
             _reference_and_sets(ph, file)
             _evaluators(ph, file)
