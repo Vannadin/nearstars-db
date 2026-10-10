@@ -47,6 +47,8 @@ _EDGES = (("p_min", "p_min", "lower"), ("p_max", "p_max", "upper"), ("t_min", "t
 #: The load STOP ids: (evidence fields, how to fix). A STOP is data, never an exception; the fix text is what the
 #: checker prints after «what is wrong» (impl note 3 C2: field / what is wrong / how to fix).
 STOPS = MappingProxyType({
+    "material.placeholder": (("file", "path", "text"),
+                             "Replace the scaffold's FILL placeholder with the value from your source."),
     "material.unreadable": (("file", "detail"),
                             "Fix the YAML syntax at the line named; duplicate keys are not allowed."),
     "material.unknown_key": (("file", "path", "key", "allowed"),
@@ -143,7 +145,12 @@ def _is_number(x) -> bool:
     return isinstance(x, (int, float)) and not isinstance(x, bool) and not math.isnan(x)
 
 
-def _check(v, spec, path, file):
+PLACEHOLDER = "FILL"         # what the scaffold writes where a value is owed (impl note 3 C1)
+
+
+def _check(v, spec, path, file, cites: list):
+    if isinstance(v, str) and v.startswith(PLACEHOLDER):
+        raise _Stop("material.placeholder", file=file, path=path, text=v[:80])
     shape = spec["shape"]
     if shape == "number":
         if not _is_number(v):
@@ -159,25 +166,26 @@ def _check(v, spec, path, file):
             raise _Stop("material.bad_shape", file=file, path=path, expected=f"one of {list(spec['values'])}",
                         got=repr(v)[:60])
     elif shape in ("record", "constant", "source"):
-        _section(v, spec.get("of", shape), path, file)
+        _section(v, spec.get("of", shape), path, file, cites)
     elif shape == "list":
         if not isinstance(v, (list, tuple)) or len(v) < spec.get("min", 0):
             raise _Stop("material.bad_shape", file=file, path=path, expected=f"a list of ≥ {spec.get('min', 0)}",
                         got=repr(v)[:60])
         if "of" in spec:
             for i, x in enumerate(v):
-                _section(x, spec["of"], f"{path}[{i}]", file)
+                _section(x, spec["of"], f"{path}[{i}]", file, cites)
     elif shape == "mapping":
         if not isinstance(v, Mapping):
             raise _Stop("material.bad_shape", file=file, path=path, expected="mapping", got=repr(v)[:60])
         if "of" in spec:
             for k, x in v.items():
-                _section(x, spec["of"], f"{path}.{k}", file)
+                _section(x, spec["of"], f"{path}.{k}", file, cites)
     else:
         raise AssertionError(f"schema shape {shape!r} at {path}")
 
 
-def _section(v, name, path, file):
+def _section(v, name, path, file, cites: list):
+    """Walk one schema section; cache cites are collected into `cites` as (path, sha256) for the manifest check."""
     spec = SCHEMA[name]
     if not isinstance(v, Mapping):
         raise _Stop("material.bad_shape", file=file, path=path, expected=f"a {name} mapping", got=repr(v)[:60])
@@ -188,16 +196,13 @@ def _section(v, name, path, file):
         if s.get("required") and k not in v:
             raise _Stop("material.missing_key", file=file, path=path, key=k)
     for k, x in v.items():
-        _check(x, spec[k], f"{path}.{k}", file)
+        _check(x, spec[k], f"{path}.{k}", file, cites)
     if name == "source":
-        _cite(v, path, file)
+        _cite(v, path, file, cites)
 
 
 # ── load rules beyond shape ─────────────────────────────────────────────────────────────────────────────────────
-_CACHE_CITES: list = []      # (path, sha256) of the record being checked; reset by check_record
-
-
-def _cite(src: Mapping, path, file):
+def _cite(src: Mapping, path, file, cites: list):
     """Note 1 item 3, form only: exactly one of cache / library / doi; a cache cite has page, where and sha256."""
     kinds = [k for k in ("cache", "library", "doi", "user_declared", "formula") if k in src]
     if len(kinds) != 1:
@@ -205,7 +210,7 @@ def _cite(src: Mapping, path, file):
                     why=f"exactly one of cache/library/doi/user_declared/formula, got {kinds}")
     k = kinds[0]
     if k == "cache":
-        _CACHE_CITES.append((path, src.get("sha256")))
+        cites.append((path, src.get("sha256")))
         gone = [f for f in ("page", "where", "sha256") if f not in src]
         if gone:
             raise _Stop("material.bad_cite", file=file, path=path, why=f"a cache cite needs {gone}")
@@ -298,6 +303,9 @@ def _sources_and_joins(ph: Mapping, file):
             raise _Stop("material.precedence", file=file, phase=ph["id"], why="a frozen precedence names its ref")
         for i, j in enumerate(joins):
             a, b = (srcs[x]["basis"] for x in j["between"])
+            if pr["by"] == "basis" and a == b:
+                raise _Stop("material.precedence", file=file, phase=ph["id"],
+                            why=f"join {i}: both sources are {a}; basis cannot decide, so declare or freeze it")
             if a == "computed" and b == "measured":
                 raise _Stop("material.precedence", file=file, phase=ph["id"],
                             why=f"join {i}: measured beats computed (note 3 A6.1); the preferred source is listed first")
@@ -397,10 +405,10 @@ def read_manifest(path: Path = MANIFEST) -> frozenset | LoadStop:
 
 def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping | LoadStop:
     """One record's load rules; the record (deep-frozen) or the first STOP."""
-    _CACHE_CITES.clear()
+    cites: list = []
     try:
-        _section(raw, "record", "record", file)
-        for path, sha in _CACHE_CITES:
+        _section(raw, "record", "record", file, cites)
+        for path, sha in cites:
             if sha not in registered:
                 raise _Stop("material.unregistered_source", file=file, path=path, sha256=str(sha))
         if raw["id"] != Path(file).stem:

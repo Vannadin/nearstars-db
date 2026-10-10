@@ -138,6 +138,8 @@ CONTROLS_JOINS = (
     ("no precedence", lambda d: (joined(d), PH(d).pop("precedence")), "material.precedence"),
     ("computed preferred over measured", lambda d: (joined(d), PH(d)["joins_within"][0].update(
         between=["dft", "meas"])), "material.precedence"),
+    ("basis cannot decide two measured sources", lambda d: (joined(d), PH(d)["sources"][1].update(basis="measured")),
+     "material.precedence"),
     ("declared precedence without date", lambda d: (joined(d), PH(d).update(precedence={"by": "declared"})),
      "material.precedence"),
     ("table: ρ falls with P", lambda d: (tabled(d), _set(d, "rho", 2, [4040.0, 4000.0])), "material.table_check"),
