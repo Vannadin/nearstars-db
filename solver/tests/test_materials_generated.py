@@ -117,7 +117,7 @@ def probe_overlaps(rec) -> tuple:
         while t <= t_hi + 1e-9 * dt:
             got = v._phase_at(p, t)
             n += 1
-            if isinstance(got, st.Stop) and "fields overlap" in got.record.why:
+            if isinstance(got, st.Stop) and got.record.refusal == "material.field_overlap":
                 bad.append((p, t, got.record.why))
             t += dt
         p += dp

@@ -595,7 +595,7 @@ class RecordView:
             return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
                                                     f"no phase here ({p:g} Pa, {t:g} K)"))
         if len(hits) > 1:
-            return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
+            return st.Stop("refused", RecordRefusal(self.material_id, p, t, "material.field_overlap",
                                                     f"fields overlap: {[h.id for h in hits]}"))
         return hits[0]
 
@@ -691,6 +691,14 @@ class RecordView:
         return st.Stop("refused", RecordRefusal(self.material_id, p, t, rid,
                                                 f"{ph.id}: γ asked at {p:g} Pa, outside its window and every set"))
 
+    def _ev(self, s, p, t, key):
+        """A set's evaluator at (P, T); a failure is a named Stop, never an exception out of state() (68 N35)."""
+        try:
+            return s.evaluator.at(p, t)[key]
+        except (ValueError, ZeroDivisionError, OverflowError) as e:
+            return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
+                                                    f"evaluator {type(s.evaluator).__name__}: {e}"))
+
     def _band_error(self, ph, s):
         """A band's error: as declared, or its method evaluated from the record through the C4 grammar (once per view).
         A method that cannot be evaluated refuses; a band never rides without its number."""
@@ -713,7 +721,7 @@ class RecordView:
                 return gap
             return ph.alpha_k + ph.alpha_k_dt * self._delta_t(ph, t, p)
         if s.evaluator is not None:
-            return s.evaluator.at(p, t)["dpdt_v"]
+            return self._ev(s, p, t, "dpdt_v")
         return s.alpha_k + s.alpha_k_dt * self._set_delta_t(s, t)
 
     def gruneisen(self, ph, p, rho, t):
@@ -726,7 +734,7 @@ class RecordView:
                 self.notes.append(BandNote(self.material_id, f"{ph.id} γ set past {s.p_max:g} Pa", s.edge_band["form"],
                                            err, s.edge_band.get("method"), s.edge_band["grade"], s.edge_band["origin"]))
             if s.evaluator is not None:
-                return s.evaluator.at(p, t)["gruneisen"]
+                return self._ev(s, p, t, "gruneisen")
             if s.c_v <= 0.0 or rho <= 0.0:
                 return 0.0
             return self._dpdt_v(ph, t, p) / (rho * s.c_v)

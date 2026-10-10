@@ -12,7 +12,9 @@ registry):
 
 `SeaFreezePhase(submodel)` evaluates one SeaFreeze phase at (P [Pa], T [K]): ρ [kg/m³], α [1/K], c_P [J/kg/K],
 K_T [Pa], and (dT/dP)_S = αT/(ρ c_P) [K/Pa]. getProp takes P in MPa and returns K in MPa; the conversion is here,
-and (dT/dP)_S is checked against SeaFreeze's own Js [K/MPa] at every evaluation.
+and (dT/dP)_S is checked against SeaFreeze's own Js [K/MPa] at every evaluation. A (P, T) outside the submodel's knot
+box (seafreeze.phaselines.phase_range) is out of range before getProp is called: SeaFreeze silences its own
+«outside the knot sequence» warning, so that warning is not relied on (68 N34).
 """
 from __future__ import annotations
 
@@ -91,7 +93,12 @@ class SeaFreezePhase:
 
     def at(self, p: float, t: float) -> dict:
         import numpy as np
+        from seafreeze.phaselines import phase_range  # 68 N34: the spline's knot box, checked before evaluation
         from seafreeze.seafreeze import getProp       # 68 N33: an ImportError is its own error, never «out of data»
+        rng = phase_range(self.submodel)
+        if not (rng.P[0] <= p / 1e6 <= rng.P[1] and rng.T[0] <= t <= rng.T[1]):
+            raise LibraryOutOfRange(f"{self.submodel} at ({p:g} Pa, {t:g} K): outside the spline's knot box "
+                                    f"P {rng.P} MPa × T {rng.T} K")
         pt = np.empty((1,), dtype=object)
         pt[0] = (p / 1e6, t)
         try:

@@ -62,6 +62,18 @@ class FrenchRedmer(unittest.TestCase):
         self.assertEqual(dtdp, x["gruneisen"] * 800.0 / ks)
         self.assertIsInstance(v.state(5e9, 800.0), st.Stop)               # outside the ρ bracket: a named Stop
 
+    def test_set_evaluator_failure_is_a_named_stop(self):
+        """68 N35: an evaluator failing inside a thermal set (outside its ρ bracket) gives a Stop, not an exception."""
+        import copy
+        from solver import stepper as st
+        from solver.tests.test_material_registry import GOOD
+        d = copy.deepcopy(GOOD)
+        d["phases"][0]["thermal"]["sets"][0]["evaluator"] = {"name": "french_redmer2015", "source": {"formula": "toy"},
+                                                             "params": legacy_params()}
+        s = mv.RecordView(d, 300.0).state(5e9, 800.0)
+        self.assertIsInstance(s, st.Stop)
+        self.assertIn("FrenchRedmer2015", s.record.why)
+
     def test_missing_param_refuses(self):
         p = legacy_params()
         p.pop("gamma_3_m2")

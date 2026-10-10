@@ -116,6 +116,12 @@ class Registry(unittest.TestCase):
         self.assertIsInstance(s, st.Stop)
         self.assertIn("VI at", s.record.why)
 
+    def test_outside_the_knot_box_before_getprop(self):
+        """68 N34: past VI's knot box (3000 MPa) the adapter refuses before calling SeaFreeze."""
+        with self.assertRaises(ml.LibraryOutOfRange) as cm:
+            ml.SeaFreezePhase("VI").at(3.15e9, 300.0)
+        self.assertIn("knot box", str(cm.exception))
+
     def test_past_the_window_refuses(self):
         s = mv.RecordView(lib_record(), 300.0).state(5.0e8, 400.0)
         self.assertIsInstance(s, st.Stop)

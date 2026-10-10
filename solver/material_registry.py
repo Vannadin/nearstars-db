@@ -645,7 +645,8 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None) -> Regis
 
 def triple_point_misses(rec: Mapping, file: str) -> LoadStop | None:
     """Impl note 6 item 4 (68 (2)): at each declared mixed triple point, every declared curve between two of its phases
-    passes within dp of the printed P at the printed T, and so does the min-G boundary between two of its gibbs
+    passes within dp of the printed P at the printed T (the check is at that T, so dt is recorded but the printed T is
+    taken as exact; 68 N36), and so does the min-G boundary between two of its gibbs
     phases (located by bisection in P over their G difference within ±2·dp: a crossing farther away is a miss anyway,
     and the narrow bracket keeps the library inside its own range)."""
     tps = rec.get("triple_points") or ()
@@ -690,6 +691,8 @@ def triple_point_misses(rec: Mapping, file: str) -> LoadStop | None:
                             lo, flo = mid, fm
                         else:
                             hi = mid
+                except ImportError:                          # 68 N36: an import failure is not a miss
+                    raise
                 except Exception as e:                       # a library failure at the point is a miss, by name
                     return stop(f"min-G boundary {gib[i]}–{gib[j]} could not be evaluated: {e}")
                 if abs(0.5 * (lo + hi) - p0) > dp:

@@ -83,7 +83,7 @@ class Field(unittest.TestCase):
         rec["boundaries"] = rec["boundaries"][1:]           # VI no longer bounded by VII: 2.25 GPa is claimed by both
         s = mv.RecordView(rec, T)._phase_at(2.25e9, T)
         self.assertIsInstance(s, st.Stop)
-        self.assertIn("fields overlap", s.record.why)
+        self.assertEqual(s.record.refusal, "material.field_overlap")          # 68 N37: a record defect, own id
 
 
 class RefusalRegion(unittest.TestCase):
@@ -106,7 +106,7 @@ class RefusalRegion(unittest.TestCase):
     def test_without_the_region_it_is_an_overlap(self):
         rec = self._rec()
         rec.pop("refusals")
-        self.assertIn("fields overlap", mv.RecordView(rec, T)._phase_at(2.2e9, T).record.why)
+        self.assertEqual(mv.RecordView(rec, T)._phase_at(2.2e9, T).record.refusal, "material.field_overlap")
 
     def test_probe_sees_no_overlap_and_the_region_is_not_empty(self):
         from solver.tests.test_materials_generated import empty_refusal_regions, probe_overlaps
