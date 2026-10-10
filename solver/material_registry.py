@@ -246,12 +246,11 @@ def _gamma(ph: Mapping, file):
     gw = ph["thermal"]["gamma_window"]
     for i, ts in enumerate(ph["thermal"].get("sets", ())):
         w = ts["window"]
-        top = ts["edge_above"]["limit"] if "edge_above" in ts else w["p_max"]
-        if w["p_min"] < gw["p_min"] or w["p_max"] > gw["p_max"] or top > gw["p_max"]:
+        if w["p_min"] < gw["p_min"] or w["p_max"] > gw["p_max"]:
             raise _Stop("material.gamma_window", file=file, phase=ph["id"], set=i,
-                        why=f"set [{w['p_min']}, {w['p_max']}] Pa (edge limit {top}) outside γ window "
-                            f"[{gw['p_min']}, {gw['p_max']}]")
-        if "edge_above" in ts and not top > w["p_max"]:
+                        why=f"set [{w['p_min']}, {w['p_max']}] Pa outside γ window [{gw['p_min']}, {gw['p_max']}]")
+        # past the γ window only through a declared edge band to a stated limit (G4): γ never falls back silently
+        if "edge_above" in ts and not ts["edge_above"]["limit"] > w["p_max"]:
             raise _Stop("material.gamma_window", file=file, phase=ph["id"], set=i,
                         why="edge_above's limit must lie above the set window's p_max")
 

@@ -100,8 +100,9 @@ thermal_set:
   edge_above: {shape: record, of: set_edge}                # past the set's printed p_max: a band up to a stated limit
   grade:     {shape: text}
 
-# A thermal set's upper edge (G4, directing 2026-10-10): between the set window's p_max and `limit` the set is
-# evaluated with this band (D-M2: γ never falls back); above `limit` the record refuses.
+# A thermal set's upper edge (G4, directing 2026-10-10): the set and the γ window end at the source's printed scope;
+# between the set's p_max and `limit` the set is evaluated with this band, the declared edge D-M2 asks for (γ never
+# falls back silently); above `limit` the record refuses.
 set_edge:
   band:         {shape: record, of: band, required: true}
   limit:        {shape: number, unit: Pa, required: true}

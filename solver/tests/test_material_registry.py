@@ -152,9 +152,6 @@ CONTROLS_JOINS = (
     ("set edge limit below the set window", lambda d: PH(d)["thermal"]["sets"][0].update(edge_above={
         "band": {"form": "relative", "method": "gamma_spread", "grade": "extrapolated", "origin": "o"},
         "limit": 4.0e10, "limit_reason": "r"}), "material.gamma_window"),
-    ("set edge past the γ window", lambda d: PH(d)["thermal"]["sets"][0].update(edge_above={
-        "band": {"form": "relative", "method": "gamma_spread", "grade": "extrapolated", "origin": "o"},
-        "limit": 2.0e11, "limit_reason": "r"}), "material.gamma_window"),
     ("band with both error and method", lambda d: PH(d)["edges"]["t_max"]["band"].update(method="m"),
      "material.bad_shape"),
     ("band with neither error nor method", lambda d: PH(d)["edges"]["t_max"]["band"].pop("error"),
@@ -187,8 +184,8 @@ class TRegistry(unittest.TestCase):
     def test_set_edge_loads(self):
         rec = plant(lambda d: PH(d)["thermal"]["sets"][0].update(edge_above={
             "band": {"form": "relative", "method": "gamma_spread", "grade": "extrapolated beyond printed scope",
-                     "origin": "extrapolation of the printed fit"}, "limit": 1.0e11, "limit_reason": "EOS window"}))
-        self.assertIsInstance(self._load(rec), mr.Registry)
+                     "origin": "extrapolation of the printed fit"}, "limit": 1.2e13, "limit_reason": "EOS window"}))
+        self.assertIsInstance(self._load(rec), mr.Registry)          # the edge band reaches past the γ window
 
     def test_notes_3_4_good_bases_load(self):
         for name, edit in (("taper join", joined), ("user-declared table", tabled)):
