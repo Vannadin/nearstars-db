@@ -284,5 +284,65 @@ class MaterialBytes(unittest.TestCase):
         self.assertEqual(sid(first), sid(again))
 
 
+class ClosureDiscontinuous(unittest.TestCase):
+    """Phase-1 design note 8: a root must meet tol_F (a) and lie on one line with F at x* ± δ (a′). Planted steps of F
+    on the two-layer uniform fixture (R closure) and on its boundary_mass inverse (r2 CB1)."""
+
+    def _bodies(self):
+        body, views = _two_layer(6000.0)
+        ans, x0 = sv.solve(body, views=views)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        layers = (b.Layer("core", "core", "x"), b.Layer("mantle", "mantle", "y"))
+        inv = b.Body("fixture-inverse", "planet", body.surface, layers, b.Closure("boundary_mass", 0.05, 0.95, "core"),
+                     radius=b.Declared(x0, "m"))
+        return (body, views, x0), (inv, views)
+
+    def _slope_sign(self, body, views, x):
+        lo, hi = (sv.inward(body, sv._views_at(body, views, xx), xx, context.Options()).F for xx in
+                  (x * (1 - 1e-4), x * (1 + 1e-4)))
+        return math.copysign(1.0, hi - lo)
+
+    def _with_step(self, body, views, x_step, jump):
+        orig = sv.inward
+
+        def stepped(bd, vw, x, opt):
+            got = orig(bd, vw, x, opt)
+            if not isinstance(got, st.Stop) and got.F is not None and x > x_step:
+                got.F += jump
+            return got
+        sv.inward = stepped
+        try:
+            return sv.solve(body, views=views)
+        finally:
+            sv.inward = orig
+
+    def test_planted_steps(self):
+        (fwd, views, r0), (inv, iviews) = self._bodies()
+        ans, x_inv = sv.solve(inv, views=iviews)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        for name, body, vw, x0 in (("R", fwd, views, r0), ("boundary_mass", inv, iviews, x_inv)):
+            sg = self._slope_sign(body, vw, x0)
+            with self.subTest(closure=name, control="(iii) no step: the same root"):
+                got, x = self._with_step(body, vw, math.inf, 0.0)
+                self.assertIsInstance(got, result.Answer, getattr(got, "text", None))
+                self.assertEqual(x, x0)
+            with self.subTest(closure=name, control="(ii) step just past the root: (a′)"):
+                got, x = self._with_step(body, vw, x0 * (1 + 1e-9), sg * 1e-5)
+                self.assertIsInstance(got, result.Refusal)
+                self.assertEqual(got.id, "solve.closure_discontinuous")
+                self.assertEqual(got.evidence["check"], "probe")
+            with self.subTest(closure=name, control="(iv) a step below tol_F fires nothing"):
+                got, x = self._with_step(body, vw, x0 * (1 + 1e-9), sg * 1e-11)
+                self.assertIsInstance(got, result.Answer, getattr(got, "text", None))
+        with self.subTest(control="(i) the root closes on the jump: (a)"):
+            sg = self._slope_sign(fwd, views, r0)
+            # F(x) − jump·sg for x ≤ x_step: the sign change sits at x_step, where F jumps by 1e-5
+            got, x = self._with_step(fwd, views, r0 * (1 - 1e-7), sg * 1e-5)
+            self.assertIsInstance(got, result.Refusal)
+            self.assertEqual(got.id, "solve.closure_discontinuous")
+            self.assertEqual(got.evidence["check"], "residual")
+            self.assertGreater(abs(got.evidence["F_root"]), got.evidence["tol_F"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -478,6 +478,33 @@ def _regions(out) -> list:
     return regs
 
 
+PROBE_SPAN = 50.0           # phase-1 design note 8 (a′): δ = PROBE_SPAN·tol_F/s, so the smooth chord s·2δ = 100·tol_F
+
+
+def _root_tolerance(x, acc, options, bracket, trials) -> dict:
+    """Phase-1 design note 8 at the root x, in the closure's own variable (any closure kind).
+    tol_F = 3·N_acc·rtol + 2·s·tol_x: 3·N_acc·rtol bounds the accepted pass's integration error in
+    F = (r³ − …)/r_s³ with r_s = R (rho_mean is the bulk density at the pass's R, so r ≤ r_s and each accepted step
+    moves r³/r_s³ by at most 3·rtol); 2·s·tol_x is Brent's stop bracket times the scan secant s.
+    (a′): δ = PROBE_SPAN·tol_F/s (capped at a quarter of the scan bracket), so a smooth F moves by 100·tol_F over the
+    chord; the chord's own curvature allowance is ½·|F″|·δ² with F″ the scan's second divided difference."""
+    xa, fa, xb, fb = bracket["scan"]
+    s = abs(fb - fa) / abs(xb - xa)
+    tol_x = 2.0 * 2.2e-16 * abs(x) + 0.5 * cl.CLOSE_TOL * abs(x)
+    tol_f = 3.0 * acc.counters.get("accepted", 0) * options.rtol + 2.0 * s * tol_x
+    delta = min(PROBE_SPAN * tol_f / s, 0.25 * abs(xb - xa)) if s > 0.0 else 0.25 * abs(xb - xa)
+    pts = sorted({t.x: t.F for t in trials if t.kind == "scan" and t.F is not None}.items())
+    i = next((k for k, (xx, _f) in enumerate(pts) if xx == xa), None)
+    f2 = 0.0
+    if i is not None:
+        trio = pts[max(0, i - 1):max(0, i - 1) + 3] if i + 1 < len(pts) else pts[-3:]
+        if len(trio) == 3:
+            (x0, y0), (x1, y1), (x2, y2) = trio
+            f2 = abs(2.0 * ((y2 - y1) / (x2 - x1) - (y1 - y0) / (x1 - x0)) / (x2 - x0))
+    return {"tol_F": tol_f, "s": s, "sign": math.copysign(1.0, fb - fa), "delta": delta,
+            "curvature": 0.5 * f2 * delta * delta}
+
+
 def solve(body, options: context.Options = context.Options(), warm=None, views=None):
     """Returns (Outcome, warm). Outcome is result.Answer, result.Refusal or result.NoAnswer.
     `views` (layer id → material view) replaces the adapter's resolution; it exists for physics fixtures only and is
@@ -537,6 +564,16 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
             acc.counters["surface_rho0_fallbacks"] = acc_fb
         if isinstance(acc, st.Stop):
             return _to_refusal(acc, where, x, kind, "accepted"), x
+        guard = options.fixed_dr <= 0.0 and x in out.detail.get("brackets", {})   # a fixed grid has no rtol
+        if guard:
+            bracket = out.detail["brackets"][x]
+            rt = _root_tolerance(x, acc, options, bracket, out.trials)
+            tol_f = rt["tol_F"]
+            if not abs(acc.F) <= tol_f:                  # note 8 (a): the root closed on a jump of F
+                return refusals.make("solve.closure_discontinuous", where, x=x, closure_kind=kind,
+                                     pass_kind="accepted", check="residual", F_root=acc.F, tol_F=tol_f,
+                                     n_acc=acc.counters.get("accepted", 0), rtol=options.rtol,
+                                     bracket=bracket["final"], probes=None), x
         notes = []
         if acc.floor_end:
             notes.append(result.Note("centre_closed_at_floor", "the accepted pass ended at the r floor, not at m_ε",
@@ -561,6 +598,24 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
             qs, sens_note = _with_sensitivity(body, views, x, options, acc, qs, supplied=supplied, ctx=ctx)
             if sens_note is not None:
                 notes.append(sens_note)
+        if guard:                                        # note 8 (a′): F at x* ± δ on one line through F(x*)
+            delta, allowed = rt["delta"], 2.0 * tol_f + rt["curvature"]
+            fm, fp = cl._value(F, x - delta), cl._value(F, x + delta)
+            ctx.record("probe", x=x - delta, F=None if isinstance(fm, st.Stop) else fm,
+                       stop=fm.kind if isinstance(fm, st.Stop) else None)
+            ctx.record("probe", x=x + delta, F=None if isinstance(fp, st.Stop) else fp,
+                       stop=fp.kind if isinstance(fp, st.Stop) else None)
+            stopped = isinstance(fm, st.Stop) or isinstance(fp, st.Stop)
+            dev = None if stopped else abs(acc.F - 0.5 * (fp + fm))
+            if stopped or dev > allowed or (fp - fm) * rt["sign"] <= 0.0:
+                probes = {"delta": delta, "F_minus": None if isinstance(fm, st.Stop) else fm, "F_root": acc.F,
+                          "F_plus": None if isinstance(fp, st.Stop) else fp, "deviation": dev,
+                          "allowed": allowed,
+                          "stop": next((z.kind for z in (fm, fp) if isinstance(z, st.Stop)), None)}
+                return refusals.make("solve.closure_discontinuous", where, x=x, closure_kind=kind,
+                                     pass_kind="probe", check="probe", F_root=acc.F, tol_F=tol_f,
+                                     n_acc=acc.counters.get("accepted", 0), rtol=options.rtol,
+                                     bracket=bracket["final"], probes=probes), x
         ans = result.Answer(qs, lbs, profiles, (), tuple(notes))
         return ans, x
     if out.kind == "two_roots":

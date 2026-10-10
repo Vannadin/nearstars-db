@@ -15,7 +15,7 @@ from solver.tests.test_types import solver_sources
 
 SOLVE_IDS = ("solve.no_bracket", "solve.two_roots", "solve.material_domain", "solve.unlocated_discontinuity",
              "solve.event_chatter", "solve.layer_order", "solve.lid_unconverged", "solve.basal_unconverged",
-             "solve.basal_not_attached")
+             "solve.basal_not_attached", "solve.closure_discontinuous")
 #: Names that hold reason text. X3: no consumer decides control flow from them.
 TEXT_NAMES = ("text", "reason", "message_old", "why")
 TEXT_KEYS = ("message_old", "why", "detail", "error", "rule")          # evidence fields that hold prose

@@ -78,7 +78,9 @@ def scan_points(lo: float, hi: float, n: int = N_SCAN) -> list:
 
 def _brent(F, a: float, fa: float, b: float, fb: float, trials: list):
     """Brent's method (zeroin) on a bracket with fa·fb < 0, to |Δx| ≤ CLOSE_TOL·|x|. Bisection fallback guarantees
-    shrink. A refusing evaluation inside a solved bracket is reported (it splits the bracket)."""
+    shrink. A refusing evaluation inside a solved bracket is reported (it splits the bracket). Returns (root, None,
+    final bracket (x_b, F_b, x_c, F_c)) or (None, problem, None); the final bracket names where a jump would sit
+    (phase-1 design note 8)."""
     c, fc = a, fa
     d = e = b - a
     for _ in range(CLOSE_ITERS):
@@ -91,7 +93,7 @@ def _brent(F, a: float, fa: float, b: float, fb: float, trials: list):
         tol = 2.0 * 2.2e-16 * abs(b) + 0.5 * CLOSE_TOL * abs(b)
         m = 0.5 * (c - b)
         if abs(m) <= tol or fb == 0.0:
-            return b, None
+            return b, None, (b, fb, c, fc)
         if abs(e) >= tol and abs(fa) > abs(fb):
             s = fb / fa
             if a == c:
@@ -114,10 +116,10 @@ def _brent(F, a: float, fa: float, b: float, fb: float, trials: list):
         v = _value(F, b)
         if isinstance(v, st.Stop):
             trials.append(Trial(b, None, v, "brent"))
-            return None, ("refused_inside", b, v)
+            return None, ("refused_inside", b, v), None
         trials.append(Trial(b, v, None, "brent"))
         fb = v
-    return None, ("unconverged", b, fb)
+    return None, ("unconverged", b, fb), None
 
 
 def _value(F, x: float):
@@ -211,6 +213,7 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
     walls: list = []
     done_pairs: set = set()
     closed: dict = {}            # (a.x, b.x) → root or problem
+    brackets: dict = {}          # root → {"scan": (x_a, F_a, x_b, F_b), "final": Brent's last bracket or None}
     for _round in range(MAX_SPLITS + 1):
         order = sorted((t for t in trials if t.kind != "isolated"), key=lambda t: t.x)
         for a, b in zip(order, order[1:]):
@@ -227,14 +230,16 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
                 continue                                  # not one solved stretch
             if a.F == 0.0:
                 roots.append(a.x)
+                brackets[a.x] = {"scan": (a.x, a.F, b.x, b.F), "final": None}
                 continue
             if a.F * b.F < 0.0:
                 key = (a.x, b.x)
                 if key not in closed:
                     closed[key] = _brent(F, a.x, a.F, b.x, b.F, trials)
-                x, prob = closed[key]
+                x, prob, final = closed[key]
                 if x is not None:
                     roots.append(x)
+                    brackets[x] = {"scan": (a.x, a.F, b.x, b.F), "final": final}
                 elif prob[0] == "refused_inside":
                     split = True
                     _confirm_chain(F, prob[1], prob[2], a.x, lo, hi, trials)   # impl note 8
@@ -242,6 +247,8 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
                     problems.append(prob)
         if pts and pts[-1].F == 0.0:
             roots.append(pts[-1].x)
+            if len(pts) > 1:
+                brackets[pts[-1].x] = {"scan": (pts[-2].x, pts[-2].F, pts[-1].x, pts[-1].F), "final": None}
         if not split:
             break
     else:
@@ -249,7 +256,7 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
                        detail={"budget": "MAX_SPLITS", "lo": lo, "hi": hi, "n_scan": n_scan})
     if not pts:
         return Outcome("no_solved", walls=walls, trials=trials)
-    detail = {"problems": problems, "lo": lo, "hi": hi, "n_scan": n_scan}
+    detail = {"problems": problems, "lo": lo, "hi": hi, "n_scan": n_scan, "brackets": brackets}
     if len(roots) == 1 and not problems:
         return Outcome("root", roots=roots, walls=walls, trials=trials, detail=detail)
     if len(roots) >= 2:
