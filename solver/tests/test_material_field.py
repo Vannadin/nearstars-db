@@ -73,6 +73,18 @@ class Field(unittest.TestCase):
         self.assertIsInstance(s, st.Stop)
         self.assertIn("curve is absent", s.record.why)
 
+    def test_boundary_is_inert_where_the_other_phase_cannot_be(self):
+        """c8: the liquid–VII curve printed only above 355 K must not refuse VII at 4 GPa / 300 K, where the liquid's
+        window (to 2.3 GPa) cannot reach; where both are candidates a missing curve still refuses."""
+        rec = field_record()
+        rec["boundaries"][1]["curve"]["t_min"] = const(355.0, "K")
+        rec["boundaries"][1]["curve"]["t_max"] = const(715.0, "K")
+        v = mv.RecordView(rec, T)
+        self.assertEqual(v._phase_at(4.0e9, 300.0).id, "VII")
+        s = v._phase_at(2.25e9, 300.0)                     # liquid's window holds here too: the curve is needed
+        self.assertIsInstance(s, st.Stop)
+        self.assertIn("curve is absent", s.record.why)
+
     def test_no_phase_and_overlap_refuse(self):
         rec = field_record()
         rec["phases"][2]["window"]["p_min"] = 2.25e9        # VII starts above the line: 2.2–2.25 GPa has no phase

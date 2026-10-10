@@ -14,6 +14,7 @@ Run from the worktree root:  solver/.venv/bin/python -m unittest solver.tests.te
 """
 import copy
 import hashlib
+import math
 import os
 import tempfile
 import unittest
@@ -71,6 +72,8 @@ def edge_probes(rec):
             if name not in w:                                       # 68 N21
                 raise AssertionError(f"phase {ph['id']}: edge {name} declared without a bound in the window")
             b = float(w[name])
+            if not math.isfinite(b):                               # an edge at infinity is never reached
+                continue
             if name == "p_max":
                 yield i, name, b * 1.001, mid_t, e
             elif name == "p_min" and b > 0.0:
@@ -161,9 +164,17 @@ class Generated(unittest.TestCase):
             v = mv.RecordView(rec, T_POT)
             for i, name, p, t, e in edge_probes(rec):
                 with self.subTest(record=rid, phase=i, edge=name):
-                    s = v.state(p, t)
+                    if rec.get("kind") == "branched":
+                        # beyond one phase's edge another phase may hold the point; the phase itself never does
+                        got = v._phase_at(p, t)
+                        if not isinstance(got, st.Stop):
+                            self.assertNotEqual(got.id, rec["phases"][i]["id"], f"beyond {name} still {got.id}")
+                            continue
+                        s = got
+                    else:
+                        s = v.state(p, t)
                     self.assertIsInstance(s, st.Stop, f"beyond {name} gave {s!r}")
-                    if "refusal" in e:
+                    if "refusal" in e and rec.get("kind") != "branched":
                         self.assertEqual(s.record.refusal, e["refusal"])
 
     def test_formula_checks(self):

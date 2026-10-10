@@ -543,13 +543,20 @@ class RecordView:
 
     def _sides_hold(self, ph, p, t):
         """Note 6 FB1: ph lies on its own side of every declared boundary naming it; half-open (FB2): a boundary point
-        belongs to the high-P phase (the second id). Returns True, False, or a Stop for a curve absent at T."""
+        belongs to the high-P phase (the second id). Returns True, False, or a Stop for a curve absent at T. A curve
+        absent at T refuses only where the other phase's window also holds (P, T); where the other phase cannot be,
+        there is nothing to separate and the absent curve is inert (c8, h2o liquid–VII printed only above 355 K). A
+        curve present at T always bounds both phases (FB1)."""
+        by_id = {x.id: x for x in self.phases}
         for b in self.boundaries:
             lo, hi = b["between"]
             if ph.id not in (lo, hi):
                 continue
             pb = self.boundary_pressure(b["curve"], t)
             if pb is None:
+                other = by_id.get(hi if ph.id == lo else lo)
+                if other is None or not self._in_window(other, p, t):
+                    continue
                 return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
                                                         f"boundary {lo}–{hi}: its curve is absent at {t:g} K"))
             if (ph.id == hi and p < pb) or (ph.id == lo and p >= pb):
