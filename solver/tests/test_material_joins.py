@@ -1,0 +1,81 @@
+# 출처 잇기 시험 — 출처별 밀도(차가운 곡선 + exp_alpha), 교차 확인 띠와 r, σ 전파·공유 자료·인쇄 안 된 σ (phase-2 impl notes 3–4)
+"""Impl notes 3 A1–A3 and 4: source densities and the cross-check computation, on a toy phase whose two sources
+are BM2 fits that differ by a known amount.
+
+Run from the worktree root:  solver/.venv/bin/python -m unittest solver.tests.test_material_joins
+"""
+import copy
+import math
+import unittest
+
+from solver import material_joins as mj
+from solver import material_view as mv
+from solver.tests.test_material_registry import CITE, GOOD, const
+
+
+def rec_two_sources(k0_b=14.05e9 * 1.01, shared=True, sigma_b=None):
+    d = copy.deepcopy(GOOD)
+    ph = d["phases"][0]
+    bm2 = lambda rho0, k0: {"form": "bm2", "params": {"rho0": const(rho0, "kg/m3"), "k0": const(k0, "Pa")},  # noqa: E731
+                            "reference": {"kind": "state", "p": const(1e5, "Pa"), "t": const(300.0, "K")}}
+    exp = {"kind": "exp_alpha", "alpha0": const(14.6e-5, "1/K"), "t0": const(300.0, "K")}
+    ph["sources"] = [
+        {"id": "a", "source": dict(CITE), "basis": "measured", "data_range": {"p_min": 1.3e9, "p_max": 2.2e9},
+         "data_range_where": "t", "eos": bm2(1270.0, 14.05e9), "thermal_model": exp,
+         "sigma": {"kind": "propagated", "from": {"k0": 0.23e9}, "correlation": "not_printed"}, "sigma_kind": "1sigma"},
+        {"id": "b", "source": dict(CITE), "basis": "measured", "data_range": {"p_min": 1.0e9, "p_max": 2.2e9},
+         "data_range_where": "t", "eos": bm2(1270.0, k0_b), "thermal_model": exp,
+         "sigma": sigma_b or {"kind": "not_printed", "where": "§"}, "sigma_kind": "not_applicable"}]
+    join = {"between": ["a", "b"], "kind": "cross_check", "overlap": {"p_min": 1.3e9, "p_max": 2.2e9},
+            "sampling": {"box": {"p_min": 1.3e9, "p_max": 2.2e9, "t_min": 300.0, "t_max": 340.0},
+                         "dp": 0.1e9, "dt": 20.0}, "k": 2}
+    if shared:
+        join["shared_data"] = "toy: b's fit includes a's points"
+    ph["joins_within"] = [join]
+    ph["precedence"] = {"by": "declared", "declared_before_comparison": "2026-10-11"}
+    return d
+
+
+class SourceDensity(unittest.TestCase):
+    def test_exp_alpha_scales_the_cold_density(self):
+        v = mv.RecordView(rec_two_sources(), 300.0)
+        r300, r340 = v.source_density(0, "a", 1.5e9, 300.0), v.source_density(0, "a", 1.5e9, 340.0)
+        self.assertAlmostEqual(r340 / r300, math.exp(-14.6e-5 * 40.0), places=12)
+
+
+class CrossCheck(unittest.TestCase):
+    def test_band_r_and_disclosure_threshold(self):
+        v = mv.RecordView(rec_two_sources(), 300.0)
+        out = mj.cross_check(v, 0, v.record["phases"][0]["joins_within"][0])
+        self.assertEqual(len(out["nodes"]), 10 * 3)
+        self.assertGreater(out["band"], 0.0)
+        self.assertLess(out["band"], 0.01)                       # a 1 % K0 difference moves ρ by well under 1 %
+        n = out["nodes"][0]
+        self.assertAlmostEqual(n["r"], n["rel"] / n["sigma_allow"])
+
+    def test_identical_sources_give_zero_band(self):
+        v = mv.RecordView(rec_two_sources(k0_b=14.05e9), 300.0)
+        self.assertEqual(mj.cross_check(v, 0, v.record["phases"][0]["joins_within"][0])["band"], 0.0)
+
+    def test_shared_data_uses_max_and_independent_uses_quadrature(self):
+        sig_b = {"kind": "constant", "value": 0.003, "reduction": "toy"}
+        for shared in (True, False):
+            with self.subTest(shared=shared):
+                d = rec_two_sources(shared=shared, sigma_b=sig_b)
+                d["phases"][0]["sources"][1]["sigma_kind"] = "1sigma"
+                v = mv.RecordView(d, 300.0)
+                n = mj.cross_check(v, 0, v.record["phases"][0]["joins_within"][0])["nodes"][0]
+                sa = mj.source_sigma(v, 0, "a", n["p"], n["t"])
+                want = max(sa, 0.003) if shared else math.sqrt(sa ** 2 + 0.003 ** 2)
+                self.assertAlmostEqual(n["sigma_allow"], want, places=15)
+
+    def test_ci90_converts_and_unprinted_is_zero(self):
+        d = rec_two_sources(sigma_b={"kind": "constant", "value": 0.0329, "reduction": "toy"})
+        d["phases"][0]["sources"][1]["sigma_kind"] = "ci90"
+        v = mv.RecordView(d, 300.0)
+        self.assertAlmostEqual(mj.source_sigma(v, 0, "b", 1.5e9, 300.0), 0.0329 / 1.645)
+        self.assertEqual(mj.source_sigma(mv.RecordView(rec_two_sources(), 300.0), 0, "b", 1.5e9, 300.0), 0.0)
+
+
+if __name__ == "__main__":
+    unittest.main()

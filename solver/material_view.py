@@ -541,6 +541,43 @@ class RecordView:
                 return r
         return None
 
+    def source_density(self, phase_index, source_id, p, t):
+        """ρ(P, T) [kg/m³] from one declared source of a phase (impl note 3 A8): its own eos (a cold curve with its
+        thermal_model, a library, or an evaluator), else the phase's own EOS. A Stop where it cannot answer."""
+        ph = self.phases[phase_index]
+        src = next((s for s in self.record["phases"][phase_index].get("sources", ()) if s["id"] == source_id), None)
+        if src is None:
+            raise KeyError(f"{ph.id}: no source {source_id!r}")
+        eos = src.get("eos")
+        if eos is None:
+            return self._phase_density(ph, p, t)
+        form = eos["form"]
+        try:
+            if form == "library":
+                return ml.SeaFreezePhase(eos["library"]["submodel"]).at(p, t)["rho"]
+            if form == "evaluator":
+                return _EvaluatorPhase(EVALUATORS[eos["evaluator"]["name"]](eos["evaluator"].get("params", {}))).at(p, t)["rho"]
+        except ml.LibraryOutOfRange as e:
+            return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data", str(e)))
+        pr = eos["params"]
+        cold = _cold_pressure(form, _v(pr["rho0"]), _v(pr["k0"]), 4.0 if form == "bm2" else _v(pr.get("k0p", {"value": 4.0})))
+        rho0, k0 = _v(pr["rho0"]), _v(pr["k0"])
+        rho = rho0 * (1.0 + p / k0) ** 0.4                       # the same Newton as a phase's cold inversion
+        for _ in range(60):
+            f = cold(rho) - p
+            if abs(f) <= 1e-9 * max(p, 1.0):
+                break
+            h = rho * 1e-7
+            dfd = (cold(rho + h) - cold(rho - h)) / (2.0 * h)
+            if dfd <= 0.0:
+                return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
+                                                        f"source {source_id}: cold curve does not invert"))
+            rho = max(rho - f / dfd, 0.5 * rho0)
+        tm = src.get("thermal_model")
+        if tm is not None and tm["kind"] == "exp_alpha":          # V = V_cold(P)·exp(α0 (T − T0)) → ρ = ρ_cold·exp(−…)
+            rho = rho * math.exp(-_v(tm["alpha0"]) * (t - _v(tm["t0"])))
+        return rho
+
     def _sides_hold(self, ph, p, t):
         """Note 6 FB1: ph lies on its own side of every declared boundary naming it; half-open (FB2): a boundary point
         belongs to the high-P phase (the second id). Returns True, False, or a Stop for a curve absent at T. A curve

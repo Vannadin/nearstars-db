@@ -269,6 +269,22 @@ source_entry:
   data_range_where: {shape: text, required: true}          # the page/table that states the data range
   sigma:      {shape: record, of: sigma, required: true}
   sigma_kind: {shape: enum, values: [1sigma, ci68, ci90, ci95, not_applicable], required: true}   # converted to 1σ by the checker
+  eos:        {shape: record, of: eos}                      # how this source gives ρ(P, T); absent = the phase's own EOS
+  thermal_model: {shape: record, of: thermal_model}        # with a cold-curve eos: how T enters ρ
+  data_range_rho: {shape: record, of: rho_range}           # a source printing its range in ρ (F&R): instead of P
+
+# How T enters a source's ρ with a cold-curve eos (c8: Bezacier 2014 eq. (2), read literally):
+# exp_alpha: V(P, T) = V_cold(P) · exp(α0 (T − T0)), one constant α at every P, the zero-P volume not shifted.
+thermal_model:
+  kind:   {shape: enum, values: [exp_alpha], required: true}
+  alpha0: {shape: constant, required: true}
+  t0:     {shape: constant, required: true}
+
+rho_range:
+  rho_min: {shape: number, unit: kg/m3, required: true}
+  rho_max: {shape: number, unit: kg/m3, required: true}
+  t_min:   {shape: number, unit: K, required: true}
+  t_max:   {shape: number, unit: K, required: true}
 
 sigma:
   kind:        {shape: enum, values: [propagated, constant, not_printed], required: true}
@@ -291,6 +307,7 @@ join_within:
   width:       {shape: record, of: taper_width}            # taper: absent = the default rule
   t_extrapolation: {shape: record, of: t_extrapolation}    # a T edge (note 4 item 1.4)
   disclosures: {shape: list}                               # cross_check: «cross-check disagrees beyond 2σ at …»
+  sampling:    {shape: record, of: sampling}               # cross_check / blend: the grid, declared before measuring
 
 taper_width:
   p_end:       {shape: number, unit: Pa, required: true}
