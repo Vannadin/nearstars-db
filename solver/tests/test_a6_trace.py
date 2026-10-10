@@ -37,11 +37,18 @@ def _solve_recording(leak: bool):
                 out.counters = {**shared, "accepted": out.counters.get("accepted", 0)}
         return out
 
+    guard_n = []                                       # the N_acc behind tol_F (phase-1 design note 8)
+    real_rt = sv._root_tolerance
+
+    def rt(x, acc, options, bracket, trials):
+        guard_n.append(acc.counters.get("accepted"))
+        return real_rt(x, acc, options, bracket, trials)
+
     body, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
-    with mock.patch.object(sv, "inward", wrapped):
+    with mock.patch.object(sv, "inward", wrapped), mock.patch.object(sv, "_root_tolerance", rt):
         ans, x_root = sv.solve(body, context.Options(sensitivity_dt=0.0))
     acc = [c for xx, c in calls if xx == x_root]                  # the accepted pass: the last one at the root
-    return ans, [c for _xx, c in calls], acc[-1] if acc else None
+    return ans, [c for _xx, c in calls], acc[-1] if acc else None, guard_n
 
 
 def separated(ans, accepted) -> bool:
@@ -57,8 +64,8 @@ def separated(ans, accepted) -> bool:
 class TraceSeparation(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.ans, cls.calls, cls.acc = _solve_recording(leak=False)
-        cls.leak_ans, cls.leak_calls, cls.leak_acc = _solve_recording(leak=True)
+        cls.ans, cls.calls, cls.acc, cls.guard_n = _solve_recording(leak=False)
+        cls.leak_ans, cls.leak_calls, cls.leak_acc, cls.leak_guard_n = _solve_recording(leak=True)
 
     def test_answer(self):
         self.assertIsInstance(self.ans, result.Answer, getattr(self.ans, "text", None))
@@ -66,6 +73,12 @@ class TraceSeparation(unittest.TestCase):
 
     def test_provenance_is_the_accepted_pass(self):
         self.assertTrue(separated(self.ans, self.acc))
+
+    def test_guard_reads_the_accepted_pass_own_count(self):
+        """r2 on 55117864: tol_F's N_acc is the accepted pass's own accepted-step count, so a counter leak cannot
+        loosen the closure guard unseen."""
+        for n, acc in ((self.guard_n, self.acc), (self.leak_guard_n, self.leak_acc)):
+            self.assertEqual(n, [acc["accepted"]])
 
     def test_trials_would_differ(self):
         """Control: the trials' summed counters are not the accepted pass's, so a leak would show."""

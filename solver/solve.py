@@ -491,6 +491,9 @@ def _root_tolerance(x, acc, options, bracket, trials) -> dict:
     s = abs(fb - fa) / abs(xb - xa)
     tol_x = 2.0 * 2.2e-16 * abs(x) + 0.5 * cl.CLOSE_TOL * abs(x)
     tol_f = 3.0 * acc.counters.get("accepted", 0) * options.rtol + 2.0 * s * tol_x
+    # when the root is a scan point (x = x_a, Venus's member), the cap falls back to ⅛ of the whole bracket and
+    # x* − 2δ can leave it on that side; a probe that refuses there (a wall within 2δ) refuses the solve by design
+    # (r2 on 55117864 (b)), so a scan-point root next to a wall is a named refusal, never a pass
     cap = 0.125 * min(abs(x - xa), abs(xb - x)) if xa != x != xb else 0.125 * abs(xb - xa)
     delta = min(PROBE_SPAN * tol_f / s, cap) if s > 0.0 else cap
     # each side's reference point: the nearest solved trial of the solve at least 4δ off the root (a scan point, a
@@ -603,6 +606,10 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
                                      n_acc=acc.counters.get("accepted", 0), rtol=options.rtol,
                                      bracket=bracket["final"], probes=None), x
         notes = []
+        if not guard and options.fixed_dr <= 0.0:       # r2 on 55117864 (a): never skipped silently
+            notes.append(result.Note("closure_guard_skipped", "the root has no sign-change bracket (a solved point with "
+                                     "F = 0), so phase-1 design notes 8–9's residual and probe checks did not run",
+                                     {"x": x}))
         if acc.floor_end:
             notes.append(result.Note("centre_closed_at_floor", "the accepted pass ended at the r floor, not at m_ε",
                                      {"m_end_over_M": acc.m / body.mass, "r_floor_over_r_scale": options.r_floor_frac}))
