@@ -345,6 +345,10 @@ EVALUATOR_PARAMS = MappingProxyType({
                           "gamma_0_m4", "gamma_0_m3", "gamma_0_m2", "gamma_1_m4", "gamma_1_m3", "gamma_1_m2",
                           "gamma_2_m4", "gamma_2_m3", "gamma_2_m2", "gamma_3_m4", "gamma_3_m3", "gamma_3_m2",
                           "rho_search_min", "rho_search_max"),
+    # IAPWS R10-06 (2006/2009) ice Ih, eq. (1), Tables 1–2 (c8's readings, artifacts fb2e318); complex constants as
+    # real/imaginary pairs.
+    "iapws06_ih": ("g00", "g01", "g02", "g03", "g04", "s0", "t1_re", "t1_im", "r1_re", "r1_im", "t2_re", "t2_im",
+                   "r20_re", "r20_im", "r21_re", "r21_im", "r22_re", "r22_im", "t_t", "p_t", "p0"),
 })
 
 

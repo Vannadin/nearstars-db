@@ -244,3 +244,41 @@ def taper_zone_checks(view, pi, join, temps, n=21) -> dict:
             if kts:
                 worst = max(worst, max(kt_zone / k for k in kts), max(k / kt_zone for k in kts))
     return {"failures": fails, "max_kt_factor": worst}
+
+
+
+def preferred_source(view, pi):
+    """The source a phase answers from when its cross-check's preferred side (between[0]) declares its own eos
+    (c8, IAPWS-06 Ih: the gibbs field stays SeaFreeze's, the values come from the preferred source). None otherwise."""
+    own = view.record["phases"][pi]["eos"]
+    for j in view.record["phases"][pi].get("joins_within", ()):
+        if j["kind"] == "cross_check":
+            src = _src(view, pi, j["between"][0])
+            eos = src.get("eos")
+            if eos is not None and not _same_eos(eos, own):    # the phase's own EOS answers as before (e.g. h2o VI)
+                return src["id"]
+    return None
+
+
+def _same_eos(a, b):
+    if a["form"] != b["form"]:
+        return False
+    if a["form"] == "library":
+        return a["library"]["submodel"] == b.get("library", {}).get("submodel")
+    if a["form"] == "evaluator":
+        return a["evaluator"]["name"] == b.get("evaluator", {}).get("name")
+    return False
+
+
+def source_state(view, pi, sid, p, t):
+    """ρ and (dT/dP)_S = αT/(ρc_P) of one source: α by a centred T difference of its ρ, c_P from source_cp."""
+    rho = view.source_density(pi, sid, p, t)
+    vh, vl = view.source_density(pi, sid, p, t + DT_ALPHA), view.source_density(pi, sid, p, t - DT_ALPHA)
+    cp = source_cp(view, pi, sid, p, t)
+    for x in (rho, vh, vl, cp):
+        if isinstance(x, st.Stop):
+            return x
+    alpha = (1.0 / vh - 1.0 / vl) / (2.0 * DT_ALPHA) * rho
+    if not (cp > 0.0) or not math.isfinite(alpha):
+        return st.Stop("refused", _refusal(view, p, t, f"source {sid} fails the physical checks (c_P {cp}, α {alpha})"))
+    return rho, alpha * t / (rho * cp)

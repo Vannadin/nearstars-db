@@ -42,6 +42,13 @@ phase:
   sources:     {shape: list, of: source_entry}           # impl note 3 A8: each source the phase reads, with its data range
   joins_within: {shape: list, of: join_within}          # impl notes 3 A4–A5, 4: blend / taper / seam / cross_check
   precedence:  {shape: record, of: precedence}           # impl note 4 item 3: fixed before any comparison
+  notes:       {shape: list, of: declared_note}          # declared notes riding with every answer in their box (c8:
+                                                         # IAPWS-06's metastability caveat below 100 K, p.1025)
+
+declared_note:
+  box:    {shape: record, of: box, required: true}
+  text:   {shape: text, required: true}
+  source: {shape: source, required: true}
 
 eos:
   form:      {shape: enum, values: [bm2, bme3, vinet, library, table, evaluator], required: true}   # bme4: not built

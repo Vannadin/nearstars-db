@@ -54,6 +54,14 @@ class RecordRefusal:
 
 
 @dataclass(frozen=True)
+class DeclaredNote:
+    """A note a record declares for a region of a phase (e.g. a source's own caveat), riding with every answer there."""
+    material_id: str
+    phase: str
+    text: str
+
+
+@dataclass(frozen=True)
 class BandNote:
     """A declared band surfaced with a value (design §I): it never changes the value."""
     material_id: str
@@ -353,8 +361,75 @@ class FrenchRedmer2015:
         return out
 
 
+class Iapws06Ih:
+    """IAPWS R10-06 ice Ih: the complex Gibbs function g(T, p) of eq. (1) with Tables 1–2 (c8's readings). The
+    derivatives are analytic (the paper's Table 4 relations): with τ = T/T_t, π = p/p_t, Π = π − π0,
+    h_k(τ) = (t_k−τ)ln(t_k−τ) + (t_k+τ)ln(t_k+τ) − 2t_k ln t_k − τ²/t_k,
+    g_p = g0'(p) + T_t·Re[r2'(p)·h_2], g_pp = g0''(p) + T_t·Re[r2''(p)·h_2],
+    g_T = −s0 + Re Σ r_k h_k', g_TT = (1/T_t)·Re Σ r_k h_k'', g_Tp = Re[r2'(p)·h_2'],
+    h' = −ln(t−τ) + ln(t+τ) − 2τ/t, h'' = 1/(t−τ) + 1/(t+τ) − 2/t; a p-derivative carries 1/p_t per order.
+    ρ = 1/g_p, α = g_Tp/g_p, c_P = −T·g_TT, K_T = −g_p/g_pp. At τ = 0 the T terms vanish (their limit)."""
+
+    NEEDS = mr.EVALUATOR_PARAMS["iapws06_ih"]
+
+    def __init__(self, params: Mapping):
+        missing = [k for k in self.NEEDS if k not in params]
+        if missing:
+            raise ValueError(f"iapws06_ih needs params {missing}")
+        g = {k: _v(params[k]) for k in self.NEEDS}
+        self.g0 = tuple(g[f"g0{k}"] for k in range(5))
+        self.s0 = g["s0"]
+        self.t1, self.r1 = complex(g["t1_re"], g["t1_im"]), complex(g["r1_re"], g["r1_im"])
+        self.t2 = complex(g["t2_re"], g["t2_im"])
+        self.r2 = tuple(complex(g[f"r2{k}_re"], g[f"r2{k}_im"]) for k in range(3))
+        self.t_t, self.p_t, self.p0 = g["t_t"], g["p_t"], g["p0"]
+
+    @staticmethod
+    def _h(t, tau):
+        import cmath
+        return (t - tau) * cmath.log(t - tau) + (t + tau) * cmath.log(t + tau) - 2.0 * t * cmath.log(t) - tau * tau / t
+
+    @staticmethod
+    def _h1(t, tau):
+        import cmath
+        return -cmath.log(t - tau) + cmath.log(t + tau) - 2.0 * tau / t
+
+    @staticmethod
+    def _h2(t, tau):
+        return 1.0 / (t - tau) + 1.0 / (t + tau) - 2.0 / t
+
+    def derivs(self, p, t):
+        tau, pi0 = t / self.t_t, self.p0 / self.p_t
+        x = p / self.p_t - pi0
+        g0p = sum(k * self.g0[k] * x ** (k - 1) for k in range(1, 5)) / self.p_t
+        g0pp = sum(k * (k - 1) * self.g0[k] * x ** (k - 2) for k in range(2, 5)) / self.p_t ** 2
+        r2p = (self.r2[1] + 2.0 * self.r2[2] * x) / self.p_t
+        r2pp = 2.0 * self.r2[2] / self.p_t ** 2
+        r2v = self.r2[0] + self.r2[1] * x + self.r2[2] * x * x
+        if tau == 0.0:
+            h2 = h2_1 = 0.0
+        else:
+            h2, h2_1 = self._h(self.t2, tau), self._h1(self.t2, tau)
+        gp = g0p + self.t_t * (r2p * h2).real
+        gpp = g0pp + self.t_t * (r2pp * h2).real
+        gtt = (self.r1 * self._h2(self.t1, tau) + r2v * self._h2(self.t2, tau)).real / self.t_t
+        gtp = (r2p * h2_1).real
+        return gp, gpp, gtt, gtp
+
+    def at(self, p, t) -> dict:
+        gp, gpp, gtt, gtp = self.derivs(p, t)
+        rho = 1.0 / gp
+        alpha = gtp / gp
+        cp = -t * gtt
+        kt = -gp / gpp
+        dpdt = alpha * kt
+        cv = cp - t * alpha * alpha * kt / rho
+        return {"density": rho, "alpha": alpha, "c_p": cp, "k_t": kt, "dpdt_v": dpdt, "c_v": cv,
+                "gruneisen": 0.0 if cv <= 0.0 else dpdt / (rho * cv)}
+
+
 EVALUATORS = MappingProxyType({"dorogokupets2017_liquid_fe": Dorogokupets2017Liquid,
-                               "french_redmer2015": FrenchRedmer2015})
+                               "french_redmer2015": FrenchRedmer2015, "iapws06_ih": Iapws06Ih})
 
 
 class _EvaluatorPhase:
@@ -853,7 +928,9 @@ class RecordView:
         ph = self._phase_at(p, t)
         if isinstance(ph, st.Stop):
             return ph
-        if self._taper_join(ph) is not None:              # 68 N44: a joined phase answers from its join everywhere;
+        from solver import material_joins as mj
+        if self._taper_join(ph) is not None or mj.preferred_source(self, self.phases.index(ph)) is not None:
+            # 68 N44: a joined phase answers from its join everywhere;
             got = self.state(p, t)                         # state() resets self.notes (68 on 2fb7cacf): read notes
                                                            # from state()'s own return, never after density()
             return got if isinstance(got, st.Stop) else got[0]
@@ -880,7 +957,8 @@ class RecordView:
         ph = self._phase_at(pe, t)
         if isinstance(ph, st.Stop):
             return ph
-        if self._taper_join(ph) is not None:              # 68 N44
+        from solver import material_joins as mj
+        if self._taper_join(ph) is not None or mj.preferred_source(self, self.phases.index(ph)) is not None:   # N44
             got = self.state(p, t)
             return got if isinstance(got, st.Stop) else got[1]
         if ph.library is not None:                 # (dT/dP)_S = αT/(ρc_P) from the library, checked against its Js
@@ -929,10 +1007,26 @@ class RecordView:
                 return pi, j
         return None
 
+    def _declared_notes(self, ph, p, t):
+        """Declared notes of a phase whose box holds (P, T) ride with the answer (c8: IAPWS-06 below 100 K)."""
+        pi = self.phases.index(ph)
+        for n in self.record["phases"][pi].get("notes", ()):
+            b = n["box"]
+            if b["p_min"] <= p <= b["p_max"] and b.get("t_min", -math.inf) <= t <= b.get("t_max", math.inf):
+                self.notes.append(DeclaredNote(self.material_id, ph.id, n["text"]))
+
     def state(self, p: float, t: float, guess_rho=None):
         self.notes.clear()
         ph = self._phase_at(max(p, self.p_stop) if p > 0.0 else max(1.0e5, self.p_stop), t)
         if not isinstance(ph, st.Stop):
+            self._declared_notes(ph, p, t)
+            from solver import material_joins as mj
+            pref = mj.preferred_source(self, self.phases.index(ph))
+            if pref is not None and self._taper_join(ph) is None:     # values from the cross-check's preferred source
+                got = mj.source_state(self, self.phases.index(ph), pref, p, t)
+                if isinstance(got, st.Stop):
+                    return got
+                return (got[0], got[1], tuple(self.notes))
             tj = self._taper_join(ph)
             if tj is not None:                             # impl note 4 item 1: the phase's value comes from its sources
                 from solver import material_joins as mj

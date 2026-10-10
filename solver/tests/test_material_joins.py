@@ -199,5 +199,28 @@ class Taper(unittest.TestCase):
             self.assertEqual(e.stop.id, "material.join_rule")
 
 
+class PreferredSource(unittest.TestCase):
+    """c8 (IAPWS-06 Ih): a phase whose cross-check's preferred source declares an eos other than the phase's own
+    answers from that source; a declared note rides in its box."""
+
+    def test_answers_from_the_preferred_source_with_its_note(self):
+        d = rec_two_sources()
+        ph = d["phases"][0]
+        ph["joins_within"][0]["between"] = ["b", "a"]                     # b (K0 +1 %) preferred
+        ph["notes"] = [{"box": {"p_min": 1.0e9, "p_max": 2.0e9, "t_min": 0.0, "t_max": 320.0},
+                        "text": "toy caveat", "source": dict(CITE)}]
+        for s in ph["sources"]:
+            s["c_p_from"] = "a"
+        ph["sources"][0]["eos"] = {"form": "library", "reference": ph["sources"][0]["eos"]["reference"],
+                                   "library": {"name": "SeaFreeze", "version": "1.1.0", "sha256": "0" * 64,
+                                               "submodel": "VI"}}
+        v = mv.RecordView(d, 300.0)
+        rho, dtdp, notes = v.state(1.5e9, 300.0)
+        self.assertEqual(rho, v.source_density(0, "b", 1.5e9, 300.0))
+        self.assertGreater(dtdp, 0.0)
+        self.assertEqual([n.text for n in notes], ["toy caveat"])
+        self.assertEqual(v.state(1.5e9, 330.0)[2], ())                   # outside the note's box
+
+
 if __name__ == "__main__":
     unittest.main()

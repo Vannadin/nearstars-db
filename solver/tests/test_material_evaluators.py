@@ -81,5 +81,32 @@ class FrenchRedmer(unittest.TestCase):
             mv.FrenchRedmer2015(p)
 
 
+IAPWS06 = dict(g00=-632020.233449497, g01=0.655022213658955, g02=-1.89369929326131e-08, g03=3.39746123271053e-15,
+               g04=-5.56464869058991e-22, s0=189.13, t1_re=3.68017112855051e-02, t1_im=5.10878114959572e-02,
+               r1_re=44.7050716285388, r1_im=65.6876847463481, t2_re=0.337315741065416, t2_im=0.335449415919309,
+               r20_re=-72.597457432922, r20_im=-78.100842711287, r21_re=-5.57107698030123e-05,
+               r21_im=4.64578634580806e-05, r22_re=2.34801409215913e-11, r22_im=-2.85651142904972e-11,
+               t_t=273.16, p_t=611.657, p0=101325.0)
+
+
+class Iapws06(unittest.TestCase):
+    """IAPWS R10-06 ice Ih with c8's Table 2 readings; Table 11's verification values (ρ), and c_P at the triple
+    point (Table 11: 2096.78 J/kg/K)."""
+
+    def setUp(self):
+        self.ev = mv.Iapws06Ih({k: {"value": v} for k, v in IAPWS06.items()})
+
+    def test_table_11(self):
+        for t, p, rho in ((273.16, 611.657, 916.709), (100.0, 100e6, 941.68), (0.0, 0.0, 933.79),
+                          (250.0, 200e6, 939.94), (50.0, 150e6, 946.33)):
+            with self.subTest(t=t, p=p):
+                self.assertAlmostEqual(self.ev.at(p, t)["density"], rho, delta=0.006)
+        self.assertAlmostEqual(self.ev.at(611.657, 273.16)["c_p"], 2096.78, delta=0.006)
+
+    def test_missing_param_refuses(self):
+        with self.assertRaises(ValueError):
+            mv.Iapws06Ih({k: {"value": v} for k, v in IAPWS06.items() if k != "r22_im"})
+
+
 if __name__ == "__main__":
     unittest.main()
