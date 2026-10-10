@@ -442,7 +442,9 @@ EVALUATORS = MappingProxyType({"dorogokupets2017_liquid_fe": Dorogokupets2017Liq
 class _TablePhase:
     """A direct (P, T) table (impl note 3 B1, note 4 item 5) behind the library face: ρ, α, c_P, K_T read bilinearly in
     (ln P, T) from their columns, (dT/dP)_S = αT/(ρc_P) from the α and c_P columns (never differentiated across cell
-    edges). Outside the grid, LibraryOutOfRange; a quantity without its column is absent from the answer."""
+    edges). Outside the grid, LibraryOutOfRange; a quantity without its column is absent from the answer.
+    Impl note 9 guarantees α and c_P only; K_T is optional, so any later consumer of K_T (K_S for an event, a
+    sensitivity) must require the column itself (r2 on note 9)."""
 
     def __init__(self, table):
         self.lnp = [math.log(float(x)) for x in table["first"]]

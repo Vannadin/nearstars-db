@@ -122,7 +122,8 @@ def tabled(d):
                     "table": {"axes": "P_T", "first": [1.0e9, 2.0e9, 4.0e9], "t": [300.0, 600.0],
                               "columns": {"rho": [[4000.0, 3975.5], [4050.0, 4025.2], [4150.0, 4124.6]],
                                           "alpha": [[2.0e-5, 2.1e-5] for _ in range(3)],
-                                          "k_t": [[2.0e11, 1.9e11] for _ in range(3)]},
+                                          "k_t": [[2.0e11, 1.9e11] for _ in range(3)],
+                                          "c_p": [[1000.0, 1000.0] for _ in range(3)]},
                               "interpolation": "bilinear_lnp_t", "alpha_range": [0.0, 1.0e-4],
                               "maxwell_tolerance": 0.05,          # one-sided differences over a 300 K step (B3)
                               "source": {"user_declared": "a fictional rock for a test"}}}
@@ -191,7 +192,7 @@ CONTROLS_JOINS = (
     ("table: K_T ≤ 0", lambda d: (tabled(d), _set(d, "k_t", 0, [0.0, 1.9e11])), "material.table_check"),
     ("table: α outside its range", lambda d: (tabled(d), _set(d, "alpha", 0, [2.0e-3, 2.1e-5])),
      "material.table_check"),
-    ("table: bilinear without α/K_T", lambda d: (tabled(d), PH(d)["eos"]["table"]["columns"].pop("k_t")),
+    ("table: bilinear without c_P (note 9)", lambda d: (tabled(d), PH(d)["eos"]["table"]["columns"].pop("c_p")),
      "material.table_check"),
     ("set edge limit below the set window", lambda d: PH(d)["thermal"]["sets"][0].update(edge_above={
         "band": {"form": "relative", "method": "gamma_spread", "grade": "extrapolated", "origin": "o"},
@@ -367,15 +368,28 @@ class DirectTable(TRegistry):
         got = self._load(self._rec(lambda d: PH(d)["eos"]["table"].update(axes="rho_T")))
         self.assertEqual(got.id, "material.kind_rule")                          # not built in phase 2
 
+    def test_alpha_and_cp_required(self):
+        """Impl note 9: {α, K_T} alone and {c_P, K_T} alone each STOP; {α, c_P} without K_T loads."""
+        for name, drop, ok in (("α, K_T", "c_p", False), ("c_P, K_T", "alpha", False), ("α, c_P", "k_t", True)):
+            with self.subTest(name):
+                got = self._load(self._rec(lambda d, drop=drop: col(d, "rho") and
+                                           PH(d)["eos"]["table"]["columns"].pop(drop)))
+                if ok:
+                    self.assertIsInstance(got, mr.Registry, dict(getattr(got, "evidence", {})))
+                else:
+                    self.assertEqual(got.id, "material.table_check")
+                    self.assertIn("α and c_P", got.evidence["why"])
+
     def test_view_reads_the_table(self):
-        d = self._rec(lambda d: PH(d)["eos"]["table"]["columns"].update(c_p=[[1000.0, 1000.0] for _ in range(3)]))
+        d = self._rec()
         v = mv.RecordView(d, 300.0)
         u = (math.log(1.5e9) - math.log(1.0e9)) / (math.log(2.0e9) - math.log(1.0e9))
         want = (1 - u) * 0.5 * (4000.0 + 3975.5) + u * 0.5 * (4050.0 + 4025.2)
         rho, dtdp, _n = v.state(1.5e9, 450.0)
         self.assertAlmostEqual(rho, want, places=9)
         self.assertAlmostEqual(dtdp, 2.05e-5 * 450.0 / (rho * 1000.0), delta=1e-18)
-        self.assertIsInstance(mv.RecordView(self._rec(), 300.0).state(1.5e9, 450.0), st.Stop)   # no c_P column
+        no_cp = self._rec(lambda d: PH(d)["eos"]["table"]["columns"].pop("c_p"))
+        self.assertIsInstance(mv.RecordView(no_cp, 300.0).state(1.5e9, 450.0), st.Stop)   # the view refuses too
         self.assertIsInstance(v.state(5.0e9, 450.0), st.Stop)                  # past the grid: refused by its edge
 
 

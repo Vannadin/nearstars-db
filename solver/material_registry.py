@@ -685,8 +685,9 @@ def _table(ph: Mapping, file):
             for k, v in enumerate(r):
                 if not _is_number(v) or math.isinf(v):
                     no(f"column {name} has a hole or NaN at node ({first[i]}, {ts[k]})")
-    if tb["interpolation"] == "bilinear_lnp_t" and not ({"alpha", "k_t"} <= set(cols) or {"c_p", "k_t"} <= set(cols)):
-        no("bilinear interpolation needs α and K_T columns (or c_P and K_T), or a C¹ interpolant (note 4 item 5)")
+    if tb["interpolation"] == "bilinear_lnp_t" and not {"alpha", "c_p"} <= set(cols):
+        no("a bilinear table carries α and c_P columns, so that (dT/dP)_S = αT/(ρc_P) is read from columns "
+           "(impl note 9, correcting note 4 item 5)")
     dens = "rho" if tb["axes"] == "P_T" else None
     if dens is not None and dens not in cols:
         no("a (P, T) table carries a rho column")
