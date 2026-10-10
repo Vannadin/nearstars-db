@@ -498,6 +498,31 @@ def _table(ph: Mapping, file):
                     no(f"α {v} outside its declared range {list(rng)} at node ({first[i]}, {ts[k]})")
 
 
+def _field_record(rec: Mapping, ids: list, pairs: list, file):
+    """Impl note 6 item 4: every phase has a gibbs or sourced field; the gibbs phases are library-form phases of one
+    pin (one source); each boundary names two of the record's phases and is a declared curve (clapeyron / table),
+    never a library-derived line, since G is never compared across sources."""
+    gibbs_pins = set()
+    for ph in rec["phases"]:
+        k = ph["field"]["kind"]
+        if k not in ("gibbs", "sourced"):
+            raise _Stop("material.kind_rule", file=file, why=f"phase {ph['id']}: a field record's fields are gibbs or sourced")
+        if k == "gibbs":
+            lib = ph["eos"].get("library")
+            if ph["eos"]["form"] != "library" or lib is None:
+                raise _Stop("material.kind_rule", file=file, why=f"phase {ph['id']}: a gibbs field needs a library phase")
+            gibbs_pins.add((lib["name"], lib["version"], lib["sha256"]))
+    if len(gibbs_pins) > 1:
+        raise _Stop("material.kind_rule", file=file, why="gibbs phases come from more than one library pin (one source)")
+    for a, b in pairs:
+        if a not in ids or b not in ids:
+            raise _Stop("material.kind_rule", file=file, why=f"boundary {a}–{b} names a phase the record lacks")
+    for bnd in rec.get("boundaries", ()):
+        if bnd["curve"]["form"] not in ("clapeyron", "table"):
+            raise _Stop("material.kind_rule", file=file,
+                        why=f"boundary {tuple(bnd['between'])}: a field record's boundary is a declared curve")
+
+
 def _kind(rec: Mapping, file):
     ids = [p["id"] for p in rec["phases"]]
     if len(set(ids)) != len(ids):
@@ -506,10 +531,16 @@ def _kind(rec: Mapping, file):
     if kind == "single" and len(ids) != 1:
         raise _Stop("material.kind_rule", file=file, why="a single record has one phase")
     if kind == "branched":
+        choice = rec.get("choice")
+        if choice is None:                                    # impl note 6 item 1
+            raise _Stop("material.kind_rule", file=file, why="a branched record declares choice: chain | field")
         pairs = [tuple(b["between"]) for b in rec.get("boundaries", ())]
-        want = list(zip(ids, ids[1:]))
-        if sorted(pairs) != sorted(want):
-            raise _Stop("material.kind_rule", file=file, why=f"boundaries {pairs} vs adjacent pairs {want}")
+        if choice == "chain":
+            want = list(zip(ids, ids[1:]))
+            if sorted(pairs) != sorted(want):
+                raise _Stop("material.kind_rule", file=file, why=f"boundaries {pairs} vs adjacent pairs {want}")
+        else:
+            _field_record(rec, ids, pairs, file)
     if kind == "hand_over" and not rec.get("joins"):
         raise _Stop("material.kind_rule", file=file, why="a hand-over record declares its joins")
     for ph in rec["phases"]:

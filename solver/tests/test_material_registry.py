@@ -80,7 +80,10 @@ CONTROLS = (
     ("bme4 form (not built)", lambda d: PH(d)["eos"].update(form="bme4"), "material.bad_shape"),
     ("no formula check", lambda d: d.update(formula_checks=[]), "material.bad_shape"),
     ("single with two phases", lambda d: d["phases"].append(dict(PH(d), id="toy_b")), "material.kind_rule"),
-    ("branched without boundary", lambda d: (d.update(kind="branched"), d["phases"].append(dict(PH(d), id="toy_b"))),
+    ("branched without choice", lambda d: (d.update(kind="branched"), d["phases"].append(dict(PH(d), id="toy_b"))),
+     "material.kind_rule"),
+    ("chain without boundary", lambda d: (d.update(kind="branched", choice="chain"),
+                                          d["phases"].append(dict(PH(d), id="toy_b"))),
      "material.kind_rule"),
     ("library form without pin", lambda d: PH(d)["eos"].update(form="library"), "material.kind_rule"),
 )

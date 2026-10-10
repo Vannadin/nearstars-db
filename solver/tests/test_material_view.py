@@ -153,7 +153,7 @@ class Branched(unittest.TestCase):
         a["id"], b["id"] = "lo", "hi"
         d["phases"].append(b)
         b["eos"]["params"]["rho0"] = const(5000.0, "kg/m3")
-        d["kind"] = "branched"
+        d["kind"], d["choice"] = "branched", "chain"
         d["boundaries"] = [{"between": ["lo", "hi"], "kind": "solid_solid",
                             "curve": {"form": "clapeyron", "p0": const(1.0e10, "Pa"), "t0": const(1000.0, "K"),
                                       "slope": const(3.0e6, "Pa/K"), "t_min": const(300.0, "K"),

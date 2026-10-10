@@ -18,7 +18,10 @@ record:
   fit_composition: {shape: text, required: true}          # the composition the record was fitted to (the C58 field)
   role_hint:       {shape: enum, values: [core, mantle, ice, envelope, any]}   # the old `role`; core_gamma's guard
   phases:          {shape: list, of: phase, required: true, min: 1}
-  boundaries:      {shape: list, of: boundary}             # branched: required, one per adjacent phase pair (P2)
+  boundaries:      {shape: list, of: boundary}             # branched: chain = one per adjacent pair; field = touching fields
+  choice:          {shape: enum, values: [chain, field]}   # branched: how the phase at (P, T) is chosen (impl note 6)
+  triple_points:   {shape: list, of: triple_point}         # field: mixed triple points, as printed (impl note 6 item 4)
+  field_probe:     {shape: record, of: sampling}           # field: the grid P4 walks for overlaps and gaps (note 6 item 5)
   joins:           {shape: list, of: join}                 # hand_over: required (D-P1, r2 N7)
   formula_checks:  {shape: list, of: formula_check, required: true, min: 1}
   note:            {shape: text}
@@ -188,6 +191,17 @@ boundary:
   kind:    {shape: enum, values: [solid_solid, melting], required: true}   # D-P3; a triple point refuses at solve
   curve:   {shape: record, of: curve, required: true}
   delta_rho: {shape: constant}                               # the per-side ruler checks the step equals this (P4)
+
+triple_point:
+  phases:    {shape: list, required: true}                 # the three phase ids
+  p:         {shape: constant, required: true}
+  t:         {shape: constant, required: true}
+  tolerance: {shape: record, of: tp_tolerance, required: true}
+
+tp_tolerance:
+  dp:     {shape: number, unit: Pa, required: true}
+  dt:     {shape: number, unit: K, required: true}
+  reason: {shape: text, required: true}                    # set before any measurement
 
 join:
   between: {shape: list, required: true}                     # [lower material id, upper material id]

@@ -500,9 +500,69 @@ class RecordView:
             cur = by_id[hi]
         return cur
 
+    def _sides_hold(self, ph, p, t):
+        """Note 6 FB1: ph lies on its own side of every declared boundary naming it; half-open (FB2): a boundary point
+        belongs to the high-P phase (the second id). Returns True, False, or a Stop for a curve absent at T."""
+        for b in self.boundaries:
+            lo, hi = b["between"]
+            if ph.id not in (lo, hi):
+                continue
+            pb = self.boundary_pressure(b["curve"], t)
+            if pb is None:
+                return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
+                                                        f"boundary {lo}–{hi}: its curve is absent at {t:g} K"))
+            if (ph.id == hi and p < pb) or (ph.id == lo and p >= pb):
+                return False
+        return True
+
+    def _in_window(self, ph, p, t):
+        return ph.p_min <= p <= ph.p_max and not (ph.t_max and t > ph.t_max) and not (ph.t_min and t < ph.t_min)
+
+    def _field_at(self, p, t):
+        """Impl note 6: the phase whose stability field holds (P, T). A gibbs phase also needs the lowest G among the
+        record's gibbs phases whose window holds (one source; G never compared across sources); a tie goes to the
+        higher-P phase (later in phase order). None → «no phase here»; two or more → overlap; never a guess."""
+        kinds = {ph.id: self.record["phases"][i]["field"]["kind"] for i, ph in enumerate(self.phases)}
+        gibbs = [ph for ph in self.phases if kinds[ph.id] == "gibbs" and ph.library is not None
+                 and self._in_window(ph, p, t)]
+        g_win = None
+        if gibbs:
+            best = None
+            for ph in gibbs:
+                try:
+                    g = ph.library.at(p, t)["g"]
+                except ml.LibraryOutOfRange:
+                    continue                                # outside the spline: not a candidate
+                if best is None or g <= best[0]:            # ≤: a tie goes to the later (higher-P) phase
+                    best = (g, ph)
+            g_win = None if best is None else best[1]
+        hits = []
+        for ph in self.phases:
+            if not self._in_window(ph, p, t):
+                continue
+            if kinds[ph.id] == "gibbs" and ph is not g_win:
+                continue
+            side = self._sides_hold(ph, p, t)
+            if isinstance(side, st.Stop):
+                return side
+            if side:
+                hits.append(ph)
+        if not hits:
+            return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
+                                                    f"no phase here ({p:g} Pa, {t:g} K)"))
+        if len(hits) > 1:
+            return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
+                                                    f"fields overlap: {[h.id for h in hits]}"))
+        return hits[0]
+
     def _phase_at(self, p, t):
         """The phase whose window holds p (p_min ≤ p ≤ p_max, as legacy Material.phase_at), or the edge's outcome. A
         branched record picks the phase by its declared boundary curves first, then applies that phase's window."""
+        if self.kind == "branched" and self.record.get("choice") == "field":
+            ph = self._field_at(p, t)
+            if isinstance(ph, st.Stop):
+                return ph
+            return ph
         if self.kind == "branched" and self.boundaries:
             ph = self._branch_at(p, t)
             if isinstance(ph, st.Stop):

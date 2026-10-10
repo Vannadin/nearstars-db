@@ -103,7 +103,7 @@ class SeaFreezePhase:
                     raise ValueError(f"{name} is not finite")
                 return x
             rho, alpha, cp = one("rho"), one("alpha"), one("Cp")
-            kt, js = one("Kt"), one("Js")
+            kt, js, gibbs = one("Kt"), one("Js"), one("G")
         except (ImportError, ModuleNotFoundError):
             raise
         except Exception as e:                      # 68 N28: whatever SeaFreeze raises becomes one named outcome
@@ -112,4 +112,4 @@ class SeaFreezePhase:
         js = js * 1e-6
         if abs(dtdp - js) > self.JS_RTOL * abs(js):
             raise ValueError(f"{self.submodel} at ({p:g} Pa, {t:g} K): αT/(ρc_P) {dtdp:.6e} vs Js {js:.6e}")
-        return {"rho": rho, "alpha": alpha, "c_p": cp, "k_t": kt * 1e6, "dtdp": dtdp}
+        return {"rho": rho, "alpha": alpha, "c_p": cp, "k_t": kt * 1e6, "dtdp": dtdp, "g": gibbs}
