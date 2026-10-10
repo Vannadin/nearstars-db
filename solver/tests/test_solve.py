@@ -10,7 +10,7 @@ import multiprocessing as mp
 import pickle
 import unittest
 
-from solver import body as b, closure as cl, context, from_v1, result, solve as sv
+from solver import body as b, closure as cl, context, from_v1, member as mb, result, solve as sv
 from solver import stepper as st
 
 
@@ -284,6 +284,11 @@ class MaterialBytes(unittest.TestCase):
         self.assertEqual(sid(first), sid(again))
 
 
+def disclosure(ans):
+    """Phase-1 design note 12: (a″) never refuses; its finding is the Note closure_probe_disclosure, or None."""
+    return next((n for n in getattr(ans, "notes", ()) if n.kind == "closure_probe_disclosure"), None)
+
+
 class ClosureDiscontinuous(unittest.TestCase):
     """Phase-1 design notes 8–9: a root must meet tol_F (a), and each side's F at x* ± δ, ± 2δ must lie on one line
     through F(x*) (a″). Planted steps of F on the two-layer uniform fixture (R closure) and on its boundary_mass
@@ -356,11 +361,11 @@ class ClosureDiscontinuous(unittest.TestCase):
                 got, x = self._with_step(body, vw, math.inf, 0.0)
                 self.assertIsInstance(got, result.Answer, getattr(got, "text", None))
                 self.assertEqual(x, x0)
-            with self.subTest(closure=name, control="(ii) step just past the root: (a′)"):
+            with self.subTest(closure=name, control="(ii) step just past the root: (a″) discloses"):
                 got, x = self._with_step(body, vw, x0 * (1 + 1e-9), sg * 1e-5)
-                self.assertIsInstance(got, result.Refusal)
-                self.assertEqual(got.id, "solve.closure_discontinuous")
-                self.assertEqual(got.evidence["check"], "probe")
+                self.assertIsInstance(got, result.Answer, getattr(got, "text", None))
+                self.assertIsNotNone(disclosure(got))
+                self.assertGreater(disclosure(got).fields["dev_ratio"], 1.0)
             with self.subTest(closure=name, control="(v) a 50 % slope change at the root passes (note 9, r2)"):
                 got, x = self._with_step(body, vw, x0, 0.0, kink=0.5 * self._slope(body, vw, x0))
                 self.assertIsInstance(got, result.Answer, getattr(got, "text", None))
@@ -448,12 +453,13 @@ class GuardRedTeam(unittest.TestCase):
         self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
         self.assertLess(abs(x / self.x0 - 1.0), 1e-12)
 
-    def test_wall_within_two_delta_refuses(self):
-        """A wall δ/2 below the root: the lower probe refuses, so the solve refuses by name, never answers."""
+    def test_wall_within_two_delta_discloses(self):
+        """A wall δ/2 below the root: the lower probe refuses, so the answer carries the disclosure naming that stop."""
         cut = self.x0 - 0.5 * self.delta0
         ans, x = self._solve(lambda xx, f: st.Stop("refused", {"planted": "wall", "x": xx}) if xx < cut else f)
-        self.assertIsInstance(ans, result.Refusal)
-        self.assertEqual((ans.id, ans.evidence["check"]), ("solve.closure_discontinuous", "probe"))
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        lower = next(sd for sd in disclosure(ans).fields["sides"] if sd["side"] < 0)
+        self.assertEqual(lower["stop"], "refused")
 
     def test_a_wall_between_the_root_and_its_scan_point(self):
         """r2 GB1: the trials from 0.5·x0 to 0.999·x0 refuse (the nearest scan point below among them) and F jumps by 10
@@ -474,7 +480,7 @@ class GuardRedTeam(unittest.TestCase):
 
     def test_a_wall_between_the_probes_and_the_reference(self):
         """r2 GB2: trials from 0.5·x0 to x0 − 5·δ_clean refuse and F is offset by 10 beyond them; no solved trial ≥ 4δ
-        below lies inside the stretch, so the lower side refuses «no_solved_reference» and never reads past the wall."""
+        below lies inside the stretch, so the lower side reports «no_solved_reference» and never reads past the wall."""
         lo_w, hi_w = 0.5 * self.x0, self.x0 - 5.0 * self.delta0         # 2δ < 5·δ0 < 4δ here (δ ≈ 1.6·δ0)
         sg = math.copysign(1.0, self._f_at(1.001 * self.x0) - self._f_at(0.9995 * self.x0))
 
@@ -486,9 +492,8 @@ class GuardRedTeam(unittest.TestCase):
         ans, x = self._solve(alter)
         d = self.rt[-1]["delta"]
         self.assertTrue(2.0 * d < self.x0 - hi_w < 4.0 * d, (d, self.x0 - hi_w))   # the case is the one meant
-        self.assertIsInstance(ans, result.Refusal, getattr(ans, "quantities", None))
-        self.assertEqual((ans.id, ans.evidence["check"]), ("solve.closure_discontinuous", "probe"))
-        lower = next(sd for sd in ans.evidence["probes"]["sides"] if sd["side"] < 0)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        lower = next(sd for sd in disclosure(ans).fields["sides"] if sd["side"] < 0)
         self.assertEqual(lower["stop"], "no_solved_reference")
 
     def test_very_flat_and_very_steep_F(self):
@@ -499,8 +504,8 @@ class GuardRedTeam(unittest.TestCase):
                 self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
                 self.assertLess(abs(x / self.x0 - 1.0), 1e-12)
 
-    def test_composition_closure_step_refuses(self):
-        """The third closure kind: a step just past the composition root refuses by the probe."""
+    def test_composition_closure_step_discloses(self):
+        """The third closure kind: a step just past the composition root is disclosed by the probe (note 12)."""
         from solver.tests.test_s10 import CompositionClosure, XCore
         cc = CompositionClosure()
         body = cc._body()
@@ -521,8 +526,24 @@ class GuardRedTeam(unittest.TestCase):
             ans, x = sv.solve(body, views=views)
         finally:
             sv.inward = orig
-        self.assertIsInstance(ans, result.Refusal)
-        self.assertEqual((ans.id, ans.evidence["check"]), ("solve.closure_discontinuous", "probe"))
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.assertIsNotNone(disclosure(ans))
+
+
+class TableStepCap(unittest.TestCase):
+    """Phase-1 design note 12: only a material with a legacy table phase declares a step cap; Earth's and Venus's
+    layers have none, so their runs (and O9 values) are unchanged by the cap."""
+
+    def test_only_table_materials_cap(self):
+        from solver import events as ev
+        for stem, layer, has in (("earth", "mantle", False), ("earth", "core", False), ("mars", "mantle", True)):
+            with self.subTest(body=stem, layer=layer):
+                got = from_v1.load_v1(f"engine/bodies/{stem}.yaml")
+                body = got[0] if isinstance(got, tuple) else got
+                if mb.is_inverse(body):
+                    body, _m = mb.member_of(body)
+                mat = sv._views(body)[layer].mat
+                self.assertEqual(ev.step_cap(mat) is not None, has)
 
 
 if __name__ == "__main__":

@@ -79,6 +79,8 @@ class Options:
                                   # stage stops the run (the T2 method term, rewrite/oracle/t2-method-term-registration.md)
     frozen: tuple = ()            # fixed mode: components held at their step-start value through the stages …
     frozen_ref: int = 0           # … and advanced by (k1[j] / k1[ref]) · Δy[ref] (the old engine's T: Euler in P)
+    h_cap: object = None          # phase-1 design note 12: (x, y, k1) → the largest |h| allowed from here, or None, where a
+                                  # material varies on a scale shorter than the step (a declared fine region)
 
 
 @dataclass
@@ -303,6 +305,10 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
     while True:
         if cnt.accepted + cnt.rejected >= opt.max_steps:
             return stop("max_steps", {"budget": opt.max_steps})
+        if opt.h_cap is not None and not opt.fixed:
+            cap = opt.h_cap(x, y, k1)
+            if cap is not None and abs(h) > cap:
+                h = direction * max(cap, opt.h_min)
         if direction * (x + h - x1) > 0.0:
             h = x1 - x
         out = stepf(f, x, y, h, k1)

@@ -128,6 +128,37 @@ def layer_events(mat, p_stop: float = 0.0) -> list:
     return seam_events(mat) + ammonia_events(mat) + onset_events(mat, p_stop)
 
 
+def _table_phases(mat) -> list:
+    out = []
+    for m, w in (getattr(mat, "parts", None) or ((mat, 1.0),)):
+        if w > 0.0:
+            out += [ph for ph in (getattr(m, "phases", ()) or ()) if getattr(ph, "table_key", "")]
+    return out
+
+
+def step_cap(mat):
+    """Phase-1 design note 12: the stepper's h cap for a material that declares a fine scale (today the legacy
+    mantle table: one ln P cell), as (x, y, k1) → max |h| in mass from the ΔP cap and dP/dm = k1[1]; None for every
+    other material, whose runs are then unchanged."""
+    if not _table_phases(mat):
+        return None
+    from solver.legacy_materials import table_step_cap
+
+    def cap(x, y, k1):
+        p = y[1] if y[1] > 0.0 else 1.0e5
+        try:
+            ph = mat.phase_at(p)
+        except Exception as exc:
+            if type(exc).__name__ in ("PhaseGap", "SpinodalGap"):
+                return None
+            raise
+        dp = table_step_cap(ph, p)
+        if dp is None or not k1[1]:
+            return None
+        return abs(dp / k1[1])
+    return cap
+
+
 @dataclass(frozen=True)
 class Graze:
     curve: str

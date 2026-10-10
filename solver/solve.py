@@ -112,7 +112,8 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
                       h_max=mass / 20.0, max_steps=opt.max_steps_solve,
                       event_min_progress=opt.event_min_progress * mass,
                       event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_solve,
-                      event_rewalks=opt.event_rewalks)
+                      event_rewalks=opt.event_rewalks,
+                      h_cap=None if getattr(view, "mat", None) is None else events.step_cap(view.mat))
     return st.run(rhs.make_rhs(view), m0, y0, m_end, sopt, evs, on_accept=monitor)
 
 
@@ -662,11 +663,15 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
                 for xx, ff in ((sd["x1"], sd["F1"]), (sd["x2"], sd["F2"])):
                     ctx.record("probe", x=xx, F=ff, stop=sd["stop"])
             if not all(sd["ok"] for sd in sides):
-                probes = {"delta": rt["delta"], "F_root": acc.F, "sides": sides}
-                return refusals.make("solve.closure_discontinuous", where, x=x, closure_kind=kind,
-                                     pass_kind="probe", check="probe", F_root=acc.F, tol_F=tol_f,
-                                     n_acc=acc.counters.get("accepted", 0), rtol=options.rtol,
-                                     bracket=bracket["final"], probes=probes), x
+                # phase-1 design note 12 (directing): a probabilistic detector with false positives never refuses;
+                # its finding rides on the answer by name, with each side's deviation / allowed
+                ratios = [sd["deviation"] / sd["allowed"] for sd in sides if sd.get("deviation") is not None]
+                notes.append(result.Note(
+                    "closure_probe_disclosure", "the local probe found F off one line beside the root (phase-1 "
+                    "design notes 9, 12): the root may sit on a shifted level of a jagged F; the answer stands, "
+                    "disclosed", {"x": x, "delta": rt["delta"], "dev_ratio": max(ratios) if ratios else None,
+                                  "sides": [{k: sd.get(k) for k in ("side", "stop", "deviation", "allowed", "ok")}
+                                            for sd in sides]}))
         ans = result.Answer(qs, lbs, profiles, (), tuple(notes))
         return ans, x
     if out.kind == "two_roots":
