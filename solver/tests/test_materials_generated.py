@@ -10,6 +10,7 @@ hand-listed. Per record:
 Per-side continuity across boundaries (P4's fourth item) waits for the first branched record (P6).
 
 Run from the worktree root:  solver/.venv/bin/python -m unittest solver.tests.test_materials_generated
+(the paper cache is found through the git common dir; set NEARSTARS_PAPERS for a clone elsewhere)
 """
 import copy
 import hashlib
@@ -25,7 +26,19 @@ from solver import stepper as st
 from solver.from_v1 import thaw
 
 T_POT = 1600.0
-PAPERS = Path(os.environ.get("NEARSTARS_PAPERS") or Path(__file__).resolve().parents[4] / "NearStars/docs/phase3/_papers")
+def _default_papers() -> Path:
+    """The main checkout's paper cache: the git common dir's parent (any worktree of ~/Desktop/NearStars finds it),
+    else beside the worktree (68 N20). NEARSTARS_PAPERS overrides both."""
+    import subprocess
+    here = Path(__file__).resolve().parent
+    p = subprocess.run(["git", "rev-parse", "--path-format=absolute", "--git-common-dir"], cwd=here,
+                       capture_output=True, text=True)
+    if p.returncode == 0 and p.stdout.strip():
+        return Path(p.stdout.strip()).parent / "docs/phase3/_papers"
+    return here.parents[3] / "NearStars/docs/phase3/_papers"
+
+
+PAPERS = Path(os.environ.get("NEARSTARS_PAPERS") or _default_papers())
 PAPERS_ABSENT_DECLARED = os.environ.get("NEARSTARS_PAPERS_ABSENT") == "declared"
 
 
@@ -54,9 +67,9 @@ def edge_probes(rec):
         mid_t = 0.5 * (float(w.get("t_min", 300.0)) + float(w.get("t_max", 3000.0)))
         mid_p = 0.5 * (float(w["p_min"]) + min(float(w["p_max"]), 1e11))
         for name, e in ph["edges"].items():
-            b = float(w[name]) if name in w else None
-            if b is None:
-                continue
+            if name not in w:                                       # 68 N21
+                raise AssertionError(f"phase {ph['id']}: edge {name} declared without a bound in the window")
+            b = float(w[name])
             if name == "p_max":
                 yield i, name, b * 1.001, mid_t, e
             elif name == "p_min" and b > 0.0:
@@ -65,6 +78,24 @@ def edge_probes(rec):
                 yield i, name, mid_p, b + 1.0, e
             elif name == "t_min" and b > 0.0:
                 yield i, name, mid_p, b - 1.0, e
+
+
+def cite_problems(recs) -> tuple:
+    """68 T4: every (path, file, sha256) triple is compared, each file hashed once; not one cite per file.
+    Returns (cites checked, [problem texts])."""
+    hashes, n, bad = {}, 0, []
+    for rid, rec in recs.items():
+        for path, name, sha in _cache_cites(rec):
+            f = PAPERS / name
+            if not f.is_file():
+                bad.append(f"{rid} {path}: {name} not in the cache")
+                continue
+            if name not in hashes:
+                hashes[name] = hashlib.sha256(f.read_bytes()).hexdigest()
+            if hashes[name] != sha:
+                bad.append(f"{rid} {path}: sha256 {sha[:12]}… is not {name}'s {hashes[name][:12]}…")
+            n += 1
+    return n, bad
 
 
 class Generated(unittest.TestCase):
@@ -102,16 +133,8 @@ class Generated(unittest.TestCase):
         if not PAPERS.is_dir():
             self.fail(f"paper cache not found at {PAPERS}; set NEARSTARS_PAPERS, or NEARSTARS_PAPERS_ABSENT=declared")
         n = 0
-        for rid, rec in self.recs.items():
-            seen = {}
-            for path, name, sha in _cache_cites(rec):
-                seen.setdefault(name, (path, sha))
-            for name, (path, sha) in seen.items():
-                with self.subTest(record=rid, file=name):
-                    f = PAPERS / name
-                    self.assertTrue(f.is_file(), f"{path}: {name} not in the cache")
-                    self.assertEqual(hashlib.sha256(f.read_bytes()).hexdigest(), sha, path)
-                    n += 1
+        n, bad = cite_problems(self.recs)
+        self.assertEqual(bad, [])
         self.assertGreater(n, 0, "no cache cite was checked")
 
     # A host without the cache by declaration: the test above becomes an expected failure, counted in the summary
@@ -129,6 +152,31 @@ class Controls(unittest.TestCase):
         fc["expected"] = float(fc["expected"]) + 2.0 * float(fc["tolerance"]) + abs(
             mc.run_formula_checks(rec)[0]["got"] - float(fc["expected"]))
         self.assertFalse(mc.run_formula_checks(rec)[0]["passed"])
+
+    @unittest.skipUnless(PAPERS.is_dir(), "needs the paper cache")
+    def test_second_cite_of_a_file_with_another_files_sha_fails(self):
+        """68 T4: two cites of one PDF; the second carries another registered file's sha256 — it must fail."""
+        rec = _records()["fe_prem"]
+        cites = list(_cache_cites(rec))
+        names = sorted({n for _p, n, _s in cites})
+        first_of = {n: s for _p, n, s in cites}
+        two = [c for c in cites if c[1] == names[0]]
+        self.assertGreater(len(two), 1, "control needs two cites of one file")
+        other_sha = first_of[names[1]]
+        path = two[1][0]
+        node = rec
+        for part in path.replace("]", "").replace("[", ".").split(".")[1:]:
+            node = node[int(part)] if part.isdigit() else node[part]
+        node["sha256"] = other_sha
+        _n, bad = cite_problems({"fe_prem": rec})
+        self.assertEqual(len(bad), 1, bad)
+
+    def test_edge_without_a_bound_fails(self):
+        """68 N21: a declared edge whose bound is not in the window is a failure, not a skip."""
+        rec = _records()["fe_prem"]
+        rec["phases"][0]["edges"]["t_max"] = {"refusal": "input.material_out_of_data"}
+        with self.assertRaises(AssertionError):
+            list(edge_probes(rec))
 
     def test_undeclared_edge_stops_at_load(self):
         rec = copy.deepcopy(_records()["fe_prem"])
