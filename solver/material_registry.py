@@ -736,8 +736,8 @@ def triple_point_misses(rec: Mapping, file: str) -> LoadStop | None:
     """Impl note 6 item 4 (68 (2)): at each declared mixed triple point, every declared curve between two of its phases
     passes within dp of the printed P at the printed T (the check is at that T, so dt is recorded but the printed T is
     taken as exact; 68 N36), and so does the min-G boundary between two of its gibbs
-    phases (located by bisection in P over their G difference within ±2·dp: a crossing farther away is a miss anyway,
-    and the narrow bracket keeps the library inside its own range)."""
+    phases (located by bisection in P over their G difference within ±2·dp, clipped to both phases' windows: a crossing
+    farther away is a miss anyway, and the bracket keeps the library inside its own range)."""
     tps = rec.get("triple_points") or ()
     if not tps:
         return None
@@ -764,15 +764,22 @@ def triple_point_misses(rec: Mapping, file: str) -> LoadStop | None:
         gib = [n for n in names if kinds.get(n) == "gibbs"]
         for i in range(len(gib)):
             for j in range(i + 1, len(gib)):
-                a, b = by_id[gib[i]].library, by_id[gib[j]].library
+                pa, pb_ = by_id[gib[i]], by_id[gib[j]]
+                a, b = pa.library, pb_.library
 
                 def dg(p):
                     return a.at(p, t0)["g"] - b.at(p, t0)["g"]
-                lo, hi = p0 - 2 * dp, p0 + 2 * dp
+                # c8 on 81b42e17: the bracket stays inside both phases' windows, so the library is never asked past
+                # its range; a crossing outside that interval is a miss by name
+                lo, hi = max(p0 - 2 * dp, pa.p_min, pb_.p_min), min(p0 + 2 * dp, pa.p_max, pb_.p_max)
+                if not lo < hi:
+                    return stop(f"min-G boundary {gib[i]}–{gib[j]}: the windows share no P within ±{2 * dp:g} Pa "
+                                f"of {p0:g}")
                 try:
                     flo, fhi = dg(lo), dg(hi)
                     if flo * fhi > 0.0:
-                        return stop(f"min-G boundary {gib[i]}–{gib[j]} not found within ±{2 * dp:g} Pa of {p0:g}")
+                        return stop(f"min-G boundary {gib[i]}–{gib[j]} not found in [{lo:g}, {hi:g}] Pa (±{2 * dp:g} "
+                                    f"of {p0:g}, inside both windows)")
                     for _ in range(60):
                         mid = 0.5 * (lo + hi)
                         fm = dg(mid)

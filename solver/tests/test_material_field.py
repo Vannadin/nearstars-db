@@ -210,6 +210,19 @@ class TriplePoint(unittest.TestCase):
         self.assertEqual(got.id, "material.triple_point_miss")
         self.assertIn("('VI', 'VII')", got.evidence["why"])
 
+    def test_bracket_stays_inside_both_windows(self):
+        """c8 on 81b42e17: printed 2.216 GPa with dp 56 MPa puts p + 2dp = 2.328 GPa past water1's window (2.3 GPa)
+        and its knots; the bracket is clipped, the crossing (2.2049 GPa) lies inside, so the point passes. Windows
+        that share no P near the point are a miss by name."""
+        from solver import material_registry as mr
+        rec = self._rec(p_tp=2.216e9)
+        rec["triple_points"][0]["tolerance"]["dp"] = 56.0e6
+        self.assertIsNone(mr.triple_point_misses(rec, "toy.yaml"))
+        rec["phases"][0]["window"]["p_max"] = 2.0e9
+        got = mr.triple_point_misses(rec, "toy.yaml")
+        self.assertEqual(got.id, "material.triple_point_miss")
+        self.assertIn("share no P", got.evidence["why"])
+
     def test_printed_point_off_the_min_g_boundary_stops(self):
         """Curves moved with the point, so only the min-G boundary (2.2049 GPa) misses 2.3 GPa."""
         from solver import material_registry as mr
