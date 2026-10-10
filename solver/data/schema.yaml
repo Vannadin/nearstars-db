@@ -69,7 +69,8 @@ layer:
   thermal:     {shape: enum, values: [adiabatic, conductive, isothermal]}
   t_declared:  {shape: number_or_block, unit: K, domain: {gt: 0}}
   system:      {shape: text}
-  composition: {shape: block, value_shape: mapping, provenance: true}
+  composition: {shape: block, value_shape: mapping, provenance: true,
+                extra_fields: [source_kind, deviation, preset, owner_direction, anchor]}   # phase-2 note 1 item 2, impl P1
   params:      {shape: mapping}                        # name → block with the trio
 
 extent:
@@ -89,6 +90,39 @@ closure:
     boundary_mass: {default: [0.001, 0.999], unit: "1", domain: {gt: 0, lt: 1}, fields: [layer]}
     composition:   {unit: "1", domain: {ge: 0}, fields: [layer, name], defaults: {S: [0.13, 0.25],                       # SULPHUR_FIT_BRACKET, interior.py:5843
                                           initial_porosity: [0.0, 0.60]}}      # PHI0_NOMINAL, porosity.py:68 (c8 note 1 §2)
+
+# A layer composition's rule per system (phase-2 impl P1 and post-freeze note 2). A component outside its system's
+# list, or a system not listed here, is refused by name.
+composition_systems:
+  silicate:                                     # a bulk declaration: oxide wt% as printed
+    form: bulk
+    components: [SiO2, TiO2, Al2O3, Cr2O3, FeO, MnO, MgO, NiO, CaO, Na2O, K2O, P2O5]   # OXIDES, mantle_composition.py:33
+    required: [CaO, FeO, MgO, Al2O3, SiO2, Na2O]                                         # CFMASNA, mantle_composition.py:37
+    sum: {target: 100.0, tolerance: 2.0, unit: "wt%"}                                    # SUM_TOLERANCE_WT, mantle_composition.py:35
+    source_kind_required: true
+  iron_alloy:                                   # a partial declaration: light-element mass fractions, no sum-to-1 rule
+    form: partial
+    components: [S, O, C]                                                                 # CORE_BOX_WT, eos.py:4402
+    markers: [fit]                                                                        # the closure axis, not a number
+    source_kind_required: false
+
+# Where a declared composition came from (phase-2 design note 1 item 2). Phase 2 accepts the first four; the last two
+# are refused by name until the resolver (c) is built.
+source_kinds:
+  accepted: [measured, owner_override, preset, default_bse]
+  not_built: [inherited, star_derived]
+  companions:                                   # required with each kind (impl P1, c8 item 9)
+    measured: []                                # the block's grade · source · counter_evidence_searched (the trio)
+    owner_override: [owner_direction, anchor]   # the owner-direction blob and a unique anchor
+    preset: [preset]                            # an id in presets.yaml
+    default_bse: []                             # McDonough & Sun 1995 Table 5, read with page; oxides derived (note 2)
+
+deviation_kinds:                                # deviation {kind, grade}
+  none: "no deviation from the source composition"
+  distance_condensation: "volatile condensation from the body's distance to its star; grade carries «current orbit, migration not modelled»"
+  scenario: "a declared formation scenario"
+  declared: "a directly declared value"
+deviation_distance_grade: "current orbit, migration not modelled"
 
 jump: {unit: K, domain: {ge: 0}}                                     # R-IJ-3
 

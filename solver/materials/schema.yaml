@@ -1,0 +1,177 @@
+# 물질 기록 스키마 — 한 물질 = 한 데이터 시트의 닫힌 키 목록: 상 · 상태방정식 · 열 세트 · 안정 영역 · 창 · 가장자리 · 출처 · 검산 (phase-2 D-M1, D-M2)
+# Every key a material record (`solver/materials/<id>.yaml`) may carry. A key not listed here is a load STOP by
+# name (material.unknown_key). Frozen design: rewrite/phase2-design.frozen.md D-M1, D-M2, D-P1, D-P3, §I, with
+# post-freeze note 1 item 3 (the citation rule); registration rewrite/phase2-impl.frozen.md P1, P2 and note 1.
+#
+# shape:    as the body schema (solver/data/schema.yaml): number | text | enum | mapping | list | record | constant.
+#           `constant` is a sourced number: {value, unit, source, grade, [cites], [printed], [conversion], [note]}.
+# required: the key must be present; absence is a load STOP (material.missing_key).
+version: 1
+
+kinds: [single, branched, assemblage, hand_over]         # D-P1
+
+record:
+  id:              {shape: text, required: true}          # = the file's stem; the registry key
+  label:           {shape: text, required: true}
+  kind:            {shape: enum, values: [single, branched, assemblage, hand_over], required: true}
+  system:          {shape: text, required: true}          # the composition system a layer declares (R-LAYERGEN-1)
+  fit_composition: {shape: text, required: true}          # the composition the record was fitted to (the C58 field)
+  role_hint:       {shape: enum, values: [core, mantle, ice, envelope, any]}   # the old `role`; core_gamma's guard
+  phases:          {shape: list, of: phase, required: true, min: 1}
+  boundaries:      {shape: list, of: boundary}             # branched: required, one per adjacent phase pair (P2)
+  joins:           {shape: list, of: join}                 # hand_over: required (D-P1, r2 N7)
+  formula_checks:  {shape: list, of: formula_check, required: true, min: 1}
+  note:            {shape: text}
+
+phase:
+  id:          {shape: text, required: true}
+  label:       {shape: text}
+  state:       {shape: enum, values: [solid, liquid, fluid, mixed], required: true}
+  eos:         {shape: record, of: eos, required: true}
+  thermal:     {shape: record, of: thermal, required: true}
+  field:       {shape: record, of: field, required: true}  # D-M2: every phase, single records included (r2 B6)
+  window:      {shape: record, of: box, required: true}    # the EOS validity window
+  edges:       {shape: record, of: edges, required: true}  # behaviour where the field passes the window (D-M2)
+  porosity:    {shape: record, of: porosity}
+
+eos:
+  form:      {shape: enum, values: [bm2, bme3, vinet, library], required: true}   # bme4: not built (impl P3; papers-to-fetch)
+  params:    {shape: mapping, of: constant}                # bm2/bme3/vinet: rho0, k0, [k0p]; each a constant
+  reference: {shape: record, of: reference, required: true}
+  library:   {shape: record, of: library}                  # form library only (SeaFreeze, owner db20e171 (b))
+
+reference:
+  kind:  {shape: enum, values: [state, path], required: true}   # D-M1: a path is allowed (r2 N5, «PREM path»)
+  p:     {shape: constant}                                   # kind state
+  t:     {shape: constant}                                   # kind state
+  path:  {shape: text}                                       # kind path: its name, e.g. «PREM path»
+  t_ref_kind: {shape: enum, values: [isotherm, adiabat]}     # how the thermal model applies against the reference
+
+library:
+  name:     {shape: text, required: true}
+  version:  {shape: text, required: true}
+  sha256:   {shape: text, required: true}                    # the pinned distribution; checked at load (impl note 1 §6)
+  submodel: {shape: text, required: true}
+
+# Thermal sets: pressure windows over one phase, each with its own source (legacy `ThermalSet`; impl note 1 §2).
+# The density path's thermal pressure reads the phase's own `pressure` block; γ and (∂P/∂T)_V read the set whose
+# window holds P, else the phase's own constants. γ has its own window and never falls back to a constant (D-M2).
+thermal:
+  source_state:       {shape: enum, values: [solid, liquid, fluid, mixed], required: true}
+  source_composition: {shape: text, required: true}
+  pressure:           {shape: mapping, of: constant}         # alpha_k [Pa/K], alpha_k_dt [Pa/K²], c_v [J/kg/K]
+  sets:               {shape: list, of: thermal_set}
+  gamma_window:       {shape: record, of: box, required: true}
+  grade:              {shape: text}                           # e.g. «solid hcp constants on a liquid-fit phase»
+
+thermal_set:
+  window:    {shape: record, of: box, required: true}
+  source_state:       {shape: enum, values: [solid, liquid, fluid, mixed], required: true}
+  source_composition: {shape: text, required: true}
+  constants: {shape: mapping, of: constant}                  # alpha_k, c_v (piecewise constant)
+  evaluator: {shape: record, of: evaluator}                  # a printed formula evaluated (e.g. Dorogokupets 2017)
+  grade:     {shape: text}
+
+evaluator:
+  name:   {shape: text, required: true}                      # the view's registered evaluator
+  source: {shape: source, required: true}
+
+box:
+  p_min: {shape: number, unit: Pa, required: true}
+  p_max: {shape: number, unit: Pa, required: true}           # .inf allowed
+  t_min: {shape: number, unit: K}
+  t_max: {shape: number, unit: K}
+
+# The stability field as data (D-M2). sourced: curves or a box from a source; declared: graded «declared» with a
+# reason; gibbs: derived from the source's Gibbs surfaces at a library pin (SeaFreeze, impl note 1 §6).
+field:
+  kind:   {shape: enum, values: [sourced, declared, gibbs], required: true}
+  box:    {shape: record, of: box}
+  lower:  {shape: list, of: curve}                           # curves bounding the field from below / above in P
+  upper:  {shape: list, of: curve}
+  source: {shape: source}                                    # sourced: required
+  reason: {shape: text}                                      # declared: required
+  grade:  {shape: text}
+
+curve:
+  form:  {shape: enum, values: [clapeyron, scaled, table, library], required: true}
+  p0:    {shape: constant}                                   # clapeyron: P_b(T) = p0 + slope·(T − t0)
+  t0:    {shape: constant}
+  slope: {shape: constant}
+  base:  {shape: text}                                       # scaled: a named curve times `factor`
+  factor: {shape: constant}
+  nodes: {shape: list}                                       # table: [[T, P], …] as printed
+  source: {shape: source}
+
+# One entry per window edge the field passes (D-M2). Each is a refusal or a band; neither is a load STOP.
+edges:
+  p_min: {shape: record, of: edge}
+  p_max: {shape: record, of: edge}
+  t_min: {shape: record, of: edge}
+  t_max: {shape: record, of: edge}
+
+edge:
+  refusal: {shape: text}                                     # a registry id, e.g. input.material_out_of_data
+  band:    {shape: record, of: band}
+
+band:
+  form:   {shape: enum, values: [relative, absolute], required: true}
+  error:  {shape: number, required: true}
+  grade:  {shape: text, required: true}
+  origin: {shape: text, required: true}                      # source or method of the error (D-M2, r2 N10)
+  sampling: {shape: record, of: sampling}                    # hand-over bands: declared before measuring (c8 on rev 2)
+
+sampling:
+  box:  {shape: record, of: box, required: true}
+  dp:   {shape: number, unit: Pa, required: true}
+  dt:   {shape: number, unit: K, required: true}
+
+boundary:
+  between: {shape: list, required: true}                     # [lower-P phase id, higher-P phase id]
+  kind:    {shape: enum, values: [solid_solid, melting], required: true}   # D-P3; a triple point refuses at solve
+  curve:   {shape: record, of: curve, required: true}
+  delta_rho: {shape: constant}                               # the per-side ruler checks the step equals this (P4)
+
+join:
+  between: {shape: list, required: true}                     # [lower material id, upper material id]
+  p:       {shape: constant, required: true}
+  band:    {shape: record, of: band, required: true}
+
+porosity:
+  law:    {shape: text, required: true}
+  params: {shape: mapping, of: constant}
+
+# The citation rule (design note 1 item 3): a value's source is where it was actually read. Exactly one of
+# cache / library / doi. Load checks the form only; existence and sha256 are a generated test (impl P2, P4).
+source:
+  cache:   {shape: text}                                     # a file name under docs/phase3/_papers/
+  page:    {shape: text}                                     # printed page
+  where:   {shape: text}                                     # table / equation / text anchor
+  sha256:  {shape: text}                                     # of the cached file; required with cache
+  library: {shape: text}                                     # name@version
+  doi:     {shape: text}                                     # doi:…
+  cites:   {shape: text}                                     # «A cites B»: B is never the source
+  abstract_only: {shape: bool}                               # a value seen only in an abstract
+
+constant:
+  value:      {shape: number, required: true}                # SI
+  unit:       {shape: text, required: true}                  # the SI unit of `value`
+  source:     {shape: source, required: true}
+  grade:      {shape: enum, values: [read, derived, declared, held], required: true}
+  printed:    {shape: text}                                  # the value and unit as printed, when converted
+  conversion: {shape: text}
+  note:       {shape: text}
+
+# Grades of a constant: read = as printed on the cited page; derived = our arithmetic on read values (stated in
+# `conversion`); declared = a labelled convention with its reason in `note`; held = the cache PROVENANCE says HELD
+# (route unknown), carried onto the constant (c8 item 4).
+
+formula_check:
+  quantity:   {shape: text, required: true}                  # what is printed
+  state:      {shape: mapping, required: true}               # where it is evaluated (P, T, V…)
+  expected:   {shape: number, required: true}                # as printed
+  unit:       {shape: text, required: true}
+  tolerance:  {shape: number, required: true}
+  tolerance_reason: {shape: text, required: true}
+  expression: {shape: text, required: true}                  # over the stored constants, evaluated by the view
+  source:     {shape: source, required: true}

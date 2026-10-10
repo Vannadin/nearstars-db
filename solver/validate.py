@@ -25,6 +25,10 @@ from solver.yamlio import LoadError, load_data, parse
 
 SCHEMA_PATH = Path(__file__).resolve().parent / "data" / "schema.yaml"
 SCHEMA = load_data(SCHEMA_PATH)
+PRESETS_PATH = Path(__file__).resolve().parent / "data" / "presets.yaml"
+#: Preset ids a composition declaration may name (impl P1): every preset key, expanded or listed.
+PRESET_IDS = frozenset([k for k in load_data(PRESETS_PATH) if k != "not_expanded"]
+                       + list(load_data(PRESETS_PATH).get("not_expanded", ())))
 
 #: Unit factors to SI. Earth mass and radius are the old engine's (engine/interior.py:80–81 at 097a8aa3), so a
 #: converted body solves the oracle's mass and radius bit for bit.
@@ -328,11 +332,11 @@ def _layers(raw, where, materials: Materials | None) -> tuple:
             if system is None:
                 _no("input.cross_field", w, rule="composition needs a system (R-LAYERGEN-1)", detail=lid)
             comp = _input(f"{lid}.composition", l["composition"], spec["composition"], w)
+            _composition_rule(comp, system, lid, w)
             window = materials.composition_window(mat, system) if materials is not None else None
             for c, x in comp.value.items():
                 if x == "fit":
                     continue
-                _number(x, f"{lid}.composition.{c}", w)
                 if window and c in window and not window[c][0] <= x <= window[c][1]:
                     _no("input.composition_window", w, layer_id=lid, component=str(c), value=x,
                         window=[window[c][0], window[c][1]], source=window[c][2])
@@ -352,6 +356,90 @@ def _layers(raw, where, materials: Materials | None) -> tuple:
         pair, rule = bad[0]
         _no("input.layer_order", where, pair=pair, rule=rule)
     return tuple(out)
+
+
+def _composition_rule(comp: bd.Declared, system: str, lid: str, where):
+    """The per-system rule of a layer composition and its source kind (phase-2 impl P1 and post-freeze note 2).
+    silicate: oxide wt% as printed, the CFMASNa six present, the printed sum within 100 ± 2.0; the value is stored as
+    printed and the one normalisation stays legacy's `cfmasna()` on the table key path. iron_alloy: light-element
+    fractions in [0, 1] summing below 1, or the `fit` marker; no sum-to-1 rule."""
+    systems = SCHEMA["composition_systems"]
+    if system not in systems:
+        _no("input.composition_system", where, layer_id=lid, system=system, known=sorted(systems))
+    rule = systems[system]
+    value = comp.value
+    for c in value:
+        if c not in rule["components"]:
+            _no("input.composition_component", where, layer_id=lid, system=system, component=str(c),
+                known=list(rule["components"]))
+    if rule["form"] == "bulk":
+        missing = [c for c in rule["required"] if c not in value]
+        if missing:
+            _no("input.composition_missing", where, layer_id=lid, system=system, missing=missing)
+        for c, x in value.items():
+            _number(x, f"{lid}.composition.{c}", where, {"ge": 0})
+        total = math.fsum(float(x) for x in value.values())      # as legacy (C143): a correctly rounded sum
+        sm = rule["sum"]
+        if abs(total - sm["target"]) > sm["tolerance"]:
+            _no("input.composition_sum", where, layer_id=lid, system=system, total=total, target=sm["target"],
+                tolerance=sm["tolerance"], unit=sm["unit"])
+    else:
+        light = 0.0
+        for c, x in value.items():
+            if isinstance(x, str):
+                if x not in rule["markers"]:
+                    _no("input.composition_fraction", where, layer_id=lid, component=str(c), value=x,
+                        why=f"a marker is one of {list(rule['markers'])}")
+                continue
+            x = _number(x, f"{lid}.composition.{c}", where)
+            if not 0.0 <= x <= 1.0:
+                _no("input.composition_fraction", where, layer_id=lid, component=str(c), value=x,
+                    why="a mass fraction lies in [0, 1]")
+            light += x
+        if light >= 1.0:
+            _no("input.composition_fraction", where, layer_id=lid, component="+".join(map(str, value)), value=light,
+                why="the light elements sum below 1")
+    _source_kind(comp, rule, lid, where)
+
+
+def _source_kind(comp: bd.Declared, rule, lid: str, where):
+    """`source_kind` and its companion fields (phase-2 design note 1 item 2; impl P1, c8 item 9)."""
+    kinds = SCHEMA["source_kinds"]
+    ex = comp.extra
+    if "source_kind" not in ex:
+        if rule["source_kind_required"]:
+            _no("input.missing_key", where, key=f"{lid}.composition.source_kind")
+        for f in ("deviation", "preset", "owner_direction", "anchor"):
+            if f in ex:
+                _no("input.cross_field", where, rule=f"{f} goes with a source_kind", detail=lid)
+        return
+    sk = ex["source_kind"]
+    if sk in kinds["not_built"]:
+        _no("input.source_kind_not_built", where, layer_id=lid, source_kind=str(sk))
+    if sk not in kinds["accepted"]:
+        _no("input.source_kind", where, layer_id=lid, source_kind=str(sk),
+            why=f"one of {list(kinds['accepted'])}")
+    need = list(kinds["companions"][sk])
+    gone = [f for f in need if not ex.get(f)]
+    if gone:
+        _no("input.source_kind", where, layer_id=lid, source_kind=sk, why=f"needs {gone}")
+    stray = [f for f in ("preset", "owner_direction", "anchor") if f in ex and f not in need]
+    if stray:
+        _no("input.source_kind", where, layer_id=lid, source_kind=sk, why=f"{stray} belong to another kind")
+    if sk == "preset" and ex["preset"] not in PRESET_IDS:
+        _no("input.source_kind", where, layer_id=lid, source_kind=sk,
+            why=f"preset '{ex['preset']}' is not in presets.yaml")
+    if "deviation" in ex:
+        d = ex["deviation"]
+        if not isinstance(d, Mapping) or set(d) != {"kind", "grade"}:
+            _no("input.deviation", where, layer_id=lid, why="deviation is {kind, grade}")
+        if d["kind"] not in SCHEMA["deviation_kinds"]:
+            _no("input.deviation", where, layer_id=lid, why=f"kind is one of {list(SCHEMA['deviation_kinds'])}")
+        if not isinstance(d["grade"], str) or not d["grade"].strip():
+            _no("input.deviation", where, layer_id=lid, why="grade is a non-empty text")
+        if d["kind"] == "distance_condensation" and SCHEMA["deviation_distance_grade"] not in d["grade"]:
+            _no("input.deviation", where, layer_id=lid,
+                why=f"distance_condensation's grade carries «{SCHEMA['deviation_distance_grade']}»")
 
 
 def _fits(layers) -> list:

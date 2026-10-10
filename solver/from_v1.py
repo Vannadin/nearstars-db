@@ -210,7 +210,9 @@ def _mars(inp, where, notes):
                "params": {"density": _block(dens, "basal_layer_density", notes),
                           "thickness_km": _block(thick, "basal_layer_thickness_km", notes)}},
               {"id": "mantle", "role": "mantle", "material": MANTLE_DECL_MATERIAL, "system": "silicate",
-               "composition": _block(mc, "mantle_composition", notes)}]
+               # the v1 grade and source are carried verbatim: «measured» = a paper's value for this body, and the
+               # grade is never upgraded (phase-2 impl note 2 item 5)
+               "composition": {**_block(mc, "mantle_composition", notes), "source_kind": "measured"}}]
     return layers, {"kind": "composition", "layer": "core", "name": "S"}
 
 
