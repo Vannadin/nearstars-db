@@ -126,6 +126,7 @@ class TCheckAndSource(unittest.TestCase):
             with contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(cli.add_source(pdf, "Toy", None, man), 1)
             self.assertEqual(man.read_text(encoding="utf-8"), before)
+            self.assertFalse(Path(tmp, "paper.pdf.PROVENANCE.txt").exists())      # 68 N1: no stub either
 
 
 if __name__ == "__main__":

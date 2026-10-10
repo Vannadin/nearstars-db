@@ -328,6 +328,23 @@ def _sources_and_joins(ph: Mapping, file):
                             why=f"join {i}: measured beats computed (note 3 A6.1); the preferred source is listed first")
 
 
+def _reference_and_sets(ph: Mapping, file):
+    """68 on 738358de N3 and b0169870 N5: the reference adiabat's nodes are paired and strictly increasing in ln P; a
+    thermal set with an adiabat kind or a T² term names its own t_ref (legacy's trap: without it ΔT runs from 0 K)."""
+    ad = ph["eos"]["reference"].get("adiabat")
+    if ad is not None:
+        if len(ad["lnp"]) != len(ad["t"]) or len(ad["lnp"]) < 2 or not _increasing(ad["lnp"]) \
+                or not all(_is_number(x) and x > 0.0 for x in ad["t"]):
+            raise _Stop("material.kind_rule", file=file,
+                        why=f"phase {ph['id']}: reference adiabat needs paired lnp/t nodes, lnp strictly increasing, T > 0")
+    for i, ts in enumerate(ph["thermal"].get("sets", ())):
+        k_dt = (ts.get("constants") or {}).get("alpha_k_dt")
+        needs = ts.get("t_ref_kind") == "adiabat" or (k_dt is not None and k_dt["value"] != 0.0)
+        if needs and "t_ref" not in ts:
+            raise _Stop("material.kind_rule", file=file,
+                        why=f"phase {ph['id']} set {i}: an adiabat kind or a T² term needs the set's own t_ref")
+
+
 def _increasing(xs) -> bool:
     return all(_is_number(x) for x in xs) and all(b > a for a, b in zip(xs, xs[1:]))
 
@@ -446,6 +463,7 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
             _edges(ph, file)
             _gamma(ph, file)
             _sources_and_joins(ph, file)
+            _reference_and_sets(ph, file)
             _table(ph, file)
     except _Stop as s:
         return s.stop

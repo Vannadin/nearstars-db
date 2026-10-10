@@ -156,6 +156,16 @@ CONTROLS_JOINS = (
      "material.bad_shape"),
     ("band with neither error nor method", lambda d: PH(d)["edges"]["t_max"]["band"].pop("error"),
      "material.bad_shape"),
+    ("reference adiabat unpaired", lambda d: PH(d)["eos"]["reference"].update(
+        kind="path", path="toy path", t_ref_kind="adiabat",
+        adiabat={"lnp": [20.0, 21.0, 22.0], "t": [1700.0, 1800.0], "interpolation": "pchip_lnp",
+                 "anchor": {"p_pa": 1.0e9}, "source": {"formula": "toy"}}), "material.kind_rule"),
+    ("reference adiabat lnp not increasing", lambda d: PH(d)["eos"]["reference"].update(
+        kind="path", path="toy path", t_ref_kind="adiabat",
+        adiabat={"lnp": [20.0, 22.0, 21.0], "t": [1700.0, 1800.0, 1900.0], "interpolation": "pchip_lnp",
+                 "anchor": {"p_pa": 1.0e9}, "source": {"formula": "toy"}}), "material.kind_rule"),
+    ("adiabat-kind set without t_ref", lambda d: PH(d)["thermal"]["sets"][0].update(t_ref_kind="adiabat"),
+     "material.kind_rule"),
     ("table: ragged column", lambda d: (tabled(d), _set(d, "rho", 0, [4000.0])), "material.table_check"),
 )
 

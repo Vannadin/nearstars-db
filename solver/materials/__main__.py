@@ -186,24 +186,25 @@ def add_source(pdf: Path, citation: str, label: str | None, manifest: Path = mr.
     today = datetime.date.today().isoformat()
     stub = pdf.with_name(pdf.name + ".PROVENANCE.txt")
     existing = pdf.with_name(pdf.stem + ".PROVENANCE.txt")      # the paper cache's own naming
-    if existing.exists():
-        stub = existing
-    elif not stub.exists():
-        stub.write_text(f"file: {pdf.name}\nsha256: {sha}\nsize: {pdf.stat().st_size} B\nlabel: {name}\n"
-                        f"citation: {citation}\nroute: user-supplied\nregistered: {today} by "
-                        "`python -m solver.materials add-source`\n", encoding="utf-8")
+    route = "user-supplied"
+    if existing.exists():                                     # 68 N2: a cached paper keeps its own provenance and route
+        stub, route = existing, f"paper cache ({existing.name})"
     body = manifest.read_text(encoding="utf-8") if manifest.exists() else "sources:\n"
     body = body.replace("sources: []", "sources:")
     if body[-1:] != "\n":
         body += "\n"
     q = lambda x: '"' + x.replace("\\", "\\\\").replace('"', '\\"') + '"'          # noqa: E731
-    body += (f"  - {{name: {q(name)}, sha256: {sha}, citation: {q(citation)}, route: user-supplied, "
+    body += (f"  - {{name: {q(name)}, sha256: {sha}, citation: {q(citation)}, route: {q(route)}, "
              f"date: {q(today)}}}\n")
     again = mr.manifest_shas(body)                    # checked in memory first; the file is written only if it reads back
     if isinstance(again, mr.LoadStop) or sha not in again or not have <= again:
         print("sources.yaml: the new row would not read back (is there content after the sources list?); "
               "nothing was written — add the row by hand under `sources:`")
         return 1
+    if stub is not existing and not stub.exists():           # 68 N1: nothing is written before the check passes
+        stub.write_text(f"file: {pdf.name}\nsha256: {sha}\nsize: {pdf.stat().st_size} B\nlabel: {name}\n"
+                        f"citation: {citation}\nroute: user-supplied\nregistered: {today} by "
+                        "`python -m solver.materials add-source`\n", encoding="utf-8")
     manifest.write_text(body, encoding="utf-8")
     print(f"{pdf.name}: registered, sha256 {sha}\n  cite it as: {{cache: {pdf.name}, page: <printed page>, "
           f"where: <table or eq.>, sha256: {sha}}}\n  provenance stub: {stub}")
