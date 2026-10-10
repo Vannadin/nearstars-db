@@ -26,6 +26,8 @@ from solver.yamlio import LoadError, load_data, parse
 SCHEMA_PATH = Path(__file__).resolve().parent / "data" / "schema.yaml"
 SCHEMA = load_data(SCHEMA_PATH)
 PRESETS_PATH = Path(__file__).resolve().parent / "data" / "presets.yaml"
+#: The default_bse composition (impl note 5): MS95 Table 4 col. 1 as printed. A default_bse declaration equals it.
+BSE = load_data(Path(__file__).resolve().parent / "data" / "bse_ms95.yaml")
 #: Preset ids a composition declaration may name (impl P1): every preset key, expanded or listed.
 PRESET_IDS = frozenset([k for k in load_data(PRESETS_PATH) if k != "not_expanded"]
                        + list(load_data(PRESETS_PATH).get("not_expanded", ())))
@@ -426,6 +428,9 @@ def _source_kind(comp: bd.Declared, rule, lid: str, where):
     stray = [f for f in ("preset", "owner_direction", "anchor") if f in ex and f not in need]
     if stray:
         _no("input.source_kind", where, layer_id=lid, source_kind=sk, why=f"{stray} belong to another kind")
+    if sk == "default_bse" and dict(comp.value) != dict(BSE["oxides_wt"]):
+        _no("input.source_kind", where, layer_id=lid, source_kind=sk,
+            why="default_bse is MS95 Table 4 col. 1 as printed (solver/data/bse_ms95.yaml)")
     if sk == "preset" and ex["preset"] not in PRESET_IDS:
         _no("input.source_kind", where, layer_id=lid, source_kind=sk,
             why=f"preset '{ex['preset']}' is not in presets.yaml")

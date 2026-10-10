@@ -1,2 +1,3 @@
 # 출처 목록 — 등록한 PDF 의 sha256 · 서지 · 경로 (add-source 가 쓴다; 물질 기록의 cache 인용은 여기 있어야 읽힌다, phase-2 impl note 3 C3)
-sources: []
+sources:
+  - {name: "1995ChGeo.120..223M.pdf", sha256: 44bea7d818911f49bed32e471dcb3426684e500f8a6ea339c56db7541269d111, citation: "McDonough, W.F. & Sun, S.-s. 1995, The composition of the Earth, Chemical Geology 120, 223-253", route: "paper cache, owner fetch 2026-10-10 (1995ChGeo.120..223M.PROVENANCE.txt)", date: "2026-10-10"}

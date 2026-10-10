@@ -88,7 +88,9 @@ class TSourceKind(unittest.TestCase):
         self.assertNotIsInstance(vd.validate(core({"S": 0.1})), Refusal)
 
     def test_accepted_kinds(self):
-        for kind, extra in (("measured", {}), ("default_bse", {}), ("preset", {"preset": "earth_like"}),
+        bse = _with_kind(mantle(dict(vd.BSE["oxides_wt"])), "default_bse")
+        self.assertNotIsInstance(vd.validate(bse), Refusal)
+        for kind, extra in (("measured", {}), ("preset", {"preset": "earth_like"}),
                             ("owner_override", {"owner_direction": "db20e171", "anchor": "an owner bullet"})):
             with self.subTest(kind=kind):
                 out = vd.validate(_with_kind(mantle(MARS_KHAN2022, **extra), kind))
@@ -101,6 +103,21 @@ class TSourceKind(unittest.TestCase):
                         source_kind=kind)
         refused(self, vd.validate(_with_kind(mantle(MARS_KHAN2022), "default_mgsio3")), "input.source_kind",
                 source_kind="default_mgsio3")
+
+    def test_default_bse_is_pinned(self):
+        """Impl note 5 item 3 (r2 on P1): default_bse cannot label arbitrary numbers."""
+        for name, wt in (("Khan's Mars", MARS_KHAN2022), ("one oxide moved", dict(vd.BSE["oxides_wt"], FeO=8.06)),
+                         ("one oxide dropped", {k: v for k, v in vd.BSE["oxides_wt"].items() if k != "P2O5"})):
+            with self.subTest(case=name):
+                refused(self, vd.validate(_with_kind(mantle(wt), "default_bse")), "input.source_kind",
+                        source_kind="default_bse")
+
+    def test_table5_cross_check(self):
+        """Impl note 5 item 4: MS95 Table 5's element values, converted with standard molar masses, match Table 4
+        col. 1 within the printed rounding of both. A planted Fe → Fe2O3 factor fails."""
+        self.assertEqual(_table5_misses(_FACTORS), [])
+        planted = dict(_FACTORS, Fe=("FeO", 159.6882 / (2 * 55.845)))
+        self.assertEqual([m[0] for m in _table5_misses(planted)], ["Fe"])
 
     def test_companions(self):
         refused(self, vd.validate(_with_kind(mantle(MARS_KHAN2022), "preset")), "input.source_kind")
@@ -117,6 +134,34 @@ class TSourceKind(unittest.TestCase):
                     {"kind": "distance_condensation", "grade": "derived"}):
             with self.subTest(dev=dev):
                 refused(self, vd.validate(mantle(MARS_KHAN2022, deviation=dev)), "input.deviation")
+
+
+#: Element → oxide factors from standard molar masses (g/mol: O 15.999, Mg 24.305, Al 26.982, Si 28.085, Ca 40.078,
+#: Fe 55.845, Na 22.990). A `formula` source (impl P1 follow-up), grade declared; inputs from IUPAC standard atomic
+#: weights as commonly tabulated, not read from a cached file.
+_FACTORS = {"Mg": ("MgO", 40.304 / 24.305), "Al": ("Al2O3", 101.961 / (2 * 26.982)), "Si": ("SiO2", 60.083 / 28.085),
+            "Ca": ("CaO", 56.077 / 40.078), "Fe": ("FeO", 71.844 / 55.845), "Na": ("Na2O", 61.979 / (2 * 22.990))}
+
+
+def _half_unit(printed: str) -> float:
+    """Half a unit in the last printed digit of a value as printed (e.g. «2.35» → 0.005, «2670» → 0.5)."""
+    return 0.5 * 10.0 ** -(len(printed.split(".")[1]) if "." in printed else 0)
+
+
+def _table5_misses(factors) -> list:
+    t5 = vd.BSE["table5_cross_check"]
+    printed = {**t5["elements_wt"], **{k: v for k, v in t5["elements_ppm"].items()}}
+    out = []
+    for el, raw in printed.items():
+        oxide, f = factors[el]
+        scale = 1.0e-4 if el in t5["elements_ppm"] else 1.0              # ppm → wt%
+        got = float(raw) * scale * f
+        want = vd.BSE["oxides_wt"][oxide]
+        col1 = repr(want)
+        tol = _half_unit(raw) * scale * f + _half_unit(col1)
+        if abs(got - want) > tol:
+            out.append((el, oxide, got, want, tol))
+    return out
 
 
 def _with_kind(d, kind):

@@ -1,0 +1,31 @@
+# 지구 규산염 기본 조성 — McDonough & Sun 1995 Table 4 1열(이 논문의 pyrolite)을 인쇄된 그대로; default_bse 가 이 값에 묶인다 (phase-2 impl note 5)
+# Read on the page image: 1995ChGeo.120..223M.pdf PDF p.15 = printed p.237, Table 4 «Silicate Earth model
+# compositions», column 1 «pyrolite model based on peridotites, komatiites and basalts (this study)». Column 4 is
+# Taylor & McLennan's CI-based model and is not used. Values in oxide wt%, as printed; the printed sum is 100.23.
+source: {cache: "1995ChGeo.120..223M.pdf", page: "237", where: "Table 4, column 1",
+         sha256: 44bea7d818911f49bed32e471dcb3426684e500f8a6ea339c56db7541269d111}
+grade: read
+counter_evidence_searched: >-
+  Table 5 (p.238) prints the same model in element wt% (Mg, Al, Si, Ca, Fe) and Na in ppm; converted with standard
+  molar masses it matches column 1 to rounding (test_composition_decl). The ± column of Table 5 is «a subjective
+  judgement of the uncertainty» (p.238 footnote), so no band is made from it.
+oxides_wt:
+  SiO2: 45.0
+  TiO2: 0.201
+  Al2O3: 4.45
+  Cr2O3: 0.384
+  MnO: 0.135
+  FeO: 8.05
+  NiO: 0.25
+  MgO: 37.8
+  CaO: 3.55
+  Na2O: 0.36
+  K2O: 0.029
+  P2O5: 0.021
+# The cross-check: Table 5 «Recommended chemical composition of the Silicate Earth–"Pyrolite"», p.238 (PDF p.16),
+# column «Pyrolite», as printed. Mg, Al, Si, Ca, Fe in wt%; Na in ppm (table footnote).
+table5_cross_check:
+  source: {cache: "1995ChGeo.120..223M.pdf", page: "238", where: "Table 5, column Pyrolite",
+           sha256: 44bea7d818911f49bed32e471dcb3426684e500f8a6ea339c56db7541269d111}
+  elements_wt: {Mg: "22.8", Al: "2.35", Si: "21.0", Ca: "2.53", Fe: "6.26"}
+  elements_ppm: {Na: "2670"}
