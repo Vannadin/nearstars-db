@@ -66,6 +66,9 @@ DEMANDS = (
     ("note 3 B1", "eos.table", False), ("note 3 B1", "table.interpolation", True),
     ("note 3 B2", "table.source", True), ("note 3 B2", "source.user_declared", False),
     ("note 3 B3", "table.maxwell_tolerance", False),
+    # legacy C148: a path reference's own adiabat table (c8 P5)
+    ("C148", "reference.adiabat", False), ("C148", "reference_adiabat.lnp", True),
+    ("C148", "reference_adiabat.interpolation", True), ("C148", "reference_adiabat.source", True),
 )
 
 

@@ -62,6 +62,15 @@ reference:
   path:  {shape: text}                                       # kind path: its name, e.g. «PREM path»; `t` is then the
                                                              # temperature the thermal model applies against (an adiabat's T_p)
   t_ref_kind: {shape: enum, values: [isotherm, adiabat]}     # how the thermal model applies against the reference
+  adiabat:    {shape: record, of: reference_adiabat}         # kind path, t_ref_kind adiabat: ΔT = T − T_ref(P) from this table
+
+# A reference adiabat as data (legacy C148: fe_prem's ΔT is measured from its own reference adiabat, not T·(1 − t_ref/T_pot)).
+reference_adiabat:
+  lnp:           {shape: list, required: true}               # ln(P / Pa) nodes, increasing
+  t:             {shape: list, required: true}               # T_ref [K] at each node
+  interpolation: {shape: enum, values: [pchip_lnp, linear_lnp], required: true}   # outside the table: the end slope, straight
+  anchor:        {shape: mapping, required: true}            # where the adiabat is pinned (P, T and how)
+  source:        {shape: source, required: true}             # the generator and its commit: a formula source, grade derived
 
 library:
   name:     {shape: text, required: true}
