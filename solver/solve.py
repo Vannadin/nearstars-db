@@ -482,25 +482,30 @@ PROBE_SPAN = 50.0           # phase-1 design notes 8–9: δ = PROBE_SPAN·tol_F
 
 
 def _root_tolerance(x, acc, options, bracket, trials) -> dict:
-    """Phase-1 design notes 8–9 at the root x, in the closure's own variable (any closure kind).
+    """Phase-1 design notes 8–10 at the root x, in the closure's own variable (any closure kind).
     tol_F = 3·N_acc·rtol + 2·s·tol_x: 3·N_acc·rtol bounds the accepted pass's integration error in
     F = (r³ − …)/r_s³ with r_s = R (rho_mean is the bulk density at the pass's R, so r ≤ r_s and each accepted step
-    moves r³/r_s³ by at most 3·rtol); 2·s·tol_x is Brent's stop bracket times the scan secant s.
-    δ = PROBE_SPAN·tol_F/s, capped at an eighth of the scan bracket so x* ± 2δ stays inside it."""
+    moves r³/r_s³ by at most 3·rtol); 2·s·tol_x is Brent's stop bracket times the slope s.
+    s is the secant of the scan pair around the root: the last scan point below x and the first above (a scan
+    point at x itself is skipped). Note 10: a sign-change bracket can be a hair wide (a Brent or wall trial next to
+    a scan point), where noise sets its secant and δ collapsed below the noise (Mars member at rtol/10, δ 5.5e-5 m).
+    δ = PROBE_SPAN·tol_F/s, capped at an eighth of the scan pair's width."""
+    scan = sorted((t.x, t.F) for t in trials if t.kind == "scan" and t.F is not None)
+    below = [q for q in scan if q[0] < x]
+    above = [q for q in scan if q[0] > x]
     xa, fa, xb, fb = bracket["scan"]
+    (xa, fa), (xb, fb) = (below[-1] if below else (xa, fa)), (above[0] if above else (xb, fb))
     s = abs(fb - fa) / abs(xb - xa)
     tol_x = 2.0 * 2.2e-16 * abs(x) + 0.5 * cl.CLOSE_TOL * abs(x)
     tol_f = 3.0 * acc.counters.get("accepted", 0) * options.rtol + 2.0 * s * tol_x
-    # when the root is a scan point (x = x_a, Venus's member), the cap falls back to ⅛ of the whole bracket and
-    # x* − 2δ can leave it on that side; a probe that refuses there (a wall within 2δ) refuses the solve by design
-    # (r2 on 55117864 (b)), so a scan-point root next to a wall is a named refusal, never a pass
-    cap = 0.125 * min(abs(x - xa), abs(xb - x)) if xa != x != xb else 0.125 * abs(xb - xa)
+    # a probe that leaves the solved stretch (a wall within 2δ) refuses the solve by design (r2 on 55117864 (b))
+    cap = 0.125 * abs(xb - xa)
     delta = min(PROBE_SPAN * tol_f / s, cap) if s > 0.0 else cap
     # each side's reference point: the nearest solved trial of the solve at least 4δ off the root (a scan point, a
     # wall-location shot or a Brent trial; Venus's member root is itself a scan point with only walls below it)
     solved = sorted((t.x, t.F) for t in trials if t.F is not None and abs(t.x - x) >= 4.0 * delta)
-    left = [p for p in solved if p[0] < x]
-    right = [p for p in solved if p[0] > x]
+    left = [q for q in solved if q[0] < x]
+    right = [q for q in solved if q[0] > x]
     far = (left[-1] if left else None, right[0] if right else None)
     return {"tol_F": tol_f, "s": s, "delta": delta, "far": far}
 
