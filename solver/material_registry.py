@@ -97,6 +97,10 @@ STOPS = MappingProxyType({
                                    "At a declared mixed triple point the declared curves and the min-G boundary must "
                                    "pass within the tolerance set before measuring; correct the curve or the printed "
                                    "point (impl note 6 item 4), never widen the tolerance after seeing the miss."),
+    "material.source_seam": (("file", "seam", "why"),
+                             "A source seam in T joins two phases of one family, lower-T first, whose windows meet at "
+                             "t, with its sampling inside both and its nil equal to the global SEAM_NIL (phase-2 "
+                             "design note 5); otherwise keep one source for the whole phase."),
     "material.kind_rule": (("file", "why"),
                            "Match the record kind: single = one phase; branched = one boundary per adjacent phase "
                            "pair; hand_over = joins; a library form names its pinned library."),
@@ -371,6 +375,9 @@ def _evaluators(ph: Mapping, file):
 
 
 K_GATE = 2.0        # impl note 3 A3: fixed; a different k is a recorded change, never a per-record choice
+#: Phase-2 design note 5 (r2 SB1, binding): the nil step of a source seam in T, global like K_GATE. A record's `nil`
+#: must equal it; changing it is a recorded change.
+SEAM_NIL = MappingProxyType({"rho": 1e-9, "alpha": 1e-6, "c_p": 1e-6})
 
 
 def _sources_and_joins(ph: Mapping, file):
@@ -541,6 +548,35 @@ def _curves(rec: Mapping, file):
             raise _Stop("material.kind_rule", file=file, why=f"boundary {i}: an ln_sum curve needs p_star, t_star, terms")
 
 
+def _source_seams(rec: Mapping, file):
+    """Phase-2 design note 5: a source seam names two phases of the record, lower-T first, whose windows meet at t;
+    not two gibbs phases of one pin (that is a min-G boundary); its sampling inside both windows' P range; its nil
+    equal to SEAM_NIL."""
+    phases = {ph["id"]: ph for ph in rec["phases"]}
+    for i, sm in enumerate(rec.get("source_seams", ())):
+        def stop(why):
+            return _Stop("material.source_seam", file=file, seam=i, why=why)
+        ids = list(sm["between"])
+        if len(ids) != 2 or any(x not in phases for x in ids) or ids[0] == ids[1]:
+            raise stop(f"between names two phases of the record {sorted(phases)}, got {ids}")
+        lo, hi = phases[ids[0]], phases[ids[1]]
+        t = float(sm["t"]["value"])
+        if lo["window"].get("t_max") != t or hi["window"].get("t_min") != t:
+            raise stop(f"{ids[0]}'s window must end at t = {t:g} K and {ids[1]}'s begin there (lower-T phase first)")
+        if lo["field"]["kind"] == "gibbs" and hi["field"]["kind"] == "gibbs":
+            raise stop("two gibbs phases of one pin meet at their min-G boundary, not at a source seam")
+        smp = sm["sampling"]
+        p_lo = max(float(lo["window"]["p_min"]), float(hi["window"]["p_min"]))
+        p_hi = min(float(lo["window"]["p_max"]), float(hi["window"]["p_max"]))
+        if not (p_lo <= float(smp["p_min"]) < float(smp["p_max"]) <= p_hi and float(smp["dp"]) > 0.0):
+            raise stop(f"sampling [{smp['p_min']}, {smp['p_max']}] Pa (dp {smp['dp']}) must lie in both windows' "
+                       f"P range [{p_lo:g}, {p_hi:g}] with dp > 0")
+        got = {k: float(sm["nil"][k]) for k in SEAM_NIL}
+        if got != dict(SEAM_NIL):
+            raise stop(f"nil {got} must equal the global SEAM_NIL {dict(SEAM_NIL)} (r2 SB1: a record cannot raise "
+                       f"its own nil)")
+
+
 def _increasing(xs) -> bool:
     return all(_is_number(x) for x in xs) and all(b > a for a, b in zip(xs, xs[1:]))
 
@@ -686,6 +722,7 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
             raise _Stop("material.id_mismatch", file=file, id=raw["id"])
         _kind(raw, file)
         _curves(raw, file)
+        _source_seams(raw, file)
         _disclosures(raw, file)
         _curve_ends(raw, file)
         _bands(raw, "record", file)

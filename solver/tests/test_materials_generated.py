@@ -151,6 +151,24 @@ def empty_refusal_regions(rec) -> list:
     return [r["reason"] for r in rec["refusals"] if r["reason"] not in hit]
 
 
+def seam_problems(rec) -> list:
+    """Phase-2 design note 5: each source seam's measured step against the global SEAM_NIL; (between, step, why)."""
+    from solver import material_joins as mj
+    v = mv.RecordView(rec, T_POT)
+    out = []
+    for sm in rec.get("source_seams", ()):
+        got = mj.seam_delta(v, sm)
+        if isinstance(got, st.Stop):
+            out.append((tuple(sm["between"]), None, f"cannot evaluate: {got.record.why}"))
+            continue
+        over = {k: got[k] for k in mr.SEAM_NIL if not got[k] <= mr.SEAM_NIL[k]}
+        print(f"\n  seam {tuple(sm['between'])} at {sm['t']['value']} K: |Δρ|/ρ {got['rho']:.3g}, |Δα|/α "
+              f"{got['alpha']:.3g}, |Δc_P|/c_P {got['c_p']:.3g} over {got['nodes']} nodes", file=sys.stderr)
+        if got["nodes"] == 0 or over:
+            out.append((tuple(sm["between"]), got, f"above the nil step {dict(mr.SEAM_NIL)}: {over}"))
+    return out
+
+
 class Generated(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -227,6 +245,13 @@ class Generated(unittest.TestCase):
                     n, bad = probe_overlaps(rec)
                     self.assertGreater(n, 0)
                     self.assertEqual(bad, [])
+
+    def test_source_seams_are_nil(self):
+        """Phase-2 design note 5 (r2 SB1): a source seam in T inside one physical phase is a STOP above the nil step."""
+        for rid, rec in self.recs.items():
+            if rec.get("source_seams"):
+                with self.subTest(record=rid):
+                    self.assertEqual(seam_problems(rec), [])
 
     def test_taper_zones_pass_their_physical_checks(self):
         """r2 on 48770cb0 (1): every shipped taper zone, walked at its measured source's data-range T ends and
@@ -332,6 +357,19 @@ class Controls(unittest.TestCase):
         fc["disclosed_fail"]["source"] = {"doi": "doi:10.1/x"}
         self.assertEqual(mr.check_record(rec, "fe_prem.yaml", frozenset(
             s for _p, _n, s in _cache_cites(rec))).id, "material.bad_cite")
+
+    def test_a_real_step_at_a_seam_fails(self):
+        """r2 SB1: a seam between two different-family sources with a 1e-3 Δρ fails P4."""
+        class Stub:
+            def phase_props(self, pid, p, t):
+                return {"rho": 1000.0 * (1.001 if pid == "b" else 1.0), "alpha": 1e-4, "c_p": 2000.0}
+        rec = {"source_seams": [{"between": ["a", "b"], "t": {"value": 130.0},
+                                 "sampling": {"p_min": 1e5, "p_max": 2e5, "dp": 1e5}}]}
+        from solver import material_joins as mj
+        got = mj.seam_delta(Stub(), rec["source_seams"][0])
+        self.assertAlmostEqual(got["rho"], 1e-3, places=12)
+        self.assertEqual(got["nodes"], 2)
+        self.assertFalse(got["rho"] <= mr.SEAM_NIL["rho"])
 
     def test_undeclared_edge_stops_at_load(self):
         rec = copy.deepcopy(_records()["fe_prem"])

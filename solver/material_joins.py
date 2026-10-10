@@ -259,6 +259,26 @@ def taper_zone_checks(view, pi, join, temps, n=21) -> dict:
 
 
 
+def seam_delta(view, seam) -> dict:
+    """Phase-2 design note 5: the step of a source seam in T, max |Δx|/x for ρ, α, c_P over its declared P grid at t,
+    each side from its own eos. A Stop where either side cannot answer."""
+    lo, hi = seam["between"]
+    t = float(seam["t"]["value"])
+    smp = seam["sampling"]
+    out = {"rho": 0.0, "alpha": 0.0, "c_p": 0.0, "nodes": 0}
+    p, p_max, dp = float(smp["p_min"]), float(smp["p_max"]), float(smp["dp"])
+    while p <= p_max + 1e-9 * dp:
+        a, b = view.phase_props(lo, p, t), view.phase_props(hi, p, t)
+        for z in (a, b):
+            if isinstance(z, st.Stop):
+                return z
+        for k in ("rho", "alpha", "c_p"):
+            out[k] = max(out[k], abs(b[k] - a[k]) / abs(a[k]) if a[k] else abs(b[k] - a[k]))
+        out["nodes"] += 1
+        p += dp
+    return out
+
+
 def preferred_source(view, pi):
     """The source a phase answers from when its cross-check's preferred side (between[0]) declares its own eos
     (c8, IAPWS-06 Ih: the gibbs field stays SeaFreeze's, the values come from the preferred source). None otherwise."""

@@ -8,6 +8,7 @@ import copy
 import math
 import unittest
 
+from solver import material_registry as mr
 from solver import material_view as mv
 from solver import stepper as st
 from solver.tests.test_material_library import lib_record
@@ -231,6 +232,37 @@ class TriplePoint(unittest.TestCase):
         got = mr.triple_point_misses(rec, "toy.yaml")
         self.assertEqual(got.id, "material.triple_point_miss")
         self.assertIn("min-G boundary water1–VI", got.evidence["why"])
+
+
+class SourceSeamRules(unittest.TestCase):
+    """Phase-2 design note 5: the load rules of a source seam in T, with the binding SEAM_NIL (r2 SB1)."""
+
+    @staticmethod
+    def _rec(**over):
+        lo = {"id": "ih_cold", "window": {"p_min": 0.0, "p_max": 2.1e8, "t_min": 0.0, "t_max": 130.0},
+              "field": {"kind": "sourced"}}
+        hi = {"id": "Ih", "window": {"p_min": 1e5, "p_max": 3e8, "t_min": 130.0, "t_max": 273.16},
+              "field": {"kind": "gibbs"}}
+        seam = {"between": ["ih_cold", "Ih"], "t": const(130.0, "K"),
+                "sampling": {"p_min": 1e5, "p_max": 1.9e8, "dp": 1e7}, "nil": dict(mr.SEAM_NIL, reason="r")}
+        seam.update(over)
+        return {"phases": [lo, hi], "source_seams": [seam]}
+
+    def test_good_seam_and_each_control(self):
+        mr._source_seams(self._rec(), "toy.yaml")
+        bad = (("windows don't meet at t", self._rec(t=const(140.0, "K"))),
+               ("upper phase first", self._rec(between=["Ih", "ih_cold"])),
+               ("unknown id", self._rec(between=["ih_cold", "XI"])),
+               ("sampling outside both windows", self._rec(sampling={"p_min": 1e5, "p_max": 2.5e8, "dp": 1e7})),
+               ("nil raised by the record", self._rec(nil=dict(mr.SEAM_NIL, rho=1e-3, reason="r"))))
+        for name, rec in bad:
+            with self.subTest(name), self.assertRaises(mr._Stop) as cm:
+                mr._source_seams(rec, "toy.yaml")
+            self.assertEqual(cm.exception.stop.id, "material.source_seam")
+        rec = self._rec()
+        rec["phases"][0]["field"]["kind"] = "gibbs"
+        with self.assertRaises(mr._Stop):                      # two gibbs phases of one pin: a min-G boundary
+            mr._source_seams(rec, "toy.yaml")
 
 
 if __name__ == "__main__":

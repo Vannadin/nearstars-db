@@ -1086,6 +1086,28 @@ class RecordView:
                     out.add(b)
         return tuple(sorted(out))
 
+    def source_seams(self) -> tuple:
+        """Declared source seams in T (phase-2 design note 5): (t, (lower id, upper id)). Never in transitions()."""
+        return tuple((_v(sm["t"]), tuple(sm["between"])) for sm in self.record.get("source_seams", ()))
+
+    def phase_props(self, phase_id, p, t):
+        """ρ, α, c_P of one named phase's own library or evaluator eos at (P, T), whatever the field says there (a
+        source seam compares the two sides at its t). A Stop when that eos cannot give them."""
+        ph = next((x for x in self.phases if x.id == phase_id), None)
+        lib = None if ph is None else ph.library
+        try:
+            if isinstance(lib, ml.SeaFreezePhase):
+                x = lib.at(p, t)
+                return {"rho": x["rho"], "alpha": x["alpha"], "c_p": x["c_p"]}
+            if isinstance(lib, _EvaluatorPhase):
+                x = lib.ev.at(p, t)
+                if "alpha" in x and "c_p" in x:
+                    return {"rho": x["density"], "alpha": x["alpha"], "c_p": x["c_p"]}
+        except (ml.LibraryOutOfRange, ValueError, ZeroDivisionError, OverflowError) as e:
+            return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data", str(e)))
+        return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
+                                                f"{phase_id}: a seam reads a library or evaluator phase giving α and c_P"))
+
     def transitions(self) -> tuple:
         """Declared univariant boundaries (design §I): (between, kind, curve). Source seams are never listed here."""
         return tuple((tuple(b["between"]), b["kind"], b["curve"]) for b in self.boundaries)
