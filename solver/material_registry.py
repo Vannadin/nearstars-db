@@ -382,6 +382,9 @@ def _sources_and_joins(ph: Mapping, file):
         if gone:
             raise _Stop("material.sigma_rule", file=file, phase=ph["id"], source=sid,
                         why=f"sigma kind {sg['kind']} needs {gone}")
+        if (x["sigma_kind"] == "not_applicable") != (sg["kind"] == "not_printed"):   # 68 N47
+            raise _Stop("material.sigma_rule", file=file, phase=ph["id"], source=sid,
+                        why="sigma_kind not_applicable goes with an unprinted σ, and only with it")
         if sg["kind"] == "not_printed" and "value" in sg:
             raise _Stop("material.sigma_rule", file=file, phase=ph["id"], source=sid,
                         why="an unprinted σ takes no stand-in value")
@@ -475,9 +478,16 @@ def _curve_ends(rec: Mapping, file):
 
 
 def _disclosures(rec: Mapping, file):
-    """A disclosed fail cites a cached source (page) that prints the disagreement; no other source kind will do."""
+    """A disclosed fail cites a cached source (page) that prints the disagreement; no other source kind will do. A
+    bound in K converts with a slope read from the record's own boundary (curve(…) or melt_p(…)), never a literal
+    (68 N42)."""
     for i, fc in enumerate(rec["formula_checks"]):
         d = fc.get("disclosed_fail")
+        b = (d or {}).get("bound") or {}
+        if b.get("unit") == "K" and not any(f in b.get("slope", "") for f in ("curve(", "melt_p(")):
+            raise _Stop("material.bad_shape", file=file, path=f"record.formula_checks[{i}].disclosed_fail.bound.slope",
+                        expected="a slope read from the record's own boundary: curve(…) or melt_p(…)",
+                        got=repr(b.get("slope"))[:60])
         if d is not None and "cache" not in d["source"]:
             raise _Stop("material.bad_cite", file=file, path=f"record.formula_checks[{i}].disclosed_fail.source",
                         why="a disclosed fail cites the cached source that prints the disagreement")

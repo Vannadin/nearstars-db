@@ -90,6 +90,7 @@ def rec_taper():
          "eos": {"form": "bm2", "params": {"rho0": const(1442.4, "kg/m3"), "k0": const(20.15e9, "Pa")},
                  "reference": {"kind": "state", "p": const(1e5, "Pa"), "t": const(300.0, "K")}},
          "thermal_model": {"kind": "exp_alpha", "alpha0": const(11.58e-5, "1/K"), "t0": const(300.0, "K")},
+         "alpha_range": {"min": 0.0, "max": 3.0e-4, "origin": "toy"},
          "sigma": {"kind": "not_printed", "where": "§"}, "sigma_kind": "not_applicable"},
         {"id": "b", "source": dict(CITE), "basis": "computed", "data_range": {"p_min": 3.3e9, "p_max": 1.0e12},
          "data_range_where": "t",
@@ -141,7 +142,8 @@ class Taper(unittest.TestCase):
         self.assertEqual(len(notes), 1)
         self.assertIn("extrapolated in T", notes[0].grade)
         ra, rb = v.source_density(0, "a", 8.0e9, 500.0), v.source_density(0, "b", 8.0e9, 500.0)
-        self.assertAlmostEqual(notes[0].error, abs(rb - ra) / ra)
+        ea, eb = v.source_density(0, "a", 8.0e9, 450.0), v.source_density(0, "b", 8.0e9, 450.0)
+        self.assertAlmostEqual(notes[0].error, max(abs(rb - ra) / ra, abs(eb - ea) / ea))   # floored at the T edge
         self.assertEqual(v.state(8.0e9, 400.0)[2], ())               # inside the data T range: no note
 
     def test_t_extrapolation_refuses_where_the_other_source_cannot_answer(self):
@@ -149,6 +151,25 @@ class Taper(unittest.TestCase):
         d["phases"][0]["sources"][0]["data_range"].update(t_min=300.0, t_max=450.0)
         s = mv.RecordView(d, 300.0).state(3.0e9, 800.0)            # F&R below its ρ bracket there
         self.assertIsInstance(s, st.Stop)
+
+    def test_zone_and_t_extrapolation_both_ride(self):
+        """68 N49: inside the zone and past the measured T range, both grades ride, with the larger band."""
+        d = rec_taper()
+        d["phases"][0]["sources"][0]["data_range"].update(t_min=300.0, t_max=450.0)
+        notes = mv.RecordView(d, 300.0).state(12.6e9, 500.0)[2]
+        self.assertEqual(len(notes), 1)
+        self.assertIn("blended", notes[0].grade)
+        self.assertIn("extrapolated in T", notes[0].grade)
+
+    def test_alpha_outside_its_declared_range_refuses(self):
+        """r2 XB1: α of the extrapolated source outside the declared range refuses (11.58e-5 /K against a max of
+        5e-5)."""
+        d = rec_taper()
+        d["phases"][0]["sources"][0]["data_range"].update(t_min=300.0, t_max=450.0)
+        d["phases"][0]["sources"][0]["alpha_range"]["max"] = 5.0e-5
+        s = mv.RecordView(d, 300.0).state(8.0e9, 500.0)
+        self.assertIsInstance(s, st.Stop)
+        self.assertIn("outside its declared range", s.record.why)
 
     def test_taper_side_without_c_p_stops(self):
         from solver import material_registry as mr

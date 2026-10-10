@@ -432,6 +432,7 @@ class RecordView:
         self.phases = [self._phase(ph) for ph in self.record["phases"]]
         self.notes: list = []
         self._band_errors: dict = {}             # (phase index, set index) → the method's value, evaluated once
+        self._source_engines: dict = {}          # (phase index, source id) → its library adapter / evaluator
 
     # construction ─────────────────────────────────────────────────────────────────────────────────────────────────
     def _phase(self, ph):
@@ -541,6 +542,16 @@ class RecordView:
                 return r
         return None
 
+    def source_engine(self, phase_index, source_id):
+        """The source's library adapter or evaluator, built once per view (68 N46: its cache then serves stencils)."""
+        key = (phase_index, source_id)
+        if key not in self._source_engines:
+            src = next(s for s in self.record["phases"][phase_index]["sources"] if s["id"] == source_id)
+            eos = src["eos"]
+            self._source_engines[key] = (ml.SeaFreezePhase(eos["library"]["submodel"]) if eos["form"] == "library" else
+                                         _EvaluatorPhase(EVALUATORS[eos["evaluator"]["name"]](eos["evaluator"].get("params", {}))))
+        return self._source_engines[key]
+
     def source_density(self, phase_index, source_id, p, t):
         """ρ(P, T) [kg/m³] from one declared source of a phase (impl note 3 A8): its own eos (a cold curve with its
         thermal_model, a library, or an evaluator), else the phase's own EOS. A Stop where it cannot answer."""
@@ -553,10 +564,8 @@ class RecordView:
             return self._phase_density(ph, p, t)
         form = eos["form"]
         try:
-            if form == "library":
-                return ml.SeaFreezePhase(eos["library"]["submodel"]).at(p, t)["rho"]
-            if form == "evaluator":
-                return _EvaluatorPhase(EVALUATORS[eos["evaluator"]["name"]](eos["evaluator"].get("params", {}))).at(p, t)["rho"]
+            if form in ("library", "evaluator"):
+                return self.source_engine(phase_index, source_id).at(p, t)["rho"]
         except ml.LibraryOutOfRange as e:
             return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data", str(e)))
         pr = eos["params"]
@@ -844,6 +853,9 @@ class RecordView:
         ph = self._phase_at(p, t)
         if isinstance(ph, st.Stop):
             return ph
+        if self._taper_join(ph) is not None:              # 68 N44: a joined phase answers from its join everywhere
+            got = self.state(p, t)
+            return got if isinstance(got, st.Stop) else got[0]
         return self._phase_density(ph, p, t)
 
     def _stencil_bounds(self, ph, p):
@@ -867,6 +879,9 @@ class RecordView:
         ph = self._phase_at(pe, t)
         if isinstance(ph, st.Stop):
             return ph
+        if self._taper_join(ph) is not None:              # 68 N44
+            got = self.state(p, t)
+            return got if isinstance(got, st.Stop) else got[1]
         if ph.library is not None:                 # (dT/dP)_S = αT/(ρc_P) from the library, checked against its Js
             return self._library(ph, pe, t, "dtdp")
         rho = self._phase_density(ph, pe, t)
@@ -925,9 +940,13 @@ class RecordView:
                     return got
                 rho, dtdp, note = got
                 if note is not None:
-                    origin = ("full |Δρ|/ρ across the taper zone (note 4)" if "blended" in note["grade"] else
-                              "extrapolation in T beyond the measured data range; error = its difference from the "
-                              "other source at the same state (note 4 item 1.4)")
+                    parts = []
+                    if "blended" in note["grade"]:
+                        parts.append("full |Δρ|/ρ across the taper zone (note 4)")
+                    if "extrapolated in T" in note["grade"]:
+                        parts.append("extrapolation in T beyond the measured data range; error = its difference from "
+                                     "the other source at the same state (note 4 item 1.4)")
+                    origin = "; ".join(parts)
                     self.notes.append(BandNote(self.material_id, f"{ph.id} taper", "relative", note["band"],
                                                None, note["grade"], origin))
                 return (rho, dtdp, tuple(self.notes))

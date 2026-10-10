@@ -78,6 +78,9 @@ def cross_check(view, pi, join) -> dict:
             t += dt
         p += dp
     good = [n for n in nodes if "rel" in n]
+    if not good:                                              # 68 N45: never a NaN band
+        return st.Stop("refused", _refusal(view, float(box["p_min"]), float(box["t_min"]),
+                                           f"cross-check {a}–{b} has no valid nodes on its grid"))
     return {"nodes": nodes, "band": max((n["rel"] for n in good), default=math.nan),
             "max_r": max((n["r"] for n in good), default=math.nan), "k": k,
             "over_k": [(n["p"], n["t"], n["r"]) for n in good if n["r"] > k]}
@@ -96,12 +99,12 @@ def source_cp(view, pi, sid, p, t):
     eos = src.get("eos")
     if eos is not None and eos["form"] == "library":
         try:
-            return ml.SeaFreezePhase(eos["library"]["submodel"]).at(p, t)["c_p"]
+            return view.source_engine(pi, sid).at(p, t)["c_p"]
         except ml.LibraryOutOfRange as e:
             return st.Stop("refused", mv.RecordRefusal(view.material_id, p, t, "input.material_out_of_data", str(e)))
     if eos is not None and eos["form"] == "evaluator":
         try:
-            x = mv.EVALUATORS[eos["evaluator"]["name"]](eos["evaluator"].get("params", {})).at(p, t)
+            x = view.source_engine(pi, sid).ev.at(p, t)
         except ValueError as e:
             return st.Stop("refused", mv.RecordRefusal(view.material_id, p, t, "input.material_out_of_data", str(e)))
         return x["c_v"] + t * x["dpdt_v"] ** 2 / (x["density"] * x["k_t"])
@@ -166,8 +169,9 @@ def taper_state(view, pi, join, p, t):
     if 0.0 < w < 1.0:
         ra, rb = view.source_density(pi, a, p, t), view.source_density(pi, b, p, t)
         note = {"grade": f"blended ({a} extrapolated, {b})", "band": abs(rb - ra) / ra}
-    if t_note is not None and (note is None or t_note["band"] > note["band"]):
-        note = t_note
+    if t_note is not None:                                    # 68 N49: both facts ride; the band is the larger
+        note = t_note if note is None else {"grade": f"{note['grade']}; {t_note['grade']}",
+                                            "band": max(note["band"], t_note["band"])}
     if not (cp > 0.0) or not math.isfinite(alpha):
         return st.Stop("refused", _refusal(view, p, t, f"taper state fails the physical checks (c_P {cp}, α {alpha})"))
     return rho, alpha * t / (rho * cp), note
@@ -191,4 +195,18 @@ def t_extrapolation(view, pi, a, b, p, t):
     up = view.source_density(pi, a, p * (1.0 + 1e-4), t)
     if isinstance(up, st.Stop) or not up > ra:
         return st.Stop("refused", _refusal(view, p, t, f"{a} extrapolated in T fails ρ rising with P"))
-    return {"grade": f"{a} extrapolated in T", "band": abs(rb - ra) / ra}
+    rng = _src(view, pi, a).get("alpha_range")                # r2 XB1: α inside the declared range, not merely finite
+    vh, vl = view.source_density(pi, a, p, t + DT_ALPHA), view.source_density(pi, a, p, t - DT_ALPHA)
+    if rng is None or isinstance(vh, st.Stop) or isinstance(vl, st.Stop):
+        return st.Stop("refused", _refusal(view, p, t, f"{a} extrapolated in T: no declared α range to check against"))
+    alpha = (1.0 / vh - 1.0 / vl) / (2.0 * DT_ALPHA) * ra
+    if not float(rng["min"]) <= alpha <= float(rng["max"]):
+        return st.Stop("refused", _refusal(view, p, t, f"{a} extrapolated in T: α {alpha:.3e} outside its declared "
+                                                       f"range [{rng['min']}, {rng['max']}]"))
+    band = abs(rb - ra) / ra
+    dr = _src(view, pi, a)["data_range"]                      # r2: floor by the disagreement at a's nearest T edge
+    t_edge = float(dr["t_max"]) if t > float(dr.get("t_max", math.inf)) else float(dr["t_min"])
+    ea, eb = view.source_density(pi, a, p, t_edge), view.source_density(pi, b, p, t_edge)
+    if not isinstance(ea, st.Stop) and not isinstance(eb, st.Stop):
+        band = max(band, abs(eb - ea) / ea)
+    return {"grade": f"{a} extrapolated in T", "band": band}

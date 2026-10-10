@@ -297,6 +297,9 @@ class Controls(unittest.TestCase):
         self.assertTrue(mc.run_formula_checks(rec)[0]["passed"])
         fc["disclosed_fail"]["bound"] = {"value": 0.6, "unit": "K"}                     # K without a slope: no way
         self.assertIn("stop", mc.run_formula_checks(rec)[0])
+        fc["disclosed_fail"]["bound"] = {"value": 0.6, "unit": "K", "slope": "3.0e9"}   # a literal slope: load STOPs
+        self.assertEqual(mr.check_record(rec, "fe_prem.yaml", frozenset(
+            s for _p, _n, s in _cache_cites(rec))).id, "material.bad_shape")            # 68 N42
         fc["disclosed_fail"]["source"] = {"doi": "doi:10.1/x"}
         self.assertEqual(mr.check_record(rec, "fe_prem.yaml", frozenset(
             s for _p, _n, s in _cache_cites(rec))).id, "material.bad_cite")
