@@ -61,7 +61,7 @@ DEMANDS = (
     ("note 4.1", "join_within.edge_p", False), ("note 4.1", "join_within.width", False),
     ("note 4.1", "taper_width.reason", True), ("note 4.1", "taper_width.declared_before_comparison", True),
     ("note 4.1.4", "join_within.t_extrapolation", False), ("note 4.3", "phase.precedence", False),
-    ("note 4.3", "precedence.rule", True),
+    ("note 4.3", "precedence.by", True),
     # impl note 3 Part B: direct tables, sourced or user-declared
     ("note 3 B1", "eos.table", False), ("note 3 B1", "table.interpolation", True),
     ("note 3 B2", "table.source", True), ("note 3 B2", "source.user_declared", False),

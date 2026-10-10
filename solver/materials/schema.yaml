@@ -227,9 +227,9 @@ t_extrapolation:
   band_origin: {shape: text, required: true}
 
 precedence:
-  rule:        {shape: enum, values: [basis, declared, frozen], required: true}   # measured over computed first (note 4 item 3)
-  declared_before_comparison: {shape: text}                # rule declared: the date
-  ref:         {shape: text}                               # rule frozen: the frozen record that fixed it
+  by:          {shape: enum, values: [basis, declared, frozen], required: true}   # measured over computed first (note 4 item 3); not «rule», a prose key
+  declared_before_comparison: {shape: text}                # by declared: the date
+  ref:         {shape: text}                               # by frozen: the frozen record that fixed it
 
 formula_check:
   quantity:   {shape: text, required: true}                  # what is printed
