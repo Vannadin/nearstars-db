@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import math
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from types import MappingProxyType
 from typing import Mapping
@@ -89,6 +89,10 @@ STOPS = MappingProxyType({
     "material.table_check": (("file", "phase", "why"),
                              "Fix the table at the node named: ρ must rise with P on every isotherm, K_T > 0, c_P > 0, "
                              "α inside its declared range, no holes or NaN; a bilinear table needs α and K_T columns."),
+    "material.library_pin": (("file", "why"),
+                             "Install the pinned library version (pip install --require-hashes from the repo's pin "
+                             "file), or update the record's library.version and library.sha256 after a reviewed "
+                             "upgrade; the sha256 is material_library.tree_sha256(<name>)."),
     "material.kind_rule": (("file", "why"),
                            "Match the record kind: single = one phase; branched = one boundary per adjacent phase "
                            "pair; hand_over = joins; a library form names its pinned library."),
@@ -120,6 +124,8 @@ class _Stop(Exception):
 @dataclass(frozen=True)
 class Registry:
     records: Mapping            # id → the record, deep-frozen
+    unavailable: Mapping = field(default_factory=lambda: MappingProxyType({}))   # id → LoadStop: a library pin
+                                                                                   # that does not match (note 1 §6)
 
     def declared(self) -> tuple:
         """Ids of records carrying a user-declared source anywhere (impl note 3 B2): counted on boards and gates."""
@@ -532,7 +538,7 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None) -> Regis
     registered = read_manifest(Path(directory) / "sources.yaml" if manifest is None else manifest)
     if isinstance(registered, LoadStop):
         return registered
-    out = {}
+    out, unavailable = {}, {}
     for f in sorted(Path(directory).glob("*.yaml")):
         if f.name in NOT_RECORDS:
             continue
@@ -543,7 +549,22 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None) -> Regis
         rec = check_record(raw, f.name, registered)
         if isinstance(rec, LoadStop):
             return rec
-        if rec["id"] in out:
+        if rec["id"] in out or rec["id"] in unavailable:
             return LoadStop("material.duplicate_id", MappingProxyType({"file": f.name, "id": rec["id"]}))
+        pin = _library_pin(rec, f.name)
+        if pin is not None:                         # that record only: the others still load (impl note 1 §6)
+            unavailable[rec["id"]] = pin
+            continue
         out[rec["id"]] = rec
-    return Registry(MappingProxyType(out))
+    return Registry(MappingProxyType(out), MappingProxyType(unavailable))
+
+
+def _library_pin(rec: Mapping, file: str) -> LoadStop | None:
+    from solver import material_library as ml
+    for ph in rec["phases"]:
+        lib = ph["eos"].get("library")
+        if ph["eos"]["form"] == "library" and lib is not None:
+            got = ml.check_pin(lib)
+            if got is not None:
+                return LoadStop("material.library_pin", MappingProxyType({"file": file, "why": got.why}))
+    return None

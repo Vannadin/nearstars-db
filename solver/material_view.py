@@ -22,6 +22,7 @@ from types import MappingProxyType
 from typing import Mapping
 
 from solver import material_checks as mc
+from solver import material_library as ml
 from solver import material_registry as mr
 from solver import stepper as st
 from solver.result import freeze
@@ -275,6 +276,7 @@ class _Phase:
     t_ref: float
     adiabat: tuple | None
     sets: list = field(default_factory=list)
+    library: object = None
     gamma_window: tuple = (0.0, math.inf)
     constants_span: tuple | None = None
     edges: Mapping = field(default_factory=dict)
@@ -305,8 +307,12 @@ class RecordView:
         eos = ph["eos"]
         pr = eos.get("params", {})
         form = eos["form"]
-        k0p = _v(pr["k0p"]) if "k0p" in pr else 4.0
-        cold = _cold_pressure(form, _v(pr["rho0"]), _v(pr["k0"]), 4.0 if form == "bm2" else k0p)
+        lib = None
+        if form == "library":                       # note 1 §6: the pinned installed library, evaluated at runtime
+            lib, cold = ml.SeaFreezePhase(eos["library"]["submodel"]), None
+        else:
+            k0p = _v(pr["k0p"]) if "k0p" in pr else 4.0
+            cold = _cold_pressure(form, _v(pr["rho0"]), _v(pr["k0"]), 4.0 if form == "bm2" else k0p)
         ref = eos["reference"]
         th = ph["thermal"]
         pc = th.get("pressure", {})
@@ -330,7 +336,8 @@ class RecordView:
         gw = th["gamma_window"]
         return _Phase(id=ph["id"], p_min=_num(w["p_min"]), p_max=_num(w["p_max"]),
                       t_min=_num(w.get("t_min", 0.0)), t_max=_num(w.get("t_max", 0.0)),
-                      cold=cold, rho0=_v(pr["rho0"]), k0=_v(pr["k0"]),
+                      cold=cold, rho0=_v(pr["rho0"]) if "rho0" in pr else 0.0, k0=_v(pr["k0"]) if "k0" in pr else 0.0,
+                      library=lib,
                       alpha_k=_v(pc["alpha_k"]) if "alpha_k" in pc else 0.0,
                       alpha_k_dt=_v(pc["alpha_k_dt"]) if "alpha_k_dt" in pc else 0.0,
                       c_v=_v(pc["c_v"]) if "c_v" in pc else 0.0,
@@ -466,7 +473,10 @@ class RecordView:
 
     # density ──────────────────────────────────────────────────────────────────────────────────────────────────────
     def _phase_density(self, ph, p, t):
-        """Legacy Phase.density: subtract the thermal pressure, invert the cold curve by the same Newton."""
+        """Legacy Phase.density: subtract the thermal pressure, invert the cold curve by the same Newton. A library
+        phase reads ρ from the pinned library."""
+        if ph.library is not None:
+            return ph.library.at(p, t)["rho"]
         p_th = self._thermal_pressure(ph, t, p)
         if p_th:
             p = p - p_th
@@ -523,6 +533,8 @@ class RecordView:
         ph = self._phase_at(pe, t)
         if isinstance(ph, st.Stop):
             return ph
+        if ph.library is not None:                 # (dT/dP)_S = αT/(ρc_P) from the library, checked against its Js
+            return ph.library.at(pe, t)["dtdp"]
         rho = self._phase_density(ph, pe, t)
         if isinstance(rho, st.Stop):
             return rho
