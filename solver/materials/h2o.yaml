@@ -248,7 +248,7 @@ phases:
   state: solid
   eos:
     form: library
-    reference:
+    reference: &id002
       kind: state
       p:
         value: 0.0
@@ -264,7 +264,7 @@ phases:
           library: SeaFreeze@1.1.0
         grade: declared
         note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
-    library:
+    library: &id003
       name: SeaFreeze
       version: 1.1.0
       sha256: 0fb040a8ed939416b19c8a1bdbd967e74e7059f5bec2015c0edf201dca1a71e1
@@ -290,6 +290,130 @@ phases:
       refusal: input.material_out_of_data
     t_max:
       refusal: input.material_out_of_data
+  sources:
+  - id: seafreeze_vi
+    source: *id001
+    basis: measured
+    data_range:
+      p_min: 1260000000.0
+      p_max: 2560000000.0
+      t_min: 300.0
+      t_max: 340.0
+    data_range_where: 'Journaux 2020 p.8 §3.1 (the only numeric range printed for its VI data: Bezacier''s 45 points; the
+      cryogenic points'' range is not printed numerically, Fig. 2d)'
+    sigma:
+      kind: not_printed
+      where: Journaux 2020 prints no σ of ρ for ice VI
+    sigma_kind: not_applicable
+    eos:
+      form: library
+      reference: *id002
+      library: *id003
+  - id: bezacier_vi
+    source: &id004
+      cache: 2014JChPh.141j4505B.pdf
+      page: 104505-4
+      where: Table II, «Ice VI—PVT», H2O this study
+      sha256: 265e6d17932ffad1e37903bdc284bc620e7c981203a76ee82c29d61c9b5691eb
+    basis: measured
+    data_range:
+      p_min: 1260000000.0
+      p_max: 2810000000.0
+      t_min: 298.7
+      t_max: 340.7
+    data_range_where: Bezacier 2014 Table I (pp.104505-2–3), extremes of the listed VI points (directing 2026-10-11)
+    sigma:
+      kind: propagated
+      correlation: not_printed
+      from:
+        rho0: 1.7944497927923309
+        k0: 230000000.0
+        alpha0: 1.4e-05
+      where: 'Table II: the parenthesised digits of V0, K0, α0 (σ of ρ0 from V0''s); no covariance printed, propagated independently
+        (overstates for K0–K′ fits, note 4 item 4)'
+    sigma_kind: 1sigma
+    eos:
+      form: bm2
+      params:
+        rho0:
+          value: 1271.3676781933664
+          unit: kg/m3
+          source:
+            formula: ρ0 = M/V0, M = 18.01528 g/mol (H2O), V0 = 14.17 cm3/mol (Table II)
+          grade: derived
+          printed: V0 = 14.17(2) cm3 mol−1
+        k0:
+          value: 14050000000.0
+          unit: Pa
+          source: *id004
+          grade: read
+          printed: K0 = 14.05 GPa
+      reference:
+        kind: state
+        p:
+          value: 100000.0
+          unit: Pa
+          source:
+            cache: 2014JChPh.141j4505B.pdf
+            page: 104505-4
+            where: '§III: «P0 = 10⁵ Pa and T0 = 300 K»'
+            sha256: 265e6d17932ffad1e37903bdc284bc620e7c981203a76ee82c29d61c9b5691eb
+          grade: read
+        t:
+          value: 300.0
+          unit: K
+          source:
+            cache: 2014JChPh.141j4505B.pdf
+            page: 104505-4
+            where: '§III: «P0 = 10⁵ Pa and T0 = 300 K»'
+            sha256: 265e6d17932ffad1e37903bdc284bc620e7c981203a76ee82c29d61c9b5691eb
+          grade: read
+    thermal_model:
+      kind: exp_alpha
+      alpha0:
+        value: 0.000146
+        unit: 1/K
+        source: *id004
+        grade: read
+        printed: α0 × 10⁵ = 14.6 K−1
+        note: 'eq. (2) read literally: V(P,T) = V0(P,T0)·exp(α0(T − T0)), one α at every P (declared reading, h2o-sources.md)'
+      t0:
+        value: 300.0
+        unit: K
+        source:
+          cache: 2014JChPh.141j4505B.pdf
+          page: 104505-4
+          where: '§III: «T0 = 300 K»'
+          sha256: 265e6d17932ffad1e37903bdc284bc620e7c981203a76ee82c29d61c9b5691eb
+        grade: read
+  precedence:
+    by: frozen
+    ref: 'phase2-impl.frozen.md P6: «ice VI: SeaFreeze inside its window»; note 3 A7: Bezacier is a cross-check'
+  joins_within:
+  - between:
+    - seafreeze_vi
+    - bezacier_vi
+    kind: cross_check
+    overlap:
+      p_min: 1260000000.0
+      p_max: 2560000000.0
+      t_min: 300.0
+      t_max: 340.0
+    shared_data: 'Journaux 2020 p.8 §3.1: «our new cryogenic measurements at high pressure were combined with 45 points previously
+      reported in Bezacier et al. (2014), ranging from 1,260 to 2,560 MPa and from 300 to 340 K». Bezacier Table I lists those
+      45 points, but its 300 K series reaches 2.81 GPa (disclosed)'
+    k: 2.0
+    sampling:
+      box:
+        p_min: 1260000000.0
+        p_max: 2300000000.0
+        t_min: 300.0
+        t_max: 340.0
+      dp: 50000000.0
+      dt: 10.0
+    disclosures:
+    - 'cross-check disagrees beyond 2σ at 1.26 GPa / 340 K: r = 2.18 (bezacier_vi vs seafreeze_vi; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 1.31 GPa / 340 K: r = 2.03 (bezacier_vi vs seafreeze_vi; the sources share data)'
 - id: vii_x
   label: ice VII / VII* / X (French & Redmer 2015, one potential, HSE)
   state: solid
@@ -300,7 +424,7 @@ phases:
       p:
         value: 0.0
         unit: Pa
-        source: &id002
+        source: &id005
           cache: 2015PhRvB..91a4308F.pdf
           page: 5–7
           where: eqs. (6), (9), (11), (14), (15); Tables I (HSE), II, III
@@ -310,7 +434,7 @@ phases:
       t:
         value: 295.0
         unit: K
-        source: &id003
+        source: &id006
           cache: 2015PhRvB..91a4308F.pdf
           page: '3'
           where: '§II: «densities were varied between 1.6 and 4.25 g/cm3, and the temperatures were chosen from 295 up to
@@ -320,7 +444,7 @@ phases:
         note: 'evaluator form: the potential is absolute'
     evaluator:
       name: french_redmer2015
-      source: *id002
+      source: *id005
       params:
         a0:
           value: -16.8923
@@ -635,14 +759,14 @@ phases:
         rho_search_min:
           value: 1600.0
           unit: kg/m3
-          source: *id003
+          source: *id006
           grade: declared
           printed: 1.6 g/cm³
           note: the inversion bracket is the MD grid, so nothing past it is reached
         rho_search_max:
           value: 4250.0
           unit: kg/m3
-          source: *id003
+          source: *id006
           grade: declared
           printed: 4.25 g/cm³
           note: the inversion bracket is the MD grid, so nothing past it is reached
@@ -682,7 +806,7 @@ boundaries:
     p_star:
       value: 2216000000.0
       unit: Pa
-      source: &id004
+      source: &id007
         cache: IAPWS-R14-08-2011.pdf
         page: -5-
         where: '§3.5, eq. (5): ice VII melting pressure'
@@ -692,53 +816,65 @@ boundaries:
     t_star:
       value: 355.0
       unit: K
-      source: *id004
+      source: *id007
       grade: read
       printed: T* = 355 K
     terms:
     - a:
         value: 1.73683
         unit: '1'
-        source: *id004
+        source: *id007
         grade: read
       b:
         value: -1.0
         unit: '1'
-        source: *id004
+        source: *id007
         grade: read
     - a:
         value: -0.0544606
         unit: '1'
-        source: *id004
+        source: *id007
         grade: read
       b:
         value: 5.0
         unit: '1'
-        source: *id004
+        source: *id007
         grade: read
     - a:
         value: 8.06106e-08
         unit: '1'
-        source: *id004
+        source: *id007
         grade: read
       b:
         value: 22.0
         unit: '1'
-        source: *id004
+        source: *id007
         grade: read
     t_min:
       value: 355.0
       unit: K
-      source: *id004
+      source: *id007
       grade: read
       printed: temperature range from 355 K to 715 K
     t_max:
       value: 715.0
       unit: K
-      source: *id004
+      source: *id007
       grade: read
       printed: temperature range from 355 K to 715 K
-    source: *id004
+    t_min_end:
+      kind: physical
+      reason: the L–VI–VII triple point
+      source:
+        cache: IAPWS-R14-08-2011.pdf
+        page: -5-
+        where: 'Table 1: ice VI – ice VII – liquid, 355 K / 2216 MPa'
+        sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+    t_max_end:
+      kind: data
+      reason: «the highest temperature for which measurements exist and not the end of the melting curve of ice VII»
+      source: *id007
+    source: *id007
 refusals:
 - id: input.material_out_of_data
   box:
@@ -760,7 +896,7 @@ refusals:
     p_star:
       value: 2216000000.0
       unit: Pa
-      source: &id005
+      source: &id008
         cache: IAPWS-R14-08-2011.pdf
         page: -5-
         where: '§3.5, eq. (5): ice VII melting pressure'
@@ -770,53 +906,65 @@ refusals:
     t_star:
       value: 355.0
       unit: K
-      source: *id005
+      source: *id008
       grade: read
       printed: T* = 355 K
     terms:
     - a:
         value: 1.73683
         unit: '1'
-        source: *id005
+        source: *id008
         grade: read
       b:
         value: -1.0
         unit: '1'
-        source: *id005
+        source: *id008
         grade: read
     - a:
         value: -0.0544606
         unit: '1'
-        source: *id005
+        source: *id008
         grade: read
       b:
         value: 5.0
         unit: '1'
-        source: *id005
+        source: *id008
         grade: read
     - a:
         value: 8.06106e-08
         unit: '1'
-        source: *id005
+        source: *id008
         grade: read
       b:
         value: 22.0
         unit: '1'
-        source: *id005
+        source: *id008
         grade: read
     t_min:
       value: 355.0
       unit: K
-      source: *id005
+      source: *id008
       grade: read
       printed: temperature range from 355 K to 715 K
     t_max:
       value: 715.0
       unit: K
-      source: *id005
+      source: *id008
       grade: read
       printed: temperature range from 355 K to 715 K
-    source: *id005
+    t_min_end:
+      kind: physical
+      reason: the L–VI–VII triple point
+      source:
+        cache: IAPWS-R14-08-2011.pdf
+        page: -5-
+        where: 'Table 1: ice VI – ice VII – liquid, 355 K / 2216 MPa'
+        sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+    t_max_end:
+      kind: data
+      reason: «the highest temperature for which measurements exist and not the end of the melting curve of ice VII»
+      source: *id008
+    source: *id008
   reason: 'VI–VII boundary not cached (Bridgman 1937, Pistorius et al. 1968, Journaux et al. 2013 on papers-to-fetch); bounded
     only by declared edges: Bezacier 2014''s lowest VII point (2.14 GPa, Table I), SeaFreeze VI''s window top and the R14-08
     VII melting curve (directing 2026-10-11). Any column crossing ~2.2 GPa refuses until then; above 355 K only above the
@@ -829,7 +977,7 @@ triple_points:
   p:
     value: 2216000000.0
     unit: Pa
-    source: &id006
+    source: &id009
       cache: IAPWS-R14-08-2011.pdf
       page: -5-
       where: 'Table 1: ice VI – ice VII – liquid, 355 K / 2216 MPa'
@@ -839,7 +987,7 @@ triple_points:
   t:
     value: 355.0
     unit: K
-    source: *id006
+    source: *id009
     grade: read
     printed: 355 K
   tolerance:
