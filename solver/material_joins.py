@@ -192,6 +192,48 @@ def taper_state(view, pi, join, p, t):
     return rho, alpha * t / (rho * cp), note
 
 
+def _blend_v_cp(view, pi, join, p, t):
+    """The blend's V and c_P at (P, T) (note 3 A4: V and c_P blended with the P-only weight), or a Stop."""
+    a, b = join["between"]
+    lo, hi, _up = taper_zone(join, None)
+    w = _smoothstep((p - lo) / (hi - lo))
+    v = cp = 0.0
+    for sid, wt in ((a, 1.0 - w), (b, w)):
+        if wt == 0.0:
+            continue
+        r, c = view.source_density(pi, sid, p, t), source_cp(view, pi, sid, p, t)
+        for x in (r, c):
+            if isinstance(x, st.Stop):
+                return x
+        v, cp = v + wt / r, cp + wt * c
+    return v, cp
+
+
+def blend_cp_residual(view, pi, join) -> float | None:
+    """Impl note 3 A4 item 3 (68 on 924e9336): R = (∂c_P/∂P)_T + T(∂²v/∂T²)_P per unit mass of the blended quantities,
+    on the join's grid; returned as the bound max|R|·ΔP_overlap/c_P on the relative error (dT/dP)_S inherits. None
+    where a node cannot be evaluated (the gate has already refused such a grid)."""
+    smp = join["sampling"]
+    box, dp_g, dt_g = smp["box"], float(smp["dp"]), float(smp["dt"])
+    lo, hi, _up = taper_zone(join, None)
+    worst = 0.0
+    p = float(box["p_min"])
+    while p <= float(box["p_max"]) + 1e-9 * dp_g:
+        t = float(box["t_min"])
+        while t <= float(box["t_max"]) + 1e-9 * dt_g:
+            dp, dt = 1e-4 * p, 1.0
+            got = [_blend_v_cp(view, pi, join, pp, tt) for pp, tt in
+                   ((p + dp, t), (p - dp, t), (p, t + dt), (p, t), (p, t - dt))]
+            if any(isinstance(g, st.Stop) for g in got):
+                return None
+            (_, c_hi), (_, c_lo), (v_hi, _), (v0, c0), (v_lo, _) = got
+            r = (c_hi - c_lo) / (2.0 * dp) + t * (v_hi - 2.0 * v0 + v_lo) / (dt * dt)
+            worst = max(worst, abs(r) * (hi - lo) / c0)
+            t += dt_g
+        p += dp_g
+    return worst
+
+
 def _refusal(view, p, t, why):
     from solver import material_view as mv
     return mv.RecordRefusal(view.material_id, p, t, "input.material_out_of_data", why)

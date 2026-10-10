@@ -443,6 +443,20 @@ def _sources_and_joins(ph: Mapping, file):
         if "k" in j and j["k"] != K_GATE:
             raise _Stop("material.join_rule", file=file, phase=ph["id"], join=i,
                         why=f"k is {K_GATE:g} (impl note 3 A3); a different k is a recorded change")
+        if kind == "blend":                                       # 68 H2: A1's box is the data-range intersection
+            ov, a_dr, b_dr = j["overlap"], srcs[j["between"][0]]["data_range"], srcs[j["between"][1]]["data_range"]
+            for lo_k, hi_k in (("p_min", "p_max"), ("t_min", "t_max")):
+                lo = max(float(a_dr.get(lo_k, -math.inf)), float(b_dr.get(lo_k, -math.inf)))
+                hi = min(float(a_dr.get(hi_k, math.inf)), float(b_dr.get(hi_k, math.inf)))
+                if not (lo <= float(ov.get(lo_k, lo)) and float(ov.get(hi_k, hi)) <= hi):
+                    raise _Stop("material.join_rule", file=file, phase=ph["id"], join=i,
+                                why=f"the overlap's {lo_k}–{hi_k} lies outside both sources' data ranges "
+                                    f"[{lo:g}, {hi:g}] (note 3 A1: extrapolated parts take no part)")
+            bx = j["sampling"]["box"]
+            if float(bx["p_min"]) != float(ov["p_min"]) or float(bx["p_max"]) != float(ov["p_max"]) or any(
+                    k in ov and float(bx.get(k, math.nan)) != float(ov[k]) for k in ("t_min", "t_max")):
+                raise _Stop("material.join_rule", file=file, phase=ph["id"], join=i,
+                            why="a blend's sampling box is its overlap box (note 3 A1, A3: the gate walks the overlap)")
         if kind in ("taper", "blend"):                            # note 3 A4 item 3: c_P on both sides of a V-blend
             for sid in j["between"]:
                 x = srcs[sid]
@@ -873,6 +887,13 @@ def source_conflicts(rec: Mapping, file: str) -> LoadStop | None:
         if isinstance(out, st.Stop):
             return LoadStop("material.source_conflict", MappingProxyType(
                 {**ev, "max_r": None, "node": None, "sigma_allow": None}))
+        bad = next((n for n in out["nodes"] if n.get("stop")), None)
+        if bad is not None:                         # 68 H1: a blend cannot form where a side cannot answer
+            side = next(sid for sid in j["between"]
+                        if isinstance(view.source_density(pi, sid, bad["p"], bad["t"]), st.Stop))
+            return LoadStop("material.source_conflict", MappingProxyType(
+                {**ev, "max_r": None, "node": (bad["p"], bad["t"]), "sigma_allow": None,
+                 "sigma_allow_formed": f"side {side} cannot answer at this node; narrow the overlap"}))
         if out["max_r"] > K_GATE:
             n = max((x for x in out["nodes"] if "r" in x), key=lambda x: x["r"])
             return LoadStop("material.source_conflict", MappingProxyType(

@@ -76,6 +76,8 @@ class BandNote:
     method: str | None
     grade: str
     origin: str
+    dtdp_error: float | None = None       # a blend's relative error on (dT/dP)_S from c_P's Maxwell residual (A4 item 3)
+    dtdp_origin: str | None = None
 
 
 # ── PCHIP in ln P: the same algorithm as legacy smooth_table at 097a8aa3 (Fritsch–Carlson) ────────────────────────────
@@ -1028,6 +1030,14 @@ class RecordView:
     def porosity(self, p: float) -> float:
         return 0.0
 
+    def _blend_residual(self, pi, join):
+        """A blend's c_P Maxwell bound, computed once per view on the join's grid (material_joins.blend_cp_residual)."""
+        key = (pi, id(join))
+        if key not in self._source_engines:
+            from solver import material_joins as mj
+            self._source_engines[key] = mj.blend_cp_residual(self, pi, join)
+        return self._source_engines[key]
+
     def _taper_join(self, ph):
         pi = self.phases.index(ph)
         for j in self.record["phases"][pi].get("joins_within", ()):
@@ -1070,8 +1080,13 @@ class RecordView:
                         parts.append("extrapolation in T beyond the measured data range; error = its difference from "
                                      "the other source at the same state (note 4 item 1.4)")
                     origin = "; ".join(parts)
-                    self.notes.append(BandNote(self.material_id, f"{ph.id} taper", "relative", note["band"],
-                                               None, note["grade"], origin))
+                    dte = dto = None
+                    if tj[1]["kind"] == "blend" and "blended" in note["grade"]:      # 68 on 924e9336: kept out of ρ
+                        dte = self._blend_residual(tj[0], tj[1])
+                        dto = ("relative error on (dT/dP)_S from c_P's Maxwell residual (impl note 3 A4 item 3), "
+                               "bound max|R|·ΔP_overlap/c_P over the join's grid")
+                    self.notes.append(BandNote(self.material_id, f"{ph.id} {tj[1]['kind']}", "relative", note["band"],
+                                               None, note["grade"], origin, dte, dto))
                 return (rho, dtdp, tuple(self.notes))
         rho = self.density(p, t)
         if isinstance(rho, st.Stop):

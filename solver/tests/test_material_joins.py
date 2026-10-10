@@ -322,6 +322,41 @@ class BlendGate(unittest.TestCase):
         self.assertIsNotNone(mr.source_conflicts(self._blend(band / 4.0), "toy.yaml"))
         self.assertIsNone(mr.source_conflicts(self._blend(band / 4.0, kind="cross_check"), "toy.yaml"))
 
+    def test_a_node_a_side_cannot_answer_stops_the_gate(self):
+        """68 H1: one planted Stop node inside the grid is material.source_conflict naming the side, never skipped."""
+        from unittest import mock
+        from solver import material_registry as mr
+        d = self._blend(1.0)
+        real = mv.RecordView.source_density
+
+        def planted(view, pi, sid, p, t):
+            if sid == "b" and abs(p - 1.7e9) < 1.0 and t == 320.0:
+                return st.Stop("refused", "planted")
+            return real(view, pi, sid, p, t)
+        with mock.patch.object(mv.RecordView, "source_density", planted):
+            got = mr.source_conflicts(d, "toy.yaml")
+        self.assertEqual(got.id, "material.source_conflict")
+        self.assertIn("side b cannot answer", got.evidence["sigma_allow_formed"])
+
+    def test_overlap_and_sampling_tied_to_the_data_ranges(self):
+        """68 H2: the overlap lies in both data ranges and the sampling box is the overlap; a plant of each STOPs."""
+        from solver import material_registry as mr
+
+        def ph():
+            d = rec_preferred()                                # c_P on both sides (a library source, c_p_from)
+            d["phases"][0]["joins_within"][0].update(kind="blend", weight="smoothstep_p")
+            return d["phases"][0]
+        mr._sources_and_joins(ph(), "toy.yaml")
+        wide = ph()
+        wide["joins_within"][0]["overlap"] = {"p_min": 1.0e9, "p_max": 2.2e9}           # a's data starts at 1.3 GPa
+        wide["joins_within"][0]["sampling"]["box"].update(p_min=1.0e9)
+        off = ph()
+        off["joins_within"][0]["sampling"]["box"].update(p_max=2.0e9)
+        for name, ph in (("overlap past a data range", wide), ("sampling box not the overlap", off)):
+            with self.subTest(name), self.assertRaises(mr._Stop) as cm:
+                mr._sources_and_joins(ph, "toy.yaml")
+            self.assertEqual(cm.exception.stop.id, "material.join_rule")
+
     def test_blend_is_a_p_only_v_blend(self):
         """A4: inside the overlap V = (1 − w)V_a + w·V_b with w the C¹ smoothstep in P over the overlap's P span; the
         answer is graded «blended (a, b)» with the full |Δρ|/ρ as its band; below the overlap a alone answers."""
@@ -340,6 +375,9 @@ class BlendGate(unittest.TestCase):
                 self.assertAlmostEqual(rho, 1.0 / ((1 - w) / ra + w / rb), places=9)
                 self.assertIn(f"blended ({a}, {b})", notes[-1].grade)
                 self.assertAlmostEqual(notes[-1].error, abs(rb - ra) / ra, places=12)
+                # 68 on 924e9336: the c_P Maxwell bound rides on its own field, labelled for (dT/dP)_S
+                self.assertTrue(notes[-1].dtdp_error is not None and notes[-1].dtdp_error >= 0.0)
+                self.assertIn("(dT/dP)_S", notes[-1].dtdp_origin)
 
 
 if __name__ == "__main__":
