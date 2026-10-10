@@ -6,6 +6,7 @@ body validator (solver/tests/test_composition_decl.py), where the declaration is
 Run from the worktree root:  solver/.venv/bin/python -m unittest solver.tests.test_material_registry
 """
 import copy
+import math
 import tempfile
 import unittest
 from pathlib import Path
@@ -13,6 +14,8 @@ from pathlib import Path
 import yaml
 
 from solver import material_registry as mr
+from solver import stepper as st
+from solver import material_view as mv
 
 SHA = "0" * 64
 CITE = {"cache": "2007ApJ...669.1279S.pdf", "page": "1281", "where": "eq. (5)", "sha256": SHA}
@@ -117,11 +120,15 @@ def tabled(d):
     """GOOD as a user-declared (P, T) table with α and K_T columns (impl note 3 B1–B3)."""
     PH(d)["eos"] = {"form": "table", "reference": {"kind": "state", "p": const(0.0, "Pa"), "t": const(300.0, "K")},
                     "table": {"axes": "P_T", "first": [1.0e9, 2.0e9, 4.0e9], "t": [300.0, 600.0],
-                              "columns": {"rho": [[4000.0, 3990.0], [4050.0, 4040.0], [4150.0, 4140.0]],
+                              "columns": {"rho": [[4000.0, 3975.5], [4050.0, 4025.2], [4150.0, 4124.6]],
                                           "alpha": [[2.0e-5, 2.1e-5] for _ in range(3)],
                                           "k_t": [[2.0e11, 1.9e11] for _ in range(3)]},
                               "interpolation": "bilinear_lnp_t", "alpha_range": [0.0, 1.0e-4],
+                              "maxwell_tolerance": 0.05,          # one-sided differences over a 300 K step (B3)
                               "source": {"user_declared": "a fictional rock for a test"}}}
+    PH(d)["window"] = {"p_min": 1.0e9, "p_max": 4.0e9, "t_min": 300.0, "t_max": 600.0}   # B1: the grid is the window
+    for e in ("p_min", "p_max", "t_min", "t_max"):
+        PH(d)["edges"].setdefault(e, {"refusal": "input.material_out_of_data"})          # outside the grid: refuse
 
 
 def col(d, name):
@@ -325,6 +332,45 @@ class MultiSource(unittest.TestCase):
         lib["eos"] = {"form": "library", "library": {"name": "SeaFreeze", "version": "1.1.0"}}
         self.assertEqual(self._warns(lib, family=("SeaFreeze@1.1.0",)), [])
         self.assertEqual(mr.multi_source_warnings({"id": "toy", "phases": [self._phase("other.pdf")]}, "t"), [])
+
+
+class DirectTable(TRegistry):
+    """Impl note 3 B1, B3 and note 4 item 5: the table's window is its grid; Maxwell consistency where the columns allow
+    it, within the declared tolerance; the view reads the table bilinearly in (ln P, T) and takes (dT/dP)_S from the
+    α and c_P columns only."""
+
+    def _rec(self, change=None):
+        d = copy.deepcopy(GOOD)
+        tabled(d)
+        if change:
+            change(d)
+        return d
+
+    def test_loads_and_each_control(self):
+        self.assertIsInstance(self._load(self._rec()), mr.Registry)
+        for name, change, word in (
+                ("α against ρ", lambda d: _set(d, "rho", 0, [4000.0, 3990.0]), "Maxwell"),
+                ("no tolerance", lambda d: PH(d)["eos"]["table"].pop("maxwell_tolerance"), "maxwell_tolerance"),
+                ("c_P against v", lambda d: col(d, "rho") and PH(d)["eos"]["table"]["columns"].update(
+                    c_p=[[1000.0, 1000.0], [3000.0, 3000.0], [1000.0, 1000.0]]), "c_P"),
+                ("window past the grid", lambda d: PH(d)["window"].update(p_max=5.0e9), "grid")):
+            with self.subTest(name):
+                got = self._load(self._rec(change))
+                self.assertEqual(got.id, "material.table_check", dict(getattr(got, "evidence", {})))
+                self.assertIn(word, got.evidence["why"])
+        got = self._load(self._rec(lambda d: PH(d)["eos"]["table"].update(axes="rho_T")))
+        self.assertEqual(got.id, "material.kind_rule")                          # not built in phase 2
+
+    def test_view_reads_the_table(self):
+        d = self._rec(lambda d: PH(d)["eos"]["table"]["columns"].update(c_p=[[1000.0, 1000.0] for _ in range(3)]))
+        v = mv.RecordView(d, 300.0)
+        u = (math.log(1.5e9) - math.log(1.0e9)) / (math.log(2.0e9) - math.log(1.0e9))
+        want = (1 - u) * 0.5 * (4000.0 + 3975.5) + u * 0.5 * (4050.0 + 4025.2)
+        rho, dtdp, _n = v.state(1.5e9, 450.0)
+        self.assertAlmostEqual(rho, want, places=9)
+        self.assertAlmostEqual(dtdp, 2.05e-5 * 450.0 / (rho * 1000.0), delta=1e-18)
+        self.assertIsInstance(mv.RecordView(self._rec(), 300.0).state(1.5e9, 450.0), st.Stop)   # no c_P column
+        self.assertIsInstance(v.state(5.0e9, 450.0), st.Stop)                  # past the grid: refused by its edge
 
 
 if __name__ == "__main__":

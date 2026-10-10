@@ -352,7 +352,10 @@ class BlendGate(unittest.TestCase):
         wide["joins_within"][0]["sampling"]["box"].update(p_min=1.0e9)
         off = ph()
         off["joins_within"][0]["sampling"]["box"].update(p_max=2.0e9)
-        for name, ph in (("overlap past a data range", wide), ("sampling box not the overlap", off)):
+        topen = ph()                                       # 68 N60: a T-open overlap, a's data ends at 330 K
+        topen["sources"][0]["data_range"]["t_max"] = 330.0
+        for name, ph in (("overlap past a data range", wide), ("sampling box not the overlap", off),
+                         ("sampling T past a data range", topen)):
             with self.subTest(name), self.assertRaises(mr._Stop) as cm:
                 mr._sources_and_joins(ph, "toy.yaml")
             self.assertEqual(cm.exception.stop.id, "material.join_rule")

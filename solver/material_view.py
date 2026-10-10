@@ -439,6 +439,40 @@ EVALUATORS = MappingProxyType({"dorogokupets2017_liquid_fe": Dorogokupets2017Liq
                                "french_redmer2015": FrenchRedmer2015, "iapws06_ih": Iapws06Ih})
 
 
+class _TablePhase:
+    """A direct (P, T) table (impl note 3 B1, note 4 item 5) behind the library face: ρ, α, c_P, K_T read bilinearly in
+    (ln P, T) from their columns, (dT/dP)_S = αT/(ρc_P) from the α and c_P columns (never differentiated across cell
+    edges). Outside the grid, LibraryOutOfRange; a quantity without its column is absent from the answer."""
+
+    def __init__(self, table):
+        self.lnp = [math.log(float(x)) for x in table["first"]]
+        self.t = [float(x) for x in table["t"]]
+        self.cols = {k: [[float(v) for v in row] for row in rows] for k, rows in table["columns"].items()}
+
+    def at(self, p, t):
+        import bisect
+        if not (p > 0.0 and self.lnp[0] <= math.log(p) <= self.lnp[-1] and self.t[0] <= t <= self.t[-1]):
+            raise ml.LibraryOutOfRange(f"table at ({p:g} Pa, {t:g} K): outside its grid "
+                                       f"P [{math.exp(self.lnp[0]):g}, {math.exp(self.lnp[-1]):g}] Pa × "
+                                       f"T [{self.t[0]:g}, {self.t[-1]:g}] K")
+        x = math.log(p)
+        i = min(max(bisect.bisect_right(self.lnp, x) - 1, 0), len(self.lnp) - 2)
+        j = min(max(bisect.bisect_right(self.t, t) - 1, 0), len(self.t) - 2)
+        u = (x - self.lnp[i]) / (self.lnp[i + 1] - self.lnp[i])
+        v = (t - self.t[j]) / (self.t[j + 1] - self.t[j])
+
+        def bil(c):
+            return ((1 - u) * (1 - v) * c[i][j] + u * (1 - v) * c[i + 1][j] + (1 - u) * v * c[i][j + 1]
+                    + u * v * c[i + 1][j + 1])
+        out = {"rho": bil(self.cols["rho"]), "g": math.nan}
+        for k in ("alpha", "c_p", "k_t"):
+            if k in self.cols:
+                out[k] = bil(self.cols[k])
+        if "alpha" in out and "c_p" in out:
+            out["dtdp"] = out["alpha"] * t / (out["rho"] * out["c_p"])
+        return out
+
+
 class _EvaluatorPhase:
     """An evaluator used as a phase's EOS: the same face as the library adapter (ρ, dT/dP), from the evaluator's ρ,
     γ, K_T and (∂P/∂T)_V: (dT/dP)_S = γT/K_S, K_S = K_T + (∂P/∂T)_V·γ·T. A failure is LibraryOutOfRange."""
@@ -526,6 +560,8 @@ class RecordView:
             lib, cold = ml.SeaFreezePhase(eos["library"]["submodel"]), None
         elif form == "evaluator":                   # a potential gives ρ and its derivatives (c8: French & Redmer)
             lib, cold = _EvaluatorPhase(EVALUATORS[eos["evaluator"]["name"]](eos["evaluator"].get("params", {}))), None
+        elif form == "table":                       # impl note 3 B1: a direct table, read as a library is
+            lib, cold = _TablePhase(eos["table"]), None
         else:
             k0p = _v(pr["k0p"]) if "k0p" in pr else 4.0
             cold = _cold_pressure(form, _v(pr["rho0"]), _v(pr["k0"]), 4.0 if form == "bm2" else k0p)
@@ -916,9 +952,13 @@ class RecordView:
     # density ──────────────────────────────────────────────────────────────────────────────────────────────────────
     def _library(self, ph, p, t, key):
         try:
-            return ph.library.at(p, t)[key]
+            got = ph.library.at(p, t)
         except ml.LibraryOutOfRange as e:           # 68 N28: a named Stop, never a crash
             return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data", str(e)))
+        if key not in got:                          # a table without the columns for this quantity (note 4 item 5)
+            return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
+                                                    f"{ph.id}: the table has no columns for {key}"))
+        return got[key]
 
     def _phase_density(self, ph, p, t):
         """Legacy Phase.density: subtract the thermal pressure, invert the cold curve by the same Newton. A library

@@ -453,6 +453,12 @@ def _sources_and_joins(ph: Mapping, file):
                                 why=f"the overlap's {lo_k}–{hi_k} lies outside both sources' data ranges "
                                     f"[{lo:g}, {hi:g}] (note 3 A1: extrapolated parts take no part)")
             bx = j["sampling"]["box"]
+            t_lo = max(float(a_dr.get("t_min", -math.inf)), float(b_dr.get("t_min", -math.inf)))
+            t_hi = min(float(a_dr.get("t_max", math.inf)), float(b_dr.get("t_max", math.inf)))
+            if not (t_lo <= float(bx["t_min"]) and float(bx["t_max"]) <= t_hi):     # 68 N60: a T-open overlap
+                raise _Stop("material.join_rule", file=file, phase=ph["id"], join=i,
+                            why=f"the sampling box's T [{bx['t_min']}, {bx['t_max']}] lies outside both sources' "
+                                f"data T range [{t_lo:g}, {t_hi:g}] (note 3 A1)")
             if float(bx["p_min"]) != float(ov["p_min"]) or float(bx["p_max"]) != float(ov["p_max"]) or any(
                     k in ov and float(bx.get(k, math.nan)) != float(ov[k]) for k in ("t_min", "t_max")):
                 raise _Stop("material.join_rule", file=file, phase=ph["id"], join=i,
@@ -608,6 +614,47 @@ def _increasing(xs) -> bool:
     return all(_is_number(x) for x in xs) and all(b > a for a, b in zip(xs, xs[1:]))
 
 
+def _maxwell(tb: Mapping, no):
+    """Impl note 3 B3: Maxwell consistency where the columns allow it, within the declared maxwell_tolerance.
+    - α against ρ: α = −(∂ ln ρ/∂T)_P, by differences along each isobar (needs α, ρ and ≥ 2 T nodes);
+    - c_P against v = 1/ρ: (∂c_P/∂P)_T = −T(∂²v/∂T²)_P per unit mass, with ∂v/∂T = αv (needs c_P, α, ρ, ≥ 2 P and
+      ≥ 2 T nodes); compared against max(|lhs|, |rhs|, c_P/P) so a vanishing side does not divide by zero.
+    A table whose columns allow a check and that declares no tolerance STOPs; the tolerance is never chosen after
+    the check (a recorded value, as every declared number)."""
+    first, ts, cols = tb["first"], tb["t"], tb["columns"]
+    can_a = {"alpha", "rho"} <= set(cols) and len(ts) >= 2
+    can_c = {"c_p", "alpha", "rho"} <= set(cols) and len(ts) >= 2 and len(first) >= 2
+    if not (can_a or can_c):
+        return
+    tol = tb.get("maxwell_tolerance")
+    if tol is None:
+        no("the columns allow the Maxwell check (B3): declare maxwell_tolerance, set before running it")
+    rho, al = cols["rho"], cols["alpha"]
+    n_t = len(ts)
+    for i in range(len(first)):
+        for k in range(n_t):
+            k0, k1 = (k - 1 if k > 0 else k), (k + 1 if k + 1 < n_t else k)
+            a_fd = -(math.log(rho[i][k1]) - math.log(rho[i][k0])) / (ts[k1] - ts[k0])
+            if abs(a_fd - al[i][k]) > tol * abs(al[i][k]):
+                no(f"Maxwell: α {al[i][k]:.4g} against −∂lnρ/∂T {a_fd:.4g} at node ({first[i]}, {ts[k]}), "
+                   f"beyond the declared {tol:g}")
+    if can_c:
+        cp = cols["c_p"]
+        for i in range(len(first) - 1):
+            for k in range(n_t):
+                k0, k1 = (k - 1 if k > 0 else k), (k + 1 if k + 1 < n_t else k)
+                pm = 0.5 * (first[i] + first[i + 1])
+                lhs = (cp[i + 1][k] - cp[i][k]) / (first[i + 1] - first[i])
+
+                def avt(kk):                          # (∂v/∂T)_P = αv at the mid isobar, node kk
+                    return 0.5 * (al[i][kk] / rho[i][kk] + al[i + 1][kk] / rho[i + 1][kk])
+                rhs = -ts[k] * (avt(k1) - avt(k0)) / (ts[k1] - ts[k0])
+                scale = max(abs(lhs), abs(rhs), 0.5 * (cp[i][k] + cp[i + 1][k]) / pm)
+                if abs(lhs - rhs) > tol * scale:
+                    no(f"Maxwell: (∂c_P/∂P)_T {lhs:.4g} against −T(∂²v/∂T²)_P {rhs:.4g} at ({pm:g}, {ts[k]}), "
+                       f"beyond the declared {tol:g}")
+
+
 def _table(ph: Mapping, file):
     """Impl note 3 B1–B3 and note 4 item 5: the direct table's shape and physical checks."""
     if ph["eos"]["form"] != "table":
@@ -620,6 +667,10 @@ def _table(ph: Mapping, file):
     def no(why):
         raise _Stop("material.table_check", file=file, phase=pid, why=why)
 
+    if tb["axes"] != "P_T" or tb["interpolation"] != "bilinear_lnp_t":
+        raise _Stop("material.kind_rule", file=file, why=f"phase {pid}: only (P, T) tables with bilinear_lnp_t "
+                                                         f"interpolation are built in phase 2 (got {tb['axes']}, "
+                                                         f"{tb['interpolation']})")
     first, ts, cols = tb["first"], tb["t"], tb["columns"]
     if not _increasing(first) or not _increasing(ts):
         no("the axis nodes are numbers in increasing order")
@@ -648,6 +699,12 @@ def _table(ph: Mapping, file):
             for k, v in enumerate(r):
                 if not test(v):
                     no(f"{why} fails at node ({first[i]}, {ts[k]}): {v}")
+    w = ph["window"]
+    if not (first[0] <= float(w["p_min"]) and float(w["p_max"]) <= first[-1]
+            and ts[0] <= float(w.get("t_min", ts[0])) and float(w.get("t_max", ts[-1])) <= ts[-1]):
+        no(f"the window lies outside the table's grid P [{first[0]:g}, {first[-1]:g}] × T [{ts[0]:g}, {ts[-1]:g}] "
+           "(B1: the table's edges are its window)")
+    _maxwell(tb, no)
     if "alpha" in cols:
         rng = tb.get("alpha_range")
         if not rng or len(rng) != 2:
