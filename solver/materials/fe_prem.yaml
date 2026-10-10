@@ -90,7 +90,7 @@ formula_checks:
     unit: Pa
     tolerance: 500000000.0
     tolerance_reason: "2-figure print «82 GPa»"
-    expression: "alpha_k * (T - T0) + 0.5 * alpha_k_dt * (T - T0)**2"
+    expression: "pressure.alpha_k * (T - T0) + 0.5 * pressure.alpha_k_dt * (T - T0)**2"
     source: {cache: "2003PhyB..328..345I.pdf", page: "347", where: "text below eq. (4): «the value of PTH at 6000 K is 82 GPa»", sha256: d6cc26aa2bdb9a04d55efa480bdbbbeca8c6899ca35275e627c43051ec6fd6ee}
   - quantity: "P_TH nonlinear term at 6000 K"
     state: {T: 6000.0, T0: 300.0}
@@ -98,7 +98,7 @@ formula_checks:
     unit: Pa
     tolerance: 500000000.0
     tolerance_reason: "2-figure print «13 GPa»; exercises the ½ (r2 N4)"
-    expression: "0.5 * alpha_k_dt * (T - T0)**2"
+    expression: "0.5 * pressure.alpha_k_dt * (T - T0)**2"
     source: {cache: "2003PhyB..328..345I.pdf", page: "347", where: "text below eq. (4): «of which 13 GPa is due to the nonlinear term»", sha256: d6cc26aa2bdb9a04d55efa480bdbbbeca8c6899ca35275e627c43051ec6fd6ee}
   - quantity: "γ of liquid Fe at 19 GPa / 2100 K"
     state: {P: 19.0e9, T: 2100.0, rho: 8083.0}
@@ -106,7 +106,7 @@ formula_checks:
     unit: "1"
     tolerance: 0.14
     tolerance_reason: "the printed 1σ of γ"
-    expression: "alpha_k / (rho * c_v)"
+    expression: "sets[0].alpha_k / (rho * sets[0].c_v)"
     source: {cache: "2023GeoRL..5002271H-pub.pdf", page: "7", where: "Table 1, liquid Fe, CMB column: γ 2.74 (1σ 0.14), ρ 8,083", sha256: 653cbb0690f690eaca8d8450029ecedd0495c7bdb4263421e5320c85a0f60af6}
 note: >-
   The liquid/hcp split and the iron melting curve × 0.8 belong to the core-energy node, which phase 2 does

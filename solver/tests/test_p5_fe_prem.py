@@ -210,41 +210,59 @@ class Adiabat(unittest.TestCase):
 
 
 class FormulaChecks(unittest.TestCase):
-    """The record's formula checks, evaluated on its own constants (P3's evaluator will replace this)."""
+    """The record's formula checks, evaluated by the checker's grammar (solver.material_checks, note 3 C4) on the
+    record's own constants, as printed (I&A P_TH and its nonlinear part, Huang's γ)."""
 
     @classmethod
     def setUpClass(cls):
         rec = _record()
+        cls.rec = rec
         cls.checks = {c["quantity"]: c for c in rec["formula_checks"]}
-        ph = rec["phases"][0]
-        cls.ns = {"alpha_k": _v(ph["thermal"]["pressure"]["alpha_k"]),
-                  "alpha_k_dt": _v(ph["thermal"]["pressure"]["alpha_k_dt"])}
-        cls.huang = {"alpha_k": _v(ph["thermal"]["sets"][0]["constants"]["alpha_k"]),
-                     "c_v": _v(ph["thermal"]["sets"][0]["constants"]["c_v"])}
 
-    def eval(self, c, ns):
-        return eval(c["expression"], {"__builtins__": {}}, {**ns, **c["state"]})   # noqa: S307 (record data, tests only)
+    def eval(self, c, phase=None):
+        from solver import material_checks as mc
+        got = mc.evaluate(c["expression"], phase if phase is not None else self.rec["phases"][0], c["state"])
+        self.assertNotIsInstance(got, mc.CheckStop, got)
+        return got
+
+    def test_every_check_passes_in_the_checker(self):
+        from solver import material_checks as mc
+        res = mc.run_formula_checks(self.rec)
+        self.assertEqual([r["quantity"] for r in res if not r.get("passed")], [])
 
     def test_p_th_6000(self):
         c = self.checks["P_TH at 6000 K"]
-        got = self.eval(c, self.ns)
+        got = self.eval(c)
         self.assertAlmostEqual(got / GPA, 81.6411, places=3)          # 68.97 + 12.6711
         self.assertLessEqual(abs(got - c["expected"]), c["tolerance"])
 
     def test_nonlinear_term(self):
         c = self.checks["P_TH nonlinear term at 6000 K"]
-        self.assertLessEqual(abs(self.eval(c, self.ns) - c["expected"]), c["tolerance"])
-        self.assertGreater(abs(2 * self.eval(c, self.ns) - c["expected"]), c["tolerance"])   # without the ½: 25.3 fails
+        self.assertLessEqual(abs(self.eval(c) - c["expected"]), c["tolerance"])
+        self.assertGreater(abs(2 * self.eval(c) - c["expected"]), c["tolerance"])   # without the ½: 25.3 fails
 
     def test_huang_gamma(self):
         c = self.checks["γ of liquid Fe at 19 GPa / 2100 K"]
-        got = self.eval(c, self.huang)
+        got = self.eval(c)
         self.assertAlmostEqual(got, 2.7309, places=3)
         self.assertLessEqual(abs(got - c["expected"]), c["tolerance"])
 
+    def test_edge_band_method_in_the_checker(self):
+        # the band's method on the record's own view (printed V0): 0.47418, vs 0.4742 on legacy's evaluator
+        from solver import material_checks as mc
+        from solver import material_view as mv
+        ph = self.rec["phases"][0]
+        band = ph["thermal"]["sets"][1]["edge_above"]["band"]
+        got = mc.evaluate(band["method"], ph, {}, mc.view_spread(mv.RecordView(self.rec, 1600.0)))
+        self.assertNotIsInstance(got, mc.CheckStop, got)
+        self.assertAlmostEqual(got, 0.47418, places=4)
+
     def test_planted_seager_alpha_fails(self):
+        from solver.from_v1 import thaw
         c = self.checks["P_TH at 6000 K"]
-        got = self.eval(c, {**self.ns, "alpha_k": 0.00121 * GPA})
+        ph = thaw(self.rec["phases"][0])
+        ph["thermal"]["pressure"]["alpha_k"] = {"value": 0.00121 * GPA, "unit": "Pa/K"}
+        got = self.eval(c, ph)
         self.assertAlmostEqual(got / GPA, 19.567, places=2)
         self.assertGreater(abs(got - c["expected"]), c["tolerance"])
 
