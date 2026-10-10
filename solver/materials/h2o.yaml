@@ -784,7 +784,9 @@ phases:
       t_min: 300.5
       t_max: 451.2
     data_range_where: 'Bezacier 2014 Table I (pp.104505-2–3), extremes of the listed VII points (directing 2026-10-11): 2.14(2)
-      GPa at 340.7 K to 10.11(3) GPa at 449.9 K; 300.5–451.2 K'
+      GPa at 340.7 K to 10.11(3) GPa at 449.9 K; 300.5–451.2 K. The «300 K» series was measured at 300.5–300.8 K; T0 = 300
+      K is the fit''s reference (§III), not a measured point, so below 300.5 K is graded extrapolated in T per the Table I
+      ruling (68 N55)'
     sigma:
       kind: propagated
       correlation: not_printed
@@ -854,7 +856,8 @@ phases:
       min: 9.96e-05
       max: 0.000132
       origin: Bezacier 2014 Table II ice VII PVT α0 = 11.58(54)×10⁻⁵ K⁻¹ ± 3σ; Fei et al. 1993's 11.39(68)×10⁻⁵ (same table)
-        lies inside; declared 2026-10-11 before any T-extrapolation comparison
+        lies inside; declared 2026-10-11 before any T-extrapolation comparison. With exp_alpha α ≡ α0 at every (P, T), so
+        this range binds only a T-varying model; the T-edge guard here is the band against F&R and the ρ-rise check (68 N56)
   - id: fr2015
     source: *id005
     basis: computed
@@ -1114,14 +1117,35 @@ triple_points:
     reason: 'set before measuring: the spread of reported locations, 352.2–355 K and 2,160–2,216 MPa (Journaux et al. 2020
       p.11)'
   unchecked: inside the declared VI–VII refusal region (no VI–VII curve until its source is cached)
-field_probe:
-  box:
+field_probes:
+- box:
+    p_min: 0.0
+    p_max: 1000000000.0
+    t_min: 1.0
+    t_max: 300.0
+  dp: 10000000.0
+  dt: 5.0
+- box:
     p_min: 0.0
     p_max: 3000000000.0
     t_min: 240.0
     t_max: 500.0
   dp: 20000000.0
   dt: 5.0
+- box:
+    p_min: 1000000000.0
+    p_max: 2300000000.0
+    t_min: 1.0
+    t_max: 240.0
+  dp: 20000000.0
+  dt: 10.0
+- box:
+    p_min: 3000000000.0
+    p_max: 30000000000.0
+    t_min: 295.0
+    t_max: 1000.0
+  dp: 500000000.0
+  dt: 25.0
 formula_checks:
 - quantity: R14-08 eq. (5), ice VII melting pressure at 550 K
   state: {}
@@ -1196,10 +1220,12 @@ formula_checks:
     page: -7-
     where: §7 Table 3, ice VI – liquid, 320.0 K
     sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
-note: SeaFreeze 1.1.0 is the PyPI sdist (sha256 c7574f3e9b9628d2eac6ca7f049d54c5c027928930cdb4b13a6988c5700bda8c, enforced
+note: 'SeaFreeze 1.1.0 is the PyPI sdist (sha256 c7574f3e9b9628d2eac6ca7f049d54c5c027928930cdb4b13a6988c5700bda8c, enforced
   at install by pip --require-hashes); library.sha256 is the installed package tree (material_library.tree_sha256). Windows
-  are the spline knot domains at the pin ∩ the printed validity (≤ 2,300 MPa; water1 ≤ 500 K). Liquid above water1's window
+  are the spline knot domains at the pin ∩ the printed validity (≤ 2,300 MPa; water1 ≤ 500 K). Liquid above water1''s window
   and the vapour refuse by name until IAPWS-IF97 lands (owner-direction 2026-10-11, scope change). Any icy column crossing
-  ~2.2 GPa refuses until a VI–VII boundary source is cached (directing 2026-10-11). French & Redmer 2015 prints no point value
-  of its potential; its transcription is checked against legacy ice_fr2015 (test_material_evaluators) and against SeaFreeze's
-  VII_X_French, the same potential (P6 test, directing).
+  ~2.2 GPa refuses until a VI–VII boundary source is cached (directing 2026-10-11). Ice VII from 2.3 GPa (VI''s window top)
+  to F&R''s ρ = 1600 kg/m³ edge (~3.3 GPa at 300 K) refuses by name: Bezacier gives ρ there but prints no c_P, and the c_P
+  it borrows from F&R is outside F&R''s ρ bracket; it waits on a measured ice VII c_P source (h2o-sources.md; 68 N53). French
+  & Redmer 2015 prints no point value of its potential; its transcription is checked against legacy ice_fr2015 (test_material_evaluators)
+  and against SeaFreeze''s VII_X_French, the same potential (P6 test, directing).'
