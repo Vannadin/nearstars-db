@@ -141,5 +141,40 @@ class Edges(unittest.TestCase):
         self.assertIn("band evaluation not built", s.record.why)
 
 
+class Branched(unittest.TestCase):
+    """D-P1: a branched record picks its phase by the declared boundary curve at T, not by P windows alone."""
+
+    def _rec(self):
+        from solver.tests.test_material_registry import GOOD, const
+        import copy
+        d = copy.deepcopy(GOOD)
+        a = d["phases"][0]
+        b = copy.deepcopy(a)
+        a["id"], b["id"] = "lo", "hi"
+        d["phases"].append(b)
+        b["eos"]["params"]["rho0"] = const(5000.0, "kg/m3")
+        d["kind"] = "branched"
+        d["boundaries"] = [{"between": ["lo", "hi"], "kind": "solid_solid",
+                            "curve": {"form": "clapeyron", "p0": const(1.0e10, "Pa"), "t0": const(1000.0, "K"),
+                                      "slope": const(3.0e6, "Pa/K")}}]
+        return d
+
+    def test_side_of_the_curve(self):
+        v = mv.RecordView(self._rec(), T_POT)
+        # at 1000 K the boundary is at 10 GPa; at 2000 K it is at 13 GPa
+        self.assertEqual(v._phase_at(9.9e9, 1000.0).id, "lo")
+        self.assertEqual(v._phase_at(10.1e9, 1000.0).id, "hi")
+        self.assertEqual(v._phase_at(12.0e9, 2000.0).id, "lo")          # the same P, hotter: still the low-P phase
+        self.assertEqual(v._phase_at(13.1e9, 2000.0).id, "hi")
+        self.assertEqual(len(v.transitions()), 1)
+
+    def test_table_curve_outside_its_nodes_refuses(self):
+        rec = self._rec()
+        rec["boundaries"][0]["curve"] = {"form": "table", "nodes": [[500.0, 9.0e9], [1500.0, 11.0e9]]}
+        v = mv.RecordView(rec, T_POT)
+        self.assertEqual(v._phase_at(10.5e9, 1000.0).id, "hi")         # P_b(1000 K) = 10 GPa
+        self.assertIsInstance(v._phase_at(10.5e9, 2000.0), st.Stop)     # no curve at 2000 K: no guess
+
+
 if __name__ == "__main__":
     unittest.main()

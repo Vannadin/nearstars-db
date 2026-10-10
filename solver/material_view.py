@@ -350,8 +350,53 @@ class RecordView:
                       (_num(th["phase_constants"]["p_min"]), _num(th["phase_constants"]["p_max"])))
 
     # edges (D-M2) ─────────────────────────────────────────────────────────────────────────────────────────────────
+    def boundary_pressure(self, curve, t):
+        """P_b(T) of a declared boundary curve (D-P1): clapeyron p0 + slope·(T − t0), or a table of printed (T, P) nodes
+        read piecewise-linearly in T (no extrapolation: outside the nodes the curve is absent, None). Other forms are
+        not built yet (None)."""
+        form = curve["form"]
+        if form == "clapeyron":
+            return _v(curve["p0"]) + _v(curve["slope"]) * (t - _v(curve["t0"]))
+        if form == "table":
+            nodes = [(float(a), float(b)) for a, b in curve["nodes"]]
+            for (t0, p0), (t1, p1) in zip(nodes, nodes[1:]):
+                if t0 <= t <= t1:
+                    return p0 + (p1 - p0) * (t - t0) / (t1 - t0)
+            return None
+        return None
+
+    def _branch_at(self, p, t):
+        """Branched record (D-P1): the phase on P's side of each declared boundary at T, in the record's phase order
+        (lower-P phase first). A boundary whose curve is absent at T refuses (no phase is guessed)."""
+        by_id = {ph.id: ph for ph in self.phases}
+        cur = self.phases[0]
+        for b in self.boundaries:                       # one per adjacent pair, in phase order (registry kind rule)
+            lo, hi = b["between"]
+            if lo != cur.id:
+                break
+            pb = self.boundary_pressure(b["curve"], t)
+            if pb is None:
+                return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data",
+                                                        f"boundary {tuple(b['between'])} has no curve at {t:g} K"))
+            if p < pb:
+                break
+            cur = by_id[hi]
+        return cur
+
     def _phase_at(self, p, t):
-        """The phase whose window holds p (p_min ≤ p ≤ p_max, as legacy Material.phase_at), or the edge's outcome."""
+        """The phase whose window holds p (p_min ≤ p ≤ p_max, as legacy Material.phase_at), or the edge's outcome. A
+        branched record picks the phase by its declared boundary curves first, then applies that phase's window."""
+        if self.kind == "branched" and self.boundaries:
+            ph = self._branch_at(p, t)
+            if isinstance(ph, st.Stop):
+                return ph
+            if not ph.p_min <= p <= ph.p_max:
+                return self._edge(ph, "p_max" if p > ph.p_max else "p_min", p, t)
+            if t > 0.0 and ph.t_max and t > ph.t_max:
+                return self._edge(ph, "t_max", p, t)
+            if t > 0.0 and ph.t_min and t < ph.t_min:
+                return self._edge(ph, "t_min", p, t)
+            return ph
         for ph in self.phases:
             if ph.p_min <= p <= ph.p_max:
                 if t > 0.0 and ph.t_max and t > ph.t_max:
