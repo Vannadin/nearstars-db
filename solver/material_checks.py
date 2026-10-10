@@ -255,10 +255,6 @@ def run_formula_checks(record: Mapping, view=None) -> list:
         if disc is None:
             row["passed"] = within
         else:                                               # owner-direction 44ff625: stale, or beyond the bound, fails
-            if "bound" not in disc:                         # step 1 of 44ff625: until records carry it (then required)
-                row["passed"] = not within
-                out.append(row)
-                continue
             allowed = _disclosure_allowance(disc["bound"], fc, record["phases"][pi], state, view, pi)
             if isinstance(allowed, CheckStop):
                 out.append({"quantity": fc["quantity"], "stop": allowed})
