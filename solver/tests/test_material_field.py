@@ -129,6 +129,23 @@ class RefusalRegion(unittest.TestCase):
         self.assertEqual(mr.triple_point_misses(rec, "toy.yaml").id, "material.triple_point_miss")
 
 
+class RecordFunctions(unittest.TestCase):
+    """c8: curve() and melt_p() in the C4 grammar, so R14-08's verification values can be formula checks."""
+
+    def test_curve_and_melt_p(self):
+        from solver import material_checks as mc
+        rec = field_record()
+        v = mv.RecordView(rec, T)
+        fns = mc.view_record_fns(v)
+        got = mc.evaluate("curve(boundaries[0] @ T=300.0)", rec["phases"][0], {}, None, fns)
+        self.assertEqual(got, P_VI_VII)
+        p = mc.evaluate("melt_p(VI, water1 @ T=300.0)", rec["phases"][0], {}, None, fns)
+        self.assertAlmostEqual(p / 1e9, 0.994, places=2)                 # SeaFreeze's water1–VI crossing at 300 K
+        for bad in ("curve(boundaries[0] @ T=400.0)", "melt_p(VI, VII @ T=300.0)", "__curve__(0, 300.0)"):
+            with self.subTest(expr=bad):
+                self.assertIsInstance(mc.evaluate(bad, rec["phases"][0], {}, None, fns), mc.CheckStop)
+
+
 class TriplePoint(unittest.TestCase):
     """Impl note 6 item 4: at a declared mixed triple point the declared curves and the min-G boundary meet within the
     tolerance set before measuring. Toy point: water1–VI–VII at 354 K, 2.2 GPa (SeaFreeze's water1–VI crossing there

@@ -36,6 +36,10 @@ class _Stop(Exception):
 
 
 _SPREAD_CALL = "__spread__"
+_CURVE_CALL = "__curve__"
+_MELT_CALL = "__melt__"
+_CURVE = re.compile(r"curve\(\s*boundaries\[(\d+)\]\s*@\s*T\s*=\s*([^)]*)\)")
+_MELT = re.compile(r"melt_p\(\s*([A-Za-z_][\w]*)\s*,\s*([A-Za-z_][\w]*)\s*@\s*T\s*=\s*([^)]*)\)")
 _SPREAD = re.compile(r"(gamma_spread|dpdt_spread)\(\s*(sets\[\d+\])\s*@\s*([^;]*);\s*printed\s*=\s*([^)]*)\)")
 _OPS = MappingProxyType({ast.Add: lambda a, b: a + b, ast.Sub: lambda a, b: a - b, ast.Mult: lambda a, b: a * b,
                          ast.Div: lambda a, b: a / b, ast.Pow: lambda a, b: a ** b})
@@ -80,8 +84,9 @@ def _path(node) -> str | None:
 
 
 class _Eval:
-    def __init__(self, consts: dict, state: Mapping, spread=None):
+    def __init__(self, consts: dict, state: Mapping, spread=None, record_fns=None):
         self.consts, self.state, self.spread = consts, {k: float(v) for k, v in state.items()}, spread
+        self.record_fns = record_fns
 
     def name(self, p: str) -> float:
         if p in self.state:
@@ -115,6 +120,12 @@ class _Eval:
                 if (f == "abs" and len(args) != 1) or not args:                # 68 G2: arity
                     raise _Stop("material.check_grammar", f"{f} takes {'one argument' if f == 'abs' else 'arguments'}")
                 return {"max": max, "min": min, "abs": abs}[f](*args)
+            if f in (_CURVE_CALL, _MELT_CALL):
+                if self.record_fns is None:
+                    raise _Stop("material.check_grammar", "curve / melt_p need the record's view")
+                if f == _CURVE_CALL:
+                    return self.record_fns["curve"](node.args[0].value, self(node.args[1]))
+                return self.record_fns["melt_p"](node.args[0].value, node.args[1].value, self(node.args[2]))
             if f == _SPREAD_CALL:
                 kind_s, set_i = node.args[0].value, node.args[1].value
                 if kind_s not in ("gamma_spread", "dpdt_spread"):
@@ -137,17 +148,20 @@ def _rewrite_spreads(expr: str) -> str:
         if set(kv) != {"P", "T"}:
             raise _Stop("material.check_grammar", f"{kind} takes «@ P=…, T=…», got {at!r}")
         return f'{_SPREAD_CALL}("{kind}", {int(s[5:-1])}, ({kv["P"]}), ({kv["T"]}), ({printed}))'
-    if _SPREAD_CALL in expr:                                   # 68 G1: the internal call is not spellable by a record
-        raise _Stop("material.check_grammar", f"«{_SPREAD_CALL}» is internal; write gamma_spread / dpdt_spread")
+    for internal in (_SPREAD_CALL, _CURVE_CALL, _MELT_CALL):    # 68 G1: internal calls are not spellable by a record
+        if internal in expr:
+            raise _Stop("material.check_grammar", f"«{internal}» is internal")
+    expr = _CURVE.sub(lambda m: f"{_CURVE_CALL}({int(m.group(1))}, ({m.group(2)}))", expr)
+    expr = _MELT.sub(lambda m: f'{_MELT_CALL}("{m.group(1)}", "{m.group(2)}", ({m.group(3)}))', expr)
     return _SPREAD.sub(sub, expr)
 
 
-def evaluate(expr: str, phase: Mapping, state: Mapping, spread=None) -> float | CheckStop:
+def evaluate(expr: str, phase: Mapping, state: Mapping, spread=None, record_fns=None) -> float | CheckStop:
     """The value of `expr` for one phase of a record at `state`, or a CheckStop. `spread(kind, set_index, P, T,
     printed)` evaluates a set at a state (a RecordView supplies it)."""
     try:
         tree = ast.parse(_rewrite_spreads(expr), mode="eval")
-        return _Eval(_constants(phase), state, spread)(tree)
+        return _Eval(_constants(phase), state, spread, record_fns)(tree)
     except _Stop as s:
         return s.stop
     except SyntaxError as e:
@@ -169,6 +183,42 @@ def view_spread(view, phase_index: int = 0):
     return spread
 
 
+def view_record_fns(view):
+    """curve(boundaries[i] @ T=…) = P_b(T) of a declared curve; melt_p(a, b @ T=…) = the P where gibbs phases a and b
+    have equal G at T, bracketed inside both windows (c8: R14-08 verification values as formula checks)."""
+    def curve(i, t):
+        b = view.record["boundaries"][i]
+        pb = view.boundary_pressure(b["curve"], t)
+        if pb is None:
+            raise _Stop("material.check_grammar", f"boundaries[{i}] is absent at {t:g} K")
+        return pb
+
+    def melt_p(a, b, t):
+        pa = next((ph for ph in view.phases if ph.id == a), None)
+        pb = next((ph for ph in view.phases if ph.id == b), None)
+        if pa is None or pb is None or pa.library is None or pb.library is None:
+            raise _Stop("material.check_grammar", f"melt_p needs two library phases of the record, got {a}, {b}")
+        lo, hi = max(pa.p_min, pb.p_min, 1.0e5), min(pa.p_max, pb.p_max)
+        try:
+            f = lambda p: pa.library.at(p, t)["g"] - pb.library.at(p, t)["g"]     # noqa: E731
+            flo, fhi = f(lo), f(hi)
+            if flo * fhi > 0.0:
+                raise _Stop("material.check_grammar", f"melt_p: G of {a} and {b} do not cross at {t:g} K in the windows")
+            for _ in range(80):
+                mid = 0.5 * (lo + hi)
+                fm = f(mid)
+                if (fm > 0.0) == (flo > 0.0):
+                    lo, flo = mid, fm
+                else:
+                    hi = mid
+        except _Stop:
+            raise
+        except Exception as e:
+            raise _Stop("material.check_grammar", f"melt_p could not evaluate: {e}") from e
+        return 0.5 * (lo + hi)
+    return {"curve": curve, "melt_p": melt_p}
+
+
 def run_formula_checks(record: Mapping, view=None) -> list:
     """Each formula check of a record: {quantity, got, expected, tolerance, passed} or {quantity, stop}. A check is read
     against the first phase unless its state names `phase` (an index)."""
@@ -177,7 +227,8 @@ def run_formula_checks(record: Mapping, view=None) -> list:
         state = dict(fc["state"])
         pi = int(state.pop("phase", 0))
         got = evaluate(fc["expression"], record["phases"][pi], state,
-                       None if view is None else view_spread(view, pi))
+                       None if view is None else view_spread(view, pi),
+                       None if view is None else view_record_fns(view))
         if isinstance(got, CheckStop):
             out.append({"quantity": fc["quantity"], "stop": got})
             continue
