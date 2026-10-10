@@ -60,7 +60,7 @@ phases:
   state: solid
   eos:
     form: library
-    reference:
+    reference: &id002
       kind: state
       p:
         value: 0.0
@@ -76,7 +76,7 @@ phases:
           library: SeaFreeze@1.1.0
         grade: declared
         note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
-    library:
+    library: &id003
       name: SeaFreeze
       version: 1.1.0
       sha256: 0fb040a8ed939416b19c8a1bdbd967e74e7059f5bec2015c0edf201dca1a71e1
@@ -90,9 +90,9 @@ phases:
     grade: derived from the source's Gibbs surfaces at the pin (note 1 §6)
   window:
     p_min: 0.0
-    p_max: 400000000.0
+    p_max: 210000000.0
     t_min: 130.0
-    t_max: 300.99999999999983
+    t_max: 273.16
   edges:
     p_min:
       refusal: input.material_out_of_data
@@ -102,6 +102,558 @@ phases:
       refusal: input.material_out_of_data
     t_max:
       refusal: input.material_out_of_data
+  sources:
+  - id: iapws06
+    source:
+      cache: 2006JPCRD..35.1021F.pdf
+      page: '1026'
+      where: eq. (1), Table 2
+      sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+    basis: measured
+    data_range:
+      p_min: 0.0
+      p_max: 210000000.0
+      t_min: 0.0
+      t_max: 273.16
+    data_range_where: 'IAPWS-06 abstract p.1021: the formulation''s range, 0–273.16 K, 0–210 MPa'
+    sigma:
+      kind: by_region
+      where: IAPWS-06 Table 7 (p.1035), u_c(ρ)/ρ, combined standard uncertainty
+      regions:
+      - box:
+          p_min: 0.0
+          p_max: 100000.0
+          t_min: 268.0
+          t_max: 273.16
+        value: 0.0002
+        where: 'IAPWS-06 Table 7 (p.1035), u_c(ρ)/ρ, combined standard uncertainty: 0.02 % at 268 K ≤ T ≤ 273 K, p ≤ 0.1 MPa'
+      - box:
+          p_min: 0.0
+          p_max: 100000.0
+          t_min: 0.0
+          t_max: 268.0
+        value: 0.001
+        where: 'IAPWS-06 Table 7 (p.1035), u_c(ρ)/ρ, combined standard uncertainty: 0.1 % at T ≤ 268 K, p ≤ 0.1 MPa'
+      - box:
+          p_min: 0.0
+          p_max: 200000000.0
+          t_min: 238.0
+          t_max: 273.16
+        value: 0.002
+        where: 'IAPWS-06 Table 7 (p.1035), u_c(ρ)/ρ, combined standard uncertainty: 0.2 % at 238 K ≤ T ≤ 273 K, p ≤ 200 MPa'
+      else:
+        kind: not_printed
+        where: 'IAPWS-06 Fig. 8 (p.1035): «No uncertainty estimate possible … No experimental high-pressure data are available
+          at low temperatures»'
+    sigma_kind: 1sigma
+    eos:
+      form: evaluator
+      reference:
+        kind: state
+        p:
+          value: 101325.0
+          unit: Pa
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 1, p0
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+        t:
+          value: 273.16
+          unit: K
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 1, T_t
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+      evaluator:
+        name: iapws06_ih
+        source:
+          cache: 2006JPCRD..35.1021F.pdf
+          page: '1026'
+          where: eq. (1), Table 2
+          sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+        params:
+          g00:
+            value: -632020.233449497
+            unit: J/kg
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: g00 −632 020.233 449 497
+          g01:
+            value: 0.655022213658955
+            unit: J/kg
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: g01 0.655 022 213 658 955
+          g02:
+            value: -1.89369929326131e-08
+            unit: J/kg
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: g02 −1.893 699 293 261 31E−08
+          g03:
+            value: 3.39746123271053e-15
+            unit: J/kg
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: g03 3.397 461 232 710 53E−15
+          g04:
+            value: -5.56464869058991e-22
+            unit: J/kg
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: g04 −5.564 648 690 589 91E−22
+          s0:
+            value: 189.13
+            unit: J/kg/K
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: s0 (absolute) 189.13
+          t1_re:
+            value: 0.0368017112855051
+            unit: '1'
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: t1 3.680 171 128 550 51E−02
+          t1_im:
+            value: 0.0510878114959572
+            unit: '1'
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: t1 (imag) 5.108 781 149 595 72E−02
+          r1_re:
+            value: 44.7050716285388
+            unit: J/kg/K
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: r1 44.705 071 628 5388
+          r1_im:
+            value: 65.6876847463481
+            unit: J/kg/K
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: r1 (imag) 65.687 684 746 3481
+          t2_re:
+            value: 0.337315741065416
+            unit: '1'
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: t2 0.337 315 741 065 416
+          t2_im:
+            value: 0.335449415919309
+            unit: '1'
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: t2 (imag) 0.335 449 415 919 309
+          r20_re:
+            value: -72.597457432922
+            unit: J/kg/K
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: r20 −72.597 457 432 922
+          r20_im:
+            value: -78.100842711287
+            unit: J/kg/K
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: r20 (imag) −78.100 842 711 287
+          r21_re:
+            value: -5.57107698030123e-05
+            unit: J/kg/K
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: r21 −5.571 076 980 301 23E−05
+          r21_im:
+            value: 4.64578634580806e-05
+            unit: J/kg/K
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: r21 (imag) 4.645 786 345 808 06E−05
+          r22_re:
+            value: 2.34801409215913e-11
+            unit: J/kg/K
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: r22 2.348 014 092 159 13E−11
+          r22_im:
+            value: -2.85651142904972e-11
+            unit: J/kg/K
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 2
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: r22 (imag) −2.856 511 429 049 72E−11
+          t_t:
+            value: 273.16
+            unit: K
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 1
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: T_t 273.160
+          p_t:
+            value: 611.657
+            unit: Pa
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 1
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: p_t 611.657
+          p0:
+            value: 101325.0
+            unit: Pa
+            source:
+              cache: 2006JPCRD..35.1021F.pdf
+              page: '1026'
+              where: Table 1
+              sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+            grade: read
+            printed: p0 101325
+  - id: seafreeze_ih
+    source: *id001
+    basis: measured
+    data_range:
+      p_min: 0.0
+      p_max: 210000000.0
+      t_min: 130.0
+      t_max: 273.16
+    data_range_where: SeaFreeze Ih is «a direct LBF parametrization of the Feistel and Wagner (2006) equation of state» (Journaux
+      2020 p.11); its range here is the window ∩ IAPWS-06's
+    sigma:
+      kind: not_printed
+      where: Journaux 2020 prints no σ of ρ for ice Ih
+    sigma_kind: not_applicable
+    eos:
+      form: library
+      reference: *id002
+      library: *id003
+  precedence:
+    by: declared
+    declared_before_comparison: '2026-10-11'
+    ref: 'owner-direction 2026-10-11 (89ffc3a, clarified): IAPWS-06 is the dedicated international standard for ice Ih; SeaFreeze
+      Ih is the cross-check'
+  joins_within:
+  - between:
+    - iapws06
+    - seafreeze_ih
+    kind: cross_check
+    overlap:
+      p_min: 0.0
+      p_max: 210000000.0
+      t_min: 130.0
+      t_max: 273.16
+    shared_data: SeaFreeze Ih is an LBF fit of IAPWS-06 itself (Journaux 2020 p.11 §3.2.3)
+    k: 2.0
+    sampling:
+      box:
+        p_min: 100000.0
+        p_max: 210000000.0
+        t_min: 130.0
+        t_max: 270.0
+      dp: 10000000.0
+      dt: 10.0
+    disclosures:
+    - 'cross-check disagrees beyond 2σ at 0.01 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.01 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.01 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.01 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.01 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.01 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.01 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.01 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.01 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.01 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.01 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.02 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.02 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.02 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.02 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.02 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.02 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.02 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.02 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.02 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.02 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.02 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.03 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.03 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.03 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.03 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.03 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.03 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.03 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.03 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.03 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.03 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.03 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.04 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.04 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.04 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.04 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.04 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.04 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.04 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.04 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.04 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.04 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.04 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.05 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.05 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.05 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.05 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.05 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.05 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.05 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.05 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.05 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.05 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.05 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.06 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.06 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.06 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.06 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.06 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.06 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.06 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.06 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.06 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.06 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.06 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.07 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.07 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.07 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.07 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.07 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.07 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.07 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.07 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.07 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.07 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.07 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.08 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.08 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.08 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.08 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.08 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.08 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.08 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.08 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.08 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.08 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.08 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.09 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.09 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.09 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.09 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.09 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.09 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.09 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.09 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.09 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.09 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.09 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.10 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.10 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.10 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.10 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.10 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.10 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.10 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.10 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.10 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.10 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.10 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.11 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.11 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.11 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.11 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.11 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.11 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.11 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.11 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.11 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.11 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.11 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.12 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.12 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.12 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.12 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.12 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.12 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.12 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.12 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.12 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.12 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.12 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.13 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.13 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.13 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.13 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.13 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.13 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.13 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.13 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.13 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.13 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.13 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.14 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.14 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.14 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.14 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.14 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.14 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.14 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.14 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.14 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.14 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.14 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.15 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.15 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.15 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.15 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.15 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.15 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.15 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.15 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.15 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.15 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.15 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.16 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.16 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.16 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.16 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.16 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.16 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.16 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.16 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.16 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.16 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.16 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.17 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.17 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.17 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.17 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.17 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.17 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.17 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.17 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.17 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.17 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.17 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.18 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.18 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.18 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.18 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.18 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.18 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.18 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.18 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.18 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.18 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.18 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.19 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.19 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.19 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.19 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.19 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.19 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.19 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.19 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.19 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.19 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.19 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 130 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 140 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 150 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 160 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 170 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 180 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 190 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 200 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 210 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 220 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 230 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 240 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 250 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 260 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
+    - 'cross-check disagrees beyond 2σ at 0.20 GPa / 270 K: r = inf (seafreeze_ih vs iapws06; the sources share data)'
 - id: II
   label: ice II (Journaux et al. 2020, SeaFreeze)
   state: solid
@@ -248,7 +800,7 @@ phases:
   state: solid
   eos:
     form: library
-    reference: &id002
+    reference: &id004
       kind: state
       p:
         value: 0.0
@@ -264,7 +816,7 @@ phases:
           library: SeaFreeze@1.1.0
         grade: declared
         note: 'library form: SeaFreeze''s own Gibbs reference; no reference state is read'
-    library: &id003
+    library: &id005
       name: SeaFreeze
       version: 1.1.0
       sha256: 0fb040a8ed939416b19c8a1bdbd967e74e7059f5bec2015c0edf201dca1a71e1
@@ -307,10 +859,10 @@ phases:
     sigma_kind: not_applicable
     eos:
       form: library
-      reference: *id002
-      library: *id003
+      reference: *id004
+      library: *id005
   - id: bezacier_vi
-    source: &id004
+    source: &id006
       cache: 2014JChPh.141j4505B.pdf
       page: 104505-4
       where: Table II, «Ice VI—PVT», H2O this study
@@ -345,7 +897,7 @@ phases:
         k0:
           value: 14050000000.0
           unit: Pa
-          source: *id004
+          source: *id006
           grade: read
           printed: K0 = 14.05 GPa
       reference:
@@ -373,7 +925,7 @@ phases:
       alpha0:
         value: 0.000146
         unit: 1/K
-        source: *id004
+        source: *id006
         grade: read
         printed: α0 × 10⁵ = 14.6 K−1
         note: 'eq. (2) read literally: V(P,T) = V0(P,T0)·exp(α0(T − T0)), one α at every P (declared reading, h2o-sources.md)'
@@ -419,12 +971,12 @@ phases:
   state: solid
   eos:
     form: evaluator
-    reference: &id008
+    reference: &id010
       kind: state
       p:
         value: 0.0
         unit: Pa
-        source: &id005
+        source: &id007
           cache: 2015PhRvB..91a4308F.pdf
           page: 5–7
           where: eqs. (6), (9), (11), (14), (15); Tables I (HSE), II, III
@@ -434,7 +986,7 @@ phases:
       t:
         value: 295.0
         unit: K
-        source: &id006
+        source: &id008
           cache: 2015PhRvB..91a4308F.pdf
           page: '3'
           where: '§II: «densities were varied between 1.6 and 4.25 g/cm3, and the temperatures were chosen from 295 up to
@@ -442,9 +994,9 @@ phases:
           sha256: 512796667fe11cdab9b5cbfb8a706c068ce60b5f24713d275a4e714dc2d0a5dc
         grade: declared
         note: 'evaluator form: the potential is absolute'
-    evaluator: &id009
+    evaluator: &id011
       name: french_redmer2015
-      source: *id005
+      source: *id007
       params:
         a0:
           value: -16.8923
@@ -759,20 +1311,20 @@ phases:
         rho_search_min:
           value: 1600.0
           unit: kg/m3
-          source: *id006
+          source: *id008
           grade: declared
           printed: 1.6 g/cm³
           note: the inversion bracket is the MD grid, so nothing past it is reached
         rho_search_max:
           value: 4250.0
           unit: kg/m3
-          source: *id006
+          source: *id008
           grade: declared
           printed: 4.25 g/cm³
           note: the inversion bracket is the MD grid, so nothing past it is reached
   sources:
   - id: bezacier_vii
-    source: &id007
+    source: &id009
       cache: 2014JChPh.141j4505B.pdf
       page: 104505-4
       where: Table II, «Ice VII—PVT», H2O this study
@@ -810,7 +1362,7 @@ phases:
         k0:
           value: 20150000000.0
           unit: Pa
-          source: *id007
+          source: *id009
           grade: read
           printed: K0 = 20.15 GPa
       reference:
@@ -838,7 +1390,7 @@ phases:
       alpha0:
         value: 0.00011580000000000001
         unit: 1/K
-        source: *id007
+        source: *id009
         grade: read
         printed: α0 × 10⁵ = 11.58 K−1
         note: 'eq. (2) read literally: V(P,T) = V0(P,T0)·exp(α0(T − T0)), one α at every P (declared reading, h2o-sources.md)'
@@ -859,7 +1411,7 @@ phases:
         lies inside; declared 2026-10-11 before any T-extrapolation comparison. With exp_alpha α ≡ α0 at every (P, T), so
         this range binds only a T-varying model; the T-edge guard here is the band against F&R and the ρ-rise check (68 N56)
   - id: fr2015
-    source: *id005
+    source: *id007
     basis: computed
     data_range:
       p_min: 0.0
@@ -878,8 +1430,8 @@ phases:
     sigma_kind: not_applicable
     eos:
       form: evaluator
-      reference: *id008
-      evaluator: *id009
+      reference: *id010
+      evaluator: *id011
   precedence:
     by: basis
   joins_within:
@@ -917,6 +1469,326 @@ phases:
       refusal: input.material_out_of_data
     t_max:
       refusal: input.material_out_of_data
+- id: ih_cold
+  label: ice Ih below SeaFreeze's 130 K (IAPWS-06 alone)
+  state: solid
+  eos:
+    form: evaluator
+    reference:
+      kind: state
+      p:
+        value: 101325.0
+        unit: Pa
+        source:
+          cache: 2006JPCRD..35.1021F.pdf
+          page: '1026'
+          where: Table 1, p0
+          sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+        grade: read
+      t:
+        value: 273.16
+        unit: K
+        source:
+          cache: 2006JPCRD..35.1021F.pdf
+          page: '1026'
+          where: Table 1, T_t
+          sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+        grade: read
+    evaluator:
+      name: iapws06_ih
+      source:
+        cache: 2006JPCRD..35.1021F.pdf
+        page: '1026'
+        where: eq. (1), Table 2
+        sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+      params:
+        g00:
+          value: -632020.233449497
+          unit: J/kg
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: g00 −632 020.233 449 497
+        g01:
+          value: 0.655022213658955
+          unit: J/kg
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: g01 0.655 022 213 658 955
+        g02:
+          value: -1.89369929326131e-08
+          unit: J/kg
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: g02 −1.893 699 293 261 31E−08
+        g03:
+          value: 3.39746123271053e-15
+          unit: J/kg
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: g03 3.397 461 232 710 53E−15
+        g04:
+          value: -5.56464869058991e-22
+          unit: J/kg
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: g04 −5.564 648 690 589 91E−22
+        s0:
+          value: 189.13
+          unit: J/kg/K
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: s0 (absolute) 189.13
+        t1_re:
+          value: 0.0368017112855051
+          unit: '1'
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: t1 3.680 171 128 550 51E−02
+        t1_im:
+          value: 0.0510878114959572
+          unit: '1'
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: t1 (imag) 5.108 781 149 595 72E−02
+        r1_re:
+          value: 44.7050716285388
+          unit: J/kg/K
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: r1 44.705 071 628 5388
+        r1_im:
+          value: 65.6876847463481
+          unit: J/kg/K
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: r1 (imag) 65.687 684 746 3481
+        t2_re:
+          value: 0.337315741065416
+          unit: '1'
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: t2 0.337 315 741 065 416
+        t2_im:
+          value: 0.335449415919309
+          unit: '1'
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: t2 (imag) 0.335 449 415 919 309
+        r20_re:
+          value: -72.597457432922
+          unit: J/kg/K
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: r20 −72.597 457 432 922
+        r20_im:
+          value: -78.100842711287
+          unit: J/kg/K
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: r20 (imag) −78.100 842 711 287
+        r21_re:
+          value: -5.57107698030123e-05
+          unit: J/kg/K
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: r21 −5.571 076 980 301 23E−05
+        r21_im:
+          value: 4.64578634580806e-05
+          unit: J/kg/K
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: r21 (imag) 4.645 786 345 808 06E−05
+        r22_re:
+          value: 2.34801409215913e-11
+          unit: J/kg/K
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: r22 2.348 014 092 159 13E−11
+        r22_im:
+          value: -2.85651142904972e-11
+          unit: J/kg/K
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 2
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: r22 (imag) −2.856 511 429 049 72E−11
+        t_t:
+          value: 273.16
+          unit: K
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 1
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: T_t 273.160
+        p_t:
+          value: 611.657
+          unit: Pa
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 1
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: p_t 611.657
+        p0:
+          value: 101325.0
+          unit: Pa
+          source:
+            cache: 2006JPCRD..35.1021F.pdf
+            page: '1026'
+            where: Table 1
+            sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+          grade: read
+          printed: p0 101325
+  thermal:
+    source_state: solid
+    source_composition: pure H2O
+  field:
+    kind: sourced
+    source:
+      cache: 2006JPCRD..35.1021F.pdf
+      page: '1021'
+      where: 'abstract: «covering the ranges 0–273.16 K and 0 Pa–210 MPa»'
+      sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+    upper:
+    - &id015
+      form: clapeyron
+      p0:
+        value: 130845314.03276083
+        unit: Pa
+        source: &id012
+          formula: 'P_low(T) = P_b(130 K) − s_max·(130 K − T), P_b(130 K) = 130.845 MPa (the pin''s Ih–II min-G crossing),
+            s_max = s0·M/|ΔV(130 K)| = 189.13 J/kg/K × 18.01528 g/mol / 3.9700 cm³/mol = 0.8582 MPa/K; s0 from IAPWS-06 eq.
+            (3) / Table 2 (absolute, Pauling residual entropy). Assumptions (owner-direction 2026-10-11): |ΔS(Ih→II)| rises
+            monotonically to its 0 K value s0·M below 130 K, and |ΔV| does not fall below its 130 K value; together the slope
+            ≤ s_max, so P_low is a lower envelope of the true line. Pin table: 130 K: P_b 130.845 MPa, ΔV -3.9700 cm³/mol,
+            ΔS -2.7415 J/mol/K, ΔS/ΔV 0.6906 MPa/K; 150 K: P_b 144.601 MPa, ΔV -3.9531 cm³/mol, ΔS -2.7176 J/mol/K, ΔS/ΔV
+            0.6875 MPa/K; 180 K: P_b 165.470 MPa, ΔV -3.9315 cm³/mol, ΔS -2.7866 J/mol/K, ΔS/ΔV 0.7088 MPa/K; 210 K: P_b 187.426
+            MPa, ΔV -3.9119 cm³/mol, ΔS -2.9729 J/mol/K, ΔS/ΔV 0.7600 MPa/K; 235 K: P_b 207.200 MPa, ΔV -3.8949 cm³/mol, ΔS
+            -3.2149 J/mol/K, ΔS/ΔV 0.8254 MPa/K'
+        grade: derived
+      t0:
+        value: 130.0
+        unit: K
+        source: *id012
+        grade: declared
+      slope:
+        value: 858248.8789716382
+        unit: Pa/K
+        source: *id012
+        grade: derived
+      t_min:
+        value: 0.0
+        unit: K
+        source: *id012
+        grade: declared
+      t_max:
+        value: 130.0
+        unit: K
+        source: *id012
+        grade: declared
+      source: *id012
+    grade: IAPWS-06's window below 130 K, capped by the lower envelope P_low(T) of the Ih–II line
+  window:
+    p_min: 0.0
+    p_max: 210000000.0
+    t_min: 0.0
+    t_max: 129.99999999999997
+  edges:
+    p_min:
+      refusal: input.material_out_of_data
+    p_max:
+      refusal: input.material_out_of_data
+    t_min:
+      refusal: input.material_out_of_data
+    t_max:
+      refusal: input.material_out_of_data
+  notes:
+  - box:
+      p_min: 0.0
+      p_max: 210000000.0
+      t_min: 0.0
+      t_max: 100.0
+    text: 'IAPWS-06: «A phase transition from ice Ih to a perfectly ordered, cubical, denser, and ferroelectric phase XI is
+      supposed to occur between 60 and 100 K … thus turning ice Ih into a thermodynamically metastable structure below the
+      threshold temperature»; the formulation «treats ice Ih like a stable equilibrium phase down to 0 K»'
+    source:
+      cache: 2006JPCRD..35.1021F.pdf
+      page: '1025'
+      where: §1, the low-temperature paragraph
+      sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
 boundaries:
 - between:
   - water1
@@ -927,7 +1799,7 @@ boundaries:
     p_star:
       value: 2216000000.0
       unit: Pa
-      source: &id010
+      source: &id013
         cache: IAPWS-R14-08-2011.pdf
         page: -5-
         where: '§3.5, eq. (5): ice VII melting pressure'
@@ -937,50 +1809,50 @@ boundaries:
     t_star:
       value: 355.0
       unit: K
-      source: *id010
+      source: *id013
       grade: read
       printed: T* = 355 K
     terms:
     - a:
         value: 1.73683
         unit: '1'
-        source: *id010
+        source: *id013
         grade: read
       b:
         value: -1.0
         unit: '1'
-        source: *id010
+        source: *id013
         grade: read
     - a:
         value: -0.0544606
         unit: '1'
-        source: *id010
+        source: *id013
         grade: read
       b:
         value: 5.0
         unit: '1'
-        source: *id010
+        source: *id013
         grade: read
     - a:
         value: 8.06106e-08
         unit: '1'
-        source: *id010
+        source: *id013
         grade: read
       b:
         value: 22.0
         unit: '1'
-        source: *id010
+        source: *id013
         grade: read
     t_min:
       value: 355.0
       unit: K
-      source: *id010
+      source: *id013
       grade: read
       printed: temperature range from 355 K to 715 K
     t_max:
       value: 715.0
       unit: K
-      source: *id010
+      source: *id013
       grade: read
       printed: temperature range from 355 K to 715 K
     t_min_end:
@@ -994,8 +1866,8 @@ boundaries:
     t_max_end:
       kind: data
       reason: «the highest temperature for which measurements exist and not the end of the melting curve of ice VII»
-      source: *id010
-    source: *id010
+      source: *id013
+    source: *id013
 refusals:
 - id: input.material_out_of_data
   box:
@@ -1017,7 +1889,7 @@ refusals:
     p_star:
       value: 2216000000.0
       unit: Pa
-      source: &id011
+      source: &id014
         cache: IAPWS-R14-08-2011.pdf
         page: -5-
         where: '§3.5, eq. (5): ice VII melting pressure'
@@ -1027,50 +1899,50 @@ refusals:
     t_star:
       value: 355.0
       unit: K
-      source: *id011
+      source: *id014
       grade: read
       printed: T* = 355 K
     terms:
     - a:
         value: 1.73683
         unit: '1'
-        source: *id011
+        source: *id014
         grade: read
       b:
         value: -1.0
         unit: '1'
-        source: *id011
+        source: *id014
         grade: read
     - a:
         value: -0.0544606
         unit: '1'
-        source: *id011
+        source: *id014
         grade: read
       b:
         value: 5.0
         unit: '1'
-        source: *id011
+        source: *id014
         grade: read
     - a:
         value: 8.06106e-08
         unit: '1'
-        source: *id011
+        source: *id014
         grade: read
       b:
         value: 22.0
         unit: '1'
-        source: *id011
+        source: *id014
         grade: read
     t_min:
       value: 355.0
       unit: K
-      source: *id011
+      source: *id014
       grade: read
       printed: temperature range from 355 K to 715 K
     t_max:
       value: 715.0
       unit: K
-      source: *id011
+      source: *id014
       grade: read
       printed: temperature range from 355 K to 715 K
     t_min_end:
@@ -1084,8 +1956,8 @@ refusals:
     t_max_end:
       kind: data
       reason: «the highest temperature for which measurements exist and not the end of the melting curve of ice VII»
-      source: *id011
-    source: *id011
+      source: *id014
+    source: *id014
   reason: 'VI–VII boundary not cached (Bridgman 1937, Pistorius et al. 1968, Journaux et al. 2013 on papers-to-fetch); bounded
     only by declared edges: Bezacier 2014''s lowest VII point (2.14 GPa, Table I), SeaFreeze VI''s window top and the R14-08
     VII melting curve (directing 2026-10-11). Any column crossing ~2.2 GPa refuses until then; above 355 K only above the
@@ -1096,8 +1968,10 @@ refusals:
     p_max: 2300000000.0
     t_min: 0.0
     t_max: 129.99999999999997
-  reason: below SeaFreeze's printed validity, «130–500 K to 2,300 MPa» (Journaux 2020 p.1); the splines answer there without
-    meaning (68 H1). A declared extrapolation band is directing's call
+  lower:
+  - *id015
+  reason: 'below SeaFreeze''s printed validity, «130–500 K to 2,300 MPa» (Journaux 2020 p.1), above ice Ih''s cap P_low(T):
+    ices II, III, V, VI have no source below 130 K, and Ih–II is not sourced there (owner-direction 2026-10-11)'
   source:
     cache: 2020JGRE..12506176J.pdf
     page: '1'
@@ -1111,7 +1985,7 @@ triple_points:
   p:
     value: 2216000000.0
     unit: Pa
-    source: &id012
+    source: &id016
       cache: IAPWS-R14-08-2011.pdf
       page: -5-
       where: 'Table 1: ice VI – ice VII – liquid, 355 K / 2216 MPa'
@@ -1121,7 +1995,7 @@ triple_points:
   t:
     value: 355.0
     unit: K
-    source: *id012
+    source: *id016
     grade: read
     printed: 355 K
   tolerance:
@@ -1179,6 +2053,78 @@ formula_checks:
     page: -7-
     where: §7 Table 3, eq. (5) ice VII – liquid, 550.0 K
     sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+- quantity: IAPWS-06 ice Ih density at 250 K / 101 325 Pa
+  state: {}
+  expected: 920.0
+  unit: kg/m3
+  tolerance: 0.005
+  tolerance_reason: printed to 0.01 kg/m³
+  expression: rho(Ih @ P=101325.0, T=250.0)
+  source:
+    cache: 2006JPCRD..35.1021F.pdf
+    page: '1040'
+    where: Table 11, ρ(T,p), 250 K, 101 325 Pa
+    sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+- quantity: IAPWS-06 ice Ih density at 130 K / 50 MPa
+  state: {}
+  expected: 936.31
+  unit: kg/m3
+  tolerance: 0.005
+  tolerance_reason: printed to 0.01 kg/m³
+  expression: rho(Ih @ P=50000000.0, T=130.0)
+  source:
+    cache: 2006JPCRD..35.1021F.pdf
+    page: '1040'
+    where: Table 11, ρ(T,p), 130 K, 50 MPa
+    sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+- quantity: IAPWS-06 ice Ih density at 250 K / 200 MPa
+  state: {}
+  expected: 939.94
+  unit: kg/m3
+  tolerance: 0.005
+  tolerance_reason: printed to 0.01 kg/m³
+  expression: rho(Ih @ P=200000000.0, T=250.0)
+  source:
+    cache: 2006JPCRD..35.1021F.pdf
+    page: '1040'
+    where: Table 11, ρ(T,p), 250 K, 200 MPa
+    sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+- quantity: IAPWS-06 ice Ih density at 100 K / 100 MPa
+  state: {}
+  expected: 941.68
+  unit: kg/m3
+  tolerance: 0.005
+  tolerance_reason: printed to 0.01 kg/m³
+  expression: rho(ih_cold @ P=100000000.0, T=100.0)
+  source:
+    cache: 2006JPCRD..35.1021F.pdf
+    page: '1040'
+    where: Table 11, ρ(T,p), 100 K, 100 MPa
+    sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+- quantity: IAPWS-06 ice Ih density at 50 K / 50 MPa
+  state: {}
+  expected: 938.08
+  unit: kg/m3
+  tolerance: 0.005
+  tolerance_reason: printed to 0.01 kg/m³
+  expression: rho(ih_cold @ P=50000000.0, T=50.0)
+  source:
+    cache: 2006JPCRD..35.1021F.pdf
+    page: '1040'
+    where: Table 11, ρ(T,p), 50 K, 50 MPa
+    sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
+- quantity: IAPWS-06 ice Ih density at 0 K / 0 Pa
+  state: {}
+  expected: 933.79
+  unit: kg/m3
+  tolerance: 0.005
+  tolerance_reason: printed to 0.01 kg/m³
+  expression: rho(ih_cold @ P=0.0, T=0.0)
+  source:
+    cache: 2006JPCRD..35.1021F.pdf
+    page: '1040'
+    where: Table 11, ρ(T,p), 0 K, 0 Pa
+    sha256: b1b1400815a16a065c685e61de4f74f619f4c198a336adde13dae5b635d394d8
 - quantity: SeaFreeze Ih–water1 melting pressure at 260 K against R14-08
   state: {}
   expected: 138268000.0
