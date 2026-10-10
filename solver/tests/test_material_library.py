@@ -28,9 +28,8 @@ def lib_record(sha=None, version=None, submodel="water1"):
                              "sha256": sha or ml.tree_sha256("SeaFreeze"), "submodel": submodel}}
     ph["window"] = {"p_min": 1.0e5, "p_max": 1.0e9, "t_min": 250.0, "t_max": 350.0}
     ph["field"]["box"] = {"p_min": 1.0e5, "p_max": 1.0e9}
-    ph["thermal"]["sets"] = []
-    ph["thermal"].pop("phase_constants", None)
-    ph["thermal"]["gamma_window"] = {"p_min": 1.0e5, "p_max": 1.0e9}
+    for k in ("sets", "phase_constants", "gamma_window"):
+        ph["thermal"].pop(k, None)
     ph["edges"] = {"t_min": {"refusal": "input.material_out_of_data"}, "t_max": {"refusal": "input.material_out_of_data"}}
     return d
 
@@ -95,6 +94,27 @@ class Registry(unittest.TestCase):
         self.assertIn("other", reg.records)
         self.assertNotIn("toy", reg.records)
         self.assertEqual(reg.unavailable["toy"].id, "material.library_pin")
+
+    def test_unavailable_record_lookup_gives_the_stop(self):
+        """68 N31: asking for an unavailable record returns its LoadStop with fix text."""
+        reg = load(lib_record(sha="1" * 64))
+        got = reg.get("toy")
+        self.assertIsInstance(got, mr.LoadStop)
+        self.assertIn("tree_sha256", got.fix)
+        self.assertIsNone(reg.get("nonexistent"))
+
+    def test_library_phase_with_thermal_sets_stops(self):
+        rec = lib_record()
+        rec["phases"][0]["thermal"]["gamma_window"] = {"p_min": 1.0e5, "p_max": 1.0e9}
+        self.assertEqual(load(rec).id, "material.kind_rule")
+
+    def test_past_the_library_range_is_a_named_stop(self):
+        """68 N28: VI at 5 GPa / 300 K makes SeaFreeze raise; the view gives a named Stop."""
+        rec = lib_record(submodel="VI")
+        rec["phases"][0]["window"] = {"p_min": 1.0e5, "p_max": 1.0e10, "t_min": 250.0, "t_max": 350.0}
+        s = mv.RecordView(rec, 300.0).state(5.0e9, 300.0)
+        self.assertIsInstance(s, st.Stop)
+        self.assertIn("VI at", s.record.why)
 
     def test_past_the_window_refuses(self):
         s = mv.RecordView(lib_record(), 300.0).state(5.0e8, 400.0)

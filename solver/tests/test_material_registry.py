@@ -181,6 +181,7 @@ CONTROLS_JOINS = (
     ("evaluator not registered", lambda d: PH(d)["thermal"]["sets"][0].update(evaluator={
         "name": "toy_evaluator", "source": dict(CITE)}), "material.kind_rule"),
     ("γ window not tiled (68 N19)", lambda d: PH(d)["thermal"].pop("phase_constants"), "material.gamma_window"),
+    ("non-library phase without gamma_window", lambda d: PH(d)["thermal"].pop("gamma_window"), "material.missing_key"),
     ("table: ragged column", lambda d: (tabled(d), _set(d, "rho", 0, [4000.0])), "material.table_check"),
 )
 

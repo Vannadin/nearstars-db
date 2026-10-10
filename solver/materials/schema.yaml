@@ -41,7 +41,8 @@ eos:
   form:      {shape: enum, values: [bm2, bme3, vinet, library, table], required: true}   # bme4: not built (impl P3; papers-to-fetch)
   params:    {shape: mapping, of: constant}                # bm2/bme3/vinet: rho0, k0, [k0p]; each a constant
   reference: {shape: record, of: reference, required: true}
-  library:   {shape: record, of: library}                  # form library only (SeaFreeze, owner db20e171 (b))
+  library:   {shape: record, of: library}                  # form library only (SeaFreeze, owner db20e171 (b)); γ and
+                                                           # dT/dP then come from the library: no sets, no gamma_window
   table:     {shape: record, of: table}                    # form table only (impl note 3 B1, note 4 item 5)
 
 # A direct table (impl note 3 B1–B3, note 4 item 5). Its edges are its window; outside it the record refuses.
@@ -86,7 +87,7 @@ thermal:
   source_composition: {shape: text, required: true}
   pressure:           {shape: mapping, of: constant}         # alpha_k [Pa/K], alpha_k_dt [Pa/K²], c_v [J/kg/K]
   sets:               {shape: list, of: thermal_set}
-  gamma_window:       {shape: record, of: box, required: true}
+  gamma_window:       {shape: record, of: box}             # required except for a library-form phase (registry)
   phase_constants:    {shape: record, of: constants_span}    # where the phase's own constants give γ (68 N19)
   grade:              {shape: text}                           # e.g. «solid hcp constants on a liquid-fit phase»
 

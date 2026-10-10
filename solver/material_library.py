@@ -52,8 +52,9 @@ def tree_sha256(distribution: str) -> str | PinStop:
     return h.hexdigest()
 
 
-def check_pin(library) -> PinStop | None:
-    """None when the installed library matches the record's pin; else why not."""
+def check_pin(library, tree_sha: str | PinStop | None = None) -> PinStop | None:
+    """None when the installed library matches the record's pin; else why not. `tree_sha` may be passed in when the
+    caller has computed it already (the registry does it once per load)."""
     name = library["name"]
     if name not in PACKAGES:
         return PinStop(f"library {name!r} has no adapter ({sorted(PACKAGES)})")
@@ -65,12 +66,16 @@ def check_pin(library) -> PinStop | None:
         return PinStop(f"{name} is not installed")
     if got != library["version"]:
         return PinStop(f"{name} {got} installed, the record pins {library['version']}")
-    sha = tree_sha256(name)
+    sha = tree_sha256(name) if tree_sha is None else tree_sha
     if isinstance(sha, PinStop):
         return sha
     if sha != library["sha256"]:
         return PinStop(f"{name} tree sha256 {sha[:12]}… differs from the pinned {library['sha256'][:12]}…")
     return None
+
+
+class LibraryOutOfRange(Exception):
+    """The library could not answer at (P, T): it raised, or returned a non-finite value (68 N28)."""
 
 
 class SeaFreezePhase:
@@ -89,13 +94,20 @@ class SeaFreezePhase:
         from seafreeze.seafreeze import getProp
         pt = np.empty((1,), dtype=object)
         pt[0] = (p / 1e6, t)
-        o = getProp(pt, self.submodel)
+        try:
+            o = getProp(pt, self.submodel)
 
-        def one(name):
-            return float(np.ravel(getattr(o, name))[0])
-        rho, alpha, cp = one("rho"), one("alpha"), one("Cp")
+            def one(name):
+                x = float(np.ravel(getattr(o, name))[0])
+                if not np.isfinite(x):
+                    raise ValueError(f"{name} is not finite")
+                return x
+            rho, alpha, cp = one("rho"), one("alpha"), one("Cp")
+            kt, js = one("Kt"), one("Js")
+        except Exception as e:                      # 68 N28: whatever SeaFreeze raises becomes one named outcome
+            raise LibraryOutOfRange(f"{self.submodel} at ({p:g} Pa, {t:g} K): {type(e).__name__}: {e}") from e
         dtdp = alpha * t / (rho * cp)
-        js = one("Js") * 1e-6
+        js = js * 1e-6
         if abs(dtdp - js) > self.JS_RTOL * abs(js):
             raise ValueError(f"{self.submodel} at ({p:g} Pa, {t:g} K): αT/(ρc_P) {dtdp:.6e} vs Js {js:.6e}")
-        return {"rho": rho, "alpha": alpha, "c_p": cp, "k_t": one("Kt") * 1e6, "dtdp": dtdp}
+        return {"rho": rho, "alpha": alpha, "c_p": cp, "k_t": kt * 1e6, "dtdp": dtdp}

@@ -33,7 +33,7 @@ DEMANDS = (
     # a band states its error's origin (r2 N10)
     ("D-M2", "band.origin", True), ("D-M2", "band.error", False), ("G4", "band.method", False), ("D-M2", "band.grade", True),
     # γ has its own window
-    ("D-M2", "thermal.gamma_window", True),
+    ("D-M2", "thermal.gamma_window", False),       # required by the registry except for a library phase (68)
     # provenance per constant: source, page/table/equation, printed units and conversion, grade
     ("D-M1", "constant.source", True), ("D-M1", "constant.grade", True), ("D-M1", "constant.printed", False),
     ("D-M1", "constant.conversion", False), ("D-M1", "constant.unit", True),

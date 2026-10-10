@@ -333,7 +333,7 @@ class RecordView:
                              t_ref_kind=s.get("t_ref_kind", "isotherm"),
                              evaluator=None if ev is None else EVALUATORS[ev["name"]](ev.get("params", {}))))
         w = ph["window"]
-        gw = th["gamma_window"]
+        gw = th.get("gamma_window") or {"p_min": 0.0, "p_max": math.inf}     # a library phase has none
         return _Phase(id=ph["id"], p_min=_num(w["p_min"]), p_max=_num(w["p_max"]),
                       t_min=_num(w.get("t_min", 0.0)), t_max=_num(w.get("t_max", 0.0)),
                       cold=cold, rho0=_v(pr["rho0"]) if "rho0" in pr else 0.0, k0=_v(pr["k0"]) if "k0" in pr else 0.0,
@@ -517,11 +517,17 @@ class RecordView:
         return self._dpdt_v(ph, t, p) / (rho * ph.c_v)
 
     # density ──────────────────────────────────────────────────────────────────────────────────────────────────────
+    def _library(self, ph, p, t, key):
+        try:
+            return ph.library.at(p, t)[key]
+        except ml.LibraryOutOfRange as e:           # 68 N28: a named Stop, never a crash
+            return st.Stop("refused", RecordRefusal(self.material_id, p, t, "input.material_out_of_data", str(e)))
+
     def _phase_density(self, ph, p, t):
         """Legacy Phase.density: subtract the thermal pressure, invert the cold curve by the same Newton. A library
         phase reads ρ from the pinned library."""
         if ph.library is not None:
-            return ph.library.at(p, t)["rho"]
+            return self._library(ph, p, t, "rho")
         p_th = self._thermal_pressure(ph, t, p)
         if p_th:
             p = p - p_th
@@ -579,7 +585,7 @@ class RecordView:
         if isinstance(ph, st.Stop):
             return ph
         if ph.library is not None:                 # (dT/dP)_S = αT/(ρc_P) from the library, checked against its Js
-            return ph.library.at(pe, t)["dtdp"]
+            return self._library(ph, pe, t, "dtdp")
         rho = self._phase_density(ph, pe, t)
         if isinstance(rho, st.Stop):
             return rho

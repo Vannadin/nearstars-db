@@ -131,6 +131,13 @@ class Registry:
         """Ids of records carrying a user-declared source anywhere (impl note 3 B2): counted on boards and gates."""
         return tuple(sorted(i for i, r in self.records.items() if _has_user_declared(r)))
 
+    def get(self, material_id: str):
+        """The record, or the LoadStop that made it unavailable (with its fix text), or None for an unknown id
+        (68 N31: a body asking for an unavailable record gets why, not a missing key)."""
+        if material_id in self.records:
+            return self.records[material_id]
+        return self.unavailable.get(material_id)
+
     def known(self, material_id: str) -> bool:
         return material_id in self.records
 
@@ -248,7 +255,22 @@ def _edges(ph: Mapping, file):
             raise _Stop("material.edge_undeclared", file=file, phase=ph["id"], edge=name)
 
 
+def _library_thermal(ph: Mapping, file):
+    """68 on 6c7bb337: a library-form phase takes γ and dT/dP from the library, so it carries no thermal sets and no
+    gamma_window (fields read by nothing would claim a decision lives there); every other phase needs gamma_window."""
+    th = ph["thermal"]
+    if ph["eos"]["form"] == "library":
+        extra = [k for k in ("sets", "gamma_window", "phase_constants") if k in th]
+        if extra:
+            raise _Stop("material.kind_rule", file=file,
+                        why=f"phase {ph['id']}: a library phase reads γ and dT/dP from the library; remove {extra}")
+    elif "gamma_window" not in th:
+        raise _Stop("material.missing_key", file=file, path=f"phase {ph['id']}.thermal", key="gamma_window")
+
+
 def _gamma(ph: Mapping, file):
+    if ph["eos"]["form"] == "library":
+        return
     gw = ph["thermal"]["gamma_window"]
     for i, ts in enumerate(ph["thermal"].get("sets", ())):
         w = ts["window"]
@@ -277,7 +299,7 @@ def _gamma_tiling(ph: Mapping, file):
     """68 N19: inside the γ window, the sets ([p_min, p_max)) and the declared phase_constants span cover every P."""
     th = ph["thermal"]
     sets = th.get("sets", ())
-    if not sets:
+    if not sets or ph["eos"]["form"] == "library":
         return                                    # a phase with no sets: its constants are the γ source throughout
     gw = th["gamma_window"]
     spans = sorted([(s["window"]["p_min"], s["window"]["p_max"]) for s in sets]
@@ -522,6 +544,7 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
         _bands(raw, "record", file)
         for ph in raw["phases"]:
             _edges(ph, file)
+            _library_thermal(ph, file)
             _gamma(ph, file)
             _gamma_tiling(ph, file)
             _sources_and_joins(ph, file)
@@ -538,7 +561,7 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None) -> Regis
     registered = read_manifest(Path(directory) / "sources.yaml" if manifest is None else manifest)
     if isinstance(registered, LoadStop):
         return registered
-    out, unavailable = {}, {}
+    out, unavailable, shas = {}, {}, {}             # shas: a library's tree sha, computed once per load (68 N30)
     for f in sorted(Path(directory).glob("*.yaml")):
         if f.name in NOT_RECORDS:
             continue
@@ -551,7 +574,7 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None) -> Regis
             return rec
         if rec["id"] in out or rec["id"] in unavailable:
             return LoadStop("material.duplicate_id", MappingProxyType({"file": f.name, "id": rec["id"]}))
-        pin = _library_pin(rec, f.name)
+        pin = _library_pin(rec, f.name, shas)
         if pin is not None:                         # that record only: the others still load (impl note 1 §6)
             unavailable[rec["id"]] = pin
             continue
@@ -559,12 +582,14 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None) -> Regis
     return Registry(MappingProxyType(out), MappingProxyType(unavailable))
 
 
-def _library_pin(rec: Mapping, file: str) -> LoadStop | None:
+def _library_pin(rec: Mapping, file: str, shas: dict) -> LoadStop | None:
     from solver import material_library as ml
     for ph in rec["phases"]:
         lib = ph["eos"].get("library")
         if ph["eos"]["form"] == "library" and lib is not None:
-            got = ml.check_pin(lib)
+            if lib["name"] not in shas:
+                shas[lib["name"]] = ml.tree_sha256(lib["name"]) if lib["name"] in ml.PACKAGES else None
+            got = ml.check_pin(lib, shas[lib["name"]])
             if got is not None:
                 return LoadStop("material.library_pin", MappingProxyType({"file": file, "why": got.why}))
     return None
