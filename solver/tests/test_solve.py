@@ -10,7 +10,7 @@ import multiprocessing as mp
 import pickle
 import unittest
 
-from solver import body as b, context, from_v1, result, solve as sv
+from solver import body as b, closure as cl, context, from_v1, result, solve as sv
 from solver import stepper as st
 
 
@@ -320,6 +320,31 @@ class ClosureDiscontinuous(unittest.TestCase):
             return sv.solve(body, views=views)
         finally:
             sv.inward = orig
+
+    def test_guard_skipped_is_noted(self):
+        """r2 on 55117864 (1): a lone solved scan point with F = 0.0 exactly is a root with no bracket; the guard cannot
+        run there, and the answer says so (Note closure_guard_skipped), never silently."""
+        body, views = _two_layer(6000.0)
+        _a, x0 = sv.solve(body, views=views)
+        x_s = min(cl.scan_points(body.closure.lo, body.closure.hi, context.Options().n_scan), key=lambda z: abs(z - x0))
+        orig = sv.inward
+
+        def lone(bd, vw, x, opt):
+            if x != x_s:
+                return st.Stop("refused", {"planted": "every trial but one scan point refuses", "x": x})
+            got = orig(bd, vw, x, opt)
+            got.F = 0.0
+            return got
+        sv.inward = lone
+        try:
+            ans, x = sv.solve(body, views=views)
+        finally:
+            sv.inward = orig
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.assertEqual(x, x_s)
+        self.assertIn("closure_guard_skipped", [n.kind for n in ans.notes])
+        ans2, _x = sv.solve(body, views=views)                       # control: a bracketed root carries no such note
+        self.assertNotIn("closure_guard_skipped", [n.kind for n in ans2.notes])
 
     def test_planted_steps(self):
         (fwd, views, r0), (inv, iviews) = self._bodies()
