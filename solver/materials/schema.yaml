@@ -87,7 +87,15 @@ thermal:
   pressure:           {shape: mapping, of: constant}         # alpha_k [Pa/K], alpha_k_dt [Pa/K²], c_v [J/kg/K]
   sets:               {shape: list, of: thermal_set}
   gamma_window:       {shape: record, of: box, required: true}
+  phase_constants:    {shape: record, of: constants_span}    # where the phase's own constants give γ (68 N19)
   grade:              {shape: text}                           # e.g. «solid hcp constants on a liquid-fit phase»
+
+# Where γ comes from the phase's own `pressure` constants rather than a set (legacy: below the first set). Inside the γ
+# window, the sets and this span together must cover every pressure (68 N19): no gap is filled undeclared.
+constants_span:
+  p_min:  {shape: number, unit: Pa, required: true}
+  p_max:  {shape: number, unit: Pa, required: true}
+  reason: {shape: text, required: true}
 
 thermal_set:
   window:    {shape: record, of: box, required: true}
