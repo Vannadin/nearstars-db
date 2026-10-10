@@ -86,5 +86,39 @@ class Field(unittest.TestCase):
         self.assertIn("fields overlap", s.record.why)
 
 
+class TriplePoint(unittest.TestCase):
+    """Impl note 6 item 4: at a declared mixed triple point the declared curves and the min-G boundary meet within the
+    tolerance set before measuring. Toy point: water1–VI–VII at 354 K, 2.2 GPa (SeaFreeze's water1–VI crossing there
+    is 2.2049 GPa; the toy VI–VII and liquid–VII lines sit at 2.2 GPa); tolerance 0.02 GPa."""
+
+    def _rec(self, p_tp=2.2e9, vi_vii=P_VI_VII):
+        rec = field_record()
+        for b in rec["boundaries"]:
+            b["curve"]["t_max"] = const(360.0, "K")
+        rec["boundaries"][0]["curve"]["p0"] = const(vi_vii, "Pa")
+        rec["triple_points"] = [{"phases": ["water1", "VI", "VII"], "p": const(p_tp, "Pa"), "t": const(354.0, "K"),
+                                 "tolerance": {"dp": 0.02e9, "dt": 1.0, "reason": "toy: set before measuring"}}]
+        return rec
+
+    def test_meets_within_tolerance(self):
+        from solver import material_registry as mr
+        self.assertIsNone(mr.triple_point_misses(self._rec(), "toy.yaml"))
+
+    def test_shifted_declared_curve_stops(self):
+        from solver import material_registry as mr
+        got = mr.triple_point_misses(self._rec(vi_vii=2.3e9), "toy.yaml")
+        self.assertEqual(got.id, "material.triple_point_miss")
+        self.assertIn("('VI', 'VII')", got.evidence["why"])
+
+    def test_printed_point_off_the_min_g_boundary_stops(self):
+        """Curves moved with the point, so only the min-G boundary (2.2049 GPa) misses 2.3 GPa."""
+        from solver import material_registry as mr
+        rec = self._rec(p_tp=2.3e9, vi_vii=2.3e9)
+        rec["boundaries"][1]["curve"]["p0"] = const(2.3e9, "Pa")
+        got = mr.triple_point_misses(rec, "toy.yaml")
+        self.assertEqual(got.id, "material.triple_point_miss")
+        self.assertIn("min-G boundary water1–VI", got.evidence["why"])
+
+
 if __name__ == "__main__":
     unittest.main()

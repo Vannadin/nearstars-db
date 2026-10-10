@@ -93,6 +93,10 @@ STOPS = MappingProxyType({
                              "Install the pinned library version (pip install --require-hashes from the repo's pin "
                              "file), or update the record's library.version and library.sha256 after a reviewed "
                              "upgrade; the sha256 is material_library.tree_sha256(<name>)."),
+    "material.triple_point_miss": (("file", "phases", "why"),
+                                   "At a declared mixed triple point the declared curves and the min-G boundary must "
+                                   "pass within the tolerance set before measuring; correct the curve or the printed "
+                                   "point (impl note 6 item 4), never widen the tolerance after seeing the miss."),
     "material.kind_rule": (("file", "why"),
                            "Match the record kind: single = one phase; branched = one boundary per adjacent phase "
                            "pair; hand_over = joins; a library form names its pinned library."),
@@ -626,8 +630,62 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None) -> Regis
         if pin is not None:                         # that record only: the others still load (impl note 1 §6)
             unavailable[rec["id"]] = pin
             continue
+        miss = triple_point_misses(rec, f.name)
+        if miss is not None:
+            return miss
         out[rec["id"]] = rec
     return Registry(MappingProxyType(out), MappingProxyType(unavailable))
+
+
+def triple_point_misses(rec: Mapping, file: str) -> LoadStop | None:
+    """Impl note 6 item 4 (68 (2)): at each declared mixed triple point, every declared curve between two of its phases
+    passes within dp of the printed P at the printed T, and so does the min-G boundary between two of its gibbs
+    phases (located by bisection in P over their G difference within ±2·dp: a crossing farther away is a miss anyway,
+    and the narrow bracket keeps the library inside its own range)."""
+    tps = rec.get("triple_points") or ()
+    if not tps:
+        return None
+    from solver import material_view as mv
+    view = mv.RecordView(rec, 0.0)
+    kinds = {ph["id"]: ph["field"]["kind"] for ph in rec["phases"]}
+    by_id = {ph.id: ph for ph in view.phases}
+    for tp in tps:
+        names = list(tp["phases"])
+        p0, t0 = float(tp["p"]["value"]), float(tp["t"]["value"])
+        dp = float(tp["tolerance"]["dp"])
+
+        def stop(why):
+            return LoadStop("material.triple_point_miss", MappingProxyType({"file": file, "phases": names, "why": why}))
+        for b in rec.get("boundaries", ()):
+            if set(b["between"]) <= set(names):
+                pb = view.boundary_pressure(b["curve"], t0)
+                if pb is None or abs(pb - p0) > dp:
+                    return stop(f"curve {tuple(b['between'])} at {t0:g} K is {pb!r} Pa, not within {dp:g} of {p0:g}")
+        gib = [n for n in names if kinds.get(n) == "gibbs"]
+        for i in range(len(gib)):
+            for j in range(i + 1, len(gib)):
+                a, b = by_id[gib[i]].library, by_id[gib[j]].library
+
+                def dg(p):
+                    return a.at(p, t0)["g"] - b.at(p, t0)["g"]
+                lo, hi = p0 - 2 * dp, p0 + 2 * dp
+                try:
+                    flo, fhi = dg(lo), dg(hi)
+                    if flo * fhi > 0.0:
+                        return stop(f"min-G boundary {gib[i]}–{gib[j]} not found within ±{2 * dp:g} Pa of {p0:g}")
+                    for _ in range(60):
+                        mid = 0.5 * (lo + hi)
+                        fm = dg(mid)
+                        if (fm > 0.0) == (flo > 0.0):
+                            lo, flo = mid, fm
+                        else:
+                            hi = mid
+                except Exception as e:                       # a library failure at the point is a miss, by name
+                    return stop(f"min-G boundary {gib[i]}–{gib[j]} could not be evaluated: {e}")
+                if abs(0.5 * (lo + hi) - p0) > dp:
+                    return stop(f"min-G boundary {gib[i]}–{gib[j]} at {t0:g} K is {0.5 * (lo + hi):g} Pa, "
+                                f"not within {dp:g} of {p0:g}")
+    return None
 
 
 def _library_pin(rec: Mapping, file: str, shas: dict) -> LoadStop | None:

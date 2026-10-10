@@ -100,6 +100,30 @@ def cite_problems(recs, papers: Path = None) -> tuple:
     return n, bad
 
 
+def probe_overlaps(rec) -> tuple:
+    """Impl note 6 item 5: walk a field record's declared probe grid; every node must give one phase or a declared
+    refusal, and an overlap anywhere is a failure. Returns (nodes walked, [overlap nodes])."""
+    pr = rec.get("field_probe")
+    if not pr:
+        return 0, []
+    v = mv.RecordView(rec, T_POT)
+    box = pr["box"]
+    p_lo, p_hi, t_lo, t_hi = (float(box[k]) for k in ("p_min", "p_max", "t_min", "t_max"))
+    dp, dt = float(pr["dp"]), float(pr["dt"])
+    n, bad = 0, []
+    p = p_lo
+    while p <= p_hi + 1e-9 * dp:
+        t = t_lo
+        while t <= t_hi + 1e-9 * dt:
+            got = v._phase_at(p, t)
+            n += 1
+            if isinstance(got, st.Stop) and "fields overlap" in got.record.why:
+                bad.append((p, t, got.record.why))
+            t += dt
+        p += dp
+    return n, bad
+
+
 class Generated(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -148,6 +172,15 @@ class Generated(unittest.TestCase):
                         n += 1
         self.assertGreater(n, 0)
 
+    def test_field_records_have_no_overlap_on_their_probe_grid(self):
+        for rid, rec in self.recs.items():
+            if rec.get("kind") == "branched" and rec.get("choice") == "field":
+                with self.subTest(record=rid):
+                    self.assertIn("field_probe", rec, "a field record declares its probe grid (impl note 6 item 5)")
+                    n, bad = probe_overlaps(rec)
+                    self.assertGreater(n, 0)
+                    self.assertEqual(bad, [])
+
     def test_cache_cites_exist_with_their_hash(self):
         if not PAPERS.is_dir():
             self.fail(f"paper cache not found at {PAPERS}; set NEARSTARS_PAPERS, or NEARSTARS_PAPERS_ABSENT=declared")
@@ -186,6 +219,17 @@ class Controls(unittest.TestCase):
             self.assertEqual(len(cite_problems({"toy": rec}, Path(tmp))[1]), 1)
             rec["y"]["sha256"] = sa
             self.assertEqual(cite_problems({"toy": rec}, Path(tmp))[1], [])
+
+    def test_probe_finds_an_overlap(self):
+        """Impl note 6 item 5 control: the toy field record with VI no longer bounded by VII overlaps above 2.2 GPa;
+        intact, it does not."""
+        from solver.tests.test_material_field import field_record
+        rec = field_record()
+        rec["field_probe"] = {"box": {"p_min": 2.0e9, "p_max": 2.3e9, "t_min": 290.0, "t_max": 310.0},
+                              "dp": 0.05e9, "dt": 10.0}
+        self.assertEqual(probe_overlaps(rec)[1], [])
+        rec["boundaries"] = rec["boundaries"][1:]
+        self.assertGreater(len(probe_overlaps(rec)[1]), 0)
 
     def test_edge_without_a_bound_fails(self):
         """68 N21: a declared edge whose bound is not in the window is a failure, not a skip."""
