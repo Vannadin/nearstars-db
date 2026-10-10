@@ -15,6 +15,7 @@ Run from the worktree root:  solver/.venv/bin/python -m unittest solver.tests.te
 import copy
 import hashlib
 import os
+import tempfile
 import unittest
 from collections.abc import Mapping
 from pathlib import Path
@@ -80,13 +81,14 @@ def edge_probes(rec):
                 yield i, name, mid_p, b - 1.0, e
 
 
-def cite_problems(recs) -> tuple:
+def cite_problems(recs, papers: Path = None) -> tuple:
     """68 T4: every (path, file, sha256) triple is compared, each file hashed once; not one cite per file.
     Returns (cites checked, [problem texts])."""
+    papers = PAPERS if papers is None else papers
     hashes, n, bad = {}, 0, []
     for rid, rec in recs.items():
         for path, name, sha in _cache_cites(rec):
-            f = PAPERS / name
+            f = papers / name
             if not f.is_file():
                 bad.append(f"{rid} {path}: {name} not in the cache")
                 continue
@@ -153,23 +155,20 @@ class Controls(unittest.TestCase):
             mc.run_formula_checks(rec)[0]["got"] - float(fc["expected"]))
         self.assertFalse(mc.run_formula_checks(rec)[0]["passed"])
 
-    @unittest.skipUnless(PAPERS.is_dir(), "needs the paper cache")
     def test_second_cite_of_a_file_with_another_files_sha_fails(self):
-        """68 T4: two cites of one PDF; the second carries another registered file's sha256 — it must fail."""
-        rec = _records()["fe_prem"]
-        cites = list(_cache_cites(rec))
-        names = sorted({n for _p, n, _s in cites})
-        first_of = {n: s for _p, n, s in cites}
-        two = [c for c in cites if c[1] == names[0]]
-        self.assertGreater(len(two), 1, "control needs two cites of one file")
-        other_sha = first_of[names[1]]
-        path = two[1][0]
-        node = rec
-        for part in path.replace("]", "").replace("[", ".").split(".")[1:]:
-            node = node[int(part)] if part.isdigit() else node[part]
-        node["sha256"] = other_sha
-        _n, bad = cite_problems({"fe_prem": rec})
-        self.assertEqual(len(bad), 1, bad)
+        """68 T4 (N25: runs everywhere, no real cache): two cites of one file, the second carrying the other registered
+        file's sha256, give exactly one problem."""
+        with tempfile.TemporaryDirectory() as tmp:
+            a, b = Path(tmp, "a.pdf"), Path(tmp, "b.pdf")
+            a.write_bytes(b"%PDF-1.4 a\n")
+            b.write_bytes(b"%PDF-1.4 b\n")
+            sa, sb = (hashlib.sha256(x.read_bytes()).hexdigest() for x in (a, b))
+            rec = {"x": {"cache": "a.pdf", "sha256": sa}, "y": {"cache": "a.pdf", "sha256": sb},
+                   "z": {"cache": "b.pdf", "sha256": sb}}
+            self.assertEqual(cite_problems({"toy": rec}, Path(tmp))[0], 3)
+            self.assertEqual(len(cite_problems({"toy": rec}, Path(tmp))[1]), 1)
+            rec["y"]["sha256"] = sa
+            self.assertEqual(cite_problems({"toy": rec}, Path(tmp))[1], [])
 
     def test_edge_without_a_bound_fails(self):
         """68 N21: a declared edge whose bound is not in the window is a failure, not a skip."""
