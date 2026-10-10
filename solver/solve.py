@@ -486,16 +486,29 @@ def _root_tolerance(x, acc, options, bracket, trials) -> dict:
     tol_F = 3·N_acc·rtol + 2·s·tol_x: 3·N_acc·rtol bounds the accepted pass's integration error in
     F = (r³ − …)/r_s³ with r_s = R (rho_mean is the bulk density at the pass's R, so r ≤ r_s and each accepted step
     moves r³/r_s³ by at most 3·rtol); 2·s·tol_x is Brent's stop bracket times the slope s.
-    s is the secant of the scan pair around the root: the last scan point below x and the first above (a scan
-    point at x itself is skipped). Note 10: a sign-change bracket can be a hair wide (a Brent or wall trial next to
+    s is the secant of the points around the root: on each side the nearest scan point (a scan point at x itself is
+    skipped), else the farthest solved trial of that side's solved stretch. Note 10: a sign-change bracket can be a hair wide (a Brent or wall trial next to
     a scan point), where noise sets its secant and δ collapsed below the noise (Mars member at rtol/10, δ 5.5e-5 m).
     δ = PROBE_SPAN·tol_F/s, capped at an eighth of the scan pair's width."""
     scan = sorted((t.x, t.F) for t in trials if t.kind == "scan" and t.F is not None)
-    below = [q for q in scan if q[0] < x]
-    above = [q for q in scan if q[0] > x]
-    xa, fa, xb, fb = bracket["scan"]
-    (xa, fa), (xb, fb) = (below[-1] if below else (xa, fa)), (above[0] if above else (xb, fb))
-    s = abs(fb - fa) / abs(xb - xa)
+    solved = sorted((t.x, t.F) for t in trials if t.F is not None)
+    refused = sorted(t.x for t in trials if t.F is None and t.kind != "isolated")
+
+    def side_point(sgn):
+        """The scan point next to x on that side; with none, the farthest solved trial on that side inside the
+        solved stretch (no refusal between it and x), so the secant never rests on a hair-wide pair."""
+        sc = [q for q in scan if (q[0] - x) * sgn > 0.0]
+        if sc:
+            return min(sc, key=lambda q: abs(q[0] - x))
+        wall = min((w for w in refused if (w - x) * sgn > 0.0), key=lambda w: abs(w - x), default=None)
+        stretch = [q for q in solved if (q[0] - x) * sgn > 0.0 and (wall is None or abs(q[0] - x) < abs(wall - x))]
+        return max(stretch, key=lambda q: abs(q[0] - x)) if stretch else None
+
+    lo_pt, hi_pt = side_point(-1.0), side_point(1.0)
+    if lo_pt is None or hi_pt is None:                 # one side has no solved trial: the secant from x to the other
+        lo_pt, hi_pt = (lo_pt or (x, acc.F)), (hi_pt or (x, acc.F))
+    (xa, fa), (xb, fb) = lo_pt, hi_pt
+    s = abs(fb - fa) / abs(xb - xa) if xb != xa else 0.0
     tol_x = 2.0 * 2.2e-16 * abs(x) + 0.5 * cl.CLOSE_TOL * abs(x)
     tol_f = 3.0 * acc.counters.get("accepted", 0) * options.rtol + 2.0 * s * tol_x
     # a probe that leaves the solved stretch (a wall within 2δ) refuses the solve by design (r2 on 55117864 (b))

@@ -378,5 +378,116 @@ class ClosureDiscontinuous(unittest.TestCase):
             self.assertGreater(abs(got.evidence["F_root"]), got.evidence["tol_F"])
 
 
+class GuardRedTeam(unittest.TestCase):
+    """Directing's red-team of the closure guard as a class (phase-1 design note 11): one planted case per input the
+    residual check and the probe depend on. Covered elsewhere: a step at the root and just past it on the R and
+    boundary_mass closures, a kink at the root, a sub-tolerance step, a lone F = 0 root (ClosureDiscontinuous); a
+    floor-closed centre (FloorGuard: a dense centre answers); the accepted pass's own N_acc (test_a6_trace)."""
+
+    def setUp(self):
+        self.body, self.views = _two_layer(6000.0)
+        self.rt = []
+        self._orig_rt, self._orig_inward = sv._root_tolerance, sv.inward
+
+        def rt(*a):
+            r = self._orig_rt(*a)
+            self.rt.append(r)
+            return r
+        sv._root_tolerance = rt
+        ans, self.x0 = sv.solve(self.body, views=self.views)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.delta0 = self.rt[-1]["delta"]
+        self.scan = cl.scan_points(self.body.closure.lo, self.body.closure.hi, context.Options().n_scan)
+
+    def tearDown(self):
+        sv._root_tolerance, sv.inward = self._orig_rt, self._orig_inward
+
+    def _solve(self, alter):
+        """Solve with each pass's F replaced by alter(x, F) (a Stop from alter refuses that trial)."""
+        orig = self._orig_inward
+
+        def wrapped(bd, vw, x, opt):
+            got = orig(bd, vw, x, opt)
+            if isinstance(got, st.Stop) or got.F is None:
+                return got
+            f = alter(x, got.F)
+            if isinstance(f, st.Stop):
+                return f
+            got.F = f
+            return got
+        sv.inward = wrapped
+        try:
+            return sv.solve(self.body, views=self.views)
+        finally:
+            sv.inward = orig
+
+    def _f_at(self, x):
+        return self._orig_inward(self.body, sv._views_at(self.body, self.views, x), x, context.Options()).F
+
+    def test_root_exactly_at_a_scan_point(self):
+        """Venus's member: the root is itself a scan point; the slope skips it and δ stays finite."""
+        x_s = min(self.scan, key=lambda z: abs(z - self.x0))
+        f_s = self._f_at(x_s)
+        ans, x = self._solve(lambda xx, f: f - f_s)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.assertEqual(x, x_s)
+        self.assertGreater(self.rt[-1]["delta"], 0.1 * self.delta0)
+
+    def test_root_a_hair_from_a_scan_point(self):
+        """Mars member at rtol/10: a root 1e-10 relative from a scan point; δ must not collapse (note 10)."""
+        x_s = min(self.scan, key=lambda z: abs(z - self.x0))
+        f_h = self._f_at(x_s * (1 + 1e-10))
+        ans, x = self._solve(lambda xx, f: f - f_h)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.assertGreater(self.rt[-1]["delta"], 0.1 * self.delta0)
+
+    def test_walls_on_one_side(self):
+        """Every trial below 0.999·x0 refuses: the slope and the reference come from the solved stretch; it answers."""
+        cut = 0.999 * self.x0
+        ans, x = self._solve(lambda xx, f: st.Stop("refused", {"planted": "wall", "x": xx}) if xx < cut else f)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.assertLess(abs(x / self.x0 - 1.0), 1e-12)
+
+    def test_wall_within_two_delta_refuses(self):
+        """A wall δ/2 below the root: the lower probe refuses, so the solve refuses by name, never answers."""
+        cut = self.x0 - 0.5 * self.delta0
+        ans, x = self._solve(lambda xx, f: st.Stop("refused", {"planted": "wall", "x": xx}) if xx < cut else f)
+        self.assertIsInstance(ans, result.Refusal)
+        self.assertEqual((ans.id, ans.evidence["check"]), ("solve.closure_discontinuous", "probe"))
+
+    def test_very_flat_and_very_steep_F(self):
+        """F scaled by 1e-3 and 1e3: δ follows the slope (capped by the scan pair), and the root is unchanged."""
+        for k in (1e-3, 1e3):
+            with self.subTest(scale=k):
+                ans, x = self._solve(lambda xx, f, k=k: k * f)
+                self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+                self.assertLess(abs(x / self.x0 - 1.0), 1e-12)
+
+    def test_composition_closure_step_refuses(self):
+        """The third closure kind: a step just past the composition root refuses by the probe."""
+        from solver.tests.test_s10 import CompositionClosure, XCore
+        cc = CompositionClosure()
+        body = cc._body()
+        views = {"core": XCore(0.0), "mantle": Uniform(3000.0)}
+        ans, x0 = sv.solve(body, views=views)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        orig = self._orig_inward
+        lo, hi = (orig(body, sv._views_at(body, views, z), z, context.Options()).F for z in (x0 * 0.99, x0 * 1.01))
+        sg = math.copysign(1.0, hi - lo)
+
+        def stepped(bd, vw, x, opt):
+            got = orig(bd, vw, x, opt)
+            if not isinstance(got, st.Stop) and got.F is not None and x > x0 * (1 + 1e-9):
+                got.F += sg * 1e-5
+            return got
+        sv.inward = stepped
+        try:
+            ans, x = sv.solve(body, views=views)
+        finally:
+            sv.inward = orig
+        self.assertIsInstance(ans, result.Refusal)
+        self.assertEqual((ans.id, ans.evidence["check"]), ("solve.closure_discontinuous", "probe"))
+
+
 if __name__ == "__main__":
     unittest.main()
