@@ -91,7 +91,7 @@ phases:
   window:
     p_min: 0.0
     p_max: 400000000.0
-    t_min: 1.0
+    t_min: 130.0
     t_max: 300.99999999999983
   edges:
     p_min:
@@ -138,7 +138,7 @@ phases:
   window:
     p_min: 0.0
     p_max: 900000000.0
-    t_min: 0.0
+    t_min: 130.0
     t_max: 270.00000000000006
   edges:
     p_min:
@@ -185,7 +185,7 @@ phases:
   window:
     p_min: 0.0
     p_max: 500000000.0
-    t_min: 0.0
+    t_min: 130.0
     t_max: 270.00000000000006
   edges:
     p_min:
@@ -232,7 +232,7 @@ phases:
   window:
     p_min: 0.0
     p_max: 1000000000.0
-    t_min: 0.0
+    t_min: 130.0
     t_max: 300.0000000000001
   edges:
     p_min:
@@ -279,7 +279,7 @@ phases:
   window:
     p_min: 0.0
     p_max: 2300000000.0
-    t_min: 0.0
+    t_min: 130.0
     t_max: 400.0000000000001
   edges:
     p_min:
@@ -1001,7 +1001,7 @@ refusals:
   box:
     p_min: 2140000000.0
     p_max: 2300000000.0
-    t_min: 0.0
+    t_min: 130.0
     t_max: 355.0
   reason: 'VI–VII boundary not cached (Bridgman 1937, Pistorius et al. 1968, Journaux et al. 2013 on papers-to-fetch); bounded
     only by declared edges: Bezacier 2014''s lowest VII point (2.14 GPa, Table I), SeaFreeze VI''s window top and the R14-08
@@ -1090,6 +1090,19 @@ refusals:
     only by declared edges: Bezacier 2014''s lowest VII point (2.14 GPa, Table I), SeaFreeze VI''s window top and the R14-08
     VII melting curve (directing 2026-10-11). Any column crossing ~2.2 GPa refuses until then; above 355 K only above the
     melting curve'
+- id: input.material_out_of_data
+  box:
+    p_min: 0.0
+    p_max: 2300000000.0
+    t_min: 0.0
+    t_max: 129.99999999999997
+  reason: below SeaFreeze's printed validity, «130–500 K to 2,300 MPa» (Journaux 2020 p.1); the splines answer there without
+    meaning (68 H1). A declared extrapolation band is directing's call
+  source:
+    cache: 2020JGRE..12506176J.pdf
+    page: '1'
+    where: 'abstract: «(130–500 K to 2,300 MPa)»'
+    sha256: 32be1644a63fa452a5fcd273d893185a065243577d0084ac7b0df2197615deff
 triple_points:
 - phases:
   - water1
@@ -1121,7 +1134,7 @@ field_probes:
 - box:
     p_min: 0.0
     p_max: 1000000000.0
-    t_min: 1.0
+    t_min: 130.0
     t_max: 300.0
   dp: 10000000.0
   dt: 5.0
@@ -1135,7 +1148,7 @@ field_probes:
 - box:
     p_min: 1000000000.0
     p_max: 2300000000.0
-    t_min: 1.0
+    t_min: 130.0
     t_max: 240.0
   dp: 20000000.0
   dt: 10.0
@@ -1146,6 +1159,13 @@ field_probes:
     t_max: 1000.0
   dp: 500000000.0
   dt: 25.0
+- box:
+    p_min: 0.0
+    p_max: 2300000000.0
+    t_min: 10.0
+    t_max: 120.0
+  dp: 100000000.0
+  dt: 10.0
 formula_checks:
 - quantity: R14-08 eq. (5), ice VII melting pressure at 550 K
   state: {}
@@ -1222,7 +1242,8 @@ formula_checks:
     sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
 note: 'SeaFreeze 1.1.0 is the PyPI sdist (sha256 c7574f3e9b9628d2eac6ca7f049d54c5c027928930cdb4b13a6988c5700bda8c, enforced
   at install by pip --require-hashes); library.sha256 is the installed package tree (material_library.tree_sha256). Windows
-  are the spline knot domains at the pin ∩ the printed validity (≤ 2,300 MPa; water1 ≤ 500 K). Liquid above water1''s window
+  are the spline knot domains at the pin ∩ the printed validity (130–500 K to 2,300 MPa, Journaux 2020 p.1; water1 ≤ 500 K).
+  Below 130 K the ices refuse by name until directing rules on an extrapolation band (68 H1). Liquid above water1''s window
   and the vapour refuse by name until IAPWS-IF97 lands (owner-direction 2026-10-11, scope change). Any icy column crossing
   ~2.2 GPa refuses until a VI–VII boundary source is cached (directing 2026-10-11). Ice VII from 2.3 GPa (VI''s window top)
   to F&R''s ρ = 1600 kg/m³ edge (~3.3 GPa at 300 K) refuses by name: Bezacier gives ρ there but prints no c_P, and the c_P
