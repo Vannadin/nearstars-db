@@ -741,9 +741,14 @@ class RecordView:
                 if best is None or g <= best[0]:            # ≤: a tie goes to the later (higher-P) phase
                     best = (g, ph)
             g_win = None if best is None else best[1]
+        # phase-2 design note 5: a source seam is half-open; its t belongs to the upper side, so the lower side's
+        # window ends just before it
+        seam_low = {sm["between"][0]: _v(sm["t"]) for sm in self.record.get("source_seams", ())}
         hits = []
         for ph in self.phases:
             if not self._in_window(ph, p, t):
+                continue
+            if ph.id in seam_low and t >= seam_low[ph.id]:
                 continue
             if kinds[ph.id] == "gibbs" and ph is not g_win:
                 continue

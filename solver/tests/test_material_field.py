@@ -265,5 +265,27 @@ class SourceSeamRules(unittest.TestCase):
             mr._source_seams(rec, "toy.yaml")
 
 
+class SourceSeamHalfOpen(unittest.TestCase):
+    """Phase-2 design note 5: exactly t belongs to the upper side of a source seam; just below, the lower side."""
+
+    def test_t_belongs_to_the_upper_side(self):
+        rec = field_record()
+        rec["phases"][2]["window"]["t_min"] = 300.0                    # VII: T ≥ 300 K
+        lo = copy.deepcopy(rec["phases"][2])
+        lo.update(id="VII_cold")
+        lo["window"] = dict(lo["window"], t_min=250.0, t_max=300.0)
+        rec["phases"].append(lo)
+        p = 5.0e9
+        v = mv.RecordView(rec, T)
+        got = v._field_at(p, 300.0)
+        self.assertIsInstance(got, st.Stop)                           # control: without the seam, an overlap at t
+        self.assertEqual(got.record.refusal, "material.field_overlap")
+        rec["source_seams"] = [{"between": ["VII_cold", "VII"], "t": const(300.0, "K")}]
+        v = mv.RecordView(rec, T)
+        self.assertEqual(v._field_at(p, 300.0).id, "VII")
+        self.assertEqual(v._field_at(p, 299.9999).id, "VII_cold")
+        self.assertEqual(v._field_at(p, 300.0001).id, "VII")
+
+
 if __name__ == "__main__":
     unittest.main()
