@@ -17,6 +17,8 @@ from solver import stepper as st
 
 N_SCAN = 17
 WALL_TOL = 1e-6
+WALL_TOL_COARSE = 1e-3       # phase-1 note 15 §1: first location; WALL_TOL only where the outcome reads the wall
+SCREEN_K = 10.0              # note 15 §1: a root may hide beside a wall when |F| ≤ K·|s|·gap (2873.8 K's wall: 5.6)
 WALL_SHOTS = 24
 CLOSE_TOL = 1e-12
 CLOSE_ITERS = 100            # Brent iterations per root (fixed by the S2 dated line)
@@ -56,7 +58,8 @@ class Wall:
     x: float                     # the located wall (first refusing x next to a solved one)
     stop: st.Stop
     solved_side: float           # the nearest solved x
-    located: bool = True         # False when WALL_SHOTS ran out before WALL_TOL (NoAnswer budget WALL_SHOTS)
+    located: bool = True         # False when WALL_SHOTS ran out before `tol` (NoAnswer budget WALL_SHOTS)
+    tol: float = WALL_TOL        # note 15 §1 (r2 H1): the tolerance this wall was located to; `located` is judged on it
 
 
 @dataclass
@@ -169,9 +172,10 @@ def _isolate(trials: list, x: float, stop: st.Stop):
             trials[n] = Trial(x, None, stop, "isolated")
 
 
-def _locate_wall(F, x_ok: float, x_bad: float, stop_bad: st.Stop, trials: list, lo: float, hi: float) -> Wall:
+def _locate_wall(F, x_ok: float, x_bad: float, stop_bad: st.Stop, trials: list, lo: float, hi: float,
+                 tol: float = WALL_TOL) -> Wall:
     for _ in range(WALL_SHOTS):
-        if abs(x_bad - x_ok) <= WALL_TOL * max(abs(x_ok), abs(x_bad)):
+        if abs(x_bad - x_ok) <= tol * max(abs(x_ok), abs(x_bad)):
             break
         xm = 0.5 * (x_ok + x_bad)
         v = _value(F, xm)
@@ -185,7 +189,7 @@ def _locate_wall(F, x_ok: float, x_bad: float, stop_bad: st.Stop, trials: list, 
         else:
             trials.append(Trial(xm, v, None, "wall"))
             x_ok = xm
-    return Wall(x_bad, stop_bad, x_ok, abs(x_bad - x_ok) <= WALL_TOL * max(abs(x_ok), abs(x_bad)))
+    return Wall(x_bad, stop_bad, x_ok, abs(x_bad - x_ok) <= tol * max(abs(x_ok), abs(x_bad)), tol)
 
 
 MAX_SPLITS = 16              # refusals met inside a Brent bracket, each splitting it (then re-searched)
@@ -214,13 +218,41 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
     done_pairs: set = set()
     closed: dict = {}            # (a.x, b.x) → root or problem
     brackets: dict = {}          # root → {"scan": (x_a, F_a, x_b, F_b), "final": Brent's last bracket or None}
+    # phase-1 note 15 §1: walls are located coarse first; a wall is refined to WALL_TOL (and the search run again with
+    # the new trials, N4) when the outcome reads it (any outcome but one root) or a root may hide beside it
+    out = _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_wall_trials, WALL_TOL_COARSE)
+    hide = [w for w in walls if out.kind != "root" or _root_may_hide(w, trials)]
+    if not hide:
+        return out
+    walls[:] = [_locate_wall(F, w.solved_side, w.x, w.stop, trials, lo, hi) if w in hide else w for w in walls]
+    order = sorted((t for t in trials if t.kind != "isolated"), key=lambda t: t.x)
+    for a, b in zip(order, order[1:]):                   # the refined walls' own pairs: not new walls
+        if (a.F is None) != (b.F is None):
+            done_pairs.add((a.x, b.x))
+    return _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_wall_trials, WALL_TOL)
+
+
+def _root_may_hide(w, trials) -> bool:
+    """Note 15 §1's screen: at the solved trial nearest the wall (on its solved side), |F| ≤ SCREEN_K·|s|·gap, s the
+    slope of the two nearest solved trials there, gap the distance to the wall's refusing x. Fewer than two solved
+    trials on that side: refine."""
+    side = 1.0 if w.x > w.solved_side else -1.0
+    solved = sorted((t for t in trials if t.F is not None and (t.x - w.x) * side < 0.0), key=lambda t: abs(t.x - w.x))
+    if len(solved) < 2:
+        return True
+    a, b = solved[0], solved[1]
+    s = abs(a.F - b.F) / abs(a.x - b.x) if a.x != b.x else math.inf
+    return abs(a.F) <= SCREEN_K * s * abs(w.x - a.x)
+
+
+def _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_wall_trials, wall_tol):
     for _round in range(MAX_SPLITS + 1):
         order = sorted((t for t in trials if t.kind != "isolated"), key=lambda t: t.x)
         for a, b in zip(order, order[1:]):
             if (a.F is None) != (b.F is None) and (a.x, b.x) not in done_pairs:
                 done_pairs.add((a.x, b.x))
                 ok, bad = (a, b) if a.F is not None else (b, a)
-                walls.append(_locate_wall(F, ok.x, bad.x, bad.stop, trials, lo, hi))
+                walls.append(_locate_wall(F, ok.x, bad.x, bad.stop, trials, lo, hi, wall_tol))
         pts = sorted((t for t in trials if t.F is not None and (use_wall_trials or t.kind != "wall")),
                      key=lambda t: t.x)
         refused = sorted(t.x for t in trials if t.F is None and t.kind != "isolated")

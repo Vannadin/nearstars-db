@@ -36,7 +36,7 @@ class Walls(unittest.TestCase):
         self.assertAlmostEqual(out.roots[0], 2.0, delta=2.0 * closure.CLOSE_TOL * 10)
         self.assertEqual(len(out.walls), 1)
         w = out.walls[0]
-        self.assertLessEqual(abs(w.x - WALL), closure.WALL_TOL * WALL)
+        self.assertLessEqual(abs(w.x - WALL), w.tol * WALL)                 # note 15 §1: its own tolerance
         self.assertLess(w.solved_side, WALL)
         self.assertGreaterEqual(w.x, WALL)
 
@@ -209,7 +209,7 @@ class IsolatedRefusal(unittest.TestCase):
         self.assertEqual(out.kind, "root")
         self.assertAlmostEqual(out.roots[0], self.ROOT, delta=1e-9)
         self.assertIn("isolated", [t.kind for t in out.trials if t.x == iso])
-        self.assertTrue(any(abs(w.x - self.WALL) <= 1e-5 * self.WALL for w in out.walls))   # control: genuine wall
+        self.assertTrue(any(abs(w.x - self.WALL) <= w.tol * self.WALL for w in out.walls))   # control: genuine wall
 
     def test_isolated_bisection_shot_above_the_wall(self):
         xs = closure.scan_points(1.0, 10.0)
@@ -226,7 +226,7 @@ class IsolatedRefusal(unittest.TestCase):
         self.assertEqual(out.kind, "root")
         self.assertIn("isolated", [t.kind for t in out.trials if t.x == iso])
         walls = [w for w in out.walls if w.located]
-        self.assertTrue(walls and all(abs(w.x - self.WALL) <= 1e-5 * self.WALL for w in walls), walls)
+        self.assertTrue(walls and all(abs(w.x - self.WALL) <= w.tol * self.WALL for w in walls), walls)
         orig = closure.CONFIRM_FRAC, closure.CONFIRM_MIN    # control: unconfirmed, the wall lands on the planted point
         closure.CONFIRM_FRAC, closure.CONFIRM_MIN = 0.0, 0.0
         try:
@@ -287,7 +287,7 @@ class ReasonMustMatch(unittest.TestCase):
         self.assertEqual(out.kind, "root")
         self.assertIn("isolated", [t.kind for t in out.trials if t.x == iso])
         walls = [w for w in out.walls if w.located]
-        self.assertTrue(walls and all(abs(w.x - wall) <= 1e-5 * wall for w in walls), walls)
+        self.assertTrue(walls and all(abs(w.x - wall) <= w.tol * wall for w in walls), walls)
         self.assertTrue(all(closure.reason(w.stop)[0] == "refused" for w in walls), [w.stop for w in walls])
 
     def test_control_without_reason_matching_the_failure_is_the_wall(self):
@@ -306,3 +306,47 @@ class ReasonMustMatch(unittest.TestCase):
         walls = [w for w in out.walls if w.located]
         self.assertTrue(walls and all(closure.reason(w.stop) == ("chatter", "EVENT_REWALKS") for w in walls))
         self.assertEqual(out.kind, "root")
+
+
+class CoarseWalls(unittest.TestCase):
+    """Phase-1 design note 15 §1: walls located coarse first, refined to WALL_TOL where the outcome reads them or a
+    root may hide beside them."""
+    WALL = 2.0
+
+    def _F(self, g):
+        return lambda x: st.Stop("refused", {"x": x}) if x < self.WALL else g(x)
+
+    def test_a_root_hiding_beside_a_wall_is_still_found(self):
+        """A second root 1e-4·|x| from the wall (inside the last coarse interval; at 5e-4 the coarse trials already bracket
+        it) is found by the screen; control: K = 0 loses it."""
+        r2 = self.WALL * (1.0 + 1e-4)
+        F = self._F(lambda x: (x - r2) * (x - 5.0))
+        out = closure.solve_scalar(F, 1.0, 10.0)
+        self.assertEqual(out.kind, "two_roots", out.roots)
+        orig = closure.SCREEN_K
+        closure.SCREEN_K = 0.0
+        try:
+            self.assertEqual(closure.solve_scalar(F, 1.0, 10.0).kind, "root")
+        finally:
+            closure.SCREEN_K = orig
+
+    def test_a_wall_far_from_any_root_stays_coarse(self):
+        out = closure.solve_scalar(self._F(lambda x: x - 5.0), 1.0, 10.0)
+        self.assertEqual(out.kind, "root")
+        self.assertEqual([(w.tol, w.located) for w in out.walls], [(closure.WALL_TOL_COARSE, True)])
+
+    def test_an_outcome_that_reads_its_walls_gets_them_refined(self):
+        out = closure.solve_scalar(self._F(lambda x: x + 1.0), 1.0, 10.0)
+        self.assertEqual(out.kind, "no_bracket")
+        self.assertEqual([w.tol for w in out.walls], [closure.WALL_TOL])
+        self.assertLessEqual(abs(out.walls[0].x - self.WALL), closure.WALL_TOL * self.WALL)
+
+    def test_a_wall_out_of_shots_is_unlocated_at_its_own_tolerance(self):
+        """r2 H1's control: `located` is judged on the wall's own tol; an exhausted bisection is unlocated."""
+        orig = closure.WALL_SHOTS
+        closure.WALL_SHOTS = 1
+        try:
+            out = closure.solve_scalar(self._F(lambda x: x - 5.0), 1.0, 10.0)
+        finally:
+            closure.WALL_SHOTS = orig
+        self.assertEqual([(w.tol, w.located) for w in out.walls], [(closure.WALL_TOL_COARSE, False)])
