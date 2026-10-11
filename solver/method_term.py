@@ -29,6 +29,11 @@ from solver import context, from_v1, member as mb, result, run_oracle as ro, sol
 STEPS = 1500                       # interior.STEPS at 097a8aa3
 
 
+
+#: Switch-over note 6: the T2 method term measures the phase-1 method on the legacy materials it was registered on, so
+#: it keeps the switch off (its fixed mode is not shown identical for record views; switch-over note 1 item 3).
+MATERIALS = "legacy"
+
 def grid_dr(body, answer, steps: int = STEPS):
     """(dr, ρ_c) from the adaptive answer's innermost profile node."""
     prof = answer.profiles[body.layers[0].id]
@@ -77,7 +82,7 @@ def _body_at(body_yaml, t_pot, member=None):
     body = got[0] if isinstance(got, tuple) else got
     info = None
     if t_pot is not None and not isinstance(body, result.Refusal):
-        got_m = member if member is not None else mb.member_of(body)
+        got_m = member if member is not None else mb.member_of(body, MATERIALS)
         if got_m is not None:
             body, info = got_m
             if body is None:
@@ -97,7 +102,7 @@ def one_state(body_yaml: str, state, tag: str, steps: int = STEPS, member=None) 
     if info is not None:
         rec["member"] = result.plain(info)
     c0 = time.process_time()
-    a, _ = sv.solve(body, context.Options(sensitivity_dt=0.0))
+    a, _ = sv.solve(body, context.Options(sensitivity_dt=0.0, materials=MATERIALS))
     rec["cpu_adaptive_s"] = time.process_time() - c0
     rec["kind_adaptive"] = _kind(a)
     if not isinstance(a, result.Answer):
@@ -107,7 +112,7 @@ def one_state(body_yaml: str, state, tag: str, steps: int = STEPS, member=None) 
     dr, rho_c = grid_dr(body, a, steps)
     rec.update(dr=dr, rho_c=rho_c)
     if state == "declared":
-        base = context.Options()
+        base = context.Options(materials=MATERIALS)
         c0 = time.process_time()
         ra = ro.one(body_yaml, "declared", base)
         rf = ro.one(body_yaml, "declared", dataclasses.replace(base, fixed_dr=dr))
@@ -117,7 +122,7 @@ def one_state(body_yaml: str, state, tag: str, steps: int = STEPS, member=None) 
         rec["options"] = result.plain(dataclasses.asdict(base))
     else:
         c0 = time.process_time()
-        f, _ = sv.solve(body, context.Options(sensitivity_dt=0.0, fixed_dr=dr))
+        f, _ = sv.solve(body, context.Options(sensitivity_dt=0.0, fixed_dr=dr, materials=MATERIALS))
         rec["cpu_fixed_s"] = time.process_time() - c0
         rec["kind_fixed"] = _kind(f)
         va = {q.key: q.point for q in a.quantities}
@@ -153,14 +158,14 @@ def run(body_yaml: str, points_json: str, out_jsonl: str, steps: int = STEPS) ->
         for line in lines:
             r = json.loads(line)
             done.add((r["body"], repr(r["state"])))
-    header = ro._header(context.Options(sensitivity_dt=0.0), "")
+    header = ro._header(context.Options(sensitivity_dt=0.0, materials=MATERIALS), "")
     stem = Path(body_yaml).stem
     states = [(s, t) for s, t in _states(stem, points_json) if (stem, repr(s)) not in done]
     member = None
     if any(s != "declared" for s, _t in states):     # one declared solve per body for all its T_pot states
         body0, _i = _body_at(body_yaml, None)
         if not isinstance(body0, result.Refusal):
-            member = mb.member_of(body0)
+            member = mb.member_of(body0, MATERIALS)
     with out.open("a", encoding="utf-8") as fh:
         for state, tag in states:
             rec = one_state(body_yaml, state, tag, steps, member)
@@ -213,7 +218,7 @@ def controls(body_yaml: str) -> dict:
     """Registration controls 1 and 2 at the declared state: the fixed solve twice gives identical values (null), and
     STEPS 2N halves the temperature keys' d (ratio d(N)/d(2N) within ORDER_RANGE: Euler in P, first order)."""
     body, _info = _body_at(body_yaml, None)
-    opt = context.Options(sensitivity_dt=0.0)
+    opt = context.Options(sensitivity_dt=0.0, materials=MATERIALS)
     a, _ = sv.solve(body, opt)
     va = {q.key: q.point for q in a.quantities}
     dr, rho_c = grid_dr(body, a, STEPS)

@@ -108,7 +108,7 @@ def _one(body_yaml: str, state, options, chain: bool, member=None, registry=None
                        "detail": f"{stem} declares no potential temperature; a T_pot state has no meaning for it"}})
         return rec
     if t_pot is not None:
-        got_m = member if member is not None else mb.member_of(body)   # an inverse body's T_pot state: its member
+        got_m = member if member is not None else mb.member_of(body, options.materials, registry)   # its member
         if got_m is not None:
             fb, info = got_m
             rec["member"] = result.plain(info)
@@ -184,7 +184,7 @@ def main(argv=None) -> int:
             got = from_v1.load_v1(body_yaml)
             body = got[0] if isinstance(got, tuple) else got
             if not isinstance(body, result.Refusal):
-                member = mb.member_of(body)
+                member = mb.member_of(body, options.materials, registry)
         for state in states:
             rec = one(body_yaml, state, options, chain, member, registry)
             name = f"{stem}__{'declared' if state == 'declared' else repr(state)}.json"

@@ -355,6 +355,29 @@ class RegistryLoads(unittest.TestCase):
         self.assertEqual(got.id, "input.material_registry")
 
 
+class SwitchReachesEverySolve(unittest.TestCase):
+    """Switch-over note 6: a solve made on the caller's behalf (an inverse body's member) follows the caller's switch,
+    so a baseline run is a baseline throughout; the T2 method term stays on legacy."""
+
+    def test_member_solve_follows_the_switch(self):
+        from unittest import mock
+        from solver import member as mb
+        venus, _aside = from_v1.load_v1("engine/bodies/venus.yaml")
+        seen = []
+        real = sv.solve
+
+        def spy(body, options=context.Options(), warm=None, views=None, registry=None):
+            seen.append(options.materials)
+            return real(body, options, warm, views, registry)
+        with mock.patch.object(sv, "solve", spy):
+            mb.member_of(venus, "legacy")
+        self.assertEqual(seen, ["legacy"])
+
+    def test_method_term_keeps_legacy(self):
+        from solver import method_term as mt
+        self.assertEqual(mt.MATERIALS, "legacy")
+
+
 class Step1Identity(unittest.TestCase):
     """§6.6: Earth and Venus through fe_prem_legacy reproduce the switch-off answers (solve_id masked)."""
 

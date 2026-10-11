@@ -29,15 +29,16 @@ def is_inverse(body) -> bool:
     return body.closure.kind != "R"
 
 
-def member_of(body):
+def member_of(body, materials: str = "registry", registry=None):
     """(member body, record) for an inverse body with a temperature path, from a fresh declared-state solve
     (sensitivity off); None for a forward body. A declared state that does not answer gives (None, record): its T_pot
     states are then refused by name (run_oracle). No memo here (§A6, r2): a caller that needs it for many states
-    solves once and passes the result in."""
+    solves once and passes the result in. `materials` / `registry`: the caller's switch-over setting and its loaded
+    registry (switch-over §1, note 5), so a baseline run's member solve is a baseline solve too."""
     if not is_inverse(body) or body.surface.t_pot is None:
         return None
     from solver import context, result, solve as sv
-    a, x = sv.solve(body, context.Options(sensitivity_dt=0.0))
+    a, x = sv.solve(body, context.Options(sensitivity_dt=0.0, materials=materials), registry=registry)
     if not isinstance(a, result.Answer):
         return None, {"declared_outcome": type(a).__name__, "x": None}
     fb = forward_member(body, a, x)
