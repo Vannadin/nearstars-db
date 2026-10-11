@@ -214,7 +214,7 @@ def _mars(inp, where, notes):
                # grade is never upgraded (phase-2 impl note 2 item 5)
                "composition": {**_block(mc, "mantle_composition", notes), "source_kind": "measured"}}]
     if _val(thick) == 0:                     # R-BL-7: 0 means «no basal layer»; v2 refuses a zero extent (note 14 item 1)
-        del layers[1]
+        layers = [l for l in layers if l["id"] != "basal"]
         notes.append(Note("v1_field_dropped", "basal_layer_thickness_km 0: no basal layer (R-BL-7); the core reaches "
                           "core_plus_layer_radius_km", {"key": "basal_layer_thickness_km"}))
     return layers, {"kind": "composition", "layer": "core", "name": "S"}

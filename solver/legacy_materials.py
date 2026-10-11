@@ -21,6 +21,7 @@ import math
 import os
 import sys
 from dataclasses import dataclass
+from types import MappingProxyType
 
 from solver import stepper as st
 
@@ -365,7 +366,7 @@ class LegacyMaterials:
     `pressure_floor`: the engine material's p_floor (0 when absent); a built id reads its base material; a record
     gives None until records carry one."""
 
-    BUILT = {"fe_core_light": "fe_prem", "silicate_decl": "silicate", BASAL_CONST: "silicate"}
+    BUILT = MappingProxyType({"fe_core_light": "fe_prem", "silicate_decl": "silicate", BASAL_CONST: "silicate"})
 
     def __init__(self, registry=None):
         self._reg, self._loaded = registry, registry is not None

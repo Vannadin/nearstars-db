@@ -19,6 +19,12 @@ def earth():
     return body
 
 
+def no_lid(body):
+    """The body without its conductive lid: an inversion keeps no structural lid through phase 1 (R-LITHO-6, owner
+    Q3; P1R-G4-C-08), so a forward/inverse round trip runs on the lid-free structure in both directions."""
+    return dataclasses.replace(body, layers=tuple(l for l in body.layers if l.thermal != "conductive"))
+
+
 def q(answer, key):
     return next(x.point for x in answer.quantities if x.key == key)
 
@@ -27,6 +33,7 @@ class FirstJoin(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.ans, cls.warm = sv.solve(earth())
+        cls.ans_no_lid, _ = sv.solve(no_lid(earth()))      # the round trips' forward leg (G4-C-08)
 
     def test_earth_answers(self):
         self.assertIsInstance(self.ans, result.Answer, getattr(self.ans, "text", None))
@@ -40,8 +47,8 @@ class FirstJoin(unittest.TestCase):
 
     def test_round_trip_inverse_returns_cmf(self):
         """Forward R from the declared CMF, fed back with R declared and CMF free, returns the CMF (≤ 1e-9)."""
-        e = earth()
-        R = q(self.ans, "radius")
+        e = no_lid(earth())
+        R = q(self.ans_no_lid, "radius")
         layers = tuple(dataclasses.replace(l, extent=None) if l.id == "core" else l for l in e.layers)
         inv = b.Body(e.name + "-inverse", e.kind, e.surface, layers, b.Closure("boundary_mass", 0.05, 0.95, "core"),
                      parent=e.parent, radius=b.Declared(R, "m"), jumps=e.jumps, declarations=e.declarations,
@@ -51,8 +58,8 @@ class FirstJoin(unittest.TestCase):
         self.assertLess(abs(q(ans, "core_mass_fraction") - 0.325), 1e-9)
 
     def test_control_round_trip_with_wrong_radius_misses(self):
-        e = earth()
-        R = q(self.ans, "radius") * (1 + 1e-6)
+        e = no_lid(earth())
+        R = q(self.ans_no_lid, "radius") * (1 + 1e-6)
         layers = tuple(dataclasses.replace(l, extent=None) if l.id == "core" else l for l in e.layers)
         inv = b.Body(e.name + "-inverse", e.kind, e.surface, layers, b.Closure("boundary_mass", 0.05, 0.95, "core"),
                      parent=e.parent, radius=b.Declared(R, "m"), jumps=e.jumps, declarations=e.declarations,
@@ -63,7 +70,7 @@ class FirstJoin(unittest.TestCase):
 
 def _one(t_pot):
     import solver.solve as s2
-    e = earth()
+    e = no_lid(earth())
     body = dataclasses.replace(e, surface=dataclasses.replace(e.surface, t_pot=t_pot))
     return t_pot, pickle.dumps(s2.solve(body)[0].quantities)
 

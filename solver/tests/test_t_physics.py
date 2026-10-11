@@ -32,7 +32,8 @@ class ClosureRoundTrip(unittest.TestCase):
     CMF to ≤ 1e-9 (measured 4.8e-10). Control: a planted wrong residual sign (F → |F|) gives solve.no_bracket."""
 
     def _inverse(self):
-        e = _earth()
+        e = _earth()          # an inversion keeps no structural lid (R-LITHO-6, owner Q3; P1R-G4-C-08): both legs lid-free
+        e = dataclasses.replace(e, layers=tuple(l for l in e.layers if l.thermal != "conductive"))
         a, _ = sv.solve(e, OPT)
         layers = tuple(dataclasses.replace(l, extent=None) if l.id == "core" else l for l in e.layers)
         return dataclasses.replace(e, layers=layers, closure=bd.Closure("boundary_mass", 0.001, 0.999, layer="core"),

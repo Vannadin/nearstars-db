@@ -617,11 +617,12 @@ def _jumps(raw, layers, where):
         if j not in names:
             _no("input.jump_boundary", where, boundary=str(j), known=sorted(names))
         canon = alias.get(j, j)
-        lid_base = next((b for b in bounds if b.name == canon and by_id[b.upper].thermal == "conductive"), None)
-        if lid_base is not None or "lithosphere" in str(j):   # P1R-G4-C-09 + G2-R-11: never silently dropped
+        b_here = next(b for b in bounds if b.name == canon or b.interface == canon)
+        lid_base = by_id[b_here.upper].thermal == "conductive"
+        if lid_base or "lid" in b_here.roles:      # P1R-G4-C-09 + G2-R-11 (R-LITHO-7): by role, never by name text
             _no("input.jump_at_lithosphere", where, boundary=str(j),
-                why="the conductive lid's own profile sets T at its base" if lid_base is not None
-                else "a jump on a lithosphere boundary")
+                why="the conductive lid's own profile sets T at its base" if lid_base
+                else "a jump at the lithosphere (lid) boundary")
         if canon in hit:                     # one boundary named twice, by alias and by id (R-IJ-3)
             _no("input.cross_field", where, rule="a boundary's jump is declared once (R-IJ-3)",
                 detail=f"{hit[canon]} and {j} are both {canon}")
