@@ -190,7 +190,8 @@ def step_cap(mat):
     other material, whose runs are then unchanged."""
     if not _table_phases(mat):
         return None
-    from solver.legacy_materials import table_step_cap
+    from solver.legacy_materials import table_cell_factor
+    factors = {}                 # S1: the table constant once per phase, held by this cap (one material view)
 
     def cap(x, y, k1):
         p = y[1] if y[1] > 0.0 else 1.0e5
@@ -200,7 +201,10 @@ def step_cap(mat):
             if type(exc).__name__ in ("PhaseGap", "SpinodalGap"):
                 return None
             raise
-        dp = table_step_cap(ph, p)
+        if id(ph) not in factors:
+            factors[id(ph)] = (ph, table_cell_factor(ph))      # the phase object is kept, so its id is not reused
+        f = factors[id(ph)][1]
+        dp = None if f is None else p * f
         if dp is None or not k1[1]:
             return None
         return abs(dp / k1[1])

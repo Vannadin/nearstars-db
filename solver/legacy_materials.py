@@ -304,11 +304,18 @@ def table_step_cap(phase, p):
     Its blend band's entry and exit curves g = E(P) − T_STEP/2 − T_ad (TablePhase._w) move cell by cell with the
     table's upper edge E(P); a step longer than a cell can carry both crossings and land neither (Mars 1793 K: one
     step 1.56 → 2.4 GPa skipped the 15 MPa bump at 1.715–1.73 GPa, which jumped F by ±2–4e-5 between passes)."""
+    f = table_cell_factor(phase)
+    return None if f is None else p * f
+
+
+def table_cell_factor(phase):
+    """exp(narrowest ln P cell) − 1 of a legacy table phase, else None: table_step_cap's constant (S1: G1-SP-02,
+    G2-SP-05, G3-SP-10 — the caller computes it once per phase, not per step)."""
     key = getattr(phase, "table_key", "")
     if not key:
         return None
     tab = importlib.import_module("mantle_composition")._TABLES[key]
-    return p * (math.exp(min(b - a for a, b in zip(tab.lnp, tab.lnp[1:]))) - 1.0)   # the narrowest cell, everywhere
+    return math.exp(min(b - a for a, b in zip(tab.lnp, tab.lnp[1:]))) - 1.0   # the narrowest cell, everywhere
 
 
 def ammonia_isotherms() -> tuple:
