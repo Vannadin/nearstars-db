@@ -276,6 +276,80 @@ class NotesOnEarth(unittest.TestCase):
         self.assertEqual(len(planted_notes(True)), 1)
 
 
+def _values(ans):
+    """An Answer's values for the step-1 identity: quantities with solve_id masked (it names the material bytes, so it
+    moves with the switch by design), boundaries and profiles."""
+    from solver import result
+    qs = []
+    for q in ans.quantities:
+        d = result.plain(q)
+        d["provenance"]["solver"]["solve_id"] = "<masked>"
+        qs.append(d)
+    return qs, result.plain(ans.boundaries), result.plain(dict(ans.profiles))
+
+
+class Resolution(unittest.TestCase):
+    """Switch-over §1 / §6.1: records first, legacy otherwise, never a fallback; the switch off is the baseline."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.earth, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
+
+    def test_record_first_and_legacy_otherwise(self):
+        on = sv._views(self.earth, registry=sv.registry_for(self.earth, context.Options()))
+        self.assertIsInstance(on["core"], mv.RecordView)
+        self.assertEqual(on["core"].material_id, "fe_prem_legacy")             # step 1's one-line map
+        self.assertTrue(all(isinstance(v, lm.LegacyView) for k, v in on.items() if k != "core"))
+        self.assertIsNone(sv.registry_for(self.earth, context.Options(materials="legacy")))
+        off = sv._views(self.earth)
+        self.assertIsInstance(off["core"], lm.LegacyView)
+
+    def test_a_body_naming_no_record_loads_no_registry(self):
+        mars, _aside = from_v1.load_v1("engine/bodies/mars.yaml")
+        self.assertIsNone(sv.registry_for(mars, context.Options()))
+
+    def test_an_unavailable_record_refuses_and_never_falls_back(self):
+        from types import SimpleNamespace as NS
+        stop = mr.LoadStop("material.library_pin", {"file": "fe_prem_legacy.yaml", "why": "planted pin mismatch"})
+        reg = NS(get=lambda rid: stop if rid == "fe_prem_legacy" else None)
+        got = sv._views(self.earth, registry=reg)
+        self.assertEqual((got.id, got.evidence["material_id"], got.evidence["load_stop"]),
+                         ("input.material_record_unavailable", "fe_prem_legacy", "material.library_pin"))
+
+    def test_a_registry_stop_refuses_the_body(self):
+        from unittest import mock
+        with mock.patch.object(mr, "load", return_value=mr.LoadStop("material.duplicate_id", {"file": "h2o.yaml", "id": "h2o"})):
+            got, _w = sv.solve(self.earth, context.Options(sensitivity_dt=0.0))
+        self.assertEqual((got.id, got.evidence["load_stop"]), ("input.material_registry", "material.duplicate_id"))
+
+    def test_the_switch_is_not_in_solve_id(self):
+        body = {"b": 1}
+        self.assertEqual(context.solve_id_of(body, b"m", context.Options()),
+                         context.solve_id_of(body, b"m", context.Options(materials="legacy")))
+
+
+class Step1Identity(unittest.TestCase):
+    """§6.6: Earth and Venus through fe_prem_legacy reproduce the switch-off answers (solve_id masked)."""
+
+    def _pair(self, path):
+        body, _aside = from_v1.load_v1(path)
+        on, _x = sv.solve(body, context.Options(sensitivity_dt=0.0))
+        off, _x2 = sv.solve(body, context.Options(sensitivity_dt=0.0, materials="legacy"))
+        return on, off
+
+    def test_earth(self):
+        on, off = self._pair("engine/bodies/earth.yaml")
+        self.assertIsInstance(on, sv.result.Answer)
+        self.assertEqual(_values(on), _values(off))
+        self.assertNotEqual(on.quantities[0].provenance.solver.solve_id,
+                            off.quantities[0].provenance.solver.solve_id)          # the material bytes moved
+
+    def test_venus(self):
+        on, off = self._pair("engine/bodies/venus.yaml")
+        self.assertEqual(type(on), type(off))
+        self.assertEqual(_values(on), _values(off))
+
+
 class RecordRefusals(unittest.TestCase):
     def test_a_record_refusal_maps_to_its_registry_id(self):
         r = mv.RecordRefusal("h2o", 5.0e9, 120.0, "input.material_out_of_data", "past t_min")

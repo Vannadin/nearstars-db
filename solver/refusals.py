@@ -88,6 +88,11 @@ _INPUT = (
     Entry("input.layer_order", ("pair", "rule"), "층 순서가 규칙을 어긴다 — {pair}: {rule}"),
     Entry("input.duplicate_layer_id", ("layer_id",), "층 id '{layer_id}' 가 두 번 나온다"),
     Entry("input.unknown_material", ("layer_id", "material"), "층 '{layer_id}' 의 물질 '{material}' 을(를) 물질 목록에서 찾지 못했다"),
+    Entry("input.material_record_unavailable", ("layer_id", "material_id", "load_stop", "detail"),
+          "층 '{layer_id}' 의 물질 기록 '{material_id}' 을(를) 쓸 수 없다 — {load_stop}: {detail} (옛 물질로 돌아가지 "
+          "않는다, switch-over §1)"),
+    Entry("input.material_registry", ("load_stop", "detail"),
+          "물질 레지스트리가 열리지 않았다 — {load_stop}: {detail} (반쯤 열린 레지스트리로는 풀지 않는다, switch-over §1)"),
     Entry("input.declared_grade_not_wired", ("layer_id", "material_id"),
           "층 '{layer_id}' 의 물질 기록 '{material_id}' 에 사용자 선언 출처가 있다 — 등급 «declared» 전파가 아직 없다 "
           "(switch-over note 3)"),

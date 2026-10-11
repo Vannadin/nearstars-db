@@ -19,11 +19,12 @@ from __future__ import annotations
 
 import dataclasses
 import math
+from types import MappingProxyType
 from dataclasses import dataclass, field
 
 from solver import closure as cl
 from solver import context, events, legacy_materials as lm, lid, material_notes, refusals, result, rhs
-from solver import material_registry as mr
+from solver import material_registry as mr, material_view as mv
 from solver import fixed_grid
 from solver import stepper as st
 
@@ -214,11 +215,54 @@ def _param(layer, name):
     return getattr(v, "value", v)
 
 
-def _view_for(body, layer, x, p_stop):
+#: Switch-over step 1 (registration §1.3): fe_prem layers read the record fe_prem_legacy (legacy's αK_T and V0, graded
+#: «legacy, known wrong»), so the switch itself is an identity. Step 2's note removes this line.
+STEP1_MAP = MappingProxyType({"fe_prem": "fe_prem_legacy"})
+
+
+def registry_for(body, options):
+    """Switch-over §1: the registry for this solve (loaded per solve, never cached at module level), None when the
+    switch is off or no layer names a record file, or a Refusal for a registry-level STOP."""
+    if options.materials == "legacy":
+        return None
+    names = {f.stem for f in mr.MATERIALS_DIR.glob("*.yaml") if f.name not in mr.NOT_RECORDS}
+    if not any(STEP1_MAP.get(l.material, l.material) in names for l in body.layers):
+        return None
+    reg = mr.load()
+    if isinstance(reg, mr.LoadStop):
+        return refusals.make("input.material_registry", f"{body.name}.materials", load_stop=reg.id,
+                             detail=result.plain(dict(reg.evidence)))
+    return reg
+
+
+def _record_view(body, layer, on_me, p_stop, registry):
+    """(view, None), (None, why), or None when the registry holds no record for this layer (legacy resolves it)."""
+    rid = STEP1_MAP.get(layer.material, layer.material)
+    got = registry.get(rid)
+    if got is None:
+        return None
+    if isinstance(got, mr.LoadStop):                          # never a fallback to legacy (impl note 1 §6)
+        return None, ("record_unavailable", (rid, got))
+    if on_me:
+        return None, ("closure_axis", f"the record {rid!r} has no fit axis {body.closure.name!r}")
+    params = layer.params or {}
+    if any(k.startswith("porosity") for k in params):          # a record declares its own porosity; none do today
+        return None, ("record_params", f"layer {layer.id!r} declares {sorted(params)} on the record {rid!r}, which "
+                                       "reads none of them")
+    from solver.from_v1 import thaw
+    return mv.RecordView(thaw(got), body.surface.t_pot or 0.0, p_stop), None
+
+
+def _view_for(body, layer, x, p_stop, registry=None):
     """One layer's view; `x` is the closure value when the closure acts on this layer (note 5 item 3a). Returns a view,
-    or (None, why) for a material the adapter cannot build."""
+    or (None, why) for a material the adapter cannot build. With a registry, a record of the layer's id wins
+    (switch-over §1)."""
     t_pot = body.surface.t_pot or 0.0
     on_me = body.closure.kind == "composition" and body.closure.layer == layer.id
+    if registry is not None:
+        got = _record_view(body, layer, on_me, p_stop, registry)
+        if got is not None:
+            return got
     if layer.material == "fe_core_light":                       # note 5 item 3b
         comp = _comp(layer)
         if on_me and body.closure.name != "S":
@@ -271,15 +315,19 @@ def _p_stop(body) -> float:
     return (getattr(top, "p_floor", 0.0) or 0.0) if top is not None else 0.0
 
 
-def _views(body, x=None):
+def _views(body, x=None, registry=None):
     out = {}
     p_stop = _p_stop(body)
     for l in body.layers:
         on_closure = body.closure.kind == "composition" and body.closure.layer == l.id
-        v, fail = _view_for(body, l, body.closure.lo if (on_closure and x is None) else x, p_stop)
+        v, fail = _view_for(body, l, body.closure.lo if (on_closure and x is None) else x, p_stop, registry)
         if v is None:                                # fail = (typed kind, detail text); only the kind is read
             kind_, detail = fail
             where = f"{body.name}.layers.{l.id}"
+            if kind_ == "record_unavailable":
+                rid, stop = detail
+                return refusals.make("input.material_record_unavailable", where, layer_id=l.id, material_id=rid,
+                                     load_stop=stop.id, detail=result.plain(dict(stop.evidence)))
             if kind_ == "unknown_material":
                 return refusals.make("input.unknown_material", where, layer_id=l.id, material=l.material)
             return refusals.make("input.cross_field", where, rule=kind_, detail=detail)
@@ -439,7 +487,7 @@ def _with_sensitivity(body, views, x, opt, acc, qs, supplied=False, ctx=None):
     warm solve does not answer."""
     dt = opt.sensitivity_dt
     b2 = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=body.surface.t_pot + dt))
-    v2 = dict(views) if supplied else _views(b2, x)
+    v2 = dict(views) if supplied else _views(b2, x, registry_for(b2, opt))
     if isinstance(v2, result.Refusal):
         return qs, result.Note("sensitivity_not_measured", "the T_pot + δ views could not be built", {"dt": dt})
 
@@ -583,7 +631,10 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
     supplied = views is not None
     if views is None:
         lm.reset_engine_state()                      # reset before any material is touched (r2 S7)
-        views = _views(body)
+        registry = registry_for(body, options)        # switch-over §1: once per solve, held by this solve only
+        if isinstance(registry, result.Refusal):
+            return registry, warm
+        views = _views(body, registry=registry)
     else:
         views = dict(views)
     if isinstance(views, result.Refusal):

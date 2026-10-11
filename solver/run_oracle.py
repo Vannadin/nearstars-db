@@ -1,7 +1,7 @@
 # 오라클 대조용 풀이 드라이버 — 천체 v1 파일과 점 목록을 받아 (천체, 상태)마다 비교기 계약 JSON 하나를 쓴다 (비교기 등록 §4)
 """Rewrite side of the regression-oracle comparison (c8's comparator registration §4; b9 registration S10).
 
-    solver/.venv/bin/python -m solver.run_oracle BODY_YAML POINTS_JSON OUT_DIR [--sensitivity-dt K]
+    solver/.venv/bin/python -m solver.run_oracle BODY_YAML POINTS_JSON OUT_DIR [--sensitivity-dt K] [--legacy-materials]
 
 - BODY_YAML: a v1 body file (engine/bodies/<stem>.yaml).
 - POINTS_JSON: rewrite/oracle/points.py's gen() output [[body, t_pot, tag], …], or «-» for the declared state only.
@@ -9,6 +9,8 @@
 - OUT_DIR: must be absent or empty (no stale files). One JSON per (body, state), <stem>__declared.json or
   <stem>__<repr(t_pot)>.json, written to a temporary directory first and moved into place only when every state ran.
 - --sensitivity-dt: the §A1.7 sensitivity δ in K (default 10; 0 switches the field off). It is in each header's options.
+- --legacy-materials: the switch-over off (switch-over §5 baseline): every layer resolves through legacy_materials.
+  Without it, a layer whose material has a phase-2 record reads that record (step 1: fe_prem → fe_prem_legacy).
 - --no-chain-for-points: T_pot states skip the old chain (legacy_nodes {}, table_read false; header «chain» false). The
   O9 comparison reads interior_layers and the verdict only (compare.py judge_point); declared states keep the chain.
 Exit 0 on success; 2 on any STOP (bad arguments, a non-empty OUT_DIR, an exception), with nothing written.
@@ -159,6 +161,9 @@ def main(argv=None) -> int:
     chain = "--no-chain-for-points" not in argv
     if not chain:
         argv.remove("--no-chain-for-points")
+    materials = "legacy" if "--legacy-materials" in argv else "registry"
+    if materials == "legacy":
+        argv.remove("--legacy-materials")
     if len(argv) != 3:
         print(__doc__)
         return 2
@@ -167,7 +172,7 @@ def main(argv=None) -> int:
     if out.exists() and any(out.iterdir()):
         print(f"STOP: {out} is not empty (stale files would mix into the comparison)")
         return 2
-    options = context.Options(sensitivity_dt=dt)
+    options = context.Options(sensitivity_dt=dt, materials=materials)
     stem = Path(body_yaml).stem
     tmp = Path(tempfile.mkdtemp(prefix=f"run_oracle_{stem}_"))
     try:

@@ -40,6 +40,8 @@ class Options:
     sensitivity_dt: float = 10.0       # K, the warm T_pot + δ solve (registration note 5 item 3f); 0 switches it off
     fixed_dr: float = 0.0              # m; > 0 integrates every layer on the old engine's fixed grid (fixed_grid.py,
                                        # T2 method-term registration). 0 is the adaptive DP5(4) of record
+    materials: str = "registry"        # switch-over §1: "registry" (records first) or "legacy" (the switch off, the §5
+                                       # baseline). Not hashed into solve_id: its whole effect is in the material bytes
 
 
 @dataclass(frozen=True)
@@ -54,12 +56,17 @@ class SolveContext:
         self.trace.append({"kind": kind, **data})
 
 
+#: Options whose effect solve_id already holds elsewhere (materials: the material bytes name every view's record).
+UNHASHED_OPTIONS = ("materials",)
+
+
 def solve_id_of(body_canonical: Mapping, material_bytes: bytes, options: Options) -> str:
     """sha256 of (canonical Body, material data bytes, options, solver version); no clock (design §A6, D-A3-3)."""
     h = hashlib.sha256()
     h.update(json.dumps(body_canonical, sort_keys=True, separators=(",", ":")).encode())
     h.update(material_bytes)
-    h.update(json.dumps(asdict(options), sort_keys=True).encode())
+    opts = {k: v for k, v in asdict(options).items() if k not in UNHASHED_OPTIONS}
+    h.update(json.dumps(opts, sort_keys=True).encode())
     h.update(SOLVER_VERSION.encode())
     return h.hexdigest()
 

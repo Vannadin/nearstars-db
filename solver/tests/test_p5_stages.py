@@ -64,7 +64,7 @@ def accepted_nodes():
     body, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
     with mock.patch.object(sv, "inward", inward), \
             mock.patch.multiple(lm.LegacyView, **{n: wrap(n) for n in METHODS}):
-        sv.solve(body, context.Options(sensitivity_dt=0.0))
+        sv.solve(body, context.Options(sensitivity_dt=0.0, materials="legacy"))   # the legacy fe_prem's own nodes
     return seen["t_pot"], sorted(set(calls[-1]))
 
 
