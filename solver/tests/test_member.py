@@ -49,7 +49,9 @@ class Identity(unittest.TestCase):
 class OldMember(unittest.TestCase):
     """Venus at its hottest O9 point: the member's radius sits on the old O4O9 entry-A radius (the old s0 is the
     declared composition), measured 7.7e-6 at 3188.87 K. Control: the inverse solve at the same T_pot keeps R at the
-    declared value, about 6 % from the old member (at 1723 K the two are only 1.4e-3 apart, too close for a control)."""
+    declared value, about 6 % from the old member (at 1723 K the two are only 1.4e-3 apart, too close for a control).
+    Switch-over step 2: the old engine carries legacy's fe_prem constants, so the like-for-like member reads fe_prem with
+    both put back (test_switchover.Step2PutBack); the shipped record moves the radius (measured 4.3e-3)."""
 
     T = 3188.87
 
@@ -57,12 +59,18 @@ class OldMember(unittest.TestCase):
     def test_venus_point(self):
         old = next(p for p in json.loads((O4O9 / "venus.json").read_text())["points"]
                    if p.get("entry", "").startswith("A ") and p["t_pot"] == self.T)["values"]["radius"] * 6.371e6
+        from solver.tests.test_switchover import Step2PutBack
+        reg = Step2PutBack._registry("W-L1-01", "P5-F1")
         body, _ = from_v1.load_v1("engine/bodies/venus.yaml")
-        fb, _info = mb.member_of(body)
-        f, _ = sv.solve(dataclasses.replace(fb, surface=dataclasses.replace(fb.surface, t_pot=self.T)), OPT)
+        fb, _info = mb.member_of(body, registry=reg)
+        f, _ = sv.solve(dataclasses.replace(fb, surface=dataclasses.replace(fb.surface, t_pot=self.T)), OPT, registry=reg)
         self.assertLess(abs(_q(f, "radius") - old) / old, 2e-5)
-        inv, _ = sv.solve(dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=self.T)), OPT)
+        inv, _ = sv.solve(dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=self.T)), OPT,
+                          registry=reg)
         self.assertGreater(abs(_q(inv, "radius") - old) / old, 0.04)
+        fs, _info = mb.member_of(body)
+        shipped, _ = sv.solve(dataclasses.replace(fs, surface=dataclasses.replace(fs.surface, t_pot=self.T)), OPT)
+        self.assertGreater(abs(_q(shipped, "radius") - old) / old, 1e-3)
 
 
 class ForwardUntouched(unittest.TestCase):
