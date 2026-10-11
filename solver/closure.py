@@ -79,13 +79,14 @@ def scan_points(lo: float, hi: float, n: int = N_SCAN) -> list:
     return [lo + (hi - lo) * i / (n - 1) for i in range(n)]
 
 
-def _brent(F, a: float, fa: float, b: float, fb: float, trials: list):
+def _brent(F, a: float, fa: float, b: float, fb: float, trials: list, lo: float = -math.inf, hi: float = math.inf):
     """Brent's method (zeroin) on a bracket with fa·fb < 0, to |Δx| ≤ CLOSE_TOL·|x|. Bisection fallback guarantees
     shrink. A refusing evaluation inside a solved bracket is reported (it splits the bracket). Returns (root, None,
     final bracket (x_b, F_b, x_c, F_c)) or (None, problem, None); the final bracket names where a jump would sit
     (phase-1 design note 8)."""
     c, fc = a, fa
     d = e = b - a
+    isolated = set()             # G2-C-01: x where a landing failed and its confirming shot solved
     for _ in range(CLOSE_ITERS):
         if fb * fc > 0.0:
             c, fc = a, fa
@@ -116,11 +117,27 @@ def _brent(F, a: float, fa: float, b: float, fb: float, trials: list):
             d = e = m
         a, fa = b, fb
         b = b + (d if abs(d) > tol else math.copysign(tol, m))
+        if b in isolated:
+            # Brent came back to an isolated point: it sits at the bracket's resolution, so the better end is the
+            # root; the closure guard (note 8 (a)) judges its residual like any other root
+            x_best, f_best = (a, fa) if abs(fa) <= abs(fc) else (c, fc)
+            return x_best, None, (a, fa, c, fc)
         v = _value(F, b)
         if isinstance(v, st.Stop):
             trials.append(Trial(b, None, v, "brent"))
-            return None, ("refused_inside", b, v), None
-        trials.append(Trial(b, v, None, "brent"))
+            # G2-C-01: confirm here (impl note 8). A solved confirming shot isolates b, and Brent goes on from that shot
+            # (kept as a Brent trial, out of the sign search); only a confirmed refusal splits the bracket
+            what, xc, vc = _confirm_chain(F, b, v, a, lo, hi, trials)
+            if what == "wall":
+                return None, ("refused_inside", xc, vc), None
+            isolated.add(b)
+            for n in range(len(trials) - 1, -1, -1):
+                if trials[n].x == xc and trials[n].kind == "confirm":
+                    trials[n] = Trial(xc, vc, None, "brent")
+                    break
+            b, v = xc, vc
+        else:
+            trials.append(Trial(b, v, None, "brent"))
         fb = v
     return None, ("unconverged", b, fb), None
 
@@ -301,8 +318,9 @@ def _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_
                 done_pairs.add((a.x, b.x))
                 ok, bad = (a, b) if a.F is not None else (b, a)
                 walls.append(_locate_wall(F, ok.x, bad.x, bad.stop, trials, lo, hi, wall_tol))
-        pts = sorted((t for t in trials if t.F is not None and (use_wall_trials or t.kind != "wall")),
-                     key=lambda t: t.x)
+        # G2-C-02: Brent's own trials sit inside F's jitter band near a root; they never open a new bracket
+        pts = sorted((t for t in trials if t.F is not None and t.kind != "brent"
+                      and (use_wall_trials or t.kind != "wall")), key=lambda t: t.x)
         refused = sorted(t.x for t in trials if t.F is None and t.kind != "isolated")
         roots, problems, split = [], [], False
         for a, b in zip(pts, pts[1:]):
@@ -315,14 +333,13 @@ def _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_
             if a.F * b.F < 0.0:
                 key = (a.x, b.x)
                 if key not in closed:
-                    closed[key] = _brent(F, a.x, a.F, b.x, b.F, trials)
+                    closed[key] = _brent(F, a.x, a.F, b.x, b.F, trials, lo, hi)
                 x, prob, final = closed[key]
                 if x is not None:
                     roots.append(x)
                     brackets[x] = {"scan": (a.x, a.F, b.x, b.F), "final": final}
                 elif prob[0] == "refused_inside":
-                    split = True
-                    _confirm_chain(F, prob[1], prob[2], a.x, lo, hi, trials)   # impl note 8
+                    split = True                          # confirmed inside _brent: a wall, located next round
                 else:
                     problems.append(prob)
         if pts and pts[-1].F == 0.0:

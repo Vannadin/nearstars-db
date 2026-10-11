@@ -601,6 +601,17 @@ def _with_sensitivity(body, views, x, opt, acc, qs, supplied=False, ctx=None, re
     acc2 = inward(b2, _views_at(b2, v2, x2), x2, opt)
     if isinstance(acc2, st.Stop):
         return qs, result.Note("sensitivity_not_measured", f"the T_pot + δ pass stopped: {acc2.kind}", {"dt": dt})
+    # phase-1 design note 13 §2 (G2-C-03): the sensitivity root gets notes 8/12's checks; a failure omits the
+    # sensitivity with its reason (the answer stands), a failing probe side keeps it and discloses
+    if any(not w.located for w in out.walls):
+        return qs, result.Note("sensitivity_not_measured", "the T_pot + δ scan left a wall unlocated",
+                               {"dt": dt, "reason": "unlocated_wall"})
+    rt2 = None
+    if opt.fixed_dr <= 0.0 and x2 in out.detail.get("brackets", {}):
+        rt2 = _root_tolerance(x2, acc2, opt, out.detail["brackets"][x2], out.trials)
+        if not abs(acc2.F) <= rt2["tol_F"]:
+            return qs, result.Note("sensitivity_not_measured", "the T_pot + δ root closed on a jump of F (note 8 (a))",
+                                   {"dt": dt, "reason": "closure_discontinuous", "F": acc2.F, "tol_F": rt2["tol_F"]})
     names1 = [b[0] for b in acc.boundaries] + acc.events
     names2 = [b[0] for b in acc2.boundaries] + acc2.events
     if names1 != names2 or (acc.graze is None) != (acc2.graze is None):
@@ -613,6 +624,15 @@ def _with_sensitivity(body, views, x, opt, acc, qs, supplied=False, ctx=None, re
             new.append(dataclasses.replace(q, sensitivity=(q2[q.key] - q.point) / dt))
         else:
             new.append(q)
+    if rt2 is not None:
+        sides = [_side_check(F2, x2, acc2.F, -1.0, rt2), _side_check(F2, x2, acc2.F, 1.0, rt2)]
+        if not all(sd["ok"] for sd in sides):
+            ratios = [sd["deviation"] / sd["allowed"] for sd in sides if sd.get("deviation") is not None]
+            return tuple(new), result.Note(
+                "sensitivity_probe_disclosure", "the local probe found F off one line beside the T_pot + δ root "
+                "(note 13 §2): the sensitivity stands, disclosed",
+                {"dt": dt, "x": x2, "delta": rt2["delta"], "dev_ratio": max(ratios) if ratios else None,
+                 "sides": [{k: sd.get(k) for k in ("side", "stop", "deviation", "allowed", "ok")} for sd in sides]})
     return tuple(new), None
 
 

@@ -418,13 +418,17 @@ class GuardRedTeam(unittest.TestCase):
 
         def rt(*a):
             r = self._orig_rt(*a)
-            self.rt.append(r)
+            self.rt.append({**r, "_x": a[0]})
             return r
         sv._root_tolerance = rt
         ans, self.x0 = sv.solve(self.body, views=self.views)
         self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
-        self.delta0 = self.rt[-1]["delta"]
+        self.delta0 = self._at(self.x0)["delta"]
         self.scan = cl.scan_points(self.body.closure.lo, self.body.closure.hi, context.Options().n_scan)
+
+    def _at(self, x):
+        """The guard record of the accepted root x (note 13 §2: the sensitivity root has its own record now)."""
+        return [r for r in self.rt if r["_x"] == x][-1]
 
     def tearDown(self):
         sv._root_tolerance, sv.inward = self._orig_rt, self._orig_inward
@@ -458,7 +462,7 @@ class GuardRedTeam(unittest.TestCase):
         ans, x = self._solve(lambda xx, f: f - f_s)
         self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
         self.assertEqual(x, x_s)
-        self.assertGreater(self.rt[-1]["delta"], 0.1 * self.delta0)
+        self.assertGreater(self._at(x)["delta"], 0.1 * self.delta0)
 
     def test_root_a_hair_from_a_scan_point(self):
         """Mars member at rtol/10: a root 1e-10 relative from a scan point; δ must not collapse (note 10)."""
@@ -466,7 +470,7 @@ class GuardRedTeam(unittest.TestCase):
         f_h = self._f_at(x_s * (1 + 1e-10))
         ans, x = self._solve(lambda xx, f: f - f_h)
         self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
-        self.assertGreater(self.rt[-1]["delta"], 0.1 * self.delta0)
+        self.assertGreater(self._at(x)["delta"], 0.1 * self.delta0)
 
     def test_walls_on_one_side(self):
         """Every trial below 0.999·x0 refuses: the slope and the reference come from the solved stretch; it answers."""
@@ -486,7 +490,7 @@ class GuardRedTeam(unittest.TestCase):
     def test_a_wall_between_the_root_and_its_scan_point(self):
         """r2 GB1: the trials from 0.5·x0 to 0.999·x0 refuse (the nearest scan point below among them) and F jumps by 10
         beyond them; the slope must come from inside the solved stretch, not from the scan point across the wall."""
-        s0 = self.rt[-1]["s"]
+        s0 = self._at(self.x0)["s"]
         lo_w, hi_w = 0.5 * self.x0, 0.999 * self.x0
         sg = math.copysign(1.0, self._f_at(1.001 * self.x0) - self._f_at(0.9995 * self.x0))
 
@@ -498,7 +502,7 @@ class GuardRedTeam(unittest.TestCase):
         ans, x = self._solve(alter)
         self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
         self.assertLess(abs(x / self.x0 - 1.0), 1e-12)
-        self.assertLess(abs(self.rt[-1]["s"] / s0 - 1.0), 0.5)          # the local slope, not the jump across the wall
+        self.assertLess(abs(self._at(x)["s"] / s0 - 1.0), 0.5)          # the local slope, not the jump across the wall
 
     def test_a_wall_between_the_probes_and_the_reference(self):
         """r2 GB2: trials from 0.5·x0 to x0 − 5·δ_clean refuse and F is offset by 10 beyond them; no solved trial ≥ 4δ
@@ -512,7 +516,7 @@ class GuardRedTeam(unittest.TestCase):
             return f - 10.0 * sg if xx < lo_w else f
         self.rt.clear()
         ans, x = self._solve(alter)
-        d = self.rt[-1]["delta"]
+        d = self._at(x)["delta"]
         self.assertTrue(2.0 * d < self.x0 - hi_w < 4.0 * d, (d, self.x0 - hi_w))   # the case is the one meant
         self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
         lower = next(sd for sd in disclosure(ans).fields["sides"] if sd["side"] < 0)
