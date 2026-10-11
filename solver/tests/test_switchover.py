@@ -259,10 +259,10 @@ class NotesOnEarth(unittest.TestCase):
         real = sv.inward
 
         def arming(arm_at_root):
-            def inward(body, vs, x, opt):
+            def inward(body, vs, x, opt, **kw):
                 Planted.armed = arm_at_root or x != x_root
                 try:
-                    return real(body, vs, x, opt)
+                    return real(body, vs, x, opt, **kw)
                 finally:
                     Planted.armed = arm_at_root
             return inward

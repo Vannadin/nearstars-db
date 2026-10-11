@@ -337,8 +337,8 @@ class ClosureDiscontinuous(unittest.TestCase):
         """F + jump past x_step; with `kink`, F + kink·(x − x_step) past x_step instead (a slope change, no jump)."""
         orig = sv.inward
 
-        def stepped(bd, vw, x, opt):
-            got = orig(bd, vw, x, opt)
+        def stepped(bd, vw, x, opt, **kw):
+            got = orig(bd, vw, x, opt, **kw)
             if not isinstance(got, st.Stop) and got.F is not None and x > x_step:
                 got.F += jump + kink * (x - x_step)
             return got
@@ -356,10 +356,10 @@ class ClosureDiscontinuous(unittest.TestCase):
         x_s = min(cl.scan_points(body.closure.lo, body.closure.hi, context.Options().n_scan), key=lambda z: abs(z - x0))
         orig = sv.inward
 
-        def lone(bd, vw, x, opt):
+        def lone(bd, vw, x, opt, **kw):
             if x != x_s:
                 return st.Stop("refused", {"planted": "every trial but one scan point refuses", "x": x})
-            got = orig(bd, vw, x, opt)
+            got = orig(bd, vw, x, opt, **kw)
             got.F = 0.0
             return got
         sv.inward = lone
@@ -433,8 +433,8 @@ class GuardRedTeam(unittest.TestCase):
         """Solve with each pass's F replaced by alter(x, F) (a Stop from alter refuses that trial)."""
         orig = self._orig_inward
 
-        def wrapped(bd, vw, x, opt):
-            got = orig(bd, vw, x, opt)
+        def wrapped(bd, vw, x, opt, **kw):
+            got = orig(bd, vw, x, opt, **kw)
             if isinstance(got, st.Stop) or got.F is None:
                 return got
             f = alter(x, got.F)
@@ -538,8 +538,8 @@ class GuardRedTeam(unittest.TestCase):
         lo, hi = (orig(body, sv._views_at(body, views, z), z, context.Options()).F for z in (x0 * 0.99, x0 * 1.01))
         sg = math.copysign(1.0, hi - lo)
 
-        def stepped(bd, vw, x, opt):
-            got = orig(bd, vw, x, opt)
+        def stepped(bd, vw, x, opt, **kw):
+            got = orig(bd, vw, x, opt, **kw)
             if not isinstance(got, st.Stop) and got.F is not None and x > x0 * (1 + 1e-9):
                 got.F += sg * 1e-5
             return got

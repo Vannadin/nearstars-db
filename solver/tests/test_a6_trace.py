@@ -26,8 +26,8 @@ def _solve_recording(leak: bool):
     real = sv.inward
     calls, shared = [], {}
 
-    def wrapped(body, views, x, opt):
-        out = real(body, views, x, opt)
+    def wrapped(body, views, x, opt, **kw):
+        out = real(body, views, x, opt, **kw)
         if not isinstance(out, sv.st.Stop):
             calls.append((x, dict(out.counters)))      # the pass's x and its own counters
             if leak:                                   # planted: one counter dict for every pass

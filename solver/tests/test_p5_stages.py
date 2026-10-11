@@ -45,9 +45,9 @@ def accepted_nodes():
     """(t_pot, sorted unique (P, T)) at which Earth's accepted pass asked the fe_prem view."""
     real_inward, calls, cur, seen = sv.inward, [], [], {}
 
-    def inward(body, views, x, opt):
+    def inward(body, views, x, opt, **kw):
         cur.clear()
-        out = real_inward(body, views, x, opt)
+        out = real_inward(body, views, x, opt, **kw)
         calls.append(list(cur))
         return out
 

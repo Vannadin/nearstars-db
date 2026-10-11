@@ -137,7 +137,9 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
     return st.run(rhs.make_rhs(view), m0, y0, m_end, sopt, evs, on_accept=monitor)
 
 
-def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
+def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> PassOut | st.Stop:
+    """One pass at closure value x. `want_graze` False skips the graze monitor: a trial pass whose graze record no
+    one reads (S1: G2-SP-02, G1-SP-03); the accepted and the sensitivity pass keep it."""
     M = body.mass
     R = _radius_of(body, x)
     rho_mean = 3.0 * M / (4.0 * math.pi * R ** 3)
@@ -182,12 +184,14 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
             return _at(st.Stop("layer_order", {"layer_id": layer.id, "rule": "mass_fraction",
                                            "expected": f"base mass {end[1]:.6g} below the top {m:.6g}",
                                            "got_m": m, "got_r": y[0]}), y, m)
-        graze_mon = events.GrazeMonitor(getattr(view, "mat", None) or view, getattr(view, "p_stop", 0.0))
+        graze_mon = events.GrazeMonitor(getattr(view, "mat", None) or view, getattr(view, "p_stop", 0.0)) \
+            if want_graze else None
         out.entered.append(layer.id)
         res = _segment(view, M, m, y, end, rs, opt, graze_mon)
         out.profiles[layer.id] = res.path
         out.events += [e[0] for e in res.events]
-        if graze_mon.best is not None and (out.graze is None or abs(graze_mon.best.g) < abs(out.graze.g)):
+        if graze_mon is not None and graze_mon.best is not None and (out.graze is None
+                                                                       or abs(graze_mon.best.g) < abs(out.graze.g)):
             out.graze = graze_mon.best
         for k, v in vars(res.counters).items():
             out.counters[k] = out.counters.get(k, 0) + v
@@ -584,7 +588,7 @@ def _with_sensitivity(body, views, x, opt, acc, qs, supplied=False, ctx=None, re
         vx = _views_at(b2, v2, xx)
         if isinstance(vx, st.Stop):
             return vx
-        got = inward(b2, vx, xx, opt)
+        got = inward(b2, vx, xx, opt, want_graze=False)     # a trial: its graze is never read
         return got if isinstance(got, st.Stop) else got.F
     span = 1e-2 * abs(x) if x else 1e-3
     lo, hi = max(b2.closure.lo, x - span), min(b2.closure.hi, x + span)
@@ -760,7 +764,7 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
         vx = _views_at(body, views_all, x)
         if isinstance(vx, st.Stop):
             return vx
-        got = inward(body, vx, x, options)
+        got = inward(body, vx, x, options, want_graze=False)   # a trial: its graze is never read
         if isinstance(got, st.Stop):
             return got
         return got.F if got.F is not None else st.Stop("no_residual", {"x": x})
