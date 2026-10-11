@@ -336,7 +336,7 @@ def resolve(layer, t_pot: float, p_stop: float, column_steam: bool = False):
     mat = interior.MATERIALS.get(layer.material)
     if mat is None or _has_water(mat):
         return None
-    phi0 = params.get("porosity_phi0")
+    phi0 = params.get("initial_porosity")      # one name for φ₀, declared or fit (phase-1 design note 14 item 2)
     p_cap = params.get("porosity_p_cap")
     return LegacyView(layer.material, mat, t_pot, p_stop,
                       phi0=float(getattr(phi0, "value", phi0) or 0.0),
@@ -352,6 +352,49 @@ def _pin_of(o: float, c: float) -> str:
         if v["O"] == o and v["C"] == c:
             return pin
     return f"o{o}_c{c}"
+
+
+class LegacyMaterials:
+    """validate's Materials (D-A7-4) for the production loads (phase-1 design note 14 item 4, r2 H1 on note A6).
+
+    `known`: an engine MATERIALS id, one of the three built ids, or a record id. Record ids come from the registry
+    the run already loaded (`registry`, switch-over note 5: one load per run, passed down). Without one, the registry
+    is loaded once, read-only, for its ids only. If that load stops, `known` answers True for a non-engine id, so solve
+    refuses it by name (`input.material_registry`) as today, not a second, different id at load.
+    `composition_window`: None for every id until D2 gives windows (no window check changes in this batch).
+    `pressure_floor`: the engine material's p_floor (0 when absent); a built id reads its base material; a record
+    gives None until records carry one."""
+
+    BUILT = {"fe_core_light": "fe_prem", "silicate_decl": "silicate", BASAL_CONST: "silicate"}
+
+    def __init__(self, registry=None):
+        self._reg, self._loaded = registry, registry is not None
+
+    def _registry(self):
+        if not self._loaded:
+            from solver import material_registry as mr
+            self._reg, self._loaded = mr.load(), True
+        return self._reg
+
+    def known(self, material_id: str) -> bool:
+        if material_id in interior.MATERIALS or material_id in self.BUILT:
+            return True
+        reg = self._registry()
+        if not hasattr(reg, "known"):                      # the registry stopped: solve names it
+            return True
+        return reg.known(material_id) or reg.get(material_id) is not None
+
+    def composition_window(self, material_id: str, system: str):
+        return None
+
+    def pressure_floor(self, material_id: str):
+        mat = interior.MATERIALS.get(self.BUILT.get(material_id, material_id))
+        if mat is None:
+            return None
+        parts = getattr(mat, "parts", None)
+        if parts:
+            return max((float(getattr(m, "p_floor", 0.0) or 0.0) for m, w in parts if w > 0.0), default=0.0)
+        return float(getattr(mat, "p_floor", 0.0) or 0.0)
 
 
 def build_fe_core_light(s: float, o: float, c: float):

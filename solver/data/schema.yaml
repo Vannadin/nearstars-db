@@ -73,6 +73,17 @@ layer:
                 extra_fields: [source_kind, deviation, preset, owner_direction, anchor]}   # phase-2 note 1 item 2, impl P1
   params:      {shape: mapping}                        # name → block with the trio
 
+# The closed layer `params` vocabulary (phase-1 design note 14 item 2, note 14a). `materials`: the layer materials a
+# key is allowed on; «plain» = any id except the three built ids (silicate_basal_const, fe_core_light, silicate_decl).
+# density's domain is a unit guard (a g/cm³ or g/L slip falls outside it), not a physics bound (r2 on note A6).
+layer_params:
+  density:          {unit: kg/m3, domain: {ge: 500, le: 20000}, materials: [silicate_basal_const], consumer: solver}
+  initial_porosity: {unit: "1", domain: {ge: 0, le: 0.60}, materials: plain, fit: true, consumer: solver}
+  porosity_p_cap:   {unit: Pa, domain: {gt: 0}, materials: plain, requires: initial_porosity, consumer: solver}
+  thickness_km:     {unit: km, domain: {gt: 0}, materials: [silicate_basal_const], consumer: history}
+# Renamed keys: refused as unknown, with the new name as the nearest (note 14 item 2: one name for φ₀).
+layer_params_renamed: {porosity_phi0: initial_porosity}
+
 extent:
   mass_fraction:      {unit: "1", domain: {ge: 0, le: 1}}
   radius_from_centre: {unit: km, domain: {gt: 0}}

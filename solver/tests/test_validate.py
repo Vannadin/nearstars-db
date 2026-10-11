@@ -166,7 +166,9 @@ class TBoundaryTable(unittest.TestCase):
             cases = [(math.nan, "input.non_finite"), (math.inf, "input.non_finite"), (-math.inf, "input.non_finite"),
                      ("1.0", "input.not_number"), (None, "input.null_value"), (True, "input.not_number")]
             for probe in (0.0, -1.0):
-                if violates(probe, dom):
+                if label.startswith("extent.") and probe == 0.0:      # phase-1 design note 14 item 1: a zero extent
+                    cases.append((probe, "input.zero_extent"))
+                elif violates(probe, dom):
                     cases.append((probe, "input.out_of_domain"))
             for bad, want in cases:
                 with self.subTest(slot=label, bad=bad):
@@ -233,17 +235,19 @@ class TBoundaryTable(unittest.TestCase):
         refused(self, vd.validate(yamlio.parse(text)), "input.non_finite", key="mass_earth")
 
     def test_valid_zeros_load(self):
+        """Scalar zeros load. Zero layer extents are refused by name (phase-1 design note 14 item 1, amending
+        this acceptance): an absent layer is omitted; v1's R-BL-7 zero is omitted by from_v1."""
         self.assertIsInstance(vd.validate(with_input("eccentricity", 0.0)), bd.Body)
         self.assertIsInstance(vd.validate(doc(jumps={"cmb": 0.0})), bd.Body)
         d = doc(layers=[{"id": "core", "role": "core", "material": "fe", "extent": {"mass_fraction": 0.2}},
                         {"id": "basal", "role": "basal_layer", "material": "b",
-                         "extent": {"thickness_above": {"layer": "core", "km": 0.0}}},          # R-BL-7
+                         "extent": {"thickness_above": {"layer": "core", "km": 0.0}}},
                         {"id": "mantle", "role": "mantle", "material": "s"}])
-        self.assertIsInstance(vd.validate(d), bd.Body)
+        refused(self, vd.validate(d), "input.zero_extent", layer_id="basal")
         d = doc(layers=[{"id": "core", "role": "core", "material": "fe", "extent": {"mass_fraction": 0.3}},
                         {"id": "ice", "role": "ice", "material": "h2o", "extent": {"mass_fraction": 0.0}},
                         {"id": "mantle", "role": "mantle", "material": "s"}])
-        self.assertIsInstance(vd.validate(d), bd.Body)
+        refused(self, vd.validate(d), "input.zero_extent", layer_id="ice")
 
 
 def _deep(n):

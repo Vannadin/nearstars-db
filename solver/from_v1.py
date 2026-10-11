@@ -213,6 +213,10 @@ def _mars(inp, where, notes):
                # the v1 grade and source are carried verbatim: «measured» = a paper's value for this body, and the
                # grade is never upgraded (phase-2 impl note 2 item 5)
                "composition": {**_block(mc, "mantle_composition", notes), "source_kind": "measured"}}]
+    if _val(thick) == 0:                     # R-BL-7: 0 means «no basal layer»; v2 refuses a zero extent (note 14 item 1)
+        del layers[1]
+        notes.append(Note("v1_field_dropped", "basal_layer_thickness_km 0: no basal layer (R-BL-7); the core reaches "
+                          "core_plus_layer_radius_km", {"key": "basal_layer_thickness_km"}))
     return layers, {"kind": "composition", "layer": "core", "name": "S"}
 
 
@@ -323,8 +327,10 @@ class _V1Loader(yaml.SafeLoader):
         return super().construct_mapping(node, deep=deep)
 
 
-def load_v1(path, materials=None):
-    """Read a v1 body file, convert it and validate it: `(Body | Refusal, aside)`."""
+def load_v1(path, materials=vd.PRODUCTION, registry=None):
+    """Read a v1 body file, convert it and validate it: `(Body | Refusal, aside)`. `materials` defaults to the legacy
+    adapter's, reading record ids from `registry` when the run has loaded one (phase-1 design note 14 item 4)."""
+    materials = vd.production_materials(materials, registry)
     where = Path(path).name
     try:
         doc = yaml.load(Path(path).read_text(encoding="utf-8"), Loader=_V1Loader)

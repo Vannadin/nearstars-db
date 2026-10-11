@@ -54,6 +54,24 @@ class Materials(Protocol):
     def composition_window(self, material_id: str, system: str) -> Mapping | None:
         """component → (lo, hi, source), or None when the material declares no window."""
 
+    def pressure_floor(self, material_id: str) -> float | None:
+        """The material's pressure floor [Pa] (0 = none), or None when not known (phase-1 design note 14 item 4)."""
+
+
+#: the three ids the phase-1 adapter builds itself (solve._view_for); «plain» params are refused on them (note 14)
+BUILT_MATERIALS = ("silicate_basal_const", "fe_core_light", "silicate_decl")
+
+#: the production loads' default (note 14 item 4): `load` / `from_v1.load_v1` resolve it to the legacy adapter's
+#: Materials, so no production caller loads a file without one. An explicit `materials=None` keeps the raw behaviour.
+PRODUCTION = object()
+
+
+def production_materials(materials, registry=None):
+    if materials is PRODUCTION:
+        from solver.legacy_materials import LegacyMaterials
+        return LegacyMaterials(registry)
+    return materials
+
 
 # ── refusal plumbing ──────────────────────────────────────────────────────────────────────────────────────────
 class _Refuse(Exception):
@@ -279,6 +297,10 @@ def _extent(raw, lid, where, ids_below, roles_below):
     if kind == "phase":
         return bd.Extent("phase", ref=_text(v, f"{lid}.extent.phase", where))
     scale = KM if spec.get("unit") == "km" else 1.0
+    raw_x = (v.get("km") if kind == "thickness_above" and isinstance(v, Mapping) else v)
+    raw_x = raw_x.get("value") if isinstance(raw_x, Mapping) else raw_x
+    if isinstance(raw_x, (int, float)) and not isinstance(raw_x, bool) and raw_x == 0:
+        _no("input.zero_extent", where, layer_id=lid, kind=kind, value=raw_x)    # note 14 item 1
     if kind == "thickness_above":
         if not isinstance(v, Mapping) or set(v) != {"layer", "km"}:
             _no("input.extent_invalid", where, layer_id=lid, why="thickness_above is {layer, km}")
@@ -343,12 +365,27 @@ def _layers(raw, where, materials: Materials | None) -> tuple:
                     _no("input.composition_window", w, layer_id=lid, component=str(c), value=x,
                         window=[window[c][0], window[c][1]], source=window[c][2])
         params = {}
+        vocab = SCHEMA["layer_params"]
         for pk, pv in _mapping(l.get("params", {}), f"{lid}.params", w).items():
             _text(pk, f"{lid}.params key", w)
+            ps = vocab.get(pk)
+            if ps is None:                    # note 14 item 2: a closed vocabulary (D-A7-3)
+                _no("input.unknown_key", w, key=f"{lid}.params.{pk}",
+                    nearest=SCHEMA.get("layer_params_renamed", {}).get(pk) or _nearest(pk, vocab))
+            allowed = ps["materials"]
+            if (mat in BUILT_MATERIALS) if allowed == "plain" else (mat not in allowed):
+                _no("input.param_not_for_material", w, layer_id=lid, key=pk, material=mat)
             if pv == "fit":                   # a closure axis marker, not a declared value: no trio (c8 note 1 §3a)
+                if not ps.get("fit"):
+                    _no("input.cross_field", w, rule=f"params.{pk} has no fit axis", detail=lid)
                 params[pk] = bd.Declared(value="fit")
                 continue
-            params[pk] = _input(f"{lid}.params.{pk}", pv, {"shape": "block", "provenance": True}, w)
+            params[pk] = _input(f"{lid}.params.{pk}", pv,
+                                {"shape": "block", "provenance": True, "unit": ps["unit"], "domain": ps["domain"]}, w)
+        for pk in params:
+            need = vocab[pk].get("requires")
+            if need and need not in params:
+                _no("input.cross_field", w, rule=f"params.{pk} needs params.{need}", detail=lid)
         out.append(bd.Layer(id=lid, role=role, material=mat, extent=ext, thermal=thermal, t_declared=t_decl,
                             system=system, composition=comp, params=params))
         ids.append(lid)
@@ -357,6 +394,14 @@ def _layers(raw, where, materials: Materials | None) -> tuple:
     if bad:
         pair, rule = bad[0]
         _no("input.layer_order", where, pair=pair, rule=rule)
+    if materials is not None and hasattr(materials, "pressure_floor"):   # note 14 item 4: envelope class by material
+        for l in out:
+            floor = materials.pressure_floor(l.material)
+            is_env_mat = floor is not None and floor > 0.0
+            is_env_role = bd.family(l.role) == "envelope"
+            if is_env_mat != is_env_role:
+                _no("input.role_material_class", where, layer_id=l.id, role=l.role, material=l.material,
+                    material_class="envelope" if is_env_mat else "not envelope")
     return tuple(out)
 
 
@@ -514,6 +559,54 @@ def _remainders(layers, closure, where):
         _no("input.mass_fraction_sum", where, total=sum(fr), tol=tol)
 
 
+def _extent_rules(layers, closure, where):
+    """Phase-1 design note 14 item 3 (D-A7-5, G4-C-05): every interface determined by at most one declaration; the
+    top layer's radius is R and is never declared; declared radii rise and declared depths fall outward. Plus item 1's
+    zero remainder, and note 14a's condition: a basal params.thickness_km agrees with the two radii."""
+    n = len(layers)
+    mf = [l.extent is not None and l.extent.kind == "mass_fraction" for l in layers]
+    for j in range(n - 1):
+        lo, up = layers[j], layers[j + 1]
+        src = []
+        if lo.extent is not None and lo.extent.kind == "radius_from_centre":
+            src.append(f"{lo.id}.radius_from_centre")
+        if up.extent is not None and up.extent.kind == "depth_from_surface":
+            src.append(f"{up.id}.depth_from_surface")
+        if all(mf[:j + 1]) or all(mf[j + 1:]):
+            src.append("mass_fraction")
+        if lo.extent is not None and lo.extent.kind == "thickness_above":    # it bounds its own layer's top (14b)
+            src.append(f"{lo.id}.thickness_above")
+        if len(src) > 1:
+            _no("input.extent_overdetermined", where, interface=f"{lo.id}/{up.id}", sources=src)
+    top = layers[-1]
+    if top.extent is not None and top.extent.kind == "radius_from_centre":
+        _no("input.extent_overdetermined", where, interface="surface",
+            sources=[f"{top.id}.radius_from_centre", "the body's R"])
+    for kind, sign in (("radius_from_centre", 1.0), ("depth_from_surface", -1.0)):
+        got = [(l.id, l.extent.value) for l in layers if l.extent is not None and l.extent.kind == kind]
+        if any(sign * (b[1] - a[1]) <= 0.0 for a, b in zip(got, got[1:])):
+            _no("input.extent_order", where, layers=[i for i, _ in got], values=[v for _, v in got])
+    rest = [l for l in layers if l.extent is None and not (closure.kind == "boundary_mass" and l.id == closure.layer)]
+    others = [l for l in layers if l not in rest]
+    tol = SCHEMA["tolerances"]["mass_fraction_sum"]
+    if len(rest) == 1 and others and all(l.extent is not None and l.extent.kind == "mass_fraction" for l in others) \
+            and closure.kind != "boundary_mass" and abs(1.0 - sum(l.extent.value for l in others)) <= tol:
+        _no("input.zero_extent", where, layer_id=rest[0].id, kind="remainder", value=0.0)
+    for j, l in enumerate(layers):
+        t = l.params.get("thickness_km")
+        if t is None or j == 0:
+            continue
+        below = layers[j - 1]
+        if not (l.extent is not None and l.extent.kind == "radius_from_centre" and below.extent is not None
+                and below.extent.kind == "radius_from_centre"):
+            continue
+        thick = float(t.value) * KM
+        if abs(l.extent.value - below.extent.value - thick) > 1e-9 * l.extent.value:
+            _no("input.cross_field", where, rule="basal_thickness_consistent",
+                detail=f"{l.id}: r_top − r_core = {(l.extent.value - below.extent.value) / KM} km, thickness_km = "
+                       f"{t.value}")
+
+
 def _jumps(raw, layers, where):
     bounds = bd.derive_boundaries(layers)
     by_id = {l.id: l for l in layers}
@@ -589,6 +682,7 @@ def _validate(raw, where, materials):
     layers = _layers(raw["layers"], where, materials)
     closure = _closure(raw["closure"], layers, "radius_earth" in got, where)
     _remainders(layers, closure, where)
+    _extent_rules(layers, closure, where)
     jumps = _jumps(raw.get("jumps", {}), layers, where)
     if any(l.thermal == "conductive" for l in layers) and "surface_temperature_k" not in got:
         _no("input.cross_field", where, rule="a conductive layer needs surface_temperature_k (R-LITHO-6)",
@@ -618,8 +712,10 @@ def _validate(raw, where, materials):
                    surface_declared={k: _declared_or_value(v) for k, v in got.items() if k in SURFACE_KEYS})
 
 
-def load(path, materials: Materials | None = None) -> bd.Body | Refusal:
-    """D-A7-1: the only reader of body files. Parses with the project loader, then `validate`. Never raises."""
+def load(path, materials=PRODUCTION) -> bd.Body | Refusal:
+    """D-A7-1: the only reader of body files. Parses with the project loader, then `validate`. Never raises.
+    `materials` defaults to the legacy adapter's (note 14 item 4)."""
+    materials = production_materials(materials)
     where = Path(path).name
     try:
         text = Path(path).read_text(encoding="utf-8")

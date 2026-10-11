@@ -91,7 +91,7 @@ def one(body_yaml: str, state, options=context.Options(), chain: bool = True, me
 
 def _one(body_yaml: str, state, options, chain: bool, member=None, registry=None) -> dict:
     stem = Path(body_yaml).stem
-    got = from_v1.load_v1(body_yaml)
+    got = from_v1.load_v1(body_yaml, registry=registry)
     body = got[0] if isinstance(got, tuple) else got
     rec = {"header": None, "body": stem, "state": state, "outcome_kind": None, "quantities": [], "boundaries": [],
            "refusal": None, "no_answer": None, "legacy_nodes": {}, "table_read": False, "notes": []}
@@ -181,7 +181,7 @@ def main(argv=None) -> int:
         states = states_for(stem, points_json)
         member = None
         if len(states) > 1:                          # one declared solve per body for all its T_pot states
-            got = from_v1.load_v1(body_yaml)
+            got = from_v1.load_v1(body_yaml, registry=registry)
             body = got[0] if isinstance(got, tuple) else got
             if not isinstance(body, result.Refusal):
                 member = mb.member_of(body, options.materials, registry)
