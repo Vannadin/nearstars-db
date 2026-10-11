@@ -382,6 +382,8 @@ def _layers(raw, where, materials: Materials | None) -> tuple:
                 continue
             params[pk] = _input(f"{lid}.params.{pk}", pv,
                                 {"shape": "block", "provenance": True, "unit": ps["unit"], "domain": ps["domain"]}, w)
+        if mat == "silicate_basal_const" and "density" not in params:   # note 14 item 2: required there (68 N72)
+            _no("input.missing_key", w, key=f"{lid}.params.density")
         for pk in params:
             need = vocab[pk].get("requires")
             if need and need not in params:

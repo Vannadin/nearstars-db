@@ -88,6 +88,15 @@ class LayerParams(unittest.TestCase):
         d["layers"][0]["extent"] = {"radius_from_centre": 3480.0}
         refused(self, vd.validate(d), "input.out_of_domain")
 
+    def test_basal_needs_density(self):
+        """68 N72: density is required on silicate_basal_const at load, not left to solve's unknown_material."""
+        d = doc()
+        d["layers"] = [{"id": "core", "role": "core", "material": "fe_prem", "extent": {"radius_from_centre": 1695.0}},
+                       {"id": "basal", "role": "basal_layer", "material": "silicate_basal_const",
+                        "extent": {"radius_from_centre": 1845.0}},
+                       {"id": "mantle", "role": "mantle", "material": "silicate"}]
+        refused(self, vd.validate(d), "input.missing_key", key="basal.params.density")
+
     def test_p_cap_needs_porosity(self):
         refused(self, self._rock({"porosity_p_cap": blk(1.5e8)}), "input.cross_field")
 

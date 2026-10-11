@@ -70,7 +70,7 @@ class FirstJoin(unittest.TestCase):
 
 def _one(t_pot):
     import solver.solve as s2
-    e = no_lid(earth())
+    e = earth()
     body = dataclasses.replace(e, surface=dataclasses.replace(e.surface, t_pot=t_pot))
     return t_pot, pickle.dumps(s2.solve(body)[0].quantities)
 
