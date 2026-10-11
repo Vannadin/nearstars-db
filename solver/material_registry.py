@@ -88,7 +88,8 @@ STOPS = MappingProxyType({
                             "gate result."),
     "material.table_check": (("file", "phase", "why"),
                              "Fix the table at the node named: ρ must rise with P on every isotherm, K_T > 0, c_P > 0, "
-                             "α inside its declared range, no holes or NaN; a bilinear table needs α and K_T columns."),
+                             "α inside its declared range, no holes or NaN; a bilinear table carries α and c_P "
+                             "columns (impl note 9); Maxwell within the declared maxwell_tolerance."),
     "material.library_pin": (("file", "why"),
                              "Install the pinned library version (pip install --require-hashes from the repo's pin "
                              "file), or update the record's library.version and library.sha256 after a reviewed "
@@ -277,19 +278,21 @@ def _edges(ph: Mapping, file):
 
 def _library_thermal(ph: Mapping, file):
     """68 on 6c7bb337: a library-form phase takes γ and dT/dP from the library, so it carries no thermal sets and no
-    gamma_window (fields read by nothing would claim a decision lives there); every other phase needs gamma_window."""
+    gamma_window (fields read by nothing would claim a decision lives there); every other phase needs gamma_window.
+    A table phase is the same: dT/dP comes from its α and c_P columns (impl note 9; P7 cold run)."""
     th = ph["thermal"]
-    if ph["eos"]["form"] in ("library", "evaluator"):
+    if ph["eos"]["form"] in ("library", "evaluator", "table"):
         extra = [k for k in ("sets", "gamma_window", "phase_constants") if k in th]
         if extra:
             raise _Stop("material.kind_rule", file=file,
-                        why=f"phase {ph['id']}: a library phase reads γ and dT/dP from the library; remove {extra}")
+                        why=f"phase {ph['id']}: a {ph['eos']['form']} phase reads γ and dT/dP from its own form; "
+                            f"remove {extra}")
     elif "gamma_window" not in th:
         raise _Stop("material.missing_key", file=file, path=f"phase {ph['id']}.thermal", key="gamma_window")
 
 
 def _gamma(ph: Mapping, file):
-    if ph["eos"]["form"] in ("library", "evaluator"):
+    if ph["eos"]["form"] in ("library", "evaluator", "table"):
         return
     gw = ph["thermal"]["gamma_window"]
     for i, ts in enumerate(ph["thermal"].get("sets", ())):
@@ -341,7 +344,7 @@ def _gamma_tiling(ph: Mapping, file):
     """68 N19: inside the γ window, the sets ([p_min, p_max)) and the declared phase_constants span cover every P."""
     th = ph["thermal"]
     sets = th.get("sets", ())
-    if not sets or ph["eos"]["form"] in ("library", "evaluator"):
+    if not sets or ph["eos"]["form"] in ("library", "evaluator", "table"):
         return                                    # a phase with no sets: its constants are the γ source throughout
     gw = th["gamma_window"]
     spans = sorted([(s["window"]["p_min"], s["window"]["p_max"]) for s in sets]
@@ -897,9 +900,10 @@ def _source_key(cite) -> str | None:
 
 def _eos_keys(eos: Mapping) -> set:
     """The family keys an eos answers from: its library pin «name@version», else every cached file its constants
-    cite."""
+    (params, evaluator params, table) cite; the reference state is a declaration, not an answering source."""
     if eos.get("form") == "library":
         return {f"{eos['library']['name']}@{eos['library']['version']}"}
+    eos = {k: v for k, v in eos.items() if k != "reference"}   # the reference state is declared, not an answer (P7)
     keys = set()
 
     def walk(x):

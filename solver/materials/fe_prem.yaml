@@ -5,6 +5,12 @@ kind: single
 system: iron_alloy
 fit_composition: "PREM-alloy"
 role_hint: core
+primary_family:                      # design note 4 (P7): the one family; iron's thermal unification is phase A's
+  name: Zeng et al. 2016 PREM-fit core
+  sources: [2016ApJ...819..127Z.pdf]
+  reason: >-
+    ρ follows Zeng's PREM-fit core path; the thermal sets by P band (Isaak & Anderson, Huang, Dorogokupets) are
+    thermal constants, not answering sources. Unifying them on one source is the phase-A question (design note 4 item 5).
 phases:
   - id: fe_prem
     label: "PREM path, outer core through the inner core (legacy FE_PREM)"

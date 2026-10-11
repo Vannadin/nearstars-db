@@ -100,7 +100,7 @@ def scaffold(kind: str, material_id: str) -> str:
              "# Then run: python -m solver.materials check " + material_id, ""]
     comments = schema_comments()
     rec_kind = "single" if kind == "table" else kind
-    _emit("record", "", lines, comments, only=("id", "label", "kind", "system", "fit_composition"),
+    _emit("record", "", lines, comments, only=("id", "label", "kind", "system", "fit_composition", "primary_family"),
           overrides={"id": material_id, "kind": rec_kind})
     lines.append("phases:")
     for n in range(2 if kind in ("branched", "hand_over") else 1):
@@ -126,6 +126,8 @@ def scaffold(kind: str, material_id: str) -> str:
         lines.append("             # or {band: {form, error, grade, origin}}")
         lines.append("      t_min: {refusal: input.material_out_of_data}")
         lines.append("      t_max: {refusal: input.material_out_of_data}")
+        lines.append("      # p_max: {refusal: input.material_out_of_data}   # add when window.p_max is finite (P7 cold run)")
+        lines.append("      # p_min: {refusal: input.material_out_of_data}   # add when window.p_min > 0")
     if kind == "branched":
         lines.append("boundaries:")
         lines.append("  -")

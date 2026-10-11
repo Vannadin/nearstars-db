@@ -23,7 +23,7 @@ record:
   triple_points:   {shape: list, of: triple_point}         # field: mixed triple points, as printed (impl note 6 item 4)
   field_probe:     {shape: record, of: sampling}           # field: the grid P4 walks for overlaps and gaps (note 6 item 5)
   field_probes:    {shape: list, of: sampling}             # … or several boxes, each with its own dp/dt (c8, h2o)
-  primary_family:  {shape: record, of: primary_family}    # design note 4: the one self-consistent family
+  primary_family:  {shape: record, of: primary_family, required: true}   # design note 4: required from P7 on
   source_seams:    {shape: list, of: source_seam}          # a source seam in T inside one physical phase, split as two
                                                            # phases of one family with a nil step (design note 5)
   refusals:        {shape: list, of: refusal_region}       # declared refusal regions (frozen P6: a region with no cached
@@ -70,8 +70,8 @@ table:
   first:         {shape: list, required: true}             # P [Pa] or ρ [kg/m³] nodes, increasing
   t:             {shape: list, required: true}             # T [K] nodes, increasing
   columns:       {shape: mapping, required: true}          # name → rows over (first × t): rho or P, and alpha, c_p, k_t where given
-  interpolation: {shape: enum, values: [bilinear_lnp_t, c1], required: true}   # bilinear needs alpha and k_t columns (note 4 item 5)
-  maxwell_tolerance: {shape: number}                       # where the columns allow the Maxwell check (B3)
+  interpolation: {shape: enum, values: [bilinear_lnp_t, c1], required: true}   # bilinear needs alpha and c_p columns (impl note 9); c1 not built
+  maxwell_tolerance: {shape: number}                       # relative misfit allowed in the Maxwell check (B3): α against −∂lnρ/∂T, c_P against v
   alpha_range:   {shape: list}                             # [lo, hi] 1/K: the declared sane range for α (B3)
   source:        {shape: source, required: true}           # sourced, or {user_declared: <reason>} (B2)
 

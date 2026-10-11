@@ -28,6 +28,7 @@ def const(v, unit):
 #: A minimal single record: every required key, a sourced field inside its window on P, open in T with refusals.
 GOOD = {
     "id": "toy", "label": "toy solid", "kind": "single", "system": "toy", "fit_composition": "toy",
+    "primary_family": {"name": "toy", "sources": ["2007ApJ...669.1279S.pdf"], "reason": "a test record's one source"},
     "phases": [{
         "id": "toy_solid", "state": "solid",
         "eos": {"form": "bme3", "params": {"rho0": const(4000.0, "kg/m3"), "k0": const(2.0e11, "Pa"),
@@ -133,6 +134,8 @@ def tabled(d):
                               "maxwell_tolerance": 0.05,          # one-sided differences over a 300 K step (B3)
                               "source": {"user_declared": "a fictional rock for a test"}}}
     PH(d)["window"] = {"p_min": 1.0e9, "p_max": 4.0e9, "t_min": 300.0, "t_max": 600.0}   # B1: the grid is the window
+    for k in ("sets", "gamma_window", "phase_constants", "pressure"):                       # γ and dT/dP from columns
+        PH(d)["thermal"].pop(k, None)
     for e in ("p_min", "p_max", "t_min", "t_max"):
         PH(d)["edges"].setdefault(e, {"refusal": "input.material_out_of_data"})          # outside the grid: refuse
 
