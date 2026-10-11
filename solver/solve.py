@@ -220,15 +220,16 @@ def _param(layer, name):
 STEP1_MAP = MappingProxyType({"fe_prem": "fe_prem_legacy"})
 
 
-def registry_for(body, options):
-    """Switch-over §1: the registry for this solve (loaded per solve, never cached at module level), None when the
-    switch is off or no layer names a record file, or a Refusal for a registry-level STOP."""
+def registry_for(body, options, loaded=None):
+    """Switch-over §1: the registry for this solve, None when the switch is off or no layer names a record file, or a
+    Refusal for a registry-level STOP. `loaded` is a registry (or its LoadStop) the caller loaded once and owns (r2 on
+    note 4: one load per run); without it the solve loads its own. Never a module-level cache (A6)."""
     if options.materials == "legacy":
         return None
     names = {f.stem for f in mr.MATERIALS_DIR.glob("*.yaml") if f.name not in mr.NOT_RECORDS}
     if not any(STEP1_MAP.get(l.material, l.material) in names for l in body.layers):
         return None
-    reg = mr.load()
+    reg = mr.load() if loaded is None else loaded
     if isinstance(reg, mr.LoadStop):
         return refusals.make("input.material_registry", f"{body.name}.materials", load_stop=reg.id,
                              detail=result.plain(dict(reg.evidence)))
@@ -481,13 +482,13 @@ def _material_bytes(views) -> bytes:
 SENSITIVE_KEYS = ("core_temperature", "cmb_temperature", "radius")
 
 
-def _with_sensitivity(body, views, x, opt, acc, qs, supplied=False, ctx=None):
+def _with_sensitivity(body, views, x, opt, acc, qs, supplied=False, ctx=None, registry=None):
     """Note 5 item 3f: one warm solve at T_pot + δ (δ = opt.sensitivity_dt), forward differences d q / d T_pot on
     SENSITIVE_KEYS. Omitted, with a note, when the located-boundary set changes between the two states (r2) or the
     warm solve does not answer."""
     dt = opt.sensitivity_dt
     b2 = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=body.surface.t_pot + dt))
-    v2 = dict(views) if supplied else _views(b2, x, registry_for(b2, opt))
+    v2 = dict(views) if supplied else _views(b2, x, registry)
     if isinstance(v2, result.Refusal):
         return qs, result.Note("sensitivity_not_measured", "the T_pot + δ views could not be built", {"dt": dt})
 
@@ -620,18 +621,21 @@ def _side_check(F, x, f_root, side, rt) -> dict:
     return out
 
 
-def solve(body, options: context.Options = context.Options(), warm=None, views=None):
+def solve(body, options: context.Options = context.Options(), warm=None, views=None, registry=None):
     """Returns (Outcome, warm). Outcome is result.Answer, result.Refusal or result.NoAnswer.
     `views` (layer id → material view) replaces the adapter's resolution; it exists for physics fixtures only and is
-    not reachable from Body, options or the context."""
+    not reachable from Body, options or the context. `registry`: a loaded material registry the caller owns and
+    reuses across solves (switch-over note 5); without it the solve loads its own."""
+    registry_arg = registry
     where = f"{body.name}.solve"
     nyi = _not_yet(body)                              # r2 S7 B2/B3: refuse by name what phase 1 does not implement
     if nyi is not None:
         return refusals.make("input.cross_field", where, rule=nyi[0], detail=nyi[1]), warm
     supplied = views is not None
+    registry = None
     if views is None:
         lm.reset_engine_state()                      # reset before any material is touched (r2 S7)
-        registry = registry_for(body, options)        # switch-over §1: once per solve, held by this solve only
+        registry = registry_for(body, options, registry_arg)   # switch-over §1; note 5: the caller's load, reused
         if isinstance(registry, result.Refusal):
             return registry, warm
         views = _views(body, registry=registry)
@@ -724,7 +728,8 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
         sid = context.solve_id_of(_canonical(body), _material_bytes(views), options)
         qs = _quantities(body, acc, sid, x, views)
         if body.surface.t_pot is not None and options.sensitivity_dt > 0.0:
-            qs, sens_note = _with_sensitivity(body, views, x, options, acc, qs, supplied=supplied, ctx=ctx)
+            qs, sens_note = _with_sensitivity(body, views, x, options, acc, qs, supplied=supplied, ctx=ctx,
+                                              registry=registry)
             if sens_note is not None:
                 notes.append(sens_note)
         if guard:                                        # note 9 (a″): one-sided chords on both sides of x*

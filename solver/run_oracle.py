@@ -33,6 +33,7 @@ from pathlib import Path
 
 from solver import context, from_v1, legacy_view as lv, member as mb, result, solve as sv
 from solver import legacy_materials as lm
+from solver import material_registry as mr
 
 interior = lm.interior
 ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
@@ -79,16 +80,16 @@ def _sid(body, options, answer=None) -> str:
     return context.solve_id_of(sv._canonical(body), lm.material_bytes(), options) if body is not None else ""
 
 
-def one(body_yaml: str, state, options=context.Options(), chain: bool = True, member=None) -> dict:
+def one(body_yaml: str, state, options=context.Options(), chain: bool = True, member=None, registry=None) -> dict:
     """The comparator record of one (body, state). `state` is «declared» or a T_pot float. `chain` False skips the old
     chain (legacy_nodes stays {}), for O9 states only (--no-chain-for-points). `member`: member.member_of(body),
     solved once by a caller with many states; None solves it here when the body is inverse."""
-    rec = _one(body_yaml, state, options, chain if state != "declared" else True, member)
+    rec = _one(body_yaml, state, options, chain if state != "declared" else True, member, registry)
     rec["header"]["chain"] = chain or state == "declared"
     return rec
 
 
-def _one(body_yaml: str, state, options, chain: bool, member=None) -> dict:
+def _one(body_yaml: str, state, options, chain: bool, member=None, registry=None) -> dict:
     stem = Path(body_yaml).stem
     got = from_v1.load_v1(body_yaml)
     body = got[0] if isinstance(got, tuple) else got
@@ -119,7 +120,7 @@ def _one(body_yaml: str, state, options, chain: bool, member=None) -> dict:
                 return rec
             body = fb
         body = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=t_pot))
-    out, _warm = sv.solve(body, options)
+    out, _warm = sv.solve(body, options, registry=registry)
     if isinstance(out, result.Answer):
         rec.update(header=_header(options, _sid(body, options, out)), outcome_kind="answer",
                    quantities=[result.plain(q) for q in out.quantities],
@@ -173,6 +174,7 @@ def main(argv=None) -> int:
         print(f"STOP: {out} is not empty (stale files would mix into the comparison)")
         return 2
     options = context.Options(sensitivity_dt=dt, materials=materials)
+    registry = mr.load() if materials == "registry" else None     # switch-over note 5: one load per run, passed down
     stem = Path(body_yaml).stem
     tmp = Path(tempfile.mkdtemp(prefix=f"run_oracle_{stem}_"))
     try:
@@ -184,7 +186,7 @@ def main(argv=None) -> int:
             if not isinstance(body, result.Refusal):
                 member = mb.member_of(body)
         for state in states:
-            rec = one(body_yaml, state, options, chain, member)
+            rec = one(body_yaml, state, options, chain, member, registry)
             name = f"{stem}__{'declared' if state == 'declared' else repr(state)}.json"
             (tmp / name).write_text(json.dumps(rec, ensure_ascii=False, allow_nan=False, indent=1) + "\n",
                                     encoding="utf-8")

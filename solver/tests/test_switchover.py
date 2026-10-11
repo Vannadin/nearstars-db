@@ -328,6 +328,33 @@ class Resolution(unittest.TestCase):
                          context.solve_id_of(body, b"m", context.Options(materials="legacy")))
 
 
+class RegistryLoads(unittest.TestCase):
+    """68 H1 / r2 on note 4 (switch-over note 5): one load per solve, the sensitivity pass included; a caller's
+    registry is reused with no load and gives the same answer as solves that load their own."""
+
+    def test_one_load_per_solve_and_none_when_passed(self):
+        from unittest import mock
+        body, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
+        real = mr.load
+        with mock.patch.object(mr, "load", side_effect=real) as ld:
+            own, _x = sv.solve(body, context.Options())                  # sensitivity on (δ = 10 K)
+            self.assertEqual(ld.call_count, 1)
+            reg = real()
+            ld.reset_mock()
+            a, _x = sv.solve(body, context.Options(), registry=reg)
+            b, _x = sv.solve(body, context.Options(), registry=reg)
+            self.assertEqual(ld.call_count, 0)
+        self.assertEqual(_values(a), _values(own))
+        self.assertEqual(_values(b), _values(own))
+        self.assertEqual(a.quantities[0].provenance.solver.solve_id, own.quantities[0].provenance.solver.solve_id)
+
+    def test_a_passed_registry_stop_refuses(self):
+        body, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
+        stop = mr.LoadStop("material.duplicate_id", {"file": "h2o.yaml", "id": "h2o"})
+        got, _w = sv.solve(body, context.Options(sensitivity_dt=0.0), registry=stop)
+        self.assertEqual(got.id, "input.material_registry")
+
+
 class Step1Identity(unittest.TestCase):
     """§6.6: Earth and Venus through fe_prem_legacy reproduce the switch-off answers (solve_id masked)."""
 
