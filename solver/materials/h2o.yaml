@@ -2040,6 +2040,9 @@ formula_checks:
     page: -7-
     where: §7 Table 3, eq. (5) ice VII – liquid, 550.0 K
     sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+  boundary:
+  - water1
+  - vii_x
 - quantity: IAPWS-06 ice Ih density at 250 K / 101 325 Pa
   state: {}
   expected: 920.0
@@ -2124,6 +2127,9 @@ formula_checks:
     page: -7-
     where: §7 Table 3, ice Ih – liquid, 260.0 K
     sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+  boundary:
+  - Ih
+  - water1
 - quantity: SeaFreeze III–water1 melting pressure at 254 K against R14-08
   state: {}
   expected: 268685000.0
@@ -2136,6 +2142,9 @@ formula_checks:
     page: -7-
     where: §7 Table 3, ice III – liquid, 254.0 K
     sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+  boundary:
+  - III
+  - water1
   disclosed_fail:
     source:
       cache: 2020JGRE..12506176J.pdf
@@ -2161,6 +2170,9 @@ formula_checks:
     page: -7-
     where: §7 Table 3, ice V – liquid, 265.0 K
     sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+  boundary:
+  - V
+  - water1
 - quantity: SeaFreeze VI–water1 melting pressure at 320 K against R14-08
   state: {}
   expected: 1356760000.0
@@ -2173,6 +2185,9 @@ formula_checks:
     page: -7-
     where: §7 Table 3, ice VI – liquid, 320.0 K
     sha256: 706b17a9c646979aa77c589db145a6a707e7b19527aefbdb70dc230898cfc839
+  boundary:
+  - VI
+  - water1
 note: 'SeaFreeze 1.1.0 is the PyPI sdist (sha256 c7574f3e9b9628d2eac6ca7f049d54c5c027928930cdb4b13a6988c5700bda8c, enforced
   at install by pip --require-hashes); library.sha256 is the installed package tree (material_library.tree_sha256). Windows
   are the spline knot domains at the pin ∩ the printed validity (130–500 K to 2,300 MPa, Journaux 2020 p.1; water1 ≤ 500 K).
