@@ -112,7 +112,8 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
                       h_max=mass / 20.0, max_steps=opt.max_steps_solve,
                       event_min_progress=opt.event_min_progress * mass,
                       event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_solve,
-                      event_rewalks=opt.event_rewalks)
+                      event_rewalks=opt.event_rewalks,
+                      h_cap=None if getattr(view, "mat", None) is None else events.step_cap(view.mat))
     return st.run(rhs.make_rhs(view), m0, y0, m_end, sopt, evs, on_accept=monitor)
 
 
@@ -478,6 +479,85 @@ def _regions(out) -> list:
     return regs
 
 
+PROBE_SPAN = 50.0           # phase-1 design notes 8–9: δ = PROBE_SPAN·tol_F/s, so a side's chord s·2δ = 100·tol_F
+
+
+def _root_tolerance(x, acc, options, bracket, trials) -> dict:
+    """Phase-1 design notes 8–10 at the root x, in the closure's own variable (any closure kind).
+    tol_F = 3·N_acc·rtol + 2·s·tol_x: 3·N_acc·rtol bounds the accepted pass's integration error in
+    F = (r³ − …)/r_s³ with r_s = R (rho_mean is the bulk density at the pass's R, so r ≤ r_s and each accepted step
+    moves r³/r_s³ by at most 3·rtol); 2·s·tol_x is Brent's stop bracket times the slope s.
+    s is the secant of the points around the root: on each side, inside its solved stretch, the nearest scan point (a
+    scan point at x itself is skipped), else the farthest solved trial (note 11). Note 10: a sign-change bracket can be a hair wide (a Brent or wall trial next to
+    a scan point), where noise sets its secant and δ collapsed below the noise (Mars member at rtol/10, δ 5.5e-5 m).
+    δ = PROBE_SPAN·tol_F/s, capped at an eighth of the scan pair's width."""
+    scan = sorted((t.x, t.F) for t in trials if t.kind == "scan" and t.F is not None)
+    solved = sorted((t.x, t.F) for t in trials if t.F is not None)
+    refused = sorted(t.x for t in trials if t.F is None and t.kind != "isolated")
+
+    def inside(q, sgn):
+        """q lies on that side of x inside its solved stretch: no refused trial between q and x (r2 GB1, GB2). Every
+        consumer of the solve's trials (the slope's points and each side's reference) goes through it."""
+        wall = min((w for w in refused if (w - x) * sgn > 0.0), key=lambda w: abs(w - x), default=None)
+        return (q[0] - x) * sgn > 0.0 and (wall is None or abs(q[0] - x) < abs(wall - x))
+
+    def side_point(sgn):
+        """Inside that side's solved stretch: the nearest scan point; with none, the farthest solved trial; so the
+        secant never rests on a hair-wide pair nor spans a wall."""
+        sc = [q for q in scan if inside(q, sgn)]
+        if sc:
+            return min(sc, key=lambda q: abs(q[0] - x))
+        stretch = [q for q in solved if inside(q, sgn)]
+        return max(stretch, key=lambda q: abs(q[0] - x)) if stretch else None
+
+    lo_pt, hi_pt = side_point(-1.0), side_point(1.0)
+    if lo_pt is None or hi_pt is None:                 # one side has no solved trial: the secant from x to the other
+        lo_pt, hi_pt = (lo_pt or (x, acc.F)), (hi_pt or (x, acc.F))
+    (xa, fa), (xb, fb) = lo_pt, hi_pt
+    s = abs(fb - fa) / abs(xb - xa) if xb != xa else 0.0
+    tol_x = 2.0 * 2.2e-16 * abs(x) + 0.5 * cl.CLOSE_TOL * abs(x)
+    tol_f = 3.0 * acc.counters.get("accepted", 0) * options.rtol + 2.0 * s * tol_x
+    # a probe that leaves the solved stretch (a wall within 2δ) refuses the solve by design (r2 on 55117864 (b))
+    cap = 0.125 * abs(xb - xa)
+    delta = min(PROBE_SPAN * tol_f / s, cap) if s > 0.0 else cap
+    # each side's reference point: the nearest solved trial at least 4δ off the root inside that side's solved
+    # stretch (r2 GB2: never beyond a wall); none → the side refuses «no_solved_reference»
+    off = [q for q in solved if abs(q[0] - x) >= 4.0 * delta]
+    left = [q for q in off if inside(q, -1.0)]
+    right = [q for q in off if inside(q, 1.0)]
+    far = (left[-1] if left else None, right[0] if right else None)
+    return {"tol_F": tol_f, "s": s, "delta": delta, "far": far}
+
+
+def _side_check(F, x, f_root, side, rt) -> dict:
+    """Phase-1 design note 9 (a″): one side of the root, both sides always (the rule, not the result, picks them).
+    F at x + side·δ and x + side·2δ must lie on one line through F(x*) within 2·tol_F + ½·|F″_side|·δ², F″_side the
+    second divided difference over (the side's reference point, x + side·2δ, x*), the reference being the nearest
+    solved trial at least 4δ off the root on that side; the chord's slope must have the sign of the secant from x* to
+    that point. A side with no solved trial is refused by name (its probes are not anchored). F has a slope change at its root by construction (the m_ε end for F > 0, the
+    r-floor event for F < 0; rhs.residual), so a chord never straddles it."""
+    d = rt["delta"]
+    x1, x2 = x + side * d, x + side * 2.0 * d
+    f1, f2 = cl._value(F, x1), cl._value(F, x2)
+    out = {"side": side, "x1": x1, "x2": x2, "F1": None if isinstance(f1, st.Stop) else f1,
+           "F2": None if isinstance(f2, st.Stop) else f2,
+           "stop": next((z.kind for z in (f1, f2) if isinstance(z, st.Stop)), None)}
+    if out["stop"] is not None:
+        out["ok"] = False
+        return out
+    ref = rt["far"][1 if side > 0 else 0]
+    if ref is None:
+        out.update(ok=False, stop="no_solved_reference")
+        return out
+    xe, fe = ref
+    curv = abs(2.0 * ((fe - f2) / (xe - x2) - (f2 - f_root) / (x2 - x)) / (xe - x))
+    out["deviation"] = abs(f1 - 0.5 * (f_root + f2))
+    out["allowed"] = 2.0 * rt["tol_F"] + 0.5 * curv * d * d
+    secant = (fe - f_root) / (xe - x)
+    out["ok"] = out["deviation"] <= out["allowed"] and (f2 - f_root) / (x2 - x) * secant > 0.0
+    return out
+
+
 def solve(body, options: context.Options = context.Options(), warm=None, views=None):
     """Returns (Outcome, warm). Outcome is result.Answer, result.Refusal or result.NoAnswer.
     `views` (layer id → material view) replaces the adapter's resolution; it exists for physics fixtures only and is
@@ -498,8 +578,10 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
                         reset_legacy=any(isinstance(v, lm.LegacyView) for v in views.values()))
     kind = body.closure.kind
 
+    views_all = views                                 # F keeps the unbound views: the probes run after `views` is bound to x*
+
     def F(x):
-        vx = _views_at(body, views, x)
+        vx = _views_at(body, views_all, x)
         if isinstance(vx, st.Stop):
             return vx
         got = inward(body, vx, x, options)
@@ -537,7 +619,21 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
             acc.counters["surface_rho0_fallbacks"] = acc_fb
         if isinstance(acc, st.Stop):
             return _to_refusal(acc, where, x, kind, "accepted"), x
+        guard = options.fixed_dr <= 0.0 and x in out.detail.get("brackets", {})   # a fixed grid has no rtol
+        if guard:
+            bracket = out.detail["brackets"][x]
+            rt = _root_tolerance(x, acc, options, bracket, out.trials)
+            tol_f = rt["tol_F"]
+            if not abs(acc.F) <= tol_f:                  # note 8 (a): the root closed on a jump of F
+                return refusals.make("solve.closure_discontinuous", where, x=x, closure_kind=kind,
+                                     pass_kind="accepted", check="residual", F_root=acc.F, tol_F=tol_f,
+                                     n_acc=acc.counters.get("accepted", 0), rtol=options.rtol,
+                                     bracket=bracket["final"], probes=None), x
         notes = []
+        if not guard and options.fixed_dr <= 0.0:       # r2 on 55117864 (a): never skipped silently
+            notes.append(result.Note("closure_guard_skipped", "the root has no sign-change bracket (a solved point with "
+                                     "F = 0), so phase-1 design notes 8–9's residual and probe checks did not run",
+                                     {"x": x}))
         if acc.floor_end:
             notes.append(result.Note("centre_closed_at_floor", "the accepted pass ended at the r floor, not at m_ε",
                                      {"m_end_over_M": acc.m / body.mass, "r_floor_over_r_scale": options.r_floor_frac}))
@@ -561,6 +657,21 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
             qs, sens_note = _with_sensitivity(body, views, x, options, acc, qs, supplied=supplied, ctx=ctx)
             if sens_note is not None:
                 notes.append(sens_note)
+        if guard:                                        # note 9 (a″): one-sided chords on both sides of x*
+            sides = [_side_check(F, x, acc.F, -1.0, rt), _side_check(F, x, acc.F, 1.0, rt)]
+            for sd in sides:
+                for xx, ff in ((sd["x1"], sd["F1"]), (sd["x2"], sd["F2"])):
+                    ctx.record("probe", x=xx, F=ff, stop=sd["stop"])
+            if not all(sd["ok"] for sd in sides):
+                # phase-1 design note 12 (directing): a probabilistic detector with false positives never refuses;
+                # its finding rides on the answer by name, with each side's deviation / allowed
+                ratios = [sd["deviation"] / sd["allowed"] for sd in sides if sd.get("deviation") is not None]
+                notes.append(result.Note(
+                    "closure_probe_disclosure", "the local probe found F off one line beside the root (phase-1 "
+                    "design notes 9, 12): the root may sit on a shifted level of a jagged F; the answer stands, "
+                    "disclosed", {"x": x, "delta": rt["delta"], "dev_ratio": max(ratios) if ratios else None,
+                                  "sides": [{k: sd.get(k) for k in ("side", "stop", "deviation", "allowed", "ok")}
+                                            for sd in sides]}))
         ans = result.Answer(qs, lbs, profiles, (), tuple(notes))
         return ans, x
     if out.kind == "two_roots":

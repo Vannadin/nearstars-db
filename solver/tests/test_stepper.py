@@ -189,5 +189,31 @@ class HminRecord(unittest.TestCase):
             self.assertIn(k, r.stop.record)
         self.assertGreater(r.stop.record["rejected_in_row"], 0)
 
+class StepCap(unittest.TestCase):
+    """Phase-1 design note 12: a feature narrower than the step is invisible to the stages and to the error estimate;
+    a declared cap (Options.h_cap) makes the stepper resolve it. Planted: y′ = 1 + A·b(x), b a C¹ hat of half-width
+    w at x_b, whose integral is A·w·16/15."""
+    A, W, XB = 10.0, 0.002, 0.3123
+
+    def f(self, x, y):
+        u = (x - self.XB) / self.W
+        return (1.0 + (self.A * (1.0 - u * u) ** 2 if abs(u) < 1.0 else 0.0),)
+
+    def test_uncapped_misses_and_capped_resolves(self):
+        want = 1.0 + self.A * self.W * 16.0 / 15.0
+        free = st.run(self.f, 0.0, (0.0,), 1.0, _opts(h0=0.5, h_max=0.5))
+        capped = st.run(self.f, 0.0, (0.0,), 1.0, _opts(h0=0.5, h_max=0.5, h_cap=lambda x, y, k1: 0.01))
+        self.assertEqual((free.stop.kind, capped.stop.kind), ("end", "end"))
+        self.assertGreater(abs(free.y[0] - want), 0.5 * self.A * self.W)           # the bump is lost
+        self.assertLess(abs(capped.y[0] - want), 1e-8)
+
+    def test_no_cap_is_the_old_run(self):
+        """h_cap None (every non-table material) gives the same path as before, bit for bit."""
+        f = lambda x, y: (y[0],)
+        a = st.run(f, 0.0, (1.0,), 1.0, _opts())
+        b = st.run(f, 0.0, (1.0,), 1.0, _opts(h_cap=lambda x, y, k1: None))
+        self.assertEqual((a.x, a.y, len(a.path)), (b.x, b.y, len(b.path)))
+
+
 if __name__ == "__main__":
     unittest.main()

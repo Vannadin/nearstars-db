@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import copy
 import importlib
+import math
 import os
 import sys
 from dataclasses import dataclass
@@ -275,6 +276,18 @@ class LegacyView:
         has = has() if callable(has) else has
         notes = ("no_thermal_constants",) if (t > 0.0 and has is False) else ()
         return (rho, g, notes)
+
+
+def table_step_cap(phase, p):
+    """Phase-1 design note 12: a legacy table phase's fine scale, one ln P cell of its table [Pa], else None.
+    Its blend band's entry and exit curves g = E(P) − T_STEP/2 − T_ad (TablePhase._w) move cell by cell with the
+    table's upper edge E(P); a step longer than a cell can carry both crossings and land neither (Mars 1793 K: one
+    step 1.56 → 2.4 GPa skipped the 15 MPa bump at 1.715–1.73 GPa, which jumped F by ±2–4e-5 between passes)."""
+    key = getattr(phase, "table_key", "")
+    if not key:
+        return None
+    tab = importlib.import_module("mantle_composition")._TABLES[key]
+    return p * (math.exp(min(b - a for a, b in zip(tab.lnp, tab.lnp[1:]))) - 1.0)   # the narrowest cell, everywhere
 
 
 def ammonia_isotherms() -> tuple:

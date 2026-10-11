@@ -10,7 +10,7 @@ import multiprocessing as mp
 import pickle
 import unittest
 
-from solver import body as b, context, from_v1, result, solve as sv
+from solver import body as b, closure as cl, context, from_v1, member as mb, result, solve as sv
 from solver import stepper as st
 
 
@@ -282,6 +282,268 @@ class MaterialBytes(unittest.TestCase):
         again, _ = sv.solve(earth())
         sid = lambda a: a.quantities[0].provenance.solver.solve_id
         self.assertEqual(sid(first), sid(again))
+
+
+def disclosure(ans):
+    """Phase-1 design note 12: (a″) never refuses; its finding is the Note closure_probe_disclosure, or None."""
+    return next((n for n in getattr(ans, "notes", ()) if n.kind == "closure_probe_disclosure"), None)
+
+
+class ClosureDiscontinuous(unittest.TestCase):
+    """Phase-1 design notes 8–9: a root must meet tol_F (a), and each side's F at x* ± δ, ± 2δ must lie on one line
+    through F(x*) (a″). Planted steps of F on the two-layer uniform fixture (R closure) and on its boundary_mass
+    inverse (r2 CB1), and a planted slope kink at the root that must pass (r2 on note 9)."""
+
+    def _bodies(self):
+        body, views = _two_layer(6000.0)
+        ans, x0 = sv.solve(body, views=views)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        layers = (b.Layer("core", "core", "x"), b.Layer("mantle", "mantle", "y"))
+        inv = b.Body("fixture-inverse", "planet", body.surface, layers, b.Closure("boundary_mass", 0.05, 0.95, "core"),
+                     radius=b.Declared(x0, "m"))
+        return (body, views, x0), (inv, views)
+
+    def _slope(self, body, views, x):
+        lo, hi = (sv.inward(body, sv._views_at(body, views, xx), xx, context.Options()).F for xx in
+                  (x * (1 - 1e-4), x * (1 + 1e-4)))
+        return (hi - lo) / (2e-4 * x)
+
+    def _slope_sign(self, body, views, x):
+        return math.copysign(1.0, self._slope(body, views, x))
+
+    def _with_step(self, body, views, x_step, jump, kink=0.0):
+        """F + jump past x_step; with `kink`, F + kink·(x − x_step) past x_step instead (a slope change, no jump)."""
+        orig = sv.inward
+
+        def stepped(bd, vw, x, opt):
+            got = orig(bd, vw, x, opt)
+            if not isinstance(got, st.Stop) and got.F is not None and x > x_step:
+                got.F += jump + kink * (x - x_step)
+            return got
+        sv.inward = stepped
+        try:
+            return sv.solve(body, views=views)
+        finally:
+            sv.inward = orig
+
+    def test_guard_skipped_is_noted(self):
+        """r2 on 55117864 (1): a lone solved scan point with F = 0.0 exactly is a root with no bracket; the guard cannot
+        run there, and the answer says so (Note closure_guard_skipped), never silently."""
+        body, views = _two_layer(6000.0)
+        _a, x0 = sv.solve(body, views=views)
+        x_s = min(cl.scan_points(body.closure.lo, body.closure.hi, context.Options().n_scan), key=lambda z: abs(z - x0))
+        orig = sv.inward
+
+        def lone(bd, vw, x, opt):
+            if x != x_s:
+                return st.Stop("refused", {"planted": "every trial but one scan point refuses", "x": x})
+            got = orig(bd, vw, x, opt)
+            got.F = 0.0
+            return got
+        sv.inward = lone
+        try:
+            ans, x = sv.solve(body, views=views)
+        finally:
+            sv.inward = orig
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.assertEqual(x, x_s)
+        self.assertIn("closure_guard_skipped", [n.kind for n in ans.notes])
+        ans2, _x = sv.solve(body, views=views)                       # control: a bracketed root carries no such note
+        self.assertNotIn("closure_guard_skipped", [n.kind for n in ans2.notes])
+
+    def test_planted_steps(self):
+        (fwd, views, r0), (inv, iviews) = self._bodies()
+        ans, x_inv = sv.solve(inv, views=iviews)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        for name, body, vw, x0 in (("R", fwd, views, r0), ("boundary_mass", inv, iviews, x_inv)):
+            sg = self._slope_sign(body, vw, x0)
+            with self.subTest(closure=name, control="(iii) no step: the same root"):
+                got, x = self._with_step(body, vw, math.inf, 0.0)
+                self.assertIsInstance(got, result.Answer, getattr(got, "text", None))
+                self.assertEqual(x, x0)
+            with self.subTest(closure=name, control="(ii) step just past the root: (a″) discloses"):
+                got, x = self._with_step(body, vw, x0 * (1 + 1e-9), sg * 1e-5)
+                self.assertIsInstance(got, result.Answer, getattr(got, "text", None))
+                self.assertIsNotNone(disclosure(got))
+                self.assertGreater(disclosure(got).fields["dev_ratio"], 1.0)
+            with self.subTest(closure=name, control="(v) a 50 % slope change at the root passes (note 9, r2)"):
+                got, x = self._with_step(body, vw, x0, 0.0, kink=0.5 * self._slope(body, vw, x0))
+                self.assertIsInstance(got, result.Answer, getattr(got, "text", None))
+                self.assertLess(abs(x / x0 - 1.0), 1e-12)          # Brent's path differs; the root does not
+            with self.subTest(closure=name, control="(iv) a step below tol_F fires nothing"):
+                got, x = self._with_step(body, vw, x0 * (1 + 1e-9), sg * 1e-11)
+                self.assertIsInstance(got, result.Answer, getattr(got, "text", None))
+        with self.subTest(control="(i) the root closes on the jump: (a)"):
+            sg = self._slope_sign(fwd, views, r0)
+            # F(x) − jump·sg for x ≤ x_step: the sign change sits at x_step, where F jumps by 1e-5
+            got, x = self._with_step(fwd, views, r0 * (1 - 1e-7), sg * 1e-5)
+            self.assertIsInstance(got, result.Refusal)
+            self.assertEqual(got.id, "solve.closure_discontinuous")
+            self.assertEqual(got.evidence["check"], "residual")
+            self.assertGreater(abs(got.evidence["F_root"]), got.evidence["tol_F"])
+
+
+class GuardRedTeam(unittest.TestCase):
+    """Directing's red-team of the closure guard as a class (phase-1 design note 11): one planted case per input the
+    residual check and the probe depend on. Covered elsewhere: a step at the root and just past it on the R and
+    boundary_mass closures, a kink at the root, a sub-tolerance step, a lone F = 0 root (ClosureDiscontinuous); a
+    floor-closed centre (FloorGuard: a dense centre answers); the accepted pass's own N_acc (test_a6_trace)."""
+
+    def setUp(self):
+        self.body, self.views = _two_layer(6000.0)
+        self.rt = []
+        self._orig_rt, self._orig_inward = sv._root_tolerance, sv.inward
+
+        def rt(*a):
+            r = self._orig_rt(*a)
+            self.rt.append(r)
+            return r
+        sv._root_tolerance = rt
+        ans, self.x0 = sv.solve(self.body, views=self.views)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.delta0 = self.rt[-1]["delta"]
+        self.scan = cl.scan_points(self.body.closure.lo, self.body.closure.hi, context.Options().n_scan)
+
+    def tearDown(self):
+        sv._root_tolerance, sv.inward = self._orig_rt, self._orig_inward
+
+    def _solve(self, alter):
+        """Solve with each pass's F replaced by alter(x, F) (a Stop from alter refuses that trial)."""
+        orig = self._orig_inward
+
+        def wrapped(bd, vw, x, opt):
+            got = orig(bd, vw, x, opt)
+            if isinstance(got, st.Stop) or got.F is None:
+                return got
+            f = alter(x, got.F)
+            if isinstance(f, st.Stop):
+                return f
+            got.F = f
+            return got
+        sv.inward = wrapped
+        try:
+            return sv.solve(self.body, views=self.views)
+        finally:
+            sv.inward = orig
+
+    def _f_at(self, x):
+        return self._orig_inward(self.body, sv._views_at(self.body, self.views, x), x, context.Options()).F
+
+    def test_root_exactly_at_a_scan_point(self):
+        """Venus's member: the root is itself a scan point; the slope skips it and δ stays finite."""
+        x_s = min(self.scan, key=lambda z: abs(z - self.x0))
+        f_s = self._f_at(x_s)
+        ans, x = self._solve(lambda xx, f: f - f_s)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.assertEqual(x, x_s)
+        self.assertGreater(self.rt[-1]["delta"], 0.1 * self.delta0)
+
+    def test_root_a_hair_from_a_scan_point(self):
+        """Mars member at rtol/10: a root 1e-10 relative from a scan point; δ must not collapse (note 10)."""
+        x_s = min(self.scan, key=lambda z: abs(z - self.x0))
+        f_h = self._f_at(x_s * (1 + 1e-10))
+        ans, x = self._solve(lambda xx, f: f - f_h)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.assertGreater(self.rt[-1]["delta"], 0.1 * self.delta0)
+
+    def test_walls_on_one_side(self):
+        """Every trial below 0.999·x0 refuses: the slope and the reference come from the solved stretch; it answers."""
+        cut = 0.999 * self.x0
+        ans, x = self._solve(lambda xx, f: st.Stop("refused", {"planted": "wall", "x": xx}) if xx < cut else f)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.assertLess(abs(x / self.x0 - 1.0), 1e-12)
+
+    def test_wall_within_two_delta_discloses(self):
+        """A wall δ/2 below the root: the lower probe refuses, so the answer carries the disclosure naming that stop."""
+        cut = self.x0 - 0.5 * self.delta0
+        ans, x = self._solve(lambda xx, f: st.Stop("refused", {"planted": "wall", "x": xx}) if xx < cut else f)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        lower = next(sd for sd in disclosure(ans).fields["sides"] if sd["side"] < 0)
+        self.assertEqual(lower["stop"], "refused")
+
+    def test_a_wall_between_the_root_and_its_scan_point(self):
+        """r2 GB1: the trials from 0.5·x0 to 0.999·x0 refuse (the nearest scan point below among them) and F jumps by 10
+        beyond them; the slope must come from inside the solved stretch, not from the scan point across the wall."""
+        s0 = self.rt[-1]["s"]
+        lo_w, hi_w = 0.5 * self.x0, 0.999 * self.x0
+        sg = math.copysign(1.0, self._f_at(1.001 * self.x0) - self._f_at(0.9995 * self.x0))
+
+        def alter(xx, f):
+            if lo_w <= xx <= hi_w:
+                return st.Stop("refused", {"planted": "wall band", "x": xx})
+            return f - 10.0 * sg if xx < lo_w else f                 # away from zero: no second root
+        self.rt.clear()
+        ans, x = self._solve(alter)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.assertLess(abs(x / self.x0 - 1.0), 1e-12)
+        self.assertLess(abs(self.rt[-1]["s"] / s0 - 1.0), 0.5)          # the local slope, not the jump across the wall
+
+    def test_a_wall_between_the_probes_and_the_reference(self):
+        """r2 GB2: trials from 0.5·x0 to x0 − 5·δ_clean refuse and F is offset by 10 beyond them; no solved trial ≥ 4δ
+        below lies inside the stretch, so the lower side reports «no_solved_reference» and never reads past the wall."""
+        lo_w, hi_w = 0.5 * self.x0, self.x0 - 5.0 * self.delta0         # 2δ < 5·δ0 < 4δ here (δ ≈ 1.6·δ0)
+        sg = math.copysign(1.0, self._f_at(1.001 * self.x0) - self._f_at(0.9995 * self.x0))
+
+        def alter(xx, f):
+            if lo_w <= xx <= hi_w:
+                return st.Stop("refused", {"planted": "wall band", "x": xx})
+            return f - 10.0 * sg if xx < lo_w else f
+        self.rt.clear()
+        ans, x = self._solve(alter)
+        d = self.rt[-1]["delta"]
+        self.assertTrue(2.0 * d < self.x0 - hi_w < 4.0 * d, (d, self.x0 - hi_w))   # the case is the one meant
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        lower = next(sd for sd in disclosure(ans).fields["sides"] if sd["side"] < 0)
+        self.assertEqual(lower["stop"], "no_solved_reference")
+
+    def test_very_flat_and_very_steep_F(self):
+        """F scaled by 1e-3 and 1e3: δ follows the slope (capped by the scan pair), and the root is unchanged."""
+        for k in (1e-3, 1e3):
+            with self.subTest(scale=k):
+                ans, x = self._solve(lambda xx, f, k=k: k * f)
+                self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+                self.assertLess(abs(x / self.x0 - 1.0), 1e-12)
+
+    def test_composition_closure_step_discloses(self):
+        """The third closure kind: a step just past the composition root is disclosed by the probe (note 12)."""
+        from solver.tests.test_s10 import CompositionClosure, XCore
+        cc = CompositionClosure()
+        body = cc._body()
+        views = {"core": XCore(0.0), "mantle": Uniform(3000.0)}
+        ans, x0 = sv.solve(body, views=views)
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        orig = self._orig_inward
+        lo, hi = (orig(body, sv._views_at(body, views, z), z, context.Options()).F for z in (x0 * 0.99, x0 * 1.01))
+        sg = math.copysign(1.0, hi - lo)
+
+        def stepped(bd, vw, x, opt):
+            got = orig(bd, vw, x, opt)
+            if not isinstance(got, st.Stop) and got.F is not None and x > x0 * (1 + 1e-9):
+                got.F += sg * 1e-5
+            return got
+        sv.inward = stepped
+        try:
+            ans, x = sv.solve(body, views=views)
+        finally:
+            sv.inward = orig
+        self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
+        self.assertIsNotNone(disclosure(ans))
+
+
+class TableStepCap(unittest.TestCase):
+    """Phase-1 design note 12: only a material with a legacy table phase declares a step cap; Earth's and Venus's
+    layers have none, so their runs (and O9 values) are unchanged by the cap."""
+
+    def test_only_table_materials_cap(self):
+        from solver import events as ev
+        for stem, layer, has in (("earth", "mantle", False), ("earth", "core", False), ("mars", "mantle", True)):
+            with self.subTest(body=stem, layer=layer):
+                got = from_v1.load_v1(f"engine/bodies/{stem}.yaml")
+                body = got[0] if isinstance(got, tuple) else got
+                if mb.is_inverse(body):
+                    body, _m = mb.member_of(body)
+                mat = sv._views(body)[layer].mat
+                self.assertEqual(ev.step_cap(mat) is not None, has)
 
 
 if __name__ == "__main__":

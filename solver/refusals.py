@@ -31,7 +31,7 @@ SOLVE_COMMON = ("x", "closure_kind", "pass_kind")
 #: Optional on every solve.* id: the reached state, the scan trace, and the walls and solved regions (§A1.5: «the
 #: refusal at the lowest-x wall is the Outcome, with the scan in the evidence»; b9 2026-10-09).
 SOLVE_OPTIONAL = ("state", "scan", "walls", "solved_regions")
-PASS_KINDS = ("scan", "wall", "brent", "accepted", "band")
+PASS_KINDS = ("scan", "wall", "brent", "accepted", "band", "probe")
 #: A wall record (b9 2026-10-09): the trial x, what stopped it (a refusal id or a NoAnswer reason), the reached state,
 #: and whether the wall's position was located.
 WALL_FIELDS = ("x", "outcome_kind", "id_or_reason", "state", "located")
@@ -50,6 +50,9 @@ _SOLVE = (
           "경계 사건 '{event_name}' 이(가) {count} 번 되풀이돼 {cap_name} {cap_value} 에 걸렸다", optional=("g", "tol")),
     Entry("solve.layer_order", ("layer_id", "rule", "expected", "got_m", "got_r"),
           "층 '{layer_id}' 의 경계({rule})가 순서를 어긴다 — 기대 {expected}, 실제 m {got_m} · r {got_r}"),
+    Entry("solve.closure_discontinuous", ("check", "F_root", "tol_F", "n_acc", "rtol", "bracket", "probes"),
+          "닫힘 잔차가 근 x {x} 에서 연속이 아니다 ({check}) — F {F_root}, 허용 {tol_F}, 마지막 괄호 {bracket}, 탐침 {probes}",
+          preamble="잔차가 끊긴 자리에 근이 걸려 답을 믿을 수 없다."),
     Entry("solve.lid_unconverged", ("layer_id", "trail", "iters", "tol"),
           "전도층 '{layer_id}' 바닥 온도가 {iters} 번 안에 {tol} 로 닫히지 않았다 — 자취 {trail}"),
     Entry("solve.basal_unconverged", ("layer_id", "trail", "iters", "tol"),
