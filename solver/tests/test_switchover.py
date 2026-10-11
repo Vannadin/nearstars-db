@@ -160,7 +160,9 @@ class Note3(unittest.TestCase):
         self.assertEqual(fc([(1e7, 200.0), (5e7, 210.0)]), [])                        # Ih only
         got = fc([(2.5e8, 245.0), (3e8, 250.0)])                                        # III read
         self.assertEqual([tuple(n.fields["boundary"]) for n in got], [("III", "water1")])
-        self.assertEqual(len([n for n in _notes_of(_record("h2o"), [(1e7, 200.0)])     # no boundary: every read
+        bare = _record("h2o")                          # the shipped record names the pair (c8, 7c7c48f1): drop it
+        bare["formula_checks"][8].pop("boundary", None)
+        self.assertEqual(len([n for n in _notes_of(bare, [(1e7, 200.0)])               # no boundary: every read
                               if n.kind == "material_disclosure" and n.fields["of"] == "formula_check"]), 1)
 
     def test_a_reread_stop_is_recorded(self):
