@@ -99,7 +99,7 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
         evs.append(st.Event("layer_end", (lambda m, y, rr=end[1]: y[0] - rr), scale=r_scale))
     elif end is not None:
         m_end = end[1]
-    evs += events.layer_events(view.mat, getattr(view, "p_stop", 0.0)) + list(extra_events)
+    evs += events.layer_events(view, getattr(view, "p_stop", 0.0)) + list(extra_events)
     if opt.fixed_dr > 0.0:
         r_end, name = (end[1], "layer_end") if end is not None and end[0] == "r" else \
             (opt.r_floor_frac * r_scale, "r_floor")
@@ -113,7 +113,7 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
                       event_min_progress=opt.event_min_progress * mass,
                       event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_solve,
                       event_rewalks=opt.event_rewalks,
-                      h_cap=None if getattr(view, "mat", None) is None else events.step_cap(view.mat))
+                      h_cap=events.step_cap(getattr(view, "mat", None) or view))
     return st.run(rhs.make_rhs(view), m0, y0, m_end, sopt, evs, on_accept=monitor)
 
 
@@ -138,7 +138,7 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
                                            event_min_progress=opt.event_min_progress, fixed_dr=opt.fixed_dr,
                                            event_rewalks=opt.event_rewalks),
                            lid_iters=opt.lid_iters, lid_t_tol=opt.lid_t_tol, layer_id=lt.id,
-                           events=events.layer_events(views[lt.id].mat, getattr(views[lt.id], "p_stop", 0.0))
+                           events=events.layer_events(views[lt.id], getattr(views[lt.id], "p_stop", 0.0))
                            if getattr(views[lt.id], "mat", None) is not None else ())
         if isinstance(got, st.Stop):
             return got
@@ -162,7 +162,7 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
             return st.Stop("layer_order", {"layer_id": layer.id, "rule": "mass_fraction",
                                            "expected": f"base mass {end[1]:.6g} below the top {m:.6g}",
                                            "got_m": m, "got_r": y[0]})
-        graze_mon = events.GrazeMonitor(view.mat, getattr(view, "p_stop", 0.0))
+        graze_mon = events.GrazeMonitor(getattr(view, "mat", None) or view, getattr(view, "p_stop", 0.0))
         out.entered.append(layer.id)
         res = _segment(view, M, m, y, end, rs, opt, graze_mon)
         out.profiles[layer.id] = res.path
@@ -175,6 +175,10 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
         if kind not in ("end", "event"):
             return res.stop
         m, y = res.x, res.y
+        melts = events.melting_events(view)             # D-P3: phase 2 does not cross a melting boundary
+        if kind == "event" and res.event in melts:
+            return st.Stop("melting_not_in_phase2", {"material_id": getattr(view, "material_id", layer.material),
+                                                     "boundary": melts[res.event], "p": res.y[1], "t": res.y[2]})
         if kind == "event" and res.event == "r_floor":
             out.floor_end = True
             break
@@ -304,6 +308,12 @@ def _to_refusal(stop: st.Stop, where: str, x, kind: str, pass_kind: str):
     rec = stop.record
     if stop.kind == "refused" and isinstance(rec, st.Stop):
         stop, rec = rec, rec.record
+    if type(rec).__name__ == "RecordRefusal":            # switch-over §2: a phase-2 record view refuses by its id
+        return refusals.make("solve.material_record", where, material_id=rec.material_id, p=rec.p, t=rec.t,
+                             refusal=rec.refusal, why=rec.why, **common)
+    if stop.kind == "melting_not_in_phase2":
+        return refusals.make("solve.melting_not_in_phase2", where, material_id=rec["material_id"],
+                             boundary=rec["boundary"], p=rec["p"], t=rec["t"], **common)
     if isinstance(rec, lm.MaterialRefusal):
         return refusals.make("solve.material_domain", where, material_id=rec.material_id, axis="P",
                              bound=rec.p, bound_kind="table_edge", source="engine/eos.py (097a8aa3)",

@@ -124,8 +124,55 @@ def onset_event(mat, p_stop: float = 0.0) -> list:
     return onset_events(mat, p_stop)
 
 
-def layer_events(mat, p_stop: float = 0.0) -> list:
+def layer_events(src, p_stop: float = 0.0) -> list:
+    """The events of one layer, from its view (switch-over registration §2): a phase-2 record view builds them from its
+    own declarations (record_events); any other view, or a bare legacy material, from the legacy material as before."""
+    if hasattr(src, "record") and hasattr(src, "transitions"):
+        return record_events(src)
+    mat = getattr(src, "mat", None) or src
     return seam_events(mat) + ammonia_events(mat) + onset_events(mat, p_stop)
+
+
+def melting_events(view) -> dict:
+    """{event name: (phase a, phase b)} of a record view's melting boundaries; {} for any other view."""
+    if not hasattr(view, "transitions") or not hasattr(view, "record"):
+        return {}
+    return {f"melt:{a}|{b}": (a, b) for (a, b), kind, _c in view.transitions() if kind == "melting"}
+
+
+def record_events(view) -> list:
+    """Switch-over registration §2: a record view's events.
+    - P seams: seams() (phase windows, thermal-set seams), landed as legacy's seam events.
+    - Field boundaries from transitions(): a solid–solid curve is a seam event g = P − P_b(T_ad) (None where the curve is
+      absent); a gibbs boundary (curve form library) g = G_a − G_b at (P, T_ad); a melting curve is terminal: reaching
+      it refuses as solve.melting_not_in_phase2 (D-P3).
+    - Source-seam isotherms: T_ad = t (design note 5).
+    No onset curves: a record declares none (legacy's onset_curves gives none for iron either; the silicate solidus
+    arrives with the silicate records)."""
+    out = [st.Event(f"seam:{p_b:.9g}", (lambda m, y, p_b=p_b: y[1] - p_b), scale=p_b, terminal=False, seam=True,
+                    component=1) for p_b in view.seams()]
+    by_id = {ph.id: ph for ph in view.phases}
+    for between, kind, curve in view.transitions():
+        name = f"{'melt' if kind == 'melting' else 'phase'}:{between[0]}|{between[1]}"
+        if curve.get("form") == "library":
+            a, b = by_id[between[0]], by_id[between[1]]
+
+            def g(m, y, a=a, b=b):
+                try:
+                    return a.library.at(y[1], y[2])["g"] - b.library.at(y[1], y[2])["g"]
+                except Exception:                       # a side outside its spline: no boundary read there
+                    return None
+            scale = 1.0e3
+        else:
+            def g(m, y, curve=curve):
+                pb = view.boundary_pressure(curve, y[2])
+                return None if pb is None else y[1] - pb
+            scale = 1.0e9
+        out.append(st.Event(name, g, scale=scale, terminal=(kind == "melting"), seam=(kind != "melting")))
+    for t_s, between in view.source_seams():
+        out.append(st.Event(f"source_seam:{between[0]}|{between[1]}", (lambda m, y, t_s=t_s: y[2] - t_s),
+                            scale=t_s, terminal=False, seam=True, component=2))
+    return out
 
 
 def _table_phases(mat) -> list:
