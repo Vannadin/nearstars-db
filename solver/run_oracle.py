@@ -10,7 +10,7 @@
   <stem>__<repr(t_pot)>.json, written to a temporary directory first and moved into place only when every state ran.
 - --sensitivity-dt: the §A1.7 sensitivity δ in K (default 10; 0 switches the field off). It is in each header's options.
 - --legacy-materials: the switch-over off (switch-over §5 baseline): every layer resolves through legacy_materials.
-  Without it, a layer whose material has a phase-2 record reads that record (step 1: fe_prem → fe_prem_legacy).
+  Without it, a layer whose material has a phase-2 record reads that record (step 2: fe_prem reads fe_prem).
 - --no-chain-for-points: T_pot states skip the old chain (legacy_nodes {}, table_read false; header «chain» false). The
   O9 comparison reads interior_layers and the verdict only (compare.py judge_point); declared states keep the chain.
 Exit 0 on success; 2 on any STOP (bad arguments, a non-empty OUT_DIR, an exception), with nothing written.

@@ -1,7 +1,7 @@
 # 전환 등록 시험 — 기록 뷰의 사건 · 옛 물질과의 패스 동일성(SW1) · 기록 거절의 대응 (switch-over registration §2, §6)
 """Switch-over registration (rewrite/switchover-registration.frozen.md) §2 and §6, the parts that land before the
 resolver switches: a record view's events, the identity of a pass through fe_prem_legacy with the legacy fe_prem
-(r2 SW1), and a record view's refusals reaching the solver's refusal registry.
+(r2 SW1), and a record view's refusals reaching the solver's refusal registry; step 2's put-back identity.
 
 Run from the worktree root:  solver/.venv/bin/python -m unittest solver.tests.test_switchover
 """
@@ -279,7 +279,7 @@ class NotesOnEarth(unittest.TestCase):
 
 
 def _values(ans):
-    """An Answer's values for the step-1 identity: quantities with solve_id masked (it names the material bytes, so it
+    """An Answer's values for the put-back identity: quantities with solve_id masked (it names the material bytes, so it
     moves with the switch by design), boundaries and profiles."""
     from solver import result
     qs = []
@@ -300,7 +300,7 @@ class Resolution(unittest.TestCase):
     def test_record_first_and_legacy_otherwise(self):
         on = sv._views(self.earth, registry=sv.registry_for(self.earth, context.Options()))
         self.assertIsInstance(on["core"], mv.RecordView)
-        self.assertEqual(on["core"].material_id, "fe_prem_legacy")             # step 1's one-line map
+        self.assertEqual(on["core"].material_id, "fe_prem")                    # step 2: no map left
         self.assertTrue(all(isinstance(v, lm.LegacyView) for k, v in on.items() if k != "core"))
         self.assertIsNone(sv.registry_for(self.earth, context.Options(materials="legacy")))
         off = sv._views(self.earth)
@@ -312,11 +312,11 @@ class Resolution(unittest.TestCase):
 
     def test_an_unavailable_record_refuses_and_never_falls_back(self):
         from types import SimpleNamespace as NS
-        stop = mr.LoadStop("material.library_pin", {"file": "fe_prem_legacy.yaml", "why": "planted pin mismatch"})
-        reg = NS(get=lambda rid: stop if rid == "fe_prem_legacy" else None)
+        stop = mr.LoadStop("material.library_pin", {"file": "fe_prem.yaml", "why": "planted pin mismatch"})
+        reg = NS(get=lambda rid: stop if rid == "fe_prem" else None)
         got = sv._views(self.earth, registry=reg)
         self.assertEqual((got.id, got.evidence["material_id"], got.evidence["load_stop"]),
-                         ("input.material_record_unavailable", "fe_prem_legacy", "material.library_pin"))
+                         ("input.material_record_unavailable", "fe_prem", "material.library_pin"))
 
     def test_a_composition_on_a_record_layer_refuses(self):
         """G4-C-01's class (p1review, r2): a declared composition on a record layer is refused by name, never ignored.
@@ -401,26 +401,40 @@ class SwitchReachesEverySolve(unittest.TestCase):
         self.assertEqual(mt.MATERIALS, "legacy")
 
 
-class Step1Identity(unittest.TestCase):
-    """§6.6: Earth and Venus through fe_prem_legacy reproduce the switch-off answers (solve_id masked)."""
+class Step2PutBack(unittest.TestCase):
+    """Switch-over step 2: fe_prem layers read fe_prem, whose two corrected constants (W-L1-01 αK_T, P5-F1 V0) are
+    the only difference from the switch-off answers. Planted: both constants put back (test_p5_stages FIXTURES) give
+    the switch-off values on Earth and Venus (solve_id masked); control: the record as shipped moves Earth's values."""
 
-    def _pair(self, path):
+    @staticmethod
+    def _registry(*findings):
+        from types import MappingProxyType
+        from solver.result import freeze
+        from solver.tests.test_p5_stages import record
+        reg = mr.load()
+        return mr.Registry(MappingProxyType({**reg.records, "fe_prem": freeze(record(*findings))}),
+                           reg.unavailable, reg.warnings)
+
+    def _pair(self, path, registry):
         body, _aside = from_v1.load_v1(path)
-        on, _x = sv.solve(body, context.Options(sensitivity_dt=0.0))
+        on, _x = sv.solve(body, context.Options(sensitivity_dt=0.0), registry=registry)
         off, _x2 = sv.solve(body, context.Options(sensitivity_dt=0.0, materials="legacy"))
         return on, off
 
-    def test_earth(self):
-        on, off = self._pair("engine/bodies/earth.yaml")
+    def test_earth_both_put_back(self):
+        on, off = self._pair("engine/bodies/earth.yaml", self._registry("W-L1-01", "P5-F1"))
         self.assertIsInstance(on, sv.result.Answer)
         self.assertEqual(_values(on), _values(off))
-        self.assertNotEqual(on.quantities[0].provenance.solver.solve_id,
-                            off.quantities[0].provenance.solver.solve_id)          # the material bytes moved
 
-    def test_venus(self):
-        on, off = self._pair("engine/bodies/venus.yaml")
+    def test_venus_both_put_back(self):
+        on, off = self._pair("engine/bodies/venus.yaml", self._registry("W-L1-01", "P5-F1"))
         self.assertEqual(type(on), type(off))
         self.assertEqual(_values(on), _values(off))
+
+    def test_earth_as_shipped_moves(self):
+        on, off = self._pair("engine/bodies/earth.yaml", None)
+        self.assertIsInstance(on, sv.result.Answer)
+        self.assertNotEqual(_values(on), _values(off))
 
 
 class RecordRefusals(unittest.TestCase):

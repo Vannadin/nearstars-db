@@ -20,7 +20,6 @@ from __future__ import annotations
 import dataclasses
 from collections.abc import Mapping
 import math
-from types import MappingProxyType
 from dataclasses import dataclass, field
 
 from solver import body as bd
@@ -237,11 +236,6 @@ def _param(layer, name):
     return getattr(v, "value", v)
 
 
-#: Switch-over step 1 (registration §1.3): fe_prem layers read the record fe_prem_legacy (legacy's αK_T and V0, graded
-#: «legacy, known wrong»), so the switch itself is an identity. Step 2's note removes this line.
-STEP1_MAP = MappingProxyType({"fe_prem": "fe_prem_legacy"})
-
-
 def registry_for(body, options, loaded=None):
     """Switch-over §1: the registry for this solve, None when the switch is off or no layer names a record file, or a
     Refusal for a registry-level STOP. `loaded` is a registry (or its LoadStop) the caller loaded once and owns (r2 on
@@ -249,7 +243,7 @@ def registry_for(body, options, loaded=None):
     if options.materials == "legacy":
         return None
     names = {f.stem for f in mr.MATERIALS_DIR.glob("*.yaml") if f.name not in mr.NOT_RECORDS}
-    if not any(STEP1_MAP.get(l.material, l.material) in names for l in body.layers):
+    if not any(l.material in names for l in body.layers):
         return None
     reg = mr.load() if loaded is None else loaded
     if isinstance(reg, mr.LoadStop):
@@ -260,7 +254,7 @@ def registry_for(body, options, loaded=None):
 
 def _record_view(body, layer, on_me, p_stop, registry):
     """(view, None), (None, why), or None when the registry holds no record for this layer (legacy resolves it)."""
-    rid = STEP1_MAP.get(layer.material, layer.material)
+    rid = layer.material                                      # switch-over step 2: fe_prem reads fe_prem
     got = registry.get(rid)
     if got is None:
         return None
