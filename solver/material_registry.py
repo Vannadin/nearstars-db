@@ -900,10 +900,9 @@ def _source_key(cite) -> str | None:
 
 def _eos_keys(eos: Mapping) -> set:
     """The family keys an eos answers from: its library pin «name@version», else every cached file its constants
-    (params, evaluator params, table) cite; the reference state is a declaration, not an answering source."""
+    cite, the reference state included (design note 4 item 3 as frozen; directing on 68's D4)."""
     if eos.get("form") == "library":
         return {f"{eos['library']['name']}@{eos['library']['version']}"}
-    eos = {k: v for k, v in eos.items() if k != "reference"}   # the reference state is declared, not an answer (P7)
     keys = set()
 
     def walk(x):
