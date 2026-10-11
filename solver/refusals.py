@@ -43,7 +43,7 @@ _SOLVE = (
     Entry("solve.two_roots", ("roots", "F_scan", "n_scan"),
           "닫힘 잔차의 근이 둘 이상이다 — 근 {roots} (훑기 {n_scan} 번)"),
     Entry("solve.material_domain", ("material_id", "axis", "bound", "bound_kind", "source", "message_old", "t", "gap"),
-          "물질 '{material_id}' 이(가) {axis} 축의 {bound_kind} 끝 {bound} 밖이다 — 출처 {source}"),
+          "물질 '{material_id}' 이(가) 값을 내지 않았다 — 축 {axis}, 종류 {bound_kind}, 도달값 {bound} (출처 {source})"),
     Entry("solve.unlocated_discontinuity", ("h", "h_min", "m_at", "err_norm", "rejected_in_row"),
           "걸음이 h_min {h_min} 밑으로 줄었는데 그 자리(m {m_at})에 찾은 경계가 없다 — 오차 {err_norm}, 연속 기각 {rejected_in_row}"),
     Entry("solve.event_chatter", ("event_name", "count", "cap_name", "cap_value"),

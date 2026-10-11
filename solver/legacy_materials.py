@@ -79,7 +79,7 @@ class MaterialRefusal:
     t: float
     kind: str              # the exception class name, e.g. "PhaseGap", "SpinodalGap", "ValueError"
     message_old: str       # the old engine's reason text (oracle T0 match while the adapter is in use)
-    axis: str = "P"        # G2-R-03: «T» when the engine's PhaseGap names a temperature (a T ceiling or floor)
+    axis: str = "P"        # G2-R-03: «T» when the engine's PhaseGap names a temperature; «none» for a ValueError
     too_cold: bool = False # the T wall's side: raise T to pass (True) or lower it (False)
 
 
@@ -222,9 +222,10 @@ class LegacyView:
         return self.lo if (self.lo and p < self.lo) else p
 
     def _refusal(self, exc, p, t):
-        t_wall = bool(getattr(exc, "temperature_k", 0.0))
+        gap = isinstance(exc, eos.PhaseGap)                  # 68 H1: a ValueError names no axis and no edge
+        t_wall = gap and bool(getattr(exc, "temperature_k", 0.0))
         return st.Stop("refused", MaterialRefusal(self.material_id, p, t, type(exc).__name__, str(exc),
-                                                  axis="T" if t_wall else "P",
+                                                  axis=("T" if t_wall else "P") if gap else "none",
                                                   too_cold=bool(getattr(exc, "too_cold", False))))
 
     def density(self, p: float, t: float):

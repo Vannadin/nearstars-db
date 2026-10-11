@@ -380,10 +380,14 @@ def _to_refusal(stop: st.Stop, where: str, x, kind: str, pass_kind: str, scan=No
         # G2-R-03: the axis the engine named; `bound` is the reached value on that axis (the engine does not hand
         # over its limit, which stays in message_old), and `bound_kind` says so
         t_axis = rec.axis == "T"
+        if rec.axis == "none":                             # 68 H1: the engine's ValueError channel, no edge named
+            bk = "engine_value_error"
+        elif t_axis:
+            bk = "reached_t_below_floor" if rec.too_cold else "reached_t_above_ceiling"
+        else:
+            bk = "reached_p_outside_table"
         return refusals.make("solve.material_domain", where, material_id=rec.material_id, axis=rec.axis,
-                             bound=rec.t if t_axis else rec.p,
-                             bound_kind=("reached_t_below_floor" if rec.too_cold else "reached_t_above_ceiling")
-                             if t_axis else "reached_p_outside_table",
+                             bound=rec.t if t_axis else rec.p, bound_kind=bk,
                              source="engine/eos.py (097a8aa3)", message_old=rec.message_old, t=rec.t, gap=rec.kind,
                              **common)
     if stop.kind == "chatter":

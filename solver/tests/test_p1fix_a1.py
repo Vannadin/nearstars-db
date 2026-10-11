@@ -31,6 +31,9 @@ class AdapterChannel(unittest.TestCase):
             got = v.state(1.0e10, 2000.0)
         self.assertIsInstance(got, st.Stop)
         self.assertEqual((got.kind, got.record.kind), ("refused", "ValueError"))
+        node = {"m": 1.0, "r": 2.0, "P": 9.0e9, "T": 1990.0}
+        ev = sv._to_refusal(st.Stop(got.kind, got.record, node), "fixture.solve", 1.0, "R", "wall").evidence
+        self.assertEqual((ev["axis"], ev["bound_kind"], ev["gap"]), ("none", "engine_value_error", "ValueError"))
 
     def test_a_temperature_wall_names_the_t_axis(self):
         """G2-R-03 = G4-R-01: a PhaseGap naming a temperature reports axis T, the reached T, and the wall's side."""
@@ -74,9 +77,18 @@ class ReachedState(unittest.TestCase):
         views = _with_core(body, _WallAbove)
         opt = context.Options(sensitivity_dt=0.0)
         _ans, x = sv.solve(body, opt)
-        stop = sv.inward(body, sv._views_at(body, views, x), x, opt)
+        seen = []
+        real = sv._segment
+
+        def spy(*a, **k):
+            res = real(*a, **k)
+            seen.append(res)
+            return res
+        with mock.patch.object(sv, "_segment", spy):
+            stop = sv.inward(body, sv._views_at(body, views, x), x, opt)
         self.assertIsInstance(stop, st.Stop)
-        self.assertIsNotNone(stop.state)
+        m_last, y_last, _k = seen[-1].path[-1]                 # 68 N70: equal to the path's last accepted node
+        self.assertEqual(stop.state, {"m": m_last, "r": y_last[0], "P": y_last[1], "T": y_last[3]})
         got = sv._to_refusal(stop, "fixture.solve", x, "R", "accepted")
         self.assertEqual(got.id, "solve.material_record")
         self.assertLessEqual(got.evidence["state"]["P"], _WallAbove.P_WALL)
@@ -102,6 +114,22 @@ class ReachedState(unittest.TestCase):
 
 def _trial(x, F, kind="scan"):
     return cl.Trial(x, F, None if F is not None else st.Stop("refused"), kind)
+
+
+class StraddleWiring(unittest.TestCase):
+    def test_solve_returns_the_straddled_walls_refusal_with_the_scan(self):
+        """68 N71: solve() itself, not only the helper: a no_bracket outcome whose solved F changes sign across a wall
+        returns that wall's refusal, with its state and the scan."""
+        node = {"m": 1.0, "r": 1.0, "P": 1.0e11, "T": 3000.0}
+        rec = mv.RecordRefusal("fe_prem_legacy", 1.1e11, 3010.0, "input.material_out_of_data", "planted")
+        wall_stop = st.Stop("refused", rec, node)
+        trials = [cl.Trial(1.0, -1.0, None, "scan"), cl.Trial(2.0, -0.5, None, "scan"),
+                  cl.Trial(3.0, None, wall_stop, "scan"), cl.Trial(4.0, 0.5, None, "scan")]
+        out = NS(kind="no_bracket", trials=trials, walls=[cl.Wall(3.0, wall_stop, 2.0)], roots=[], detail={})
+        with mock.patch.object(cl, "solve_scalar", return_value=out):
+            got, _w = sv.solve(_earth(), context.Options(sensitivity_dt=0.0))
+        self.assertEqual((got.id, got.evidence["pass_kind"], got.evidence["state"]), ("solve.material_record", "wall", node))
+        self.assertEqual(len(got.evidence["scan"]), 4)
 
 
 class ScanEvidence(unittest.TestCase):
