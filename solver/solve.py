@@ -95,6 +95,21 @@ def _jump(body, lower, upper):
     return 0.0
 
 
+def _plan(view):
+    """(layer events, step cap) of one view, built once and kept on the view (S1: G1-SP-07, G2-SP-06). A view is built
+    per solve (or per trial on a composition closure), so nothing outlives the solve that owns it. Events are frozen
+    and their g functions pure; the cap's table constant is per phase. A view that takes no attribute is rebuilt."""
+    got = getattr(view, "_s1_plan", None)
+    if got is None:
+        got = (tuple(events.layer_events(view, getattr(view, "p_stop", 0.0))),
+               events.step_cap(getattr(view, "mat", None) or view))
+        try:
+            view._s1_plan = got
+        except (AttributeError, TypeError):
+            pass
+    return got
+
+
 def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
     """One adiabatic layer from (m0, y0) down to `end` (('m', m) | ('r', r) | None for the centre)."""
     evs = [st.Event("r_floor", lambda m, y: y[0] - opt.r_floor_frac * r_scale, scale=r_scale)]
@@ -103,7 +118,8 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
         evs.append(st.Event("layer_end", (lambda m, y, rr=end[1]: y[0] - rr), scale=r_scale))
     elif end is not None:
         m_end = end[1]
-    evs += events.layer_events(view, getattr(view, "p_stop", 0.0)) + list(extra_events)
+    layer_evs, h_cap = _plan(view)
+    evs += list(layer_evs) + list(extra_events)
     if opt.fixed_dr > 0.0:
         r_end, name = (end[1], "layer_end") if end is not None and end[0] == "r" else \
             (opt.r_floor_frac * r_scale, "r_floor")
@@ -117,7 +133,7 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
                       event_min_progress=opt.event_min_progress * mass,
                       event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_solve,
                       event_rewalks=opt.event_rewalks,
-                      h_cap=events.step_cap(getattr(view, "mat", None) or view))
+                      h_cap=h_cap)
     return st.run(rhs.make_rhs(view), m0, y0, m_end, sopt, evs, on_accept=monitor)
 
 
