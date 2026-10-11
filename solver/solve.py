@@ -22,7 +22,7 @@ import math
 from dataclasses import dataclass, field
 
 from solver import closure as cl
-from solver import context, events, legacy_materials as lm, lid, refusals, result, rhs
+from solver import context, events, legacy_materials as lm, lid, material_notes, refusals, result, rhs
 from solver import fixed_grid
 from solver import stepper as st
 
@@ -682,6 +682,7 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
                     "disclosed", {"x": x, "delta": rt["delta"], "dev_ratio": max(ratios) if ratios else None,
                                   "sides": [{k: sd.get(k) for k in ("side", "stop", "deviation", "allowed", "ok")}
                                             for sd in sides]}))
+        notes += material_notes.collect(body, views, acc)   # switch-over §4: after every value, accepted pass only
         ans = result.Answer(qs, lbs, profiles, (), tuple(notes))
         return ans, x
     if out.kind == "two_roots":

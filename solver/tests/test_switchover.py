@@ -82,6 +82,111 @@ class LegacyIdentity(unittest.TestCase):
         self.assertNotEqual(sv.inward(body, views, x, opt).F, sv.inward(body, {**views, "core": rec}, x, opt).F)
 
 
+def _path(nodes):
+    """An accepted-node path (m, y, k) with y = (r, P, T_ad, T)."""
+    return [(0.0, (1.0, p, t, t), None) for p, t in nodes]
+
+
+def _collect(rid, t_pot, nodes):
+    from types import SimpleNamespace as NS
+    from solver import material_notes as mn
+    v = mv.RecordView(_record(rid), t_pot)
+    return v, mn.collect(NS(layers=[NS(id="L")]), {"L": v}, NS(profiles={"L": _path(nodes)}))
+
+
+class Notes(unittest.TestCase):
+    """Switch-over §4 / §6.4: what the accepted pass read reaches Answer.notes once per key, values untouched."""
+
+    def test_h2o_declared_note_seam_and_disclosure(self):
+        _v, got = _collect("h2o", 300.0, [(1e7, 90.0), (1e7, 120.0), (2e7, 140.0), (5e7, 200.0)])
+        kinds = [n.kind for n in got]
+        self.assertEqual(kinds.count("material_declared_note"), 1)            # IAPWS-06 below 100 K, three nodes
+        seam = [n for n in got if n.kind == "material_source_seam"]
+        self.assertEqual([(n.fields["t"], tuple(n.fields["between"])) for n in seam], [(130.0, ("ih_cold", "Ih"))])
+        self.assertIsNotNone(seam[0].fields["step"])
+        cross = [n for n in got if n.kind == "material_disclosure" and n.fields["of"] == "cross_check"]
+        self.assertEqual([n.fields["phase"] for n in cross], ["Ih"])
+        self.assertNotIn("material_grade", kinds)                              # h2o has no user-declared source
+
+    def test_a_seam_touched_from_above_is_not_crossed(self):
+        """Control: the upper side owns t, so a path from t = 130 K upward never crossed the seam."""
+        _v, got = _collect("h2o", 300.0, [(1e7, 130.0), (2e7, 140.0)])
+        self.assertFalse([n for n in got if n.kind == "material_source_seam"])
+        self.assertFalse([n for n in got if n.kind == "material_declared_note"])
+
+    def test_fe_prem_band_once_with_the_largest_error(self):
+        nodes = [(3.3e11, 4000.0), (3.6e11, 4000.0), (3.7e11, 4000.0)]
+        v, got = _collect("fe_prem", 1600.0, nodes)
+        bands = [n for n in got if n.kind == "material_band"]
+        self.assertEqual(len(bands), 1)
+        errs = [n.error for p, t in nodes for n in v.state(p, t)[2] if isinstance(n, mv.BandNote)]
+        self.assertEqual(bands[0].fields["error"], max(errs))
+        self.assertEqual((bands[0].fields["p_min"], bands[0].fields["p_max"]), (3.6e11, 3.7e11))   # only past 350 GPa
+
+
+class NotesOnEarth(unittest.TestCase):
+    """§6.4 on a real solve: Earth's core through fe_prem_legacy (its band past 350 GPa)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.body, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
+        cls.opt = context.Options(sensitivity_dt=0.0)
+        leg = sv._views(cls.body)
+        cls.views = {**leg, "core": mv.RecordView(_record("fe_prem_legacy"), cls.body.surface.t_pot,
+                                                   getattr(leg["core"], "p_stop", 0.0))}
+
+    def test_values_identical_with_collection_off(self):
+        from unittest import mock
+        from solver import material_notes as mn
+        on, _x = sv.solve(self.body, self.opt, views=self.views)
+        with mock.patch.object(mn, "collect", return_value=()):
+            off, _x2 = sv.solve(self.body, self.opt, views=self.views)
+        self.assertIsInstance(on, sv.result.Answer)
+        self.assertEqual((on.quantities, on.boundaries, dict(on.profiles)),
+                         (off.quantities, off.boundaries, dict(off.profiles)))
+        self.assertTrue([n for n in on.notes if n.kind.startswith("material_")])   # noqa: test-side kind check
+        self.assertFalse([n for n in off.notes if n.kind.startswith("material_")])  # noqa: test-side kind check
+
+    def test_a_note_planted_in_trial_passes_never_reaches_the_answer(self):
+        """Planted leak (A6 pattern): a view that notes every read while armed; armed in every pass but the one at the
+        root, the note must not appear. Control: armed everywhere, it does."""
+        from unittest import mock
+        _ans, x_root = sv.solve(self.body, self.opt, views=self.views)
+        core = self.views["core"]
+
+        class Planted(mv.RecordView):
+            armed = False
+
+            def state(self, p, t, guess_rho=None):
+                got = super().state(p, t, guess_rho)
+                if Planted.armed and not isinstance(got, st.Stop):
+                    return (got[0], got[1], got[2] + (mv.DeclaredNote(self.material_id, "planted", "planted"),))
+                return got
+
+        planted = Planted(_record("fe_prem_legacy"), self.body.surface.t_pot, core.p_stop)
+        views = {**self.views, "core": planted}
+        real = sv.inward
+
+        def arming(arm_at_root):
+            def inward(body, vs, x, opt):
+                Planted.armed = arm_at_root or x != x_root
+                try:
+                    return real(body, vs, x, opt)
+                finally:
+                    Planted.armed = arm_at_root
+            return inward
+
+        def planted_notes(arm_at_root):
+            Planted.armed = arm_at_root
+            with mock.patch.object(sv, "inward", arming(arm_at_root)):
+                ans, _x = sv.solve(self.body, self.opt, views=views)
+            Planted.armed = False
+            return [n for n in ans.notes if n.kind == "material_declared_note" and n.fields["phase"] == "planted"]
+
+        self.assertEqual(planted_notes(False), [])
+        self.assertEqual(len(planted_notes(True)), 1)
+
+
 class RecordRefusals(unittest.TestCase):
     def test_a_record_refusal_maps_to_its_registry_id(self):
         r = mv.RecordRefusal("h2o", 5.0e9, 120.0, "input.material_out_of_data", "past t_min")

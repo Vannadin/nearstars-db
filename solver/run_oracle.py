@@ -91,7 +91,7 @@ def _one(body_yaml: str, state, options, chain: bool, member=None) -> dict:
     got = from_v1.load_v1(body_yaml)
     body = got[0] if isinstance(got, tuple) else got
     rec = {"header": None, "body": stem, "state": state, "outcome_kind": None, "quantities": [], "boundaries": [],
-           "refusal": None, "no_answer": None, "legacy_nodes": {}, "table_read": False}
+           "refusal": None, "no_answer": None, "legacy_nodes": {}, "table_read": False, "notes": []}
     t_pot = None if state == "declared" else float(state)
     if isinstance(body, result.Refusal):
         rec.update(header=_header(options, ""), outcome_kind="refusal",
@@ -121,7 +121,8 @@ def _one(body_yaml: str, state, options, chain: bool, member=None) -> dict:
     if isinstance(out, result.Answer):
         rec.update(header=_header(options, _sid(body, options, out)), outcome_kind="answer",
                    quantities=[result.plain(q) for q in out.quantities],
-                   boundaries=[result.plain(b) for b in out.boundaries])
+                   boundaries=[result.plain(b) for b in out.boundaries],
+                   notes=[result.plain(n) for n in out.notes])        # switch-over §5 (Q2); comparator note 15: class R
         chain and _legacy(rec, lv.run_chain(body_yaml, out, t_pot=t_pot))
     elif isinstance(out, result.NoAnswer):
         rec.update(header=_header(options, _sid(body, options)), outcome_kind="no_answer",

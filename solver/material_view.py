@@ -1098,6 +1098,11 @@ class RecordView:
             if b["p_min"] <= p <= b["p_max"] and b.get("t_min", -math.inf) <= t <= b.get("t_max", math.inf):
                 self.notes.append(DeclaredNote(self.material_id, ph.id, n["text"]))
 
+    def phase_read(self, p: float, t: float):
+        """The phase `state(p, t)` reads (its id), or the Stop it meets; the switch-over notes collector's question."""
+        ph = self._phase_at(max(p, self.p_stop) if p > 0.0 else max(1.0e5, self.p_stop), t)
+        return ph if isinstance(ph, st.Stop) else ph.id
+
     def state(self, p: float, t: float, guess_rho=None):
         self.notes.clear()
         ph = self._phase_at(max(p, self.p_stop) if p > 0.0 else max(1.0e5, self.p_stop), t)

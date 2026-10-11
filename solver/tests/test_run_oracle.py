@@ -11,7 +11,7 @@ from pathlib import Path
 from solver import context, run_oracle as ro
 
 FIELDS = {"header", "body", "state", "outcome_kind", "quantities", "boundaries", "refusal", "no_answer",
-          "legacy_nodes", "table_read"}
+          "legacy_nodes", "table_read", "notes"}   # notes: switch-over §5 (Q2), comparator note 15
 FAST = context.Options(sensitivity_dt=0.0)
 
 
@@ -25,6 +25,11 @@ class Earth(unittest.TestCase):
         self.assertEqual(self.rec["outcome_kind"], "answer")
         self.assertTrue(self.rec["header"]["engine_identical_to_oracle_tree"])
         self.assertEqual(len(self.rec["header"]["solve_id"]), 64)
+
+    def test_notes_are_written_as_kinded_objects(self):
+        """Switch-over §6.7: `notes` is a list of objects with a text `kind` (comparator note 15's shape)."""
+        self.assertIsInstance(self.rec["notes"], list)
+        self.assertTrue(all(isinstance(n, dict) and isinstance(n.get("kind"), str) for n in self.rec["notes"]))
 
     def test_table_read_from_the_committed_table(self):
         """B1: true because core_thermal_history read engine/structure_grid/earth.json at its 097a8aa3 blob."""
