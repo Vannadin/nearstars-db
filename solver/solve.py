@@ -246,6 +246,9 @@ def _record_view(body, layer, on_me, p_stop, registry):
         return None, ("record_unavailable", (rid, got))
     if on_me:
         return None, ("closure_axis", f"the record {rid!r} has no fit axis {body.closure.name!r}")
+    if layer.composition is not None:                          # G4-C-01's class on the record path (r2, p1review)
+        return None, ("record_composition", f"layer {layer.id!r} declares a composition on the record {rid!r}, "
+                                            "which takes none (records with compositions: c8's silicate registration)")
     params = layer.params or {}
     if any(k.startswith("porosity") for k in params):          # a record declares its own porosity; none do today
         return None, ("record_params", f"layer {layer.id!r} declares {sorted(params)} on the record {rid!r}, which "

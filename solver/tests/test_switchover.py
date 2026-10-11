@@ -318,6 +318,18 @@ class Resolution(unittest.TestCase):
         self.assertEqual((got.id, got.evidence["material_id"], got.evidence["load_stop"]),
                          ("input.material_record_unavailable", "fe_prem_legacy", "material.library_pin"))
 
+    def test_a_composition_on_a_record_layer_refuses(self):
+        """G4-C-01's class (p1review, r2): a declared composition on a record layer is refused by name, never ignored.
+        Control: the same layer without it resolves (test_record_first_and_legacy_otherwise)."""
+        import dataclasses
+        from solver import body as bd
+        core = next(l for l in self.earth.layers if l.id == "core")
+        planted = dataclasses.replace(self.earth, layers=tuple(
+            dataclasses.replace(l, system="iron_alloy", composition=bd.Declared({"S": 0.15})) if l is core else l
+            for l in self.earth.layers))
+        got = sv._views(planted, registry=sv.registry_for(planted, context.Options()))
+        self.assertEqual((got.id, got.evidence["rule"]), ("input.cross_field", "record_composition"))
+
     def test_a_registry_stop_refuses_the_body(self):
         from unittest import mock
         with mock.patch.object(mr, "load", return_value=mr.LoadStop("material.duplicate_id", {"file": "h2o.yaml", "id": "h2o"})):
