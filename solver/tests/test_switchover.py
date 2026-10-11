@@ -191,6 +191,27 @@ class Note3(unittest.TestCase):
         self.assertIn("input.declared_grade_not_wired", refusals.REGISTRY)
 
 
+class SolveIdOfRecordViews(unittest.TestCase):
+    """A6: solve_id's material bytes for a record view are its record, the same in every process (a repr of the view
+    held object addresses and differed run to run)."""
+
+    def test_same_bytes_in_two_processes_and_record_sensitive(self):
+        import subprocess
+        import sys
+        code = ("from solver import material_registry as mr, material_view as mv, solve as sv\n"
+                "from solver.from_v1 import thaw\n"
+                "import sys\n"
+                "v = mv.RecordView(thaw(mr.load().records[sys.argv[1]]), 300.0)\n"
+                "print(sv._material_bytes({'L': v}).hex())\n")
+
+        def run(rid):
+            return subprocess.run([sys.executable, "-c", code, rid], capture_output=True, text=True,
+                                  check=True).stdout.strip()
+        a, b = run("h2o"), run("h2o")
+        self.assertEqual(a, b)
+        self.assertNotEqual(run("fe_prem"), run("fe_prem_legacy"))
+
+
 class NotesOnEarth(unittest.TestCase):
     """§6.4 on a real solve: Earth's core through fe_prem_legacy (its band past 350 GPa)."""
 

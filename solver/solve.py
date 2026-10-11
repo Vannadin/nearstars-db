@@ -416,13 +416,16 @@ def _canonical(body) -> dict:
 def _material_bytes(views) -> bytes:
     """«Material data bytes» of solve_id: the adapter's record of engine modules and data files read
     (`legacy_materials.material_bytes`), plus each layer's view id and material id; a fixture view without a material
-    contributes its repr."""
+    contributes its repr; a record view contributes its record as canonical JSON (switch-over note 4)."""
     import hashlib
+    import json
     h = hashlib.sha256(lm.material_bytes())
     for lid in sorted(views):
         v = views[lid]
         h.update(lid.encode())
-        if getattr(v, "mat", None) is None:
+        if getattr(v, "record", None) is not None:      # a record view: its record, canonical (never a repr: addresses)
+            h.update(json.dumps(result.plain(v.record), sort_keys=True, separators=(",", ":")).encode())
+        elif getattr(v, "mat", None) is None:
             h.update(repr(vars(v)).encode())
     return h.digest()
 
