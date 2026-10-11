@@ -297,11 +297,39 @@ def _from_v1(doc, where):
     return raw, notes, aside
 
 
+class _V1Duplicate(Exception):
+    def __init__(self, key, line):
+        super().__init__(key)
+        self.key, self.line = key, line
+
+
+class _V1Loader(yaml.SafeLoader):
+    """PyYAML's SafeLoader (v1's own YAML 1.1 grammar: `017` is octal, `1:30` sexagesimal, as the old engine reads it),
+    plus one rule: a repeated mapping key is refused, never last-wins (P1R-G4-R-05, D-A7-2; r2's condition 2 keeps the
+    scalars as they are)."""
+
+    def construct_mapping(self, node, deep=False):
+        seen = set()
+        for key_node, _v in node.value:
+            key = self.construct_object(key_node, deep=deep)
+            try:
+                hashable = hash(key) is not None
+            except TypeError:
+                hashable = False
+            if hashable and key in seen:
+                raise _V1Duplicate(key, key_node.start_mark.line + 1)
+            if hashable:
+                seen.add(key)
+        return super().construct_mapping(node, deep=deep)
+
+
 def load_v1(path, materials=None):
     """Read a v1 body file, convert it and validate it: `(Body | Refusal, aside)`."""
     where = Path(path).name
     try:
-        doc = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+        doc = yaml.load(Path(path).read_text(encoding="utf-8"), Loader=_V1Loader)
+    except _V1Duplicate as e:
+        return rf.make("input.duplicate_key", where, key=str(e.key), line=e.line), {}
     except OSError as e:
         return rf.make("input.unreadable", where, path=str(path), error=type(e).__name__), {}
     except UnicodeDecodeError as e:

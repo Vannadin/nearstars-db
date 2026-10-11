@@ -71,6 +71,8 @@ _INPUT = (
     Entry("input.empty", ("path",), "파일 '{path}' 이(가) 비어 있다"),
     Entry("input.not_mapping", ("path", "got_type"), "파일 '{path}' 의 최상위가 사전이 아니라 {got_type} 이다"),
     Entry("input.duplicate_key", ("key", "line"), "키 '{key}' 가 {line} 번째 줄에서 한 번 더 나온다"),
+    Entry("input.jump_at_lithosphere", ("boundary", "why"),
+          "경계 '{boundary}' 의 온도 도약은 받지 않는다 — {why} (R-LITHO-7)"),
     Entry("input.unknown_key", ("key", "nearest"), "모르는 키 '{key}' — 가장 가까운 키 '{nearest}'"),
     Entry("input.missing_key", ("key",), "필요한 키 '{key}' 가 없다"),
     Entry("input.null_value", ("key",), "키 '{key}' 의 값이 null 이다 — 없는 값은 키를 빼서 나타낸다"),

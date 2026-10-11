@@ -289,6 +289,11 @@ def _view_for(body, layer, x, p_stop, registry=None):
         if mat is None:
             return None, ("unknown_material", why)
         return lm.LegacyView("silicate_decl", mat, t_pot, p_stop), None
+    if layer.composition is not None:                          # P1R-G4-C-01: only the two builders read one
+        return None, ("composition_not_consumed",
+                      f"layer '{layer.id}' declares a composition on material {layer.material!r}, which the phase-1 "
+                      "adapter builds without one; use fe_core_light (iron_alloy) or silicate_decl (silicate), or a "
+                      "material record that takes a composition")
     if layer.material == lm.BASAL_CONST:                       # r2 S10 B1: the basal layer's thermal base
         rho = _param(layer, "density")
         if rho is None:

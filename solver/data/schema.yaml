@@ -88,7 +88,7 @@ closure:
   kinds:
     R:             {default: [0.05, 30.0], unit: R_earth, domain: {gt: 0}, fields: []}
     boundary_mass: {default: [0.001, 0.999], unit: "1", domain: {gt: 0, lt: 1}, fields: [layer]}
-    composition:   {unit: "1", domain: {ge: 0}, fields: [layer, name], defaults: {S: [0.13, 0.25],                       # SULPHUR_FIT_BRACKET, interior.py:5843
+    composition:   {unit: "1", domain: {ge: 0, le: 1}, fields: [layer, name], defaults: {S: [0.13, 0.25],                       # SULPHUR_FIT_BRACKET, interior.py:5843
                                           initial_porosity: [0.0, 0.60]}}      # PHI0_NOMINAL, porosity.py:68 (c8 note 1 §2)
 
 # A layer composition's rule per system (phase-2 impl P1 and post-freeze note 2). A component outside its system's

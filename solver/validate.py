@@ -516,6 +516,7 @@ def _remainders(layers, closure, where):
 
 def _jumps(raw, layers, where):
     bounds = bd.derive_boundaries(layers)
+    by_id = {l.id: l for l in layers}
     alias = {b.interface: b.name for b in bounds if b.interface}
     names = {b.name for b in bounds} | set(alias)
     out, hit = {}, {}
@@ -523,6 +524,11 @@ def _jumps(raw, layers, where):
         if j not in names:
             _no("input.jump_boundary", where, boundary=str(j), known=sorted(names))
         canon = alias.get(j, j)
+        lid_base = next((b for b in bounds if b.name == canon and by_id[b.upper].thermal == "conductive"), None)
+        if lid_base is not None or "lithosphere" in str(j):   # P1R-G4-C-09 + G2-R-11: never silently dropped
+            _no("input.jump_at_lithosphere", where, boundary=str(j),
+                why="the conductive lid's own profile sets T at its base" if lid_base is not None
+                else "a jump on a lithosphere boundary")
         if canon in hit:                     # one boundary named twice, by alias and by id (R-IJ-3)
             _no("input.cross_field", where, rule="a boundary's jump is declared once (R-IJ-3)",
                 detail=f"{hit[canon]} and {j} are both {canon}")
