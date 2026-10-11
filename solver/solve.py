@@ -250,9 +250,9 @@ def _record_view(body, layer, on_me, p_stop, registry):
         return None, ("record_composition", f"layer {layer.id!r} declares a composition on the record {rid!r}, "
                                             "which takes none (records with compositions: c8's silicate registration)")
     params = layer.params or {}
-    if any(k.startswith("porosity") for k in params):          # a record declares its own porosity; none do today
+    if params:                                                 # a record reads no layer params (68 N69: any key, e.g.
         return None, ("record_params", f"layer {layer.id!r} declares {sorted(params)} on the record {rid!r}, which "
-                                       "reads none of them")
+                                       "reads none of them")     # the basal path's density, not porosity only)
     from solver.from_v1 import thaw
     return mv.RecordView(thaw(got), body.surface.t_pot or 0.0, p_stop), None
 

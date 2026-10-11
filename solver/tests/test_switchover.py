@@ -330,6 +330,15 @@ class Resolution(unittest.TestCase):
         got = sv._views(planted, registry=sv.registry_for(planted, context.Options()))
         self.assertEqual((got.id, got.evidence["rule"]), ("input.cross_field", "record_composition"))
 
+    def test_any_param_on_a_record_layer_refuses(self):
+        """68 N69: a record reads no layer params, so any key refuses (planted: `density`, which legacy's basal path
+        reads), not only porosity keys."""
+        import dataclasses
+        planted = dataclasses.replace(self.earth, layers=tuple(
+            dataclasses.replace(l, params={"density": 9000.0}) if l.id == "core" else l for l in self.earth.layers))
+        got = sv._views(planted, registry=sv.registry_for(planted, context.Options()))
+        self.assertEqual((got.id, got.evidence["rule"]), ("input.cross_field", "record_params"))
+
     def test_a_registry_stop_refuses_the_body(self):
         from unittest import mock
         with mock.patch.object(mr, "load", return_value=mr.LoadStop("material.duplicate_id", {"file": "h2o.yaml", "id": "h2o"})):
