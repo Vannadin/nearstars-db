@@ -475,6 +475,15 @@ def _not_yet(body):
             return ("conductive_not_top", f"layer '{l.id}' is conductive but not the top layer")
         if l.thermal == "conductive" and (l.extent is None or l.extent.kind != "depth_from_surface"):
             return ("conductive_extent", f"the conductive top layer '{l.id}' must be bounded by depth_from_surface")
+        if l.extent is not None and l.extent.kind == "phase":       # P1R-G4-C-06: accepted at load, no solve branch
+            return ("extent_phase_not_in_phase1",
+                    f"layer '{l.id}' is bounded by the phase event '{l.extent.ref}'; phase-bounded extents are not "
+                    "implemented in phase 1")
+    if body.closure.kind != "R" and any(l.thermal == "conductive" for l in body.layers):
+        # P1R-G4-C-08: owner Q3 / R-LITHO-6, as from_v1 refuses it on the v1 path: an inversion keeps no structural lid
+        return ("lid_on_inversion",
+                f"a conductive lid on a {body.closure.kind} closure is refused through phase 1 (R-LITHO-6, owner Q3): "
+                "it would move the inferred core values")
     return None
 
 

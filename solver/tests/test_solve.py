@@ -176,6 +176,21 @@ class NotYetImplemented(unittest.TestCase):
         top = b.Layer("mantle", "mantle", "y", b.Extent("mass_fraction", 0.7), thermal="conductive")
         self._refused(self._body(top=top), "conductive_extent")
 
+    def test_phase_extent(self):
+        """P1R-G4-C-06: a phase-bounded extent is refused by name, not misread as a mass split or a layer_order."""
+        core = b.Layer("core", "core", "x", b.Extent("phase", ref="melt"))
+        self._refused(self._body(core=core), "extent_phase_not_in_phase1")
+
+    def test_lid_on_inversion(self):
+        """P1R-G4-C-08: an inverse closure with a conductive lid is refused on v2 as on v1 (R-LITHO-6, owner Q3).
+        Control: the same lid on an R closure is not refused by this rule."""
+        lid = b.Layer("mantle", "mantle", "y", b.Extent("depth_from_surface", 1.0e5), thermal="conductive")
+        core = b.Layer("core", "core", "x")
+        inv = self._body(core=core, top=lid, closure=b.Closure("boundary_mass", 0.05, 0.6, layer="core"))
+        self._refused(inv, "lid_on_inversion")
+        out, _ = sv.solve(self._body(top=lid), views={"core": Uniform(9000.0), "mantle": Uniform(3000.0)})
+        self.assertNotEqual(getattr(out, "evidence", {}).get("rule"), "lid_on_inversion")
+
 
 
 class ThicknessAboveNotInPhase1(unittest.TestCase):
