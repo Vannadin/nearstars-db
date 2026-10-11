@@ -96,6 +96,14 @@ class Stages(unittest.TestCase):
         bad = [(n, a, b) for n, a, b in zip(self.nodes, got, self.legacy) if a != b]
         self.assertEqual(bad[:3], [], f"{len(bad)} of {len(self.nodes)} nodes differ")
 
+    def test_legacy_variant_is_the_fixtures_as_a_record(self):
+        # switch-over step 1 (directing Q1): fe_prem_legacy carries the two constants the fixtures put back, so it
+        # equals LegacyView bit for bit at every accepted-pass node with no fixture at all
+        rec = thaw(mr.load().records["fe_prem_legacy"])
+        got = values(mv.RecordView(rec, self.t_pot), self.nodes)
+        bad = [(n, a, b) for n, a, b in zip(self.nodes, got, self.legacy) if a != b]
+        self.assertEqual(bad[:3], [], f"{len(bad)} of {len(self.nodes)} nodes differ")
+
     def test_stage_b_every_difference_is_named(self):
         shipped = self.view()
         self.assertNotEqual(shipped, self.legacy)                        # control: the corrections move the path

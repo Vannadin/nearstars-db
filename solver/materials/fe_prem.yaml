@@ -87,6 +87,9 @@ phases:
       kind: declared
       reason: "the PREM core path through the inner core, one structure phase (impl note 1 §2); the liquid/hcp split is history data, not a structure phase"
       grade: "declared"
+    multi_source_reason:
+      reach: whole_phase
+      text: "reference T_P from Unterborn 2019: a declaration of the PREM path's temperature, not an answering source"
     window: {p_min: 0.0, p_max: 1.2e13}
     edges:
       p_max: {refusal: input.material_out_of_data}
