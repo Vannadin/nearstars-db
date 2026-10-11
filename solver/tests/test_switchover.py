@@ -426,14 +426,16 @@ class Step1Identity(unittest.TestCase):
 class RecordRefusals(unittest.TestCase):
     def test_a_record_refusal_maps_to_its_registry_id(self):
         r = mv.RecordRefusal("h2o", 5.0e9, 120.0, "input.material_out_of_data", "past t_min")
-        got = sv._to_refusal(st.Stop("refused", r), "fixture.solve", 1.0, "R", "scan")
+        node = {"m": 1.0, "r": 1.0, "P": 4.9e9, "T": 121.0}
+        got = sv._to_refusal(st.Stop("refused", r, node), "fixture.solve", 1.0, "R", "scan")
         self.assertEqual((got.id, got.evidence["refusal"], got.evidence["material_id"]),
                          ("solve.material_record", "input.material_out_of_data", "h2o"))
         self.assertIn("solve.material_record", refusals.REGISTRY)
 
     def test_melting_stop_maps(self):
         got = sv._to_refusal(st.Stop("melting_not_in_phase2", {"material_id": "h2o", "boundary": ("water1", "VI"),
-                                                               "p": 1.0e9, "t": 300.0}),
+                                                               "p": 1.0e9, "t": 300.0},
+                                     {"m": 1.0, "r": 1.0, "P": 1.0e9, "T": 300.0}),
                              "fixture.solve", 1.0, "R", "accepted")
         self.assertEqual(got.id, "solve.melting_not_in_phase2")
 

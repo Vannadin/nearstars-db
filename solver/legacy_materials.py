@@ -77,8 +77,10 @@ class MaterialRefusal:
     material_id: str
     p: float
     t: float
-    kind: str              # the exception class name, e.g. "PhaseGap", "SpinodalGap"
+    kind: str              # the exception class name, e.g. "PhaseGap", "SpinodalGap", "ValueError"
     message_old: str       # the old engine's reason text (oracle T0 match while the adapter is in use)
+    axis: str = "P"        # G2-R-03: «T» when the engine's PhaseGap names a temperature (a T ceiling or floor)
+    too_cold: bool = False # the T wall's side: raise T to pass (True) or lower it (False)
 
 
 #: MEMO entries filled at import (node and placeholder registries). Clearing them would unregister the engine itself,
@@ -220,7 +222,10 @@ class LegacyView:
         return self.lo if (self.lo and p < self.lo) else p
 
     def _refusal(self, exc, p, t):
-        return st.Stop("refused", MaterialRefusal(self.material_id, p, t, type(exc).__name__, str(exc)))
+        t_wall = bool(getattr(exc, "temperature_k", 0.0))
+        return st.Stop("refused", MaterialRefusal(self.material_id, p, t, type(exc).__name__, str(exc),
+                                                  axis="T" if t_wall else "P",
+                                                  too_cold=bool(getattr(exc, "too_cold", False))))
 
     def density(self, p: float, t: float):
         mat = self.mat
@@ -238,7 +243,7 @@ class LegacyView:
                     self.surface_fallbacks += 1
             else:
                 rho = mat.rho0
-        except eos.PhaseGap as exc:
+        except (eos.PhaseGap, ValueError) as exc:          # G3-C-01: the engine's second refusal channel
             return self._refusal(exc, p, t)
         return rho * (1.0 - interior.porosity_at(mat, p, self.phi0, self.p_cap))
 
@@ -251,7 +256,7 @@ class LegacyView:
         try:
             rho = self.mat.density(self._at_floor(pe), t, self.t_pot)
             return interior._adiabatic_dtdp(self.mat, pe, rho, t, self.t_pot)
-        except eos.PhaseGap as exc:
+        except (eos.PhaseGap, ValueError) as exc:          # G3-C-01: the engine's second refusal channel
             return self._refusal(exc, p, t)
 
     def porosity(self, p: float) -> float:

@@ -113,12 +113,14 @@ class TRegistry(unittest.TestCase):
     def test_b9_evidence_fields(self):
         # §A1.5: the scan rides on any solve.* refusal; a MAX_STEPS wall's NoAnswer carries its trial
         rf.make("solve.material_domain", "solve", x=1.0, closure_kind="R", pass_kind="wall", material_id="fe_prem",
-                axis="P", bound=1e12, bound_kind="upper", source="s", message_old="m", scan=[[1.0, 0.1]])
+                axis="P", bound=1e12, bound_kind="upper", source="s", message_old="m", scan=[[1.0, 0.1]],
+                t=3000.0, gap="PhaseGap", state={"m": 1.0, "r": 1.0, "P": 1e12, "T": 3000.0})   # note 13 §3
         n = rf.no_answer("unconverged", "solve", budget_name="MAX_STEPS_SOLVE", budget_value=1e5,
                          last_residual=0.1, x=1.0, pass_kind="wall", state={"m": 1.0}, scan=[], m_at=0.5)
         self.assertEqual(n.evidence["pass_kind"], "wall")
         rf.make("solve.event_chatter", "solve", x=1.0, closure_kind="R", pass_kind="brent", event_name="solidus",
-                count=9, cap_name="EVENT_REWALKS", cap_value=8, g=1e-11, tol=1e-12)
+                count=9, cap_name="EVENT_REWALKS", cap_value=8, g=1e-11, tol=1e-12,
+                state={"m": 1.0, "r": 1.0, "P": 1e10, "T": 2000.0})
         for budget in ("CLOSE_ITERS", "MAX_STEPS_SOLVE", "WALL_SHOTS", "MAX_SPLITS"):
             rf.no_answer("unconverged", "solve", budget_name=budget, budget_value=1, last_residual=0.0)
 
@@ -131,7 +133,8 @@ class TRegistry(unittest.TestCase):
             rf.no_answer("unconverged", "solve", budget_name="T_PASSES", budget_value=8, last_residual=1e-3)
         with self.assertRaises(ValueError):
             rf.make("solve.event_chatter", "solve", x=1.0, closure_kind="R", pass_kind="brent", event_name="e",
-                    count=9, cap_name="EVENT_FOREVER", cap_value=8)
+                    count=9, cap_name="EVENT_FOREVER", cap_value=8,
+                    state={"m": 1.0, "r": 1.0, "P": 1e10, "T": 2000.0})   # so only the vocabulary refuses
         rf.make("solve.no_bracket", "solve", **_solve_ev())
 
     def test_wall_records(self):

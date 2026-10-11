@@ -143,7 +143,7 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
                            events=events.layer_events(views[lt.id], getattr(views[lt.id], "p_stop", 0.0))
                            if getattr(views[lt.id], "mat", None) is not None else ())
         if isinstance(got, st.Stop):
-            return got
+            return _at(got, y, m)                    # a lid stop: the segment's start (note 13 §3)
         m, y = got.m, got.y
         out.entered.append(lt.id)
         out.profiles[lt.id] = got.path
@@ -158,12 +158,12 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
         view = views[layer.id]
         end = _top_of(body, j - 1, x, R) if j > 0 else None
         if j > 0 and end is None:
-            return st.Stop("layer_order", {"layer_id": layer.id, "rule": "end", "expected": "a determinable base",
-                                           "got_m": m, "got_r": y[0]})
+            return _at(st.Stop("layer_order", {"layer_id": layer.id, "rule": "end", "expected": "a determinable base",
+                                           "got_m": m, "got_r": y[0]}), y, m)
         if end is not None and end[0] == "m" and end[1] >= m:
-            return st.Stop("layer_order", {"layer_id": layer.id, "rule": "mass_fraction",
+            return _at(st.Stop("layer_order", {"layer_id": layer.id, "rule": "mass_fraction",
                                            "expected": f"base mass {end[1]:.6g} below the top {m:.6g}",
-                                           "got_m": m, "got_r": y[0]})
+                                           "got_m": m, "got_r": y[0]}), y, m)
         graze_mon = events.GrazeMonitor(getattr(view, "mat", None) or view, getattr(view, "p_stop", 0.0))
         out.entered.append(layer.id)
         res = _segment(view, M, m, y, end, rs, opt, graze_mon)
@@ -175,12 +175,12 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
             out.counters[k] = out.counters.get(k, 0) + v
         kind = res.stop.kind
         if kind not in ("end", "event"):
-            return res.stop
+            return _at(res.stop, res.y, res.x)
         m, y = res.x, res.y
         melts = events.melting_events(view)             # D-P3: phase 2 does not cross a melting boundary
         if kind == "event" and res.event in melts:
-            return st.Stop("melting_not_in_phase2", {"material_id": getattr(view, "material_id", layer.material),
-                                                     "boundary": melts[res.event], "p": res.y[1], "t": res.y[2]})
+            return _at(st.Stop("melting_not_in_phase2", {"material_id": getattr(view, "material_id", layer.material),
+                                                     "boundary": melts[res.event], "p": res.y[1], "t": res.y[2]}), y, m)
         if kind == "event" and res.event == "r_floor":
             out.floor_end = True
             break
@@ -199,7 +199,7 @@ def inward(body, views, x, opt: context.Options) -> PassOut | st.Stop:
     bottom = views[layers[0].id]
     got = bottom.state(y[1], y[2], None)
     if isinstance(got, st.Stop):
-        return got
+        return _at(got, y, m)
     out.m, out.y, out.rho_end = m, y, got[0]
     out.F = rhs.residual(m, y[0], got[0], rs)
     return out
@@ -356,8 +356,17 @@ def _state(y, m):
     return {"m": m, "r": y[0], "P": y[1], "T": y[3]} if y else None
 
 
-def _to_refusal(stop: st.Stop, where: str, x, kind: str, pass_kind: str):
+def _at(stop, y, m):
+    """The stop with the pass's reached state (phase-1 note 13 §3: the last accepted node), unless it has one."""
+    return stop if stop.state is not None else dataclasses.replace(stop, state=_state(y, m))
+
+
+def _to_refusal(stop: st.Stop, where: str, x, kind: str, pass_kind: str, scan=None):
     common = {"x": x, "closure_kind": kind, "pass_kind": pass_kind}
+    if stop.state is not None:                         # phase-1 note 13 §3: the last accepted node
+        common["state"] = stop.state
+    if scan is not None:                               # no_solved: the scan in the evidence (§A1.5)
+        common["scan"] = scan
     rec = stop.record
     if stop.kind == "refused" and isinstance(rec, st.Stop):
         stop, rec = rec, rec.record
@@ -368,9 +377,15 @@ def _to_refusal(stop: st.Stop, where: str, x, kind: str, pass_kind: str):
         return refusals.make("solve.melting_not_in_phase2", where, material_id=rec["material_id"],
                              boundary=rec["boundary"], p=rec["p"], t=rec["t"], **common)
     if isinstance(rec, lm.MaterialRefusal):
-        return refusals.make("solve.material_domain", where, material_id=rec.material_id, axis="P",
-                             bound=rec.p, bound_kind="table_edge", source="engine/eos.py (097a8aa3)",
-                             message_old=rec.message_old, **common)
+        # G2-R-03: the axis the engine named; `bound` is the reached value on that axis (the engine does not hand
+        # over its limit, which stays in message_old), and `bound_kind` says so
+        t_axis = rec.axis == "T"
+        return refusals.make("solve.material_domain", where, material_id=rec.material_id, axis=rec.axis,
+                             bound=rec.t if t_axis else rec.p,
+                             bound_kind=("reached_t_below_floor" if rec.too_cold else "reached_t_above_ceiling")
+                             if t_axis else "reached_p_outside_table",
+                             source="engine/eos.py (097a8aa3)", message_old=rec.message_old, t=rec.t, gap=rec.kind,
+                             **common)
     if stop.kind == "chatter":
         return refusals.make("solve.event_chatter", where, event_name=rec["event"], count=rec["count"],
                              cap_name=rec["cap_name"], cap_value=rec["cap_value"], **common)
@@ -531,9 +546,10 @@ def _with_sensitivity(body, views, x, opt, acc, qs, supplied=False, ctx=None, re
 
 
 def _regions(out) -> list:
-    """Solved stretches of the scan, split at every refusing trial."""
+    """Solved stretches of the scan, split at every refusing trial except an isolated one (A1 impl note 8 rule 2: an
+    isolated refusal never splits a solved stretch; G2-C-07)."""
     regs, cur = [], []
-    for t in sorted(out.trials, key=lambda t: t.x):
+    for t in sorted((t for t in out.trials if t.kind != "isolated"), key=lambda t: t.x):
         if t.F is None:
             if cur:
                 regs.append([cur[0], cur[-1]])
@@ -543,6 +559,19 @@ def _regions(out) -> list:
     if cur:
         regs.append([cur[0], cur[-1]])
     return regs
+
+
+def _straddled_wall(out):
+    """G2-R-04: the located wall between two solved neighbours whose F have opposite signs, else None. The root then lies
+    inside the refusing stretch, so that wall's refusal is the outcome, not «F does not change sign»."""
+    order = sorted((t for t in out.trials if t.kind != "isolated"), key=lambda t: t.x)
+    solved = [t for t in order if t.F is not None]
+    for a, b in zip(solved, solved[1:]):
+        if a.F * b.F < 0.0 and any(a.x < t.x < b.x and t.F is None for t in order):
+            inside = [w for w in out.walls if a.x <= w.x <= b.x]
+            if inside:
+                return min(inside, key=lambda w: w.x)
+    return None
 
 
 PROBE_SPAN = 50.0           # phase-1 design notes 8–9: δ = PROBE_SPAN·tol_F/s, so a side's chord s·2δ = 100·tol_F
@@ -703,6 +732,7 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
             tol_f = rt["tol_F"]
             if not abs(acc.F) <= tol_f:                  # note 8 (a): the root closed on a jump of F
                 return refusals.make("solve.closure_discontinuous", where, x=x, closure_kind=kind,
+                                     state=_state(acc.y, acc.m),     # note 13 §3: the node where F was taken
                                      pass_kind="accepted", check="residual", F_root=acc.F, tol_F=tol_f,
                                      n_acc=acc.counters.get("accepted", 0), rtol=options.rtol,
                                      bracket=bracket["final"], probes=None), x
@@ -768,10 +798,16 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
         mapped = _to_refusal(w.stop, where, w.x, kind, "wall")
         is_na = isinstance(mapped, result.NoAnswer)
         walls.append({"x": w.x, "outcome_kind": "no_answer" if is_na else "refusal",
-                      "id_or_reason": mapped.reason if is_na else mapped.id, "state": None, "located": w.located})
+                      "id_or_reason": mapped.reason if is_na else mapped.id,
+                      "state": getattr(w.stop, "state", None), "located": w.located})
     if out.kind == "no_solved":
         first = min(out.trials, key=lambda t: t.x)
-        return _to_refusal(first.stop, where, first.x, kind, "scan"), warm
+        scan = [[t.x, t.F, None if t.stop is None else t.stop.kind] for t in sorted(out.trials, key=lambda t: t.x)]
+        return _to_refusal(first.stop, where, first.x, kind, "scan", scan=scan), warm
+    straddled = _straddled_wall(out)
+    if straddled is not None:
+        scan = [[t.x, t.F, None if t.stop is None else t.stop.kind] for t in sorted(out.trials, key=lambda t: t.x)]
+        return _to_refusal(straddled.stop, where, straddled.x, kind, "wall", scan=scan), warm
     solved = sorted((t for t in out.trials if t.F is not None), key=lambda t: t.x)
     return refusals.make("solve.no_bracket", where, x=None, closure_kind=kind, pass_kind="scan",
                          x_lo=body.closure.lo, x_hi=body.closure.hi, F_lo=solved[0].F, F_hi=solved[-1].F,

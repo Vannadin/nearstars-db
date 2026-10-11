@@ -46,6 +46,7 @@ class Stop:
     `record` carries the caller's payload (e.g. a refusal from the material adapter)."""
     kind: str
     record: object = None
+    state: object = None    # phase-1 note 13 §3: {m, r, P, T} of the last accepted node, set by the pass (solve.inward)
 
 
 @dataclass(frozen=True)

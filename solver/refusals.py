@@ -42,7 +42,7 @@ _SOLVE = (
           "닫힘 잔차가 선언 범위 [{x_lo}, {x_hi}] 에서 부호를 바꾸지 않는다 — F {F_lo} · {F_hi}, 훑기 {n_scan} 번"),
     Entry("solve.two_roots", ("roots", "F_scan", "n_scan"),
           "닫힘 잔차의 근이 둘 이상이다 — 근 {roots} (훑기 {n_scan} 번)"),
-    Entry("solve.material_domain", ("material_id", "axis", "bound", "bound_kind", "source", "message_old"),
+    Entry("solve.material_domain", ("material_id", "axis", "bound", "bound_kind", "source", "message_old", "t", "gap"),
           "물질 '{material_id}' 이(가) {axis} 축의 {bound_kind} 끝 {bound} 밖이다 — 출처 {source}"),
     Entry("solve.unlocated_discontinuity", ("h", "h_min", "m_at", "err_norm", "rejected_in_row"),
           "걸음이 h_min {h_min} 밑으로 줄었는데 그 자리(m {m_at})에 찾은 경계가 없다 — 오차 {err_norm}, 연속 기각 {rejected_in_row}"),
@@ -147,8 +147,20 @@ def _index(entries: tuple) -> MappingProxyType:
     return MappingProxyType(out)
 
 
-REGISTRY = _index(tuple(Entry(e.id, SOLVE_COMMON + e.fields, e.template, SOLVE_OPTIONAL + e.optional, e.preamble,
-                              solve=True) for e in _SOLVE) + _INPUT)
+#: Phase-1 note 13 §3: refusals that a pass always reaches carry `state` (the last accepted node), required. Kinds
+#: that may also fire before any pass (layer_order) keep it optional; a pass-time one fills it.
+STATE_REQUIRED = ("solve.material_domain", "solve.material_record", "solve.melting_not_in_phase2",
+                  "solve.event_chatter", "solve.unlocated_discontinuity", "solve.lid_unconverged",
+                  "solve.basal_unconverged", "solve.closure_discontinuous")
+
+
+def _solve_entry(e):
+    req = e.id in STATE_REQUIRED
+    return Entry(e.id, SOLVE_COMMON + e.fields + (("state",) if req else ()), e.template,
+                 tuple(f for f in SOLVE_OPTIONAL if not (req and f == "state")) + e.optional, e.preamble, solve=True)
+
+
+REGISTRY = _index(tuple(_solve_entry(e) for e in _SOLVE) + _INPUT)
 NO_ANSWER_REGISTRY = _index(_NO_ANSWER)
 if tuple(NO_ANSWER_REGISTRY) != NO_ANSWER_REASONS:      # not an assert: it must hold under python -O too
     raise ImportError("NoAnswer registry and NO_ANSWER_REASONS disagree")
