@@ -23,6 +23,7 @@ from dataclasses import dataclass, field
 
 from solver import closure as cl
 from solver import context, events, legacy_materials as lm, lid, material_notes, refusals, result, rhs
+from solver import material_registry as mr
 from solver import fixed_grid
 from solver import stepper as st
 
@@ -584,6 +585,11 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
         views = dict(views)
     if isinstance(views, result.Refusal):
         return views, warm
+    for l in body.layers:                             # switch-over note 3: no ungraded declared value ships
+        v = views.get(l.id)
+        if hasattr(v, "record") and mr.has_user_declared(v.record):
+            return refusals.make("input.declared_grade_not_wired", f"{body.name}.layers.{l.id}", layer_id=l.id,
+                                 material_id=v.material_id), warm
     ctx = context.build(options, views, warm,
                         reset_legacy=any(isinstance(v, lm.LegacyView) for v in views.values()))
     kind = body.closure.kind

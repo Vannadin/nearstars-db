@@ -124,6 +124,73 @@ class Notes(unittest.TestCase):
         self.assertEqual((bands[0].fields["p_min"], bands[0].fields["p_max"]), (3.6e11, 3.7e11))   # only past 350 GPa
 
 
+def _h2o_with_boundary(bd):
+    rec = _record("h2o")
+    rec["formula_checks"][8]["boundary"] = bd                     # the III–water1 disclosed fail (c8's pair)
+    return rec
+
+
+def _notes_of(rec, nodes):
+    from types import SimpleNamespace as NS
+    from solver import material_notes as mn
+    v = mv.RecordView(rec, 300.0)
+    return mn.collect(NS(layers=[NS(id="L")]), {"L": v}, NS(profiles={"L": _path(nodes)}))
+
+
+class Note3(unittest.TestCase):
+    """Switch-over note 3: a formula check's `boundary` narrows its disclosure; a re-read Stop is recorded; a
+    user-declared record refuses at solve."""
+
+    def test_boundary_load_rule(self):
+        from solver.tests.test_materials_generated import _cache_cites
+
+        def check(bd):
+            rec = _h2o_with_boundary(bd)
+            return mr.check_record(rec, "h2o.yaml", frozenset(s for _p, _n, s in _cache_cites(rec)))
+        self.assertNotIsInstance(check(["III", "water1"]), mr.LoadStop)
+        for bad in (["III", "nope"], ["III", "III"], ["III"]):
+            self.assertEqual(check(bad).id, "material.bad_shape")
+
+    def test_disclosure_only_where_the_pair_is_read(self):
+        rec = _h2o_with_boundary(["III", "water1"])
+
+        def fc(nodes):
+            return [n for n in _notes_of(rec, nodes) if n.kind == "material_disclosure"
+                    and n.fields["of"] == "formula_check"]
+        self.assertEqual(fc([(1e7, 200.0), (5e7, 210.0)]), [])                        # Ih only
+        got = fc([(2.5e8, 245.0), (3e8, 250.0)])                                        # III read
+        self.assertEqual([tuple(n.fields["boundary"]) for n in got], [("III", "water1")])
+        self.assertEqual(len([n for n in _notes_of(_record("h2o"), [(1e7, 200.0)])     # no boundary: every read
+                              if n.kind == "material_disclosure" and n.fields["of"] == "formula_check"]), 1)
+
+    def test_a_reread_stop_is_recorded(self):
+        got = [n for n in _notes_of(_record("h2o"), [(1e7, 200.0), (1e7, 5000.0)])
+               if n.kind == "material_reread_stop"]
+        self.assertEqual([(n.fields["count"], n.fields["points"][0][2]) for n in got], [(1, "refused")])
+
+    def test_a_user_declared_record_refuses_at_solve(self):
+        """Planted: fe_prem_legacy with one source made user-declared; control: the record as shipped answers
+        (NotesOnEarth)."""
+        body, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
+        leg = sv._views(body)
+        rec = _record("fe_prem_legacy")
+
+        def plant(x):
+            if isinstance(x, dict):
+                if "source" in x and isinstance(x["source"], dict):
+                    x["source"] = {"user_declared": "planted control"}
+                    return True
+                return any(plant(v) for v in x.values())
+            if isinstance(x, list):
+                return any(plant(v) for v in x)
+            return False
+        self.assertTrue(plant(rec))
+        views = {**leg, "core": mv.RecordView(rec, body.surface.t_pot, getattr(leg["core"], "p_stop", 0.0))}
+        got, _x = sv.solve(body, context.Options(sensitivity_dt=0.0), views=views)
+        self.assertEqual((got.id, got.evidence["material_id"]), ("input.declared_grade_not_wired", "fe_prem_legacy"))
+        self.assertIn("input.declared_grade_not_wired", refusals.REGISTRY)
+
+
 class NotesOnEarth(unittest.TestCase):
     """§6.4 on a real solve: Earth's core through fe_prem_legacy (its band past 350 GPa)."""
 
@@ -146,6 +213,7 @@ class NotesOnEarth(unittest.TestCase):
                          (off.quantities, off.boundaries, dict(off.profiles)))
         self.assertTrue([n for n in on.notes if n.kind.startswith("material_")])   # noqa: test-side kind check
         self.assertFalse([n for n in off.notes if n.kind.startswith("material_")])  # noqa: test-side kind check
+        self.assertFalse([n for n in on.notes if n.kind == "material_reread_stop"])   # 68 N65: every node re-reads
 
     def test_a_note_planted_in_trial_passes_never_reaches_the_answer(self):
         """Planted leak (A6 pattern): a view that notes every read while armed; armed in every pass but the one at the

@@ -166,6 +166,11 @@ class Registry:
         return self.records[material_id]
 
 
+def has_user_declared(rec) -> bool:
+    """A record carrying a user-declared source anywhere (impl note 3 B2)."""
+    return _has_user_declared(rec)
+
+
 def _has_user_declared(x) -> bool:
     if isinstance(x, Mapping):
         return "user_declared" in x or any(_has_user_declared(v) for v in x.values())
@@ -566,7 +571,13 @@ def _disclosures(rec: Mapping, file):
     """A disclosed fail cites a cached source (page) that prints the disagreement; no other source kind will do. A
     bound in K converts with a slope read from the record's own boundary (curve(…) or melt_p(…)), never a literal
     (68 N42)."""
+    ids = [ph["id"] for ph in rec.get("phases", ())]
     for i, fc in enumerate(rec["formula_checks"]):
+        bd = fc.get("boundary")
+        if bd is not None and not (isinstance(bd, (list, tuple)) and len(bd) == 2 and bd[0] != bd[1]
+                                   and all(x in ids for x in bd)):
+            raise _Stop("material.bad_shape", file=file, path=f"record.formula_checks[{i}].boundary",
+                        expected="two distinct phase ids of this record (switch-over note 3)", got=repr(bd)[:60])
         d = fc.get("disclosed_fail")
         b = (d or {}).get("bound") or {}
         if b.get("unit") == "K" and not any(f in b.get("slope", "") for f in ("curve(", "melt_p(")):

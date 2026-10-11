@@ -11,9 +11,15 @@ Kinds (compare.NOTE_KINDS, comparator note 15):
 - `material_declared_note`: one per (layer, material, phase, text), with the P range met;
 - `material_source_seam`: one per source seam the layer's temperature crossed (from below t to t or above; the
   upper side owns t), with its measured step (material_joins.seam_delta);
-- `material_disclosure`: the cross-check disclosures of every phase read; a disclosed formula-check fail of every
-  record read (the schema does not tie a check to a boundary, so the record is the unit read);
-- `material_grade`: a record with a user-declared source anywhere (impl note 3 B2).
+- `material_disclosure`: the cross-check disclosures of every phase read; a disclosed formula-check fail whose
+  `boundary` pair holds a phase read (that phase's field test evaluates the boundary), or, with no `boundary`, of
+  every record read;
+- `material_grade`: a record with a user-declared source anywhere (impl note 3 B2). Such a body refuses at solve
+  (input.declared_grade_not_wired) until the grade rewrite lands (switch-over note 3); the note is the wired path;
+- `material_reread_stop`: an accepted node whose re-read gives a Stop. It answered in the pass, so this records a
+  re-read that differs from the pass; never skipped silently (r2 on 131e824a).
+Bands are maxima over the accepted nodes, not between them; seams and window edges are landed events, so nodes sit
+at the edges.
 Wording comes from the record's fields only.
 """
 from solver import material_joins as mj, material_registry as mr, material_view as mv, result, stepper as st
@@ -40,10 +46,11 @@ def collect(body, views, acc) -> tuple:
         if not isinstance(view, mv.RecordView) or not path:
             continue
         mid = view.material_id
-        bands, declared, phases_read, ts = {}, {}, [], []
+        bands, declared, phases_read, ts, rereads = {}, {}, [], [], []
         for p, t in _reads(path):
             got = view.state(p, t, None)
-            if isinstance(got, st.Stop):                  # an accepted node answered in the pass; nothing to add
+            if isinstance(got, st.Stop):                  # the pass answered here: a re-read that differs is recorded
+                rereads.append((p, t, got.kind))
                 continue
             ts.append(t)
             ph = view.phase_read(p, t)
@@ -95,11 +102,17 @@ def collect(body, views, acc) -> tuple:
                         "between": list(j["between"]), "text": text}))
         for fc in view.record.get("formula_checks", ()):
             df = fc.get("disclosed_fail")
-            if df is not None:
+            bd = fc.get("boundary")
+            if df is not None and (bd is None or set(bd) & set(phases_read)):
                 out.append(result.Note("material_disclosure", f"{mid} {fc['quantity']}: {df['why']}", {
                     "layer": layer.id, "material": mid, "of": "formula_check", "quantity": fc["quantity"],
-                    "why": df["why"], "bound": df["bound"], "source": df["source"]}))
-        if mr._has_user_declared(view.record):
+                    "why": df["why"], "bound": df["bound"], "source": df["source"],
+                    "boundary": None if bd is None else list(bd)}))
+        if rereads:
+            out.append(result.Note("material_reread_stop", f"{mid}: {len(rereads)} accepted node(s) did not answer "
+                                   "on re-read", {"layer": layer.id, "material": mid,
+                                                  "points": [list(r) for r in rereads[:8]], "count": len(rereads)}))
+        if mr.has_user_declared(view.record):
             out.append(result.Note("material_grade", f"{mid} carries a user-declared source (grade «declared»)", {
                 "layer": layer.id, "material": mid, "grade": "declared"}))
     return tuple(out)
