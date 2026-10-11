@@ -18,10 +18,12 @@ is the outcome.
 from __future__ import annotations
 
 import dataclasses
+from collections.abc import Mapping
 import math
 from types import MappingProxyType
 from dataclasses import dataclass, field
 
+from solver import body as bd
 from solver import closure as cl
 from solver import context, events, legacy_materials as lm, lid, material_notes, refusals, result, rhs
 from solver import material_registry as mr, material_view as mv
@@ -493,9 +495,43 @@ def _not_yet(body):
 
 
 def _canonical(body) -> dict:
-    """The Body as plain, ordered data for solve_id: repr of every field, which is deterministic for the frozen types
-    (mappingproxies keep insertion order)."""
-    return {"repr": repr(body)}
+    """The Body as solve_id binds it: only what the solve reads, as plain data with sorted keys and every number a
+    float (P1R-G4-SP-01, with LOWs G4-C-15 and G4-R-11). Values, units and bands of the declarations the solve reads
+    enter; grades, sources, notes, counter-evidence, the body's name and the fields the solver never reads
+    (declarations, solver_flags, later_tools, surface_declared, notes) do not, so a prose edit keeps the id and an
+    int/float spelling or a key order cannot move it."""
+    def num(x):
+        return float(x) if isinstance(x, (int, float)) and not isinstance(x, bool) else x
+
+    def plain(x):
+        if isinstance(x, Mapping):
+            return {str(k): plain(v) for k, v in sorted(x.items(), key=lambda kv: str(kv[0]))}
+        if isinstance(x, (list, tuple)):
+            return [plain(v) for v in x]
+        return num(x)
+
+    def decl(d):
+        if d is None:
+            return None
+        if not isinstance(d, bd.Declared):
+            return plain(d)
+        return {"value": plain(d.value), "unit": d.unit, "band": plain(d.band), "uncertainty": num(d.uncertainty)}
+
+    sf = body.surface
+    return {
+        "surface": {"m": num(sf.m), "p_s": num(sf.p_s), "p_s_source": sf.p_s_source, "t_s": num(sf.t_s),
+                    "t_pot": num(sf.t_pot)},
+        "radius": decl(body.radius),
+        "layers": [{"id": l.id, "role": l.role, "material": l.material, "thermal": l.thermal,
+                    "t_declared": num(l.t_declared), "system": l.system,
+                    "extent": None if l.extent is None else {"kind": l.extent.kind, "value": num(l.extent.value),
+                                                            "ref": l.extent.ref},
+                    "composition": decl(l.composition),
+                    "params": {k: decl(v) for k, v in sorted(l.params.items())}} for l in body.layers],
+        "closure": {"kind": body.closure.kind, "lo": num(body.closure.lo), "hi": num(body.closure.hi),
+                    "layer": body.closure.layer, "name": body.closure.name},
+        "jumps": {k: decl(v) for k, v in sorted(body.jumps.items())},
+    }
 
 
 def _material_bytes(views) -> bytes:
