@@ -350,3 +350,28 @@ class CoarseWalls(unittest.TestCase):
         finally:
             closure.WALL_SHOTS = orig
         self.assertEqual([(w.tol, w.located) for w in out.walls], [(closure.WALL_TOL_COARSE, False)])
+
+
+class Refine(unittest.TestCase):
+    """Phase-1 note 15 §2 (note 15a): closure.refine starts from a root already found."""
+
+    def test_brackets_from_the_start_and_names_its_pair(self):
+        F = lambda x: 2.0 * (x - 5.01)
+        out = closure.refine(F, 5.0, 1.0, 10.0)
+        self.assertEqual(out.kind, "root")
+        self.assertAlmostEqual(out.roots[0], 5.01, delta=1e-9)
+        a, fa, b, fb = out.detail["brackets"][out.roots[0]]["scan"]
+        self.assertLess(fa * fb, 0.0)                                   # the sign-change pair
+        self.assertEqual({t.kind for t in out.trials}, {"scan", "brent"})
+        self.assertLessEqual(len([t for t in out.trials if t.kind == "scan"]), 3)
+
+    def test_a_root_at_the_start_still_has_a_pair(self):
+        """r2 on note 15: F(x0) = 0 still gives a pair with a width (x0 and the slope shot)."""
+        out = closure.refine(lambda x: x - 5.0, 5.0, 1.0, 10.0)
+        a, _fa, b, _fb = out.detail["brackets"][5.0]["scan"]
+        self.assertEqual(out.roots, [5.0])
+        self.assertGreater(b - a, 0.0)
+
+    def test_a_refusal_falls_back(self):
+        F = lambda x: st.Stop("refused", {}) if x > 5.0005 else x - 5.01
+        self.assertIsNone(closure.refine(F, 5.0, 1.0, 10.0))

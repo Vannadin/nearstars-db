@@ -590,9 +590,12 @@ def _with_sensitivity(body, views, x, opt, acc, qs, supplied=False, ctx=None, re
             return vx
         got = inward(b2, vx, xx, opt, want_graze=False)     # a trial: its graze is never read
         return got if isinstance(got, st.Stop) else got.F
-    span = 1e-2 * abs(x) if x else 1e-3
-    lo, hi = max(b2.closure.lo, x - span), min(b2.closure.hi, x + span)
-    out = cl.solve_scalar(F2, lo, hi, 5)
+    # phase-1 note 15 §2: start from the root already found; any refusal or no bracket falls back unchanged
+    out = cl.refine(F2, x, b2.closure.lo, b2.closure.hi)
+    if out is None:
+        span = 1e-2 * abs(x) if x else 1e-3
+        lo, hi = max(b2.closure.lo, x - span), min(b2.closure.hi, x + span)
+        out = cl.solve_scalar(F2, lo, hi, 5)
     if out.kind != "root":
         out = cl.solve_scalar(F2, b2.closure.lo, b2.closure.hi, opt.n_scan)
     if out.kind != "root":

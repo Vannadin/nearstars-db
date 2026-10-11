@@ -192,6 +192,54 @@ def _locate_wall(F, x_ok: float, x_bad: float, stop_bad: st.Stop, trials: list, 
     return Wall(x_bad, stop_bad, x_ok, abs(x_bad - x_ok) <= tol * max(abs(x_ok), abs(x_bad)), tol)
 
 
+def refine(F, x0: float, lo: float, hi: float, h_rel: float = 1e-4, tries: int = 6):
+    """Phase-1 note 15 §2 (as amended by note 15a): the root of a small shift of a function already solved at x0.
+    F(x0) and F(x0 + h_rel·|x0|) give the slope (one extra pass: the first solve's own pairs can sit inside F's
+    jitter, 4 µm wide on Earth); a pair that already brackets goes to Brent, else a Newton-sized step (×1.5) from x0
+    and ×4 widenings until F changes sign, then Brent. Trials: x0, x1 and the widenings as «scan», Brent's as «brent»;
+    brackets[root]["scan"] is the sign-change pair, so the closure guard reads s, the δ cap and its references from
+    this run (r2 H2). None when anything refuses or no sign change comes within `tries`: the caller falls back."""
+    trials: list = []
+    f0 = _value(F, x0)
+    if isinstance(f0, st.Stop):
+        return None
+    trials.append(Trial(x0, f0, None, "scan"))
+    x1 = min(max(x0 + h_rel * abs(x0), lo), hi)
+    if x1 == x0:
+        return None
+    f1 = _value(F, x1)
+    if isinstance(f1, st.Stop):
+        return None
+    trials.append(Trial(x1, f1, None, "scan"))
+
+    def root_at(a, fa, b, fb):
+        if a > b:
+            a, fa, b, fb = b, fb, a, fa
+        x, prob, final = (a, None, None) if fa == 0.0 else (b, None, None) if fb == 0.0 else \
+            _brent(F, a, fa, b, fb, trials)
+        if x is None:
+            return None
+        return Outcome("root", roots=[x], walls=[], trials=trials,
+                       detail={"problems": [], "lo": lo, "hi": hi, "n_scan": len(trials),
+                               "brackets": {x: {"scan": (a, fa, b, fb), "final": final}}})
+    if f0 * f1 <= 0.0:
+        return root_at(x0, f0, x1, f1)
+    s = (f1 - f0) / (x1 - x0)
+    if s == 0.0:
+        return None
+    dx = -1.5 * f0 / s
+    for _ in range(tries):
+        xk = min(max(x0 + dx, lo), hi)
+        fk = _value(F, xk)
+        if isinstance(fk, st.Stop):
+            return None
+        trials.append(Trial(xk, fk, None, "scan"))
+        if f0 * fk <= 0.0:
+            return root_at(x0, f0, xk, fk)
+        dx *= 4.0
+    return None
+
+
 MAX_SPLITS = 16              # refusals met inside a Brent bracket, each splitting it (then re-searched)
 
 
