@@ -270,6 +270,20 @@ class LegacyView:
         materials keep their own inversion start. Notes: «surface_rho0_fallback» when the hot-surface rule fell back
         to ρ₀ (then (dT/dP)_ad is 0 there: the material refuses the surface state, so it has no gradient);
         «no_thermal_constants» when the material carries none (the old engine's 0-with-note branch)."""
+        if p > 0.0 and t > 0.0 and not (self.column_steam and self.mat is self._dense
+                                         and p < water2_table.P_MIN_PA and steam_if97.in_domain(p, t)):
+            # S1 (G1-SP-01, G2-SP-03, G3-SP-07): density() and dtdp() read mat.density at the same (max(p, p_stop), t);
+            # read it once. Same calls, same order, same refusal: bit-identical
+            pe = max(p, self.p_stop)
+            try:
+                raw = self.mat.density(self._at_floor(pe), t, self.t_pot)
+                g = interior._adiabatic_dtdp(self.mat, pe, raw, t, self.t_pot)
+            except (eos.PhaseGap, ValueError) as exc:
+                return self._refusal(exc, p, t)
+            has = getattr(self.mat, "has_thermal", None)
+            has = has() if callable(has) else has
+            return (raw * (1.0 - interior.porosity_at(self.mat, p, self.phi0, self.p_cap)), g,
+                    ("no_thermal_constants",) if has is False else ())
         before = self.surface_fallbacks
         rho = self.density(p, t)
         if isinstance(rho, st.Stop):
