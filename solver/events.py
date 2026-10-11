@@ -158,9 +158,10 @@ def record_events(view) -> list:
             a, b = by_id[between[0]], by_id[between[1]]
 
             def g(m, y, a=a, b=b):
+                from solver import material_library as ml
                 try:
                     return a.library.at(y[1], y[2])["g"] - b.library.at(y[1], y[2])["g"]
-                except Exception:                       # a side outside its spline: no boundary read there
+                except ml.LibraryOutOfRange:            # 68 N64: only «outside its spline» means no boundary here
                     return None
             scale = 1.0e3
         else:

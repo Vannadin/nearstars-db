@@ -1151,6 +1151,13 @@ class RecordView:
                     out.add(b)
         return tuple(sorted(out))
 
+    def onset_curves(self, p: float, t: float) -> list:
+        """Legacy's signature (eos.Material.onset_curves → [(name, T_on)]) for the graze monitor and onset events
+        (switch-over registration §2 item 3; 68 N63). A record declares no onset data today (the schema has no key for
+        it, so a record that tried would STOP at load as an unknown key); c8's onset shape lands with the first
+        silicate record."""
+        return []
+
     def source_seams(self) -> tuple:
         """Declared source seams in T (phase-2 design note 5): (t, (lower id, upper id)). Never in transitions()."""
         return tuple((_v(sm["t"]), tuple(sm["between"])) for sm in self.record.get("source_seams", ()))

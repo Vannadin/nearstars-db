@@ -33,6 +33,15 @@ class RecordEvents(unittest.TestCase):
         self.assertIn("source_seam:ih_cold|Ih", {e.name for e in evs})
         self.assertEqual(len([e for e in evs if e.name.startswith("seam:")]), len(v.seams()))   # noqa: test-side name
 
+    def test_onset_curves_hook_is_present_and_empty(self):
+        """68 N63: the graze monitor reads a record view's onset_curves (legacy's signature); none are declared today,
+        and a record declaring onset data STOPs at load as an unknown key until the schema has it."""
+        v = mv.RecordView(_record("fe_prem"), 1600.0)
+        self.assertEqual(v.onset_curves(1.0e11, 4000.0), [])
+        rec = _record("fe_prem")
+        rec["onset_curves"] = [{"name": "고상선"}]
+        self.assertEqual(mr.check_record(rec, "fe_prem.yaml").id, "material.unknown_key")
+
     def test_a_legacy_view_keeps_its_events(self):
         """A legacy view (or its bare material) builds exactly the events it built before the switch-over."""
         body, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
