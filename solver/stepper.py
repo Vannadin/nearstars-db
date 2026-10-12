@@ -82,6 +82,8 @@ class Options:
     frozen_ref: int = 0           # … and advanced by (k1[j] / k1[ref]) · Δy[ref] (the old engine's T: Euler in P)
     h_cap: object = None          # phase-1 design note 12: (x, y, k1) → the largest |h| allowed from here, or None, where a
                                   # material varies on a scale shorter than the step (a declared fine region)
+    step_check: object = None     # phase-1 design notes 13 §1 / 13a: (x, y, x_new, y_new, k1, k7) → None (accept), "halve",
+                                  # or a dict (accepted at the floor; recorded in Result.band_grazes). Adaptive steps only
 
 
 @dataclass
@@ -90,6 +92,7 @@ class Counters:
     rejected: int = 0
     refused_stage: int = 0
     events: int = 0
+    band_halved: int = 0          # notes 13 §1 / 13a: steps retried at h/2 by step_check (not error rejections)
     rewalks: int = 0
 
 
@@ -103,6 +106,7 @@ class Result:
     path: tuple = ()              # accepted (x, y, f(x, y)) nodes, including the start and the end point
     events: tuple = ()            # non-terminal events landed: (name, x, y)
     counters: Counters = field(default_factory=Counters)
+    band_grazes: tuple = ()       # step_check's floor acceptances (notes 13 §1 / 13a)
 
 
 def _axpy(y: Vec, h: float, ks: Sequence[Vec], w: Sequence[float]) -> Vec:
@@ -297,6 +301,7 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
     if on_accept is not None:
         on_accept(x, y)
     landed = []
+    grazes = []                                     # step_check's floor acceptances
     last_fire = dict(disabled_until or {})          # event name → x of its last landing
     run_events = 0
     in_row = 0                                      # landings since the last plain accepted step
@@ -304,7 +309,8 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
     g_prev = {ev.name: ev.g(x, y) for ev in events}
 
     def stop(kind, record=None):
-        return Result(x, y, Stop(kind, record), h_last=h, path=tuple(path), events=tuple(landed), counters=cnt)
+        return Result(x, y, Stop(kind, record), h_last=h, path=tuple(path), events=tuple(landed), counters=cnt,
+                      band_grazes=tuple(grazes))
 
     while True:
         if cnt.accepted + cnt.rejected >= opt.max_steps:
@@ -334,6 +340,14 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             continue
         rejected_in_row = 0
         x_new = x + h
+        if opt.step_check is not None and not opt.fixed:    # notes 13 §1 / 13a: adaptive steps only (r2 H1)
+            chk = opt.step_check(x, y, x_new, y_new, k1, k7)
+            if chk == "halve":
+                cnt.band_halved += 1
+                h = h * 0.5
+                continue
+            if chk is not None:
+                grazes.append(chk)
         g_new = {ev.name: ev.g(x_new, y_new) for ev in events}
         crossing = [ev for ev in events if _crossed(g_prev[ev.name], g_new[ev.name])]
         if crossing:
@@ -399,7 +413,7 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             last_fire[fired.name] = x
             if fired.terminal:
                 return Result(x, y, Stop("event"), event=fired.name, h_last=h, path=tuple(path),
-                              events=tuple(landed), counters=cnt)
+                              events=tuple(landed), counters=cnt, band_grazes=tuple(grazes))
             landed.append((fired.name, x, y))
             g_prev = {ev.name: ev.g(x, y) for ev in events}
             h = direction * min(abs(h), opt.h_max)
@@ -412,7 +426,8 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             on_accept(x, y)
         g_prev = g_new
         if direction * (x - x1) >= 0.0:
-            return Result(x, y, Stop("end"), h_last=h, path=tuple(path), events=tuple(landed), counters=cnt)
+            return Result(x, y, Stop("end"), h_last=h, path=tuple(path), events=tuple(landed), counters=cnt,
+                          band_grazes=tuple(grazes))
         h = direction * min(max(abs(next_h(h, en, True)), opt.h_min), opt.h_max)
 
 

@@ -1,7 +1,8 @@
 # 리뷰 수정 A4 시험 — 봉합선 착지 뒤 첫 걸음은 새 쪽에서(적응 모드), 곡선 이음매는 스침이 아님
 """Post-phase-1 review fix batch A4 (rewrite/p1review/fix-plan.md): G1-C-01 on the review's toy (probe p4: Earth M,
-R; ρ 3717 → 4407 kg/m³ at 23.83 GPa), G1-R-01 on a planted solidus walk across the 20 GPa Monteux join. Each test
-fails on af27819c.
+R; ρ 3717 → 4407 kg/m³ at 23.83 GPa), G1-R-01 on a planted solidus walk across the 20 GPa Monteux join (part 1, fail on
+af27819c); G3-C-02, phase-1 design notes 13 §1 / 13a / 13b, the band test on a planted table (part 2, fail on
+75af30d3).
 
 Run from the worktree root:  solver/.venv/bin/python -m unittest solver.tests.test_p1fix_a4
 """
@@ -106,6 +107,186 @@ class GrazeAcrossAJoin(unittest.TestCase):
         mon = events.GrazeMonitor(mat)
         mon.joins = []                                     # as before the fix: no join known
         self.assertIsNotNone(self._walk(mon, join).best)
+
+
+# ---- part 2: notes 13 §1 / 13a / 13b, the band test --------------------------------------------------------------
+
+import dataclasses                                   # noqa: E402
+import importlib                                     # noqa: E402
+from types import SimpleNamespace as NS              # noqa: E402
+from unittest import mock                            # noqa: E402
+
+from solver import legacy_materials as _lm           # noqa: E402,F401  (puts engine/ on sys.path)
+
+mc = importlib.import_module("mantle_composition")
+smooth = importlib.import_module("smooth_table")
+KEY = "a4_planted_table"
+W = mc.BLEND_K
+OFF = 0.5 * mc.T_STEP
+
+
+class _Table:
+    """A planted upper edge E(ln P) on a uniform 0.05 ln P grid from 1 GPa: flat at E0, with an optional bump."""
+    def __init__(self, e0=2000.0, bump=None):
+        self.lnp = [math.log(1.0e9) + 0.05 * i for i in range(40)]
+        self.edge = [e0 + (bump(i) if bump else 0.0) for i in range(40)]
+        self.edge_ys = list(self.edge)
+
+    def edge_at(self, p):
+        x = math.log(p)
+        i = min(max(int((x - self.lnp[0]) / 0.05), 0), len(self.lnp) - 2)
+        return smooth.cubic1(x, self.lnp, self.edge_ys, i)
+
+
+def _check(table):
+    ph = NS(table_key=KEY)
+    mat = NS(name="planted", phases=(ph,), phase_at=lambda p: ph)
+    patch = mock.patch.dict(mc._TABLES, {KEY: table})
+    patch.start()
+    return events.band_check(mat)(), patch
+
+
+def _y(p, t):
+    return (0.0, p, t, t, 0.0, 0.0)
+
+
+K = (1.0, 1.0, 0.0, 0.0, 0.0, 0.0)            # k[P] = 1, k[T] = 0: an isothermal step, so L is E's slope alone
+
+
+def _slope_k(p):
+    """Stages with P·dT/dP = 128 K per ln P, so ½·h_floor·L = ½·(0.05/64)·2·128 ≈ 0.1 K at the floor."""
+    s = 128.0 / p
+    return (1.0, 1.0, s, s, 0.0, 0.0)
+
+
+class BandTest(unittest.TestCase):
+    """Notes 13 §1 / 13a: the Lipschitz test, on a planted table, called as the stepper's step_check."""
+
+    def tearDown(self):
+        mock.patch.stopall()
+
+    def test_a_sub_cell_bump_is_not_stepped_over(self):
+        """§1 «bump»: g = −10 K at both ends, a +30 K bump of E in a cell between them: the step is halved."""
+        chk, _p = _check(_Table(bump=lambda i: 30.0 if i == 10 else 0.0))
+        pa, pb = math.exp(_Table().lnp[8]), math.exp(_Table().lnp[12])
+        t = 2000.0 - OFF + 10.0
+        self.assertEqual(chk(0.0, _y(pa, t), 1.0, _y(pb, t), K, K), "halve")
+
+    def test_control_flat_edge_passes(self):
+        chk, _p = _check(_Table())
+        pa, pb = math.exp(_Table().lnp[8]), math.exp(_Table().lnp[12])
+        self.assertIsNone(chk(0.0, _y(pa, 2000.0 - OFF + 10.0), 1.0, _y(pb, 2000.0 - OFF + 10.0), K, K))
+
+    def test_a_bump_from_above_across_w(self):
+        """13a item 2: g = W + 10 K at both ends and a −30 K dip of E between them reaches across g = W."""
+        chk, _p = _check(_Table(bump=lambda i: -30.0 if i == 10 else 0.0))
+        pa, pb = math.exp(_Table().lnp[8]), math.exp(_Table().lnp[12])
+        t = 2000.0 - OFF - W - 10.0
+        self.assertEqual(chk(0.0, _y(pa, t), 1.0, _y(pb, t), K, K), "halve")
+
+    def test_a_crossing_step_is_accepted(self):
+        """13a item 1: g changes sign across an edge over the step: accepted as is (no band event exists)."""
+        chk, _p = _check(_Table())
+        pa, pb = math.exp(_Table().lnp[8]), math.exp(_Table().lnp[12])
+        self.assertIsNone(chk(0.0, _y(pa, 2000.0 - OFF + 10.0), 1.0, _y(pb, 2000.0 - OFF - 10.0), K, K))
+
+    def test_the_t_margin_is_exercised(self):
+        """§1 «margin»: with E flat, L is BAND_T_MARGIN·|P·dT/dP| at the ends; a step that passes at the true slope
+        fails once the margin doubles it."""
+        chk, _p = _check(_Table())
+        pa = math.exp(_Table().lnp[8])
+        pb = pa * math.exp(0.01)
+        slope = 1.0e-7                               # dT/dP [K/Pa]: P·dT/dP ≈ 270 K per ln P at 2.7 GPa
+        k = (1.0, 1.0, slope, slope, 0.0, 0.0)
+        lt = max(pa, pb) * slope
+        g = 0.5 * 0.01 * lt * 1.5                    # above ½·h·L at the true slope, below at 2× it
+        t = 2000.0 - OFF - g
+        self.assertEqual(chk(0.0, _y(pa, t), 1.0, _y(pb, t - 0.0), k, k), "halve")
+
+    def test_a_true_touch_is_disclosed_once(self):
+        """§1 «tangent touch» with 13b: g approaches 0 from below, touches at the floor and turns away: one band_graze."""
+        chk, _p = _check(_Table())
+        lnp0 = _Table().lnp[8]
+        floor = 0.05 / events.BAND_FLOOR_DIV
+        k = _slope_k(math.exp(lnp0))
+        g_seq = [-0.05, -0.02, -0.01, -0.03, -0.2]           # closing in at the floor, then away on the same side
+        got = []
+        for i in range(len(g_seq) - 1):
+            pa, pb = math.exp(lnp0 + i * floor), math.exp(lnp0 + (i + 1) * floor)
+            r = chk(0.0, _y(pa, 2000.0 - OFF - g_seq[i]), 1.0, _y(pb, 2000.0 - OFF - g_seq[i + 1]), k, k)
+            got.append(r)
+        grazes = [r for r in got if isinstance(r, dict)]
+        self.assertEqual(len(grazes), 1, got)
+        self.assertEqual((grazes[0]["edge"], round(grazes[0]["min_abs_g"], 6)), (0.0, 0.01))
+
+    def test_an_approach_that_crosses_is_not_a_graze(self):
+        """13b: the same approach, then g crosses 0: no band_graze (the candidate is dropped)."""
+        chk, _p = _check(_Table())
+        lnp0 = _Table().lnp[8]
+        floor = 0.05 / events.BAND_FLOOR_DIV
+        k = _slope_k(math.exp(lnp0))
+        g_seq = [-0.05, -0.02, -0.01, 0.02, 0.2]
+        got = []
+        for i in range(len(g_seq) - 1):
+            pa, pb = math.exp(lnp0 + i * floor), math.exp(lnp0 + (i + 1) * floor)
+            got.append(chk(0.0, _y(pa, 2000.0 - OFF - g_seq[i]), 1.0, _y(pb, 2000.0 - OFF - g_seq[i + 1]), k, k))
+        self.assertFalse([r for r in got if isinstance(r, dict)], got)
+
+
+class BandTestScope(unittest.TestCase):
+    """13a item 5 and acceptance: no band test without a table phase (Earth, Venus); none in the fixed mode."""
+
+    def test_earth_has_no_band_test(self):
+        from solver import from_v1, solve as sv
+        body, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
+        views = sv._views(body)
+        self.assertTrue(all(sv._band(v) is None for v in views.values()))
+
+    def test_fixed_mode_mars_is_unchanged_by_the_test(self):
+        from solver import context, from_v1, member as mb, solve as sv
+        body, _aside = from_v1.load_v1("engine/bodies/mars.yaml")
+        body, _m = mb.member_of(body)
+        opt = context.Options(sensitivity_dt=0.0, fixed_dr=2000.0)
+        x = 0.5 * (body.closure.lo + body.closure.hi)
+        a = sv.inward(body, sv._views_at(body, sv._views(body), x), x, opt)
+        with mock.patch.object(events, "band_check", lambda *aa, **kk: None):
+            b = sv.inward(body, sv._views_at(body, sv._views(body), x), x, opt)
+        self.assertIsInstance(a, sv.PassOut, a)
+        self.assertEqual((a.F, a.y), (b.F, b.y))
+
+    def test_control_adaptive_mars_is_changed_by_the_test(self):
+        from solver import context, from_v1, member as mb, solve as sv
+        body, _aside = from_v1.load_v1("engine/bodies/mars.yaml")
+        body, _m = mb.member_of(body)
+        body = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=1980.0))
+        opt = context.Options(sensitivity_dt=0.0)
+        _ans, x = sv.solve(body, opt)
+        a = sv.inward(body, sv._views_at(body, sv._views(body), x), x, opt)
+        with mock.patch.object(events, "band_check", lambda *aa, **kk: None):
+            b = sv.inward(body, sv._views_at(body, sv._views(body), x), x, opt)
+        self.assertGreater(a.counters.get("band_halved", 0), 0)
+        self.assertNotEqual(a.F, b.F)
+
+
+class LidReadsItsOwnT(unittest.TestCase):
+    """13a item 4: in a lid the cap reads y[3] (the profile T), in a segment y[2]."""
+
+    def test_t_index(self):
+        from solver import from_v1, member as mb, solve as sv
+        body, _aside = from_v1.load_v1("engine/bodies/mars.yaml")
+        body, _m = mb.member_of(body)
+        mat = sv._views(body)["mantle"].mat
+        p = 5.0e9
+        ph = mat.phase_at(p)
+        from solver import legacy_materials as lm
+        edge, off = lm.table_band(ph)[:2]
+        t_in = edge(p) - off - 0.5 * W                       # in the band
+        t_far = t_in - 1000.0                                # far above the band: g = −1000 + … far outside
+        y = (0.0, p, t_far, t_in, 0.0, 0.0)
+        k1 = (0.0, 1.0, 1.0e-8, 1.0e-8, 0.0, 0.0)
+        hc = p * lm.table_cell_factor(ph)
+        self.assertEqual(events.step_cap(mat, t_index=3)(0.0, y, k1), hc)
+        self.assertGreater(events.step_cap(mat, t_index=2)(0.0, y, k1), hc)
 
 
 if __name__ == "__main__":

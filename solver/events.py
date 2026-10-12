@@ -190,14 +190,16 @@ def _table_phases(mat) -> list:
 BAND_MARGIN = 200.0
 
 
-def step_cap(mat):
+def step_cap(mat, t_index: int = 2):
     """Phase-1 design note 12: the stepper's h cap for a material that declares a fine scale (today the legacy
     mantle table: one ln P cell), as (x, y, k1) → max |h| in mass from the ΔP cap and dP/dm = k1[1]; None for every
     other material, whose runs are then unchanged.
     Note 12a: the fine scale is the blend band's (its entry and exit move with E(P) cell by cell), so the cell cap
     applies only where g = E(P) − T_STEP/2 − T lies within BAND_MARGIN of the band [0, BLEND_K]. Outside that window a
     step is uncapped except that its estimated |Δg| (the current cell's edge secant and dT/dP) stays ≤ BAND_MARGIN / 2,
-    so no step can carry g from outside the window across the band (measured: uncapped steps move g ≤ 49 K)."""
+    so no step can carry g from outside the window across the band (measured: uncapped steps move g ≤ 49 K).
+    `t_index`: the state component the material is read at, T_ad = y[2] in a segment, the lid's profile y[3] in a lid
+    (note 13a item 4)."""
     if not _table_phases(mat):
         return None
     from solver.legacy_materials import table_band, table_cell_factor
@@ -222,18 +224,151 @@ def step_cap(mat):
             return hc
         edge_at, offset, width, lnp, secant, t_lo = band
         e = edge_at(p)
-        t = y[2]
+        t = y[t_index]
         if not math.isfinite(e) or t < t_lo + width + BAND_MARGIN:
             return hc
         g = e - offset - t
         if -BAND_MARGIN <= g <= width + BAND_MARGIN:
             return hc
         i = min(max(bisect.bisect_right(lnp, math.log(p)) - 1, 0), len(secant) - 1)
-        rate = secant[i] / p + abs(k1[2] / k1[1])     # |dg/dP| estimated on the current cell [K/Pa]
+        rate = secant[i] / p + abs(k1[t_index] / k1[1])     # |dg/dP| estimated on the current cell [K/Pa]
         if not math.isfinite(rate):
             return hc
         return None if rate == 0.0 else max(hc, abs(0.5 * BAND_MARGIN / rate / k1[1]))
     return cap
+
+
+#: Notes 13 §1 / 13a: halving stops at the table's narrowest ln P cell over this, where the step is accepted and a
+#: band_graze recorded.
+BAND_FLOOR_DIV = 64.0
+#: Note 13 §1: the declared margin on the T term of L (not a bound; the one inexact part).
+BAND_T_MARGIN = 2.0
+
+
+def _cell_slope_max(phase) -> tuple:
+    """max |dE/d ln P| over each node cell of a table phase's upper edge E(P): the exact maximum of the cell's PCHIP
+    derivative (engine smooth_table `_coeffs`, a quadratic in ln P per cell), or the chord slope in MODE «linear»;
+    inf beside an empty column. Once per phase."""
+    import importlib
+    mc = importlib.import_module("mantle_composition")
+    smooth = importlib.import_module("smooth_table")
+    tab = mc._TABLES[phase.table_key]
+    xs, ys = tab.lnp, tab.edge_ys
+    out = []
+    for i in range(len(xs) - 1):
+        if ys[i] is None or ys[i + 1] is None:
+            out.append(math.inf)
+            continue
+        if smooth.MODE == "linear":
+            out.append(abs((ys[i + 1] - ys[i]) / (xs[i + 1] - xs[i])))
+            continue
+        _x0, hh, y0, y1, m0, m1 = smooth._coeffs(xs, ys, i)
+        # dE/dx = [(6t²−6t)y0 + (3t²−4t+1)h·m0 + (6t−6t²)y1 + (3t²−2t)h·m1] / h = (a t² + b t + c) / h, t in [0, 1]
+        a = 6.0 * y0 + 3.0 * hh * m0 - 6.0 * y1 + 3.0 * hh * m1
+        b = -6.0 * y0 - 4.0 * hh * m0 + 6.0 * y1 - 2.0 * hh * m1
+        c = hh * m0
+        cand = [0.0, 1.0] + ([-b / (2.0 * a)] if a != 0.0 and 0.0 < -b / (2.0 * a) < 1.0 else [])
+        out.append(max(abs(a * t * t + b * t + c) for t in cand) / hh)
+    return tuple(out)
+
+
+def band_check(mat, t_index: int = 2):
+    """Phase-1 design note 13 §1 as built (notes 13a, 13b): a factory of the Lipschitz test of an adaptive step [a, b]
+    on a legacy table phase (one fresh test per stepper run, so no state crosses passes), or None for a material
+    without one. For each band edge e in {0, W} of g = E(P) − T_STEP/2 − T (the g-band only, 13a N2): the edge passes
+    when g − e changes sign over the step, or min |g − e| at the ends > ½·h·L, with h = |ln P_b − ln P_a| and
+    L = max |dE/d ln P| over the spanned cells + BAND_T_MARGIN · max |P·dT/dP| at the step's end stages k1, k7 (13a
+    item 3). Both pass → None (accept). Else "halve", unless h ≤ the narrowest cell / BAND_FLOOR_DIV: the step is then
+    accepted and the edge held as a graze candidate (13b). A candidate is dropped when g − e later changes sign (the
+    edge was crossed: an approach, not a graze) and reported, as the dict this test returns, when g − e later moves
+    away from the edge with its sign kept (a turn: a graze). A step whose two ends are not on the same table phase, or
+    that touches an empty column or a domain gap, is not tested (the seam landing and the cell cap cover it)."""
+    if not _table_phases(mat):
+        return None
+    from solver.legacy_materials import table_band
+    per = {}
+
+    def consts(ph):
+        got = per.get(id(ph))
+        if got is None:
+            band = table_band(ph)
+            lnp = band[3]
+            floor = min(b - a for a, b in zip(lnp, lnp[1:])) / BAND_FLOOR_DIV
+            got = per[id(ph)] = (ph, band, _cell_slope_max(ph), floor)
+        return got
+
+    def phase(p):
+        try:
+            return mat.phase_at(p if p > 0.0 else 1.0e5)
+        except Exception as exc:
+            if type(exc).__name__ in ("PhaseGap", "SpinodalGap"):
+                return None
+            raise
+
+    def make():
+        pending = {}                                  # edge → (sign of g − e, the record so far)
+
+        def follow(ga, gb, width):
+            """Resolve the held candidates on this accepted step; the first confirmed one is returned."""
+            out = None
+            for e, (sgn, rec) in list(pending.items()):
+                da, db = ga - e, gb - e
+                if da * sgn <= 0.0 or db * sgn <= 0.0:
+                    del pending[e]                    # crossed (or touched): an approach
+                elif abs(db) < abs(da):
+                    rec["min_abs_g"] = min(rec["min_abs_g"], abs(db))     # still closing in
+                elif abs(db) > abs(da):
+                    del pending[e]                    # turned away on the same side: a graze
+                    out = out or rec
+            return out
+
+        def check(x, y, x_new, y_new, k1, k7):
+            pa, pb = y[1], y_new[1]
+            if pa <= 0.0 or pb <= 0.0:
+                return None
+            ph = phase(pa)
+            if ph is None or not getattr(ph, "table_key", "") or phase(pb) is not ph:
+                pending.clear()
+                return None
+            _ph, band, cellmax, floor = consts(ph)
+            edge_at, offset, width, lnp = band[:4]
+            ea, eb = edge_at(pa), edge_at(pb)
+            if not (math.isfinite(ea) and math.isfinite(eb)):
+                pending.clear()
+                return None
+            la, lb = math.log(pa), math.log(pb)
+            lo, hi = min(la, lb), max(la, lb)
+            h = hi - lo
+            i0 = min(max(bisect.bisect_right(lnp, lo) - 1, 0), len(cellmax) - 1)
+            i1 = min(max(bisect.bisect_right(lnp, hi) - 1, 0), len(cellmax) - 1)
+            l_e = max(cellmax[i0:i1 + 1])
+            if not math.isfinite(l_e):
+                pending.clear()
+                return None
+            l_t = max(abs(pa * k1[t_index] / k1[1]) if k1[1] else 0.0,
+                      abs(pb * k7[t_index] / k7[1]) if k7[1] else 0.0)
+            lip = l_e + BAND_T_MARGIN * l_t
+            ga, gb = ea - offset - y[t_index], eb - offset - y_new[t_index]
+            failing = []
+            for e in (0.0, width):
+                da, db = ga - e, gb - e
+                if da * db < 0.0:
+                    continue
+                m = min(abs(da), abs(db))
+                if not m > 0.5 * h * lip:
+                    failing.append((e, m, db))
+            if failing and h > floor:
+                return "halve"
+            # accepted (passing, or at the floor): resolve held candidates, then hold this step's floor edges
+            confirmed = follow(ga, gb, width)
+            for e, m, db in failing:
+                if e not in pending and db != 0.0:
+                    pending[e] = (1.0 if db > 0.0 else -1.0,
+                                  {"material": getattr(mat, "name", "?"), "p": pb, "edge": e, "min_abs_g": m,
+                                   "h_floor": floor, "m": x_new})
+            return confirmed
+        return check
+    return make
 
 
 @dataclass(frozen=True)

@@ -116,9 +116,12 @@ class LidStepCap(unittest.TestCase):
                 r = real(*a, **k)
                 got.append((k.get("h_cap"), r))
                 return r
-            real_plan = sv._plan
-            plan = real_plan if cap_on else (lambda v: (real_plan(v)[0], None))
-            with mock.patch.object(lid, "lid_pass", spy), mock.patch.object(sv, "_plan", plan):
+            # the lid's cap is events.step_cap(mat, t_index=3) since note 13a item 4; the band test is held off in
+            # both runs, so the step counts differ by the cap alone
+            real_cap = events.step_cap
+            cap = real_cap if cap_on else (lambda *a, **k: None)
+            with mock.patch.object(lid, "lid_pass", spy), mock.patch.object(events, "step_cap", cap), \
+                    mock.patch.object(events, "band_check", lambda *a, **k: None):
                 sv.inward(body, sv._views_at(body, views, x), x, context.Options())
             cap, r = got[-1]
             self.assertEqual(cap is not None, cap_on)

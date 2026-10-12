@@ -43,6 +43,7 @@ class PassOut:
     floor_end: bool = False
     entered: list = field(default_factory=list)          # layer ids the pass integrated, top to bottom
     events: list = field(default_factory=list)           # every landed event name, in order (phase, seam, onset, …)
+    band_grazes: list = field(default_factory=list)      # notes 13 §1 / 13a: steps accepted at the band floor
     counters: dict = field(default_factory=dict)
     R: float = 0.0
     r_scale: float = 0.0
@@ -109,6 +110,19 @@ def _plan(view):
     return got
 
 
+def _band(view):
+    """Notes 13 §1 / 13a / 13b: the view's band test factory (None without a legacy table phase), kept on the view as
+    _plan; each stepper run takes a fresh test from it."""
+    got = getattr(view, "_a4_band", None)
+    if got is None:
+        got = (events.band_check(getattr(view, "mat", None) or view),)
+        try:
+            view._a4_band = got
+        except (AttributeError, TypeError):
+            pass
+    return got[0]
+
+
 def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
     """One adiabatic layer from (m0, y0) down to `end` (('m', m) | ('r', r) | None for the centre)."""
     evs = [st.Event("r_floor", lambda m, y: y[0] - opt.r_floor_frac * r_scale, scale=r_scale)]
@@ -132,7 +146,7 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
                       event_min_progress=opt.event_min_progress * mass,
                       event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_solve,
                       event_rewalks=opt.event_rewalks,
-                      h_cap=h_cap)
+                      h_cap=h_cap, step_check=None if _band(view) is None else _band(view)())
     return st.run(rhs.make_rhs(view), m0, y0, m_end, sopt, evs, on_accept=monitor)
 
 
@@ -162,8 +176,10 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
                                            event_rewalks=opt.event_rewalks),
                            lid_iters=opt.lid_iters, lid_t_tol=opt.lid_t_tol, layer_id=lt.id,
                            events=events.layer_events(lv_, getattr(lv_, "p_stop", 0.0)) if lid_mat is not None else (),
-                           # G1-C-04: the lid is the mantle material; it takes the same note-12 step cap
-                           h_cap=_plan(lv_)[1] if lid_mat is not None else None,
+                           # G1-C-04: the lid is the mantle material; it takes the same note-12 step cap, read at
+                           # the lid's own T, y[3] (note 13a item 4), and the same band test
+                           h_cap=events.step_cap(lid_mat, t_index=3) if lid_mat is not None else None,
+                           step_check=events.band_check(lid_mat, t_index=3) if lid_mat is not None else None,  # a factory
                            # G1-R-02 = G2-R-01: the lid's landed events and its graze reach the pass record
                            monitor=(lambda: events.GrazeMonitor(lid_mat or lv_, getattr(lv_, "p_stop", 0.0)))
                            if want_graze else None)
@@ -174,6 +190,7 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
         out.profiles[lt.id] = got.path
         out.events += [e[0] for e in got.events]
         out.graze = got.graze
+        out.band_grazes += list(got.band_grazes)
         for k, v in got.counters.items():                # G2-C-05: the accepted lid pass's steps only enter N_acc
             out.counters[k] = out.counters.get(k, 0) + v
         out.counters["lid_discarded_accepted"] = (got.discarded or {}).get("accepted", 0)   # cost, not tol_F
@@ -198,6 +215,7 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
         res = _segment(view, M, m, y, end, rs, opt, graze_mon)
         out.profiles[layer.id] = res.path
         out.events += [e[0] for e in res.events]
+        out.band_grazes += list(res.band_grazes)
         if graze_mon is not None and graze_mon.best is not None and (out.graze is None
                                                                        or abs(graze_mon.best.g) < abs(out.graze.g)):
             out.graze = graze_mon.best
@@ -885,6 +903,10 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
                     "disclosed", {"x": x, "delta": rt["delta"], "dev_ratio": max(ratios) if ratios else None,
                                   "sides": [{k: sd.get(k) for k in ("side", "stop", "deviation", "allowed", "ok")}
                                             for sd in sides]}))
+        for bg in acc.band_grazes:                       # notes 13 §1 / 13a: accepted at the band floor, disclosed
+            notes.append(result.Note("band_graze", "a step on a legacy table phase reached the band test's floor with g "
+                                     "still near a band edge: accepted there, the band's entry or exit may be a graze "
+                                     "(phase-1 design notes 13 §1, 13a)", dict(bg)))
         notes += material_notes.collect(body, views, acc)   # switch-over §4: after every value, accepted pass only
         ans = result.Answer(qs, lbs, profiles, (), tuple(notes))
         return ans, x
