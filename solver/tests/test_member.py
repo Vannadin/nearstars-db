@@ -22,26 +22,21 @@ class Identity(unittest.TestCase):
     """At the declared T_pot the member is the declared answer again: R, CMF and the located boundaries within the two
     solves' measured resolution. Venus (boundary_mass) and Mars (S, radius-declared core and basal) each exercise one
     closure kind. Bound per key (o9-forward-member-note amendment 1): max(1e-8, r_inverse + r_forward), each r the
-    solve's |y(rtol) − y(rtol/10)| measured here on this machine; 1e-8 alone sat at the forward solve's own resolution.
-    Amendment 2: a key the inverse holds at its declared value (Mars's radius) shows no rtol pair there, since the
-    inverse's resolution lives in its root x; it is carried into the key by the member built from the rtol/10 root,
-    solved at rtol: r_root = |y(member(x10)) − y(member(x))|. (The PC missed 1e-8 on Mars radius by 2.0e-8.)"""
+    solve's |y(rtol) − y(rtol/10)| measured here on this machine; 1e-8 alone sat at the forward solve's own resolution."""
 
     def _check(self, stem, keys):
         body, _ = from_v1.load_v1(f"engine/bodies/{stem}.yaml")
         o10 = dataclasses.replace(OPT, rtol=OPT.rtol / 10.0)
         a, x = sv.solve(body, OPT)
-        a10, x10 = sv.solve(body, o10)
+        a10, _ = sv.solve(body, o10)
         fb = mb.forward_member(body, a, x)
         self.assertEqual(fb.closure.kind, "R")
         f, _ = sv.solve(fb, OPT)
         f10, _ = sv.solve(fb, o10)
-        g, _ = sv.solve(mb.forward_member(body, a10, x10), OPT)          # amendment 2: the inverse's root resolution
         self.assertIsInstance(f, result.Answer, getattr(f, "text", None))
         for k in keys:
             y = abs(_q(a, k))
-            r = (abs(_q(a10, k) - _q(a, k)) / y + abs(_q(g, k) - _q(f, k)) / abs(_q(f, k))
-                 + abs(_q(f10, k) - _q(f, k)) / abs(_q(f, k)))
+            r = abs(_q(a10, k) - _q(a, k)) / y + abs(_q(f10, k) - _q(f, k)) / abs(_q(f, k))
             self.assertLessEqual(abs(_q(f, k) - _q(a, k)) / y, max(1e-8, r), k)
 
     def test_venus(self):
