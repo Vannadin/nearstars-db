@@ -117,13 +117,14 @@ def _axpy(y: Vec, h: float, ks: Sequence[Vec], w: Sequence[float]) -> Vec:
     return tuple(y[j] + h * math.fsum(w[i] * ks[i][j] for i in range(len(w)) if w[i] != 0.0) for j in range(n))
 
 
-def step(f, x: float, y: Vec, h: float, k1: Vec):
+def step(f, x: float, y: Vec, h: float, k1: Vec, stage_f=None):
     """One DP5(4) step from (x, y) with first stage k1 = f(x, y). Returns (y_new, err, k7) or a Stop from f.
-    k7 = f(x + h, y_new) (FSAL), reused as the next step's k1."""
+    k7 = f(x + h, y_new) (FSAL), reused as the next step's k1. `stage_f` (a landing re-step's old-side reading,
+    P1R-G1-R-05) replaces f in stages 2–6, as step_rk4's does in its inner stages; the FSAL stage is f's."""
     ks = [k1]
     for i in range(1, 7):
         yi = _axpy(y, h, ks, _A[i])
-        k = f(x + _C[i] * h, yi)
+        k = (f if stage_f is None or i == 6 else stage_f)(x + _C[i] * h, yi)
         if isinstance(k, Stop):
             return k
         ks.append(k)
@@ -183,10 +184,12 @@ def _new_side_k1(f, ev: Event, x: float, y: Vec, k1: Vec, g0: float):
 
 def _stepper(opt, stage_f=None):
     if not opt.fixed:
-        return step
+        return step if stage_f is None else (lambda f, x, y, h, k1: step(f, x, y, h, k1, stage_f))
     return lambda f, x, y, h, k1: step_rk4(f, x, y, h, k1, opt.frozen, opt.frozen_ref, stage_f)
 
 
+#: P1R-G1-C-03: the other events are tested at a re-step this relative fraction short of a landed seam
+SEAM_NEAR_FRAC = 1e-9
 #: relative margin of the old-side stage clamp (interior.py's p_b(1 + 4e-12) for its outward pass, r2's H5 audit item 12).
 #: At exactly the seam value a curve seam (the 20 GPa Monteux join, −1 K) reads its new branch, so a clamp onto the seam
 #: itself left P(s) discontinuous and the landing chattered at |g| ≈ 20 Pa (Earth 2067–2131 K, 88 O9 points, fc0edb3a).
@@ -232,7 +235,8 @@ def _land(f, ev: Event, x: float, y: Vec, k1: Vec, s_hi: float, out_hi, g0: floa
     last old-side re-step (None if none was taken) — or a Stop: "event_unlanded", or a re-step's refusal."""
     lo, g_lo = 0.0, g0
     hi = s_hi
-    stepf = _stepper(opt, _old_side(f, ev, g0) if opt.fixed and ev.component is not None and g0 else None)
+    # P1R-G1-R-05: both modes; a landing re-step's stages read the old side, so none straddles the seam (§A1.3)
+    stepf = _stepper(opt, _old_side(f, ev, g0) if ev.component is not None and g0 else None)
     g_hi = g_hi_true = ev.g(x + hi, out_hi[0])
     best = (hi, out_hi)
     old_side = None
@@ -292,6 +296,9 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
     plain step between them), EVENT_RESTARTS_SOLVE (more than event_restarts_run landings in the run).
     After a landing the controller restarts from the event with h = min(|h of the crossing step|, h_max) and no
     error history (the step-size rule has none)."""
+    names = [ev.name for ev in events]
+    if len(set(names)) != len(names):          # P1R-G1-C-11: event state is keyed by name; two events, one slot
+        raise ValueError(f"event names collide: {sorted(n for n in set(names) if names.count(n) > 1)}")
     cnt = Counters()
     stepf = _stepper(opt)
     direction = 1.0 if x1 >= x0 else -1.0
@@ -368,6 +375,20 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
                     best, limit = (ev, node), lo_side
             others = [ev for ev in events if not ev.seam]
             if best is not None:
+                # P1R-G1-C-03 / G1-R-04: the other events are tested at the old-side end nearest the seam. The
+                # secant's last old-side iterate (limit) may be far from it, or absent; a re-step to just short of the
+                # landed seam (one old-side re-step, the seam's own stage clamp) closes that sliver
+                fs, node_s = best
+                s_near = (node_s[0] - x) * (1.0 - SEAM_NEAR_FRAC)
+                if s_near != 0.0 and (limit is None or abs(s_near) > abs(limit[0])):
+                    g0s = g_prev[fs.name]
+                    cnt.rewalks += 1
+                    o = _stepper(opt, _old_side(f, fs, g0s) if fs.component is not None and g0s else None)(
+                        f, x, y, s_near, k1)
+                    if not isinstance(o, Stop):
+                        gs = fs.g(x + s_near, o[0])
+                        if gs is not None and gs * g0s > 0.0:
+                            limit = (s_near, o)
                 if limit is None:
                     others = []                       # the seam sits at the step start: nothing lies before it
                 else:

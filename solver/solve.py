@@ -173,7 +173,10 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
                            rhs.PassOptions(rtol=opt.rtol, eps=opt.eps, r_floor_frac=opt.r_floor_frac,
                                            max_steps=opt.max_steps_solve,
                                            event_min_progress=opt.event_min_progress, fixed_dr=opt.fixed_dr,
-                                           event_rewalks=opt.event_rewalks),
+                                           event_rewalks=opt.event_rewalks,
+                                           # P1R-G1-C-06: the context's restart caps reach the lid
+                                           event_restarts_step=opt.event_restarts_step,
+                                           event_restarts_run=opt.event_restarts_solve),
                            lid_iters=opt.lid_iters, lid_t_tol=opt.lid_t_tol, layer_id=lt.id,
                            events=events.layer_events(lv_, getattr(lv_, "p_stop", 0.0)) if lid_mat is not None else (),
                            # G1-C-04: the lid is the mantle material; it takes the same note-12 step cap, read at
