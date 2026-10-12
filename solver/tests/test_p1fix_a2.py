@@ -102,7 +102,8 @@ class SensitivityRoot(unittest.TestCase):
             calls.append(1)
             return {**out, "ok": False} if len(calls) <= 2 else out         # the sensitivity root's two sides
         ans = self._solve(_side_check=side)
-        self.assertEqual([n.kind for n in ans.notes if n.kind.startswith("sensitivity")],
+        self.assertEqual([n.kind for n in ans.notes if n.kind.startswith("sensitivity")
+                          and n.kind != "sensitivity_resolution"],                 # SR1's Note rides beside it
                          ["sensitivity_probe_disclosure"])
         self.assertTrue(any(q.sensitivity is not None for q in ans.quantities))
         self.assertNotIn("closure_probe_disclosure", [n.kind for n in ans.notes])   # the accepted root's are clean

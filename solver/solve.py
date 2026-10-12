@@ -743,8 +743,10 @@ def _sensitivity_resolution(b2, x2, acc2, q2, new, dt, rt2, trials, sides, kept)
     qp, xp = None, None
     for sd in sorted(sides, key=lambda d: -d["side"]):      # the + side first (registration §2, r2 N1)
         got = kept.get(sd["x1"])
-        if got is None or isinstance(got, st.Stop):
-            why.append(f"side {sd['side']:+.0f}: {getattr(got, 'kind', 'not run')}")
+        if got is None or isinstance(got, st.Stop) or sd["x1"] == x2:
+            # a stopped or missing probe pass, or a probe step below x2's resolution (δ rounds to 0 at x2)
+            why.append(f"side {sd['side']:+.0f}: " + ("probe at x2" if got is not None and sd["x1"] == x2
+                                                      else getattr(got, "kind", "not run")))
             continue
         qp = {q.key: q.point for q in _quantities(b2, got, "", sd["x1"])}
         xp, side_used = sd["x1"], sd["side"]
