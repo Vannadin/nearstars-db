@@ -380,7 +380,7 @@ class RegistryLoads(unittest.TestCase):
 
 class SwitchReachesEverySolve(unittest.TestCase):
     """Switch-over note 6: a solve made on the caller's behalf (an inverse body's member) follows the caller's switch,
-    so a baseline run is a baseline throughout; the T2 method term stays on legacy."""
+    so a baseline run is a baseline throughout (the T2 method term: MethodTermMaterials)."""
 
     def test_member_solve_follows_the_switch(self):
         from unittest import mock
@@ -396,9 +396,45 @@ class SwitchReachesEverySolve(unittest.TestCase):
             mb.member_of(venus, "legacy")
         self.assertEqual(seen, ["legacy"])
 
-    def test_method_term_keeps_legacy(self):
+
+
+class MethodTermMaterials(unittest.TestCase):
+    """Switch-over note 7 (68 N68): the T2 method term solves on the records the answers read, except for a body with a
+    record that declares a field boundary (its curve events escape the fixed mode's clamp, note 1 item 3)."""
+
+    @staticmethod
+    def _with_fe_prem(**extra):
+        from types import MappingProxyType
+        from solver.result import freeze
+        reg = mr.load()
+        return mr.Registry(MappingProxyType({**reg.records, "fe_prem": freeze({**thaw(reg.records["fe_prem"]), **extra})}),
+                           reg.unavailable, reg.warnings)
+
+    def test_switch_on_without_boundaries(self):
         from solver import method_term as mt
-        self.assertEqual(mt.MATERIALS, "legacy")
+        earth, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
+        self.assertEqual(mt.materials_for(earth, mr.load()), "registry")
+        planted = self._with_fe_prem(boundaries=[{"between": ["a", "b"], "kind": "solid_solid", "curve": {}}])
+        self.assertEqual(mt.materials_for(earth, planted), "legacy")       # control: a boundary keeps legacy
+
+    def test_every_solve_follows_it(self):
+        from unittest import mock
+        from solver import method_term as mt
+        seen = []
+
+        class Stop(Exception):
+            pass
+
+        def spy(body, options=context.Options(), warm=None, views=None, registry=None):
+            seen.append((options.materials, registry is not None))
+            raise Stop
+        for reg, want in ((mr.load(), "registry"),
+                          (self._with_fe_prem(boundaries=[{"between": ["a", "b"], "kind": "solid_solid", "curve": {}}]),
+                           "legacy")):
+            seen.clear()
+            with mock.patch.object(sv, "solve", spy), self.assertRaises(Stop):
+                mt.one_state("engine/bodies/earth.yaml", "declared", "O1", registry=reg)
+            self.assertEqual(seen, [(want, True)])
 
 
 class Step2PutBack(unittest.TestCase):

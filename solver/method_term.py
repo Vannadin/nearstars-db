@@ -24,15 +24,21 @@ import time
 from pathlib import Path
 from types import MappingProxyType
 
-from solver import context, from_v1, member as mb, result, run_oracle as ro, solve as sv
+from solver import context, from_v1, material_registry as mr, member as mb, result, run_oracle as ro, solve as sv
 
 STEPS = 1500                       # interior.STEPS at 097a8aa3
 
 
-
-#: Switch-over note 6: the T2 method term measures the phase-1 method on the legacy materials it was registered on, so
-#: it keeps the switch off (its fixed mode is not shown identical for record views; switch-over note 1 item 3).
-MATERIALS = "legacy"
+def materials_for(body, registry) -> str:
+    """Switch-over note 7 (68 N68, directing): the term is measured on the materials the answers read, so the switch is
+    on («registry»), except for a body one of whose layers resolves to a record that declares a field boundary: the
+    fixed mode's old-side clamp acts on single-component seams, and a boundary curve event has none (note 1 item 3), so
+    that body keeps legacy (note 6). Today no switched record a body uses declares one (fe_prem: one structure phase)."""
+    for layer in body.layers:
+        rec = registry.records.get(layer.material)
+        if rec is not None and rec.get("boundaries"):
+            return "legacy"
+    return "registry"
 
 def grid_dr(body, answer, steps: int = STEPS):
     """(dr, ρ_c) from the adaptive answer's innermost profile node."""
@@ -75,26 +81,38 @@ def _diff(a: dict, f: dict) -> tuple:
     return d, flags
 
 
-def _body_at(body_yaml, t_pot, member=None):
-    """(body at the state, member record or None); an inverse body's T_pot state is its forward member (run_oracle's
-    rule). The body is None when the declared state has no answer, so there is no member."""
-    got = from_v1.load_v1(body_yaml)
+def _registry(registry=None):
+    """The caller's loaded registry, or one load here; a registry-level LoadStop stops the run (no body runs on it)."""
+    reg = registry if registry is not None else mr.load()
+    if isinstance(reg, mr.LoadStop):
+        raise RuntimeError(f"STOP: material registry: {reg.id}")
+    return reg
+
+
+def _body_at(body_yaml, t_pot, member=None, registry=None):
+    """(body at the state, member record or None, materials); an inverse body's T_pot state is its forward member
+    (run_oracle's rule). The body is None when the declared state has no answer, so there is no member."""
+    got = from_v1.load_v1(body_yaml, registry=registry)
     body = got[0] if isinstance(got, tuple) else got
+    if isinstance(body, result.Refusal):
+        return body, None, "registry"
+    materials = materials_for(body, registry)
     info = None
-    if t_pot is not None and not isinstance(body, result.Refusal):
-        got_m = member if member is not None else mb.member_of(body, MATERIALS)
+    if t_pot is not None:
+        got_m = member if member is not None else mb.member_of(body, materials, registry)
         if got_m is not None:
             body, info = got_m
             if body is None:
-                return None, info
+                return None, info, materials
         body = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=t_pot))
-    return body, info
+    return body, info, materials
 
 
-def one_state(body_yaml: str, state, tag: str, steps: int = STEPS, member=None) -> dict:
+def one_state(body_yaml: str, state, tag: str, steps: int = STEPS, member=None, registry=None) -> dict:
+    registry = _registry(registry)
     t_pot = None if state == "declared" else float(state)
-    body, info = _body_at(body_yaml, t_pot, member)
-    rec = {"body": Path(body_yaml).stem, "state": state, "tag": tag, "steps": steps}
+    body, info, materials = _body_at(body_yaml, t_pot, member, registry)
+    rec = {"body": Path(body_yaml).stem, "state": state, "tag": tag, "steps": steps, "materials": materials}
     if isinstance(body, result.Refusal):
         return {**rec, "kind_adaptive": "refusal", "kind_fixed": None, "flag": "input_refusal"}
     if body is None:
@@ -102,7 +120,7 @@ def one_state(body_yaml: str, state, tag: str, steps: int = STEPS, member=None) 
     if info is not None:
         rec["member"] = result.plain(info)
     c0 = time.process_time()
-    a, _ = sv.solve(body, context.Options(sensitivity_dt=0.0, materials=MATERIALS))
+    a, _ = sv.solve(body, context.Options(sensitivity_dt=0.0, materials=materials), registry=registry)
     rec["cpu_adaptive_s"] = time.process_time() - c0
     rec["kind_adaptive"] = _kind(a)
     if not isinstance(a, result.Answer):
@@ -112,17 +130,17 @@ def one_state(body_yaml: str, state, tag: str, steps: int = STEPS, member=None) 
     dr, rho_c = grid_dr(body, a, steps)
     rec.update(dr=dr, rho_c=rho_c)
     if state == "declared":
-        base = context.Options(materials=MATERIALS)
+        base = context.Options(materials=materials)
         c0 = time.process_time()
-        ra = ro.one(body_yaml, "declared", base)
-        rf = ro.one(body_yaml, "declared", dataclasses.replace(base, fixed_dr=dr))
+        ra = ro.one(body_yaml, "declared", base, registry=registry)
+        rf = ro.one(body_yaml, "declared", dataclasses.replace(base, fixed_dr=dr), registry=registry)
         rec["cpu_records_s"] = time.process_time() - c0
         rec["kind_adaptive"], rec["kind_fixed"] = ra["outcome_kind"], rf["outcome_kind"]
         va, vf = _flat(ra), _flat(rf)
         rec["options"] = result.plain(dataclasses.asdict(base))
     else:
         c0 = time.process_time()
-        f, _ = sv.solve(body, context.Options(sensitivity_dt=0.0, fixed_dr=dr, materials=MATERIALS))
+        f, _ = sv.solve(body, context.Options(sensitivity_dt=0.0, fixed_dr=dr, materials=materials), registry=registry)
         rec["cpu_fixed_s"] = time.process_time() - c0
         rec["kind_fixed"] = _kind(f)
         va = {q.key: q.point for q in a.quantities}
@@ -158,17 +176,18 @@ def run(body_yaml: str, points_json: str, out_jsonl: str, steps: int = STEPS) ->
         for line in lines:
             r = json.loads(line)
             done.add((r["body"], repr(r["state"])))
-    header = ro._header(context.Options(sensitivity_dt=0.0, materials=MATERIALS), "")
+    registry = _registry()                           # one load per run (switch-over note 5)
+    body0, _i, materials = _body_at(body_yaml, None, registry=registry)
+    header = ro._header(context.Options(sensitivity_dt=0.0, materials=materials), "")
     stem = Path(body_yaml).stem
     states = [(s, t) for s, t in _states(stem, points_json) if (stem, repr(s)) not in done]
     member = None
     if any(s != "declared" for s, _t in states):     # one declared solve per body for all its T_pot states
-        body0, _i = _body_at(body_yaml, None)
         if not isinstance(body0, result.Refusal):
-            member = mb.member_of(body0, MATERIALS)
+            member = mb.member_of(body0, materials, registry)
     with out.open("a", encoding="utf-8") as fh:
         for state, tag in states:
-            rec = one_state(body_yaml, state, tag, steps, member)
+            rec = one_state(body_yaml, state, tag, steps, member, registry)
             rec["header"] = header
             fh.write(json.dumps(result.plain(rec), ensure_ascii=True, allow_nan=False) + "\n")
             fh.flush()
@@ -217,12 +236,13 @@ ORDER_RANGE = (1.6, 2.4)
 def controls(body_yaml: str) -> dict:
     """Registration controls 1 and 2 at the declared state: the fixed solve twice gives identical values (null), and
     STEPS 2N halves the temperature keys' d (ratio d(N)/d(2N) within ORDER_RANGE: Euler in P, first order)."""
-    body, _info = _body_at(body_yaml, None)
-    opt = context.Options(sensitivity_dt=0.0, materials=MATERIALS)
-    a, _ = sv.solve(body, opt)
+    registry = _registry()
+    body, _info, materials = _body_at(body_yaml, None, registry=registry)
+    opt = context.Options(sensitivity_dt=0.0, materials=materials)
+    a, _ = sv.solve(body, opt, registry=registry)
     va = {q.key: q.point for q in a.quantities}
     dr, rho_c = grid_dr(body, a, STEPS)
-    outs = [sv.solve(body, dataclasses.replace(opt, fixed_dr=d))[0] for d in (dr, dr, dr / 2.0)]
+    outs = [sv.solve(body, dataclasses.replace(opt, fixed_dr=d), registry=registry)[0] for d in (dr, dr, dr / 2.0)]
     if not all(isinstance(o, result.Answer) for o in outs):
         return {"body": Path(body_yaml).stem, "dr": dr, "rho_c": rho_c, "fixed_not_answer": [_kind(o) for o in outs],
                 "null_identical": False, "order_holds": False, "holds": False}
