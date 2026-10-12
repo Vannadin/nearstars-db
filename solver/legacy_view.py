@@ -25,6 +25,7 @@ from solver import legacy_materials as lm          # noqa: F401  (puts engine/ o
 import payload    # noqa: E402
 import registry   # noqa: E402
 import run        # noqa: E402
+from state import BodyState   # noqa: E402
 
 #: The old interior_layers keys the in-scope readers use (registration §3), and how each comes from the Answer.
 OUTPUT_KEYS = ("core_radius", "cmb_pressure", "cmb_temperature", "core_pressure", "core_temperature", "radius",
@@ -200,10 +201,23 @@ def _run(body, injected, declared_keys) -> ChainRun:
     return ChainRun(body, injected, declared_keys, tuple(reads), tuple(notes))
 
 
+class LookupLogOff(RuntimeError):
+    """The old lookup log is off (NEARSTARS_LOOKUP_LOG=0) or recorded nothing, so the read checks have nothing to
+    judge; an empty log looks exactly like a clean one (engine state.py `log_enabled`), so this is a STOP, never a
+    pass (P1R-G3-C-03)."""
+
+
+def _log_on(chain: ChainRun):
+    if not BodyState.log_enabled() or not chain.body.lookups:
+        raise LookupLogOff(f"{chain.body.name}: the old lookup log is {'off' if not BodyState.log_enabled() else 'empty'}"
+                           "; the registration §3 read checks cannot run (unset NEARSTARS_LOOKUP_LOG)")
+
+
 def reads(chain: ChainRun) -> dict:
     """{reader: {"outputs": set, "declared": set, "other": set}} for the in-scope readers, from the old lookup log.
     «outputs»: answered by the injected interior_layers Result; «declared»: answered by the body's inputs;
-    «other»: answered by another node."""
+    «other»: answered by another node. LookupLogOff when the log is off or empty (G3-C-03)."""
+    _log_on(chain)
     body = chain.body
     out = {}
     for reader, key, kind in body.lookups:
@@ -228,7 +242,7 @@ def check_reads(chain: ChainRun) -> list:
     - a registered output key an in-scope reader asked for and missed (no producer answered it)."""
     bad = []
     body = chain.body
-    for reader, sides in reads(chain).items():
+    for reader, sides in reads(chain).items():          # LookupLogOff when the log is off (G3-C-03)
         for k in sorted(sides["outputs"] - set(OUTPUT_KEYS)):
             bad.append((reader, k, "output read outside the registered set"))
         for k in sorted(sides["declared"] & STRUCTURE_KEYS):
