@@ -66,10 +66,19 @@ class LidGraze(unittest.TestCase):
                 seen.append((y[2], y[3]))
         body = _earth(1800.0)
         ans, x = sv.solve(body, OPT)
-        v = sv._views_at(body, sv._views(body), x)
-        lt = body.layers[-1]
-        got = lid.lid_pass(v[lt.id], body.mass, sv._radius_of(body, x), lt.extent.value, body.surface.p_s or 0.0,
-                           body.surface.t_s, body.surface.t_pot, 6.0e6, monitor=Mon)
+        # the lid pass as inward calls it (its r_scale, options and events), with the planted monitor in place of
+        # inward's: a hand-built call (r_scale 6e6, default PassOptions) sat on the lid's noise floor and stopped
+        # lid_unconverged once A5's fsum moved the last digits (the f7a5b95c suite)
+        real, results = lid.lid_pass, []
+
+        def call(*a, **k):
+            got = real(*a, **{**k, "monitor": Mon})
+            results.append(got)
+            return got
+        with mock.patch.object(lid, "lid_pass", call):
+            sv.inward(body, sv._views_at(body, sv._views(body), x), x, context.Options())
+        got = results[-1]
+        self.assertIsInstance(got, lid.LidResult, got)
         self.assertTrue(seen)
         self.assertTrue(all(a == b for a, b in seen))                  # T handed to the monitor is T_ad
         self.assertGreater(len(passes), 1)
