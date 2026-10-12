@@ -63,6 +63,12 @@ _SOLVE = (
           "기저층 '{layer_id}' 의 반지름 고정점이 {iters} 번 안에 {tol} 로 닫히지 않았다 — 자취 {trail}"),
     Entry("solve.basal_not_attached", ("layer_id", "crossings", "n_crossings"),
           "기저층 '{layer_id}' 이(가) 아래 층에 붙지 않는다 — 건넘 {n_crossings} 번 {crossings}"),
+    # phase-1 design note 17 §6: a value that is not a finite number (the residual F at a trial, or the integrated state)
+    Entry("solve.non_finite", ("where_kind", "value"),
+          "수가 아닌 값이 나왔다 ({where_kind}) — {value}"),
+    # note 17 §6 (G1-R-07): an event's g undefined at a secant iterate (its curve absent there), not a cap tripping
+    Entry("solve.event_undefined", ("event_name",),
+          "경계 사건 '{event_name}' 의 함수가 착지 탐색 중 정의되지 않았다 (곡선이 그 자리에 없다)"),
 )
 
 #: Input refusals (A7: D-A7-1..5, D-A2-7). `where` names the file and key, e.g. «mars.yaml:inputs.mass_earth».

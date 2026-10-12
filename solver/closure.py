@@ -320,19 +320,21 @@ def _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_
             if (a.F is None) != (b.F is None) and (a.x, b.x) not in done_pairs:
                 done_pairs.add((a.x, b.x))
                 ok, bad = (a, b) if a.F is not None else (b, a)
-                walls.append(_locate_wall(F, ok.x, bad.x, bad.stop, trials, lo, hi, wall_tol))
+                wl = _locate_wall(F, ok.x, bad.x, bad.stop, trials, lo, hi, wall_tol)
+                if all(w.x != wl.x for w in walls):       # P1R-G2-C-10: a located wall's own pair re-finds it
+                    walls.append(wl)
         # G2-C-02: Brent's own trials sit inside F's jitter band near a root; they never open a new bracket
         pts = sorted((t for t in trials if t.F is not None and t.kind != "brent"
                       and (use_wall_trials or t.kind != "wall")), key=lambda t: t.x)
         refused = sorted(t.x for t in trials if t.F is None and t.kind != "isolated")
         roots, problems, split = [], [], False
         for a, b in zip(pts, pts[1:]):
-            if any(a.x < w < b.x for w in refused):
-                continue                                  # not one solved stretch
-            if a.F == 0.0:
+            if a.F == 0.0:                                # P1R-G2-C-14: an exact zero is a root even beside a wall
                 roots.append(a.x)
                 brackets[a.x] = {"scan": (a.x, a.F, b.x, b.F), "final": None}
                 continue
+            if any(a.x < w < b.x for w in refused):
+                continue                                  # not one solved stretch
             if a.F * b.F < 0.0:
                 key = (a.x, b.x)
                 if key not in closed:

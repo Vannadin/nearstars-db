@@ -256,8 +256,8 @@ def _land(f, ev: Event, x: float, y: Vec, k1: Vec, s_hi: float, out_hi, g0: floa
         if isinstance(o, Stop):
             return o
         gs = ev.g(x + s, o[0])
-        if gs is None:
-            return Stop("event_unlanded", {"event": ev.name, "g": None, "tol": tol, "rewalks": it, "x": x + s})
+        if gs is None:                         # note 17 §6 (G1-R-07): the curve's domain, not the rewalk cap
+            return Stop("event_undefined", {"event": ev.name, "x": x + s, "rewalks": it})
         if gs * g0 > 0.0:                     # still on the old side
             lo, g_lo = s, gs
             old_side = (s, o)
@@ -292,8 +292,8 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
     re-taken from the event, so a later crossing is seen again. The event guard stops with kind "chatter" and the
     cap that tripped: EVENT_REWALKS (a crossing not landed to |g| ≤ event_tol·scale within event_rewalks re-steps),
     EVENT_MIN_PROGRESS (an event changes sign again before |x − x_last| ≥ event_min_progress —
-    a real crossing is never skipped), EVENT_RESTARTS_STEP (more than event_restarts_step landings in a row with no
-    plain step between them), EVENT_RESTARTS_SOLVE (more than event_restarts_run landings in the run).
+    a real crossing is never skipped), EVENT_RESTARTS_STEP (one event landing more than event_restarts_step times
+    since the last plain step; note 17 §1), EVENT_RESTARTS_SOLVE (more than event_restarts_run landings in the run).
     After a landing the controller restarts from the event with h = min(|h of the crossing step|, h_max) and no
     error history (the step-size rule has none)."""
     names = [ev.name for ev in events]
@@ -314,7 +314,9 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
     grazes = []                                     # step_check's floor acceptances
     last_fire = dict(disabled_until or {})          # event name → x of its last landing
     run_events = 0
-    in_row = 0                                      # landings since the last plain accepted step
+    # phase-1 design note 17 §1 (G1-R-06): landings per event name since the last plain accepted step; the cap is a
+    # chatter guard (one event re-firing), so distinct events landing in a row do not trip it
+    in_row: dict = {}
     rejected_in_row = 0
     g_prev = {ev.name: ev.g(x, y) for ev in events}
 
@@ -339,6 +341,15 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             h = direction * max(abs(h) * 0.25, opt.h_min)
             continue
         y_new, err, k7 = out
+        if not (all(map(math.isfinite, y_new)) and all(map(math.isfinite, err))):
+            # phase-1 design note 17 §6 (G1-C-07): a non-finite state is a refusing stage, not a value the error
+            # norm's max may drop; retried shorter, and at h_min a typed stop
+            cnt.refused_stage += 1
+            bad = Stop("non_finite", {"m": x + h, "y": tuple(y_new), "err": tuple(err)})
+            if opt.fixed or abs(h) <= opt.h_min:
+                return stop("refused", bad)
+            h = direction * max(abs(h) * 0.25, opt.h_min)
+            continue
         en = 0.0 if opt.fixed else err_norm(err, y, y_new, opt.rtol, opt.floors)
         if en > 1.0:
             cnt.rejected += 1
@@ -414,9 +425,9 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
                 return stop("chatter", {"event": fired.name, "count": run_events, "cap_name": "EVENT_MIN_PROGRESS",
                                         "cap_value": opt.event_min_progress})
             run_events += 1
-            in_row += 1
-            if in_row > opt.event_restarts_step:
-                return stop("chatter", {"event": fired.name, "count": in_row, "cap_name": "EVENT_RESTARTS_STEP",
+            in_row[fired.name] = in_row.get(fired.name, 0) + 1
+            if in_row[fired.name] > opt.event_restarts_step:
+                return stop("chatter", {"event": fired.name, "count": in_row[fired.name], "cap_name": "EVENT_RESTARTS_STEP",
                                         "cap_value": opt.event_restarts_step})
             if run_events > opt.event_restarts_run:
                 return stop("chatter", {"event": fired.name, "count": run_events,
@@ -443,7 +454,7 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             g_prev = {ev.name: ev.g(x, y) for ev in events}
             h = direction * min(abs(h), opt.h_max)
             continue
-        in_row = 0
+        in_row.clear()
         cnt.accepted += 1
         if chk is not None:
             got = chk.commit(x, y, x_new, y_new)

@@ -60,14 +60,57 @@ class SolveContext:
 UNHASHED_OPTIONS = ("materials",)
 
 
+def require_git_tree() -> None:
+    """P1R-G2-R-07: solve_id reads git (material_bytes, solver_code_bytes) after the accepted pass; outside a git work
+    tree that raised only then. Called before any pass, it fails at once with the reason named. An environment fault,
+    not a body's refusal."""
+    import os
+    import subprocess
+    repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    try:
+        ok = subprocess.run(["git", "-C", repo, "rev-parse", "--is-inside-work-tree"], capture_output=True,
+                            text=True).stdout.strip() == "true"
+    except OSError:
+        ok = False
+    if not ok:
+        raise RuntimeError(f"solve_id needs the solver's git work tree ({repo}): material and code bytes are read "
+                           "from git (design §A6; P1R-G2-R-07)")
+
+
+def solver_code_bytes() -> bytes:
+    """Phase-1 design note 17 §5 (G2-R-06): the solver's own code, as material_bytes binds engine/ (G3-T-08's pattern):
+    git's blob ids of the tracked solver/*.py files outside solver/tests/, plus the content hash of each such file that
+    is modified in the work tree or untracked (r2 on note 17: a new module before its commit). A fixed function of
+    the tree, no machine paths."""
+    import os
+    import subprocess
+    repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    counts = lambda p: p.endswith(".py") and not p.startswith("solver/tests/") and "/__pycache__/" not in p
+    git = lambda *a: subprocess.run(["git", "-C", repo, *a, "--", "solver"], capture_output=True, text=True,
+                                    check=True).stdout
+    h = hashlib.sha256()
+    for line in sorted(git("ls-files", "-s").splitlines()):
+        meta, path = line.split("\t", 1)
+        if counts(path):
+            h.update(f"{path} {meta.split()[1]}\n".encode())
+    changed = set(git("diff", "--name-only").split()) | set(git("ls-files", "--others", "--exclude-standard").split())
+    for path in sorted(p for p in changed if counts(p)):
+        full = os.path.join(repo, path)
+        content = open(full, "rb").read() if os.path.isfile(full) else b"<deleted>"
+        h.update(f"changed {path} ".encode() + hashlib.sha256(content).digest())
+    return h.digest()
+
+
 def solve_id_of(body_canonical: Mapping, material_bytes: bytes, options: Options) -> str:
-    """sha256 of (canonical Body, material data bytes, options, solver version); no clock (design §A6, D-A3-3)."""
+    """sha256 of (canonical Body, material data bytes, options, solver version, solver code); no clock (design §A6,
+    D-A3-3; note 17 §5 adds the code digest beside SOLVER_VERSION, which stays the human label)."""
     h = hashlib.sha256()
     h.update(json.dumps(body_canonical, sort_keys=True, separators=(",", ":")).encode())
     h.update(material_bytes)
     opts = {k: v for k, v in asdict(options).items() if k not in UNHASHED_OPTIONS}
     h.update(json.dumps(opts, sort_keys=True).encode())
     h.update(SOLVER_VERSION.encode())
+    h.update(solver_code_bytes())
     return h.hexdigest()
 
 

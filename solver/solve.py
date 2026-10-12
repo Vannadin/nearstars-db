@@ -212,6 +212,12 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
         if j > 0 and end is None:
             return _at(st.Stop("layer_order", {"layer_id": layer.id, "rule": "end", "expected": "a determinable base",
                                            "got_m": m, "got_r": y[0]}), y, m)
+        if end is not None and end[0] == "m" and 0.0 < end[1] < opt.eps * M:
+            # phase-1 design note 17 §4 (G2-C-12): a mass base strictly inside (0, m_ε) would reverse the next segment;
+            # x-dependent on a boundary-mass closure, so at trial level it is a wall in x (as «mass_fraction» is)
+            return _at(st.Stop("layer_order", {"layer_id": layer.id, "rule": "base_below_m_eps",
+                                           "expected": f"a base mass ≥ m_ε = {opt.eps * M:.6g} or the centre",
+                                           "got_m": end[1], "got_r": y[0]}), y, m)
         if end is not None and end[0] == "m" and end[1] >= m:
             return _at(st.Stop("layer_order", {"layer_id": layer.id, "rule": "mass_fraction",
                                            "expected": f"base mass {end[1]:.6g} below the top {m:.6g}",
@@ -257,7 +263,9 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
             out.boundaries.append((f"{below.id}/{layer.id}", "layer", m, y[0], y[1], y[3], y[3] + jump))
             if jump:
                 y = (y[0], y[1], y[2] + jump, y[3] + jump, *y[4:])
-    bottom = views[layers[0].id]
+    # P1R-G2-C-11: the end density is read with the layer the pass ended in (a trial that stops at the r floor or at
+    # m_ε above its radius base ends in a higher layer), not always the bottom one
+    bottom = views[out.entered[-1]] if out.entered else views[layers[0].id]
     got = bottom.state(y[1], y[2], None)
     if isinstance(got, st.Stop):
         return _at(got, y, m)
@@ -472,6 +480,16 @@ def _to_refusal(stop: st.Stop, where: str, x, kind: str, pass_kind: str, scan=No
                              got_r=float("nan"), **common)
     if stop.kind == "layer_order":
         return refusals.make("solve.layer_order", where, **rec, **common)
+    # phase-1 design note 17 §6: the four stops that raised or misreported
+    if stop.kind == "no_residual":
+        return refusals.make("solve.non_finite", where, where_kind="residual", value=repr(rec.get("value")), **common)
+    if stop.kind == "non_finite":
+        return refusals.make("solve.non_finite", where, where_kind="state", value=repr(rec.get("y")), **common)
+    if stop.kind == "centre_crossed":
+        return refusals.make("solve.layer_order", where, layer_id="(pass)", rule="centre_crossed",
+                             expected="r > 0 to the centre end", got_m=rec["m"], got_r=rec["r"], **common)
+    if stop.kind == "event_undefined":
+        return refusals.make("solve.event_undefined", where, event_name=rec["event"], **common)
     if stop.kind == "max_steps":
         return refusals.no_answer("unconverged", where, budget_name="MAX_STEPS_SOLVE",
                                   budget_value=rec["budget"], last_residual=None, x=x, pass_kind=pass_kind)
@@ -615,6 +633,9 @@ def _material_bytes(views) -> bytes:
     return h.digest()
 
 
+#: P1R-G2-C-09: declared Options the solve does not read (the closure reads closure.py's constants).
+INERT_OPTIONS = ("close_tol", "close_iters", "wall_tol", "wall_shots", "basal_iters", "basal_tol", "band_pass")
+
 SENSITIVE_KEYS = ("core_temperature", "cmb_temperature", "radius")
 
 
@@ -675,7 +696,8 @@ def _with_sensitivity(body, views, x, opt, acc, qs, supplied=False, ctx=None, re
         else:
             new.append(q)
     if rt2 is not None:
-        sides = [_side_check(F2, x2, acc2.F, -1.0, rt2), _side_check(F2, x2, acc2.F, 1.0, rt2)]
+        sides = [_side_check(F2, x2, acc2.F, -1.0, rt2, b2.closure.lo, b2.closure.hi),
+                 _side_check(F2, x2, acc2.F, 1.0, rt2, b2.closure.lo, b2.closure.hi)]
         if not all(sd["ok"] for sd in sides):
             ratios = [sd["deviation"] / sd["allowed"] for sd in sides if sd.get("deviation") is not None]
             return tuple(new), result.Note(
@@ -765,7 +787,7 @@ def _root_tolerance(x, acc, options, bracket, trials) -> dict:
     return {"tol_F": tol_f, "s": s, "delta": delta, "far": far}
 
 
-def _side_check(F, x, f_root, side, rt) -> dict:
+def _side_check(F, x, f_root, side, rt, lo=-math.inf, hi=math.inf) -> dict:
     """Phase-1 design note 9 (a″): one side of the root, both sides always (the rule, not the result, picks them).
     F at x + side·δ and x + side·2δ must lie on one line through F(x*) within 2·tol_F + ½·|F″_side|·δ², F″_side the
     second divided difference over (the side's reference point, x + side·2δ, x*), the reference being the nearest
@@ -774,6 +796,8 @@ def _side_check(F, x, f_root, side, rt) -> dict:
     r-floor event for F < 0; rhs.residual), so a chord never straddles it."""
     d = rt["delta"]
     x1, x2 = x + side * d, x + side * 2.0 * d
+    if not (lo <= x2 <= hi):                           # P1R-G2-R-10: a probe off the closure range is not taken
+        return {"side": side, "x1": x1, "x2": x2, "F1": None, "F2": None, "stop": "outside_range", "ok": False}
     f1, f2 = cl._value(F, x1), cl._value(F, x2)
     out = {"side": side, "x1": x1, "x2": x2, "F1": None if isinstance(f1, st.Stop) else f1,
            "F2": None if isinstance(f2, st.Stop) else f2,
@@ -800,6 +824,13 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
     not reachable from Body, options or the context. `registry`: a loaded material registry the caller owns and
     reuses across solves (switch-over note 5); without it the solve loads its own."""
     registry_arg = registry
+    context.require_git_tree()                        # P1R-G2-R-07: before any pass, not after the accepted one
+    # P1R-G2-C-09: these declared Options enter solve_id but the closure reads its module constants (close_*, wall_*)
+    # and nothing reads basal_* or band_pass (A1 impl note 7); a caller setting one would get a new id with an
+    # unchanged computation, so a non-default value is refused here as not wired
+    inert = [k for k in INERT_OPTIONS if getattr(options, k) != getattr(context.Options(), k)]
+    if inert:
+        raise NotImplementedError(f"Options {inert} are declared but not wired into the solve (P1R-G2-C-09)")
     where = f"{body.name}.solve"
     nyi = _not_yet(body)                              # r2 S7 B2/B3: refuse by name what phase 1 does not implement
     if nyi is not None:
@@ -907,7 +938,8 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
             if sens_note is not None:
                 notes.append(sens_note)
         if guard:                                        # note 9 (a″): one-sided chords on both sides of x*
-            sides = [_side_check(F, x, acc.F, -1.0, rt), _side_check(F, x, acc.F, 1.0, rt)]
+            sides = [_side_check(F, x, acc.F, -1.0, rt, body.closure.lo, body.closure.hi),
+                     _side_check(F, x, acc.F, 1.0, rt, body.closure.lo, body.closure.hi)]
             for sd in sides:
                 for xx, ff in ((sd["x1"], sd["F1"]), (sd["x2"], sd["F2"])):
                     ctx.record("probe", x=xx, F=ff, stop=sd["stop"])
@@ -935,7 +967,9 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
     if out.kind == "unconverged":
         budget = out.detail.get("budget", "CLOSE_ITERS")
         value = cl.MAX_SPLITS if budget == "MAX_SPLITS" else cl.CLOSE_ITERS
-        last = next((t.F for t in reversed(out.trials) if t.F is not None), None)
+        # P1R-G2-R-08: the residual of the bracket that failed (closure's problem record), else the last solved trial
+        failed = next((p for p in out.detail.get("problems", []) if p and p[0] == "unconverged"), None)
+        last = failed[2] if failed is not None else next((t.F for t in reversed(out.trials) if t.F is not None), None)
         return refusals.no_answer("unconverged", where, budget_name=budget, budget_value=value,
                                   last_residual=last), warm
     walls = []
@@ -953,7 +987,10 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
     if straddled is not None:
         scan = [[t.x, t.F, None if t.stop is None else t.stop.kind] for t in sorted(out.trials, key=lambda t: t.x)]
         return _to_refusal(straddled.stop, where, straddled.x, kind, "wall", scan=scan), warm
-    solved = sorted((t for t in out.trials if t.F is not None), key=lambda t: t.x)
+    # P1R-G2-C-13: design §A1.5's «the scan ends, F there»: F at the lowest and highest scan points (None where that
+    # end refused), not at the extreme solved trials
+    scan_pts = sorted((t for t in out.trials if t.kind == "scan"), key=lambda t: t.x)
     return refusals.make("solve.no_bracket", where, x=None, closure_kind=kind, pass_kind="scan",
-                         x_lo=body.closure.lo, x_hi=body.closure.hi, F_lo=solved[0].F, F_hi=solved[-1].F,
+                         x_lo=body.closure.lo, x_hi=body.closure.hi, F_lo=scan_pts[0].F if scan_pts else None,
+                         F_hi=scan_pts[-1].F if scan_pts else None,
                          n_scan=options.n_scan, walls=walls, solved_regions=_regions(out)), warm
