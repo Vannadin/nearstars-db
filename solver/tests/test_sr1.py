@@ -91,6 +91,7 @@ class OnRealSolves(unittest.TestCase):
         n = [x for x in ans.notes if x.kind == "sensitivity_resolution"]
         self.assertEqual(len(n), 1)
         self.assertEqual(n[0].fields["scope"], "root placement")
+        self.assertEqual(n[0].fields["probe_side"], 1.0)            # both probe passes answer: the + side first (68)
         self.assertEqual(set(n[0].fields["per_key"]), {q.key for q in ans.quantities if q.sensitivity is not None})
 
     def test_omitted_sensitivity_gives_no_resolution(self):

@@ -93,7 +93,9 @@ def solver_code_bytes() -> bytes:
         meta, path = line.split("\t", 1)
         if counts(path):
             h.update(f"{path} {meta.split()[1]}\n".encode())
-    changed = set(git("diff", "--name-only").split()) | set(git("ls-files", "--others", "--exclude-standard").split())
+    # --relative: diff names paths from the top level otherwise, ls-files from -C's directory (68 on f9fdc396)
+    changed = set(git("diff", "--name-only", "--relative").split()) | set(git("ls-files", "--others",
+                                                                               "--exclude-standard").split())
     for path in sorted(p for p in changed if counts(p)):
         full = os.path.join(repo, path)
         content = open(full, "rb").read() if os.path.isfile(full) else b"<deleted>"

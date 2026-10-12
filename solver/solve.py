@@ -921,7 +921,7 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
         got = inward(body, vx, x, options, want_graze=False)   # a trial: its graze is never read
         if isinstance(got, st.Stop):
             return got
-        return got.F if got.F is not None else st.Stop("no_residual", {"x": x})
+        return got.F if got.F is not None else st.Stop("no_residual", {"x": x, "value": None})   # value named (68)
 
     out = cl.solve_scalar(F, body.closure.lo, body.closure.hi, options.n_scan)
     for t in out.trials:                              # design §A1.5: passes tagged scan / wall / brent
