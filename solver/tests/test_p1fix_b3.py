@@ -166,5 +166,41 @@ class MaterialBytesBlobHalf(unittest.TestCase):
         self.assertNotEqual(context.solve_id_of(c, base, OPT), context.solve_id_of(c, counted, OPT))
 
 
+class StepCapBranches(unittest.TestCase):
+    """G3-T-05, events.step_cap's own branches (68 on cc1d20f0): a PhaseGap or SpinodalGap at the step's P gives no
+    cap, any other exception propagates, dP/dm = 0 gives no cap, and a material without a table phase has no cap."""
+
+    @classmethod
+    def setUpClass(cls):
+        from solver import events as ev
+        body, _aside = from_v1.load_v1("engine/bodies/mars.yaml")
+        body, _m = mb.member_of(body)
+        cls.ev = ev
+        cls.mat = sv._views(body)["mantle"].mat
+        cls.cap = staticmethod(ev.step_cap(cls.mat))
+
+    def _raising(self, exc):
+        return mock.patch.object(type(self.mat), "phase_at", side_effect=exc)
+
+    def test_gaps_give_no_cap(self):
+        k1 = (0.0, 1.0, 1.0e-8)
+        y = (3.0e6, 5.0e9, 1900.0, 1900.0, 0.0, 0.0)
+        self.assertIsNotNone(self.cap(0.0, y, k1))                          # control: a cap at that state
+        for gap in (lm.eos.PhaseGap("silicate", 5.0e9, "planted"), type("SpinodalGap", (Exception,), {})("planted")):
+            with self.subTest(gap=type(gap).__name__), self._raising(gap):
+                self.assertIsNone(self.cap(0.0, y, k1))
+
+    def test_other_exceptions_propagate(self):
+        with self._raising(KeyError("planted")), self.assertRaises(KeyError):
+            self.cap(0.0, (3.0e6, 5.0e9, 1900.0, 1900.0, 0.0, 0.0), (0.0, 1.0, 1.0e-8))
+
+    def test_zero_pressure_slope_gives_no_cap(self):
+        self.assertIsNone(self.cap(0.0, (3.0e6, 5.0e9, 1900.0, 1900.0, 0.0, 0.0), (0.0, 0.0, 1.0e-8)))
+
+    def test_no_table_phase_no_cap(self):
+        body, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
+        self.assertIsNone(self.ev.step_cap(sv._views(body)["mantle"].mat))
+
+
 if __name__ == "__main__":
     unittest.main()
