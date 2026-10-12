@@ -418,23 +418,40 @@ class MethodTermMaterials(unittest.TestCase):
         self.assertEqual(mt.materials_for(earth, planted), "legacy")       # control: a boundary keeps legacy
 
     def test_every_solve_follows_it(self):
+        """68 H1 on 13035f6e: every solve one_state makes, not only the first. With the shipped registry, the spy passes
+        each call through (the old chain off, it is legacy and not a solve of this term) and records it: the declared
+        state makes three (adaptive, run_oracle's adaptive and fixed records), a T_pot state two (adaptive, fixed). With a
+        planted boundary the first call already shows «legacy». Earth is forward, so no member solve is made."""
         from unittest import mock
-        from solver import method_term as mt
+        from solver import method_term as mt, run_oracle as ro
         seen = []
+        real = sv.solve
 
         class Stop(Exception):
             pass
 
         def spy(body, options=context.Options(), warm=None, views=None, registry=None):
+            seen.append((options.materials, registry is not None, options.fixed_dr > 0.0))
+            return real(body, options, warm, views, registry)
+
+        def stop(body, options=context.Options(), warm=None, views=None, registry=None):
             seen.append((options.materials, registry is not None))
             raise Stop
-        for reg, want in ((mr.load(), "registry"),
-                          (self._with_fe_prem(boundaries=[{"between": ["a", "b"], "kind": "solid_solid", "curve": {}}]),
-                           "legacy")):
-            seen.clear()
-            with mock.patch.object(sv, "solve", spy), self.assertRaises(Stop):
-                mt.one_state("engine/bodies/earth.yaml", "declared", "O1", registry=reg)
-            self.assertEqual(seen, [(want, True)])
+        shipped = mr.load()
+        with mock.patch.object(sv, "solve", spy), mock.patch.object(ro.lv, "run_chain", lambda *a, **k: None), \
+                mock.patch.object(ro, "_legacy", lambda rec, chain: None):
+            for state, want in (("declared", [("registry", True, False), ("registry", True, False),
+                                              ("registry", True, True)]),
+                                (2000.0, [("registry", True, False), ("registry", True, True)])):
+                seen.clear()
+                rec = mt.one_state("engine/bodies/earth.yaml", state, "t", registry=shipped)
+                self.assertEqual(seen, want, state)
+                self.assertEqual(rec["materials"], "registry")
+        seen.clear()
+        planted = self._with_fe_prem(boundaries=[{"between": ["a", "b"], "kind": "solid_solid", "curve": {}}])
+        with mock.patch.object(sv, "solve", stop), self.assertRaises(Stop):
+            mt.one_state("engine/bodies/earth.yaml", "declared", "t", registry=planted)
+        self.assertEqual(seen, [("legacy", True)])                          # control: the planted boundary
 
 
 class Step2PutBack(unittest.TestCase):
