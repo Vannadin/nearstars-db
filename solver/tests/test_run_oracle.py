@@ -67,6 +67,35 @@ class CoreBalanceGuard(unittest.TestCase):
         self.assertTrue(node["values"]["has_inner_core"])
         self.assertFalse([n for n in rec["notes"] if n["kind"] == "core_balance_not_solved"])
 
+    def test_planted_corner_on_a_jump_nulls_the_band(self):
+        """68 H1: the band corners are roots too. Both corrections put back (a true central root); one corner's balance
+        gets a planted jump at 3900 K, so its bisection lands there. The band's _min/_max give no value, the centre
+        stands, and the note names that corner."""
+        from unittest import mock
+        import core_energy as ce
+        from solver.tests.test_switchover import Step2PutBack
+        real = ce.balance
+        bad = (ce.DTC_DT_RANGE[0], ce.H_CORE_RANGE[0])
+
+        def planted(t_c, t_m_base, material_name, p_cmb, r_cmb, m_core, dtc_dt=ce.DTC_DT, h=ce.H_CORE):
+            f, bl, terms = real(t_c, t_m_base, material_name, p_cmb, r_cmb, m_core, dtc_dt, h)
+            if (dtc_dt, h) == bad:
+                f += (1.0 if t_c < 3900.0 else -1.0) * 1e3 * bl["q_c_w"]
+            return f, bl, terms
+        with mock.patch.object(ce, "balance", planted):
+            rec = ro.one("engine/bodies/earth.yaml", "declared", FAST,
+                         registry=Step2PutBack._registry("W-L1-01", "P5-F1"))
+        node = self._balance(rec)
+        self.assertTrue(node["applicable"])
+        self.assertLess(abs(node["values"]["balance_residual"]), ro.lv.BALANCE_TOL)
+        self.assertIsNone(node["values"]["core_cmb_temperature_solved_min"])
+        self.assertIsNone(node["values"]["core_cmb_temperature_solved_max"])
+        got = [n for n in rec["notes"] if n["kind"] == "core_balance_not_solved"]
+        self.assertEqual(len(got), 1)
+        self.assertEqual(got[0]["fields"]["failed"], "corners")
+        self.assertEqual([(c["dtc_dt"], c["h"]) for c in got[0]["fields"]["corners"]], [bad])
+        self.assertAlmostEqual(got[0]["fields"]["corners"][0]["t"], 3900.0, places=6)
+
     def test_guard_on_planted_results(self):
         import payload
         ok = payload.Result(recipe="r", version="v", regime="x", reason="", grade="analog", inputs={},
@@ -79,6 +108,18 @@ class CoreBalanceGuard(unittest.TestCase):
         self.assertEqual((note["kind"], note["fields"]["residual"]), ("core_balance_not_solved", -15.93))
         refused = payload.out_of_domain("r", "v", "no core", inputs={})
         self.assertEqual(ro.lv.balance_guard(refused), (refused, None))
+        band = payload.Result(recipe="r", version="v", regime="x", reason="", grade="analog", inputs={},
+                              values={"balance_residual": 6.5e-13, "core_cmb_temperature_solved_min": 3769.0,
+                                      "core_cmb_temperature_solved_max": 4160.0},
+                              units={"balance_residual": "", "core_cmb_temperature_solved_min": "K",
+                                     "core_cmb_temperature_solved_max": "K"})
+        roots = ((1, 1, 3770.0, 6.5e-13), (2, 0, 3769.0, 1e-12), (2, 1, 4160.0, 0.4))
+        out, note = ro.lv.balance_guard(band, roots)
+        self.assertTrue(out.applicable)
+        self.assertEqual((out.values["core_cmb_temperature_solved_min"], out.values["core_cmb_temperature_solved_max"],
+                          out.values["balance_residual"]), (None, None, 6.5e-13))
+        self.assertEqual([(c["dtc_dt"], c["h"]) for c in note["fields"]["corners"]], [(2, 1)])
+        self.assertEqual(ro.lv.balance_guard(band, roots[:2]), (band, None))
 
 
 class Dante(unittest.TestCase):

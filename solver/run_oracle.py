@@ -68,7 +68,8 @@ def _legacy(rec, chain):
         out[node] = {"verdict_kind": interior.verdict_of(r).kind, "applicable": bool(r.applicable),
                      "values": result.plain(dict(r.values)), "units": dict(r.units)}
     rec["legacy_nodes"] = out
-    rec["notes"] = list(rec.get("notes") or []) + list(chain.notes)   # core_balance_not_solved (switch-over note 7)
+    # notes: the Answer's notes plus the old chain's (core_balance_not_solved, switch-over note 7); all class R (note 15)
+    rec["notes"] = list(rec.get("notes") or []) + list(chain.notes)
     # table_read: the history actually read O3's table, i.e. load_for returned a grid from a file whose blob equals the
     # oracle tree's committed table (t2 note 2's frozen-table mode; r2 run_oracle B1)
     rec["table_read"] = any(ok and blob is not None and blob == _committed_blob(path) for path, blob, ok in

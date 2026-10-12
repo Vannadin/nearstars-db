@@ -14,6 +14,7 @@ by the injected interior_layers Result is an **output** read; a key answered by 
 """
 from __future__ import annotations
 
+import dataclasses
 import os
 import sys
 from dataclasses import dataclass
@@ -82,19 +83,36 @@ class ChainRun:
     notes: tuple = ()                         # Note dicts the chain adds to the record (core_balance_not_solved)
 
 
-def balance_guard(r):
-    """(Result, note dict or None): core_energy_balance's Result as the old recipe gave it when its balance_residual
-    meets BALANCE_TOL; otherwise an out-of-domain Result (no values, so no later node reads them) and the Note
-    core_balance_not_solved. The structure answer is untouched (note 13 §2's precedent for sensitivity)."""
-    res = (r.values or {}).get("balance_residual") if r.applicable else None
-    if res is None or abs(res) <= BALANCE_TOL:
+def balance_guard(r, roots=()):
+    """(Result, note dict or None) for core_energy_balance. `roots`: (dtc_dt, h, T, residual) of every find_root call the
+    node made, in order — the central root first, then the four dTc/dt × H band corners (core_energy.solve). A root
+    must meet BALANCE_TOL (68 H1, directing: no root, no value):
+    - the central root (balance_residual) fails → an out-of-domain Result (no values, so no later node reads them);
+    - a band corner fails → core_cmb_temperature_solved_min/_max become None, the centre's values stand;
+    either way the Note core_balance_not_solved names the failing roots. The structure answer is untouched (note 13
+    §2's precedent for sensitivity)."""
+    if not r.applicable:
+        return r, None
+    res = (r.values or {}).get("balance_residual")
+    corners = [{"dtc_dt": d, "h": h, "t": t, "residual": x} for d, h, t, x in roots[1:]
+               if t is not None and x is not None and abs(x) > BALANCE_TOL]
+    centre_bad = res is not None and abs(res) > BALANCE_TOL
+    if not centre_bad and not corners:
         return r, None
     reason = "root on a discontinuity"
-    text = (f"core_energy_balance: |balance_residual| {abs(res):.3g} > {BALANCE_TOL:g}; the bisection's sign change "
-            f"is not a root ({reason}), so the node gives no values")
-    out = payload.out_of_domain(r.recipe, r.version, text, inputs=dict(r.inputs), refs=tuple(r.refs or ()))
-    return out, {"type": "Note", "kind": "core_balance_not_solved", "text": text,
-                 "fields": {"residual": res, "tolerance": BALANCE_TOL, "reason": reason}}
+    fields = {"residual": res, "tolerance": BALANCE_TOL, "reason": reason, "failed": "centre" if centre_bad else "corners",
+              "corners": corners}
+    if centre_bad:
+        text = (f"core_energy_balance: |balance_residual| {abs(res):.3g} > {BALANCE_TOL:g}; the bisection's sign change "
+                f"is not a root ({reason}), so the node gives no values")
+        out = payload.out_of_domain(r.recipe, r.version, text, inputs=dict(r.inputs), refs=tuple(r.refs or ()),
+                                    notes=tuple(r.notes or ()))
+    else:
+        text = (f"core_energy_balance: {len(corners)} band corner root(s) past {BALANCE_TOL:g} ({reason}); "
+                f"core_cmb_temperature_solved_min/_max give no value, the central root stands")
+        vals = {**r.values, "core_cmb_temperature_solved_min": None, "core_cmb_temperature_solved_max": None}
+        out = dataclasses.replace(r, values=vals)
+    return out, {"type": "Note", "kind": "core_balance_not_solved", "text": text, "fields": fields}
 
 
 def run_chain(v1_yaml: str | os.PathLike, answer, serve_cmf_from_declared: bool = False,
@@ -150,7 +168,23 @@ def _run(body, injected, declared_keys) -> ChainRun:
             return None
 
         def run_balance(b):
-            r, note = balance_guard(fn(b))
+            import core_energy as ce
+            real, roots = ce.find_root, []
+
+            def find_root(t_m_base, material_name, p_cmb, r_cmb, m_core, dtc_dt=ce.DTC_DT, h=ce.H_CORE, t_hi=None):
+                t = real(t_m_base, material_name, p_cmb, r_cmb, m_core, dtc_dt, h, t_hi)
+                x = None
+                if t is not None:
+                    f, bl, _terms = ce.balance(t, t_m_base, material_name, p_cmb, r_cmb, m_core, dtc_dt, h)
+                    x = f / max(bl["q_c_w"], 1.0)                  # as core_energy.solve's balance_residual
+                roots.append((dtc_dt, h, t, x))
+                return t
+            ce.find_root = find_root
+            try:
+                got = fn(b)
+            finally:
+                ce.find_root = real
+            r, note = balance_guard(got, tuple(roots))
             note is not None and notes.append(note)
             return r
         return run_balance
