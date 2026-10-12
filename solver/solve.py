@@ -153,21 +153,30 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
     start = len(layers) - 1
     if layers[-1].thermal == "conductive":
         lt = layers[-1]
-        got = lid.lid_pass(views[lt.id], M, R, lt.extent.value, p_s, sf.t_s, t_pot, rs,
+        lv_ = views[lt.id]
+        lid_mat = getattr(lv_, "mat", None)
+        got = lid.lid_pass(lv_, M, R, lt.extent.value, p_s, sf.t_s, t_pot, rs,
                            rhs.PassOptions(rtol=opt.rtol, eps=opt.eps, r_floor_frac=opt.r_floor_frac,
                                            max_steps=opt.max_steps_solve,
                                            event_min_progress=opt.event_min_progress, fixed_dr=opt.fixed_dr,
                                            event_rewalks=opt.event_rewalks),
                            lid_iters=opt.lid_iters, lid_t_tol=opt.lid_t_tol, layer_id=lt.id,
-                           events=events.layer_events(views[lt.id], getattr(views[lt.id], "p_stop", 0.0))
-                           if getattr(views[lt.id], "mat", None) is not None else ())
+                           events=events.layer_events(lv_, getattr(lv_, "p_stop", 0.0)) if lid_mat is not None else (),
+                           # G1-C-04: the lid is the mantle material; it takes the same note-12 step cap
+                           h_cap=_plan(lv_)[1] if lid_mat is not None else None,
+                           # G1-R-02 = G2-R-01: the lid's landed events and its graze reach the pass record
+                           monitor=(lambda: events.GrazeMonitor(lid_mat or lv_, getattr(lv_, "p_stop", 0.0)))
+                           if want_graze else None)
         if isinstance(got, st.Stop):
             return _at(got, y, m)                    # a lid stop: the segment's start (note 13 §3)
         m, y = got.m, got.y
         out.entered.append(lt.id)
         out.profiles[lt.id] = got.path
-        for k, v in got.counters.items():
+        out.events += [e[0] for e in got.events]
+        out.graze = got.graze
+        for k, v in got.counters.items():                # G2-C-05: the accepted lid pass's steps only enter N_acc
             out.counters[k] = out.counters.get(k, 0) + v
+        out.counters["lid_discarded_accepted"] = (got.discarded or {}).get("accepted", 0)   # cost, not tol_F
         start = len(layers) - 2
         if start >= 0:
             out.boundaries.append((f"{layers[start].id}/{lt.id}", "layer", m, y[0], y[1], y[3], y[3]))
@@ -500,6 +509,11 @@ def _not_yet(body):
             return ("extent_phase_not_in_phase1",
                     f"layer '{l.id}' is bounded by the phase event '{l.extent.ref}'; phase-bounded extents are not "
                     "implemented in phase 1")
+    if body.layers and all(l.thermal == "conductive" for l in body.layers):
+        # phase-1 design note 13 §4 (G2-C-04): with no adiabatic layer below the lid, F would be taken at the lid
+        # base as if it were the centre
+        return ("lid_only_body", "phase 1 integrates the interior below a lid as adiabatic layers; this body declares "
+                                 "none")
     if body.closure.kind != "R" and any(l.thermal == "conductive" for l in body.layers):
         # P1R-G4-C-08: owner Q3 / R-LITHO-6, as from_v1 refuses it on the v1 path: an inversion keeps no structural lid
         return ("lid_on_inversion",

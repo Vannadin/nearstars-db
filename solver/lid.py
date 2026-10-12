@@ -30,7 +30,10 @@ class LidResult:
     t_profile_base: float        # the stepped T at the base node of that pass (= a/r_b + b to the stepper's rtol)
     trail: tuple                 # T_b iterates
     path: tuple
-    counters: dict               # summed over every pass of the fixed point
+    counters: dict               # the accepted (last) pass's own, which alone integrates the state F reads (G2-C-05)
+    events: tuple = ()           # the accepted pass's landed events, as (name, m, y) (G1-R-02 = G2-R-01)
+    graze: object = None         # the accepted pass's closest graze of T_ad, or None
+    discarded: dict = None       # summed counters of the other passes (T_b⁰ and the non-final iterates), for cost
 
 
 def _lid_rhs(view, a: float | None, b: float | None):
@@ -64,12 +67,16 @@ def _coeffs(radius: float, r_b: float, t_s: float, t_b: float):
 
 def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_pot: float,
              r_scale: float, opt: rhs.PassOptions = rhs.PassOptions(), lid_iters: int = 8,
-             lid_t_tol: float = 1e-9, t_b_seed: float | None = None, layer_id: str = "lid", events=()):
+             lid_t_tol: float = 1e-9, t_b_seed: float | None = None, layer_id: str = "lid", events=(),
+             h_cap=None, monitor=None):
     """Integrate the lid from the surface to its base. Returns a LidResult, or a Stop:
     - Stop("lid_input", {layer_id, field, value}) for R-LITHO-6's input refusals (depth ≤ 0 or ≥ R, no T_s);
     - the pass's own stop, with layer_id added;
     - Stop("lid_unconverged", {layer_id, trail, iters, tol}).
-    `t_b_seed` replaces T_b⁰ (a test control). `events` are the layer's S5 events (seams, onset curves)."""
+    `t_b_seed` replaces T_b⁰ (a test control). `events` are the layer's S5 events (seams, onset curves); `h_cap` is
+    the material's note-12 step cap, as `_segment` passes it (G1-C-04). `monitor` () → a fresh on_accept callable
+    with a `best` graze: one per pass, the accepted pass's kept (G1-R-02). It is handed the state with T = T_ad,
+    since the lid's onset events watch T_ad (y[2]) and the monitor reads y[3]."""
     if t_s is None:
         return st.Stop("lid_input", {"layer_id": layer_id, "field": "surface_temperature_k", "value": None})
     if not (0.0 < depth < radius):
@@ -79,23 +86,28 @@ def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_
                       h_min=1e-15 * mass, h_max=mass / 20.0, max_steps=opt.max_steps,
                       event_min_progress=opt.event_min_progress * mass,
                       event_restarts_step=opt.event_restarts_step, event_restarts_run=opt.event_restarts_run,
-                      event_rewalks=opt.event_rewalks)
+                      event_rewalks=opt.event_rewalks, h_cap=h_cap)
     base = st.Event("lid_base", lambda m, y: y[0] - r_b, scale=r_scale)
-    counters: dict = {}
+    discarded: dict = {}
+    last: dict = {}
 
     def run(a, b):
         t0 = t_pot if a is None else t_s
+        mon = monitor() if monitor is not None else None
+        on_accept = None if mon is None else (lambda m, y: mon(m, (y[0], y[1], y[2], y[2], *y[4:])))
         if opt.fixed_dr > 0.0:
             res = fixed_grid.run_r(_lid_rhs(view, a, b), mass, (radius, p_s, t_pot, t0, 0.0, 0.0), 0.0, r_b,
-                                   "lid_base", opt.fixed_dr, events, max_steps=opt.max_steps,
+                                   "lid_base", opt.fixed_dr, events, on_accept=on_accept, max_steps=opt.max_steps,
                                    event_min_progress=opt.event_min_progress * r_scale,
                                    event_restarts_step=opt.event_restarts_step,
                                    event_restarts_run=opt.event_restarts_run, m_scale=mass)
         else:
             res = st.run(_lid_rhs(view, a, b), mass, (radius, p_s, t_pot, t0, 0.0, 0.0), 0.0, sopt,
-                         [base, *events])
-        for k, v in vars(res.counters).items():
-            counters[k] = counters.get(k, 0) + v
+                         [base, *events], on_accept=on_accept)
+        last["graze"] = None if mon is None else mon.best
+        for k, v in last.get("counters", {}).items():         # the previous pass is now a discarded one
+            discarded[k] = discarded.get(k, 0) + v
+        last["counters"] = dict(vars(res.counters))
         if res.stop.kind != "event" or res.event != "lid_base":
             rec = res.stop.record if isinstance(res.stop.record, dict) else {"record": res.stop.record}
             if res.stop.kind in ("end", "event"):
@@ -119,7 +131,8 @@ def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_
         if abs(t_new - t_b) <= lid_t_tol * abs(t_new):
             r, p, t_ad, t_prof, i_moi, v_pore = res.y
             return LidResult(res.x, (r, p, t_ad, t_new, i_moi, v_pore), t_new, a, b, t_prof, tuple(trail), res.path,
-                             counters)
+                             last["counters"], tuple(e for e in res.events if e[0] != "lid_base"), last.get("graze"),
+                             discarded)
         t_b = t_new
     return st.Stop("lid_unconverged", {"layer_id": layer_id, "trail": tuple(trail), "iters": lid_iters,
                                        "tol": lid_t_tol})
