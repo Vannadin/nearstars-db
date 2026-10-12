@@ -254,12 +254,20 @@ class GrazeMonitor:
         self.p_stop = p_stop
         self.hist: dict = {}
         self.best: Graze | None = None
+        self.joins = sorted(curve_seams(mat))
+        self.branch = None
 
     def __call__(self, m: float, y: tuple) -> None:
         p, t = y[1], y[3]
         oc = getattr(self.mat, "onset_curves", None)
         if oc is None or t <= 0.0:
             return
+        # P1R-G1-R-01: a curve's branch join (a seam, landed at P = p_b, which reads the new branch) is not a graze;
+        # the three-node window never spans it (the old detector's «clear on material change», per branch)
+        branch = bisect.bisect_right(self.joins, p)
+        if branch != self.branch:
+            self.hist.clear()
+            self.branch = branch
         try:
             curves = oc(p if p > 0.0 else max(1.0e5, self.p_stop), t)
         except Exception as exc:

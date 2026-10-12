@@ -154,11 +154,14 @@ def step_rk4(f, x: float, y: Vec, h: float, k1: Vec, frozen: tuple = (), ref: in
 
 
 def _new_side_k1(f, ev: Event, x: float, y: Vec, k1: Vec, g0: float):
-    """Fixed mode, after landing a seam: k1 read on the new side. A landed node may sit exactly on the seam (g = 0),
+    """After landing a seam (both modes): k1 read on the new side. A landed node may sit exactly on the seam (g = 0),
     where the material reads its old branch; the full fixed step that follows weights that k1 by 1/6, so a density
     jump at the seam would put an O(Δρ/ρ · dr / 6) error into r (Earth 23.83 GPa at 1369 K: −84 m, 3717 vs 4407
     kg/m³). The old engine starts the step after a phase landing on the opposite phase (interior.py «다음 걸음은 판정
-    없이 반대 상으로 시작한다»); here the derivative is read one ulp past the seam. The state is not moved."""
+    없이 반대 상으로 시작한다»); here the derivative is read one ulp past the seam. The state is not moved.
+    Adaptive mode (P1R-G1-C-01): the landed FSAL stage k_e is that same old-branch read, and the error estimate
+    weights k1 by E₁ ≈ 0.0012 against 35/384 in the solution, so it went uncontrolled (−0.066 m in r per seam on the
+    review's toy, ~1.5e-8 in F); the next step now starts from the new side's k1 here too."""
     c = ev.component
     g = ev.g(x, y)
     if g is None or g * g0 < 0.0:
@@ -386,7 +389,7 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             cnt.accepted += 1
             cnt.events += 1
             x, y, k1 = x_e, y_e, k_e
-            if opt.fixed and fired.component is not None:
+            if fired.component is not None:          # G1-C-01: both modes; the adaptive FSAL k1 too
                 k1 = _new_side_k1(f, fired, x, y, k1, g_prev[fired.name])
                 if isinstance(k1, Stop):
                     return stop("refused", k1)
