@@ -95,6 +95,12 @@ def ammonia_events(mat) -> list:
 ONSET_SCALE = 1.0e3
 
 
+#: P1R-G1-R-11: the engine's refusal channels these direct material calls (event g, the cap, the band test, the graze
+#: monitor) read as «not here»: PhaseGap, SpinodalGap and, as the adapter maps it since G3-C-01, ValueError. The density
+#: path refuses by name at the same state when the material itself cannot answer there.
+ENGINE_GAPS = ("PhaseGap", "SpinodalGap", "ValueError")
+
+
 def _curve_at(mat, name, p, t, p_stop=0.0):
     """T − T_onset of the named curve at (P, T), or None where the material reports no such curve. The surface start
     (P ≤ 0) is read at max(1 bar, p_stop), as dT/dP is."""
@@ -104,7 +110,7 @@ def _curve_at(mat, name, p, t, p_stop=0.0):
     try:
         curves = oc(p if p > 0.0 else max(1.0e5, p_stop), t)
     except Exception as exc:                     # a material domain edge: no curve read here (the density path
-        if type(exc).__name__ in ("PhaseGap", "SpinodalGap"):   # refuses by name at the same state)
+        if type(exc).__name__ in ENGINE_GAPS:   # refuses by name at the same state)
             return None
         raise
     for n, t_on in curves:
@@ -210,7 +216,7 @@ def step_cap(mat, t_index: int = 2):
         try:
             ph = mat.phase_at(p)
         except Exception as exc:
-            if type(exc).__name__ in ("PhaseGap", "SpinodalGap"):
+            if type(exc).__name__ in ENGINE_GAPS:
                 return None
             raise
         if id(ph) not in factors:
@@ -302,7 +308,7 @@ def band_check(mat, t_index: int = 2):
         try:
             return mat.phase_at(p if p > 0.0 else 1.0e5)
         except Exception as exc:
-            if type(exc).__name__ in ("PhaseGap", "SpinodalGap"):
+            if type(exc).__name__ in ENGINE_GAPS:
                 return None
             raise
 
@@ -425,7 +431,7 @@ class GrazeMonitor:
         try:
             curves = oc(p if p > 0.0 else max(1.0e5, self.p_stop), t)
         except Exception as exc:
-            if type(exc).__name__ in ("PhaseGap", "SpinodalGap"):
+            if type(exc).__name__ in ENGINE_GAPS:
                 return
             raise
         for name, t_on in curves:

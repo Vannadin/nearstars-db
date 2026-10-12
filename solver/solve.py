@@ -159,6 +159,10 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
     rs = rhs.r_scale_of(M, rho_mean)
     sf = body.surface
     top_view = views[body.layers[-1].id]
+    if getattr(top_view, "surface_shell", None) is not None:
+        # P1R-G1-C-10: §A1.2's analytic shell (ρ(P_s) → 0) exists on rhs.inward_pass, the physics tests' pass only; no
+        # phase-1 material has one. Reaching it here is a bug, not a refusal: ρ = 0 would divide by zero in the rhs
+        raise NotImplementedError(f"{body.name}: a surface shell (ρ(P_s) = 0) is not implemented in solve.inward")
     p_s = sf.p_s if sf.p_s is not None else (top_view.p_floor or 0.0)
     t_pot = sf.t_pot or 0.0
     out = PassOut(None, M, (), float("nan"), None, R=R, r_scale=rs)
@@ -212,8 +216,14 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
             return _at(st.Stop("layer_order", {"layer_id": layer.id, "rule": "mass_fraction",
                                            "expected": f"base mass {end[1]:.6g} below the top {m:.6g}",
                                            "got_m": m, "got_r": y[0]}), y, m)
-        graze_mon = events.GrazeMonitor(getattr(view, "mat", None) or view, getattr(view, "p_stop", 0.0)) \
-            if want_graze else None
+        mat_j = getattr(view, "mat", None) or view
+        if not want_graze:
+            graze_mon = None
+        elif graze_mon is None or getattr(graze_mon.mat, "name", None) != getattr(mat_j, "name", None) \
+                or getattr(mat_j, "name", None) is None:
+            # P1R-G1-C-09: the old detector cleared its history on a material change only; a same-material layer
+            # boundary keeps the three-node window (the best graze so far is kept by the merge below either way)
+            graze_mon = events.GrazeMonitor(mat_j, getattr(view, "p_stop", 0.0))
         out.entered.append(layer.id)
         res = _segment(view, M, m, y, end, rs, opt, graze_mon)
         out.profiles[layer.id] = res.path
@@ -530,6 +540,11 @@ def _not_yet(body):
             return ("extent_phase_not_in_phase1",
                     f"layer '{l.id}' is bounded by the phase event '{l.extent.ref}'; phase-bounded extents are not "
                     "implemented in phase 1")
+    if any(l.thermal == "conductive" for l in body.layers) and body.surface.t_pot is None:
+        # phase-1 design note 17 §2b (G1-R-09, closes G4-C-12): R-LITHO-4 anchors the lid's T_ad on T_pot; without it the
+        # lid's fixed point targets T_b = 0 and its relative test passes at 0 ≤ 0
+        return ("lid_without_t_pot", "a conductive lid is anchored on the potential temperature (R-LITHO-4); this body "
+                                     "declares none")
     if body.layers and all(l.thermal == "conductive" for l in body.layers):
         # phase-1 design note 13 §4 (G2-C-04): with no adiabatic layer below the lid, F would be taken at the lid
         # base as if it were the centre
