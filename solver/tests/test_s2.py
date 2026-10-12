@@ -1,5 +1,6 @@
-# 속도 묶음 S2 시험 — 민감도 풀이의 출발점·전도층 씨앗·Brent 허용오차 (phase-1 design note 15 §2–§4)
-"""Speed batch S2 on real bodies (phase-1 design post-freeze note 15). Each test fails on 9de992d4.
+# 속도 묶음 S2 시험 — 민감도 풀이의 출발점 (phase-1 design note 15 §2; §3·§4 는 15a·15b 로 빠짐)
+"""Speed batch S2 on real bodies (phase-1 design post-freeze note 15 §2, as amended by 15a; items 3 and 4 were dropped by
+notes 15a and 15b, so nothing here tests them). Each test fails on 9de992d4.
 
 Run from the worktree root:  solver/.venv/bin/python -m unittest solver.tests.test_s2
 """

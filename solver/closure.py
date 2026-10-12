@@ -79,7 +79,8 @@ def scan_points(lo: float, hi: float, n: int = N_SCAN) -> list:
     return [lo + (hi - lo) * i / (n - 1) for i in range(n)]
 
 
-def _brent(F, a: float, fa: float, b: float, fb: float, trials: list, lo: float = -math.inf, hi: float = math.inf):
+def _brent(F, a: float, fa: float, b: float, fb: float, trials: list, lo: float = -math.inf, hi: float = math.inf,
+           confirm: bool = True):
     """Brent's method (zeroin) on a bracket with fa·fb < 0, to |Δx| ≤ CLOSE_TOL·|x|. Bisection fallback guarantees
     shrink. A refusing evaluation inside a solved bracket is reported (it splits the bracket). Returns (root, None,
     final bracket (x_b, F_b, x_c, F_c)) or (None, problem, None); the final bracket names where a jump would sit
@@ -125,6 +126,8 @@ def _brent(F, a: float, fa: float, b: float, fb: float, trials: list, lo: float 
         v = _value(F, b)
         if isinstance(v, st.Stop):
             trials.append(Trial(b, None, v, "brent"))
+            if not confirm:              # refine (note 15a): any refusal falls back to the full procedure
+                return None, ("refused_inside", b, v), None
             # G2-C-01: confirm here (impl note 8). A solved confirming shot isolates b, and Brent goes on from that shot
             # (kept as a Brent trial, out of the sign search); only a confirmed refusal splits the bracket
             what, xc, vc = _confirm_chain(F, b, v, a, lo, hi, trials)
@@ -233,7 +236,7 @@ def refine(F, x0: float, lo: float, hi: float, h_rel: float = 1e-4, tries: int =
         if a > b:
             a, fa, b, fb = b, fb, a, fa
         x, prob, final = (a, None, None) if fa == 0.0 else (b, None, None) if fb == 0.0 else \
-            _brent(F, a, fa, b, fb, trials)
+            _brent(F, a, fa, b, fb, trials, confirm=False)
         if x is None:
             return None
         return Outcome("root", roots=[x], walls=[], trials=trials,
