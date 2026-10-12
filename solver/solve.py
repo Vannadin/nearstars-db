@@ -649,11 +649,15 @@ def _with_sensitivity(body, views, x, opt, acc, qs, supplied=False, ctx=None, re
     if isinstance(v2, result.Refusal):
         return qs, result.Note("sensitivity_not_measured", "the T_pot + δ views could not be built", {"dt": dt})
 
+    kept = {}                                         # SR1: the (a″) probe passes, kept while `keep` is on
+
     def F2(xx):
         vx = _views_at(b2, v2, xx)
         if isinstance(vx, st.Stop):
             return vx
         got = inward(b2, vx, xx, opt, want_graze=False)     # a trial: its graze is never read
+        if kept.get("on"):
+            kept[xx] = got
         return got if isinstance(got, st.Stop) else got.F
     # phase-1 note 15 §2: start from the root already found; any refusal or no bracket falls back unchanged
     out = cl.refine(F2, x, b2.closure.lo, b2.closure.hi)
@@ -695,17 +699,67 @@ def _with_sensitivity(body, views, x, opt, acc, qs, supplied=False, ctx=None, re
             new.append(dataclasses.replace(q, sensitivity=(q2[q.key] - q.point) / dt))
         else:
             new.append(q)
+    notes = []
     if rt2 is not None:
+        kept["on"] = True
         sides = [_side_check(F2, x2, acc2.F, -1.0, rt2, b2.closure.lo, b2.closure.hi),
                  _side_check(F2, x2, acc2.F, 1.0, rt2, b2.closure.lo, b2.closure.hi)]
+        kept["on"] = False
         if not all(sd["ok"] for sd in sides):
             ratios = [sd["deviation"] / sd["allowed"] for sd in sides if sd.get("deviation") is not None]
-            return tuple(new), result.Note(
+            notes.append(result.Note(
                 "sensitivity_probe_disclosure", "the local probe found F off one line beside the T_pot + δ root "
                 "(note 13 §2): the sensitivity stands, disclosed",
                 {"dt": dt, "x": x2, "delta": rt2["delta"], "dev_ratio": max(ratios) if ratios else None,
-                 "sides": [{k: sd.get(k) for k in ("side", "stop", "deviation", "allowed", "ok")} for sd in sides]})
-    return tuple(new), None
+                 "sides": [{k: sd.get(k) for k in ("side", "stop", "deviation", "allowed", "ok")} for sd in sides]}))
+        if any(q.sensitivity is not None for q in new):
+            notes.append(_sensitivity_resolution(b2, x2, acc2, q2, new, dt, rt2, out.trials, sides, kept))
+    return tuple(new), (notes or None)
+
+
+def _sensitivity_resolution(b2, x2, acc2, q2, new, dt, rt2, trials, sides, kept):
+    """SR1 (rewrite/sr1-sensitivity-resolution-registration.frozen.md): the sensitivity's root-placement resolution.
+    x_res = max(2·tol_F2/s2, E): the guard's constant, and E, the contiguous extent around x2 of the δ-solve's own
+    trials and probes with |F| ≤ tol_F2, sign changes among them included (a lower bound, limited by trial density).
+    Per key: dq/dx from the + side's nearer probe pass (else the − side's), Δs_q = |dq/dx|·x_res/δ, reported as
+    |Δs_q / s_q|. The fixed-x read is not in scope (§5)."""
+    tol, s2 = rt2["tol_F"], rt2["s"]
+    guard = 2.0 * tol / s2 if s2 > 0.0 else math.inf
+    pts = sorted({(t.x, t.F) for t in trials if t.F is not None}
+                 | {(sd[k], sd[f]) for sd in sides for k, f in (("x1", "F1"), ("x2", "F2")) if sd.get(f) is not None}
+                 | {(x2, acc2.F)})
+    i0 = min(range(len(pts)), key=lambda i: abs(pts[i][0] - x2))
+    near = lambda i: abs(pts[i][1]) <= tol
+    # the contiguous run of near trials (|F| ≤ tol_F2) around x2; a sign change inside the run is part of it, and a
+    # crossing between a near trial and a far one is not extended past the near one (E stays a lower bound)
+    lo = hi = i0
+    while lo > 0 and near(lo - 1):
+        lo -= 1
+    while hi < len(pts) - 1 and near(hi + 1):
+        hi += 1
+    extent = pts[hi][0] - pts[lo][0]
+    x_res = max(guard, extent)
+    side_used, why = None, []
+    qp, xp = None, None
+    for sd in sorted(sides, key=lambda d: -d["side"]):      # the + side first (registration §2, r2 N1)
+        got = kept.get(sd["x1"])
+        if got is None or isinstance(got, st.Stop):
+            why.append(f"side {sd['side']:+.0f}: {getattr(got, 'kind', 'not run')}")
+            continue
+        qp = {q.key: q.point for q in _quantities(b2, got, "", sd["x1"])}
+        xp, side_used = sd["x1"], sd["side"]
+        break
+    per_key = {}
+    if qp is not None:
+        for q in new:
+            if q.sensitivity is not None and q.key in qp and q.key in q2 and q.sensitivity != 0.0:
+                dqdx = (qp[q.key] - q2[q.key]) / (xp - x2)
+                per_key[q.key] = abs(dqdx * x_res / dt / q.sensitivity)
+    return result.Note("sensitivity_resolution", "the printed sensitivity's resolution from where the T_pot + δ root "
+                       "lands in F's floor crossing set (SR1); the fixed-x read is not included",
+                       {"x_res": x_res, "x_res_from": "trials" if extent > guard else "guard", "per_key": per_key,
+                        "probe_side": side_used if side_used is not None else "; ".join(why) or None,
+                        "scope": "root placement"})
 
 
 def _regions(out) -> list:
@@ -935,7 +989,9 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
         if body.surface.t_pot is not None and options.sensitivity_dt > 0.0:
             qs, sens_note = _with_sensitivity(body, views, x, options, acc, qs, supplied=supplied, ctx=ctx,
                                               registry=registry)
-            if sens_note is not None:
+            if isinstance(sens_note, list):
+                notes.extend(sens_note)
+            elif sens_note is not None:
                 notes.append(sens_note)
         if guard:                                        # note 9 (a″): one-sided chords on both sides of x*
             sides = [_side_check(F, x, acc.F, -1.0, rt, body.closure.lo, body.closure.hi),
