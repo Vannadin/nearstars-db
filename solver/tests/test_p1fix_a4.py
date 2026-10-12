@@ -138,12 +138,22 @@ class _Table:
         return smooth.cubic1(x, self.lnp, self.edge_ys, i)
 
 
+class _Call:
+    """The stepper's two calls on a plain step: verdict on the trial, then commit on the same node."""
+    def __init__(self, test):
+        self.test = test
+
+    def __call__(self, x, y, x_new, y_new, k1, k7):
+        v = self.test.verdict(x, y, x_new, y_new, k1, k7)
+        return v if v == "halve" else self.test.commit(x, y, x_new, y_new)
+
+
 def _check(table):
     ph = NS(table_key=KEY)
     mat = NS(name="planted", phases=(ph,), phase_at=lambda p: ph)
     patch = mock.patch.dict(mc._TABLES, {KEY: table})
     patch.start()
-    return events.band_check(mat)(), patch
+    return _Call(events.band_check(mat)()), patch
 
 
 def _y(p, t):
@@ -287,6 +297,58 @@ class LidReadsItsOwnT(unittest.TestCase):
         hc = p * lm.table_cell_factor(ph)
         self.assertEqual(events.step_cap(mat, t_index=3)(0.0, y, k1), hc)
         self.assertGreater(events.step_cap(mat, t_index=2)(0.0, y, k1), hc)
+
+
+class CommitOnTheAcceptedNode(unittest.TestCase):
+    """68 H1: candidates are judged at the node the stepper accepts. A landing short of a trial end that would read
+    «turned away» reports nothing; the same trial accepted whole reports one graze."""
+
+    def tearDown(self):
+        mock.patch.stopall()
+
+    def _held(self):
+        chk, _p = _check(_Table())
+        lnp0 = _Table().lnp[8]
+        floor = 0.05 / events.BAND_FLOOR_DIV
+        k = _slope_k(math.exp(lnp0))
+        g = [-0.05, -0.02, -0.01]                       # two floor steps closing in: a candidate is held
+        for i in range(2):
+            pa, pb = math.exp(lnp0 + i * floor), math.exp(lnp0 + (i + 1) * floor)
+            self.assertIsNone(chk(0.0, _y(pa, 2000.0 - OFF - g[i]), 1.0, _y(pb, 2000.0 - OFF - g[i + 1]), k, k))
+        return chk.test, math.exp(lnp0 + 2 * floor), floor, k
+
+    def test_a_landing_short_of_a_turn_reports_nothing(self):
+        test, p0, floor, k = self._held()
+        y0 = _y(p0, 2000.0 - OFF + 0.01)
+        y_trial = _y(p0 * math.exp(floor), 2000.0 - OFF + 0.03)          # the trial end: g − 0 grows (a turn)
+        y_land = _y(p0 * math.exp(0.5 * floor), 2000.0 - OFF + 0.005)    # the landing: still closing in
+        self.assertIsNone(test.verdict(0.0, y0, 1.0, y_trial, k, k))
+        self.assertIsNone(test.commit(0.0, y0, 0.5, y_land))
+        self.assertIn(0.0, test.pending)
+
+    def test_control_the_whole_trial_reports_the_turn(self):
+        test, p0, floor, k = self._held()
+        y0 = _y(p0, 2000.0 - OFF + 0.01)
+        y_trial = _y(p0 * math.exp(floor), 2000.0 - OFF + 0.03)
+        self.assertIsNone(test.verdict(0.0, y0, 1.0, y_trial, k, k))
+        self.assertIsInstance(test.commit(0.0, y0, 1.0, y_trial), dict)
+
+    def test_the_stepper_commits_the_landing(self):
+        """stepper.run calls commit with the landed node when an event lands inside the accepted trial."""
+        seen = []
+
+        class Spy:
+            def verdict(self, *a):
+                return None
+
+            def commit(self, x, y, x_acc, y_acc):
+                seen.append((x_acc, y_acc[1]))
+                return None
+        opt = dataclasses.replace(_opt(1e-10, 1e-3), step_check=Spy())
+        res = st.run(rhs.make_rhs(_Two()), M, Y0, 0.5 * M, opt, [_seam()])
+        (name, x_e, y_e), = res.events
+        self.assertIn((x_e, y_e[1]), seen)
+        self.assertEqual(len(seen), res.counters.accepted)
 
 
 if __name__ == "__main__":

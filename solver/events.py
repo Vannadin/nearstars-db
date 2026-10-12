@@ -278,10 +278,11 @@ def band_check(mat, t_index: int = 2):
     without one. For each band edge e in {0, W} of g = E(P) − T_STEP/2 − T (the g-band only, 13a N2): the edge passes
     when g − e changes sign over the step, or min |g − e| at the ends > ½·h·L, with h = |ln P_b − ln P_a| and
     L = max |dE/d ln P| over the spanned cells + BAND_T_MARGIN · max |P·dT/dP| at the step's end stages k1, k7 (13a
-    item 3). Both pass → None (accept). Else "halve", unless h ≤ the narrowest cell / BAND_FLOOR_DIV: the step is then
-    accepted and the edge held as a graze candidate (13b). A candidate is dropped when g − e later changes sign (the
-    edge was crossed: an approach, not a graze) and reported, as the dict this test returns, when g − e later moves
-    away from the edge with its sign kept (a turn: a graze). A step whose two ends are not on the same table phase, or
+    item 3). Both pass → verdict None (accept). Else "halve", unless h ≤ the narrowest cell / BAND_FLOOR_DIV: the step
+    is then accepted and the edge held as a graze candidate (13b), stored by commit() at the node the stepper accepts
+    (68 H1). A candidate is dropped when g − e later changes sign (the edge was crossed: an approach, not a graze) and
+    reported, as the dict commit() returns, when g − e later moves away from the edge with its sign kept (a turn: a
+    graze). A step whose two ends are not on the same table phase, or
     that touches an empty column or a domain gap, is not tested (the seam landing and the cell cap cover it)."""
     if not _table_phases(mat):
         return None
@@ -305,36 +306,33 @@ def band_check(mat, t_index: int = 2):
                 return None
             raise
 
-    def make():
-        pending = {}                                  # edge → (sign of g − e, the record so far)
+    def g_at(ph, y):
+        """(g, the band constants) at a state on table phase ph, or None where the edge is not finite."""
+        _ph, band, cellmax, floor = consts(ph)
+        e = band[0](y[1])
+        return None if not math.isfinite(e) else e - band[1] - y[t_index]
 
-        def follow(ga, gb, width):
-            """Resolve the held candidates on this accepted step; the first confirmed one is returned."""
-            out = None
-            for e, (sgn, rec) in list(pending.items()):
-                da, db = ga - e, gb - e
-                if da * sgn <= 0.0 or db * sgn <= 0.0:
-                    del pending[e]                    # crossed (or touched): an approach
-                elif abs(db) < abs(da):
-                    rec["min_abs_g"] = min(rec["min_abs_g"], abs(db))     # still closing in
-                elif abs(db) > abs(da):
-                    del pending[e]                    # turned away on the same side: a graze
-                    out = out or rec
-            return out
+    class Test:
+        """One run's test (13b: candidates live per run). verdict() is pure: it judges the trial step [a, b] and keeps
+        the edges it accepted at the floor; commit() runs on the node the stepper actually accepted, the trial's end or
+        a landing short of it (68 H1), and resolves and stores the candidates there."""
 
-        def check(x, y, x_new, y_new, k1, k7):
+        def __init__(self):
+            self.pending = {}                       # edge → (sign of g − e, the record so far)
+            self.floor_edges = ()                   # the last verdict's floor-accepted edges
+
+        def verdict(self, x, y, x_new, y_new, k1, k7):
+            self.floor_edges = ()
             pa, pb = y[1], y_new[1]
             if pa <= 0.0 or pb <= 0.0:
                 return None
             ph = phase(pa)
             if ph is None or not getattr(ph, "table_key", "") or phase(pb) is not ph:
-                pending.clear()
                 return None
             _ph, band, cellmax, floor = consts(ph)
             edge_at, offset, width, lnp = band[:4]
             ea, eb = edge_at(pa), edge_at(pb)
             if not (math.isfinite(ea) and math.isfinite(eb)):
-                pending.clear()
                 return None
             la, lb = math.log(pa), math.log(pb)
             lo, hi = min(la, lb), max(la, lb)
@@ -343,7 +341,6 @@ def band_check(mat, t_index: int = 2):
             i1 = min(max(bisect.bisect_right(lnp, hi) - 1, 0), len(cellmax) - 1)
             l_e = max(cellmax[i0:i1 + 1])
             if not math.isfinite(l_e):
-                pending.clear()
                 return None
             l_t = max(abs(pa * k1[t_index] / k1[1]) if k1[1] else 0.0,
                       abs(pb * k7[t_index] / k7[1]) if k7[1] else 0.0)
@@ -354,21 +351,43 @@ def band_check(mat, t_index: int = 2):
                 da, db = ga - e, gb - e
                 if da * db < 0.0:
                     continue
-                m = min(abs(da), abs(db))
-                if not m > 0.5 * h * lip:
-                    failing.append((e, m, db))
+                if not min(abs(da), abs(db)) > 0.5 * h * lip:
+                    failing.append(e)
             if failing and h > floor:
                 return "halve"
-            # accepted (passing, or at the floor): resolve held candidates, then hold this step's floor edges
-            confirmed = follow(ga, gb, width)
-            for e, m, db in failing:
-                if e not in pending and db != 0.0:
-                    pending[e] = (1.0 if db > 0.0 else -1.0,
-                                  {"material": getattr(mat, "name", "?"), "p": pb, "edge": e, "min_abs_g": m,
-                                   "h_floor": floor, "m": x_new})
-            return confirmed
-        return check
-    return make
+            self.floor_edges = tuple(failing)
+            return None
+
+        def commit(self, x, y, x_acc, y_acc):
+            edges, self.floor_edges = self.floor_edges, ()
+            ph = phase(y[1]) if y[1] > 0.0 else None
+            if ph is None or not getattr(ph, "table_key", "") or y_acc[1] <= 0.0 or phase(y_acc[1]) is not ph:
+                self.pending.clear()
+                return None
+            ga, gb = g_at(ph, y), g_at(ph, y_acc)
+            if ga is None or gb is None:
+                self.pending.clear()
+                return None
+            out = None
+            for e, (sgn, rec) in list(self.pending.items()):
+                da, db = ga - e, gb - e
+                if da * sgn <= 0.0 or db * sgn <= 0.0:
+                    del self.pending[e]               # crossed (or touched): an approach
+                elif abs(db) < abs(da):
+                    rec["min_abs_g"] = min(rec["min_abs_g"], abs(db))     # still closing in
+                elif abs(db) > abs(da):
+                    del self.pending[e]               # turned away on the same side: a graze
+                    out = out or rec
+            floor = consts(ph)[3]
+            for e in edges:
+                da, db = ga - e, gb - e
+                if e not in self.pending and db != 0.0 and da * db > 0.0:
+                    self.pending[e] = (1.0 if db > 0.0 else -1.0,
+                                       {"material": getattr(mat, "name", "?"), "p": y_acc[1], "edge": e,
+                                        "min_abs_g": min(abs(da), abs(db)), "h_floor": floor, "m": x_acc})
+            return out
+
+    return Test
 
 
 @dataclass(frozen=True)

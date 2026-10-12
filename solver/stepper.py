@@ -82,8 +82,10 @@ class Options:
     frozen_ref: int = 0           # … and advanced by (k1[j] / k1[ref]) · Δy[ref] (the old engine's T: Euler in P)
     h_cap: object = None          # phase-1 design note 12: (x, y, k1) → the largest |h| allowed from here, or None, where a
                                   # material varies on a scale shorter than the step (a declared fine region)
-    step_check: object = None     # phase-1 design notes 13 §1 / 13a: (x, y, x_new, y_new, k1, k7) → None (accept), "halve",
-                                  # or a dict (accepted at the floor; recorded in Result.band_grazes). Adaptive steps only
+    step_check: object = None     # phase-1 design notes 13 §1 / 13a / 13b: an object with verdict(x, y, x_new, y_new, k1, k7)
+                                  # → "halve" or None (pure: the trial step), and commit(x, y, x_acc, y_acc) → None or a dict
+                                  # (state: called with the node actually accepted, a plain step's end or the landing; a dict is
+                                  # recorded in Result.band_grazes). Adaptive steps only
 
 
 @dataclass
@@ -340,14 +342,11 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             continue
         rejected_in_row = 0
         x_new = x + h
-        if opt.step_check is not None and not opt.fixed:    # notes 13 §1 / 13a: adaptive steps only (r2 H1)
-            chk = opt.step_check(x, y, x_new, y_new, k1, k7)
-            if chk == "halve":
-                cnt.band_halved += 1
-                h = h * 0.5
-                continue
-            if chk is not None:
-                grazes.append(chk)
+        chk = opt.step_check if not opt.fixed else None    # notes 13 §1 / 13a: adaptive steps only (r2 H1)
+        if chk is not None and chk.verdict(x, y, x_new, y_new, k1, k7) == "halve":
+            cnt.band_halved += 1
+            h = h * 0.5
+            continue
         g_new = {ev.name: ev.g(x_new, y_new) for ev in events}
         crossing = [ev for ev in events if _crossed(g_prev[ev.name], g_new[ev.name])]
         if crossing:
@@ -402,6 +401,10 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
                                         "cap_name": "EVENT_RESTARTS_SOLVE", "cap_value": opt.event_restarts_run})
             cnt.accepted += 1
             cnt.events += 1
+            if chk is not None:                     # 68 H1: the candidates follow the node accepted, the landing
+                got = chk.commit(x, y, x_e, y_e)
+                if got is not None:
+                    grazes.append(got)
             x, y, k1 = x_e, y_e, k_e
             if fired.component is not None:          # G1-C-01: both modes; the adaptive FSAL k1 too
                 k1 = _new_side_k1(f, fired, x, y, k1, g_prev[fired.name])
@@ -420,6 +423,10 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             continue
         in_row = 0
         cnt.accepted += 1
+        if chk is not None:
+            got = chk.commit(x, y, x_new, y_new)
+            if got is not None:
+                grazes.append(got)
         x, y, k1 = x_new, y_new, k7
         path.append((x, y, k1))
         if on_accept is not None:
