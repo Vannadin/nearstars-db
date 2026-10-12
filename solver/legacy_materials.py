@@ -318,6 +318,21 @@ def table_cell_factor(phase):
     return math.exp(min(b - a for a, b in zip(tab.lnp, tab.lnp[1:]))) - 1.0   # the narrowest cell, everywhere
 
 
+def table_band(phase):
+    """Phase-1 design note 12a: the blend band of a legacy table phase, else None, as (edge, offset, width, lnp,
+    secant, t_lo). TablePhase._w = h((E(P) − T_STEP/2 − T)/BLEND_K) · h((T − T_LO)/BLEND_K): with g = E(P) − offset − T
+    the band is 0 < g < width (w strictly between 0 and 1; w = 1 above it, the old phase below it). secant[i] is
+    |ΔE / Δ ln P| of node cell i (inf beside an empty column). Computed once per phase by the caller."""
+    key = getattr(phase, "table_key", "")
+    if not key:
+        return None
+    mc = importlib.import_module("mantle_composition")
+    tab = mc._TABLES[key]
+    sec = tuple(abs((b - a) / (y - x)) if math.isfinite(a) and math.isfinite(b) else math.inf
+                for a, b, x, y in zip(tab.edge, tab.edge[1:], tab.lnp, tab.lnp[1:]))
+    return tab.edge_at, 0.5 * mc.T_STEP, mc.BLEND_K, tuple(tab.lnp), sec, mc.T_LO
+
+
 def ammonia_isotherms() -> tuple:
     """The ammonia table's isotherm nodes [K] (Bethkenhagen+ 2013 Table I, engine/ammonia_table.T_K): interpolation
     switches isotherm pair there, so the integrand has a kink in T (located as events, design §A1.3)."""

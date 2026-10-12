@@ -554,7 +554,8 @@ class GuardRedTeam(unittest.TestCase):
 
 class TableStepCap(unittest.TestCase):
     """Phase-1 design note 12: only a material with a legacy table phase declares a step cap; Earth's and Venus's
-    layers have none, so their runs (and O9 values) are unchanged by the cap."""
+    layers have none, so their runs (and O9 values) are unchanged by the cap. Note 12a: the cap acts near the blend
+    band only."""
 
     def test_only_table_materials_cap(self):
         from solver import events as ev
@@ -566,6 +567,29 @@ class TableStepCap(unittest.TestCase):
                     body, _m = mb.member_of(body)
                 mat = sv._views(body)[layer].mat
                 self.assertEqual(ev.step_cap(mat) is not None, has)
+
+    def test_cell_cap_only_near_the_blend_band(self):
+        """Note 12a: the one-cell cap holds where g = E(P) − T_STEP/2 − T is within BAND_MARGIN of the band
+        [0, BLEND_K]; outside that window the step may be longer, limited so its estimated |Δg| ≤ BAND_MARGIN / 2."""
+        from solver import events as ev, legacy_materials as lm
+        got = from_v1.load_v1("engine/bodies/mars.yaml")
+        body, _m = mb.member_of(got[0] if isinstance(got, tuple) else got)
+        mat = sv._views(body)["mantle"].mat
+        cap = ev.step_cap(mat)
+        p = 5.0e9
+        ph = mat.phase_at(p)
+        edge, off, width = lm.table_band(ph)[:3]
+        hc = p * lm.table_cell_factor(ph)                  # k1[1] = 1: the cap reads in Pa
+        k1 = (0.0, 1.0, 1.0e-8)                            # dT/dP 1e-8 K/Pa, an adiabat's order
+        at = lambda g: cap(0.0, (0.0, p, edge(p) - off - g), k1)
+        self.assertEqual(at(0.5 * width), hc)                          # inside the band
+        self.assertEqual(at(-0.9 * ev.BAND_MARGIN), hc)                # control: inside the window, below the band
+        self.assertEqual(at(width + 0.9 * ev.BAND_MARGIN), hc)         # control: inside the window, above it
+        far = at(-3.0 * ev.BAND_MARGIN)
+        self.assertGreater(far, hc)                                    # far below the band: longer than a cell …
+        i = max(j for j, x in enumerate(lm.table_band(ph)[3]) if x <= math.log(p))
+        rate = lm.table_band(ph)[4][i] / p + 1.0e-8
+        self.assertLessEqual(far * rate, 0.5 * ev.BAND_MARGIN * (1 + 1e-12))   # … but its estimated |Δg| ≤ margin / 2
 
 
 if __name__ == "__main__":

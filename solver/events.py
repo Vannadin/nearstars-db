@@ -17,6 +17,7 @@ extremum of g = T − T_onset with |g| ≤ GRAZE_K is a graze; the closest one i
 """
 from __future__ import annotations
 
+import bisect
 import math
 from dataclasses import dataclass
 
@@ -184,14 +185,23 @@ def _table_phases(mat) -> list:
     return out
 
 
+#: Phase-1 design note 12a: the cell cap acts only where g lies within this many K of a legacy table's blend band;
+#: 4 × the largest |Δg| an uncapped step made on Mars 1978–1989 K (49 K, measured with the window rule).
+BAND_MARGIN = 200.0
+
+
 def step_cap(mat):
     """Phase-1 design note 12: the stepper's h cap for a material that declares a fine scale (today the legacy
     mantle table: one ln P cell), as (x, y, k1) → max |h| in mass from the ΔP cap and dP/dm = k1[1]; None for every
-    other material, whose runs are then unchanged."""
+    other material, whose runs are then unchanged.
+    Note 12a: the fine scale is the blend band's (its entry and exit move with E(P) cell by cell), so the cell cap
+    applies only where g = E(P) − T_STEP/2 − T lies within BAND_MARGIN of the band [0, BLEND_K]. Outside that window a
+    step is uncapped except that its estimated |Δg| (the current cell's edge secant and dT/dP) stays ≤ BAND_MARGIN / 2,
+    so no step can carry g from outside the window across the band (measured: uncapped steps move g ≤ 49 K)."""
     if not _table_phases(mat):
         return None
-    from solver.legacy_materials import table_cell_factor
-    factors = {}                 # S1: the table constant once per phase, held by this cap (one material view)
+    from solver.legacy_materials import table_band, table_cell_factor
+    factors = {}                 # S1: the table constants once per phase, held by this cap (one material view)
 
     def cap(x, y, k1):
         p = y[1] if y[1] > 0.0 else 1.0e5
@@ -202,12 +212,27 @@ def step_cap(mat):
                 return None
             raise
         if id(ph) not in factors:
-            factors[id(ph)] = (ph, table_cell_factor(ph))      # the phase object is kept, so its id is not reused
-        f = factors[id(ph)][1]
+            factors[id(ph)] = (ph, table_cell_factor(ph), table_band(ph))   # the phase object is kept, so its id is not reused
+        _ph, f, band = factors[id(ph)]
         dp = None if f is None else p * f
         if dp is None or not k1[1]:
             return None
-        return abs(dp / k1[1])
+        hc = abs(dp / k1[1])
+        if band is None:
+            return hc
+        edge_at, offset, width, lnp, secant, t_lo = band
+        e = edge_at(p)
+        t = y[2]
+        if not math.isfinite(e) or t < t_lo + width + BAND_MARGIN:
+            return hc
+        g = e - offset - t
+        if -BAND_MARGIN <= g <= width + BAND_MARGIN:
+            return hc
+        i = min(max(bisect.bisect_right(lnp, math.log(p)) - 1, 0), len(secant) - 1)
+        rate = secant[i] / p + abs(k1[2] / k1[1])     # |dg/dP| estimated on the current cell [K/Pa]
+        if not math.isfinite(rate):
+            return hc
+        return None if rate == 0.0 else max(hc, abs(0.5 * BAND_MARGIN / rate / k1[1]))
     return cap
 
 
