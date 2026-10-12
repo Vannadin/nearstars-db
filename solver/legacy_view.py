@@ -31,6 +31,10 @@ OUTPUT_KEYS = ("core_radius", "cmb_pressure", "cmb_temperature", "core_pressure"
 IN_SCOPE_READERS = ("core_state", "cmb_heat_flux", "core_energy_balance", "core_entropy_production",
                     "core_thermal_history", "internal_heat_nontidal")
 EARTH_RADIUS_M = 6.371e6           # interior.EARTH_RADIUS_M at 097a8aa3
+#: Switch-over note 7 (directing, r2): core_energy.find_root bisects on the sign of f with no residual check, so where
+#: f jumps (inner-core nucleation) it returns the jump as a «root». A root must meet this |f / Q_CMB| (route B's own
+#: bound in engine/test_core_energy.py; true roots sit near 1e-12), fixed before any comparison.
+BALANCE_TOL = 1e-9
 
 
 def _q(answer, key):
@@ -75,6 +79,22 @@ class ChainRun:
     injected: object        # the injected interior_layers Result
     declared_keys: frozenset = frozenset()   # the v1 body's own declared input keys, before any control edits
     table_reads: tuple = ()                   # (path, blob, grid returned?) of every structure_grid.load_for call
+    notes: tuple = ()                         # Note dicts the chain adds to the record (core_balance_not_solved)
+
+
+def balance_guard(r):
+    """(Result, note dict or None): core_energy_balance's Result as the old recipe gave it when its balance_residual
+    meets BALANCE_TOL; otherwise an out-of-domain Result (no values, so no later node reads them) and the Note
+    core_balance_not_solved. The structure answer is untouched (note 13 §2's precedent for sensitivity)."""
+    res = (r.values or {}).get("balance_residual") if r.applicable else None
+    if res is None or abs(res) <= BALANCE_TOL:
+        return r, None
+    reason = "root on a discontinuity"
+    text = (f"core_energy_balance: |balance_residual| {abs(res):.3g} > {BALANCE_TOL:g}; the bisection's sign change "
+            f"is not a root ({reason}), so the node gives no values")
+    out = payload.out_of_domain(r.recipe, r.version, text, inputs=dict(r.inputs), refs=tuple(r.refs or ()))
+    return out, {"type": "Note", "kind": "core_balance_not_solved", "text": text,
+                 "fields": {"residual": res, "tolerance": BALANCE_TOL, "reason": reason}}
 
 
 def run_chain(v1_yaml: str | os.PathLike, answer, serve_cmf_from_declared: bool = False,
@@ -123,14 +143,27 @@ def _run(body, injected, declared_keys) -> ChainRun:
         reads.append((str(path.relative_to(Path(lm._ENGINE).parent)), blob, got[0] is not None))
         return got
     orig_get = registry.get
-    registry.get = lambda node: (lambda b: injected) if node == "interior_layers" else orig_get(node)
+    notes = []
+
+    def guarded(fn):
+        if fn is None:
+            return None
+
+        def run_balance(b):
+            r, note = balance_guard(fn(b))
+            note is not None and notes.append(note)
+            return r
+        return run_balance
+
+    registry.get = lambda node: ((lambda b: injected) if node == "interior_layers" else
+                                 guarded(orig_get(node)) if node == "core_energy_balance" else orig_get(node))
     structure_grid.load_for = load_for
     try:
         run.solve(body, run.load_chain())
     finally:
         registry.get = orig_get
         structure_grid.load_for = orig_load
-    return ChainRun(body, injected, declared_keys, tuple(reads))
+    return ChainRun(body, injected, declared_keys, tuple(reads), tuple(notes))
 
 
 def reads(chain: ChainRun) -> dict:

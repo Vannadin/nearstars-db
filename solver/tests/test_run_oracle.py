@@ -37,6 +37,50 @@ class Earth(unittest.TestCase):
         self.assertIn("core_thermal_history", self.rec["legacy_nodes"])
 
 
+class CoreBalanceGuard(unittest.TestCase):
+    """Switch-over note 7 (directing, r2): core_energy_balance's bisection has no residual check; on the corrected
+    fe_prem, Earth's declared state puts its sign change on the inner-core nucleation jump (Mac −15.93 with an inner
+    core, PC +0.23 without). |balance_residual| > 1e-9 gives no values and the Note core_balance_not_solved; the
+    structure answer stands. Control: both corrections put back, the true root (≈ 1e-12) keeps its values."""
+
+    @staticmethod
+    def _balance(rec):
+        return rec["legacy_nodes"]["core_energy_balance"]
+
+    def test_earth_corrected_has_no_root(self):
+        rec = ro.one("engine/bodies/earth.yaml", "declared", FAST)
+        node = self._balance(rec)
+        self.assertEqual(rec["outcome_kind"], "answer")
+        self.assertFalse(node["applicable"])
+        self.assertEqual(node["values"], {})
+        got = [n for n in rec["notes"] if n["kind"] == "core_balance_not_solved"]
+        self.assertEqual(len(got), 1)
+        self.assertGreater(abs(got[0]["fields"]["residual"]), ro.lv.BALANCE_TOL)
+        self.assertEqual(got[0]["fields"]["reason"], "root on a discontinuity")
+
+    def test_control_both_put_back_keeps_the_root(self):
+        from solver.tests.test_switchover import Step2PutBack
+        rec = ro.one("engine/bodies/earth.yaml", "declared", FAST, registry=Step2PutBack._registry("W-L1-01", "P5-F1"))
+        node = self._balance(rec)
+        self.assertTrue(node["applicable"])
+        self.assertLess(abs(node["values"]["balance_residual"]), ro.lv.BALANCE_TOL)
+        self.assertTrue(node["values"]["has_inner_core"])
+        self.assertFalse([n for n in rec["notes"] if n["kind"] == "core_balance_not_solved"])
+
+    def test_guard_on_planted_results(self):
+        import payload
+        ok = payload.Result(recipe="r", version="v", regime="x", reason="", grade="analog", inputs={},
+                            values={"balance_residual": 6.5e-13}, units={"balance_residual": ""})
+        bad = payload.Result(recipe="r", version="v", regime="x", reason="", grade="analog", inputs={},
+                             values={"balance_residual": -15.93}, units={"balance_residual": ""})
+        self.assertEqual(ro.lv.balance_guard(ok), (ok, None))
+        out, note = ro.lv.balance_guard(bad)
+        self.assertFalse(out.applicable)
+        self.assertEqual((note["kind"], note["fields"]["residual"]), ("core_balance_not_solved", -15.93))
+        refused = payload.out_of_domain("r", "v", "no core", inputs={})
+        self.assertEqual(ro.lv.balance_guard(refused), (refused, None))
+
+
 class Dante(unittest.TestCase):
     def test_coreless_body_writes_a_record(self):
         """B2: no crash; the absent core / temperature keys reach the old chain as the old engine's zeros."""
