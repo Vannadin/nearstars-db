@@ -113,7 +113,8 @@ class Result:
 
 def _axpy(y: Vec, h: float, ks: Sequence[Vec], w: Sequence[float]) -> Vec:
     n = len(y)
-    return tuple(y[j] + h * sum(w[i] * ks[i][j] for i in range(len(w)) if w[i] != 0.0) for j in range(n))
+    # P1R-G1-C-02: math.fsum, correctly rounded, so Python 3.11 (naive sum) and 3.12 (compensated sum) agree
+    return tuple(y[j] + h * math.fsum(w[i] * ks[i][j] for i in range(len(w)) if w[i] != 0.0) for j in range(n))
 
 
 def step(f, x: float, y: Vec, h: float, k1: Vec):
@@ -127,7 +128,7 @@ def step(f, x: float, y: Vec, h: float, k1: Vec):
             return k
         ks.append(k)
     y_new = _axpy(y, h, ks, _B5)            # equals stage 7's argument (row 7 of A = B5)
-    err = tuple(h * sum(_E[i] * ks[i][j] for i in range(7)) for j in range(len(y)))
+    err = tuple(h * math.fsum(_E[i] * ks[i][j] for i in range(7)) for j in range(len(y)))   # G1-C-02
     return y_new, err, ks[6]
 
 

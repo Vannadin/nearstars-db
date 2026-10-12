@@ -63,7 +63,30 @@ def material_bytes() -> bytes:
         full = os.path.join(repo, path)
         content = open(full, "rb").read() if os.path.isfile(full) else b"<deleted>"
         h.update(f"dirty {path} ".encode() + hashlib.sha256(content).digest())
+    h.update(_switch_bytes())
     return h.digest()
+
+
+def _switch_bytes() -> bytes:
+    """P1R-G3-R-01: the two engine switches that change material numbers with no file change, read from the state they
+    set (not from the environment, which may have changed since import): NEARSTARS_REFERENCE_BUILD=1 leaves fe_prem
+    out of eos.REFERENCE_ADIABAT (the pre-C148 ΔT form); MANTLE_TABLE_DIR moves mantle_composition.TABLE_DIR, whose
+    tables are then hashed by name and content (no machine path). The default state adds nothing, so the ids of every
+    run without a switch are unchanged."""
+    import hashlib
+    import importlib
+    from pathlib import Path
+    eos_ = importlib.import_module("eos")
+    mc = importlib.import_module("mantle_composition")
+    out = b""
+    if "fe_prem" not in eos_.REFERENCE_ADIABAT:
+        out += b"switch reference_adiabat fe_prem absent\n"
+    table_dir = Path(mc.TABLE_DIR).resolve()
+    if table_dir != (Path(mc.HERE) / "mantle_tables").resolve():
+        out += b"switch mantle_table_dir\n"
+        for f in sorted(table_dir.glob("*.json")):
+            out += f.name.encode() + b" " + hashlib.sha256(f.read_bytes()).digest() + b"\n"
+    return out
 
 
 import eos            # noqa: E402  (engine/, 097a8aa3)
