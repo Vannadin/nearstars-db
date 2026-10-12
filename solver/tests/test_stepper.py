@@ -143,11 +143,16 @@ class Guard(unittest.TestCase):
         self.assertEqual(len(r.events), 2)                      # control: both crossings land, none skipped
 
     def test_restarts_step(self):
+        """Phase-1 design note 17 §1: the cap counts one event's landings since the last plain step. Six distinct
+        events within one step's reach land at cap 4 (they tripped it before note 17); one event re-firing more than
+        4 times with no plain step between trips it."""
         evs = [st.Event(f"e{k}", (lambda x, y, c=0.40 + 0.01 * k: y[0] - c), terminal=False) for k in range(6)]
         r = st.run(self.f, 0.0, (0.0,), 1.0, _opts(h0=0.3, h_max=0.3, event_restarts_step=4), evs)
-        self.assertEqual(_cap(r), ("chatter", "EVENT_RESTARTS_STEP"))
-        r = st.run(self.f, 0.0, (0.0,), 1.0, _opts(h0=0.3, h_max=0.3, event_restarts_step=10), evs)
         self.assertEqual((r.stop.kind, len(r.events)), ("end", 6))
+        osc = [st.Event("osc", lambda x, y: math.sin(math.pi * x / 0.02), terminal=False)]
+        r = st.run(self.f, 0.01, (0.01,), 1.0, _opts(h0=0.03, h_max=0.03, event_restarts_step=4,
+                                                    event_min_progress=0.0, event_rewalks=32), osc)
+        self.assertEqual(_cap(r), ("chatter", "EVENT_RESTARTS_STEP"))
 
     def test_restarts_solve(self):
         evs = [st.Event(f"e{k}", (lambda x, y, c=(k + 0.5) / 60: y[0] - c), terminal=False) for k in range(60)]

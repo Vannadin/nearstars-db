@@ -507,7 +507,9 @@ class GuardRedTeam(unittest.TestCase):
     def test_a_wall_between_the_probes_and_the_reference(self):
         """r2 GB2: trials from 0.5·x0 to x0 − 5·δ_clean refuse and F is offset by 10 beyond them; no solved trial ≥ 4δ
         below lies inside the stretch, so the lower side reports «no_solved_reference» and never reads past the wall."""
-        lo_w, hi_w = 0.5 * self.x0, self.x0 - 5.0 * self.delta0         # 2δ < 5·δ0 < 4δ here (δ ≈ 1.6·δ0)
+        # 2δ < 3·δ0 < 4δ here (δ ≈ δ0). Before P1R-G2-C-11 the r-floor trials of this two-layer fixture read ρ_end
+        # with the core's view in the mantle, which moved their F and so δ to ≈ 1.6·δ0, and the band sat at 5·δ0
+        lo_w, hi_w = 0.5 * self.x0, self.x0 - 3.0 * self.delta0
         sg = math.copysign(1.0, self._f_at(1.001 * self.x0) - self._f_at(0.9995 * self.x0))
 
         def alter(xx, f):
