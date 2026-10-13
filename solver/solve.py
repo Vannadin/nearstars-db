@@ -885,14 +885,32 @@ def _side_check(F, x, f_root, side, rt, lo=-math.inf, hi=math.inf) -> dict:
 CLOSURE_RETRY_RTOL_DIV = 10.0
 
 
-def solve(body, options: context.Options = context.Options(), warm=None, views=None, registry=None, _first=None,
-          _id_options=None):
+def solve(body, options: context.Options = context.Options(), warm=None, views=None, registry=None):
     """Returns (Outcome, warm). Outcome is result.Answer, result.Refusal or result.NoAnswer.
     `views` (layer id → material view) replaces the adapter's resolution; it exists for physics fixtures only and is
     not reachable from Body, options or the context. `registry`: a loaded material registry the caller owns and
-    reuses across solves (switch-over note 5); without it the solve loads its own.
-    `_first` / `_id_options` are note 18's retry (internal): the first attempt's residual-check record, and the
-    caller's options, which keep the solve_id the request's."""
+    reuses across solves (switch-over note 5); without it the solve loads its own."""
+    return _solve(body, options, warm, views, registry)
+
+
+def _with_first(outcome, first):
+    """Note 18: every outcome of a retry other than an Answer carries the first attempt's residual failure (68 B1)."""
+    if isinstance(outcome, result.Refusal):
+        e = refusals.REGISTRY.get(outcome.id)
+        if e is not None and e.solve and "first_attempt" not in outcome.evidence:
+            return refusals.make(outcome.id, outcome.where, at=outcome.at, **dict(outcome.evidence), first_attempt=first)
+    if isinstance(outcome, result.NoAnswer):
+        e = refusals.NO_ANSWER_REGISTRY.get(outcome.reason)      # the registry says which reasons take it (X3)
+        if e is not None and "first_attempt" in e.optional and "first_attempt" not in outcome.evidence:
+            return refusals.no_answer(outcome.reason, outcome.where, at=outcome.at, **dict(outcome.evidence),
+                                      first_attempt=first)
+    return outcome
+
+
+def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
+    """solve()'s body. `_first` / `_id_options` are note 18's retry: the first attempt's residual-check record, and
+    the caller's options, which keep the solve_id the request's. The retry calls _solve, not the module's `solve`, so
+    a patched solve never sees it (68 N2)."""
     registry_arg = registry
     views_arg = views
     context.require_git_tree()                        # P1R-G2-R-07: before any pass, not after the accepted one
@@ -980,8 +998,9 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
                     # note 18: where F's slope is below its per-pass noise (Mars's melt knee: ~5e-7 per m of R against
                     # ~1e-7 with tails to 8e-7 at rtol 1e-10) Brent can close on a noise sign change; the residual check
                     # catches it, and the solve is re-closed once at rtol/10 before it refuses
-                    return solve(body, dataclasses.replace(options, rtol=options.rtol / CLOSURE_RETRY_RTOL_DIV), warm,
-                                 views=views_arg, registry=registry_arg, _first=here, _id_options=options)
+                    got, w = _solve(body, dataclasses.replace(options, rtol=options.rtol / CLOSURE_RETRY_RTOL_DIV),
+                                    warm, views_arg, registry_arg, _first=here, _id_options=options)
+                    return _with_first(got, here), w
                 return refusals.make("solve.closure_discontinuous", where, x=x, closure_kind=kind,
                                      state=_state(acc.y, acc.m),     # note 13 §3: the node where F was taken
                                      pass_kind="accepted", check="residual", F_root=acc.F, tol_F=tol_f,

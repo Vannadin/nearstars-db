@@ -30,7 +30,8 @@ class Entry:
 SOLVE_COMMON = ("x", "closure_kind", "pass_kind")
 #: Optional on every solve.* id: the reached state, the scan trace, and the walls and solved regions (§A1.5: «the
 #: refusal at the lowest-x wall is the Outcome, with the scan in the evidence»; b9 2026-10-09).
-SOLVE_OPTIONAL = ("state", "scan", "walls", "solved_regions")
+SOLVE_OPTIONAL = ("state", "scan", "walls", "solved_regions",
+                  "first_attempt")   # phase-1 design note 18: a retried closure's first residual failure
 PASS_KINDS = ("scan", "wall", "brent", "accepted", "band", "probe")
 #: A wall record (b9 2026-10-09): the trial x, what stopped it (a refusal id or a NoAnswer reason), the reached state,
 #: and whether the wall's position was located.
@@ -52,7 +53,6 @@ _SOLVE = (
           "층 '{layer_id}' 의 경계({rule})가 순서를 어긴다 — 기대 {expected}, 실제 m {got_m} · r {got_r}"),
     Entry("solve.closure_discontinuous", ("check", "F_root", "tol_F", "n_acc", "rtol", "bracket", "probes"),
           "닫힘 잔차가 근 x {x} 에서 연속이 아니다 ({check}) — F {F_root}, 허용 {tol_F}, 마지막 괄호 {bracket}, 탐침 {probes}",
-          ("first_attempt",),                            # phase-1 design note 18: the residual failure before the retry
           preamble="잔차가 끊긴 자리에 근이 걸려 답을 믿을 수 없다."),
     Entry("solve.material_record", ("material_id", "p", "t", "refusal", "why"),
           "물질 기록 '{material_id}' 이(가) ({p} Pa, {t} K) 에서 답하지 않는다 — {refusal}: {why}"),
@@ -152,7 +152,7 @@ NO_ANSWER_BUDGETS = ("CLOSE_ITERS", "MAX_STEPS_SOLVE", "WALL_SHOTS", "MAX_SPLITS
 _NO_ANSWER = (
     Entry("unconverged", ("budget_name", "budget_value", "last_residual"),
           "예산 {budget_name} = {budget_value} 안에 닫히지 않았다 — 마지막 잔차 {last_residual} (값 아님)",
-          optional=("x", "pass_kind", "state", "scan", "m_at")),
+          optional=("x", "pass_kind", "state", "scan", "m_at", "first_attempt")),
     Entry("span_too_long", ("t_lo", "t_hi", "width", "bound"),
           "[{t_lo}, {t_hi}] 폭 {width} 이(가) 잇기 한도 {bound} 보다 길어 빈 칸으로 둔다"),
 )

@@ -2,11 +2,12 @@
 """Phase-1 design note 18 (draft): the accepted root failing note 8's residual check is re-closed once at rtol/10.
 Planted on ClosureDiscontinuous's forward (R) two-layer body: a step in F just below the root, either at rtol 1e-10
 only (noise that a tighter pass removes) or at every rtol (a real jump)."""
+import dataclasses
 import math
 import unittest
 
 from solver import closure as cl
-from solver import context, result, solve as sv
+from solver import context, legacy_materials as lm, result, solve as sv
 from solver import stepper as st
 from solver.tests import test_solve                         # its TestCase is not bound here, so it is not rerun
 
@@ -67,6 +68,35 @@ class ClosureRetry(unittest.TestCase):
         self.assertEqual(got.evidence["rtol"], context.Options().rtol / sv.CLOSURE_RETRY_RTOL_DIV)
         first = got.evidence["first_attempt"]
         self.assertEqual(first["rtol"], context.Options().rtol)
+        self.assertGreater(abs(first["F_root"]), first["tol_F"])
+
+    def test_any_other_outcome_of_the_retry_carries_the_first_attempt(self):
+        """68 B1: the first closure fails on the residual (a step at the solve's rtol); at the retry's rtol every pass
+        is refused by its material. The retry's outcome is not the residual refusal, and it carries first_attempt."""
+        (fwd, views, r0), _inv = self._bodies()
+        sg = self._slope_sign(fwd, views, r0)
+        rtol0 = context.Options().rtol
+        orig = sv.inward
+        x_step, jump = r0 * (1 - 1e-7), sg * 1e-5
+
+        def planted(bd, vw, x, opt, **kw):
+            if opt.rtol != rtol0:
+                return dataclasses.replace(st.Stop("refused", lm.MaterialRefusal("planted", 1.0, 1.0, "PhaseGap", "planted",
+                                                                                 axis="P")),
+                                           state={"m": 1.0, "r": 1.0, "P": 1.0, "T": 1.0})     # a reached state (note 13 §3)
+            got = orig(bd, vw, x, opt, **kw)
+            if not isinstance(got, st.Stop) and got.F is not None and x > x_step:
+                got.F += jump
+            return got
+        sv.inward = planted
+        try:
+            got, _x = sv.solve(fwd, views=views)
+        finally:
+            sv.inward = orig
+        self.assertNotIsInstance(got, result.Answer)
+        self.assertNotEqual(getattr(got, "id", None), "solve.closure_discontinuous")
+        first = got.evidence["first_attempt"]
+        self.assertEqual(first["rtol"], rtol0)
         self.assertGreater(abs(first["F_root"]), first["tol_F"])
 
     def test_a_clean_root_runs_one_closure_and_no_note(self):
