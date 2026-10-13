@@ -880,12 +880,21 @@ def _side_check(F, x, f_root, side, rt, lo=-math.inf, hi=math.inf) -> dict:
     return out
 
 
-def solve(body, options: context.Options = context.Options(), warm=None, views=None, registry=None):
+#: Phase-1 design note 18 (draft): the accepted root failing note 8's residual check is re-closed once with the whole
+#: solve at rtol / CLOSURE_RETRY_RTOL_DIV before it is refused (Mars 1773 K at the melt knee, 10-14)
+CLOSURE_RETRY_RTOL_DIV = 10.0
+
+
+def solve(body, options: context.Options = context.Options(), warm=None, views=None, registry=None, _first=None,
+          _id_options=None):
     """Returns (Outcome, warm). Outcome is result.Answer, result.Refusal or result.NoAnswer.
     `views` (layer id → material view) replaces the adapter's resolution; it exists for physics fixtures only and is
     not reachable from Body, options or the context. `registry`: a loaded material registry the caller owns and
-    reuses across solves (switch-over note 5); without it the solve loads its own."""
+    reuses across solves (switch-over note 5); without it the solve loads its own.
+    `_first` / `_id_options` are note 18's retry (internal): the first attempt's residual-check record, and the
+    caller's options, which keep the solve_id the request's."""
     registry_arg = registry
+    views_arg = views
     context.require_git_tree()                        # P1R-G2-R-07: before any pass, not after the accepted one
     # P1R-G2-C-09: these declared Options enter solve_id but the closure reads its module constants (close_*, wall_*)
     # and nothing reads basal_* or band_pass (A1 impl note 7); a caller setting one would get a new id with an
@@ -965,12 +974,26 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
             rt = _root_tolerance(x, acc, options, bracket, out.trials)
             tol_f = rt["tol_F"]
             if not abs(acc.F) <= tol_f:                  # note 8 (a): the root closed on a jump of F
+                here = {"x": x, "F_root": acc.F, "tol_F": tol_f, "n_acc": acc.counters.get("accepted", 0),
+                        "rtol": options.rtol, "bracket": bracket["final"]}
+                if _first is None:
+                    # note 18: where F's slope is below its per-pass noise (Mars's melt knee: ~5e-7 per m of R against
+                    # ~1e-7 with tails to 8e-7 at rtol 1e-10) Brent can close on a noise sign change; the residual check
+                    # catches it, and the solve is re-closed once at rtol/10 before it refuses
+                    return solve(body, dataclasses.replace(options, rtol=options.rtol / CLOSURE_RETRY_RTOL_DIV), warm,
+                                 views=views_arg, registry=registry_arg, _first=here, _id_options=options)
                 return refusals.make("solve.closure_discontinuous", where, x=x, closure_kind=kind,
                                      state=_state(acc.y, acc.m),     # note 13 §3: the node where F was taken
                                      pass_kind="accepted", check="residual", F_root=acc.F, tol_F=tol_f,
-                                     n_acc=acc.counters.get("accepted", 0), rtol=options.rtol,
-                                     bracket=bracket["final"], probes=None), x
+                                     n_acc=here["n_acc"], rtol=options.rtol,
+                                     bracket=bracket["final"], probes=None, first_attempt=_first), x
         notes = []
+        if _first is not None:                          # note 18: the retry is disclosed on the Answer it gave
+            notes.append(result.Note("closure_retried", "the first closure failed note 8's residual check, so the solve "
+                                     f"was re-closed once at rtol/{CLOSURE_RETRY_RTOL_DIV:g}",
+                                     {"first_attempt": _first, "rtol": options.rtol,
+                                      "F_root": acc.F if guard else None, "tol_F": tol_f if guard else None,
+                                      "n_acc": acc.counters.get("accepted", 0)}))
         if not guard and options.fixed_dr <= 0.0:       # r2 on 55117864 (a): never skipped silently
             notes.append(result.Note("closure_guard_skipped", "the root has no sign-change bracket (a solved point with "
                                      "F = 0), so phase-1 design notes 8–9's residual and probe checks did not run",
@@ -992,7 +1015,7 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
                           **({"T": tuple(n[1][3] for n in path)} if body.surface.t_pot is not None else {})}
                     for lid, path in acc.profiles.items()}
         # solve_id after the accepted pass, so every data file the solve opened is in the material bytes
-        sid = context.solve_id_of(_canonical(body), _material_bytes(views), options)
+        sid = context.solve_id_of(_canonical(body), _material_bytes(views), _id_options or options)
         qs = _quantities(body, acc, sid, x, views)
         if body.surface.t_pot is not None and options.sensitivity_dt > 0.0:
             qs, sens_note = _with_sensitivity(body, views, x, options, acc, qs, supplied=supplied, ctx=ctx,

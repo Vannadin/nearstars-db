@@ -52,6 +52,7 @@ _SOLVE = (
           "층 '{layer_id}' 의 경계({rule})가 순서를 어긴다 — 기대 {expected}, 실제 m {got_m} · r {got_r}"),
     Entry("solve.closure_discontinuous", ("check", "F_root", "tol_F", "n_acc", "rtol", "bracket", "probes"),
           "닫힘 잔차가 근 x {x} 에서 연속이 아니다 ({check}) — F {F_root}, 허용 {tol_F}, 마지막 괄호 {bracket}, 탐침 {probes}",
+          ("first_attempt",),                            # phase-1 design note 18: the residual failure before the retry
           preamble="잔차가 끊긴 자리에 근이 걸려 답을 믿을 수 없다."),
     Entry("solve.material_record", ("material_id", "p", "t", "refusal", "why"),
           "물질 기록 '{material_id}' 이(가) ({p} Pa, {t} K) 에서 답하지 않는다 — {refusal}: {why}"),
