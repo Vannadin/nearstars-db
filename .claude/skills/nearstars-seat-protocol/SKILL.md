@@ -21,6 +21,10 @@ only. Everything that changes a frozen fact goes through one loop.
 2. **Audit clears a blob, not a file.** The audit seat hashes the draft (`git hash-object -w`),
    reads that blob, and sends one message: HOLD *or* clear `<blob>`. Clear messages always cc the
    directing seat.
+   - **Split the audit by remit; never ask both audit seats for the same check.** Audit (68) takes the
+     mechanics: hashes, shard/cmp/run evidence, records, scripts and code, merges. Audit2 (r2) takes
+     the reading: registrations, declarations, classes and bounds, physics rulings. A request to both
+     names each one's scope. 2026-10-13: the silicate ship asked 68 for the declaration reading too.
 3. **The drafting seat freezes; directing verifies and pushes.** On a clear, the seat that wrote the
    draft runs `tools/freeze.py` (directing may run it instead, e.g. for a PC draft). Directing checks the
    Frozen/Appended line and the blobs, then pushes. `freeze.py` does the hash check, the copy or
