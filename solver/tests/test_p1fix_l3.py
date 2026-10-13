@@ -223,7 +223,9 @@ class EndDensity(unittest.TestCase):
     def test_ended_layer_when_the_bottom_refuses_its_domain(self):
         """The finding's case: the bottom material refuses, by its domain, a state it never reached; not a wall."""
         for name, rec in (("legacy edge", lm.MaterialRefusal("fe", 1.0, 1.0, "PhaseGap", "planted", axis="P")),
-                          ("record edge", mv.RecordRefusal("fe", 1.0, 1.0, "input.material_out_of_data", "planted"))):
+                          ("record edge", mv.RecordRefusal("fe", 1.0, 1.0, "input.material_out_of_data", "planted")),
+                          ("record-declared edge id", mv.RecordRefusal("fe", 1.0, 1.0, "input.planted_declared_edge",
+                                                                      "planted"))):
             with self.subTest(name):
                 out, ends, _v = self._run(lambda p, t, rec=rec: st.Stop("refused", rec))
                 self.assertEqual(ends[-2:], ["core", "mantle"])
@@ -239,7 +241,9 @@ class EndDensity(unittest.TestCase):
                            ("engine ValueError", st.Stop("refused", lm.MaterialRefusal("fe", 1.0, 1.0, "ValueError",
                                                                                        "planted", axis="none"))),
                            ("field overlap", st.Stop("refused", mv.RecordRefusal("fe", 1.0, 1.0,
-                                                                                 "material.field_overlap", "planted")))):
+                                                                                 "material.field_overlap", "planted"))),
+                           ("check grammar", st.Stop("refused", mv.RecordRefusal("fe", 1.0, 1.0,
+                                                                                 "material.check_grammar", "planted")))):
             with self.subTest(name):
                 out, ends, _v = self._run(lambda p, t, stop=stop: stop)
                 self.assertEqual(ends[-1:], ["core"])          # the mantle's view is not read after the core's Stop

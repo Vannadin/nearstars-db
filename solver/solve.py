@@ -281,14 +281,14 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
 
 def _domain_refusal(got) -> bool:
     """A material view's refusal of a state outside its domain or window: a record's declared edge or region refusal
-    (D-M2; not «material.field_overlap», a record defect), or the old engine's PhaseGap edge on a named axis (not its
-    undifferentiated ValueError channel, axis «none»). r2 on c8274a73: only these may hand F's end density to the
-    ended layer."""
+    (D-M2: input.* or a record-declared id; never a «material.*» id, which names a record defect — field_overlap,
+    check_grammar …; 68 on 03cd9888), or the old engine's PhaseGap edge on a named axis (not its undifferentiated
+    ValueError channel, axis «none»). r2 on c8274a73: only these may hand F's end density to the ended layer."""
     if not (isinstance(got, st.Stop) and got.kind == "refused"):
         return False
     rec = got.record
     if isinstance(rec, mv.RecordRefusal):
-        return rec.refusal != "material.field_overlap"
+        return not rec.refusal.startswith("material.")
     if isinstance(rec, lm.MaterialRefusal):
         return rec.axis in ("P", "T")
     return False
