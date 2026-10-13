@@ -266,16 +266,32 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
     # F's end density (design §A1.5, rhs.residual): one material for every end point, the bottom layer's, so F stays
     # continuous in x where the end switches layer (707aa7a4 read the ended layer's view: F jumped by ρ_mantle/ρ_core
     # at that switch and the closure took 14–33 % more passes on Mars 1978–1989). P1R-G2-C-11 keeps its point: where
-    # the bottom material refuses an end state it never reached (a trial that stopped higher), the ended layer's view
-    # answers instead of the trial becoming a wall; that is the only place F may jump, and it was a wall before
+    # the bottom material refuses an end state it never reached (a trial that stopped higher) by its domain or window,
+    # the ended layer's view answers instead of the trial becoming a wall; that is the only place F may jump, and it
+    # was a wall before. Any other Stop from the bottom view propagates (r2 on c8274a73)
     got = views[layers[0].id].state(y[1], y[2], None)
-    if isinstance(got, st.Stop) and out.entered and out.entered[-1] != layers[0].id:
+    if _domain_refusal(got) and out.entered and out.entered[-1] != layers[0].id:
         got = views[out.entered[-1]].state(y[1], y[2], None)
     if isinstance(got, st.Stop):
         return _at(got, y, m)
     out.m, out.y, out.rho_end = m, y, got[0]
     out.F = rhs.residual(m, y[0], got[0], rs)
     return out
+
+
+def _domain_refusal(got) -> bool:
+    """A material view's refusal of a state outside its domain or window: a record's declared edge or region refusal
+    (D-M2; not «material.field_overlap», a record defect), or the old engine's PhaseGap edge on a named axis (not its
+    undifferentiated ValueError channel, axis «none»). r2 on c8274a73: only these may hand F's end density to the
+    ended layer."""
+    if not (isinstance(got, st.Stop) and got.kind == "refused"):
+        return False
+    rec = got.record
+    if isinstance(rec, mv.RecordRefusal):
+        return rec.refusal != "material.field_overlap"
+    if isinstance(rec, lm.MaterialRefusal):
+        return rec.axis in ("P", "T")
+    return False
 
 
 def _comp(layer) -> dict:
