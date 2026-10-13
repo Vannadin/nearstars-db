@@ -21,14 +21,15 @@ only. Everything that changes a frozen fact goes through one loop.
 2. **Audit clears a blob, not a file.** The audit seat hashes the draft (`git hash-object -w`),
    reads that blob, and sends one message: HOLD *or* clear `<blob>`. Clear messages always cc the
    directing seat.
-   - **Split the audit by remit; never ask both audit seats for the same check.** Audit (68) takes the
-     mechanics: hashes, shard/cmp/run evidence, records, scripts and code, merges. Audit2 (r2) takes
-     the reading: registrations, declarations, classes and bounds, physics rulings. A request to both
-     names each one's scope. 2026-10-13: the silicate ship asked 68 for the declaration reading too.
-   - **One full pass per blob, every finding in one message.** Both audit seats read the same blob in
-     parallel and send all findings at once (blocking and non-blocking); a fix's re-check covers the
-     delta and what it touches. Directing dispatches PC test runs only after both have cleared the same
-     blob on reading. Owner 2026-10-13 («왕복 횟수만 줄여도 좋을거같아»), after a day of HOLD loops.
+   - **One audit seat per stream, full scope (owner 2026-10-13).** The two audit seats exist to run two
+     streams in parallel, not to split one item. Audit 68 takes the solver/engine stream (the work
+     seat's code, EVC/compare tools, PC rounds); audit2 r2 takes the materials stream (the parallel
+     seat's tables, records, declarations). Each clears its items alone, mechanics and reading both.
+     Both read the same item only when it spans the two streams (e.g. a registration that binds both).
+   - **One full pass per blob, every finding in one message.** The seat reads the blob through once
+     and sends all findings at once (blocking and non-blocking); a fix's re-check covers the delta and
+     what it touches. Directing dispatches PC test runs only after the reading clear. Owner 2026-10-13
+     («왕복 횟수만 줄여도 좋을거같아»), after a day of HOLD loops.
 3. **The drafting seat freezes; directing verifies and pushes.** On a clear, the seat that wrote the
    draft runs `tools/freeze.py` (directing may run it instead, e.g. for a PC draft). Directing checks the
    Frozen/Appended line and the blobs, then pushes. `freeze.py` does the hash check, the copy or
