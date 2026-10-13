@@ -264,34 +264,20 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
             if jump:
                 y = (y[0], y[1], y[2] + jump, y[3] + jump, *y[4:])
     # F's end density (design §A1.5, rhs.residual): one material for every end point, the bottom layer's, so F stays
-    # continuous in x where the end switches layer (707aa7a4 read the ended layer's view: F jumped by ρ_mantle/ρ_core
-    # at that switch and the closure took 14–33 % more passes on Mars 1978–1989). P1R-G2-C-11 keeps its point: where
-    # the bottom material refuses an end state it never reached (a trial that stopped higher) by its domain or window,
-    # the ended layer's view answers instead of the trial becoming a wall; that is the only place F may jump, and it
-    # was a wall before. Any other Stop from the bottom view propagates (r2 on c8274a73)
+    # continuous in x where the end switches layer. P1R-G2-C-11 is accepted under that convention (directing ruling R1,
+    # 10-13): where the bottom material refuses the end state of a trial that stopped above the bottom layer, the trial
+    # is a wall naming that material, and its reached state records the layer the pass ended in (reporting only).
+    # Reading the ended layer's view instead (707aa7a4; as a domain-refusal fallback in 785868db) made F jump at the
+    # switch: +30–90 % net instructions on Mars 1978–1989 and the cost line at 8/12
     got = views[layers[0].id].state(y[1], y[2], None)
-    if _domain_refusal(got) and out.entered and out.entered[-1] != layers[0].id:
-        got = views[out.entered[-1]].state(y[1], y[2], None)
     if isinstance(got, st.Stop):
-        return _at(got, y, m)
+        stop = _at(got, y, m)
+        if out.entered and out.entered[-1] != layers[0].id and stop.state is not None:
+            stop = dataclasses.replace(stop, state={**stop.state, "end_layer": out.entered[-1]})
+        return stop
     out.m, out.y, out.rho_end = m, y, got[0]
     out.F = rhs.residual(m, y[0], got[0], rs)
     return out
-
-
-def _domain_refusal(got) -> bool:
-    """A material view's refusal of a state outside its domain or window: a record's declared edge or region refusal
-    (D-M2: input.* or a record-declared id; never a «material.*» id, which names a record defect — field_overlap,
-    check_grammar …; 68 on 03cd9888), or the old engine's PhaseGap edge on a named axis (not its undifferentiated
-    ValueError channel, axis «none»). r2 on c8274a73: only these may hand F's end density to the ended layer."""
-    if not (isinstance(got, st.Stop) and got.kind == "refused"):
-        return False
-    rec = got.record
-    if isinstance(rec, mv.RecordRefusal):
-        return not rec.refusal.startswith("material.")
-    if isinstance(rec, lm.MaterialRefusal):
-        return rec.axis in ("P", "T")
-    return False
 
 
 def _comp(layer) -> dict:

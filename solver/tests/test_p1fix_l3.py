@@ -180,12 +180,12 @@ class SolveEvidence(unittest.TestCase):
 
 
 class EndDensity(unittest.TestCase):
-    """G2-C-11 as amended (the 707aa7a4 cost regression; r2 on c8274a73): a pass that ends above the bottom layer
-    (planted: the mantle segment reports the r-floor event at its end) reads ρ_end with the bottom layer's view, so F
-    is one function across the end-layer switch. Only a domain or window refusal by that view hands the read to the
-    ended layer's view; any other Stop propagates."""
+    """G2-C-11, accepted under design §A1.5's one-material convention (directing ruling R1, 10-13): ρ_end is always
+    read with the bottom layer's view, so F is one function across the end-layer switch. Where that view refuses the
+    end state of a pass that stopped higher (planted: the mantle segment reports the r-floor event at its end), the
+    trial is a wall naming the bottom material, and its reached state records the ended layer (reporting only)."""
 
-    def _run(self, core_answer=None):
+    def _run(self, core_answer=None, mantle_floor=True):
         e = _earth()
         _ans, x = sv.solve(e, OPT)
         views = sv._views_at(e, sv._views(e), x)
@@ -193,8 +193,8 @@ class EndDensity(unittest.TestCase):
 
         def seg(view, *a, **k):
             r = real_seg(view, *a, **k)
-            return dataclasses.replace(r, stop=st.Stop("event"), event="r_floor") if getattr(view, "lid", None) == "mantle" \
-                else r
+            return dataclasses.replace(r, stop=st.Stop("event"), event="r_floor") \
+                if mantle_floor and getattr(view, "lid", None) == "mantle" else r
         ends = []
 
         class Spy:
@@ -220,36 +220,51 @@ class EndDensity(unittest.TestCase):
         self.assertEqual(ends.count("core"), 1)                 # the end read is the core view's only read (68)
         self.assertEqual(out.rho_end, views["core"].state(out.y[1], out.y[2], None)[0])
 
-    def test_ended_layer_when_the_bottom_refuses_its_domain(self):
-        """The finding's case: the bottom material refuses, by its domain, a state it never reached; not a wall."""
-        for name, rec in (("legacy edge", lm.MaterialRefusal("fe", 1.0, 1.0, "PhaseGap", "planted", axis="P")),
-                          ("record edge", mv.RecordRefusal("fe", 1.0, 1.0, "input.material_out_of_data", "planted")),
-                          ("record-declared edge id", mv.RecordRefusal("fe", 1.0, 1.0, "input.planted_declared_edge",
-                                                                      "planted"))):
-            with self.subTest(name):
-                out, ends, _v = self._run(lambda p, t, rec=rec: st.Stop("refused", rec))
-                self.assertEqual(ends[-2:], ["core", "mantle"])
-                self.assertEqual(ends.count("core"), 1)
-                self.assertNotIsInstance(out, st.Stop)
-                self.assertIsNotNone(out.F)
-                self.assertTrue(out.floor_end)
-
-    def test_any_other_stop_propagates(self):
-        """r2 H1 on c8274a73: a non-domain Stop from the bottom view is not answered by the ended layer's view; the
-        pass ends with that Stop (at its reached state)."""
-        for name, stop in (("non-finite", st.Stop("non_finite", {"planted": True})),
-                           ("engine ValueError", st.Stop("refused", lm.MaterialRefusal("fe", 1.0, 1.0, "ValueError",
-                                                                                       "planted", axis="none"))),
-                           ("field overlap", st.Stop("refused", mv.RecordRefusal("fe", 1.0, 1.0,
-                                                                                 "material.field_overlap", "planted"))),
-                           ("check grammar", st.Stop("refused", mv.RecordRefusal("fe", 1.0, 1.0,
-                                                                                 "material.check_grammar", "planted")))):
+    def test_an_upper_end_refusal_is_a_wall_with_its_layer(self):
+        """A domain refusal (legacy PhaseGap edge, record edge) and any other Stop alike: the pass ends with the bottom
+        view's Stop, the mantle's view is never read for ρ_end, and the state names the ended layer."""
+        for name, stop in (("legacy edge", st.Stop("refused", lm.MaterialRefusal("fe", 1.0, 1.0, "PhaseGap", "planted",
+                                                                                 axis="P"))),
+                           ("record edge", st.Stop("refused", mv.RecordRefusal("fe", 1.0, 1.0,
+                                                                               "input.material_out_of_data", "planted"))),
+                           ("non-finite", st.Stop("non_finite", {"planted": True}))):
             with self.subTest(name):
                 out, ends, _v = self._run(lambda p, t, stop=stop: stop)
-                self.assertEqual(ends[-1:], ["core"])          # the mantle's view is not read after the core's Stop
+                self.assertEqual(ends[-1:], ["core"])
                 self.assertEqual(ends.count("core"), 1)
                 self.assertIsInstance(out, st.Stop)
                 self.assertEqual((out.kind, out.record), (stop.kind, stop.record))
+                self.assertEqual(out.state.get("end_layer"), "mantle")
+
+    def test_no_tag_when_the_pass_ended_in_the_bottom_layer(self):
+        """The tag is for an upper end only: a pass that reached the core and is refused there carries none."""
+        e = _earth()
+        _ans, x = sv.solve(e, OPT)
+        views = sv._views_at(e, sv._views(e), x)
+        real_state = views["core"].state
+        n_before = []
+
+        class EndOnly:
+            """The core view, refusing only the pass's final end read (its segment's own reads answer)."""
+            def __getattr__(self, k):
+                return getattr(views["core"], k)
+
+            def state(self, p, t, g):
+                n_before.append(1)
+                return real_state(p, t, g)
+        out_ok = sv.inward(e, {**views, "core": EndOnly()}, x, context.Options())
+        last = len(n_before)
+        n_before.clear()
+
+        class RefuseLast(EndOnly):
+            def state(self, p, t, g):
+                n_before.append(1)
+                return st.Stop("refused", lm.MaterialRefusal("fe", p, t, "PhaseGap", "planted", axis="P")) \
+                    if len(n_before) == last else real_state(p, t, g)
+        out = sv.inward(e, {**views, "core": RefuseLast()}, x, context.Options())
+        self.assertEqual(out_ok.entered[-1], "core")
+        self.assertIsInstance(out, st.Stop)
+        self.assertNotIn("end_layer", out.state)
 
 
 class GitWorkTree(unittest.TestCase):
