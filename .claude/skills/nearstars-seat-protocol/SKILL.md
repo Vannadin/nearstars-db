@@ -25,6 +25,10 @@ only. Everything that changes a frozen fact goes through one loop.
      mechanics: hashes, shard/cmp/run evidence, records, scripts and code, merges. Audit2 (r2) takes
      the reading: registrations, declarations, classes and bounds, physics rulings. A request to both
      names each one's scope. 2026-10-13: the silicate ship asked 68 for the declaration reading too.
+   - **One full pass per blob, every finding in one message.** Both audit seats read the same blob in
+     parallel and send all findings at once (blocking and non-blocking); a fix's re-check covers the
+     delta and what it touches. Directing dispatches PC test runs only after both have cleared the same
+     blob on reading. Owner 2026-10-13 («왕복 횟수만 줄여도 좋을거같아»), after a day of HOLD loops.
 3. **The drafting seat freezes; directing verifies and pushes.** On a clear, the seat that wrote the
    draft runs `tools/freeze.py` (directing may run it instead, e.g. for a PC draft). Directing checks the
    Frozen/Appended line and the blobs, then pushes. `freeze.py` does the hash check, the copy or
