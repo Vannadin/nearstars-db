@@ -263,10 +263,14 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
             out.boundaries.append((f"{below.id}/{layer.id}", "layer", m, y[0], y[1], y[3], y[3] + jump))
             if jump:
                 y = (y[0], y[1], y[2] + jump, y[3] + jump, *y[4:])
-    # P1R-G2-C-11: the end density is read with the layer the pass ended in (a trial that stops at the r floor or at
-    # m_ε above its radius base ends in a higher layer), not always the bottom one
-    bottom = views[out.entered[-1]] if out.entered else views[layers[0].id]
-    got = bottom.state(y[1], y[2], None)
+    # F's end density (design §A1.5, rhs.residual): one material for every end point, the bottom layer's, so F stays
+    # continuous in x where the end switches layer (707aa7a4 read the ended layer's view: F jumped by ρ_mantle/ρ_core
+    # at that switch and the closure took 14–33 % more passes on Mars 1978–1989). P1R-G2-C-11 keeps its point: where
+    # the bottom material refuses an end state it never reached (a trial that stopped higher), the ended layer's view
+    # answers instead of the trial becoming a wall; that is the only place F may jump, and it was a wall before
+    got = views[layers[0].id].state(y[1], y[2], None)
+    if isinstance(got, st.Stop) and out.entered and out.entered[-1] != layers[0].id:
+        got = views[out.entered[-1]].state(y[1], y[2], None)
     if isinstance(got, st.Stop):
         return _at(got, y, m)
     out.m, out.y, out.rho_end = m, y, got[0]

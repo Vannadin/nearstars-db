@@ -178,11 +178,12 @@ class SolveEvidence(unittest.TestCase):
         self.assertEqual(got.evidence["last_residual"], 0.25)
 
 
-class EndDensityFromTheEndedLayer(unittest.TestCase):
-    """G2-C-11: a pass that ends above the bottom layer (planted: the mantle segment reports the r-floor event at its
-    end) reads ρ_end with the mantle's view, not the core's."""
+class EndDensity(unittest.TestCase):
+    """G2-C-11 as amended (the 707aa7a4 cost regression): a pass that ends above the bottom layer (planted: the mantle
+    segment reports the r-floor event at its end) reads ρ_end with the bottom layer's view, so F is one function across
+    the end-layer switch; only where that view refuses the end state does the ended layer's view answer."""
 
-    def test_view_used(self):
+    def _run(self, core_refuses):
         e = _earth()
         _ans, x = sv.solve(e, OPT)
         views = sv._views_at(e, sv._views(e), x)
@@ -195,22 +196,34 @@ class EndDensityFromTheEndedLayer(unittest.TestCase):
         ends = []
 
         class Spy:
-            def __init__(self, lid, v):
-                self.lid, self.v = lid, v
+            def __init__(self, lid, v, refuse=False):
+                self.lid, self.v, self.refuse = lid, v, refuse
 
             def __getattr__(self, k):
                 return getattr(self.v, k)
 
             def state(self, p, t, g):
                 ends.append(self.lid)
-                return self.v.state(p, t, g)
+                return st.Stop("refused", {"planted": "core refuses the mantle's end state"}) if self.refuse \
+                    else self.v.state(p, t, g)
         with mock.patch.object(sv, "_segment", seg):
-            out = sv.inward(e, {**views, "mantle": Spy("mantle", views["mantle"]), "core": Spy("core", views["core"])},
-                            x, context.Options())
+            out = sv.inward(e, {**views, "mantle": Spy("mantle", views["mantle"]),
+                                "core": Spy("core", views["core"], core_refuses)}, x, context.Options())
+        return out, ends, views
+
+    def test_bottom_view_when_it_answers(self):
+        out, ends, views = self._run(False)
         self.assertTrue(out.floor_end)
         self.assertEqual(out.entered[-1], "mantle")
-        self.assertEqual(ends[-1:], ["mantle"])                 # the end density's read
-        self.assertNotIn("core", ends)
+        self.assertEqual(ends[-1:], ["core"])                   # one material for F: no jump at the end-layer switch
+        self.assertEqual(out.rho_end, views["core"].state(out.y[1], out.y[2], None)[0])
+
+    def test_ended_layer_when_the_bottom_refuses(self):
+        """The finding's case: the bottom material refuses a state it never reached; the trial is not a wall."""
+        out, ends, _v = self._run(True)
+        self.assertEqual(ends[-2:], ["core", "mantle"])
+        self.assertIsNotNone(out.F)
+        self.assertTrue(out.floor_end)
 
 
 class GitWorkTree(unittest.TestCase):
