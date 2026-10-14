@@ -117,6 +117,9 @@ def check(spec: dict, stem: str | None = None) -> dict:
             raise SpecError("spec.reads_missing", f"a {spec['kind']} node needs `reads`", sid)
         if spec["kind"] == "measured" and not spec["reads"].get("methods"):
             raise SpecError("spec.methods_missing", "a measured node needs its closed `methods` list (N13)", sid)
+        overlap = set(spec["reads"].get("methods") or ()) & set(spec["reads"].get("adopted_methods") or ())
+        if overlap:
+            raise SpecError("spec.bad_value", f"adopted_methods overlaps methods: {sorted(overlap)}", sid)
     from solver import refusals as rf
     for rid in spec["refusals"]:
         if rid not in rf.REGISTRY:

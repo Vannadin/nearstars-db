@@ -78,16 +78,33 @@ def run(spec, body, where, db_root=None):
     i = rec[0]
     entry = block[i]
     ekey = f"{key}[{i}]"
-    if entry.get("method") not in r["methods"]:
-        return rf.make("node.record_not_measured", where, file=r["file"], key=ekey, method=entry.get("method")), None
+    method = entry.get("method")
+    adopted = method is not None and method in (r.get("adopted_methods") or ())
+    if method not in r["methods"] and not adopted:
+        return rf.make("node.record_not_measured", where, file=r["file"], key=ekey, method=method), None
     records = {ekey: rid.entry_sha256(entry)}
-    for j, other in enumerate(block):            # the spread check reads the others, so they bind the run id too
+    for j, other in enumerate(block):            # the spread / window checks read the others, so they bind the run id
         if j != i:
             records[f"{key}[{j}]"] = rid.entry_sha256(other)
-    run = rid.run_id(spec, upstream={}, records=records, body=body)
+    run_body = body
+    if adopted:                                  # prereg-orbit-adopted §1: the body-context rule, adopted route only
+        census = fictional_census(db_root)
+        fictional = body["fictional"] if "fictional" in body else body["name"] in census
+        run_body = dict(body, fictional=fictional)
+        records["phase4 fictional census"] = rid.entry_sha256(sorted(census))
+    else:
+        fictional = body.get("fictional") is True   # the measured route reads only an explicit flag (M5c guards data)
+    if fictional:
+        return rf.make("node.fiction_in_measured_db", where, file=r["file"], key=ekey), None
+    run = rid.run_id(spec, upstream={}, records=records, body=run_body)
     src = SourceRef(kind="record", ref={"file": r["file"], "key": ekey, "sha256": records[ekey]},
                     cites=entry.get("bibcode") or entry.get("doi"))
+    grade, how_read = ("authored", "chosen") if adopted else ("measured", "read")
     quantities, notes = [], []
+    if adopted:
+        notes.append(Note(kind="stability_adopted",
+                          text=f"{ekey} (method {method}) is adopted in place of an observation; read as authored",
+                          fields={"record": ekey, "method": method}))
     for out_key, how in r["outputs"].items():
         out = spec["outputs"][out_key]
         if entry.get(how["value"]) is None:
@@ -102,24 +119,50 @@ def run(spec, body, where, db_root=None):
                                         solver=None, model_reason="a measurement: no model",
                                         solver_reason="a measurement: no solver"))
             reason = None
-            for j, other in enumerate(block):
-                if j == i or other.get(how["value"]) is None or other.get("method") not in r["methods"]:
-                    continue
-                v = float(other[how["value"]]) * f
-                if not band.lo <= v <= band.hi:
-                    notes.append(Note(kind="measurement_spread",
-                                      text=f"{out_key}: {key}[{j}] = {v!r} lies outside the recommended band",
-                                      fields={"output": out_key, "record": f"{key}[{j}]", "value": v,
-                                              "reference": other.get("reference") or other.get("source")}))
         else:
             band, reason = None, "the recommended record prints no uncertainty"
+        for j, other in enumerate(block):
+            if j == i or other.get(how["value"]) is None or other.get("method") not in r["methods"]:
+                continue
+            v = float(other[how["value"]]) * f
+            if adopted:                          # shown, not graded (owner 00:25)
+                ou = other.get(how["uncertainty"]) if how.get("uncertainty") else None
+                lo = hi = inside = None
+                if ou is not None:
+                    lo, hi = v - float(ou) * f, v + float(ou) * f
+                    inside = lo <= point <= hi
+                notes.append(Note(kind="adopted_vs_observed",
+                                  text=f"{out_key}: adopted {point!r} vs observed {key}[{j}] = {v!r}; inside {inside}",
+                                  fields={"output": out_key, "observed_record": f"{key}[{j}]", "observed_value": v,
+                                          "lo": lo, "hi": hi, "inside": inside}))
+            elif band is not None and not band.lo <= v <= band.hi:
+                notes.append(Note(kind="measurement_spread",
+                                  text=f"{out_key}: {key}[{j}] = {v!r} lies outside the recommended band",
+                                  fields={"output": out_key, "record": f"{key}[{j}]", "value": v,
+                                          "reference": other.get("reference") or other.get("source")}))
         quantities.append(Quantity(
-            key=f"{node}.{out_key}", unit=out["unit"], point=point, kind=out["kind"], method="read",
+            key=f"{node}.{out_key}", unit=out["unit"], point=point, kind=out["kind"], method=how_read,
             where=Where("body"), band=band, band_reason=reason,
-            provenance=NodeProvenance(grade="measured", solver=SolverInfo(solve_id=run), sources=(src,))))
+            provenance=NodeProvenance(grade=grade, solver=SolverInfo(solve_id=run), sources=(src,))))
     if not quantities:
         return rf.make("node.input_missing", where, input=",".join(r["outputs"]), **{"from": f"{r['file']}:{ekey}"}), run
     return Answer(quantities=tuple(quantities), notes=tuple(notes)), run
+
+
+def fictional_census(db_root=None) -> frozenset:
+    """Bodies a phase4 identity row marks `fictional: true` (contract note 1 A0: the only typed marker today)."""
+    root = Path(db_root or REPO)
+    k = ("census", root)
+    if k not in _CACHE:
+        import yaml                              # legacy boards carry duplicate keys the strict project loader refuses;
+        names = set()                            # read them as scripts/check_pipeline_flow.py does (safe_load)
+        for p in sorted((root / "phase4").glob("*.yaml")):
+            data = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+            for row in data.get("decisions") or ():
+                if row.get("fictional") is True:
+                    names.add(row.get("body"))
+        _CACHE[k] = frozenset(names)
+    return _CACHE[k]
 
 
 def _owner(spec, body, block, key, where):

@@ -8,6 +8,7 @@ reads:
   path: "{host}[pl_name={self}]"
   field: orbital
   methods: [rv, astrometric, transit, direct_imaging]   # the DB's own observational method values (prereg N13)
+  adopted_methods: [predicted, theoretical]              # read as authored, method chosen (prereg-orbit-adopted)
   outputs:
     a: {value: semi_major_axis_au, uncertainty: uncertainty_semi_major_axis_au, to_si: 1.495978707e11,
         to_si_source: "IAU 2012 Resolution B2, au = 149597870700 m"}
@@ -15,14 +16,15 @@ reads:
 outputs:
   a: {quantity: semi_major_axis, unit: m, kind: exact, method_grade: measured, band_required: true, to: [t_eq_stellar]}
   e: {quantity: eccentricity, unit: "1", kind: exact, method_grade: measured, band_required: true, to: [t_eq_stellar]}
-refusals: [node.input_missing, node.record_not_measured]
-note_kinds: [measurement_spread]
+refusals: [node.input_missing, node.record_not_measured, node.fiction_in_measured_db]
+note_kinds: [measurement_spread, stability_adopted, adopted_vs_observed]
 sources:
   - {formula: "au = 149597870700 m (IAU 2012 Resolution B2)", identity: true}
 formula_checks: []
 hand_checks: []
 negative_controls:
   - {refusal: node.input_missing, state: {planet: "no such planet"}}
-  - {refusal: node.record_not_measured, state: {method: predicted}}
+  - {refusal: node.record_not_measured, state: {method: analytic}}
+  - {refusal: node.fiction_in_measured_db, state: {body: "40 Eridani A c"}}
 tests: [nodes/tests/test_nodes.py]
 code: [nodes/records.py]

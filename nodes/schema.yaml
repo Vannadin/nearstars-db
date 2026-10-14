@@ -44,6 +44,7 @@ reads:
   path:     {shape: enum, values: ["{self}", "{host}[pl_name={self}]"], required: true}   # where the body's block sits
   field:    {shape: text, required: true}                   # the block's record list (or legacy dict), e.g. luminosity_measurements
   methods:  {shape: list}                                   # measured nodes: closed list of observational methods (required)
+  adopted_methods: {shape: list}                           # measured nodes: non-observational methods read as authored (prereg-orbit-adopted)
   outputs:  {shape: mapping, of: read_field, required: true}   # output key -> how to read it from the record
 
 read_field:

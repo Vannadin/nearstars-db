@@ -289,16 +289,9 @@ class N13RecordNotMeasured(unittest.TestCase):
         finally:
             records._block = real
 
-    def test_real_alpha_cen_a_b(self):
-        r = Runner()
-        out, _ = r.result("orbit_elements", A_CEN_A_B)
-        self.assertEqual((out.id, out.evidence["method"]), ("node.record_not_measured", "predicted"))
-        self.assertEqual(r.result("t_eq_stellar", A_CEN_A_B)[0].id, "node.input_missing")
-
-    def test_predicted_with_bibcode_refuses(self):
-        rec = {"semi_major_axis_au": 1.0, "eccentricity": 0.1, "method": "predicted", "bibcode": "2025ApJ...989L..22B",
-               "recommended": True}
-        self.assertEqual(self._run_block([rec]).id, "node.record_not_measured")
+    # test_real_alpha_cen_a_b and test_predicted_with_bibcode_refuses were voided by prereg-orbit-adopted.frozen.md
+    # (owner 2026-10-15 00:25: a recommended predicted/theoretical orbit is read as authored); M1 replaces both,
+    # in nodes/tests/test_orbit_adopted.py.
 
     def test_same_record_with_rv_reads(self):
         rec = {"semi_major_axis_au": 1.0, "eccentricity": 0.1, "method": "rv", "bibcode": "2025ApJ...989L..22B",
