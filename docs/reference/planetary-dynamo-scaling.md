@@ -1,6 +1,11 @@
 <!-- 거대행성·아성단 자기장을 에너지플럭스 dynamo 스케일링으로 도출하는 방법(논문 근거) -->
 # Planetary / substellar magnetic-field grounding: energy-flux dynamo scaling
 
+> **Obsolete as a source of values (owner, 2026-10-14).** Derived values now come from chain nodes: node specs
+> under `nodes/` in the solver repo, built to the node contract (`rewrite/nodes/node-contract.md` in the
+> artifacts repo). This page stays as background reading and a list of candidate papers. Do not take numbers
+> from it. It will be rewritten from its node's output when that node lands.
+
 Method reference for deriving the dipole magnetic field of **gas-giant and
 substellar** bodies, in the same "cite the relation + calibration, not a fake
 measurement" spirit as the [J₂ Radau–Darwin worked example](principia-geopotential-data.md).

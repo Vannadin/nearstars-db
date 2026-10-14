@@ -1,6 +1,11 @@
 <!-- NS의 논문-근거화 derived-value 방법론 문서 전체 인덱스 (Phase 3/4가 도출에 사용) -->
 # Methodology Index: Paper-Grounded Derived-Value Recipes
 
+> **Obsolete as a source of values (owner, 2026-10-14).** Derived values now come from chain nodes: node specs
+> under `nodes/` in the solver repo, built to the node contract (`rewrite/nodes/node-contract.md` in the
+> artifacts repo). This page stays as background reading and a list of candidate papers. Do not take numbers
+> from it. It will be rewritten from its node's output when that node lands.
+
 NearStars assigns many physical values that are **derived, not measured**: a body's
 color, magnetic field, atmosphere, internal heat, and so on. Each such value has a
 dedicated **methodology reference**: an ADS-verified recipe (relation + regimes +

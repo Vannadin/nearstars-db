@@ -1,6 +1,11 @@
 <!-- 행성·갈색왜성 내부열(잔여+Kelvin-Helmholtz+방사성) → T_int → 유효온도 T_eff를 도출하는 방법론 레퍼런스 -->
 # Internal-Heat / Self-Luminosity Methodology: T_int and the Effective Temperature
 
+> **Obsolete as a source of values (owner, 2026-10-14).** Derived values now come from chain nodes: node specs
+> under `nodes/` in the solver repo, built to the node contract (`rewrite/nodes/node-contract.md` in the
+> artifacts repo). This page stays as background reading and a list of candidate papers. Do not take numbers
+> from it. It will be rewritten from its node's output when that node lands.
+
 > **Legacy.** Written before the node/chain structure, and not held to a node's code.
 > When its node is built, this is replaced by a per-node methodology carrying an anchor
 > the node's code reproduces. Until then cite it as base material, not as authority.

@@ -1,6 +1,11 @@
 <!-- 쌍극 자기장 세기+항성풍에서 자기권 크기·모양과 방사선대 강도(다요인)를 도출해 Kerbalism 지오메트리로 매핑하는 방법(논문 근거) -->
 # Planetary magnetosphere geometry grounding: standoff, belts, and Kerbalism mapping
 
+> **Obsolete as a source of values (owner, 2026-10-14).** Derived values now come from chain nodes: node specs
+> under `nodes/` in the solver repo, built to the node contract (`rewrite/nodes/node-contract.md` in the
+> artifacts repo). This page stays as background reading and a list of candidate papers. Do not take numbers
+> from it. It will be rewritten from its node's output when that node lands.
+
 > **Legacy.** Written before the node/chain structure, and not held to a node's code.
 > When its node is built, this is replaced by a per-node methodology carrying an anchor
 > the node's code reproduces. Until then cite it as base material, not as authority.

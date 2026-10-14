@@ -1,6 +1,11 @@
 <!-- 크레이터가 다른 지형에 지워지기까지 걸리는 시간을 풍화 채널별로 도출하는 방법(논문 근거) — 표면 비주얼(크레이터 밀도) 결정용 -->
 # Crater degradation grounding: how long a crater survives each resurfacing process
 
+> **Obsolete as a source of values (owner, 2026-10-14).** Derived values now come from chain nodes: node specs
+> under `nodes/` in the solver repo, built to the node contract (`rewrite/nodes/node-contract.md` in the
+> artifacts repo). This page stays as background reading and a list of candidate papers. Do not take numbers
+> from it. It will be rewritten from its node's output when that node lands.
+
 > **Legacy.** Written before the node/chain structure, and not held to a node's code.
 > When its node is built, this is replaced by a per-node methodology carrying an anchor
 > the node's code reproduces. Until then cite it as base material, not as authority.

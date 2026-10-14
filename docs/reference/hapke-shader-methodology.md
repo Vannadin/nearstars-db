@@ -1,6 +1,11 @@
 <!-- Sol의 Hapke 셰이더 값(_Hapke 지형/스케일드)을 앵커 보간 + 광도 문헌으로 처방하는 방법 -->
 # Hapke shader value grounding: Sol anchor families + photometric regimes
 
+> **Obsolete as a source of values (owner, 2026-10-14).** Derived values now come from chain nodes: node specs
+> under `nodes/` in the solver repo, built to the node contract (`rewrite/nodes/node-contract.md` in the
+> artifacts repo). This page stays as background reading and a list of candidate papers. Do not take numbers
+> from it. It will be rewritten from its node's output when that node lands.
+
 > **Legacy.** Written before the node/chain structure, and not held to a node's code.
 > When its node is built, this is replaced by a per-node methodology carrying an anchor
 > the node's code reproduces. Until then cite it as base material, not as authority.
