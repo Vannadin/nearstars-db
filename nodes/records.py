@@ -79,6 +79,8 @@ def run(spec, body, where, db_root=None):
     entry = block[i]
     ekey = f"{key}[{i}]"
     method = entry.get("method")
+    if body.get("fictional") is True:            # an explicit flag refuses in every method case (frozen §1, 68)
+        return rf.make("node.fiction_in_measured_db", where, file=r["file"], key=ekey), None
     adopted = method is not None and method in (r.get("adopted_methods") or ())
     if method not in r["methods"] and not adopted:
         return rf.make("node.record_not_measured", where, file=r["file"], key=ekey, method=method), None

@@ -107,6 +107,13 @@ class M5Fiction(unittest.TestCase):
         out = run_block([rec(0.1, "rv", True)], body=dict(X, fictional=True))
         self.assertEqual(out.id, "node.fiction_in_measured_db")
 
+    def test_explicit_fictional_refuses_in_every_method_case(self):
+        for method in ("rv", "predicted", "analytic", None):
+            r0 = rec(0.1, method, True)
+            if method is None:
+                r0.pop("method")
+            self.assertEqual(run_block([r0], body=dict(X, fictional=True)).id, "node.fiction_in_measured_db", method)
+
     def test_census(self):
         """M5b: the non-fictional bodies the adopted route reads are exactly the owner's two."""
         spec = sp.load_all()["orbit_elements"]
