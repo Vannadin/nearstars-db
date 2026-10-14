@@ -1,0 +1,27 @@
+# 항성 물리량(측정 노드) — 이번 등록은 광도만, DB 권장 기록에서 읽는다 (prereg-t-eq-stellar §1 C3, N8)
+id: star_physical
+kind: measured
+label: "Star physical properties (luminosity only in this registration)"
+applies_to: [star]
+reads:
+  file: db/stellar_props_curated.json
+  path: "{self}"
+  field: luminosity_measurements
+  methods: [bolometric_flux, photometric, sed_fitting]   # the DB's own method values for luminosity (prereg N13)
+  outputs:
+    luminosity: {value: value_lsun, uncertainty: uncertainty_lsun, to_si: 3.828e26,
+                 to_si_source: "IAU 2015 Resolution B3 nominal solar luminosity, 3.828e26 W"}
+outputs:
+  luminosity: {quantity: stellar_luminosity, unit: W, kind: exact, method_grade: measured, band_required: true,
+               to: [t_eq_stellar]}
+refusals: [node.input_missing, node.record_not_measured]
+note_kinds: [measurement_spread]
+sources:
+  - {formula: "L_sun = 3.828e26 W (IAU 2015 Resolution B3, nominal)", identity: true}
+formula_checks: []
+hand_checks: []
+negative_controls:
+  - {refusal: node.input_missing, state: {star: "no such star"}}
+  - {refusal: node.record_not_measured, state: {method: predicted}}
+tests: [nodes/tests/test_nodes.py]
+code: [nodes/records.py]

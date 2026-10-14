@@ -1,0 +1,25 @@
+# 본드 반사율(오너 노드) — surface_albedo 노드가 생기기 전까지 오너가 보드에서 정한 값을 그대로 낸다 (prereg-t-eq-stellar §1 C3)
+id: bond_albedo_declared
+kind: owner
+label: "Bond albedo, owner-declared until surface_albedo exists"
+applies_to: [planet, moon, brown_dwarf]
+reads:
+  file: nodes/owner/bond_albedo.yaml
+  path: "{self}"
+  field: bond_albedo
+  outputs:
+    bond_albedo: {value: value, to_si: 1}
+outputs:
+  bond_albedo: {quantity: bond_albedo, unit: "1", kind: exact, method_grade: authored, band_required: false,
+                to: [t_eq_stellar]}
+replaced_by: surface_albedo
+refusals: [node.input_missing]
+note_kinds: []
+sources:
+  - {user_declared: "owner values in nodes/owner/bond_albedo.yaml, each naming its decision"}
+formula_checks: []
+hand_checks: []
+negative_controls:
+  - {refusal: node.input_missing, state: {body: "a body with no owner albedo"}}
+tests: [nodes/tests/test_nodes.py]
+code: [nodes/records.py]

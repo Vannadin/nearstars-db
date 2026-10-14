@@ -1,0 +1,28 @@
+# 궤도 요소(측정 노드) — 이번 등록은 장반경과 이심률만, DB 권장 기록에서 읽는다 (prereg-t-eq-stellar §1 C3, N9·N13)
+id: orbit_elements
+kind: measured
+label: "Orbital elements about the primary (a and e only in this registration)"
+applies_to: [planet, brown_dwarf]
+reads:
+  file: db/planets_curated.json
+  path: "{host}[pl_name={self}]"
+  field: orbital
+  methods: [rv, astrometric, transit, direct_imaging]   # the DB's own observational method values (prereg N13)
+  outputs:
+    a: {value: semi_major_axis_au, uncertainty: uncertainty_semi_major_axis_au, to_si: 1.495978707e11,
+        to_si_source: "IAU 2012 Resolution B2, au = 149597870700 m"}
+    e: {value: eccentricity, uncertainty: uncertainty_eccentricity, to_si: 1}
+outputs:
+  a: {quantity: semi_major_axis, unit: m, kind: exact, method_grade: measured, band_required: true, to: [t_eq_stellar]}
+  e: {quantity: eccentricity, unit: "1", kind: exact, method_grade: measured, band_required: true, to: [t_eq_stellar]}
+refusals: [node.input_missing, node.record_not_measured]
+note_kinds: [measurement_spread]
+sources:
+  - {formula: "au = 149597870700 m (IAU 2012 Resolution B2)", identity: true}
+formula_checks: []
+hand_checks: []
+negative_controls:
+  - {refusal: node.input_missing, state: {planet: "no such planet"}}
+  - {refusal: node.record_not_measured, state: {method: predicted}}
+tests: [nodes/tests/test_nodes.py]
+code: [nodes/records.py]

@@ -1,0 +1,44 @@
+# 평형온도 노드 — 궤도 평균 입사량과 완전 재분배 평형온도, 교과서 항등식 (prereg-t-eq-stellar §1 C3, N10–N12; 초안 draft/t_eq_stellar.yaml)
+id: t_eq_stellar
+kind: computed
+label: "Orbit-averaged instellation and equilibrium temperature"
+applies_to: [planet, brown_dwarf]          # moons read the parent's orbit (contract §2); none run in this registration
+inputs:
+  l_host: {from: star_physical.luminosity, scope: host, unit: W}
+  a:      {from: orbit_elements.a, scope: self, unit: m}
+  e:      {from: orbit_elements.e, scope: self, unit: "1"}
+  albedo: {from: bond_albedo_declared.bond_albedo, scope: self, unit: "1"}
+host_combine: {s_inst: sum, t_eq: from_summed_s_inst}   # flux summed over hosts; here the list holds the body's own host only (prereg §1)
+outputs:
+  s_inst: {quantity: instellation, unit: W/m^2, kind: exact, method_grade: measured, band_required: true, to: []}
+  t_eq:   {quantity: equilibrium_temperature, unit: K, kind: exact, method_grade: measured, band_required: true, to: []}
+domain:                                    # SI values
+  - {input: a, gt: 0, refusal: node.out_of_domain}
+  - {input: e, ge: 0, refusal: node.out_of_domain}
+  - {input: e, lt: 1, refusal: node.out_of_domain}
+  - {input: albedo, ge: 0, refusal: node.out_of_domain}
+  - {input: albedo, le: 1, refusal: node.out_of_domain}
+refusals: [node.out_of_domain, node.input_missing]
+note_kinds: [companion_hosts_not_combined]
+sources:
+  - {formula: "S = L / (4 pi a^2 sqrt(1 - e^2)) (time average of L / 4 pi r^2 over a Keplerian orbit)", identity: true}
+  - {formula: "T_eq = (S (1 - A) / (4 sigma))^(1/4), full redistribution, emissivity 1", identity: true}
+  - {formula: "sigma = 5.670374419e-8 W m^-2 K^-4 (CODATA 2018, exact in SI)", identity: true}
+formula_checks: []                         # identities: hand checks only (contract §7)
+hand_checks:
+  - {output: t_eq, state: {l_host: 3.828e26, a: 1.495978707e11, e: 0.0167, albedo: 0.306}, expected: 254.047,
+     tolerance: 1.0e-4, expression: "(l_host*(1-albedo)/(16*pi*5.670374419e-8*a**2*sqrt(1-e**2)))**0.25"}
+  - {output: s_inst, state: {l_host: 3.828e26, a: 1.495978707e11, e: 0.0167, albedo: 0.306}, expected: 1361.36,
+     tolerance: 1.0e-4, expression: "l_host/(4*pi*a**2*sqrt(1-e**2))"}
+  - {output: t_eq, state: {l_host: 3.828e26, a: 1.495978707e11, e: 0.0, albedo: 0.306}, expected: "teff_form",
+     tolerance: 1.0e-3, expression: "5772*sqrt(6.957e8/(2*a))*(1-albedo)**0.25",
+     note: "IAU 2015 B3 nominal T_eff 5772 K and R_sun 6.957e8 m; agrees with the L form to the 1e-3 level"}
+negative_controls:
+  - {refusal: node.out_of_domain, state: {e: 1.0}}
+  - {refusal: node.out_of_domain, state: {albedo: 1.2}}
+  - {refusal: node.input_missing, state: {albedo: null}}
+edges_info:
+  - {to: "interior solver surface boundary", kind: influences, ref: "chain.yaml cycle 1; enters the solver only via body bytes (contract §6)"}
+  - {to: "heat_transport_mode, day_night_contrast, atmosphere_choice, greenhouse, t_eff_body, crater_state, atmosphere_reflected_color", kind: influences, ref: "chain.yaml consumers; they declare themselves in `to` when specified"}
+tests: [nodes/tests/test_nodes.py]
+code: [nodes/t_eq_stellar.py]

@@ -1,0 +1,5 @@
+# 오너가 정한 본드 반사율 — 천체마다 값과 그 결정의 출처 (bond_albedo_declared 노드가 읽는다)
+"Proxima Cen b":
+  bond_albedo:
+    value: 0.33
+    decision: "phase4/proxima_cen.yaml, Proxima Cen b row with field albedo = 0.33 («Bond, area-weighted over the dayside», gate pass-in-window)"
