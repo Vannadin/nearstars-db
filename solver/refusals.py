@@ -147,8 +147,23 @@ _INPUT = (
     Entry("input.class_out_of_scope", ("body_class", "why"), "'{body_class}' 는 이 내부구조 솔버 밖이다 — {why}"),
 )
 
+#: Chain-node refusals (rewrite/nodes/node-contract.frozen.md §2, prereg-t-eq-stellar.frozen.md §1). Their own group,
+#: kept apart from _SOLVE / _INPUT so other additions do not interleave (c8, 2026-10-14). `where` names the node run.
+_NODE = (
+    Entry("node.out_of_domain", ("input", "value", "bound", "bound_kind"),
+          "입력 '{input}' 값 {value} 이(가) 노드의 적용 범위 밖이다 — {bound_kind} {bound}"),
+    Entry("node.input_missing", ("input", "from"), "입력 '{input}' 이(가) 없다 — '{from}' 이(가) 값을 내지 않았다"),
+    Entry("node.source_not_cached", ("bibcode", "why", "outputs"),
+          "출력 {outputs} 이(가) 캐시에 없는 논문 {bibcode} 에 기댄다 — {why}"),
+    Entry("node.undeclared_read", ("key",), "노드가 명세에 없는 입력 '{key}' 을(를) 읽었다"),
+    Entry("node.record_not_measured", ("file", "key", "method"),
+          "기록 {file}:{key} 의 방법 '{method}' 은(는) 관측이 아니다 — 측정값으로 읽지 않는다"),
+)
+
 #: NoAnswer evidence sets (D-A3-2). `unconverged`: b9's set; GridExceeded maps to MAX_STEPS_SOLVE (r2 N3).
 NO_ANSWER_BUDGETS = ("CLOSE_ITERS", "MAX_STEPS_SOLVE", "WALL_SHOTS", "MAX_SPLITS")
+#: Chain nodes: `iterate.max_passes` of a node on a cycle (node-contract.frozen.md §3). Appended.
+NO_ANSWER_BUDGETS += ("NODE_ITERATE_PASSES",)
 _NO_ANSWER = (
     Entry("unconverged", ("budget_name", "budget_value", "last_residual"),
           "예산 {budget_name} = {budget_value} 안에 닫히지 않았다 — 마지막 잔차 {last_residual} (값 아님)",
@@ -180,7 +195,7 @@ def _solve_entry(e):
                  tuple(f for f in SOLVE_OPTIONAL if not (req and f == "state")) + e.optional, e.preamble, solve=True)
 
 
-REGISTRY = _index(tuple(_solve_entry(e) for e in _SOLVE) + _INPUT)
+REGISTRY = _index(tuple(_solve_entry(e) for e in _SOLVE) + _INPUT + _NODE)
 NO_ANSWER_REGISTRY = _index(_NO_ANSWER)
 if tuple(NO_ANSWER_REGISTRY) != NO_ANSWER_REASONS:      # not an assert: it must hold under python -O too
     raise ImportError("NoAnswer registry and NO_ANSWER_REASONS disagree")

@@ -27,6 +27,9 @@ INPUT_GRADES = tuple(g for g in GRADE_WORDS if g != "calibrated")
 
 KINDS = ("exact", "lower", "upper", "interval")                 # D-A3-1, R-C154-1..3
 METHODS = ("direct", "interpolated", "bridged", "derived")      # D-A3-1; «bridged» = not directly solved (R-OWN-6)
+#: Chain nodes (rewrite/nodes/node-contract.frozen.md §3): «read» = a measured node copying a curated record, «chosen» =
+#: an owner node or an override record. Appended; the solver never emits them.
+METHODS += ("read", "chosen")
 WHERE_KINDS = ("layer", "boundary", "body")
 SIDES = ("lower", "upper", "equal_by_convention")               # R-C153-1/2
 LABEL_KINDS = ("known_wrong", "oracle_bias", "expected_verdict_change", "board_choice")   # D-A3-4
