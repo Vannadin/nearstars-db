@@ -161,9 +161,8 @@ _NODE = (
 )
 
 #: NoAnswer evidence sets (D-A3-2). `unconverged`: b9's set; GridExceeded maps to MAX_STEPS_SOLVE (r2 N3).
-NO_ANSWER_BUDGETS = ("CLOSE_ITERS", "MAX_STEPS_SOLVE", "WALL_SHOTS", "MAX_SPLITS")
-#: Chain nodes: `iterate.max_passes` of a node on a cycle (node-contract.frozen.md §3). Appended.
-NO_ANSWER_BUDGETS += ("NODE_ITERATE_PASSES",)
+#: NODE_ITERATE_PASSES: `iterate.max_passes` of a chain node on a cycle (node-contract.frozen.md §3). Appended at the end.
+NO_ANSWER_BUDGETS = ("CLOSE_ITERS", "MAX_STEPS_SOLVE", "WALL_SHOTS", "MAX_SPLITS", "NODE_ITERATE_PASSES")
 _NO_ANSWER = (
     Entry("unconverged", ("budget_name", "budget_value", "last_residual"),
           "예산 {budget_name} = {budget_value} 안에 닫히지 않았다 — 마지막 잔차 {last_residual} (값 아님)",
