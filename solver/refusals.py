@@ -158,6 +158,8 @@ _NODE = (
     Entry("node.undeclared_read", ("key",), "노드가 명세에 없는 입력 '{key}' 을(를) 읽었다"),
     Entry("node.record_not_measured", ("file", "key", "method"),
           "기록 {file}:{key} 의 방법 '{method}' 은(는) 관측이 아니다 — 측정값으로 읽지 않는다"),
+    Entry("node.fiction_in_measured_db", ("file", "key"),
+          "가상 천체의 기록 {file}:{key} 이(가) 측정 DB 에 있다 — 읽지 않는다 (가상 값은 오너 값 경로로만)"),
 )
 
 #: NoAnswer evidence sets (D-A3-2). `unconverged`: b9's set; GridExceeded maps to MAX_STEPS_SOLVE (r2 N3).

@@ -100,7 +100,7 @@ PARENT_IDS = ["input.bad_grade",
 PARENT_NO_ANSWER_IDS = ["span_too_long", "unconverged"]
 PARENT_BUDGETS = ["CLOSE_ITERS", "MAX_STEPS_SOLVE", "WALL_SHOTS", "MAX_SPLITS"]
 NODE_IDS = ("node.out_of_domain", "node.input_missing", "node.source_not_cached", "node.undeclared_read",
-            "node.record_not_measured")
+            "node.record_not_measured", "node.fiction_in_measured_db")   # sixth: prereg-orbit-adopted D1
 
 
 def _drop_solve_id(x):
