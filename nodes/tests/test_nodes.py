@@ -147,7 +147,7 @@ class N6RunId(unittest.TestCase):
         tmp = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, tmp)
         for p in ("solver/result.py", "solver/refusals.py", "nodes/types.py", "nodes/runner.py", "nodes/records.py",
-                  "nodes/t_eq_stellar.py"):
+                  "nodes/t_eq_stellar.py", "nodes/spec.py", "nodes/quantities.yaml"):
             (tmp / p).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(REPO / p, tmp / p)
         before = {n: rid.run_id(s, upstream={}, records={}, body=self.body, repo=tmp) for n, s in self.s.items()}

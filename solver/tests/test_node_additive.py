@@ -4,7 +4,8 @@
 C1 adds to solver/ only: METHODS += read, chosen; a `_NODE` refusal tuple; NODE_ITERATE_PASSES. These tests prove
 nothing existing changed.
 
-N1: solve() on Earth (T_pot 1700 K), Mars and Venus, as `plain((ans, warm))` with every `solve_id` removed, hashes
+N1 (moved to nodes/landing/n1_identity.py, a one-time landing proof outside the suite; audit 68 L1): solve() on
+Earth (T_pot 1700 K), Mars and Venus, as `plain((ans, warm))` with every `solve_id` removed, hashes
 to the values captured at C1's parent. solve_id itself must move (it hashes every solver/*.py, 707aa7a4), so it is
 dropped, as in the silicate switch-off identity. Planted controls: a 1-ulp change must fail, a solve_id-only
 change must pass.
@@ -14,7 +15,7 @@ node ids and the one budget.
 
 Capture (run at C1's parent, before the edit):
     solver/.venv/bin/python -m solver.tests.test_node_additive capture
-Run:
+Run (N2 only; the hashes and helpers stay here because the landing proof and `capture` use them):
     solver/.venv/bin/python -m unittest solver.tests.test_node_additive
 """
 import dataclasses
@@ -143,27 +144,6 @@ def capture():
     render = hashlib.sha256(repr(sorted(_render_all(rf.REGISTRY).items())).encode()).hexdigest()
     print(json.dumps({"hashes": hashes, "ids": sorted(rf.REGISTRY), "no_answer_ids": sorted(rf.NO_ANSWER_REGISTRY),
                       "budgets": list(rf.NO_ANSWER_BUDGETS), "render": render}, indent=1))
-
-
-class N1Identity(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.plain = {n: _solve_plain(n) for n in CAPTURED}
-
-    def test_solves_equal_parent_without_solve_id(self):
-        for n, want in CAPTURED.items():
-            self.assertEqual(_digest(self.plain[n]), want, n)
-
-    def test_planted_one_ulp_fails(self):
-        p = json.loads(json.dumps(self.plain["mars"]))
-        q = p[0]["quantities"][0]
-        q["point"] = math.nextafter(q["point"], math.inf)
-        self.assertNotEqual(_digest(p), CAPTURED["mars"])
-
-    def test_planted_solve_id_only_passes(self):
-        p = json.loads(json.dumps(self.plain["mars"]))
-        p[0]["quantities"][0]["provenance"]["solver"]["solve_id"] = "0" * 64
-        self.assertEqual(_digest(p), CAPTURED["mars"])
 
 
 class N2Registry(unittest.TestCase):

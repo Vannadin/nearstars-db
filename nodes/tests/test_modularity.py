@@ -124,7 +124,7 @@ class N15AloneWithStubs(unittest.TestCase):
 
 class N16SwapStalesOnlyDownstream(unittest.TestCase):
     FILES = ("solver/result.py", "solver/refusals.py", "nodes/types.py", "nodes/runner.py", "nodes/records.py",
-             "nodes/t_eq_stellar.py")
+             "nodes/t_eq_stellar.py", "nodes/spec.py", "nodes/quantities.yaml")
 
     def test_swap(self):
         tmp = Path(tempfile.mkdtemp())

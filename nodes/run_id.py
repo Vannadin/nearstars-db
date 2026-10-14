@@ -43,8 +43,10 @@ def projection(spec: dict) -> dict:
 
 
 def code_blobs(spec: dict, repo: Path = REPO) -> dict:
-    """The spec's code files plus the solver types every node imports (prereg §1, C2)."""
-    paths = list(spec["code"]) + ["solver/result.py", "solver/refusals.py", "nodes/types.py", "nodes/runner.py"]
+    """The spec's code files, the solver types every node imports (prereg §1, C2), and the spec loader and quantity
+    vocabulary, whose defaults and units can change an outcome (audit 68, landing pass)."""
+    paths = list(spec["code"]) + ["solver/result.py", "solver/refusals.py", "nodes/types.py", "nodes/runner.py",
+                                  "nodes/spec.py", "nodes/quantities.yaml"]   # loader defaults and the vocabulary (68)
     return {p: git_blob_id(repo / p) for p in sorted(set(paths))}
 
 
