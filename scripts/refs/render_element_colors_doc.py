@@ -102,6 +102,11 @@ def render_en(data) -> str:
     lines = [
         "# Element plasma colors",
         "",
+        "> **Obsolete as a source of values (owner, 2026-10-14).** Derived values now come from chain nodes: node specs",
+        "> under `nodes/` in the solver repo, built to the node contract (`rewrite/nodes/node-contract.frozen.md` in the",
+        "> artifacts repo). This page stays as background reading and a list of candidate papers. Do not take numbers",
+        "> from it. It will be rewritten from its node's output when that node lands.",
+        "",
         "Per-element flame test / low-temperature plasma colors. "
         "Replaces pixel-sampling of the Helmenstine 2017 chart (whose "
         "decorative gradient blurs the intended hex). Source: chemistry "
@@ -157,6 +162,11 @@ def render_en(data) -> str:
 def render_ko(data) -> str:
     lines = [
         "# 원소별 플라즈마 색상",
+        "",
+        "> **값의 출처로는 더 이상 쓰지 않음 (오너, 2026-10-14).** 도출값은 이제 사슬 노드가 낸다. 노드 명세는 솔버",
+        "> 저장소의 `nodes/` 에 있고, 노드 계약(artifacts 저장소 `rewrite/nodes/node-contract.frozen.md`)을 따른다. 이 문서는",
+        "> 배경 자료와 후보 논문 목록으로만 남으며, 여기서 숫자를 가져오지 않는다. 해당 노드가 들어오면 그 출력으로",
+        "> 다시 쓴다.",
         "",
         "주기율표 원소별 불꽃 반응 / 저온 플라즈마 색상 사전. "
         "[Helmenstine 2017 차트](https://sciencenotes.org/flame-test-colors-and-procedure-chemistry/)는 "

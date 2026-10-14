@@ -1,5 +1,10 @@
 # 원소별 플라즈마 색상
 
+> **값의 출처로는 더 이상 쓰지 않음 (오너, 2026-10-14).** 도출값은 이제 사슬 노드가 낸다. 노드 명세는 솔버
+> 저장소의 `nodes/` 에 있고, 노드 계약(artifacts 저장소 `rewrite/nodes/node-contract.frozen.md`)을 따른다. 이 문서는
+> 배경 자료와 후보 논문 목록으로만 남으며, 여기서 숫자를 가져오지 않는다. 해당 노드가 들어오면 그 출력으로
+> 다시 쓴다.
+
 주기율표 원소별 불꽃 반응 / 저온 플라즈마 색상 사전. [Helmenstine 2017 차트](https://sciencenotes.org/flame-test-colors-and-procedure-chemistry/)는 장식용 그라디언트 때문에 정확한 hex 가 안 보여서, 화학 문헌 + [NIST 원자 스펙트럼 DB](https://physics.nist.gov/asd) 를 1차 출처로 쓰고 차트는 시각 sanity check 로만 활용합니다.
 
 정본 데이터: `db/refs/element_plasma_colors.yaml`. 이 문서는 `scripts/refs/render_element_colors_doc.py` 가 자동 생성합니다 — 직접 편집 금지.
