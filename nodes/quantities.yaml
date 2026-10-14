@@ -1,0 +1,18 @@
+# 노드 출력 물리량의 닫힌 어휘 — id · SI 단위 · 한 줄 정의, 출력은 반드시 여기서 이름을 고른다 (계약 §2, F3)
+#
+# From the artifacts draft rewrite/nodes/draft/quantities.yaml (blob 5a076d01), trimmed to what the first
+# registration (prereg-t-eq-stellar.frozen.md) uses plus its declared neighbours. Two outputs with the same
+# definition are the same quantity, whatever their keys are called; two nodes may not produce one quantity for
+# intersecting `applies_to` (nodes/graph.py). Units are SI strings compared exactly.
+version: 1
+
+quantities:
+  stellar_mass:            {unit: kg,    definition: "mass of the star"}
+  stellar_radius:          {unit: m,     definition: "photospheric radius of the star"}
+  stellar_teff:            {unit: K,     definition: "effective temperature of the star"}
+  stellar_luminosity:      {unit: W,     definition: "bolometric luminosity of the star"}
+  instellation:            {unit: W/m^2, definition: "orbit-averaged bolometric stellar flux at the body's orbit, summed over hosts"}
+  equilibrium_temperature: {unit: K,     definition: "temperature of a blackbody (emissivity 1) re-emitting the absorbed orbit-averaged instellation uniformly over its whole surface"}
+  semi_major_axis:         {unit: m,     definition: "orbital semi-major axis of the body about its primary"}
+  eccentricity:            {unit: "1",   definition: "orbital eccentricity of the body about its primary"}
+  bond_albedo:             {unit: "1",   definition: "fraction of incident bolometric stellar power the body reflects"}

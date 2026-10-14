@@ -1,0 +1,99 @@
+# 노드 명세 스키마 — 닫힌 키 목록: 꼴 · 필수 · 허용값 (node-contract.frozen.md §2). 목록 밖 키는 이름 대고 멈춘다.
+# Every key a node spec (`nodes/<id>.yaml`) may carry. A key not listed here is a load STOP by name
+# (spec.unknown_key); a required key missing is spec.missing_key. Contract: rewrite/nodes/node-contract.frozen.md
+# (artifacts, blob aabe8e84) §2–§7; registration rewrite/nodes/prereg-t-eq-stellar.frozen.md (blob 9e9f08ae).
+#
+# shape: text | enum | list | mapping | record | bool | any. `of` names the record or item schema.
+version: 1
+
+top:
+  id:                {shape: text, required: true}          # = file stem
+  kind:              {shape: enum, values: [measured, owner, computed], required: true}
+  label:             {shape: text, required: true}
+  applies_to:        {shape: list, values: [star, planet, moon, brown_dwarf, any], required: true}
+  inputs:            {shape: mapping, of: input}            # computed nodes; measured / owner nodes read records
+  host_combine:      {shape: mapping}                       # output key -> rule; required when any input has scope host
+  selects:           {shape: list, of: select}
+  reads:             {shape: record, of: reads}             # measured / owner nodes: which records they read
+  outputs:           {shape: mapping, of: output, required: true}
+  domain:            {shape: list, of: bound}
+  iterate:           {shape: any}                           # null, or {seed, max_passes, tol}
+  refusals:          {shape: list, required: true}
+  note_kinds:        {shape: list, required: true}
+  sources:           {shape: list, of: source, required: true}
+  formula_checks:    {shape: list, required: true}
+  hand_checks:       {shape: list, of: hand_check, required: true}
+  negative_controls: {shape: list, of: negative_control, required: true}
+  edges_info:        {shape: list}
+  replaced_by:       {shape: text}                          # owner / placeholder stand-ins: the node that will replace it
+  tests:             {shape: list, required: true}
+  code:              {shape: list, required: true}
+
+input:
+  from:     {shape: text, required: true}                   # <node>.<output>
+  scope:    {shape: enum, values: [self, parent, host, system], required: true}
+  unit:     {shape: text, required: true}
+  required: {shape: bool}
+
+select:
+  from:  {shape: text, required: true}
+  scope: {shape: enum, values: [self, parent, host, system], required: true}
+
+reads:
+  file:     {shape: text, required: true}                   # repo-relative record file
+  path:     {shape: enum, values: ["{self}", "{host}[pl_name={self}]"], required: true}   # where the body's block sits
+  field:    {shape: text, required: true}                   # the block's record list (or legacy dict), e.g. luminosity_measurements
+  methods:  {shape: list}                                   # measured nodes: closed list of observational methods (required)
+  outputs:  {shape: mapping, of: read_field, required: true}   # output key -> how to read it from the record
+
+read_field:
+  value:       {shape: text, required: true}                # record field holding the value
+  uncertainty: {shape: text}                                # record field holding the printed ± (absent = no band)
+  to_si:       {shape: any, required: true}                 # factor to the output's SI unit
+  to_si_source: {shape: text}                               # where the factor comes from (e.g. IAU 2015 B3)
+
+output:
+  quantity:      {shape: text, required: true}
+  unit:          {shape: text, required: true}
+  kind:          {shape: enum, values: [exact, lower, upper, interval], required: true}
+  method_grade:  {shape: enum, values: [measured, calibrated, analog, judgment, authored], required: true}
+  band_required: {shape: bool, required: true}
+  to:            {shape: list, required: true}
+  counter_evidence_searched: {shape: list}
+
+bound:
+  input:   {shape: text, required: true}
+  ge:      {shape: any}
+  gt:      {shape: any}
+  le:      {shape: any}
+  lt:      {shape: any}
+  refusal: {shape: text, required: true}
+  edge:    {shape: any}
+
+source:
+  cache:         {shape: text}
+  page:          {shape: text}
+  where:         {shape: text}
+  sha256:        {shape: text}
+  for:           {shape: list}
+  to_fetch:      {shape: text}
+  why:           {shape: text}
+  blocks:        {shape: list}
+  formula:       {shape: text}
+  identity:      {shape: bool}
+  user_declared: {shape: text}
+  library:       {shape: text}
+  doi:           {shape: text}
+  cites:         {shape: text}
+
+hand_check:
+  output:     {shape: text, required: true}
+  state:      {shape: mapping, required: true}
+  expected:   {shape: any, required: true}
+  tolerance:  {shape: any, required: true}
+  expression: {shape: text, required: true}
+  note:       {shape: text}
+
+negative_control:
+  refusal: {shape: text, required: true}
+  state:   {shape: mapping, required: true}
