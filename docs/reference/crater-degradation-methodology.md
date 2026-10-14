@@ -2,7 +2,7 @@
 # Crater degradation grounding: how long a crater survives each resurfacing process
 
 > **Obsolete as a source of values (owner, 2026-10-14).** Derived values now come from chain nodes: node specs
-> under `nodes/` in the solver repo, built to the node contract (`rewrite/nodes/node-contract.md` in the
+> under `nodes/` in the solver repo, built to the node contract (`rewrite/nodes/node-contract.frozen.md` in the
 > artifacts repo). This page stays as background reading and a list of candidate papers. Do not take numbers
 > from it. It will be rewritten from its node's output when that node lands.
 
