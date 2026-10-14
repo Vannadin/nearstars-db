@@ -93,17 +93,36 @@ class Runner:
         return got
 
     def _run_computed(self, spec, body, where):
-        node = spec["id"]
-        inputs, upstream, read_grades = {}, {}, []
+        given = {}
         for name, inp in (spec.get("inputs") or {}).items():
             got = self._resolve_input(inp, body)
             if not got or any(q is None for q, _ in got):
+                continue
+            given[name] = [q for q, _ in got] if inp["scope"] == "host" else got[0][0]
+        return self._execute(spec, body, where, given)
+
+    def run_with_inputs(self, node: str, body: dict, given: dict):
+        """Run one computed node alone on given input quantities (a list for a host input), with no upstream
+        node and no record read (note 1, N15). Names the spec does not declare are ignored. Grades, domain
+        checks, provenance and the run id follow the same path as a graph run."""
+        spec = self.specs[node]
+        if spec["kind"] != "computed":
+            raise ValueError(f"{node} is a {spec['kind']} node; only computed nodes take given inputs")
+        return self._execute(spec, body, f"{node}@{body['name']}", given)
+
+    def _execute(self, spec, body, where, given):
+        node = spec["id"]
+        inputs, upstream, read_grades = {}, {}, []
+        for name, inp in (spec.get("inputs") or {}).items():
+            if name not in given:
                 if inp.get("required", True):
                     return rf.make("node.input_missing", where, input=name, **{"from": inp["from"]}), None
                 continue
-            upstream[name] = [r for _, r in got]
-            inputs[name] = [q for q, _ in got] if inp["scope"] == "host" else got[0][0]
-            for q, _ in got:
+            val = given[name]
+            qs = val if isinstance(val, list) else [val]
+            inputs[name] = val
+            upstream[name] = [q.provenance.solver.solve_id for q in qs]
+            for q in qs:
                 read_grades.append((inp["from"], q.provenance.grade))
         for b in spec.get("domain") or []:
             if b["input"] not in inputs:
