@@ -101,6 +101,8 @@ PARENT_NO_ANSWER_IDS = ["span_too_long", "unconverged"]
 PARENT_BUDGETS = ["CLOSE_ITERS", "MAX_STEPS_SOLVE", "WALL_SHOTS", "MAX_SPLITS"]
 NODE_IDS = ("node.out_of_domain", "node.input_missing", "node.source_not_cached", "node.undeclared_read",
             "node.record_not_measured", "node.fiction_in_measured_db")   # sixth: prereg-orbit-adopted D1
+#: Solver ids added after C1 (b0a17107), one line each with the commit that added it; C1's PARENT_IDS stay pinned.
+ADDED_AFTER_C1 = {"input.no_table_for_composition": "silicate step 4 aa48d1bf"}
 
 
 def _drop_solve_id(x):
@@ -149,8 +151,9 @@ def capture():
 class N2Registry(unittest.TestCase):
     def test_parent_entries_unchanged(self):
         from solver import refusals as rf
-        self.assertEqual(sorted(set(rf.REGISTRY) - set(NODE_IDS)), PARENT_IDS)
-        self.assertEqual(sorted(set(rf.REGISTRY) - set(PARENT_IDS)), sorted(NODE_IDS))
+        parent, node, added = set(PARENT_IDS), set(NODE_IDS), set(ADDED_AFTER_C1)
+        self.assertEqual(set(rf.REGISTRY), parent | node | added)     # C1's pins, plus each later id by name
+        self.assertFalse(parent & node or parent & added or node & added)
         self.assertEqual(sorted(rf.NO_ANSWER_REGISTRY), PARENT_NO_ANSWER_IDS)
         self.assertEqual(list(rf.NO_ANSWER_BUDGETS), PARENT_BUDGETS + ["NODE_ITERATE_PASSES"])
         parent_only = {k: v for k, v in rf.REGISTRY.items() if k in PARENT_IDS}

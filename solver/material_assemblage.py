@@ -38,6 +38,8 @@ def composition_key(oxides_wt) -> str:
 
 # ── the compact table and its load checks (registration §2.2–§2.3; post-freeze note 3 §3) ────────────────────────────
 WINDOW_CAUSES = ("grid_end", "bound_cut", "eos_edge", "solidus_cap")
+#: the boundary export's states (registration §3.3): pending until the boundary pass lands, then exported
+BOUNDARY_STATUS = ("pending", "exported")
 CELL_KINDS = ("equilibrium", "extrapolated", "above_solidus", "frozen")
 
 
@@ -224,6 +226,9 @@ def check_table(asm, table) -> dict:
     # P node, so the one-sided cut falls on a node and a read below it never extrapolates past the grid
     if ts[0] != T_FLOOR:
         raise TableStop(f"the grid's first T node is {ts[0]:g} K, not the view's floor {T_FLOOR:g} K", check="structure")
+    if (table.get("boundaries") or {}).get("status") not in BOUNDARY_STATUS:     # read by the resolver (68 S3)
+        raise TableStop(f"boundaries.status is {(table.get('boundaries') or {}).get('status')!r}, not one of "
+                        f"{BOUNDARY_STATUS}", check="structure")
     if table.get("p_dataset") not in ps:
         raise TableStop(f"p_dataset {table.get('p_dataset')!r} is not a P node of the table", check="structure")
     cols = {c["p"]: c for c in table.get("columns", ())}
