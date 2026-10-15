@@ -42,6 +42,9 @@ class Options:
                                        # T2 method-term registration). 0 is the adaptive DP5(4) of record
     materials: str = "registry"        # switch-over §1: "registry" (records first) or "legacy" (the switch off, the §5
                                        # baseline). Not hashed into solve_id: its whole effect is in the material bytes
+    silicate_records: bool = False     # silicate record registration §4: the silicate layers read the assemblage
+                                       # records (all routes together); a read Option, hashed into solve_id. False
+                                       # until the records land (68 S3: not while their boundaries are pending)
 
 
 @dataclass(frozen=True)

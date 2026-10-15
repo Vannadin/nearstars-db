@@ -154,6 +154,8 @@ class Registry:
     unavailable: Mapping = field(default_factory=lambda: MappingProxyType({}))   # id → LoadStop: a library pin
                                                                                    # that does not match (note 1 §6)
     warnings: tuple = ()        # LoadStop-shaped warnings that never block a load (design note 4 item 3)
+    development: bool = False   # loaded with allow_development (tests only): the resolver may then read an assemblage
+                                # record whose boundaries are pending (68 S3)
     tables: Mapping = field(default_factory=lambda: MappingProxyType({}))   # id → an assemblage record's compact table
                                                                               # (read-only by convention; its sha256 is
                                                                               # in the record, so solve_id binds it)
@@ -958,7 +960,8 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None,
             return conflict
         out[rec["id"]] = rec
     warns = tuple(w for rec in out.values() for w in multi_source_warnings(rec, f"{rec['id']}.yaml"))
-    return Registry(MappingProxyType(out), MappingProxyType(unavailable), warns, MappingProxyType(tables))
+    return Registry(MappingProxyType(out), MappingProxyType(unavailable), warns, allow_development,
+                    MappingProxyType(tables))
 
 
 def _source_key(cite) -> str | None:

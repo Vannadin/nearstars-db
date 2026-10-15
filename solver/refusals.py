@@ -145,6 +145,9 @@ _INPUT = (
     Entry("input.composition_undeclared", ("body_class", "looked_for"),
           "조성이 선언되지 않았다 — {looked_for} 가 없고, '{body_class}' 는 반지름으로 조성을 역산할 수 있는 무리가 아니다. 선언이 필요하다"),
     Entry("input.class_out_of_scope", ("body_class", "why"), "'{body_class}' 는 이 내부구조 솔버 밖이다 — {why}"),
+    Entry("input.no_table_for_composition", ("layer_id", "composition_key", "built_keys"),
+          "층 '{layer_id}' 의 조성 지문 {composition_key} 에 맞는 광물 집합 표가 없다 — 지어진 표 {built_keys} "
+          "(옛 물질로 돌아가지 않는다, 규산염 기록 등록 §4)"),
 )
 
 #: Chain-node refusals (rewrite/nodes/node-contract.frozen.md §2, prereg-t-eq-stellar.frozen.md §1). Their own group,

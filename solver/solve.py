@@ -20,6 +20,7 @@ from __future__ import annotations
 import dataclasses
 from collections.abc import Mapping
 import math
+from types import MappingProxyType
 from dataclasses import dataclass, field
 
 from solver import body as bd
@@ -297,6 +298,8 @@ def registry_for(body, options, loaded=None):
     if options.materials == "legacy":
         return None
     names = {f.stem for f in mr.MATERIALS_DIR.glob("*.yaml") if f.name not in mr.NOT_RECORDS}
+    if options.silicate_records:                    # silicate registration §4: the silicate routes read records too
+        names |= set(SILICATE_ROUTES)
     if not any(l.material in names for l in body.layers):
         return None
     reg = mr.load() if loaded is None else loaded
@@ -304,6 +307,60 @@ def registry_for(body, options, loaded=None):
         return refusals.make("input.material_registry", f"{body.name}.materials", load_stop=reg.id,
                              detail=result.plain(dict(reg.evidence)))
     return reg
+
+
+#: Silicate record registration §4: the layer materials the switch `silicate_records` routes to assemblage records,
+#: each with its line. One Option gates all of them together (the map line, the composition-key match, and the
+#: `record_composition` lift, which only an assemblage record takes); `silicate_basal_const` is not routed yet (its
+#: record, Q6, is built with the basal step) and stays legacy under both settings.
+SILICATE_ROUTES = MappingProxyType({
+    "silicate": "silicate_slb_default_bse",        # Q-P2 (a) / Q2: no declared composition → default_bse
+    "silicate_decl": None,                         # by composition key (material_assemblage.composition_key)
+})
+#: §4's named legacy line: Dante's porosity fit axis (Q5) keeps legacy silicate until the porosity modifier record.
+SILICATE_LEGACY_AXES = ("initial_porosity",)
+
+
+def _assemblage_view(body, layer, rid, p_stop, registry):
+    """(AssemblageView, None) or (None, why) for record `rid` (silicate registration §3; 68 S1–S3)."""
+    from solver import material_assemblage as ma
+    got = registry.get(rid)
+    if got is None or isinstance(got, mr.LoadStop):
+        return None, ("record_unavailable", (rid, got if got is not None else mr.LoadStop(
+            "material.assemblage_table", MappingProxyType({"file": f"{rid}.yaml", "why": "no such record"}))))
+    table = registry.tables[rid]
+    if table["boundaries"]["status"] == "pending" and not registry.development:    # 68 S3
+        return None, ("record_boundaries_pending", f"the assemblage record {rid!r} has its phase boundaries pending "
+                                                   "(registration §3.3); it is read only in development")
+    from solver.from_v1 import thaw
+    floor = getattr(lm.interior.MATERIALS.get(layer.material), "p_floor", 0.0) or 0.0    # legacy's, by name (§3.1)
+    return ma.view(thaw(got), table, body.surface.t_pot or 0.0, p_stop, floor), None
+
+
+def _silicate_route(body, layer, on_me, p_stop, registry):
+    """Silicate registration §4 with the switch on: the assemblage view of a silicate layer, (None, why), or None for
+    a layer the routes leave to legacy (Dante's porosity axis; any other material)."""
+    from solver import material_assemblage as ma
+    if layer.material not in SILICATE_ROUTES:
+        return None
+    if on_me and body.closure.name in SILICATE_LEGACY_AXES:
+        return None
+    if layer.material == "silicate":
+        if layer.composition is not None:
+            return None
+        return _assemblage_view(body, layer, SILICATE_ROUTES["silicate"], p_stop, registry)
+    if on_me:
+        return None, ("closure_axis", "silicate_decl has no fit axis in phase 2")
+    comp = _comp(layer)
+    try:
+        key = ma.composition_key(comp)
+    except (KeyError, TypeError, ValueError, ZeroDivisionError) as e:
+        return None, ("unknown_material", f"silicate_decl composition has no CFMASNa reduction: {e!r}")
+    hits = [rid for rid, r in registry.records.items() if r["kind"] == "assemblage" and r["composition_key"] == key]
+    if len(hits) != 1:
+        built = sorted(r["composition_key"] for r in registry.records.values() if r["kind"] == "assemblage")
+        return None, ("no_table_for_composition", (key, built))
+    return _assemblage_view(body, layer, hits[0], p_stop, registry)
 
 
 def _record_view(body, layer, on_me, p_stop, registry):
@@ -316,6 +373,11 @@ def _record_view(body, layer, on_me, p_stop, registry):
         return None, ("record_unavailable", (rid, got))
     if on_me:
         return None, ("closure_axis", f"the record {rid!r} has no fit axis {body.closure.name!r}")
+    if got["kind"] == "assemblage":                           # a layer naming an assemblage record directly
+        if layer.params:
+            return None, ("record_params", f"layer {layer.id!r} declares {sorted(layer.params)} on the record "
+                                           f"{rid!r}, which reads none of them")
+        return _assemblage_view(body, layer, rid, p_stop, registry)
     if layer.composition is not None:                          # G4-C-01's class on the record path (r2, p1review)
         return None, ("record_composition", f"layer {layer.id!r} declares a composition on the record {rid!r}, "
                                             "which takes none (records with compositions: c8's silicate registration)")
@@ -327,12 +389,16 @@ def _record_view(body, layer, on_me, p_stop, registry):
     return mv.RecordView(thaw(got), body.surface.t_pot or 0.0, p_stop), None
 
 
-def _view_for(body, layer, x, p_stop, registry=None):
+def _view_for(body, layer, x, p_stop, registry=None, silicate=False):
     """One layer's view; `x` is the closure value when the closure acts on this layer (note 5 item 3a). Returns a view,
     or (None, why) for a material the adapter cannot build. With a registry, a record of the layer's id wins
     (switch-over §1)."""
     t_pot = body.surface.t_pot or 0.0
     on_me = body.closure.kind == "composition" and body.closure.layer == layer.id
+    if registry is not None and silicate:             # silicate registration §4, before every other route
+        got = _silicate_route(body, layer, on_me, p_stop, registry)
+        if got is not None:
+            return got
     if registry is not None:
         got = _record_view(body, layer, on_me, p_stop, registry)
         if got is not None:
@@ -394,12 +460,12 @@ def _p_stop(body) -> float:
     return (getattr(top, "p_floor", 0.0) or 0.0) if top is not None else 0.0
 
 
-def _views(body, x=None, registry=None):
+def _views(body, x=None, registry=None, silicate=False):
     out = {}
     p_stop = _p_stop(body)
     for l in body.layers:
         on_closure = body.closure.kind == "composition" and body.closure.layer == l.id
-        v, fail = _view_for(body, l, body.closure.lo if (on_closure and x is None) else x, p_stop, registry)
+        v, fail = _view_for(body, l, body.closure.lo if (on_closure and x is None) else x, p_stop, registry, silicate)
         if v is None:                                # fail = (typed kind, detail text); only the kind is read
             kind_, detail = fail
             where = f"{body.name}.layers.{l.id}"
@@ -409,6 +475,10 @@ def _views(body, x=None, registry=None):
                                      load_stop=stop.id, detail=result.plain(dict(stop.evidence)))
             if kind_ == "unknown_material":
                 return refusals.make("input.unknown_material", where, layer_id=l.id, material=l.material)
+            if kind_ == "no_table_for_composition":
+                key, built = detail
+                return refusals.make("input.no_table_for_composition", where, layer_id=l.id, composition_key=key,
+                                     built_keys=built)
             return refusals.make("input.cross_field", where, rule=kind_, detail=detail)
         out[l.id] = v
     return out
@@ -651,7 +721,7 @@ def _with_sensitivity(body, views, x, opt, acc, qs, supplied=False, ctx=None, re
     warm solve does not answer."""
     dt = opt.sensitivity_dt
     b2 = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=body.surface.t_pot + dt))
-    v2 = dict(views) if supplied else _views(b2, x, registry)
+    v2 = dict(views) if supplied else _views(b2, x, registry, opt.silicate_records)
     if isinstance(v2, result.Refusal):
         return qs, result.Note("sensitivity_not_measured", "the T_pot + δ views could not be built", {"dt": dt})
 
@@ -1006,7 +1076,7 @@ def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
         registry = registry_for(body, options, registry_arg)   # switch-over §1; note 5: the caller's load, reused
         if isinstance(registry, result.Refusal):
             return registry, warm
-        views = _views(body, registry=registry)
+        views = _views(body, registry=registry, silicate=options.silicate_records)
     else:
         views = dict(views)
     if isinstance(views, result.Refusal):
