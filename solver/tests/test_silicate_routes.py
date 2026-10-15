@@ -379,6 +379,38 @@ class BasalRecord(unittest.TestCase):
         self.assertIsInstance(views[self.basal.id], lm.LegacyView)
 
 
+class MethodTerm(unittest.TestCase):
+    """method_term passes the silicate switch to member_of and every solve it makes (the class of ad90aa3a's fix)."""
+
+    def test_switch_reaches_member_and_solves(self):
+        from solver import member as mb
+        from solver import method_term as mt
+        seen = {"member": [], "solve": []}
+        real_m, real_s = mb.member_of, sv.solve
+
+        class _Stop(Exception):
+            pass
+
+        def spy_member(body, materials="registry", registry=None, silicate_records=False):
+            seen["member"].append(silicate_records)
+            raise _Stop()
+
+        def spy_solve(body, options=context.Options(), *a, **k):
+            seen["solve"].append(options.silicate_records)
+            raise _Stop()
+        try:
+            mb.member_of, sv.solve = spy_member, spy_solve
+            for on in (True, False):
+                with self.assertRaises(_Stop):
+                    mt._body_at(str(ROOT / "engine/bodies/mars.yaml"), 1600.0, None, mr.load(), on)
+                with self.assertRaises(_Stop):
+                    mt.one_state(str(ROOT / "engine/bodies/earth.yaml"), "declared", "O1", registry=mr.load(),
+                                 silicate_records=on)
+        finally:
+            mb.member_of, sv.solve = real_m, real_s
+        self.assertEqual(seen, {"member": [True, False], "solve": [True, False]})
+
+
 class SolveId(unittest.TestCase):
     def test_option_and_table_bind_solve_id(self):
         """The Option enters solve_id (§4); the view's record carries the compact sha, so a changed table moves the

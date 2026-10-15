@@ -2,8 +2,9 @@
 """The T2 integration-method term (rewrite/oracle/t2-method-term-registration.md).
 
     solver/.venv/bin/python -m solver.method_term run BODY_YAML POINTS_JSON OUT_JSONL [--steps N]
+        [--silicate-records on|off]
     solver/.venv/bin/python -m solver.method_term terms OUT_JSONL... > terms.json
-    solver/.venv/bin/python -m solver.method_term controls BODY_YAML > controls.json
+    solver/.venv/bin/python -m solver.method_term controls BODY_YAML [--silicate-records on|off] > controls.json
     solver/.venv/bin/python -m solver.method_term crosscheck CAP_O1_DIR OUT_JSONL... > crosscheck.json
 
 run: one JSON line per (body, state), appended to OUT_JSONL as each state finishes; states already in the file are
@@ -13,6 +14,8 @@ interior_layers values). For each state the adaptive solve comes first; its acce
 ρ_c = 3 m_end / (4π r_end³), and the fixed mode's grid is dr = (3M / (4π ρ_c))^(1/3) / N (interior.py's r_scale / STEPS).
 d = (y_fixed − y_adaptive) / |y_adaptive| per numeric key; null with flag `zero_reference` where y_adaptive = 0.
 terms: per (body, key), max |d| over the states whose two outcome kinds are both «answer», with count and argmax.
+--silicate-records: the silicate switch (silicate record registration §4), as run_oracle's flag: every solve, the
+declared state's records and the T_pot states' forward member (member_of) read it; default off.
 """
 from __future__ import annotations
 
@@ -89,7 +92,7 @@ def _registry(registry=None):
     return reg
 
 
-def _body_at(body_yaml, t_pot, member=None, registry=None):
+def _body_at(body_yaml, t_pot, member=None, registry=None, silicate_records=False):
     """(body at the state, member record or None, materials); an inverse body's T_pot state is its forward member
     (run_oracle's rule). The body is None when the declared state has no answer, so there is no member."""
     got = from_v1.load_v1(body_yaml, registry=registry)
@@ -99,7 +102,7 @@ def _body_at(body_yaml, t_pot, member=None, registry=None):
     materials = materials_for(body, registry)
     info = None
     if t_pot is not None:
-        got_m = member if member is not None else mb.member_of(body, materials, registry)
+        got_m = member if member is not None else mb.member_of(body, materials, registry, silicate_records)
         if got_m is not None:
             body, info = got_m
             if body is None:
@@ -108,10 +111,11 @@ def _body_at(body_yaml, t_pot, member=None, registry=None):
     return body, info, materials
 
 
-def one_state(body_yaml: str, state, tag: str, steps: int = STEPS, member=None, registry=None) -> dict:
+def one_state(body_yaml: str, state, tag: str, steps: int = STEPS, member=None, registry=None,
+              silicate_records: bool = False) -> dict:
     registry = _registry(registry)
     t_pot = None if state == "declared" else float(state)
-    body, info, materials = _body_at(body_yaml, t_pot, member, registry)
+    body, info, materials = _body_at(body_yaml, t_pot, member, registry, silicate_records)
     rec = {"body": Path(body_yaml).stem, "state": state, "tag": tag, "steps": steps, "materials": materials}
     if isinstance(body, result.Refusal):
         return {**rec, "kind_adaptive": "refusal", "kind_fixed": None, "flag": "input_refusal"}
@@ -120,7 +124,8 @@ def one_state(body_yaml: str, state, tag: str, steps: int = STEPS, member=None, 
     if info is not None:
         rec["member"] = result.plain(info)
     c0 = time.process_time()
-    a, _ = sv.solve(body, context.Options(sensitivity_dt=0.0, materials=materials), registry=registry)
+    a, _ = sv.solve(body, context.Options(sensitivity_dt=0.0, materials=materials,
+                                          silicate_records=silicate_records), registry=registry)
     rec["cpu_adaptive_s"] = time.process_time() - c0
     rec["kind_adaptive"] = _kind(a)
     if not isinstance(a, result.Answer):
@@ -130,7 +135,7 @@ def one_state(body_yaml: str, state, tag: str, steps: int = STEPS, member=None, 
     dr, rho_c = grid_dr(body, a, steps)
     rec.update(dr=dr, rho_c=rho_c)
     if state == "declared":
-        base = context.Options(materials=materials)
+        base = context.Options(materials=materials, silicate_records=silicate_records)
         c0 = time.process_time()
         ra = ro.one(body_yaml, "declared", base, registry=registry)
         rf = ro.one(body_yaml, "declared", dataclasses.replace(base, fixed_dr=dr), registry=registry)
@@ -140,7 +145,8 @@ def one_state(body_yaml: str, state, tag: str, steps: int = STEPS, member=None, 
         rec["options"] = result.plain(dataclasses.asdict(base))
     else:
         c0 = time.process_time()
-        f, _ = sv.solve(body, context.Options(sensitivity_dt=0.0, fixed_dr=dr, materials=materials), registry=registry)
+        f, _ = sv.solve(body, context.Options(sensitivity_dt=0.0, fixed_dr=dr, materials=materials,
+                                              silicate_records=silicate_records), registry=registry)
         rec["cpu_fixed_s"] = time.process_time() - c0
         rec["kind_fixed"] = _kind(f)
         va = {q.key: q.point for q in a.quantities}
@@ -164,7 +170,7 @@ def _states(stem: str, points_json: str) -> list:
     return out
 
 
-def run(body_yaml: str, points_json: str, out_jsonl: str, steps: int = STEPS) -> int:
+def run(body_yaml: str, points_json: str, out_jsonl: str, steps: int = STEPS, silicate_records: bool = False) -> int:
     out = Path(out_jsonl)
     done = set()
     if out.exists():
@@ -177,17 +183,17 @@ def run(body_yaml: str, points_json: str, out_jsonl: str, steps: int = STEPS) ->
             r = json.loads(line)
             done.add((r["body"], repr(r["state"])))
     registry = _registry()                           # one load per run (switch-over note 5)
-    body0, _i, materials = _body_at(body_yaml, None, registry=registry)
-    header = ro._header(context.Options(sensitivity_dt=0.0, materials=materials), "")
+    body0, _i, materials = _body_at(body_yaml, None, registry=registry, silicate_records=silicate_records)
+    header = ro._header(context.Options(sensitivity_dt=0.0, materials=materials, silicate_records=silicate_records), "")
     stem = Path(body_yaml).stem
     states = [(s, t) for s, t in _states(stem, points_json) if (stem, repr(s)) not in done]
     member = None
     if any(s != "declared" for s, _t in states):     # one declared solve per body for all its T_pot states
         if not isinstance(body0, result.Refusal):
-            member = mb.member_of(body0, materials, registry)
+            member = mb.member_of(body0, materials, registry, silicate_records)
     with out.open("a", encoding="utf-8") as fh:
         for state, tag in states:
-            rec = one_state(body_yaml, state, tag, steps, member, registry)
+            rec = one_state(body_yaml, state, tag, steps, member, registry, silicate_records)
             rec["header"] = header
             fh.write(json.dumps(result.plain(rec), ensure_ascii=True, allow_nan=False) + "\n")
             fh.flush()
@@ -233,12 +239,12 @@ ORDER_KEYS = ("cmb_temperature", "core_temperature")
 ORDER_RANGE = (1.6, 2.4)
 
 
-def controls(body_yaml: str) -> dict:
+def controls(body_yaml: str, silicate_records: bool = False) -> dict:
     """Registration controls 1 and 2 at the declared state: the fixed solve twice gives identical values (null), and
     STEPS 2N halves the temperature keys' d (ratio d(N)/d(2N) within ORDER_RANGE: Euler in P, first order)."""
     registry = _registry()
-    body, _info, materials = _body_at(body_yaml, None, registry=registry)
-    opt = context.Options(sensitivity_dt=0.0, materials=materials)
+    body, _info, materials = _body_at(body_yaml, None, registry=registry, silicate_records=silicate_records)
+    opt = context.Options(sensitivity_dt=0.0, materials=materials, silicate_records=silicate_records)
     a, _ = sv.solve(body, opt, registry=registry)
     va = {q.key: q.point for q in a.quantities}
     dr, rho_c = grid_dr(body, a, STEPS)
@@ -313,10 +319,18 @@ def main(argv=None) -> int:
         i = argv.index("--steps")
         steps = int(argv[i + 1])
         del argv[i:i + 2]
+    silicate = context.Options().silicate_records     # run_oracle's flag, stated the same way (silicate §4)
+    if "--silicate-records" in argv:
+        i = argv.index("--silicate-records")
+        if i + 1 >= len(argv) or argv[i + 1] not in ("on", "off"):
+            print("STOP: --silicate-records needs on or off")
+            return 2
+        silicate = argv[i + 1] == "on"
+        del argv[i:i + 2]
     if argv[:1] == ["run"] and len(argv) == 4:
-        return run(argv[1], argv[2], argv[3], steps)
+        return run(argv[1], argv[2], argv[3], steps, silicate)
     if argv[:1] == ["controls"] and len(argv) == 2:
-        c = controls(argv[1])
+        c = controls(argv[1], silicate)
         print(json.dumps(c, indent=1, ensure_ascii=True, allow_nan=False))
         return 0 if c["holds"] else 1
     if argv[:1] == ["crosscheck"] and len(argv) >= 3:
