@@ -29,21 +29,24 @@ def pb_slope(t):
 
 
 def table(pb=pb_const, left="ol+opx", right="wa+opx", cls="swap", t_end=None, third=None, edges=None,
-          off=OFF, t_lo=1000.0, t_hi=1400.0):
+          off=OFF, t_lo=1000.0, t_hi=1400.0, tops=None, p_dataset=None):
     """Cells to 1600 K, non-frozen from 400 K; the label is `left` below P_b(t) and `right` above it for
     t_lo ≤ t ≤ t_hi (outside, `left` everywhere, or `third` above t_end). Rows of the exported block at every T row
     where the two neighbouring columns of P_b differ in label."""
     cells, cols, rows = [], [], []
     ts = [t for t in TS if t <= 1600.0]
+    tops = tops or {}
     for i, p in enumerate(PS):
         for t in ts:
+            if t > tops.get(i, ts[-1]):
+                continue
             fr = t < 400.0
             lab = left
             inside = t_lo <= t <= t_hi and (t_end is None or t <= t_end)
             if inside and p > pb(t):
                 lab = right
-            if third is not None and t_end is not None and t > t_end and t_lo <= t <= t_hi:
-                lab = third
+            if third is not None and t_end is not None and t > t_end and t_lo <= t <= t_hi and p > pb(t):
+                lab = third                                   # the right side's label changes past the curve's end
             r = rho_of(p, t) * (1.0 + off if lab == right else 1.0)
             c = {"p": p, "t": t, "kind": "frozen" if fr else "equilibrium", "assemblage": lab, "rho": r,
                  "c_p": 1200.0 + 0.1 * t, "dtdp_s": 1e-8 * t / 1000.0, "freeze_t": 400.0 if fr else None,
@@ -51,7 +54,9 @@ def table(pb=pb_const, left="ol+opx", right="wa+opx", cls="swap", t_end=None, th
             c["dtdp_eq"] = c["dtdp_s"]
             c["c_p_eq"] = None if fr else c["c_p"] * 1.03
             cells.append(c)
-        cols.append({"p": p, "t_sol": 1500.0, "t_window_top": ts[-1], "window": {"cause": "grid_end"}})
+        top = tops.get(i, ts[-1])
+        cols.append({"p": p, "t_sol": 1500.0, "t_window_top": top,
+                     "window": {"cause": "grid_end"} if top == ts[-1] else {"cause": "eos_edge", "phase": "opx"}})
     for t in ts:
         if not (t_lo <= t <= t_hi) or (t_end is not None and t > t_end) or t < 400.0:
             continue
@@ -66,7 +71,7 @@ def table(pb=pb_const, left="ol+opx", right="wa+opx", cls="swap", t_end=None, th
                                                     "by_amount_only": False, "delta_rho": off,
                                                     "over_tolerance": True}]
         rows.append(row)
-    return {"cells": cells, "columns": cols, "p_dataset": PS[-3],
+    return {"cells": cells, "columns": cols, "p_dataset": p_dataset or PS[-3],
             "boundaries": {"status": "exported", "rows": rows}}
 
 
@@ -225,25 +230,63 @@ def tb_cell(tb, p, t):
 
 
 class Ends(unittest.TestCase):
-    """68 M2: past a curve's end, nodes are classified by label; a corner row with no read-side node refuses by name;
-    an outer row with none drops out."""
+    """68 M2 and r2's R1: past a curve's ends the read side comes from the read cell's corner labels on the row nearest
+    the curve past the end; nodes are classified by label; corners that decide nothing fall back to the nearest row."""
 
-    def test_label_rule_and_no_node(self):
-        tb = table(t_end=1250.0, third="cpx+opx")             # above 1250 K the right side is a third label
+    def test_label_rule_left_of_the_curve(self):
+        tb = table(t_end=1250.0, third="cpx+opx")
         v = view(tb)
         p = pb_const(1200.0) * 0.98
         got = solid(v, p, 1205.0)                              # rows 1150–1300: 1300 past the end, by label
         self.assertLess(rel(got[0], rho_of(p, 1205.0)), 1e-3)
         self.assertGreater(v.cut_counts["label_rule_rows"], 0)
-        q = pb_const(1200.0) * 1.02                            # the right side: its label is gone past the end
-        got = v._solid(q, 1255.0)                              # corner row 1300 K has no right-side node
+
+    def test_closing_edge_reads_without_refusal(self):
+        """r2's R1 test: past a closing edge (the gt field ends at 1400 K) no read refuses «no read-side node»; the
+        nearest-row mutant (the read's side by the last row's P_b) refuses there."""
+        tb = table(cls="edge_in", right="ol+opx+gt")
+        p = pb_const(1400.0) * 1.003                          # right of where the curve was
+        for t in (1410.0, 1460.0):                            # straddling the end, and a cell wholly past it
+            v = view(tb)
+            got = v._solid(p, t)
+            self.assertNotIsInstance(got, st.Stop, (t, getattr(got, "record", None)))
+            self.assertLess(rel(got[0], rho_of(p, t)), 1e-3)  # the closed field reads as the left label's
+            mut = view(tb)
+            mut._read_side = lambda c, p_, t_, ia, ib: c.side_of(p_, t_)
+            self.assertIsInstance(mut._solid(p, t), st.Stop)
+
+    def test_before_the_curve_starts(self):
+        tb = table()                                          # the curve starts at 1000 K
+        v = view(tb)
+        p = pb_const(1000.0) * 1.003
+        got = v._solid(p, 990.0)
+        self.assertNotIsInstance(got, st.Stop)
+        self.assertLess(rel(got[0], rho_of(p, 990.0)), 1e-3)  # below 1000 K the right label is absent: the left side
+
+    def test_mixed_corner_takes_the_matching_side(self):
+        """One corner on the left label, the other on a third label: the read is on the left side (68)."""
+        tb = table(t_end=1250.0, third="cpx+opx")
+        v = view(tb)
+        p = math.sqrt(PS[15] * pb_const(1200.0))              # inside the curve's cell, left of P_b
+        got = v._solid(p, 1260.0)                             # corner row 1300: column 15 left label, 16 third
+        self.assertNotIsInstance(got, st.Stop)
+        self.assertLess(rel(got[0], rho_of(p, 1260.0)), 1e-3)
+        self.assertEqual(v.cut_counts["side_fallbacks"], 0)
+
+    def test_no_match_falls_back_and_refuses_by_name(self):
+        """Both corners on a third label: the nearest row decides (counted); its label is gone, so the corner row has
+        no read-side node and the read refuses by name."""
+        tb = table(t_end=1250.0, third="cpx+opx")
+        v = view(tb)
+        p = math.sqrt(PS[16] * PS[17])                        # right of the curve, both corners third past the end
+        got = v._solid(p, 1260.0)
         self.assertIsInstance(got, st.Stop)
         self.assertIn("no read-side node in row 1300 K", got.record.why)
-        self.assertEqual(v.cut_counts["no_node_refusals"], 1)
+        self.assertEqual((v.cut_counts["side_fallbacks"], v.cut_counts["no_node_refusals"]), (1, 1))
 
     def test_corner_row_extrapolates_further_out(self):
-        """68 S1: a steep curve moves six columns in 50 K, so at the upper corner row the right side's nodes all lie
-        beyond the stencil span: the row is read from them (counted, with its reach) and the read answers."""
+        """68 S1, N1, E11: a steep curve moves six columns in 50 K, so at the upper corner row the right side's nodes
+        all lie beyond the stencil span: the row is read from up to four of them, counted once per read with its reach."""
         def steep(t):
             a, b = math.log(math.sqrt(PS[13] * PS[14])), math.log(math.sqrt(PS[19] * PS[20]))
             w = min(max((t - 1200.0) / 50.0, 0.0), 1.0)
@@ -253,9 +296,49 @@ class Ends(unittest.TestCase):
         t = 1205.0
         p = v._curves[0].p_b(t) * 1.001                       # right of the curve at the read's T (P_b linear in T)
         got = solid(v, p, t)[0]
-        self.assertEqual(v.cut_counts["corner_extrapolations"], 3)       # ρ, dT/dP, c_P each read the row
+        self.assertEqual(v.cut_counts["corner_extrapolations"], 1)
         self.assertGreaterEqual(v.cut_counts["corner_max_reach"], 3)
+        self.assertEqual(v.cut_counts["corner_max_nodes"], 4)
         self.assertLess(rel(got, rho_of(p, t) * (1 + OFF)), 2e-2)
+
+    def test_corner_without_a_cell_refuses_as_uncut(self):
+        """68 E2: a cut read whose read-side corner has no cell (the column's window ended) refuses above the solid
+        window, as the uncut path does; it never extrapolates there."""
+        tb = table(tops={16: 1150.0})                         # column 16 (right of the curve) ends at 1150 K
+        v = view(tb)
+        got = v._solid(pb_const(1200.0) * 1.003, 1210.0)
+        self.assertIsInstance(got, st.Stop)
+        self.assertEqual(got.record.refusal, "input.material_above_solid_window")
+
+
+class Crossing(unittest.TestCase):
+    """68 B1 and B2: the crossing test covers the whole stencil T interval; the p_dataset cut stays in cut reads."""
+
+    def test_curve_crossing_between_rows(self):
+        """P_b at column 5.5 up to 1200 K and 20.5 from 1250 K; a read at column 8.5, 1205 K is left of P_b(1205) and its
+        stencil's upper rows are across the curve, though no sampled P_b lies in the span."""
+        def jump(t):
+            return math.sqrt(PS[5] * PS[6]) if t <= 1200.0 else math.sqrt(PS[20] * PS[21])
+        tb = table(pb=jump, t_lo=1050.0, t_hi=1350.0)
+        v = view(tb)
+        p, t = math.sqrt(PS[8] * PS[9]), 1205.0
+        self.assertTrue(v._crossing(p, t, 8, int((t - TS[0]) // 50)))
+        side = v._curves[0].side_of(p, t)
+        want = rho_of(p, t) * (1 + OFF if side > 0 else 1.0)
+        self.assertLess(rel(solid(v, p, t)[0], want), 1e-3)
+
+    def test_p_dataset_cut_in_cut_reads(self):
+        """A cut read near the dataset top does not move when every cell above p_dataset is perturbed (as uncut)."""
+        def top(t):
+            return math.sqrt(PS[25] * PS[26])
+        tb = table(pb=top, p_dataset=PS[27])
+        pert = copy.deepcopy(tb)
+        for c in pert["cells"]:
+            if c["p"] > PS[27]:
+                c["rho"] *= 1.5
+        p, t = math.sqrt(PS[26] * PS[27]), 1210.0
+        self.assertTrue(view(tb)._crossing(p, t, 26, int((t - TS[0]) // 50)))
+        self.assertEqual(solid(view(tb), p, t)[0], solid(view(pert), p, t)[0])
 
 
 class Load(unittest.TestCase):
@@ -285,6 +368,29 @@ class Load(unittest.TestCase):
         tb = table()
         tb["boundaries"]["rows"][1]["p_hi"] = PS[18]
         self.stops(tb, "not a pair of adjacent columns")
+
+    def test_frozen_side(self):
+        """68 E3: a frozen cell is not a boundary side (r2 H6)."""
+        tb = table()
+        r = tb["boundaries"]["rows"][2]
+        c = tb_cell(tb, r["p_lo"], r["t"])
+        c["kind"], c["freeze_t"] = "frozen", r["t"] + 50.0
+        self.stops(tb, "a frozen cell is not a boundary side")
+
+    def test_labels_are_string_equal(self):
+        """68 E4: the row copies the cells' label strings; the same phase set in another order STOPs."""
+        tb = table()
+        tb["boundaries"]["rows"][2]["left"] = "opx+ol"
+        self.stops(tb, "are not the cells'")
+
+    def test_runs_split_at_a_t_gap(self):
+        """68 E6: a group missing one row becomes two curves, and P_b is absent inside the gap."""
+        tb = table()
+        rows = tb["boundaries"]["rows"]
+        gap = rows.pop(4)["t"]
+        curves = ma.build_curves(tb["boundaries"], sorted({c["t"] for c in tb["cells"]}))
+        self.assertEqual(len(curves), 2)
+        self.assertTrue(all(c.p_b(gap) is None for c in curves))
 
     def test_duplicate_t_in_a_group(self):
         """68 M6: two rows of one group at one T STOP; the control is the same table without the duplicate."""
@@ -342,6 +448,7 @@ class Disclosures(unittest.TestCase):
         self.assertTrue(all(x["on_curve"] == 0 for x in d["t_changes"]["located"]))
         self.assertTrue(d["t_changes"]["unlocated"])                    # the region's T ends (950/1000, 1400/1450)
         self.assertGreater(d["sweep"]["cut_reads"], 0)
+        self.assertEqual(d["curve_ends"], 2)                           # 68 E15: starts at 1000 K, ends at 1400 K
 
     def test_multi_curve_cells_counted(self):
         def edges(t):

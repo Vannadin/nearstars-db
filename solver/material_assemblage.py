@@ -739,8 +739,9 @@ class AssemblageView(mv.RecordView):
         self._curves = build_curves(b, self.ts) if b.get("status") == "exported" else []
         #: the cut-read counts of this view (scope note §3 (b), 68 S1): reads cut, corner rows extrapolated past the
         #: stencil span with their largest reach in cells, rows refused with no read-side node, rows classified by label
-        self.cut_counts = {"cut_reads": 0, "corner_extrapolations": 0, "corner_max_reach": 0, "no_node_refusals": 0,
-                           "label_rule_rows": 0}
+        self.cut_counts = {"cut_reads": 0, "corner_extrapolations": 0, "corner_max_reach": 0, "corner_max_nodes": 0,
+                           "no_node_refusals": 0, "label_rule_rows": 0, "side_fallbacks": 0}
+        self._marks = {"corner_rows": set(), "label_rows": set(), "reach": 0, "corner_nodes": 0}
 
     # the table read ──────────────────────────────────────────────────────────────────────────────────────────
     def _refuse(self, p, t, rid, why):
@@ -815,9 +816,20 @@ class AssemblageView(mv.RecordView):
         if not self._curves:
             return []
         c0, c1 = max(ia - 1, 0), min(ia + 2, len(self.ps) - 1)
-        tts = [t] + [self.ts[k] for k in range(max(ib - 1, 0), min(ib + 2, len(self.ts) - 1) + 1)]
+        ta, tb = self.ts[max(ib - 1, 0)], self.ts[min(ib + 2, len(self.ts) - 1)]
         lo, hi = self.ps[c0], self.ps[c1]
-        return [c for c in self._curves if any((pb := c.p_b(tt)) is not None and lo < pb < hi for tt in tts)]
+        out = []
+        for c in self._curves:
+            # anywhere on [t_{ib−1}, t_{ib+2}] (68 B1): P_b is piecewise linear, so its range over each segment between
+            # consecutive samples (the stencil rows, t, the curve's own rows inside) is its two ends'
+            tts = sorted({t, ta, tb, *(self.ts[k] for k in range(max(ib - 1, 0), min(ib + 2, len(self.ts) - 1) + 1)),
+                          *(r["t"] for r in c.rows if ta <= r["t"] <= tb)})
+            pbs = [c.p_b(tt) for tt in tts]
+            hit = any(pb is not None and lo < pb < hi for pb in pbs) or any(
+                a is not None and b is not None and min(a, b) < hi and max(a, b) > lo for a, b in zip(pbs, pbs[1:]))
+            if hit:
+                out.append(c)
+        return out
 
     def _node_ok(self, j, k, side, cuts):
         """A node is on the read's side of every crossing curve, judged at its own T (r2 M1); past a curve's ends by
@@ -831,7 +843,7 @@ class AssemblageView(mv.RecordView):
             else:
                 r = c.nearest(tk)
                 cell = self._cell(j, k)
-                self.cut_counts["label_rule_rows"] += 1
+                self._marks["label_rows"].add(k)
                 if cell is None or _labels(cell["assemblage"]) != (r["left"] if side[c] < 0 else r["right"]):
                     return False
         return True
@@ -849,20 +861,61 @@ class AssemblageView(mv.RecordView):
                 for j in (ia, ia + 1):
                     if self._node_ok(j, k, side, cuts) and self._val(f, j, k) is None:
                         raise CellMissing((j, k))
-            ok = [j for j in range(max(0, c0 - 4), min(n_p, c1 + 5))
-                  if self._node_ok(j, k, side, cuts) and self._val(f, j, k) is not None]
+            ok = [j for j in range(n_p)                                       # the p_dataset cut stays (68 B2)
+                  if self.ps[j] <= self.p_dataset and self._node_ok(j, k, side, cuts) and self._val(f, j, k) is not None]
             use = [j for j in ok if c0 <= j <= c1]
             if not use:
                 if not corner:
                     continue
-                if not ok:
+                near = sorted(ok, key=lambda j: abs(self.lnps[j] - x))
+                if not near or (c0 - near[0] if near[0] < c0 else near[0] - c1) > 4:   # the nearest within 4 columns
                     raise _NoNode(k)
-                use = sorted(sorted(ok, key=lambda j: abs(self.lnps[j] - x))[:4])
+                use = sorted(near[:4])
                 reach = min(abs(j - ia) if j < ia else abs(j - ia - 1) for j in use)
-                self.cut_counts["corner_extrapolations"] += 1
-                self.cut_counts["corner_max_reach"] = max(self.cut_counts["corner_max_reach"], reach)
+                self._marks["corner_rows"].add(k)
+                self._marks["reach"] = max(self._marks["reach"], reach)
+                self._marks["corner_nodes"] = max(self._marks["corner_nodes"], len(use))
             rows[k] = _pchip_1d(x, [self.lnps[j] for j in use], [self._val(f, j, k) for j in use])
         return _cubic1(t, self.ts, _Seq(rows, n_t), ib)
+
+    def _read_side(self, c, p, t, ia, ib):
+        """The read's side of one curve. Inside the curve's T range, by P_b(t). Past either end (r2's R1 ruling, 68's
+        three points): by the labels of the read cell's two corner nodes on its row nearest the curve that lies past the
+        end — past the last row t1, row ib if the read cell lies wholly past (t_ib > t1), else ib+1 (the first row past);
+        before the first row t0, row ib+1 if t_{ib+1} < t0, else ib (the last row below). A corner matching the
+        curve's left (right) label puts the read left (right); one matching corner and one third label still decide
+        (the third-label node drops by the label rule); corners matching opposite sides, or none, fall back to the
+        nearest row's P_b, counted («side_fallbacks», with the Q3/M2 disclosure)."""
+        pb = c.p_b(t)
+        if pb is not None:
+            return -1 if p < pb else 1
+        if t > c.t1:
+            k = ib if self.ts[ib] > c.t1 else ib + 1
+        else:
+            k = ib + 1 if self.ts[ib + 1] < c.t0 else ib
+        r = c.nearest(t)
+        hits = set()
+        for j in (ia, ia + 1):
+            cell = self._cell(j, k)
+            if cell is None:
+                continue
+            lab = _labels(cell["assemblage"])
+            if lab == r["left"]:
+                hits.add(-1)
+            elif lab == r["right"]:
+                hits.add(1)
+        if len(hits) == 1:
+            return hits.pop()
+        self.cut_counts["side_fallbacks"] += 1
+        return -1 if p < r["p_b"] else 1
+
+    def _close_marks(self):
+        """One count per read, and per (read, row) for corner and label rows, whatever the field and δ calls (68 N1)."""
+        m = self._marks
+        self.cut_counts["corner_extrapolations"] += len(m["corner_rows"])
+        self.cut_counts["label_rule_rows"] += len(m["label_rows"])
+        self.cut_counts["corner_max_reach"] = max(self.cut_counts["corner_max_reach"], m["reach"])
+        self.cut_counts["corner_max_nodes"] = max(self.cut_counts["corner_max_nodes"], m["corner_nodes"])
 
     def _solid_cut(self, p, t, pr, x, ia, ib, cuts):
         """The cut read (scope note §3 (b)–(c″)): one-sided per side; a swap in the read cell steps (with §3.3's
@@ -870,7 +923,8 @@ class AssemblageView(mv.RecordView):
         the nodes and ±δ/2 at P_b with the equal split (r2 Q2, T1); two or more curves in the cell are read linear in
         ln P between the outermost curves' one-sided values (r2 Q1), with no edge correction there (r2 N1)."""
         self.cut_counts["cut_reads"] += 1
-        side = {c: c.side_of(pr, t) for c in cuts}
+        self._marks = {"corner_rows": set(), "label_rows": set(), "reach": 0, "corner_nodes": 0}   # per read (68 N1)
+        side = {c: self._read_side(c, pr, t, ia, ib) for c in cuts}
         lo, hi = self.ps[ia], self.ps[ia + 1]
         cell = sorted((c for c in cuts if (pb := c.p_b(t)) is not None and lo <= pb <= hi), key=lambda c: c.p_b(t))
         xl, xh = self.lnps[ia], self.lnps[ia + 1]
@@ -897,6 +951,7 @@ class AssemblageView(mv.RecordView):
                         v += 0.5 * d * (xh - x) / (xh - xbd)
                 out[f] = v
         except _NoNode as e:
+            self._close_marks()
             self.cut_counts["no_node_refusals"] += 1
             return self._refuse(p, t, "input.material_out_of_data", NO_NODE_WHY.format(t=self.ts[e.args[0]]))
         except CellMissing as e:
@@ -910,6 +965,7 @@ class AssemblageView(mv.RecordView):
             return self._refuse(p, t, "input.material_out_of_data",
                                 f"no equilibrium isentrope at node ({c['p']:g} Pa, {c['t']:g} K): its "
                                 "re-solves did not converge (registration note 3 §2 condition 4)")
+        self._close_marks()
         if len(cell) >= 2:
             self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID, MULTI_NOTE))
         elif len(cell) == 1 and cell[0].kind == "swap":
@@ -1071,6 +1127,7 @@ def boundary_disclosures(record, table) -> dict:
                     "class": "edge" if (la <= lb or lb <= la) else "swap"}
             (located if on is not None else unlocated).append({**item, "on_curve": on} if on is not None else item)
     ends = sum((c.t0 > ts[0]) + (c.t1 < ts[-1]) for c in v._curves)
+    v.cut_counts = {k: 0 for k in v.cut_counts}          # the sweep's own counts, not the δ loop's (68 N1)
     for ia in range(len(ps) - 1):
         for ib in range(len(ts) - 1):
             p, t = math.sqrt(ps[ia] * ps[ia + 1]), 0.5 * (ts[ib] + ts[ib + 1])
