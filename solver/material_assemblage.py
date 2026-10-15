@@ -42,7 +42,12 @@ CELL_KINDS = ("equilibrium", "extrapolated", "above_solidus", "frozen")
 
 
 class TableStop(Exception):
-    """A load check the compact table fails; the registry turns it into `material.assemblage_table`."""
+    """A load check the compact table fails; the registry turns it into `material.assemblage_table`. `check` names
+    the check (read by planted_coverage; control flow never reads the text, X3)."""
+
+    def __init__(self, why: str, check: str = "table"):
+        super().__init__(why)
+        self.check = check
 
 
 def read_table(path, sha256: str) -> dict:
@@ -183,13 +188,13 @@ def check_table(asm, table) -> dict:
             raise TableStop(f"a cell's node is not a pair of finite numbers: ({c.get('p')!r}, {c.get('t')!r})")
         for f in ("dtdp_eq", "dtdp_g", "dtdp_eq_band", "envelope_gap_v", "envelope_gap_s"):
             if c.get(f) is not None and not _finite(c[f]):
-                raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): {f} is {c[f]!r}, not a finite number or absent")
+                raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): {f} is {c[f]!r}, not a finite number or absent", check="finite fields")
         if c.get("kind") not in CELL_KINDS:
             raise TableStop(f"cell ({c.get('p')}, {c.get('t')}): kind {c.get('kind')!r}")
         for f in ("rho", "s", "c_p", "c_v", "alpha_k_t", "gamma", "dtdp_s"):
             v = c.get(f)
             if not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v):
-                raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): {f} is {v!r}, not a finite number")
+                raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): {f} is {v!r}, not a finite number", check="finite fields")
         by[(c["p"], c["t"])] = c
     if len(by) != len(cells):
         raise TableStop("two cells share a node")
@@ -207,11 +212,11 @@ def check_table(asm, table) -> dict:
                 misses.append((c["p"], c["t"], m[1], m[0]))
     if misses:
         raise TableStop(f"{len(misses)} cells' stored values differ from the model's beyond {STORED_MODEL_REL:g}: "
-                        + "; ".join(f"({p:g}, {t:g}) {f} {d:.3g}" for p, t, f, d in misses[:20]))
+                        + "; ".join(f"({p:g}, {t:g}) {f} {d:.3g}" for p, t, f, d in misses[:20]), check="stored-value gate")
     if uncovered:
         raise TableStop(f"{len(uncovered)} cells have no model values, so the stored-value gate cannot cover them "
                         "(a ruling is needed before the table ships): "
-                        + "; ".join(f"({p:g}, {t:g}) {k}" for p, t, k in uncovered[:20]))
+                        + "; ".join(f"({p:g}, {t:g}) {k}" for p, t, k in uncovered[:20]), check="stored-value gate")
     ps = sorted({p for p, _ in by})
     ts = sorted({t for _, t in by})
     pi = {p: i for i, p in enumerate(ps)}
@@ -234,10 +239,10 @@ def check_table(asm, table) -> dict:
     # positivity and the γ identity (interim internal check, note 3 §3)
     for c in cells:
         if not (c["c_p"] > 0.0 and c["c_v"] > 0.0 and c["alpha_k_t"] > 0.0 and c["dtdp_s"] > 0.0):
-            raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): c_P, c_V, αK_T and dtdp_s must be > 0")
+            raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): c_P, c_V, αK_T and dtdp_s must be > 0", check="positivity")
         g = c["alpha_k_t"] / (c["rho"] * c["c_v"])
         if abs(g - c["gamma"]) > b3["gamma_tolerance"] * abs(c["gamma"]):
-            raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): γ {c['gamma']!r} against αK_T/(ρc_V) {g!r}")
+            raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): γ {c['gamma']!r} against αK_T/(ρc_V) {g!r}", check="γ identity")
     # ρ rises with P along every isotherm, for pairs in one state (r2 H6); cross-state frozen pairs are reported
     cross = []
     for t in ts:
@@ -247,7 +252,7 @@ def check_table(asm, table) -> dict:
                 continue
             if _one_state(ca, cb):
                 raise TableStop(f"ρ does not rise with P at {t:g} K between {a:g} and {b:g} Pa in one state "
-                                f"({ca['assemblage']})")
+                                f"({ca['assemblage']})", check="ρ rises with P")
             if ca["kind"] == "frozen" or cb["kind"] == "frozen":
                 cross.append((a, b, t, cb["rho"] / ca["rho"] - 1.0))
     # frozen cells: the in-column identity α = −∂lnρ/∂T against dtdp_s·ρc_P/T (note 3 §3, gate)
@@ -266,7 +271,7 @@ def check_table(asm, table) -> dict:
         frozen_max = max(frozen_max, r)
         if r > b3["frozen_alpha_tolerance"]:
             raise TableStop(f"frozen cell ({c['p']:g}, {c['t']:g}): α {alpha:.6g} against dtdp_s·ρc_P/T {want:.6g}, "
-                            f"beyond {b3['frozen_alpha_tolerance']:g}")
+                            f"beyond {b3['frozen_alpha_tolerance']:g}", check="frozen in-column identity")
     # Maxwell, gated per cell on 5-point interior cells against the cell's own truncation estimate (note 3 §3). An FD
     # failure is excused («FD blind: kink inside the stencil») only if the model's exact Maxwell there is ≤ FD/10 and
     # the stored ρ and s equal the model's to 1e-6 at the cell and every node of its stencils (r2's rulings)
@@ -290,7 +295,7 @@ def check_table(asm, table) -> dict:
         why = _fd_blind(by, ps, ts, i, k, d1, b3)
         if why is not None:
             raise TableStop(f"Maxwell at ({c['p']:g}, {c['t']:g}): residual {d1:.4g} beyond "
-                            f"{b3['maxwell_k']:g}·|D_h − D_2h| + {b3['maxwell_floor']:g} = {tol:.4g}, not excused: {why}")
+                            f"{b3['maxwell_k']:g}·|D_h − D_2h| + {b3['maxwell_floor']:g} = {tol:.4g}, not excused: {why}", check="FD Maxwell")
         excused.append((c["p"], c["t"], d1, _exact_maxwell(c)))
     # the dT/dP field: the equilibrium isentrope on non-frozen cells, dtdp_s on frozen ones (note 3 §2)
     refused = {(r["p"], r["t"]) for r in table.get("dtdp_eq_refused", ())}
@@ -301,7 +306,7 @@ def check_table(asm, table) -> dict:
         v = c.get("dtdp_eq")
         if c["kind"] == "frozen":
             if v != c["dtdp_s"] or c.get("dtdp_eq_from") != "frozen: dtdp_s":
-                raise TableStop(f"frozen cell ({c['p']:g}, {c['t']:g}): its dT/dP field is not its dtdp_s")
+                raise TableStop(f"frozen cell ({c['p']:g}, {c['t']:g}): its dT/dP field is not its dtdp_s", check="frozen in-column identity")
         elif v is None:
             if (c["p"], c["t"]) not in refused:
                 raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): no dT/dP and not listed as refused")
@@ -310,10 +315,10 @@ def check_table(asm, table) -> dict:
         elif abs(c["dtdp_eq_band"] - band(c["dtdp_eq"], c["dtdp_g"], c["dtdp_s"], asm["dtdp"]["band_floor"])) \
                 > 1e-12 * c["dtdp_eq_band"]:
             raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): dT/dP band {c['dtdp_eq_band']!r} is not its "
-                            f"recomputation from A, G and the floor {asm['dtdp']['band_floor']:g}")
+                            f"recomputation from A, G and the floor {asm['dtdp']['band_floor']:g}", check="band recompute")
         elif not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) \
                 or c.get("dtdp_eq_from") != "model" or (c["p"], c["t"]) in refused:
-            raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): dT/dP field {v!r} ({c.get('dtdp_eq_from')!r})")
+            raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): dT/dP field {v!r} ({c.get('dtdp_eq_from')!r})", check="dT/dP field rule")
     if asm["dtdp"]["refused_count"] != len(refused):
         raise TableStop(f"the record says {asm['dtdp']['refused_count']} refused dT/dP cells, the table lists "
                         f"{len(refused)}")
@@ -328,16 +333,6 @@ def check_table(asm, table) -> dict:
 
 #: the fields a planted single-field bump is tried on, per cell kind (r2 condition 3: coverage per field)
 BUMP_FIELDS = MODEL_FIELDS + ("dtdp_eq", "dtdp_g", "dtdp_eq_band")
-
-
-def _caught_by(why: str) -> str:
-    for key, name in (("differ from the model", "stored-value gate"), ("recomputation", "band recompute"),
-                      ("γ", "γ identity"), ("frozen cell", "frozen in-column identity"), ("Maxwell", "FD Maxwell"),
-                      ("ρ does not rise", "ρ rises with P"), ("dT/dP field", "dT/dP field rule"),
-                      ("must be > 0", "positivity")):
-        if key in why:
-            return name
-    return why[:60]
 
 
 def planted_coverage(asm, table, per=5, seed=0, rel=0.01):
@@ -366,7 +361,7 @@ def planted_coverage(asm, table, per=5, seed=0, rel=0.01):
                     row["missed"].append((t2["cells"][i]["p"], t2["cells"][i]["t"]))
                 except TableStop as e:
                     row["caught"] += 1
-                    name = _caught_by(str(e))
+                    name = e.check
                     row["by"][name] = row["by"].get(name, 0) + 1
             out[(f, k)] = row
     return out
