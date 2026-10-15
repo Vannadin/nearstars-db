@@ -2,6 +2,7 @@
 """Rewrite side of the regression-oracle comparison (c8's comparator registration §4; b9 registration S10).
 
     solver/.venv/bin/python -m solver.run_oracle BODY_YAML POINTS_JSON OUT_DIR [--sensitivity-dt K] [--legacy-materials]
+        [--silicate-records on|off]
 
 - BODY_YAML: a v1 body file (engine/bodies/<stem>.yaml).
 - POINTS_JSON: rewrite/oracle/points.py's gen() output [[body, t_pot, tag], …], or «-» for the declared state only.
@@ -11,6 +12,9 @@
 - --sensitivity-dt: the §A1.7 sensitivity δ in K (default 10; 0 switches the field off). It is in each header's options.
 - --legacy-materials: the switch-over off (switch-over §5 baseline): every layer resolves through legacy_materials.
   Without it, a layer whose material has a phase-2 record reads that record (step 2: fe_prem reads fe_prem).
+- --silicate-records on|off: the silicate switch (silicate record registration §4), stated either way so a round does not
+  depend on the Option's default; absent, the default holds. It is in each header's options and in solve_id, and the
+  member of an inverse body is solved under it too.
 - --no-chain-for-points: T_pot states skip the old chain (legacy_nodes {}, table_read false; header «chain» false). The
   O9 comparison reads interior_layers and the verdict only (compare.py judge_point); declared states keep the chain.
 Exit 0 on success; 2 on any STOP (bad arguments, a non-empty OUT_DIR, an exception), with nothing written.
@@ -110,7 +114,8 @@ def _one(body_yaml: str, state, options, chain: bool, member=None, registry=None
                        "detail": f"{stem} declares no potential temperature; a T_pot state has no meaning for it"}})
         return rec
     if t_pot is not None:
-        got_m = member if member is not None else mb.member_of(body, options.materials, registry)   # its member
+        got_m = member if member is not None else mb.member_of(body, options.materials, registry,   # its member
+                                                               options.silicate_records)
         if got_m is not None:
             fb, info = got_m
             rec["member"] = result.plain(info)
@@ -164,6 +169,15 @@ def main(argv=None) -> int:
     chain = "--no-chain-for-points" not in argv
     if not chain:
         argv.remove("--no-chain-for-points")
+    silicate = context.Options().silicate_records
+    if "--silicate-records" in argv:
+        i = argv.index("--silicate-records")
+        val = argv[i + 1] if i + 1 < len(argv) else None
+        if val not in ("on", "off"):
+            print("STOP: --silicate-records needs on or off")
+            return 2
+        silicate = val == "on"
+        del argv[i:i + 2]
     materials = "legacy" if "--legacy-materials" in argv else "registry"
     if materials == "legacy":
         argv.remove("--legacy-materials")
@@ -175,7 +189,7 @@ def main(argv=None) -> int:
     if out.exists() and any(out.iterdir()):
         print(f"STOP: {out} is not empty (stale files would mix into the comparison)")
         return 2
-    options = context.Options(sensitivity_dt=dt, materials=materials)
+    options = context.Options(sensitivity_dt=dt, materials=materials, silicate_records=silicate)
     registry = mr.load() if materials == "registry" else None     # switch-over note 5: one load per run, passed down
     stem = Path(body_yaml).stem
     tmp = Path(tempfile.mkdtemp(prefix=f"run_oracle_{stem}_"))
@@ -186,7 +200,7 @@ def main(argv=None) -> int:
             got = from_v1.load_v1(body_yaml, registry=registry)
             body = got[0] if isinstance(got, tuple) else got
             if not isinstance(body, result.Refusal):
-                member = mb.member_of(body, options.materials, registry)
+                member = mb.member_of(body, options.materials, registry, options.silicate_records)
         for state in states:
             rec = one(body_yaml, state, options, chain, member, registry)
             name = f"{stem}__{'declared' if state == 'declared' else repr(state)}.json"

@@ -181,5 +181,51 @@ class Cli(unittest.TestCase):
         self.assertEqual(ro.states_for("earth", str(p)), ["declared", 2093.0])
 
 
+class SilicateFlag(unittest.TestCase):
+    """Silicate record registration §4 / §6.1: a round states the switch either way, and an inverse body's member is
+    solved under it (the member's CMF comes from the same mantle as the records)."""
+
+    def _main_options(self, *flag, inverse=False):
+        seen = {}
+        real_one, real_member = ro.one, ro.mb.member_of
+
+        def one(body_yaml, state, options=context.Options(), chain=True, member=None, registry=None):
+            seen.setdefault("options", options)
+            return {"header": {}, "state": state}
+
+        def member_of(body, materials="registry", registry=None, silicate_records=False):
+            seen["member_silicate"] = silicate_records
+            return None
+        p = Path(tempfile.mkdtemp(), "pts.json")
+        p.write_text(json.dumps([["mars", 1800.0, "node"]] if inverse else []))
+        ro.one, ro.mb.member_of = one, member_of
+        try:
+            rc = ro.main([f"engine/bodies/{'mars' if inverse else 'earth'}.yaml", str(p), tempfile.mkdtemp(), *flag])
+        finally:
+            ro.one, ro.mb.member_of = real_one, real_member
+        return rc, seen
+
+    def test_on_and_off_reach_the_options(self):
+        for flag, want in ((("--silicate-records", "on"), True), (("--silicate-records", "off"), False),
+                           ((), context.Options().silicate_records)):
+            with self.subTest(flag=flag):
+                rc, seen = self._main_options(*flag)
+                self.assertEqual(rc, 0)
+                self.assertIs(seen["options"].silicate_records, want)
+
+    def test_a_bad_value_stops(self):
+        for flag in (("--silicate-records",), ("--silicate-records", "yes")):
+            with self.subTest(flag=flag):
+                self.assertEqual(self._main_options(*flag)[0], 2)
+
+    def test_the_member_is_solved_under_the_switch(self):
+        """Mars is inverse with T_pot states: run_oracle.main solves its member once, under the round's switch."""
+        for flag, want in ((("--silicate-records", "on"), True), (("--silicate-records", "off"), False)):
+            with self.subTest(flag=flag):
+                rc, seen = self._main_options(*flag, inverse=True)
+                self.assertEqual(rc, 0)
+                self.assertIs(seen["member_silicate"], want)
+
+
 if __name__ == "__main__":
     unittest.main()
