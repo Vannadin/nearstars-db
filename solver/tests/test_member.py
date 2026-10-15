@@ -18,26 +18,86 @@ def _q(a, k):
     return next(q.point for q in a.quantities if q.key == k)
 
 
+def tier_error(y1, y10, y100):
+    """One solve's error estimate at rtol from three tiers (rtol, /10, /100; o9-forward-member-note amendment 2, 68's
+    measurement): where the tiers converge monotonically with per-decade ratio ρ = (y1−y10)/(y10−y100) > 1, the
+    geometric tail e = |y1−y10|·ρ/(ρ−1); otherwise (non-monotone, ρ ≤ 1, or an exact repeat) the largest span
+    max(|y1−y10|, |y1−y100|). Absolute, in y's units."""
+    d1, d2 = y1 - y10, y10 - y100
+    if d2 != 0.0 and d1 / d2 > 1.0:
+        rho = d1 / d2
+        return abs(d1) * rho / (rho - 1.0)
+    return max(abs(d1), abs(y1 - y100))
+
+
+#: Each solve's e/|y| above this is «resolution not measured», and the test fails naming it (68 B1 on amendment 2): near
+#: ρ = 1 the geometric tail ρ/(ρ−1) grows without limit, so a key whose tiers barely converge would pass against any
+#: miss. 1e-7 is the closure-noise level solve.py names for rtol 1e-10 (the note-8 retry comment, «~1e-7»); today's
+#: largest per-solve e/|y| is 2.73e-8 (Mars cmb_temperature, inverse).
+E_CEILING = 1e-7
+
+
+def identity_bound(y, inv, fwd):
+    """(bound, None) for one key from the inverse's and the forward's three tiers, or (None, why) when either solve's
+    e/|y| is over E_CEILING (its ρ named)."""
+    out = 0.0
+    for name, t in (("inverse", inv), ("forward", fwd)):
+        e = tier_error(*t) / y
+        if e > E_CEILING:
+            d1, d2 = t[0] - t[1], t[1] - t[2]
+            rho = d1 / d2 if d2 != 0.0 else float("inf")
+            return None, f"{name} e/|y| {e:.3e} over the ceiling {E_CEILING:g} (ρ {rho:.6g}): resolution not measured"
+        out += e
+    return max(1e-8, out), None
+
+
 class Identity(unittest.TestCase):
     """At the declared T_pot the member is the declared answer again: R, CMF and the located boundaries within the two
     solves' measured resolution. Venus (boundary_mass) and Mars (S, radius-declared core and basal) each exercise one
-    closure kind. Bound per key (o9-forward-member-note amendment 1): max(1e-8, r_inverse + r_forward), each r the
-    solve's |y(rtol) − y(rtol/10)| measured here on this machine; 1e-8 alone sat at the forward solve's own resolution."""
+    closure kind. Bound per key (o9-forward-member-note amendment 2, replacing amendment 1's one-decade r):
+    max(1e-8, (e_inverse + e_forward)/|y|), each e the solve's three-tier error at rtol (`tier_error`) measured here on
+    this machine; a solve with e/|y| over E_CEILING fails by name (resolution not measured, 68 B1). Amendment 1's r = |y(rtol) − y(rtol/10)| understates the error when the per-decade ratio is near 1
+    (Mars inverse ρ 1.6–2.4) and does not measure a non-monotone forward solve (68, 10-16)."""
 
     def _check(self, stem, keys):
         body, _ = from_v1.load_v1(f"engine/bodies/{stem}.yaml")
         o10 = dataclasses.replace(OPT, rtol=OPT.rtol / 10.0)
+        o100 = dataclasses.replace(OPT, rtol=OPT.rtol / 100.0)
         a, x = sv.solve(body, OPT)
         a10, _ = sv.solve(body, o10)
+        a100, _ = sv.solve(body, o100)
         fb = mb.forward_member(body, a, x)
         self.assertEqual(fb.closure.kind, "R")
         f, _ = sv.solve(fb, OPT)
         f10, _ = sv.solve(fb, o10)
+        f100, _ = sv.solve(fb, o100)
         self.assertIsInstance(f, result.Answer, getattr(f, "text", None))
         for k in keys:
             y = abs(_q(a, k))
-            r = abs(_q(a10, k) - _q(a, k)) / y + abs(_q(f10, k) - _q(f, k)) / abs(_q(f, k))
-            self.assertLessEqual(abs(_q(f, k) - _q(a, k)) / y, max(1e-8, r), k)
+            bound, why = identity_bound(y, (_q(a, k), _q(a10, k), _q(a100, k)), (_q(f, k), _q(f10, k), _q(f100, k)))
+            self.assertIsNone(why, f"{stem} {k}: {why}")
+            self.assertLessEqual(abs(_q(f, k) - _q(a, k)) / y, bound, k)
+
+    def test_tier_error(self):
+        """The two branches: a geometric tail where the tiers converge (ρ = 2 doubles the one-decade span), the largest
+        span where they do not (a sign change, or ρ ≤ 1)."""
+        self.assertAlmostEqual(tier_error(1.0 + 4e-8, 1.0 + 2e-8, 1.0 + 1e-8), 2e-8 * 2.0, delta=1e-15)
+        self.assertAlmostEqual(tier_error(1.0 + 1e-8, 1.0 - 3e-8, 1.0 + 2e-8), 4e-8, delta=1e-15)
+        self.assertAlmostEqual(tier_error(1.0 + 1e-8, 1.0, 1.0 - 2e-8), 3e-8, delta=1e-15)
+        self.assertEqual(tier_error(2.0, 2.0, 2.0), 0.0)
+        self.assertAlmostEqual(tier_error(2.01e-9, 1e-9, 0.0), 1.01e-9 * 101.0, delta=1e-18)   # ρ 1.01: ×101
+
+    def test_ceiling_fails_not_passes(self):
+        """68 B1: a solve whose tiers barely converge (ρ 1.01, e/|y| ≈ 1e-6) is over the ceiling — the key fails by
+        name instead of passing against any miss; under it the bound is the sum, floored at 1e-8."""
+        bound, why = identity_bound(1.0, (2.01e-8, 1e-8, 0.0), (0.0, 0.0, 0.0))
+        self.assertIsNone(bound)
+        self.assertIn("inverse", why)
+        self.assertIn("ρ 1.01", why)
+        bound, why = identity_bound(1.0, (4e-8, 2e-8, 1e-8), (0.0, 0.0, 0.0))
+        self.assertIsNone(why)
+        self.assertAlmostEqual(bound, 4e-8, delta=1e-20)
+        self.assertEqual(identity_bound(1.0, (1.0, 1.0, 1.0), (1.0, 1.0, 1.0)), (1e-8, None))
 
     def test_venus(self):
         self._check("venus", ("radius", "core_mass_fraction", "core_radius", "nmoi", "cmb_temperature"))
