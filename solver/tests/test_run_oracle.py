@@ -226,6 +226,45 @@ class SilicateFlag(unittest.TestCase):
                 self.assertEqual(rc, 0)
                 self.assertIs(seen["member_silicate"], want)
 
+    def test_on_with_legacy_materials_stops(self):
+        """68 B2: a legacy solve resolves no record, so «on» there would be a header that lies."""
+        self.assertEqual(self._main_options("--silicate-records", "on", "--legacy-materials")[0], 2)
+        self.assertEqual(self._main_options("--silicate-records", "off", "--legacy-materials")[0], 0)
+
+    def test_member_of_solves_under_the_switch(self):
+        """68 B1: the switch reaches member_of's own declared-state solve, not only member_of's signature."""
+        from solver import from_v1, member as mb, solve as sv
+        got = from_v1.load_v1("engine/bodies/mars.yaml")
+        body = got[0] if isinstance(got, tuple) else got
+        seen, real = [], sv.solve
+
+        def spy(b, options=context.Options(), *a, **k):
+            seen.append(options.silicate_records)
+            return object(), None                                     # not an Answer: member_of returns early
+        sv.solve = spy
+        try:
+            for want in (True, False):
+                mb.member_of(body, silicate_records=want)
+        finally:
+            sv.solve = real
+        self.assertEqual(seen, [True, False])
+
+    def test_one_passes_the_switch_to_its_member_fallback(self):
+        """68 S1b: one() with member=None solves the member itself, under the options' switch."""
+        seen, real = [], ro.mb.member_of
+
+        def member_of(body, materials="registry", registry=None, silicate_records=False):
+            seen.append(silicate_records)
+            return None, {"declared_outcome": "Refusal", "x": None}
+        ro.mb.member_of = member_of
+        try:
+            for want in (True, False):
+                ro.one("engine/bodies/mars.yaml", 1800.0, context.Options(sensitivity_dt=0.0, silicate_records=want),
+                       chain=False, member=None)
+        finally:
+            ro.mb.member_of = real
+        self.assertEqual(seen, [True, False])
+
 
 if __name__ == "__main__":
     unittest.main()

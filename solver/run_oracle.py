@@ -181,6 +181,9 @@ def main(argv=None) -> int:
     materials = "legacy" if "--legacy-materials" in argv else "registry"
     if materials == "legacy":
         argv.remove("--legacy-materials")
+    if silicate and materials == "legacy":            # 68 B2: legacy resolution ignores the switch; the header would lie
+        print("STOP: --silicate-records on needs the registry (not --legacy-materials): a legacy solve reads no record")
+        return 2
     if len(argv) != 3:
         print(__doc__)
         return 2
