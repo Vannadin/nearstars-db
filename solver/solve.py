@@ -345,13 +345,13 @@ def _silicate_route(body, layer, on_me, p_stop, registry):
         return None
     if on_me and body.closure.name in SILICATE_LEGACY_AXES:
         return None
+    if layer.material == "silicate" and layer.composition is not None:
+        return None                                 # not routed: legacy refuses it first, as when switched off (68 NB)
     if on_me:                                       # an assemblage view has no fit axis: refuse as legacy does (68 B1)
         if layer.material == "silicate_decl":
             return None, ("closure_axis", "silicate_decl has no fit axis in phase 1")
         return None, ("closure_axis", f"no fit axis {body.closure.name!r} on material {layer.material!r}")
     if layer.material == "silicate":
-        if layer.composition is not None:
-            return None
         return _assemblage_view(body, layer, SILICATE_ROUTES["silicate"], p_stop, registry)
     comp = _comp(layer)
     try:
