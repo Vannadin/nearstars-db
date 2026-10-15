@@ -95,6 +95,10 @@ def _maxwell_residual(by, ps, ts, i, k, d):
 #: frozen: the fixed state re-evaluated), relative (s against max(|s|, 1)). Measured ≤ 1.4e-8 before it was set.
 STORED_MODEL_REL = 1.0e-6
 MODEL_FIELDS = ("rho", "s", "c_p", "c_v", "alpha_k_t", "gamma", "dtdp_s")
+#: each field's declared scale floor in the gate's denominator max(|x|, floor) (r2 NB 3 on c1907476: no field divides
+#: by a value that can approach 0). Each is far below the field's values in the tables (ρ ~3e3 kg/m³, c_P and c_V
+#: ~1e3 J/kg/K, αK_T ~1e6 Pa/K, γ ~1, dtdp_s ~1e-8 K/Pa); s is the one that crosses 0, as before.
+FIELD_SCALE = {"rho": 1.0, "s": 1.0, "c_p": 1.0, "c_v": 1.0, "alpha_k_t": 1.0, "gamma": 1e-3, "dtdp_s": 1e-12}
 
 
 def _model_miss(c):
@@ -104,7 +108,7 @@ def _model_miss(c):
         m = c.get(f"{f}_model")
         if m is None:
             return None
-        d = abs(c[f] - m) / max(abs(c[f]), 1.0 if f == "s" else 0.0)
+        d = abs(c[f] - m) / max(abs(c[f]), FIELD_SCALE[f])
         if d > worst[0]:
             worst = (d, f)
     return worst
