@@ -42,8 +42,9 @@ class TableStop(Exception):
 def read_table(path, sha256: str) -> dict:
     """The compact table at `path`, after its sha256 matches the record's pin (§2.2: only the compact sha256 can be
     checked at engine load; a mismatch is a STOP, never a fallback)."""
+    from pathlib import Path
     try:
-        data = open(path, "rb").read()
+        data = Path(path).read_bytes()
     except OSError as e:
         raise TableStop(f"the compact table {path} cannot be read: {e}") from None
     got = hashlib.sha256(data).hexdigest()
@@ -102,12 +103,17 @@ FIELD_SCALE = {"rho": 1.0, "s": 1.0, "c_p": 1.0, "c_v": 1.0, "alpha_k_t": 1.0, "
 
 
 def _model_miss(c):
-    """The worst relative stored-against-model difference at a cell, and its field; None without model values."""
+    """The worst relative stored-against-model difference at a cell, and its field; None without model values. The
+    model group is all None or all finite numbers: anything else is a STOP (68 B1 on 2a5af2db: a NaN made every
+    comparison False and so turned the gate off)."""
+    ms = [c.get(f"{f}_model") for f in MODEL_FIELDS]
+    if all(m is None for m in ms):
+        return None
+    if not all(_finite(m) for m in ms):
+        raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): its model values are neither all absent nor all finite "
+                        f"numbers: {ms!r}")
     worst = (0.0, None)
-    for f in MODEL_FIELDS:
-        m = c.get(f"{f}_model")
-        if m is None:
-            return None
+    for f, m in zip(MODEL_FIELDS, ms):
         d = abs(c[f] - m) / max(abs(c[f]), FIELD_SCALE[f])
         if d > worst[0]:
             worst = (d, f)
@@ -117,8 +123,11 @@ def _model_miss(c):
 def _exact_maxwell(c):
     """The model's own Maxwell residual at a cell, from the dT/dP sidecar's four ±δ solves; None without them."""
     dv, ds = c.get("dv_dt_model"), c.get("ds_dp_model")
-    if dv is None or ds is None:
+    if dv is None and ds is None:
         return None
+    if not (_finite(dv) and _finite(ds)):                 # 68 B1: a NaN must never excuse a cell
+        raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): its exact derivatives are neither both absent nor both "
+                        f"finite numbers: {dv!r}, {ds!r}")
     return abs(dv + ds) / max(abs(dv), abs(ds), ALPHA_FLOOR / c["rho"])
 
 
@@ -131,6 +140,8 @@ def _fd_blind(by, ps, ts, i, k, d1, b3):
         return "no exact derivatives at the cell"
     if e > d1 / 10.0:
         return f"the model's exact Maxwell {e:.4g} is not ≤ FD/10"
+    # a belt behind the global stored-value gate, which already STOPs on any miss (68 N1 on 2a5af2db): kept so the
+    # excuse states its own condition (r2) even if that gate is ever moved after this check
     for d in (0, 1, 2):
         for a, b in (((0, 0),) if d == 0 else ((-d, 0), (d, 0), (0, -d), (0, d))):
             n = by[(ps[i + a], ts[k + b])]
@@ -162,6 +173,11 @@ def check_table(asm, table) -> dict:
         raise TableStop("the compact table has no cells")
     by = {}
     for c in cells:
+        if not (_finite(c.get("p")) and _finite(c.get("t"))):          # 68 N2: numbers before any arithmetic
+            raise TableStop(f"a cell's node is not a pair of finite numbers: ({c.get('p')!r}, {c.get('t')!r})")
+        for f in ("dtdp_eq", "dtdp_g", "dtdp_eq_band", "envelope_gap_v", "envelope_gap_s"):
+            if c.get(f) is not None and not _finite(c[f]):
+                raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): {f} is {c[f]!r}, not a finite number or absent")
         if c.get("kind") not in CELL_KINDS:
             raise TableStop(f"cell ({c.get('p')}, {c.get('t')}): kind {c.get('kind')!r}")
         for f in ("rho", "s", "c_p", "c_v", "alpha_k_t", "gamma", "dtdp_s"):
@@ -194,6 +210,8 @@ def check_table(asm, table) -> dict:
     ts = sorted({t for _, t in by})
     pi = {p: i for i, p in enumerate(ps)}
     cols = {c["p"]: c for c in table.get("columns", ())}
+    if len(cols) != len(table.get("columns", ())):                   # 68 N3: duplicates would collapse unseen
+        raise TableStop("two columns share a P node")
     if sorted(cols) != ps:
         raise TableStop("the column list does not match the cells' P nodes")
     # no holes: every node from the grid's first T up to the column's window top
@@ -270,6 +288,9 @@ def check_table(asm, table) -> dict:
         excused.append((c["p"], c["t"], d1, _exact_maxwell(c)))
     # the dT/dP field: the equilibrium isentrope on non-frozen cells, dtdp_s on frozen ones (note 3 §2)
     refused = {(r["p"], r["t"]) for r in table.get("dtdp_eq_refused", ())}
+    for k in refused:                                    # each refused entry names a non-frozen cell of the table
+        if k not in by or by[k]["kind"] == "frozen" or by[k].get("dtdp_eq") is not None:
+            raise TableStop(f"the refused dT/dP list names {k}, which is not a non-frozen cell without a value")
     for c in cells:
         v = c.get("dtdp_eq")
         if c["kind"] == "frozen":
@@ -287,8 +308,6 @@ def check_table(asm, table) -> dict:
         elif not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) \
                 or c.get("dtdp_eq_from") != "model" or (c["p"], c["t"]) in refused:
             raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): dT/dP field {v!r} ({c.get('dtdp_eq_from')!r})")
-    if len(refused) != sum(1 for c in cells if c["kind"] != "frozen" and c.get("dtdp_eq") is None):
-        raise TableStop("the refused dT/dP list names a cell that has a value or is not in the table")
     if asm["dtdp"]["refused_count"] != len(refused):
         raise TableStop(f"the record says {asm['dtdp']['refused_count']} refused dT/dP cells, the table lists "
                         f"{len(refused)}")

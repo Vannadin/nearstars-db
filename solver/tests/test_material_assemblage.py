@@ -191,8 +191,86 @@ class TableChecks(unittest.TestCase):
 
     def test_cell_without_model_values(self):
         """r2 condition 2: a cell the stored-value gate cannot cover (no model values) is a STOP for a ruling."""
-        tb = table(); cell(tb, 4, 5)["c_p_model"] = None
+        tb = table(); cell(tb, 4, 5).update({f"{f}_model": None for f in ma.MODEL_FIELDS})
         self.stops(tb, why="no model values")
+
+    def test_non_finite_model_values(self):
+        """68 B1: a NaN or partial model group, or a NaN exact derivative, STOPs; it never switches a gate off."""
+        for f in ma.MODEL_FIELDS:
+            with self.subTest(field=f):
+                tb = table(); c = cell(tb, 4, 5); c[f] *= 1.01; c[f"{f}_model"] = float("nan")
+                self.stops(tb, why="neither all absent nor all finite")
+        tb = table(); cell(tb, 4, 5)["c_p_model"] = None
+        self.stops(tb, why="neither all absent nor all finite")
+        ps = [2e10 * 1.05 ** i for i in range(9)]
+        steps = ((0.5 * (ps[4] + ps[5]), 1.0), (0.5 * (ps[5] + ps[6]), 1.0))
+        tb = table(steps)
+        for c in tb["cells"]:
+            if c["kind"] != "frozen":
+                c["dv_dt_model"] = float("nan")
+        self.stops(tb, why="exact derivatives are neither")
+        tb = table(); cell(tb, 4, 5)["ds_dp_model"] = None
+        self.stops(tb, why="exact derivatives are neither")
+
+    def test_guards(self):
+        """68 B2: one planted control per check_table guard (each the only defect)."""
+        def both(c, f, x):
+            c[f] = x
+            if f"{f}_model" in c and c[f"{f}_model"] is not None:
+                c[f"{f}_model"] = x
+        cases = []
+        tb = table()                                        # M9: ρ falls with P inside one state
+        for k in range(9):
+            a, b = cell(tb, 3, k), cell(tb, 4, k)
+            if a["kind"] != "frozen":
+                both(b, "rho", a["rho"] * 0.999)
+                b["gamma"] = b["gamma_model"] = b["alpha_k_t"] / (b["rho"] * b["c_v"])
+                break
+        cases.append((tb, "ρ does not rise"))
+        for f in ("c_p", "c_v", "alpha_k_t", "dtdp_s"):        # M10: positivity, each field
+            tb = table(); c = cell(tb, 4, 5); both(c, f, -abs(c[f]))
+            c["gamma"] = c["gamma_model"] = c["alpha_k_t"] / (c["rho"] * c["c_v"])
+            cases.append((tb, "must be > 0"))
+        tb = table(); cell(tb, 4, 5)["dtdp_eq_from"] = "frozen: dtdp_s"   # M14
+        cases.append((tb, "dT/dP field"))
+        tb = table(); tb["columns"] = tb["columns"][:-1]     # M15
+        cases.append((tb, "column list"))
+        tb = table(); tb["columns"][2]["window"] = {"cause": "made_up"}   # M16
+        cases.append((tb, "window cause"))
+        tb = table(); tb["cells"].append(dict(tb["cells"][10]))           # M17
+        cases.append((tb, "share a node"))
+        tb = table(); cell(tb, 4, 5)["s"] = float("inf")                   # M18
+        cases.append((tb, "not a finite number"))
+        tb = table(); cell(tb, 4, 5)["dtdp_eq"] = "1e-8"                   # 68 N2: a string, not a crash
+        cases.append((tb, "not a finite number"))
+        tb = table(); cell(tb, 4, 5)["p"] = "2e10"
+        cases.append((tb, "finite numbers"))
+        tb = table(); tb["columns"].append(dict(tb["columns"][0]))         # 68 N3: duplicate columns
+        cases.append((tb, "two columns share"))
+        tb = table(); fr = cell(tb, 4, 0)                                  # M27: a refused entry naming a frozen node
+        tb["dtdp_eq_refused"] = [{"p": fr["p"], "t": fr["t"]}]
+        cases.append((tb, "refused dT/dP list names"))
+        tb = table(); tb["dtdp_eq_refused"] = [{"p": 1.0, "t": 1.0}]       # … or an absent one
+        cases.append((tb, "refused dT/dP list names"))
+        tb = table(); top = cell(tb, 4, 8); extra = dict(top); extra["t"] = top["t"] + 50.0   # M28
+        tb["cells"].append(extra)
+        cases.append((tb, "last cell is not its window top|hole"))
+        for tb, why in cases:
+            with self.subTest(why=why):
+                self.stops(tb, why=why)
+
+    def test_freeze_t_breaks_one_state(self):
+        """68 M22: frozen neighbours with different freeze_t are not one state, so the in-column identity is not
+        formed across them: a dtdp_s that fails it with equal freeze_t passes with a different one."""
+        def bad(tb):
+            c = cell(tb, 4, 1)
+            c["dtdp_s"] *= 1.05; c["dtdp_s_model"] = c["dtdp_s"]; c["dtdp_eq"] = c["dtdp_s"]
+            return tb
+        self.stops(bad(table()), why="frozen cell")
+        tb = bad(table())
+        for k in (0, 2):
+            cell(tb, 4, k)["freeze_t"] = 999.0
+        ma.check_table(asm(), tb)
 
     def test_refused_dtdp_cell(self):
         """Note 3 §2 condition 4: a listed not-converged cell has no value, the record counts it."""
@@ -238,7 +316,8 @@ class TableChecks(unittest.TestCase):
             write(d, table(), sha="0" * 64)
             got = mr.load(Path(d), allow_development=True)
         self.assertIsInstance(got, mr.LoadStop)
-        self.assertIn(got.id, ("material.assemblage_table", "material.kind_rule"))
+        self.assertEqual(got.id, "material.assemblage_table")       # 68 M3: the sha pin itself, nothing else
+        self.assertIn("sha256", got.evidence["why"])
 
 
 class RegistryLoad(unittest.TestCase):
@@ -267,13 +346,63 @@ class RegistryLoad(unittest.TestCase):
         self.assertIn("sha256", got.evidence["why"])
 
     def test_kind_rules(self):
-        """§2.1: an assemblage record without its key or table STOPs; it has no boundaries/joins/choice (68)."""
-        for over, why in (({"composition_key": None}, "composition_key"), ({"choice": "chain"}, "has no")):
+        """§2.1: an assemblage record without its key or table STOPs; it has none of the seven forbidden keys (68 M5b);
+        one phase only (M6)."""
+        cases = [({"composition_key": None}, "composition_key"), ({"assemblage": None}, "assemblage")]
+        cases += [({k: v}, "has no") for k, v in (("boundaries", []), ("joins", []), ("triple_points", []),
+                                                 ("choice", "chain"), ("source_seams", []),
+                                                 ("field_probe", {"box": {"p_min": 1.0, "p_max": 2.0}, "dp": 1.0,
+                                                                  "dt": 1.0}),
+                                                 ("field_probes", []))]
+        two = record("0" * 64)["phases"] * 2
+        cases.append(({"phases": [two[0], {**two[1], "id": "b"}]}, "one phase"))
+        for over, why in cases:
             with self.subTest(why=why), tempfile.TemporaryDirectory() as d:
                 write(d, table(), status="pinned", rec_over=over)
                 got = mr.load(Path(d))
                 self.assertEqual(got.id, "material.kind_rule")
                 self.assertIn(why, got.evidence["why"])
+
+    def test_registry_guards(self):
+        """68 B2: the sha ≠ compact_sha256 (M3), assemblage keys on another kind (M4), an absolute or «..» path (M7),
+        a p_dataset mismatch (M8)."""
+        with tempfile.TemporaryDirectory() as d:
+            write(d, table(), status="pinned")
+            rec = yaml.safe_load((Path(d) / "silicate_slb_test.yaml").read_text())
+            rec["assemblage"]["pins"]["compact_sha256"] = "0" * 64
+            (Path(d) / "silicate_slb_test.yaml").write_text(yaml.safe_dump(rec, sort_keys=False))
+            got = mr.load(Path(d))
+        self.assertEqual((got.id, "compact_sha256" in got.evidence["why"]), ("material.kind_rule", True))
+        for over in ({"kind": "single"},):
+            with tempfile.TemporaryDirectory() as d:
+                write(d, table(), status="pinned", rec_over=over)
+                got = mr.load(Path(d))
+            self.assertEqual(got.id, "material.kind_rule")
+            self.assertIn("belong to an assemblage record", got.evidence["why"])
+        for path in ("/tmp/x.json", "../x.json"):
+            with tempfile.TemporaryDirectory() as d:
+                write(d, table(), status="pinned")
+                rec = yaml.safe_load((Path(d) / "silicate_slb_test.yaml").read_text())
+                rec["assemblage"]["file"] = path
+                (Path(d) / "silicate_slb_test.yaml").write_text(yaml.safe_dump(rec, sort_keys=False))
+                got = mr.load(Path(d))
+            with self.subTest(path=path):
+                self.assertEqual(got.id, "material.assemblage_table")
+                self.assertIn("a path under solver/materials", got.evidence["why"])
+        with tempfile.TemporaryDirectory() as d:
+            tb = table(); tb["p_dataset"] = 135e9
+            write(d, tb, status="pinned")
+            got = mr.load(Path(d))
+        self.assertEqual(got.id, "material.assemblage_table")
+        self.assertIn("p_dataset", got.evidence["why"])
+
+    def test_tables_read_only(self):
+        """68 N3: the registry hands the table out read-only."""
+        with tempfile.TemporaryDirectory() as d:
+            write(d, table(), status="pinned")
+            reg = mr.load(Path(d))
+        with self.assertRaises(TypeError):
+            reg.tables["silicate_slb_test"]["cells"][0]["rho"] = 1.0
 
     def test_b3_stop_reaches_the_registry(self):
         tb = table(); cell(tb, 4, 5)["gamma"] *= 1.1
