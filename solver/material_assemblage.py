@@ -253,6 +253,8 @@ def check_table(asm, table) -> dict:
     for c in cells:
         if not (c["c_p"] > 0.0 and c["c_v"] > 0.0 and c["alpha_k_t"] > 0.0 and c["dtdp_s"] > 0.0):
             raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): c_P, c_V, αK_T and dtdp_s must be > 0", check="positivity")
+        if c.get("c_p_eq") is not None and not c["c_p_eq"] > 0.0:     # stability: c_P,eq > 0 (68 B1 on 9582a67b)
+            raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): c_p_eq {c['c_p_eq']!r} must be > 0", check="positivity")
         g = c["alpha_k_t"] / (c["rho"] * c["c_v"])
         if abs(g - c["gamma"]) > b3["gamma_tolerance"] * abs(c["gamma"]):
             raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): γ {c['gamma']!r} against αK_T/(ρc_V) {g!r}", check="γ identity")
