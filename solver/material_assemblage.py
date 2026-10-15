@@ -57,14 +57,14 @@ def read_table(path, sha256: str) -> dict:
     try:
         data = Path(path).read_bytes()
     except OSError as e:
-        raise TableStop(f"the compact table {path} cannot be read: {e}") from None
+        raise TableStop(f"the compact table {path} cannot be read: {e}", check="read") from None
     got = hashlib.sha256(data).hexdigest()
     if got != sha256:
-        raise TableStop(f"the compact table's sha256 is {got}, not the record's pinned {sha256}")
+        raise TableStop(f"the compact table's sha256 is {got}, not the record's pinned {sha256}", check="sha pin")
     try:
         return json.loads(data)
     except ValueError as e:
-        raise TableStop(f"the compact table is not JSON: {e}") from None
+        raise TableStop(f"the compact table is not JSON: {e}", check="read") from None
 
 
 def _one_state(a, b) -> bool:
@@ -122,7 +122,7 @@ def _model_miss(c):
         return None
     if not all(_finite(m) for m in ms):
         raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): its model values are neither all absent nor all finite "
-                        f"numbers: {ms!r}")
+                        f"numbers: {ms!r}", check="finite fields")
     worst = (0.0, None)
     for f, m in zip(MODEL_FIELDS, ms):
         d = abs(c[f] - m) / max(abs(c[f]), FIELD_SCALE[f])
@@ -138,7 +138,7 @@ def _exact_maxwell(c):
         return None
     if not (_finite(dv) and _finite(ds)):                 # 68 B1: a NaN must never excuse a cell
         raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): its exact derivatives are neither both absent nor both "
-                        f"finite numbers: {dv!r}, {ds!r}")
+                        f"finite numbers: {dv!r}, {ds!r}", check="finite fields")
     return abs(dv + ds) / max(abs(dv), abs(ds), ALPHA_FLOOR / c["rho"])
 
 
@@ -181,23 +181,23 @@ def check_table(asm, table) -> dict:
     b3 = asm["b3"]
     cells = table.get("cells")
     if isinstance(cells, (str, bytes)) or not isinstance(cells, Sequence) or not cells:   # a list, or the registry's
-        raise TableStop("the compact table has no cells")                                  # frozen tuple (68)
+        raise TableStop("the compact table has no cells", check="structure")                                  # frozen tuple (68)
     by = {}
     for c in cells:
         if not (_finite(c.get("p")) and _finite(c.get("t"))):          # 68 N2: numbers before any arithmetic
-            raise TableStop(f"a cell's node is not a pair of finite numbers: ({c.get('p')!r}, {c.get('t')!r})")
+            raise TableStop(f"a cell's node is not a pair of finite numbers: ({c.get('p')!r}, {c.get('t')!r})", check="finite fields")
         for f in ("dtdp_eq", "dtdp_g", "dtdp_eq_band", "envelope_gap_v", "envelope_gap_s"):
             if c.get(f) is not None and not _finite(c[f]):
                 raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): {f} is {c[f]!r}, not a finite number or absent", check="finite fields")
         if c.get("kind") not in CELL_KINDS:
-            raise TableStop(f"cell ({c.get('p')}, {c.get('t')}): kind {c.get('kind')!r}")
+            raise TableStop(f"cell ({c.get('p')}, {c.get('t')}): kind {c.get('kind')!r}", check="structure")
         for f in ("rho", "s", "c_p", "c_v", "alpha_k_t", "gamma", "dtdp_s"):
             v = c.get(f)
             if not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v):
                 raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): {f} is {v!r}, not a finite number", check="finite fields")
         by[(c["p"], c["t"])] = c
     if len(by) != len(cells):
-        raise TableStop("two cells share a node")
+        raise TableStop("two cells share a node", check="structure")
     # the stored-value gate: every stored field the engine reads, on every cell, against the model (r2; note 3 §3).
     # A cell with no model value (its sidecar re-solve failed) is not covered by it: a STOP for a ruling, never shipped
     # silently uncovered (r2 condition 2)
@@ -220,22 +220,28 @@ def check_table(asm, table) -> dict:
     ps = sorted({p for p, _ in by})
     ts = sorted({t for _, t in by})
     pi = {p: i for i, p in enumerate(ps)}
+    # the grid assumptions the view relies on (68 B1 on 2390a7e2): every column starts at the T floor; p_dataset is a
+    # P node, so the one-sided cut falls on a node and a read below it never extrapolates past the grid
+    if ts[0] != T_FLOOR:
+        raise TableStop(f"the grid's first T node is {ts[0]:g} K, not the view's floor {T_FLOOR:g} K", check="structure")
+    if table.get("p_dataset") not in ps:
+        raise TableStop(f"p_dataset {table.get('p_dataset')!r} is not a P node of the table", check="structure")
     cols = {c["p"]: c for c in table.get("columns", ())}
     if len(cols) != len(table.get("columns", ())):                   # 68 N3: duplicates would collapse unseen
-        raise TableStop("two columns share a P node")
+        raise TableStop("two columns share a P node", check="structure")
     if sorted(cols) != ps:
-        raise TableStop("the column list does not match the cells' P nodes")
+        raise TableStop("the column list does not match the cells' P nodes", check="structure")
     # no holes: every node from the grid's first T up to the column's window top
     for p, col in cols.items():
         if col.get("window", {}).get("cause") not in WINDOW_CAUSES:
-            raise TableStop(f"column {p:g}: window cause {col.get('window')!r}")
+            raise TableStop(f"column {p:g}: window cause {col.get('window')!r}", check="structure")
         top = col["t_window_top"]
         have = [t for t in ts if (p, t) in by]
         if not have or have[-1] != top:
-            raise TableStop(f"column {p:g}: its last cell is not its window top {top}")
+            raise TableStop(f"column {p:g}: its last cell is not its window top {top}", check="structure")
         for t in ts:
             if t <= top and (p, t) not in by:
-                raise TableStop(f"a hole at ({p:g}, {t:g}), below the column's window top {top}")
+                raise TableStop(f"a hole at ({p:g}, {t:g}), below the column's window top {top}", check="structure")
     # positivity and the γ identity (interim internal check, note 3 §3)
     for c in cells:
         if not (c["c_p"] > 0.0 and c["c_v"] > 0.0 and c["alpha_k_t"] > 0.0 and c["dtdp_s"] > 0.0):
@@ -301,17 +307,17 @@ def check_table(asm, table) -> dict:
     refused = {(r["p"], r["t"]) for r in table.get("dtdp_eq_refused", ())}
     for k in refused:                                    # each refused entry names a non-frozen cell of the table
         if k not in by or by[k]["kind"] == "frozen" or by[k].get("dtdp_eq") is not None:
-            raise TableStop(f"the refused dT/dP list names {k}, which is not a non-frozen cell without a value")
+            raise TableStop(f"the refused dT/dP list names {k}, which is not a non-frozen cell without a value", check="dT/dP field rule")
     for c in cells:
         v = c.get("dtdp_eq")
         if c["kind"] == "frozen":
             if v != c["dtdp_s"] or c.get("dtdp_eq_from") != "frozen: dtdp_s":
-                raise TableStop(f"frozen cell ({c['p']:g}, {c['t']:g}): its dT/dP field is not its dtdp_s", check="frozen in-column identity")
+                raise TableStop(f"frozen cell ({c['p']:g}, {c['t']:g}): its dT/dP field is not its dtdp_s", check="dT/dP field rule")
         elif v is None:
             if (c["p"], c["t"]) not in refused:
-                raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): no dT/dP and not listed as refused")
+                raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): no dT/dP and not listed as refused", check="dT/dP field rule")
         elif not all(_finite(c.get(f)) for f in ("dtdp_eq_band", "dtdp_g", "envelope_gap_v", "envelope_gap_s")):
-            raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): its band, G-based isentrope or envelope gap is missing")
+            raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): its band, G-based isentrope or envelope gap is missing", check="dT/dP field rule")
         elif abs(c["dtdp_eq_band"] - band(c["dtdp_eq"], c["dtdp_g"], c["dtdp_s"], asm["dtdp"]["band_floor"])) \
                 > 1e-12 * c["dtdp_eq_band"]:
             raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): dT/dP band {c['dtdp_eq_band']!r} is not its "
@@ -321,7 +327,7 @@ def check_table(asm, table) -> dict:
             raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): dT/dP field {v!r} ({c.get('dtdp_eq_from')!r})", check="dT/dP field rule")
     if asm["dtdp"]["refused_count"] != len(refused):
         raise TableStop(f"the record says {asm['dtdp']['refused_count']} refused dT/dP cells, the table lists "
-                        f"{len(refused)}")
+                        f"{len(refused)}", check="dT/dP field rule")
     exact = sorted(e for e in (_exact_maxwell(c) for c in cells if c["kind"] != "frozen") if e is not None)
     q = (lambda f: exact[min(len(exact) - 1, int(f * (len(exact) - 1)))]) if exact else (lambda f: None)
     return {"stored_model": {"n": len(stored), "median": sorted(stored)[len(stored) // 2] if stored else None,

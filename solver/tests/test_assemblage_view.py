@@ -20,7 +20,8 @@ TS = [200.0 + 50.0 * k for k in range(93)]                     # 200 … 4800 K
 
 
 def rho_of(p, t):
-    return 3300.0 * (1.0 + p / 1.3e11) * (1.0 - 3e-5 * (t - 300.0))
+    """Curved in T, so slope rules (end slope, extrapolation) give values that differ from a linear read."""
+    return 3300.0 * (1.0 + p / 1.3e11) * (1.0 - 3e-5 * (t - 300.0) - 2e-9 * (t - 300.0) ** 2)
 
 
 def table(tops=None, refused=()):
@@ -86,6 +87,47 @@ class Interpolation(unittest.TestCase):
             want = smooth_table.cubic2(math.log(p), t, v.lnps, v.ts, val, ia, ib)
             self.assertEqual(solid(v, p, t)[0], want)
 
+    def legacy_at(self, v, p, t, field="rho"):
+        import smooth_table
+        ia = max(i for i in range(len(PS) - 1) if PS[i] <= p)
+        ib = max(k for k in range(len(TS) - 1) if TS[k] <= t)
+        val = lambda a, b: (v._cell(a, b) or {}).get(field)
+        return smooth_table.cubic2(math.log(p), t, v.lnps, v.ts, val, ia, ib)
+
+    def test_ragged_edge_extrapolation(self):
+        """68 V11: a read in a column's top cell, whose outer stencil node above the next column's top is
+        extrapolated along that row's end slope, equals smooth_table's."""
+        import smooth_table
+        v = view(table(tops={7: 2350.0, 8: 1200.0}))
+        n0 = smooth_table.EXTRAPOLATED_READS[0]
+        want = self.legacy_at(v, PS[7] * 1.2, 1170.0)
+        self.assertGreater(smooth_table.EXTRAPOLATED_READS[0], n0)           # the path is really taken
+        self.assertEqual(solid(v, PS[7] * 1.2, 1170.0)[0], want)
+
+    def test_zero_weight_grid_line(self):
+        """68 V3: a read exactly on a P node whose neighbour row lacks the corner answers from its own row (the
+        zero-weight rule), as smooth_table."""
+        v = view(table(tops={6: 1200.0}))                    # the read's cell is [PS[6], PS[7]] with weight 0 on PS[6]
+        got = solid(v, PS[7], 1220.0)[0]
+        self.assertEqual(got, self.legacy_at(v, PS[7], 1220.0))
+        self.assertIsInstance(v._solid(PS[7] * 0.99, 1220.0), st.Stop)        # off the line, the corner is needed
+
+    def test_non_monotone_stencil(self):
+        """68 V16: a non-monotone stencil (the end-slope ×3 clamp and zero inner slopes) equals smooth_table's."""
+        tb = table()
+        for c in tb["cells"]:
+            if c["p"] in (PS[10], PS[11]):
+                c["rho"] *= 1.0 + 0.03 * math.sin(c["t"] / 37.0)
+            if c["p"] == PS[12] and c["t"] in (200.0, 250.0, 300.0):    # end node: d0 small, d1 opposite and large,
+                c["rho"] = 3000.0 + {200.0: 0.0, 250.0: 1.0, 300.0: -10.0}[c["t"]]   # so the ×3 clamp acts
+        v = view(tb)
+        import smooth_table
+        s_raw = ((2 * 50 + 50) * (1 / 50) - 50 * (-11 / 50)) / 100
+        self.assertNotEqual(smooth_table._end_slope(50.0, 50.0, 1 / 50, -11 / 50), s_raw)   # the clamp is taken
+        for p, t in ((PS[10] * 1.1, 1333.0), (PS[10] * 1.3, 222.0), (PS[10] * 1.01, 4790.0), (PS[12], 220.0)):
+            with self.subTest(p=p, t=t):
+                self.assertEqual(solid(v, p, t)[0], self.legacy_at(v, p, t))
+
     def test_dtdp_is_the_field_not_rho(self):
         """§3.2 (68 (i)): dT/dP is the dtdp_eq interpolant; a planted ρ inversion leaves it unchanged."""
         tb = table()
@@ -143,7 +185,8 @@ class Window(unittest.TestCase):
         self.assertEqual(got[0], solid(v, PS[0], 300.0)[0])
         bands = [n for n in got[2] if isinstance(n, mv.BandNote) and n.edge == "p_min floor"]
         self.assertEqual(len(bands), 1)
-        self.assertLess(bands[0].error, 1e-4)
+        k_t = rho_of(PS[0], 300.0) * (PS[1] - PS[0]) / (rho_of(PS[1], 300.0) - rho_of(PS[0], 300.0))   # 68 V23
+        self.assertAlmostEqual(bands[0].error, (PS[0] - 5e4) / k_t, delta=1e-12 * bands[0].error)
 
     def test_refused_isentrope_node(self):
         """Note 3 §2 condition 4: a read whose cell corner has no dT/dP refuses by name."""
@@ -205,6 +248,19 @@ class MeltWindow(unittest.TestCase):
         r, g, cp, _ = solid(v, p, float(tw))
         self.assertEqual(v.state(p, float(tw))[:2],
                          lm.silicate_melt_mix(p, float(tw), "peridotitic", r, g, cp)[:2])
+
+    def test_rtpress_refusal(self):
+        """68 V14: RTpress's own PhaseGap reaches the solve as a named out_of_data refusal."""
+        import rtpress
+        real = rtpress.liquid
+        try:
+            rtpress.liquid = lambda p, t: (_ for _ in ()).throw(lm.eos.PhaseGap("silicate", p, "planted"))
+            got = view().state(PS[25], 4000.0)
+        finally:
+            rtpress.liquid = real
+        self.assertIsInstance(got, st.Stop)
+        self.assertEqual(got.record.refusal, "input.material_out_of_data")
+        self.assertIn("RTpress", got.record.why)
 
     def test_window_above_solid_top_refuses(self):
         """Note 3 §1: only 0 < φ < 1 above the window top refuses."""
