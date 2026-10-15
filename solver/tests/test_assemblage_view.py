@@ -359,5 +359,25 @@ class SolverHooks(unittest.TestCase):
         self.assertIn(("material_band", None), kinds)
 
 
+class BandLocation(unittest.TestCase):
+    def test_dtdp_band_location_follows_its_maximum(self):
+        """68 on 07772fca: the «dT/dP model consistency» note's p_at_max and t_at_max are where dtdp_error is largest,
+        also when the larger band is read second."""
+        import types
+        from solver import material_notes
+        tb = table()
+        for c in tb["cells"]:
+            if c["dtdp_eq_band"] is not None and c["p"] >= PS[20]:
+                c["dtdp_eq_band"] = 5e-2                      # larger bands at higher P, read second
+        v = ma.view(record(), tb, 1600.0)
+        body = types.SimpleNamespace(layers=[types.SimpleNamespace(id="mantle")])
+        acc = types.SimpleNamespace(profiles={"mantle": [(0.0, (0.0, PS[10] * 1.1, 1000.0, 1000.0), 0),
+                                                         (0.0, (0.0, PS[22] * 1.1, 1000.0, 1000.0), 0)]})
+        band = next(n for n in material_notes.collect(body, {"mantle": v}, acc)
+                    if n.kind == "material_band" and n.fields["edge"] == "dT/dP model consistency")
+        self.assertEqual(band.fields["dtdp_error"], 5e-2)
+        self.assertEqual(band.fields["p_at_max"], PS[22] * 1.1)
+
+
 if __name__ == "__main__":
     unittest.main()

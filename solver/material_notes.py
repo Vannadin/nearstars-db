@@ -63,6 +63,8 @@ def collect(body, views, acc) -> tuple:
                     if n.error is not None and (d["error"] is None or n.error > d["error"]):
                         d.update(note=n, error=n.error, p=p, t=t)
                     if n.dtdp_error is not None:
+                        if n.error is None and n.dtdp_error > (d.get("dtdp_error") or 0.0):
+                            d.update(note=n, p=p, t=t)       # a dT/dP-only band: its location follows dtdp_error (68)
                         d["dtdp_error"] = max(d.get("dtdp_error") or 0.0, n.dtdp_error)
                     _span(d, p, t)
                 elif isinstance(n, mv.DeclaredNote):
