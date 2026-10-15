@@ -102,6 +102,22 @@ assemblage:
   b3:            {shape: record, of: assemblage_b3, required: true}
   dtdp:          {shape: record, of: assemblage_dtdp, required: true}
   pins:          {shape: record, of: assemblage_pins, required: true}
+  transition_check: {shape: record, of: assemblage_transition_check}   # earth_dmm_wh2005 only: S3 (registration
+                                                           # §2.4, boundary-export scope note §2, r2 Q5); judged by the
+                                                           # suite (test_transition_check), never at load
+
+assemblage_transition_check:
+  tool:            {shape: record, of: assemblage_tool, required: true}    # transition_check.py, pinned
+  table1:          {shape: mapping, required: true}         # {path, blob} of SLB 2022 Table 1's transcription
+  boundaries_blob: {shape: text, required: true}            # the boundary export it ran on (= the compact's source)
+  table_blob:      {shape: text, required: true}            # = pins.table_blob
+  rows:            {shape: list, required: true, min: 1}    # the tool's rows verbatim; `ruling: <artifacts commit>` the
+                                                           # one key a generator may add (an r2 ruling on a FAIL row)
+  passed:          {shape: bool, required: true}            # every verdict PASS or NOT EVALUABLE (rulings aside)
+
+assemblage_tool:
+  blob:   {shape: text, required: true}
+  sha256: {shape: text, required: true}
 
 assemblage_floor:
   origin: {shape: text, required: true}
@@ -132,6 +148,7 @@ assemblage_pins:
   generator_blob: {shape: text}
   compact_sha256: {shape: text, required: true}
   rebuilt:        {shape: list, required: true}
+  boundary_tool:  {shape: record, of: assemblage_tool}      # boundary_pass.py, with an exported boundaries block
 
 assemblage_builder:
   role:   {shape: enum, values: [strict, above_cap], required: true}
