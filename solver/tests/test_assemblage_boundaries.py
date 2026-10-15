@@ -392,8 +392,33 @@ class Load(unittest.TestCase):
         self.assertEqual(len(curves), 2)
         self.assertTrue(all(c.p_b(gap) is None for c in curves))
 
+    def test_two_branches_at_one_t(self):
+        """ea on 76c0016f: one group with two rows at each T on different pairs (a phase out, back in, out again) is two
+        single-valued curves, chained by rank, never one curve interpolated across them."""
+        tb = table()
+        extra = []
+        for r in tb["boundaries"]["rows"]:
+            e = copy.deepcopy(r)
+            e.update(p_lo=PS[22], p_hi=PS[23], p_b=math.sqrt(PS[22] * PS[23]))
+            extra.append(e)
+        tb["boundaries"]["rows"] += extra
+        curves = ma.build_curves(tb["boundaries"], sorted({c["t"] for c in tb["cells"]}))
+        self.assertEqual(len(curves), 2)
+        self.assertEqual(sorted(round(c.p_b(1200.0) / PS[15], 6) for c in curves),
+                         sorted(round(x / PS[15], 6) for x in (pb_const(1200.0), math.sqrt(PS[22] * PS[23]))))
+
+    def test_branch_count_change_ends_the_curves(self):
+        """When a group's row count changes between T rows, its branches end and new ones start (counted ends)."""
+        tb = table()
+        e = copy.deepcopy(tb["boundaries"]["rows"][4])
+        e.update(p_lo=PS[22], p_hi=PS[23], p_b=math.sqrt(PS[22] * PS[23]))
+        tb["boundaries"]["rows"].append(e)                    # one T row with two rows, its neighbours with one
+        curves = ma.build_curves(tb["boundaries"], sorted({c["t"] for c in tb["cells"]}))
+        self.assertEqual(len(curves), 4)                       # before, the two at that row, after
+        self.assertTrue(all(len({r["t"] for r in c.rows}) == len(c.rows) for c in curves))
+
     def test_duplicate_t_in_a_group(self):
-        """68 M6: two rows of one group at one T STOP; the control is the same table without the duplicate."""
+        """68 M6: two rows of one group on one pair at one T STOP; the control is the same table without the duplicate."""
         tb = table()
         dup = copy.deepcopy(tb["boundaries"]["rows"][2])
         tb["boundaries"]["rows"].append(dup)

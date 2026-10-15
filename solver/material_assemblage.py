@@ -615,26 +615,35 @@ def curve_groups(boundaries):
 
 
 def build_curves(boundaries, ts):
-    """The curves of an exported block: each group split into runs of rows adjacent on the table's T grid. A group
-    with two rows at one T is not a function of T: TableStop (68 M6)."""
+    """The curves of an exported block. A group (§3 (a)'s key) can hold two branches at one T: a phase that goes out,
+    comes back and goes out again (real data: opx edge_out near 4 and 12 GPa at 2050–2500 K, ea on 76c0016f). So each
+    group is chained in T by rank: at each T row its rows sorted by P_b; a branch continues to the next T row (adjacent
+    on the grid) only when both rows hold the same number of rows, the k-th lowest to the k-th lowest; otherwise every
+    branch ends there and new ones start (the ends are counted with Q3/M2). Each curve is then single-valued in T.
+    Two rows of one group on the same pair at one T are a data error: TableStop (68 M6)."""
     idx = {t: k for k, t in enumerate(ts)}
     out = []
     for key, rows in sorted(curve_groups(boundaries).items(), key=lambda kv: repr(kv[0])):
-        seen = {}
+        by_t = {}
         for r in rows:
-            if r["t"] in seen:
+            if any(o["p_lo"] == r["p_lo"] for o in by_t.get(r["t"], ())):
                 raise TableStop(f"exported boundary group {key[0]} {sorted(key[1])}→{sorted(key[2])}"
-                                f"{'' if key[3] is None else ' (' + key[3] + ')'} has two rows at {r['t']:g} K: P_b(T) "
-                                "is not single-valued", check="boundaries")
-            seen[r["t"]] = r
-        run = []
-        for r in sorted(rows, key=lambda r: r["t"]):
-            if run and idx[r["t"]] != idx[run[-1]["t"]] + 1:
-                out.append(_Curve(len(out), key[0], key[3], run))
-                run = []
-            run.append(r)
-        if run:
-            out.append(_Curve(len(out), key[0], key[3], run))
+                                f"{'' if key[3] is None else ' (' + key[3] + ')'} has two rows on one pair at "
+                                f"{r['t']:g} K: P_b(T) is not single-valued", check="boundaries")
+            by_t.setdefault(r["t"], []).append(r)
+        open_, prev_t = [], None
+        for t in sorted(by_t):
+            now = sorted(by_t[t], key=lambda r: r["p_b"])
+            if open_ and prev_t is not None and idx[t] == idx[prev_t] + 1 and len(now) == len(open_):
+                for run, r in zip(open_, now):
+                    run.append(r)
+            else:
+                out += [_Curve(len(out) + i, key[0], key[3], run) for i, run in enumerate(open_)]
+                open_ = [[r] for r in now]
+            prev_t = t
+        out += [_Curve(len(out) + i, key[0], key[3], run) for i, run in enumerate(open_)]
+    for i, c in enumerate(out):
+        c.id = i
     return out
 
 
