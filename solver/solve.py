@@ -297,9 +297,11 @@ def registry_for(body, options, loaded=None):
     note 4: one load per run); without it the solve loads its own. Never a module-level cache (A6)."""
     if options.materials == "legacy":
         return None
-    names = {f.stem for f in mr.MATERIALS_DIR.glob("*.yaml") if f.name not in mr.NOT_RECORDS}
+    files = [f for f in mr.MATERIALS_DIR.glob("*.yaml") if f.name not in mr.NOT_RECORDS]
     if options.silicate_records:                    # silicate registration §4: the silicate routes read records too
-        names |= set(SILICATE_ROUTES)
+        names = {f.stem for f in files} | set(SILICATE_ROUTES)
+    else:                                           # a record that requires the switch is not a record name off it
+        names = {f.stem for f in files if not _file_requires_switch(f)}
     if not any(l.material in names for l in body.layers):
         return None
     reg = mr.load() if loaded is None else loaded
@@ -500,6 +502,17 @@ def _basal_view(body, layer, views, registry):
                                                   "from the overlying layer's assemblage record, and the layer above "
                                                   f"is {type(above).__name__ if above is not None else 'absent'}")
     return ma.BasalView(thaw(rec), float(rho), above, body.surface.t_pot or 0.0, above.p_stop), None
+
+
+def _file_requires_switch(path) -> bool:
+    """A record file declaring `requires_switch` (read before any load, so registry_for stays None for a body whose
+    only record-named layers need the switch; test_switchover's «a body naming no record loads no registry»)."""
+    from solver.yamlio import LoadError, parse
+    try:
+        doc = parse(path.read_text(encoding="utf-8"))
+    except (LoadError, OSError):
+        return False                                # a broken file is the registry load's to name, not this check's
+    return isinstance(doc, Mapping) and doc.get("requires_switch") == "silicate_records"
 
 
 def _requires_switch(registry, rid) -> bool:

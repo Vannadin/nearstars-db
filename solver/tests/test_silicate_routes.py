@@ -196,6 +196,13 @@ class Routes(unittest.TestCase):
         self.assertIsNone(v)
         self.assertEqual(why[0], "composition_key_ambiguous")
 
+    def test_switched_record_names_need_the_switch(self):
+        """registry_for: Mars names the basal record, which requires the switch, so with the switch off it loads no
+        registry (as before the record file existed); on, it loads."""
+        mars = body("mars")
+        self.assertIsNone(sv.registry_for(mars, context.Options()))
+        self.assertIsInstance(sv.registry_for(mars, context.Options(silicate_records=True)), mr.Registry)
+
     def test_registry_loads_for_silicate_routes(self):
         """R5: a body whose only record-named layers are silicate routes gets a registry only when switched on."""
         import types
