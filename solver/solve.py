@@ -345,19 +345,23 @@ def _silicate_route(body, layer, on_me, p_stop, registry):
         return None
     if on_me and body.closure.name in SILICATE_LEGACY_AXES:
         return None
+    if on_me:                                       # an assemblage view has no fit axis: refuse as legacy does (68 B1)
+        if layer.material == "silicate_decl":
+            return None, ("closure_axis", "silicate_decl has no fit axis in phase 1")
+        return None, ("closure_axis", f"no fit axis {body.closure.name!r} on material {layer.material!r}")
     if layer.material == "silicate":
         if layer.composition is not None:
             return None
         return _assemblage_view(body, layer, SILICATE_ROUTES["silicate"], p_stop, registry)
-    if on_me:
-        return None, ("closure_axis", "silicate_decl has no fit axis in phase 2")
     comp = _comp(layer)
     try:
         key = ma.composition_key(comp)
     except (KeyError, TypeError, ValueError, ZeroDivisionError) as e:
         return None, ("unknown_material", f"silicate_decl composition has no CFMASNa reduction: {e!r}")
     hits = [rid for rid, r in registry.records.items() if r["kind"] == "assemblage" and r["composition_key"] == key]
-    if len(hits) != 1:
+    if len(hits) > 1:                                # load refuses this; a hand-built registry must not pick one
+        return None, ("composition_key_ambiguous", f"records {sorted(hits)} share composition key {key}")
+    if not hits:
         built = sorted(r["composition_key"] for r in registry.records.values() if r["kind"] == "assemblage")
         return None, ("no_table_for_composition", (key, built))
     return _assemblage_view(body, layer, hits[0], p_stop, registry)
@@ -485,7 +489,9 @@ def _views(body, x=None, registry=None, silicate=False):
 
 
 def _views_at(body, views, x):
-    """The views for trial x: only the closure's own layer is rebuilt (composition closure)."""
+    """The views for trial x: only the closure's own layer is rebuilt (composition closure). It rebuilds through the
+    legacy path (no registry, no silicate switch): safe because no record or assemblage route takes a fit axis —
+    `_record_view` and `_silicate_route` refuse one (68 on aa48d1bf). A future route with a fit axis must pass both."""
     if body.closure.kind != "composition":
         return views
     layer = next(l for l in body.layers if l.id == body.closure.layer)

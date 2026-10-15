@@ -959,6 +959,15 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None,
         if conflict is not None:
             return conflict
         out[rec["id"]] = rec
+    keys = {}
+    for rid, rec in out.items():                     # one assemblage record per composition (silicate registration
+        if rec["kind"] == "assemblage":              # §2.1): the resolver matches exactly one (68 R4 on aa48d1bf)
+            if rec["composition_key"] in keys:
+                return LoadStop("material.kind_rule", MappingProxyType({
+                    "file": f"{rid}.yaml", "why": f"composition_key {rec['composition_key']} is also "
+                                                  f"{keys[rec['composition_key']]}'s: one assemblage record per "
+                                                  "composition"}))
+            keys[rec["composition_key"]] = rid
     warns = tuple(w for rec in out.values() for w in multi_source_warnings(rec, f"{rec['id']}.yaml"))
     return Registry(MappingProxyType(out), MappingProxyType(unavailable), warns, allow_development,
                     MappingProxyType(tables))

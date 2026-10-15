@@ -130,6 +130,134 @@ class Switch(unittest.TestCase):
         self.assertIn("input.no_table_for_composition", refusals.REGISTRY)
 
 
+def with_layer(b, lid, **over):
+    return dataclasses.replace(b, layers=tuple(dataclasses.replace(l, **over) if l.id == lid else l for l in b.layers))
+
+
+def closure_on(b, lid, name):
+    return dataclasses.replace(b, closure=dataclasses.replace(b.closure, kind="composition", layer=lid, name=name,
+                                                              lo=0.1, hi=0.9))
+
+
+class Routes(unittest.TestCase):
+    """68 B1, B3 on aa48d1bf: one test per route guard."""
+
+    def test_closure_axis_refused_as_legacy(self):
+        """B1 / R13: a closure axis on a routed layer refuses exactly as legacy does, switched on or off."""
+        with tempfile.TemporaryDirectory() as d:
+            reg = registry(d, allow_development=True)
+            for name, lid, axis in (("earth", "mantle", "mg_number"), ("mars", "mantle", "fe_number")):
+                b = closure_on(body(name), lid, axis)
+                layer = next(l for l in b.layers if l.id == lid)
+                off = sv._view_for(b, layer, 0.5, 0.0, reg, False)
+                on = sv._view_for(b, layer, 0.5, 0.0, reg, True)
+                with self.subTest(body=name):
+                    self.assertIsNone(on[0])
+                    self.assertEqual(on, off)
+                    self.assertEqual(on[1][0], "closure_axis")
+
+    def test_one_record_per_composition(self):
+        """R4: two assemblage records with one composition key STOP at load."""
+        with tempfile.TemporaryDirectory() as d:
+            for f in mr.MATERIALS_DIR.glob("*.yaml"):
+                if f.name not in mr.NOT_RECORDS:
+                    (Path(d) / f.name).write_text(f.read_text(encoding="utf-8"), encoding="utf-8")
+            (Path(d) / "sources.yaml").write_text((mr.MATERIALS_DIR / "sources.yaml").read_text(encoding="utf-8"),
+                                                  encoding="utf-8")
+            (Path(d) / "tables").mkdir()
+            tb = T.table()
+            raw = (json.dumps(tb, sort_keys=True, separators=(",", ":")) + "\n").encode()
+            for rid in ("silicate_slb_a", "silicate_slb_b"):
+                (Path(d) / "tables" / f"{rid}.json").write_bytes(raw)
+                rec = T.record(hashlib.sha256(raw).hexdigest(), "pinned")
+                rec.update(id=rid, composition_key=MARS_KEY)
+                rec["assemblage"]["file"] = f"tables/{rid}.json"
+                (Path(d) / f"{rid}.yaml").write_text(yaml.safe_dump(rec, sort_keys=False), encoding="utf-8")
+            got = mr.load(Path(d))
+        self.assertIsInstance(got, mr.LoadStop)
+        self.assertEqual(got.id, "material.kind_rule")
+        self.assertIn("one assemblage record per composition", got.evidence["why"])
+
+    def test_ambiguous_key_at_the_resolver(self):
+        """R4: a hand-built registry with two records under one key is refused by name, never resolved to one."""
+        from types import MappingProxyType
+        from solver.result import freeze
+        with tempfile.TemporaryDirectory() as d:
+            reg = registry(d, allow_development=True)
+            twin = dict(result.plain(reg.records["silicate_slb_mars_khan2022"]), id="silicate_slb_mars_twin")
+            reg2 = mr.Registry(MappingProxyType({**reg.records, "silicate_slb_mars_twin": freeze(twin)}),
+                               reg.unavailable, reg.warnings, True,
+                               MappingProxyType({**reg.tables, "silicate_slb_mars_twin": reg.tables[
+                                   "silicate_slb_mars_khan2022"]}))
+            b = body("mars")
+            layer = next(l for l in b.layers if l.material == "silicate_decl")
+            v, why = sv._view_for(b, layer, None, 0.0, reg2, True)
+        self.assertIsNone(v)
+        self.assertEqual(why[0], "composition_key_ambiguous")
+
+    def test_registry_loads_for_silicate_routes(self):
+        """R5: a body whose only record-named layers are silicate routes gets a registry only when switched on."""
+        import types
+        b = types.SimpleNamespace(layers=[types.SimpleNamespace(material="silicate")])
+        with tempfile.TemporaryDirectory() as d:
+            reg = registry(d, allow_development=True)
+            self.assertIsNone(sv.registry_for(b, context.Options(), reg))
+            self.assertIs(sv.registry_for(b, context.Options(silicate_records=True), reg), reg)
+
+    def test_option_reaches_every_views_call(self):
+        """R6, R7: the solve's views and the sensitivity rebuild both read options.silicate_records."""
+        seen = []
+        real = sv._views
+
+        def spy(*a, **k):
+            seen.append(k.get("silicate", a[3] if len(a) > 3 else False))
+            raise _Stop()
+
+        class _Stop(Exception):
+            pass
+        with tempfile.TemporaryDirectory() as d:
+            reg = registry(d, allow_development=True)
+            try:
+                sv._views = spy
+                with self.assertRaises(_Stop):
+                    sv.solve(body("earth"), context.Options(silicate_records=True), registry=reg)
+                with self.assertRaises(_Stop):
+                    sv._with_sensitivity(body("earth"), {}, None, context.Options(silicate_records=True), None, (),
+                                         registry=reg)
+            finally:
+                sv._views = real
+        self.assertEqual(seen, [True, True])
+
+    def test_named_record_direct(self):
+        """R8, R15: a layer naming an assemblage record directly gets an AssemblageView, and with params it refuses."""
+        with tempfile.TemporaryDirectory() as d:
+            reg = registry(d, allow_development=True)
+            b = with_layer(body("earth"), "mantle", material="silicate_slb_default_bse")
+            layer = next(l for l in b.layers if l.id == "mantle")
+            v, why = sv._view_for(b, layer, None, 0.0, reg, False)
+            self.assertIsInstance(v, ma.AssemblageView)
+            mars = body("mars")
+            dens = next(l.params["density"] for l in mars.layers if l.material == lm.BASAL_CONST)
+            b2 = with_layer(b, "mantle", params={"density": dens})
+            v, why = sv._view_for(b2, next(l for l in b2.layers if l.id == "mantle"), None, 0.0, reg, False)
+            self.assertIsNone(v)
+            self.assertEqual(why[0], "record_params")
+
+    def test_silicate_with_composition_stays_legacy(self):
+        """R11: `silicate` with a declared composition is not routed (only the no-composition line is): it refuses
+        as today, switched on or off."""
+        with tempfile.TemporaryDirectory() as d:
+            reg = registry(d, allow_development=True)
+            mars = body("mars")
+            comp = next(l for l in mars.layers if l.material == "silicate_decl")
+            b = with_layer(body("earth"), "mantle", composition=comp.composition, system=comp.system)
+            on = sv._views(b, registry=reg, silicate=True)
+            off = sv._views(b, registry=reg, silicate=False)
+        self.assertIsInstance(on, result.Refusal)
+        self.assertEqual((on.id, on.evidence.get("rule")), (off.id, off.evidence.get("rule")))
+        self.assertEqual(on.evidence.get("rule"), "composition_not_consumed")
+
+
 class SolveId(unittest.TestCase):
     def test_option_and_table_bind_solve_id(self):
         """The Option enters solve_id (§4); the view's record carries the compact sha, so a changed table moves the
