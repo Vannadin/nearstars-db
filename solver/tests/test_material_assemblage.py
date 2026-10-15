@@ -347,14 +347,37 @@ class TableChecks(unittest.TestCase):
                 self.stops(tb, why="differ from the model")
 
     def test_exact_maxwell_not_small_enough(self):
-        """An FD failure is excused only if the model's exact Maxwell is ≤ FD/10."""
+        """An FD failure is excused only if the model's exact Maxwell is ≤ the gate's tol at the cell (note 5, r2 (iii))."""
         ps = [2e10 * 1.05 ** i for i in range(9)]
         steps = ((0.5 * (ps[4] + ps[5]), 1.0), (0.5 * (ps[5] + ps[6]), 1.0))
         tb = table(steps)
         for c in tb["cells"]:
             if c["kind"] != "frozen":
                 c["ds_dp_model"] = -C * 1.5
-        self.stops(tb, why="not ≤ FD/10")
+        self.stops(tb, why="over the gate's tol")
+
+    def test_exact_within_tol_boundary(self):
+        """68's pair (r2 (iii) condition (b)): at an FD-failing cell, exact Maxwell just under the cell's tol is excused
+        (FD, exact and tol listed), just over it STOPs. The exact residual is set through dv_dt_model alone, so the
+        dT/dP recompute (ds_dp_model, c_p_eq) is untouched: exact = x/(1+x) for dv = −ds·(1+x)."""
+        ps = [2e10 * 1.05 ** i for i in range(9)]
+        steps = ((0.5 * (ps[4] + ps[5]), 1.0), (0.5 * (ps[5] + ps[6]), 1.0))
+        r = ma.check_table(asm(), table(steps))
+        p_ex, t_ex, fd, _e, tol = r["maxwell_fd_blind"][0]
+        self.assertGreater(fd, tol)
+        for factor, excused in ((0.99, True), (1.01, False)):
+            tb = table(steps)
+            c = next(x for x in tb["cells"] if (x["p"], x["t"]) == (p_ex, t_ex))
+            e = factor * tol
+            c["dv_dt_model"] = -c["ds_dp_model"] * (1.0 + e / (1.0 - e))
+            with self.subTest(factor=factor):
+                if excused:
+                    got = ma.check_table(asm(), tb)["maxwell_fd_blind"]
+                    row = next(x for x in got if x[:2] == (p_ex, t_ex))
+                    self.assertAlmostEqual(row[3], e, delta=1e-12)
+                    self.assertEqual(row[4], tol)
+                else:
+                    self.stops(tb, why="over the gate's tol")
 
     def test_sha_pin(self):
         with tempfile.TemporaryDirectory() as d:

@@ -153,15 +153,18 @@ def _exact_maxwell(c):
     return abs(dv + ds) / max(abs(dv), abs(ds), ALPHA_FLOOR / c["rho"])
 
 
-def _fd_blind(by, ps, ts, i, k, d1, b3):
-    """None when an FD Maxwell failure at node (i, k) is FD's (exact ≤ FD/10, and stored = model to 1e-6 at the cell
-    and at every node of its ±1 and ±2 stencils); else why it is not excused."""
+def _fd_blind(by, ps, ts, i, k, d1, b3, tol):
+    """None when an FD Maxwell failure at node (i, k) is FD's («FD blind: exact Maxwell within tol»: the model's exact
+    Maxwell at the cell ≤ the gate's own tol there, and stored = model to 1e-6 at the cell and at every node of its ±1
+    and ±2 stencils); else why it is not excused. POST-RESULT (registration note 5, r2's ruling (iii) on the final
+    earth_dmm record, 2026-10-16): the test was «exact ≤ FD/10», which refused three cells consistent at the gate's own
+    tol, inside the plg+ol+opx+cpx field along its plg ≈ 1.1–1.2 % contour (no label change in their stencils)."""
     c = by[(ps[i], ts[k])]
     e = _exact_maxwell(c)
     if e is None:
         return "no exact derivatives at the cell"
-    if e > d1 / 10.0:
-        return f"the model's exact Maxwell {e:.4g} is not ≤ FD/10"
+    if e > tol:
+        return f"the model's exact Maxwell {e:.4g} is over the gate's tol {tol:.4g} at the cell"
     # a belt behind the global stored-value gate, which already STOPs on any miss (68 N1 on 2a5af2db): kept so the
     # excuse states its own condition (r2) even if that gate is ever moved after this check
     for d in (0, 1, 2):
@@ -295,7 +298,7 @@ def check_table(asm, table) -> dict:
             raise TableStop(f"frozen cell ({c['p']:g}, {c['t']:g}): α {alpha:.6g} against dtdp_s·ρc_P/T {want:.6g}, "
                             f"beyond {b3['frozen_alpha_tolerance']:g}", check="frozen in-column identity")
     # Maxwell, gated per cell on 5-point interior cells against the cell's own truncation estimate (note 3 §3). An FD
-    # failure is excused («FD blind: kink inside the stencil») only if the model's exact Maxwell there is ≤ FD/10 and
+    # failure is excused («FD blind: exact Maxwell within tol», note 5) only if the model's exact Maxwell there is ≤ tol and
     # the stored ρ and s equal the model's to 1e-6 at the cell and every node of its stencils (r2's rulings)
     gated, blind, worst, excused = 0, [], 0.0, []
     for c in cells:
@@ -314,11 +317,11 @@ def check_table(asm, table) -> dict:
             blind.append((c["p"], c["t"], tol))
         if d1 <= tol:
             continue
-        why = _fd_blind(by, ps, ts, i, k, d1, b3)
+        why = _fd_blind(by, ps, ts, i, k, d1, b3, tol)
         if why is not None:
             raise TableStop(f"Maxwell at ({c['p']:g}, {c['t']:g}): residual {d1:.4g} beyond "
                             f"{b3['maxwell_k']:g}·|D_h − D_2h| + {b3['maxwell_floor']:g} = {tol:.4g}, not excused: {why}", check="FD Maxwell")
-        excused.append((c["p"], c["t"], d1, _exact_maxwell(c)))
+        excused.append((c["p"], c["t"], d1, _exact_maxwell(c), tol))       # per cell: FD, exact, tol (r2)
     # the dT/dP field: the equilibrium isentrope on non-frozen cells, dtdp_s on frozen ones (note 3 §2)
     refused = {(r["p"], r["t"]) for r in table.get("dtdp_eq_refused", ())}
     for k in refused:                                    # each refused entry names a non-frozen cell of the table
