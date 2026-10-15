@@ -41,6 +41,16 @@ class Generated(unittest.TestCase):
     def test_some_record_is_shipped(self):
         self.assertGreater(len(self.recs), 0)
 
+    def test_context_records_are_listed(self):
+        """Silicate Q6: a record whose view needs outside context is listed by name with its own suite, never walked
+        here and never dropped silently; the basal record is one."""
+        from solver import material_p4 as p4
+        ctx = p4.context_records()
+        self.assertIn("silicate_basal_const", ctx)
+        self.assertFalse(set(ctx) & set(self.recs))
+        reg = mr.load()
+        self.assertEqual(set(ctx) | set(self.recs), set(reg.records))
+
     def test_views_build(self):
         for rid, rec in self.recs.items():
             with self.subTest(record=rid):

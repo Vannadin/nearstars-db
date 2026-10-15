@@ -31,6 +31,9 @@ record:
   joins:           {shape: list, of: join}                 # hand_over: required (D-P1, r2 N7)
   formula_checks:  {shape: list, of: formula_check, required: true, min: 1}
   note:            {shape: text}
+  requires_switch: {shape: enum, values: [silicate_records]}   # the record is read only with this Option on
+                                                           # (silicate registration §4: the switch-off identity holds
+                                                           # with the record file present)
   composition_key: {shape: text}                           # assemblage: the CFMASNa fingerprint the resolver matches
                                                            # (material_assemblage.composition_key; silicate reg. §2.1)
   assemblage:      {shape: record, of: assemblage}         # assemblage: its compact table and what rides with it (§2.2)
@@ -58,8 +61,11 @@ declared_note:
   source: {shape: source, required: true}
 
 eos:
-  form:      {shape: enum, values: [bm2, bme3, vinet, library, table, evaluator, assemblage], required: true}   # bme4: not built
+  form:      {shape: enum, values: [bm2, bme3, vinet, library, table, evaluator, assemblage, layer_density], required: true}   # bme4: not built
                                                            # assemblage: ρ, dT/dP and S from the record's compact table
+                                                           # layer_density: ρ is the layer's declared param `layer_param`
+                                                           # (silicate registration Q6, the basal record)
+  layer_param: {shape: enum, values: [density]}            # form layer_density: the layer param ρ is read from
   evaluator: {shape: record, of: evaluator}                # form evaluator only: a potential gives ρ and its derivatives
                                                            # (French & Redmer 2015); no sets, no gamma_window, as library
   params:    {shape: mapping, of: constant}                # bm2/bme3/vinet: rho0, k0, [k0p]; each a constant
@@ -166,6 +172,8 @@ thermal:
   gamma_window:       {shape: record, of: box}             # required except for a library-form phase (registry)
   phase_constants:    {shape: record, of: constants_span}    # where the phase's own constants give γ (68 N19)
   grade:              {shape: text}                           # e.g. «solid hcp constants on a liquid-fit phase»
+  from_layer:         {shape: enum, values: [overlying_assemblage]}   # form layer_density: dT/dP from the overlying
+                                                           # layer's assemblage view at the same (P, T) (registration Q6)
 
 # Where γ comes from the phase's own `pressure` constants rather than a set (legacy: below the first set). Inside the γ
 # window, the sets and this span together must cover every pressure (68 N19): no gap is filled undeclared.

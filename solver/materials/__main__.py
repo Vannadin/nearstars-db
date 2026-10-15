@@ -181,6 +181,12 @@ def check(paths: list, directory: Path = mr.MATERIALS_DIR, papers: Path | None =
             rid = Path(f).stem
             if rid not in whole.records:
                 continue
+            if p4.is_context_record(whole.records[rid]):        # silicate Q6: checked by its own suite, said so
+                form = next(ph["eos"]["form"] for ph in whole.records[rid]["phases"]
+                            if ph["eos"]["form"] in mr.CONTEXT_FORMS)
+                print(f"{Path(f).name}: a context record (form {form}): its view needs context outside the record; "
+                      f"checked by {p4.CONTEXT_SUITES[form]}")
+                continue
             probs = p4.record_problems(thaw(whole.records[rid]), papers)
             for what, fix in probs:
                 print(f"{Path(f).name}: {what}\n  how to fix: {fix}")

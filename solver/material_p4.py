@@ -9,6 +9,7 @@ import math
 import os
 from collections.abc import Mapping
 from pathlib import Path
+from types import MappingProxyType
 
 from solver import material_checks as mc
 from solver import material_registry as mr
@@ -35,11 +36,32 @@ PAPERS = Path(os.environ.get("NEARSTARS_PAPERS") or _default_papers())
 PAPERS_ABSENT_DECLARED = os.environ.get("NEARSTARS_PAPERS_ABSENT") == "declared"
 
 
-def _records():
+def is_context_record(rec) -> bool:
+    """A record whose view needs context outside itself (mr.CONTEXT_FORMS: an assemblage table; a layer param and
+    the overlying view). P4's walkers leave it to its own suite and list it by name, never silently."""
+    return any(ph["eos"]["form"] in mr.CONTEXT_FORMS for ph in rec["phases"])
+
+
+#: each context record's own suite, named in P4's listing (silicate registration Q6 / §2.3)
+CONTEXT_SUITES = MappingProxyType({"assemblage": "solver/tests/test_material_assemblage.py, test_assemblage_view.py",
+                                   "layer_density": "solver/tests/test_silicate_routes.py (BasalRecord, §7.4a)"})
+
+
+def context_records() -> dict:
+    """{record id: the suite that checks it} for every context record of the shipped registry."""
     reg = mr.load()
     if isinstance(reg, mr.LoadStop):
         raise AssertionError(f"registry STOP: {reg.id} {dict(reg.evidence)}")
-    return {k: thaw(v) for k, v in reg.records.items()}
+    return {k: CONTEXT_SUITES[next(ph["eos"]["form"] for ph in v["phases"] if ph["eos"]["form"] in mr.CONTEXT_FORMS)]
+            for k, v in reg.records.items() if is_context_record(v)}
+
+
+def _records():
+    """The records P4's walkers build a RecordView for: every shipped record except the context records."""
+    reg = mr.load()
+    if isinstance(reg, mr.LoadStop):
+        raise AssertionError(f"registry STOP: {reg.id} {dict(reg.evidence)}")
+    return {k: thaw(v) for k, v in reg.records.items() if not is_context_record(v)}
 
 
 def _cache_cites(x, path="record"):

@@ -1,0 +1,57 @@
+# silicate_basal_const — 녹은 기저층: 밀도는 층 선언값, dT/dP 는 위 맨틀의 광물 집합 기록 (규산염 기록 등록 §4 Q6, §7.4a)
+id: silicate_basal_const
+label: Molten basal silicate layer — declared density, the overlying assemblage record's dT/dP
+kind: single
+system: silicate
+fit_composition: the overlying mantle layer's (the layer reads no composition of its own)
+role_hint: mantle
+requires_switch: silicate_records
+primary_family:
+  name: the layer's own declaration (Khan+ 2023 for Mars)
+  sources:
+  - 2023Natur.622..718K
+  reason: >-
+    silicate registration Q6 (a): the density is the layer's declared value, graded «declared», with no thermal block of
+    its own; dT/dP is read from the overlying assemblage record at the same (P, T), the frozen-design wording «the
+    thermal block from the overlying mantle record»
+phases:
+- id: basal
+  label: molten basal layer (declared density)
+  state: mixed
+  eos:
+    form: layer_density
+    layer_param: density
+    reference:
+      kind: path
+      path: the layer's declared density
+  thermal:
+    source_state: mixed
+    source_composition: the overlying assemblage record's composition
+    from_layer: overlying_assemblage
+    grade: dT/dP of the overlying assemblage record at the same (P, T); no thermal constants of the layer's own
+  field:
+    kind: declared
+    box:
+      p_min: 0.0
+      p_max: .inf
+    reason: the layer's extent is declared by the body; the record answers wherever the overlying record answers
+  window:
+    p_min: 0.0
+    p_max: .inf
+  edges: {}
+formula_checks:
+- quantity: density
+  state:
+    p: 2.0e+10
+    t: 2000.0
+    layer_density: 4050.0
+  expected: 4050.0
+  unit: kg/m3
+  tolerance: 0.0
+  tolerance_reason: an identity, ρ = the layer's declared density (band origin «the declared layer density»; no band value)
+  expression: layer_density
+  source:
+    formula: ρ = the layer's declared `density` param, read as declared (silicate registration Q6)
+note: >-
+  Read only with the Option silicate_records on (requires_switch); its view needs the layer's
+  density and the overlying layer's view, so P4's walkers list it as a context record (CONTEXT_FORMS).

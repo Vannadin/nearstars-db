@@ -43,7 +43,10 @@ _LIB = re.compile(r"^[A-Za-z][\w.-]*@[0-9][\w.+-]*$")
 _DOI = re.compile(r"^doi:10\.\d{4,9}/\S+$")
 #: forms that read γ and dT/dP from their own form, so they carry no thermal sets and no gamma_window (68 on 6c7bb337;
 #: impl note 9; the assemblage kind reads its table, silicate record registration §3.2)
-OWN_THERMAL_FORMS = ("library", "evaluator", "table", "assemblage")
+OWN_THERMAL_FORMS = ("library", "evaluator", "table", "assemblage", "layer_density")
+#: forms whose view needs context outside the record (a compact table; a layer param and the overlying view): P4's
+#: walkers and the materials CLI list such records by name and leave them to their own suites (silicate Q6)
+CONTEXT_FORMS = ("assemblage", "layer_density")
 _EDGES = (("p_min", "p_min", "lower"), ("p_max", "p_max", "upper"), ("t_min", "t_min", "lower"),
           ("t_max", "t_max", "upper"))
 
@@ -817,6 +820,15 @@ def _kind(rec: Mapping, file):
     elif "assemblage" in rec or "composition_key" in rec or any(p["eos"]["form"] == "assemblage" for p in rec["phases"]):
         raise _Stop("material.kind_rule", file=file, why="assemblage, composition_key and the assemblage form belong "
                                                           "to an assemblage record")
+    for ph in rec["phases"]:
+        if ph["eos"]["form"] == "layer_density":         # silicate registration Q6: the basal record's shape
+            if kind != "single" or ph["eos"].get("layer_param") != "density" or \
+                    ph["thermal"].get("from_layer") != "overlying_assemblage":
+                raise _Stop("material.kind_rule", file=file, why="a layer_density phase is a single record's, reads "
+                                                                  "layer_param density, and takes dT/dP from_layer "
+                                                                  "overlying_assemblage")
+        elif "layer_param" in ph["eos"] or "from_layer" in ph["thermal"]:
+            raise _Stop("material.kind_rule", file=file, why="layer_param and from_layer belong to a layer_density phase")
     if kind == "hand_over" and not rec.get("joins"):
         raise _Stop("material.kind_rule", file=file, why="a hand-over record declares its joins")
     for ph in rec["phases"]:
@@ -1047,7 +1059,7 @@ def source_conflicts(rec: Mapping, file: str) -> LoadStop | None:
     material.source_conflict, naming the sources, the max r and its node, σ_allow and how it was formed, and k. A grid
     with no valid node is the same STOP (the gate cannot pass unseen)."""
     gated = [(pi, j) for pi, ph in enumerate(rec["phases"]) for j in ph.get("joins_within", ()) if j["kind"] == "blend"]
-    if not gated:
+    if not gated or any(ph["eos"]["form"] in CONTEXT_FORMS for ph in rec["phases"]):   # a context record: never here
         return None
     from solver import material_joins as mj
     from solver import material_view as mv
@@ -1081,7 +1093,7 @@ def triple_point_misses(rec: Mapping, file: str) -> LoadStop | None:
     phases (located by bisection in P over their G difference within ±2·dp, clipped to both phases' windows: a crossing
     farther away is a miss anyway, and the bracket keeps the library inside its own range)."""
     tps = rec.get("triple_points") or ()
-    if not tps:
+    if not tps or any(ph["eos"]["form"] in CONTEXT_FORMS for ph in rec["phases"]):   # a context record: never here
         return None
     from solver import material_view as mv
     view = mv.RecordView(rec, 0.0)

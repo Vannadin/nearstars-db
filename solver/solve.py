@@ -317,6 +317,12 @@ SILICATE_ROUTES = MappingProxyType({
     "silicate": "silicate_slb_default_bse",        # Q-P2 (a) / Q2: no declared composition → default_bse
     "silicate_decl": None,                         # by composition key (material_assemblage.composition_key)
 })
+#: The basal record's id (silicate registration §4 route 3, Q6): with the switch on its layer is built after the loop,
+#: over the next layer outward. Whether a record is read at all with the switch off is the record's own
+#: `requires_switch` field (68 on the Q6 proposal), read by `_view_for`.
+SILICATE_SWITCHED_RECORDS = ("silicate_basal_const",)
+#: the layer params the basal record reads (the record_params lift, for this record only; registration §4)
+BASAL_PARAMS = ("density", "thickness_km")
 #: §4's named legacy line: Dante's porosity fit axis (Q5) keeps legacy silicate until the porosity modifier record.
 SILICATE_LEGACY_AXES = ("initial_porosity",)
 
@@ -377,6 +383,9 @@ def _record_view(body, layer, on_me, p_stop, registry):
         return None, ("record_unavailable", (rid, got))
     if on_me:
         return None, ("closure_axis", f"the record {rid!r} has no fit axis {body.closure.name!r}")
+    if any(ph["eos"]["form"] == "layer_density" for ph in got["phases"]):   # built only by the basal route (Q6)
+        return None, ("record_context", f"the record {rid!r} reads the layer above it; it is built by the silicate "
+                                        "basal route only")
     if got["kind"] == "assemblage":                           # a layer naming an assemblage record directly
         if layer.params:
             return None, ("record_params", f"layer {layer.id!r} declares {sorted(layer.params)} on the record "
@@ -403,7 +412,7 @@ def _view_for(body, layer, x, p_stop, registry=None, silicate=False):
         got = _silicate_route(body, layer, on_me, p_stop, registry)
         if got is not None:
             return got
-    if registry is not None:
+    if registry is not None and (silicate or not _requires_switch(registry, layer.material)):
         got = _record_view(body, layer, on_me, p_stop, registry)
         if got is not None:
             return got
@@ -464,28 +473,77 @@ def _p_stop(body) -> float:
     return (getattr(top, "p_floor", 0.0) or 0.0) if top is not None else 0.0
 
 
+def _basal_view(body, layer, views, registry):
+    """(BasalView, None) or (None, why): the basal record over the next layer outward (silicate registration Q6).
+    body.layers runs from the centre outward (D-A2-2: core first), so the next layer outward is the next entry; a
+    missing one, or one that is not an assemblage view, refuses by name (§7.4a)."""
+    from solver import material_assemblage as ma
+    from solver.from_v1 import thaw
+    if body.closure.kind == "composition" and body.closure.layer == layer.id:
+        return None, ("closure_axis", f"no fit axis {body.closure.name!r} on material {layer.material!r}")
+    rec = registry.get(layer.material)
+    if rec is None or isinstance(rec, mr.LoadStop):
+        return None, ("record_unavailable", (layer.material, rec if rec is not None else mr.LoadStop(
+            "material.kind_rule", MappingProxyType({"file": f"{layer.material}.yaml", "why": "no such record"}))))
+    extra = sorted(k for k in (layer.params or {}) if k not in BASAL_PARAMS)
+    if extra:
+        return None, ("record_params", f"layer {layer.id!r} declares {extra} on the record {layer.material!r}, which "
+                                       f"reads only {list(BASAL_PARAMS)}")
+    rho = _param(layer, "density")
+    if rho is None:
+        return None, ("unknown_material", "silicate_basal_const needs params.density")
+    ids = [l.id for l in body.layers]
+    i = ids.index(layer.id)
+    above = views.get(ids[i + 1]) if i + 1 < len(ids) else None
+    if not isinstance(above, ma.AssemblageView):
+        return None, ("basal_without_assemblage", f"layer {layer.id!r} reads {layer.material!r}, whose dT/dP comes "
+                                                  "from the overlying layer's assemblage record, and the layer above "
+                                                  f"is {type(above).__name__ if above is not None else 'absent'}")
+    return ma.BasalView(thaw(rec), float(rho), above, body.surface.t_pot or 0.0, above.p_stop), None
+
+
+def _requires_switch(registry, rid) -> bool:
+    """A record that declares `requires_switch: silicate_records` is read only with that Option on (68)."""
+    rec = registry.get(rid)
+    return isinstance(rec, Mapping) and rec.get("requires_switch") == "silicate_records"
+
+
+def _view_refusal(body, l, fail):
+    """The Refusal for a layer whose view failed: fail = (typed kind, detail); only the kind is read."""
+    kind_, detail = fail
+    where = f"{body.name}.layers.{l.id}"
+    if kind_ == "record_unavailable":
+        rid, stop = detail
+        return refusals.make("input.material_record_unavailable", where, layer_id=l.id, material_id=rid,
+                             load_stop=stop.id, detail=result.plain(dict(stop.evidence)))
+    if kind_ == "unknown_material":
+        return refusals.make("input.unknown_material", where, layer_id=l.id, material=l.material)
+    if kind_ == "no_table_for_composition":
+        key, built = detail
+        return refusals.make("input.no_table_for_composition", where, layer_id=l.id, composition_key=key,
+                             built_keys=built)
+    return refusals.make("input.cross_field", where, rule=kind_, detail=detail)
+
+
 def _views(body, x=None, registry=None, silicate=False):
     out = {}
     p_stop = _p_stop(body)
+    deferred = []                                    # silicate Q6: the basal record reads the view above it
     for l in body.layers:
+        if silicate and registry is not None and l.material in SILICATE_SWITCHED_RECORDS:
+            deferred.append(l)
+            continue
         on_closure = body.closure.kind == "composition" and body.closure.layer == l.id
         v, fail = _view_for(body, l, body.closure.lo if (on_closure and x is None) else x, p_stop, registry, silicate)
-        if v is None:                                # fail = (typed kind, detail text); only the kind is read
-            kind_, detail = fail
-            where = f"{body.name}.layers.{l.id}"
-            if kind_ == "record_unavailable":
-                rid, stop = detail
-                return refusals.make("input.material_record_unavailable", where, layer_id=l.id, material_id=rid,
-                                     load_stop=stop.id, detail=result.plain(dict(stop.evidence)))
-            if kind_ == "unknown_material":
-                return refusals.make("input.unknown_material", where, layer_id=l.id, material=l.material)
-            if kind_ == "no_table_for_composition":
-                key, built = detail
-                return refusals.make("input.no_table_for_composition", where, layer_id=l.id, composition_key=key,
-                                     built_keys=built)
-            return refusals.make("input.cross_field", where, rule=kind_, detail=detail)
+        if v is None:
+            return _view_refusal(body, l, fail)
         out[l.id] = v
-    return out
+    for l in deferred:
+        v, fail = _basal_view(body, l, out, registry)
+        if v is None:
+            return _view_refusal(body, l, fail)
+        out[l.id] = v
+    return {l.id: out[l.id] for l in body.layers}
 
 
 def _views_at(body, views, x):
@@ -500,7 +558,12 @@ def _views_at(body, views, x):
     v, why = _view_for(body, layer, x, _p_stop(body))
     if v is None:
         raise RuntimeError(f"closure layer view failed at trial {x!r} after it built at lo: {why}")
-    return {**views, layer.id: v}
+    out = {**views, layer.id: v}
+    from solver import material_assemblage as ma            # a basal view over the rebuilt layer is rebuilt too (68)
+    for lid, bv in views.items():
+        if isinstance(bv, ma.BasalView) and bv.overlying is views.get(layer.id):
+            out[lid] = ma.BasalView(bv.record, bv.density_declared, v, bv.t_pot, bv.p_stop)
+    return out
 
 
 def _state(y, m):

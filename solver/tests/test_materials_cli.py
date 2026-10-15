@@ -108,6 +108,17 @@ class TCheckAndSource(unittest.TestCase):
                 self.assertIn(word, text)
                 self.assertIn("how to fix:", text)
 
+    def test_context_record_is_listed_not_walked(self):
+        """Silicate Q6 (68): `check` names a context record (the basal record) and its own suite; it never builds a
+        RecordView for it and never drops it silently."""
+        rec = parse((mr.MATERIALS_DIR / "silicate_basal_const.yaml").read_text(encoding="utf-8"))
+        with tempfile.TemporaryDirectory() as tmp:
+            d = self._dir(tmp, rec)
+            code, text = self._run([d / "silicate_basal_const.yaml"], d, Path(tmp) / "no-cache")
+        self.assertEqual(code, 0, text)
+        self.assertIn("silicate_basal_const.yaml: a context record (form layer_density)", text)
+        self.assertIn("test_silicate_routes", text)
+
     def test_scaffold_fills_params(self):
         """P7 cold run: a cold-curve scaffold carries rho0, k0, k0p as FILL lines, not commented out."""
         text = cli.scaffold("single", "toy")

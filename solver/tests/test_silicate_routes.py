@@ -15,6 +15,7 @@ import yaml
 
 from solver import context, from_v1, legacy_materials as lm, material_registry as mr, refusals, result
 from solver import material_assemblage as ma
+from solver import material_view as mv
 from solver import solve as sv
 from solver.tests import test_material_assemblage as T
 
@@ -42,7 +43,7 @@ def registry(d, keys=(("silicate_slb_default_bse", "14f8758a7681f418"), ("silica
     for rid, key in keys:
         (Path(d) / "tables" / f"{rid}.json").write_bytes(body_)
         rec = T.record(hashlib.sha256(body_).hexdigest(), status)
-        rec.update(id=rid, composition_key=key)
+        rec.update(id=rid, composition_key=key, requires_switch="silicate_records")
         rec["assemblage"]["file"] = f"tables/{rid}.json"
         (Path(d) / f"{rid}.yaml").write_text(yaml.safe_dump(rec, sort_keys=False), encoding="utf-8")
     got = mr.load(Path(d), allow_development=allow_development)
@@ -77,7 +78,7 @@ class Switch(unittest.TestCase):
 
     def test_on_routes(self):
         """§4's table: Earth's mantle and lid and Venus read default_bse; Mars's mantle reads its record by key, its
-        basal layer stays legacy (Q6 not built); Dante stays legacy (Q5)."""
+        basal layer the basal record (Q6); Dante stays legacy (Q5)."""
         with tempfile.TemporaryDirectory() as d:
             reg = registry(d, allow_development=True)
             for name, want in (("earth", "silicate_slb_default_bse"), ("venus", "silicate_slb_default_bse"),
@@ -92,8 +93,8 @@ class Switch(unittest.TestCase):
                         self.assertIsInstance(views[l.id], ma.AssemblageView)
                         self.assertEqual(views[l.id].material_id, want)
                     for l in b.layers:
-                        if l.material == lm.BASAL_CONST:
-                            self.assertIsInstance(views[l.id], lm.LegacyView)
+                        if l.material == lm.BASAL_CONST:              # Q6: the basal record over the mantle's view
+                            self.assertIsInstance(views[l.id], ma.BasalView)
             b = body("dante_fixture")
             on = sv._views(b, registry=reg, silicate=True)
             self.assertEqual(kinds(on), kinds(sv._views(b, registry=None)))
@@ -229,17 +230,18 @@ class Routes(unittest.TestCase):
         self.assertEqual(seen, [True, True])
 
     def test_named_record_direct(self):
-        """R8, R15: a layer naming an assemblage record directly gets an AssemblageView, and with params it refuses."""
+        """R8, R15: a layer naming an assemblage record directly gets an AssemblageView (switch on: the record requires
+        it), and with params it refuses."""
         with tempfile.TemporaryDirectory() as d:
             reg = registry(d, allow_development=True)
             b = with_layer(body("earth"), "mantle", material="silicate_slb_default_bse")
             layer = next(l for l in b.layers if l.id == "mantle")
-            v, why = sv._view_for(b, layer, None, 0.0, reg, False)
+            v, why = sv._view_for(b, layer, None, 0.0, reg, True)
             self.assertIsInstance(v, ma.AssemblageView)
             mars = body("mars")
             dens = next(l.params["density"] for l in mars.layers if l.material == lm.BASAL_CONST)
             b2 = with_layer(b, "mantle", params={"density": dens})
-            v, why = sv._view_for(b2, next(l for l in b2.layers if l.id == "mantle"), None, 0.0, reg, False)
+            v, why = sv._view_for(b2, next(l for l in b2.layers if l.id == "mantle"), None, 0.0, reg, True)
             self.assertIsNone(v)
             self.assertEqual(why[0], "record_params")
 
@@ -256,6 +258,125 @@ class Routes(unittest.TestCase):
         self.assertIsInstance(on, result.Refusal)
         self.assertEqual((on.id, on.evidence.get("rule")), (off.id, off.evidence.get("rule")))
         self.assertEqual(on.evidence.get("rule"), "composition_not_consumed")
+
+
+class BasalRecord(unittest.TestCase):
+    """§7.4a: the basal record (Q6)."""
+
+    def setUp(self):
+        self.d = tempfile.TemporaryDirectory()
+        self.reg = registry(self.d.name, allow_development=True)
+        self.mars = body("mars")
+        self.basal = next(l for l in self.mars.layers if l.material == lm.BASAL_CONST)
+
+    def tearDown(self):
+        self.d.cleanup()
+
+    def test_density_and_dtdp(self):
+        """ρ equals the declared 4050 kg/m³; dT/dP equals the overlying assemblage record's at the same (P, T) to
+        1e-12; the notes name the declared grade."""
+        views = sv._views(self.mars, registry=self.reg, silicate=True)
+        bv = views[self.basal.id]
+        above = bv.overlying
+        self.assertIsInstance(above, ma.AssemblageView)
+        self.assertEqual(above.material_id, "silicate_slb_mars_khan2022")
+        for p, t in ((2.1e10, 420.0), (2.5e10, 510.0), (2.8e10, 375.0)):      # inside the synthetic table
+            got, ref = bv.state(p, t), above.state(p, t)
+            with self.subTest(p=p, t=t):
+                self.assertEqual(got[0], 4050.0)
+                self.assertLessEqual(abs(got[1] - ref[1]), 1e-12 * abs(ref[1]))
+                self.assertTrue(any(isinstance(n, mv.DeclaredNote) and "declared" in n.text for n in got[2]))
+        self.assertEqual(bv.name, lm.BASAL_CONST)
+        self.assertEqual(bv.onset_curves(2e10, 2000.0), above.onset_curves(2e10, 2000.0))
+
+    def test_no_overlying_assemblage_refuses(self):
+        """Control: the record with no overlying assemblage layer refuses by name."""
+        legacy_above = {l.id: lm.LegacyView("silicate", lm.eos.MATERIALS["silicate"], 1600.0) for l in self.mars.layers}
+        v, why = sv._basal_view(self.mars, self.basal, legacy_above, self.reg)
+        self.assertIsNone(v)
+        self.assertEqual(why[0], "basal_without_assemblage")
+
+    def test_missing_density_refuses(self):
+        """Control: a missing `density` param refuses, as today's silicate_basal_const does."""
+        b = with_layer(self.mars, self.basal.id, params={k: v for k, v in self.basal.params.items() if k != "density"})
+        got = sv._views(b, registry=self.reg, silicate=True)
+        self.assertIsInstance(got, result.Refusal)
+        self.assertEqual(got.id, "input.unknown_material")
+        off = sv._views(b, registry=self.reg, silicate=False)
+        self.assertEqual(off.id, got.id)
+
+    def test_other_params_refused(self):
+        """The record_params lift is for density and thickness_km only."""
+        b = with_layer(self.mars, self.basal.id, params={**self.basal.params, "porosity": self.basal.params["density"]})
+        got = sv._views(b, registry=self.reg, silicate=True)
+        self.assertEqual((got.id, got.evidence["rule"]), ("input.cross_field", "record_params"))
+
+    def test_formula_check_identity(self):
+        """The record's one formula check (ρ = the layer's declared density, tolerance 0), run here since P4 lists
+        the record as a context record."""
+        rec = result.plain(self.reg.records[lm.BASAL_CONST])
+        fc = rec["formula_checks"][0]
+        views = sv._views(self.mars, registry=self.reg, silicate=True)
+        bv = ma.BasalView(rec, fc["state"]["layer_density"], views["mantle"], 1600.0)
+        got = bv.state(2.5e10, 510.0)[0]
+        self.assertLessEqual(abs(got - fc["expected"]), fc["tolerance"])
+
+    def test_record_route_never_builds_it(self):
+        """The plain record route refuses to build the basal record (it needs the layer above)."""
+        v, why = sv._record_view(self.mars, self.basal, False, 0.0, self.reg)
+        self.assertIsNone(v)
+        self.assertEqual(why[0], "record_context")
+
+    def test_notes_attributed_to_the_basal_record(self):
+        """68: the overlying view's band note rides with the basal answer under the basal record's id."""
+        views = sv._views(self.mars, registry=self.reg, silicate=True)
+        notes = views[self.basal.id].state(2.5e10, 510.0)[2]
+        bands = [n for n in notes if isinstance(n, mv.BandNote)]
+        self.assertTrue(bands)
+        self.assertTrue(all(n.material_id == lm.BASAL_CONST for n in bands))
+
+    def test_rebuilds_carry_the_basal_view(self):
+        """68: the sensitivity rebuild's basal view holds the rebuilt overlying view; a closure rebuild of the
+        overlying layer rebuilds the basal view over the new one."""
+        b2 = dataclasses.replace(self.mars, surface=dataclasses.replace(self.mars.surface,
+                                                                        t_pot=self.mars.surface.t_pot + 10.0))
+        v2 = sv._views(b2, registry=self.reg, silicate=True)
+        self.assertIs(v2[self.basal.id].overlying, v2["mantle"])
+        self.assertEqual(v2["mantle"].t_pot, b2.surface.t_pot)
+        views = sv._views(self.mars, registry=self.reg, silicate=True)
+        new_mantle = ma.view(result.plain(views["mantle"].record), self.reg.tables[views["mantle"].material_id],
+                             1700.0)
+        real = sv._view_for
+        try:
+            sv._view_for = lambda *a, **k: (new_mantle, None)
+            b3 = closure_on(self.mars, "mantle", "fe_number")
+            got = sv._views_at(b3, views, 0.5)
+        finally:
+            sv._view_for = real
+        self.assertIs(got["mantle"], new_mantle)
+        self.assertIs(got[self.basal.id].overlying, new_mantle)
+
+    def test_registry_walkers_never_meet_a_context_record(self):
+        """68: the registry's own RecordView builds (triple points, blend conflicts) return before a context record."""
+        rec = dict(result.plain(self.reg.records[lm.BASAL_CONST]))
+        rec["triple_points"] = [{"phases": ["a", "b", "c"]}]
+        self.assertIsNone(mr.triple_point_misses(rec, "x.yaml"))
+        rec["phases"] = [{**rec["phases"][0], "joins_within": [{"kind": "blend", "between": ["a", "b"]}]}]
+        self.assertIsNone(mr.source_conflicts(rec, "x.yaml"))
+
+    def test_named_assemblage_record_needs_the_switch(self):
+        """68: a layer naming an assemblage record directly reads it only with the switch on (requires_switch)."""
+        b = with_layer(body("earth"), "mantle", material="silicate_slb_default_bse")
+        on = sv._views(b, registry=self.reg, silicate=True)
+        self.assertIsInstance(on["mantle"], ma.AssemblageView)
+        off = sv._views(b, registry=self.reg, silicate=False)
+        self.assertIsInstance(off, result.Refusal)
+        self.assertEqual(off.id, "input.unknown_material")
+
+    def test_off_keeps_legacy_basal(self):
+        """With the record file present and the switch off, the basal layer is today's LegacyView."""
+        views = sv._views(self.mars, registry=self.reg, silicate=False)
+        self.assertIsInstance(views[self.basal.id], lm.LegacyView)
 
 
 class SolveId(unittest.TestCase):

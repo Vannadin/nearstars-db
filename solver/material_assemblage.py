@@ -10,6 +10,7 @@ layer's declared oxides and a record's key cannot drift; one changed oxide misse
 from __future__ import annotations
 
 import copy
+import dataclasses
 import hashlib
 import json
 import math
@@ -717,3 +718,70 @@ class AssemblageView(mv.RecordView):
 def view(record, table, t_pot, p_stop=0.0, p_floor=0.0):
     """An AssemblageView of a loaded record and its compact table (registry.tables[id])."""
     return AssemblageView(record, table, t_pot, p_stop, p_floor)
+
+
+class BasalView(mv.RecordView):
+    """The basal record (silicate registration §4 Q6, §7.4a): ρ is the layer's declared density, graded «declared»;
+    dT/dP, the onset curves and the melt window are the overlying assemblage view's at the same (P, T). A RecordView
+    subclass, so the notes collector reads it."""
+
+    def __init__(self, record, density: float, overlying, t_pot: float, p_stop: float = 0.0):
+        self.material_id = record["id"]
+        self.name = record["id"]                    # legacy BasalConstDensity's name: one GrazeMonitor, as today
+        self.t_pot = float(t_pot)
+        self.p_stop = float(p_stop)
+        self.p_floor = 0.0
+        self.kind = record["kind"]
+        self.record = freeze(copy.deepcopy(mv.thaw_plain(record)))
+        self.boundaries = ()
+        self.phases = []
+        self.notes: list = []
+        self.density_declared = float(density)
+        self.overlying = overlying
+        self.onset_curve_names = list(getattr(overlying, "onset_curve_names", ()))
+        self._phase_id = self.record["phases"][0]["id"]
+
+    def state(self, p: float, t: float, guess_rho=None):
+        self.notes.clear()
+        got = self.overlying.state(p, t)
+        if isinstance(got, st.Stop):
+            rec = got.record
+            if isinstance(rec, mv.RecordRefusal):
+                return st.Stop("refused", mv.RecordRefusal(self.material_id, p, t, rec.refusal,
+                                                           f"the overlying record {rec.material_id}: {rec.why}"))
+            return got
+        self.notes.append(mv.DeclaredNote(self.material_id, self._phase_id,
+                                          "molten basal layer: density declared by the layer (graded «declared»; band "
+                                          "origin «the declared layer density»); dT/dP from the overlying assemblage "
+                                          f"record {self.overlying.material_id} at the same (P, T)"))
+        # the overlying view's dT/dP band rides with the basal layer's answer, attributed to the basal record (68)
+        self.notes.extend(dataclasses.replace(n, material_id=self.material_id)
+                          for n in got[2] if isinstance(n, mv.BandNote) and n.dtdp_error is not None)
+        return (self.density_declared, got[1], tuple(self.notes))
+
+    def density(self, p: float, t: float):
+        got = self.state(p, t)
+        return got if isinstance(got, st.Stop) else got[0]
+
+    def dtdp(self, p: float, t: float):
+        got = self.state(p, t)
+        return got if isinstance(got, st.Stop) else got[1]
+
+    def phase_read(self, p: float, t: float):
+        got = self.state(p, t)
+        return got if isinstance(got, st.Stop) else self._phase_id
+
+    def porosity(self, p: float) -> float:
+        return 0.0
+
+    def seams(self) -> tuple:
+        return ()
+
+    def transitions(self) -> tuple:
+        return ()
+
+    def source_seams(self) -> tuple:
+        return ()
+
+    def onset_curves(self, p: float, t: float) -> list:
+        return self.overlying.onset_curves(p, t)
