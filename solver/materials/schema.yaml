@@ -31,6 +31,9 @@ record:
   joins:           {shape: list, of: join}                 # hand_over: required (D-P1, r2 N7)
   formula_checks:  {shape: list, of: formula_check, required: true, min: 1}
   note:            {shape: text}
+  composition_key: {shape: text}                           # assemblage: the CFMASNa fingerprint the resolver matches
+                                                           # (material_assemblage.composition_key; silicate reg. §2.1)
+  assemblage:      {shape: record, of: assemblage}         # assemblage: its compact table and what rides with it (§2.2)
 
 phase:
   id:          {shape: text, required: true}
@@ -55,7 +58,8 @@ declared_note:
   source: {shape: source, required: true}
 
 eos:
-  form:      {shape: enum, values: [bm2, bme3, vinet, library, table, evaluator], required: true}   # bme4: not built
+  form:      {shape: enum, values: [bm2, bme3, vinet, library, table, evaluator, assemblage], required: true}   # bme4: not built
+                                                           # assemblage: ρ, dT/dP and S from the record's compact table
   evaluator: {shape: record, of: evaluator}                # form evaluator only: a potential gives ρ and its derivatives
                                                            # (French & Redmer 2015); no sets, no gamma_window, as library
   params:    {shape: mapping, of: constant}                # bm2/bme3/vinet: rho0, k0, [k0p]; each a constant
@@ -74,6 +78,59 @@ table:
   maxwell_tolerance: {shape: number}                       # relative misfit allowed in the Maxwell check (B3): α against −∂lnρ/∂T, c_P against v
   alpha_range:   {shape: list}                             # [lo, hi] 1/K: the declared sane range for α (B3)
   source:        {shape: source, required: true}           # sourced, or {user_declared: <reason>} (B2)
+
+# An assemblage record's table (phase-2 silicate record registration §2.2, post-freeze note 3). The compact file sits
+# at solver/materials/<file>; only its sha256 is checked at load, and a mismatch is a STOP (material.assemblage_table).
+# The table's B3 numbers and the dT/dP field's band are declared here, before the first load.
+assemblage:
+  file:          {shape: text, required: true}             # tables/<record id>.json, relative to solver/materials
+  sha256:        {shape: text, required: true}             # of the compact file
+  p_dataset:     {shape: number, unit: Pa, required: true} # the dataset top (declaration §4); above it, only the taper
+  interpolation: {shape: enum, values: [c1_lnp_t], required: true}   # D-P2's C¹ monotone cubic Hermite in (ln P, T)
+  melt_variant:  {shape: enum, values: [peridotitic, chondritic], required: true}   # the legacy solidus–liquidus chain
+  frozen_classes: {shape: list, required: true}            # the declared freeze classes of the frozen cells
+  dataset:       {shape: text, required: true}             # the table header's dataset string, verbatim
+  disclosures:   {shape: list, required: true, min: 1}     # the declaration's disclosures, on every answer
+  floor_band:    {shape: record, of: assemblage_floor, required: true}   # below the 1 bar grid floor (§3.1)
+  handover:      {shape: text, required: true}             # the hand-over record above p_dataset (§3.4)
+  b3:            {shape: record, of: assemblage_b3, required: true}
+  dtdp:          {shape: record, of: assemblage_dtdp, required: true}
+  pins:          {shape: record, of: assemblage_pins, required: true}
+
+assemblage_floor:
+  origin: {shape: text, required: true}
+
+# §2.3 as post-freeze note 3 §3 amends it (r2 46855164): γ identity; the frozen cells' in-column dT/dP identity; Maxwell
+# per cell on 5-point interior cells, residual ≤ maxwell_k·|D_h − D_2h| + maxwell_floor.
+assemblage_b3:
+  gamma_tolerance:        {shape: number, required: true}
+  frozen_alpha_tolerance: {shape: number, required: true}
+  maxwell_k:              {shape: number, required: true}
+  maxwell_floor:          {shape: number, required: true}
+  reason:                 {shape: text, required: true}
+
+# The record's dT/dP field (note 3 §2): the model's equilibrium isentrope on non-frozen cells, dtdp_s on frozen ones.
+assemblage_dtdp:
+  field:         {shape: enum, values: [equilibrium_isentrope], required: true}
+  band_floor:    {shape: number, required: true}           # relative: the δ/10 check's maximum, rounded up; each
+                                                           # cell's band is max(floor, |A − G|/max(|A|, dtdp_s)) (r2 (α))
+  band_origin:   {shape: text, required: true}
+  refused_count: {shape: number, required: true}           # cells whose solves did not converge: refused by name
+  sidecar:       {shape: mapping, required: true}          # the dtdp_eq.py header: table and builder identity
+
+# Cite-only in the engine except compact_sha256 (§2.2): the generator checked them before it wrote.
+assemblage_pins:
+  status:         {shape: enum, values: [pinned, development], required: true}   # development: tests only
+  table_blob:     {shape: text, required: true}
+  builders:       {shape: list, of: assemblage_builder, required: true, min: 1}
+  generator_blob: {shape: text}
+  compact_sha256: {shape: text, required: true}
+  rebuilt:        {shape: list, required: true}
+
+assemblage_builder:
+  role:   {shape: enum, values: [strict, above_cap], required: true}
+  blob:   {shape: text, required: true}
+  sha256: {shape: text, required: true}
 
 reference:
   kind:  {shape: enum, values: [state, path], required: true}   # D-M1: a path is allowed (r2 N5, «PREM path»)

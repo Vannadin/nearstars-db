@@ -41,6 +41,9 @@ NOT_RECORDS = ("schema.yaml", "sources.yaml")
 _SHA = re.compile(r"^[0-9a-f]{64}$")
 _LIB = re.compile(r"^[A-Za-z][\w.-]*@[0-9][\w.+-]*$")
 _DOI = re.compile(r"^doi:10\.\d{4,9}/\S+$")
+#: forms that read γ and dT/dP from their own form, so they carry no thermal sets and no gamma_window (68 on 6c7bb337;
+#: impl note 9; the assemblage kind reads its table, silicate record registration §3.2)
+OWN_THERMAL_FORMS = ("library", "evaluator", "table", "assemblage")
 _EDGES = (("p_min", "p_min", "lower"), ("p_max", "p_max", "upper"), ("t_min", "t_min", "lower"),
           ("t_max", "t_max", "upper"))
 
@@ -113,6 +116,10 @@ STOPS = MappingProxyType({
                              "A source seam in T joins two phases of one family, lower-T first, whose windows meet at "
                              "t, with its sampling inside both and its nil equal to the global SEAM_NIL (phase-2 "
                              "design note 5); otherwise keep one source for the whole phase."),
+    "material.assemblage_table": (("file", "why"),
+                                  "Regenerate the record and its compact table with rewrite/phase2-records/"
+                                  "gen_silicate_records.py from the pinned table (never hand-edit either); a development "
+                                  "record loads only in tests (Registry.load(allow_development=True))."),
     "material.kind_rule": (("file", "why"),
                            "Match the record kind: single = one phase; branched = one boundary per adjacent phase "
                            "pair; hand_over = joins; a library form names its pinned library."),
@@ -147,6 +154,9 @@ class Registry:
     unavailable: Mapping = field(default_factory=lambda: MappingProxyType({}))   # id → LoadStop: a library pin
                                                                                    # that does not match (note 1 §6)
     warnings: tuple = ()        # LoadStop-shaped warnings that never block a load (design note 4 item 3)
+    tables: Mapping = field(default_factory=lambda: MappingProxyType({}))   # id → an assemblage record's compact table
+                                                                              # (read-only by convention; its sha256 is
+                                                                              # in the record, so solve_id binds it)
 
     def declared(self) -> tuple:
         """Ids of records carrying a user-declared source anywhere (impl note 3 B2): counted on boards and gates."""
@@ -284,9 +294,10 @@ def _edges(ph: Mapping, file):
 def _library_thermal(ph: Mapping, file):
     """68 on 6c7bb337: a library-form phase takes γ and dT/dP from the library, so it carries no thermal sets and no
     gamma_window (fields read by nothing would claim a decision lives there); every other phase needs gamma_window.
-    A table phase is the same: dT/dP comes from its α and c_P columns (impl note 9; P7 cold run)."""
+    A table phase is the same: dT/dP comes from its α and c_P columns (impl note 9; P7 cold run); so is an assemblage
+    phase, from its compact table (silicate record registration §3.2)."""
     th = ph["thermal"]
-    if ph["eos"]["form"] in ("library", "evaluator", "table"):
+    if ph["eos"]["form"] in OWN_THERMAL_FORMS:
         extra = [k for k in ("sets", "gamma_window", "phase_constants") if k in th]
         if extra:
             raise _Stop("material.kind_rule", file=file,
@@ -297,7 +308,7 @@ def _library_thermal(ph: Mapping, file):
 
 
 def _gamma(ph: Mapping, file):
-    if ph["eos"]["form"] in ("library", "evaluator", "table"):
+    if ph["eos"]["form"] in OWN_THERMAL_FORMS:
         return
     gw = ph["thermal"]["gamma_window"]
     for i, ts in enumerate(ph["thermal"].get("sets", ())):
@@ -328,7 +339,7 @@ def _gamma_constants(ph: Mapping, file):
     with no evaluator), both alpha_k and c_v are present and c_v > 0; otherwise γ = αK_T/(ρc_V) has no value (the
     view crashed on c_v = 0) and no silent 0 is taken."""
     th = ph["thermal"]
-    if ph["eos"]["form"] in ("library", "evaluator", "table"):
+    if ph["eos"]["form"] in OWN_THERMAL_FORMS:
         return
 
     def need(consts, where):
@@ -349,7 +360,7 @@ def _gamma_tiling(ph: Mapping, file):
     """68 N19: inside the γ window, the sets ([p_min, p_max)) and the declared phase_constants span cover every P."""
     th = ph["thermal"]
     sets = th.get("sets", ())
-    if not sets or ph["eos"]["form"] in ("library", "evaluator", "table"):
+    if not sets or ph["eos"]["form"] in OWN_THERMAL_FORMS:
         return                                    # a phase with no sets: its constants are the γ source throughout
     gw = th["gamma_window"]
     spans = sorted([(s["window"]["p_min"], s["window"]["p_max"]) for s in sets]
@@ -799,11 +810,55 @@ def _kind(rec: Mapping, file):
                 raise _Stop("material.kind_rule", file=file, why=f"boundaries {pairs} vs adjacent pairs {want}")
         else:
             _field_record(rec, ids, pairs, file)
+    if kind == "assemblage":
+        _assemblage_kind(rec, file)
+    elif "assemblage" in rec or "composition_key" in rec or any(p["eos"]["form"] == "assemblage" for p in rec["phases"]):
+        raise _Stop("material.kind_rule", file=file, why="assemblage, composition_key and the assemblage form belong "
+                                                          "to an assemblage record")
     if kind == "hand_over" and not rec.get("joins"):
         raise _Stop("material.kind_rule", file=file, why="a hand-over record declares its joins")
     for ph in rec["phases"]:
         if ph["eos"]["form"] == "library" and "library" not in ph["eos"]:
             raise _Stop("material.kind_rule", file=file, why=f"phase {ph['id']}: a library form names its pin")
+
+
+def _assemblage_kind(rec: Mapping, file):
+    """Silicate record registration §2.1: an assemblage record carries its table and its composition key, has one
+    phase of the assemblage form, and no boundaries, joins, triple points or choice (68: so the RecordView-based gates
+    never run over it; its boundaries live in the compact table's export, §3.3)."""
+    for k in ("assemblage", "composition_key"):
+        if k not in rec:
+            raise _Stop("material.kind_rule", file=file, why=f"an assemblage record carries `{k}`")
+    extra = [k for k in ("boundaries", "joins", "triple_points", "choice", "field_probe", "field_probes",
+                         "source_seams") if k in rec]
+    if extra:
+        raise _Stop("material.kind_rule", file=file, why=f"an assemblage record has no {extra}")
+    if len(rec["phases"]) != 1 or rec["phases"][0]["eos"]["form"] != "assemblage":
+        raise _Stop("material.kind_rule", file=file, why="an assemblage record has one phase, of the assemblage form")
+    a = rec["assemblage"]
+    if not _is_sha(a["sha256"]) or a["sha256"] != a["pins"]["compact_sha256"]:
+        raise _Stop("material.kind_rule", file=file, why="assemblage.sha256 is the 64-hex compact_sha256 of its pins")
+
+
+def _assemblage_table(rec: Mapping, file, directory: Path, allow_development: bool):
+    """§2.2–§2.3: the compact table, its pinned sha256 and its B3 (as post-freeze note 3 §3 amends it). A development
+    record (pins.status development) loads only when a test asks (68, «dev records refused outside tests»)."""
+    from solver import material_assemblage as ma
+    a = rec["assemblage"]
+    if a["pins"]["status"] != "pinned" and not allow_development:
+        raise _Stop("material.assemblage_table", file=file,
+                    why=f"pins.status is {a['pins']['status']}: a development record is refused outside tests")
+    path = Path(directory) / a["file"]
+    if Path(a["file"]).is_absolute() or ".." in Path(a["file"]).parts:
+        raise _Stop("material.assemblage_table", file=file, why="assemblage.file is a path under solver/materials")
+    try:
+        table = ma.read_table(path, a["sha256"])
+        ma.check_table(a, table)
+    except ma.TableStop as e:
+        raise _Stop("material.assemblage_table", file=file, why=str(e)) from None
+    if table.get("p_dataset") != a["p_dataset"]:
+        raise _Stop("material.assemblage_table", file=file, why="the table's p_dataset differs from the record's")
+    return table
 
 
 def _is_sha(x) -> bool:
@@ -866,12 +921,14 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
     return freeze(raw)
 
 
-def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None) -> Registry | LoadStop:
-    """Every record in `directory` (schema and manifest excepted), checked; the registry or the first STOP."""
+def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None,
+         allow_development: bool = False) -> Registry | LoadStop:
+    """Every record in `directory` (schema and manifest excepted), checked; the registry or the first STOP.
+    `allow_development` admits a development assemblage record; only tests set it (never an env var or an Option)."""
     registered = read_manifest(Path(directory) / "sources.yaml" if manifest is None else manifest)
     if isinstance(registered, LoadStop):
         return registered
-    out, unavailable, shas = {}, {}, {}             # shas: a library's tree sha, computed once per load (68 N30)
+    out, unavailable, shas, tables = {}, {}, {}, {}   # shas: a library's tree sha, computed once per load (68 N30)
     for f in sorted(Path(directory).glob("*.yaml")):
         if f.name in NOT_RECORDS:
             continue
@@ -888,6 +945,11 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None) -> Regis
         if pin is not None:                         # that record only: the others still load (impl note 1 §6)
             unavailable[rec["id"]] = pin
             continue
+        if rec["kind"] == "assemblage":
+            try:
+                tables[rec["id"]] = _assemblage_table(rec, f.name, Path(directory), allow_development)
+            except _Stop as s:
+                return s.stop
         miss = triple_point_misses(rec, f.name)
         if miss is not None:
             return miss
@@ -896,7 +958,7 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None) -> Regis
             return conflict
         out[rec["id"]] = rec
     warns = tuple(w for rec in out.values() for w in multi_source_warnings(rec, f"{rec['id']}.yaml"))
-    return Registry(MappingProxyType(out), MappingProxyType(unavailable), warns)
+    return Registry(MappingProxyType(out), MappingProxyType(unavailable), warns, MappingProxyType(tables))
 
 
 def _source_key(cite) -> str | None:
