@@ -13,7 +13,7 @@ from solver import stepper as st
 
 I, eos = lm.interior, lm.eos
 MARS_OXIDES = {"SiO2": 46.66, "Al2O3": 3.49, "MgO": 32.81, "CaO": 2.66, "FeO": 13.68, "Na2O": 0.69}
-ANCHOR_S = 0.1890625
+ANCHOR_S = 0.1478125     # the engine's frozen box_ceiling fit, refreshed by the core two-anchor item (was 0.1890625; owner-direction c573d894)
 
 
 def _pts(n=200):

@@ -26,6 +26,20 @@ class Earth(unittest.TestCase):
         self.assertTrue(self.rec["header"]["engine_identical_to_oracle_tree"])
         self.assertEqual(len(self.rec["header"]["solve_id"]), 64)
 
+    def test_header_carries_both_oracle_trees(self):
+        """Owner-direction c573d894: the phase-1 commit stays named, and the engine tree the oracle now is (the core
+        two-anchor item's engine/) is the one `engine_identical_to_oracle_tree` compares against."""
+        h = self.rec["header"]
+        self.assertEqual(h["oracle_tree"], "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc")
+        self.assertEqual(h["oracle_engine_tree"], ro.ORACLE_ENGINE_TREE)
+        self.assertRegex(ro.ORACLE_ENGINE_TREE, r"^[0-9a-f]{40}$")
+        real = ro.ORACLE_ENGINE_TREE
+        try:                                         # negative control: another declared tree is not identical
+            ro.ORACLE_ENGINE_TREE = "0" * 40
+            self.assertFalse(ro._header(FAST, "")["engine_identical_to_oracle_tree"])
+        finally:
+            ro.ORACLE_ENGINE_TREE = real
+
     def test_notes_are_written_as_kinded_objects(self):
         """Switch-over §6.7: `notes` is a list of objects with a text `kind` (comparator note 15's shape)."""
         self.assertIsInstance(self.rec["notes"], list)

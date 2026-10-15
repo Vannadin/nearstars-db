@@ -474,15 +474,16 @@ class LegacyMaterials:
 
 def build_fe_core_light(s: float, o: float, c: float):
     """The liquid Fe–S–O–C core material at S = s, O = o, C = c (mass fractions), as `interior._sulphur_core` builds it
-    at 097a8aa3 (interior.py:5859 ff.: core_mole_fractions → huang_core_phase(x, "19GPa") in a Material with the fit-floor
+    at 097a8aa3 (interior.py:5859 ff.: core_mole_fractions → huang_core_phase(x) in a Material with the fit-floor
     reasons)."""
     x = eos.core_mole_fractions({"S": s, "O": o, "C": c})
     name = f"fe_core_fit_s{s * 100:.4f}_{_pin_of(o, c)}"
     return eos.Material(
         name, f"액체 Fe–S–O–C · S {s * 100:.4f} wt% ({_pin_of(o, c)})",
-        (eos.huang_core_phase(x, "19GPa"),), fit_composition="Fe-S-O-C", role="core",
+        (eos.huang_core_phase(x),), fit_composition="Fe-S-O-C", role="core",
         gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다",
-        under_reason=eos.FE_S_FIT_FLOOR_REASON, floor_source=eos.FE_S_FIT_FLOOR_SOURCE)
+        under_reason=eos.FE_S_FIT_FLOOR_REASON, floor_source=eos.FE_S_FIT_FLOOR_SOURCE,
+        over_reason=eos.HUANG_CEILING_REASON)
 
 
 class _MeltPhase:
