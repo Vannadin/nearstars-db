@@ -13,6 +13,7 @@ import copy
 import hashlib
 import json
 import math
+from collections.abc import Sequence
 
 from solver import material_view as mv
 from solver import stepper as st
@@ -174,8 +175,8 @@ def check_table(asm, table) -> dict:
     declared before the first load)."""
     b3 = asm["b3"]
     cells = table.get("cells")
-    if not isinstance(cells, list) or not cells:
-        raise TableStop("the compact table has no cells")
+    if isinstance(cells, (str, bytes)) or not isinstance(cells, Sequence) or not cells:   # a list, or the registry's
+        raise TableStop("the compact table has no cells")                                  # frozen tuple (68)
     by = {}
     for c in cells:
         if not (_finite(c.get("p")) and _finite(c.get("t"))):          # 68 N2: numbers before any arithmetic
@@ -344,8 +345,8 @@ def planted_coverage(asm, table, per=5, seed=0, rel=0.01):
     `per` seeded cells (and at every cell with no model values) and record which check catches it. Returns
     {(field, kind): {"tried": n, "caught": n, "by": {check: n}, "missed": [(p, t)]}}. Report-only: the load gate is
     check_table; this is the evidence that it covers each pair."""
-    import copy
     import random
+    table = mv.thaw_plain(table)                     # the registry hands the table out frozen (68 on 2922f022)
     rng = random.Random(seed)
     out = {}
     kinds = sorted({c["kind"] for c in table["cells"]})

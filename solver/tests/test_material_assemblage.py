@@ -404,6 +404,16 @@ class RegistryLoad(unittest.TestCase):
         with self.assertRaises(TypeError):
             reg.tables["silicate_slb_test"]["cells"][0]["rho"] = 1.0
 
+    def test_gate_reruns_on_a_loaded_table(self):
+        """68 on 2922f022: check_table and planted_coverage take the table as the registry hands it out (frozen)."""
+        with tempfile.TemporaryDirectory() as d:
+            write(d, table(), status="pinned")
+            reg = mr.load(Path(d))
+        rid = "silicate_slb_test"
+        ma.check_table(reg[rid]["assemblage"], reg.tables[rid])
+        cov = ma.planted_coverage(reg[rid]["assemblage"], reg.tables[rid], per=1)
+        self.assertTrue(all(row["missed"] == [] for row in cov.values()))
+
     def test_b3_stop_reaches_the_registry(self):
         tb = table(); cell(tb, 4, 5)["gamma"] *= 1.1
         with tempfile.TemporaryDirectory() as d:
