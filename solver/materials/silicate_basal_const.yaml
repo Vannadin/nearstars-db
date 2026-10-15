@@ -28,7 +28,10 @@ phases:
     source_state: mixed
     source_composition: the overlying assemblage record's composition
     from_layer: overlying_assemblage
-    grade: dT/dP of the overlying assemblage record at the same (P, T); no thermal constants of the layer's own
+    grade: >-
+      dT/dP of the overlying assemblage record at the same (P, T); no thermal constants of the layer's own.
+      ρ declared from Khan 2023 (a molten basal layer); thermal terms are the overlying solid assemblage's, so the
+      layer's melt state is not modelled
   field:
     kind: declared
     box:
