@@ -380,6 +380,55 @@ class BasalRecord(unittest.TestCase):
         self.assertIsInstance(off, result.Refusal)
         self.assertEqual(off.id, "input.unknown_material")
 
+    def test_overlying_refusal_carries_the_basal_id(self):
+        """68 K6 (Q6 condition 1): an overlying record's refusal read through the basal view is re-raised under the
+        basal record's id, keeps the overlying refusal id, and names the overlying record in why."""
+        from solver import stepper as st
+
+        class _Refusing:
+            material_id = "silicate_slb_mars_khan2022"
+            onset_curve_names = ()
+
+            def state(self, p, t):
+                return st.Stop("refused", mv.RecordRefusal(self.material_id, p, t,
+                                                           "input.material_above_solid_window", "above the top"))
+        rec = result.plain(self.reg.records[lm.BASAL_CONST])
+        got = ma.BasalView(rec, 4050.0, _Refusing(), 1600.0).state(2.5e10, 2600.0)
+        self.assertIsInstance(got, st.Stop)
+        self.assertEqual(got.record.material_id, lm.BASAL_CONST)
+        self.assertEqual(got.record.refusal, "input.material_above_solid_window")
+        self.assertIn("silicate_slb_mars_khan2022", got.record.why)
+
+    def test_layer_density_kind_rule(self):
+        """68 K10: a layer_density phase is a single record's, reads layer_param density and takes dT/dP from_layer
+        overlying_assemblage; each clause broken alone stops the load by name (wrong values of the two enums stop earlier,
+        at the schema)."""
+        src = yaml.safe_load((mr.MATERIALS_DIR / f"{lm.BASAL_CONST}.yaml").read_text(encoding="utf-8"))
+
+        def breaks(edit):
+            rec = json.loads(json.dumps(src))
+            edit(rec)
+            with tempfile.TemporaryDirectory() as d:
+                for f in mr.MATERIALS_DIR.glob("*.yaml"):
+                    if f.name not in mr.NOT_RECORDS and f.name != f"{lm.BASAL_CONST}.yaml":
+                        (Path(d) / f.name).write_text(f.read_text(encoding="utf-8"), encoding="utf-8")
+                (Path(d) / "sources.yaml").write_text(
+                    (mr.MATERIALS_DIR / "sources.yaml").read_text(encoding="utf-8"), encoding="utf-8")
+                (Path(d) / f"{lm.BASAL_CONST}.yaml").write_text(yaml.safe_dump(rec, sort_keys=False), encoding="utf-8")
+                return mr.load(Path(d))
+        cases = {                    # a wrong from_layer or layer_param value is the schema's enum (material.bad_shape)
+            "from_layer missing": lambda r: r["phases"][0]["thermal"].pop("from_layer"),
+            "layer_param missing": lambda r: r["phases"][0]["eos"].pop("layer_param"),
+            "kind not single": lambda r: r.update(kind="branched", choice="chain"),
+        }
+        for name, edit in cases.items():
+            with self.subTest(name):
+                got = breaks(edit)
+                self.assertIsInstance(got, mr.LoadStop)
+                self.assertEqual(got.id, "material.kind_rule")
+                self.assertIn("layer_density", got.evidence["why"])
+        self.assertNotIsInstance(breaks(lambda r: None), mr.LoadStop)      # control: the record as shipped loads
+
     def test_off_keeps_legacy_basal(self):
         """With the record file present and the switch off, the basal layer is today's LegacyView."""
         views = sv._views(self.mars, registry=self.reg, silicate=False)
@@ -416,6 +465,30 @@ class MethodTerm(unittest.TestCase):
         finally:
             mb.member_of, sv.solve = real_m, real_s
         self.assertEqual(seen, {"member": [True, False], "solve": [True, False]})
+
+    def test_run_passes_the_switch_to_its_shared_member(self):
+        """68 K16: run() solves an inverse body's member once for all its T_pot states, under the run's switch."""
+        from solver import member as mb
+        from solver import method_term as mt
+        seen = []
+        real_m, real_one = mb.member_of, mt.one_state
+
+        def spy_member(body, materials="registry", registry=None, silicate_records=False):
+            seen.append(silicate_records)
+            return None
+
+        def stub_one(body_yaml, state, tag, steps=mt.STEPS, member=None, registry=None, silicate_records=False):
+            return {"body": "mars", "state": state}
+        p = Path(tempfile.mkdtemp(), "pts.json")
+        p.write_text(json.dumps([["mars", 1800.0, "node"]]))
+        try:
+            mb.member_of, mt.one_state = spy_member, stub_one
+            for on in (True, False):
+                self.assertEqual(mt.run(str(ROOT / "engine/bodies/mars.yaml"), str(p),
+                                        str(Path(tempfile.mkdtemp(), "o.jsonl")), silicate_records=on), 0)
+        finally:
+            mb.member_of, mt.one_state = real_m, real_one
+        self.assertEqual(seen, [True, False])
 
 
 class SolveId(unittest.TestCase):
