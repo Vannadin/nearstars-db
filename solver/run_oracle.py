@@ -41,6 +41,10 @@ from solver import material_registry as mr
 
 interior = lm.interior
 ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
+#: The engine tree the oracle now is (owner-direction c573d894): the two-anchor core item changed engine/ (core two-anchor
+#: registration §4), so the oracle's engine is that item's engine/ tree, declared here by its git tree id. ORACLE_TREE
+#: stays the phase-1 commit (the frozen-table blobs `table_read` checks were not touched by the item).
+ORACLE_ENGINE_TREE = "1ac0df8b97f6ae61dbd16642643adea9237cb785"
 REPO = Path(lm._ENGINE).parent
 
 
@@ -52,11 +56,14 @@ def _git(*args) -> str:
 def _header(options, solve_id):
     import numpy
     import scipy
-    engine_same = subprocess.run(["git", "-C", str(REPO), "diff", "--quiet", ORACLE_TREE, "--", "engine"]).returncode == 0
+    # identical: HEAD's engine/ is the declared tree and the working tree has no engine/ changes against HEAD
+    engine_same = (_git("rev-parse", "HEAD:engine") == ORACLE_ENGINE_TREE
+                   and subprocess.run(["git", "-C", str(REPO), "diff", "--quiet", "HEAD", "--", "engine"]).returncode == 0)
     return {"tree": _git("rev-parse", "HEAD"), "venv": sys.prefix, "python": sys.version.split()[0],
             "numpy": numpy.__version__, "scipy": scipy.__version__,
             "options": result.plain(dataclasses.asdict(options)), "solve_id": solve_id,
             "engine_identical_to_oracle_tree": engine_same, "oracle_tree": ORACLE_TREE,
+            "oracle_engine_tree": ORACLE_ENGINE_TREE,
             "dirty": bool(_git("status", "--porcelain", "--", "solver", "engine"))}
 
 

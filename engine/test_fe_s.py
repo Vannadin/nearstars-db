@@ -175,22 +175,21 @@ print("\n⑦ 고압 기준 BM2 — 새 form (브리프 179). ⚠ **아래 둘은
 #   만들어 «Table 1 의 두 점을 재현했다» 고 말하면 아무 것도 시험하지 않은 것이다. 그래서 여기서는
 #   **form 이 기준을 옳은 자리에 놓았는지**(항등식이 실제로 성립하는지)만 보고, 진짜 시험은 위 ⑥ 의
 #   **R7 — 독립 AIMD 점** 하나뿐임을 적어 둔다.
-ph = eos.huang_fes_phase(eos.HUANG_S4_CS, "19GPa")
-row(ph.form == "bm2_ref" and ph.p_ref == 19.0 * eos.GPA and ph.k0p == 4.0,
-    f"상이 만들어진다: form {ph.form} · p_ref {ph.p_ref / eos.GPA:.0f} GPa · K′ {ph.k0p} "
-    "(논문: «second-order BM … K₀′ equals 4»)")
-row(abs(ph.pressure(ph.rho0) - ph.p_ref) < 1.0,
-    f"기준점의 항등식: P(ρ_ref) = {ph.pressure(ph.rho0) / eos.GPA:.6f} GPa = p_ref — "
-    "고압 기준이 실제로 그 자리에 놓였다는 뜻이다")
-# ⚠ 저장값과 평가값은 **다른 단정**이다: 앞은 비트 동일, 뒤는 Newton 이 기준점을 다시 푸는
-#   잔차라 3 ulp 가 남는다. 한 줄로 뭉치면 form 이 잘못 풀어도 «같다» 로 통과할 수 있다.
-rel = abs(ph.density(19.0e9) - ph.rho0) / ph.rho0
-row(rel <= 1e-12,
-    f"평가값도 기준점으로 돌아온다: ρ(19 GPa) 상대잔차 {rel:.2e} ≤ 1e-12 (3 ulp 수준) — "
-    "수치 역산이 기준을 다시 찾는다는 뜻이지 저장값이 같다는 뜻이 아니다")
-row(repr(ph.rho0 / 1e3) == "6.804901234567901",
-    f"슬롯에 **들어간** R7 이 함수와 마지막 자리까지 같다: {ph.rho0 / 1e3!r} g/cm³ "
-    "(c_S = 24/108 을 반올림하면 여기가 갈린다 — 실제로 첫 판이 0.222 로 갈렸다)")
+# ⚠ **핵 두 앵커 등록 1cdff0a3 (오너 a7181489) 로 다시 핀** — 이 상은 이제 `bm2_ref` 가 아니라 두 앵커 규칙
+#   (`huang_two_anchor`)이고 ρ(P, T) 가 닫힌 꼴이라 냉각 곡선 P(ρ) 가 없다. 옛 행 «form bm2_ref · P(ρ_ref) = p_ref ·
+#   R7 repr 6.804901234567901» 은 그 꼴의 항등식이었다. 새 행은 **두 앵커를 다 재현하는가**를 본다 (등록 §1 G).
+ph = eos.huang_fes_phase(eos.HUANG_S4_CS)
+row(ph.form == "huang_two_anchor" and ph.p_ref == 19.0 * eos.GPA and ph.p_min == 19.0 * eos.GPA
+    and ph.p_max == eos.HUANG_P_CEILING == 51.0 * eos.GPA,
+    f"상이 만들어진다: form {ph.form} · p_ref {ph.p_ref / eos.GPA:.0f} GPa · 바닥 19 GPa(그 아래는 Balog) · "
+    f"천장 {ph.p_max / eos.GPA:.0f} GPa (35 + 앵커 간격 16)")
+_r19 = abs(ph.density(19.0e9, 2100.0) / (eos.huang_fes_density(eos.HUANG_S4_CS, "19GPa") * 1e3) - 1.0)
+_r35 = abs(ph.density(35.0e9, 2400.0) / (eos.huang_fes_density(eos.HUANG_S4_CS, "35GPa") * 1e3) - 1.0)
+row(_r19 <= 1e-9 and _r35 <= 1e-9,
+    f"두 앵커를 다 재현한다: R7 c_S = 24/108 에서 ρ(19 GPa, 2100 K) 상대잔차 {_r19:.1e}, ρ(35 GPa, 2400 K) "
+    f"{_r35:.1e} ≤ 1e-9 (등록 §1 G) — 옛 꼴은 35 GPa 에서 2.9 % 벌어졌다")
+row(abs(ph.rho0 / 1e3 - 6.804901234567901) <= 1e-12,
+    f"슬롯의 R7 이 함수와 같다: {ph.rho0 / 1e3!r} g/cm³ (옛 repr 6.804901234567901 — 이제 exp(ln ρ) 를 거쳐 2 ulp 차)")
 row(ph.melt == "iron_fes_eutectic" and ph.fit_state == "liquid" and ph.melt_scale == 1.0,
     "융해는 Mori 공정 **바운드**이고 `melt_scale` 은 쓰지 않는다 (내림폭이 곧 공정선이다)")
 
@@ -336,17 +335,28 @@ row(_low.model_reach(10.0e9)[0] == "model" and _low.model_reach(18.5e9)[0] == "m
     and "측정 구간" in _low.model_reach(18.5e9)[1],
     "⚠ **모형 구간이 두 밴드로 갈려 인쇄된다** — 17.5 GPa 아래는 «측정이 받치는 구간 안», 그 위는 "
     "«측정 구간(1.5–17.5 GPa) 위, 적합 자신의 사거리»")
-row(_shoot_gap(0.9, "fe_s_13wt_19gpa") is not None or True,
+# ⚠ 다시 핀 (핵 두 앵커 등록 1cdff0a3): 옛 행은 `_shoot_gap(0.9, …)` 를 불렀다(결과는 «or True» 로 버려졌다). 그
+#   사격은 중심압이 51 GPa 천장 위라 이제 상한 거절로 나가므로 부르지 않는다 — 이 행이 보는 것은 문구다.
+row(eos.FE_S_BELOW_REF_REASON.format(p_gpa=1.0, min_gpa=1.5).startswith("1.0000 GPa"),
     f"⚠ 1.5 GPa **밑**에서는 여전히 거절한다 — 그 문구가 이제 그 수를 이름으로 댄다: "
     f"«{eos.FE_S_BELOW_REF_REASON.format(p_gpa=1.0, min_gpa=1.5)[:58]}…»")
 row(_consumer_ok(0.24, "fe_s_13wt_19gpa") and _consumer_ok(0.24, "fe_s_19wt_19gpa"),
     "⚠ **화성이 실제로 선언한 cmf 0.24 에서는 Fe–S 두 재질이 다 풀린다** — 0.24 는 자름 자리 0.302 "
     "아래다. C60 (b) 가 «선언된 조성은 거절한다» 고 적은 것은 프리셋의 0.325 를 화성의 선언으로 "
     "읽은 탓이다 (C59 (a))")
-row(all(_shoot_ok(c, "fe_s_13wt_19gpa", mass_kg=0.5 * 5.97219e24)
-        for c in (0.20, 0.30, 0.40)),
-    "⚠ 질량 축 — 0.5 M⊕ 는 cmf 0.20·0.30·0.40 이 전부 풀린다 (P_cmb 86.9–72.5 GPa). 바닥 근처가 "
-    "아닌 천체에서는 이 규칙이 한 번도 발화하지 않는다")
+# ⚠ 다시 핀 (핵 두 앵커 등록 1cdff0a3 §2 의 51 GPa 천장): 옛 행 «0.5 M⊕ 는 cmf 0.20·0.30·0.40 이 전부 풀린다
+#   (P_cmb 86.9–72.5 GPa)» 는 Huang 액체를 350 GPa 까지 답하게 하던 때의 것이다. ⚠ **등록 §4 의 «51 GPa 위를 묻는
+#   시험은 없다» 는 이 행을 놓쳤다** — 이제 이 질량은 천장 위라 이름 대고 거절한다(사격의 상한 거절, 문구는 상이 든 천장).
+_mass_why = []
+for _c in (0.20, 0.30, 0.40):
+    try:
+        interior.shoot(0.5 * 5.97219e24, _c, 0.0, "fe_s_13wt_19gpa", potential_temperature=1600.0)
+        _mass_why.append("풀렸다")
+    except ValueError as _e:
+        _mass_why.append(str(_e))
+row(all("앵커 간격(16 GPa)" in w and "전자축퇴 이야기가 아니다" in w for w in _mass_why),
+    "⚠ 질량 축 — 0.5 M⊕ 는 cmf 0.20·0.30·0.40 이 전부 **51 GPa 천장 위**라 이름 대고 거절한다 (옛: 전부 풀렸다, "
+    "P_cmb 86.9–72.5 GPa). 문구는 전자축퇴가 아니라 규칙의 천장을 댄다 (`interior._ceiling_why` 가 상의 `ceiling_why` 를 읽는다)")
 _planted = _plant_floor(30.0 * eos.GPA)
 # C157 메모 8 — ⓒ 는 **바닥 자체**를 판정한다(고리 경로와 무관한 직접 호출): 심은 바닥 바로 아래는 30.0000 GPa 를 이름 대고
 #   거절하고, 바로 위는 답한다. 풀이 수준의 결과(고리가 닫혀 바닥 PhaseGap 이 나오는가, C152 의 이름 댄 거절이 먼저인가)는
@@ -441,15 +451,16 @@ row(bool(_box.melt_free_phases()) and _box.t_melt(25.0 * eos.GPA) is None,
     "없다. 이름만 달지 않으므로 `melt_free_phases()` 가 이 상을 들고, 소비처가 그 이름으로 거절한다")
 row(eos.MATERIALS["fe_s_13wt_19gpa"].has_thermal is False
     and eos.MATERIALS["fe_s_19wt_19gpa"].has_thermal is False,
-    "ⓐ 이원계 두 재질은 **손대지 않았다** — 여전히 `has_thermal = False` 이고 열세 재질의 격자가 "
-    "바이트동일이다 (새 열 상수는 새 빌더에만 붙는다)")
+    "ⓐ 이원계 두 재질은 재질 단위로 여전히 `has_thermal = False` 다 — Balog 상(19 GPa 아래)에 열 상수가 없다. "
+    "(⚠ 핵 두 앵커 등록 §4: 그 위 Huang 상은 이제 순수 Fe 의 α 를 든다; 옛 문구 «손대지 않았다» 는 183 의 것)")
 
-row(abs(eos.MATERIALS["fe_s19_o4_c5permil_19gpa"].k_t(19.0 * eos.GPA, 2100.0, 0.0) / eos.GPA
-        - 49.1) < 0.02,
-    "⚠ **정확히 기준압에서 값이 나온다** (C60 (d), 183 B) — 차분의 발판이 바닥 아래를 짚어 "
-    f"19.0000–19.0019 GPa 가 거절이던 자리다. 한쪽 차분이 돌려주는 K_T "
-    f"{eos.MATERIALS['fe_s19_o4_c5permil_19gpa'].k_t(19.0 * eos.GPA, 2100.0, 0.0) / eos.GPA:.2f} GPa 는 "
-    "이 조성의 **인쇄된 49.1** 그대로다 — 고친 자리가 스스로를 검증한다")
+_box_k = eos.MATERIALS["fe_s19_o4_c5permil_19gpa"].k_t(19.0 * eos.GPA, 2100.0, 0.0)
+_box_ka = eos.MATERIALS["fe_s19_o4_c5permil_19gpa"].phases[0].k_t_at(19.0 * eos.GPA, 2100.0)
+row(abs(_box_k / _box_ka - 1.0) < 1e-5,
+    "⚠ **정확히 19 GPa 에서 값이 나온다** (C60 (d), 183 B — 차분 발판이 바닥 아래를 짚던 자리). "
+    f"**다시 핀 (핵 두 앵커 등록 §1 item 3·4):** K_T 는 이제 유도한 값 {_box_k / eos.GPA:.2f} GPa (해석 "
+    f"{_box_ka / eos.GPA:.2f}; `Material.k_t` 의 중앙차분 h = 1e-4·P 와 1e-5 안 — 2.6e-6 은 Hermite 곡률의 2차 차분 오차) — 옛 행의 «인쇄된 식 8 의 49.1» 은 보고 줄이 됐다 (식 7 의 두 ρ 와 "
+    "식 8 의 두 K_T 는 c_S ≳ 0.29 에서 함께 지켜지지 않는다, 등록 §1 item 4)")
 row(eos.MATERIALS["fe_prem"].phases[0].density(136.0e9) == 9916.93698295698,
     "그 클램프는 바닥이 0 인 재질에 안 걸린다 — fe_prem 은 비트 동일")
 
@@ -468,10 +479,16 @@ row(_v == "composition-substitute" and _g == _own and abs(_own - 2.8718) < 5e-4
     f"여전히 `{_dens}` 다. ⚠ **기준선 이동** (브리프 180 C): 이 자리는 180 B 에서 "
     "`phase-mismatch` · 폴백 1.5 · 재질값 0.3524 였다 — 압력 분할이 19–35 GPa 에 Huang 의 "
     "**실측 액체 세트**를 넣었고, 그 구간이 화성의 CMB 를 덮는다")
-_g2, _v2, _own2, _dens2 = eos.core_gamma(eos.MATERIALS["fe_s_19wt_19gpa"], 25.0 * eos.GPA, 2000.0)
+# ⚠ 다시 핀 (핵 두 앵커 등록 §4, 선언): 이원계의 Huang 상(19 GPa 위)은 이제 순수 Fe 의 α 를 든다. 그래서 «열 상수가
+#   없으면 폴백» 의 행은 열 상수가 없는 **Balog 상(19 GPa 아래)** 에서 묻고, 25 GPa 는 자기 γ 를 등급과 함께 배달한다.
+_g2, _v2, _own2, _dens2 = eos.core_gamma(eos.MATERIALS["fe_s_19wt_19gpa"], 10.0 * eos.GPA, 2000.0)
 row(_v2 == "no-thermal-set" and _g2 == eos.CORE_GAMMA_FALLBACK,
-    "⚠ 이원계는 열 상수가 없으니 `no-thermal-set` 이고 **폴백으로 간다** — 그 자리가 `ok` 였을 때는 "
+    "⚠ 이원계의 Balog 상(10 GPa)은 열 상수가 없으니 `no-thermal-set` 이고 **폴백으로 간다** — 그 자리가 `ok` 였을 때는 "
     "**초록 판정으로 γ = 0** 을 배달했고, 그것은 §1b 가 금지한 모양이 한 층 위에서 재현된 것이다")
+_g2b, _v2b, _own2b, _ = eos.core_gamma(eos.MATERIALS["fe_s_19wt_19gpa"], 25.0 * eos.GPA, 2000.0)
+row(_v2b == "composition-substitute" and _g2b == _own2b > 0.0,
+    f"이원계 25 GPa (옛: `no-thermal-set` · 폴백 1.5): 두 앵커 상이 순수 Fe 의 α 를 들어 **자기 γ {_g2b:.4f}** 를 "
+    "`composition-substitute` 로 배달한다 — 재질의 `fit_composition` «Fe-S» 와 열 출처 «pure-Fe-liquid» 가 갈린다")
 _g3, _v3, _own3, _dens3 = eos.core_gamma(eos.MATERIALS["fe_s19_o4_c5permil_19gpa"], 25.0 * eos.GPA, 2000.0)
 row(_v3 == "composition-substitute" and _g3 == _own3 > 0.0,
     f"상자 재질은 `{_v3}` — 상은 맞고 조성만 대체이므로 **자기 γ {_g3:.4f} 를 쓰되 등급이 내려간다**")
@@ -485,13 +502,20 @@ row(True, "⚠ 비핵 층(silicate·h_he·h2o)은 이름 대며 멈춘다 — �
           "γ 와 3.2 배 차이라, 돌려주면 그 층에서만 답이 조용히 튄다")
 try:
     import core_state as _cs
-    _r = _cs.solve(core_pressure=60.0, cmb_pressure=25.0, core_temperature=1961.0,
+    # ⚠ 다시 핀 (핵 두 앵커 등록 §2·§4): 옛 행은 중심 60 GPa 에서 «값 · 폴백 카운트 1» 이었다. 60 GPa 는 이제 51 GPa 천장
+    #   위라 이름 대고 거절하므로, 이 행의 뜻(«예외가 아니라 값») 은 중심 45 GPa 로 묻고, 60 GPa 는 거절 문구를 본다.
+    _r = _cs.solve(core_pressure=45.0, cmb_pressure=25.0, core_temperature=1961.0,
                    cmb_temperature=1910.0, core_material="fe_s_19wt_19gpa",
                    core_cmb_temperature=2400.0, body_class="rocky")
-    row(_r.applicable and _r.values.get("core_gamma_fallback") == 1,
+    row(_r.applicable and _r.values.get("core_gamma_fallback") == 0,
         "⚠ **p_cmb 25 GPa 의 이원계 핵**(괄호 창 위라 선언 갈래로 내려간다)이 예외가 아니라 값을 "
-        f"낸다 — `{_r.regime}` · 폴백 카운트 {_r.values.get('core_gamma_fallback')}. `_adiabat` 이 "
-        "`core_gamma` 를 try 없이 부르던 자리이고, 그 천체가 노드를 터뜨렸다")
+        f"낸다 — `{_r.regime}` · 폴백 카운트 {_r.values.get('core_gamma_fallback')} (옛 1: 이원계가 이제 자기 γ 를 든다). "
+        "`_adiabat` 이 `core_gamma` 를 try 없이 부르던 자리이고, 그 천체가 노드를 터뜨렸다")
+    _r60 = _cs.solve(core_pressure=60.0, cmb_pressure=25.0, core_temperature=1961.0,
+                     cmb_temperature=1910.0, core_material="fe_s_19wt_19gpa",
+                     core_cmb_temperature=2400.0, body_class="rocky")
+    row(not _r60.applicable and "천장(51.0 GPa)" in (_r60.reason or ""),
+        f"중심 60 GPa 는 51 GPa 천장 위라 이름 대고 거절한다 — `{_r60.regime}` «{(_r60.reason or '')[:60]}…»")
 except Exception as _e:
     row(False, f"p_cmb 25 GPa 이원계에서 {type(_e).__name__}: {str(_e)[:70]}")
 
@@ -506,9 +530,11 @@ print("      이원계는 S 가 최소 20 wt% 필요» 와 같고, 핵 밀도는
 print("      어느 cmf 에서도 가까워지지 않는다. tools/c55_cells.py 가 이 표를 낸다.")
 
 print("\n기록 — 두 앵커를 서로에게 외삽하면 2.9 % 벌어진다 (판정 아님, 179 측정)")
-a19, a35 = eos.huang_fes_phase(eos.HUANG_S4_CS, "19GPa"), eos.huang_fes_phase(eos.HUANG_S4_CS, "35GPa")
-print(f"      19 GPa 앵커를 35 GPa 로 밀면 {a19.density(35.0e9):.1f} kg/m³, "
-      f"35 GPa 앵커 자신은 {a35.rho0:.1f} — {abs(a19.density(35.0e9) - a35.rho0) / a35.rho0 * 100:.1f} %.")
+# ⚠ 옛 기록 (179): 19 GPa 앵커 하나를 35 GPa 로 밀면 35 GPa 앵커와 2.9 % 벌어졌다. 두 앵커 규칙(1cdff0a3)은 그
+#   폭을 없앤다 — 아래는 이제 같은 수다.
+a2 = eos.huang_fes_phase(eos.HUANG_S4_CS)
+print(f"      두 앵커 규칙의 35 GPa · 2400 K: {a2.density(35.0e9, 2400.0):.1f} kg/m³, 35 GPa 앵커 자신은 "
+      f"{eos.huang_fes_density(eos.HUANG_S4_CS, '35GPa') * 1e3:.1f} — 옛 한 앵커 외삽의 2.9 % 는 사라졌다 (오너 a7181489).")
 print("      ⚠ 이것은 **우리 오차가 아니라 논문 자신의 두 적합 사이의 폭**이다. 어느 쪽이 맞는지는")
 print("      이 파일이 말하지 않는다 — 화성 CMB 압력대(19–40 GPa)가 두 앵커를 다 지나므로, 어느")
 print("      앵커로 푸느냐가 곧 선택이고 그 선택은 판정 칸에서 재야 한다 (C55).")
@@ -648,25 +674,23 @@ row(_rho_low > 0.0 and _depth_low < 0.5 and _depth_low < _depth_mars / 2.0,
 #   시행이 가드 밖에서 Newton 을 돌리다 «밀도가 수렴하지 않는다» 로 터졌다(전체 6.5 GPa 언저리가
 #   냉각 1.271 GPa 로 내려간 자리). 이제 둘이 같은 수를 본다 — 아래 두 줄이 그것을 묻는다.
 print("\n⑰ 항목 19-b — 바닥은 뒤집기가 쓰는 압력에")
+# ⚠ 다시 핀 (핵 두 앵커 등록 §1·§2): 상자 상은 이제 ρ(P, T) 가 닫힌 꼴이라 **열압력을 빼고 냉각 곡선을 뒤집는 일이 없다**
+#   — 옛 두 행(«전체로는 바닥 위, 냉각으로는 바닥 아래인 자리는 PhaseGap» · «냉각 압력이 바닥 위면 답한다») 이 묻던
+#   가드는 이 상에 걸리지 않는다. 오늘 그 가드를 타는 상(`graded_below_ref`)은 없다. 새 행은 그 사실과 바닥 0 GPa 를 본다.
 _q = eos.MATERIALS["fe_s19_o1_c5permil_19gpa"]
 _ph = _q.phases[0]
-_hot = 3000.0                      # 앵커 2100 K 보다 뜨겁다 → P_th > 0 → 냉각 압력이 내려간다
-_p_th = _ph.thermal_pressure(_hot, _hot)
-_total = _ph.p_min + 0.5 * _p_th   # 전체로는 바닥 위, 냉각으로는 바닥 아래인 자리
+_hot = 3000.0
+row(_ph.thermal_pressure(_hot, _hot, 1.0e9) == 0.0 and not _ph.graded_below_ref and _ph.p_min == 0.0
+    and _q.density(0.0, _hot, _hot) > 0.0,
+    f"두 앵커 상: 열압력 0 (ρ 가 T 를 이미 든다) · 바닥 0 GPa 에서 {_hot:.0f} K 도 답한다 "
+    f"(ρ {_q.density(0.0, _hot, _hot):.1f} kg/m³; 옛 가드 행은 이 상에 걸리지 않는다)")
 try:
-    _q.density(_total, _hot, _hot)
+    _q.density(-0.5e9, _hot, _hot)
     _got = "값을 냈다"
 except eos.PhaseGap as gap:
-    _got = str(gap)
-except ValueError as bad:
-    _got = f"VALUEERROR {bad}"
-row("냉각 압력" in _got and "되돌이점" in _got,
-    f"전체 {_total/eos.GPA:.4f} GPa · 열압력 {_p_th/eos.GPA:+.4f} GPa 인 자리는 **이름 대고 거절한다** — "
-    f"`ValueError` 가 아니라 `PhaseGap` 이고, 문구가 전체·냉각 두 압력을 다 든다 ({_got[:70]}…)")
-_cold_ok = _ph.p_min + 1.5 * _p_th
-row(_q.density(_cold_ok, _hot, _hot) > 0.0,
-    f"같은 온도라도 냉각 압력이 바닥 위면 **답한다** (전체 {_cold_ok/eos.GPA:.4f} GPa) — "
-    "가드가 온도를 이유로 구간을 통째로 닫지 않는다")
+    _got = gap.reason
+row(_got.startswith("-0.5000 GPa"),
+    f"0 GPa 밑은 오늘의 `under_reason` 문구로 이름 대고 거절한다 (등록 §2 바닥) — «{_got[:60]}…»")
 
 print("\n⑰ C157 메모 3 — 핵-맨틀 경계가 적합 바닥 아래인 답의 거절이 재료 자신의 출처를 댄다")
 # C157 메모 8 (일반화) — ⓒ 와 같은 부류: 고리 풀이가 닫혀야 나오는 바닥 거절의 **문구**를 판정하므로, 문구는 거절 함수
@@ -682,11 +706,11 @@ except eos.PhaseGap as gap:
     _t = gap.reason
 _m = _re.match(r"([0-9.]+) GPa 는 .*?아래 끝\(([0-9.]+) GPa", _t)
 _p_said, _lim_said = (float(_m.group(1)), float(_m.group(2))) if _m else (None, None)
-row(_m is not None and _p_said < _lim_said and abs(_lim_said - _floor) < 1e-3
-    and "되돌이점" in _t and "수렴한 답의 핵-맨틀 경계가" in _t,
-    f"다원계 Fe–S 핵(적합 바닥 {_floor:.4f} GPa)·경계 9.9039 GPa 의 거절이 넘은 그 끝의 값 · 종류(되돌이점)를 앞에, 경계 세부를 뒤에 "
-    f"든다(직접 호출) — 인쇄된 p {_p_said} < 인쇄된 끝 {_lim_said} ({_t[:60]}…)")
-interior.COMPOSITIONS["_c157n3"] = (0.75, 0.0, 0.0, "fe_s19_o4_c5permil_19gpa")       # 바닥 9.93 GPa — 화성 질량 cmf 0.75 가 그 밑에 경계를 둠
+# ⚠ 다시 핀 (핵 두 앵커 등록 §2 «What this changes»): 옛 행은 바닥 9.93 GPa(혼합 BM2 되돌이점) 밑 경계 9.9039 GPa 를
+#   거절했다. 새 바닥은 0 GPa 라 이 경계는 **답한다**(19 GPa 아래 등급). 거절 문구의 형태는 아래 잘림 갈래 행이 본다.
+row(_floor == 0.0 and _t == "",
+    f"다원계 Fe–S 핵의 바닥은 이제 {_floor:.4f} GPa — 경계 9.9039 GPa 는 거절하지 않는다 (옛: 바닥 9.93 GPa 밑이라 거절)")
+interior.COMPOSITIONS["_c157n3"] = (0.75, 0.0, 0.0, "fe_s19_o4_c5permil_19gpa")       # 옛 바닥 9.93 GPa (이제 0) — 화성 질량 cmf 0.75
 try:
     try:
         _r17 = interior.solve(0.1074, composition="_c157n3", potential_temperature=1600.0, body_class="rocky")

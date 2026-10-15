@@ -1,6 +1,6 @@
 {
- "python": "3.12.3",
- "frozen_at": "2026-10-08",
+ "python": "3.11.16",
+ "frozen_at": "2026-10-16",
  "bracket": [
   0.13,
   0.25
@@ -25,19 +25,19 @@
  },
  "files": {
   "interior.py": {
-   "bytes": "b9ae82bc82de9664",
-   "code": "9f25187fd393b2d0"
+   "bytes": "0f55560857556efe",
+   "code": "aaed7ca5585b9cb6"
   },
   "eos.py": {
-   "bytes": "3c74d308cc1df7f0",
-   "code": "d78b24d9e3d2c1ce"
+   "bytes": "14a413d7139a11f0",
+   "code": "6b8c020904d160d9"
   },
   "chain.yaml": {
    "bytes": "1b1574d73140be04"
   },
   "mantle_composition.py": {
    "bytes": "6505772035c64fe5",
-   "code": "1524ec364dad1355"
+   "code": "96995507ae59523e"
   },
   "mantle_tables/0663e6a031cae4dc.json": {
    "bytes": "e49e6ea6bc4311c8"
@@ -46,22 +46,21 @@
  "fixings": {
   "box_ceiling": {
    "halvings": 6,
-   "core_sulphur_wt": 0.1890625,
-   "core_radius_km": 1695.3103895291877,
-   "core_radius_fraction": 0.500184234941122,
-   "core_mass_fraction": 0.21252966875505383,
-   "core_mean_density_gcc": 6.6789372899103485,
-   "nmoi": 0.3626265628050738
+   "core_sulphur_wt": 0.1478125,
+   "core_radius_km": 1695.7758943099486,
+   "core_radius_fraction": 0.5003216312832467,
+   "core_mass_fraction": 0.2126321715823705,
+   "core_mean_density_gcc": 6.676657117965609,
+   "nmoi": 0.3628348870714008
   },
   "box_floor": {
-   "bracket_miss": true,
    "halvings": 2,
-   "bracket": [
-    0.13,
-    0.25
-   ],
-   "target_km": 1845.0,
-   "reason": "축이 목표를 안 감싼다 — S 괄호 안에서 핵+층이 목표에 못 닿음"
+   "core_sulphur_wt": 0.20500000000000002,
+   "core_radius_km": 1711.3200657939135,
+   "core_radius_fraction": 0.5049077291891004,
+   "core_mass_fraction": 0.21614057149618784,
+   "core_mean_density_gcc": 6.603558638928347,
+   "nmoi": 0.3629590934496621
   }
  }
 }

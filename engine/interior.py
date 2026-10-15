@@ -3449,6 +3449,11 @@ def _ceiling_why(mat) -> str:
     그렇지 않다 — 무거운 성분 하나의 적합이 끝났을 뿐이고, 나머지 성분은 멀쩡하다.
     두 경우에 같은 문장을 돌려주면 거절 이유가 거짓이 된다."""
     parts = getattr(mat, "parts", None)
+    top_why = getattr(mat.phases[-1], "ceiling_why", "") if not parts and getattr(mat, "phases", ()) else ""
+    if top_why:
+        # ⚠ **상이 자기 천장의 이유를 들면 그것을 쓴다** (핵 두 앵커 등록 §2): 51 GPa 천장은 전자축퇴가 아니라
+        #   «앵커 밖으로 사이 간격보다 멀리 외삽하지 않는다» 는 규칙이다 — 아래 TFD 문장을 붙이면 거절 이유가 거짓이 된다.
+        return top_why
     if not parts:
         return ("그 위는 전자축퇴가 지배하는 영역이고 (Thomas-Fermi-Dirac), 이 "
                 "레시피에는 그 상태방정식이 없다 — Seager+ 2007 §III.2 가 그 자리를 "
@@ -5859,16 +5864,16 @@ SULPHUR_ANCHOR_DECLARATIONS = ("mass_earth", "radius_earth", "core_plus_layer_ra
 def _sulphur_core(w_s: float, pin: str):
     """황 분율 w_s 의 액체 Fe–S–O–C 핵 재질을 `earth_like` 의 핵 자리에 잠시 끼운다 — 맞춤 · 읽기 · 고정 풀이가
     **같은 재질 짓기**를 쓴다(두 벌로 지으면 굳힌 값과 노드 값이 다른 길로 나온다)."""
-    from eos import Material, core_mole_fractions, huang_core_phase, FE_S_FIT_FLOOR_REASON, FE_S_FIT_FLOOR_SOURCE, MATERIALS
+    from eos import Material, core_mole_fractions, huang_core_phase, FE_S_FIT_FLOOR_REASON, FE_S_FIT_FLOOR_SOURCE, HUANG_CEILING_REASON, MATERIALS
     w_o = LIGHT_ELEMENT_PINS[pin]["O"]
     w_c = LIGHT_ELEMENT_PINS[pin]["C"]
     x = core_mole_fractions({"S": w_s, "O": w_o, "C": w_c})
     name = f"fe_core_fit_s{w_s * 100:.4f}_{pin}"
     MATERIALS[name] = Material(
         name, f"액체 Fe–S–O–C · S {w_s * 100:.4f} wt% ({pin})",
-        (huang_core_phase(x, "19GPa"),), fit_composition="Fe-S-O-C", role="core",
+        (huang_core_phase(x),), fit_composition="Fe-S-O-C", role="core",
         gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다",
-        under_reason=FE_S_FIT_FLOOR_REASON, floor_source=FE_S_FIT_FLOOR_SOURCE)
+        under_reason=FE_S_FIT_FLOOR_REASON, floor_source=FE_S_FIT_FLOOR_SOURCE, over_reason=HUANG_CEILING_REASON)
     saved = COMPOSITIONS["earth_like"]
     COMPOSITIONS["earth_like"] = (saved[0], saved[1], saved[2], name)
     try:
@@ -5928,14 +5933,14 @@ def pin_for(spec) -> str | None:
 @contextmanager
 def _declared_light_core(spec, composition: str):
     """선언 수 S · O · C 의 액체 Fe–S–O–C 핵을 조성 `composition` 의 핵 자리에 잠시 끼운다(`_sulphur_core` 와 같은 짓기)."""
-    from eos import Material, core_mole_fractions, huang_core_phase, FE_S_FIT_FLOOR_REASON, FE_S_FIT_FLOOR_SOURCE, MATERIALS
+    from eos import Material, core_mole_fractions, huang_core_phase, FE_S_FIT_FLOOR_REASON, FE_S_FIT_FLOOR_SOURCE, HUANG_CEILING_REASON, MATERIALS
     x = core_mole_fractions({"S": spec["S"], "O": spec["O"], "C": spec["C"]})
     name = f"fe_core_decl_s{spec['S'] * 100:.4f}_o{spec['O'] * 100:.4f}_c{spec['C'] * 100:.4f}"
     MATERIALS[name] = Material(
         name, f"액체 Fe–S–O–C · S {spec['S'] * 100:.4f} · O {spec['O'] * 100:.4f} · C {spec['C'] * 100:.4f} wt% (선언)",
-        (huang_core_phase(x, "19GPa"),), fit_composition="Fe-S-O-C", role="core",
+        (huang_core_phase(x),), fit_composition="Fe-S-O-C", role="core",
         gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다",
-        under_reason=FE_S_FIT_FLOOR_REASON, floor_source=FE_S_FIT_FLOOR_SOURCE)
+        under_reason=FE_S_FIT_FLOOR_REASON, floor_source=FE_S_FIT_FLOOR_SOURCE, over_reason=HUANG_CEILING_REASON)
     saved = COMPOSITIONS[composition]
     COMPOSITIONS[composition] = (saved[0], saved[1], saved[2], name)
     try:

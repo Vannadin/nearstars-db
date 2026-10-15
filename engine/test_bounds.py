@@ -67,7 +67,11 @@ def sites() -> dict:
 
 def b_sites(o: dict) -> None:
     ok(o["row4_undeclared"] == cs.CONDUCTOR_UNDECIDED, f"B-sites row 4: undeclared t_top below the bracket → undecided (was solid); got {o['row4_undeclared']}")
-    ok(o["row4_declared"] == cs.CONDUCTOR_SOLID, f"B-sites row 4: declared t_top, centre from its own adiabat, below the bracket → solid; got {o['row4_declared']}")
+    # ⚠ 다시 핀 (핵 두 앵커 등록 1cdff0a3 §4, 선언: 이원계 Huang 상이 순수 Fe 의 α 를 든다). 옛: «solid» — 중심 단열선이
+    #   폴백 γ 1.5 로 700 K → ~934 K (괄호 1023 K 아래). 이제 중심(20 GPa, Huang 상)의 γ 는 자기 값 ~2.6 이고
+    #   `_adiabat` 의 T ∝ ρ^γ 가 Balog(18 GPa)/Huang(20 GPa) 이음매의 밀도 차(~21 %, 이 상 밖의 기존 이음매)를 그 γ 로 건너
+    #   ~1182 K — 괄호 안이라 «undecided». ⚠ 등록 §4 의 독자 표는 core_state 의 이원계 읽기(이 행)를 놓쳤다.
+    ok(o["row4_declared"] == cs.CONDUCTOR_UNDECIDED, f"B-sites row 4: declared t_top 700 K, centre from its own adiabat (~1182 K, own γ) inside the bracket → undecided (was solid with the fallback γ); got {o['row4_declared']}")
     ok(o["row4_declared_centre_in_bracket"] == cs.CONDUCTOR_UNDECIDED, f"B-sites row 4: declared 900 K, centre adiabat ~1052 K inside the bracket → undecided; got {o['row4_declared_centre_in_bracket']}")
     ok(o["row4_liquid"] == cs.CONDUCTOR_LIQUID, f"B-sites row 4: a lower bound above the bracket → liquid (supported); got {o['row4_liquid']}")
     ok(o["row5_150"] == interior.SILICATE_STATE_UNDECIDED, f"B-sites row 5: rock at 150 GPa below the MgSiO₃ curve → undecided; got {o['row5_150']}")

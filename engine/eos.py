@@ -2475,80 +2475,241 @@ def huang_core_k_t_gpa(x: dict[str, float], anchor: str = "19GPa") -> float:
     return k_t
 
 
-def huang_core_phase(x: dict[str, float], anchor: str = "19GPa") -> "Phase":
-    """다원계 액체 핵의 `Phase` — 고압 기준 BM2, **열 상수까지** (C55 2단계, 브리프 183).
+# ── 액체 핵: Huang+ 2023 의 **두 앵커** 규칙 (오너 a7181489, 핵 두 앵커 등록 1cdff0a3) ─────────────────
+# ⚠ **19 GPa 앵커 하나를 BM2 로 이어 쓰던 것을 그만둔다.** 그 외삽은 24 GPa 위에서 고정 (P, T) 의 ρ 가 S 와
+#   함께 **오르게** 만들었다 — 논문은 두 앵커 모두에서 ∂ρ/∂c_S < 0 을 인쇄한다 (r2, 노트 4 B3). 규칙 (등록 §1):
+#   1. 순수 액체 Fe: 경로 T_path(P) = 2100 K + 300 K·(P − 19 GPa)/16 GPa 위에서 ln ρ 는 P 의 3차 Hermite —
+#      끝값은 Table 1 의 ρ, 끝 기울기는 경로를 따른 d ln ρ/dP = 1/K_T − α·(300 K/16 GPa). 경로 밖은
+#      ln ρ_Fe(P, T) = ln ρ_Fe,path(P) − α(P)·(T − T_path(P)). α(P) 와 T_path(P) 는 **한 직선**씩이고 두 앵커
+#      밖으로도 그대로 잇는다 — 그래서 19·35 GPa 이음매가 모든 T 에서 C¹ 이다.
+#   2. 혼합: 식 7 을 고정 (P, T) 에서, 경로 위 순수 Fe 에 대한 비로 — ρ_mix = ρ_Fe(P, T)·[1 + Δρ(x, P)/ρ_Fe(P, T_path)].
+#      Δρ 의 Table S5 열은 P 에 선형(19·35 GPa 값을 지나는 직선, 밖으로도 이어서). 괄호가 T 에 무관하므로
+#      α_mix = α_Fe(P) — 논문의 «α 는 조성에 무관» 이 그대로 성립한다.
+#   3. K_T 는 **유도**한다 (섞지 않는다): K_T = 1/(∂ln ρ/∂P)_T, 해석적으로. αK_T = α(P)·K_T, C_V 는 P 에 선형
+#      494 → 496, γ = αK_T/(C_V ρ) (식 4) — 그래서 γ 는 조성에 따라 움직인다(α·C_V 를 조성 무관으로 두면 둘을 함께
+#      지킬 수 없다; 오늘의 상도 같았다).
+#   4. 식 8 은 모형이 아니라 보고 줄이다 (`huang_core_k_t_gpa` 가 그 값이다).
+#   앵커 밖: 19 GPa 아래는 19 GPa 앵커의 BM2 등온선, 35 GPa 위는 35 GPa 앵커의 것 (19 GPa 것은 절대 아님).
+#   0 GPa 바닥과 **51 GPa 천장** (35 GPa + 앵커 간격 16 GPa — 앵커 밖으로 사이 간격보다 멀리 외삽하지 않는다,
+#   r2 H1 (i)). 35 GPa 위는 답하되 등급이 내려가고, c_S > 0.30 (Huang 의 표본 끝) 도 등급으로 — 거절이 아니다.
+#   등급은 «judgment»: 앵커 사이·밖의 규칙(Hermite, 경로, P 에 선형인 열, 유도 K_T)은 우리 것이다.
+HUANG_P_FLOOR = 0.0                      # Pa. 새 꼴의 순수 Fe 되돌이점은 −9.8 GPa 라 0 GPa 가 묶는 끝이다 (등록 §2)
+HUANG_P_CEILING = 51.0 * GPA             # Pa. 35 GPa + 16 GPa (등록 §2, r2 H1 (i)); α(P) 는 85.6 GPa 에서 0 이 된다
+HUANG_C_S_SAMPLED = 0.30                 # 몰분율. Huang 의 Fe–S 표본 끝 (Fig. 2 · SI Fig. S3) — 넘으면 등급
+HUANG_CEILING_REASON = (
+    "{p_gpa:.1f} GPa 는 두 앵커 액체 핵 규칙의 천장({max_gpa:.1f} GPa) 위다 — 35 GPa 앵커에서 앵커 간격(16 GPa)만큼까지만 "
+    "잇고 그보다 멀리 외삽하지 않는다 (핵 두 앵커 등록 §2, r2 H1 (i)). 직선 α(P) 는 85.6 GPa 에서 0 이 된다")
+HUANG_GRADED_REASON = (
+    "{p_gpa:.4g} GPa 는 두 앵커(19·35 GPa) 위로 {beyond_gpa:.4g} GPa — 35 GPa 앵커의 BM2 등온선과 직선 α(P)·T_path(P)·"
+    "Table S5 열을 이어 쓴 값이다 (등급 judgment, 천장 51 GPa; 핵 두 앵커 등록 §2)")
+HUANG_C_S_REASON = (
+    "c_S {c_s:.4f} 는 Huang+ 2023 의 Fe–S 표본 끝 0.30 위로 {beyond:.4f} — Table S5 의 S 열을 그 끝 너머로 쓴 값이다 "
+    "(등급, 거절 아님: 거절하면 화성의 훑기 구간 [0.13, 0.25] wt 안에 벽이 선다; 핵 두 앵커 등록 §2)")
+_HUANG_P19, _HUANG_P35 = HUANG_FE_ANCHORS["19GPa"][0], HUANG_FE_ANCHORS["35GPa"][0]
+_HUANG_T19, _HUANG_T35 = HUANG_FE_ANCHORS["19GPa"][1], HUANG_FE_ANCHORS["35GPa"][1]
 
-    ⚠ **여기는 `alpha_k` 를 붙이고 `huang_fes_phase` 는 안 붙인다.** 그 함수의 주석이 적어 둔
-    함정은 «α 를 붙이면서 `t_ref` 를 안 적는 것» 이다 — 그러면 `delta_t` 가 절대영도부터 데운다.
-    앵커의 온도(2100·2400 K)를 `t_ref` 로 **함께** 적으면 그 함정이 없고, 그것이 이 빌더가 하는
-    일이다. 기존 두 재질은 손대지 않는다 (183 판정선 ⓐ: 열세 재질 바이트동일).
 
-    ⚠ **α·C_V 에는 조성 도함수가 인쇄되지 않았다** — Table S5 는 ρ 와 K_T 만 준다. 그래서 이
-    상은 앵커의 순수 Fe 값을 그대로 들고, **그 «도함수 0» 이 우리 가정이라는 것을 라벨이 말한다.**
-    K_T 는 혼합의 것을 쓰므로 `alpha_k = α_Fe × K_T,mix` 다.
+def _huang_line(v19: float, v35: float, p: float) -> tuple[float, float]:
+    """19·35 GPa 값을 지나는 직선의 (값, P 기울기) — 앵커 밖으로도 같은 직선."""
+    s = (v35 - v19) / (_HUANG_P35 - _HUANG_P19)
+    return v19 + s * (p - _HUANG_P19), s
 
-    ⚠ **녹는곡선은 없다.** Fe–Fe₃S 공정선은 이원계의 것이고 Fe–S–O–C 의 인쇄된 곡선은 보유
-    집합에 없다 — 이름만 달아 두면 178 C′ 가 잡은 모양이 되므로 `melt` 를 비워 둔다. 결과는
-    `melt_free_phases()` 가 이 상을 이름 대어 들고, 소비처가 그 이름으로 거절하는 것이다."""
-    p_ref, t_ref, _rho, _kt = HUANG_FE_ANCHORS[anchor]
-    alpha, c_v, _gamma = HUANG_FE_THERMAL[anchor]
-    rho = huang_core_density(x, anchor) * 1e3           # g/cm³ → kg/m³
-    k_t = huang_core_k_t_gpa(x, anchor) * GPA
-    tag = "".join(f"{k}{x.get(k, 0.0):.4f}" for k in ("S", "O", "C") if x.get(k, 0.0) > 0.0)
-    return Phase(
-        name=f"fe_core_{anchor}_{tag}", form="bm2_ref",
-        rho0=rho, k0=k_t, k0p=4.0,
-        # ⚠ **바닥은 고른 수가 아니라 적합이 스스로 정하는 자리다** (항목 19, 오너 2026-09-20).
-        #   `bm2_ref` 의 압력은 x = ρ/ρ₀ 가 (5/7)^{3/2} = 0.6037 일 때 **최소**가 되고 그 아래로는
-        #   다시 올라간다 — 거기서는 한 압력에 두 밀도가 있어 뒤집기가 답을 못 낸다. 그래서
-        #   여기가 **«못 푼다» 바닥**이고, 그 위 ~ `p_ref` 사이는 답을 내되 세고 깊이를 남긴다.
-        #   측정된 구간은 여전히 19 GPa 위뿐이다.
-        p_max=MORI_FES_P_MAX, p_min=p_ref + 1.5 * k_t * (BM2_TURN ** (7.0 / 3.0)
-                                                        - BM2_TURN ** (5.0 / 3.0)),
-        p_ref=p_ref, graded_below_ref=True,
-        alpha_k=alpha * k_t, t_ref=t_ref, t_ref_kind="isotherm", c_v_ref=c_v,
+
+def _huang_bm2_ln(anchor: str, p: float) -> tuple[float, float]:
+    """순수 액체 Fe 의 그 앵커 BM2 등온선(K′ = 4) 위 (ln ρ, d ln ρ/dP) — 앵커 밖 구간의 순수 Fe."""
+    p_ref, _t, rho_ref, k_ref = HUANG_FE_ANCHORS[anchor]
+    rho_ref, k_ref = rho_ref * 1e3, k_ref * GPA
+    c = 1.5 * k_ref
+    lo, hi, x = BM2_TURN, 4.0, 1.0
+    for _ in range(100):                    # 보호된 Newton: 되돌이점 위 단조 가지 [BM2_TURN, 4] 안에서만
+        f = p_ref + c * (x ** (7.0 / 3.0) - x ** (5.0 / 3.0)) - p
+        if f > 0.0:
+            hi = x
+        else:
+            lo = x
+        d = c * (7.0 / 3.0 * x ** (4.0 / 3.0) - 5.0 / 3.0 * x ** (2.0 / 3.0))
+        nxt = x - f / d if d > 0.0 else 0.5 * (lo + hi)
+        if not lo < nxt < hi:
+            nxt = 0.5 * (lo + hi)
+        if abs(nxt - x) <= 1e-15 * x:
+            x = nxt
+            break
+        x = nxt
+    else:
+        raise ValueError(f"순수 Fe {anchor} BM2 등온선이 {p / 1e9:.6g} GPa 에서 수렴하지 않는다")
+    k = c * (7.0 / 3.0 * x ** (7.0 / 3.0) - 5.0 / 3.0 * x ** (5.0 / 3.0))
+    return math.log(rho_ref * x), 1.0 / k
+
+
+def huang_fe_path(p: float) -> tuple[float, float]:
+    """순수 액체 Fe 의 경로 T_path(P) 위 (ln ρ, d ln ρ/dP) — 사이는 Hermite, 밖은 그 앵커의 BM2 를 경로로 옮긴 것."""
+    t_path, dt_path = _huang_line(_HUANG_T19, _HUANG_T35, p)
+    alpha, dalpha = _huang_line(HUANG_FE_THERMAL["19GPa"][0], HUANG_FE_THERMAL["35GPa"][0], p)
+    if _HUANG_P19 <= p <= _HUANG_P35:
+        h = _HUANG_P35 - _HUANG_P19
+        u = (p - _HUANG_P19) / h
+        ends = []
+        for tag in ("19GPa", "35GPa"):
+            _p, _t, rho, k = HUANG_FE_ANCHORS[tag]
+            ends.append((math.log(rho * 1e3), 1.0 / (k * GPA) - HUANG_FE_THERMAL[tag][0] * dt_path))
+        (l0, m0), (l1, m1) = ends
+        h00, h10, h01, h11 = (2 * u ** 3 - 3 * u ** 2 + 1, u ** 3 - 2 * u ** 2 + u, -2 * u ** 3 + 3 * u ** 2, u ** 3 - u ** 2)
+        d00, d10, d01, d11 = (6 * u ** 2 - 6 * u, 3 * u ** 2 - 4 * u + 1, -6 * u ** 2 + 6 * u, 3 * u ** 2 - 2 * u)
+        return (h00 * l0 + h10 * h * m0 + h01 * l1 + h11 * h * m1,
+                (d00 * l0 + d01 * l1) / h + d10 * m0 + d11 * m1)
+    anchor, t_a = ("19GPa", _HUANG_T19) if p < _HUANG_P19 else ("35GPa", _HUANG_T35)
+    lr, dlr = _huang_bm2_ln(anchor, p)
+    return lr - alpha * (t_path - t_a), dlr - dalpha * (t_path - t_a) - alpha * dt_path
+
+
+def huang_drho(x: dict[str, float], p: float) -> tuple[float, float]:
+    """식 7 의 Δρ(x, P) [kg/m³] 와 그 P 기울기 — Table S5 의 열을 P 에 선형으로 (S 는 a·c²/2 + b·c, O·C 는 상수열)."""
+    c = x.get("S", 0.0)
+    a, da = _huang_line(HUANG_S_DRHO["19GPa"][0], HUANG_S_DRHO["35GPa"][0], p)
+    b, db = _huang_line(HUANG_S_DRHO["19GPa"][1], HUANG_S_DRHO["35GPa"][1], p)
+    d, dd = b * c + a * c * c / 2.0, db * c + da * c * c / 2.0
+    for k in HUANG_X_DRHO["19GPa"]:
+        v, dv = _huang_line(HUANG_X_DRHO["19GPa"][k], HUANG_X_DRHO["35GPa"][k], p)
+        d, dd = d + v * x.get(k, 0.0), dd + dv * x.get(k, 0.0)
+    return d * 1e3, dd * 1e3
+
+
+@dataclass(frozen=True)
+class HuangTwoAnchorPhase(Phase):
+    """두 앵커 규칙의 액체 핵 상 — ρ(P, T) 가 닫힌 꼴이라 냉각 곡선·열압력으로 뒤집지 않는다 (위 블록, 등록 §1).
+
+    `Phase` 의 읽기 자리를 같은 이름으로 다시 쓴다: `density` (닫힌 꼴), `dpdt_v` = α(P)·K_T (유도 K_T), `c_v_at`
+    (P 에 선형), `gruneisen` (식 4), `thermal_pressure` = 0 (ρ 가 이미 T 를 든다), `density_reach` (35 GPa 위와
+    c_S > 0.30 의 등급), `note_below_ref` (19 GPa 아래를 오늘처럼 센다). `alpha_k`·`c_v_ref` 는 «열 상수가 있다» 는
+    표지일 뿐 (19 GPa 앵커 값) — 이 상의 αK_T 는 P·T 의 함수라 `dpdt_v` 로만 읽는다."""
+    x_s: float = 0.0
+    x_o: float = 0.0
+    x_c: float = 0.0
+
+    def _x(self) -> dict[str, float]:
+        return {"S": self.x_s, "O": self.x_o, "C": self.x_c}
+
+    @property
+    def ceiling_why(self) -> str:
+        """`p_max` 위가 무엇인지 — 사격의 상한 거절(`interior._ceiling_why`)이 읽는다. 전자축퇴가 아니라 규칙의 천장이다."""
+        return ("51 GPa 는 두 앵커 액체 핵 규칙의 천장이다 — 35 GPa 앵커에서 앵커 간격(16 GPa)만큼까지만 잇고 그보다 멀리 "
+                "외삽하지 않는다 (핵 두 앵커 등록 §2, r2 H1 (i)). 전자축퇴 이야기가 아니다")
+
+    def ln_rho(self, p: float, t: float) -> tuple[float, float]:
+        """(ln ρ, (∂ln ρ/∂P)_T). t ≤ 0 (온도 미선언) 은 경로 T_path(P) 에서 잰다."""
+        lp, dlp = huang_fe_path(p)
+        t_path, dt_path = _huang_line(_HUANG_T19, _HUANG_T35, p)
+        alpha, dalpha = _huang_line(HUANG_FE_THERMAL["19GPa"][0], HUANG_FE_THERMAL["35GPa"][0], p)
+        t = t_path if t is None or t <= 0.0 else t
+        d, dd = huang_drho(self._x(), p)
+        rho_path = math.exp(lp)
+        br = 1.0 + d / rho_path
+        if not br > 0.0:
+            raise PhaseGap(self.name, p, f"두 앵커 혼합의 괄호 1 + Δρ/ρ_Fe,path = {br:.4g} 가 양수가 아니다 — "
+                                         "이 조성은 이 압력에서 식 7 의 범위 밖이다 (핵 두 앵커 등록 §2)")
+        return (lp - alpha * (t - t_path) + math.log(br),
+                dlp - dalpha * (t - t_path) + alpha * dt_path + (dd - d * dlp) / rho_path / br)
+
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0, _p_th: float | None = None) -> float:
+        return math.exp(self.ln_rho(p, t)[0])
+
+    def k_t_at(self, p: float, t: float = 0.0) -> float:
+        """해석적 K_T = 1/(∂ln ρ/∂P)_T [Pa] (등록 §1 item 3)."""
+        return 1.0 / self.ln_rho(p, t)[1]
+
+    def alpha_at(self, p: float) -> float:
+        return _huang_line(HUANG_FE_THERMAL["19GPa"][0], HUANG_FE_THERMAL["35GPa"][0], p)[0]
+
+    def thermal_pressure(self, t: float, t_pot: float = 0.0, p: float | None = None) -> float:
+        return 0.0
+
+    def dpdt_v(self, t: float, t_pot: float = 0.0, p: float | None = None) -> float:
+        if p is None:
+            raise ValueError(f"{self.name}: 두 앵커 상의 αK_T 는 압력을 요구한다")
+        return self.alpha_at(p) * self.k_t_at(p, t)
+
+    def c_v_at(self, p: float | None = None, t: float | None = None) -> float:
+        if p is None:
+            raise ValueError(f"{self.name}: 두 앵커 상의 C_V 는 압력을 요구한다")
+        return _huang_line(HUANG_FE_THERMAL["19GPa"][1], HUANG_FE_THERMAL["35GPa"][1], p)[0]
+
+    def gruneisen(self, rho: float, t: float, t_pot: float = 0.0, p: float | None = None) -> float:
+        if rho <= 0.0:
+            return 0.0
+        return self.dpdt_v(t, t_pot, p) / (rho * self.c_v_at(p, t))
+
+    def pressure(self, rho: float) -> float:
+        raise ValueError(f"{self.name}: 두 앵커 상의 ρ 는 (P, T) 의 닫힌 꼴이다 — 냉각 곡선 P(ρ) 가 없다")
+
+    def density_reach(self, p: float) -> tuple[str, str]:
+        why = []
+        if p > self.p_graded_above:
+            DENSITY_REACH["graded"] += 1
+            why.append(HUANG_GRADED_REASON.format(p_gpa=p / 1e9, beyond_gpa=(p - self.p_graded_above) / 1e9))
+        if self.x_s > HUANG_C_S_SAMPLED:
+            why.append(HUANG_C_S_REASON.format(c_s=self.x_s, beyond=self.x_s - HUANG_C_S_SAMPLED))
+        return ("graded-extrapolation", " · ".join(why)) if why else ("ok", "")
+
+    def note_below_ref(self, p: float) -> None:
+        """19 GPa 아래 호출을 오늘의 `graded_below_ref` 와 같은 칸에 센다 (등록 §2) — 값은 안 만든다."""
+        if not p < self.p_ref:
+            return
+        DENSITY_REACH["beyond_measured"] += 1
+        lo = DENSITY_BELOW_REF["lowest_pa"]
+        if lo is None or p < lo:
+            DENSITY_BELOW_REF["lowest_pa"] = p
+        ratio = p / self.p_ref
+        cur = DENSITY_BELOW_REF["min_p_over_ref"]
+        if cur is None or ratio < cur:
+            DENSITY_BELOW_REF["min_p_over_ref"] = ratio
+
+
+def _huang_two_anchor(name: str, x: dict[str, float], p_min: float, ref: str, **kw) -> HuangTwoAnchorPhase:
+    probe = HuangTwoAnchorPhase(name=name, form="huang_two_anchor", rho0=1.0, k0=1.0, k0p=4.0, p_max=HUANG_P_CEILING,
+                                ref=ref, x_s=x.get("S", 0.0), x_o=x.get("O", 0.0), x_c=x.get("C", 0.0))
+    rho19, k19 = probe.density(_HUANG_P19, _HUANG_T19), probe.k_t_at(_HUANG_P19, _HUANG_T19)
+    alpha, c_v, _g = HUANG_FE_THERMAL["19GPa"]
+    return HuangTwoAnchorPhase(
+        name=name, form="huang_two_anchor",
+        # rho0·k0 는 19 GPa·2100 K 의 혼합 ρ·유도 K_T — 괄호잡기 척도(`Material.rho0`)일 뿐, 이 상의 ρ 는 `density` 다
+        rho0=rho19, k0=k19, k0p=4.0, p_min=p_min, p_max=HUANG_P_CEILING, p_ref=_HUANG_P19,
+        alpha_k=alpha * k19, t_ref=_HUANG_T19, t_ref_kind="isotherm", c_v_ref=c_v,
         thermal_source_state="liquid", thermal_source_composition="pure-Fe-liquid",
-        ref=f"Huang+ 2023 (2023GeoRL..5002271H) Table 1 + SI Table S5, {anchor} 기준 · "
-            f"혼합은 Khan+ 2023 식 (1)–(2) 의 이상혼합 · α·C_V 는 **순수 Fe 앵커값**"
-            f"(조성 도함수 미인쇄 — 0 으로 둔 것은 우리 가정)",
-        join="Fe–S–O–C 액체", fit_state="liquid",
-        join_note="녹는곡선 없음 — Fe–Fe₃S 공정선은 **이원계**의 것이고 다원계의 인쇄된 곡선은 "
-                  "보유 집합에 없다. 이름만 달지 않는다 (178 C′)")
+        p_graded_above=_HUANG_P35, ref=ref, fit_state="liquid",
+        x_s=x.get("S", 0.0), x_o=x.get("O", 0.0), x_c=x.get("C", 0.0), **kw)
 
 
-def huang_fes_phase(c_s: float, anchor: str = "19GPa") -> "Phase":
-    """주어진 몰분율에서 액체 Fe–S 의 `Phase` 를 만든다 — **고압 기준 BM2** (브리프 179).
+def huang_core_phase(x: dict[str, float]) -> "Phase":
+    """다원계 액체 핵(Fe–S–O–C)의 `Phase` — Huang+ 2023 의 **두 앵커** 규칙 (위 블록; 오너 a7181489).
 
-    ⚠ **정적 재질로 등록하지 않는다.** 황은 오너가 **밴드**로 결정했고(13–19 wt%, 점 미선출),
-    `MATERIALS` 에 하나를 박으려면 그 안에서 한 점을 골라야 한다. 그래서 조성이 인수로 들어오는
-    빌더로 두고, 밴드의 양끝을 쓰는 쪽은 부르는 곳이 정한다."""
-    p_ref, t_ref, _rho, _kt = HUANG_FE_ANCHORS[anchor]
-    rho = huang_fes_density(c_s, anchor) * 1e3          # g/cm³ → kg/m³
-    k_t = huang_fes_k_t_gpa(c_s, anchor) * GPA
-    return Phase(
-        name=f"fe_s_{anchor}_c{c_s:.4f}", form="bm2_ref",
-        rho0=rho, k0=k_t, k0p=4.0,                      # 논문: "second-order BM … K₀′ equals 4"
-        p_max=MORI_FES_P_MAX, p_min=p_ref, p_ref=p_ref,
-        ref=f"Huang+ 2023 (2023GeoRL..5002271H) Table 1 + SI Table S5, {anchor} 기준",
-        # ⚠ **이 상에는 열항이 없다** — `alpha_k = 0` 이라 `has_thermal` 이 False 이고 `t_ref` 는
-        #   읽히지 않는다. 논문의 두 앵커가 각자 자기 온도(2100·2400 K)에 놓여 있어서, 그 온도를
-        #   `t_ref` 로 적고 α 를 붙이면 `delta_t` 가 **절대영도부터 데우는 모양**이 된다 — C56 이
-        #   기록한 바로 그 함정이다. 열은 앵커 안에 이미 들어 있고, 밖에서 또 얹지 않는다.
+    ⚠ **녹는곡선은 없다** (오늘과 같다). Fe–Fe₃S 공정선은 이원계의 것이고 Fe–S–O–C 의 인쇄된 곡선은 보유 집합에
+    없다 — `melt` 를 비워 두고 `melt_free_phases()` 가 이 상을 이름 대어 든다 (178 C′).
+    ⚠ **α·C_V 는 순수 Fe 값** — Table S5 는 ρ·K_T 의 조성 도함수만 인쇄한다 (그래서 «composition-substitute»)."""
+    tag = "".join(f"{k}{x.get(k, 0.0):.4f}" for k in ("S", "O", "C") if x.get(k, 0.0) > 0.0)
+    return _huang_two_anchor(
+        f"fe_core_2a_{tag}", x, HUANG_P_FLOOR,
+        "Huang+ 2023 (2023GeoRL..5002271H) Table 1 + SI Table S5, 두 앵커(19 GPa/2100 K · 35 GPa/2400 K) 규칙 "
+        "(핵 두 앵커 등록 1cdff0a3: 순수 Fe ln ρ 의 경로 Hermite · 식 7 을 고정 (P, T) 에서 · 유도 K_T) · α·C_V 는 "
+        "**순수 Fe 앵커값**(조성 도함수 미인쇄 — 0 으로 둔 것은 우리 가정)",
+        join="Fe–S–O–C 액체",
+        join_note="녹는곡선 없음 — Fe–Fe₃S 공정선은 **이원계**의 것이고 다원계의 인쇄된 곡선은 보유 집합에 없다. "
+                  "이름만 달지 않는다 (178 C′)")
+
+
+def huang_fes_phase(c_s: float) -> "Phase":
+    """주어진 몰분율에서 액체 Fe–S 의 `Phase` — 같은 두 앵커 규칙을 S 열만으로 (핵 두 앵커 등록 §4).
+
+    ⚠ **이제 열 항을 든다** (등록 §4, 선언). 예전의 «열 없음» 은 각 앵커의 열이 그 하나의 적합 안에 들어 있어서였다
+    — 두 앵커 규칙은 앵커의 T 를 드러내 쓰므로 순수 Fe 의 α 를 다원계 상처럼 든다. 이 상의 바닥은 19 GPa 그대로
+    (그 아래는 `balog_fes_phase` 가 답한다).
+    ⚠ **정적 재질로 등록하지 않는다** (브리프 179) — 조성은 부르는 곳이 정한다."""
+    return _huang_two_anchor(
+        f"fe_s_2a_c{c_s:.4f}", {"S": c_s}, _HUANG_P19,
+        "Huang+ 2023 (2023GeoRL..5002271H) Table 1 + SI Table S5 의 S 열, 두 앵커 규칙 (핵 두 앵커 등록 1cdff0a3)",
         melt="iron_fes_eutectic", melt_ref="Mori+ 2017 Fe–Fe₃S 공정 (바운드)",
-        # ⚠ **두 앵커(19·35 GPa) 위에서는 값을 내되 등급이 내려간다** (196 B). 예전엔 19 GPa 부터
-        #   `MORI_FES_P_MAX` 까지 **라벨 없이** 답했다 — 그 사이가 적합이 놓인 구간이 아니었다.
-        p_graded_above=HUANG_FE_ANCHORS["35GPa"][0],
-        p_measured_max=MORI_FES_P_MEASURED_MAX,
-        graded_reason=(
-            "{p_gpa:.4g} GPa 는 이 액체 Fe–S 적합의 **두 앵커(19·35 GPa) 위**다 — {band}. "
-            "⚠ 천장 350 GPa 는 이 밀도 적합의 수가 아니라 **Mori+ 2017 자신의 외삽 사용처**에서 온 수고"
-            "(«~4100 K at the ICB»), 그 논문의 **측정 상한은 254 GPa** 다(제목이 그렇게 적힌다: "
-            "«Melting experiments on Fe-Fe3S system to 254 GPa»). 그래서 35–254 GPa 는 **Huang 적합의 외삽이도 "
-            "Mori 측정 범위 안**이고, 254–350 GPa 는 **둘 다의 외삽**이다. ⚠ 적합을 다시 앵커하지 않고, "
-            "이 문장을 안 인쇄할 거라면 천장은 254 GPa 로 내려야 한다"),
-        join="Fe–S 액체", fit_state="liquid",
-        join_note=f"밀도 적합은 c_S = {c_s:.4f} 의 액체 Fe–S, 융해는 Fe–Fe₃S 공정 바운드 — "
-                  f"조성이 다르고 후자는 바닥이다 (21 GPa 아래는 IRON_FES_GAP_REASON)")
+        join="Fe–S 액체",
+        join_note=f"밀도 규칙은 c_S = {c_s:.4f} 의 액체 Fe–S, 융해는 Fe–Fe₃S 공정 바운드 — 조성이 다르고 후자는 "
+                  f"바닥이다 (21 GPa 아래는 IRON_FES_GAP_REASON)")
 
 
 HUANG_FES_SLOT_GAP = (
@@ -4384,14 +4545,16 @@ def fe_s_mole_fraction(w_s: float) -> float:
 
 FE_S_13WT = Material("fe_s_13wt_19gpa", "액체 Fe–S 핵 · 13 wt% S (밴드 아래끝, 19 GPa 기준)",
                      (balog_fes_phase(0.13),
-                      huang_fes_phase(fe_s_mole_fraction(0.13), "19GPa")),
+                      huang_fes_phase(fe_s_mole_fraction(0.13))),
                      gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
-                     under_reason=FE_S_BELOW_REF_REASON, floor_source=FE_S_BELOW_REF_SOURCE, role="core")
+                     under_reason=FE_S_BELOW_REF_REASON, floor_source=FE_S_BELOW_REF_SOURCE, role="core",
+                     over_reason=HUANG_CEILING_REASON, fit_composition="Fe-S")
 FE_S_19WT = Material("fe_s_19wt_19gpa", "액체 Fe–S 핵 · 19 wt% S (밴드 위끝, 19 GPa 기준)",
                      (balog_fes_phase(0.19),
-                      huang_fes_phase(fe_s_mole_fraction(0.19), "19GPa")),
+                      huang_fes_phase(fe_s_mole_fraction(0.19))),
                      gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
-                     under_reason=FE_S_BELOW_REF_REASON, floor_source=FE_S_BELOW_REF_SOURCE, role="core")
+                     under_reason=FE_S_BELOW_REF_REASON, floor_source=FE_S_BELOW_REF_SOURCE, role="core",
+                     over_reason=HUANG_CEILING_REASON, fit_composition="Fe-S")
 
 # ── 다원계 액체 핵: 오너 상자의 여덟 끝점 (C55 2단계, 브리프 183) ────────────────────────
 # 오너 결정 2026-09-10: S 13–19 wt% · O 1–4 wt% · C 0.5–1.4 wt% · **H 미선언**(문헌이 여섯 배로
@@ -4417,12 +4580,13 @@ def _core_box_materials() -> dict[str, Material]:
                     name, label + " · ⚠ 임시: 19 GPa **아래** 는 이 적합을 이어 쓴 값이다 "
                                   "(오너 2026-09-20, 항목 19). 그 구간의 자료(P39)가 들어오면 "
                                   "**이 상을 갈아 끼운다** — 허용치를 넓히는 것이 아니라 상을 바꾸는 일이다.",
-                    (huang_core_phase(x, "19GPa"),),
+                    (huang_core_phase(x),),
                     fit_composition="Fe-S-O-C", role="core",
                     gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
                     # ⚠ 이 문구는 이제 **되돌이점 아래**에서만 발화한다 (항목 19). 그 위 ~ 19 GPa 는
                     #   거절이 아니라 «세고 깊이를 남기는» 구간이고, 이원계의 1.5 GPa 규칙은 안 바뀌었다.
-                    under_reason=FE_S_FIT_FLOOR_REASON, floor_source=FE_S_FIT_FLOOR_SOURCE)
+                    under_reason=FE_S_FIT_FLOOR_REASON, floor_source=FE_S_FIT_FLOOR_SOURCE,
+                    over_reason=HUANG_CEILING_REASON)
     return out
 
 
