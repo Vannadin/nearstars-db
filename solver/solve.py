@@ -885,12 +885,87 @@ def _side_check(F, x, f_root, side, rt, lo=-math.inf, hi=math.inf) -> dict:
 CLOSURE_RETRY_RTOL_DIV = 10.0
 
 
+#: Owner F12 ruling (owner-direction 82de8c46; solver-wide, switch or no switch: f3463ebe): where the closure F has two
+#: roots, the answer is the root continuous with the warm-side T_pot sweep. The sweep steps T_pot up by WARM_STEP_K
+#: (the sensitivity step when one is set) until one root is left, at most WARM_STEPS_MAX steps (200 K at 10 K; a declared
+#: choice, named in silicate registration post-freeze note 4).
+WARM_STEP_K = 10.0
+WARM_STEPS_MAX = 20
+
+
+def warm_continuation(solve_at, t0: float, roots0, step: float, n_max: int = WARM_STEPS_MAX):
+    """The root of `roots0` (at T_pot t0) continuous with the warm-side sweep, and the trace.
+    `solve_at(t)` gives ("root", x), ("two_roots", (x1, x2, …)) or ("other", id) for the closure at T_pot t.
+    Steps t0 + k·step for k = 1 … n_max until one root is left, then walks back, taking at each T_pot the root nearest
+    the one chosen at the next warmer T_pot. Returns (root or None, trace, why): None when the sweep meets anything but
+    roots before one root is left, or never leaves two roots within n_max steps."""
+    trace = [(t0, tuple(roots0))]
+    for k in range(1, n_max + 1):
+        t = t0 + k * step
+        kind, val = solve_at(t)
+        if kind == "root":
+            trace.append((t, (val,)))
+            chosen = val
+            for _t, roots in reversed(trace[:-1]):
+                chosen = min(roots, key=lambda r: abs(r - chosen))
+            return chosen, trace, None
+        if kind != "two_roots":
+            trace.append((t, ()))
+            return None, trace, f"the warm-side sweep met {val} at T_pot {t:g} K before one root was left"
+        trace.append((t, tuple(val)))
+    return None, trace, f"two roots persist over {n_max} warm steps of {step:g} K"
+
+
 def solve(body, options: context.Options = context.Options(), warm=None, views=None, registry=None):
     """Returns (Outcome, warm). Outcome is result.Answer, result.Refusal or result.NoAnswer.
     `views` (layer id → material view) replaces the adapter's resolution; it exists for physics fixtures only and is
     not reachable from Body, options or the context. `registry`: a loaded material registry the caller owns and
-    reuses across solves (switch-over note 5); without it the solve loads its own."""
-    return _solve(body, options, warm, views, registry)
+    reuses across solves (switch-over note 5); without it the solve loads its own.
+    A closure with two roots is answered by the owner's F12 rule (`_warm_root`)."""
+    out, w = _solve(body, options, warm, views, registry)
+    if isinstance(out, result.Refusal) and out.id == "solve.two_roots" and views is None \
+            and body.surface.t_pot is not None:
+        ans, x = _warm_root(body, options, registry, out)
+        return (ans, x) if isinstance(ans, result.Answer) else (ans, w)   # an Answer's second value is its root (68)
+    return out, w
+
+
+def _warm_root(body, options, registry, refusal):
+    """Owner F12 (82de8c46): the root continuous with the warm-side T_pot sweep, solved alone in its half of the scan
+    range (split at the two roots' midpoint), with a `closure_root_choice` note naming the other root and the sweep.
+    If the sweep cannot decide, or the chosen half does not answer alone, the two_roots refusal stands unchanged.
+    Returns (outcome, the half solve's root or None); `solve` hands the root on as its second value (member_of)."""
+    roots = tuple(sorted(refusal.evidence["roots"]))
+    step = options.sensitivity_dt if options.sensitivity_dt > 0.0 else WARM_STEP_K
+    quiet = dataclasses.replace(options, sensitivity_dt=0.0)
+
+    def at(t):
+        bt = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=t))
+        o, x = _solve(bt, quiet, None, None, registry)
+        if isinstance(o, result.Answer):
+            return "root", x
+        if isinstance(o, result.Refusal) and o.id == "solve.two_roots":
+            return "two_roots", tuple(sorted(o.evidence["roots"]))
+        return "other", getattr(o, "id", None) or getattr(o, "reason", None)
+    chosen, trace, why = warm_continuation(at, body.surface.t_pot, roots, step)
+    if chosen is None:                               # the refusal stands as it was: solve.two_roots's evidence fields
+        return refusal, None                         # are C1's pinned set (test_node_additive), so the sweep is not added
+    lo, hi = body.closure.lo, body.closure.hi
+    i = roots.index(chosen)
+    half_lo = lo if i == 0 else 0.5 * (roots[i - 1] + roots[i])
+    half_hi = hi if i == len(roots) - 1 else 0.5 * (roots[i] + roots[i + 1])
+    bh = dataclasses.replace(body, closure=dataclasses.replace(body.closure, lo=half_lo, hi=half_hi))
+    ans, x_half = _solve(bh, options, None, None, registry)
+    if not isinstance(ans, result.Answer):           # the chosen half does not answer alone: the refusal stands
+        return refusal, None
+    note = result.Note(
+        "closure_root_choice", "the closure has two roots; the answer is the root continuous with the warm-side T_pot "
+        "sweep (owner F12, owner-direction 82de8c46), the other root named", {
+            "roots": list(roots), "chosen": chosen, "others": [r for r in roots if r != chosen],
+            "closure": {"kind": body.closure.kind, "layer": body.closure.layer, "name": body.closure.name,
+                        "range": [lo, hi], "solved_in": [half_lo, half_hi]},
+            "warm_sweep": [[t, list(r)] for t, r in trace], "step_k": step})
+    return result.Answer(ans.quantities, ans.boundaries, ans.profiles, ans.missing, tuple(ans.notes) + (note,)), x_half
 
 
 def _with_first(outcome, first):
