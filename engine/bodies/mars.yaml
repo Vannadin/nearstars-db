@@ -227,7 +227,10 @@ inputs:
     counter_evidence_searched: >
       C107 (interior-core.md): with this box the layered family's core is not reached; the two box corners give
       S 18.9062 (floor) against 13.8438 wt% (ceiling) at halvings 6, so the choice of corner is a declaration.
-      Huang+ 2023's fit range (19 GPa anchor) is the box; no source held gives Mars's O or C.
+      The box is the owner's (2026-09-10), not a fit range. Huang+ 2023 samples Fe–S to about c_S 0.3 mole
+      fraction (Fig. 2, SI Fig. S3; S ≈ 0–22.8 wt% at this file's O and C) at two anchors, 19 GPa / 2100 K and
+      35 GPa / 2400 K (Table 1, SI Table S5); the engine reads both (owner-direction a7181489). No source held
+      gives Mars's O or C.
   light_element_fixing:
     value: box_ceiling        # box_floor = O 1 · C 0.5 wt% · box_ceiling = O 4 · C 1.4 wt%
     grade: declared
