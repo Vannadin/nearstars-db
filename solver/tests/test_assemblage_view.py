@@ -256,6 +256,9 @@ class MeltWindow(unittest.TestCase):
         got = cut.state(p, hot)
         self.assertNotIsInstance(got, st.Stop)
         self.assertEqual(got[:2], lm.silicate_melt_mix(p, hot, "peridotitic", None, None, None)[:2])
+        self.assertIn(ma.LIQUID_ALONE_NOTE, [n.text for n in got[2] if isinstance(n, mv.DeclaredNote)])
+        self.assertFalse([n for n in v.state(p, t0)[2] if isinstance(n, mv.DeclaredNote)
+                          and n.text == ma.LIQUID_ALONE_NOTE])
         tw = next(t for t in range(1500, 3000, 5) if 0.2 < lm.silicate_melt_phi(p, t, "peridotitic") < 0.8)
         r, g, cp, _ = solid(v, p, float(tw))
         self.assertEqual(v.state(p, float(tw))[:2],

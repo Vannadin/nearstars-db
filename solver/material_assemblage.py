@@ -65,7 +65,7 @@ def read_table(path, sha256: str) -> dict:
     got = hashlib.sha256(data).hexdigest()
     if got != sha256:
         raise TableStop(f"the compact table's sha256 is {got}, not the record's pinned {sha256}", check="sha pin")
-    if str(path).endswith(".gz"):                   # the shipped form: gzip, pinned on the packed bytes (directing)
+    if Path(path).suffix == ".gz":                  # the shipped form: gzip, pinned on the packed bytes (directing)
         import gzip
         try:
             data = gzip.decompress(data)
@@ -546,6 +546,9 @@ def cubic2(xa, xb, xs_a, xs_b, val, ia, ib, rows_allowed=None):
 #: the T floor of every column (registration §3.1: below 200 K a refusal; Mars's surface is 216 K)
 T_FLOOR = 200.0
 PHASE_ID = "slb_assemblage"
+#: the declared note of a read with φ ≥ 1 (no solid cell read, so no dT/dP band note): the round's B6 exemption keys on it
+LIQUID_ALONE_NOTE = ("liquid alone (φ ≥ 1): RTpress liquid, as phase 1; no solid cell read (registration post-freeze "
+                     "note 3 §1)")
 
 
 def _lm():
@@ -678,6 +681,7 @@ class AssemblageView(mv.RecordView):
         try:
             if phi >= 1.0:                       # the liquid alone: no solid cell is read (note 3 §1)
                 rho, g, _ = _lm().silicate_melt_mix(pe, t, self.variant, None, None, None)
+                self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID, LIQUID_ALONE_NOTE))
                 return (rho, g, tuple(self.notes))
             got = self._solid(pe, t)
             if isinstance(got, st.Stop):            # the refusal names the solver's P, not the clamped read (ea F4)
