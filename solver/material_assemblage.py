@@ -674,13 +674,14 @@ class AssemblageView(mv.RecordView):
                 rho, g, _ = _lm().silicate_melt_mix(pe, t, self.variant, None, None, None)
                 return (rho, g, tuple(self.notes))
             got = self._solid(pe, t)
-            if isinstance(got, st.Stop):
-                return got
+            if isinstance(got, st.Stop):            # the refusal names the solver's P, not the clamped read (ea F4)
+                r = got.record
+                return self._refuse(p, t, r.refusal, r.why if pe == p else f"{r.why} (read at {pe:g} Pa)")
             rho_s, g_s, cp_s, cells = got
             self._cell_notes(cells, p, t)
             rho, g, _ = _lm().silicate_melt_mix(pe, t, self.variant, rho_s, g_s, cp_s)
         except _lm().eos.PhaseGap as e:             # RTpress's own refusal
-            return self._refuse(pe, t, "input.material_out_of_data", f"RTpress liquid: {e}")
+            return self._refuse(p, t, "input.material_out_of_data", f"RTpress liquid: {e}")
         return (rho, g, tuple(self.notes))
 
     def density(self, p: float, t: float):

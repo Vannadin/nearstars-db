@@ -191,6 +191,15 @@ class Window(unittest.TestCase):
         k_t = rho_of(PS[0], 300.0) * (PS[1] - PS[0]) / (rho_of(PS[1], 300.0) - rho_of(PS[0], 300.0))   # 68 V23
         self.assertAlmostEqual(bands[0].error, (PS[0] - 5e4) / k_t, delta=1e-12 * bands[0].error)
 
+    def test_refusal_names_the_solver_pressure(self):
+        """ea's F4 gate reads the refusal's p: it is the solver's P (here below 1 bar), not the clamped 1 bar read."""
+        got = view().state(5e4, 199.0)
+        self.assertIsInstance(got, st.Stop)
+        self.assertEqual(got.record.p, 5e4)
+        got = view(p_stop=2e5).state(1e5, 199.0)                  # a read raised to p_stop names both pressures
+        self.assertEqual(got.record.p, 1e5)
+        self.assertIn("read at 200000 Pa", got.record.why)
+
     def test_refused_isentrope_node(self):
         """Note 3 §2 condition 4: a read whose cell corner has no dT/dP refuses by name."""
         v = view(table(refused={(10, 1500.0)}))
