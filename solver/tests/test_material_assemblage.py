@@ -195,6 +195,22 @@ class TableChecks(unittest.TestCase):
             c[f"{f}_model"] = 10.0 * ma.FIELD_SCALE[f]
             self.assertGreater(ma._model_miss(c)[0], ma.STORED_MODEL_REL)
 
+    def test_c_p_eq_guards(self):
+        """68 on 9582a67b: a negative c_p_eq with dtdp_eq flipped along (the recompute and band still hold) STOPs as
+        positivity; a refused cell's NaN c_p_eq (read as an outer stencil node) STOPs as finite fields."""
+        tb = table(); c = cell(tb, 4, 5)
+        c["c_p_eq"], c["dtdp_eq"] = -c["c_p_eq"], -c["dtdp_eq"]
+        c["dtdp_eq_band"] = ma.band(c["dtdp_eq"], c["dtdp_g"], c["dtdp_s"], 2.5e-4)
+        with self.assertRaises(ma.TableStop) as cm:
+            ma.check_table(asm(), tb)
+        self.assertEqual(cm.exception.check, "positivity")
+        tb = table(); c = cell(tb, 4, 5)
+        c.update(dtdp_eq=None, dtdp_eq_band=None, c_p_eq=float("nan"))
+        tb["dtdp_eq_refused"] = [{"p": c["p"], "t": c["t"]}]
+        with self.assertRaises(ma.TableStop) as cm:
+            ma.check_table(asm(refused=1), tb)
+        self.assertEqual(cm.exception.check, "finite fields")
+
     def test_cell_without_model_values(self):
         """r2 condition 2: a cell the stored-value gate cannot cover (no model values) is a STOP for a ruling."""
         tb = table(); cell(tb, 4, 5).update({f"{f}_model": None for f in ma.MODEL_FIELDS})
