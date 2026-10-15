@@ -65,6 +65,12 @@ def read_table(path, sha256: str) -> dict:
     got = hashlib.sha256(data).hexdigest()
     if got != sha256:
         raise TableStop(f"the compact table's sha256 is {got}, not the record's pinned {sha256}", check="sha pin")
+    if str(path).endswith(".gz"):                   # the shipped form: gzip, pinned on the packed bytes (directing)
+        import gzip
+        try:
+            data = gzip.decompress(data)
+        except (OSError, EOFError) as e:
+            raise TableStop(f"the compact table is not readable gzip: {e}", check="read") from None
     try:
         return json.loads(data)
     except ValueError as e:

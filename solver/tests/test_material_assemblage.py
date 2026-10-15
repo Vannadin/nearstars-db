@@ -441,6 +441,32 @@ class RegistryLoad(unittest.TestCase):
         self.assertEqual(got.id, "material.assemblage_table")
         self.assertIn("p_dataset", got.evidence["why"])
 
+    def test_gzip_table(self):
+        """The shipped form: a gzip-packed compact table, the sha pinned on the packed bytes, loads as the plain one."""
+        import gzip
+        tb = table()
+        raw = (json.dumps(tb, sort_keys=True, separators=(",", ":")) + "\n").encode()
+        packed = gzip.compress(raw, compresslevel=9, mtime=0)
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "tables").mkdir()
+            (Path(d) / "tables/silicate_slb_test.json.gz").write_bytes(packed)
+            rec = record(hashlib.sha256(packed).hexdigest(), "pinned")
+            rec["assemblage"]["file"] = "tables/silicate_slb_test.json.gz"
+            (Path(d) / "silicate_slb_test.yaml").write_text(yaml.safe_dump(rec, sort_keys=False), encoding="utf-8")
+            reg = mr.load(Path(d))
+            self.assertIsInstance(reg, mr.Registry)
+            self.assertEqual(len(reg.tables["silicate_slb_test"]["cells"]), len(tb["cells"]))
+            rec["assemblage"]["sha256"] = rec["assemblage"]["pins"]["compact_sha256"] = hashlib.sha256(raw).hexdigest()
+            (Path(d) / "silicate_slb_test.yaml").write_text(yaml.safe_dump(rec, sort_keys=False), encoding="utf-8")
+            got = mr.load(Path(d))                     # a pin on the unpacked bytes does not match: a STOP
+            self.assertEqual(got.id, "material.assemblage_table")
+            (Path(d) / "tables/silicate_slb_test.json.gz").write_bytes(raw)
+            rec["assemblage"]["sha256"] = rec["assemblage"]["pins"]["compact_sha256"] = hashlib.sha256(raw).hexdigest()
+            (Path(d) / "silicate_slb_test.yaml").write_text(yaml.safe_dump(rec, sort_keys=False), encoding="utf-8")
+            got = mr.load(Path(d))                     # not gzip under a .gz name: a named STOP, not a crash
+            self.assertEqual(got.id, "material.assemblage_table")
+            self.assertIn("gzip", got.evidence["why"])
+
     def test_tables_read_only(self):
         """68 N3: the registry hands the table out read-only."""
         with tempfile.TemporaryDirectory() as d:
