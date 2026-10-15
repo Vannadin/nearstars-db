@@ -179,6 +179,16 @@ class TableChecks(unittest.TestCase):
                 with self.subTest(record=rid, pair=key):
                     self.assertEqual(row["missed"], [])
 
+    def test_gate_near_zero(self):
+        """r2 NB 3: a field at 0 with a model value of 0 passes, and one at 0 against a nonzero model fails, without a
+        division by zero (each field's declared scale floor)."""
+        for f in ma.MODEL_FIELDS:
+            c = {**cell(table(), 4, 5)}
+            c[f] = c[f"{f}_model"] = 0.0
+            self.assertEqual(ma._model_miss(c)[0], 0.0)
+            c[f"{f}_model"] = 10.0 * ma.FIELD_SCALE[f]
+            self.assertGreater(ma._model_miss(c)[0], ma.STORED_MODEL_REL)
+
     def test_cell_without_model_values(self):
         """r2 condition 2: a cell the stored-value gate cannot cover (no model values) is a STOP for a ruling."""
         tb = table(); cell(tb, 4, 5)["c_p_model"] = None
