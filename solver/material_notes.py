@@ -11,7 +11,8 @@ Kinds (compare.NOTE_KINDS, comparator note 15):
 - `material_declared_note`: one per (layer, material, phase, text), with the P range met;
 - `material_source_seam`: one per source seam the layer's temperature crossed (from below t to t or above; the
   upper side owns t), with its measured step (material_joins.seam_delta);
-- `material_disclosure`: the cross-check disclosures of every phase read; a disclosed formula-check fail whose
+- `material_disclosure`: an assemblage record's declared disclosures (`of: record`), on every answer that read it;
+  the cross-check disclosures of every phase read; a disclosed formula-check fail whose
   `boundary` pair holds a phase read (that phase's field test evaluates the boundary), or, with no `boundary`, of
   every record read;
 - `material_grade`: a record with a user-declared source anywhere (impl note 3 B2). Such a body refuses at solve
@@ -100,6 +101,10 @@ def collect(body, views, acc) -> tuple:
                     out.append(result.Note("material_disclosure", f"{mid} {ph['id']}: {text}", {
                         "layer": layer.id, "material": mid, "phase": ph["id"], "of": "cross_check",
                         "between": list(j["between"]), "text": text}))
+        if ts:                                       # an assemblage record's disclosures, on every answer reading it
+            for text in (view.record.get("assemblage") or {}).get("disclosures", ()):     # (silicate registration §2.1)
+                out.append(result.Note("material_disclosure", f"{mid}: {text}", {
+                    "layer": layer.id, "material": mid, "of": "record", "text": text}))
         for fc in view.record.get("formula_checks", ()):
             df = fc.get("disclosed_fail")
             bd = fc.get("boundary")
