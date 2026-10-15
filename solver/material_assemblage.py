@@ -190,7 +190,7 @@ def check_table(asm, table) -> dict:
     for c in cells:
         if not (_finite(c.get("p")) and _finite(c.get("t"))):          # 68 N2: numbers before any arithmetic
             raise TableStop(f"a cell's node is not a pair of finite numbers: ({c.get('p')!r}, {c.get('t')!r})", check="finite fields")
-        for f in ("dtdp_eq", "dtdp_g", "dtdp_eq_band", "envelope_gap_v", "envelope_gap_s"):
+        for f in ("dtdp_eq", "dtdp_g", "dtdp_eq_band", "envelope_gap_v", "envelope_gap_s", "c_p_eq"):
             if c.get(f) is not None and not _finite(c[f]):
                 raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): {f} is {c[f]!r}, not a finite number or absent", check="finite fields")
         if c.get("kind") not in CELL_KINDS:
@@ -323,8 +323,12 @@ def check_table(asm, table) -> dict:
         elif v is None:
             if (c["p"], c["t"]) not in refused:
                 raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): no dT/dP and not listed as refused", check="dT/dP field rule")
-        elif not all(_finite(c.get(f)) for f in ("dtdp_eq_band", "dtdp_g", "envelope_gap_v", "envelope_gap_s")):
+        elif not all(_finite(c.get(f)) for f in ("dtdp_eq_band", "dtdp_g", "envelope_gap_v", "envelope_gap_s",
+                                                  "c_p_eq", "ds_dp_model")):
             raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): its band, G-based isentrope or envelope gap is missing", check="dT/dP field rule")
+        elif abs(v + c["ds_dp_model"] * c["t"] / c["c_p_eq"]) > 1e-12 * max(abs(v), abs(c["dtdp_s"])):
+            raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): dtdp_eq {v!r} is not −ds_dp·T/c_p_eq (r2 B1 on note 3: "
+                            "c_p_eq on dtdp_eq's basis)", check="c_p_eq recompute")
         elif abs(c["dtdp_eq_band"] - band(c["dtdp_eq"], c["dtdp_g"], c["dtdp_s"], asm["dtdp"]["band_floor"])) \
                 > 1e-12 * c["dtdp_eq_band"]:
             raise TableStop(f"cell ({c['p']:g}, {c['t']:g}): dT/dP band {c['dtdp_eq_band']!r} is not its "
@@ -345,7 +349,7 @@ def check_table(asm, table) -> dict:
 
 
 #: the fields a planted single-field bump is tried on, per cell kind (r2 condition 3: coverage per field)
-BUMP_FIELDS = MODEL_FIELDS + ("dtdp_eq", "dtdp_g", "dtdp_eq_band")
+BUMP_FIELDS = MODEL_FIELDS + ("dtdp_eq", "dtdp_g", "dtdp_eq_band", "c_p_eq")
 
 
 def planted_coverage(asm, table, per=5, seed=0, rel=0.01):
@@ -361,7 +365,7 @@ def planted_coverage(asm, table, per=5, seed=0, rel=0.01):
     for f in BUMP_FIELDS:
         for k in kinds:
             pool = [i for i, c in enumerate(table["cells"]) if c["kind"] == k and _finite(c.get(f))]
-            if f in ("dtdp_eq", "dtdp_g", "dtdp_eq_band") and k == "frozen" and f != "dtdp_eq":
+            if f in ("dtdp_g", "dtdp_eq_band", "c_p_eq") and k == "frozen":
                 continue
             pick = sorted(rng.sample(pool, min(per, len(pool))))
             row = {"tried": 0, "caught": 0, "by": {}, "missed": []}
@@ -604,7 +608,11 @@ class AssemblageView(mv.RecordView):
         for f in ("rho", "dtdp_eq", "c_p"):
             def val(ka, kb, f=f):
                 c = self._cell(ka, kb)
-                return None if c is None else c.get(f)
+                if c is None:
+                    return None
+                if f == "c_p" and c["kind"] != "frozen":
+                    return c.get("c_p_eq")          # the window's c_P,s on dtdp_eq's basis (r2 B1 on note 3)
+                return c.get(f)
             try:
                 out[f] = cubic2(x, t, self.lnps, self.ts, val, ia, ib, cut)
             except CellMissing as e:
