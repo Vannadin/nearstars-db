@@ -858,7 +858,7 @@ def _assemblage_table(rec: Mapping, file, directory: Path, allow_development: bo
         raise _Stop("material.assemblage_table", file=file, why=str(e)) from None
     if table.get("p_dataset") != a["p_dataset"]:
         raise _Stop("material.assemblage_table", file=file, why="the table's p_dataset differs from the record's")
-    return table
+    return freeze(table)                            # 68 N3: handed out read-only, as the records are
 
 
 def _is_sha(x) -> bool:
