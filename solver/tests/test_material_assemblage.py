@@ -269,6 +269,20 @@ class TableChecks(unittest.TestCase):
             with self.subTest(p_dataset=pd):
                 self.stops(tb, why="not a P node")
 
+    def test_boundaries_status(self):
+        """68 R16: a missing or unknown boundaries.status STOPs with check «structure» (the resolver reads it)."""
+        for bad in (None, {"status": "made_up"}, {}):
+            tb = table()
+            if bad is None:
+                tb.pop("boundaries")
+            else:
+                tb["boundaries"] = bad
+            with self.subTest(boundaries=bad):
+                with self.assertRaises(ma.TableStop) as cm:
+                    ma.check_table(asm(), tb)
+                self.assertEqual(cm.exception.check, "structure")
+                self.assertIn("boundaries.status", str(cm.exception))
+
     def test_freeze_t_breaks_one_state(self):
         """68 M22: frozen neighbours with different freeze_t are not one state, so the in-column identity is not
         formed across them: a dtdp_s that fails it with equal freeze_t passes with a different one."""
