@@ -154,8 +154,9 @@ def record_events(view) -> list:
       absent); a gibbs boundary (curve form library) g = G_a − G_b at (P, T_ad); a melting curve is terminal: reaching
       it refuses as solve.melting_not_in_phase2 (D-P3).
     - Source-seam isotherms: T_ad = t (design note 5).
-    No onset curves: a record declares none (legacy's onset_curves gives none for iron either; the silicate solidus
-    arrives with the silicate records)."""
+    - Onset curves: none for a record that declares none (legacy's onset_curves gives none for iron either); a view
+      that declares `onset_curve_names` (the assemblage kind: legacy silicate's solidus, registration §3.1) gets
+      phase 1's solidus seam and onset events, as legacy silicate does."""
     out = [st.Event(f"seam:{p_b:.9g}", (lambda m, y, p_b=p_b: y[1] - p_b), scale=p_b, terminal=False, seam=True,
                     component=1) for p_b in view.seams()]
     by_id = {ph.id: ph for ph in view.phases}
@@ -180,7 +181,16 @@ def record_events(view) -> list:
     for t_s, between in view.source_seams():
         out.append(st.Event(f"source_seam:{between[0]}|{between[1]}", (lambda m, y, t_s=t_s: y[2] - t_s),
                             scale=t_s, terminal=False, seam=True, component=2))
+    if getattr(view, "onset_curve_names", ()):     # a record view declaring legacy onset curves (the assemblage kind,
+        out += seam_events_of_curves(view)          # silicate registration §3.1): phase 1's solidus seams and onsets
+        out += onset_events(view, getattr(view, "p_stop", 0.0))
     return out
+
+
+def seam_events_of_curves(view) -> list:
+    """The onset curves' own seam events (curve_seams) for a view that declares onset curve names."""
+    return [st.Event(f"seam:{p_b:.9g}", (lambda m, y, p_b=p_b: y[1] - p_b), scale=p_b, terminal=False, seam=True,
+                     component=1) for p_b in sorted(curve_seams(view))]
 
 
 def _table_phases(mat) -> list:

@@ -470,6 +470,53 @@ def build_fe_core_light(s: float, o: float, c: float):
         under_reason=eos.FE_S_FIT_FLOOR_REASON, floor_source=eos.FE_S_FIT_FLOOR_SOURCE)
 
 
+class _MeltPhase:
+    """The two attributes `eos.Material._latent_cp` reads of a phase: a silicate melt and its solidus variant."""
+    melt = "silicate"
+
+    def __init__(self, variant: str):
+        self.melt_variant = variant
+
+
+def silicate_melt_mix(p: float, t: float, variant: str, rho_s: float, dtdp_s: float, cp_s: float):
+    """Phase 1's melt window (C120; addendum 4; C120b) with the solid's terms supplied by the caller: an assemblage
+    record's ρ_s, its dT/dP field and the table's c_P (silicate record registration post-freeze note 3 §1; r2 78af8983).
+    Returns (ρ, dT/dP, φ). φ = `eos.silicate_melt_fraction(p, t, variant)`, 0 below the solidus (ρ_s and dtdp_s exactly);
+    at φ ≥ 1 the RTpress liquid alone, with no solid read; in the window 1/ρ = (1 − φ)/ρ_s + φ/ρ_ℓ and
+    dT/dP = [(1 − φ)c_P,s·dtdp_s + φc_P,ℓ·dtdp_ℓ]/c_P,mix × c_P,mix/(c_P,mix + L), c_P,mix = (1 − φ)c_P,s + φc_P,ℓ and
+    L = `eos.Material._latent_cp` (called, never copied: C120b keeps the latent formula in one place), as
+    `interior._adiabatic_dtdp` forms it. RTpress's own refusal (eos.PhaseGap) propagates."""
+    import rtpress
+    phi = silicate_melt_phi(p, t, variant)
+    if phi <= 0.0:
+        return rho_s, dtdp_s, 0.0
+    rho_l, grad_l, cp_l = rtpress.liquid(p, t)
+    dtdp_l = grad_l * t / p
+    if phi >= 1.0:
+        return rho_l, dtdp_l, 1.0
+    rho = 1.0 / ((1.0 - phi) / rho_s + phi / rho_l)
+    lat = eos.Material._latent_cp(_MeltPhase(variant), p, t)
+    w_s, w_l = (1.0 - phi) * cp_s, phi * cp_l
+    mixed = (w_s * dtdp_s + w_l * dtdp_l) / (w_s + w_l) if w_s + w_l > 0.0 else dtdp_l
+    cp_mix = w_s + w_l
+    g = mixed * cp_mix / (cp_mix + lat) if lat > 0.0 and cp_mix > 0.0 else mixed
+    return rho, g, phi
+
+
+def silicate_melt_phi(p: float, t: float, variant: str) -> float:
+    """φ as `silicate_melt_mix` takes it (0 off the curve, below the solidus, or without P and T)."""
+    return (eos.silicate_melt_fraction(p, t, variant) or 0.0) if (p > 0.0 and t > 0.0) else 0.0
+
+
+def silicate_solidus_onset(p: float, t: float, variant: str) -> list:
+    """Legacy `Material.onset_curves`'s silicate row for one variant: [("고상선", T_sol(P))], or [] off the curve
+    (eos.silicate_solidus returns None past its end), for an assemblage record's onset events (registration §3.1)."""
+    if p <= 0.0 or t <= 0.0:
+        return []
+    sol = eos.silicate_solidus(p, variant)
+    return [] if sol is None else [("고상선", sol)]
+
+
 def build_silicate_decl(wt: dict):
     """The declared-mantle silicate for oxide wt% `wt`: the object `mantle_composition.declared(wt)` installs as
     MATERIALS["silicate"] (table_material over the base silicate), built without the swap. Returns None with the old

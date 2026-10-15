@@ -9,9 +9,14 @@ layer's declared oxides and a record's key cannot drift; one changed oxide misse
 """
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import math
+
+from solver import material_view as mv
+from solver import stepper as st
+from solver.result import freeze
 
 #: the six oxides the build keeps (build declaration §2), in the builder's order
 CFMASNA = ("CaO", "FeO", "MgO", "Al2O3", "SiO2", "Na2O")
@@ -364,3 +369,332 @@ def planted_coverage(asm, table, per=5, seed=0, rel=0.01):
                     row["by"][name] = row["by"].get(name, 0) + 1
             out[(f, k)] = row
     return out
+
+
+# ── C¹ interpolation: a port of legacy engine/smooth_table.py (prereg-c157 note 10) ─────────────────────────────────
+# Monotone piecewise-cubic Hermite (Fritsch & Carlson 1980; PCHIP slopes) on non-uniform grids, tensor product in
+# (ln P, T): along T on each of the stencil's P rows, then along ln P through those values. A missing node *outside*
+# the query cell is replaced, for slope estimation only, by linear extrapolation from its row's nearest real node along
+# that row's PCHIP end slope (audit e2: the stencil shape never changes, so C¹ holds next to ragged column tops); a
+# missing corner of the query cell is a CellMissing, never a value. On a grid line a zero-weight end is not read
+# (smooth_table's rule). Ported, not imported: the solver imports engine/ only through legacy_materials (design §L).
+class CellMissing(Exception):
+    """A corner of the query cell has no value: (axis-a index, axis-b index) of the corner."""
+
+
+def _end_slope(h0, h1, d0, d1):
+    s = ((2.0 * h0 + h1) * d0 - h0 * d1) / (h0 + h1)
+    if s * d0 <= 0.0:
+        return 0.0
+    if d0 * d1 < 0.0 and abs(s) > 3.0 * abs(d0):
+        return 3.0 * d0
+    return s
+
+
+def _inner_slope(h0, h1, d0, d1):
+    if d0 * d1 <= 0.0:
+        return 0.0
+    w1, w2 = 2.0 * h1 + h0, h1 + 2.0 * h0
+    return (w1 + w2) / (w1 / d0 + w2 / d1)
+
+
+def _coeffs(xs, ys, i):
+    y0, y1 = ys[i], ys[i + 1]
+    if y0 is None or y1 is None:
+        raise CellMissing(i)
+    x0, x1 = xs[i], xs[i + 1]
+    h = x1 - x0
+    d = (y1 - y0) / h
+    has_l = i - 1 >= 0 and ys[i - 1] is not None
+    has_r = i + 2 < len(xs) and ys[i + 2] is not None
+    if has_l:
+        hl = x0 - xs[i - 1]
+        m0 = _inner_slope(hl, h, (y0 - ys[i - 1]) / hl, d)
+    elif has_r:
+        hr = xs[i + 2] - x1
+        m0 = _end_slope(h, hr, d, (ys[i + 2] - y1) / hr)
+    else:
+        m0 = d
+    if has_r:
+        hr = xs[i + 2] - x1
+        m1 = _inner_slope(h, hr, d, (ys[i + 2] - y1) / hr)
+    elif has_l:
+        hl = x0 - xs[i - 1]
+        m1 = _end_slope(h, hl, d, (y0 - ys[i - 1]) / hl)
+    else:
+        m1 = d
+    return x0, h, y0, y1, m0, m1
+
+
+def _hermite(x, c):
+    x0, h, y0, y1, m0, m1 = c
+    u = (x - x0) / h
+    u2, u3 = u * u, u * u * u
+    return ((2.0 * u3 - 3.0 * u2 + 1.0) * y0 + (u3 - 2.0 * u2 + u) * h * m0
+            + (-2.0 * u3 + 3.0 * u2) * y1 + (u3 - u2) * h * m1)
+
+
+def _cubic1(x, xs, ys, i):
+    y0, y1 = ys[i], ys[i + 1]
+    u = (x - xs[i]) / (xs[i + 1] - xs[i])
+    if u == 0.0 and y0 is not None:
+        return y0
+    if u == 1.0 and y1 is not None:
+        return y1
+    if y0 is None or y1 is None:
+        raise CellMissing(i)
+    return _hermite(x, _coeffs(xs, ys, i))
+
+
+class _Seq:
+    """Index → value or None (absent keys and out-of-range read None)."""
+    __slots__ = ("d", "n")
+
+    def __init__(self, d, n):
+        self.d, self.n = d, n
+
+    def __len__(self):
+        return self.n
+
+    def __getitem__(self, k):
+        return self.d.get(k)
+
+
+def _extrapolate(val, ka, kb, ib, n):
+    """smooth_table `_extrapolate`: a missing outer node (ka, kb) from its row's nearest real node along the row's
+    PCHIP end slope, the slope taken per index."""
+    k = None
+    for dist in range(1, n):
+        cands = [kb + dist, kb - dist] if kb <= ib else [kb - dist, kb + dist]
+        for c in cands:
+            if 0 <= c < n and val(ka, c) is not None:
+                k = c
+                break
+        if k is not None:
+            break
+    if k is None:
+        return None
+    step = 1 if k > kb else -1
+    y0 = val(ka, k)
+    y1 = val(ka, k + step) if 0 <= k + step < n else None
+    y2 = val(ka, k + 2 * step) if 0 <= k + 2 * step < n else None
+    if y1 is None:
+        return y0
+    d0 = (y1 - y0) / step
+    d1 = (y2 - y1) / step if y2 is not None else d0
+    m = -_end_slope(1.0, 1.0, -d0, -d1) if step > 0 else _end_slope(1.0, 1.0, d0, d1)
+    return y0 + m * (kb - k)
+
+
+def cubic2(xa, xb, xs_a, xs_b, val, ia, ib, rows_allowed=None):
+    """Value at (xa, xb) in cell [ia, ia+1] × [ib, ib+1]; `val(ka, kb)` gives a node value or None. `rows_allowed(ka)`
+    False drops a first-axis row from the stencil entirely (the one-sided cut at p_dataset): the first-axis
+    interpolation then goes one-sided there, as at a table end. A missing corner raises CellMissing((ka, kb))."""
+    na, nb = len(xs_a), len(xs_b)
+    rows = {}
+    for ka in range(ia - 1, ia + 3):
+        if not 0 <= ka < na or (rows_allowed is not None and not rows_allowed(ka)):
+            continue
+        need = ka in (ia, ia + 1)
+        col = {}
+        for kb in range(ib - 1, ib + 3):
+            if not 0 <= kb < nb:
+                continue
+            v = val(ka, kb)
+            if v is None and not (need and kb in (ib, ib + 1)):
+                v = _extrapolate(val, ka, kb, ib, nb)
+            col[kb] = v
+        seq = _Seq(col, nb)
+        try:
+            rows[ka] = _cubic1(xb, xs_b, seq, ib)
+        except CellMissing:
+            if need:
+                u = (xa - xs_a[ia]) / (xs_a[ia + 1] - xs_a[ia])
+                if (ka == ia and u == 1.0) or (ka == ia + 1 and u == 0.0):
+                    continue                        # a zero-weight row is not read (smooth_table's grid-line rule)
+                missing = next(kb for kb in (ib, ib + 1) if col.get(kb) is None)
+                raise CellMissing((ka, missing)) from None
+    try:
+        return _cubic1(xa, xs_a, _Seq(rows, na), ia)
+    except CellMissing as e:
+        raise CellMissing((e.args[0], ib)) from None
+
+
+# ── the view (registration §3; post-freeze note 3 §1, §4) ───────────────────────────────────────────────────────────
+#: the T floor of every column (registration §3.1: below 200 K a refusal; Mars's surface is 216 K)
+T_FLOOR = 200.0
+PHASE_ID = "slb_assemblage"
+
+
+def _lm():
+    """legacy_materials, imported on first use: the generator imports this module for `composition_key` alone, with
+    no engine/ on its path (design §L: only legacy_materials imports engine/)."""
+    from solver import legacy_materials
+    return legacy_materials
+
+
+class AssemblageView(mv.RecordView):
+    """An assemblage record as the integrator reads it (registration §3). A RecordView subclass so the notes
+    collector reads it (68 S2), answering every attribute the solver reads (§3.1's class sweep): density, dtdp and
+    state through the C¹ table read and phase 1's melt window (`_lm().silicate_melt_mix`); onset curves and their
+    names as legacy silicate's; the record id as `name`; `.record` with the compact sha, so solve_id binds the
+    table (68 S1). RecordView's own branches (sets, γ windows, joins, the K_T stencil) are never entered."""
+
+    def __init__(self, record, table, t_pot: float, p_stop: float = 0.0, p_floor: float = 0.0):
+        self.material_id = record["id"]
+        self.name = record["id"]                 # solve._pass keys its GrazeMonitor on this (68)
+        self.t_pot = float(t_pot)
+        self.p_stop = float(p_stop)
+        self.p_floor = float(p_floor)            # legacy's, by the declared name (§3.1): _p_stop unchanged
+        self.kind = "assemblage"
+        self.record = freeze(copy.deepcopy(mv.thaw_plain(record)))
+        self.boundaries = ()
+        self.phases = []
+        self.notes: list = []
+        asm = self.record["assemblage"]
+        self.variant = asm["melt_variant"]
+        self.p_dataset = float(asm["p_dataset"])
+        self.band_origin = asm["dtdp"]["band_origin"]
+        self.onset_curve_names = ["고상선"]
+        self._cells = {(c["p"], c["t"]): c for c in table["cells"]}
+        self.ps = sorted({c["p"] for c in table["cells"]})
+        self.ts = sorted({c["t"] for c in table["cells"]})
+        self.lnps = [math.log(p) for p in self.ps]
+        self.columns = {c["p"]: c for c in table["columns"]}
+
+    # the table read ──────────────────────────────────────────────────────────────────────────────────────────
+    def _refuse(self, p, t, rid, why):
+        return st.Stop("refused", mv.RecordRefusal(self.material_id, p, t, rid, why))
+
+    def _cell(self, ia, kb):
+        return self._cells.get((self.ps[ia], self.ts[kb]))
+
+    def _solid(self, p, t):
+        """(ρ_s, dT/dP_s, c_P,s, the corner cells) from the C¹ read at (P, T), or a Stop (§3.1–§3.2)."""
+        if t < T_FLOOR:
+            return self._refuse(p, t, "input.material_out_of_data",
+                                f"below the table's {T_FLOOR:g} K floor (registration §3.1)")
+        if p > self.p_dataset:
+            return self._refuse(p, t, "input.material_out_of_data",
+                                f"above the SLB dataset top {self.p_dataset / 1e9:g} GPa (declaration §4); the "
+                                "taper to the hand-over is not built yet (registration §3.4, note 2)")
+        if t > self.ts[-1]:
+            return self._refuse(p, t, "input.material_above_solid_window",
+                                f"above the table's last T node {self.ts[-1]:g} K (grid_end)")
+        pr = max(p, self.ps[0])                  # below 1 bar: read at the floor node (§3.1's floor band)
+        x = math.log(pr)
+        ia = min(max(next(i for i in range(len(self.ps)) if i + 1 == len(self.ps) or self.ps[i + 1] >= pr), 0),
+                 len(self.ps) - 2)
+        ib = min(max(int((t - self.ts[0]) // (self.ts[1] - self.ts[0])), 0), len(self.ts) - 2)
+        while self.ts[ib] > t:
+            ib -= 1
+        while self.ts[ib + 1] < t:
+            ib += 1
+        cut = (lambda ka: self.ps[ka] <= self.p_dataset)
+        out = {}
+        for f in ("rho", "dtdp_eq", "c_p"):
+            def val(ka, kb, f=f):
+                c = self._cell(ka, kb)
+                return None if c is None else c.get(f)
+            try:
+                out[f] = cubic2(x, t, self.lnps, self.ts, val, ia, ib, cut)
+            except CellMissing as e:
+                ka, kb = e.args[0]
+                c = self._cell(ka, kb)
+                if c is None:
+                    col = self.columns[self.ps[ka]]
+                    return self._refuse(p, t, "input.material_above_solid_window",
+                                        f"above the solid window of the {self.ps[ka]:g} Pa column (top "
+                                        f"{col['t_window_top']:g} K, cause {col['window'].get('cause')}: "
+                                        f"{ {k: v for k, v in col['window'].items() if k != 'cause'} })")
+                return self._refuse(p, t, "input.material_out_of_data",
+                                    f"no equilibrium isentrope at node ({c['p']:g} Pa, {c['t']:g} K): its "
+                                    "re-solves did not converge (registration note 3 §2 condition 4)")
+        corners = [self._cell(a, b) for a in (ia, ia + 1) for b in (ib, ib + 1)]
+        return out["rho"], out["dtdp_eq"], out["c_p"], [c for c in corners if c is not None]
+
+    def _cell_notes(self, cells, p, t):
+        for c in cells:
+            if c["kind"] == "frozen":
+                self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID,
+                                                  f"frozen assemblage below its freeze temperature "
+                                                  f"(class: {c.get('freeze_class')}); one fixed state re-evaluated"))
+            elif c["kind"] == "above_solidus":
+                self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID,
+                                                  "solid above the solidus cap: SLB extrapolated in T (metastable "
+                                                  "solid); melt mixed by the phase-1 rule (C120)"))
+        bands = [c["dtdp_eq_band"] for c in cells if c.get("dtdp_eq_band") is not None]
+        if bands:
+            self.notes.append(mv.BandNote(self.material_id, "dT/dP model consistency", "relative", None, None,
+                                          "equilibrium isentrope (route A)", self.band_origin, max(bands),
+                                          self.band_origin))
+        if p < self.ps[0]:
+            k_t = self._floor_k_t(t)
+            if k_t:
+                self.notes.append(mv.BandNote(self.material_id, "p_min floor", "relative",
+                                              (self.ps[0] - max(p, 0.0)) / k_t, None,
+                                              "extrapolated in P below the grid floor",
+                                              self.record["assemblage"]["floor_band"]["origin"]))
+
+    def _floor_k_t(self, t):
+        """K_T at the floor node on the read's T, ρ·∂P/∂ρ over the first two P nodes (r2 N2), at the nearest node T."""
+        kb = min(range(len(self.ts)), key=lambda k: abs(self.ts[k] - t))
+        a, b = self._cell(0, kb), self._cell(1, kb)
+        if a is None or b is None or not b["rho"] > a["rho"]:
+            return None
+        return a["rho"] * (self.ps[1] - self.ps[0]) / (b["rho"] - a["rho"])
+
+    # the interface the solver reads ─────────────────────────────────────────────────────────────────────────
+    def state(self, p: float, t: float, guess_rho=None):
+        self.notes.clear()
+        pe = max(p, self.p_stop) if p > 0.0 else max(1.0e5, self.p_stop)
+        phi = _lm().silicate_melt_phi(pe, t, self.variant)
+        try:
+            if phi >= 1.0:                       # the liquid alone: no solid cell is read (note 3 §1)
+                rho, g, _ = _lm().silicate_melt_mix(pe, t, self.variant, None, None, None)
+                return (rho, g, tuple(self.notes))
+            got = self._solid(pe, t)
+            if isinstance(got, st.Stop):
+                return got
+            rho_s, g_s, cp_s, cells = got
+            self._cell_notes(cells, p, t)
+            rho, g, _ = _lm().silicate_melt_mix(pe, t, self.variant, rho_s, g_s, cp_s)
+        except _lm().eos.PhaseGap as e:             # RTpress's own refusal
+            return self._refuse(pe, t, "input.material_out_of_data", f"RTpress liquid: {e}")
+        return (rho, g, tuple(self.notes))
+
+    def density(self, p: float, t: float):
+        got = self.state(p, t)
+        return got if isinstance(got, st.Stop) else got[0]
+
+    def dtdp(self, p: float, t: float):
+        got = self.state(p, t)
+        return got if isinstance(got, st.Stop) else got[1]
+
+    def phase_read(self, p: float, t: float):
+        pe = max(p, self.p_stop) if p > 0.0 else max(1.0e5, self.p_stop)
+        if _lm().silicate_melt_phi(pe, t, self.variant) >= 1.0:
+            return PHASE_ID
+        got = self._solid(pe, t)
+        return got if isinstance(got, st.Stop) else PHASE_ID
+
+    def porosity(self, p: float) -> float:
+        return 0.0
+
+    def seams(self) -> tuple:
+        return ()
+
+    def transitions(self) -> tuple:
+        return ()                                # boundaries pending (§3.3): every label change is read across
+
+    def source_seams(self) -> tuple:
+        return ()
+
+    def onset_curves(self, p: float, t: float) -> list:
+        return _lm().silicate_solidus_onset(p, t, self.variant)
+
+
+
+def view(record, table, t_pot, p_stop=0.0, p_floor=0.0):
+    """An AssemblageView of a loaded record and its compact table (registry.tables[id])."""
+    return AssemblageView(record, table, t_pot, p_stop, p_floor)
