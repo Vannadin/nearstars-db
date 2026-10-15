@@ -339,10 +339,10 @@ class SensitivityBranches(unittest.TestCase):
     def test_the_t_plus_delta_views_fail(self):
         real = sv._views
 
-        def views(body, x=None, registry=None):
+        def views(body, x=None, registry=None, silicate=False):    # silicate: the silicate registration's switch
             if body.surface.t_pot != self.body.surface.t_pot:
                 return refusals.make("input.missing_key", "fixture", key="planted")
-            return real(body, x, registry)
+            return real(body, x, registry, silicate)
         with mock.patch.object(sv, "_views", views):
             ans, _x = sv.solve(self.body, context.Options())
         self.assertEqual([x.kind for x in self._sens(ans)], ["sensitivity_not_measured"])
