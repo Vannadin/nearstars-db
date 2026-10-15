@@ -19,6 +19,7 @@ from solver import material_assemblage as ma
 from solver import material_registry as mr
 
 V0, K, C, CP = 1 / 3300.0, 5e10, 1e-8, 1200.0
+P_TOP = 2e10 * 1.05 ** 8                                       # the synthetic grid's last P node, its p_dataset
 B3 = {"gamma_tolerance": 1e-9, "frozen_alpha_tolerance": 2e-2, "maxwell_k": 3.0, "maxwell_floor": 1e-3,
       "reason": "test"}
 BSE = {"SiO2": 45.0, "TiO2": 0.201, "Al2O3": 4.45, "Cr2O3": 0.384, "MnO": 0.135, "FeO": 8.05, "NiO": 0.25,
@@ -50,7 +51,7 @@ def table(steps=()):
                          dv_dt_model=C, ds_dp_model=-C, envelope_gap_v=1e-6, envelope_gap_s=1e-7)
             cells.append(c)
     cols = [{"p": p, "t_sol": 1000.0, "t_window_top": ts[-1], "window": {"cause": "grid_end"}} for p in ps]
-    return {"cells": cells, "columns": cols, "p_dataset": 136e9,
+    return {"cells": cells, "columns": cols, "p_dataset": ps[-1],
             "boundaries": {"status": "pending", "why": "test", "rows": []},
             "feature_regions": {"status": "pending", "why": "test", "rows": []},
             "dtdp_eq_refused": [], "dtdp_eq_source": {"table_blob": "x"}, "source": {}}
@@ -73,7 +74,7 @@ def record(sha, status="development", **over):
         "role_hint": "mantle", "composition_key": ma.composition_key(BSE),
         "primary_family": {"name": "SLB", "sources": ["BurnMan@2.1.0"], "reason": "test"},
         "assemblage": {
-            "file": f"tables/{rid}.json", "sha256": sha, "p_dataset": 136e9, "interpolation": "c1_lnp_t",
+            "file": f"tables/{rid}.json", "sha256": sha, "p_dataset": P_TOP, "interpolation": "c1_lnp_t",
             "melt_variant": "peridotitic", "frozen_classes": ["convergence edge"], "dataset": "test",
             "disclosures": ["test"], "floor_band": {"origin": "test"}, "handover": "silicate_prem_zeng2016",
             "b3": dict(B3),
@@ -86,9 +87,9 @@ def record(sha, status="development", **over):
             "id": "slb_assemblage", "state": "solid",
             "eos": {"form": "assemblage", "reference": {"kind": "path", "path": "SLB assemblage table"}},
             "thermal": {"source_state": "solid", "source_composition": "default_bse"},
-            "field": {"kind": "declared", "box": {"p_min": 2e10, "p_max": 136e9, "t_min": 200.0, "t_max": 600.0},
+            "field": {"kind": "declared", "box": {"p_min": 2e10, "p_max": P_TOP, "t_min": 200.0, "t_max": 600.0},
                       "reason": "test"},
-            "window": {"p_min": 2e10, "p_max": 136e9, "t_min": 200.0, "t_max": 600.0},
+            "window": {"p_min": 2e10, "p_max": P_TOP, "t_min": 200.0, "t_max": 600.0},
             "edges": {"p_max": {"refusal": "input.material_out_of_data"},
                       "t_min": {"refusal": "input.material_out_of_data"},
                       "t_max": {"refusal": "input.material_above_solid_window"}}}],
@@ -259,6 +260,15 @@ class TableChecks(unittest.TestCase):
             with self.subTest(why=why):
                 self.stops(tb, why=why)
 
+    def test_grid_assumptions(self):
+        """68 B1 on 2390a7e2: the T grid starts at the view's floor, and p_dataset is a P node of the table."""
+        tb = table(); tb["cells"] = [c for c in tb["cells"] if c["t"] > 200.0]
+        self.stops(tb, why="first T node")
+        for pd in (2e10 * 1.05 ** 9, 0.5 * (2e10 + 2e10 * 1.05)):        # above the last node; between two nodes
+            tb = table(); tb["p_dataset"] = pd
+            with self.subTest(p_dataset=pd):
+                self.stops(tb, why="not a P node")
+
     def test_freeze_t_breaks_one_state(self):
         """68 M22: frozen neighbours with different freeze_t are not one state, so the in-column identity is not
         formed across them: a dtdp_s that fails it with equal freeze_t passes with a different one."""
@@ -390,7 +400,7 @@ class RegistryLoad(unittest.TestCase):
                 self.assertEqual(got.id, "material.assemblage_table")
                 self.assertIn("a path under solver/materials", got.evidence["why"])
         with tempfile.TemporaryDirectory() as d:
-            tb = table(); tb["p_dataset"] = 135e9
+            tb = table(); tb["p_dataset"] = 2e10 * 1.05 ** 7                     # a node, but not the record's
             write(d, tb, status="pinned")
             got = mr.load(Path(d))
         self.assertEqual(got.id, "material.assemblage_table")
