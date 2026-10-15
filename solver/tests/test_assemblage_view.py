@@ -39,6 +39,7 @@ def table(tops=None, refused=()):
                  "freeze_t": 400.0 if fr else None, "freeze_class": "convergence edge" if fr else None,
                  "dtdp_eq_band": None if fr else 2.5e-4 * (1.0 + t / 1e4)}
             c["dtdp_eq"] = None if (i, t) in refused else c["dtdp_s"] * (1.0 + 0.1 * math.sin(math.log(p)))
+            c["c_p_eq"] = None if fr or (i, t) in refused else c["c_p"] * 1.03
             cells.append(c)
         cols.append({"p": p, "t_sol": 1500.0, "t_window_top": top,
                      "window": {"cause": "grid_end"} if top == TS[-1] else {"cause": "eos_edge", "phase": "opx"}})
@@ -70,7 +71,9 @@ class Interpolation(unittest.TestCase):
         v = view()
         r, g, cp, _ = solid(v, PS[10], TS[20])
         c = v._cells[(PS[10], TS[20])]
-        self.assertEqual((r, g, cp), (c["rho"], c["dtdp_eq"], c["c_p"]))
+        self.assertEqual((r, g, cp), (c["rho"], c["dtdp_eq"], c["c_p_eq"]))      # non-frozen: c_p_eq (r2 B1)
+        fr = v._cells[(PS[10], TS[2])]                                            # 300 K, frozen: the table's c_p
+        self.assertEqual(solid(v, PS[10], TS[2])[2], fr["c_p"])
         p = PS[10]
         for t in (TS[20] - 1e-9, TS[20] + 1e-9):
             self.assertAlmostEqual(solid(v, p, t)[0], c["rho"], delta=1e-6)
@@ -261,6 +264,23 @@ class MeltWindow(unittest.TestCase):
         self.assertIsInstance(got, st.Stop)
         self.assertEqual(got.record.refusal, "input.material_out_of_data")
         self.assertIn("RTpress", got.record.why)
+
+    def test_window_reads_the_equilibrium_heat_capacity(self):
+        """r2 B1 on note 3: in the window the solid's c_P is c_p_eq on non-frozen cells (dtdp_eq's basis), so changing
+        c_p_eq changes the answer and changing the isomorphic c_p does not; φ = 0 reads neither."""
+        p = PS[25]
+        tw = float(next(t for t in range(1500, 3000, 5) if 0.2 < lm.silicate_melt_phi(p, t, "peridotitic") < 0.8))
+        base = view().state(p, tw)[:2]
+        tb = table()
+        for c in tb["cells"]:
+            if c["c_p_eq"] is not None:
+                c["c_p_eq"] *= 1.5
+        self.assertNotEqual(view(tb).state(p, tw)[1], base[1])
+        tb = table()
+        for c in tb["cells"]:
+            if c["kind"] != "frozen":
+                c["c_p"] *= 1.5
+        self.assertEqual(view(tb).state(p, tw)[:2], base)
 
     def test_window_above_solid_top_refuses(self):
         """Note 3 §1: only 0 < φ < 1 above the window top refuses."""

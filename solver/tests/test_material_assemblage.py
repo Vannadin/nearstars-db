@@ -48,7 +48,8 @@ def table(steps=()):
                          dv_dt_model=None, ds_dp_model=None, envelope_gap_v=None, envelope_gap_s=None)
             else:
                 c.update(dtdp_eq=c["dtdp_s"], dtdp_eq_from="model", dtdp_eq_band=2.5e-4, dtdp_g=c["dtdp_s"],
-                         dv_dt_model=C, ds_dp_model=-C, envelope_gap_v=1e-6, envelope_gap_s=1e-7)
+                         dv_dt_model=C, ds_dp_model=-C, envelope_gap_v=1e-6, envelope_gap_s=1e-7,
+                         c_p_eq=-(-C) * t / c["dtdp_s"])          # dtdp_eq = −ds_dp·T/c_p_eq
             cells.append(c)
     cols = [{"p": p, "t_sol": 1000.0, "t_window_top": ts[-1], "window": {"cause": "grid_end"}} for p in ps]
     return {"cells": cells, "columns": cols, "p_dataset": ps[-1],
@@ -155,10 +156,14 @@ class TableChecks(unittest.TestCase):
         self.stops(tb, why="frozen cell")
         tb = table(); cell(tb, 4, 5)["dtdp_eq"] = None
         self.stops(tb, why="not listed as refused")
-        for f in ("dtdp_eq", "dtdp_g", "dtdp_eq_band"):
+        for f in ("dtdp_g", "dtdp_eq_band"):
             with self.subTest(field=f):
                 tb = table(); cell(tb, 4, 5)[f] *= 1.01
                 self.stops(tb, why="recomputation")
+        for f in ("dtdp_eq", "c_p_eq", "ds_dp_model"):                     # r2 B1 on note 3: c_p_eq's guard
+            with self.subTest(field=f):
+                tb = table(); cell(tb, 4, 5)[f] *= 1.01
+                self.stops(tb, why="−ds_dp·T/c_p_eq")
 
     def test_planted_coverage_synthetic(self):
         """r2 condition 3: every field the engine reads × cell kind is caught by a named check."""
@@ -210,8 +215,8 @@ class TableChecks(unittest.TestCase):
             if c["kind"] != "frozen":
                 c["dv_dt_model"] = float("nan")
         self.stops(tb, why="exact derivatives are neither")
-        tb = table(); cell(tb, 4, 5)["ds_dp_model"] = None
-        self.stops(tb, why="exact derivatives are neither")
+        tb = table(); cell(tb, 4, 5)["ds_dp_model"] = None          # caught first by the field rule's presence check
+        self.stops(tb, why="exact derivatives are neither|envelope gap is missing")
 
     def test_guards(self):
         """68 B2: one planted control per check_table guard (each the only defect)."""
