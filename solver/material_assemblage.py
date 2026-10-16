@@ -840,11 +840,12 @@ class AssemblageView(mv.RecordView):
         self._reach = EXT_ROWS * (self.ts[1] - self.ts[0]) if len(self.ts) > 1 else 0.0
         self._parts, self._runcache = {}, {}
         #: the read counts of this view ((R1), 68 S1): reads, corner rows read in an empty region, outer rows dropped
-        #: (reads, most in one read), refusals by class, edge corrections applied, and side fallbacks (0 by
-        #: construction: the extension covers the stencil)
+        #: (reads, most in one read), refusals by class, edge corrections applied, side fallbacks (0 by
+        #: construction: the extension covers the stencil), and δ taken from the corner rows' differences because a side
+        #: has no value in a corner row (_delta, per edge and field)
         self.cut_counts = {"reads": 0, "empty_region_reads": 0, "row_drop_reads": 0, "row_drop_max": 0,
                            "cap_refusals": 0, "no_run_refusals": 0, "by_count_reads": 0, "corrections": 0,
-                           "side_fallbacks": 0}
+                           "side_fallbacks": 0, "row_delta_reads": 0}
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
 
     # the table read ──────────────────────────────────────────────────────────────────────────────────────────
@@ -1062,8 +1063,31 @@ class AssemblageView(mv.RecordView):
         depends on the read's own side of another edge. It changes in t where another cut edge's P_b crosses x_b."""
         sd = {cc: (sides[cc] if cc.kind == "swap" or q is None else (-1 if (xb, c.id) < (math.log(q), cc.id) else 1))
               for cc, q in pbs.items()}                  # at an exact tie, ordered by id: one order for both δ
-        return (self._value(f, xb, t, ia, ib, {**sd, c: -1}, False)
-                - self._value(f, xb, t, ia, ib, {**sd, c: 1}, False))
+        rl, rr = self._side_rows(f, xb, ib, {**sd, c: -1}), self._side_rows(f, xb, ib, {**sd, c: 1})
+        if all(k in rl and k in rr for k in (ib, ib + 1)):
+            return _cubic1(t, self.ts, _Seq(rl, len(self.ts)), ib) - _cubic1(t, self.ts, _Seq(rr, len(self.ts)), ib)
+        # 68 B1: a side with no value in a corner row never refuses the read. δ is then linear in t between the corner
+        # rows' own differences L_k − R_k (0 in a row where a side has none): at a row line both forms reduce to that
+        # row's difference, so δ stays continuous in t; counted
+        self.cut_counts["row_delta_reads"] += 1
+        d = [rl[k] - rr[k] if k in rl and k in rr else 0.0 for k in (ib, ib + 1)]
+        return d[0] + (t - self.ts[ib]) / (self.ts[ib + 1] - self.ts[ib]) * (d[1] - d[0])
+
+    def _side_rows(self, f, x, ib, sides):
+        """One side's stencil row values at x_b for δ: as _value's rows, but uncapped (x_b moves with t, so a cap would
+        switch inside a T cell; the cap only refuses, it changes no value), and a row with no value is left out
+        instead of refusing (68 B1 on d7cc971d). {row: value}."""
+        n_t = len(self.ts)
+        rows = {}
+        for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1):
+            r = self._region(k, sides, x)
+            v = self._row_value(f, k, r, x, False)
+            if v is None:
+                continue
+            if k in (ib, ib + 1) and not self._runs(f, k).get(r):
+                self._marks["empty"] = True              # as a corner read of an empty region (MULTI_NOTE)
+            rows[k] = v
+        return rows
 
     def _read(self, p, t, pr, x, ia, ib):
         """The read of an exported-boundary record (R1): every field P first through the row regions, T last; at each

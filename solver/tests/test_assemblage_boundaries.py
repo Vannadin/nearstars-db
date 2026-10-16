@@ -648,6 +648,167 @@ class ReadRule(unittest.TestCase):
         self.assertEqual(len(outs), 1, outs)
         self.assertEqual(outs.pop().count("'"), 12)            # six curves printed, not an empty or failed run
 
+class Choices(unittest.TestCase):
+    """Each agreed (R1) design choice pinned by a case that its alternative fails (68 B2 on d7cc971d)."""
+
+    def test_far_side_unreadable_never_refuses_the_near_side(self):
+        """68 B1: an edge whose far side has no dT/dP or c_P at a corner row (only ρ) never refuses the near side
+        inside the window: δ is then linear in t between the corner rows' own differences (0 in the row where the far
+        side has none), so the read stays continuous in T across the row lines (δ := 0 stepped dT/dP ×3 at
+        default_bse 133 GPa, 3550 K). The far side's own read refuses."""
+        tb = table(cls="edge_in", right="ol+opx+gt")
+        p_b = pb_const(0.0)
+        for c in tb["cells"]:
+            if c["p"] > p_b and c["kind"] != "frozen":
+                c["dtdp_eq"] *= 1.05                                # a planted dT/dP offset for δ to carry
+            if c["t"] == 1250.0 and c["p"] > p_b:
+                c["dtdp_eq"], c["c_p_eq"] = None, None
+        v = view(tb)
+        (c,) = v._cut
+        xb = math.log(p_b)
+        w = v._width(xb)
+        p = math.exp(xb - 0.5 * w)
+        t = 1210.0
+        got = v._solid(p, t)
+        self.assertNotIsInstance(got, st.Stop)
+        self.assertGreater(v.cut_counts["row_delta_reads"], 0)
+        k = TS.index(1200.0)                                       # δ linear in t: row 1200's difference, 0 at 1250 K
+        d0 = v._row_value("dtdp_eq", k, 0, xb, False) - v._row_value("dtdp_eq", k, 1, xb, False)
+        self.assertGreater(abs(d0), 1e-3 * abs(v._row_value("dtdp_eq", k, 0, xb, False)))
+        self.assertAlmostEqual(v._delta("dtdp_eq", c, xb, w, t, 14, k, {c: -1}, {c: p_b}), 0.8 * d0, delta=1e-12 * abs(d0))
+        for tl in (1200.0, 1250.0):                                # continuous in T at the row lines, every field
+            a, b = v._solid(p, tl - 1e-7), v._solid(p, tl + 1e-7)
+            for f in range(3):
+                self.assertLess(abs(b[f] / a[f] - 1), 1e-6, (tl, f))
+        self.assertIsInstance(v._solid(p_b * 1.001, t), st.Stop)
+        self.assertEqual(jumps_p(v, (t,)), [])
+
+    def test_far_side_past_the_cap_never_refuses_the_near_side(self):
+        """68 B1, the cap: δ's side reads are uncapped (x_b moves with t, so a cap there would switch inside a T cell);
+        a far side whose run starts more than 4 columns from x_b in a corner row leaves the near read standing, while
+        the far side's own read refuses (its read-cell corner has no value)."""
+        tb = table(cls="edge_in", right="ol+opx+gt")
+        p_b = pb_const(0.0)
+        for c in tb["cells"]:
+            if c["t"] == 1250.0 and p_b < c["p"] < PS[22]:
+                c["rho"] = None
+        v = view(tb)
+        xb = math.log(p_b)
+        p = math.exp(xb - 0.5 * v._width(xb))
+        self.assertNotIsInstance(v._solid(p, 1210.0), st.Stop)
+        self.assertIsInstance(v._solid(p_b * 1.001, 1210.0), st.Stop)
+
+    def test_liquid_alone_never_reads_the_solid_table(self):
+        """The solver reads the view through state() and phase_read() only; at φ ≥ 1 neither reads the solid table, so
+        a solid-table refusal there (default_bse's 15 cells at 0.11–0.22 GPa, 2325 K, φ = 1) is never met by a solve."""
+        v = view(table())
+        p, t = 1.0e8, 2400.0
+        self.assertGreaterEqual(ma._lm().silicate_melt_phi(p, t, v.variant), 1.0)
+        self.assertIsInstance(v._solid(p, t), st.Stop)               # the solid table refuses here
+        def boom(*a):
+            raise AssertionError("solid table read at φ ≥ 1")
+        v._solid = boom
+        got = v.state(p, t)
+        self.assertNotIsInstance(got, st.Stop)
+        self.assertTrue(any(ma.LIQUID_ALONE_NOTE in getattr(n, "text", "") for n in got[2]))
+        self.assertEqual(v.phase_read(p, t), ma.PHASE_ID)
+
+    def test_gap_inside_a_region_reads_linearly(self):
+        """68 H1: an outer row with a missing node inside a region reads linearly in ln P across the gap (not the
+        nearest run's value), and the read stays continuous across the gap's midpoint."""
+        tb = table()
+        tb_cell(tb, PS[11], 1300.0)["rho"] = None
+        v = view(tb)
+        k = TS.index(1300.0)
+        x = math.log(PS[10]) + 0.3 * (math.log(PS[12]) - math.log(PS[10]))
+        a, b = tb_cell(tb, PS[10], 1300.0)["rho"], tb_cell(tb, PS[12], 1300.0)["rho"]
+        self.assertAlmostEqual(v._row_value("rho", k, 0, x, False), a + 0.3 * (b - a), delta=1e-9 * a)
+        self.assertEqual(jumps_p(v, (1210.0,)), [])
+
+    def test_outer_row_uncapped_and_dropped(self):
+        """68 H2: an outer row reads past its run's end with no column cap, and an outer row with no run in the read's
+        region drops; neither refuses (a corner row would)."""
+        def steep(t):
+            a, b = math.log(math.sqrt(PS[13] * PS[14])), math.log(math.sqrt(PS[22] * PS[23]))
+            w = min(max((t - 1200.0) / 50.0, 0.0), 1.0)
+            return math.exp(a + w * (b - a))
+        v = view(table(pb=steep, t_lo=1150.0, t_hi=1400.0))
+        p, t = PS[21] * 1.1, 1275.0                                 # row 1200's left run ends at column 13: 8 columns
+        self.assertNotIsInstance(v._solid(p, t), st.Stop)
+        def high(t):                                                # right of P_b at 1300 K: only columns above p_dataset
+            j = {1150.0: 23, 1200.0: 24, 1250.0: 26}.get(t, 27)
+            return math.sqrt(PS[j] * PS[j + 1])
+        v = view(table(pb=high, t_lo=1150.0, t_hi=1400.0))
+        got = v._solid(PS[26] * 1.1, 1210.0)
+        self.assertNotIsInstance(got, st.Stop)
+        self.assertEqual(v.cut_counts["row_drop_reads"], 1)
+
+    def test_window_width_interpolated_in_ln_p(self):
+        """68 (c): w at x is the node-centred cell width interpolated linearly in ln P between nodes, so it is
+        continuous where x_b crosses a node (a step-valued w would step the correction there)."""
+        v = view(table(cls="edge_in", right="ol+opx+gt"))
+        v.lnps = [0.0, 1.0, 3.0, 4.0, 7.0, 8.0]
+        self.assertAlmostEqual(v._width(2.0), 0.5 * (1.5 + 1.5), delta=1e-12)
+        self.assertAlmostEqual(v._width(3.5), 0.5 * (1.5 + 2.0), delta=1e-12)
+        self.assertAlmostEqual(v._width(3.0 - 1e-12), v._width(3.0 + 1e-12), delta=1e-9)
+
+    def test_coincident_edges_are_a_swap(self):
+        """68 N2: two cut edges at one P_b at every row are a step, read as a swap (no correction), counted."""
+        def edges(t):
+            e = {"converged": True, "location_error": 0.0, "by_amount_only": False, "delta_rho": OFF,
+                 "over_tolerance": True, "p_b": pb_const(t), "p_b_driving_force": pb_const(t), "p_b_amount": pb_const(t)}
+            return [{**e, "phase": "cpx"}, {**e, "phase": "wa"}]
+        v = view(table(cls="swap_two_edges", edges=edges))
+        self.assertEqual(v.coincident, 2)
+        self.assertEqual({c.kind for c in v._cut}, {"swap"})
+        p_b, t = pb_const(1200.0), 1210.0
+        self.assertAlmostEqual(solid(v, p_b * (1 + 1e-9), t)[0] / solid(v, p_b * (1 - 1e-9), t)[0] - 1, OFF, delta=1e-4)
+
+    def test_zero_width_region_reads_the_mean(self):
+        """Two curves at one P_b in a row (crossing there, not coincident at every row): the zero-width region
+        between them reads the mean of its neighbours' values at that P_b."""
+        def edges(t):
+            m = math.sqrt(PS[15] * PS[16])
+            d = (t - 1200.0) / 2000.0
+            a, b = m * math.exp(-d), m * math.exp(d)
+            e = {"converged": True, "location_error": 0.0, "by_amount_only": False, "delta_rho": None}
+            return [{**e, "phase": "ol", "p_b": a, "p_b_driving_force": a, "p_b_amount": a},
+                    {**e, "phase": "wa", "p_b": b, "p_b_driving_force": b, "p_b_amount": b}]
+        v = view(table(cls="swap_two_edges", edges=edges, t_lo=1150.0, t_hi=1250.0))
+        k = TS.index(1200.0)
+        (pa, _), (pb, _) = v._partition(k)
+        self.assertEqual(pa, pb)
+        xm = math.log(pa)
+        vl, vr = v._run_value("rho", k, 0, xm, False), v._run_value("rho", k, 2, xm, False)
+        self.assertGreater(abs(vr / vl - 1), 1e-3)
+        self.assertEqual(v._row_value("rho", k, 1, xm, False), 0.5 * (vl + vr))
+
+    def test_extension_ln_linear(self):
+        """(R1) §4: past an end P_b continues ln-linearly from the two end rows (constant only for a one-row curve)."""
+        rows = [{"t": 1000.0, "p_b": 2.0e9}, {"t": 1050.0, "p_b": 3.0e9}]
+        c = ma._Curve(0, "swap", None, rows)
+        self.assertAlmostEqual(c.p_b_ext(1100.0, 100.0), 4.5e9, delta=1e-3)
+        self.assertAlmostEqual(c.p_b_ext(950.0, 100.0), 2.0e9 / 1.5, delta=1e-3)
+        self.assertIsNone(c.p_b_ext(1151.0, 100.0))
+        self.assertEqual(ma._Curve(0, "swap", None, rows[:1]).p_b_ext(1040.0, 100.0), 2.0e9)
+
+    def test_missing_corner_off_the_reads_region_does_not_refuse(self):
+        """D-M2 per region: a read-cell corner node with no cell refuses only when it is in the read's region; across a
+        cut curve it is not read, so a read left of the curve stands when the right column ends below its T."""
+        v = view(table(tops={16: 1150.0}))
+        self.assertNotIsInstance(v._solid(pb_const(1200.0) * 0.997, 1210.0), st.Stop)
+        self.assertIsInstance(v._solid(pb_const(1200.0) * 1.003, 1210.0), st.Stop)
+
+    def test_swap_note_only_in_the_read_cell(self):
+        """SWAP_NOTE goes on a read whose P cell holds the swap's P_b, not on every read whose stencil sees it."""
+        v = view(table())
+        t = 1210.0
+        near = v.state(pb_const(1200.0) * 1.001, t)[2]
+        far = v.state(math.sqrt(PS[12] * PS[13]), t)[2]
+        self.assertTrue(any(ma.SWAP_NOTE in getattr(n, "text", "") for n in near))
+        self.assertFalse(any(ma.SWAP_NOTE in getattr(n, "text", "") for n in far))
+
+
 class Disclosures(unittest.TestCase):
     """§5's per-table disclosures: edge δ, multi-curve cells, T-direction changes split located/unlocated (68 M5)."""
 
