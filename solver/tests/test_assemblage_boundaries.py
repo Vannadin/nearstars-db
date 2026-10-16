@@ -642,6 +642,59 @@ class ReadRule(unittest.TestCase):
         rechained = ma.build_curves({"rows": [r for r in tb["boundaries"]["rows"] if not ma.row_across(r)]}, v.ts)
         self.assertTrue(any(len({r["p_lo"] for r in c.rows}) > 1 for c in rechained))   # the mutant links them
 
+    def test_edge_continuous_with_p0_prime_past_an_end(self):
+        """The edge correction's δ takes each side's own P0′ reference (_side_value), so a read is continuous at P_b
+        whichever side it is on. An over-tolerance gt edge E between columns 15/16 at every T; a swap S
+        (ol+opx+gt → wa+opx+gt) between columns 16/17 up to 1250 K; past S's end the nodes right of column 16 carry
+        opx+gt with their own ρ offset. A read left of E has reference ol+opx (opx+gt is a swap-type difference:
+        rejected); a read right of E has ol+opx+gt (edge-type: admitted). With the read's reference for both one-sided
+        values (engine 2453b935–c327275a) δ differed by side and a step stayed at P_b; ea's preview on e0ec582f
+        chattered on such a step (Mars wa edge, 16.53 GPa, 1800.9 K)."""
+        tb = table(cls="edge_in", right="ol+opx+gt")
+        p_e = pb_const(0.0)
+        p_s = math.sqrt(PS[16] * PS[17])
+        for cell in tb["cells"]:
+            if cell["kind"] == "frozen" or cell["p"] < p_e:
+                continue
+            if cell["t"] <= 1250.0 and cell["p"] > p_s:
+                cell["assemblage"] = "wa+opx+gt"
+            elif cell["t"] > 1250.0 and cell["p"] > p_s:
+                cell["assemblage"] = "opx+gt"
+                cell["rho"] = rho_of(cell["p"], cell["t"]) * 1.05
+        for r in list(tb["boundaries"]["rows"]):
+            if r["t"] <= 1250.0:
+                tb["boundaries"]["rows"].append({"t": r["t"], "p_lo": PS[16], "p_hi": PS[17], "left": "ol+opx+gt",
+                                                 "right": "wa+opx+gt", "class": "swap", "converged": True, "p_b": p_s,
+                                                 "delta_rho": 0.02, "delta_s": 1.0})
+        v = view(tb)
+        t = 1300.0                                            # past S's end; S's row 1250 K is in the stencil
+        self.assertEqual(len(v._crossing(p_e, t, 15, TS.index(1250.0))), 2)
+        a, b = solid(v, p_e * (1 - 1e-12), t), solid(v, p_e * (1 + 1e-12), t)
+        for k in (0, 1):
+            self.assertLess(rel(a[k], b[k]), 1e-9)
+        mut = view(tb)                                       # the mutant: both values at the read's own reference
+        mut._side_value = lambda f, x, t_, ia, ib, side, cuts: ma.AssemblageView._cut_value(mut, f, x, t_, ia, ib,
+                                                                                            side, cuts)
+        a, b = solid(mut, p_e * (1 - 1e-12), t), solid(mut, p_e * (1 + 1e-12), t)
+        self.assertGreater(rel(a[0], b[0]), 1e-4)
+
+    def test_curve_ids_do_not_depend_on_hashing(self):
+        """Curve ids order the groups by sorted phase names, not a frozenset's repr (which follows PYTHONHASHSEED):
+        six swap groups with multi-phase labels get the same ids in processes with different hash seeds."""
+        import os
+        import subprocess
+        import sys
+        code = ("from solver import material_assemblage as ma; "
+                "labs = [('aa+bb+cc', 'dd+ee+ff'), ('aa+dd+ee', 'bb+cc+ff'), ('bb+dd+ff', 'aa+cc+ee'), "
+                "('cc+dd+ee', 'aa+bb+ff'), ('aa+cc+ff', 'bb+dd+ee'), ('bb+cc+ee', 'aa+dd+ff')]; "
+                "rows = [{'t': 1000.0, 'p_lo': float(2 * i), 'p_hi': float(2 * i + 1), 'left': l, 'right': r, "
+                "'class': 'swap', 'converged': True, 'p_b': 2 * i + 0.5} for i, (l, r) in enumerate(labs)]; "
+                "print([(c.id, c.rows[0]['left_label']) for c in ma.build_curves({'rows': rows}, [1000.0])])")
+        outs = {subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True,
+                               env={**os.environ, "PYTHONHASHSEED": str(seed)}).stdout for seed in range(1, 9)}
+        self.assertEqual(len(outs), 1, outs)
+        self.assertEqual(outs.pop().count("'"), 12)            # six curves printed, not an empty or failed run
+
     def test_starved_corner_row_drops(self):
         """S1: a corner row with no read-side node in the read's region drops and the read answers; the mutant that
         refuses on a starved corner row (the pre-(A″) rule) refuses the same read."""

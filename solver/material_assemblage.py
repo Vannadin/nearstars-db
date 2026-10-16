@@ -646,7 +646,8 @@ def build_curves(boundaries, ts):
     Two rows of one group on the same pair at one T are a data error: TableStop (68 M6)."""
     idx = {t: k for k, t in enumerate(ts)}
     out = []
-    for key, rows in sorted(curve_groups(boundaries).items(), key=lambda kv: repr(kv[0])):
+    for key, rows in sorted(curve_groups(boundaries).items(),     # a key of sorted names, never a frozenset's repr
+                            key=lambda kv: (kv[0][0], sorted(kv[0][1]), sorted(kv[0][2]), kv[0][3] or "")):
         by_t = {}
         for r in rows:
             if any(o["p_lo"] == r["p_lo"] for o in by_t.get(r["t"], ())):
@@ -965,6 +966,20 @@ class AssemblageView(mv.RecordView):
                     best = (d, cell, jj)
         self._ref = None if best is None else (_labels(best[1]["assemblage"]), best[2])
 
+    def _side_value(self, f, x, t, ia, ib, side, cuts):
+        """A one-sided value at the end of a cut (an edge's δ at P_b, (c″)'s outer values) with P0′'s reference corner
+        taken for that side (_set_ref), not the read's: so δ = L − R is the same whichever side a read is on, and the
+        edge correction and (c″) are continuous at P_b. The read's own reference is restored after. (Engine 2453b935–
+        c327275a took both values with the read's reference; past a curve's end that left a step at P_b: Mars's wa
+        edge at 16.53 GPa, 1800.9 K read 0.28 % in ρ and 24 % in dT/dP apart either side, and the solve's event
+        landing chattered, ea's preview (b) on e0ec582f.)"""
+        keep = self._ref
+        self._set_ref(x, t, ia, ib, side, cuts)
+        try:
+            return self._cut_value(f, x, t, ia, ib, side, cuts)
+        finally:
+            self._ref = keep
+
     def _region(self, k, x, side):
         """(A″) S1: the read's P region in row k, (lo, hi) between the nearest cut curves defined at t_k on either side
         (a crossing curve by the read's side, any other by the read's ln P): a row's reach never passes a curve."""
@@ -1084,16 +1099,16 @@ class AssemblageView(mv.RecordView):
                     xa, xb = math.log(cell[0].p_b(t)), math.log(cell[-1].p_b(t))
                     left = {**side, **{c: -1 for c in cell}}
                     right = {**side, **{c: 1 for c in cell}}
-                    va = self._cut_value(f, xa, t, ia, ib, left, cuts)
-                    vb = self._cut_value(f, xb, t, ia, ib, right, cuts)
+                    va = self._side_value(f, xa, t, ia, ib, left, cuts)
+                    vb = self._side_value(f, xb, t, ia, ib, right, cuts)
                     out[f] = va + (vb - va) * (x - xa) / (xb - xa)
                     continue
                 v = self._cut_value(f, x, t, ia, ib, side, cuts)
                 if len(cell) == 1 and cell[0].kind in ("edge", "node"):
                     c = cell[0]
                     xbd = math.log(c.p_b(t))
-                    d = (self._cut_value(f, xbd, t, ia, ib, {**side, c: -1}, cuts)
-                         - self._cut_value(f, xbd, t, ia, ib, {**side, c: 1}, cuts))
+                    d = (self._side_value(f, xbd, t, ia, ib, {**side, c: -1}, cuts)
+                         - self._side_value(f, xbd, t, ia, ib, {**side, c: 1}, cuts))
                     if side[c] < 0:
                         v -= 0.5 * d * (x - xl) / (xbd - xl)
                     else:
@@ -1296,10 +1311,9 @@ def boundary_disclosures(record, table) -> dict:
             ib = min(ts.index(t), len(ts) - 2)
             cuts = v._crossing(pb, t, ia, ib)
             side = {cc: cc.side_of(pb, t) for cc in cuts}
-            v._set_ref(math.log(pb), t, ia, ib, side, cuts)
             try:
-                left = v._cut_value("rho", math.log(pb), t, ia, ib, {**side, c: -1}, cuts)
-                right = v._cut_value("rho", math.log(pb), t, ia, ib, {**side, c: 1}, cuts)
+                left = v._side_value("rho", math.log(pb), t, ia, ib, {**side, c: -1}, cuts)
+                right = v._side_value("rho", math.log(pb), t, ia, ib, {**side, c: 1}, cuts)
             except (CellMissing, _NoNode) as e:          # named, never silently dropped
                 unreadable.append({"curve": c.id, "t": t, "p_b": pb, "why": type(e).__name__})
                 continue
