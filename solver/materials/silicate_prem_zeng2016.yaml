@@ -1,0 +1,111 @@
+# silicate_prem_zeng2016 — 136 GPa 위 인계 기록: ρ 는 Zeng 2016 하부 맨틀 BM2, dT/dP·c_P 는 넘겨주는 SLB 기록의 204 GPa 고정 상태 (규산염 기록 등록 §3.4, note 2·7); rewrite/phase2-records/gen_prem_handover.py 가 썼다, 손으로 고치지 않는다
+id: silicate_prem_zeng2016
+label: 'SLB-to-PREM hand-over above SLB''s dataset top: Zeng 2016 lower-mantle BM2 ρ, the tapering record''s SLB composite
+  for dT/dP and c_P'
+kind: single
+system: silicate
+fit_composition: PREM lower mantle (ρ); the tapering record's own composition (thermal blocks)
+role_hint: mantle
+requires_switch: silicate_records
+primary_family:
+  name: Zeng et al. 2016 PREM-fit lower mantle
+  sources:
+  - 2016ApJ...819..127Z.pdf
+  reason: 'silicate registration §3.4: the hand-over above SLB''s dataset top 136 GPa; ρ on the PREM path (D-M1), T-independent
+    (Zeng ignores T, note 2 item 2)'
+handover_table:
+  file: tables/silicate_prem_zeng2016.json.gz
+  sha256: 291b9c562f89b99de26dac0ce07200c9d1333fd672eefcac69d489af435d7e58
+  blocks:
+  - silicate_slb_default_bse
+  - silicate_slb_earth_dmm_wh2005
+  - silicate_slb_mars_khan2022
+phases:
+- id: prem_lm
+  label: PREM lower mantle, Zeng 2016 BM2
+  state: solid
+  eos:
+    form: handover
+    params:
+      rho0:
+        value: 3980.0
+        unit: kg/m3
+        grade: read
+        printed: ρ0 = 3.98 g/cc
+        conversion: ×1000
+        source:
+          cache: 2016ApJ...819..127Z.pdf
+          page: –3–
+          where: §2, «Lower Mantle» bullet
+          sha256: 80d1f3b0c360722f205a54ce24ec5b00dbc8966216dc3b7ade45eafc5b6b2422
+      k0:
+        value: 206000000000.0
+        unit: Pa
+        grade: read
+        printed: K0 = 206 GPa
+        conversion: ×1e9
+        source:
+          cache: 2016ApJ...819..127Z.pdf
+          page: –3–
+          where: §2, «Lower Mantle» bullet
+          sha256: 80d1f3b0c360722f205a54ce24ec5b00dbc8966216dc3b7ade45eafc5b6b2422
+      k0p:
+        value: 4.0
+        unit: '1'
+        grade: declared
+        note: BM2 fixes K0′ = 4
+        source:
+          cache: 2016ApJ...819..127Z.pdf
+          page: –3–
+          where: §2, BM2 fit
+          sha256: 80d1f3b0c360722f205a54ce24ec5b00dbc8966216dc3b7ade45eafc5b6b2422
+    reference:
+      kind: path
+      path: PREM path
+  thermal:
+    source_state: solid
+    source_composition: the tapering SLB record's composition, its 204 GPa column's fixed state
+    from_assemblage: handover_table
+    grade: 'hand-over: PREM-path ρ (Zeng 2016); thermal terms SLB 2024 extrapolated in P at fixed assemblage (note 2 item
+      6)'
+  field:
+    kind: declared
+    box:
+      p_min: 136000000000.0
+      p_max: 3500000000000.0
+    reason: the taper zone from SLB's dataset top 136 GPa, then the hand-over alone to Zeng's 3.5 TPa (p. –5–) or its thermal
+      block's cut per T row
+  window:
+    p_min: 136000000000.0
+    p_max: 3500000000000.0
+  multi_source_reason:
+    reach: beyond_primary
+    text: above SLB's dataset top 136 GPa (declaration §4)
+  edges: {}
+formula_checks:
+- quantity: ρ0 of the PREM lower-mantle fit
+  state: {}
+  expected: 3980.0
+  unit: kg/m3
+  tolerance: 0.0
+  tolerance_reason: the printed value, read as printed (an identity)
+  expression: params.rho0
+  source:
+    cache: 2016ApJ...819..127Z.pdf
+    page: –3–
+    where: §2, «Lower Mantle» bullet
+    sha256: 80d1f3b0c360722f205a54ce24ec5b00dbc8966216dc3b7ade45eafc5b6b2422
+- quantity: K0 of the PREM lower-mantle fit
+  state: {}
+  expected: 206000000000.0
+  unit: Pa
+  tolerance: 0.0
+  tolerance_reason: the printed value, read as printed (an identity)
+  expression: params.k0
+  source:
+    cache: 2016ApJ...819..127Z.pdf
+    page: –3–
+    where: §2, «Lower Mantle» bullet
+    sha256: 80d1f3b0c360722f205a54ce24ec5b00dbc8966216dc3b7ade45eafc5b6b2422
+note: Read only through an SLB assemblage record's taper (assemblage.handover) with the Option silicate_records on; its view
+  needs the tapering record, so P4's walkers list it as a context record.
