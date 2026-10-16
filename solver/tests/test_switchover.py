@@ -399,8 +399,9 @@ class SwitchReachesEverySolve(unittest.TestCase):
 
 
 class MethodTermMaterials(unittest.TestCase):
-    """Switch-over note 7 (68 N68): the T2 method term solves on the records the answers read, except for a body with a
-    record that declares a field boundary (its curve events escape the fixed mode's clamp, note 1 item 3)."""
+    """Switch-over note 7 (68 N68): the T2 method term solves on the records the answers read. A body with a record that
+    declares a field boundary no longer keeps legacy: its curve events carry component 1 (652004f9) and land under the
+    fixed mode's clamp (68 N3 on 652004f9, directing)."""
 
     @staticmethod
     def _with_fe_prem(**extra):
@@ -415,13 +416,36 @@ class MethodTermMaterials(unittest.TestCase):
         earth, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
         self.assertEqual(mt.materials_for(earth, mr.load()), "registry")
         planted = self._with_fe_prem(boundaries=[{"between": ["a", "b"], "kind": "solid_solid", "curve": {}}])
-        self.assertEqual(mt.materials_for(earth, planted), "legacy")       # control: a boundary keeps legacy
+        self.assertEqual(mt.materials_for(earth, planted), "registry")     # a boundary no longer keeps legacy (N3)
+
+    def test_fixed_mode_lands_a_curve_event(self):
+        """The reason legacy is no longer kept: in the fixed mode (the method term's), a sloped curve event with
+        component 1 lands at every grid step and the answer does not depend on dr (to 1e-5 m); free (component None),
+        r moves by metres with dr. Toy: a curve as steep as Mars's swap 304, dT/dP dropping 4 % across it."""
+        from solver import fixed_grid as fg, rhs, stepper as stp
+        m_, r_, pb, k = 5.972e24, 6.371e6, 23.83e9, 9.4e6
+
+        class Sloped:
+            def state(self, p, t, guess):
+                new = p > pb + k * (t - 1600.0)
+                return (3720.0 if new else 3717.0), (9.2e-9 if new else 9.6e-9)
+        f = rhs.make_rhs(Sloped())
+        got = {}
+        for comp in (1, None):
+            for dr in (2e3, 7.3e3, 1.37e4):
+                ev = stp.Event("phase:sloped", lambda m, y: y[1] - (pb + k * (y[2] - 1600.0)), scale=1e9,
+                               terminal=False, seam=True, component=comp)
+                res = fg.run_r(f, m_, (r_, 0.0, 1600.0, 1600.0, 0.0, 0.0), 0.5 * m_, 0.0, "r_end", dr, [ev], m_scale=m_)
+                self.assertEqual([e[0] for e in res.events], ["phase:sloped"])
+                got.setdefault(comp, []).append(res.y[0])
+        self.assertLess(max(got[1]) - min(got[1]), 1e-5)
+        self.assertGreater(max(got[None]) - min(got[None]), 1.0)          # the control: unheld, it depends on dr
 
     def test_every_solve_follows_it(self):
         """68 H1 on 13035f6e: every solve one_state makes, not only the first. With the shipped registry, the spy passes
         each call through (the old chain off, it is legacy and not a solve of this term) and records it: the declared
         state makes three (adaptive, run_oracle's adaptive and fixed records), a T_pot state two (adaptive, fixed). With a
-        planted boundary the first call already shows «legacy». Earth is forward, so no member solve is made."""
+        planted boundary the first call shows «registry» too (68 N3 on 652004f9). Earth is forward, so no member solve is made."""
         from unittest import mock
         from solver import method_term as mt, run_oracle as ro
         seen = []
@@ -451,7 +475,7 @@ class MethodTermMaterials(unittest.TestCase):
         planted = self._with_fe_prem(boundaries=[{"between": ["a", "b"], "kind": "solid_solid", "curve": {}}])
         with mock.patch.object(sv, "solve", stop), self.assertRaises(Stop):
             mt.one_state("engine/bodies/earth.yaml", "declared", "t", registry=planted)
-        self.assertEqual(seen, [("legacy", True)])                          # control: the planted boundary
+        self.assertEqual(seen, [("registry", True)])            # a planted boundary no longer keeps legacy (68 N3)
 
 
 class Step2PutBack(unittest.TestCase):

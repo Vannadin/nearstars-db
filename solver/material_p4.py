@@ -44,7 +44,8 @@ def is_context_record(rec) -> bool:
 
 #: each context record's own suite, named in P4's listing (silicate registration Q6 / §2.3)
 CONTEXT_SUITES = MappingProxyType({"assemblage": "solver/tests/test_material_assemblage.py, test_assemblage_view.py",
-                                   "layer_density": "solver/tests/test_silicate_routes.py (BasalRecord, §7.4a)"})
+                                   "layer_density": "solver/tests/test_silicate_routes.py (BasalRecord, §7.4a)",
+                                   "handover": "solver/tests/test_assemblage_taper.py (the hand-over, §3.4, note 7)"})
 
 
 def context_records() -> dict:

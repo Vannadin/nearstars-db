@@ -37,6 +37,8 @@ record:
   composition_key: {shape: text}                           # assemblage: the CFMASNa fingerprint the resolver matches
                                                            # (material_assemblage.composition_key; silicate reg. §2.1)
   assemblage:      {shape: record, of: assemblage}         # assemblage: its compact table and what rides with it (§2.2)
+  handover_table:  {shape: record, of: handover_table}     # a handover-form record: its thermal blocks, one per SLB
+                                                           # record it takes over from (silicate reg. §3.4, note 7 §3)
 
 phase:
   id:          {shape: text, required: true}
@@ -61,7 +63,7 @@ declared_note:
   source: {shape: source, required: true}
 
 eos:
-  form:      {shape: enum, values: [bm2, bme3, vinet, library, table, evaluator, assemblage, layer_density], required: true}   # bme4: not built
+  form:      {shape: enum, values: [bm2, bme3, vinet, library, table, evaluator, assemblage, layer_density, handover], required: true}   # bme4: not built
                                                            # assemblage: ρ, dT/dP and S from the record's compact table
                                                            # layer_density: ρ is the layer's declared param `layer_param`
                                                            # (silicate registration Q6, the basal record)
@@ -88,6 +90,11 @@ table:
 # An assemblage record's table (phase-2 silicate record registration §2.2, post-freeze note 3). The compact file sits
 # at solver/materials/<file>; only its sha256 is checked at load, and a mismatch is a STOP (material.assemblage_table).
 # The table's B3 numbers and the dT/dP field's band are declared here, before the first load.
+handover_table:
+  file:   {shape: text, required: true}                    # tables/<record id>.json.gz, relative to solver/materials
+  sha256: {shape: text, required: true}                    # of that file
+  blocks: {shape: list, required: true, min: 1}            # the SLB record ids it holds a thermal block for
+
 assemblage:
   file:          {shape: text, required: true}             # tables/<record id>.json, relative to solver/materials
   sha256:        {shape: text, required: true}             # of the compact file
@@ -190,6 +197,8 @@ thermal:
   phase_constants:    {shape: record, of: constants_span}    # where the phase's own constants give γ (68 N19)
   grade:              {shape: text}                           # e.g. «solid hcp constants on a liquid-fit phase»
   from_layer:         {shape: enum, values: [overlying_assemblage]}   # form layer_density: dT/dP from the overlying
+  from_assemblage:    {shape: enum, values: [handover_table]}  # form handover: dT/dP and c_P from the record's
+                                                           # handover_table block of the tapering SLB record (note 7 §3)
                                                            # layer's assemblage view at the same (P, T) (registration Q6)
 
 # Where γ comes from the phase's own `pressure` constants rather than a set (legacy: below the first set). Inside the γ

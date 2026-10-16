@@ -791,9 +791,12 @@ class AssemblageView(mv.RecordView):
     names as legacy silicate's; the record id as `name`; `.record` with the compact sha, so solve_id binds the
     table (68 S1). RecordView's own branches (sets, γ windows, joins, the K_T stencil) are never entered."""
 
-    def __init__(self, record, table, t_pot: float, p_stop: float = 0.0, p_floor: float = 0.0):
+    def __init__(self, record, table, t_pot: float, p_stop: float = 0.0, p_floor: float = 0.0, handover=None):
         self.material_id = record["id"]
         self.name = record["id"]                 # solve._pass keys its GrazeMonitor on this (68)
+        #: the hand-over above p_dataset (a HandOver, note 7 §3), or None: then a read above p_dataset refuses (§3.4)
+        self.handover = handover
+        self._rise_rows = {}                     # note 7 §5: T row index → None (ρ rises across the zone) or the why
         self.t_pot = float(t_pot)
         self.p_stop = float(p_stop)
         self.p_floor = float(p_floor)            # legacy's, by the declared name (§3.1): _p_stop unchanged
@@ -839,13 +842,15 @@ class AssemblageView(mv.RecordView):
         #: (R1) §4: a cut curve's side reach past its ends, two T rows (the stencil's reach)
         self._reach = EXT_ROWS * (self.ts[1] - self.ts[0]) if len(self.ts) > 1 else 0.0
         self._parts, self._runcache = {}, {}
+        #: the column cut of a read: p_dataset, lifted to the taper's end for the zone's SLB-extrapolated read (note 7 §2)
+        self._top = self.p_dataset
         #: the read counts of this view ((R1), 68 S1): reads, corner rows read in an empty region, outer rows dropped
         #: (reads, most in one read), refusals by class, edge corrections applied, side fallbacks (0 by
-        #: construction: the extension covers the stencil), corner rows δ read from the nearest region with a run
-        #: (_row_reach), and δ taken from the corner rows' differences because a corner row has no run at all (_delta)
+        #: construction: the extension covers the stencil), and corner rows δ read from the nearest region with a run
+        #: (_row_reach)
         self.cut_counts = {"reads": 0, "empty_region_reads": 0, "row_drop_reads": 0, "row_drop_max": 0,
                            "cap_refusals": 0, "no_run_refusals": 0, "by_count_reads": 0, "corrections": 0,
-                           "side_fallbacks": 0, "row_delta_reads": 0, "reach_rows": 0}
+                           "side_fallbacks": 0, "reach_rows": 0}
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
 
     # the table read ──────────────────────────────────────────────────────────────────────────────────────────
@@ -860,13 +865,104 @@ class AssemblageView(mv.RecordView):
         if t < T_FLOOR:
             return self._refuse(p, t, "input.material_out_of_data",
                                 f"below the table's {T_FLOOR:g} K floor (registration §3.1)")
-        if p > self.p_dataset:
+        if p > self.p_dataset and self.handover is None:
             return self._refuse(p, t, "input.material_out_of_data",
                                 f"above the SLB dataset top {self.p_dataset / 1e9:g} GPa (declaration §4); the "
                                 "taper to the hand-over is not built yet (registration §3.4, note 2)")
         if t > self.ts[-1]:
             return self._refuse(p, t, "input.material_above_solid_window",
                                 f"above the table's last T node {self.ts[-1]:g} K (grid_end)")
+        if p > self.p_dataset:
+            return self._taper(p, t)
+        return self._table_read(p, t)
+
+    def _lifted(self, p, t):
+        """The SLB-extrapolated read in the taper zone: the same read with the column cut lifted to the zone's end
+        (note 7 §2)."""
+        top = self._top
+        self._top = 1.5 * self.p_dataset
+        try:
+            return self._table_read(p, t)
+        finally:
+            self._top = top
+
+    def _blend(self, p, t):
+        """(ρ, dT/dP, c_P, cells, w, ρ_SLB, ρ_HO, band_HO) of the zone at (P, T), or a Stop (note 7 §1)."""
+        p_end = 1.5 * self.p_dataset
+        w = _smoothstep((p - self.p_dataset) / (p_end - self.p_dataset))
+        rho_h = self.handover.rho(p)
+        th, why = self.handover.thermal(p, t)
+        if th is None:
+            return self._refuse(p, t, "input.material_out_of_data", f"{self.handover.material_id}: {why}")
+        dtdp_h, cp_h, band_h = th
+        if w >= 1.0:
+            return rho_h, dtdp_h, cp_h, [], w, None, rho_h, band_h
+        got = self._lifted(p, t)
+        if isinstance(got, st.Stop):
+            return got
+        rho_s, dtdp_s, cp_s, cells = got
+        # the 136 GPa match (note 7 delta): the lifted read and the read below differ at the dataset top off the T rows
+        # (an outer row's end slope vs its run across, an edge's δ), so the lifted read is shifted by their difference
+        # at 136 GPa on this T, faded with the zone's own weight: the answer is C⁰ at 136 GPa in every field
+        cut0, lift0 = self._table_read(self.p_dataset, t), self._lifted(self.p_dataset, t)
+        if isinstance(cut0, tuple) and isinstance(lift0, tuple):
+            rho_s += (1.0 - w) * (cut0[0] - lift0[0])
+            dtdp_s += (1.0 - w) * (cut0[1] - lift0[1])
+            cp_s += (1.0 - w) * (cut0[2] - lift0[2])
+        rho = 1.0 / ((1.0 - w) / rho_s + w / rho_h)                 # A4's V-blend for ρ
+        return (rho, (1.0 - w) * dtdp_s + w * dtdp_h, (1.0 - w) * cp_s + w * cp_h, cells, w, rho_s, rho_h,
+                band_h)                                              # dT/dP and c_P blended directly (note 7 §1)
+
+    def _rise_ok(self, kb):
+        """Note 7 §5: None if the zone's ρ rises with P along T row kb, else the refusal text; found once per row, at
+        the zone's own P nodes and midpoints."""
+        if kb not in self._rise_rows:
+            t = self.ts[kb]
+            nodes = [q for q in self.ps if self.p_dataset <= q <= 1.5 * self.p_dataset]
+            xs = sorted(set(nodes) | {math.sqrt(a * b) for a, b in zip(nodes, nodes[1:])})
+            why, last = None, None
+            for q in xs[1:]:
+                got = self._blend(q, t)
+                if isinstance(got, st.Stop):
+                    continue                                 # a refusal there is the read's own, met at the read
+                if last is not None and not got[0] > last:
+                    why = (f"ρ does not rise with P across the taper zone (§3.4's load check) at T row {t:g} K "
+                           f"(note 7 §5)")
+                    break
+                last = got[0]
+            self._rise_rows[kb] = why
+        return self._rise_rows[kb]
+
+    def _taper(self, p, t):
+        """The read above p_dataset (§3.4, note 7): the zone 136–204 GPa blends the SLB-extrapolated read into the
+        hand-over; above it, the hand-over alone. One band per field (note 7 §4); a T row where the zone's ρ does not
+        rise refuses by name (§5)."""
+        ib = min(max(bisect.bisect_right(self.ts, t) - 1, 0), len(self.ts) - 2)
+        if p < 1.5 * self.p_dataset:
+            for kb in (ib, ib + 1):
+                why = self._rise_ok(kb)
+                if why is not None:
+                    return self._refuse(p, t, "input.material_out_of_data", why)
+        got = self._blend(p, t)
+        if isinstance(got, st.Stop):
+            return got
+        rho, dtdp, cp, cells, w, rho_s, rho_h, band_h = got
+        band_cell = max((c["dtdp_eq_band"] for c in cells if c.get("dtdp_eq_band") is not None), default=0.0)
+        if rho_s is not None:
+            rho_band, rho_origin = abs(rho_s - rho_h) / rho_s, "the local |ρ_SLB − ρ_HO|/ρ_SLB (§3.4)"
+        else:                                    # above the zone: the composition's mismatch to PREM at 204 GPa (§6)
+            rho_band, rho_origin = None, "beyond the zone: the composition's ρ mismatch to PREM at 204 GPa (note 7 §6)"
+            r204 = self._lifted(1.5 * self.p_dataset, t)
+            if not isinstance(r204, st.Stop):
+                rho_band = abs(r204[0] - self.handover.rho(1.5 * self.p_dataset)) / self.handover.rho(1.5 * self.p_dataset)
+        dt_band = max((1.0 - w) * band_cell, w * (band_h or 0.0))
+        self.notes.append(mv.BandNote(self.material_id, "taper to the hand-over", "relative", rho_band, None,
+                                      TAPER_GRADE if w < 1.0 else self.handover.grade, rho_origin, dt_band,
+                                      "max((1 − w)·the cell's dT/dP band, w·band_HO) (note 7 §4)"))
+        return rho, dtdp, cp, cells
+
+    def _table_read(self, p, t):
+        """The table's own C¹ read at (P, T) below the current column cut (self._top)."""
         pr = max(p, self.ps[0])                  # below 1 bar: read at the floor node (§3.1's floor band)
         x = math.log(pr)
         ia = min(max(next(i for i in range(len(self.ps)) if i + 1 == len(self.ps) or self.ps[i + 1] >= pr), 0),
@@ -878,7 +974,7 @@ class AssemblageView(mv.RecordView):
             ib += 1
         if self._curves:                         # an exported-boundary record: every read through the row regions (R1)
             return self._read(p, t, pr, x, ia, ib)
-        cut = (lambda ka: self.ps[ka] <= self.p_dataset)
+        cut = (lambda ka: self.ps[ka] <= self._top)
         out = {}
         for f in ("rho", "dtdp_eq", "c_p"):
             def val(ka, kb, f=f):
@@ -944,13 +1040,13 @@ class AssemblageView(mv.RecordView):
     def _runs(self, f, k):
         """Row k's runs for field f: {region: [(xs, ys, js)]}, each a maximal run of consecutive present nodes at or
         below p_dataset inside one region (a missing node, the window's end, splits a region). Fixed per row."""
-        key = (f, k)
+        key = (f, k, self._top)
         got = self._runcache.get(key)
         if got is None:
             pbs = [pb for pb, _ in self._partition(k)]
             got, cur = {}, None
             for j, p in enumerate(self.ps):
-                if p > self.p_dataset:
+                if p > self._top:
                     break
                 v = self._val(f, j, k)
                 r = bisect.bisect_left(pbs, p)
@@ -991,9 +1087,9 @@ class AssemblageView(mv.RecordView):
         ln P between the nearest regions with a run on either side, each at its bounding curve toward r ((c″) per
         region; a block of empty regions, or a field missing at a node, reads through). None if a side has no run."""
         runs = self._runs(f, k)
+        part = self._partition(k)
         if runs.get(r):
             return self._run_value(f, k, r, x, corner)
-        part = self._partition(k)
         lo = next((q for q in range(r - 1, -1, -1) if runs.get(q)), None)      # the nearest regions with a run
         hi = next((q for q in range(r + 1, len(part) + 1) if runs.get(q)), None)
         if lo is None or hi is None:
@@ -1005,7 +1101,13 @@ class AssemblageView(mv.RecordView):
             self._marks["empty"] = True
         if xr <= xl:                                     # two curves at one P_b in this row: a zero-width region
             return 0.5 * (vl + vr)
-        return vl + (vr - vl) * (x - xl) / (xr - xl)
+        # 68 B1 on 652004f9: the read's region is named by its sides at its own T, so in a row whose curves sit elsewhere
+        # x can lie outside [xl, xr]; the fraction is clamped, never extrapolated: the neighbours' difference is not
+        # carried past their bounding curves (it gave c_P −0.38 at dmm 12.833 GPa, 3668.29 K). Beyond a curve the
+        # region holds that curve's value, the nearest data it has, continuous in x; a refusal there would cut a
+        # boundary inside valid space
+        u = min(max((x - xl) / (xr - xl), 0.0), 1.0)
+        return vl + (vr - vl) * u
 
     def _region(self, k, sides, x):
         """The region of row k named by the read's sides of row k's curves: right of the first r curves in P_b(t_k)
@@ -1037,7 +1139,7 @@ class AssemblageView(mv.RecordView):
             r = self._region(k, sides, x)
             if corner and check:
                 for j in (ia, ia + 1):
-                    if self.ps[j] <= self.p_dataset and self._region_of(j, k) == r and self._val(f, j, k) is None:
+                    if self.ps[j] <= self._top and self._region_of(j, k) == r and self._val(f, j, k) is None:
                         raise CellMissing((j, k))
             v = self._row_value(f, k, r, x, corner)
             if v is None:
@@ -1066,12 +1168,9 @@ class AssemblageView(mv.RecordView):
         rl, rr = self._side_rows(f, xb, ib, {**sd, c: -1}), self._side_rows(f, xb, ib, {**sd, c: 1})
         if all(k in rl and k in rr for k in (ib, ib + 1)):
             return _cubic1(t, self.ts, _Seq(rl, len(self.ts)), ib) - _cubic1(t, self.ts, _Seq(rr, len(self.ts)), ib)
-        # a corner row with no run for f at all (both sides alike): δ linear in t between the corner rows' own
-        # differences L_k − R_k (0 in that row); at a row line both forms reduce to that row's difference, and every
-        # edge of the read meets the same empty row, so their corrections still telescope; counted
-        self.cut_counts["row_delta_reads"] += 1
-        d = [rl[k] - rr[k] if k in rl and k in rr else 0.0 for k in (ib, ib + 1)]
-        return d[0] + (t - self.ts[ib]) / (self.ts[ib + 1] - self.ts[ib]) * (d[1] - d[0])
+        # a corner row with no run for f at all: the read itself refuses there (its own corner row has no value), so
+        # no δ is used (68 N4 on 652004f9: the row-difference form was reached only by reads that refuse)
+        return 0.0
 
     def _row_reach(self, f, k, r):
         """A corner row's value for δ in region r where _row_value has none (r empty and no run on one side): the
@@ -1103,9 +1202,8 @@ class AssemblageView(mv.RecordView):
                 v = self._row_reach(f, k, r)
             if v is None:
                 continue
-            if k in (ib, ib + 1) and not self._runs(f, k).get(r):
-                self._marks["empty"] = True              # as a corner read of an empty region (MULTI_NOTE)
-            rows[k] = v
+            rows[k] = v                     # no MULTI_NOTE from δ's side reads: the read's own regions decide the
+                                            # notes (68 B2 (d) on 652004f9)
         return rows
 
     def _read(self, p, t, pr, x, ia, ib):
@@ -1422,9 +1520,91 @@ def boundary_disclosures(record, table) -> dict:
             "curve_ends": ends, "sweep": dict(v.cut_counts), "past_end_read_across": past}
 
 
-def view(record, table, t_pot, p_stop=0.0, p_floor=0.0):
-    """An AssemblageView of a loaded record and its compact table (registry.tables[id])."""
-    return AssemblageView(record, table, t_pot, p_stop, p_floor)
+def view(record, table, t_pot, p_stop=0.0, p_floor=0.0, handover=None):
+    """An AssemblageView of a loaded record and its compact table (registry.tables[id]); `handover` is the record's
+    HandOver above p_dataset (note 7), or None."""
+    return AssemblageView(record, table, t_pot, p_stop, p_floor, handover)
+
+
+class HandOver:
+    """The hand-over above SLB's dataset top for one SLB record (silicate registration §3.4, notes 2, 3 §5 and 7 §3):
+    ρ is Zeng 2016's lower-mantle BM2 on the PREM path, T-independent; dT/dP and c_P are the record's own block of the
+    hand-over table (its 204 GPa column's fixed state carried in P), read C¹ in (ln P, T) over each T row's nodes up to
+    its window p_max; band_HO(P) = band_1·|ln(P/204 GPa)|/ln(204 GPa/P_nb) + band_eq, per T row."""
+
+    def __init__(self, record, table, slb_id, p_end=None):
+        self.material_id = record["id"]
+        self.p_end = float(p_end) if p_end is not None else P_HANDOVER_END   # the taper's end: 1.5·p_dataset
+        prm = record["phases"][0]["eos"]["params"]
+        self.rho0, self.k0 = float(prm["rho0"]["value"]), float(prm["k0"]["value"])
+        win = record["phases"][0]["window"]
+        self.p_max = float(win["p_max"])
+        b = table["blocks"][slb_id]
+        self.ps = list(b["p_nodes"])
+        self.lnps = [math.log(p) for p in self.ps]
+        self.p_nb = float(b["p_neighbour"])
+        self.rows = sorted(b["rows"], key=lambda r: r["t"])
+        self.ts = [r["t"] for r in self.rows]
+        self.grade = record["phases"][0]["thermal"]["grade"]
+
+    def rho(self, p):
+        """BM2 on the PREM path: P = 1.5·K0·(x^(7/3) − x^(5/3)), x = ρ/ρ0, solved for x ≥ 1 by Newton from above."""
+        x = max(1.0, (1.0 + 4.0 * p / (3.0 * self.k0)) ** 0.25 * 1.2)
+        for _ in range(60):
+            f = 1.5 * self.k0 * (x ** (7.0 / 3.0) - x ** (5.0 / 3.0)) - p
+            d = 1.5 * self.k0 * ((7.0 / 3.0) * x ** (4.0 / 3.0) - (5.0 / 3.0) * x ** (2.0 / 3.0))
+            step = f / d
+            x -= step
+            if abs(step) <= 1e-15 * x:
+                break
+        return self.rho0 * x
+
+    def _val(self, f, ka, kb):
+        r = self.rows[kb]
+        if r.get("refused"):
+            return None
+        vals = r[f]
+        return vals[ka] if ka < len(vals) else None
+
+    def thermal(self, p, t):
+        """(dT/dP, c_P, band_HO) at (P, T), or (None, why) where the block does not answer (a refused row, past a row's
+        window p_max, outside its T rows)."""
+        if not self.ts[0] <= t <= self.ts[-1]:
+            return None, f"outside the hand-over's T rows {self.ts[0]:g}–{self.ts[-1]:g} K"
+        x = math.log(p)
+        ia = min(max(bisect.bisect_left(self.lnps, x) - 1, 0), len(self.ps) - 2)
+        ib = min(max(bisect.bisect_right(self.ts, t) - 1, 0), len(self.ts) - 2)
+        out = {}
+        try:
+            for f in ("dtdp", "c_p"):
+                out[f] = cubic2(x, t, self.lnps, self.ts, (lambda ka, kb, f=f: self._val(f, ka, kb)), ia, ib)
+        except CellMissing as e:
+            kb = e.args[0][1] if isinstance(e.args[0], tuple) else ib
+            r = self.rows[min(max(kb, 0), len(self.rows) - 1)]
+            if r.get("refused"):
+                return None, f"hand-over row {r['t']:g} K refuses: {r['refused']}"
+            cut = r.get("cut") or {}
+            return None, (f"past the hand-over's thermal window at T row {r['t']:g} K (p_max {r['p_max']:g} Pa; "
+                          f"{cut.get('bound', 'the block ends')}) (note 2 items 4–5)")
+        bands = []
+        for kb in (ib, ib + 1):
+            r = self.rows[kb]
+            if r.get("band_1") is None or r.get("band_eq") is None:
+                continue
+            bands.append(r["band_1"] * abs(math.log(p / self.p_end)) / math.log(self.p_end / self.p_nb)
+                         + r["band_eq"])
+        return (out["dtdp"], out["c_p"], max(bands) if bands else None), None
+
+
+#: the taper zone's end, 1.5·P_e with P_e = the dataset top 136 GPa (impl note 4 item 1's default; §3.4)
+P_HANDOVER_END = 204.0e9
+#: note 7 §4: the zone's grade, as §3.4 names it
+TAPER_GRADE = "blended (SLB extrapolated, PREM aggregate)"
+
+
+def _smoothstep(s):
+    s = min(max(s, 0.0), 1.0)
+    return s * s * (3.0 - 2.0 * s)
 
 
 class BasalView(mv.RecordView):

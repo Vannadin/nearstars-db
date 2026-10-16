@@ -342,7 +342,12 @@ def _assemblage_view(body, layer, rid, p_stop, registry):
                                                    "(registration §3.3); it is read only in development")
     from solver.from_v1 import thaw
     floor = getattr(lm.interior.MATERIALS.get(layer.material), "p_floor", 0.0) or 0.0    # legacy's, by name (§3.1)
-    return ma.view(thaw(got), table, body.surface.t_pot or 0.0, p_stop, floor), None
+    ho = None                                     # §3.4, note 7: the hand-over above p_dataset, where its record loads
+    hid = got["assemblage"].get("handover")
+    hrec = registry.get(hid) if hid else None
+    if hrec is not None and not isinstance(hrec, mr.LoadStop) and rid in registry.tables.get(hid, {}).get("blocks", {}):
+        ho = ma.HandOver(thaw(hrec), registry.tables[hid], rid, 1.5 * float(got["assemblage"]["p_dataset"]))
+    return ma.view(thaw(got), table, body.surface.t_pot or 0.0, p_stop, floor, ho), None
 
 
 def _silicate_route(body, layer, on_me, p_stop, registry):

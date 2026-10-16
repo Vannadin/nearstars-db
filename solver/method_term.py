@@ -34,14 +34,12 @@ STEPS = 1500                       # interior.STEPS at 097a8aa3
 
 def materials_for(body, registry) -> str:
     """Switch-over note 7 (68 N68, directing): the term is measured on the materials the answers read, so the switch is
-    on («registry»), except for a body one of whose layers resolves to a record that declares a field boundary: the
-    fixed mode's old-side clamp acts on single-component seams, and a boundary curve event has none (note 1 item 3), so
-    that body keeps legacy (note 6). Today no switched record a body uses declares one (fe_prem: one structure phase)."""
-    for layer in body.layers:
-        rec = registry.records.get(layer.material)
-        if rec is not None and rec.get("boundaries"):
-            return "legacy"
+    on («registry»). A body whose record declares a field boundary was kept on legacy while a boundary curve event had
+    no component, so the fixed mode's old-side clamp missed it (note 1 item 3); since 652004f9 every solid–solid record
+    curve event carries component 1 and lands under the clamp in the fixed mode as in the adaptive one (68 N3 on
+    652004f9, directing: test_switchover.MethodTermMaterials pins the landing), so no body keeps legacy."""
     return "registry"
+
 
 def grid_dr(body, answer, steps: int = STEPS):
     """(dr, ρ_c) from the adaptive answer's innermost profile node."""

@@ -43,10 +43,10 @@ _LIB = re.compile(r"^[A-Za-z][\w.-]*@[0-9][\w.+-]*$")
 _DOI = re.compile(r"^doi:10\.\d{4,9}/\S+$")
 #: forms that read γ and dT/dP from their own form, so they carry no thermal sets and no gamma_window (68 on 6c7bb337;
 #: impl note 9; the assemblage kind reads its table, silicate record registration §3.2)
-OWN_THERMAL_FORMS = ("library", "evaluator", "table", "assemblage", "layer_density")
+OWN_THERMAL_FORMS = ("library", "evaluator", "table", "assemblage", "layer_density", "handover")
 #: forms whose view needs context outside the record (a compact table; a layer param and the overlying view): P4's
 #: walkers and the materials CLI list such records by name and leave them to their own suites (silicate Q6)
-CONTEXT_FORMS = ("assemblage", "layer_density")
+CONTEXT_FORMS = ("assemblage", "layer_density", "handover")
 _EDGES = (("p_min", "p_min", "lower"), ("p_max", "p_max", "upper"), ("t_min", "t_min", "lower"),
           ("t_max", "t_max", "upper"))
 
@@ -829,6 +829,18 @@ def _kind(rec: Mapping, file):
                                                                   "overlying_assemblage")
         elif "layer_param" in ph["eos"] or "from_layer" in ph["thermal"]:
             raise _Stop("material.kind_rule", file=file, why="layer_param and from_layer belong to a layer_density phase")
+        if ph["eos"]["form"] == "handover":              # silicate registration §3.4, note 7 §3: the hand-over's shape
+            if kind != "single" or ph["thermal"].get("from_assemblage") != "handover_table" or \
+                    "handover_table" not in rec or \
+                    sorted(ph["eos"].get("params", {})) != ["k0", "k0p", "rho0"]:
+                raise _Stop("material.kind_rule", file=file, why="a handover phase is a single record's, carries the "
+                                                                  "BM2 params rho0, k0, k0p, and takes dT/dP and c_P "
+                                                                  "from_assemblage handover_table, which the record "
+                                                                  "declares")
+        elif "from_assemblage" in ph["thermal"]:
+            raise _Stop("material.kind_rule", file=file, why="from_assemblage belongs to a handover phase")
+    if "handover_table" in rec and not any(ph["eos"]["form"] == "handover" for ph in rec["phases"]):
+        raise _Stop("material.kind_rule", file=file, why="handover_table belongs to a handover-form record")
     if kind == "hand_over" and not rec.get("joins"):
         raise _Stop("material.kind_rule", file=file, why="a hand-over record declares its joins")
     for ph in rec["phases"]:
@@ -873,6 +885,29 @@ def _assemblage_table(rec: Mapping, file, directory: Path, allow_development: bo
     if table.get("p_dataset") != a["p_dataset"]:
         raise _Stop("material.assemblage_table", file=file, why="the table's p_dataset differs from the record's")
     return freeze(table)                            # 68 N3: handed out read-only, as the records are
+
+
+def _handover_table(rec: Mapping, file, directory: Path):
+    """Note 7 §3: the hand-over's thermal blocks, pinned by sha256 like a compact table; its blocks are the ones the
+    record lists, each with its P nodes and T rows (dtdp and c_p on the nodes up to the row's p_max)."""
+    from solver import material_assemblage as ma
+    h = rec["handover_table"]
+    if Path(h["file"]).is_absolute() or ".." in Path(h["file"]).parts:
+        raise _Stop("material.assemblage_table", file=file, why="handover_table.file is a path under solver/materials")
+    try:
+        table = ma.read_table(Path(directory) / h["file"], h["sha256"])
+    except ma.TableStop as e:
+        raise _Stop("material.assemblage_table", file=file, why=str(e)) from None
+    if table.get("id") != rec["id"] or sorted(table.get("blocks", {})) != sorted(h["blocks"]):
+        raise _Stop("material.assemblage_table", file=file, why="the hand-over table's id or blocks differ from the "
+                                                                "record's")
+    for bid, b in table["blocks"].items():
+        n = len(b["p_nodes"])
+        if any(b["p_nodes"][i] >= b["p_nodes"][i + 1] for i in range(n - 1)) or \
+                any(len(r["dtdp"]) != len(r["c_p"]) or len(r["dtdp"]) > n for r in b["rows"]):
+            raise _Stop("material.assemblage_table", file=file, why=f"block {bid}: P nodes not rising, or a row's "
+                                                                    "values do not match its nodes")
+    return freeze(table)
 
 
 def _is_sha(x) -> bool:
@@ -962,6 +997,11 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None,
         if rec["kind"] == "assemblage":
             try:
                 tables[rec["id"]] = _assemblage_table(rec, f.name, Path(directory), allow_development)
+            except _Stop as s:
+                return s.stop
+        if "handover_table" in rec:
+            try:
+                tables[rec["id"]] = _handover_table(rec, f.name, Path(directory))
             except _Stop as s:
                 return s.stop
         miss = triple_point_misses(rec, f.name)

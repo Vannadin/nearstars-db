@@ -553,6 +553,18 @@ class Transitions(unittest.TestCase):
                 got = st.run(rhs.make_rhs(Sloped()), m_, (r_, 0.0, 1600.0, 1600.0, 0.0, 0.0), 0.5 * m_, o, [e])
                 self.assertEqual(got.stop.kind, want, (comp, h0))
 
+    def test_only_curve_seams_are_held(self):
+        """68 B2 (b), (c) on 652004f9: a gibbs boundary (g = G_a − G_b, not a P) and a melting curve (terminal: reaching
+        it refuses) take no component; only a solid–solid curve g = P − P_b(T) does. Mutants: either given component 1."""
+        from types import SimpleNamespace
+        ph = SimpleNamespace(id="a"), SimpleNamespace(id="b"), SimpleNamespace(id="c")
+        stub = SimpleNamespace(phases=ph, seams=lambda: (), source_seams=lambda: (), boundary_pressure=lambda c, t: 1e9,
+                               transitions=lambda: ((("a", "b"), "solid_solid", {"form": "library"}),
+                                                    (("b", "c"), "melting", {"form": "clapeyron"}),
+                                                    (("a", "c"), "solid_solid", {"form": "clapeyron"})))
+        got = {e.name: e.component for e in events.record_events(stub)}
+        self.assertEqual(got, {"phase:a|b": None, "melt:b|c": None, "phase:a|c": 1})
+
     def test_pending_gives_none(self):
         tb = table()
         tb["boundaries"] = {"status": "pending"}
@@ -686,6 +698,8 @@ class Choices(unittest.TestCase):
         for c in tb["cells"]:
             if c["p"] > p_b and c["kind"] != "frozen":
                 c["dtdp_eq"] *= 1.05                                # a planted dT/dP offset for δ to carry
+            elif c["kind"] != "frozen":                             # curved in P on the near side, so a reach at the
+                c["dtdp_eq"] *= 1.0 + 0.002 * PS.index(c["p"]) ** 2   # last node and one at the curve differ (68 B2 (a))
             if c["t"] == 1250.0 and c["p"] > p_b:
                 c["dtdp_eq"], c["c_p_eq"] = None, None
         v = view(tb)
@@ -697,6 +711,7 @@ class Choices(unittest.TestCase):
         got = v._solid(p, t)
         self.assertNotIsInstance(got, st.Stop)
         self.assertGreater(v.cut_counts["reach_rows"], 0)
+        self.assertEqual(v._marks["empty"], False)                 # δ's side reads set no MULTI_NOTE mark (68 B2 (d))
         k = TS.index(1250.0)                                       # the far side's empty row reads the near side at P_b
         self.assertIsNone(v._row_value("dtdp_eq", k, 1, xb, False))
         self.assertEqual(v._row_reach("dtdp_eq", k, 1), v._row_value("dtdp_eq", k, 0, xb, False))
@@ -834,6 +849,53 @@ class Choices(unittest.TestCase):
         far = v.state(math.sqrt(PS[12] * PS[13]), t)[2]
         self.assertTrue(any(ma.SWAP_NOTE in getattr(n, "text", "") for n in near))
         self.assertFalse(any(ma.SWAP_NOTE in getattr(n, "text", "") for n in far))
+
+
+def _shipped():
+    from solver import material_registry as mr
+    reg = mr.load()
+    if not isinstance(reg, mr.Registry):
+        return []
+    return [(rid, reg.records[rid], reg.tables[rid]) for rid in sorted(reg.records)
+            if reg.records[rid]["kind"] == "assemblage" and rid in reg.tables]
+
+
+class Envelope(unittest.TestCase):
+    """68 B1 on 652004f9: no read leaves the physical envelope by carrying data past where it applies (the empty-region
+    read extrapolated to c_P −0.38). On every shipped assemblage record (a TIP; skipped on the engine branch alone),
+    every cell centre up to p_dataset reads c_P > 0. Mutant: the empty-region fraction unclamped."""
+
+    @unittest.skipUnless(_shipped(), "no shipped assemblage record with its table (the engine branch without records)")
+    def test_cp_positive_everywhere(self):
+        for rid, rec, tb in _shipped():
+            v = ma.view(ma.mv.thaw_plain(rec), tb, 1600.0)
+            bad = []
+            for ib in range(len(v.ts) - 1):
+                t = 0.5 * (v.ts[ib] + v.ts[ib + 1])
+                for ia in range(len(v.ps) - 1):
+                    if v.ps[ia + 1] > v.p_dataset:
+                        break
+                    got = v._solid(math.sqrt(v.ps[ia] * v.ps[ia + 1]), t)
+                    if not isinstance(got, st.Stop) and not got[2] > 0.0:
+                        bad.append((v.ps[ia], t, got[2]))
+            self.assertEqual(bad, [], rid)
+
+    def test_empty_region_read_never_extrapolates(self):
+        """The planted form of the dmm case: a row whose two cut edges bound an empty region elsewhere than the read's
+        x; the empty-region read holds the nearer curve's value instead of carrying the neighbours' difference."""
+        def edges(t):
+            m = math.sqrt(PS[15] * PS[16])
+            a, b = m * math.exp(-0.05), m * math.exp(0.05)
+            e = {"converged": True, "location_error": 0.0, "by_amount_only": False, "delta_rho": None}
+            return [{**e, "phase": "ol", "p_b": a, "p_b_driving_force": a, "p_b_amount": a},
+                    {**e, "phase": "wa", "p_b": b, "p_b_driving_force": b, "p_b_amount": b}]
+        v = view(table(cls="swap_two_edges", edges=edges))
+        k = TS.index(1200.0)
+        (pa, _), (pb, _) = v._partition(k)
+        vl = v._run_value("rho", k, 0, math.log(pa), False)
+        vr = v._run_value("rho", k, 2, math.log(pb), False)
+        for x, want in ((math.log(pa) - 0.3, vl), (math.log(pb) + 0.3, vr)):
+            self.assertEqual(v._row_value("rho", k, 1, x, False), want)
 
 
 class Disclosures(unittest.TestCase):

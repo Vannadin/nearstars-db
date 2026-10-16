@@ -59,8 +59,9 @@ class Event:
     terminal: bool = True
     seam: bool = False            # a fixed boundary of the integrand (phase, thermal-set seam, a curve's own seam):
                                   # landed first, so a curve whose branch changes there is never read across it
-    component: int | None = None  # g = y[component] − const (a seam in one state component): in the fixed mode the
-                                  # landing re-steps read their stages on the old side (fixed_grid.py, C164 rule)
+    component: int | None = None  # g = y[component] − s(y), the seam's value s along the other components (a constant
+                                  # P_b, or a record curve's P_b(T)): the landing re-steps read their stages on the
+                                  # old side, the value taken from g on each call (_old_side; fixed_grid.py, C164 rule)
 
 
 @dataclass(frozen=True)

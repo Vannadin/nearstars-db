@@ -29,15 +29,23 @@ def body(name):
     return got[0] if isinstance(got, tuple) else got
 
 
-def registry(d, keys=(("silicate_slb_default_bse", "14f8758a7681f418"), ("silicate_slb_mars_khan2022", MARS_KEY)),
-             status="pinned", allow_development=False):
-    """A registry holding the shipped records plus synthetic assemblage records under the given ids and keys."""
+def copy_shipped(d, skip=()):
+    """The shipped records, the manifest and the records' own tables into d (on a TIP every shipped record that
+    carries a table, the assemblage records and the hand-over, loads only with it; ea on 4d9661b8)."""
     for f in mr.MATERIALS_DIR.glob("*.yaml"):
-        if f.name not in mr.NOT_RECORDS:
+        if f.name not in mr.NOT_RECORDS and f.name not in skip:
             (Path(d) / f.name).write_text(f.read_text(encoding="utf-8"), encoding="utf-8")
     (Path(d) / "sources.yaml").write_text((mr.MATERIALS_DIR / "sources.yaml").read_text(encoding="utf-8"),
                                           encoding="utf-8")
     (Path(d) / "tables").mkdir(exist_ok=True)
+    for f in (mr.MATERIALS_DIR / "tables").glob("*"):
+        (Path(d) / "tables" / f.name).write_bytes(f.read_bytes())
+
+
+def registry(d, keys=(("silicate_slb_default_bse", "14f8758a7681f418"), ("silicate_slb_mars_khan2022", MARS_KEY)),
+             status="pinned", allow_development=False):
+    """A registry holding the shipped records plus synthetic assemblage records under the given ids and keys."""
+    copy_shipped(d)
     tb = T.table()
     body_ = (json.dumps(tb, sort_keys=True, separators=(",", ":")) + "\n").encode()
     for rid, key in keys:
@@ -160,12 +168,7 @@ class Routes(unittest.TestCase):
     def test_one_record_per_composition(self):
         """R4: two assemblage records with one composition key STOP at load."""
         with tempfile.TemporaryDirectory() as d:
-            for f in mr.MATERIALS_DIR.glob("*.yaml"):
-                if f.name not in mr.NOT_RECORDS:
-                    (Path(d) / f.name).write_text(f.read_text(encoding="utf-8"), encoding="utf-8")
-            (Path(d) / "sources.yaml").write_text((mr.MATERIALS_DIR / "sources.yaml").read_text(encoding="utf-8"),
-                                                  encoding="utf-8")
-            (Path(d) / "tables").mkdir()
+            copy_shipped(d)
             tb = T.table()
             raw = (json.dumps(tb, sort_keys=True, separators=(",", ":")) + "\n").encode()
             for rid in ("silicate_slb_a", "silicate_slb_b"):
@@ -409,11 +412,7 @@ class BasalRecord(unittest.TestCase):
             rec = json.loads(json.dumps(src))
             edit(rec)
             with tempfile.TemporaryDirectory() as d:
-                for f in mr.MATERIALS_DIR.glob("*.yaml"):
-                    if f.name not in mr.NOT_RECORDS and f.name != f"{lm.BASAL_CONST}.yaml":
-                        (Path(d) / f.name).write_text(f.read_text(encoding="utf-8"), encoding="utf-8")
-                (Path(d) / "sources.yaml").write_text(
-                    (mr.MATERIALS_DIR / "sources.yaml").read_text(encoding="utf-8"), encoding="utf-8")
+                copy_shipped(d, skip=(f"{lm.BASAL_CONST}.yaml",))
                 (Path(d) / f"{lm.BASAL_CONST}.yaml").write_text(yaml.safe_dump(rec, sort_keys=False), encoding="utf-8")
                 return mr.load(Path(d))
         cases = {                    # a wrong from_layer or layer_param value is the schema's enum (material.bad_shape)
