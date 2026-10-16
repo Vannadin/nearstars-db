@@ -177,7 +177,13 @@ def record_events(view) -> list:
                 pb = view.boundary_pressure(curve, y[2])
                 return None if pb is None else y[1] - pb
             scale = 1.0e9
-        out.append(st.Event(name, g, scale=scale, terminal=(kind == "melting"), seam=(kind != "melting")))
+        # a curve g = P − P_b(T) lands with its landing stages held on the old side in P (component 1, as curve_seams):
+        # without it a stage that crosses the curve reads the new side's dT/dP, the re-step's end T jumps with its
+        # length, and on a steep curve g jumps with it (Mars 1774 K on (R1)'s swap extension: |g| between 0.17 and 40
+        # Pa, never ≤ 1e-3; solve.event_chatter). A gibbs boundary has no such component
+        comp = 1 if curve.get("form") != "library" and kind != "melting" else None
+        out.append(st.Event(name, g, scale=scale, terminal=(kind == "melting"), seam=(kind != "melting"),
+                            component=comp))
     for t_s, between in view.source_seams():
         out.append(st.Event(f"source_seam:{between[0]}|{between[1]}", (lambda m, y, t_s=t_s: y[2] - t_s),
                             scale=t_s, terminal=False, seam=True, component=2))

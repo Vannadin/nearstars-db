@@ -528,6 +528,31 @@ class Transitions(unittest.TestCase):
         y = [0.0, pb_const(1200.0) * 1.01, 1200.0]
         self.assertAlmostEqual(evs[0].g(0.0, y), pb_const(1200.0) * 0.01, delta=1.0)
 
+    def test_curve_events_land_on_the_old_side(self):
+        """A record's curve event g = P − P_b(T) holds its landing stages on the old side in P (component 1, as
+        curve_seams). Toy: a curve as steep as Mars's swap 304 extension (9.4e6 Pa/K) with dT/dP dropping 4 % across
+        it; with the stages free (component None, the mutant) the re-step's end T jumps with its length and the landing
+        never reaches |g| ≤ event_tol·scale (solve.event_chatter at Mars 1774 K); held, it lands at every step size."""
+        from solver import rhs
+        v = view(table())
+        (ev,) = [e for e in events.record_events(v) if e.name.startswith("phase:")]
+        self.assertEqual(ev.component, 1)
+        m_, r_, pb, k = 5.972e24, 6.371e6, 23.83e9, 9.4e6
+
+        class Sloped:
+            def state(self, p, t, guess):
+                new = p > pb + k * (t - 1600.0)
+                return (3720.0 if new else 3717.0), (9.2e-9 if new else 9.6e-9)
+        rs = rhs.r_scale_of(m_, 3.0 * m_ / (4.0 * math.pi * r_ ** 3))
+        for comp, want in ((1, "end"), (None, "chatter")):
+            for h0 in (1e-3, 7.3e-4, 1.37e-3):
+                o = st.Options(rtol=1e-10, floors=rhs.floors(m_, rs), h0=h0 * m_, h_min=1e-15 * m_, h_max=m_ / 20.0,
+                               max_steps=200000)
+                e = st.Event("phase:sloped", lambda m, y: y[1] - (pb + k * (y[2] - 1600.0)), scale=1e9,
+                             terminal=False, seam=True, component=comp)
+                got = st.run(rhs.make_rhs(Sloped()), m_, (r_, 0.0, 1600.0, 1600.0, 0.0, 0.0), 0.5 * m_, o, [e])
+                self.assertEqual(got.stop.kind, want, (comp, h0))
+
     def test_pending_gives_none(self):
         tb = table()
         tb["boundaries"] = {"status": "pending"}
