@@ -206,14 +206,26 @@ class OneSided(unittest.TestCase):
         self.assertGreater(rel(solid(v0, left, t)[0], rho_of(left, t)), 1e-3)
 
     def test_span_one_cell_away(self):
-        """68 M3: a read one cell left of the curve's cell takes no right-side node."""
+        """68 M3: a read one cell left of the curve's cell takes no right-side node. The pin is 2e-5, not 1e-5: the run's
+        end node takes the gentler of its PCHIP end slope and the gentlest secant (item 5d998d40, 68 ruling 2), which
+        reads this end cell 1.7e-5 from the analytic ρ, inside the declared interpolation term (owner-direction
+        85f41c2b). That pin no longer separates the mutant (the cut disabled reads 1.1e-5 here), so the right side is
+        moved a further 5 %: the read is bit-identical, and the mutant's moves."""
         tb = table()
         v = view(tb)
         p, t = math.sqrt(PS[14] * PS[15]), 1210.0
-        self.assertLess(rel(solid(v, p, t)[0], rho_of(p, t)), 1e-5)
+        self.assertLess(rel(solid(v, p, t)[0], rho_of(p, t)), 2e-5)
+        tb2 = copy.deepcopy(tb)                                   # the right side moved further: the read is unmoved
+        for c in tb2["cells"]:
+            if c["p"] > pb_const(t):
+                c["rho"] *= 1.05
+        self.assertEqual(solid(view(tb2), p, t)[0], solid(v, p, t)[0])
         v0 = view(tb)
         v0._cut, v0._parts, v0._runcache = [], {}, {}
         self.assertGreater(rel(solid(v0, p, t)[0], rho_of(p, t)), 1e-5)
+        v2 = view(tb2)
+        v2._cut, v2._parts, v2._runcache = [], {}, {}
+        self.assertNotEqual(solid(v2, p, t)[0], solid(v0, p, t)[0])   # the mutant reads the right side
 
     def test_far_reads_match_cubic2(self):
         """(R1) voids «uncut bit-identical to cubic2» for exported-boundary records (owner e4cd7f01): every read goes P
@@ -264,8 +276,10 @@ class Steps(unittest.TestCase):
         self.assertTrue(any(ma.SWAP_NOTE in n.text for n in got[2]))
 
     def test_edge_correction(self):
-        """r2 Q2 / 68 M4 in (R1)'s window form (68 (c)): continuous at P_b; L − δ/4 at half the window left of P_b;
-        zero correction at the window's edge. Mutant: no correction (a step stays)."""
+        """r2 Q2 / 68 M4 in the blend form (item 5d998d40, 68 ruling 1): inside the window the read is
+        (1 − H)·own + H·far with H the smoothstep over [x_b − w, x_b + w]; (L + R)/2 at P_b, continuous there and C¹
+        (one slope from both sides); the own raw read at and past the window's edge, joined C¹. Mutant: no blend (a
+        step stays)."""
         tb = table(cls="edge_in", right="ol+opx+gt")
         v = view(tb)
         t = 1210.0
@@ -277,13 +291,20 @@ class Steps(unittest.TestCase):
         (c,) = v._cut
         L = v._value("rho", xb, t, 15, ib, {c: -1}, False)
         R = v._value("rho", xb, t, 15, ib, {c: 1}, False)
-        self.assertGreater(abs(L - R) / L, 1e-3)              # the planted δ is there to remove
+        self.assertGreater(abs(L - R) / L, 1e-3)              # the planted step the blend removes
+        self.assertAlmostEqual(a, 0.5 * (L + R), delta=1e-9 * L)
         w = v._width(xb)
-        xm = xb - 0.5 * w
-        raw = v._value("rho", xm, t, 15, ib, {c: -1}, False)
-        self.assertAlmostEqual(solid(v, math.exp(xm), t)[0] - raw, -(L - R) / 4.0, delta=1e-9 * L)
+        xm = xb - 0.5 * w                                     # H = S(¼) = 5/32
+        own = v._value("rho", xm, t, 15, ib, {c: -1}, False)
+        far = v._value("rho", xm, t, 15, ib, {c: 1}, False)
+        self.assertAlmostEqual(solid(v, math.exp(xm), t)[0], (27.0 / 32.0) * own + (5.0 / 32.0) * far, delta=1e-9 * L)
         xe = xb - w * (1 + 1e-9)
         self.assertEqual(solid(v, math.exp(xe), t)[0], v._value("rho", xe, t, 14, ib, {c: -1}, False))
+        for x0 in (xb, xb - w, xb + w):                      # one slope from both sides: C¹ at P_b and the window's ends
+            h = 1e-6
+            lo = (solid(v, math.exp(x0), t)[0] - solid(v, math.exp(x0 - h), t)[0]) / h
+            hi = (solid(v, math.exp(x0 + h), t)[0] - solid(v, math.exp(x0), t)[0]) / h
+            self.assertLess(abs(hi - lo), 1e-3 * max(abs(lo), abs(hi)), x0 - xb)
         mut = view(tb)
         for cc in mut._cut:
             cc.kind = "swap"
@@ -291,7 +312,9 @@ class Steps(unittest.TestCase):
 
     def test_two_curves_in_one_cell(self):
         """r2 Q1, per region: two cut edges in one cell; the region between them holds no node, so each row reads it
-        linear in ln P between its neighbours' values at the two curves, with MULTI_NOTE; δ at either curve is 0 there."""
+        between its neighbours' values at the two curves (a smoothstep in ln P, item 5d998d40 (c)), with MULTI_NOTE;
+        the two windows blend it with the side reads (68 ruling 1). Continuous at both curves, and the read between
+        them lies between the reads just outside them."""
         def edges(t):
             a, b = math.exp(math.log(PS[15]) + 0.3 * (math.log(PS[16]) - math.log(PS[15]))), \
                 math.exp(math.log(PS[15]) + 0.7 * (math.log(PS[16]) - math.log(PS[15])))
@@ -303,12 +326,13 @@ class Steps(unittest.TestCase):
         t = 1200.0
         xa, xb = (math.log(e["p_b"]) for e in edges(t))
         va, vb = solid(v, math.exp(xa) * (1 - 1e-12), t)[0], solid(v, math.exp(xb) * (1 + 1e-12), t)[0]
-        x = xa + 0.25 * (xb - xa)
-        self.assertAlmostEqual(solid(v, math.exp(x), t)[0], va + 0.25 * (vb - va), delta=1e-9 * va)
+        for f in (0.25, 0.5, 0.75):
+            got = solid(v, math.exp(xa + f * (xb - xa)), t)[0]
+            self.assertTrue(min(va, vb) <= got <= max(va, vb), (f, got, va, vb))
         self.assertLess(rel(solid(v, math.exp(xa) * (1 + 1e-12), t)[0], va), 1e-9)   # continuous at both curves
-        got = v.state(math.exp(x), t)
+        self.assertLess(rel(solid(v, math.exp(xb) * (1 - 1e-12), t)[0], vb), 1e-9)
+        got = v.state(math.exp(xa + 0.25 * (xb - xa)), t)
         self.assertTrue(any(ma.MULTI_NOTE in getattr(n, "text", "") for n in got[2]))
-
 
 class Ends(unittest.TestCase):
     """(R1) §4 (68 (a)): a cut curve's P_b is extended two T rows past each end for sides and events; rows past the
@@ -689,41 +713,58 @@ class Choices(unittest.TestCase):
     """Each agreed (R1) design choice pinned by a case that its alternative fails (68 B2 on d7cc971d)."""
 
     def test_far_side_unreadable_never_refuses_the_near_side(self):
-        """68 B1: an edge whose far side has no dT/dP or c_P at a corner row (only ρ) never refuses the near side
-        inside the window: δ's far-side read takes, in that row, the nearest region with a run at its bounding curve
-        (_row_reach), so the row's difference is 0 there and the read stays continuous in T across the row lines (δ := 0
-        stepped dT/dP ×3 at default_bse 133 GPa, 3550 K). The far side's own read refuses."""
+        """68 B1, in the blend form (68 ruling 1): an edge whose far side has no dT/dP or c_P at a corner row (only ρ)
+        never refuses the near side inside the window: the far side's read takes, in that row, the nearest region with
+        a run at its bounding curve (_row_reach), and the read stays continuous in T across the row lines (δ := 0
+        stepped dT/dP ×3 at default_bse 133 GPa, 3550 K). The side reads leave no mark or count on the read (ruling 1
+        (3)). The far side's own read refuses."""
         tb = table(cls="edge_in", right="ol+opx+gt")
         p_b = pb_const(0.0)
         for c in tb["cells"]:
             if c["p"] > p_b and c["kind"] != "frozen":
-                c["dtdp_eq"] *= 1.05                                # a planted dT/dP offset for δ to carry
+                c["dtdp_eq"] *= 1.05                                # a planted dT/dP offset the blend carries
             elif c["kind"] != "frozen":                             # curved in P on the near side, so a reach at the
                 c["dtdp_eq"] *= 1.0 + 0.002 * PS.index(c["p"]) ** 2   # last node and one at the curve differ (68 B2 (a))
             if c["t"] == 1250.0 and c["p"] > p_b:
                 c["dtdp_eq"], c["c_p_eq"] = None, None
         v = view(tb)
-        (c,) = v._cut
         xb = math.log(p_b)
         w = v._width(xb)
         p = math.exp(xb - 0.5 * w)
         t = 1210.0
         got = v._solid(p, t)
         self.assertNotIsInstance(got, st.Stop)
-        self.assertGreater(v.cut_counts["reach_rows"], 0)
-        self.assertEqual(v._marks["empty"], False)                 # δ's side reads set no MULTI_NOTE mark (68 B2 (d))
+        self.assertEqual(v.cut_counts["reach_rows"], 0)            # the far side's reach is a side read's: no count
+        self.assertEqual(v.cut_counts["blend_drops"], 0)           # the reach gives it its corner row: none dropped
+        self.assertEqual(v._marks["empty"], False)                 # side reads set no MULTI_NOTE mark (68 B2 (d))
         k = TS.index(1250.0)                                       # the far side's empty row reads the near side at P_b
         self.assertIsNone(v._row_value("dtdp_eq", k, 1, xb, False))
         self.assertEqual(v._row_reach("dtdp_eq", k, 1), v._row_value("dtdp_eq", k, 0, xb, False))
-        d0 = v._row_value("dtdp_eq", k - 1, 0, xb, False) - v._row_value("dtdp_eq", k - 1, 1, xb, False)
-        self.assertGreater(abs(d0), 1e-3 * abs(v._row_value("dtdp_eq", k - 1, 0, xb, False)))   # the planted δ
-        self.assertEqual(v._delta("dtdp_eq", c, xb, w, 1250.0, 14, k, {c: -1}, {c: p_b}), 0.0)
         for tl in (1200.0, 1250.0):                                # continuous in T at the row lines, every field
             a, b = v._solid(p, tl - 1e-7), v._solid(p, tl + 1e-7)
             for f in range(3):
                 self.assertLess(abs(b[f] / a[f] - 1), 1e-6, (tl, f))
         self.assertIsInstance(v._solid(p_b * 1.001, t), st.Stop)
         self.assertEqual(jumps_p(v, (t,)), [])
+
+    def test_blend_drops_a_side_with_no_corner_row(self):
+        """68 ruling 1 (2): a side assignment whose read has no corner row is dropped and the remaining weights
+        renormalised (never 0 × a missing value), and counted; the read is then the own read alone."""
+        tb = table(cls="edge_in", right="ol+opx+gt")
+        v = view(tb)
+        t = 1210.0
+        xb = math.log(pb_const(t))
+        w = v._width(xb)
+        x = xb - 0.5 * w
+        own = v._solid(math.exp(x), t)[0]
+        v2 = view(tb)
+        v2._side_rows = lambda f, x, ib, sides: {}                # every far side without rows
+        got = v2._solid(math.exp(x), t)[0]
+        (c,) = v2._cut
+        ib = int((t - TS[0]) // 50)
+        self.assertEqual(got, v2._value("rho", x, t, 15, ib, {c: -1}, False))
+        self.assertNotEqual(got, own)                              # the full blend differs: the far side was there
+        self.assertEqual(v2.cut_counts["blend_drops"], 3)          # one per field
 
     def test_far_side_past_the_cap_never_refuses_the_near_side(self):
         """68 B1, the cap: δ's side reads are uncapped (x_b moves with t, so a cap there would switch inside a T cell);
@@ -755,16 +796,25 @@ class Choices(unittest.TestCase):
         self.assertTrue(any(ma.LIQUID_ALONE_NOTE in getattr(n, "text", "") for n in got[2]))
         self.assertEqual(v.phase_read(p, t), ma.PHASE_ID)
 
-    def test_gap_inside_a_region_reads_linearly(self):
-        """68 H1: an outer row with a missing node inside a region reads linearly in ln P across the gap (not the
-        nearest run's value), and the read stays continuous across the gap's midpoint."""
+    def test_gap_inside_a_region_reads_by_a_bridge(self):
+        """68 H1, item 5d998d40 (68 ruling 4): an outer row with a missing node inside a region reads across the gap by
+        the cubic Hermite bridge from one run's end to the next with their end slopes (not the nearest run's value, and
+        no longer the linear join, which kinked at both run ends): between the two end values, C¹ at both run ends,
+        and the read stays continuous across the gap."""
         tb = table()
         tb_cell(tb, PS[11], 1300.0)["rho"] = None
         v = view(tb)
         k = TS.index(1300.0)
-        x = math.log(PS[10]) + 0.3 * (math.log(PS[12]) - math.log(PS[10]))
+        x10, x12 = math.log(PS[10]), math.log(PS[12])
         a, b = tb_cell(tb, PS[10], 1300.0)["rho"], tb_cell(tb, PS[12], 1300.0)["rho"]
-        self.assertAlmostEqual(v._row_value("rho", k, 0, x, False), a + 0.3 * (b - a), delta=1e-9 * a)
+        for f in (0.1, 0.3, 0.5, 0.9):
+            got = v._row_value("rho", k, 0, x10 + f * (x12 - x10), False)
+            self.assertTrue(min(a, b) < got < max(a, b), (f, got))
+        h = 1e-5                                             # one slope from both sides at both run ends (h large
+        for x0 in (x10, x12):                                # enough for rounding, small for the curvature)
+            lo = (v._row_value("rho", k, 0, x0, False) - v._row_value("rho", k, 0, x0 - h, False)) / h
+            hi = (v._row_value("rho", k, 0, x0 + h, False) - v._row_value("rho", k, 0, x0, False)) / h
+            self.assertLess(abs(hi - lo), 1e-3 * max(abs(lo), abs(hi)), x0)
         self.assertEqual(jumps_p(v, (1210.0,)), [])
 
     def test_outer_row_uncapped_and_dropped(self):
