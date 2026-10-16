@@ -13,6 +13,7 @@ import copy
 import dataclasses
 import hashlib
 import json
+import bisect
 import math
 from collections.abc import Sequence
 from types import MappingProxyType
@@ -409,10 +410,6 @@ class CellMissing(Exception):
     """A corner of the query cell has no value: (axis-a index, axis-b index) of the corner."""
 
 
-class _NoNode(Exception):
-    """A corner row of a cut read has no read-side node at all (scope note §3 (b)): the T row's index."""
-
-
 def _end_slope(h0, h1, d0, d1):
     s = ((2.0 * h0 + h1) * d0 - h0 * d1) / (h0 + h1)
     if s * d0 <= 0.0:
@@ -557,7 +554,6 @@ SWAP_NOTE = ("phase-set change landed as a sharp step, T continuous: coexistence
              "(a) pending its registration)")
 MULTI_NOTE = ("two or more exported boundaries inside one grid cell: read linear in ln P between the outermost curves' "
               "one-sided values (scope note Q1, r2)")
-NO_NODE_WHY = "no read-side node in any stencil row ({a:g}–{b:g} K) across the exported boundary"
 #: the declared note of a read whose cell holds a node-resolved row, read across (frozen §3.3 «never forced into a
 #: step»; (A″), owner f43dac2a)
 NODE_NOTE = ("node-resolved phase change read across: C¹ over its grid cell, never forced into a step (registration "
@@ -568,8 +564,17 @@ def _labels(label) -> frozenset:
     return frozenset(label.split("+"))
 
 
-#: (A″) S1 (r2 on 68 B2): a corner row counts read-side nodes within this many P columns of the read's cell
+#: (A″) S1 (r2 on 68 B2): a corner row reads a run past its end node only within this many P columns
 CORNER_REACH = 4
+#: (R1) §4 (68 (a)): a cut curve's P_b is extended this many T rows past each end, for sides and events only
+EXT_ROWS = 2
+#: the refusals of an (R1) read, by class (68: each located at its declared place)
+NO_READ_WHY = MappingProxyType({"cap": "no read-side node within 4 P columns in row {t:g} K across the exported boundary",
+                                "run": "no read-side node in row {t:g} K across the exported boundary"})
+
+
+class _NoRead(Exception):
+    """(R1): a corner row with no usable value — kind «cap» or «run», and the row."""
 
 
 def row_across(r) -> bool:
@@ -610,6 +615,29 @@ class _Curve:
 
     def nearest(self, t):
         return min(self.rows, key=lambda r: abs(r["t"] - t))
+
+    def p_b_ext(self, t, reach):
+        """P_b(t), extended past each end by `reach` in T for side decisions and events only ((R1), 68 (a)): ln P_b
+        linear in T from the two end rows, constant for a one-row curve; None farther out. Not a located boundary: §3 (d)'s
+        [p_lo, p_hi] check does not apply to the extension."""
+        pb = self.p_b(t)
+        if pb is not None:
+            return pb
+        rs = self.rows
+        if t > self.t1:
+            if t - self.t1 > reach:
+                return None
+            e, o = rs[-1], (rs[-2] if len(rs) > 1 else None)
+        else:
+            if self.t0 - t > reach:
+                return None
+            e, o = rs[0], (rs[1] if len(rs) > 1 else None)
+        if o is None or o["p_b"] == e["p_b"]:
+            return e["p_b"]
+        # ln P linear past the end, from the end row's exact value: never reaches 0 (linear in P did, on default_bse's
+        # steep cpx edge at 2250 K, and a clamp there flipped the read's side off any event), and a constant curve
+        # extends to its own value bit for bit (an exp-log round trip left a 2e-8 Pa sliver that named no region)
+        return e["p_b"] * math.exp((t - e["t"]) * (math.log(e["p_b"]) - math.log(o["p_b"])) / (e["t"] - o["t"]))
 
     def side_of(self, p, t):
         """The side of (p, t): −1 left, +1 right, by P_b at t, or at the nearest row's T past the curve's ends."""
@@ -671,14 +699,14 @@ def build_curves(boundaries, ts):
     return out
 
 
-def _cut_runs(curves):
-    """Each curve's maximal runs of consecutive cut rows (row["across"] False), as curves of their own; never re-chained,
-    so no two rows are linked that the full set does not link (68 B1: re-chaining the cut subset by rank joined opx
-    edge_out at 4.28 GPa, 2500 K to 11.93 GPa, 2550 K on earth_dmm)."""
+def _cut_runs(curves, across=False):
+    """Each curve's maximal runs of consecutive cut rows (row["across"] False; with `across`, of rows read across), as
+    curves of their own; never re-chained, so no two rows are linked that the full set does not link (68 B1:
+    re-chaining the cut subset by rank joined opx edge_out at 4.28 GPa, 2500 K to 11.93 GPa, 2550 K on earth_dmm)."""
     out, run = [], []
     for c in curves:
         for r in c.rows + [None]:
-            if r is not None and not r["across"]:
+            if r is not None and r["across"] == across:
                 run.append(r)
                 continue
             if run:
@@ -791,15 +819,33 @@ class AssemblageView(mv.RecordView):
         #: the curves that cut the stencil: each full curve split into its maximal runs of rows (A″) does not read
         #: across (row_across), so a cut curve's links are always links of the full set (68 B1 on 2453b935)
         self._cut = _cut_runs(self._curves)
-        #: the cut-read counts of this view (scope note §3 (b), 68 S1): reads cut, corner rows extrapolated past the
-        #: stencil span with their largest reach in cells, rows refused with no read-side node, rows classified by label;
-        #: (A″) S1: reads that dropped a starved row, and the most rows one read dropped
-        self.cut_counts = {"cut_reads": 0, "corner_extrapolations": 0, "corner_max_reach": 0, "corner_max_nodes": 0,
-                           "no_node_refusals": 0, "label_rule_rows": 0, "side_fallbacks": 0, "row_drop_reads": 0,
-                           "row_drop_max": 0}
-        self._marks = {"corner_rows": set(), "label_rows": set(), "reach": 0, "corner_nodes": 0, "dropped": set()}
-        self._ref = None             # P0′: the read's own corner (label set, column), set per cut read (_set_ref)
-        self._p0p = None             # the disclosure sweep's P0′ log, None outside it
+        #: cut runs that coincide with another at every row (P_b equal to 1e-9; e.g. dmm's cpx and wa edges at
+        #: 16.280025 GPa, 1450 K) are a step, not two edges: read as a swap, no (c′) correction, with SWAP_NOTE (68 N2,
+        #: r2's Q1 degenerate limit); both land as events at one P, and the first landed leaves the other on its new side
+        self.coincident = 0
+        by_ts = {}
+        for c in self._cut:
+            by_ts.setdefault(tuple(r["t"] for r in c.rows), []).append(c)
+        for group in by_ts.values():
+            for a in group:
+                if any(b is not a and all(abs(ra["p_b"] - rb["p_b"]) <= 1e-9 * ra["p_b"] for ra, rb in zip(a.rows, b.rows))
+                       for b in group):
+                    if a.kind == "edge":
+                        self.coincident += 1
+                    a.kind = "swap"
+        #: the event curves (transitions): the cut runs, landed at their extended P_b ((R1) §4), then the runs read
+        #: across, at their own P_b; indices are the ids the event names carry
+        self._events = self._cut + _cut_runs(self._curves, across=True)
+        #: (R1) §4: a cut curve's side reach past its ends, two T rows (the stencil's reach)
+        self._reach = EXT_ROWS * (self.ts[1] - self.ts[0]) if len(self.ts) > 1 else 0.0
+        self._parts, self._runcache = {}, {}
+        #: the read counts of this view ((R1), 68 S1): reads, corner rows read in an empty region, outer rows dropped
+        #: (reads, most in one read), refusals by class, edge corrections applied, and side fallbacks (0 by
+        #: construction: the extension covers the stencil)
+        self.cut_counts = {"reads": 0, "empty_region_reads": 0, "row_drop_reads": 0, "row_drop_max": 0,
+                           "cap_refusals": 0, "no_run_refusals": 0, "by_count_reads": 0, "corrections": 0,
+                           "side_fallbacks": 0}
+        self._marks = {"dropped": set(), "empty": False, "by_count": False}
 
     # the table read ──────────────────────────────────────────────────────────────────────────────────────────
     def _refuse(self, p, t, rid, why):
@@ -829,9 +875,8 @@ class AssemblageView(mv.RecordView):
             ib -= 1
         while self.ts[ib + 1] < t:
             ib += 1
-        cuts = self._crossing(pr, t, ia, ib)
-        if cuts:
-            return self._solid_cut(p, t, pr, x, ia, ib, cuts)
+        if self._curves:                         # an exported-boundary record: every read through the row regions (R1)
+            return self._read(p, t, pr, x, ia, ib)
         cut = (lambda ka: self.ps[ka] <= self.p_dataset)
         out = {}
         for f in ("rho", "dtdp_eq", "c_p"):
@@ -882,244 +927,178 @@ class AssemblageView(mv.RecordView):
             return c.get("c_p_eq")
         return c.get(f)
 
-    def _crossing(self, pr, t, ia, ib):
-        """The cut curves (A″) crossing the read's stencil P span (columns ia−1 … ia+2) at the read's T or at any
-        stencil row's T (68 M3). Empty: the read is uncut, cubic2 unchanged; a row read across never cuts."""
-        if not self._cut:
-            return []
-        c0, c1 = max(ia - 1, 0), min(ia + 2, len(self.ps) - 1)
-        ta, tb = self.ts[max(ib - 1, 0)], self.ts[min(ib + 2, len(self.ts) - 1)]
-        lo, hi = self.ps[c0], self.ps[c1]
-        out = []
-        for c in self._cut:
-            # anywhere on [t_{ib−1}, t_{ib+2}] (68 B1): P_b is piecewise linear, so its range over each segment between
-            # consecutive samples (the stencil rows, t, the curve's own rows inside) is its two ends'
-            tts = sorted({t, ta, tb, *(self.ts[k] for k in range(max(ib - 1, 0), min(ib + 2, len(self.ts) - 1) + 1)),
-                          *(r["t"] for r in c.rows if ta <= r["t"] <= tb)})
-            pbs = [c.p_b(tt) for tt in tts]
-            hit = any(pb is not None and lo < pb < hi for pb in pbs) or any(
-                a is not None and b is not None and min(a, b) < hi and max(a, b) > lo for a, b in zip(pbs, pbs[1:]))
-            if hit:
-                out.append(c)
-        return out
+    # (R1): fixed per-row region functions (owner e4cd7f01; 68 on the design note, H1–H3, (a)–(c)) ─────────────────
+    def _partition(self, k):
+        """Row k's cut curves defined at t_k, sorted by P_b(t_k): [(P_b, curve)]. Fixed per row."""
+        got = self._parts.get(k)
+        if got is None:
+            tk = self.ts[k]
+            got = sorted(((c.p_b(tk), c) for c in self._cut if c.p_b(tk) is not None), key=lambda e: e[0])
+            self._parts[k] = got
+        return got
 
-    def _node_ok(self, j, k, side, cuts):
-        """A node is on the read's side of every crossing curve defined at its own T (r2 M1). On a row past a crossing
-        curve's end, P0′ (r2, replacing 68 M2's «label must equal»): the node is admitted unless its label and the
-        read's own corner label (_set_ref) differ by a swap, neither a subset of the other; an edge-type difference is
-        admitted, since an edge has no step (D-P3). No cell: not admitted. No reference corner: admitted."""
-        tk = self.ts[k]
-        past = False
-        for c in cuts:
-            pb = c.p_b(tk)
-            if pb is not None:
-                if (-1 if self.ps[j] < pb else 1) != side[c]:
-                    return False
-            else:
-                past = True
-        if not past:
-            return True
-        self._marks["label_rows"].add(k)
-        cell = self._cell(j, k)
-        if cell is None:
-            return False
-        if self._ref is None:
-            return True
-        a, b = _labels(cell["assemblage"]), self._ref[0]
-        if a == b:
-            return True
-        if a <= b or b <= a:
-            if self._p0p is not None:
-                self._p0p["edge"][(j, k, self._ref[1])] = self._label_step(j, k, self._ref[1])
-            return True
-        if self._p0p is not None:
-            self._p0p["swap"].add((j, k))
-        return False
+    def _region_of(self, j, k):
+        return bisect.bisect_left([pb for pb, _ in self._partition(k)], self.ps[j])
 
-    def _label_step(self, j, k, jr):
-        """|Δρ|/ρ at the first label change walking along row k from column j toward the reference column jr (the
-        P0′ disclosure: the step an admitted edge-type node carries into the stencil); 0 if none or a cell missing."""
-        step = 1 if jr > j else -1
-        i = j
-        while i != jr:
-            u, v = self._cell(i, k), self._cell(i + step, k)
-            if u is None or v is None:
-                return 0.0
-            if u["assemblage"] != v["assemblage"]:
-                return abs(v["rho"] / u["rho"] - 1.0)
-            i += step
-        return 0.0
-
-    def _set_ref(self, x, t, ia, ib, side, cuts):
-        """P0′'s reference: among the read cell's four corners that pass M1 for the crossing curves defined at their
-        row, the one nearest the read in ln P, ties to the row nearer the read's T: (label set, column), or None."""
-        kr = ib if t - self.ts[ib] <= self.ts[ib + 1] - t else ib + 1
-        best = None
-        for jj in (ia, ia + 1):
-            for kk in (ib, ib + 1):
-                cell = self._cell(jj, kk)
-                if cell is None or any((pb := c.p_b(self.ts[kk])) is not None
-                                       and (-1 if self.ps[jj] < pb else 1) != side[c] for c in cuts):
+    def _runs(self, f, k):
+        """Row k's runs for field f: {region: [(xs, ys, js)]}, each a maximal run of consecutive present nodes at or
+        below p_dataset inside one region (a missing node, the window's end, splits a region). Fixed per row."""
+        key = (f, k)
+        got = self._runcache.get(key)
+        if got is None:
+            pbs = [pb for pb, _ in self._partition(k)]
+            got, cur = {}, None
+            for j, p in enumerate(self.ps):
+                if p > self.p_dataset:
+                    break
+                v = self._val(f, j, k)
+                r = bisect.bisect_left(pbs, p)
+                if v is None:
+                    cur = None
                     continue
-                d = (abs(self.lnps[jj] - x), kk != kr)
-                if best is None or d < best[0]:
-                    best = (d, cell, jj)
-        self._ref = None if best is None else (_labels(best[1]["assemblage"]), best[2])
+                if cur is None or cur[3] != r:
+                    cur = ([], [], [], r)
+                    got.setdefault(r, []).append(cur)
+                cur[0].append(self.lnps[j])
+                cur[1].append(v)
+                cur[2].append(j)
+            self._runcache[key] = got
+        return got
 
-    def _side_value(self, f, x, t, ia, ib, side, cuts):
-        """A one-sided value at the end of a cut (an edge's δ at P_b, (c″)'s outer values) with P0′'s reference corner
-        taken for that side (_set_ref), not the read's: so δ = L − R is the same whichever side a read is on, and the
-        edge correction and (c″) are continuous at P_b. The read's own reference is restored after. (Engine 2453b935–
-        c327275a took both values with the read's reference; past a curve's end that left a step at P_b: Mars's wa
-        edge at 16.53 GPa, 1800.9 K read 0.28 % in ρ and 24 % in dT/dP apart either side, and the solve's event
-        landing chattered, ea's preview (b) on e0ec582f.)"""
-        keep = self._ref
-        self._set_ref(x, t, ia, ib, side, cuts)
-        try:
-            return self._cut_value(f, x, t, ia, ib, side, cuts)
-        finally:
-            self._ref = keep
+    def _run_value(self, f, k, r, x, corner):
+        """Region r of row k at x from its runs: PCHIP inside a run, the end slope past the region's outer runs, and
+        linear in ln P between two runs across a gap inside the region (68 H1). A corner row reads past a run's end
+        node only within CORNER_REACH columns, else _NoRead("cap") (r2 on 68 B2); an outer row has no cap (68 H2).
+        None when the region has no run."""
+        runs = self._runs(f, k).get(r)
+        if not runs:
+            return None
+        n = len(self.ps)
+        for a, b in zip(runs, runs[1:]):
+            if a[0][-1] < x < b[0][0]:                    # a gap inside the region: linear between the two runs' ends
+                va, vb = a[1][-1], b[1][0]
+                return va + (vb - va) * (x - a[0][-1]) / (b[0][0] - a[0][-1])
+        run = runs[0] if x < runs[0][0][0] else runs[-1] if x > runs[-1][0][-1] else next(
+            q for q in runs if q[0][0] <= x <= q[0][-1])
+        if corner and (x < self.lnps[max(run[2][0] - CORNER_REACH, 0)]
+                       or x > self.lnps[min(run[2][-1] + CORNER_REACH, n - 1)]):
+            raise _NoRead("cap", k)
+        return _pchip_1d(x, run[0], run[1])
 
-    def _region(self, k, x, side):
-        """(A″) S1: the read's P region in row k, (lo, hi) between the nearest cut curves defined at t_k on either side
-        (a crossing curve by the read's side, any other by the read's ln P): a row's reach never passes a curve."""
-        lo, hi = 0.0, math.inf
-        for c in self._cut:
-            pb = c.p_b(self.ts[k])
-            if pb is None:
-                continue
-            if (side[c] if c in side else (-1 if x < math.log(pb) else 1)) > 0:
-                lo = max(lo, pb)
-            else:
-                hi = min(hi, pb)
-        return lo, hi
+    def _row_value(self, f, k, r, x, corner):
+        """Row k's value at x in region r: its runs (_run_value), or, for a region with no run for this field, linear in
+        ln P between the nearest regions with a run on either side, each at its bounding curve toward r ((c″) per
+        region; a block of empty regions, or a field missing at a node, reads through). None if a side has no run."""
+        runs = self._runs(f, k)
+        if runs.get(r):
+            return self._run_value(f, k, r, x, corner)
+        part = self._partition(k)
+        lo = next((q for q in range(r - 1, -1, -1) if runs.get(q)), None)      # the nearest regions with a run
+        hi = next((q for q in range(r + 1, len(part) + 1) if runs.get(q)), None)
+        if lo is None or hi is None:
+            return None
+        xl, xr = math.log(part[lo][0]), math.log(part[hi - 1][0])          # their bounding curves toward r
+        vl = self._run_value(f, k, lo, xl, corner)
+        vr = self._run_value(f, k, hi, xr, corner)
+        if corner:
+            self._marks["empty"] = True
+        if xr <= xl:                                     # two curves at one P_b in this row: a zero-width region
+            return 0.5 * (vl + vr)
+        return vl + (vr - vl) * (x - xl) / (xr - xl)
 
-    def _cut_value(self, f, x, t, ia, ib, side, cuts):
-        """P first per T row from that row's read-side nodes, then T (68 M1). An outer row with no read-side node in
-        the span drops; a corner row extrapolates from the nearest read-side nodes further out, up to 4 of them within
-        CORNER_REACH P columns of the read's cell and inside the read's region (never past the next curve, _region); a
-        corner row with none there drops too ((A″) S1; the cap is r2's ruling on 68 B2, no uncapped end-slope reach; r2:
-        the stencil shrinks as at a table end), and only a read with no row left raises _NoNode. With both corner rows
-        present the T read is _cubic1 as uncut; with one missing, PCHIP over the rows present. A read-side corner of the
-        read cell with no cell or no value is CellMissing, as uncut."""
-        n_p, n_t = len(self.ps), len(self.ts)
-        c0, c1 = max(ia - 1, 0), min(ia + 2, n_p - 1)
+    def _region(self, k, sides, x):
+        """The region of row k named by the read's sides of row k's curves: right of the first r curves in P_b(t_k)
+        order and left of the rest. When the sides name no such region (two curves crossed between t_k and the read's
+        T; 68 H3), the region is still r = the count of curves the read is right of: it changes only where a side
+        changes (a landed event), so the read stays continuous; counted. A curve with no side (none by construction)
+        is taken by row k's own geometry, counted."""
+        ss = []
+        for pb, c in self._partition(k):
+            s_ = sides.get(c)
+            if s_ is None:
+                self.cut_counts["side_fallbacks"] += 1
+                s_ = -1 if x < math.log(pb) else 1
+            ss.append((pb, -s_))
+        ss = [-s_ for _, s_ in sorted(ss)]               # curves at one P_b in this row: ordered by the read's side
+        r = sum(1 for s_ in ss if s_ > 0)
+        if any(s_ < 0 for s_ in ss[:r]):
+            self._marks["by_count"] = True                # 68 H3: curves crossed between t_k and t; by count
+        return r
+
+    def _value(self, f, x, t, ia, ib, sides, check=True):
+        """One field at (x, t) through the row regions, T last (_cubic1 as the uncut path). A corner row (ib, ib+1)
+        that names no region, or has no usable run, raises _NoRead; an outer row then drops (its choice changes only
+        with the sides). `check`: a read-side corner node of the read cell with no value is CellMissing (D-M2)."""
+        n_t = len(self.ts)
         rows = {}
         for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1):
             corner = k in (ib, ib + 1)
-            if corner:
+            r = self._region(k, sides, x)
+            if corner and check:
                 for j in (ia, ia + 1):
-                    if self._node_ok(j, k, side, cuts) and self._val(f, j, k) is None:
+                    if self.ps[j] <= self.p_dataset and self._region_of(j, k) == r and self._val(f, j, k) is None:
                         raise CellMissing((j, k))
-            ok = [j for j in range(n_p)                                       # the p_dataset cut stays (68 B2)
-                  if self.ps[j] <= self.p_dataset and self._node_ok(j, k, side, cuts) and self._val(f, j, k) is not None]
-            use = [j for j in ok if c0 <= j <= c1]
-            if not use:
-                if not corner:
-                    continue
-                lo, hi = self._region(k, x, side)
-                near = sorted((j for j in ok if lo < self.ps[j] < hi and ia - CORNER_REACH <= j <= ia + 1 + CORNER_REACH),
-                              key=lambda j: abs(self.lnps[j] - x))
-                if not near:
-                    self._marks["dropped"].add(k)
-                    continue
-                use = sorted(near[:4])
-                reach = min(abs(j - ia) if j < ia else abs(j - ia - 1) for j in use)
-                self._marks["corner_rows"].add(k)
-                self._marks["reach"] = max(self._marks["reach"], reach)
-                self._marks["corner_nodes"] = max(self._marks["corner_nodes"], len(use))
-            rows[k] = _pchip_1d(x, [self.lnps[j] for j in use], [self._val(f, j, k) for j in use])
-        if not rows:
-            raise _NoNode(ib)
-        if ib in rows and ib + 1 in rows:
-            return _cubic1(t, self.ts, _Seq(rows, n_t), ib)
-        ks = sorted(rows)
-        return _pchip_1d(t, [self.ts[k] for k in ks], [rows[k] for k in ks])
-
-    def _read_side(self, c, p, t, ia, ib):
-        """The read's side of one curve. Inside the curve's T range, by P_b(t). Past either end (r2's R1 ruling, 68's
-        three points): by the labels of the read cell's two corner nodes on its row nearest the curve that lies past the
-        end — past the last row t1, row ib if the read cell lies wholly past (t_ib > t1), else ib+1 (the first row past);
-        before the first row t0, row ib+1 if t_{ib+1} < t0, else ib (the last row below). A corner matching the
-        curve's left (right) label puts the read left (right); one matching corner and one third label still decide
-        (the third-label node drops by the label rule); corners matching opposite sides, or none, fall back to the
-        nearest row's P_b, counted («side_fallbacks», with the Q3/M2 disclosure)."""
-        pb = c.p_b(t)
-        if pb is not None:
-            return -1 if p < pb else 1
-        if t > c.t1:
-            k = ib if self.ts[ib] > c.t1 else ib + 1
-        else:
-            k = ib + 1 if self.ts[ib + 1] < c.t0 else ib
-        r = c.nearest(t)
-        hits = set()
-        for j in (ia, ia + 1):
-            cell = self._cell(j, k)
-            if cell is None:
+            v = self._row_value(f, k, r, x, corner)
+            if v is None:
+                if corner:
+                    raise _NoRead("run", k)
+                self._marks["dropped"].add(k)
                 continue
-            lab = _labels(cell["assemblage"])
-            if lab == r["left"]:
-                hits.add(-1)
-            elif lab == r["right"]:
-                hits.add(1)
-        if len(hits) == 1:
-            return hits.pop()
-        self.cut_counts["side_fallbacks"] += 1
-        return -1 if p < r["p_b"] else 1
+            rows[k] = v
+        return _cubic1(t, self.ts, _Seq(rows, n_t), ib)
 
-    def _close_marks(self):
-        """One count per read, and per (read, row) for corner and label rows, whatever the field and δ calls (68 N1)."""
-        m = self._marks
-        self.cut_counts["corner_extrapolations"] += len(m["corner_rows"])
-        self.cut_counts["label_rule_rows"] += len(m["label_rows"])
-        self.cut_counts["corner_max_reach"] = max(self.cut_counts["corner_max_reach"], m["reach"])
-        self.cut_counts["corner_max_nodes"] = max(self.cut_counts["corner_max_nodes"], m["corner_nodes"])
-        if m["dropped"]:
-            self.cut_counts["row_drop_reads"] += 1
-            self.cut_counts["row_drop_max"] = max(self.cut_counts["row_drop_max"], len(m["dropped"]))
+    def _width(self, x):
+        """The (c′) window's half-width at x: node-centred ln-P cell widths, linear in ln P between nodes (68 (c))."""
+        xs, n = self.lnps, len(self.lnps)
+        j = min(max(bisect.bisect_right(xs, x) - 1, 0), n - 2)
+        def wn(i):
+            return (xs[min(i + 1, n - 1)] - xs[max(i - 1, 0)]) / (2.0 if 0 < i < n - 1 else 1.0)
+        u = min(max((x - xs[j]) / (xs[j + 1] - xs[j]), 0.0), 1.0)
+        return wn(j) + u * (wn(j + 1) - wn(j))
 
-    def _solid_cut(self, p, t, pr, x, ia, ib, cuts):
-        """The cut read (scope note §3 (b)–(c″)): one-sided per side; a swap in the read cell steps (with §3.3's
-        note); a single cut edge curve in the read cell is corrected linearly in ln P across the cell, 0 at the nodes and
-        ±δ/2 at P_b with the equal split (r2 Q2, T1); two or more curves in the cell are read linear in ln P between the
-        outermost curves' one-sided values (r2 Q1), with no edge correction there (r2 N1). Only cut curves are here:
-        rows read across under (A″) never reach this read."""
-        self.cut_counts["cut_reads"] += 1
-        self._marks = {"corner_rows": set(), "label_rows": set(), "reach": 0, "corner_nodes": 0,   # per read (68 N1)
-                       "dropped": set()}
-        side = {c: self._read_side(c, pr, t, ia, ib) for c in cuts}
-        self._set_ref(x, t, ia, ib, side, cuts)
-        lo, hi = self.ps[ia], self.ps[ia + 1]
-        cell = sorted((c for c in cuts if (pb := c.p_b(t)) is not None and lo <= pb <= hi), key=lambda c: c.p_b(t))
-        xl, xh = self.lnps[ia], self.lnps[ia + 1]
+    def _delta(self, f, c, xb, w, t, ia, ib, sides, pbs):
+        """δ = L − R of edge c at x_b from the raw side reads (no correction inside, 68 (c)): every swap's side is the
+        read's (its step is a landed event), every other edge's side is taken at (x_b, t) by geometry, so δ never
+        depends on the read's own side of another edge. It changes in t where another cut edge's P_b crosses x_b."""
+        sd = {cc: (sides[cc] if cc.kind == "swap" or q is None else (-1 if (xb, c.id) < (math.log(q), cc.id) else 1))
+              for cc, q in pbs.items()}                  # at an exact tie, ordered by id: one order for both δ
+        return (self._value(f, xb, t, ia, ib, {**sd, c: -1}, False)
+                - self._value(f, xb, t, ia, ib, {**sd, c: 1}, False))
+
+    def _read(self, p, t, pr, x, ia, ib):
+        """The read of an exported-boundary record (R1): every field P first through the row regions, T last; at each
+        cut edge within w of the read, the (c′) correction ∓δ/2·(1 − |x − x_b|/w), δ = L − R from the raw side reads
+        at x_b (_delta), continuous in t and changing in x only where the read crosses a swap (a landed step), so
+        overlapping windows add continuously. Continuous except at P_b_ext(t) of
+        cut swaps (landed events) and at refusal boundaries."""
+        self.cut_counts["reads"] += 1
+        self._marks = {"dropped": set(), "empty": False, "by_count": False}
+        n_t = len(self.ts)
+        rel = {c for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1) for _, c in self._partition(k)}
+        pbs = {c: c.p_b_ext(t, self._reach) for c in rel}
+        sides = {c: (None if pb is None else (-1 if pr < pb else 1)) for c, pb in pbs.items()}
         out = {}
         try:
             for f in ("rho", "dtdp_eq", "c_p"):
-                if len(cell) >= 2 and math.log(cell[0].p_b(t)) <= x <= math.log(cell[-1].p_b(t)):
-                    xa, xb = math.log(cell[0].p_b(t)), math.log(cell[-1].p_b(t))
-                    left = {**side, **{c: -1 for c in cell}}
-                    right = {**side, **{c: 1 for c in cell}}
-                    va = self._side_value(f, xa, t, ia, ib, left, cuts)
-                    vb = self._side_value(f, xb, t, ia, ib, right, cuts)
-                    out[f] = va + (vb - va) * (x - xa) / (xb - xa)
-                    continue
-                v = self._cut_value(f, x, t, ia, ib, side, cuts)
-                if len(cell) == 1 and cell[0].kind in ("edge", "node"):
-                    c = cell[0]
-                    xbd = math.log(c.p_b(t))
-                    d = (self._side_value(f, xbd, t, ia, ib, {**side, c: -1}, cuts)
-                         - self._side_value(f, xbd, t, ia, ib, {**side, c: 1}, cuts))
-                    if side[c] < 0:
-                        v -= 0.5 * d * (x - xl) / (xbd - xl)
-                    else:
-                        v += 0.5 * d * (xh - x) / (xh - xbd)
+                v = self._value(f, x, t, ia, ib, sides)
+                for c in rel:
+                    if c.kind != "edge" or pbs[c] is None:
+                        continue
+                    xb = math.log(pbs[c])
+                    w = self._width(xb)
+                    if abs(x - xb) >= w:
+                        continue
+                    d = self._delta(f, c, xb, w, t, ia, ib, sides, pbs)
+                    v += (-0.5 * d * (1.0 - (xb - x) / w)) if sides[c] < 0 else (0.5 * d * (1.0 - (x - xb) / w))
+                    if f == "rho":
+                        self.cut_counts["corrections"] += 1
                 out[f] = v
-        except _NoNode as e:
+        except _NoRead as e:
             self._close_marks()
-            self.cut_counts["no_node_refusals"] += 1
-            k = e.args[0]
-            return self._refuse(p, t, "input.material_out_of_data",
-                                NO_NODE_WHY.format(a=self.ts[max(k - 1, 0)], b=self.ts[min(k + 2, len(self.ts) - 1)]))
+            kind, k = e.args
+            key = {"cap": "cap_refusals", "run": "no_run_refusals"}[kind]
+            self.cut_counts[key] += 1
+            return self._refuse(p, t, "input.material_out_of_data", NO_READ_WHY[kind].format(t=self.ts[k]))
         except CellMissing as e:
             ka, kb = e.args[0]
             c = self._cell(ka, kb)
@@ -1132,16 +1111,31 @@ class AssemblageView(mv.RecordView):
                                 f"no equilibrium isentrope at node ({c['p']:g} Pa, {c['t']:g} K): its "
                                 "re-solves did not converge (registration note 3 §2 condition 4)")
         self._close_marks()
-        if len(cell) >= 2:
+        if self._marks["empty"]:
             self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID, MULTI_NOTE))
-        elif len(cell) == 1 and cell[0].kind == "swap":
-            a, b = cell[0].p_range
-            self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID,
-                                              f"{SWAP_NOTE}; P {a / 1e9:.4g}–{b / 1e9:.4g} GPa"))
+        lo, hi = self.ps[ia], self.ps[ia + 1]
+        for c in rel:
+            if c.kind == "swap" and pbs[c] is not None and lo <= pbs[c] <= hi:
+                a, b = c.p_range
+                self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID,
+                                                  f"{SWAP_NOTE}; P {a / 1e9:.4g}–{b / 1e9:.4g} GPa"))
         self._node_note(t, ia)
-        corners = [self._cell(a, b) for a in (ia, ia + 1) for b in (ib, ib + 1)
-                   if self._node_ok(a, b, side, cuts)]
+        corners = []
+        for kb in (ib, ib + 1):
+            r = self._region(kb, sides, x)
+            corners += [self._cell(ja, kb) for ja in (ia, ia + 1) if self._region_of(ja, kb) == r]
         return out["rho"], out["dtdp_eq"], out["c_p"], [c for c in corners if c is not None]
+
+    def _close_marks(self):
+        """One count per read, whatever the field and δ calls (68 N1)."""
+        m = self._marks
+        if m["dropped"]:
+            self.cut_counts["row_drop_reads"] += 1
+            self.cut_counts["row_drop_max"] = max(self.cut_counts["row_drop_max"], len(m["dropped"]))
+        if m["empty"]:
+            self.cut_counts["empty_region_reads"] += 1
+        if m.get("by_count"):
+            self.cut_counts["by_count_reads"] += 1
 
     def _cell_notes(self, cells, p, t):
         for c in cells:
@@ -1217,14 +1211,17 @@ class AssemblageView(mv.RecordView):
         return ()
 
     def transitions(self) -> tuple:
-        """Exported curves as solid_solid seams (§3.3): a swap steps, an edge or node-resolved curve does not; pending
-        boundaries give none (every label change is read across)."""
-        return tuple(((f"{c.kind}{c.id}:{c.rows[0]['left_label']}", f"{c.rows[0]['right_label']}"), "solid_solid",
-                      {"form": "assemblage_curve", "id": c.id}) for c in self._curves)
+        """Exported curves as solid_solid seams (§3.3): the cut runs at their extended P_b ((R1) §4: a swap steps
+        there, fading past its end with the partitioned rows' T weight, not monotonically), then the runs read across
+        at their own P_b (no step); pending boundaries give none. Ids index self._events."""
+        return tuple(((f"{c.kind}{i}:{c.rows[0]['left_label']}", f"{c.rows[0]['right_label']}"), "solid_solid",
+                      {"form": "assemblage_curve", "id": i}) for i, c in enumerate(self._events))
 
     def boundary_pressure(self, curve, t):
         if curve.get("form") == "assemblage_curve":
-            return self._curves[curve["id"]].p_b(t)
+            i = curve["id"]
+            c = self._events[i]
+            return c.p_b_ext(t, self._reach) if i < len(self._cut) else c.p_b(t)
         return super().boundary_pressure(curve, t)
 
     def source_seams(self) -> tuple:
@@ -1309,12 +1306,12 @@ def boundary_disclosures(record, table) -> dict:
             t, pb = row["t"], row["p_b"]
             ia = max(i for i in range(len(ps) - 1) if ps[i] <= pb)
             ib = min(ts.index(t), len(ts) - 2)
-            cuts = v._crossing(pb, t, ia, ib)
-            side = {cc: cc.side_of(pb, t) for cc in cuts}
+            rel = {cc for k in range(max(ib - 1, 0), min(ib + 2, len(ts) - 1) + 1) for _, cc in v._partition(k)}
+            side = {cc: (None if (q := cc.p_b_ext(t, v._reach)) is None else (-1 if pb < q else 1)) for cc in rel}
             try:
-                left = v._side_value("rho", math.log(pb), t, ia, ib, {**side, c: -1}, cuts)
-                right = v._side_value("rho", math.log(pb), t, ia, ib, {**side, c: 1}, cuts)
-            except (CellMissing, _NoNode) as e:          # named, never silently dropped
+                left = v._value("rho", math.log(pb), t, ia, ib, {**side, c: -1}, False)
+                right = v._value("rho", math.log(pb), t, ia, ib, {**side, c: 1}, False)
+            except (CellMissing, _NoRead) as e:          # named, never silently dropped
                 unreadable.append({"curve": c.id, "t": t, "p_b": pb, "why": type(e).__name__})
                 continue
             deltas.append({"curve": c.id, "t": t, "p_b": pb, "rel": abs(left - right) / left})
@@ -1344,17 +1341,29 @@ def boundary_disclosures(record, table) -> dict:
             (located if on is not None else unlocated).append({**item, "on_curve": on} if on is not None else item)
     ends = sum((c.t0 > ts[0]) + (c.t1 < ts[-1]) for c in v._curves)
     v.cut_counts = {k: 0 for k in v.cut_counts}          # the sweep's own counts, not the δ loop's (68 N1)
-    v._p0p = {"edge": {}, "swap": set()}
     for ia in range(len(ps) - 1):
         for ib in range(len(ts) - 1):
             p, t = math.sqrt(ps[ia] * ps[ia + 1]), 0.5 * (ts[ib] + ts[ib + 1])
-            if v._crossing(p, t, ia, ib):
+            if p <= v.p_dataset:
                 v._solid(p, t)
-    adm = v._p0p["edge"]
-    p0p = {"edge_type_nodes": len({(j, k) for j, k, _ in adm}), "edge_type_uses": len(adm),
-           "step": _dist([(d, ps[j] / 1e9, ts[k]) for (j, k, _), d in adm.items()]),
-           "swap_type_rejected_nodes": len(v._p0p["swap"])}
-    v._p0p = None
+    # past-end crossings read across (R1 replaces P0′): in the rows within the extension past a cut run's ends, the
+    # label changes within CORNER_REACH columns of its extended P_b that no curve of that row partitions, by type
+    past = {"edge": {}, "swap": {}}
+    for c in v._cut:
+        for k, tk in enumerate(ts):
+            if c.p_b(tk) is not None or (q := c.p_b_ext(tk, v._reach)) is None:
+                continue
+            pbs = [pb for pb, _ in v._partition(k)]
+            jq = max(i for i in range(len(ps)) if i == 0 or ps[i] <= q)
+            for j in range(max(jq - CORNER_REACH, 0), min(jq + CORNER_REACH, len(ps) - 2) + 1):
+                a, b = v._cell(j, k), v._cell(j + 1, k)
+                if (a is None or b is None or ps[j + 1] > v.p_dataset or a["assemblage"] == b["assemblage"]
+                        or bisect.bisect_left(pbs, ps[j]) != bisect.bisect_left(pbs, ps[j + 1])):
+                    continue
+                la, lb = _labels(a["assemblage"]), _labels(b["assemblage"])
+                past["edge" if (la <= lb or lb <= la) else "swap"][(j, k)] = (abs(b["rho"] / a["rho"] - 1.0),
+                                                                              ps[j] / 1e9, tk)
+    past = {kd: _dist(list(d.values())) for kd, d in past.items()}
     return {"status": "exported",
             "curves": {k: sum(1 for c in v._curves if c.kind == k) for k in ("swap", "edge", "node")},
             "read": {"counts": {m: sum(1 for x in modes if x["mode"] == m) for m in ("cut", "across", "node")},
@@ -1367,7 +1376,7 @@ def boundary_disclosures(record, table) -> dict:
             "edge_drho_tol": (table["boundaries"].get("source") or {}).get("edge_drho_tol"),
             "multi_curve_cells": multi,
             "t_changes": {"located": located, "unlocated": unlocated, "unlocated_count": len(unlocated)},
-            "curve_ends": ends, "sweep": {**v.cut_counts, "p0_prime": p0p}}
+            "curve_ends": ends, "sweep": dict(v.cut_counts), "past_end_read_across": past}
 
 
 def view(record, table, t_pot, p_stop=0.0, p_floor=0.0):
