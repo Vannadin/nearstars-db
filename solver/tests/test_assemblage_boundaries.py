@@ -323,6 +323,12 @@ class Ends(unittest.TestCase):
         p = v._curves[0].p_b(t) * 1.001
         self.assertNotIsInstance(v._solid(p, t), st.Stop)
         self.assertEqual((v.cut_counts["row_drop_reads"], v.cut_counts["corner_max_reach"]), (1, 0))
+        v = view(table(pb=steep(6), t_lo=1150.0, t_hi=1300.0))
+        p6 = v._curves[0].p_b(t) * 1.001
+        ia6 = max(i for i in range(len(PS) - 1) if PS[i] <= p6)
+        v._region = lambda k, x, side: (PS[ia6], PS[ia6 + 2])   # a region holding no node beyond the span
+        self.assertNotIsInstance(v._solid(p6, t), st.Stop)
+        self.assertEqual((v.cut_counts["row_drop_reads"], v.cut_counts["corner_extrapolations"]), (1, 0))
         orig, ma.CORNER_REACH = ma.CORNER_REACH, 99           # the mutant: no cap
         try:
             mut = view(tb)
@@ -600,9 +606,15 @@ class ReadRule(unittest.TestCase):
         x = math.log(PS[16] * 0.999)                          # right of P_b, nearer column 16 than 15 in ln P
         v._set_ref(x, t, 15, ib, {c: 1}, [c])
         self.assertEqual(v._ref, (ma._labels("wa+opx"), 16))
-        x = math.log(pb_const(1200.0) * 1.0001)               # right of P_b, nearer column 15 in ln P
+        def pb_low(t):                                        # P_b at 0.2 of the 15→16 cell in ln P
+            return math.exp(math.log(PS[15]) + 0.2 * (math.log(PS[16]) - math.log(PS[15])))
+        v = view(table(pb=pb_low))
+        (c,) = v._cut
+        x = math.log(PS[15]) + 0.3 * (math.log(PS[16]) - math.log(PS[15]))   # right of P_b, nearer column 15
+        self.assertLess(x - math.log(PS[15]), math.log(PS[16]) - x)
+        self.assertNotEqual(tb_cell(table(pb=pb_low), PS[15], 1200.0)["assemblage"], "wa+opx")
         v._set_ref(x, t, 15, ib, {c: 1}, [c])
-        self.assertEqual(v._ref, (ma._labels("wa+opx"), 16))
+        self.assertEqual(v._ref, (ma._labels("wa+opx"), 16))  # the M1-less mutant takes column 15's ol+opx
 
     def test_cut_curves_are_runs_of_the_full_set(self):
         """68 B1: two branches of one group (edges over tolerance at columns 15/16 and 22/23); the low branch's row is
