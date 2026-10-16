@@ -568,6 +568,10 @@ def _labels(label) -> frozenset:
     return frozenset(label.split("+"))
 
 
+#: (A″) S1 (r2 on 68 B2): a corner row counts read-side nodes within this many P columns of the read's cell
+CORNER_REACH = 4
+
+
 def row_across(r) -> bool:
     """(A″) (r2's per-edge criterion, owner f43dac2a): a row is read across, not cut, iff it is node-resolved, or it is
     an edge class (edge_in, edge_out, swap_two_edges) whose every edge is converged with both sides solved and within
@@ -622,7 +626,7 @@ def curve_groups(boundaries):
     for r in boundaries.get("rows", ()):
         left, right = _labels(r["left"]), _labels(r["right"])
         base = {"t": r["t"], "p_lo": r["p_lo"], "p_hi": r["p_hi"], "left": left, "right": right,
-                "left_label": r["left"], "right_label": r["right"], "band": r.get("band")}
+                "left_label": r["left"], "right_label": r["right"], "band": r.get("band"), "across": row_across(r)}
         if r.get("node_resolved"):
             groups.setdefault(("node", left, right, None), []).append({**base, "p_b": r["p_b"]})
         elif r["class"] == "swap":
@@ -663,6 +667,22 @@ def build_curves(boundaries, ts):
         out += [_Curve(len(out) + i, key[0], key[3], run) for i, run in enumerate(open_)]
     for i, c in enumerate(out):
         c.id = i
+    return out
+
+
+def _cut_runs(curves):
+    """Each curve's maximal runs of consecutive cut rows (row["across"] False), as curves of their own; never re-chained,
+    so no two rows are linked that the full set does not link (68 B1: re-chaining the cut subset by rank joined opx
+    edge_out at 4.28 GPa, 2500 K to 11.93 GPa, 2550 K on earth_dmm)."""
+    out, run = [], []
+    for c in curves:
+        for r in c.rows + [None]:
+            if r is not None and not r["across"]:
+                run.append(r)
+                continue
+            if run:
+                out.append(_Curve(len(out), c.kind, c.phase, run))
+                run = []
     return out
 
 
@@ -767,8 +787,9 @@ class AssemblageView(mv.RecordView):
         exported = b.get("status") == "exported"
         #: every exported curve: the seam events (transitions) and the disclosures
         self._curves = build_curves(b, self.ts) if exported else []
-        #: the curves that cut the stencil, built from the rows (A″) does not read across (row_across)
-        self._cut = build_curves({"rows": [r for r in b["rows"] if not row_across(r)]}, self.ts) if exported else []
+        #: the curves that cut the stencil: each full curve split into its maximal runs of rows (A″) does not read
+        #: across (row_across), so a cut curve's links are always links of the full set (68 B1 on 2453b935)
+        self._cut = _cut_runs(self._curves)
         #: the cut-read counts of this view (scope note §3 (b), 68 S1): reads cut, corner rows extrapolated past the
         #: stencil span with their largest reach in cells, rows refused with no read-side node, rows classified by label;
         #: (A″) S1: reads that dropped a starved row, and the most rows one read dropped
@@ -839,14 +860,17 @@ class AssemblageView(mv.RecordView):
         return out["rho"], out["dtdp_eq"], out["c_p"], [c for c in corners if c is not None]
 
     def _node_note(self, t, ia):
-        """NODE_NOTE with P_b and its ±half-cell band, for each node-resolved curve whose P_b(t) lies in the read's P
-        cell (scope note §4 «the midpoint and band are carried into the note»; band from the curve's nearest row)."""
+        """NODE_NOTE with the curve's P_b range and its ±half-cell band range, for each node-resolved curve whose P_b(t)
+        lies in the read's P cell (scope note §4 «the midpoint and band are carried into the note»). Over the curve,
+        not at the read's T, so the note's text does not depend on the integrator's T nodes (68 N1, as SWAP_NOTE)."""
         lo, hi = self.ps[ia], self.ps[ia + 1]
         for c in self._curves:
             if c.kind == "node" and (pb := c.p_b(t)) is not None and lo <= pb <= hi:
+                a, b = c.p_range
+                bands = [r["band"] for r in c.rows]
                 self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID,
-                                                  f"{NODE_NOTE}; P_b {pb / 1e9:.4g} GPa ± "
-                                                  f"{c.nearest(t)['band'] / 1e9:.3g} GPa"))
+                                                  f"{NODE_NOTE}; P_b {a / 1e9:.4g}–{b / 1e9:.4g} GPa, band ± "
+                                                  f"{min(bands) / 1e9:.3g}–{max(bands) / 1e9:.3g} GPa"))
 
     # exported boundaries (scope note §3 (b)–(c″)) ─────────────────────────────────────────────────────────────
     def _val(self, f, j, k):
@@ -957,8 +981,9 @@ class AssemblageView(mv.RecordView):
 
     def _cut_value(self, f, x, t, ia, ib, side, cuts):
         """P first per T row from that row's read-side nodes, then T (68 M1). An outer row with no read-side node in
-        the span drops; a corner row extrapolates from the nearest read-side nodes further out, up to 4 of them inside
-        the read's region (never past the next curve, _region); a corner row with none there drops too ((A″) S1, r2:
+        the span drops; a corner row extrapolates from the nearest read-side nodes further out, up to 4 of them within
+        CORNER_REACH P columns of the read's cell and inside the read's region (never past the next curve, _region); a
+        corner row with none there drops too ((A″) S1; the cap is r2's ruling on 68 B2, no uncapped end-slope reach; r2:
         the stencil shrinks as at a table end), and only a read with no row left raises _NoNode. With both corner rows
         present the T read is _cubic1 as uncut; with one missing, PCHIP over the rows present. A read-side corner of the
         read cell with no cell or no value is CellMissing, as uncut."""
@@ -978,7 +1003,8 @@ class AssemblageView(mv.RecordView):
                 if not corner:
                     continue
                 lo, hi = self._region(k, x, side)
-                near = sorted((j for j in ok if lo < self.ps[j] < hi), key=lambda j: abs(self.lnps[j] - x))
+                near = sorted((j for j in ok if lo < self.ps[j] < hi and ia - CORNER_REACH <= j <= ia + 1 + CORNER_REACH),
+                              key=lambda j: abs(self.lnps[j] - x))
                 if not near:
                     self._marks["dropped"].add(k)
                     continue

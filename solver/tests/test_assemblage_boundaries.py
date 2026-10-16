@@ -300,22 +300,50 @@ class Ends(unittest.TestCase):
         self.assertIn("no read-side node in any stencil row (1150–1300 K)", got.record.why)
         self.assertEqual(v.cut_counts["no_node_refusals"], 1)
 
-    def test_corner_row_extrapolates_further_out(self):
-        """68 S1, N1, E11: a steep curve moves six columns in 50 K, so at the upper corner row the right side's nodes
-        all lie beyond the stencil span: the row is read from up to four of them, counted once per read with its reach."""
-        def steep(t):
-            a, b = math.log(math.sqrt(PS[13] * PS[14])), math.log(math.sqrt(PS[19] * PS[20]))
-            w = min(max((t - 1200.0) / 50.0, 0.0), 1.0)
-            return math.exp(a + w * (b - a))
-        tb = table(pb=steep, t_lo=1150.0, t_hi=1300.0)
-        v = view(tb)
+    def test_corner_row_extrapolates_within_the_cap(self):
+        """68 S1, N1, E11; r2 on 68 B2: a steep curve moves six columns in 50 K, so at the upper corner row the right
+        side's nodes all lie beyond the stencil span; the row reads only nodes within CORNER_REACH columns of the read's
+        cell (here one, 4 columns out), counted once per read with its reach. Nine columns: none within the cap, so the
+        row drops (S1); the uncapped mutant extrapolates from 9 columns out."""
+        def steep(n):
+            def pb(t):
+                a, b = math.log(math.sqrt(PS[13] * PS[14])), math.log(math.sqrt(PS[13 + n] * PS[14 + n]))
+                w = min(max((t - 1200.0) / 50.0, 0.0), 1.0)
+                return math.exp(a + w * (b - a))
+            return pb
         t = 1205.0
+        v = view(table(pb=steep(6), t_lo=1150.0, t_hi=1300.0))
         p = v._curves[0].p_b(t) * 1.001                       # right of the curve at the read's T (P_b linear in T)
         got = solid(v, p, t)[0]
         self.assertEqual(v.cut_counts["corner_extrapolations"], 1)
-        self.assertGreaterEqual(v.cut_counts["corner_max_reach"], 3)
-        self.assertEqual(v.cut_counts["corner_max_nodes"], 4)
-        self.assertLess(rel(got, rho_of(p, t) * (1 + OFF)), 2e-2)
+        self.assertEqual((v.cut_counts["corner_max_reach"], v.cut_counts["corner_max_nodes"]), (4, 1))
+        self.assertLess(rel(got, rho_of(p, t) * (1 + OFF)), 2e-3)
+        tb = table(pb=steep(9), t_lo=1150.0, t_hi=1300.0)
+        v = view(tb)
+        p = v._curves[0].p_b(t) * 1.001
+        self.assertNotIsInstance(v._solid(p, t), st.Stop)
+        self.assertEqual((v.cut_counts["row_drop_reads"], v.cut_counts["corner_max_reach"]), (1, 0))
+        orig, ma.CORNER_REACH = ma.CORNER_REACH, 99           # the mutant: no cap
+        try:
+            mut = view(tb)
+            mut._solid(p, t)
+            self.assertGreater(mut.cut_counts["corner_max_reach"], 4)
+        finally:
+            ma.CORNER_REACH = orig
+
+    def test_region_stops_at_the_next_curve(self):
+        """S1's region: a corner row never takes nodes past the next cut curve. With two cut curves 3 columns apart, the
+        region of a read between them is exactly the interval between their P_b (a no-region mutant returns (0, ∞))."""
+        def edges(t):
+            a, b = math.sqrt(PS[15] * PS[16]), math.sqrt(PS[18] * PS[19])
+            e = {"converged": True, "location_error": 0.0, "by_amount_only": False, "delta_rho": 0.02,
+                 "over_tolerance": True}
+            return [{**e, "phase": "gt", "p_b": a, "p_b_driving_force": a, "p_b_amount": a},
+                    {**e, "phase": "wa", "p_b": b, "p_b_driving_force": b, "p_b_amount": b}]
+        v = view(table(cls="edge_in", right="ol+opx+gt", edges=edges))
+        self.assertEqual(len(v._cut), 2)
+        lo, hi = v._region(TS.index(1200.0), math.log(PS[17]), {c: (1 if c.p_b(1200.0) < PS[17] else -1) for c in v._cut})
+        self.assertEqual((lo, hi), (math.sqrt(PS[15] * PS[16]), math.sqrt(PS[18] * PS[19])))
 
     def test_corner_without_a_cell_refuses_as_uncut(self):
         """68 E2: a cut read whose read-side corner has no cell (the column's window ended) refuses above the solid
@@ -536,7 +564,9 @@ class ReadRule(unittest.TestCase):
         self.assertEqual(solid(v, p, t)[:3], solid(w, p, t)[:3])
         notes = [n.text for n in v.state(p, t)[2] if ma.NODE_NOTE in getattr(n, "text", "")]
         band = 0.5 * (PS[16] - PS[15]) / 1e9
-        self.assertEqual(notes, [f"{ma.NODE_NOTE}; P_b {pb_const(1200.0) / 1e9:.4g} GPa ± {band:.3g} GPa"])
+        pb = pb_const(1200.0) / 1e9                           # constant over the curve: the range is one value
+        self.assertEqual(notes, [f"{ma.NODE_NOTE}; P_b {pb:.4g}–{pb:.4g} GPa, band ± {band:.3g}–{band:.3g} GPa"])
+        self.assertEqual(notes, [n.text for n in v.state(p, 1255.0)[2] if ma.NODE_NOTE in getattr(n, "text", "")])
         self.assertFalse(any(ma.NODE_NOTE in getattr(n, "text", "") for n in v.state(PS[25] * 1.1, t)[2]))   # not in another cell
         self.assertEqual([c.kind for c in v._curves], ["node"])
         self.assertEqual(len(v.transitions()), 1)
@@ -551,6 +581,54 @@ class ReadRule(unittest.TestCase):
             v._ref = (ma._labels("wa+opx"), 16)
             self.assertIs(v._node_ok(17, k, {c: 1}, [c]), want, third)
             self.assertTrue(v._node_ok(17, k - 1, {c: 1}, [c]))        # defined at 1250 K: M1, right of P_b
+        v = view(table(t_end=1250.0, third="cpx+opx"))
+        (c,) = v._cut
+        k = TS.index(1300.0)
+        v._ref = None                                         # no reference corner: admitted
+        self.assertTrue(v._node_ok(17, k, {c: 1}, [c]))
+        v._ref = (ma._labels("wa+opx"), 16)
+        v._cells.pop((PS[17], TS[k]))                          # no cell: not admitted
+        self.assertFalse(v._node_ok(17, k, {c: 1}, [c]))
+
+    def test_reference_corner_passes_m1(self):
+        """_set_ref takes the nearest corner on the read's side at its own row: a read just right of P_b gets the right
+        corner's label, never the nearer-in-ln-P left corner across the curve."""
+        v = view(table(t_end=1250.0, third="cpx+opx"))
+        (c,) = v._cut
+        t = 1210.0
+        ib = int((t - TS[0]) // 50)
+        x = math.log(PS[16] * 0.999)                          # right of P_b, nearer column 16 than 15 in ln P
+        v._set_ref(x, t, 15, ib, {c: 1}, [c])
+        self.assertEqual(v._ref, (ma._labels("wa+opx"), 16))
+        x = math.log(pb_const(1200.0) * 1.0001)               # right of P_b, nearer column 15 in ln P
+        v._set_ref(x, t, 15, ib, {c: 1}, [c])
+        self.assertEqual(v._ref, (ma._labels("wa+opx"), 16))
+
+    def test_cut_curves_are_runs_of_the_full_set(self):
+        """68 B1: two branches of one group (edges over tolerance at columns 15/16 and 22/23); the low branch's row is
+        read across at 1200 K and the high branch's at 1250 K. Re-chaining the cut rows by rank would link the high
+        row at 1200 K to the low row at 1250 K; the cut curves are runs of the full curves and link no two branches."""
+        tb = table(cls="edge_in", right="ol+opx+gt")
+        extra = []
+        for r in tb["boundaries"]["rows"]:
+            e = copy.deepcopy(r)
+            pb = math.sqrt(PS[22] * PS[23])
+            e.update(p_lo=PS[22], p_hi=PS[23])
+            e["edges"][0].update(p_b=pb, p_b_driving_force=pb, p_b_amount=pb)
+            extra.append(e)
+        tb["boundaries"]["rows"] += extra
+        for r in tb["boundaries"]["rows"]:
+            if (r["t"], r["p_lo"]) in ((1200.0, PS[15]), (1250.0, PS[22])):
+                r["edges"][0].update(delta_rho=1e-4, over_tolerance=False)
+        v = view(tb)
+        self.assertEqual(len(v._curves), 2)
+        for c in v._cut:
+            self.assertEqual(len({r["p_lo"] for r in c.rows}), 1, [(r["t"], r["p_lo"]) for r in c.rows])
+        self.assertEqual(sorted((c.t0, c.t1, c.rows[0]["p_lo"] == PS[15]) for c in v._cut),
+                         [(1000.0, 1150.0, True), (1000.0, 1200.0, False), (1250.0, 1400.0, True),
+                          (1300.0, 1400.0, False)])
+        rechained = ma.build_curves({"rows": [r for r in tb["boundaries"]["rows"] if not ma.row_across(r)]}, v.ts)
+        self.assertTrue(any(len({r["p_lo"] for r in c.rows}) > 1 for c in rechained))   # the mutant links them
 
     def test_starved_corner_row_drops(self):
         """S1: a corner row with no read-side node in the read's region drops and the read answers; the mutant that
