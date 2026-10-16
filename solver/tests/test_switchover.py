@@ -5,6 +5,7 @@ resolver switches: a record view's events, the identity of a pass through fe_pre
 
 Run from the worktree root:  solver/.venv/bin/python -m unittest solver.tests.test_switchover
 """
+import math
 import unittest
 
 from solver import context, events, from_v1, legacy_materials as lm, material_registry as mr, material_view as mv
@@ -32,6 +33,34 @@ class RecordEvents(unittest.TestCase):
         self.assertEqual({e.name for e in evs if e.terminal}, set(melts))      # every melting curve is terminal
         self.assertIn("source_seam:ih_cold|Ih", {e.name for e in evs})
         self.assertEqual(len([e for e in evs if e.name.startswith("seam:")]), len(v.seams()))   # noqa: test-side name
+
+    def test_h2o_vi_vii_curve_lands_under_the_clamp(self):
+        """68 N2 / directing 10-17 (b): h2o's VI|vii_x solid–solid curve carries component 1 and lands under the old-side
+        clamp. Walked inward from 2.0 GPa, 340 K, on h2o's own ice VI, with a planted far side: past the curve, ice VI's
+        state at the curve 4 % denser and with dT/dP 4 % lower, because h2o's vii_x source (french_redmer2015) refuses
+        just past the line at 330–354 K (its ρ bracket; logged for the h2o range list). Unheld (component None, the
+        mutant) the landing chatters."""
+        import dataclasses
+        from solver import rhs
+        v = mv.RecordView(_record("h2o"), 340.0)
+        (vi,) = [e for e in events.layer_events(v) if e.name == "phase:VI|vii_x"]
+        self.assertEqual((vi.component, vi.seam, vi.terminal), (1, True, False))
+
+        class Past:
+            def state(self, p, t, guess):
+                g = vi.g(0.0, (0.0, p, t, t, 0.0, 0.0))
+                if g is not None and g > 0.0:
+                    s = v.state((p - g) * (1.0 - 1e-9), t, guess)
+                    return s if isinstance(s, st.Stop) else (s[0] * 1.04, s[1] * 0.96, s[2])
+                return v.state(p, t, guess)
+        m_, r_ = 5.972e24, 6.371e6
+        rs = rhs.r_scale_of(m_, 3.0 * m_ / (4.0 * math.pi * r_ ** 3))
+        opt = st.Options(rtol=1e-10, floors=rhs.floors(m_, rs), h0=3e-4 * m_, h_min=1e-15 * m_, h_max=m_ / 50.0,
+                         max_steps=200000)
+        for comp, want in ((1, ("end", ["phase:VI|vii_x"])), (None, ("chatter", []))):
+            res = st.run(rhs.make_rhs(Past()), m_, (r_, 2.0e9, 340.0, 340.0, 0.0, 0.0), 0.995 * m_, opt,
+                         [dataclasses.replace(vi, component=comp)])
+            self.assertEqual((res.stop.kind, [e[0] for e in res.events]), want, comp)
 
     def test_onset_curves_hook_is_present_and_empty(self):
         """68 N63: the graze monitor reads a record view's onset_curves (legacy's signature); none are declared today,
