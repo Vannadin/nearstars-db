@@ -688,6 +688,22 @@ class ReadRule(unittest.TestCase):
 class Choices(unittest.TestCase):
     """Each agreed (R1) design choice pinned by a case that its alternative fails (68 B2 on d7cc971d)."""
 
+    def test_reach_reads_the_region_below_first(self):
+        """_row_reach's side rule, pinned (68 N7 «reach hi first» on 7582ff4a): an empty region with runs on both sides
+        reads the region below it, at its upper bounding curve; the region above only when none lies below. Either
+        rule telescopes (it depends on the row and region alone); this one is the one the records were read with."""
+        v = view(table(cls="edge_in", right="ol+opx+gt"))
+        part = [(PS[10], None), (PS[14], None), (PS[18], None)]
+        v._partition = lambda k: part
+        v._run_value = lambda f, k, r, x, corner: (r, x)
+        v._runs = lambda f, k: {0: [1], 3: [1]}
+        self.assertEqual(v._row_reach("dtdp_eq", 0, 1), (0, math.log(PS[10])))
+        self.assertEqual(v._row_reach("dtdp_eq", 0, 2), (0, math.log(PS[10])))
+        v._runs = lambda f, k: {3: [1]}
+        self.assertEqual(v._row_reach("dtdp_eq", 0, 1), (3, math.log(PS[18])))
+        v._runs = lambda f, k: {}
+        self.assertIsNone(v._row_reach("dtdp_eq", 0, 1))
+
     def test_far_side_unreadable_never_refuses_the_near_side(self):
         """68 B1: an edge whose far side has no dT/dP or c_P at a corner row (only ρ) never refuses the near side
         inside the window: δ's far-side read takes, in that row, the nearest region with a run at its bounding curve

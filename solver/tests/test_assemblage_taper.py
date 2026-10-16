@@ -28,9 +28,10 @@ def ho_cp(p, t):
     return 1250.0 + 0.05 * t
 
 
-def handover(rho0=3300.0, k0=1.3e11, p_max_at=None, refused=(), n=8):
+def handover(rho0=3300.0, k0=1.3e11, p_max_at=None, refused=(), n=8, window=None):
     """A planted hand-over record and its table: nodes from PD up on 1.5, every T row of the table; `p_max_at` {T:
-    the last node index} cuts a row's window; `refused` rows refuse."""
+    the last node index} cuts a row's window; `refused` rows refuse; `window` is the record's window p_max (default
+    the last node)."""
     nodes = [PD * 1.5 ** k for k in range(n)]
     rows = []
     for t in TS:
@@ -42,7 +43,7 @@ def handover(rho0=3300.0, k0=1.3e11, p_max_at=None, refused=(), n=8):
         rows.append(r)
     rec = {"id": "silicate_prem_test", "phases": [{"eos": {"params": {"rho0": {"value": rho0}, "k0": {"value": k0},
                                                                       "k0p": {"value": 4.0}}},
-                                                    "window": {"p_max": nodes[-1]},
+                                                    "window": {"p_max": window or nodes[-1]},
                                                     "thermal": {"grade": "planted hand-over grade"}}]}
     tb = {"id": "silicate_prem_test",
           "blocks": {"silicate_slb_test": {"p_nodes": nodes, "p_neighbour": PS[-4], "rows": rows}}}
@@ -140,6 +141,53 @@ class Taper(unittest.TestCase):
         self.assertIn("above the hand-over's last thermal node", got.record.why)
         self.assertNotIsInstance(v._solid(ho.ps[-1] * 0.99, 2000.0), st.Stop)
 
+    def test_below_the_window_p_max_the_last_node_still_answers(self):
+        """68 N7 (E1 node only) on 7582ff4a: a record window below the block's last node bounds the read too."""
+        ho = handover(window=PD * 1.5 ** 5.5)
+        v = view(ho)
+        got = v._solid(PD * 1.5 ** 6, 2000.0)
+        self.assertIsInstance(got, st.Stop)
+        self.assertIn("above the hand-over's last thermal node / window", got.record.why)
+        self.assertNotIsInstance(v._solid(PD * 1.5 ** 5, 2000.0), st.Stop)
+
+    def test_hand_over_refuses_below_its_first_node(self):
+        """68 N4 on 7582ff4a: the block starts at its first node; below it the hand-over does not answer."""
+        ho = handover()
+        got, why = ho.thermal(ho.ps[0] * 0.99, 2000.0)
+        self.assertIsNone(got)
+        self.assertIn("below the hand-over's first thermal node", why)
+        self.assertIsNotNone(ho.thermal(ho.ps[0], 2000.0)[0])
+
+    def test_band_ho_grows_with_ln_p_from_the_end(self):
+        """Note 2 item 5: band_HO = band_1·|ln(P/P_end)|/ln(P_end/P_nb) + band_eq (68 N7 «ho band no ln»)."""
+        ho = handover()
+        for p in (PD * 1.1, PE, PE * 2.0, ho.ps[-1]):
+            want = 1e-4 * abs(math.log(p / PE)) / math.log(PE / PS[-4]) + 2e-3
+            self.assertAlmostEqual(ho.thermal(p, 2000.0)[0][2], want, delta=1e-15)
+
+    def test_zone_notes_do_not_depend_on_read_order(self):
+        """68 N1 on 7582ff4a: the zone's internal reads (the 136 GPa match, the ρ-rise check) drop their notes, so a
+        cold view's first zone read carries the same notes as a warm one's. Mutant: their notes kept (the cold read
+        carries extra copies)."""
+        def planted(v):
+            real = v._table_read
+
+            def table_read(p, t):
+                v.notes.append(mv.DeclaredNote(v.material_id, ma.PHASE_ID, "planted read note"))
+                return real(p, t)
+            v._table_read = table_read
+            return v
+        p = math.sqrt(PD * PE)
+        for t in (1200.0, 2000.0, 2525.0):
+            cold = planted(view(handover()))
+            cold.notes.clear()
+            solid(cold, p, t)
+            first = list(cold.notes)
+            cold.notes.clear()
+            solid(cold, p, t)
+            self.assertEqual(first, list(cold.notes))
+            self.assertEqual(sum(1 for n in first if getattr(n, "text", None) == "planted read note"), 1)
+
     def test_zone_refuses_where_the_top_cannot_be_matched(self):
         """r2 D2 on delta 1: where the read below refuses at p_dataset on the read's T, the zone refuses by name (an
         unshifted lifted read there stepped the zone ×3 in T). Mutant: the unshifted read answers."""
@@ -162,7 +210,10 @@ class Taper(unittest.TestCase):
         for c in hole["cells"]:
             if c["t"] == 1450.0 and c["dtdp_eq"] is not None:
                 c["dtdp_eq"] *= 1.0 + 0.003 * PS.index(c["p"]) ** 2
+            if c["t"] == 1300.0 and c["rho"] is not None:              # and ρ's, on the stencil's other outer row
+                c["rho"] *= 1.0 + 1e-4 * PS.index(c["p"]) ** 2
         next(c for c in hole["cells"] if c["p"] == PD and c["t"] == 1450.0)["dtdp_eq"] = None
+        next(c for c in hole["cells"] if c["p"] == PD and c["t"] == 1300.0)["rho"] = None
         ho = handover()
         v = view(ho, hole)
         p, t = PD * 1.01, 1360.0
@@ -176,6 +227,11 @@ class Taper(unittest.TestCase):
         want = max((1 - w) * bc, w * ho.thermal(p, t)[0][2]) + (1 - w) * abs(cut0[1] - lift0[1]) / abs(cut0[1])
         self.assertAlmostEqual(n.dtdp_error, want, delta=1e-15)
         self.assertGreater((1 - w) * abs(cut0[1] - lift0[1]) / abs(cut0[1]), 1e-9)
+        lift = v._lifted(p, t)                   # and ρ's (68 N2 on 7582ff4a: «D3 no shift band» survived)
+        rs = lift[0] + (1 - w) * (cut0[0] - lift0[0])
+        shift = (1 - w) * abs(cut0[0] - lift0[0]) / abs(cut0[0])
+        self.assertAlmostEqual(n.error, abs(rs - ho.rho(p)) / rs + shift, delta=1e-15)
+        self.assertGreater(shift, 1e-12)
 
     def test_zone_rho_must_rise(self):
         """Note 7 §5: a hand-over much lighter than the table makes the zone's ρ fall with P; that T row refuses by
@@ -185,6 +241,16 @@ class Taper(unittest.TestCase):
         self.assertIsInstance(got, st.Stop)
         self.assertIn("ρ does not rise with P across the taper zone", got.record.why)
         self.assertIsNone(view(handover())._rise_ok(TS.index(2000.0)))
+
+    def test_rise_checked_on_both_rows_of_the_read(self):
+        """Note 7 §5: a read between T rows ib and ib + 1 refuses where either row's ρ does not rise (68 N7 «rise only
+        ib»: the ib + 1 row's check unpinned)."""
+        v = view(handover())
+        kb = TS.index(2000.0)
+        v._rise_rows.update({kb: None, kb + 1: "planted: row ib + 1 falls"})
+        got = v._solid(math.sqrt(PD * PE), 0.5 * (TS[kb] + TS[kb + 1]))
+        self.assertIsInstance(got, st.Stop)
+        self.assertIn("planted: row ib + 1 falls", got.record.why)
 
     def test_bands_one_per_field(self):
         """Note 7 §4: the ρ band is the local |ρ_SLB − ρ_HO|/ρ_SLB; the dT/dP band max((1 − w)·the cell's band,

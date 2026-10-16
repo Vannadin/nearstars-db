@@ -943,7 +943,7 @@ class AssemblageView(mv.RecordView):
         # the 136 GPa match (note 7 delta): the lifted read and the read below differ at the dataset top off the T rows
         # (an outer row's end slope vs its run across, an edge's δ), so the lifted read is shifted by their difference
         # at 136 GPa on this T, faded with the zone's own weight: the answer is C⁰ at 136 GPa in every field
-        cut0, lift0 = self._table_read(self.p_dataset, t), self._lifted(self.p_dataset, t)
+        cut0, lift0 = self._quiet(self._table_read, self.p_dataset, t), self._quiet(self._lifted, self.p_dataset, t)
         if not (isinstance(cut0, tuple) and isinstance(lift0, tuple)):
             # r2 D2 on delta 1: unshifted reads where one side refuses stepped the zone ×3 in T (bse 3600–3609 K); the
             # zone cannot be matched to a read that does not answer at the dataset top on this T, so it refuses there
@@ -959,6 +959,16 @@ class AssemblageView(mv.RecordView):
         return (rho, (1.0 - w) * dtdp_s + w * dtdp_h, (1.0 - w) * cp_s + w * cp_h, cells, w, rho_s, rho_h,
                 band_h, shift)                                       # dT/dP and c_P blended directly (note 7 §1)
 
+    def _quiet(self, fn, *args):
+        """fn(*args) with the notes it appends dropped: the zone's internal reads (the 136 GPa match, the ρ-rise check)
+        are not the answer's reads, so a cold view's first zone read carries the same notes as a warm one's (68 N1 on
+        7582ff4a)."""
+        n = len(self.notes)
+        try:
+            return fn(*args)
+        finally:
+            del self.notes[n:]
+
     def _rise_ok(self, kb):
         """Note 7 §5: None if the zone's ρ rises with P along T row kb, else the refusal text; found once per row, at
         the zone's own P nodes and midpoints."""
@@ -968,7 +978,7 @@ class AssemblageView(mv.RecordView):
             xs = sorted(set(nodes) | {math.sqrt(a * b) for a, b in zip(nodes, nodes[1:])})
             why, last = None, None
             for q in xs[1:]:
-                got = self._blend(q, t)
+                got = self._quiet(self._blend, q, t)
                 if isinstance(got, st.Stop):
                     continue                                 # a refusal there is the read's own, met at the read
                 if last is not None and not got[0] > last:
@@ -1675,10 +1685,12 @@ class HandOver:
 
     def thermal(self, p, t):
         """(dT/dP, c_P, band_HO) at (P, T), or (None, why) where the block does not answer (a refused row, past a row's
-        window p_max, outside its T rows)."""
+        window p_max, outside its T rows or its P nodes)."""
         if not self.ts[0] <= t <= self.ts[-1]:
             return None, f"outside the hand-over's T rows {self.ts[0]:g}–{self.ts[-1]:g} K"
         top = min(self.ps[-1], self.p_max)
+        if p < self.ps[0]:                       # 68 N4 on 7582ff4a: the block starts at its first node (the dataset top)
+            return None, f"below the hand-over's first thermal node {self.ps[0]:g} Pa (note 2 item 5)"
         if p > top:                              # r2 E1 / R1: never extrapolated past the last node or the window
             return None, (f"above the hand-over's last thermal node / window {top:g} Pa (note 2 item 5)")
         x = math.log(p)
