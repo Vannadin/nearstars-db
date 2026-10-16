@@ -14,6 +14,7 @@ import dataclasses
 import hashlib
 import json
 import bisect
+import itertools
 import math
 from collections.abc import Sequence
 from types import MappingProxyType
@@ -763,10 +764,23 @@ class _Run(tuple):
     def __new__(cls, xs, ys, js, r):
         self = super().__new__(cls, (xs, ys, js, r))
         n = len(xs)
+        self.coeffs = [None] * max(n - 1, 0)
+        self.m = self.m_lo = self.m_hi = 0.0             # a one-node run: constant, slope 0 at its node
         if n > 1:
             secs = [(ys[i + 1] - ys[i]) / (xs[i + 1] - xs[i]) for i in range(n - 1)]
             self.m = 0.0 if (min(secs) < 0.0 < max(secs)) else min(secs, key=abs)
-        self.coeffs = [None] * max(n - 1, 0)
+            # item 5d998d40 (b): each end node's slope is the gentler of its PCHIP end slope and the gentlest secant m
+            # (0 if they differ in sign), and the extrapolation past it follows that same slope: C¹ at the end node,
+            # never steeper than m (dd3e58a7's guarantee), and the PCHIP end slope kept where it is the gentler one.
+            # The end segment's Hermite stays monotone: the slope only shrinks toward 0 (Fritsch–Carlson)
+            c0 = _coeffs(xs, ys, 0)
+            c1 = c0 if n == 2 else _coeffs(xs, ys, n - 2)
+            self.m_lo, self.m_hi = _minmod(c0[4], self.m), _minmod(c1[5], self.m)
+            if n == 2:
+                self.coeffs[0] = c0[:4] + (self.m_lo, self.m_hi)
+            else:
+                self.coeffs[0] = c0[:4] + (self.m_lo, c0[5])
+                self.coeffs[n - 2] = c1[:4] + (c1[4], self.m_hi)
         return self
 
     def value(self, x):
@@ -785,23 +799,75 @@ class _Run(tuple):
             if c is None:
                 c = self.coeffs[i] = _coeffs(xs, ys, i)
             return _hermite(x, c)
-        return (ys[-1] + self.m * (x - xs[-1])) if x > xs[-1] else (ys[0] + self.m * (x - xs[0]))
+        return (ys[-1] + self.m_hi * (x - xs[-1])) if x > xs[-1] else (ys[0] + self.m_lo * (x - xs[0]))
+
+
+def _minmod(a, b):
+    """The gentler of two slopes when they agree in sign, else 0."""
+    if a * b <= 0.0:
+        return 0.0
+    return a if abs(a) <= abs(b) else b
+
+
+def _clip_fc(m, d0, d1):
+    """The Fritsch–Carlson clip of a node slope m between secants d0, d1: 0 where they change sign (or one is 0), else
+    m with |m| ≤ 3·min(|d0|, |d1|) (68 ruling 3 on item 5d998d40)."""
+    if d0 * d1 <= 0.0:
+        return 0.0
+    cap = 3.0 * min(abs(d0), abs(d1))
+    return m if abs(m) <= cap else math.copysign(cap, d0)
+
+
+def _slope_t(d0, d1):
+    """A T-direction node slope C¹ in the row values wherever the clip does not bind: van Albada's
+    d0·d1·(d0 + d1)/(d0² + d1²), Fritsch–Carlson clipped. PCHIP's harmonic mean switched to 0 at a sign change is C⁰
+    in the row values, so it kinked the read in P inside one stencil wherever a T secant passed 0 (item 5d998d40 note 1
+    §1 class 4); van Albada is smooth there, and the clip (which keeps ρ monotone) binds only at a sign change (its
+    |m| ≤ 1.21·min|d| for secants of one sign)."""
+    q = d0 * d0 + d1 * d1
+    return _clip_fc(0.0 if q == 0.0 else d0 * d1 * (d0 + d1) / q, d0, d1)
+
+
+def _cubic1_t(x, xs, ys, i):
+    """The T-last interpolation of a read's rows: as _cubic1 (its node returns and CellMissing), with node slopes by
+    _slope_t and end slopes the end secant, so it is C¹ in the row values except where the clip binds."""
+    y0, y1 = ys[i], ys[i + 1]
+    u = (x - xs[i]) / (xs[i + 1] - xs[i])
+    if u == 0.0 and y0 is not None:
+        return y0
+    if u == 1.0 and y1 is not None:
+        return y1
+    if y0 is None or y1 is None:
+        raise CellMissing(i)
+    x0, x1 = xs[i], xs[i + 1]
+    h = x1 - x0
+    d = (y1 - y0) / h
+    has_l = i - 1 >= 0 and ys[i - 1] is not None
+    has_r = i + 2 < len(xs) and ys[i + 2] is not None
+    m0 = _slope_t((y0 - ys[i - 1]) / (x0 - xs[i - 1]), d) if has_l else d
+    m1 = _slope_t(d, (ys[i + 2] - y1) / (xs[i + 2] - x1)) if has_r else d
+    return _hermite(x, (x0, h, y0, y1, m0, m1))
+
+
+def _bridge(x, a, b):
+    """The value at x in the gap between two runs of one region (a ends before b starts): the cubic Hermite from a's
+    end (value, its end slope m_hi) to b's start (value, m_lo), each slope Fritsch–Carlson clipped against the gap's
+    secant, so C¹ at both run ends unless a clip binds, and monotone where the two ends are (item 5d998d40, 68 ruling 4:
+    in place of the linear join, which kinked at both ends)."""
+    xa, xb_ = a[0][-1], b[0][0]
+    va, vb = a[1][-1], b[1][0]
+    h = xb_ - xa
+    s = (vb - va) / h
+    return _hermite(x, (xa, h, va, vb, _clip_fc(a.m_hi, s, s), _clip_fc(b.m_lo, s, s)))
 
 
 def _pchip_1d(x, xs, ys):
-    """A run's value at x (sorted xs): PCHIP inside; past the ends, linear from the end node with the gentlest of the
-    run's secants (0 where the secants change sign), so an extrapolation never steepens a run's trend and never turns
-    it (directing 10-17: a run whose first segment is a steep transition, bse row 2100 K at 22.49 → 23.62 GPa, carried
-    its slope a column back and inverted ρ by 1.2 % with the edge correction; the PCHIP end slope had done so)."""
-    n = len(xs)
-    if n == 1:
-        return ys[0]
-    if xs[0] <= x <= xs[-1]:
-        i = min(max(bisect.bisect_left(xs, x) - 1, 0), n - 2)      # the first k with xs[k+1] >= x
-        return _cubic1(x, xs, ys, i)
-    secs = [(ys[i + 1] - ys[i]) / (xs[i + 1] - xs[i]) for i in range(n - 1)]
-    m = 0.0 if (min(secs) < 0.0 < max(secs)) else min(secs, key=abs)
-    return (ys[-1] + m * (x - xs[-1])) if x > xs[-1] else (ys[0] + m * (x - xs[0]))
+    """A run's value at x (sorted xs): PCHIP inside, its end nodes taking the gentlest of the run's secants (0 where the
+    secants change sign) as their slope; past the ends, linear with that slope. So the run is C¹ at its end nodes (item
+    5d998d40 (b)) and an extrapolation never steepens a run's trend nor turns it (directing 10-17: a run whose first
+    segment is a steep transition, bse row 2100 K at 22.49 → 23.62 GPa, carried its slope a column back and inverted ρ
+    by 1.2 % with the edge correction; the PCHIP end slope had done so)."""
+    return _Run(list(xs), list(ys), list(range(len(xs))), 0).value(x)
 
 
 # ── the view (registration §3; post-freeze note 3 §1, §4) ───────────────────────────────────────────────────────────
@@ -859,7 +925,7 @@ class AssemblageView(mv.RecordView):
         #: across (row_across), so a cut curve's links are always links of the full set (68 B1 on 2453b935)
         self._cut = _cut_runs(self._curves)
         #: cut runs that coincide with another at every row (P_b equal to 1e-9; e.g. dmm's cpx and wa edges at
-        #: 16.280025 GPa, 1450 K) are a step, not two edges: read as a swap, no (c′) correction, with SWAP_NOTE (68 N2,
+        #: 16.280025 GPa, 1450 K) are a step, not two edges: read as a swap, no (c′) blend, with SWAP_NOTE (68 N2,
         #: r2's Q1 degenerate limit); both land as events at one P, and the first landed leaves the other on its new side
         self.coincident = 0
         by_ts = {}
@@ -883,12 +949,12 @@ class AssemblageView(mv.RecordView):
         #: the column cut of a read: p_dataset, lifted to the taper's end for the zone's SLB-extrapolated read (note 7 §2)
         self._top = self.p_dataset
         #: the read counts of this view ((R1), 68 S1): reads, corner rows read in an empty region, outer rows dropped
-        #: (reads, most in one read), refusals by class, edge corrections applied, side fallbacks (0 by
-        #: construction: the extension covers the stencil), and corner rows δ read from the nearest region with a run
-        #: (_row_reach)
+        #: (reads, most in one read), refusals by class, edge windows blended (corrections), side fallbacks (0 by
+        #: construction: the extension covers the stencil), corner rows the read itself took from the nearest region
+        #: with a run (_row_reach; side reads leave no count), and side assignments the blend dropped (item 5d998d40)
         self.cut_counts = {"reads": 0, "empty_region_reads": 0, "row_drop_reads": 0, "row_drop_max": 0,
                            "cap_refusals": 0, "no_run_refusals": 0, "by_count_reads": 0, "corrections": 0,
-                           "side_fallbacks": 0, "reach_rows": 0}
+                           "side_fallbacks": 0, "reach_rows": 0, "blend_drops": 0}
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
 
     # the table read ──────────────────────────────────────────────────────────────────────────────────────────
@@ -1122,7 +1188,7 @@ class AssemblageView(mv.RecordView):
 
     def _run_value(self, f, k, r, x, corner):
         """Region r of row k at x from its runs: PCHIP inside a run, the end slope past the region's outer runs, and
-        linear in ln P between two runs across a gap inside the region (68 H1). A corner row reads past a run's end
+        the Hermite bridge between two runs across a gap inside the region (68 H1; item 5d998d40). A corner row reads past a run's end
         node only within CORNER_REACH columns, else _NoRead("cap") (r2 on 68 B2); an outer row has no cap (68 H2).
         None when the region has no run."""
         runs = self._runs(f, k).get(r)
@@ -1133,9 +1199,8 @@ class AssemblageView(mv.RecordView):
             run = runs[0]
         else:
             for a, b in zip(runs, runs[1:]):
-                if a[0][-1] < x < b[0][0]:                # a gap inside the region: linear between the two runs' ends
-                    va, vb = a[1][-1], b[1][0]
-                    return va + (vb - va) * (x - a[0][-1]) / (b[0][0] - a[0][-1])
+                if a[0][-1] < x < b[0][0]:                # a gap inside the region: the Hermite bridge (_bridge)
+                    return _bridge(x, a, b)
             run = runs[0] if x < runs[0][0][0] else runs[-1] if x > runs[-1][0][-1] else next(
                 q for q in runs if q[0][0] <= x <= q[0][-1])
         if corner and (x < self.lnps[max(run[2][0] - CORNER_REACH, 0)]
@@ -1186,6 +1251,7 @@ class AssemblageView(mv.RecordView):
         # region holds that curve's value, the nearest data it has, continuous in x; a refusal there would cut a
         # boundary inside valid space
         u = min(max((x - xl) / (xr - xl), 0.0), 1.0)
+        u = u * u * (3.0 - 2.0 * u)                      # item 5d998d40 (c): a smoothstep in u, C¹ at both curves
         return vl + (vr - vl) * u
 
     def _region(self, k, sides, x):
@@ -1246,7 +1312,7 @@ class AssemblageView(mv.RecordView):
                 self._marks["dropped"].add(k)
                 continue
             rows[k] = v
-        return _cubic1(t, self.ts, _Seq(rows, n_t), ib)
+        return _cubic1_t(t, self.ts, _Seq(rows, n_t), ib)
 
     def _node_widths(self):
         """([node-centred ln-P cell width per node], their max), found once per lnps list (found again if lnps is
@@ -1265,31 +1331,57 @@ class AssemblageView(mv.RecordView):
         u = min(max((x - xs[j]) / (xs[j + 1] - xs[j]), 0.0), 1.0)
         return wn[j] + u * (wn[j + 1] - wn[j])
 
-    def _delta(self, f, c, xb, w, t, ia, ib, sides, pbs):
-        """δ = L − R of edge c at x_b from the raw side reads (no correction inside, 68 (c)): every swap's side is the
-        read's (its step is a landed event), every other edge's side is taken at (x_b, t) by geometry, so δ never
-        depends on the read's own side of another edge. It changes in t where another cut edge's P_b crosses x_b."""
-        # the two side maps do not depend on the field: once per read. The key holds every input of sd (68 N1 on
-        # 35c8418d): the edge and x_b, and per curve its swap / no-P_b side or its P_b, so a call outside _read
-        # never meets another read's maps
-        mk = ("sd", c.id, xb, tuple((cc.id, sides[cc] if cc.kind == "swap" or q is None else q) for cc, q in pbs.items()))
-        two = self._read_memo.get(mk)
-        if two is None:
-            sd = {cc: (sides[cc] if cc.kind == "swap" or q is None else (-1 if (xb, c.id) < (math.log(q), cc.id) else 1))
-                  for cc, q in pbs.items()}              # at an exact tie, ordered by id: one order for both δ
-            two = self._read_memo[mk] = ({**sd, c: -1}, {**sd, c: 1})
-        rl, rr = self._side_rows(f, xb, ib, two[0]), self._side_rows(f, xb, ib, two[1])
-        if all(k in rl and k in rr for k in (ib, ib + 1)):
-            return _cubic1(t, self.ts, _Seq(rl, len(self.ts)), ib) - _cubic1(t, self.ts, _Seq(rr, len(self.ts)), ib)
-        # a corner row with no run for f at all: the read itself refuses there (its own corner row has no value), so
-        # no δ is used (68 N4 on 652004f9: the row-difference form was reached only by reads that refuse)
-        return 0.0
+    def _blend_sides(self, f, x, t, ib, sides, near, own):
+        """The read inside the (c′) windows of the edges near x (item 5d998d40 (a), the blend form, 68 ruling 1): for
+        each assignment of sides to those edges, the raw read with them, weighted by Π H_c or 1 − H_c, where
+        H_c = S((x − x_b)/(2w) + ½) and S is the smoothstep, so H_c runs from 0 at x_b − w to 1 at x_b + w. Every other
+        edge keeps the read's own side.
+        - The read's own assignment is `own` (_value: capped, may refuse, its marks). The others are side reads
+          (_side_rows: uncapped, never refusing) run on scratch marks and counts, so only the own read's marks, notes
+          and counts reach the read (68 ruling 1 (3)).
+        - An assignment whose side read has no corner row (no run for f in that side's region and none to reach) is
+          dropped and the remaining weights renormalised, never 0 × a missing value; counted as blend_drops
+          in cut_counts (ruling 1 (2)). It is missing for the whole window, so the read stays continuous.
+        - At a window's end the far side's weight is 0 with slope 0, so the read joins its own raw read C¹. At x_b it is
+          (L + R)/2, as the tent's L − δ/2 was. With L, R rising and R ≥ L the blend rises:
+          d/dx = (1 − H)·L′ + H·R′ + H′·(R − L).
+        - C⁰ at x_b rests on the own read equalling the same-side side read there (ruling 1 (1)). They are the same rows
+          unless the own read refuses (a cap, or a corner row with no value), which is then a refusal boundary."""
+        hs = []
+        for c, xb, w in near:
+            u = min(max(0.5 * ((x - xb) / w + 1.0), 0.0), 1.0)
+            hs.append(u * u * (3.0 - 2.0 * u))
+        mine = tuple(sides[c] for c, _xb, _w in near)
+        n_t, total, kept = len(self.ts), 0.0, 0.0
+        marks = {"dropped": set(self._marks["dropped"]), "empty": self._marks["empty"],
+                 "by_count": self._marks["by_count"]}
+        counts = {k: self.cut_counts[k] for k in ("reach_rows", "side_fallbacks")}
+        try:
+            for sig in itertools.product((-1, 1), repeat=len(near)):
+                wgt = 1.0
+                for s_, h in zip(sig, hs):
+                    wgt *= h if s_ > 0 else 1.0 - h
+                if wgt == 0.0:
+                    continue
+                if sig == mine:
+                    val = own
+                else:
+                    rows = self._side_rows(f, x, ib, {**sides, **{c: s_ for (c, _xb, _w), s_ in zip(near, sig)}})
+                    if not all(k in rows for k in (ib, ib + 1)):
+                        self.cut_counts["blend_drops"] += 1
+                        continue
+                    val = _cubic1_t(t, self.ts, _Seq(rows, n_t), ib)
+                total += wgt * val
+                kept += wgt
+        finally:                                         # the side reads leave no mark or count on the read
+            self._marks.update(marks)
+            self.cut_counts.update(counts)
+        return total if kept == 1.0 else total / kept
 
     def _row_reach(self, f, k, r):
-        """A corner row's value for δ in region r where _row_value has none (r empty and no run on one side): the
-        nearest region with a run, at its bounding curve toward r (constant). It depends on the row and the region
-        alone, so a region shared by two edges' δ (two edges crossing at x_b) reads alike in both and their
-        corrections telescope; None when the row has no run for f at all."""
+        """A corner row's value for a side read in region r where _row_value has none (r empty and no run on one side):
+        the nearest region with a run, at its bounding curve toward r (constant in x). None when the row has no run for
+        f at all."""
         runs, part = self._runs(f, k), self._partition(k)
         lo = next((q for q in range(r - 1, -1, -1) if runs.get(q)), None)
         hi = next((q for q in range(r + 1, len(part) + 1) if runs.get(q)), None)
@@ -1301,11 +1393,10 @@ class AssemblageView(mv.RecordView):
         return self._run_value(f, k, hi, math.log(part[hi - 1][0]), False)
 
     def _side_rows(self, f, x, ib, sides):
-        """One side's stencil row values at x_b for δ (68 B1 on d7cc971d: a side never refuses the read): as _value's
-        rows, but uncapped (x_b moves with t, so a cap would switch inside a T cell; the cap only refuses, it changes
-        no value); a corner row with no value in its region reads the nearest region with a run (_row_reach), an outer
-        row with none is left out, as _value drops it. {row: value}. Where both actual reads stand at x_b this is their
-        value, so δ = L − R keeps the read continuous at P_b."""
+        """One side assignment's stencil row values at x for the blend (68 B1 on d7cc971d: a side never refuses the
+        read): as _value's rows, but uncapped (the cap only refuses, it changes no value); a corner row with no value
+        in its region reads the nearest region with a run (_row_reach), an outer row with none is left out, as _value
+        drops it. {row: value}."""
         n_t = len(self.ts)
         rows = {}
         for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1):
@@ -1316,18 +1407,19 @@ class AssemblageView(mv.RecordView):
             if v is None:
                 continue
             rows[k] = v                     # no MULTI_NOTE from δ's side reads: the read's own regions decide the
-                                            # notes (68 B2 (d) on 652004f9)
+                                            # notes (68 B2 (d) on 652004f9); _blend_sides restores the marks
         return rows
 
     def _read(self, p, t, pr, x, ia, ib):
-        """The read of an exported-boundary record (R1): every field P first through the row regions, T last; at each
-        cut edge within w of the read, the (c′) correction ∓δ/2·(1 − |x − x_b|/w), δ = L − R from the raw side reads
-        at x_b (_delta), continuous in t and changing in x only where the read crosses a swap (a landed step), so
-        overlapping windows add continuously. Continuous except at P_b_ext(t) of
-        cut swaps (landed events) and at refusal boundaries."""
+        """The read of an exported-boundary record (R1): every field P first through the row regions, T last
+        (_cubic1_t). Inside the (c′) window [x_b − w, x_b + w] of each cut edge near x, the read is the C¹ blend of
+        the side reads (_blend_sides; item 5d998d40, 68 ruling 1, in place of the tent correction ∓δ/2). Another
+        edge's side in each assignment is the read's own side, unless that edge's window holds x too, in which case
+        both of its sides are weighted. C¹ in x off events, except at the named residual classes (kinkscan.py);
+        continuous except at P_b_ext(t) of cut swaps (landed events) and at refusal boundaries."""
         self.cut_counts["reads"] += 1
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
-        self._read_memo = {}                             # per read: δ's two side maps, and regions by side map
+        self._read_memo = {}                             # per read: regions by side map
         n_t = len(self.ts)
         # in curve id order: a set of curves iterates by object address, which differs between processes, and the
         # corrections below are summed in this order, so a set made the answers differ in their last bits run to run
@@ -1349,11 +1441,10 @@ class AssemblageView(mv.RecordView):
         try:
             for f in ("rho", "dtdp_eq", "c_p"):
                 v = self._value(f, x, t, ia, ib, sides)
-                for c, xb, w in near:
-                    d = self._delta(f, c, xb, w, t, ia, ib, sides, pbs)
-                    v += (-0.5 * d * (1.0 - (xb - x) / w)) if sides[c] < 0 else (0.5 * d * (1.0 - (x - xb) / w))
+                if near:
+                    v = self._blend_sides(f, x, t, ib, sides, near, v)
                     if f == "rho":
-                        self.cut_counts["corrections"] += 1
+                        self.cut_counts["corrections"] += len(near)
                 out[f] = v
         except _NoRead as e:
             self._close_marks()
