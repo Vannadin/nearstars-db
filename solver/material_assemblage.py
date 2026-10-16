@@ -1269,11 +1269,15 @@ class AssemblageView(mv.RecordView):
         """δ = L − R of edge c at x_b from the raw side reads (no correction inside, 68 (c)): every swap's side is the
         read's (its step is a landed event), every other edge's side is taken at (x_b, t) by geometry, so δ never
         depends on the read's own side of another edge. It changes in t where another cut edge's P_b crosses x_b."""
-        two = self._read_memo.get(("sd", c.id, xb))       # the two sides do not depend on the field: once per read
+        # the two side maps do not depend on the field: once per read. The key holds every input of sd (68 N1 on
+        # 35c8418d): the edge and x_b, and per curve its swap / no-P_b side or its P_b, so a call outside _read
+        # never meets another read's maps
+        mk = ("sd", c.id, xb, tuple((cc.id, sides[cc] if cc.kind == "swap" or q is None else q) for cc, q in pbs.items()))
+        two = self._read_memo.get(mk)
         if two is None:
             sd = {cc: (sides[cc] if cc.kind == "swap" or q is None else (-1 if (xb, c.id) < (math.log(q), cc.id) else 1))
                   for cc, q in pbs.items()}              # at an exact tie, ordered by id: one order for both δ
-            two = self._read_memo[("sd", c.id, xb)] = ({**sd, c: -1}, {**sd, c: 1})
+            two = self._read_memo[mk] = ({**sd, c: -1}, {**sd, c: 1})
         rl, rr = self._side_rows(f, xb, ib, two[0]), self._side_rows(f, xb, ib, two[1])
         if all(k in rl and k in rr for k in (ib, ib + 1)):
             return _cubic1(t, self.ts, _Seq(rl, len(self.ts)), ib) - _cubic1(t, self.ts, _Seq(rr, len(self.ts)), ib)
