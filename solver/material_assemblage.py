@@ -602,16 +602,18 @@ class _Curve:
         self.rows = sorted(rows, key=lambda r: r["t"])            # dicts: t, p_b, left, right (label sets), band
         self.t0, self.t1 = self.rows[0]["t"], self.rows[-1]["t"]
         self.p_range = (min(r["p_b"] for r in self.rows), max(r["p_b"] for r in self.rows))
+        self._ts = [r["t"] for r in self.rows]                      # the rows' T, for p_b's bisection
 
     def p_b(self, t):
         if t < self.t0 or t > self.t1:
             return None
         rs = self.rows
-        for a, b in zip(rs, rs[1:]):
-            if a["t"] <= t <= b["t"]:
-                w = (t - a["t"]) / (b["t"] - a["t"])
-                return a["p_b"] + w * (b["p_b"] - a["p_b"])
-        return rs[0]["p_b"]
+        if len(rs) == 1:
+            return rs[0]["p_b"]
+        i = bisect.bisect_left(self._ts, t, 1) - 1      # the first pair (i, i+1) with T_i <= t <= T_i+1, as a scan finds it
+        a, b = rs[i], rs[i + 1]
+        w = (t - a["t"]) / (b["t"] - a["t"])
+        return a["p_b"] + w * (b["p_b"] - a["p_b"])
 
     def nearest(self, t):
         return min(self.rows, key=lambda r: abs(r["t"] - t))
@@ -742,6 +744,50 @@ def check_boundaries(table, by, ps):
     return build_curves(b, ts)
 
 
+class _Part(list):
+    """A row's partition [(P_b, curve)] sorted by P_b, with its P_b list, its curves, and _region's memo (by the
+    curves' sides), so that resetting a view's _parts resets all of them."""
+    __slots__ = ("pbs", "cs", "regions")
+
+    def __init__(self, items):
+        super().__init__(items)
+        self.pbs = [pb for pb, _ in self]
+        self.cs = [c for _, c in self]
+        self.regions = {}
+
+
+class _Run(tuple):
+    """A run (xs, ys, js, region) of one row and field, with _pchip_1d's extrapolation slope and its segments' PCHIP
+    coefficients found once: run.value(x) is _pchip_1d(x, xs, ys) bit for bit."""
+
+    def __new__(cls, xs, ys, js, r):
+        self = super().__new__(cls, (xs, ys, js, r))
+        n = len(xs)
+        if n > 1:
+            secs = [(ys[i + 1] - ys[i]) / (xs[i + 1] - xs[i]) for i in range(n - 1)]
+            self.m = 0.0 if (min(secs) < 0.0 < max(secs)) else min(secs, key=abs)
+        self.coeffs = [None] * max(n - 1, 0)
+        return self
+
+    def value(self, x):
+        xs, ys = self[0], self[1]
+        n = len(xs)
+        if n == 1:
+            return ys[0]
+        if xs[0] <= x <= xs[-1]:
+            i = min(max(bisect.bisect_left(xs, x) - 1, 0), n - 2)
+            u = (x - xs[i]) / (xs[i + 1] - xs[i])           # _cubic1's node returns, then its Hermite segment
+            if u == 0.0:
+                return ys[i]
+            if u == 1.0:
+                return ys[i + 1]
+            c = self.coeffs[i]
+            if c is None:
+                c = self.coeffs[i] = _coeffs(xs, ys, i)
+            return _hermite(x, c)
+        return (ys[-1] + self.m * (x - xs[-1])) if x > xs[-1] else (ys[0] + self.m * (x - xs[0]))
+
+
 def _pchip_1d(x, xs, ys):
     """A run's value at x (sorted xs): PCHIP inside; past the ends, linear from the end node with the gentlest of the
     run's secants (0 where the secants change sign), so an extrapolation never steepens a run's trend and never turns
@@ -751,7 +797,7 @@ def _pchip_1d(x, xs, ys):
     if n == 1:
         return ys[0]
     if xs[0] <= x <= xs[-1]:
-        i = min(max(next(k for k in range(n - 1) if xs[k + 1] >= x), 0), n - 2)
+        i = min(max(bisect.bisect_left(xs, x) - 1, 0), n - 2)      # the first k with xs[k+1] >= x
         return _cubic1(x, xs, ys, i)
     secs = [(ys[i + 1] - ys[i]) / (xs[i + 1] - xs[i]) for i in range(n - 1)]
     m = 0.0 if (min(secs) < 0.0 < max(secs)) else min(secs, key=abs)
@@ -832,6 +878,8 @@ class AssemblageView(mv.RecordView):
         #: (R1) §4: a cut curve's side reach past its ends, two T rows (the stencil's reach)
         self._reach = EXT_ROWS * (self.ts[1] - self.ts[0]) if len(self.ts) > 1 else 0.0
         self._parts, self._runcache = {}, {}
+        self._read_memo = {}
+        self._wn_of = None                               # _width's node widths and their max, for the lnps they came from
         #: the column cut of a read: p_dataset, lifted to the taper's end for the zone's SLB-extrapolated read (note 7 §2)
         self._top = self.p_dataset
         #: the read counts of this view ((R1), 68 S1): reads, corner rows read in an empty region, outer rows dropped
@@ -965,8 +1013,7 @@ class AssemblageView(mv.RecordView):
         """The table's own C¹ read at (P, T) below the current column cut (self._top)."""
         pr = max(p, self.ps[0])                  # below 1 bar: read at the floor node (§3.1's floor band)
         x = math.log(pr)
-        ia = min(max(next(i for i in range(len(self.ps)) if i + 1 == len(self.ps) or self.ps[i + 1] >= pr), 0),
-                 len(self.ps) - 2)
+        ia = min(max(bisect.bisect_left(self.ps, pr, 1) - 1, 0), len(self.ps) - 2)   # the first i with P_i+1 >= pr
         ib = min(max(int((t - self.ts[0]) // (self.ts[1] - self.ts[0])), 0), len(self.ts) - 2)
         while self.ts[ib] > t:
             ib -= 1
@@ -1030,12 +1077,12 @@ class AssemblageView(mv.RecordView):
         got = self._parts.get(k)
         if got is None:
             tk = self.ts[k]
-            got = sorted(((c.p_b(tk), c) for c in self._cut if c.p_b(tk) is not None), key=lambda e: e[0])
+            got = _Part(sorted(((c.p_b(tk), c) for c in self._cut if c.p_b(tk) is not None), key=lambda e: e[0]))
             self._parts[k] = got
         return got
 
     def _region_of(self, j, k):
-        return bisect.bisect_left([pb for pb, _ in self._partition(k)], self.ps[j])
+        return bisect.bisect_left(self._partition(k).pbs, self.ps[j])
 
     def _runs(self, f, k):
         """Row k's runs for field f: {region: [(xs, ys, js)]}, each a maximal run of consecutive present nodes at or
@@ -1043,7 +1090,7 @@ class AssemblageView(mv.RecordView):
         key = (f, k, self._top)
         got = self._runcache.get(key)
         if got is None:
-            pbs = [pb for pb, _ in self._partition(k)]
+            pbs = self._partition(k).pbs
             got, cur = {}, None
             for j, p in enumerate(self.ps):
                 if p > self._top:
@@ -1059,6 +1106,7 @@ class AssemblageView(mv.RecordView):
                 cur[0].append(self.lnps[j])
                 cur[1].append(v)
                 cur[2].append(j)
+            got = {r: [_Run(*q) for q in qs] for r, qs in got.items()}
             self._runcache[key] = got
         return got
 
@@ -1071,21 +1119,42 @@ class AssemblageView(mv.RecordView):
         if not runs:
             return None
         n = len(self.ps)
-        for a, b in zip(runs, runs[1:]):
-            if a[0][-1] < x < b[0][0]:                    # a gap inside the region: linear between the two runs' ends
-                va, vb = a[1][-1], b[1][0]
-                return va + (vb - va) * (x - a[0][-1]) / (b[0][0] - a[0][-1])
-        run = runs[0] if x < runs[0][0][0] else runs[-1] if x > runs[-1][0][-1] else next(
-            q for q in runs if q[0][0] <= x <= q[0][-1])
+        if len(runs) == 1:                               # one run: no gap, and every branch below picks it
+            run = runs[0]
+        else:
+            for a, b in zip(runs, runs[1:]):
+                if a[0][-1] < x < b[0][0]:                # a gap inside the region: linear between the two runs' ends
+                    va, vb = a[1][-1], b[1][0]
+                    return va + (vb - va) * (x - a[0][-1]) / (b[0][0] - a[0][-1])
+            run = runs[0] if x < runs[0][0][0] else runs[-1] if x > runs[-1][0][-1] else next(
+                q for q in runs if q[0][0] <= x <= q[0][-1])
         if corner and (x < self.lnps[max(run[2][0] - CORNER_REACH, 0)]
                        or x > self.lnps[min(run[2][-1] + CORNER_REACH, n - 1)]):
             raise _NoRead("cap", k)
-        return _pchip_1d(x, run[0], run[1])
+        return run.value(x)
 
     def _row_value(self, f, k, r, x, corner):
         """Row k's value at x in region r: its runs (_run_value), or, for a region with no run for this field, linear in
         ln P between the nearest regions with a run on either side, each at its bounding curve toward r ((c″) per
-        region; a block of empty regions, or a field missing at a node, reads through). None if a side has no run."""
+        region; a block of empty regions, or a field missing at a node, reads through). None if a side has no run.
+        Memoised per read on its arguments and the column cut (δ's two sides share the rows the edge is not in), with
+        the empty-region mark it sets."""
+        mk = ("row", f, k, r, x, corner, self._top)
+        got = self._read_memo.get(mk)
+        if got is not None:
+            if got[1]:
+                self._marks["empty"] = True
+            return got[0]
+        e0 = self._marks["empty"]
+        self._marks["empty"] = False
+        try:
+            v = self._row_value_raw(f, k, r, x, corner)
+            self._read_memo[mk] = (v, self._marks["empty"])
+            return v
+        finally:
+            self._marks["empty"] = e0 or self._marks["empty"]
+
+    def _row_value_raw(self, f, k, r, x, corner):
         runs = self._runs(f, k)
         part = self._partition(k)
         if runs.get(r):
@@ -1114,9 +1183,24 @@ class AssemblageView(mv.RecordView):
         order and left of the rest. When the sides name no such region (two curves crossed between t_k and the read's
         T; 68 H3), the region is still r = the count of curves the read is right of: it changes only where a side
         changes (a landed event), so the read stays continuous; counted. A curve with no side (none by construction)
-        is taken by row k's own geometry, counted."""
+        is taken by row k's own geometry, counted. Memoised per row on the sides of its curves, which alone decide r and
+        the H3 mark when every curve has a side."""
+        mk = (id(sides), k)                              # the read's memo holds `sides` itself, so its id is not reused
+        got = self._read_memo.get(mk)
+        if got is not None and got[0] is sides:
+            if got[2]:
+                self._marks["by_count"] = True
+            return got[1]
+        part = self._partition(k)
+        key = tuple(map(sides.get, part.cs))
+        got = part.regions.get(key)
+        if got is not None:
+            self._read_memo[mk] = (sides, got[0], got[1])
+            if got[1]:
+                self._marks["by_count"] = True
+            return got[0]
         ss = []
-        for pb, c in self._partition(k):
+        for pb, c in part:
             s_ = sides.get(c)
             if s_ is None:
                 self.cut_counts["side_fallbacks"] += 1
@@ -1124,8 +1208,12 @@ class AssemblageView(mv.RecordView):
             ss.append((pb, -s_))
         ss = [-s_ for _, s_ in sorted(ss)]               # curves at one P_b in this row: ordered by the read's side
         r = sum(1 for s_ in ss if s_ > 0)
-        if any(s_ < 0 for s_ in ss[:r]):
+        by_count = any(s_ < 0 for s_ in ss[:r])
+        if by_count:
             self._marks["by_count"] = True                # 68 H3: curves crossed between t_k and t; by count
+        if None not in key:                              # a fallback side is x's, so never memoised
+            part.regions[key] = (r, by_count)
+            self._read_memo[mk] = (sides, r, by_count)
         return r
 
     def _value(self, f, x, t, ia, ib, sides, check=True):
@@ -1150,22 +1238,33 @@ class AssemblageView(mv.RecordView):
             rows[k] = v
         return _cubic1(t, self.ts, _Seq(rows, n_t), ib)
 
+    def _node_widths(self):
+        """([node-centred ln-P cell width per node], their max), found once per lnps list (found again if lnps is
+        replaced, as a test does)."""
+        got = self._wn_of
+        if got is None or got[0] is not self.lnps:
+            xs, n = self.lnps, len(self.lnps)
+            wn = [(xs[min(i + 1, n - 1)] - xs[max(i - 1, 0)]) / (2.0 if 0 < i < n - 1 else 1.0) for i in range(n)]
+            got = self._wn_of = (xs, wn, max(wn))
+        return got[1], got[2]
+
     def _width(self, x):
         """The (c′) window's half-width at x: node-centred ln-P cell widths, linear in ln P between nodes (68 (c))."""
-        xs, n = self.lnps, len(self.lnps)
+        xs, n, wn = self.lnps, len(self.lnps), self._node_widths()[0]
         j = min(max(bisect.bisect_right(xs, x) - 1, 0), n - 2)
-        def wn(i):
-            return (xs[min(i + 1, n - 1)] - xs[max(i - 1, 0)]) / (2.0 if 0 < i < n - 1 else 1.0)
         u = min(max((x - xs[j]) / (xs[j + 1] - xs[j]), 0.0), 1.0)
-        return wn(j) + u * (wn(j + 1) - wn(j))
+        return wn[j] + u * (wn[j + 1] - wn[j])
 
     def _delta(self, f, c, xb, w, t, ia, ib, sides, pbs):
         """δ = L − R of edge c at x_b from the raw side reads (no correction inside, 68 (c)): every swap's side is the
         read's (its step is a landed event), every other edge's side is taken at (x_b, t) by geometry, so δ never
         depends on the read's own side of another edge. It changes in t where another cut edge's P_b crosses x_b."""
-        sd = {cc: (sides[cc] if cc.kind == "swap" or q is None else (-1 if (xb, c.id) < (math.log(q), cc.id) else 1))
-              for cc, q in pbs.items()}                  # at an exact tie, ordered by id: one order for both δ
-        rl, rr = self._side_rows(f, xb, ib, {**sd, c: -1}), self._side_rows(f, xb, ib, {**sd, c: 1})
+        two = self._read_memo.get(("sd", c.id, xb))       # the two sides do not depend on the field: once per read
+        if two is None:
+            sd = {cc: (sides[cc] if cc.kind == "swap" or q is None else (-1 if (xb, c.id) < (math.log(q), cc.id) else 1))
+                  for cc, q in pbs.items()}              # at an exact tie, ordered by id: one order for both δ
+            two = self._read_memo[("sd", c.id, xb)] = ({**sd, c: -1}, {**sd, c: 1})
+        rl, rr = self._side_rows(f, xb, ib, two[0]), self._side_rows(f, xb, ib, two[1])
         if all(k in rl and k in rr for k in (ib, ib + 1)):
             return _cubic1(t, self.ts, _Seq(rl, len(self.ts)), ib) - _cubic1(t, self.ts, _Seq(rr, len(self.ts)), ib)
         # a corner row with no run for f at all: the read itself refuses there (its own corner row has no value), so
@@ -1214,6 +1313,7 @@ class AssemblageView(mv.RecordView):
         cut swaps (landed events) and at refusal boundaries."""
         self.cut_counts["reads"] += 1
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
+        self._read_memo = {}                             # per read: δ's two side maps, and regions by side map
         n_t = len(self.ts)
         # in curve id order: a set of curves iterates by object address, which differs between processes, and the
         # corrections below are summed in this order, so a set made the answers differ in their last bits run to run
@@ -1221,17 +1321,21 @@ class AssemblageView(mv.RecordView):
                      key=lambda c: c.id)
         pbs = {c: c.p_b_ext(t, self._reach) for c in rel}
         sides = {c: (None if pb is None else (-1 if pr < pb else 1)) for c, pb in pbs.items()}
+        near = []                                        # the edges whose (c′) window holds x: (curve, x_b, w), per read
+        for c in rel:
+            if c.kind != "edge" or pbs[c] is None:
+                continue
+            xb = math.log(pbs[c])
+            if abs(x - xb) >= self._node_widths()[1] * (1.0 + 1e-12):   # w is a convex mix of node widths: never wider (a
+                continue                                          # rounding margin kept), so _width would skip it too
+            w = self._width(xb)
+            if abs(x - xb) < w:
+                near.append((c, xb, w))
         out = {}
         try:
             for f in ("rho", "dtdp_eq", "c_p"):
                 v = self._value(f, x, t, ia, ib, sides)
-                for c in rel:
-                    if c.kind != "edge" or pbs[c] is None:
-                        continue
-                    xb = math.log(pbs[c])
-                    w = self._width(xb)
-                    if abs(x - xb) >= w:
-                        continue
+                for c, xb, w in near:
                     d = self._delta(f, c, xb, w, t, ia, ib, sides, pbs)
                     v += (-0.5 * d * (1.0 - (xb - x) / w)) if sides[c] < 0 else (0.5 * d * (1.0 - (x - xb) / w))
                     if f == "rho":
