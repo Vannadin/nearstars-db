@@ -514,5 +514,18 @@ class SolveId(unittest.TestCase):
             self.assertNotEqual(sv._material_bytes(moved), ids[0])
 
 
+class SurfaceFloor(unittest.TestCase):
+    def test_record_top_view_takes_the_legacy_floor(self):
+        """A body whose top layer is a record view (no p_floor attribute) takes the legacy material's floor by name, and
+        a view that has one keeps it (the N2 ocean probe raised AttributeError before)."""
+        from types import SimpleNamespace
+        body_ = SimpleNamespace(layers=[SimpleNamespace(material="h2o")])
+        want = getattr(lm.interior.MATERIALS.get("h2o"), "p_floor", 0.0) or 0.0
+        self.assertEqual(sv.surface_floor(body_, SimpleNamespace()), want)
+        self.assertEqual(sv.surface_floor(body_, SimpleNamespace(p_floor=123.0)), 123.0)
+        self.assertEqual(sv.surface_floor(SimpleNamespace(layers=[SimpleNamespace(material="none")]),
+                                          SimpleNamespace()), 0.0)
+
+
 if __name__ == "__main__":
     unittest.main()

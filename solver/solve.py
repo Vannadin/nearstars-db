@@ -151,6 +151,16 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
     return st.run(rhs.make_rhs(view), m0, y0, m_end, sopt, evs, on_accept=monitor)
 
 
+def surface_floor(body, top_view) -> float:
+    """The surface pressure when the body declares none: the top view's p_floor; a record view has none of its own
+    (an h2o top layer raised AttributeError, the N2 ocean probe 10-17), so the legacy material's, by the layer's
+    material name, as the assemblage view takes it (silicate registration §3.1); 0 where neither has one."""
+    floor = getattr(top_view, "p_floor", None)
+    if floor is None:
+        floor = getattr(lm.interior.MATERIALS.get(body.layers[-1].material), "p_floor", 0.0)
+    return floor or 0.0
+
+
 def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> PassOut | st.Stop:
     """One pass at closure value x. `want_graze` False skips the graze monitor: a trial pass whose graze record no
     one reads (S1: G2-SP-02, G1-SP-03); the accepted and the sensitivity pass keep it."""
@@ -164,7 +174,7 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
         # P1R-G1-C-10: §A1.2's analytic shell (ρ(P_s) → 0) exists on rhs.inward_pass, the physics tests' pass only; no
         # phase-1 material has one. Reaching it here is a bug, not a refusal: ρ = 0 would divide by zero in the rhs
         raise NotImplementedError(f"{body.name}: a surface shell (ρ(P_s) = 0) is not implemented in solve.inward")
-    p_s = sf.p_s if sf.p_s is not None else (top_view.p_floor or 0.0)
+    p_s = sf.p_s if sf.p_s is not None else surface_floor(body, top_view)
     t_pot = sf.t_pot or 0.0
     out = PassOut(None, M, (), float("nan"), None, R=R, r_scale=rs)
     layers = body.layers
