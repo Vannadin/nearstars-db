@@ -1,0 +1,136 @@
+# silicate_slb_default_bse — 규산염 맨틀, SLB 2024 광물 집합 표 (default_bse) (phase-2 규산염 기록 등록 §2); rewrite/phase2-records/gen_silicate_records.py 가 썼다, 손으로 고치지 않는다
+id: silicate_slb_default_bse
+label: Silicate mantle, SLB 2024 assemblage table (default_bse)
+kind: assemblage
+system: silicate
+fit_composition: default_bse
+role_hint: mantle
+requires_switch: silicate_records
+composition_key: 14f8758a7681f418
+primary_family:
+  name: SLB (Stixrude & Lithgow-Bertelloni 2011 / 2022 / 2024)
+  sources:
+  - 2011GeoJI.184.1180S
+  - 2022GeoJI.228.1119S
+  - 2024GeoJI.237.1699S
+  - BurnMan@2.1.0
+  reason: frozen S1
+assemblage:
+  file: tables/silicate_slb_default_bse.json.gz
+  sha256: 03196eac49010297ee0db3e8a1738a46feb2975892528e7c29f14d3333e05014
+  p_dataset: 136000000000.0
+  interpolation: c1_lnp_t
+  melt_variant: peridotitic
+  frozen_classes:
+  - S5-F3 corundum, corundum, high band
+  - S5-F3 corundum, corundum, low band
+  - convergence edge
+  - ruling (e) bounds, quartz
+  - ruling (e) bounds, ruling (e)
+  - winner does not re-converge
+  dataset: BurnMan@2.1.0 SLB_2024 with fixtures S1-F2, S1-F3 (phase-2 silicate impl note 3) and S1-F4 (declaration note, r2
+    50150ec7); S1-F1 disclosed, not applied
+  disclosures:
+  - 'dataset: BurnMan@2.1.0 SLB_2024 with fixtures S1-F2, S1-F3 (phase-2 silicate impl note 3) and S1-F4 (declaration note,
+    r2 50150ec7); S1-F1 disclosed, not applied'
+  - 'S1-F1: st without SLB 2024 Table C3''s Landau term (S1-F1): the printed TC0 < 0 leaves eq. A10 undefined below Tc; where
+    defined, ≤ 8.2e-5 in st ρ'
+  - 'st-PcQ: st shear modulus: PcQ from HeFESTo stishtran.f (T-dependent), not the paper''s fixed 102.3 GPa; not patched'
+  - 'fe3_over_fe = 0.0 (header fe3_over_fe; build declaration §2: an Fe3+-free model)'
+  - 'S1-F4: -T*S_conf added for Fe-NAL_Phase (22.477 J/mol/K), Lime_Tschermak'' (11.526 J/mol/K), Mg-NAL_Phase (22.477 J/mol/K),
+    Na-Majorite (15.877 J/mol/K), Na-NAL_Phase (34.579 J/mol/K) (header s1f4_sconf; declaration note S1-F4, r2 50150ec7)'
+  - 'oxides dropped from the default_bse composition (wt %, before normalising to CFMASNa): Cr2O3 0.384, K2O 0.029, MnO 0.135,
+    NiO 0.25, P2O5 0.021, TiO2 0.201'
+  floor_band:
+    origin: 'the floor node''s own compressibility: |dρ|/ρ ≤ (1e5 Pa)/K_T, K_T = ρ·∂P/∂ρ over the first two P nodes at fixed
+      T (§3.1, r2 N2)'
+  handover: silicate_prem_zeng2016
+  b3:
+    gamma_tolerance: 1.0e-09
+    frozen_alpha_tolerance: 0.02
+    maxwell_k: 3.0
+    maxwell_floor: 0.001
+    reason: 'registration post-freeze note 3 §3: γ identity (interim); frozen cells'' in-column dT/dP identity at twice the
+      measured 50 K FD error; Maxwell per 5-point interior cell, residual ≤ 3·|D_h − D_2h| + 1e-3 (signed, non-uniform 3-point,
+      scale floor ALPHA_FLOOR), an FD-blind cell excused only by the model''s exact Maxwell ≤ FD/10 and stored = model to
+      1e-6 over its stencil'
+  dtdp:
+    field: equilibrium_isentrope
+    band_floor: 0.00025
+    band_origin: 'per cell: the model-consistency band (S-based against G-based isentrope from the same solver), max(floor,
+      |A − G|/max(|A|, dtdp_s)); not an accuracy bound against the true G minimum (the solver''s envelope gap, registration
+      post-freeze note 3). Floor: the δ/10 check''s maximum on the declared 34-cell sample, 2.47e-4'
+    refused_count: 48
+    sidecar:
+      builder_blob: ac9746041f83d08b80fd42e26df4cad6d59ac4d0
+      builder_sha256: a920db596415d90972f40c81c6905e6e884dccb738611f2e6491e3ebb3501a3c
+      burnman: 2.1.0
+      composition: default_bse
+      dp_rel: 0.001
+      dt: 1.0
+      n_cells: 11382
+      n_total: 11382
+      shard: null
+      table_blob: c82f42b268a34e8bb9d18edbde70fb1cbc19a814
+      table_builders:
+      - a920db596415d90972f40c81c6905e6e884dccb738611f2e6491e3ebb3501a3c
+      tool_sha256: dee8fb899abcede4c26a2a2d638369f24e897dbd5127f99a23ddc02cf25553ee
+  pins:
+    status: pinned
+    table_blob: c82f42b268a34e8bb9d18edbde70fb1cbc19a814
+    builders:
+    - role: strict
+      blob: ac9746041f83d08b80fd42e26df4cad6d59ac4d0
+      sha256: a920db596415d90972f40c81c6905e6e884dccb738611f2e6491e3ebb3501a3c
+    - role: above_cap
+      blob: ac9746041f83d08b80fd42e26df4cad6d59ac4d0
+      sha256: a920db596415d90972f40c81c6905e6e884dccb738611f2e6491e3ebb3501a3c
+    boundary_tool:
+      blob: 0b5299e498698a23a8ef40a816415998b4ada015
+      sha256: 9ab86ebaf77f4141e9a832e95347db8f88bbf13807169bc5bcbabd7acc0c33b9
+    compact_sha256: 03196eac49010297ee0db3e8a1738a46feb2975892528e7c29f14d3333e05014
+    rebuilt: []
+phases:
+- id: slb_assemblage
+  label: SLB 2024 equilibrium assemblage (default_bse)
+  state: solid
+  eos:
+    form: assemblage
+    reference:
+      kind: path
+      path: SLB assemblage table
+  thermal:
+    source_state: solid
+    source_composition: default_bse
+  field:
+    kind: declared
+    box:
+      p_min: 100000.0
+      p_max: 136000000000.0
+      t_min: 200.0
+      t_max: 4800.0
+    reason: the built table's grid up to the declaration's dataset top (§3.1); above it, the taper
+  window:
+    p_min: 100000.0
+    p_max: 136000000000.0
+    t_min: 200.0
+    t_max: 4800.0
+  edges:
+    p_max:
+      refusal: input.material_out_of_data
+    t_min:
+      refusal: input.material_out_of_data
+    t_max:
+      refusal: input.material_above_solid_window
+formula_checks:
+- quantity: gamma
+  state:
+    p: 100000.0
+    t: 1150.0
+  expected: 0.9140529370007047
+  unit: '1'
+  tolerance: 1.0e-09
+  tolerance_reason: the table's own identity γ = αK_T/(ρc_V), cell fields recomputed (§2.3)
+  expression: alpha_k_t / (rho * c_v)
+  source:
+    formula: SLB 2024 via BurnMan@2.1.0, table blob c82f42b268a34e8bb9d18edbde70fb1cbc19a814
