@@ -131,6 +131,52 @@ class Taper(unittest.TestCase):
         got = view(handover(refused=(2000.0,)))._solid(PE * 1.2, 2000.0)
         self.assertIn("refuses: planted", got.record.why)
 
+    def test_above_the_last_node_refuses(self):
+        """r2 E1/R1 on delta 1: the hand-over never extrapolates past its last thermal node or its window."""
+        ho = handover()
+        v = view(ho)
+        got = v._solid(ho.ps[-1] * 1.01, 2000.0)
+        self.assertIsInstance(got, st.Stop)
+        self.assertIn("above the hand-over's last thermal node", got.record.why)
+        self.assertNotIsInstance(v._solid(ho.ps[-1] * 0.99, 2000.0), st.Stop)
+
+    def test_zone_refuses_where_the_top_cannot_be_matched(self):
+        """r2 D2 on delta 1: where the read below refuses at p_dataset on the read's T, the zone refuses by name (an
+        unshifted lifted read there stepped the zone ×3 in T). Mutant: the unshifted read answers."""
+        v = view(handover())
+        real = v._table_read
+
+        def table_read(p, t):
+            if p == PD and 1990.0 < t < 2010.0:
+                return v._refuse(p, t, "input.material_out_of_data", "planted: no read at the top")
+            return real(p, t)
+        v._table_read = table_read
+        got = v._solid(math.sqrt(PD * PE), 2000.0)
+        self.assertIsInstance(got, st.Stop)
+        self.assertIn("cannot be matched", got.record.why)
+        self.assertNotIsInstance(v._solid(math.sqrt(PD * PE), 2050.0), st.Stop)
+
+    def test_match_size_in_the_band(self):
+        """r2 D3 on delta 1: the 136 GPa match's (1 − w)·|ΔX|/|X| is added to that field's band."""
+        hole = btable()
+        for c in hole["cells"]:
+            if c["t"] == 1450.0 and c["dtdp_eq"] is not None:
+                c["dtdp_eq"] *= 1.0 + 0.003 * PS.index(c["p"]) ** 2
+        next(c for c in hole["cells"] if c["p"] == PD and c["t"] == 1450.0)["dtdp_eq"] = None
+        ho = handover()
+        v = view(ho, hole)
+        p, t = PD * 1.01, 1360.0
+        v.notes.clear()
+        solid(v, p, t)
+        (n,) = [x for x in v.notes if isinstance(x, mv.BandNote) and x.edge == "taper to the hand-over"]
+        w = ma._smoothstep((p - PD) / (PE - PD))
+        cut0, lift0 = v._table_read(PD, t), v._lifted(PD, t)
+        cells = v._lifted(p, t)[3]
+        bc = max(c["dtdp_eq_band"] for c in cells if c.get("dtdp_eq_band") is not None)
+        want = max((1 - w) * bc, w * ho.thermal(p, t)[0][2]) + (1 - w) * abs(cut0[1] - lift0[1]) / abs(cut0[1])
+        self.assertAlmostEqual(n.dtdp_error, want, delta=1e-15)
+        self.assertGreater((1 - w) * abs(cut0[1] - lift0[1]) / abs(cut0[1]), 1e-9)
+
     def test_zone_rho_must_rise(self):
         """Note 7 §5: a hand-over much lighter than the table makes the zone's ρ fall with P; that T row refuses by
         name, and rows where it rises answer. Mutant: the check off (the falling ρ answers)."""

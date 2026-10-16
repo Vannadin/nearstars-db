@@ -877,7 +877,8 @@ class AssemblageView(mv.RecordView):
             self._top = top
 
     def _blend(self, p, t):
-        """(ρ, dT/dP, c_P, cells, w, ρ_SLB, ρ_HO, band_HO) of the zone at (P, T), or a Stop (note 7 §1)."""
+        """(ρ, dT/dP, c_P, cells, w, ρ_SLB, ρ_HO, band_HO, shift) of the zone at (P, T), or a Stop (note 7 §1); shift is
+        the 136 GPa match's relative size per field, (1 − w)·|X_cut − X_lift|/|X| (r2 D3 on delta 1)."""
         p_end = 1.5 * self.p_dataset
         w = _smoothstep((p - self.p_dataset) / (p_end - self.p_dataset))
         rho_h = self.handover.rho(p)
@@ -886,7 +887,7 @@ class AssemblageView(mv.RecordView):
             return self._refuse(p, t, "input.material_out_of_data", f"{self.handover.material_id}: {why}")
         dtdp_h, cp_h, band_h = th
         if w >= 1.0:
-            return rho_h, dtdp_h, cp_h, [], w, None, rho_h, band_h
+            return rho_h, dtdp_h, cp_h, [], w, None, rho_h, band_h, (0.0, 0.0, 0.0)
         got = self._lifted(p, t)
         if isinstance(got, st.Stop):
             return got
@@ -895,13 +896,20 @@ class AssemblageView(mv.RecordView):
         # (an outer row's end slope vs its run across, an edge's δ), so the lifted read is shifted by their difference
         # at 136 GPa on this T, faded with the zone's own weight: the answer is C⁰ at 136 GPa in every field
         cut0, lift0 = self._table_read(self.p_dataset, t), self._lifted(self.p_dataset, t)
-        if isinstance(cut0, tuple) and isinstance(lift0, tuple):
-            rho_s += (1.0 - w) * (cut0[0] - lift0[0])
-            dtdp_s += (1.0 - w) * (cut0[1] - lift0[1])
-            cp_s += (1.0 - w) * (cut0[2] - lift0[2])
+        if not (isinstance(cut0, tuple) and isinstance(lift0, tuple)):
+            # r2 D2 on delta 1: unshifted reads where one side refuses stepped the zone ×3 in T (bse 3600–3609 K); the
+            # zone cannot be matched to a read that does not answer at the dataset top on this T, so it refuses there
+            # by name (a refusal boundary in T, as the read below has at the same T)
+            why = (cut0 if isinstance(cut0, st.Stop) else lift0).record.why
+            return self._refuse(p, t, "input.material_out_of_data",
+                                f"the taper zone cannot be matched at {self.p_dataset / 1e9:g} GPa on T {t:g} K: the "
+                                f"read there refuses ({why}) (note 7 delta 1)")
+        d = [(1.0 - w) * (cut0[i] - lift0[i]) for i in range(3)]
+        rho_s, dtdp_s, cp_s = rho_s + d[0], dtdp_s + d[1], cp_s + d[2]
+        shift = tuple(abs(d[i]) / abs(cut0[i]) if cut0[i] else 0.0 for i in range(3))
         rho = 1.0 / ((1.0 - w) / rho_s + w / rho_h)                 # A4's V-blend for ρ
         return (rho, (1.0 - w) * dtdp_s + w * dtdp_h, (1.0 - w) * cp_s + w * cp_h, cells, w, rho_s, rho_h,
-                band_h)                                              # dT/dP and c_P blended directly (note 7 §1)
+                band_h, shift)                                       # dT/dP and c_P blended directly (note 7 §1)
 
     def _rise_ok(self, kb):
         """Note 7 §5: None if the zone's ρ rises with P along T row kb, else the refusal text; found once per row, at
@@ -936,19 +944,21 @@ class AssemblageView(mv.RecordView):
         got = self._blend(p, t)
         if isinstance(got, st.Stop):
             return got
-        rho, dtdp, cp, cells, w, rho_s, rho_h, band_h = got
+        rho, dtdp, cp, cells, w, rho_s, rho_h, band_h, shift = got
         band_cell = max((c["dtdp_eq_band"] for c in cells if c.get("dtdp_eq_band") is not None), default=0.0)
         if rho_s is not None:
-            rho_band, rho_origin = abs(rho_s - rho_h) / rho_s, "the local |ρ_SLB − ρ_HO|/ρ_SLB (§3.4)"
+            rho_band = abs(rho_s - rho_h) / rho_s + shift[0]
+            rho_origin = "the local |ρ_SLB − ρ_HO|/ρ_SLB (§3.4) + the 136 GPa match's (1 − w)·|Δρ|/ρ (delta 1)"
         else:                                    # above the zone: the composition's mismatch to PREM at 204 GPa (§6)
             rho_band, rho_origin = None, "beyond the zone: the composition's ρ mismatch to PREM at 204 GPa (note 7 §6)"
             r204 = self._lifted(1.5 * self.p_dataset, t)
             if not isinstance(r204, st.Stop):
                 rho_band = abs(r204[0] - self.handover.rho(1.5 * self.p_dataset)) / self.handover.rho(1.5 * self.p_dataset)
-        dt_band = max((1.0 - w) * band_cell, w * (band_h or 0.0))
+        dt_band = max((1.0 - w) * band_cell, w * (band_h or 0.0)) + shift[1]
         self.notes.append(mv.BandNote(self.material_id, "taper to the hand-over", "relative", rho_band, None,
                                       TAPER_GRADE if w < 1.0 else self.handover.grade, rho_origin, dt_band,
-                                      "max((1 − w)·the cell's dT/dP band, w·band_HO) (note 7 §4)"))
+                                      "max((1 − w)·the cell's dT/dP band, w·band_HO) (note 7 §4) + the 136 GPa "
+                                      "match's (1 − w)·|Δ(dT/dP)|/(dT/dP) (delta 1)"))
         return rho, dtdp, cp, cells
 
     def _table_read(self, p, t):
@@ -1561,6 +1571,9 @@ class HandOver:
         window p_max, outside its T rows)."""
         if not self.ts[0] <= t <= self.ts[-1]:
             return None, f"outside the hand-over's T rows {self.ts[0]:g}–{self.ts[-1]:g} K"
+        top = min(self.ps[-1], self.p_max)
+        if p > top:                              # r2 E1 / R1: never extrapolated past the last node or the window
+            return None, (f"above the hand-over's last thermal node / window {top:g} Pa (note 2 item 5)")
         x = math.log(p)
         ia = min(max(bisect.bisect_left(self.lnps, x) - 1, 0), len(self.ps) - 2)
         ib = min(max(bisect.bisect_right(self.ts, t) - 1, 0), len(self.ts) - 2)
