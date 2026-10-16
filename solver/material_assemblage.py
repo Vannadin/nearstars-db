@@ -743,29 +743,19 @@ def check_boundaries(table, by, ps):
 
 
 def _pchip_1d(x, xs, ys):
-    """A row's branch at x from its read-side nodes (sorted xs, 1–4 of them): PCHIP inside, and past the ends the end
-    node's PCHIP end slope, as at a table end (smooth_table's rule, in x units)."""
+    """A run's value at x (sorted xs): PCHIP inside; past the ends, linear from the end node with the gentlest of the
+    run's secants (0 where the secants change sign), so an extrapolation never steepens a run's trend and never turns
+    it (directing 10-17: a run whose first segment is a steep transition, bse row 2100 K at 22.49 → 23.62 GPa, carried
+    its slope a column back and inverted ρ by 1.2 % with the edge correction; the PCHIP end slope had done so)."""
     n = len(xs)
     if n == 1:
         return ys[0]
     if xs[0] <= x <= xs[-1]:
         i = min(max(next(k for k in range(n - 1) if xs[k + 1] >= x), 0), n - 2)
         return _cubic1(x, xs, ys, i)
-    if x > xs[-1]:
-        h0, d0 = xs[-1] - xs[-2], (ys[-1] - ys[-2]) / (xs[-1] - xs[-2])
-        if n >= 3:
-            h1, d1 = xs[-2] - xs[-3], (ys[-2] - ys[-3]) / (xs[-2] - xs[-3])
-            m = _end_slope(h0, h1, d0, d1)
-        else:
-            m = d0
-        return ys[-1] + m * (x - xs[-1])
-    h0, d0 = xs[1] - xs[0], (ys[1] - ys[0]) / (xs[1] - xs[0])
-    if n >= 3:
-        h1, d1 = xs[2] - xs[1], (ys[2] - ys[1]) / (xs[2] - xs[1])
-        m = _end_slope(h0, h1, d0, d1)
-    else:
-        m = d0
-    return ys[0] + m * (x - xs[0])
+    secs = [(ys[i + 1] - ys[i]) / (xs[i + 1] - xs[i]) for i in range(n - 1)]
+    m = 0.0 if (min(secs) < 0.0 < max(secs)) else min(secs, key=abs)
+    return (ys[-1] + m * (x - xs[-1])) if x > xs[-1] else (ys[0] + m * (x - xs[0]))
 
 
 # ── the view (registration §3; post-freeze note 3 §1, §4) ───────────────────────────────────────────────────────────

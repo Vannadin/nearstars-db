@@ -880,6 +880,38 @@ class Envelope(unittest.TestCase):
                         bad.append((v.ps[ia], t, got[2]))
             self.assertEqual(bad, [], rid)
 
+    @unittest.skipUnless(_shipped(), "no shipped assemblage record with its table (the engine branch without records)")
+    def test_rho_rises_where_the_table_rises(self):
+        """Directing 10-17: along P at fixed T, ρ at consecutive cell centres rises wherever the table's nodes of both
+        cells rise on both T rows (to 1e-5: the floor columns' rounding); where the table itself does not rise the read
+        follows the data. Mutant: the PCHIP end slope past a run's end (bse 20.9 GPa, 2075 K fell 1.2 %)."""
+        for rid, rec, tb in _shipped():
+            v = ma.view(ma.mv.thaw_plain(rec), tb, 1600.0)
+            bad = []
+            for ib in range(len(v.ts) - 1):
+                t, last = 0.5 * (v.ts[ib] + v.ts[ib + 1]), None
+                for ia in range(len(v.ps) - 1):
+                    if v.ps[ia + 1] > v.p_dataset:
+                        break
+                    got = v._solid(math.sqrt(v.ps[ia] * v.ps[ia + 1]), t)
+                    if isinstance(got, st.Stop):
+                        last = None
+                        continue
+                    if last is not None and ia >= 1:
+                        cols = [[(v._cell(j, k) or {}).get("rho") for k in (ib, ib + 1)] for j in (ia - 1, ia, ia + 1)]
+                        rises = all(a and b and c and a < b < c for a, b, c in zip(*cols))
+                        if rises and got[0] < last * (1.0 - 1e-5):
+                            bad.append((v.ps[ia], t, got[0] / last - 1.0))
+                    last = got[0]
+            self.assertEqual(bad, [], rid)
+
+    def test_extrapolation_never_steepens(self):
+        """Past a run's end the value follows the gentlest secant of the run (0 where the secants change sign)."""
+        xs, ys = [0.0, 1.0, 2.0, 3.0], [10.0, 20.0, 21.0, 22.0]
+        self.assertEqual(ma._pchip_1d(-1.0, xs, ys), 9.0)          # the gentlest secant 1, not the steep first one
+        self.assertEqual(ma._pchip_1d(4.0, xs, ys), 23.0)
+        self.assertEqual(ma._pchip_1d(-1.0, xs, [10.0, 20.0, 15.0, 16.0]), 10.0)   # secants change sign: held
+
     def test_empty_region_read_never_extrapolates(self):
         """The planted form of the dmm case: a row whose two cut edges bound an empty region elsewhere than the read's
         x; the empty-region read holds the nearer curve's value instead of carrying the neighbours' difference."""
