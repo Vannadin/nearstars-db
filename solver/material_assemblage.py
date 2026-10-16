@@ -1215,7 +1215,10 @@ class AssemblageView(mv.RecordView):
         self.cut_counts["reads"] += 1
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
         n_t = len(self.ts)
-        rel = {c for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1) for _, c in self._partition(k)}
+        # in curve id order: a set of curves iterates by object address, which differs between processes, and the
+        # corrections below are summed in this order, so a set made the answers differ in their last bits run to run
+        rel = sorted({c for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1) for _, c in self._partition(k)},
+                     key=lambda c: c.id)
         pbs = {c: c.p_b_ext(t, self._reach) for c in rel}
         sides = {c: (None if pb is None else (-1 if pr < pb else 1)) for c, pb in pbs.items()}
         out = {}
