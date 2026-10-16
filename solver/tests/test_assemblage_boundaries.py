@@ -653,9 +653,9 @@ class Choices(unittest.TestCase):
 
     def test_far_side_unreadable_never_refuses_the_near_side(self):
         """68 B1: an edge whose far side has no dT/dP or c_P at a corner row (only ρ) never refuses the near side
-        inside the window: δ is then linear in t between the corner rows' own differences (0 in the row where the far
-        side has none), so the read stays continuous in T across the row lines (δ := 0 stepped dT/dP ×3 at
-        default_bse 133 GPa, 3550 K). The far side's own read refuses."""
+        inside the window: δ's far-side read takes, in that row, the nearest region with a run at its bounding curve
+        (_row_reach), so the row's difference is 0 there and the read stays continuous in T across the row lines (δ := 0
+        stepped dT/dP ×3 at default_bse 133 GPa, 3550 K). The far side's own read refuses."""
         tb = table(cls="edge_in", right="ol+opx+gt")
         p_b = pb_const(0.0)
         for c in tb["cells"]:
@@ -671,11 +671,13 @@ class Choices(unittest.TestCase):
         t = 1210.0
         got = v._solid(p, t)
         self.assertNotIsInstance(got, st.Stop)
-        self.assertGreater(v.cut_counts["row_delta_reads"], 0)
-        k = TS.index(1200.0)                                       # δ linear in t: row 1200's difference, 0 at 1250 K
-        d0 = v._row_value("dtdp_eq", k, 0, xb, False) - v._row_value("dtdp_eq", k, 1, xb, False)
-        self.assertGreater(abs(d0), 1e-3 * abs(v._row_value("dtdp_eq", k, 0, xb, False)))
-        self.assertAlmostEqual(v._delta("dtdp_eq", c, xb, w, t, 14, k, {c: -1}, {c: p_b}), 0.8 * d0, delta=1e-12 * abs(d0))
+        self.assertGreater(v.cut_counts["reach_rows"], 0)
+        k = TS.index(1250.0)                                       # the far side's empty row reads the near side at P_b
+        self.assertIsNone(v._row_value("dtdp_eq", k, 1, xb, False))
+        self.assertEqual(v._row_reach("dtdp_eq", k, 1), v._row_value("dtdp_eq", k, 0, xb, False))
+        d0 = v._row_value("dtdp_eq", k - 1, 0, xb, False) - v._row_value("dtdp_eq", k - 1, 1, xb, False)
+        self.assertGreater(abs(d0), 1e-3 * abs(v._row_value("dtdp_eq", k - 1, 0, xb, False)))   # the planted δ
+        self.assertEqual(v._delta("dtdp_eq", c, xb, w, 1250.0, 14, k, {c: -1}, {c: p_b}), 0.0)
         for tl in (1200.0, 1250.0):                                # continuous in T at the row lines, every field
             a, b = v._solid(p, tl - 1e-7), v._solid(p, tl + 1e-7)
             for f in range(3):

@@ -841,11 +841,11 @@ class AssemblageView(mv.RecordView):
         self._parts, self._runcache = {}, {}
         #: the read counts of this view ((R1), 68 S1): reads, corner rows read in an empty region, outer rows dropped
         #: (reads, most in one read), refusals by class, edge corrections applied, side fallbacks (0 by
-        #: construction: the extension covers the stencil), and δ taken from the corner rows' differences because a side
-        #: has no value in a corner row (_delta, per edge and field)
+        #: construction: the extension covers the stencil), corner rows δ read from the nearest region with a run
+        #: (_row_reach), and δ taken from the corner rows' differences because a corner row has no run at all (_delta)
         self.cut_counts = {"reads": 0, "empty_region_reads": 0, "row_drop_reads": 0, "row_drop_max": 0,
                            "cap_refusals": 0, "no_run_refusals": 0, "by_count_reads": 0, "corrections": 0,
-                           "side_fallbacks": 0, "row_delta_reads": 0}
+                           "side_fallbacks": 0, "row_delta_reads": 0, "reach_rows": 0}
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
 
     # the table read ──────────────────────────────────────────────────────────────────────────────────────────
@@ -1066,22 +1066,41 @@ class AssemblageView(mv.RecordView):
         rl, rr = self._side_rows(f, xb, ib, {**sd, c: -1}), self._side_rows(f, xb, ib, {**sd, c: 1})
         if all(k in rl and k in rr for k in (ib, ib + 1)):
             return _cubic1(t, self.ts, _Seq(rl, len(self.ts)), ib) - _cubic1(t, self.ts, _Seq(rr, len(self.ts)), ib)
-        # 68 B1: a side with no value in a corner row never refuses the read. δ is then linear in t between the corner
-        # rows' own differences L_k − R_k (0 in a row where a side has none): at a row line both forms reduce to that
-        # row's difference, so δ stays continuous in t; counted
+        # a corner row with no run for f at all (both sides alike): δ linear in t between the corner rows' own
+        # differences L_k − R_k (0 in that row); at a row line both forms reduce to that row's difference, and every
+        # edge of the read meets the same empty row, so their corrections still telescope; counted
         self.cut_counts["row_delta_reads"] += 1
         d = [rl[k] - rr[k] if k in rl and k in rr else 0.0 for k in (ib, ib + 1)]
         return d[0] + (t - self.ts[ib]) / (self.ts[ib + 1] - self.ts[ib]) * (d[1] - d[0])
 
+    def _row_reach(self, f, k, r):
+        """A corner row's value for δ in region r where _row_value has none (r empty and no run on one side): the
+        nearest region with a run, at its bounding curve toward r (constant). It depends on the row and the region
+        alone, so a region shared by two edges' δ (two edges crossing at x_b) reads alike in both and their
+        corrections telescope; None when the row has no run for f at all."""
+        runs, part = self._runs(f, k), self._partition(k)
+        lo = next((q for q in range(r - 1, -1, -1) if runs.get(q)), None)
+        hi = next((q for q in range(r + 1, len(part) + 1) if runs.get(q)), None)
+        if lo is None and hi is None:
+            return None
+        self.cut_counts["reach_rows"] += 1
+        if lo is not None:
+            return self._run_value(f, k, lo, math.log(part[lo][0]), False)
+        return self._run_value(f, k, hi, math.log(part[hi - 1][0]), False)
+
     def _side_rows(self, f, x, ib, sides):
-        """One side's stencil row values at x_b for δ: as _value's rows, but uncapped (x_b moves with t, so a cap would
-        switch inside a T cell; the cap only refuses, it changes no value), and a row with no value is left out
-        instead of refusing (68 B1 on d7cc971d). {row: value}."""
+        """One side's stencil row values at x_b for δ (68 B1 on d7cc971d: a side never refuses the read): as _value's
+        rows, but uncapped (x_b moves with t, so a cap would switch inside a T cell; the cap only refuses, it changes
+        no value); a corner row with no value in its region reads the nearest region with a run (_row_reach), an outer
+        row with none is left out, as _value drops it. {row: value}. Where both actual reads stand at x_b this is their
+        value, so δ = L − R keeps the read continuous at P_b."""
         n_t = len(self.ts)
         rows = {}
         for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1):
             r = self._region(k, sides, x)
             v = self._row_value(f, k, r, x, False)
+            if v is None and k in (ib, ib + 1):
+                v = self._row_reach(f, k, r)
             if v is None:
                 continue
             if k in (ib, ib + 1) and not self._runs(f, k).get(r):
