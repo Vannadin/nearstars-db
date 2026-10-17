@@ -158,19 +158,48 @@ class RunEnd(unittest.TestCase):
 
     def test_gap_end_shared_with_the_bridge(self):
         """An end facing a gap takes PCHIP's end slope clipped against the gap's secant, in its end segment and in the
-        bridge alike: C¹ at both run ends."""
+        bridge alike: C¹ at both run ends. The bridge is the linear join plus each end's bump over L = min(¼ h_end, h/2).
+        Mutant: the cubic Hermite bridge (its value at the gap's middle is 4.19375, not 4)."""
         a = ma._Run([0.0, 1.0, 2.0, 3.0], [0.0, 0.1, 1.0, 3.0], [0, 1, 2, 3], 0)   # gentlest secant 0.1: Z's s_n 0.4
         b = ma._Run([4.0, 5.0, 6.0], [5.0, 6.0, 7.0], [4, 5, 6], 0)
         s = (b[1][0] - a[1][-1]) / (b[0][0] - a[0][-1])
         a.set_end(True, s)
         b.set_end(False, s)
         self.assertEqual((a.se_hi, s, a.m_hi), (2.55, 2.0, 2.55))      # PCHIP's end slope, inside the clip's 3|s|
-        # the planted bridge value at the gap's middle: the Hermite from (3, 3, slope 2.55) to (4, 5, slope 1)
-        self.assertAlmostEqual(ma._bridge(3.5, a, b), 0.5 * (3.0 + 5.0) + 0.125 * (2.55 - 1.0), places=12)
+        # planted values: the join's middle (both bumps 0 past L = 0.25), and 0.1 into each end's bump
+        self.assertAlmostEqual(ma._bridge(3.5, a, b), 4.0, places=12)
+        self.assertAlmostEqual(ma._bridge(3.1, a, b), 3.2 + 0.55 * 0.1 * 0.6 ** 2, places=12)
+        self.assertAlmostEqual(ma._bridge(3.9, a, b), 4.8 + 1.0 * 0.1 * 0.6 ** 2, places=12)
         h = 1e-6
         for x, left_f, right_f in ((3.0, a.value, lambda x: ma._bridge(x, a, b)),
                                    (4.0, lambda x: ma._bridge(x, a, b), b.value)):
             self.assertAlmostEqual((left_f(x) - left_f(x - h)) / h, (right_f(x + h) - right_f(x)) / h, delta=1e-4)
+
+    def test_cap_by_field(self):
+        """END_CAPPED: an open end's node slope is capped at 4|s∞| for ρ only; dT/dP and c_P keep PCHIP's end slope (the
+        hold-out truth). Unit: a run whose s_e 5.5 exceeds 4·s∞ = 4. Mutant: the cap on every field."""
+        xs, ys = [0.0, 1.0, 2.0], [0.0, 4.0, 5.0]
+        self.assertEqual(ma._Run(xs, ys, [0, 1, 2], 0).m_lo, 4.0)
+        free = ma._Run(xs, ys, [0, 1, 2], 0, capped=False)
+        self.assertEqual(free.m_lo, free.se_lo)
+        self.assertGreater(free.m_lo, 4.0)
+        self.assertEqual(ma.END_CAPPED, frozenset({"rho"}))
+
+    @unittest.skipUnless(_shipped(), "no shipped assemblage record with its table (the engine branch without records)")
+    def test_cap_by_field_wired(self):
+        """_runs builds each field's runs with its cap: on the shipped bse record some ρ open end and some dT/dP or c_P
+        open end have |s_e| > 4|s∞| > 0, and only ρ's node slope is capped there."""
+        v = _view(mr.load(), "silicate_slb_default_bse")
+        seen = set()
+        for f in ("rho", "dtdp_eq", "c_p"):
+            for k in range(len(v.ts)):
+                for runs in v._runs(f, k).values():
+                    q = runs[0]
+                    if len(q[0]) > 1 and q.f_lo != 0.0 and abs(q.se_lo) > 4.0 * abs(q.f_lo) and len(runs) == 1:
+                        self.assertEqual(q.m_lo, 4.0 * q.f_lo if f == "rho" else q.se_lo, (f, k))
+                        seen.add(f)
+        self.assertIn("rho", seen)
+        self.assertTrue(seen & {"dtdp_eq", "c_p"})
 
     def test_one_node_gap_partner(self):
         """An end whose gap's far side is a one-node run (slope 0 in the bridge) keeps its own slope, clipped against
