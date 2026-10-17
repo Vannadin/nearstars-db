@@ -21,6 +21,11 @@ def _record(rid):
     return thaw(reg.records[rid])
 
 
+def _shipped_bse():
+    reg = mr.load()
+    return isinstance(reg, mr.Registry) and "silicate_slb_default_bse" in reg.tables
+
+
 class RecordEvents(unittest.TestCase):
     def test_h2o_events_from_its_declarations(self):
         """Seams, solid–solid curves (seam events), melting curves (terminal) and the 130 K source-seam isotherm."""
@@ -61,6 +66,52 @@ class RecordEvents(unittest.TestCase):
             res = st.run(rhs.make_rhs(Past()), m_, (r_, 2.0e9, 340.0, 340.0, 0.0, 0.0), 0.995 * m_, opt,
                          [dataclasses.replace(vi, component=comp)])
             self.assertEqual((res.stop.kind, [e[0] for e in res.events]), want, comp)
+
+    def test_curve_scale_is_its_largest_p_b(self):
+        """Pre-run C1 on 68e47ffc: a record curve event's landing scale is its curve's largest |P_b| over 50–10 000 K,
+        so its tolerance is relative to P as phase 1's seams (scale = p_b); a fixed 1e9 was 1e-3 Pa. Absent everywhere:
+        1e9."""
+        class View:
+            def boundary_pressure(self, curve, t):
+                return None if not curve["lo"] <= t <= curve["hi"] else 1.0e10 + 2.0e6 * t
+        v = View()
+        self.assertEqual(events.curve_p_scale(v, {"lo": 1000.0, "hi": 3000.0}), 1.0e10 + 2.0e6 * 3000.0)
+        self.assertEqual(events.curve_p_scale(v, {"lo": 20000.0, "hi": 30000.0}), 1.0e9)
+        hv = mv.RecordView(_record("h2o"), 340.0)
+        (vi,) = [e for e in events.layer_events(hv) if e.name == "phase:VI|vii_x"]
+        self.assertGreater(vi.scale, 1.0e9)
+
+    @unittest.skipUnless(_shipped_bse(), "no shipped default_bse record with its table (the engine branch without records)")
+    def test_edge_lands_at_its_p_scale(self):
+        """Pre-run C1 on 68e47ffc: earth O9 2135.35 K's landing on default_bse's edge427 (wa+gt+fp|gt+fp) at 16.9 GPa,
+        captured at the step that crossed it (adaptive, the solve's own options). At scale 1e9 (tolerance 1e-3 Pa) the
+        re-steps reproduce P only to ~±4e-3 Pa there and no new-side iterate falls inside: event_unlanded (the mutant).
+        At the curve's P scale it lands."""
+        import dataclasses
+        from solver import material_assemblage as ma, rhs
+        reg = mr.load()
+        rid = "silicate_slb_default_bse"
+        got = reg.records[rid]
+        hid = got["assemblage"]["handover"]
+        ho = ma.HandOver(thaw(reg.records[hid]), reg.tables[hid], rid, 1.5 * float(got["assemblage"]["p_dataset"]))
+        v = ma.view(thaw(got), reg.tables[rid], 2135.3511104889826, 0.0, 0.0, ho)
+        (ev,) = [e for e in events.record_events(v) if e.name == "phase:edge427:wa+gt+fp|gt+fp"]
+        x = 5.902044125836793e+24
+        y = (3372110.8592750556, 15773166429.591904, 2501.797174057437, 2501.797174057437, 5.519101142731295e+35, 0.0)
+        k1 = (2.0319501618785867e-18, -2.4243255396972823e-13, -4.304052193708393e-21, -4.304052193708393e-21,
+              -7580754431493.836, -0.0)
+        opt = st.Options(rtol=1e-10, floors=(3.5073921716089398e-06, 1.0e5, 10.0, 10.0, math.inf, math.inf),
+                         h0=5.972e+21, h_min=5972000000.000001, h_max=2.986e+23, max_steps=200000,
+                         event_min_progress=5972000000000001.0, event_restarts_step=4, event_restarts_run=2000)
+        f, s_hi = rhs.make_rhs(v), -5.972e+21
+        out_hi = st.step(f, x, y, s_hi, k1)
+        self.assertLess(ev.g(x, y), 0.0)
+        self.assertGreater(ev.g(x + s_hi, out_hi[0]), 0.0)                   # the step crosses the curve
+        for scale, landed in ((ev.scale, True), (1.0e9, False)):
+            e = dataclasses.replace(ev, scale=scale)
+            r = st._land(f, e, x, y, k1, s_hi, out_hi, e.g(x, y), opt, st.Counters())
+            self.assertEqual(not isinstance(r, st.Stop), landed, (scale, getattr(r, "kind", None)))
+        self.assertGreater(ev.scale, 1.5e10)
 
     def test_onset_curves_hook_is_present_and_empty(self):
         """68 N63: the graze monitor reads a record view's onset_curves (legacy's signature); none are declared today,
