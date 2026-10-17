@@ -927,6 +927,7 @@ def _bridge(x, a, b):
     va, vb = a[1][-1], b[1][0]
     h = xb_ - xa
     s = (vb - va) / h
+    return va + s * (x - xa)                             # the third draw's fallback: C⁰'s linear join (evaluation only)
     la = min(END_BUMP * (xa - a[0][-2]), 0.5 * h) if len(a[0]) > 1 else 0.5 * h
     lb = min(END_BUMP * (b[0][1] - xb_), 0.5 * h) if len(b[0]) > 1 else 0.5 * h
     da, db = x - xa, xb_ - x
