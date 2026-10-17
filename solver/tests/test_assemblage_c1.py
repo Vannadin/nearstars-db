@@ -108,7 +108,7 @@ class C1(unittest.TestCase):
             _ts, ps = ks.full_lines(v)
             p_lines = [min(ps, key=lambda q: abs(q / 1e9 - g)) for g in p_gpa]
             kinks = ks.scan(v, p_lines=t_lines_at, t_lines=p_lines)
-            self.assertEqual(ks.violations(kinks), [], rid)
+            self.assertEqual(ks.violations(kinks, rid), [], rid)
             named += len(kinks)
         self.assertGreater(named, 0)                         # the scan sees the named classes it bounds
 
@@ -118,11 +118,7 @@ class C1(unittest.TestCase):
         for rid in RECORDS:
             v = _view(reg, rid)
             ts, ps = ks.full_lines(v)
-            self.assertEqual(ks.violations(ks.scan(v, p_lines=ts, t_lines=ps)), [], rid)
-
-
-if __name__ == "__main__":
-    unittest.main()
+            self.assertEqual(ks.violations(ks.scan(v, p_lines=ts, t_lines=ps), rid, full=True), [], rid)
 
 
 class RunEnd(unittest.TestCase):
@@ -163,37 +159,48 @@ class RunEnd(unittest.TestCase):
     def test_gap_end_shared_with_the_bridge(self):
         """An end facing a gap takes PCHIP's end slope clipped against the gap's secant, in its end segment and in the
         bridge alike: C¹ at both run ends."""
-        a = ma._Run([0.0, 1.0, 2.0], [0.0, 1.0, 3.0], [0, 1, 2], 0)
-        b = ma._Run([3.0, 4.0, 5.0], [4.0, 4.5, 5.0], [3, 4, 5], 0)
+        a = ma._Run([0.0, 1.0, 2.0, 3.0], [0.0, 0.1, 1.0, 3.0], [0, 1, 2, 3], 0)   # gentlest secant 0.1: Z's s_n 0.4
+        b = ma._Run([4.0, 5.0, 6.0], [5.0, 6.0, 7.0], [4, 5, 6], 0)
         s = (b[1][0] - a[1][-1]) / (b[0][0] - a[0][-1])
         a.set_end(True, s)
         b.set_end(False, s)
-        self.assertEqual(a.m_hi, ma._clip_fc(a.se_hi, s, s))
+        self.assertEqual((a.se_hi, s, a.m_hi), (2.55, 2.0, 2.55))      # PCHIP's end slope, inside the clip's 3|s|
+        # the planted bridge value at the gap's middle: the Hermite from (3, 3, slope 2.55) to (4, 5, slope 1)
+        self.assertAlmostEqual(ma._bridge(3.5, a, b), 0.5 * (3.0 + 5.0) + 0.125 * (2.55 - 1.0), places=12)
         h = 1e-6
-        for x, run_side, bridge_side in ((2.0, lambda x: a.value(x), lambda x: ma._bridge(x, a, b)),
-                                         (3.0, lambda x: ma._bridge(x, a, b), lambda x: b.value(x))):
-            left = (run_side(x) - run_side(x - h)) / h if x == 2.0 else (bridge_side(x) - bridge_side(x - h)) / h
-            right = (bridge_side(x + h) - bridge_side(x)) / h if x == 2.0 else (run_side(x + h) - run_side(x)) / h
-            self.assertAlmostEqual(left, right, delta=1e-4)
+        for x, left_f, right_f in ((3.0, a.value, lambda x: ma._bridge(x, a, b)),
+                                   (4.0, lambda x: ma._bridge(x, a, b), b.value)):
+            self.assertAlmostEqual((left_f(x) - left_f(x - h)) / h, (right_f(x + h) - right_f(x)) / h, delta=1e-4)
+
+    #: the ρ-monotone cases each run-end variant failed (rhomono on the three records): (record, T row, P range GPa)
+    #: - bse 2100 K, 19–25 GPa: dd3e58a7's steep first segment (22.49 → 23.62 GPa), and the linear ramp's offset
+    #:   carried past 21.42 GPa at 2125 K (−0.2 % to −1.4 %);
+    #: - bse 900 K, 10–14 GPa: a loop cell's end segment at 11.93 GPa, 925 K, under L = 0 and an end-two s∞ (−1e-4)
+    CASES = (("silicate_slb_default_bse", 2100.0, 19.0, 25.0), ("silicate_slb_default_bse", 900.0, 10.0, 14.0))
 
     @unittest.skipUnless(_shipped(), "no shipped assemblage record with its table (the engine branch without records)")
-    def test_bse_2100K_case(self):
-        """dd3e58a7's case: bse row 2100 K, a run whose first segment is a steep transition (22.49 → 23.62 GPa). At
-        2125 K, ρ at cell centres from 19 to 25 GPa rises wherever the table rises (as Envelope's test, on this line)."""
+    def test_named_rho_cases(self):
+        """On each case's line (the cell centres' T above the row), ρ at consecutive cell centres rises wherever the
+        table rises (Envelope's test, on these lines). Mutants: L = 0, no cap, the linear ramp, s∞ end-two."""
         reg = mr.load()
-        v = _view(reg, "silicate_slb_default_bse")
-        ib = max(i for i, t in enumerate(v.ts) if t <= 2100.0)
-        t, last, bad = 0.5 * (v.ts[ib] + v.ts[ib + 1]), None, []
-        for ia in range(len(v.ps) - 1):
-            if not 19e9 <= v.ps[ia] <= 25e9:
-                continue
-            got = v._solid(math.sqrt(v.ps[ia] * v.ps[ia + 1]), t)
-            if not isinstance(got, tuple):
-                last = None
-                continue
-            if last is not None:
-                cols = [[(v._cell(j, k) or {}).get("rho") for k in (ib, ib + 1)] for j in (ia - 1, ia, ia + 1)]
-                if all(p and q and r and p < q < r for p, q, r in zip(*cols)) and got[0] < last * (1.0 - 1e-5):
-                    bad.append((v.ps[ia], got[0] / last - 1.0))
-            last = got[0]
-        self.assertEqual(bad, [])
+        for rid, row, lo, hi in self.CASES:
+            v = _view(reg, rid)
+            ib = max(i for i, t in enumerate(v.ts) if t <= row)
+            t, last, bad = 0.5 * (v.ts[ib] + v.ts[ib + 1]), None, []
+            for ia in range(len(v.ps) - 1):
+                if not lo * 1e9 <= v.ps[ia] <= hi * 1e9:
+                    continue
+                got = v._solid(math.sqrt(v.ps[ia] * v.ps[ia + 1]), t)
+                if not isinstance(got, tuple):
+                    last = None
+                    continue
+                if last is not None:
+                    cols = [[(v._cell(j, k) or {}).get("rho") for k in (ib, ib + 1)] for j in (ia - 1, ia, ia + 1)]
+                    if all(p and q and r and p < q < r for p, q, r in zip(*cols)) and got[0] < last * (1.0 - 1e-5):
+                        bad.append((v.ps[ia], got[0] / last - 1.0))
+                last = got[0]
+            self.assertEqual(bad, [], (rid, row))
+
+
+if __name__ == "__main__":
+    unittest.main()
