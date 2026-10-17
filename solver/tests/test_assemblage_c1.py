@@ -187,13 +187,16 @@ class RunEnd(unittest.TestCase):
     #: the ρ-monotone cases each run-end variant failed (rhomono on the three records): (record, T row, P range GPa)
     #: - bse 2100 K, 19–25 GPa: dd3e58a7's steep first segment (22.49 → 23.62 GPa), and the linear ramp's offset
     #:   carried past 21.42 GPa at 2125 K (−0.2 % to −1.4 %);
-    #: - bse 900 K, 10–14 GPa: a loop cell's end segment at 11.93 GPa, 925 K, under L = 0 and an end-two s∞ (−1e-4)
-    CASES = (("silicate_slb_default_bse", 2100.0, 19.0, 25.0), ("silicate_slb_default_bse", 900.0, 10.0, 14.0))
+    #: - bse 900 K, 10–14 GPa: a loop cell's end segment at 11.93 GPa, 925 K, under L = 0 and an end-two s∞ (−1e-4), and
+    #:   under a sharper ρ blend (BLEND_SHARP ρ 2: −5e-3);
+    #: - dmm 1000 K, 11–14 GPa: 12.52 GPa, 1025 K, under BLEND_SHARP ρ 2 (−1.1e-3; 68 on BLEND_SHARP, condition 1)
+    CASES = (("silicate_slb_default_bse", 2100.0, 19.0, 25.0), ("silicate_slb_default_bse", 900.0, 10.0, 14.0),
+             ("silicate_slb_earth_dmm_wh2005", 1000.0, 11.0, 14.0))
 
     @unittest.skipUnless(_shipped(), "no shipped assemblage record with its table (the engine branch without records)")
     def test_named_rho_cases(self):
         """On each case's line (the cell centres' T above the row), ρ at consecutive cell centres rises wherever the
-        table rises (Envelope's test, on these lines). Mutants: L = 0, no cap, the linear ramp, s∞ end-two."""
+        table rises (Envelope's test, on these lines). Mutants: L = 0, no cap, the linear ramp, s∞ end-two, κ_ρ = 2."""
         reg = mr.load()
         for rid, row, lo, hi in self.CASES:
             v = _view(reg, rid)
