@@ -1,0 +1,49 @@
+# 착지당 한 번 도는 C¹ 전체 꺾임 조사 — 시험 묶음 밖(파일 이름이 test_ 아님), PC 회차가 기록마다 한 단계로 돌리고 위반이 있으면 실패로 끝남
+"""The full kink scan (68 ruling 4: «the full scan as a HEAVY test per landing on the PC», i.e. once per landing).
+
+It ran as test_assemblage_c1's test_kinks_named_and_bounded_full under NEARSTARS_HEAVY; evc_acceptance.physics() sets
+that flag, so the ~75 min scan ran inside each of the round's three EVC suites (directing 10-18). It is now outside the
+suite (this file is not a test_*.py), and the round runs it once per record as its own phase-1 task: the task fails
+(exit 1) on any kink outside the named classes or above their bounds, which STOPs the round. The in-suite subset
+(test_kinks_named_and_bounded_subset) stays in every suite.
+
+Run from the worktree root:  <solver venv>/python -m solver.tests.landing_kink_scan OUT.json [record …]
+(default: the three SLB records). OUT.json gets {record: {"kinks": n, "violations": [...]}}."""
+import json
+import sys
+
+from solver import material_registry as mr
+from solver.tests import kinkscan as ks
+from solver.tests.test_assemblage_c1 import RECORDS, _shipped, _view
+
+
+def full(reg, rid):
+    """The full scan of one record: every line kinkscan.full_lines gives, in both directions; (kinks, violations)."""
+    v = _view(reg, rid)
+    ts, ps = ks.full_lines(v)
+    kinks = ks.scan(v, p_lines=ts, t_lines=ps)
+    return kinks, ks.violations(kinks, rid, full=True)
+
+
+def main(argv):
+    out, rids = argv[0], argv[1:] or list(RECORDS)
+    if not _shipped():
+        print("STOP: the tip ships no SLB records with their tables; the landing scan has nothing to read")
+        return 2
+    reg = mr.load()
+    res, bad = {}, 0
+    for rid in rids:
+        if rid not in RECORDS:
+            print(f"STOP: {rid} is not an SLB record ({', '.join(RECORDS)})")
+            return 2
+        kinks, viol = full(reg, rid)
+        res[rid] = {"kinks": len(kinks), "violations": [repr(x) for x in viol]}
+        bad += len(viol)
+        print(f"{rid}: {len(kinks)} kinks, {len(viol)} outside the named classes or above their bounds", flush=True)
+    with open(out, "w") as f:
+        json.dump(res, f, indent=1, sort_keys=True)
+    return 1 if bad else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

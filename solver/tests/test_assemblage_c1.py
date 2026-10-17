@@ -6,20 +6,18 @@
 - Side reads leave nothing on the read (ruling 1 (3)): inside the windows a read's notes and counts are its own read's
   (the blend switched off), and a point read cold (fresh view) and warm (after the other points) is the same.
 - Slope jumps (68 ruling 4): kinkscan's subset of lines finds no kink outside the named classes or above their bounds;
-  the full scan does the same as a NEARSTARS_HEAVY test, run once per landing.
+  the full scan does the same once per landing, outside the suite (landing_kink_scan.py, a PC round task).
 
 Run from the worktree root:  <solver venv>/python -m unittest solver.tests.test_assemblage_c1
 """
 import dataclasses
 import math
-import os
 import unittest
 
 from solver import material_assemblage as ma, material_registry as mr, material_view as mv
 from solver.from_v1 import thaw
 from solver.tests import kinkscan as ks
 
-HEAVY = os.environ.get("NEARSTARS_HEAVY") == "1"
 #: the in-suite kink subset (68 ruling 4, Q4): per record two fixed-T lines that hold T-clip kinks and one fixed-P line
 #: (the full scan's line nearest the given GPa) that holds a T-row-line kink, at v4
 SUBSET = {"silicate_slb_default_bse": ((1068.5, 1568.5), (0.9606,)),
@@ -119,13 +117,16 @@ class C1(unittest.TestCase):
             named += len(kinks)
         self.assertGreater(named, 0)                         # the scan sees the named classes it bounds
 
-    @unittest.skipUnless(HEAVY and _shipped(), "NEARSTARS_HEAVY=1 (the full kink scan, about 25 min per record)")
-    def test_kinks_named_and_bounded_full(self):
-        reg = mr.load()
-        for rid in RECORDS:
-            v = _view(reg, rid)
-            ts, ps = ks.full_lines(v)
-            self.assertEqual(ks.violations(ks.scan(v, p_lines=ts, t_lines=ps), rid, full=True), [], rid)
+    def test_landing_scan_is_the_full_scan(self):
+        """The full scan runs once per landing outside the suite (solver/tests/landing_kink_scan.py, a phase-1 task of
+        the PC round; directing 10-18). Its scan is every full line in both directions with the full bounds, on the
+        same view as the subset; the module is not collected by discover."""
+        import inspect
+        from solver.tests import landing_kink_scan as lk
+        src = inspect.getsource(lk.full)
+        for part in ("ks.full_lines(v)", "ks.scan(v, p_lines=ts, t_lines=ps)", "full=True", "_view(reg, rid)"):
+            self.assertIn(part, src)
+        self.assertFalse(lk.__name__.rsplit(".", 1)[1].startswith("test"))
 
 
 class RunEnd(unittest.TestCase):
