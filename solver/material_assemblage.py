@@ -1244,26 +1244,27 @@ class AssemblageView(mv.RecordView):
                                       TAPER_GRADE if w < 1.0 else self.handover.grade, rho_origin, dt_band,
                                       "max((1 − w)·the cell's dT/dP band, w·band_HO) (note 7 §4) + the 136 GPa "
                                       "match's (1 − w)·|Δ(dT/dP)|/(dT/dP) (delta 1)"))
-        self._loop_taper_note(w, ib, rho, dtdp, cp)
+        self._taper_term_notes(w, ib, rho, dtdp, cp)
         return rho, dtdp, cp, cells
 
-    def _loop_taper_note(self, w, ib, rho, dtdp, cp):
-        """§7.4 above p_dataset (68's ruling): in the zone the dataset-top cell on the read's T row, the cell whose upper
-        node is p_dataset, carries its loop term as (1 − w)·e_loop, beside the taper's own band; scale as _term_notes'
-        on the zone's read. Above the zone's end (w = 1) nothing."""
-        cells, floor, src = self._terms["loop_terms"]
-        if not cells or w >= 1.0:
+    def _taper_term_notes(self, w, ib, rho, dtdp, cp):
+        """§4 / §7.4 above p_dataset (68's ruling, and 68 B2 on fc3aa664 for the interp term): the zone's read is matched
+        to the cut read at the dataset top, so it carries that read's terms faded with the zone's weight. Per term
+        block, the dataset-top cell on the read's T row (the cell whose upper node is p_dataset) gives (1 − w)·e,
+        beside the taper's own band; scale as _term_notes' on the zone's read. Above the zone's end (w = 1) nothing."""
+        if w >= 1.0:
             return
         ia = bisect.bisect_left(self.ps, self.p_dataset) - 1
-        e = cells.get((ia, ib))
-        if not e or not any(e):
-            return
-        e = tuple((1.0 - w) * x for x in e)
-        edge, grade, lead = TERM_NOTES["loop_terms"]
-        why = f"{lead}; (1 − w)·e_loop of the dataset-top cell ({ia}, {ib}), w = {w:.6g} (note 7's taper)"
-        self.notes.append(mv.BandNote(self.material_id, edge, "relative", e[0], None, grade, f"{why}; loop_terms {src}",
-                                      dtdp_error=e[1], dtdp_origin=why, c_p_error=e[2], c_p_origin=why,
-                                      scale=tuple(max(abs(v), fl) for v, fl in zip((rho, dtdp, cp), floor))))
+        for key, (edge, grade, lead) in TERM_NOTES.items():
+            cells, floor, src = self._terms[key]
+            e = cells.get((ia, ib)) if cells else None
+            if not e or not any(e):
+                continue
+            e = tuple((1.0 - w) * (0.0 if x is None else x) for x in e)
+            why = f"{lead}; (1 − w)·e of the dataset-top cell ({ia}, {ib}), w = {w:.6g} (note 7's taper)"
+            self.notes.append(mv.BandNote(self.material_id, edge, "relative", e[0], None, grade, f"{why}; {key} {src}",
+                                          dtdp_error=e[1], dtdp_origin=why, c_p_error=e[2], c_p_origin=why,
+                                          scale=tuple(max(abs(v), fl) for v, fl in zip((rho, dtdp, cp), floor))))
 
     def _table_read(self, p, t):
         """The table's own C¹ read at (P, T) below the current column cut (self._top)."""
@@ -2069,7 +2070,10 @@ class BasalView(mv.RecordView):
                                           "origin «the declared layer density»); dT/dP from the overlying assemblage "
                                           f"record {self.overlying.material_id} at the same (P, T)"))
         # the overlying view's dT/dP band rides with the basal layer's answer, attributed to the basal record (68)
-        self.notes.extend(dataclasses.replace(n, material_id=self.material_id)
+        # only its dT/dP terms: the layer's ρ is declared and it reads no c_P, so a term note's ρ and c_P terms stay
+        # with the overlying record (68 B1 on fc3aa664); scale kept, its dT/dP entry is the overlying read's
+        self.notes.extend(dataclasses.replace(n, material_id=self.material_id, error=None, c_p_error=None,
+                                              c_p_origin=None)
                           for n in got[2] if isinstance(n, mv.BandNote) and n.dtdp_error is not None)
         return (self.density_declared, got[1], tuple(self.notes))
 

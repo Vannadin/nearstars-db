@@ -83,6 +83,14 @@ class BandSum(unittest.TestCase):
         self.assertEqual((band["ri"]["c_p_error"], band["ri"]["c_p_origin"]), (0.02, "co"))
         self.assertNotIn("c_p_error", band["mc"])
 
+    def test_c_p_error_is_the_largest_met(self):
+        """68 n2 on fc3aa664: material_band's c_p_error is the largest over the nodes, not the last read."""
+        hi = (_note("ri", error=1e-3, cp=0.3, scale=(1.0, 1.0, 1.0)),)
+        lo = (_note("ri", error=1e-3, cp=0.1, scale=(1.0, 1.0, 1.0)),)
+        got = _collect({(1e9, 1000.0): (3300.0, 1e-8, hi), (2e9, 1000.0): (3300.0, 1e-8, lo)})
+        (band,) = [n for n in got if n.kind == "material_band"]
+        self.assertEqual(band.fields["c_p_error"], 0.3)
+
     def test_defaults_keep_old_notes(self):
         n = mv.BandNote("m", "e", "relative", 1e-3, None, "g", "o")
         self.assertEqual((n.c_p_error, n.c_p_origin, n.scale), (None, None, None))

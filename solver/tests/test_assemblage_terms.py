@@ -3,6 +3,7 @@
 test_assemblage_view's synthetic table, plus the load gate on a shipped table."""
 import copy
 import math
+import types
 import unittest
 
 from solver import material_assemblage as ma
@@ -169,6 +170,46 @@ class Read(unittest.TestCase):
         s = next(n for n in material_notes.collect(body, {"m": v}, acc) if n.kind == "material_band_sum")
         self.assertAlmostEqual(s.fields["dtdp"]["band"], mc.dtdp_error * abs(got[1]) + ri.dtdp_error * ri.scale[1],
                                delta=1e-22)
+
+
+class Taper(unittest.TestCase):
+    """68 B2 on fc3aa664: the zone above p_dataset carries the interp term of the dataset-top cell as (1 − w)·e, by the
+    one rule the loop term takes (_taper_term_notes)."""
+    def test_zone_carries_one_minus_w(self):
+        from solver.tests import test_assemblage_taper as tt
+        tb = with_block()
+        v = tt.view(tt.handover(), tb)
+        ia, ib = bisect.bisect_left(PS, tb["p_dataset"]) - 1, bisect.bisect_right(TS, 2017.0) - 1
+        e = (1e-4 * (ia + 1), 1e-2 + 1e-4 * ib, 2e-3)                   # block()'s terms at the dataset-top cell
+        F = ma.term_floor(tb["cells"], tb["p_dataset"])
+        for f in (0.1, 0.5, 0.9):
+            p = tt.PD + f * (tt.PE - tt.PD)
+            with self.subTest(f=f):
+                (n,), _ = terms(v, p, 2017.0)
+                w = ma._smoothstep(f)
+                for x, y in zip((n.error, n.dtdp_error, n.c_p_error), e):
+                    self.assertAlmostEqual(x, (1.0 - w) * y, delta=1e-15)
+                r, g, cp, _ = v._solid(p, 2017.0)
+                self.assertEqual(n.scale, (max(abs(r), F["rho"]), max(abs(g), F["dtdp"]), max(abs(cp), F["c_p"])))
+        self.assertEqual(terms(v, tt.PE * 1.05, 2017.0)[0], [])          # past the zone's end: the hand-over alone
+
+
+class Basal(unittest.TestCase):
+    """68 B1 on fc3aa664: a layer whose ρ is declared and that reads no c_P carries only the dT/dP terms of the
+    overlying read's band notes; scale is kept."""
+    def test_only_dtdp_terms_ride_with_the_basal_layer(self):
+        ri = mv.BandNote("over", "read interpolation", "relative", 7e-5, None, "g", "o", dtdp_error=0.05,
+                         dtdp_origin="do", c_p_error=7e-3, c_p_origin="co", scale=(4000.0, 2e-9, 1200.0))
+        mc = mv.BandNote("over", "dT/dP model consistency", "relative", None, None, "g", "o", dtdp_error=1e-3)
+        fl = mv.BandNote("over", "p_min floor", "relative", 1e-4, None, "g", "o")
+        over = types.SimpleNamespace(material_id="over", state=lambda p, t: (3300.0, 1e-8, (ri, mc, fl)))
+        rec = {"id": "silicate_basal_const", "kind": "layer_density", "phases": [{"id": "basal_melt"}]}
+        bv = ma.BasalView(rec, 4050.0, over, 1600.0)
+        got = [n for n in bv.state(2e10, 2000.0)[2] if isinstance(n, mv.BandNote)]
+        self.assertEqual([n.edge for n in got], ["read interpolation", "dT/dP model consistency"])
+        r = got[0]
+        self.assertEqual((r.material_id, r.error, r.dtdp_error, r.c_p_error, r.c_p_origin, r.scale),
+                         ("silicate_basal_const", None, 0.05, None, None, (4000.0, 2e-9, 1200.0)))
 
 
 if __name__ == "__main__":
