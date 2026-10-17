@@ -82,10 +82,10 @@ class RecordEvents(unittest.TestCase):
         self.assertGreater(vi.scale, 1.0e9)
 
     def test_gibbs_scale_is_the_boundary_terms(self):
-        """68 on C1, the same class: a gibbs boundary's scale is its largest P·|Δv| + T·|Δs| at the boundary, not a fixed
-        1e3 (tolerance 1e-9 J/kg, 4–100× under the landing's spread |Δv|·σ_P + |Δs|·σ_T). Planted linear G = v·P − s·T:
-        the boundary is P = 1.333e7·T, where the terms are 2·T·|Δs| (7.2e5 J/kg at 300 K). SeaFreeze's own Ih|water1
-        too. Mutant: 1e3."""
+        """68 on C1, the same class: a gibbs boundary's g is (G_a − G_b)/(v_a − v_b), a P, and its scale the largest
+        P + T·|Δs/Δv| at the boundary, not a fixed 1e3 on ΔG (1e-9 J/kg, 4–100× under the landing's spread). Planted
+        linear G = v·P − s·T: the boundary is P = 1.333e7·T, where the scale is 2P (8e9 Pa at 300 K). SeaFreeze's own
+        Ih|water1 too. Mutant: a fixed scale."""
         class Lib:
             def __init__(self, v, s):
                 self.v, self.s = v, s
@@ -93,17 +93,73 @@ class RecordEvents(unittest.TestCase):
             def at(self, p, t):
                 return {"rho": 1.0 / self.v, "g": self.v * p - self.s * t}
         got = events.gibbs_scale(Lib(1.0e-3, 0.0), Lib(1.09e-3, 1200.0), box=(1.0e6, 1.0e10, 250.0, 300.0))
-        self.assertGreater(got, 0.5 * 7.2e5)
-        self.assertLess(got, 1.5 * 7.2e5)
+        self.assertGreater(got, 0.5 * 8.0e9)
+        self.assertLess(got, 1.5 * 8.0e9)
         from solver import material_library as ml
         ih, wa = ml.SeaFreezePhase("Ih"), ml.SeaFreezePhase("water1")
-        self.assertGreater(events.gibbs_scale(ih, wa), 1.0e4)
+        self.assertGreater(events.gibbs_scale(ih, wa), 1.0e7)
         from types import SimpleNamespace                  # and record_events takes it for a library boundary
         stub = SimpleNamespace(phases=(SimpleNamespace(id="Ih", library=ih), SimpleNamespace(id="water1", library=wa)),
                                seams=lambda: (), source_seams=lambda: (),
                                transitions=lambda: ((("Ih", "water1"), "solid_solid", {"form": "library"}),))
         (ev,) = events.record_events(stub)
         self.assertEqual(ev.scale, events.gibbs_scale(ih, wa))
+
+    def test_gibbs_boundary_lands_held_on_the_old_side(self):
+        """Directing 10-17: a gibbs boundary lands with its stages held on the old side (component 1), as a curve does.
+        Its g is (G_a − G_b)/(v_a − v_b). (1) Planted linear G whose boundary is test_assemblage_boundaries' sloped curve
+        (23.83 GPa, 9.4e6 Pa/K, ρ 3717 → 3720 and dT/dP −4 % across): held it lands at three first-step sizes, unheld
+        (component None, the mutant) it chatters, as the curve did (Mars 1774 K). (2) SeaFreeze's own Ih|water1 on an
+        inward walk from 1 MPa, 270 K (crossing near 30 MPa, a 9 % density step): held it lands at three sizes."""
+        import dataclasses
+        from types import SimpleNamespace
+        from solver import material_library as ml, rhs
+        pb, k, va, vb = 23.83e9, 9.4e6, 1.0 / 3717.0, 1.0 / 3720.0
+        dv = va - vb
+
+        class Lib:
+            def __init__(self, a):
+                self.a = a
+
+            def at(self, p, t):
+                if self.a:
+                    return {"rho": 1.0 / va, "g": va * p - dv * k * t + dv * (k * 1600.0 - pb)}
+                return {"rho": 1.0 / vb, "g": vb * p}
+
+        def walk(ev, state, y0, m_, r_, h0s, comp, end=0.5):
+            rs = rhs.r_scale_of(m_, 3.0 * m_ / (4.0 * math.pi * r_ ** 3))
+            out = []
+            for h0 in h0s:
+                o = st.Options(rtol=1e-10, floors=rhs.floors(m_, rs), h0=h0 * m_, h_min=1e-15 * m_, h_max=m_ / 20.0,
+                               max_steps=200000)
+                got = st.run(rhs.make_rhs(state), m_, y0, end * m_, o, [dataclasses.replace(ev, component=comp)])
+                out.append((got.stop.kind, [e[0] for e in got.events]))
+            return out
+
+        def stub(a, b, la, lb):
+            return SimpleNamespace(phases=(SimpleNamespace(id=a, library=la), SimpleNamespace(id=b, library=lb)),
+                                   seams=lambda: (), source_seams=lambda: (),
+                                   transitions=lambda: (((a, b), "solid_solid", {"form": "library"}),))
+        (ev,) = events.record_events(stub("a", "b", Lib(True), Lib(False)))
+        self.assertEqual(ev.component, 1)
+
+        class Sloped:
+            def state(self, p, t, guess):
+                new = p > pb + k * (t - 1600.0)
+                return (3720.0 if new else 3717.0), (9.2e-9 if new else 9.6e-9)
+        y0, h0s = (6.371e6, 0.0, 1600.0, 1600.0, 0.0, 0.0), (1e-3, 7.3e-4, 1.37e-3)
+        self.assertEqual(walk(ev, Sloped(), y0, 5.972e24, 6.371e6, h0s, 1), [("end", ["phase:a|b"])] * 3)
+        self.assertEqual([r[0] for r in walk(ev, Sloped(), y0, 5.972e24, 6.371e6, h0s, None)], ["chatter"] * 3)
+        ih, wa = ml.SeaFreezePhase("Ih"), ml.SeaFreezePhase("water1")
+        (ev,) = events.record_events(stub("Ih", "water1", ih, wa))
+
+        class Ice:
+            def state(self, p, t, guess):
+                a, b = ih.at(p, t), wa.at(p, t)
+                c = a if a["g"] < b["g"] else b
+                return c["rho"], c["dtdp"], ()
+        got = walk(ev, Ice(), (2.0e6, 1.0e6, 270.0, 270.0, 0.0, 0.0), 1.0e23, 2.0e6, (1e-3, 1.37e-3, 3e-3), 1, 0.95)
+        self.assertEqual(got, [("end", ["phase:Ih|water1"])] * 3)
 
     def test_onset_scale_is_its_largest_t(self):
         """68 on C1: an onset event's scale is its curve's largest T_onset over 1 bar–400 GPa (tolerance 1e-12 of T, the
