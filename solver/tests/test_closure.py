@@ -375,3 +375,46 @@ class Refine(unittest.TestCase):
     def test_a_refusal_falls_back(self):
         F = lambda x: st.Stop("refused", {}) if x > 5.0005 else x - 5.01
         self.assertIsNone(closure.refine(F, 5.0, 1.0, 10.0))
+
+
+class GapBetweenOppositeWalls(unittest.TestCase):
+    """A solvable gap between two adjacent refusing scan points that refused on opposite sides of a range (a trial too
+    deep for a material's top, the next too shallow for its bottom) is shot before the scan gives up (mars O9
+    2350–2850 K on 68e47ffc: R 3584 km at the core fit's 350 GPa, 3685 km under its 11.93 GPa turning point, every
+    answer at 3599–3664 km between them). Mutant: no gap shots (no_solved). Two refusals at the same side (P within
+    GAP_RATIO) are not shot."""
+
+    @staticmethod
+    def F(x):
+        if x < 43.0:
+            return st.Stop("refused", {"p": 3.5e11 * (43.0 / x)})     # too deep: P above a top
+        if x > 46.0:
+            return st.Stop("refused", {"p": 1.2e10 * (46.0 / x)})     # too shallow: P under a bottom
+        return x - 44.0
+
+    def test_the_gap_is_shot_and_its_root_found(self):
+        pts = closure.scan_points(1.0, 100.0)
+        self.assertFalse(any(43.0 <= x <= 46.0 for x in pts))         # the scan alone has no solved point
+        out = closure.solve_scalar(self.F, 1.0, 100.0)
+        self.assertEqual(out.kind, "root")
+        self.assertLess(abs(out.roots[0] - 44.0), 1e-9)
+        self.assertTrue(any(t.kind == "gap" and t.F is not None for t in out.trials))
+        saved = closure._gap_shots
+        closure._gap_shots = lambda *a: None
+        try:
+            self.assertEqual(closure.solve_scalar(self.F, 1.0, 100.0).kind, "no_solved")
+        finally:
+            closure._gap_shots = saved
+
+    def test_same_side_refusals_are_not_shot(self):
+        def F(x):
+            return st.Stop("refused", {"p": 3.5e11 * (1.0 + 1e-3 * x)})
+        out = closure.solve_scalar(F, 1.0, 100.0)
+        self.assertEqual(out.kind, "no_solved")
+        self.assertFalse(any(t.kind == "gap" for t in out.trials))
+
+    def test_refusal_p_reads_the_innermost_record(self):
+        class Rec:
+            p = 2.0e10
+        self.assertEqual(closure._refusal_p(st.Stop("refused", {"record": st.Stop("refused", Rec())})), 2.0e10)
+        self.assertIsNone(closure._refusal_p(st.Stop("chatter", {"cap_name": "EVENT_REWALKS"})))
