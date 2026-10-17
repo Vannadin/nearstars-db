@@ -1707,7 +1707,8 @@ class AssemblageView(mv.RecordView):
         whose terms are all null or 0 carries no note. Above p_dataset the taper's own bands stand (§4)."""
         if p > self.p_dataset:
             return
-        ia = min(max(bisect.bisect_right(self.ps, p) - 1, 0), len(self.ps) - 2)
+        # the read's own cell (_table_read): on a P node the cell below, on a T node the cell above (c8 on d2977f99)
+        ia = min(max(bisect.bisect_left(self.ps, max(p, self.ps[0]), 1) - 1, 0), len(self.ps) - 2)
         ib = min(max(bisect.bisect_right(self.ts, t) - 1, 0), len(self.ts) - 2)
         for key, (edge, grade, lead) in TERM_NOTES.items():
             cells, floor, src = self._terms[key]
