@@ -6,7 +6,9 @@ gate, which fails on any skip, caught it on the PC).
 Every guard in solver/tests whose reason names shipped data — a «@unittest.skipUnless(cond, "… shipped …")» decorator,
 or «if not cond: self.skipTest("… shipped …")» — is found by reading the test sources, and its condition is evaluated in
 its own module. A NEARSTARS_HEAVY operand of an «and» is dropped (that half is the environment's, not the data's). When
-this tip ships the SLB records, every such condition must be true."""
+this tip ships the SLB records, every such condition must be true.
+A guard on shipped data must say «shipped» in its reason: the scan keys on that word, and one worded otherwise escapes
+it (68 n2 on e129f820; the ≥12 control catches only a lost guard)."""
 import ast
 import importlib
 import unittest

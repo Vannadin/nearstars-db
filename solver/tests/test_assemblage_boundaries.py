@@ -566,7 +566,7 @@ class Transitions(unittest.TestCase):
 
         class Sloped:
             def state(self, p, t, guess):
-                new = p > pb + k * (t - 1600.0)
+                new = p >= pb + k * (t - 1600.0)            # g ≥ 0: the stepper's new side
                 return (3720.0 if new else 3717.0), (9.2e-9 if new else 9.6e-9)
         rs = rhs.r_scale_of(m_, 3.0 * m_ / (4.0 * math.pi * r_ ** 3))
 

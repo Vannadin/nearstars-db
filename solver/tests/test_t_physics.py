@@ -152,7 +152,7 @@ class Ruler(unittest.TestCase):
             if isinstance(got, st.Stop):
                 return got
             g = events._curve_at(self.mat, "고상선", p, t)
-            return (got[0] * (1.0 + 1e-2), *got[1:]) if g is not None and g > 0.0 else got
+            return (got[0] * (1.0 + 1e-2), *got[1:]) if g is not None and g >= 0.0 else got
         lm.LegacyView.state, events.onset_events = stepped, (lambda mat, p_stop=0.0: [])
         try:
             self.assertGreater(_ruler(), 1e-6)

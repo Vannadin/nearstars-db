@@ -128,6 +128,23 @@ class C1(unittest.TestCase):
             self.assertIn(part, src)
         self.assertFalse(lk.__name__.rsplit(".", 1)[1].startswith("test"))
 
+    def test_landing_scan_exit_code(self):
+        """The landing task fails only by main()'s exit code (68 B1 on bb274848): with full() stubbed, one violation
+        exits 1 and none exits 0, and the JSON is written both times."""
+        import json
+        import os
+        import tempfile
+        from unittest import mock
+        from solver.tests import landing_kink_scan as lk
+        rid = RECORDS[0]
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(lk.mr, "load", return_value=None), \
+                mock.patch.object(lk, "_shipped", return_value=True):
+            for viol, rc in ((["planted"], 1), ([], 0)):
+                out = os.path.join(d, f"scan-{rc}.json")
+                with mock.patch.object(lk, "full", return_value=([object()], viol)):
+                    self.assertEqual(lk.main([out, rid]), rc)
+                self.assertEqual(json.load(open(out)), {rid: {"kinks": 1, "violations": [repr(x) for x in viol]}})
+
 
 class RunEnd(unittest.TestCase):
     """The truth check's run-end rule (item 5d998d40; 68 ruling on the bump): an open run end's node slope s_n is PCHIP's

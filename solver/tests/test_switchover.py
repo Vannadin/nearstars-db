@@ -44,7 +44,11 @@ class RecordEvents(unittest.TestCase):
         clamp. Walked inward from 2.0 GPa, 340 K, on h2o's own ice VI, with a planted far side: past the curve, ice VI's
         state at the curve 4 % denser and with dT/dP 4 % lower, because h2o's vii_x source (french_redmer2015) refuses
         just past the line at 330–354 K (its ρ bracket; logged for the h2o range list). Unheld (component None, the
-        mutant) the landing chatters."""
+        mutant) the landing chatters.
+        The far side starts at g = 0, as the stepper's does (_crossed, _land's new-side iterate, _new_side_k1): h2o's own
+        view at exactly P_b reads vii_x, which refuses there. A planted «g > 0» sent a read with g == 0.0 bit-exactly
+        (a landing iterate's FSAL stage, P 2186210490.7848, T 343.481 on the PC; directing 10-18) to that refusal, so
+        the read on the seam is checked directly (mutant: «g > 0»)."""
         import dataclasses
         from solver import rhs
         v = mv.RecordView(_record("h2o"), 340.0)
@@ -54,10 +58,15 @@ class RecordEvents(unittest.TestCase):
         class Past:
             def state(self, p, t, guess):
                 g = vi.g(0.0, (0.0, p, t, t, 0.0, 0.0))
-                if g is not None and g > 0.0:
+                if g is not None and g >= 0.0:
                     s = v.state((p - g) * (1.0 - 1e-9), t, guess)
                     return s if isinstance(s, st.Stop) else (s[0] * 1.04, s[1] * 0.96, s[2])
                 return v.state(p, t, guess)
+        t_s = 343.481
+        p_s = vi.g(0.0, (0.0, 0.0, t_s, t_s, 0.0, 0.0)) * -1.0             # P_b(t_s): g = P − P_b, exactly 0 there
+        self.assertEqual(vi.g(0.0, (0.0, p_s, t_s, t_s, 0.0, 0.0)), 0.0)
+        self.assertIsInstance(v.state(p_s, t_s, None), st.Stop)              # h2o's own read on the seam refuses
+        self.assertNotIsInstance(Past().state(p_s, t_s, None), st.Stop)      # the planted far side reads it
         m_, r_ = 5.972e24, 6.371e6
         rs = rhs.r_scale_of(m_, 3.0 * m_ / (4.0 * math.pi * r_ ** 3))
         opt = st.Options(rtol=1e-10, floors=rhs.floors(m_, rs), h0=3e-4 * m_, h_min=1e-15 * m_, h_max=m_ / 50.0,
@@ -145,7 +154,7 @@ class RecordEvents(unittest.TestCase):
 
         class Sloped:
             def state(self, p, t, guess):
-                new = p > pb + k * (t - 1600.0)
+                new = p >= pb + k * (t - 1600.0)            # g ≥ 0: the stepper's new side
                 return (3720.0 if new else 3717.0), (9.2e-9 if new else 9.6e-9)
         y0, h0s = (6.371e6, 0.0, 1600.0, 1600.0, 0.0, 0.0), (1e-3, 7.3e-4, 1.37e-3)
         self.assertEqual(walk(ev, Sloped(), y0, 5.972e24, 6.371e6, h0s, 1), [("end", ["phase:a|b"])] * 3)
@@ -160,6 +169,70 @@ class RecordEvents(unittest.TestCase):
                 return c["rho"], c["dtdp"], ()
         got = walk(ev, Ice(), (2.0e6, 1.0e6, 270.0, 270.0, 0.0, 0.0), 1.0e23, 2.0e6, (1e-3, 1.37e-3, 3e-3), 1, 0.95)
         self.assertEqual(got, [("end", ["phase:Ih|water1"])] * 3)
+
+    def test_a_read_on_the_seam_takes_a_held_side(self):
+        """Directing 10-18 (the PC's g == 0.0 on h2o's VI|vii_x): a state with g exactly 0 is the new side for the stepper
+        (_crossed, _land), and a material's own read at exactly P_b may be either branch (h2o's is vii_x, which refuses
+        there). So no stage reads on the seam: the landing clamp holds g == 0 on the old side, and the k1 after a landing
+        reads strictly past it. Planted g == 0.0 bit-exactly on a curve event (h2o), a gibbs event (planted linear G)
+        and a record curve (default_bse's edge427, when shipped), both walk directions. Mutant: the clamp's
+        «g * g0 <= 0» as «< 0» reads the seam itself."""
+        from types import SimpleNamespace
+        from solver import material_assemblage as ma
+
+        def seam(ev, y, tries=(0.0, 1.0, 2.0, 3.0, 5.0, 8.0, 13.0, 21.0)):
+            """A state with ev.g == 0.0 exactly, found by Newton in the component and then ulp steps, over a few T."""
+            c = ev.component
+            for dt in tries:
+                w = list(y)
+                w[2] = w[3] = y[2] + dt
+                for _ in range(200):
+                    g = ev.g(0.0, tuple(w))
+                    if g == 0.0:
+                        return tuple(w)
+                    nxt = w[c] - g
+                    w[c] = nxt if nxt != w[c] and abs(g) > 1e-12 * abs(w[c]) else \
+                        math.nextafter(w[c], -math.inf if g > 0.0 else math.inf)
+            self.fail(f"{ev.name}: no state with g == 0.0 exactly")
+
+        v = mv.RecordView(_record("h2o"), 340.0)
+        (vi,) = [e for e in events.layer_events(v) if e.name == "phase:VI|vii_x"]
+        cases = [(vi, (0.0, 2.1e9, 343.481, 343.481, 0.0, 0.0))]
+        pb, k, va, vb = 23.83e9, 9.4e6, 1.0 / 3717.0, 1.0 / 3720.0
+        dv = va - vb
+
+        class Lib:
+            def __init__(self, a):
+                self.a = a
+
+            def at(self, p, t):
+                if self.a:
+                    return {"rho": 1.0 / va, "g": va * p - dv * k * t + dv * (k * 1600.0 - pb)}
+                return {"rho": 1.0 / vb, "g": vb * p}
+        lib = SimpleNamespace(phases=(SimpleNamespace(id="a", library=Lib(True)), SimpleNamespace(id="b", library=Lib(False))),
+                              seams=lambda: (), source_seams=lambda: (),
+                              transitions=lambda: ((("a", "b"), "solid_solid", {"form": "library"}),))
+        (ge,) = events.record_events(lib)
+        cases.append((ge, (0.0, 24.0e9, 1700.0, 1700.0, 0.0, 0.0)))
+        if _shipped_bse():
+            reg = mr.load()
+            rid = "silicate_slb_default_bse"
+            got = reg.records[rid]
+            hid = got["assemblage"]["handover"]
+            ho = ma.HandOver(thaw(reg.records[hid]), reg.tables[hid], rid, 1.5 * float(got["assemblage"]["p_dataset"]))
+            rv = ma.view(thaw(got), reg.tables[rid], 2135.3511104889826, 0.0, 0.0, ho)
+            (re_,) = [e for e in events.record_events(rv) if e.name == "phase:edge427:wa+gt+fp|gt+fp"]
+            cases.append((re_, (3372110.8592750556, 16.9e9, 2501.797174057437, 2501.797174057437, 5.5e35, 0.0)))
+        for ev, y in cases:
+            self.assertEqual(ev.component, 1, ev.name)
+            y0 = seam(ev, y)
+            for g0 in (-1.0, 1.0):                                    # inward (P rising) and outward walks
+                with self.subTest(event=ev.name, g0=g0):
+                    self.assertTrue(st._crossed(g0, 0.0))             # g == 0 is reached: the new side
+                    held = st._old_side(lambda x, w: w, ev, g0)(0.0, y0)
+                    self.assertGreater(ev.g(0.0, held) * g0, 0.0)     # the clamp reads strictly on the old side
+                    past = st._new_side_k1(lambda x, w: w, ev, 0.0, y0, None, g0)
+                    self.assertLess(ev.g(0.0, past) * g0, 0.0)        # the next k1 strictly on the new side
 
     def test_onset_scale_is_its_largest_t(self):
         """68 on C1: an onset event's scale is its curve's largest T_onset over 1 bar–400 GPa (tolerance 1e-12 of T, the
@@ -176,9 +249,12 @@ class RecordEvents(unittest.TestCase):
     @unittest.skipUnless(_shipped_bse(), "no shipped default_bse record with its table (the engine branch without records)")
     def test_edge_lands_at_its_p_scale(self):
         """Pre-run C1 on 68e47ffc: earth O9 2135.35 K's landing on default_bse's edge427 (wa+gt+fp|gt+fp) at 16.9 GPa,
-        captured at the step that crossed it (adaptive, the solve's own options). At scale 1e9 (tolerance 1e-3 Pa) the
-        re-steps reproduce P only to ~±4e-3 Pa there and no new-side iterate falls inside: event_unlanded (the mutant).
-        At the curve's P scale it lands."""
+        captured at the step that crossed it (adaptive, the solve's own options). At the curve's P scale (tolerance
+        1.79e-2 Pa) it lands; the landed iterate's |g| is 2.8e-3 Pa on the Mac (6×).
+        Control (1e9, the old fixed scale): the re-steps reproduce P only to ~±3e-3 Pa (~1000 ulp), so 1e9's 1e-3 Pa sat
+        on that noise: no new-side iterate inside on the Mac (closest 2.8× tol), one inside on the PC (0.78×; directing
+        10-18). The control now plants a floor under g on the same crossing, |g| ≥ 1e-2 Pa (10× 1e9's tolerance), so 1e9
+        cannot land on any platform."""
         import dataclasses
         from solver import material_assemblage as ma, rhs
         reg = mr.load()
@@ -199,8 +275,13 @@ class RecordEvents(unittest.TestCase):
         out_hi = st.step(f, x, y, s_hi, k1)
         self.assertLess(ev.g(x, y), 0.0)
         self.assertGreater(ev.g(x + s_hi, out_hi[0]), 0.0)                   # the step crosses the curve
-        for scale, landed in ((ev.scale, True), (1.0e9, False)):
-            e = dataclasses.replace(ev, scale=scale)
+        floor = 1.0e-2
+
+        def floored(xx, yy):
+            g = ev.g(xx, yy)
+            return None if g is None else g + math.copysign(floor, g)
+        for g, scale, landed in ((ev.g, ev.scale, True), (floored, 1.0e9, False)):
+            e = dataclasses.replace(ev, scale=scale, g=g)
             r = st._land(f, e, x, y, k1, s_hi, out_hi, e.g(x, y), opt, st.Counters())
             self.assertEqual(not isinstance(r, st.Stop), landed, (scale, getattr(r, "kind", None)))
         self.assertGreater(ev.scale, 1.5e10)
@@ -599,7 +680,7 @@ class MethodTermMaterials(unittest.TestCase):
 
         class Sloped:
             def state(self, p, t, guess):
-                new = p > pb + k * (t - 1600.0)
+                new = p >= pb + k * (t - 1600.0)            # g ≥ 0: the stepper's new side
                 return (3720.0 if new else 3717.0), (9.2e-9 if new else 9.6e-9)
         f = rhs.make_rhs(Sloped())
         got = {}
