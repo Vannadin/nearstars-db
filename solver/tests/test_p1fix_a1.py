@@ -144,6 +144,8 @@ class NearestWall(unittest.TestCase):
         self.assertIs(sv._nearest_wall(out), wall)
         grow = NS(trials=[_trial(1.0, 0.4), _trial(2.0, 1.0), _trial(3.0, None), _trial(4.0, None)], walls=[wall])
         self.assertIsNone(sv._nearest_wall(grow))
+        dip = NS(trials=[_trial(1.0, 1.0), _trial(2.0, 0.4), _trial(3.0, None), _trial(4.0, 0.3)], walls=[wall])
+        self.assertIsNone(sv._nearest_wall(dip))           # F resumes past the wall with its sign: not «past it»
         near, far = cl.Wall(3.0, st.Stop("refused"), 2.0), cl.Wall(0.5, st.Stop("refused"), 1.0)   # of two, the one
         two = NS(trials=[_trial(0.5, None), _trial(1.0, 0.9), _trial(1.5, 0.95), _trial(2.0, 0.3), _trial(3.0, None)],
                  walls=[far, near])                                       # whose neighbour has the smaller |F|
@@ -152,12 +154,14 @@ class NearestWall(unittest.TestCase):
     def test_no_solved_names_the_gap_between_opposite_walls(self):
         """Nothing solves: the refusal reported is the narrowest opposite-wall gap's lower side (P a GAP_RATIO apart),
         not the lowest x. Control: no such pair, None."""
-        def ref(x, p):
-            return cl.Trial(x, None, st.Stop("refused", {"p": p}), "scan")
+        def ref(x, p, mat="fe_core_planted"):
+            return cl.Trial(x, None, st.Stop("refused", {"p": p, "material_id": mat}), "scan")
         out = NS(trials=[ref(1.0, 3.0e11), ref(2.0, 3.5e11), ref(3.0, 3.5e11), ref(3.5, 1.4e10), ref(4.0, 1.1e10)])
         self.assertEqual(sv._gap_trial(out).x, 3.0)
         same = NS(trials=[ref(1.0, 3.0e11), ref(2.0, 3.5e11)])
         self.assertIsNone(sv._gap_trial(same))
+        two = NS(trials=[ref(1.0, 1.31e11, "silicate_basal_const"), ref(2.0, 3.5e11)])     # two materials, both deep
+        self.assertIsNone(sv._gap_trial(two))                                           # (mars 2850 K): not a gap
         rec = mv.RecordRefusal("fe_core_planted", 3.5e11, 6000.0, "input.material_out_of_data", "planted")
         trials = [ref(1.0, 3.0e11), cl.Trial(3.0, None, st.Stop("refused", rec, {"m": 1.0}), "scan"), ref(3.5, 1.4e10)]
         no = NS(kind="no_solved", trials=trials, walls=[], roots=[], detail={})

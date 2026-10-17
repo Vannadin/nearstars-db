@@ -969,8 +969,9 @@ def _straddled_wall(out):
 def _nearest_wall(out):
     """Directing 10-17: no solved stretch changes sign, but the solved F falls in |F| toward a wall: the root lies past
     that wall, so its refusal names the cause, not «F does not change sign» nor the first scan point. Of the walls whose
-    nearest solved trial has a smaller |F| than the next solved trial of the same stretch (or no next one), the one with
-    the smallest such |F|. None when F grows toward every wall."""
+    nearest solved trial has a smaller |F| than the next solved trial of the same stretch, and whose far side does not
+    resume with F of the same sign (F dipping into a refusing stretch and out again is not «past the wall»), the one
+    with the smallest such |F|. None when no wall qualifies; a one-trial stretch shows no trend."""
     order = sorted((t for t in out.trials if t.kind != "isolated"), key=lambda t: t.x)
     best = None
     for w in out.walls:
@@ -981,7 +982,11 @@ def _nearest_wall(out):
         a = side[0]
         b = side[1] if len(side) > 1 and not any(min(side[0].x, side[1].x) < t.x < max(side[0].x, side[1].x)
                                                   and t.F is None for t in order) else None
-        if b is not None and abs(a.F) >= abs(b.F):
+        if b is None or abs(a.F) >= abs(b.F):
+            continue
+        across = next((t for t in sorted((t for t in order if (t.x - w.x) * sgn < 0.0), key=lambda t: abs(t.x - w.x))
+                       if t.F is not None), None)
+        if across is not None and across.F * a.F > 0.0:
             continue
         if best is None or abs(a.F) < best[0]:
             best = (abs(a.F), w)
@@ -993,11 +998,7 @@ def _gap_trial(out):
     (closure GAP_RATIO; the gap shots end there), its lower-x side, so the refusal names the range that closes the
     answer's window and not the first scan point. None without such a pair."""
     order = sorted((t for t in out.trials if t.kind != "isolated" and t.stop is not None), key=lambda t: t.x)
-    pairs = []
-    for a, b in zip(order, order[1:]):
-        pa, pb = cl._refusal_p(a.stop), cl._refusal_p(b.stop)
-        if pa is not None and pb is not None and max(pa, pb) >= cl.GAP_RATIO * min(pa, pb):
-            pairs.append((b.x - a.x, a))
+    pairs = [(b.x - a.x, a) for a, b in zip(order, order[1:]) if cl.opposite_walls(a.stop, b.stop)]
     return min(pairs, key=lambda e: e[0])[1] if pairs else None
 
 

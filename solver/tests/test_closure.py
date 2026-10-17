@@ -413,6 +413,17 @@ class GapBetweenOppositeWalls(unittest.TestCase):
         self.assertEqual(out.kind, "no_solved")
         self.assertFalse(any(t.kind == "gap" for t in out.trials))
 
+    def test_two_materials_are_not_opposite_walls(self):
+        """Refusing P a factor apart in two materials is one side's (mars 2850 K: the basal layer at 131 GPa, the core
+        at 350 GPa, both too deep): no gap shot. Mutant: the material test off."""
+        def F(x):
+            mat = "basal" if x < 40.0 else "core"
+            return st.Stop("refused", {"p": (1.31e11 if mat == "basal" else 3.5e11), "material_id": mat})
+        out = closure.solve_scalar(F, 1.0, 100.0)
+        self.assertFalse(any(t.kind == "gap" for t in out.trials))
+        self.assertTrue(closure.opposite_walls(st.Stop("refused", {"p": 3.5e11, "material_id": "core"}),
+                                               st.Stop("refused", {"p": 1.4e10, "material_id": "core"})))
+
     def test_refusal_p_reads_the_innermost_record(self):
         class Rec:
             p = 2.0e10

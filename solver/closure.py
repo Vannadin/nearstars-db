@@ -31,7 +31,8 @@ CONFIRM_MIN = 1e-9
 CONFIRM_MAX = 4              # confirming shots per refusal chain (r2 on d031605b: the reason must match)
 
 
-#: A gap between two adjacent refusing scan points is shot when their refusals sit at P a factor GAP_RATIO apart:
+#: A gap between two adjacent refusing scan points is shot when they refused in one material at P a factor GAP_RATIO
+#: apart (opposite_walls):
 #: one trial went too deep and the next too shallow for a material's range, so the x between them may solve (mars
 #: O9 2350–2850 K: R 3584 km refused at the core fit's 350 GPa top and 3685 km under its 11.93 GPa turning point,
 #: and every answer lies at 3599–3664 km between them; the 17-point scan had no solved point). Log-midpoints, keeping
@@ -323,6 +324,28 @@ def _refusal_p(stop) -> float | None:
     return None
 
 
+def _refusal_material(stop):
+    """The material a refusing trial refused in (the innermost record naming one), or None."""
+    r = stop
+    for _ in range(6):
+        mid = r.get("material_id") if isinstance(r, dict) else getattr(r, "material_id", None)
+        if mid is not None:
+            return mid
+        r = r.get("record") if isinstance(r, dict) else getattr(r, "record", None)
+        if r is None:
+            return None
+    return None
+
+
+def opposite_walls(sa, sb) -> bool:
+    """Two refusals on opposite sides of one material's range: the same material (or none named in either), refusing
+    P a factor GAP_RATIO apart. Two materials refusing at different P are both one side's (mars 2850 K: the basal
+    layer at 131 GPa and the core at 350 GPa, both too deep)."""
+    pa, pb = _refusal_p(sa), _refusal_p(sb)
+    return (pa is not None and pb is not None and max(pa, pb) >= GAP_RATIO * min(pa, pb)
+            and _refusal_material(sa) == _refusal_material(sb))
+
+
 def _gap_shots(F, trials: list, lo: float, hi: float):
     """Shoot the gaps between adjacent refusing scan points that refused on opposite sides of a range (GAP_RATIO).
     Every shot joins the trials (kind "gap"): a solved one opens the stretch the rounds search, a refusing one is a
@@ -331,9 +354,9 @@ def _gap_shots(F, trials: list, lo: float, hi: float):
     for a, b in zip(order, order[1:]):
         if a.F is not None or b.F is not None:
             continue
-        xa, xb, pa, pb = a.x, b.x, _refusal_p(a.stop), _refusal_p(b.stop)
-        if pa is None or pb is None or max(pa, pb) < GAP_RATIO * min(pa, pb):
+        if not opposite_walls(a.stop, b.stop):
             continue
+        xa, xb, sa, sb = a.x, b.x, a.stop, b.stop
         for _ in range(GAP_SHOTS):
             xm = math.sqrt(xa * xb) if xa > 0.0 else 0.5 * (xa + xb)
             v = _value(F, xm)
@@ -341,13 +364,10 @@ def _gap_shots(F, trials: list, lo: float, hi: float):
                 trials.append(Trial(xm, v, None, "gap"))
                 break
             trials.append(Trial(xm, None, v, "gap"))
-            pm = _refusal_p(v)
-            if pm is None:
-                break
-            if max(pa, pm) >= GAP_RATIO * min(pa, pm):
-                xb, pb = xm, pm
-            elif max(pm, pb) >= GAP_RATIO * min(pm, pb):
-                xa, pa = xm, pm
+            if opposite_walls(sa, v):
+                xb, sb = xm, v
+            elif opposite_walls(v, sb):
+                xa, sa = xm, v
             else:
                 break
 

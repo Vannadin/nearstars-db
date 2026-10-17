@@ -167,9 +167,10 @@ class SolveEvidence(unittest.TestCase):
         """G2-C-13: the lowest scan point refused, so F_lo is None, not the lowest solved trial's F."""
         stop = st.Stop("chatter", {"event": "e", "count": 3, "cap_name": "EVENT_RESTARTS_STEP", "cap_value": 2},
                        {"m": 1.0, "r": 2.0, "P": 3.0, "T": 4.0})
-        trials = [cl.Trial(1.0e6, None, stop, "scan"), cl.Trial(2.0e6, 1.0, None, "scan"), cl.Trial(3.0e6, 2.0, None, "scan")]
+        trials = [cl.Trial(1.0e6, None, stop, "scan"), cl.Trial(2.0e6, 2.0, None, "scan"), cl.Trial(3.0e6, 1.0, None, "scan")]
         got = self._solve(NS(kind="no_bracket", roots=[], trials=trials, walls=[cl.Wall(1.0e6, stop, 2.0e6)], detail={}))
-        self.assertEqual((got.evidence["F_lo"], got.evidence["F_hi"]), (None, 2.0))
+        self.assertEqual((got.evidence["F_lo"], got.evidence["F_hi"]), (None, 1.0))   # |F| grows toward the wall:
+        # no_bracket stands (with |F| falling toward it the wall's refusal is the outcome, directing 10-17)
 
     def test_unconverged_reports_the_failed_brackets_residual(self):
         """G2-R-08: the residual comes from the failed bracket's problem record, not from the last trial."""
