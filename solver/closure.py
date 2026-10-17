@@ -31,6 +31,15 @@ CONFIRM_MIN = 1e-9
 CONFIRM_MAX = 4              # confirming shots per refusal chain (r2 on d031605b: the reason must match)
 
 
+#: A gap between two adjacent refusing scan points is shot when their refusals sit at P a factor GAP_RATIO apart:
+#: one trial went too deep and the next too shallow for a material's range, so the x between them may solve (mars
+#: O9 2350–2850 K: R 3584 km refused at the core fit's 350 GPa top and 3685 km under its 11.93 GPa turning point,
+#: and every answer lies at 3599–3664 km between them; the 17-point scan had no solved point). Log-midpoints, keeping
+#: the half whose ends are still GAP_RATIO apart, at most GAP_SHOTS per gap.
+GAP_RATIO = 2.0
+GAP_SHOTS = 6
+
+
 def reason(stop: st.Stop) -> tuple:
     """A refusal's reason, as fine as the registry id or finer: the stop kind, the cap for event_chatter, and for a
     refused stage the inner refusal's kind and material."""
@@ -50,7 +59,7 @@ class Trial:
     x: float
     F: float | None              # None for a wall
     stop: st.Stop | None
-    kind: str                    # "scan" | "wall" | "brent" | "confirm" | "isolated"
+    kind: str                    # "scan" | "wall" | "brent" | "confirm" | "isolated" | "gap"
 
 
 @dataclass(frozen=True)
@@ -282,6 +291,7 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
                if u is not None and u.F is not None]
         if nbr:
             _confirm_chain(F, t.x, t.stop, nbr[0].x, lo, hi, trials)
+    _gap_shots(F, trials, lo, hi)
     walls: list = []
     done_pairs: set = set()
     closed: dict = {}            # (a.x, b.x) → root or problem
@@ -298,6 +308,48 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
         if (a.F is None) != (b.F is None):
             done_pairs.add((a.x, b.x))
     return _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_wall_trials, WALL_TOL)
+
+
+def _refusal_p(stop) -> float | None:
+    """The pressure a refusing trial refused at (the innermost record carrying one), or None."""
+    r = stop
+    for _ in range(6):
+        p = r.get("p") if isinstance(r, dict) else getattr(r, "p", None)
+        if isinstance(p, (int, float)) and not isinstance(p, bool) and p > 0.0:
+            return float(p)
+        r = r.get("record") if isinstance(r, dict) else getattr(r, "record", None)
+        if r is None:
+            return None
+    return None
+
+
+def _gap_shots(F, trials: list, lo: float, hi: float):
+    """Shoot the gaps between adjacent refusing scan points that refused on opposite sides of a range (GAP_RATIO).
+    Every shot joins the trials (kind "gap"): a solved one opens the stretch the rounds search, a refusing one is a
+    wall like any scan point's."""
+    order = sorted((t for t in trials if t.kind == "scan"), key=lambda t: t.x)
+    for a, b in zip(order, order[1:]):
+        if a.F is not None or b.F is not None:
+            continue
+        xa, xb, pa, pb = a.x, b.x, _refusal_p(a.stop), _refusal_p(b.stop)
+        if pa is None or pb is None or max(pa, pb) < GAP_RATIO * min(pa, pb):
+            continue
+        for _ in range(GAP_SHOTS):
+            xm = math.sqrt(xa * xb) if xa > 0.0 else 0.5 * (xa + xb)
+            v = _value(F, xm)
+            if not isinstance(v, st.Stop):
+                trials.append(Trial(xm, v, None, "gap"))
+                break
+            trials.append(Trial(xm, None, v, "gap"))
+            pm = _refusal_p(v)
+            if pm is None:
+                break
+            if max(pa, pm) >= GAP_RATIO * min(pa, pm):
+                xb, pb = xm, pm
+            elif max(pm, pb) >= GAP_RATIO * min(pm, pb):
+                xa, pa = xm, pm
+            else:
+                break
 
 
 def _root_may_hide(w, trials) -> bool:
