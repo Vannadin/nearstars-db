@@ -17,7 +17,7 @@ primary_family:
   reason: frozen S1
 assemblage:
   file: tables/silicate_slb_default_bse.json.gz
-  sha256: 6ae84903fbad22a2651c3565177b315a9f36a35e4cbb15471d166feb96aa3bab
+  sha256: bfab62a736ddcfeb51b7f1400a17bbfc49ecbf0ee1a53a24c135c182827f78a8
   p_dataset: 136000000000.0
   interpolation: c1_lnp_t
   melt_variant: peridotitic
@@ -44,6 +44,19 @@ assemblage:
   - the dT/dP band is the A/G model-consistency band; it excludes the stencil's step spread. On re-solved nodes that spread
     is ≤ max(band, 1e-2) by the acceptance rule, listed per node (sidecar.resolve.cells[].step). Shipped nodes outside A1
     and the spike scan are not step-checked.
+  - 'the read''s band carries a per-cell «read interpolation» term (compact interp_terms): |C¹ − C⁰| over the cell''s 9 points
+    relative to max(|v|, F_f), F_f the table''s p05 |v| per field, raised to the class''s p90 truth error where the class
+    × field covered < 90 % of its truth points: T slope only (rho, dtdp, c_p); empty region (rho, dtdp, c_p); gap bridge (rho,
+    c_p); run end (rho, dtdp, c_p); window blend (rho, dtdp, c_p); |C¹ − C⁰| alone: gap bridge (dtdp); 47 cells whose every
+    point holds a cut swap take their classes'' floors (registration reg-interp-term §1)'
+  - 'the read''s band carries a per-cell «under-resolved loop» term (compact loop_terms) where a divariant loop is narrower
+    than the grid (census k 3, W 3, 1 % floor): the 9-point truth error of the read in the loop''s cells less the cell''s
+    «read interpolation» term, max(0, e_truth − e_interp), relative to max(|v|, F_f) as interp_terms; 15 of its cells have
+    no ok truth point and take the census variant''s 9-point |v − v_variant| (the loop alone) less e_interp instead: 10.3–10.8
+    GPa × 750–800 K; 10.8–11.4 GPa × 750–800 K; 10.8–11.4 GPa × 800–850 K; 22.5–23.6 GPa × 800–850 K; 22.5–23.6 GPa × 850–900
+    K; 0.815–0.856 GPa × 900–950 K; 0.856–0.899 GPa × 900–950 K; 22.5–23.6 GPa × 900–950 K; 23.6–24.8 GPa × 900–950 K; 23.6–24.8
+    GPa × 950–1000 K; 24.8–26 GPa × 1050–1100 K; 24.8–26 GPa × 1100–1150 K; 102–107 GPa × 1200–1250 K; 107–113 GPa × 1200–1250
+    K; 107–113 GPa × 1250–1300 K (registration §7)'
   floor_band:
     origin: 'the floor node''s own compressibility: |dρ|/ρ ≤ (1e5 Pa)/K_T, K_T = ρ·∂P/∂ρ over the first two P nodes at fixed
       T (§3.1, r2 N2)'
@@ -913,7 +926,7 @@ assemblage:
     boundary_tool:
       blob: 0b5299e498698a23a8ef40a816415998b4ada015
       sha256: 9ab86ebaf77f4141e9a832e95347db8f88bbf13807169bc5bcbabd7acc0c33b9
-    compact_sha256: 6ae84903fbad22a2651c3565177b315a9f36a35e4cbb15471d166feb96aa3bab
+    compact_sha256: bfab62a736ddcfeb51b7f1400a17bbfc49ecbf0ee1a53a24c135c182827f78a8
     rebuilt: []
 phases:
 - id: slb_assemblage
