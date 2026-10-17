@@ -8,6 +8,10 @@ construction, and since it runs after the values, it cannot change one (§4.3).
 
 Kinds (compare.NOTE_KINDS, comparator note 15):
 - `material_band`: one per (layer, material, edge), with the largest error met, where, and the P range;
+- `material_band_sum`: one per (layer, material) where some node reads two or more band notes on one field: per field
+  (ρ, dT/dP, c_P), the largest per-node sum of the notes' absolute bands, term × scale (the note's own denominators;
+  without them, the read's |ρ| and |dT/dP|), where, and the edges summed (directing 10-17: separate error sources add,
+  the sum is the conservative band; registration reg-interp-term §4, §7.4);
 - `material_declared_note`: one per (layer, material, phase, text), with the P range met;
 - `material_source_seam`: one per source seam the layer's temperature crossed (from below t to t or above; the
   upper side owns t), with its measured step (material_joins.seam_delta);
@@ -24,6 +28,10 @@ at the edges.
 Wording comes from the record's fields only.
 """
 from solver import material_joins as mj, material_registry as mr, material_view as mv, result, stepper as st
+
+
+#: the fields a band note's terms are on, in BandNote order (error, dtdp_error, c_p_error)
+SUM_FIELDS = ("rho", "dtdp", "c_p")
 
 
 def _reads(path):
@@ -47,7 +55,7 @@ def collect(body, views, acc) -> tuple:
         if not isinstance(view, mv.RecordView) or not path:
             continue
         mid = view.material_id
-        bands, declared, phases_read, ts, rereads = {}, {}, [], [], []
+        bands, declared, phases_read, ts, rereads, sums = {}, {}, [], [], [], {}
         for p, t in _reads(path):
             got = view.state(p, t, None)
             if isinstance(got, st.Stop):                  # the pass answered here: a re-read that differs is recorded
@@ -57,6 +65,7 @@ def collect(body, views, acc) -> tuple:
             ph = view.phase_read(p, t)
             if not isinstance(ph, st.Stop) and ph not in phases_read:
                 phases_read.append(ph)
+            node = [[0.0, []] for _ in SUM_FIELDS]       # per field: the absolute band summed over this node's notes
             for n in got[2]:
                 if isinstance(n, mv.BandNote):
                     d = bands.setdefault(n.edge, {"note": n, "error": n.error, "p": p, "t": t})
@@ -66,9 +75,26 @@ def collect(body, views, acc) -> tuple:
                         if n.error is None and n.dtdp_error > (d.get("dtdp_error") or 0.0):
                             d.update(note=n, p=p, t=t)       # a dT/dP-only band: its location follows dtdp_error (68)
                         d["dtdp_error"] = max(d.get("dtdp_error") or 0.0, n.dtdp_error)
+                    if n.c_p_error is not None:
+                        if n.error is None and n.dtdp_error is None and n.c_p_error > (d.get("c_p_error") or 0.0):
+                            d.update(note=n, p=p, t=t)
+                        d["c_p_error"] = max(d.get("c_p_error") or 0.0, n.c_p_error)
                     _span(d, p, t)
+                    for f, e in enumerate((n.error, n.dtdp_error, n.c_p_error)):
+                        if n.scale is not None:
+                            scale = n.scale[f]
+                        elif f == 0 and n.form == "absolute":      # an absolute ρ band is its own band
+                            scale = 1.0
+                        else:
+                            scale = abs(got[f]) if f < 2 else None  # state carries no c_P: a c_P term needs a scale
+                        if e is not None and scale is not None:
+                            node[f][0] += e * scale
+                            node[f][1].append(n.edge)
                 elif isinstance(n, mv.DeclaredNote):
                     _span(declared.setdefault((n.phase, n.text), {}), p, t)
+            for f, (band, edges) in enumerate(node):
+                if len(edges) > 1 and band > sums.get(f, {}).get("band", -1.0):
+                    sums[f] = {"band": band, "edges": edges, "p": p, "t": t}
         for edge, d in bands.items():
             n = d["note"]
             out.append(result.Note("material_band", f"{mid} {edge}: {n.form} error {d['error']} ({n.grade}; "
@@ -76,8 +102,16 @@ def collect(body, views, acc) -> tuple:
                                        "layer": layer.id, "material": mid, "edge": edge, "form": n.form,
                                        "error": d["error"], "method": n.method, "grade": n.grade, "origin": n.origin,
                                        "dtdp_error": d.get("dtdp_error"), "dtdp_origin": n.dtdp_origin,
+                                       **({"c_p_error": d["c_p_error"], "c_p_origin": n.c_p_origin}
+                                          if d.get("c_p_error") is not None else {}),
                                        "p_at_max": d["p"], "t_at_max": d["t"], "p_min": d["p_min"],
                                        "p_max": d["p_max"]}))
+        if sums:
+            out.append(result.Note("material_band_sum", f"{mid}: summed bands " + ", ".join(
+                f"{SUM_FIELDS[f]} {d['band']:.3g} ({' + '.join(d['edges'])})" for f, d in sorted(sums.items())), {
+                    "layer": layer.id, "material": mid,
+                    **{SUM_FIELDS[f]: {"band": d["band"], "edges": list(d["edges"]), "p_at_max": d["p"],
+                                       "t_at_max": d["t"]} for f, d in sorted(sums.items())}}))
         for (phase, text), d in declared.items():
             out.append(result.Note("material_declared_note", f"{mid} {phase}: {text}", {
                 "layer": layer.id, "material": mid, "phase": phase, "text": text, "p_min": d["p_min"],

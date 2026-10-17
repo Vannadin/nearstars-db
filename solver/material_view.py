@@ -78,6 +78,11 @@ class BandNote:
     origin: str
     dtdp_error: float | None = None       # a blend's relative error on (dT/dP)_S from c_P's Maxwell residual (A4 item 3)
     dtdp_origin: str | None = None
+    c_p_error: float | None = None        # a relative error on c_P (registration reg-interp-term §4, shared with §7.4)
+    c_p_origin: str | None = None
+    #: (ρ, dT/dP, c_P): the absolute denominators the relative terms are taken against, so term × scale is the
+    #: absolute band (a per-cell term relative to max(|v|, F_f), §1); None: each term is relative to the read's |value|
+    scale: tuple | None = None
 
 
 # ── PCHIP in ln P: the same algorithm as legacy smooth_table at 097a8aa3 (Fritsch–Carlson) ────────────────────────────
