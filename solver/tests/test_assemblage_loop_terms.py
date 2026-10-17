@@ -123,38 +123,99 @@ class Read(unittest.TestCase):
 
 class Taper(unittest.TestCase):
     """§7.4 above p_dataset: the dataset-top cell's loop term, (1 − w)·e_loop in the zone, none past its end."""
+    KEY, EDGE = "loop_terms", "under-resolved loop"
+
+    def build(self, tb, rows):
+        return lblock(tb, cells=rows)
+
     def setUp(self):
         tb = table()
         ia = bisect.bisect_left(PS, tb["p_dataset"]) - 1
         self.ib = bisect.bisect_right(TS, 2017.0) - 1
-        tb["loop_terms"] = lblock(tb, cells=[[ia, self.ib, 0.01, 2.0, 0.3]])
+        tb[self.KEY] = self.build(tb, [[ia, self.ib, 0.01, 2.0, 0.3]])
         self.ia, self.tb = ia, tb
         self.v = tt.view(tt.handover(), tb)
+
+    def notes(self, p, t):
+        return notes(self.v, p, t, edge=self.EDGE)
 
     def test_zone_carries_one_minus_w(self):
         for f in (0.1, 0.5, 0.9):
             p = tt.PD + f * (tt.PE - tt.PD)
             with self.subTest(f=f):
-                (n,), got = notes(self.v, p, 2017.0)
+                (n,), got = self.notes(p, 2017.0)
                 w = ma._smoothstep(f)
                 for x, e in zip((n.error, n.dtdp_error, n.c_p_error), (0.01, 2.0, 0.3)):
                     self.assertAlmostEqual(x, (1.0 - w) * e, delta=1e-15)
                 self.assertIn(f"dataset-top cell ({self.ia}, {self.ib})", n.origin)
+                self.assertIn(self.KEY, n.origin)
                 r, g, cp, _ = self.v._solid(p, 2017.0)
                 F = ma.term_floor(self.tb["cells"], self.tb["p_dataset"])
                 self.assertEqual(n.scale, (max(abs(r), F["rho"]), max(abs(g), F["dtdp"]), max(abs(cp), F["c_p"])))
 
     def test_full_term_below_the_top_and_none_past_the_end(self):
-        (n,), _ = notes(self.v, tt.PD * 0.999, 2017.0)              # inside the top cell: the whole term
+        (n,), _ = self.notes(tt.PD * 0.999, 2017.0)                 # inside the top cell: the whole term
         self.assertEqual((n.error, n.dtdp_error, n.c_p_error), (0.01, 2.0, 0.3))
-        self.assertEqual(notes(self.v, tt.PE * 1.05, 2017.0)[0], [])
-        self.assertEqual(notes(self.v, tt.PD + 0.5 * (tt.PE - tt.PD), TS[5] + 17.0)[0], [])   # another T row
+        self.assertEqual(self.notes(tt.PE * 1.05, 2017.0)[0], [])
+        other = {(r[0], r[1]): r[2:] for r in self.tb[self.KEY]["cells"]}.get((self.ia, 5))   # another T row: its own
+        got = self.notes(tt.PD + 0.5 * (tt.PE - tt.PD), TS[5] + 17.0)[0]                    # top cell's term, or none
+        if other is None:
+            self.assertEqual(got, [])
+        else:
+            self.assertAlmostEqual(got[0].dtdp_error, (1.0 - ma._smoothstep(0.5)) * other[1], delta=1e-15)
 
     def test_zone_values_unchanged(self):
         bare = tt.view(tt.handover(), table())
         for f in (0.1, 0.5, 0.9):
             p = tt.PD + f * (tt.PE - tt.PD)
             self.assertEqual(bare._solid(p, 2017.0)[:3], self.v._solid(p, 2017.0)[:3])
+
+
+    def test_zone_scale_takes_the_floor(self):
+        """68 on 8583e8cb («scale no floor» survived): a zone read whose |v| lies below F_f is scaled by F_f. The
+        block's floor is raised above the zone's |v| for every field, as a table with a larger p05 would set it."""
+        p = tt.PD + 0.5 * (tt.PE - tt.PD)
+        r, g, cp, _ = self.v._solid(p, 2017.0)
+        big = {"rho": 10 * abs(r), "dtdp": 10 * abs(g), "c_p": 10 * abs(cp)}
+        self.tb[self.KEY]["source"]["floor"] = big
+        v = tt.view(tt.handover(), self.tb)
+        (n,), _ = notes(v, p, 2017.0, edge=self.EDGE)
+        self.assertEqual(n.scale, (big["rho"], big["dtdp"], big["c_p"]))
+
+
+class TaperInterp(Taper):
+    """68's B2 on fc3aa664: the zone's read carries the cut read's interpolation error too, (1 − w)·e_interp of the
+    dataset-top cell; a null field reads as 0."""
+    KEY, EDGE = "interp_terms", "read interpolation"
+
+    def build(self, tb, rows):
+        return iblock(tb, edit=lambda b: {**b, "cells": [r if (r[0], r[1]) != tuple(rows[0][:2]) else rows[0]
+                                                         for r in b["cells"]]})
+
+    def test_null_reads_as_zero(self):
+        ia, ib = self.ia, self.ib
+        self.tb["interp_terms"]["cells"] = [r if (r[0], r[1]) != (ia, ib) else [ia, ib, None, 2.0, None]
+                                            for r in self.tb["interp_terms"]["cells"]]
+        v = tt.view(tt.handover(), self.tb)
+        (n,), _ = notes(v, tt.PD + 0.5 * (tt.PE - tt.PD), 2017.0, edge=self.EDGE)
+        self.assertEqual((n.error, n.c_p_error), (0.0, 0.0))
+        self.assertAlmostEqual(n.dtdp_error, (1.0 - ma._smoothstep(0.5)) * 2.0, delta=1e-15)
+
+
+class TaperBoth(unittest.TestCase):
+    """Both blocks at the dataset-top cell: two notes in the zone, each (1 − w)·its own term, and the band sum adds them."""
+    def test_two_notes(self):
+        tb = table()
+        ia, ib = bisect.bisect_left(PS, tb["p_dataset"]) - 1, bisect.bisect_right(TS, 2017.0) - 1
+        tb["loop_terms"] = lblock(tb, cells=[[ia, ib, 0.0, 2.0, 0.0]])
+        tb["interp_terms"] = iblock(tb)
+        v = tt.view(tt.handover(), tb)
+        p = tt.PD + 0.5 * (tt.PE - tt.PD)
+        w = ma._smoothstep(0.5)
+        (lo,), _ = notes(v, p, 2017.0)
+        (ri,), _ = notes(v, p, 2017.0, edge="read interpolation")
+        self.assertAlmostEqual(lo.dtdp_error, (1.0 - w) * 2.0, delta=1e-15)
+        self.assertAlmostEqual(ri.dtdp_error, (1.0 - w) * (1e-2 + 1e-4 * ib), delta=1e-15)
 
 
 class Shipped(unittest.TestCase):
