@@ -418,3 +418,22 @@ class GapBetweenOppositeWalls(unittest.TestCase):
             p = 2.0e10
         self.assertEqual(closure._refusal_p(st.Stop("refused", {"record": st.Stop("refused", Rec())})), 2.0e10)
         self.assertIsNone(closure._refusal_p(st.Stop("chatter", {"cap_name": "EVENT_REWALKS"})))
+
+
+class GapOnMars(unittest.TestCase):
+    """The real case behind GapBetweenOppositeWalls: mars O9 2450 K with the silicate records on. Its R scan refuses at
+    every one of its 17 points (deep trials, then the core fit's 350 GPa top, then under its 11.93 GPa turning point);
+    the answer is R ≈ 3602 km inside the 3584–3685 km gap (legacy 3593.4 km). Mutant: no gap shots (no answer)."""
+
+    @unittest.skipUnless(__import__("os").environ.get("NEARSTARS_HEAVY") == "1",
+                         "NEARSTARS_HEAVY=1 (a mars member solve with the records on, minutes)")
+    def test_mars_2450_answers_inside_the_gap(self):
+        from solver import context, material_registry as mr, run_oracle as ro
+        reg = mr.load()
+        if not (isinstance(reg, mr.Registry) and "silicate_slb_mars_khan2022" in reg.tables):
+            self.skipTest("no shipped mars assemblage record with its table")
+        rec = ro._one("engine/bodies/mars.yaml", 2450.0, context.Options(materials="registry", silicate_records=True),
+                      chain=False, registry=reg)
+        self.assertEqual(rec["outcome_kind"], "answer", rec.get("refusal"))
+        (radius,) = [q["point"] for q in rec["quantities"] if q["key"] == "radius"]
+        self.assertTrue(3.599e6 < radius < 3.664e6, radius)
