@@ -758,30 +758,51 @@ class _Part(list):
 
 
 class _Run(tuple):
-    """A run (xs, ys, js, region) of one row and field, with _pchip_1d's extrapolation slope and its segments' PCHIP
-    coefficients found once: run.value(x) is _pchip_1d(x, xs, ys) bit for bit."""
+    """A run (xs, ys, js, region) of one row and field: PCHIP inside, with its segments' coefficients found once and its
+    end nodes' slopes fixed at construction (item 5d998d40, the truth check's run-end rule):
+    - an open end (facing no run of the region) takes s_n = sign·min(|s_e|, 4|s∞|), where s_e is PCHIP's end slope and
+      s∞ = minmod(s_e, m) with m the gentlest of the run's secants (0 where they change sign). Past the end the read is
+      C⁰'s line y_e + s∞·d plus the bump (s_n − s∞)·d(1 − d/L)² within L = END_BUMP·h_end (_bump): C¹ at the node
+      and at L, no offset beyond L, and monotone, since the slope's least value s∞ − (s_n − s∞)/3 keeps s∞'s sign while
+      |s_n| ≤ 4|s∞|;
+    - an end facing a gap inside its region takes s_e Fritsch–Carlson clipped against the gap's secant (set_end, from
+      _runs), shared with the bridge (_bridge)."""
 
     def __new__(cls, xs, ys, js, r):
         self = super().__new__(cls, (xs, ys, js, r))
         n = len(xs)
         self.coeffs = [None] * max(n - 1, 0)
-        self.m = self.m_lo = self.m_hi = 0.0             # a one-node run: constant, slope 0 at its node
+        self.m = self.m_lo = self.m_hi = self.f_lo = self.f_hi = 0.0     # a one-node run: constant, slope 0
+        self.L_lo = self.L_hi = 0.0
         if n > 1:
             secs = [(ys[i + 1] - ys[i]) / (xs[i + 1] - xs[i]) for i in range(n - 1)]
             self.m = 0.0 if (min(secs) < 0.0 < max(secs)) else min(secs, key=abs)
-            # item 5d998d40 (b): each end node's slope is the gentler of its PCHIP end slope and the gentlest secant m
-            # (0 if they differ in sign), and the extrapolation past it follows that same slope: C¹ at the end node,
-            # never steeper than m (dd3e58a7's guarantee), and the PCHIP end slope kept where it is the gentler one.
-            # The end segment's Hermite stays monotone: the slope only shrinks toward 0 (Fritsch–Carlson)
             c0 = _coeffs(xs, ys, 0)
             c1 = c0 if n == 2 else _coeffs(xs, ys, n - 2)
-            self.m_lo, self.m_hi = _minmod(c0[4], self.m), _minmod(c1[5], self.m)
-            if n == 2:
-                self.coeffs[0] = c0[:4] + (self.m_lo, self.m_hi)
-            else:
-                self.coeffs[0] = c0[:4] + (self.m_lo, c0[5])
-                self.coeffs[n - 2] = c1[:4] + (c1[4], self.m_hi)
+            self._c0, self._c1 = c0, c1
+            self.se_lo, self.se_hi = c0[4], c1[5]
+            self.f_lo, self.f_hi = _minmod(c0[4], self.m), _minmod(c1[5], self.m)
+            self.L_lo, self.L_hi = END_BUMP * (xs[1] - xs[0]), END_BUMP * (xs[-1] - xs[-2])
+            self.m_lo, self.m_hi = _capped(c0[4], self.f_lo), _capped(c1[5], self.f_hi)
+            self._ends()
         return self
+
+    def _ends(self):
+        n, c0, c1 = len(self[0]), self._c0, self._c1
+        if n == 2:
+            self.coeffs[0] = c0[:4] + (self.m_lo, self.m_hi)
+        else:
+            self.coeffs[0] = c0[:4] + (self.m_lo, c0[5])
+            self.coeffs[n - 2] = c1[:4] + (c1[4], self.m_hi)
+
+    def set_end(self, hi, s_gap):
+        """The end facing a gap inside the region (hi: the run's last node): PCHIP's end slope clipped against the
+        gap's secant, so the end segment and the bridge share it."""
+        if hi:
+            self.m_hi = _clip_fc(self.se_hi, s_gap, s_gap)
+        else:
+            self.m_lo = _clip_fc(self.se_lo, s_gap, s_gap)
+        self._ends()
 
     def value(self, x):
         xs, ys = self[0], self[1]
@@ -799,7 +820,29 @@ class _Run(tuple):
             if c is None:
                 c = self.coeffs[i] = _coeffs(xs, ys, i)
             return _hermite(x, c)
-        return (ys[-1] + self.m_hi * (x - xs[-1])) if x > xs[-1] else (ys[0] + self.m_lo * (x - xs[0]))
+        if x > xs[-1]:
+            return ys[-1] + _bump(x - xs[-1], self.m_hi, self.f_hi, self.L_hi)
+        return ys[0] - _bump(xs[0] - x, self.m_lo, self.f_lo, self.L_lo)
+
+
+#: the bump's length past an open run end, in units of the end segment's width (item 5d998d40: the smallest of the
+#: declared {1/4, 1/2, 1} that passed the truth check and the ρ-monotone test)
+END_BUMP = 0.25
+
+
+def _capped(se, s_inf):
+    """An open end's node slope: PCHIP's end slope se, at most 4|s∞| (the bump's monotone bound), 0 where s∞ is 0."""
+    return 0.0 if s_inf == 0.0 else math.copysign(min(abs(se), 4.0 * abs(s_inf)), s_inf)
+
+
+def _bump(a, s0, s1, L):
+    """The rise over a ≥ 0 past an open run end: s1·a, plus (s0 − s1)·a(1 − a/L)² within L. Slope s0 at the end, s1
+    from L on, C¹ at both; between them the slope is s1 + (s0 − s1)(1 − u)(1 − 3u), u = a/L, never of the other sign
+    while |s0| ≤ 4|s1|."""
+    if a >= L:
+        return s1 * a
+    u = 1.0 - a / L
+    return s1 * a + (s0 - s1) * a * u * u
 
 
 def _minmod(a, b):
@@ -851,9 +894,11 @@ def _cubic1_t(x, xs, ys, i):
 
 def _bridge(x, a, b):
     """The value at x in the gap between two runs of one region (a ends before b starts): the cubic Hermite from a's
-    end (value, its end slope m_hi) to b's start (value, m_lo), each slope Fritsch–Carlson clipped against the gap's
-    secant, so C¹ at both run ends unless a clip binds, and monotone where the two ends are (item 5d998d40, 68 ruling 4:
-    in place of the linear join, which kinked at both ends)."""
+    end (value, its end slope m_hi) to b's start (value, m_lo). _runs set both slopes to the PCHIP end slope Fritsch–
+    Carlson clipped against the gap's secant (_Run.set_end), the slope each run's end segment takes too, so the read is
+    C¹ at both run ends and monotone where the two ends are (item 5d998d40, 68 ruling 4: in place of the linear join,
+    which kinked at both ends; the truth check: clipped PCHIP end slopes, not the gentlest secant). The clip here is
+    then a no-op, kept for a run of one node (slope 0)."""
     xa, xb_ = a[0][-1], b[0][0]
     va, vb = a[1][-1], b[1][0]
     h = xb_ - xa
@@ -862,11 +907,11 @@ def _bridge(x, a, b):
 
 
 def _pchip_1d(x, xs, ys):
-    """A run's value at x (sorted xs): PCHIP inside, its end nodes taking the gentlest of the run's secants (0 where the
-    secants change sign) as their slope; past the ends, linear with that slope. So the run is C¹ at its end nodes (item
-    5d998d40 (b)) and an extrapolation never steepens a run's trend nor turns it (directing 10-17: a run whose first
-    segment is a steep transition, bse row 2100 K at 22.49 → 23.62 GPa, carried its slope a column back and inverted ρ
-    by 1.2 % with the edge correction; the PCHIP end slope had done so)."""
+    """A run's value at x (sorted xs), as _Run: PCHIP inside; past the ends, the gentlest of the run's secants (0
+    where they change sign) after a short C¹ bump from the end node's slope, so an extrapolation never turns a run's
+    trend and, past the bump, never steepens it (directing 10-17: a run whose first segment is a steep transition, bse
+    row 2100 K at 22.49 → 23.62 GPa, carried its slope a column back and inverted ρ by 1.2 % with the edge correction;
+    the PCHIP end slope had done so)."""
     return _Run(list(xs), list(ys), list(range(len(xs))), 0).value(x)
 
 
@@ -1183,6 +1228,12 @@ class AssemblageView(mv.RecordView):
                 cur[1].append(v)
                 cur[2].append(j)
             got = {r: [_Run(*q) for q in qs] for r, qs in got.items()}
+            for qs in got.values():                       # ends facing a gap: the bridge's slopes (_Run.set_end)
+                for a, b in zip(qs, qs[1:]):
+                    if len(a[0]) > 1 and len(b[0]) > 1:
+                        s_gap = (b[1][0] - a[1][-1]) / (b[0][0] - a[0][-1])
+                        a.set_end(True, s_gap)
+                        b.set_end(False, s_gap)
             self._runcache[key] = got
         return got
 
