@@ -17,7 +17,7 @@ primary_family:
   reason: frozen S1
 assemblage:
   file: tables/silicate_slb_earth_dmm_wh2005.json.gz
-  sha256: 76d29e767799b24298a3fa05447ab7d7b7fef82c8f154f62a91c66a2cfd74a78
+  sha256: c0859af61c79d47a2bc9af2245c54265dca679867c4242cabf93c2e92b5b0499
   p_dataset: 136000000000.0
   interpolation: c1_lnp_t
   melt_variant: peridotitic
@@ -45,6 +45,12 @@ assemblage:
   - the dT/dP band is the A/G model-consistency band; it excludes the stencil's step spread. On re-solved nodes that spread
     is ≤ max(band, 1e-2) by the acceptance rule, listed per node (sidecar.resolve.cells[].step). Shipped nodes outside A1
     and the spike scan are not step-checked.
+  - 'the read''s band carries a per-cell «read interpolation» term (compact interp_terms): the class-wide p90 truth error
+    of the C¹ read, raised per cell where |C¹ − C⁰| is larger, relative to max(|v|, F_f) with F_f the table''s p05 |v| per
+    field (registration reg-interp-term §1)'
+  - 'the read''s band carries a per-cell «under-resolved loop» term (compact loop_terms) where a divariant loop is narrower
+    than the grid (census k 3, W 3, 1 % floor): the 9-point truth error of the read in the loop''s cells less the cell''s
+    «read interpolation» term, max(0, e_truth − e_interp), relative to max(|v|, F_f) as interp_terms (registration §7)'
   floor_band:
     origin: 'the floor node''s own compressibility: |dρ|/ρ ≤ (1e5 Pa)/K_T, K_T = ρ·∂P/∂ρ over the first two P nodes at fixed
       T (§3.1, r2 N2)'
@@ -876,7 +882,7 @@ assemblage:
     boundary_tool:
       blob: 0b5299e498698a23a8ef40a816415998b4ada015
       sha256: 9ab86ebaf77f4141e9a832e95347db8f88bbf13807169bc5bcbabd7acc0c33b9
-    compact_sha256: 76d29e767799b24298a3fa05447ab7d7b7fef82c8f154f62a91c66a2cfd74a78
+    compact_sha256: c0859af61c79d47a2bc9af2245c54265dca679867c4242cabf93c2e92b5b0499
     rebuilt: []
   transition_check:
     tool:
