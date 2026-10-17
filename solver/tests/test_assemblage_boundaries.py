@@ -544,11 +544,17 @@ class Transitions(unittest.TestCase):
                 new = p > pb + k * (t - 1600.0)
                 return (3720.0 if new else 3717.0), (9.2e-9 if new else 9.6e-9)
         rs = rhs.r_scale_of(m_, 3.0 * m_ / (4.0 * math.pi * r_ ** 3))
+
+        class Curve:                    # the planted curve over 1000–1900 K: its largest P_b (26.65 GPa) is near where the
+            def boundary_pressure(self, curve, t):     # walk crosses it (26.19 GPa, 1851 K), the thinnest margin
+                return pb + k * (t - 1600.0) if 1000.0 <= t <= 1900.0 else None   # (68 on C1, condition 1)
+        scale = events.curve_p_scale(Curve(), {})          # record_events' rule, not a pinned 1e9 (condition 2)
+        self.assertEqual(scale, pb + k * 300.0)
         for comp, want in ((1, "end"), (None, "chatter")):
             for h0 in (1e-3, 7.3e-4, 1.37e-3):
                 o = st.Options(rtol=1e-10, floors=rhs.floors(m_, rs), h0=h0 * m_, h_min=1e-15 * m_, h_max=m_ / 20.0,
                                max_steps=200000)
-                e = st.Event("phase:sloped", lambda m, y: y[1] - (pb + k * (y[2] - 1600.0)), scale=1e9,
+                e = st.Event("phase:sloped", lambda m, y: y[1] - (pb + k * (y[2] - 1600.0)), scale=scale,
                              terminal=False, seam=True, component=comp)
                 got = st.run(rhs.make_rhs(Sloped()), m_, (r_, 0.0, 1600.0, 1600.0, 0.0, 0.0), 0.5 * m_, o, [e])
                 self.assertEqual(got.stop.kind, want, (comp, h0))
