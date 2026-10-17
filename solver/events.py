@@ -147,6 +147,20 @@ def melting_events(view) -> dict:
     return {f"melt:{a}|{b}": (a, b) for (a, b), kind, _c in view.transitions() if kind == "melting"}
 
 
+#: T samples [K] for a curve's P scale: every record T range lies inside, and the scale needs only P_b's size
+CURVE_SCALE_TS = tuple(50.0 * k for k in range(1, 201))
+
+
+def curve_p_scale(view, curve) -> float:
+    """The landing scale of a curve event g = P − P_b(T): the largest |P_b| over the curve's T range, sampled every
+    50 K, so the landing tolerance event_tol·scale is relative to P as phase 1's seams (scale = p_b) have it. A fixed
+    1e9 gave 1e-3 Pa, 6e-14 of P at 17 GPa, under the ±4e-3 Pa that re-steps reproduce P to there; the landing never
+    put a new-side iterate within it and chattered (pre-run on 68e47ffc, C1: 28 earth and venus O9 states on exported
+    edges). 1e9 where the curve is absent at every sample."""
+    pbs = [abs(pb) for t in CURVE_SCALE_TS if (pb := view.boundary_pressure(curve, t)) is not None]
+    return max(pbs) if pbs and max(pbs) > 0.0 else 1.0e9
+
+
 def record_events(view) -> list:
     """Switch-over registration §2: a record view's events.
     - P seams: seams() (phase windows, thermal-set seams), landed as legacy's seam events.
@@ -176,7 +190,7 @@ def record_events(view) -> list:
             def g(m, y, curve=curve):
                 pb = view.boundary_pressure(curve, y[2])
                 return None if pb is None else y[1] - pb
-            scale = 1.0e9
+            scale = curve_p_scale(view, curve)
         # a curve g = P − P_b(T) lands with its landing stages held on the old side in P (component 1, as curve_seams):
         # without it a stage that crosses the curve reads the new side's dT/dP, the re-step's end T jumps with its
         # length, and on a steep curve g jumps with it (Mars 1774 K on (R1)'s swap extension: |g| between 0.17 and 40
