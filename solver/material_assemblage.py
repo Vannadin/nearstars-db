@@ -764,7 +764,9 @@ class _Run(tuple):
       s∞ = minmod(s_e, m) with m the gentlest of the run's secants (0 where they change sign). Past the end the read is
       C⁰'s line y_e + s∞·d plus the bump (s_n − s∞)·d(1 − d/L)² within L = END_BUMP·h_end (_bump): C¹ at the node
       and at L, no offset beyond L, and monotone, since the slope's least value s∞ − (s_n − s∞)/3 keeps s∞'s sign while
-      |s_n| ≤ 4|s∞|;
+      |s_n| ≤ 4|s∞|. m is the whole run's (68 N3): the end-two secants' gentler one differs on the shipped records (run
+      ends of ≥ 3 nodes, three fields, ~2300 per record: 23–26 % are 0 under one rule only, end-two/all p90 2.9–3.9) and
+      read the truth closer, but broke the ρ-monotone test at bse 11.93 GPa, 925 K (a loop cell's end segment);
     - an end facing a gap inside its region takes s_e Fritsch–Carlson clipped against the gap's secant (set_end, from
       _runs), shared with the bridge (_bridge)."""
 
