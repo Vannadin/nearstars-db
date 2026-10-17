@@ -119,11 +119,27 @@ def _curve_at(mat, name, p, t, p_stop=0.0):
     return None
 
 
+#: P samples [Pa] for an onset curve's T scale (1 bar to 400 GPa, log-spaced)
+ONSET_SCALE_PS = tuple(1.0e5 * 10.0 ** (k * 6.6 / 59) for k in range(60))
+
+
+def onset_t_scale(mat, name, p_stop: float = 0.0) -> float:
+    """An onset event's landing scale: the largest T_onset of the named curve over 1 bar–400 GPa, so its tolerance is
+    1e-12 of T as the seams' rule (68 on C1: ONSET_SCALE gave 1e-9 K against a ~1e-9 K re-step spread at 2500 K).
+    ONSET_SCALE where the curve is read nowhere."""
+    ts = []
+    for p in ONSET_SCALE_PS:
+        g = _curve_at(mat, name, p, 1.0e3, p_stop)
+        if g is not None:
+            ts.append(abs(1.0e3 - g))
+    return max(ts) if ts and max(ts) > 0.0 else ONSET_SCALE
+
+
 def onset_events(mat, p_stop: float = 0.0) -> list:
     """One event per onset curve (r2 S5 B2: no «nearest curve» switching). g is None where the curve is absent; its
     domain ends and branch jumps are seam events (`curve_seams`), landed first."""
     return [st.Event(f"onset:{name}", (lambda m, y, name=name: _curve_at(mat, name, y[1], y[2], p_stop)),
-                     scale=ONSET_SCALE, terminal=False) for name in _melt_curve_names(mat)]
+                     scale=onset_t_scale(mat, name, p_stop), terminal=False) for name in _melt_curve_names(mat)]
 
 
 def onset_event(mat, p_stop: float = 0.0) -> list:
@@ -161,6 +177,63 @@ def curve_p_scale(view, curve) -> float:
     return max(pbs) if pbs and max(pbs) > 0.0 else 1.0e9
 
 
+_GIBBS_SCALES: dict = {}
+
+
+def _knot_box(lib_a, lib_b):
+    """The two SeaFreeze splines' common knot box (Pa, K), 0.02 K inside in T for the ±0.01 K difference."""
+    from seafreeze.phaselines import phase_range
+    ra, rb = phase_range(lib_a.submodel), phase_range(lib_b.submodel)
+    return (max(ra.P[0], rb.P[0], 0.1) * 1e6, min(ra.P[1], rb.P[1]) * 1e6, max(ra.T[0], rb.T[0]) + 0.02,
+            min(ra.T[1], rb.T[1]) - 0.02)
+
+
+def gibbs_scale(lib_a, lib_b, box=None) -> float:
+    """A gibbs boundary's landing scale (g = G_a − G_b, J/kg): the largest P·|Δv| + T·|Δs| at the boundary, found
+    where Δg changes sign along P on a grid over the two splines' common knot box (12 T × 30 P), Δs = −∂Δg/∂T by a
+    ±0.01 K difference. The landing's spread in g is |Δv|·σ_P + |Δs|·σ_T, so this puts the tolerance at 1e-12 of the
+    terms g is made of, as the seams' rule (68 on C1: the fixed 1e3 gave 1e-9 J/kg, 4–100× under that spread). 1e3
+    where no sign change is found. Cached per submodel pair. `box` (tests): (p_lo, p_hi, t_lo, t_hi) in Pa and K in
+    place of the splines' knot boxes."""
+    key = (getattr(lib_a, "submodel", id(lib_a)), getattr(lib_b, "submodel", id(lib_b)))
+    if box is None and key in _GIBBS_SCALES:
+        return _GIBBS_SCALES[key]
+    from solver import material_library as ml
+    if box is None:
+        _GIBBS_SCALES[key] = gibbs_scale(lib_a, lib_b, _knot_box(lib_a, lib_b))
+        return _GIBBS_SCALES[key]
+    p_lo, p_hi, t_lo, t_hi = box
+    best = None
+
+    def dg(p, t):
+        try:
+            return lib_a.at(p, t)["g"] - lib_b.at(p, t)["g"]
+        except (ml.LibraryOutOfRange, ValueError):
+            return None
+
+    def term(p, t):
+        try:
+            a, b = lib_a.at(p, t), lib_b.at(p, t)
+        except (ml.LibraryOutOfRange, ValueError):
+            return None
+        up, dn = dg(p, t + 0.01), dg(p, t - 0.01)
+        if up is None or dn is None:
+            return None
+        return p * abs(1.0 / a["rho"] - 1.0 / b["rho"]) + t * abs((up - dn) / 0.02)
+    if p_lo < p_hi and t_lo < t_hi:
+        ps = [p_lo * (p_hi / p_lo) ** (k / 29) for k in range(30)]
+        for i in range(12):
+            t = t_lo + (t_hi - t_lo) * i / 11
+            gs = [dg(p, t) for p in ps]
+            for k in range(29):
+                if gs[k] is not None and gs[k + 1] is not None and gs[k] * gs[k + 1] <= 0.0:
+                    for p in (ps[k], ps[k + 1]):
+                        v = term(p, t)
+                        if v is not None and (best is None or v > best):
+                            best = v
+    return best if best else 1.0e3
+
+
 def record_events(view) -> list:
     """Switch-over registration §2: a record view's events.
     - P seams: seams() (phase windows, thermal-set seams), landed as legacy's seam events.
@@ -185,7 +258,7 @@ def record_events(view) -> list:
                     return a.library.at(y[1], y[2])["g"] - b.library.at(y[1], y[2])["g"]
                 except ml.LibraryOutOfRange:            # 68 N64: only «outside its spline» means no boundary here
                     return None
-            scale = 1.0e3
+            scale = gibbs_scale(a.library, b.library) if hasattr(a, "library") and hasattr(b, "library") else 1.0e3
         else:
             def g(m, y, curve=curve):
                 pb = view.boundary_pressure(curve, y[2])

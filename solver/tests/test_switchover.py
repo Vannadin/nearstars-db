@@ -81,6 +81,42 @@ class RecordEvents(unittest.TestCase):
         (vi,) = [e for e in events.layer_events(hv) if e.name == "phase:VI|vii_x"]
         self.assertGreater(vi.scale, 1.0e9)
 
+    def test_gibbs_scale_is_the_boundary_terms(self):
+        """68 on C1, the same class: a gibbs boundary's scale is its largest P·|Δv| + T·|Δs| at the boundary, not a fixed
+        1e3 (tolerance 1e-9 J/kg, 4–100× under the landing's spread |Δv|·σ_P + |Δs|·σ_T). Planted linear G = v·P − s·T:
+        the boundary is P = 1.333e7·T, where the terms are 2·T·|Δs| (7.2e5 J/kg at 300 K). SeaFreeze's own Ih|water1
+        too. Mutant: 1e3."""
+        class Lib:
+            def __init__(self, v, s):
+                self.v, self.s = v, s
+
+            def at(self, p, t):
+                return {"rho": 1.0 / self.v, "g": self.v * p - self.s * t}
+        got = events.gibbs_scale(Lib(1.0e-3, 0.0), Lib(1.09e-3, 1200.0), box=(1.0e6, 1.0e10, 250.0, 300.0))
+        self.assertGreater(got, 0.5 * 7.2e5)
+        self.assertLess(got, 1.5 * 7.2e5)
+        from solver import material_library as ml
+        ih, wa = ml.SeaFreezePhase("Ih"), ml.SeaFreezePhase("water1")
+        self.assertGreater(events.gibbs_scale(ih, wa), 1.0e4)
+        from types import SimpleNamespace                  # and record_events takes it for a library boundary
+        stub = SimpleNamespace(phases=(SimpleNamespace(id="Ih", library=ih), SimpleNamespace(id="water1", library=wa)),
+                               seams=lambda: (), source_seams=lambda: (),
+                               transitions=lambda: ((("Ih", "water1"), "solid_solid", {"form": "library"}),))
+        (ev,) = events.record_events(stub)
+        self.assertEqual(ev.scale, events.gibbs_scale(ih, wa))
+
+    def test_onset_scale_is_its_largest_t(self):
+        """68 on C1: an onset event's scale is its curve's largest T_onset over 1 bar–400 GPa (tolerance 1e-12 of T, the
+        seams' rule), not ONSET_SCALE. Mutant: ONSET_SCALE."""
+        class Mat:
+            def onset_curves(self, p, t):
+                return [("sol", 1500.0 + 1.0e-8 * p)]
+        self.assertEqual(events.onset_t_scale(Mat(), "sol"), 1500.0 + 1.0e-8 * max(events.ONSET_SCALE_PS))
+        self.assertEqual(events.onset_t_scale(Mat(), "liq"), events.ONSET_SCALE)
+        Mat.onset_curve_names = ("sol",)
+        (ev,) = events.onset_events(Mat())
+        self.assertEqual(ev.scale, 1500.0 + 1.0e-8 * max(events.ONSET_SCALE_PS))
+
     @unittest.skipUnless(_shipped_bse(), "no shipped default_bse record with its table (the engine branch without records)")
     def test_edge_lands_at_its_p_scale(self):
         """Pre-run C1 on 68e47ffc: earth O9 2135.35 K's landing on default_bse's edge427 (wa+gt+fp|gt+fp) at 16.9 GPa,
