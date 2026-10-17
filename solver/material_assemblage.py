@@ -760,17 +760,19 @@ class _Part(list):
 class _Run(tuple):
     """A run (xs, ys, js, region) of one row and field: PCHIP inside, with its segments' coefficients found once and its
     end nodes' slopes fixed at construction (item 5d998d40, the truth check's run-end rule):
-    - an open end (facing no run of the region) takes s_n = sign·min(|s_e|, 4|s∞|), where s_e is PCHIP's end slope and
-      s∞ = minmod(s_e, m) with m the gentlest of the run's secants (0 where they change sign). Past the end the read is
+    - an open end (facing no run of the region) takes s_n = sign·min(|s_e|, 4|s∞|) for a field in END_CAPPED (ρ), s_e
+      for the others, where s_e is PCHIP's end slope and s∞ = minmod(s_e, m) with m the gentlest of the run's secants (0
+      where they change sign). Past the end the read is
       C⁰'s line y_e + s∞·d plus the bump (s_n − s∞)·d(1 − d/L)² within L = END_BUMP·h_end (_bump): C¹ at the node
       and at L, no offset beyond L, and monotone, since the slope's least value s∞ − (s_n − s∞)/3 keeps s∞'s sign while
-      |s_n| ≤ 4|s∞|. m is the whole run's (68 N3): the end-two secants' gentler one differs on the shipped records (run
+      |s_n| ≤ 4|s∞| (ρ; dT/dP and c_P need no monotone extension, and the cap read their truth worse). m is the whole
+      run's (68 N3): the end-two secants' gentler one differs on the shipped records (run
       ends of ≥ 3 nodes, three fields, ~2300 per record: 23–26 % are 0 under one rule only, end-two/all p90 2.9–3.9) and
       read the truth closer, but broke the ρ-monotone test at bse 11.93 GPa, 925 K (a loop cell's end segment);
     - an end facing a gap inside its region takes s_e Fritsch–Carlson clipped against the gap's secant (set_end, from
       _runs), shared with the bridge (_bridge)."""
 
-    def __new__(cls, xs, ys, js, r):
+    def __new__(cls, xs, ys, js, r, capped=True):
         self = super().__new__(cls, (xs, ys, js, r))
         n = len(xs)
         self.coeffs = [None] * max(n - 1, 0)
@@ -785,7 +787,10 @@ class _Run(tuple):
             self.se_lo, self.se_hi = c0[4], c1[5]
             self.f_lo, self.f_hi = _minmod(c0[4], self.m), _minmod(c1[5], self.m)
             self.L_lo, self.L_hi = END_BUMP * (xs[1] - xs[0]), END_BUMP * (xs[-1] - xs[-2])
-            self.m_lo, self.m_hi = _capped(c0[4], self.f_lo), _capped(c1[5], self.f_hi)
+            if capped:
+                self.m_lo, self.m_hi = _capped(c0[4], self.f_lo), _capped(c1[5], self.f_hi)
+            else:
+                self.m_lo, self.m_hi = c0[4], c1[5]
             self._ends()
         return self
 
@@ -839,6 +844,12 @@ BLEND_SHARP = MappingProxyType({"rho": 1.0, "dtdp_eq": 2.0, "c_p": 2.0})
 #: the bump's length past an open run end, in units of the end segment's width (item 5d998d40: the smallest of the
 #: declared {1/4, 1/2, 1} that passed the truth check and the ρ-monotone test)
 END_BUMP = 0.25
+
+
+#: the fields whose open-end node slope is capped at 4|s∞| (_Run): ρ, for the bump's monotone bound (the ρ-monotone
+#: test). dT/dP and c_P take PCHIP's end slope (item 5d998d40, the hold-out truth: the cap read mars's gap-bridge class
+#: worse than C⁰, p95 CI lower bounds 1.09 and 1.31; uncapped 0.17–0.37).
+END_CAPPED = frozenset({"rho"})
 
 
 def _capped(se, s_inf):
@@ -904,17 +915,27 @@ def _cubic1_t(x, xs, ys, i):
 
 
 def _bridge(x, a, b):
-    """The value at x in the gap between two runs of one region (a ends before b starts): the cubic Hermite from a's
-    end (value, its end slope m_hi) to b's start (value, m_lo). _runs set both slopes to the PCHIP end slope Fritsch–
-    Carlson clipped against the gap's secant (_Run.set_end), the slope each run's end segment takes too, so the read is
-    C¹ at both run ends and monotone where the two ends are (item 5d998d40, 68 ruling 4: in place of the linear join,
-    which kinked at both ends; the truth check: clipped PCHIP end slopes, not the gentlest secant). The clip here is
-    then a no-op, kept for a run of one node (slope 0)."""
+    """The value at x in the gap between two runs of one region (a ends before b starts): C⁰'s linear join of a's end
+    and b's start (secant s) plus, at each end, the open end's bump (_bump) from that end's slope to s, over
+    L = min(END_BUMP·h_end, h/2) (h/2 for a run of one node, slope 0). _runs set both end slopes to PCHIP's end slope
+    Fritsch–Carlson clipped against s (_Run.set_end), the slope each run's end segment takes too, so the read is C¹ at
+    both run ends, s in the gap's middle, and monotone where the two ends are, as |m| ≤ 3|s| keeps the bump's least
+    slope s − (m − s)/3 of s's sign (item 5d998d40, 68 ruling 4: in place of the linear join, which kinked at both ends;
+    the hold-out truth: the cubic Hermite with those slopes read mars's gap-bridge ρ worse than C⁰, CI 1.20–1.77; this
+    form 0.39–0.51). The clip here is then a no-op, kept for a run of one node (slope 0)."""
     xa, xb_ = a[0][-1], b[0][0]
     va, vb = a[1][-1], b[1][0]
     h = xb_ - xa
     s = (vb - va) / h
-    return _hermite(x, (xa, h, va, vb, _clip_fc(a.m_hi, s, s), _clip_fc(b.m_lo, s, s)))
+    la = min(END_BUMP * (xa - a[0][-2]), 0.5 * h) if len(a[0]) > 1 else 0.5 * h
+    lb = min(END_BUMP * (b[0][1] - xb_), 0.5 * h) if len(b[0]) > 1 else 0.5 * h
+    da, db = x - xa, xb_ - x
+    y = va + s * da
+    if da < la:
+        y += (_clip_fc(a.m_hi, s, s) - s) * da * (1.0 - da / la) ** 2
+    if db < lb:
+        y -= (_clip_fc(b.m_lo, s, s) - s) * db * (1.0 - db / lb) ** 2
+    return y
 
 
 def _pchip_1d(x, xs, ys):
@@ -1228,7 +1249,7 @@ class AssemblageView(mv.RecordView):
                 cur[0].append(self.lnps[j])
                 cur[1].append(v)
                 cur[2].append(j)
-            got = {r: [_Run(*q) for q in qs] for r, qs in got.items()}
+            got = {r: [_Run(*q, capped=f in END_CAPPED) for q in qs] for r, qs in got.items()}
             for qs in got.values():                       # ends facing a gap: the bridge's slopes (_Run.set_end)
                 for a, b in zip(qs, qs[1:]):
                     s_gap = (b[1][0] - a[1][-1]) / (b[0][0] - a[0][-1])
