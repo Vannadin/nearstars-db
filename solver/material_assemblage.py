@@ -354,6 +354,11 @@ def check_table(asm, table) -> dict:
     if asm["dtdp"]["refused_count"] != len(refused):
         raise TableStop(f"the record says {asm['dtdp']['refused_count']} refused dT/dP cells, the table lists "
                         f"{len(refused)}", check="dT/dP field rule")
+    if table.get("interp_terms") is not None:            # registration reg-interp-term §4: the per-cell term
+        check_term_block(table, "interp_terms", sparse=False)
+    elif (table.get("boundaries") or {}).get("status") == "exported":
+        raise TableStop("an exported table carries no interp_terms block (registration reg-interp-term §4)",
+                        check="term block")
     exact = sorted(e for e in (_exact_maxwell(c) for c in cells if c["kind"] != "frozen") if e is not None)
     q = (lambda f: exact[min(len(exact) - 1, int(f * (len(exact) - 1)))]) if exact else (lambda f: None)
     return {"stored_model": {"n": len(stored), "median": sorted(stored)[len(stored) // 2] if stored else None,
@@ -362,6 +367,72 @@ def check_table(asm, table) -> dict:
             "exact_maxwell": {"n": len(exact), "median": q(0.5), "p99": q(0.99), "max": q(1.0)},
             "frozen_alpha_max": frozen_max, "cross_state_inversions": cross, "dtdp_eq_refused": len(refused),
             "boundary_curves": None if curves is None else len(curves)}
+
+
+# ── the per-cell band terms (registration reg-interp-term: «read interpolation» §1–§4, «under-resolved loop» §7) ──
+#: a term block's fields, in BandNote order (error on ρ, dtdp_error, c_p_error)
+TERM_FIELDS = ("rho", "dtdp", "c_p")
+
+
+def term_floor(cells, p_dataset):
+    """F_f, the terms' denominator floor (one rule for §1 and §7; the generator's term_floor): sorted |v| over the
+    cells at P ≤ p_dataset that hold a value, the entry at ⌊0.05·n⌋; ρ is rho, dT/dP dtdp_eq, c_P c_p_eq on a
+    non-frozen cell and c_p on a frozen one."""
+    vals = {f: [] for f in TERM_FIELDS}
+    for c in cells:
+        if c["p"] > p_dataset:
+            continue
+        for f, v in (("rho", c.get("rho")), ("dtdp", c.get("dtdp_eq")),
+                     ("c_p", c.get("c_p_eq") if c["kind"] != "frozen" else c.get("c_p"))):
+            if v is not None:
+                vals[f].append(abs(v))
+    return {f: sorted(v)[int(0.05 * len(v))] for f, v in vals.items() if v}
+
+
+def check_term_block(table, key, sparse):
+    """A term block {source: {…, floor}, fields, cells [[ia, ib, e_ρ, e_dT/dP, e_c_P], …]} (§4's load gate): fields in
+    TERM_FIELDS order; the source's floor equal to this table's term_floor; each entry finite and ≥ 0, or null; a cell
+    on the grid up to p_dataset at most once, and, unless `sparse`, every such cell. Raises TableStop."""
+    blk = table[key]
+    if not isinstance(blk, dict) or list(blk.get("fields") or ()) != list(TERM_FIELDS):
+        raise TableStop(f"{key}: fields are not {list(TERM_FIELDS)}", check="term block")
+    floor = dict((blk.get("source") or {}).get("floor") or {})
+    if floor != term_floor(table["cells"], table["p_dataset"]):
+        raise TableStop(f"{key}: the floor {floor!r} is not this table's", check="term block")
+    ps = sorted({c["p"] for c in table["cells"]})
+    nt = len({c["t"] for c in table["cells"]})
+    need = {(ia, ib) for ib in range(nt - 1) for ia in range(len(ps) - 1) if ps[ia + 1] <= table["p_dataset"]}
+    seen = set()
+    for r in blk.get("cells") or ():
+        if len(r) != 5 or not all(isinstance(i, int) and not isinstance(i, bool) for i in r[:2]):
+            raise TableStop(f"{key}: an entry {list(r)!r} is not [ia, ib, e_rho, e_dtdp, e_cp]", check="term block")
+        k = (r[0], r[1])
+        if k not in need or k in seen:
+            raise TableStop(f"{key}: cell {k} is {'doubled' if k in seen else 'not a cell up to p_dataset'}",
+                            check="term block")
+        seen.add(k)
+        if not all(x is None or (_finite(x) and x >= 0.0) for x in r[2:]):
+            raise TableStop(f"{key}: cell {k} holds {list(r[2:])!r}, not finite terms ≥ 0 or null", check="term block")
+    if not sparse and seen != need:
+        raise TableStop(f"{key}: {len(need - seen)} cell(s) up to p_dataset have no entry, e.g. "
+                        f"{sorted(need - seen)[:3]}", check="term block")
+
+
+def _term_map(blk):
+    """{(ia, ib): (e_ρ, e_dT/dP, e_c_P)}, the floor (F_ρ, F_dT/dP, F_c_P) and the source's name (its tool blob) of a
+    term block, or ({}, None, None)."""
+    if not blk:
+        return {}, None, None
+    src = blk["source"]
+    return ({(r[0], r[1]): tuple(r[2:]) for r in blk["cells"]}, tuple(src["floor"][k] for k in TERM_FIELDS),
+            f"tool {str(src.get('tool_blob'))[:8]}")
+
+
+#: the note each term block carries on a read in its cell: block key → (edge, grade, origin's lead)
+TERM_NOTES = {"interp_terms": ("read interpolation",
+                               "the C¹ read's interpolation: the class-wide p90 truth error, raised per cell where "
+                               "|C¹ − C⁰| is larger",
+                               "registration reg-interp-term §1: per cell, relative to max(|v|, F_f)")}
 
 
 #: the fields a planted single-field bump is tried on, per cell kind (r2 condition 3: coverage per field)
@@ -1025,6 +1096,8 @@ class AssemblageView(mv.RecordView):
         self._wn_of = None                               # _width's node widths and their max, for the lnps they came from
         #: the column cut of a read: p_dataset, lifted to the taper's end for the zone's SLB-extrapolated read (note 7 §2)
         self._top = self.p_dataset
+        #: the per-cell band terms by block (registration reg-interp-term §4, §7.4): {key: (cells, floor, source name)}
+        self._terms = {k: _term_map(table.get(k)) for k in ("interp_terms", "loop_terms")}
         #: the read counts of this view ((R1), 68 S1): reads, corner rows read in an empty region, outer rows dropped
         #: (reads, most in one read), refusals by class, edge windows blended (corrections), side fallbacks (0 by
         #: construction: the extension covers the stencil), corner rows the read itself took from the nearest region
@@ -1598,6 +1671,26 @@ class AssemblageView(mv.RecordView):
                                               "extrapolated in P below the grid floor",
                                               self.record["assemblage"]["floor_band"]["origin"]))
 
+    def _term_notes(self, p, t, rho_s, g_s, cp_s):
+        """One BandNote per term block at the read's cell (§4, §7.4), for a read at P ≤ p_dataset: the cell's terms,
+        relative to max(|v|, F_f) per field, so scale carries those denominators; a null term reads as 0 and a cell
+        whose terms are all null or 0 carries no note. Above p_dataset the taper's own bands stand (§4)."""
+        if p > self.p_dataset:
+            return
+        ia = min(max(bisect.bisect_right(self.ps, p) - 1, 0), len(self.ps) - 2)
+        ib = min(max(bisect.bisect_right(self.ts, t) - 1, 0), len(self.ts) - 2)
+        for key, (edge, grade, lead) in TERM_NOTES.items():
+            cells, floor, src = self._terms[key]
+            e = cells.get((ia, ib))
+            if not e or not any(e):
+                continue
+            e = tuple(0.0 if x is None else x for x in e)
+            self.notes.append(mv.BandNote(
+                self.material_id, edge, "relative", e[0], None, grade,
+                f"{lead}; cell ({ia}, {ib}); {key} {src}", dtdp_error=e[1], dtdp_origin=f"{lead}; cell ({ia}, {ib})",
+                c_p_error=e[2], c_p_origin=f"{lead}; cell ({ia}, {ib})",
+                scale=tuple(max(abs(v), fl) for v, fl in zip((rho_s, g_s, cp_s), floor))))
+
     def _floor_k_t(self, t):
         """K_T at the floor node on the read's T, ρ·∂P/∂ρ over the first two P nodes (r2 N2), at the nearest node T."""
         kb = min(range(len(self.ts)), key=lambda k: abs(self.ts[k] - t))
@@ -1622,6 +1715,7 @@ class AssemblageView(mv.RecordView):
                 return self._refuse(p, t, r.refusal, r.why if pe == p else f"{r.why} (read at {pe:g} Pa)")
             rho_s, g_s, cp_s, cells = got
             self._cell_notes(cells, p, t)
+            self._term_notes(pe, t, rho_s, g_s, cp_s)
             rho, g, _ = _lm().silicate_melt_mix(pe, t, self.variant, rho_s, g_s, cp_s)
         except _lm().eos.PhaseGap as e:             # RTpress's own refusal
             return self._refuse(p, t, "input.material_out_of_data", f"RTpress liquid: {e}")
