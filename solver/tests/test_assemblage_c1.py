@@ -123,3 +123,77 @@ class C1(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RunEnd(unittest.TestCase):
+    """The truth check's run-end rule (item 5d998d40; 68 ruling on the bump): an open run end's node slope s_n is PCHIP's
+    end slope capped at 4|s∞|, s∞ = minmod(PCHIP end, the run's gentlest secant); past the end, s∞'s line plus the bump
+    (s_n − s∞)·d(1 − d/L)² within L = END_BUMP·h_end. Mutants: L = 0 (a kink at the node), no cap (the bump turns),
+    the linear ramp with its offset (bse 2125 K falls past 21.42 GPa)."""
+
+    XS, YS = [0.0, 1.0, 2.0, 3.0], [10.0, 20.0, 21.0, 22.0]       # a steep first segment: s_e 14.5, s∞ 1, s_n 4
+
+    def _d(self, run, x, h):
+        return (run.value(x + h) - run.value(x - h)) / (2.0 * h)
+
+    def test_bump_shape(self):
+        run = ma._Run(list(self.XS), list(self.YS), [0, 1, 2, 3], 0)
+        self.assertEqual((run.se_lo, run.f_lo, run.m_lo), (14.5, 1.0, 4.0))
+        x0, L, h = self.XS[0], run.L_lo, 1e-6
+        self.assertEqual(L, ma.END_BUMP * 1.0)
+        # the node: the same slope s_n from the run's end segment and from the bump
+        inner = (run.value(x0 + h) - run.value(x0)) / h
+        outer = (run.value(x0) - run.value(x0 - h)) / h
+        self.assertAlmostEqual(inner, 4.0, delta=1e-3)
+        self.assertAlmostEqual(outer, 4.0, delta=1e-3)
+        # at L: C¹, slope s∞ on both sides
+        self.assertAlmostEqual((run.value(x0 - L + h) - run.value(x0 - L)) / h, 1.0, delta=1e-3)
+        self.assertAlmostEqual((run.value(x0 - L) - run.value(x0 - L - h)) / h, 1.0, delta=1e-3)
+        # beyond L: exactly the line of s∞ (no offset)
+        for d in (L, 2 * L, 1.0, 7.0):
+            self.assertEqual(run.value(x0 - d), self.YS[0] - 1.0 * d)
+        # monotone throughout, the cap at its bound included
+        xs = [x0 - 2 * L + i * 2 * L / 400 for i in range(401)]
+        self.assertTrue(all(run.value(a) <= run.value(b) for a, b in zip(xs, xs[1:])))
+        cap = ma._Run([0.0, 1.0, 2.0], [0.0, 4.0, 5.0], [0, 1, 2], 0)       # s_e 5.5 > 4·s∞ = 4: s_n = 4 exactly
+        self.assertEqual(cap.m_lo, 4.0)
+        xs = [-0.5 + i * 0.5 / 400 for i in range(401)]
+        self.assertTrue(all(cap.value(a) <= cap.value(b) for a, b in zip(xs, xs[1:])))
+
+    def test_gap_end_shared_with_the_bridge(self):
+        """An end facing a gap takes PCHIP's end slope clipped against the gap's secant, in its end segment and in the
+        bridge alike: C¹ at both run ends."""
+        a = ma._Run([0.0, 1.0, 2.0], [0.0, 1.0, 3.0], [0, 1, 2], 0)
+        b = ma._Run([3.0, 4.0, 5.0], [4.0, 4.5, 5.0], [3, 4, 5], 0)
+        s = (b[1][0] - a[1][-1]) / (b[0][0] - a[0][-1])
+        a.set_end(True, s)
+        b.set_end(False, s)
+        self.assertEqual(a.m_hi, ma._clip_fc(a.se_hi, s, s))
+        h = 1e-6
+        for x, run_side, bridge_side in ((2.0, lambda x: a.value(x), lambda x: ma._bridge(x, a, b)),
+                                         (3.0, lambda x: ma._bridge(x, a, b), lambda x: b.value(x))):
+            left = (run_side(x) - run_side(x - h)) / h if x == 2.0 else (bridge_side(x) - bridge_side(x - h)) / h
+            right = (bridge_side(x + h) - bridge_side(x)) / h if x == 2.0 else (run_side(x + h) - run_side(x)) / h
+            self.assertAlmostEqual(left, right, delta=1e-4)
+
+    @unittest.skipUnless(_shipped(), "no shipped assemblage record with its table (the engine branch without records)")
+    def test_bse_2100K_case(self):
+        """dd3e58a7's case: bse row 2100 K, a run whose first segment is a steep transition (22.49 → 23.62 GPa). At
+        2125 K, ρ at cell centres from 19 to 25 GPa rises wherever the table rises (as Envelope's test, on this line)."""
+        reg = mr.load()
+        v = _view(reg, "silicate_slb_default_bse")
+        ib = max(i for i, t in enumerate(v.ts) if t <= 2100.0)
+        t, last, bad = 0.5 * (v.ts[ib] + v.ts[ib + 1]), None, []
+        for ia in range(len(v.ps) - 1):
+            if not 19e9 <= v.ps[ia] <= 25e9:
+                continue
+            got = v._solid(math.sqrt(v.ps[ia] * v.ps[ia + 1]), t)
+            if not isinstance(got, tuple):
+                last = None
+                continue
+            if last is not None:
+                cols = [[(v._cell(j, k) or {}).get("rho") for k in (ib, ib + 1)] for j in (ia - 1, ia, ia + 1)]
+                if all(p and q and r and p < q < r for p, q, r in zip(*cols)) and got[0] < last * (1.0 - 1e-5):
+                    bad.append((v.ps[ia], got[0] / last - 1.0))
+            last = got[0]
+        self.assertEqual(bad, [])
