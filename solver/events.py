@@ -177,9 +177,6 @@ def curve_p_scale(view, curve) -> float:
     return max(pbs) if pbs and max(pbs) > 0.0 else 1.0e9
 
 
-_GIBBS_SCALES: dict = {}
-
-
 def _knot_box(lib_a, lib_b):
     """The two SeaFreeze splines' common knot box (Pa, K), 0.02 K inside in T for the ±0.01 K difference."""
     from seafreeze.phaselines import phase_range
@@ -193,17 +190,14 @@ def gibbs_scale(lib_a, lib_b, box=None) -> float:
     the boundary, found where ΔG changes sign along P on a grid over the two splines' common knot box (12 T × 30 P),
     Δs = −∂ΔG/∂T by a ±0.01 K difference. The landing's spread in g is σ_P + |Δs/Δv|·σ_T, so this puts the tolerance
     at 1e-12 of the terms g is made of, as the seams' rule (68 on C1: the fixed 1e3 on ΔG gave 1e-9 J/kg, 4–100× under
-    the spread). 1e9 (the curves' old fixed scale) where no sign change is found. Cached per submodel pair. `box` (tests): (p_lo, p_hi, t_lo, t_hi) in Pa and K in
-    place of the splines' knot boxes."""
-    key = (getattr(lib_a, "submodel", id(lib_a)), getattr(lib_b, "submodel", id(lib_b)))
-    if box is None and key in _GIBBS_SCALES:
-        return _GIBBS_SCALES[key]
+    the spread). 1e9 (the curves' old fixed scale) where no sign change is found. Found per view, not cached (no
+    module state, §A6; no shipped record declares a gibbs boundary today). `box` (tests): (p_lo, p_hi, t_lo, t_hi) in
+    Pa and K in place of the splines' knot boxes."""
     from solver import material_library as ml
     if box is None:
         if not (hasattr(lib_a, "submodel") and hasattr(lib_b, "submodel")):
             return 1.0e9                                  # no knot box to search (a planted library)
-        _GIBBS_SCALES[key] = gibbs_scale(lib_a, lib_b, _knot_box(lib_a, lib_b))
-        return _GIBBS_SCALES[key]
+        box = _knot_box(lib_a, lib_b)
     p_lo, p_hi, t_lo, t_hi = box
     best = None
 
