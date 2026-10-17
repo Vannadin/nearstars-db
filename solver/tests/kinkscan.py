@@ -14,8 +14,9 @@ Lines: fixed T (ln P from the floor to p_dataset at N steps) and fixed P (along 
   17 by this scan, on the same read.)
 - Excluded: within 2h of a cut swap's P_b at the read's T (a landed event, a step by design); refusals.
 - Class, by the read's internal state 2e-6 (2e-4 K) either side (instrumented, no value change): refusal edge, T row line,
-  row drop, region, clip (bridge), clip (T) (the per-field pattern of the T slope's clip, over the own and side reads in
-  call order, differs), else unnamed.
+  row drop, region, clip (bridge), side structure (the per-field count of T-slope calls, over the own and side reads,
+  differs: a side read gains or loses a row; 68 z1, unnamed), clip (T) (the per-field pattern of the T slope's clip,
+  over the own and side reads in call order, differs), else unnamed.
 
 The named classes and their bounds (2× the max measured on the three shipped records with the run-end rule, full scan
 on the TIP 91be8043 + this scan; max slope jump / the line's median |D|):
@@ -23,7 +24,8 @@ on the TIP 91be8043 + this scan; max slope jump / the line's median |D|):
   secant passes 0; the slope is then 0 on one side and about the secant on the other, C⁰ in the row values, so the read
   kinks in P there (68 ruling 3). In a blend's side reads too: dmm 23.961302 GPa, 1418.5 K, ρ, where row 25 holds its
   bounding curve's value (an empty region) and row 26 rises through it (68 K1 (iii)). Measured max: ρ 10812 / 2613 /
-  16924, dT/dP 2650 / 1159 / 2700, c_P 275615 / 9933 / 3961 (bse / dmm / mars); 425 / 389 / 428 per record.
+  16924, dT/dP 2650 / 1159 / 2700, c_P 275615 / 9933 / 3961 (bse / dmm / mars); 425 / 389 / 428 per record, and a
+  full scan fails on more than twice that count (CLIPS, 68 z2).
 - T row line: at a T row line the stencil's rows, and so the set of curves partitioning them, change; an edge that
   partitions only the outgoing row leaves the blend there (its far and own reads agree, as it partitions none of the
   remaining rows), so the read is C⁰ with a slope change across the row line. Measured max: ρ 1.02, dT/dP 4.83,
@@ -45,6 +47,8 @@ BOUNDS = {"clip (T)": {"rho": 2 * 16924.0, "dtdp": 2 * 2700.0, "c_p": 2 * 275615
 #: per record: the full scan's narrow-loop ramp count and their least width (ln P)
 RAMPS = {"silicate_slb_default_bse": (16, 1e-6), "silicate_slb_earth_dmm_wh2005": (10, 1e-6),
          "silicate_slb_mars_khan2022": (13, 1e-6)}
+#: per record: the full scan's clip (T) count (68 z2: the jump bound alone barely constrains)
+CLIPS = {"silicate_slb_default_bse": 425, "silicate_slb_earth_dmm_wh2005": 389, "silicate_slb_mars_khan2022": 428}
 
 
 @contextlib.contextmanager
@@ -122,6 +126,8 @@ def scan(v, p_lines=(), t_lines=(), n=4000):
             return "region"
         if a["clip_b"] != b["clip_b"] or a["clip_b"]:
             return "clip (bridge)"
+        if len(a["clip_t"]) != len(b["clip_t"]):         # 68 z1: a side read gains or loses a T call, not a binding
+            return "side structure"
         if a["clip_t"] != b["clip_t"]:                   # 68 K1: a clip that starts or stops binding, this field
             return "clip (T)"
         return "unnamed"
@@ -224,5 +230,8 @@ def violations(kinks, rid, full=False):
     out = [k for k in ramps if k["width"] < 0.5 * w_min]
     if full and len(ramps) > 2 * n_ramp:
         out.append({"class": "narrow-loop ramp", "count": len(ramps), "declared": n_ramp})
+    n_clip = sum(k["class"] == "clip (T)" for k in kinks)
+    if full and n_clip > 2 * CLIPS[rid]:
+        out.append({"class": "clip (T)", "count": n_clip, "declared": CLIPS[rid]})
     return out + [k for k in kinks if k["class"] != "narrow-loop ramp"
                   and (k["class"] not in BOUNDS or k["jump_rel"] > BOUNDS[k["class"]][k["field"]])]

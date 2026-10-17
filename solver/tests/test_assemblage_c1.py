@@ -172,6 +172,18 @@ class RunEnd(unittest.TestCase):
                                    (4.0, lambda x: ma._bridge(x, a, b), b.value)):
             self.assertAlmostEqual((left_f(x) - left_f(x - h)) / h, (right_f(x + h) - right_f(x)) / h, delta=1e-4)
 
+    def test_one_node_gap_partner(self):
+        """An end whose gap's far side is a one-node run (slope 0 in the bridge) keeps its own slope, clipped against
+        the gap's secant, so the bridge's clip is a no-op and the read is C¹ there (68 z3)."""
+        a = ma._Run([0.0, 1.0, 2.0], [0.0, 1.0, 2.0], [0, 1, 2], 0)     # s_n 1
+        b = ma._Run([3.0], [2.1], [3], 0)
+        s = (b[1][0] - a[1][-1]) / (b[0][0] - a[0][-1])
+        a.set_end(True, s, keep=True)
+        self.assertAlmostEqual(a.m_hi, 3 * s, places=12)                # 1 clipped to 3·0.1
+        h, x = 1e-6, 2.0
+        self.assertAlmostEqual((a.value(x) - a.value(x - h)) / h, (ma._bridge(x + h, a, b) - ma._bridge(x, a, b)) / h,
+                               delta=1e-4)
+
     #: the ρ-monotone cases each run-end variant failed (rhomono on the three records): (record, T row, P range GPa)
     #: - bse 2100 K, 19–25 GPa: dd3e58a7's steep first segment (22.49 → 23.62 GPa), and the linear ramp's offset
     #:   carried past 21.42 GPa at 2125 K (−0.2 % to −1.4 %);

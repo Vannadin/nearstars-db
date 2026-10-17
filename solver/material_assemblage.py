@@ -797,13 +797,15 @@ class _Run(tuple):
             self.coeffs[0] = c0[:4] + (self.m_lo, c0[5])
             self.coeffs[n - 2] = c1[:4] + (c1[4], self.m_hi)
 
-    def set_end(self, hi, s_gap):
+    def set_end(self, hi, s_gap, keep=False):
         """The end facing a gap inside the region (hi: the run's last node): PCHIP's end slope clipped against the
-        gap's secant, so the end segment and the bridge share it."""
+        gap's secant, so the end segment and the bridge share it. keep: the gap's far side is a one-node run (68 z3),
+        so the end's own slope (the open end's s_n) is clipped instead: the bridge's clip of it is then a no-op, and on
+        the shipped records it binds nowhere (no value change: 3 / 9 / 9 such ends, the clip binding at none)."""
         if hi:
-            self.m_hi = _clip_fc(self.se_hi, s_gap, s_gap)
+            self.m_hi = _clip_fc(self.m_hi if keep else self.se_hi, s_gap, s_gap)
         else:
-            self.m_lo = _clip_fc(self.se_lo, s_gap, s_gap)
+            self.m_lo = _clip_fc(self.m_lo if keep else self.se_lo, s_gap, s_gap)
         self._ends()
 
     def value(self, x):
@@ -1222,10 +1224,11 @@ class AssemblageView(mv.RecordView):
             got = {r: [_Run(*q) for q in qs] for r, qs in got.items()}
             for qs in got.values():                       # ends facing a gap: the bridge's slopes (_Run.set_end)
                 for a, b in zip(qs, qs[1:]):
-                    if len(a[0]) > 1 and len(b[0]) > 1:
-                        s_gap = (b[1][0] - a[1][-1]) / (b[0][0] - a[0][-1])
-                        a.set_end(True, s_gap)
-                        b.set_end(False, s_gap)
+                    s_gap = (b[1][0] - a[1][-1]) / (b[0][0] - a[0][-1])
+                    if len(a[0]) > 1:
+                        a.set_end(True, s_gap, keep=len(b[0]) == 1)
+                    if len(b[0]) > 1:
+                        b.set_end(False, s_gap, keep=len(a[0]) == 1)
             self._runcache[key] = got
         return got
 
