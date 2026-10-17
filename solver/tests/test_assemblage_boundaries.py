@@ -560,8 +560,9 @@ class Transitions(unittest.TestCase):
                 self.assertEqual(got.stop.kind, want, (comp, h0))
 
     def test_only_curve_seams_are_held(self):
-        """68 B2 (b), (c) on 652004f9: a gibbs boundary (g = G_a − G_b, not a P) and a melting curve (terminal: reaching
-        it refuses) take no component; only a solid–solid curve g = P − P_b(T) does. Mutants: either given component 1."""
+        """68 B2 (c) on 652004f9: a melting curve (terminal: reaching it refuses) takes no component. A solid–solid curve
+        g = P − P_b(T) and, since directing 10-17, a gibbs boundary (its g now (G_a − G_b)/(v_a − v_b), a P) take 1.
+        Mutants: melting given 1; gibbs left None."""
         from types import SimpleNamespace
         ph = SimpleNamespace(id="a"), SimpleNamespace(id="b"), SimpleNamespace(id="c")
         stub = SimpleNamespace(phases=ph, seams=lambda: (), source_seams=lambda: (), boundary_pressure=lambda c, t: 1e9,
@@ -569,7 +570,7 @@ class Transitions(unittest.TestCase):
                                                     (("b", "c"), "melting", {"form": "clapeyron"}),
                                                     (("a", "c"), "solid_solid", {"form": "clapeyron"})))
         got = {e.name: e.component for e in events.record_events(stub)}
-        self.assertEqual(got, {"phase:a|b": None, "melt:b|c": None, "phase:a|c": 1})
+        self.assertEqual(got, {"phase:a|b": 1, "melt:b|c": None, "phase:a|c": 1})   # directing 10-17: gibbs held too
 
     def test_pending_gives_none(self):
         tb = table()

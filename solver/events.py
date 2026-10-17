@@ -189,17 +189,19 @@ def _knot_box(lib_a, lib_b):
 
 
 def gibbs_scale(lib_a, lib_b, box=None) -> float:
-    """A gibbs boundary's landing scale (g = G_a − G_b, J/kg): the largest P·|Δv| + T·|Δs| at the boundary, found
-    where Δg changes sign along P on a grid over the two splines' common knot box (12 T × 30 P), Δs = −∂Δg/∂T by a
-    ±0.01 K difference. The landing's spread in g is |Δv|·σ_P + |Δs|·σ_T, so this puts the tolerance at 1e-12 of the
-    terms g is made of, as the seams' rule (68 on C1: the fixed 1e3 gave 1e-9 J/kg, 4–100× under that spread). 1e3
-    where no sign change is found. Cached per submodel pair. `box` (tests): (p_lo, p_hi, t_lo, t_hi) in Pa and K in
+    """A gibbs boundary's landing scale, g = (G_a − G_b)/(v_a − v_b) in Pa: the largest (P·|Δv| + T·|Δs|)/|Δv| at
+    the boundary, found where ΔG changes sign along P on a grid over the two splines' common knot box (12 T × 30 P),
+    Δs = −∂ΔG/∂T by a ±0.01 K difference. The landing's spread in g is σ_P + |Δs/Δv|·σ_T, so this puts the tolerance
+    at 1e-12 of the terms g is made of, as the seams' rule (68 on C1: the fixed 1e3 on ΔG gave 1e-9 J/kg, 4–100× under
+    the spread). 1e9 (the curves' old fixed scale) where no sign change is found. Cached per submodel pair. `box` (tests): (p_lo, p_hi, t_lo, t_hi) in Pa and K in
     place of the splines' knot boxes."""
     key = (getattr(lib_a, "submodel", id(lib_a)), getattr(lib_b, "submodel", id(lib_b)))
     if box is None and key in _GIBBS_SCALES:
         return _GIBBS_SCALES[key]
     from solver import material_library as ml
     if box is None:
+        if not (hasattr(lib_a, "submodel") and hasattr(lib_b, "submodel")):
+            return 1.0e9                                  # no knot box to search (a planted library)
         _GIBBS_SCALES[key] = gibbs_scale(lib_a, lib_b, _knot_box(lib_a, lib_b))
         return _GIBBS_SCALES[key]
     p_lo, p_hi, t_lo, t_hi = box
@@ -217,9 +219,10 @@ def gibbs_scale(lib_a, lib_b, box=None) -> float:
         except (ml.LibraryOutOfRange, ValueError):
             return None
         up, dn = dg(p, t + 0.01), dg(p, t - 0.01)
-        if up is None or dn is None:
+        dv = abs(1.0 / a["rho"] - 1.0 / b["rho"])
+        if up is None or dn is None or dv == 0.0:
             return None
-        return p * abs(1.0 / a["rho"] - 1.0 / b["rho"]) + t * abs((up - dn) / 0.02)
+        return (p * dv + t * abs((up - dn) / 0.02)) / dv
     if p_lo < p_hi and t_lo < t_hi:
         ps = [p_lo * (p_hi / p_lo) ** (k / 29) for k in range(30)]
         for i in range(12):
@@ -231,14 +234,15 @@ def gibbs_scale(lib_a, lib_b, box=None) -> float:
                         v = term(p, t)
                         if v is not None and (best is None or v > best):
                             best = v
-    return best if best else 1.0e3
+    return best if best else 1.0e9
 
 
 def record_events(view) -> list:
     """Switch-over registration §2: a record view's events.
     - P seams: seams() (phase windows, thermal-set seams), landed as legacy's seam events.
     - Field boundaries from transitions(): a solid–solid curve is a seam event g = P − P_b(T_ad) (None where the curve is
-      absent); a gibbs boundary (curve form library) g = G_a − G_b at (P, T_ad); a melting curve is terminal: reaching
+      absent); a gibbs boundary (curve form library) g = (G_a − G_b)/(v_a − v_b) at (P, T_ad), P − P_b to first order;
+      both are held on the old side (component 1); a melting curve is terminal: reaching
       it refuses as solve.melting_not_in_phase2 (D-P3).
     - Source-seam isotherms: T_ad = t (design note 5).
     - Onset curves: none for a record that declares none (legacy's onset_curves gives none for iron either); a view
@@ -255,10 +259,14 @@ def record_events(view) -> list:
             def g(m, y, a=a, b=b):
                 from solver import material_library as ml
                 try:
-                    return a.library.at(y[1], y[2])["g"] - b.library.at(y[1], y[2])["g"]
+                    ra, rb = a.library.at(y[1], y[2]), b.library.at(y[1], y[2])
                 except ml.LibraryOutOfRange:            # 68 N64: only «outside its spline» means no boundary here
                     return None
-            scale = gibbs_scale(a.library, b.library) if hasattr(a, "library") and hasattr(b, "library") else 1.0e3
+                dv = 1.0 / ra["rho"] - 1.0 / rb["rho"]
+                # in P: (G_a − G_b)/(v_a − v_b), since ∂(G_a − G_b)/∂P = v_a − v_b it is P − P_b(T) to first order, so
+                # the old-side clamp (component 1) reads y[1] − g as the boundary's P, as for a curve
+                return None if dv == 0.0 else (ra["g"] - rb["g"]) / dv
+            scale = gibbs_scale(a.library, b.library) if hasattr(a, "library") and hasattr(b, "library") else 1.0e9
         else:
             def g(m, y, curve=curve):
                 pb = view.boundary_pressure(curve, y[2])
@@ -267,8 +275,9 @@ def record_events(view) -> list:
         # a curve g = P − P_b(T) lands with its landing stages held on the old side in P (component 1, as curve_seams):
         # without it a stage that crosses the curve reads the new side's dT/dP, the re-step's end T jumps with its
         # length, and on a steep curve g jumps with it (Mars 1774 K on (R1)'s swap extension: |g| between 0.17 and 40
-        # Pa, never ≤ 1e-3; solve.event_chatter). A gibbs boundary has no such component
-        comp = 1 if curve.get("form") != "library" and kind != "melting" else None
+        # Pa, never ≤ 1e-3; solve.event_chatter). A gibbs boundary, its g in P, is held alike (directing 10-17: a planted
+        # Ih|water1 walk chattered unheld at h0 3e-3); a melting curve is terminal and takes none
+        comp = 1 if kind != "melting" else None
         out.append(st.Event(name, g, scale=scale, terminal=(kind == "melting"), seam=(kind != "melting"),
                             component=comp))
     for t_s, between in view.source_seams():
