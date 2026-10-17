@@ -966,6 +966,41 @@ def _straddled_wall(out):
     return None
 
 
+def _nearest_wall(out):
+    """Directing 10-17: no solved stretch changes sign, but the solved F falls in |F| toward a wall: the root lies past
+    that wall, so its refusal names the cause, not «F does not change sign» nor the first scan point. Of the walls whose
+    nearest solved trial has a smaller |F| than the next solved trial of the same stretch (or no next one), the one with
+    the smallest such |F|. None when F grows toward every wall."""
+    order = sorted((t for t in out.trials if t.kind != "isolated"), key=lambda t: t.x)
+    best = None
+    for w in out.walls:
+        sgn = 1.0 if w.solved_side > w.x else -1.0
+        side = sorted((t for t in order if t.F is not None and (t.x - w.x) * sgn > 0.0), key=lambda t: abs(t.x - w.x))
+        if not side:
+            continue
+        a = side[0]
+        b = side[1] if len(side) > 1 and not any(min(side[0].x, side[1].x) < t.x < max(side[0].x, side[1].x)
+                                                  and t.F is None for t in order) else None
+        if b is not None and abs(a.F) >= abs(b.F):
+            continue
+        if best is None or abs(a.F) < best[0]:
+            best = (abs(a.F), w)
+    return None if best is None else best[1]
+
+
+def _gap_trial(out):
+    """No trial solved: the refusing trial at the narrowest gap whose two sides refused on opposite sides of a range
+    (closure GAP_RATIO; the gap shots end there), its lower-x side, so the refusal names the range that closes the
+    answer's window and not the first scan point. None without such a pair."""
+    order = sorted((t for t in out.trials if t.kind != "isolated" and t.stop is not None), key=lambda t: t.x)
+    pairs = []
+    for a, b in zip(order, order[1:]):
+        pa, pb = cl._refusal_p(a.stop), cl._refusal_p(b.stop)
+        if pa is not None and pb is not None and max(pa, pb) >= cl.GAP_RATIO * min(pa, pb):
+            pairs.append((b.x - a.x, a))
+    return min(pairs, key=lambda e: e[0])[1] if pairs else None
+
+
 PROBE_SPAN = 50.0           # phase-1 design notes 8–9: δ = PROBE_SPAN·tol_F/s, so a side's chord s·2δ = 100·tol_F
 
 
@@ -1328,10 +1363,10 @@ def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
                       "id_or_reason": mapped.reason if is_na else mapped.id,
                       "state": getattr(w.stop, "state", None), "located": w.located})
     if out.kind == "no_solved":
-        first = min(out.trials, key=lambda t: t.x)
+        first = _gap_trial(out) or min(out.trials, key=lambda t: t.x)
         scan = [[t.x, t.F, None if t.stop is None else t.stop.kind] for t in sorted(out.trials, key=lambda t: t.x)]
         return _to_refusal(first.stop, where, first.x, kind, "scan", scan=scan), warm
-    straddled = _straddled_wall(out)
+    straddled = _straddled_wall(out) or _nearest_wall(out)
     if straddled is not None:
         scan = [[t.x, t.F, None if t.stop is None else t.stop.kind] for t in sorted(out.trials, key=lambda t: t.x)]
         return _to_refusal(straddled.stop, where, straddled.x, kind, "wall", scan=scan), warm
