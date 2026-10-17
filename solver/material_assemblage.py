@@ -435,7 +435,7 @@ def _term_map(blk):
 
 
 #: the note each term block carries on a read in its cell: block key → (edge, grade, origin's lead)
-TERM_NOTES = {"interp_terms": ("read interpolation",
+TERM_NOTES = MappingProxyType({"interp_terms": ("read interpolation",
                                "the C¹ read's interpolation: the class-wide p90 truth error, raised per cell where "
                                "|C¹ − C⁰| is larger",
                                "registration reg-interp-term §1: per cell, relative to max(|v|, F_f)"),
@@ -443,7 +443,7 @@ TERM_NOTES = {"interp_terms": ("read interpolation",
                              "a grid-unresolved loop",
                              "registration §7.2–§7.4: per loop cell (census k 3, W 3, 1 % floor), the 9-point truth "
                              "error less the cell's read interpolation term, max(0, e_truth − e_interp), relative to "
-                             "max(|v|, F_f)")}
+                             "max(|v|, F_f)")})
 
 
 #: the fields a planted single-field bump is tried on, per cell kind (r2 condition 3: coverage per field)
