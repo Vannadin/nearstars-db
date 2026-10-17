@@ -29,6 +29,14 @@ def finds_root_beside_wall(solver) -> bool:
     return out.kind == "root" and abs(out.roots[0] - 2.0) <= closure.CLOSE_TOL * 2.0 * 10
 
 
+
+
+def _mars_shipped():
+    """The shipped mars assemblage record with its table (the engine branch without records has none)."""
+    from solver import material_registry as mr
+    reg = mr.load()
+    return isinstance(reg, mr.Registry) and "silicate_slb_mars_khan2022" in reg.tables
+
 class Walls(unittest.TestCase):
     def test_root_on_solved_side_and_wall_located(self):
         out = closure.solve_scalar(refusing_above(lambda x: x - 2.0), 1.0, 10.0)
@@ -441,7 +449,7 @@ class GapOnMars(unittest.TestCase):
     def test_mars_2450_answers_inside_the_gap(self):
         from solver import context, material_registry as mr, run_oracle as ro
         reg = mr.load()
-        if not (isinstance(reg, mr.Registry) and "silicate_slb_mars_khan2022" in reg.tables):
+        if not _mars_shipped():
             self.skipTest("no shipped mars assemblage record with its table")
         rec = ro._one("engine/bodies/mars.yaml", 2450.0, context.Options(materials="registry", silicate_records=True),
                       chain=False, registry=reg)

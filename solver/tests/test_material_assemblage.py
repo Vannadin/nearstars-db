@@ -115,6 +115,12 @@ def write(d, tb, status="development", rec_over=None, sha=None):
     (Path(d) / "silicate_slb_test.yaml").write_text(yaml.safe_dump(rec, sort_keys=False), encoding="utf-8")
 
 
+
+
+def _shipped_tables():
+    """The shipped SLB tables (they ship gzipped: a «*.json» glob matched nothing at any tip, c8 10-18)."""
+    return sorted((mr.MATERIALS_DIR / "tables").glob("silicate_slb_*.json.gz"))
+
 class CompositionKey(unittest.TestCase):
     def test_key_and_one_oxide_misses(self):
         """§2.1, §7 item 10: the key is the generator's (it imports this function); BSE's is pinned; one changed
@@ -174,12 +180,14 @@ class TableChecks(unittest.TestCase):
                 self.assertEqual((row["caught"], row["missed"]), (row["tried"], []))
                 self.assertGreater(row["tried"], 0)
 
-    @unittest.skipUnless(sorted((mr.MATERIALS_DIR / "tables").glob("silicate_slb_*.json")),
-                         "no shipped silicate assemblage tables yet")
+    @unittest.skipUnless(_shipped_tables(), "no shipped silicate assemblage tables yet")
     def test_planted_coverage_real(self):
         """r2 conditions 2–3 on the shipped records: seeded single-field 1 % bumps per field × kind are all caught."""
         reg = mr.load()
-        for rid, tb in reg.tables.items():
+        slb = sorted(rid for rid in reg.tables if "assemblage" in reg[rid])     # the hand-over table has no assemblage
+        self.assertEqual(slb, sorted(p.name[:-8] for p in _shipped_tables()))
+        for rid in slb:
+            tb = reg.tables[rid]
             cov = ma.planted_coverage(reg[rid]["assemblage"], tb, per=5, seed=1)
             for key, row in cov.items():
                 with self.subTest(record=rid, pair=key):
