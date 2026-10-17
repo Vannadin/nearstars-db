@@ -175,6 +175,42 @@ class RunEnd(unittest.TestCase):
                                    (4.0, lambda x: ma._bridge(x, a, b), b.value)):
             self.assertAlmostEqual((left_f(x) - left_f(x - h)) / h, (right_f(x + h) - right_f(x)) / h, delta=1e-4)
 
+    def test_bridge_shape(self):
+        """_bridge (68 on the gap-bridge fix, condition 3): the linear join plus each end's bump over L = min(¼ h_end,
+        h/2). C¹ at both ends (the end's slope), exactly the join between the bumps, monotone at m = 3s and at m = 0;
+        a short gap whose two bumps meet in the middle (L = h/2 from both ends) is C¹ there; a one-node partner's end
+        has slope 0."""
+        h = 1e-7
+        def slope(f, x, side):
+            return (f(x + h) - f(x)) / h if side > 0 else (f(x) - f(x - h)) / h
+        def monotone(f, lo, hi):
+            xs = [lo + (hi - lo) * i / 2000 for i in range(2001)]
+            return all(f(p) <= f(q) for p, q in zip(xs, xs[1:]))
+        for ma_hi, mb_lo in ((3.0, 3.0), (0.0, 0.0), (3.0, 0.0)):         # in units of the gap secant s = 1
+            a = ma._Run([0.0, 1.0, 2.0], [0.0, 1.0, 2.0], [0, 1, 2], 0)
+            b = ma._Run([4.0, 5.0, 6.0], [4.0, 5.0, 6.0], [4, 5, 6], 0)
+            a.m_hi, b.m_lo = ma_hi, mb_lo
+            br = lambda x: ma._bridge(x, a, b)
+            self.assertAlmostEqual(slope(br, 2.0, 1), ma_hi, delta=1e-5)
+            self.assertAlmostEqual(slope(br, 4.0, -1), mb_lo, delta=1e-5)
+            for x in (2.25, 2.6, 3.0, 3.4, 3.75):                         # between the bumps (L = 0.25): the join
+                self.assertEqual(br(x), 2.0 + 1.0 * (x - 2.0))
+            self.assertTrue(monotone(br, 2.0, 4.0), (ma_hi, mb_lo))
+        a = ma._Run([0.0, 4.0], [0.0, 2.0], [0, 1], 0)                     # h_end 4: ¼ h_end = 1 > h/2 = 0.25
+        b = ma._Run([4.5, 8.5], [2.5, 4.5], [2, 3], 0)
+        a.m_hi, b.m_lo = 3.0, 0.0
+        br = lambda x: ma._bridge(x, a, b)
+        self.assertAlmostEqual(slope(br, 4.25, -1), slope(br, 4.25, 1), delta=1e-5)
+        self.assertAlmostEqual(slope(br, 4.25, 1), 1.0, delta=1e-5)       # both bumps end at the middle with slope s
+        self.assertTrue(monotone(br, 4.0, 4.5))
+        one = ma._Run([0.0], [1.0], [0], 0)                                # a one-node partner: slope 0 at its end
+        b = ma._Run([1.0, 2.0, 3.0], [2.0, 3.0, 4.0], [1, 2, 3], 0)
+        b.m_lo = 1.0
+        br = lambda x: ma._bridge(x, one, b)
+        self.assertAlmostEqual(slope(br, 0.0, 1), 0.0, delta=1e-5)
+        self.assertEqual(br(0.5), 1.5)                                     # L = h/2 from the one-node end: the join
+        self.assertTrue(monotone(br, 0.0, 1.0))
+
     def test_cap_by_field(self):
         """END_CAPPED: an open end's node slope is capped at 4|s∞| for ρ only; dT/dP and c_P keep PCHIP's end slope (the
         hold-out truth). Unit: a run whose s_e 5.5 exceeds 4·s∞ = 4. Mutant: the cap on every field."""
