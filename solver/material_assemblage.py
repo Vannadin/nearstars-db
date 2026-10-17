@@ -359,6 +359,12 @@ def check_table(asm, table) -> dict:
     elif (table.get("boundaries") or {}).get("status") == "exported":
         raise TableStop("an exported table carries no interp_terms block (registration reg-interp-term §4)",
                         check="term block")
+    if table.get("loop_terms") is not None:              # §7.3–§7.4: the sparse «under-resolved loop» block
+        check_term_block(table, "loop_terms", sparse=True)
+        for r in table["loop_terms"]["cells"]:           # sparse: a listed cell holds a term, never null
+            if any(x is None for x in r[2:]) or not any(r[2:]):
+                raise TableStop(f"loop_terms: cell ({r[0]}, {r[1]}) holds {list(r[2:])!r}, not a term (a sparse block "
+                                "lists only cells with one, never null)", check="term block")
     exact = sorted(e for e in (_exact_maxwell(c) for c in cells if c["kind"] != "frozen") if e is not None)
     q = (lambda f: exact[min(len(exact) - 1, int(f * (len(exact) - 1)))]) if exact else (lambda f: None)
     return {"stored_model": {"n": len(stored), "median": sorted(stored)[len(stored) // 2] if stored else None,
@@ -432,7 +438,12 @@ def _term_map(blk):
 TERM_NOTES = {"interp_terms": ("read interpolation",
                                "the C¹ read's interpolation: the class-wide p90 truth error, raised per cell where "
                                "|C¹ − C⁰| is larger",
-                               "registration reg-interp-term §1: per cell, relative to max(|v|, F_f)")}
+                               "registration reg-interp-term §1: per cell, relative to max(|v|, F_f)"),
+              "loop_terms": ("under-resolved loop",
+                             "a grid-unresolved loop",
+                             "registration §7.2–§7.4: per loop cell (census k 3, W 3, 1 % floor), the 9-point truth "
+                             "error less the cell's read interpolation term, max(0, e_truth − e_interp), relative to "
+                             "max(|v|, F_f)")}
 
 
 #: the fields a planted single-field bump is tried on, per cell kind (r2 condition 3: coverage per field)
@@ -1233,7 +1244,26 @@ class AssemblageView(mv.RecordView):
                                       TAPER_GRADE if w < 1.0 else self.handover.grade, rho_origin, dt_band,
                                       "max((1 − w)·the cell's dT/dP band, w·band_HO) (note 7 §4) + the 136 GPa "
                                       "match's (1 − w)·|Δ(dT/dP)|/(dT/dP) (delta 1)"))
+        self._loop_taper_note(w, ib, rho, dtdp, cp)
         return rho, dtdp, cp, cells
+
+    def _loop_taper_note(self, w, ib, rho, dtdp, cp):
+        """§7.4 above p_dataset (68's ruling): in the zone the dataset-top cell on the read's T row, the cell whose upper
+        node is p_dataset, carries its loop term as (1 − w)·e_loop, beside the taper's own band; scale as _term_notes'
+        on the zone's read. Above the zone's end (w = 1) nothing."""
+        cells, floor, src = self._terms["loop_terms"]
+        if not cells or w >= 1.0:
+            return
+        ia = bisect.bisect_left(self.ps, self.p_dataset) - 1
+        e = cells.get((ia, ib))
+        if not e or not any(e):
+            return
+        e = tuple((1.0 - w) * x for x in e)
+        edge, grade, lead = TERM_NOTES["loop_terms"]
+        why = f"{lead}; (1 − w)·e_loop of the dataset-top cell ({ia}, {ib}), w = {w:.6g} (note 7's taper)"
+        self.notes.append(mv.BandNote(self.material_id, edge, "relative", e[0], None, grade, f"{why}; loop_terms {src}",
+                                      dtdp_error=e[1], dtdp_origin=why, c_p_error=e[2], c_p_origin=why,
+                                      scale=tuple(max(abs(v), fl) for v, fl in zip((rho, dtdp, cp), floor))))
 
     def _table_read(self, p, t):
         """The table's own C¹ read at (P, T) below the current column cut (self._top)."""
