@@ -38,11 +38,12 @@ BOUNDS = {"clip (T)": {"rho": 2 * 5834.0, "dtdp": 2 * 5719.0, "c_p": 2 * 150545.
 @contextlib.contextmanager
 def _instrumented(v, probe):
     """Records, while probe["on"], whether a T clip or a bridge clip binds and which rows' regions a read used."""
-    clip, bridge, rvr = ma._clip_fc, ma._bridge, ma.AssemblageView._row_value_raw
+    clip, slope_t, bridge, rvr = ma._clip_fc, ma._slope_t, ma._bridge, ma.AssemblageView._row_value_raw
 
-    def clip_fc(m, d0, d1):
-        r = clip(m, d0, d1)
-        if probe["on"] and r != m:
+    def slope_t_(d0, d1):                     # the T slope's clip only (a run's gap-end clip is shared, so C¹)
+        r = slope_t(d0, d1)
+        q = d0 * d0 + d1 * d1
+        if probe["on"] and r != (0.0 if q == 0.0 else d0 * d1 * (d0 + d1) / q):
             probe["clip_t"] = True
         return r
 
@@ -56,11 +57,11 @@ def _instrumented(v, probe):
         if probe["on"]:
             probe["regions"].add((f, k, r))
         return rvr(self, f, k, r, x, corner)
-    ma._clip_fc, ma._bridge, ma.AssemblageView._row_value_raw = clip_fc, bridge_, row_value_raw
+    ma._slope_t, ma._bridge, ma.AssemblageView._row_value_raw = slope_t_, bridge_, row_value_raw
     try:
         yield
     finally:
-        ma._clip_fc, ma._bridge, ma.AssemblageView._row_value_raw = clip, bridge, rvr
+        ma._slope_t, ma._bridge, ma.AssemblageView._row_value_raw = slope_t, bridge, rvr
 
 
 def scan(v, p_lines=(), t_lines=(), n=4000):
