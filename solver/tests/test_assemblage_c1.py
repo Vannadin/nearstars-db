@@ -10,11 +10,12 @@
 
 Run from the worktree root:  <solver venv>/python -m unittest solver.tests.test_assemblage_c1
 """
+import dataclasses
 import math
 import os
 import unittest
 
-from solver import material_assemblage as ma, material_registry as mr
+from solver import material_assemblage as ma, material_registry as mr, material_view as mv
 from solver.from_v1 import thaw
 from solver.tests import kinkscan as ks
 
@@ -35,6 +36,10 @@ def _shipped():
 
 def _view(reg, rid):
     return ma.view(thaw(reg.get(rid)), reg.tables[rid], 1600.0)
+
+
+def _noscale(n):
+    return dataclasses.replace(n, scale=None) if isinstance(n, mv.BandNote) else n
 
 
 class C1(unittest.TestCase):
@@ -92,7 +97,9 @@ class C1(unittest.TestCase):
             for p, t in pts:
                 a, b = on.state(p, t), off.state(p, t)
                 if isinstance(a, tuple) and isinstance(b, tuple):
-                    self.assertEqual([repr(n) for n in a[2]], [repr(n) for n in b[2]], (rid, p, t))
+                    # a term note's scale is its read's own value's denominators, so it follows the blend; the
+                    # notes are otherwise the read's own (registration reg-interp-term §4)
+                    self.assertEqual([repr(_noscale(n)) for n in a[2]], [repr(_noscale(n)) for n in b[2]], (rid, p, t))
                 else:
                     self.assertEqual(type(a), type(b), (rid, p, t))
             self.assertEqual({k: on.cut_counts[k] for k in keys}, {k: off.cut_counts[k] for k in keys}, rid)
