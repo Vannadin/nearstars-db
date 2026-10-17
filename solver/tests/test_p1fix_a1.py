@@ -132,6 +132,54 @@ class StraddleWiring(unittest.TestCase):
         self.assertEqual(len(got.evidence["scan"]), 4)
 
 
+class NearestWall(unittest.TestCase):
+    """Directing 10-17: a refusal names its real cause, not the first scan point's (pre-run on 68e47ffc: earth 2950 K
+    reported a tiny-core trial at 391 GPa; mars 2850 K a 4800 K trial at 131 GPa)."""
+
+    def test_no_bracket_names_the_wall_f_falls_toward(self):
+        """No stretch changes sign, but |F| falls toward the wall at 3: the root lies past it, so that wall's refusal is
+        the outcome. Control: |F| grows toward the wall (None, no_bracket stands)."""
+        wall = cl.Wall(3.0, st.Stop("refused"), 2.0)
+        out = NS(trials=[_trial(1.0, 1.0), _trial(2.0, 0.4), _trial(3.0, None), _trial(4.0, None)], walls=[wall])
+        self.assertIs(sv._nearest_wall(out), wall)
+        grow = NS(trials=[_trial(1.0, 0.4), _trial(2.0, 1.0), _trial(3.0, None), _trial(4.0, None)], walls=[wall])
+        self.assertIsNone(sv._nearest_wall(grow))
+        near, far = cl.Wall(3.0, st.Stop("refused"), 2.0), cl.Wall(0.5, st.Stop("refused"), 1.0)   # of two, the one
+        two = NS(trials=[_trial(0.5, None), _trial(1.0, 0.9), _trial(1.5, 0.95), _trial(2.0, 0.3), _trial(3.0, None)],
+                 walls=[far, near])                                       # whose neighbour has the smaller |F|
+        self.assertIs(sv._nearest_wall(two), near)
+
+    def test_no_solved_names_the_gap_between_opposite_walls(self):
+        """Nothing solves: the refusal reported is the narrowest opposite-wall gap's lower side (P a GAP_RATIO apart),
+        not the lowest x. Control: no such pair, None."""
+        def ref(x, p):
+            return cl.Trial(x, None, st.Stop("refused", {"p": p}), "scan")
+        out = NS(trials=[ref(1.0, 3.0e11), ref(2.0, 3.5e11), ref(3.0, 3.5e11), ref(3.5, 1.4e10), ref(4.0, 1.1e10)])
+        self.assertEqual(sv._gap_trial(out).x, 3.0)
+        same = NS(trials=[ref(1.0, 3.0e11), ref(2.0, 3.5e11)])
+        self.assertIsNone(sv._gap_trial(same))
+        rec = mv.RecordRefusal("fe_core_planted", 3.5e11, 6000.0, "input.material_out_of_data", "planted")
+        trials = [ref(1.0, 3.0e11), cl.Trial(3.0, None, st.Stop("refused", rec, {"m": 1.0}), "scan"), ref(3.5, 1.4e10)]
+        no = NS(kind="no_solved", trials=trials, walls=[], roots=[], detail={})
+        with mock.patch.object(cl, "solve_scalar", return_value=no):             # and solve() reports it
+            got, _w = sv.solve(_earth(), context.Options(sensitivity_dt=0.0))
+        self.assertEqual((got.evidence["x"], got.evidence["material_id"]), (3.0, "fe_core_planted"))
+
+    def test_solve_returns_the_nearest_walls_refusal(self):
+        """solve() itself: a no_bracket outcome with |F| falling toward a wall returns that wall's refusal."""
+        node = {"m": 1.0, "r": 1.0, "P": 1.0e11, "T": 4800.0}
+        rec = mv.RecordRefusal("silicate_slb_default_bse", 1.09e11, 4800.0, "input.material_above_solid_window",
+                               "above the table's last T node 4800 K (grid_end)")
+        wall_stop = st.Stop("refused", rec, node)
+        trials = [cl.Trial(1.0, 1.0, None, "scan"), cl.Trial(2.0, 0.4, None, "scan"),
+                  cl.Trial(3.0, None, wall_stop, "scan"), cl.Trial(4.0, None, wall_stop, "scan")]
+        out = NS(kind="no_bracket", trials=trials, walls=[cl.Wall(3.0, wall_stop, 2.0)], roots=[], detail={})
+        with mock.patch.object(cl, "solve_scalar", return_value=out):
+            got, _w = sv.solve(_earth(), context.Options(sensitivity_dt=0.0))
+        self.assertEqual((got.id, got.evidence["refusal"], got.evidence["pass_kind"]),
+                         ("solve.material_record", "input.material_above_solid_window", "wall"))
+
+
 class ScanEvidence(unittest.TestCase):
     def test_an_isolated_refusal_does_not_split_a_solved_stretch(self):
         """G2-C-07: _regions skips isolated trials (A1 impl note 8 rule 2)."""
