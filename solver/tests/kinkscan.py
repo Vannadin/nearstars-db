@@ -19,21 +19,24 @@ Lines: fixed T (ln P from the floor to p_dataset at N steps) and fixed P (along 
   over the own and side reads in call order, differs), else unnamed.
 
 The named classes and their bounds (2× the max measured on the three shipped records with the run-end rule, full scan
-on the TIP 51789647 (the run-end rule and BLEND_SHARP) + this scan; max slope jump / the line's median |D|):
+on the TIP 6570d848 (the run-end rule, BLEND_SHARP, the bump bridge and END_CAPPED) + this scan; max slope jump / the
+line's median |D|):
 - clip (T): the T-direction node slope's Fritsch–Carlson clip (_clip_fc in _slope_t) starts or stops binding where a T
   secant passes 0; the slope is then 0 on one side and about the secant on the other, C⁰ in the row values, so the read
   kinks in P there (68 ruling 3). In a blend's side reads too: dmm 23.961302 GPa, 1418.5 K, ρ, where row 25 holds its
   bounding curve's value (an empty region) and row 26 rises through it (68 K1 (iii)). Measured max: ρ 10812 / 2613 /
-  16924, dT/dP 2670 / 1408 / 4283, c_P 288808 / 98934 / 5191 (bse / dmm / mars); 413 / 370 / 436 per record, and a
-  full scan fails on more than twice that count (CLIPS, 68 z2). (Before BLEND_SHARP: dT/dP 2650 / 1159 / 2700, c_P
-  275615 / 9933 / 3961, 425 / 389 / 428: the sharper dT/dP and c_P blend moves where its side reads' clips weigh.)
+  16924, dT/dP 64120 / 1412 / 2693, c_P 488360 / 88548 / 5192 (bse / dmm / mars); 410 / 377 / 440 per record, and a
+  full scan fails on more than twice that count (CLIPS, 68 z2). bse's dT/dP and c_P maxima sit on the 14.24 GPa line
+  (1068–1218 K), where the line's median |D| is small; uncapped dT/dP and c_P run ends (END_CAPPED) raised its dT/dP
+  jumps from 2670 to 64120. (Before: dT/dP 2670 / 1408 / 4283, c_P 288808 / 98934 / 5191, 413 / 370 / 436 with
+  BLEND_SHARP; 2650 / 1159 / 2700, 275615 / 9933 / 3961, 425 / 389 / 428 before it.)
 - T row line: at a T row line the stencil's rows, and so the set of curves partitioning them, change; an edge that
   partitions only the outgoing row leaves the blend there (its far and own reads agree, as it partitions none of the
   remaining rows), so the read is C⁰ with a slope change across the row line. Measured max: ρ 1.02, dT/dP 7.69,
-  c_P 1.68. 14 / 16 / 11 per record.
+  c_P 1.68. 15 / 17 / 10 per record.
 - narrow-loop ramp: C¹, so no jump bound; bounded by count and width (RAMPS: 68 on K1, a ramp much narrower than the
   stepper's step acts as a kink for the integration): a full scan fails on more than twice the declared count, any scan
-  on a ramp narrower than half the declared minimum width. Measured: 17 / 8 / 14, all of width 1e-6.
+  on a ramp narrower than half the declared minimum width. Measured: 14 / 8 / 14, all of width 1e-6.
 Any other class, or an unnamed kink above the noise floor, fails the scan.
 """
 import contextlib
@@ -43,13 +46,13 @@ from solver import material_assemblage as ma
 
 REL, CAND = 1e-3, 20.0
 FIELDS = ("rho", "dtdp", "c_p")
-BOUNDS = {"clip (T)": {"rho": 2 * 16924.0, "dtdp": 2 * 4283.0, "c_p": 2 * 288809.0},
+BOUNDS = {"clip (T)": {"rho": 2 * 16924.0, "dtdp": 2 * 64120.0, "c_p": 2 * 488361.0},
           "T row line": {"rho": 2 * 1.021, "dtdp": 2 * 7.686, "c_p": 2 * 1.683}}
 #: per record: the full scan's narrow-loop ramp count and their least width (ln P)
-RAMPS = {"silicate_slb_default_bse": (17, 1e-6), "silicate_slb_earth_dmm_wh2005": (8, 1e-6),
+RAMPS = {"silicate_slb_default_bse": (14, 1e-6), "silicate_slb_earth_dmm_wh2005": (8, 1e-6),
          "silicate_slb_mars_khan2022": (14, 1e-6)}
 #: per record: the full scan's clip (T) count (68 z2: the jump bound alone barely constrains)
-CLIPS = {"silicate_slb_default_bse": 413, "silicate_slb_earth_dmm_wh2005": 370, "silicate_slb_mars_khan2022": 436}
+CLIPS = {"silicate_slb_default_bse": 410, "silicate_slb_earth_dmm_wh2005": 377, "silicate_slb_mars_khan2022": 440}
 
 
 @contextlib.contextmanager
