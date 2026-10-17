@@ -102,6 +102,18 @@ class Read(unittest.TestCase):
             self.assertEqual(n.scale, (max(abs(r), F["rho"]), max(abs(g), F["dtdp"]), max(abs(cp), F["c_p"])))
             self.assertIn(f"cell ({ia}, {ib})", n.origin)
 
+    def test_on_a_node_the_reads_own_cell(self):
+        """On a P node the term is the cell below's, as _table_read reads it; on a T node the cell above's; below the
+        grid's first P node, the first cell (c8 on d2977f99)."""
+        tb = with_block()
+        v = ma.view(record(tb["p_dataset"]), tb, 1600.0)
+        (n,), _ = terms(v, PS[10], TS[20] + 17.0)
+        self.assertEqual(n.error, 1e-4 * 10)                                   # ia 9: the cell below P_10
+        (n,), _ = terms(v, PS[10] * 1.2, TS[20])
+        self.assertEqual(n.dtdp_error, 1e-2 + 1e-4 * 20)                       # ib 20: the cell above T_20
+        (n,), _ = terms(v, PS[0] * 0.5, TS[20] + 17.0)
+        self.assertEqual(n.error, 1e-4)                                        # ia 0
+
     def test_floor_holds_a_zero_crossing(self):
         """Near dT/dP = 0 the scale is F_dtdp, not |dT/dP| (the absolute band does not vanish)."""
         tb = with_block()
