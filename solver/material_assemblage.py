@@ -829,6 +829,13 @@ class _Run(tuple):
         return ys[0] - _bump(xs[0] - x, self.m_lo, self.f_lo, self.L_lo)
 
 
+#: the blend's sharpness per field inside a (c′) window (item 5d998d40, the loop-class truth check): H runs over the
+#: central 1/κ of [x_b − w, x_b + w]. dT/dP and c_P jump at a boundary in the truth, so the full window's spread read
+#: the loop cells worse than C⁰'s tent (p95 CI lower bounds 1.02–1.09); κ = 2 on the tune half of the cells, accepted
+#: on the other half. ρ keeps κ = 1: a sharper ρ blend broke the ρ-monotone test where a side read has R < L
+#: (H′·(R − L) < 0; κ = 1.5 two violations, κ = 2 seven).
+BLEND_SHARP = MappingProxyType({"rho": 1.0, "dtdp_eq": 2.0, "c_p": 2.0})
+
 #: the bump's length past an open run end, in units of the end segment's width (item 5d998d40: the smallest of the
 #: declared {1/4, 1/2, 1} that passed the truth check and the ρ-monotone test)
 END_BUMP = 0.25
@@ -1380,8 +1387,8 @@ class AssemblageView(mv.RecordView):
     def _blend_sides(self, f, x, t, ib, sides, near, own):
         """The read inside the (c′) windows of the edges near x (item 5d998d40 (a), the blend form, 68 ruling 1): for
         each assignment of sides to those edges, the raw read with them, weighted by Π H_c or 1 − H_c, where
-        H_c = S((x − x_b)/(2w) + ½) and S is the smoothstep, so H_c runs from 0 at x_b − w to 1 at x_b + w. Every other
-        edge keeps the read's own side.
+        H_c = S(κ(x − x_b)/(2w) + ½) clipped to [0, 1], S the smoothstep and κ the field's BLEND_SHARP, so H_c runs
+        from 0 at x_b − w/κ to 1 at x_b + w/κ. Every other edge keeps the read's own side.
         - The read's own assignment is `own` (_value: capped, may refuse, its marks). The others are side reads
           (_side_rows: uncapped, never refusing) run on scratch marks and counts, so only the own read's marks, notes
           and counts reach the read (68 ruling 1 (3)).
@@ -1394,8 +1401,9 @@ class AssemblageView(mv.RecordView):
         - C⁰ at x_b rests on the own read equalling the same-side side read there (ruling 1 (1)). They are the same rows
           unless the own read refuses (a cap, or a corner row with no value), which is then a refusal boundary."""
         hs = []
+        kap = BLEND_SHARP[f]
         for c, xb, w in near:
-            u = min(max(0.5 * ((x - xb) / w + 1.0), 0.0), 1.0)
+            u = min(max(0.5 * (kap * (x - xb) / w + 1.0), 0.0), 1.0)
             hs.append(u * u * (3.0 - 2.0 * u))
         mine = tuple(sides[c] for c, _xb, _w in near)
         n_t, total, kept = len(self.ts), 0.0, 0.0

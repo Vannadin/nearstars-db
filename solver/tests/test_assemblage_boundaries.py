@@ -277,7 +277,8 @@ class Steps(unittest.TestCase):
 
     def test_edge_correction(self):
         """r2 Q2 / 68 M4 in the blend form (item 5d998d40, 68 ruling 1): inside the window the read is
-        (1 − H)·own + H·far with H the smoothstep over [x_b − w, x_b + w]; (L + R)/2 at P_b, continuous there and C¹
+        (1 − H)·own + H·far with H the smoothstep over [x_b − w, x_b + w] for ρ, over its central half for dT/dP and c_P
+        (BLEND_SHARP); (L + R)/2 at P_b, continuous there and C¹
         (one slope from both sides); the own raw read at and past the window's edge, joined C¹. Mutant: no blend (a
         step stays)."""
         tb = table(cls="edge_in", right="ol+opx+gt")
@@ -747,6 +748,25 @@ class Choices(unittest.TestCase):
         self.assertIsInstance(v._solid(p_b * 1.001, t), st.Stop)
         self.assertEqual(jumps_p(v, (t,)), [])
 
+    def test_blend_sharpness_per_field(self):
+        """BLEND_SHARP (the loop-class truth check): H = S(κ(x − x_b)/(2w) + ½), κ 1 for ρ and 2 for dT/dP and c_P, so
+        the latter two blend over the window's central half. With L = 1 and R = 2 the blend is 1 + H on either side.
+        Mutant: one κ for every field (the dT/dP weight at w/4 is then S(3/8), not S(¼))."""
+        tb = table(cls="edge_in", right="ol+opx+gt")
+        v = view(tb)
+        t = 1210.0
+        xb = math.log(pb_const(t))
+        w = v._width(xb)
+        ib = int((t - TS[0]) // 50)
+        (c,) = v._cut
+        v._side_rows = lambda f, x, ib_, sides: {ib: 1.5 + 0.5 * sides[c], ib + 1: 1.5 + 0.5 * sides[c]}   # L 1, R 2
+        near = [(c, xb, w)]
+        S = lambda u: u * u * (3.0 - 2.0 * u)
+        for f, at, want in (("rho", -0.25, S(0.375)), ("dtdp_eq", -0.25, S(0.25)), ("c_p", -0.25, S(0.25)),
+                            ("rho", -0.5, S(0.25)), ("dtdp_eq", -0.5, 0.0), ("c_p", 0.5, 1.0), ("dtdp_eq", 0.0, 0.5)):
+            got = v._blend_sides(f, xb + at * w, t, ib, {c: -1 if at < 0 else 1}, near, 1.0 if at < 0 else 2.0)
+            self.assertAlmostEqual(got, 1.0 + want, places=12, msg=(f, at))
+
     def test_blend_drops_a_side_with_no_corner_row(self):
         """68 ruling 1 (2): a side assignment whose read has no corner row is dropped and the remaining weights
         renormalised (never 0 × a missing value), and counted; the read is then the own read alone."""
@@ -755,14 +775,14 @@ class Choices(unittest.TestCase):
         t = 1210.0
         xb = math.log(pb_const(t))
         w = v._width(xb)
-        x = xb - 0.5 * w
+        x = xb - 0.25 * w                                          # inside every field's blend (BLEND_SHARP ≤ 2)
         own = v._solid(math.exp(x), t)[0]
         v2 = view(tb)
         v2._side_rows = lambda f, x, ib, sides: {}                # every far side without rows
         got = v2._solid(math.exp(x), t)[0]
         (c,) = v2._cut
         ib = int((t - TS[0]) // 50)
-        self.assertEqual(got, v2._value("rho", x, t, 15, ib, {c: -1}, False))
+        self.assertAlmostEqual(got, v2._value("rho", x, t, 15, ib, {c: -1}, False), delta=1e-14 * got)   # (1 − H)·v/(1 − H)
         self.assertNotEqual(got, own)                              # the full blend differs: the far side was there
         self.assertEqual(v2.cut_counts["blend_drops"], 3)          # one per field
 
