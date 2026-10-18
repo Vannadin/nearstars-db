@@ -42,6 +42,7 @@ class PassOut:
     profiles: dict = field(default_factory=dict)        # layer id → path tuple
     graze: object = None
     floor_end: bool = False
+    dtdp_end: float = float("nan")                       # the bottom view's dT/dP at the end state (the T centre series)
     entered: list = field(default_factory=list)          # layer ids the pass integrated, top to bottom
     events: list = field(default_factory=list)           # every landed event name, in order (phase, seam, onset, …)
     band_grazes: list = field(default_factory=list)      # notes 13 §1 / 13a: steps accepted at the band floor
@@ -286,7 +287,7 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
         if out.entered and out.entered[-1] != layers[0].id and stop.state is not None:
             stop = dataclasses.replace(stop, state={**stop.state, "end_layer": out.entered[-1]})
         return stop
-    out.m, out.y, out.rho_end = m, y, got[0]
+    out.m, out.y, out.rho_end, out.dtdp_end = m, y, got[0], got[1]
     out.F = rhs.residual(m, y[0], got[0], rs)
     return out
 
@@ -670,6 +671,12 @@ def _to_refusal(stop: st.Stop, where: str, x, kind: str, pass_kind: str, scan=No
     raise RuntimeError(f"unmapped solver stop {stop.kind!r}: {rec!r}")
 
 
+def centre_dp(rho_end: float, r_end: float) -> float:
+    """P(0) − P(r_ε) to leading order: the constant-density centre series (2π/3)·G·ρ_ε²·r_ε², exact for uniform ρ
+    and O(r_ε⁴) otherwise; core_pressure adds it, and core_temperature adds (dT/dP)_ε times it (prereg-centre-series)."""
+    return 2.0 * math.pi / 3.0 * rhs.G * rho_end ** 2 * r_end ** 2
+
+
 def _quantities(body, p: PassOut, sid: str, x, views=None):
     M, R = body.mass, p.R
     prov = result.Provenance("judgment", result.SolverInfo(sid, counters=tuple(sorted(p.counters.items()))),
@@ -679,7 +686,11 @@ def _quantities(body, p: PassOut, sid: str, x, views=None):
         return result.Quantity(key, unit, val, "exact", "direct", where, prov, band_reason=result.BAND_NOT_MEASURED)
     body_w = result.Where("body")
     m_e, (r_e, p_e, tad_e, t_e, i_e, v_pore) = p.m, p.y
-    p_c = p_e + 2.0 * math.pi / 3.0 * rhs.G * p.rho_end ** 2 * r_e ** 2       # constant-density centre series
+    p_c = p_e + centre_dp(p.rho_end, r_e)               # constant-density centre series
+    # stage-A centre-series registration (prereg-centre-series, note 1): the same series for T, T_c = T_ε + (dT/dP)_ε·ΔP
+    # with ΔP the p_c term above, at an m_ε end; a pass ended at the r floor keeps T_ε (m there is not small)
+    if not p.floor_end and math.isfinite(p.dtdp_end):
+        t_e = t_e + p.dtdp_end * (p_c - p_e)
     i_tot = i_e + 0.4 * m_e * r_e ** 2
     has_t = body.surface.t_pot is not None       # no declared T_pot: no temperature path, no T quantities (c8)
     if views is not None and any(getattr(v, "phi0", 0.0) > 0.0 for v in views.values()):
