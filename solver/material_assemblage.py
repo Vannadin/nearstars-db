@@ -1273,6 +1273,9 @@ class AssemblageView(mv.RecordView):
         self._parts, self._runcache = {}, {}
         #: PROTOTYPE: the highest frozen node T (rows above it hold no frozen run; _flag_reads' precheck)
         self._t_frozen_max = max((c["t"] for c in table["cells"] if c["kind"] == "frozen"), default=-math.inf)
+        #: PROTOTYPE (G3 ruling (b)): an empty region narrower than 1/16 of the narrowest P cell up to p_dataset
+        _cw = [b - a for a, b, q in zip(self.lnps, self.lnps[1:], self.ps[1:]) if q <= self.p_dataset and a > -math.inf]
+        self._narrow_w = (min(_cw[1:]) if len(_cw) > 1 else math.inf) / 16.0
         self._read_memo = {}
         self._wn_of = None                               # _width's node widths and their max, for the lnps they came from
         #: the column cut of a read: p_dataset, lifted to the taper's end for the zone's SLB-extrapolated read (note 7 §2)
@@ -1575,7 +1578,7 @@ class AssemblageView(mv.RecordView):
                 ends = [math.log(e) for e in ends if e is not None]
                 if not ends:
                     continue
-                wm = max(self._width(e) for e in ends)
+                wm = self._node_widths()[1]               # 68 n1 on note 4: the global max, a superset by construction
                 if min(ends) - wm < x < max(ends) + wm:
                     ext.append(c)
             for sig in itertools.product((-1, 1), repeat=len(ext)):
@@ -1840,6 +1843,9 @@ class AssemblageView(mv.RecordView):
                 else:
                     sd = {**sides, **{c: s_ for (c, _xb, _w), s_ in zip(mine, sig)}}
                     r = self._region(k, sd, x)
+                    if self._narrow_empty(f, k, r):              # directing's G3 ruling (b): dropped, renormalised
+                        self.cut_counts["blend_drops"] += 1
+                        continue
                     val = self._row_value(f, k, r, x, False)
                     if val is None:
                         val = self._row_reach(f, k, r)
@@ -1917,6 +1923,17 @@ class AssemblageView(mv.RecordView):
             self._marks.update(marks)
             self.cut_counts.update(counts)
         return total / kept                              # 68 n1: always divided (Σ W is 1 only to rounding)
+
+    def _narrow_empty(self, f, k, r):
+        """PROTOTYPE (directing's G3 ruling (b)): row k's region r holds no run for f and is narrower in ln P than
+        NARROW_REGION (1/16 of the table's narrowest P cell): its value is the join of its neighbours across less
+        than the read's own resolution, so a side value there is not used."""
+        if self._runs(f, k).get(r):
+            return False
+        part = self._partition(k)
+        if r == 0 or r >= len(part):
+            return False
+        return math.log(part[r][0]) - math.log(part[r - 1][0]) < self._narrow_w
 
     def _row_reach(self, f, k, r):
         """A corner row's value for a side read in region r where _row_value has none (r empty and no run on one side):
