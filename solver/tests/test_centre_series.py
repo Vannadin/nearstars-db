@@ -52,7 +52,7 @@ class TemperatureSeries(unittest.TestCase):
         self.assertIsInstance(ans, result.Answer, getattr(ans, "text", None))
         self.assertIn("centre_closed_at_floor", [n.kind for n in ans.notes])
         p_c, t_c = q(ans, "core_pressure"), q(ans, "core_temperature")
-        self.assertLess(t_c, 1600.0 + GAMMA * p_c)
+        self.assertGreater((1600.0 + GAMMA * p_c - t_c) / (GAMMA * p_c), 1e-5)    # γ·ΔP short (1.6e-4 here)
 
 
 class PressureSeries(unittest.TestCase):
