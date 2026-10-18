@@ -359,6 +359,14 @@ def check_table(asm, table) -> dict:
     elif (table.get("boundaries") or {}).get("status") == "exported":
         raise TableStop("an exported table carries no interp_terms block (registration reg-interp-term §4)",
                         check="term block")
+    if table.get("closure_terms") is not None:           # s-read registration §4: the sparse «isentrope closure» block
+        check_closure_block(table)
+        if (asm.get("dtdp") or {}).get("read") == "entropy":    # §3.4 at load: the build-time result and a sample
+            v = AssemblageView({"id": "s-read load check", "assemblage": asm}, table, 1600.0)
+            s_monotone_load_check(v, table["closure_terms"])
+    elif (asm.get("dtdp") or {}).get("read") == "entropy":
+        raise TableStop("the record declares the s read but the table carries no closure_terms block (s-read §4)",
+                        check="closure block")
     if table.get("loop_terms") is not None:              # §7.3–§7.4: the sparse «under-resolved loop» block
         check_term_block(table, "loop_terms", sparse=True)
         for r in table["loop_terms"]["cells"]:           # sparse: a listed cell holds a term, never null
@@ -424,6 +432,41 @@ def check_term_block(table, key, sparse):
                         f"{sorted(need - seen)[:3]}", check="term block")
 
 
+#: s-read registration §4: the closure block's fields and its cell threshold (the generator's CLOSURE_* constants)
+CLOSURE_FIELDS = ("dtdp",)
+CLOSURE_THRESHOLD_K = 0.1
+
+
+def check_closure_block(table):
+    """s-read §4's load gate on closure_terms {source: {floor {dtdp}, threshold_k, tool_blob, skips}, fields ["dtdp"],
+    cells [[ia, ib, e_dtdp], …]} (sparse): fields, this table's dT/dP F_f, the threshold, a cell up to p_dataset at
+    most once, each term finite > 0. Raises TableStop."""
+    blk = table["closure_terms"]
+    if not isinstance(blk, dict) or list(blk.get("fields") or ()) != list(CLOSURE_FIELDS):
+        raise TableStop(f"closure_terms: fields are not {list(CLOSURE_FIELDS)}", check="closure block")
+    src = blk.get("source") or {}
+    want = term_floor(table["cells"], table["p_dataset"]).get("dtdp")
+    if dict(src.get("floor") or {}) != {"dtdp": want}:
+        raise TableStop(f"closure_terms: the floor {src.get('floor')!r} is not this table's dT/dP F_f", check="closure block")
+    if src.get("threshold_k") != CLOSURE_THRESHOLD_K:
+        raise TableStop(f"closure_terms: threshold_k {src.get('threshold_k')!r} is not {CLOSURE_THRESHOLD_K}",
+                        check="closure block")
+    ps = sorted({c["p"] for c in table["cells"]})
+    nt = len({c["t"] for c in table["cells"]})
+    need = {(ia, ib) for ib in range(nt - 1) for ia in range(len(ps) - 1) if ps[ia + 1] <= table["p_dataset"]}
+    seen = set()
+    for r in blk.get("cells") or ():
+        if len(r) != 3 or not all(isinstance(i, int) and not isinstance(i, bool) for i in r[:2]):
+            raise TableStop(f"closure_terms: an entry {list(r)!r} is not [ia, ib, e_dtdp]", check="closure block")
+        k = (r[0], r[1])
+        if k not in need or k in seen:
+            raise TableStop(f"closure_terms: cell {k} is {'doubled' if k in seen else 'not a cell up to p_dataset'}",
+                            check="closure block")
+        seen.add(k)
+        if not (_finite(r[2]) and r[2] > 0.0):
+            raise TableStop(f"closure_terms: cell {k} holds {r[2]!r}, not a finite term > 0", check="closure block")
+
+
 def _term_map(blk):
     """{(ia, ib): (e_ρ, e_dT/dP, e_c_P)}, the floor (F_ρ, F_dT/dP, F_c_P) and the source's name (its tool blob) of a
     term block, or ({}, None, None)."""
@@ -435,6 +478,17 @@ def _term_map(blk):
 
 
 #: the note each term block carries on a read in its cell: block key → (edge, grade, origin's lead)
+#: s-read registration §3.5: the text a retired block's note carries on a view that reads s (its ρ term stands)
+RETIRED_TERMS = "dT/dP and c_P terms retired by the s-read registration (§3.5); the ρ term stands"
+#: s-read §4: the «isentrope closure» note (edge, grade, origin's lead)
+CLOSURE_NOTE = ("isentrope closure", "the s read's exactness against its own s map",
+                "s-read registration §4: per cell, the largest |e_cons| / |ΔT_cell| of its contours, relative to "
+                "max(|dT/dP|, F_dT/dP)")
+#: s-read post-freeze note 1 (owner Q-P3 interim (b)): a swap is a sharp step and the s read takes no latent heat
+#: across it (the coexistence segment, Q-P3 (a), is not built), so the walk misses its isentropic T step
+SWAP_LATENT = ("with the s read the step's latent heat is not taken: the isentropic T step it omits is ≈ T·|Δs|/c_P "
+               "for the curve's |Δs| {lo:.3g}–{hi:.3g} J/kg/K (s-read post-freeze note 1; coexistence, Q-P3 (a), not "
+               "built)")
 TERM_NOTES = MappingProxyType({"interp_terms": ("read interpolation",
                                "the C¹ read's interpolation: the class-wide p90 truth error, raised per cell where "
                                "|C¹ − C⁰| is larger",
@@ -548,9 +602,10 @@ def _hermite(x, c):
 def _cubic1(x, xs, ys, i):
     y0, y1 = ys[i], ys[i + 1]
     u = (x - xs[i]) / (xs[i + 1] - xs[i])
-    if u == 0.0 and y0 is not None:
-        return y0
-    if u == 1.0 and y1 is not None:
+    node = not isinstance(u, Dual)                   # a Dual reads the Hermite at a node too: same value, its slope
+    if u == 0.0 and y0 is not None and (node or y1 is None):     # a Dual at a node whose neighbour has no value:
+        return y0                                                # the node's value (no Hermite to take a slope from)
+    if u == 1.0 and y1 is not None and (node or y0 is None):
         return y1
     if y0 is None or y1 is None:
         raise CellMissing(i)
@@ -722,7 +777,7 @@ class _Curve:
         # ln P linear past the end, from the end row's exact value: never reaches 0 (linear in P did, on default_bse's
         # steep cpx edge at 2250 K, and a clamp there flipped the read's side off any event), and a constant curve
         # extends to its own value bit for bit (an exp-log round trip left a 2e-8 Pa sliver that named no region)
-        return e["p_b"] * math.exp((t - e["t"]) * (math.log(e["p_b"]) - math.log(o["p_b"])) / (e["t"] - o["t"]))
+        return e["p_b"] * _exp((t - e["t"]) * (math.log(e["p_b"]) - math.log(o["p_b"])) / (e["t"] - o["t"]))
 
     def side_of(self, p, t):
         """The side of (p, t): −1 left, +1 right, by P_b at t, or at the nearest row's T past the curve's ends."""
@@ -743,7 +798,8 @@ def curve_groups(boundaries):
         if r.get("node_resolved"):
             groups.setdefault(("node", left, right, None), []).append({**base, "p_b": r["p_b"]})
         elif r["class"] == "swap":
-            groups.setdefault(("swap", left, right, None), []).append({**base, "p_b": r["p_b"]})
+            groups.setdefault(("swap", left, right, None), []).append({**base, "p_b": r["p_b"],
+                                                                        "delta_s": r.get("delta_s")})
         else:
             for e in r["edges"]:
                 groups.setdefault(("edge", left, right, e["phase"]), []).append({**base, "p_b": e["p_b"]})
@@ -853,6 +909,8 @@ class _Run(tuple):
       read the truth closer, but broke the ρ-monotone test at bse 11.93 GPa, 925 K (a loop cell's end segment);
     - an end facing a gap inside its region takes s_e Fritsch–Carlson clipped against the gap's secant (set_end, from
       _runs), shared with the bridge (_bridge)."""
+    #: s-read §3.2: True when the run holds a frozen node (set by AssemblageView._runs; a bare run holds none)
+    frozen = False
 
     def __new__(cls, xs, ys, js, r, capped=True):
         self = super().__new__(cls, (xs, ys, js, r))
@@ -903,10 +961,11 @@ class _Run(tuple):
         if xs[0] <= x <= xs[-1]:
             i = min(max(bisect.bisect_left(xs, x) - 1, 0), n - 2)
             u = (x - xs[i]) / (xs[i + 1] - xs[i])           # _cubic1's node returns, then its Hermite segment
-            if u == 0.0:
-                return ys[i]
-            if u == 1.0:
-                return ys[i + 1]
+            if not isinstance(u, Dual):                     # a Dual reads the Hermite at a node too (s-read §3.0)
+                if u == 0.0:
+                    return ys[i]
+                if u == 1.0:
+                    return ys[i + 1]
             c = self.coeffs[i]
             if c is None:
                 c = self.coeffs[i] = _coeffs(xs, ys, i)
@@ -921,7 +980,7 @@ class _Run(tuple):
 #: the loop cells worse than C⁰'s tent (p95 CI lower bounds 1.02–1.09); κ = 2 on the tune half of the cells, accepted
 #: on the other half. ρ keeps κ = 1: a sharper ρ blend broke the ρ-monotone test where a side read has R < L
 #: (H′·(R − L) < 0; κ = 1.5 two violations, κ = 2 seven).
-BLEND_SHARP = MappingProxyType({"rho": 1.0, "dtdp_eq": 2.0, "c_p": 2.0})
+BLEND_SHARP = MappingProxyType({"rho": 1.0, "dtdp_eq": 2.0, "c_p": 2.0, "s": 1.0})   # s: κ 1, as ρ (s-read §3.1)
 
 #: the bump's length past an open run end, in units of the end segment's width (item 5d998d40: the smallest of the
 #: declared {1/4, 1/2, 1} that passed the truth check and the ρ-monotone test)
@@ -936,7 +995,7 @@ END_CAPPED = frozenset({"rho"})
 
 def _capped(se, s_inf):
     """An open end's node slope: PCHIP's end slope se, at most 4|s∞| (the bump's monotone bound), 0 where s∞ is 0."""
-    return 0.0 if s_inf == 0.0 else math.copysign(min(abs(se), 4.0 * abs(s_inf)), s_inf)
+    return 0.0 if s_inf == 0.0 else _copysign(min(abs(se), 4.0 * abs(s_inf)), s_inf)
 
 
 def _bump(a, s0, s1, L):
@@ -962,7 +1021,7 @@ def _clip_fc(m, d0, d1):
     if d0 * d1 <= 0.0:
         return 0.0
     cap = 3.0 * min(abs(d0), abs(d1))
-    return m if abs(m) <= cap else math.copysign(cap, d0)
+    return m if abs(m) <= cap else _copysign(cap, d0)
 
 
 def _slope_t(d0, d1):
@@ -980,9 +1039,10 @@ def _cubic1_t(x, xs, ys, i):
     _slope_t and end slopes the end secant, so it is C¹ in the row values except where the clip binds."""
     y0, y1 = ys[i], ys[i + 1]
     u = (x - xs[i]) / (xs[i + 1] - xs[i])
-    if u == 0.0 and y0 is not None:
-        return y0
-    if u == 1.0 and y1 is not None:
+    node = not isinstance(u, Dual)                   # a Dual reads the Hermite at a node too: same value, its slope
+    if u == 0.0 and y0 is not None and (node or y1 is None):     # a Dual at a node whose neighbour has no value:
+        return y0                                                # the node's value (no Hermite to take a slope from)
+    if u == 1.0 and y1 is not None and (node or y0 is None):
         return y1
     if y0 is None or y1 is None:
         raise CellMissing(i)
@@ -1027,6 +1087,111 @@ def _pchip_1d(x, xs, ys):
     row 2100 K at 22.49 → 23.62 GPa, carried its slope a column back and inverted ρ by 1.2 % with the edge correction;
     the PCHIP end slope had done so)."""
     return _Run(list(xs), list(ys), list(range(len(xs))), 0).value(x)
+
+
+# ── forward-mode derivatives of the read (s-read registration §3.0, frozen 327b4f73) ──────────────────────────────────
+class Dual:
+    """A value with its first derivatives (d/d ln P, d/dT), carried through the read's own code so that the s read's
+    ∂s/∂lnP and ∂s/∂T are the exact derivatives of the read as coded, piecewise (one-sided at its kinks). Comparisons,
+    hashing and equality are by value (the read branches on values); float() refuses, so no derivative is dropped
+    silently. Only the s path builds one: every float read keeps its float-only path, bit for bit."""
+    __slots__ = ("v", "dx", "dt")
+
+    def __init__(self, v, dx=0.0, dt=0.0):
+        self.v, self.dx, self.dt = v, dx, dt
+
+    @staticmethod
+    def _of(o):
+        return o if isinstance(o, Dual) else Dual(o)
+
+    def __add__(self, o):
+        o = Dual._of(o)
+        return Dual(self.v + o.v, self.dx + o.dx, self.dt + o.dt)
+    __radd__ = __add__
+
+    def __sub__(self, o):
+        o = Dual._of(o)
+        return Dual(self.v - o.v, self.dx - o.dx, self.dt - o.dt)
+
+    def __rsub__(self, o):
+        return Dual._of(o) - self
+
+    def __mul__(self, o):
+        o = Dual._of(o)
+        return Dual(self.v * o.v, self.dx * o.v + self.v * o.dx, self.dt * o.v + self.v * o.dt)
+    __rmul__ = __mul__
+
+    def __truediv__(self, o):
+        o = Dual._of(o)
+        q = self.v / o.v
+        return Dual(q, (self.dx - q * o.dx) / o.v, (self.dt - q * o.dt) / o.v)
+
+    def __rtruediv__(self, o):
+        return Dual._of(o) / self
+
+    def __pow__(self, n):
+        if isinstance(n, Dual):
+            raise TypeError("Dual ** Dual is not used by the read")
+        return Dual(self.v ** n, n * self.v ** (n - 1) * self.dx, n * self.v ** (n - 1) * self.dt)
+
+    def __neg__(self):
+        return Dual(-self.v, -self.dx, -self.dt)
+
+    def __pos__(self):
+        return self
+
+    def __abs__(self):
+        return -self if self.v < 0.0 else self
+
+    def __lt__(self, o):
+        return self.v < (o.v if isinstance(o, Dual) else o)
+
+    def __le__(self, o):
+        return self.v <= (o.v if isinstance(o, Dual) else o)
+
+    def __gt__(self, o):
+        return self.v > (o.v if isinstance(o, Dual) else o)
+
+    def __ge__(self, o):
+        return self.v >= (o.v if isinstance(o, Dual) else o)
+
+    def __eq__(self, o):
+        return self.v == (o.v if isinstance(o, Dual) else o)
+
+    def __ne__(self, o):
+        return not self == o
+
+    def __hash__(self):
+        return hash(self.v)
+
+    def __float__(self):
+        raise TypeError("float() of a Dual would drop its derivatives")
+
+    def __repr__(self):
+        return f"Dual({self.v!r}, {self.dx!r}, {self.dt!r})"
+
+
+def _exp(a):
+    if isinstance(a, Dual):
+        e = math.exp(a.v)
+        return Dual(e, e * a.dx, e * a.dt)
+    return math.exp(a)
+
+
+def _log(a):
+    if isinstance(a, Dual):
+        return Dual(math.log(a.v), a.dx / a.v, a.dt / a.v)
+    return math.log(a)
+
+
+def _copysign(a, b):
+    """math.copysign on floats (bit for bit); on a Dual, ±a by b's sign (a's derivatives carried)."""
+    if isinstance(a, Dual) or isinstance(b, Dual):
+        bv = b.v if isinstance(b, Dual) else b
+        av = a.v if isinstance(a, Dual) else a
+        neg = math.copysign(1.0, bv) < 0.0
+        return (-a if (av >= 0.0) == neg else a) if isinstance(a, Dual) else math.copysign(av, bv)
+    return math.copysign(a, b)
 
 
 # ── the view (registration §3; post-freeze note 3 §1, §4) ───────────────────────────────────────────────────────────
@@ -1117,6 +1282,17 @@ class AssemblageView(mv.RecordView):
                            "cap_refusals": 0, "no_run_refusals": 0, "by_count_reads": 0, "corrections": 0,
                            "side_fallbacks": 0, "reach_rows": 0, "blend_drops": 0}
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
+        #: s-read registration (frozen 327b4f73): the solid dT/dP and c_P from the stored s, declared by the record
+        #: (assemblage.dtdp.read «entropy», written by the generator with the closure block); a tool may set it on a
+        #: view of a record that does not declare it yet (closure_terms.py measures the new read on the pre-block table)
+        self.s_read = asm["dtdp"].get("read") == "entropy"
+        self._frozen_hit = False
+        blk = table.get("closure_terms") or {}
+        self._closure = ({(r[0], r[1]): r[2] for r in blk.get("cells", ())},
+                         ((blk.get("source") or {}).get("floor") or {}).get("dtdp") or term_floor(
+                             table["cells"], self.p_dataset).get("dtdp", 0.0))
+        #: the s path's counts (§6.4): reads taken by it, reads kept on today's read for a frozen stencil node (§3.2)
+        self.s_counts = {"s_reads": 0, "frozen_stencil_reads": 0}
 
     # the table read ──────────────────────────────────────────────────────────────────────────────────────────
     def _refuse(self, p, t, rid, why):
@@ -1262,9 +1438,17 @@ class AssemblageView(mv.RecordView):
                 continue
             e = tuple((1.0 - w) * (0.0 if x is None else x) for x in e)
             why = f"{lead}; (1 − w)·e of the dataset-top cell ({ia}, {ib}), w = {w:.6g} (note 7's taper)"
+            scale = tuple(max(abs(v), fl) for v, fl in zip((rho, dtdp, cp), floor))
+            if self.s_read:                              # s-read §3.5
+                if e[0]:
+                    self.notes.append(mv.BandNote(self.material_id, edge, "relative", e[0], None, grade,
+                                                  f"{why}; {key} {src}; {RETIRED_TERMS}", scale=scale))
+                continue
             self.notes.append(mv.BandNote(self.material_id, edge, "relative", e[0], None, grade, f"{why}; {key} {src}",
                                           dtdp_error=e[1], dtdp_origin=why, c_p_error=e[2], c_p_origin=why,
-                                          scale=tuple(max(abs(v), fl) for v, fl in zip((rho, dtdp, cp), floor))))
+                                          scale=scale))
+        if self.s_read:
+            self._closure_note(ia, ib, dtdp, w)
 
     def _table_read(self, p, t):
         """The table's own C¹ read at (P, T) below the current column cut (self._top)."""
@@ -1277,7 +1461,8 @@ class AssemblageView(mv.RecordView):
         while self.ts[ib + 1] < t:
             ib += 1
         if self._curves:                         # an exported-boundary record: every read through the row regions (R1)
-            return self._read(p, t, pr, x, ia, ib)
+            got = self._read(p, t, pr, x, ia, ib)
+            return got if isinstance(got, st.Stop) or not self.s_read else self._with_s(p, t, pr, ia, ib, got)
         cut = (lambda ka: self.ps[ka] <= self._top)
         out = {}
         for f in ("rho", "dtdp_eq", "c_p"):
@@ -1304,7 +1489,71 @@ class AssemblageView(mv.RecordView):
                                     "re-solves did not converge (registration note 3 §2 condition 4)")
         self._node_note(t, ia)
         corners = [self._cell(a, b) for a in (ia, ia + 1) for b in (ib, ib + 1)]
-        return out["rho"], out["dtdp_eq"], out["c_p"], [c for c in corners if c is not None]
+        got = out["rho"], out["dtdp_eq"], out["c_p"], [c for c in corners if c is not None]
+        return got if not self.s_read else self._with_s(p, t, pr, ia, ib, got)
+
+    def s_path(self, p, t, force=None):
+        """The s read at (p, t) with its exact derivatives (s-read §3.0): a Dual (s, ∂s/∂lnP, ∂s/∂T); None when the
+        read's stencil holds a frozen node (§3.2: today's read stands there); or a Stop. Leaves no note, count, mark or
+        memo on the view. `force` {curve: side}: a swap's side read (§3.1)."""
+        pr = max(p, self.ps[0])
+        ia = min(max(bisect.bisect_left(self.ps, pr, 1) - 1, 0), len(self.ps) - 2)
+        ib = min(max(bisect.bisect_right(self.ts, t) - 1, 0), len(self.ts) - 2)
+        while self.ts[ib] > t:
+            ib -= 1
+        while self.ts[ib + 1] < t:
+            ib += 1
+        return self._s_path(p, t, pr, ia, ib, force)
+
+    def _s_path(self, p, t, pr, ia, ib, force=None):
+        x, td = Dual(math.log(pr), 1.0, 0.0), Dual(t, 0.0, 1.0)
+        n, counts, marks, memo = len(self.notes), dict(self.cut_counts), self._marks, self._read_memo
+        self._frozen_hit = False
+        try:
+            if self._curves:
+                got = self._read(p, td, pr, x, ia, ib, fields=("s",), force=force)
+                v = got if isinstance(got, st.Stop) else got["s"]
+            else:
+                def val(ka, kb):
+                    c = self._cell(ka, kb)
+                    if c is None:
+                        return None
+                    if c["kind"] == "frozen":
+                        self._frozen_hit = True
+                    return c.get("s")
+                cut = (lambda ka: self.ps[ka] <= self._top)
+                try:
+                    v = cubic2(x, td, self.lnps, self.ts, val, ia, ib, cut)
+                except CellMissing as e:
+                    ka, kb = e.args[0]
+                    v = self._refuse(p, t, "input.material_out_of_data",
+                                     f"no s at node ({self.ps[ka]:g} Pa, {self.ts[kb]:g} K) (s-read registration)")
+        finally:
+            del self.notes[n:]
+            self.cut_counts.clear()
+            self.cut_counts.update(counts)
+            self._marks, self._read_memo = marks, memo
+        if isinstance(v, st.Stop):
+            return v
+        if self._frozen_hit:
+            return None
+        return v if isinstance(v, Dual) else Dual(v)
+
+    def _with_s(self, p, t, pr, ia, ib, got):
+        """Today's read `got` (ρ, dT/dP, c_P, cells) with dT/dP = −(∂s/∂P)_T/(∂s/∂T)_P and c_P = T·(∂s/∂T)_P of the s read
+        (s-read §2, §3.4), unless the s read's stencil holds a frozen node (§3.2: `got` stands, counted). ρ is today's.
+        (∂s/∂T)_P ≤ 0 at a read refuses by name (§3.4's load check samples it; a read between samples is caught here)."""
+        sv = self._s_path(p, t, pr, ia, ib)
+        if isinstance(sv, st.Stop):
+            return sv
+        if sv is None:
+            self.s_counts["frozen_stencil_reads"] += 1
+            return got
+        if not sv.dt > 0.0:
+            return self._refuse(p, t, "input.material_out_of_data",
+                                f"(∂s/∂T)_P = {sv.dt!r} ≤ 0 in the s read at ({p:g} Pa, {t:g} K) (s-read registration §3.4)")
+        self.s_counts["s_reads"] += 1
+        return got[0], -(sv.dx / pr) / sv.dt, t * sv.dt, got[3]
 
     def _node_note(self, t, ia):
         """NODE_NOTE with the curve's P_b range and its ±half-cell band range, for each node-resolved curve whose P_b(t)
@@ -1364,6 +1613,9 @@ class AssemblageView(mv.RecordView):
                 cur[1].append(v)
                 cur[2].append(j)
             got = {r: [_Run(*q, capped=f in END_CAPPED) for q in qs] for r, qs in got.items()}
+            for qs in got.values():                       # s-read §3.2: a run holding a frozen node marks its reads
+                for q in qs:
+                    q.frozen = any(self._cell(j, k)["kind"] == "frozen" for j in q[2])
             for qs in got.values():                       # ends facing a gap: the bridge's slopes (_Run.set_end)
                 for a, b in zip(qs, qs[1:]):
                     s_gap = (b[1][0] - a[1][-1]) / (b[0][0] - a[0][-1])
@@ -1388,12 +1640,16 @@ class AssemblageView(mv.RecordView):
         else:
             for a, b in zip(runs, runs[1:]):
                 if a[0][-1] < x < b[0][0]:                # a gap inside the region: the Hermite bridge (_bridge)
+                    if a.frozen or b.frozen:
+                        self._frozen_hit = True
                     return _bridge(x, a, b)
             run = runs[0] if x < runs[0][0][0] else runs[-1] if x > runs[-1][0][-1] else next(
                 q for q in runs if q[0][0] <= x <= q[0][-1])
         if corner and (x < self.lnps[max(run[2][0] - CORNER_REACH, 0)]
                        or x > self.lnps[min(run[2][-1] + CORNER_REACH, n - 1)]):
             raise _NoRead("cap", k)
+        if run.frozen:
+            self._frozen_hit = True
         return run.value(x)
 
     def _row_value(self, f, k, r, x, corner):
@@ -1599,13 +1855,15 @@ class AssemblageView(mv.RecordView):
                                             # notes (68 B2 (d) on 652004f9); _blend_sides restores the marks
         return rows
 
-    def _read(self, p, t, pr, x, ia, ib):
+    def _read(self, p, t, pr, x, ia, ib, fields=None, force=None):
         """The read of an exported-boundary record (R1): every field P first through the row regions, T last
         (_cubic1_t). Inside the (c′) window [x_b − w, x_b + w] of each cut edge near x, the read is the C¹ blend of
         the side reads (_blend_sides; item 5d998d40, 68 ruling 1, in place of the tent correction ∓δ/2). Another
         edge's side in each assignment is the read's own side, unless that edge's window holds x too, in which case
         both of its sides are weighted. C¹ in x off events, except at the named residual classes (kinkscan.py);
-        continuous except at P_b_ext(t) of cut swaps (landed events) and at refusal boundaries."""
+        continuous except at P_b_ext(t) of cut swaps (landed events) and at refusal boundaries.
+        `fields` (the s path, s-read §3.0): those fields only, returned as {field: value} with no notes; `force`
+        {curve: side} overrides the read's own side of those curves (a swap's two side reads, §3.1)."""
         self.cut_counts["reads"] += 1
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
         self._read_memo = {}                             # per read: regions by side map
@@ -1616,11 +1874,13 @@ class AssemblageView(mv.RecordView):
                      key=lambda c: c.id)
         pbs = {c: c.p_b_ext(t, self._reach) for c in rel}
         sides = {c: (None if pb is None else (-1 if pr < pb else 1)) for c, pb in pbs.items()}
+        if force:
+            sides.update({c: s_ for c, s_ in force.items() if c in sides})
         near = []                                        # the edges whose (c′) window holds x: (curve, x_b, w), per read
         for c in rel:
             if c.kind != "edge" or pbs[c] is None:
                 continue
-            xb = math.log(pbs[c])
+            xb = _log(pbs[c])
             if abs(x - xb) >= self._node_widths()[1] * (1.0 + 1e-12):   # w is a convex mix of node widths: never wider (a
                 continue                                          # rounding margin kept), so _width would skip it too
             w = self._width(xb)
@@ -1628,7 +1888,7 @@ class AssemblageView(mv.RecordView):
                 near.append((c, xb, w))
         out = {}
         try:
-            for f in ("rho", "dtdp_eq", "c_p"):
+            for f in (fields or ("rho", "dtdp_eq", "c_p")):
                 v = self._value(f, x, t, ia, ib, sides)
                 if near:
                     v = self._blend_sides(f, x, t, ib, sides, near, v)
@@ -1652,6 +1912,8 @@ class AssemblageView(mv.RecordView):
             return self._refuse(p, t, "input.material_out_of_data",
                                 f"no equilibrium isentrope at node ({c['p']:g} Pa, {c['t']:g} K): its "
                                 "re-solves did not converge (registration note 3 §2 condition 4)")
+        if fields is not None:
+            return out
         self._close_marks()
         if self._marks["empty"]:
             self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID, MULTI_NOTE))
@@ -1659,8 +1921,11 @@ class AssemblageView(mv.RecordView):
         for c in rel:
             if c.kind == "swap" and pbs[c] is not None and lo <= pbs[c] <= hi:
                 a, b = c.p_range
-                self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID,
-                                                  f"{SWAP_NOTE}; P {a / 1e9:.4g}–{b / 1e9:.4g} GPa"))
+                text = f"{SWAP_NOTE}; P {a / 1e9:.4g}–{b / 1e9:.4g} GPa"
+                ds = [abs(r["delta_s"]) for r in c.rows if r.get("delta_s") is not None]
+                if self.s_read and ds:                   # s-read post-freeze note 1: the latent heat not taken
+                    text += "; " + SWAP_LATENT.format(lo=min(ds), hi=max(ds))
+                self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID, text))
         self._node_note(t, ia)
         corners = []
         for kb in (ib, ib + 1):
@@ -1717,11 +1982,31 @@ class AssemblageView(mv.RecordView):
             if not e or not any(e):
                 continue
             e = tuple(0.0 if x is None else x for x in e)
+            scale = tuple(max(abs(v), fl) for v, fl in zip((rho_s, g_s, cp_s), floor))
+            if self.s_read:                              # s-read §3.5: dT/dP and c_P terms retired, ρ's stands
+                if e[0]:
+                    self.notes.append(mv.BandNote(
+                        self.material_id, edge, "relative", e[0], None, grade,
+                        f"{lead}; cell ({ia}, {ib}); {key} {src}; {RETIRED_TERMS}", scale=scale))
+                continue
             self.notes.append(mv.BandNote(
                 self.material_id, edge, "relative", e[0], None, grade,
                 f"{lead}; cell ({ia}, {ib}); {key} {src}", dtdp_error=e[1], dtdp_origin=f"{lead}; cell ({ia}, {ib})",
-                c_p_error=e[2], c_p_origin=f"{lead}; cell ({ia}, {ib})",
-                scale=tuple(max(abs(v), fl) for v, fl in zip((rho_s, g_s, cp_s), floor))))
+                c_p_error=e[2], c_p_origin=f"{lead}; cell ({ia}, {ib})", scale=scale))
+        if self.s_read:
+            self._closure_note(ia, ib, g_s)
+
+    def _closure_note(self, ia, ib, g, w=0.0):
+        """s-read §4: the cell's «isentrope closure» dT/dP term, (1 − w)·e in the taper zone; none where unlisted."""
+        cells, f_dtdp = self._closure
+        e = cells.get((ia, ib))
+        if not e:
+            return
+        edge, grade, lead = CLOSURE_NOTE
+        why = f"{lead}; cell ({ia}, {ib})" + (f"; (1 − w)·e, w = {w:.6g} (note 7's taper)" if w else "")
+        self.notes.append(mv.BandNote(self.material_id, edge, "relative", None, None, grade, why,
+                                      dtdp_error=(1.0 - w) * e, dtdp_origin=why,
+                                      scale=(1.0, max(abs(g), f_dtdp), 1.0)))
 
     def _floor_k_t(self, t):
         """K_T at the floor node on the read's T, ρ·∂P/∂ρ over the first two P nodes (r2 N2), at the nearest node T."""
@@ -1973,6 +2258,104 @@ def boundary_disclosures(record, table) -> dict:
             "curve_ends": ends, "sweep": dict(v.cut_counts), "past_end_read_across": past}
 
 
+#: s-read §3.4 at load (directing's ruling on the build-time check): this many points of the full sample, drawn with
+#: the seed the closure block carries
+MONOTONE_LOAD_SAMPLE = 400
+
+
+def s_monotone_points(v):
+    """The full §3.4 sample of an s-reading view, in a fixed order: every grid cell up to p_dataset whose four corners
+    are present (frozen ones too; the s path itself skips a frozen stencil) at its 4 × 4 interior sub-points and its
+    four edge midpoints; inside every c′ window of an edge curve, five points across the window on each T row and half
+    row it spans in that cell (68 n4); and every open-end extension zone of every row's runs of s, at L/2 and L past the
+    end and halfway from L to the region's edge (68 X1 (ii))."""
+    pts = []
+    n_p = sum(1 for q in v.ps if q <= v.p_dataset)
+    sub = (0.2, 0.4, 0.6, 0.8)
+    for ia in range(n_p - 1):
+        for ib in range(len(v.ts) - 1):
+            if any(v._cell(a, b) is None for a in (ia, ia + 1) for b in (ib, ib + 1)):
+                continue
+            x0, x1, t0, t1 = v.lnps[ia], v.lnps[ia + 1], v.ts[ib], v.ts[ib + 1]
+            pts += [(x0 + u * (x1 - x0), t0 + w * (t1 - t0)) for u in sub for w in sub]
+            pts += [(x0, 0.5 * (t0 + t1)), (x1, 0.5 * (t0 + t1)), (0.5 * (x0 + x1), t0), (0.5 * (x0 + x1), t1)]
+            for c in v._cut:
+                if c.kind != "edge":
+                    continue
+                for t in (t0, 0.5 * (t0 + t1)):
+                    pb = c.p_b_ext(t, v._reach)
+                    if pb is None:
+                        continue
+                    xb = math.log(pb)
+                    w = v._width(xb)
+                    for f in (-0.8, -0.4, 0.0, 0.4, 0.8):
+                        x = xb + f * w
+                        if x0 <= x <= x1:
+                            pts.append((x, t))
+    for k, t in enumerate(v.ts):
+        part = v._partition(k)
+        for r, runs in v._runs("s", k).items():
+            for run in runs:
+                xs = run[0]
+                if len(xs) < 2:
+                    continue
+                for hi, xe, edge in ((True, xs[-1], math.log(part.pbs[r]) if r < len(part) else None),
+                                     (False, xs[0], math.log(part.pbs[r - 1]) if r > 0 else None)):
+                    if edge is None:
+                        continue
+                    L = END_BUMP * ((xs[-1] - xs[-2]) if hi else (xs[1] - xs[0]))
+                    sgn = 1.0 if hi else -1.0
+                    for a in (0.5 * L, L, 0.5 * (L + abs(edge - xe))):
+                        x = xe + sgn * a
+                        if (x - edge) * sgn < 0.0 and math.exp(x) <= v.p_dataset:
+                            pts.append((x, t))
+    return pts
+
+
+def s_monotone_check(v, points=None):
+    """(∂s/∂T)_P > 0 of the s read at `points` (default: the full sample). A point whose stencil holds a frozen node, or
+    whose read refuses, is skipped and counted. Returns {samples, checked, skipped, min_ds_dt, at, failures (≤ 20),
+    pass}."""
+    pts = s_monotone_points(v) if points is None else points
+    out = {"samples": len(pts), "checked": 0, "skipped": 0, "min_ds_dt": None, "at": None, "failures": []}
+    for x, t in pts:
+        got = v.s_path(math.exp(x), t)
+        if got is None or isinstance(got, st.Stop):
+            out["skipped"] += 1
+            continue
+        out["checked"] += 1
+        if out["min_ds_dt"] is None or got.dt < out["min_ds_dt"]:
+            out["min_ds_dt"], out["at"] = got.dt, [math.exp(x), t]
+        if not got.dt > 0.0 and len(out["failures"]) < 20:
+            out["failures"].append([math.exp(x), t, got.dt])
+    out["pass"] = not out["failures"] and out["checked"] > 0
+    return out
+
+
+def s_monotone_build(record, table):
+    """The generator's build-time §3.4 check (directing's ruling): the full sample on an s-reading view of `record` and
+    its compact `table`."""
+    v = AssemblageView(record, table, 1600.0)
+    v.s_read = True
+    return s_monotone_check(v)
+
+
+def s_monotone_load_check(v, block):
+    """The load's sampled §3.4 check: the closure block's build-time result must pass, and MONOTONE_LOAD_SAMPLE points
+    drawn from the full sample with the block's seed must show ∂s/∂T > 0. Raises TableStop."""
+    import random
+    mono = block.get("monotone") or {}
+    if mono.get("pass") is not True or not isinstance(mono.get("seed"), int):
+        raise TableStop(f"closure_terms: the build-time ∂s/∂T check is missing or did not pass ({mono.get('failures')})",
+                        check="s monotone")
+    pts = s_monotone_points(v)
+    sample = random.Random(mono["seed"]).sample(pts, min(MONOTONE_LOAD_SAMPLE, len(pts)))
+    got = s_monotone_check(v, sample)
+    if not got["pass"]:
+        raise TableStop(f"(∂s/∂T)_P ≤ 0 in the s read at {got['failures'][:3]} (s-read §3.4; a sampled check, not a "
+                        "proof)", check="s monotone")
+
+
 def view(record, table, t_pot, p_stop=0.0, p_floor=0.0, handover=None):
     """An AssemblageView of a loaded record and its compact table (registry.tables[id]); `handover` is the record's
     HandOver above p_dataset (note 7), or None."""
@@ -2127,6 +2510,11 @@ class BasalView(mv.RecordView):
 
     def transitions(self) -> tuple:
         return ()
+
+    def curve_slope_points(self, curve) -> tuple:
+        """Delegated to the overlying view, so a curve read through this view keeps curve-scale's full landing scale
+        (68's note on s-read 64f38d74; kept by post-freeze note 1)."""
+        return self.overlying.curve_slope_points(curve)
 
     def source_seams(self) -> tuple:
         return ()

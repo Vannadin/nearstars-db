@@ -146,6 +146,8 @@ assemblage_dtdp:
   band_origin:   {shape: text, required: true}
   refused_count: {shape: number, required: true}           # cells whose solves did not converge: refused by name
   sidecar:       {shape: mapping, required: true}          # the dtdp_eq.py header: table and builder identity
+  read:          {shape: enum, values: [entropy]}          # s-read registration: dT/dP and c_P from the stored s
+                                                           # (written by the generator with the closure block)
 
 # Cite-only in the engine except compact_sha256 (§2.2): the generator checked them before it wrote.
 assemblage_pins:
