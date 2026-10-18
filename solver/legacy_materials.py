@@ -522,9 +522,10 @@ def silicate_melt_mix(p: float, t: float, variant: str, rho_s: float, dtdp_s: fl
 #: the planted test can lower it into a validation walk's window
 WINDOW_SEAM_P = eos.SILICATE_ROCK_MAX_PA
 WINDOW_SEAM_PHASE = "silicate_melt_window"
-WINDOW_SEAM_NOTE = ("melt window past the 140 GPa curve seam: the solidus/liquidus jump at 140, 180 and 200 GPa and no "
+WINDOW_SEAM_NOTE = ("melt window past the 140 GPa curve seam: the solidus/liquidus jump at 140 and 200 GPa and no "
                     "latent term covers a jump crossed inside the window (melt-window registration §2: 140 and 200 GPa "
-                    "end the window, forfeiting up to ≈ 220–317 K; 180 GPa ≈ 28–40 K; 20 GPa ≤ 2 K)")
+                    "end the window, forfeiting up to ≈ 220–317 K; 20 GPa ≤ 2 K; the Deng bdg → ppv join at 173.6 GPa "
+                    "is continuous in value since the window-edge item)")
 
 
 def window_seam_note(material_id: str, p: float, t: float, variant: str):

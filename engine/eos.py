@@ -3518,11 +3518,12 @@ SILICATE_PV_TO_TFD = 1.35e4 * GPA    # Seager+ 2007 §III.3 — BME4 가 TFD 로
 #                   140 GPa 에서 구사하므로("melt fraction ≈ 40% at P = 140 GPa")
 #                   인쇄 출처가 스스로 밟은 압력을 경계로 택했다. 대안은 지구 CMB
 #                   136 GPa 였다.
-#   140 – 180 GPa   Deng+ 2023 bridgmanite (Table I 자료 20–160 GPa; 160–180 은
-#                   그 위 20 GPa 외삽 — 라벨). 180 GPa = 논문이 인쇄한 bdg/ppv/액체
-#                   삼중점. 논문 내부 불일치 병기: 두 적합의 교차는 173.6 GPa/6413 K,
-#                   인쇄된 삼중점은 180 GPa/6420 K — 삼중점은 원자료에서 왔다.
-#   180 – 200 GPa   Deng+ 2023 post-perovskite. 200 GPa = 논문 자신의 경고 경계
+#   140 – 173.6 GPa Deng+ 2023 bridgmanite (Table I 자료 20–160 GPa; 160–173.6 은
+#                   그 위 외삽 — 라벨). 173.6 GPa = 두 적합의 교차(6413 K, DENG_SWITCH_PA) —
+#                   값 연속, 기울기만 꺾임(r2 de96ceaa, 창 가장자리 항목). 인쇄된 bdg/ppv/액체
+#                   삼중점은 180 GPa/6420 K 로 기록에 남긴다(논문 내부 불일치 병기 — 삼중점은
+#                   원자료에서, 교차는 두 적합에서 왔다; 교차 T 는 인쇄 삼중점보다 6.5 K 낮다).
+#   173.6 – 200 GPa Deng+ 2023 post-perovskite. 200 GPa = 논문 자신의 경고 경계
 #                   ("extrapolating beyond ~200 GPa is subject to uncertainty").
 #   200 – 500 GPa   Fei+ 2021 상계 (Z-머신 충격압축; 멜팅 구속은 ~500 GPa 까지).
 #   500 GPa 위      **이름 대고 거절** — 여섯 논문 어디에도 자료가 있는 전사 가능한
