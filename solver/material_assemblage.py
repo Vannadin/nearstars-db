@@ -487,8 +487,11 @@ CLOSURE_NOTE = ("isentrope closure", "the s read's exactness against its own s m
 #: s-read post-freeze note 1 (owner Q-P3 interim (b)): a swap is a sharp step and the s read takes no latent heat
 #: across it (the coexistence segment, Q-P3 (a), is not built), so the walk misses its isentropic T step
 SWAP_LATENT = ("with the s read the step's latent heat is not taken: the isentropic T step it omits is ≈ T·|Δs|/c_P "
-               "for the curve's |Δs| {lo:.3g}–{hi:.3g} J/kg/K (s-read post-freeze note 1; coexistence, Q-P3 (a), not "
-               "built)")
+               "for the curve's |Δs| {lo:.3g}–{hi:.3g} J/kg/K, and the read's own miss can exceed it (the side reads "
+               "past the run ends are flat in P); the miss is reported in the landing note (s-read post-freeze note 1; "
+               "coexistence, Q-P3 (a), not built)")
+SWAP_LATENT_NO_DS = ("with the s read the step's latent heat is not taken (no Δs is exported for this curve's rows) "
+                     "(s-read post-freeze note 1; coexistence, Q-P3 (a), not built)")
 TERM_NOTES = MappingProxyType({"interp_terms": ("read interpolation",
                                "the C¹ read's interpolation: the class-wide p90 truth error, raised per cell where "
                                "|C¹ − C⁰| is larger",
@@ -1923,8 +1926,8 @@ class AssemblageView(mv.RecordView):
                 a, b = c.p_range
                 text = f"{SWAP_NOTE}; P {a / 1e9:.4g}–{b / 1e9:.4g} GPa"
                 ds = [abs(r["delta_s"]) for r in c.rows if r.get("delta_s") is not None]
-                if self.s_read and ds:                   # s-read post-freeze note 1: the latent heat not taken
-                    text += "; " + SWAP_LATENT.format(lo=min(ds), hi=max(ds))
+                if self.s_read:                          # s-read post-freeze note 1: the latent heat not taken
+                    text += "; " + (SWAP_LATENT.format(lo=min(ds), hi=max(ds)) if ds else SWAP_LATENT_NO_DS)
                 self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID, text))
         self._node_note(t, ia)
         corners = []

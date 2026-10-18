@@ -205,18 +205,22 @@ class Notes(unittest.TestCase):
 
 
 class SwapDeltaS(unittest.TestCase):
-    """Note 1 (68 n2): every swap curve row carries the boundary row's delta_s: bse 32 / dmm 33 / khan 32 rows, |Δs|
-    1.005–7.461 / 1.404–11.032 / 3.581–30.029 J/kg/K."""
+    """Note 1 (68 n2, and 68 on the count): the cut runs read as swaps hold 42 / 35 / 38 rows (bse / dmm / khan); the
+    swap-class rows among them carry delta_s (32 / 33 / 32, |Δs| 1.005–7.461 / 1.404–11.032 / 3.581–30.029 J/kg/K);
+    the rest are coincident edge runs read as swaps, with none."""
 
     def test_rows_carry_delta_s(self):
-        want = {"silicate_slb_default_bse": (32, 1.005, 7.461), "silicate_slb_earth_dmm_wh2005": (33, 1.404, 11.032),
-                "silicate_slb_mars_khan2022": (32, 3.581, 30.029)}
-        for rid, (n, lo, hi) in want.items():
+        want = {"silicate_slb_default_bse": (42, 32, 1.005, 7.461), "silicate_slb_earth_dmm_wh2005": (35, 33, 1.404, 11.032),
+                "silicate_slb_mars_khan2022": (38, 32, 3.581, 30.029)}
+        for rid, (n_all, n, lo, hi) in want.items():
             v = _view(rid)
-            rows = [r for c in v._curves if c.kind == "swap" for r in c.rows]
+            rows = [r for c in v._cut if c.kind == "swap" for r in c.rows]
             ds = [abs(r["delta_s"]) for r in rows if r.get("delta_s") is not None]
-            self.assertEqual((len(rows), len(ds)), (n, n), rid)
+            self.assertEqual((len(rows), len(ds)), (n_all, n), rid)
             self.assertEqual((round(min(ds), 3), round(max(ds), 3)), (lo, hi), rid)
+            for c in v._cut:                                # a run with no delta_s is a coincident edge run
+                if c.kind == "swap" and not any(r.get("delta_s") is not None for r in c.rows):
+                    self.assertTrue(all(r.get("delta_s") is None for r in c.rows), (rid, c.id))
 
 
 class ClosureBlock(unittest.TestCase):
