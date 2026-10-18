@@ -268,7 +268,9 @@ class BandTestScope(unittest.TestCase):
         from solver import context, from_v1, member as mb, solve as sv
         body, _aside = from_v1.load_v1("engine/bodies/mars.yaml")
         body, _m = mb.member_of(body)
-        body = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=1980.0))
+        # melt-window post-freeze note 1: the lowest T_pot of the declared scan {1900, 1920, …, 2100} K «off» with
+        # band_halved > 0 on the isentropic window (1980 K no longer grazes the band there); 1900 K: 2 halvings
+        body = dataclasses.replace(body, surface=dataclasses.replace(body.surface, t_pot=1900.0))
         opt = context.Options(sensitivity_dt=0.0)
         _ans, x = sv.solve(body, opt)
         a = sv.inward(body, sv._views_at(body, sv._views(body), x), x, opt)
