@@ -985,9 +985,10 @@ def _nearest_wall(out, reach_log=None):
     the wall; with fewer, its nearest and farthest solved trials, only when they are at least NARROW·|x| apart (a
     narrower pair's secant sits in F's noise: K8's floor), else no trend. A wall qualifies when |F| falls toward it,
     F does not resume past it with the same sign (a dip is not «past the wall»), and the linear zero d = |a.F|/s from
-    the nearest point a does not land beyond the refusing stretch: d ≤ |e − a|, e the nearest solved trial across the
-    wall, else the closure range's end beyond it (gap-wall note 1: §2.2's lower bound |w − a| ≤ d is dropped, since
-    the solved trials up to the wall already show F has no zero before it, and the bound refused W4's own case). Of the qualifying walls, the one with the smallest |a.F|. None
+    the nearest point a lands inside the refusing stretch: |w − a| ≤ d ≤ |e − a|, e the nearest solved trial across
+    the wall, else the closure range's end beyond it (no range known: no upper bound). Gap-wall note 2: the lower
+    bound is what separates «the root lies past the wall» from «|F| has a minimum inside the stretch» (the
+    ClosureRoundTrip wrong-sign control); note 1's drop of it is void. Of the qualifying walls, the one with the smallest |a.F|. None
     when no wall qualifies. A wall failing the reach alone is appended to `reach_log` (W5's named count)."""
     order = sorted((t for t in out.trials if t.kind != "isolated"), key=lambda t: t.x)
     refused = [t.x for t in order if t.F is None]
@@ -1015,7 +1016,7 @@ def _nearest_wall(out, reach_log=None):
         s = abs(a.F - b.F) / abs(a.x - b.x)
         d = abs(a.F) / s
         end = across.x if across is not None else (lo if sgn > 0.0 else hi)
-        if end is not None and d > abs(end - a.x):     # note 1: the upper bound only (W4); no range known, no bound
+        if d < abs(w.x - a.x) or (end is not None and d > abs(end - a.x)):   # note 2: both bounds; no range, no upper
             if reach_log is not None:
                 reach_log.append({"wall": w.x, "a": a.x, "d": d, "far_end": end})
             continue

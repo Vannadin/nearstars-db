@@ -140,15 +140,15 @@ class NearestWall(unittest.TestCase):
         """No stretch changes sign, but |F| falls toward the wall at 3: the root lies past it, so that wall's refusal is
         the outcome. Control: |F| grows toward the wall (None, no_bracket stands)."""
         wall = cl.Wall(3.0, st.Stop("refused"), 2.0)
-        out = NS(trials=[_trial(1.0, 1.0), _trial(2.0, 0.4), _trial(3.0, None), _trial(4.0, None)], walls=[wall])
-        self.assertIs(sv._nearest_wall(out), wall)
+        out = NS(trials=[_trial(1.0, 1.0), _trial(2.0, 0.6), _trial(3.0, None), _trial(4.0, None)], walls=[wall])
+        self.assertIs(sv._nearest_wall(out), wall)          # gap-wall note 2: F's linear zero (3.5) lies past the wall
         grow = NS(trials=[_trial(1.0, 0.4), _trial(2.0, 1.0), _trial(3.0, None), _trial(4.0, None)], walls=[wall])
         self.assertIsNone(sv._nearest_wall(grow))
         dip = NS(trials=[_trial(1.0, 1.0), _trial(2.0, 0.4), _trial(3.0, None), _trial(4.0, 0.3)], walls=[wall])
         self.assertIsNone(sv._nearest_wall(dip))           # F resumes past the wall with its sign: not «past it»
         near, far = cl.Wall(3.0, st.Stop("refused"), 2.0), cl.Wall(0.5, st.Stop("refused"), 1.0)   # of two, the one
-        two = NS(trials=[_trial(0.5, None), _trial(1.0, 0.9), _trial(1.5, 0.95), _trial(2.0, 0.3), _trial(3.0, None)],
-                 walls=[far, near])                                       # whose neighbour has the smaller |F|
+        two = NS(trials=[_trial(0.5, None), _trial(1.0, 0.35), _trial(1.5, 0.4), _trial(2.0, 0.3), _trial(3.0, None)],
+                 walls=[far, near])                       # whose neighbour has the smaller |F| (both zeros past their walls)
         self.assertIs(sv._nearest_wall(two), near)
 
     def test_no_solved_names_the_gap_between_opposite_walls(self):
@@ -175,7 +175,7 @@ class NearestWall(unittest.TestCase):
         rec = mv.RecordRefusal("silicate_slb_default_bse", 1.09e11, 4800.0, "input.material_above_solid_window",
                                "above the table's last T node 4800 K (grid_end)")
         wall_stop = st.Stop("refused", rec, node)
-        trials = [cl.Trial(1.0, 1.0, None, "scan"), cl.Trial(2.0, 0.4, None, "scan"),
+        trials = [cl.Trial(1.0, 1.0, None, "scan"), cl.Trial(2.0, 0.6, None, "scan"),    # gap-wall note 2: zero at 3.5
                   cl.Trial(3.0, None, wall_stop, "scan"), cl.Trial(4.0, None, wall_stop, "scan")]
         out = NS(kind="no_bracket", trials=trials, walls=[cl.Wall(3.0, wall_stop, 2.0)], roots=[], detail={})
         with mock.patch.object(cl, "solve_scalar", return_value=out):

@@ -242,6 +242,14 @@ class NearestWallOnScanPoints(unittest.TestCase):
                          _t(4.0, None)])
         self.assertIs(sv._nearest_wall(out), self.wall)
 
+    def test_w2b_a_zero_short_of_the_wall_is_a_minimum_not_a_wall(self):
+        """Gap-wall note 2: the scan points fall toward the wall, but F's linear zero lands inside the solved stretch,
+        short of the wall (|F| has a minimum there and rises again toward the wall: the ClosureRoundTrip wrong-sign
+        control's shape). None; no_bracket stands. Mutant: drop the lower bound (the wall is named)."""
+        out = self._out([_t(1.0, 1.0), _t(2.0, 0.4), _t(2.5, 0.05, "wall"), _t(2.9, 0.2, "wall"),
+                         _t(3.0, None, "wall"), _t(4.0, None)])
+        self.assertIsNone(sv._nearest_wall(out))
+
     def test_w3_a_short_stretch_reads_its_ends_only_when_wide_enough(self):
         """W3: one scan point and a wall trial far enough apart give the trend; two trials closer than
         NOISE_STOP_MIN_WIDTH·|x| give none."""
