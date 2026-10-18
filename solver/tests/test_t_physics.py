@@ -166,9 +166,13 @@ def _ruler(key="core_pressure"):
 
 class Ruler(unittest.TestCase):
     """R-C157-8 restated in T_pot (§T, note 4 item 1): max |dy − median| ≤ 1e-6 between 0.05 K neighbours across the
-    solidus onset. Control: with onset events off, a planted 1e-2 relative density step above the solidus must be
+    solidus onset. Control: with onset events off, a planted 1e-2 relative density step that no event lands must be
     seen (> 1e-6). Measured on 21 points (999f1be7): events off 2.1e-6, events on 5.2e-7; a 1e-5 step (note 4's
-    «e.g.») stayed at 7e-8 in every mode, since the adaptive steps resolve a step that small."""
+    «e.g.») stayed at 7e-8 in every mode, since the adaptive steps resolve a step that small.
+    melt-window post-freeze note 1: the step was planted above the solidus, so the control read the window's form (the
+    flat window's jumpy solidus exit made it 4.69e-6; the isentropic window exits smoothly, 3.58e-8). It is re-planted
+    in a fixed P band, [0.40, 0.50]·P_c of the unplanted 1900 K solve, which the walk crosses at every T_pot of the
+    control: 2.82e-6 at d8eb7aa7, 1.49e-6 at the isentropic window (both > 1e-6, pre-declared)."""
 
     def test_smooth(self):
         self.assertLessEqual(_ruler(), 1e-6)
@@ -176,12 +180,14 @@ class Ruler(unittest.TestCase):
     def test_control_planted_step(self):
         orig_state, orig_onset = lm.LegacyView.state, events.onset_events
 
+        p_c = _q(sv.solve(_coreless(RULER_T0), OPT)[0])["core_pressure"]
+        lo, hi = 0.40 * p_c, 0.50 * p_c                  # melt-window post-freeze note 1: a fixed P band
+
         def stepped(self, p, t, guess):
             got = orig_state(self, p, t, guess)
             if isinstance(got, st.Stop):
                 return got
-            g = events._curve_at(self.mat, "고상선", p, t)
-            return (got[0] * (1.0 + 1e-2), *got[1:]) if g is not None and g >= 0.0 else got
+            return (got[0] * (1.0 + 1e-2), *got[1:]) if lo <= p <= hi else got
         lm.LegacyView.state, events.onset_events = stepped, (lambda mat, p_stop=0.0: [])
         try:
             self.assertGreater(_ruler(), 1e-6)
