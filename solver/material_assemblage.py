@@ -1739,10 +1739,12 @@ class AssemblageView(mv.RecordView):
             self._read_memo[mk] = (sides, r, by_count)
         return r
 
-    def _value(self, f, x, t, ia, ib, sides, check=True):
+    def _value(self, f, x, t, ia, ib, sides, check=True, near=()):
         """One field at (x, t) through the row regions, T last (_cubic1 as the uncut path). A corner row (ib, ib+1)
         that names no region, or has no usable run, raises _NoRead; an outer row then drops (its choice changes only
-        with the sides). `check`: a read-side corner node of the read cell with no value is CellMissing (D-M2)."""
+        with the sides). `check`: a read-side corner node of the read cell with no value is CellMissing (D-M2).
+        `near` (PROTOTYPE, the row-level blend): each row's own value is mixed with its side values over the edges of
+        `near` in that row's own partition, before the one T interpolation (_row_blend)."""
         n_t = len(self.ts)
         rows = {}
         for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1):
@@ -1758,8 +1760,54 @@ class AssemblageView(mv.RecordView):
                     raise _NoRead("run", k)
                 self._marks["dropped"].add(k)
                 continue
+            if near:
+                v = self._row_blend(f, k, x, sides, near, v)
             rows[k] = v
         return _cubic1_t(t, self.ts, _Seq(rows, n_t), ib)
+
+    def _row_blend(self, f, k, x, sides, near, own):
+        """PROTOTYPE (row-level (c′) blend): row k's value at x mixed over the edges of `near` that are in row k's own
+        partition, weights Π H_c or 1 − H_c (H_c as _blend_sides), the read's own assignment taking `own`; a side value
+        is uncapped and, with no run in its region, the nearest region's (_row_reach) whatever the row's role; one
+        with none is dropped and the weights renormalised. Side values leave no mark or count."""
+        part = self._partition(k)
+        mine = [e for e in near if e[0] in part.cs]
+        if not mine:
+            return own
+        kap = BLEND_SHARP[f]
+        hs = []
+        for c, xb, w in mine:
+            u = min(max(0.5 * (kap * (x - xb) / w + 1.0), 0.0), 1.0)
+            hs.append(u * u * (3.0 - 2.0 * u))
+        own_sig = tuple(sides[c] for c, _xb, _w in mine)
+        marks = {"dropped": set(self._marks["dropped"]), "empty": self._marks["empty"],
+                 "by_count": self._marks["by_count"]}
+        counts = {q: self.cut_counts[q] for q in ("reach_rows", "side_fallbacks")}
+        total, kept = 0.0, 0.0
+        try:
+            for sig in itertools.product((-1, 1), repeat=len(mine)):
+                wgt = 1.0
+                for s_, h in zip(sig, hs):
+                    wgt *= h if s_ > 0 else 1.0 - h
+                if wgt == 0.0:
+                    continue
+                if sig == own_sig:
+                    val = own
+                else:
+                    sd = {**sides, **{c: s_ for (c, _xb, _w), s_ in zip(mine, sig)}}
+                    r = self._region(k, sd, x)
+                    val = self._row_value(f, k, r, x, False)
+                    if val is None:
+                        val = self._row_reach(f, k, r)
+                    if val is None:
+                        self.cut_counts["blend_drops"] += 1
+                        continue
+                total += wgt * val
+                kept += wgt
+        finally:
+            self._marks.update(marks)
+            self.cut_counts.update(counts)
+        return total if kept == 1.0 else total / kept
 
     def _node_widths(self):
         """([node-centred ln-P cell width per node], their max), found once per lnps list (found again if lnps is
@@ -1892,9 +1940,8 @@ class AssemblageView(mv.RecordView):
         out = {}
         try:
             for f in (fields or ("rho", "dtdp_eq", "c_p")):
-                v = self._value(f, x, t, ia, ib, sides)
+                v = self._value(f, x, t, ia, ib, sides, near=near)     # PROTOTYPE: the row-level blend
                 if near:
-                    v = self._blend_sides(f, x, t, ib, sides, near, v)
                     if f == "rho":
                         self.cut_counts["corrections"] += len(near)
                 out[f] = v
