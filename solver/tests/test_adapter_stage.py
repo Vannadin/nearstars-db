@@ -70,12 +70,16 @@ def _capture(run):
 
 def _seam_near(mat, p, rel=1e-9):
     lo, hi = mat.stencil_bounds(p) if hasattr(mat, "stencil_bounds") else (0.0, float("inf"))
-    return any(0.0 < b < float("inf") and abs(p - b) <= rel * b for b in (lo, hi))
+    bounds = [lo, hi]
+    # window-edge §2.2: a silicate-melt material is also landed on (and clamped at) the melt-curve seams (_cut_floor)
+    if interior.MELT_SEAMS_LANDED and any(getattr(ph, "melt", None) == "silicate" for ph in getattr(mat, "phases", ())):
+        bounds += list(eos.melt_curve_seams())
+    return any(0.0 < b < float("inf") and abs(p - b) <= rel * b for b in bounds)
 
 
 def _check(tc, rows, t_pot, p_stop, column_steam=False):
-    """Every stage matches bit for bit, except the old landing-step clamp (C164 `stage_pmin`, interior.py:1569:
-    a stage of a step that lands on a phase or seam boundary is read on the old side). The new solver lands every
+    """Every stage matches bit for bit, except the old chain's stage clamp (C164 `stage_pmin`; on every step since
+    window-edge note 1: a stage below the head's nearest lower phase, seam or melt-curve bound is read on the old side). The new solver lands every
     step on such a boundary (events), so it has no such stage; each clamped stage must be read within 1e-9 of a
     boundary of its material (measured: boundary × (1 + 4e-12)), and they are counted (measured 0.04–0.4 %)."""
     n, clamped = 0, 0
