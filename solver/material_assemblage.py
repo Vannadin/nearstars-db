@@ -1737,8 +1737,8 @@ class AssemblageView(mv.RecordView):
         vr = self._run_value(f, k, hi, xr, corner)
         if corner:
             self._marks["empty"] = True
-        if xr <= xl:                                     # two curves at one P_b in this row: a zero-width region
-            return 0.5 * (vl + vr)
+        if xr - xl < self._narrow_w:                     # PROTOTYPE (G3 (b), symmetric): a region narrower than
+            return 0.5 * (vl + vr)                       # NARROW_REGION reads as a zero-width one, the constant mean
         # 68 B1 on 652004f9: the read's region is named by its sides at its own T, so in a row whose curves sit elsewhere
         # x can lie outside [xl, xr]; the fraction is clamped, never extrapolated: the neighbours' difference is not
         # carried past their bounding curves (it gave c_P −0.38 at dmm 12.833 GPa, 3668.29 K). Beyond a curve the
@@ -1843,9 +1843,6 @@ class AssemblageView(mv.RecordView):
                 else:
                     sd = {**sides, **{c: s_ for (c, _xb, _w), s_ in zip(mine, sig)}}
                     r = self._region(k, sd, x)
-                    if self._narrow_empty(f, k, r):              # directing's G3 ruling (b): dropped, renormalised
-                        self.cut_counts["blend_drops"] += 1
-                        continue
                     val = self._row_value(f, k, r, x, False)
                     if val is None:
                         val = self._row_reach(f, k, r)
