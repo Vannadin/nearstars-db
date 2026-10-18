@@ -518,7 +518,7 @@ def silicate_melt_mix(p: float, t: float, variant: str, rho_s: float, dtdp_s: fl
 
 
 #: the window-seam note's pressure (melt-window registration §2 B2): at and above the 140 GPa rock → MgSiO₃ seam the
-#: melting curves jump (140, 180, 200 GPa) and no latent term covers a jump crossed inside the window; module-level so
+#: melting curves jump (140, 200 GPa; the 173.6 GPa Deng join is continuous) and no latent term covers a jump crossed inside the window; module-level so
 #: the planted test can lower it into a validation walk's window
 WINDOW_SEAM_P = eos.SILICATE_ROCK_MAX_PA
 WINDOW_SEAM_PHASE = "silicate_melt_window"
