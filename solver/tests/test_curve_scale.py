@@ -136,6 +136,63 @@ class RecordScales(unittest.TestCase):
         self.assertEqual(v.curve_slope_points({"form": "clapeyron"}), ())
 
 
+class DenseSup(unittest.TestCase):
+    """68 B1 on d8eb7aa7: on every assemblage curve of the three records, curve_p_scale equals max(35b7a24b's scale, the
+    dense sup of |P_b| + T·|ΔP_b/ΔT| over the curve as read: every row segment and, for a cut run, each extension out
+    to its reach) to 1e-6 relative; and no reach end of a cut run reads None (curve_slope_points' `continue` on None is
+    unreachable on the shipped records, curve-scale post-result note 1)."""
+
+    def test_every_curve(self):
+        for rid in SILICATE:
+            v = _view(rid)
+            for _between, kind, c in v.transitions():
+                if c.get("form") != "assemblage_curve":
+                    continue
+                cc = v._events[c["id"]]
+                cut = c["id"] < len(v._cut)
+                if cut and len(cc.rows) > 1:
+                    for t_e in (cc.t1 + v._reach, cc.t0 - v._reach):
+                        self.assertIsNotNone(cc.p_b_ext(t_e, v._reach), (rid, c["id"], t_e))
+                lo, hi = cc.t0 - (v._reach if cut else 0.0), cc.t1 + (v._reach if cut else 0.0)
+                knots = sorted({lo, hi, *(r["t"] for r in cc.rows)})
+                sup = 0.0
+                for a, b in zip(knots, knots[1:]):
+                    hh = min(1e-5, (b - a) * 1e-5)    # one-sided at an exponential reach end: k·hh/2 ≈ 2e-7, roundoff below
+                    for j in range(65):
+                        t = a + (b - a) * j / 64
+                        t1, t2 = max(a, t - hh), min(b, t + hh)
+                        p1, p2, p0 = (v.boundary_pressure(c, x) for x in (t1, t2, t))
+                        if None in (p1, p2, p0):
+                            continue
+                        sup = max(sup, abs(p0) + t * abs((p2 - p1) / (t2 - t1)))
+                want = max(_old_scale(v, c), sup)
+                self.assertLess(abs(events.curve_p_scale(v, c) / want - 1.0), 1e-6, (rid, c["id"], kind))
+
+
+class PlantedMaxima(unittest.TestCase):
+    """68 B1: a curve whose maximum of |P_b| + T·|dP_b/dT| sits at a segment's upper end (read across, no extension),
+    and a cut curve whose maximum sits at its lower reach end (P_b falling with T, so the ln-P extension grows below)."""
+
+    def _planted(self, rows, cut):
+        v = _view("silicate_slb_default_bse")
+        c = ma._Curve(0, "edge", "x", [{"t": t, "p_b": p} for t, p in rows])
+        v._events, v._cut = [c], ([c] if cut else [])
+        return v, {"form": "assemblage_curve", "id": 0}
+
+    def test_segment_upper_end(self):
+        v, c = self._planted([(1000.0, 1.0e9), (1050.0, 2.0e9), (1100.0, 2.05e9)], cut=False)
+        self.assertEqual(events.curve_p_scale(v, c), 2.0e9 + 1050.0 * 2.0e7)      # not the lower end's 2.1e10
+
+    def test_lower_reach_end(self):
+        v, c = self._planted([(1000.0, 2.0e9), (1050.0, 1.0e9)], cut=True)
+        k = math.log(2.0)
+        t_e = 1000.0 - v._reach
+        pb = 2.0e9 * math.exp((t_e - 1000.0) * (math.log(2.0e9) - math.log(1.0e9)) / (1000.0 - 1050.0))
+        want = pb + t_e * pb * k / 50.0
+        self.assertLess(abs(events.curve_p_scale(v, c) / want - 1.0), 1e-12)
+        self.assertGreater(want, 2.0e9 + 1000.0 * 2.0e7)                       # beyond every segment end
+
+
 @unittest.skipUnless(HEAVY, "NEARSTARS_HEAVY=1 (PC job)")
 class OffUnchanged(unittest.TestCase):
     """Records «off» read no assemblage curve: every off solve here is bit-identical with the slope term removed
