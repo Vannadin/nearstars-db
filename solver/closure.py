@@ -316,7 +316,7 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
                if u is not None and u.F is not None]
         if nbr:
             _confirm_chain(F, t.x, t.stop, nbr[0].x, lo, hi, trials)
-    _gap_shots(F, trials, lo, hi)
+    gaps = _gap_shots(F, trials, lo, hi) or []          # a no-shot mutant (test_closure) returns None
     walls: list = []
     done_pairs: set = set()
     closed: dict = {}            # (a.x, b.x) → root or problem
@@ -328,13 +328,47 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
                   noise)
     hide = [w for w in walls if out.kind != "root" or _root_may_hide(w, trials)]
     if not hide:
-        return out
+        return _disclose_gaps(out, gaps)
     walls[:] = [_locate_wall(F, w.solved_side, w.x, w.stop, trials, lo, hi) if w in hide else w for w in walls]
     order = sorted((t for t in trials if t.kind != "isolated"), key=lambda t: t.x)
     for a, b in zip(order, order[1:]):                   # the refined walls' own pairs: not new walls
         if (a.F is None) != (b.F is None):
             done_pairs.add((a.x, b.x))
-    return _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_wall_trials, WALL_TOL, noise)
+    return _disclose_gaps(_rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_wall_trials,
+                                  WALL_TOL, noise), gaps)
+
+
+def in_gap(x: float, gaps) -> bool:
+    """prereg-gap-wall §1.2: x lies strictly inside a shot gap, whose ends are two refusing scan points, so a solved
+    trial, root or Brent problem there exists because of the shots (a bracket never spans a refused trial)."""
+    return any(g["lo"] < x < g["hi"] for g in gaps)
+
+
+def _kind_of(roots: list, problems: list, any_solved: bool) -> str:
+    """_rounds' final rule on a given set of roots and problems (the split budget aside)."""
+    if not any_solved:
+        return "no_solved"
+    if len(roots) == 1 and not problems:
+        return "root"
+    if len(roots) >= 2:
+        return "two_roots"
+    return "unconverged" if problems else "no_bracket"
+
+
+def _disclose_gaps(out: "Outcome", gaps: list) -> "Outcome":
+    """prereg-gap-wall §1.2: each shot gap in out.detail["gaps"], with the roots found inside it, the kind the final
+    rule gives without them and their problems (an attribution from this run, not a re-solve; the split budget's
+    unconverged stands as it is) and the F calls inside it. Every outcome kind carries the list (empty: no gap shot)."""
+    problems = out.detail.get("problems", [])
+    rest_roots = [r for r in out.roots if not in_gap(r, gaps)]
+    rest_problems = [p for p in problems if not (p and in_gap(p[1], gaps))]
+    rest_solved = any(t.F is not None and t.kind != "brent" and not in_gap(t.x, gaps) for t in out.trials)
+    without = out.kind if out.detail.get("budget") == "MAX_SPLITS" else _kind_of(rest_roots, rest_problems,
+                                                                                 rest_solved)
+    out.detail["gaps"] = [dict(g, roots_from_gap=[r for r in out.roots if g["lo"] < r < g["hi"]],
+                               calls=sum(1 for t in out.trials if g["lo"] < t.x < g["hi"]),
+                               outcome_kind=out.kind, kind_without=without) for g in gaps]
+    return out
 
 
 def _refusal_p(stop) -> float | None:
@@ -375,19 +409,26 @@ def opposite_walls(sa, sb) -> bool:
 def _gap_shots(F, trials: list, lo: float, hi: float):
     """Shoot the gaps between adjacent refusing scan points that refused on opposite sides of a range (GAP_RATIO).
     Every shot joins the trials (kind "gap"): a solved one opens the stretch the rounds search, a refusing one is a
-    wall like any scan point's."""
+    wall like any scan point's. prereg-gap-wall §1.1: this runs after every scan, solved points or not, so a shot can
+    reveal a root the scan's stretches do not bracket; the outcome then follows the rounds' rules and owner F12.
+    Returns the shot gaps ({lo, hi, shots, solved}, lo/hi the bounding scan points)."""
     order = sorted((t for t in trials if t.kind == "scan"), key=lambda t: t.x)
+    gaps: list = []
     for a, b in zip(order, order[1:]):
         if a.F is not None or b.F is not None:
             continue
         if not opposite_walls(a.stop, b.stop):
             continue
         xa, xb, sa, sb = a.x, b.x, a.stop, b.stop
+        g = {"lo": a.x, "hi": b.x, "shots": 0, "solved": False}
+        gaps.append(g)
         for _ in range(GAP_SHOTS):
             xm = math.sqrt(xa * xb) if xa > 0.0 else 0.5 * (xa + xb)
             v = _value(F, xm)
+            g["shots"] += 1
             if not isinstance(v, st.Stop):
                 trials.append(Trial(xm, v, None, "gap"))
+                g["solved"] = True
                 break
             trials.append(Trial(xm, None, v, "gap"))
             if opposite_walls(sa, v):
@@ -396,6 +437,7 @@ def _gap_shots(F, trials: list, lo: float, hi: float):
                 xa, sa = xm, v
             else:
                 break
+    return gaps
 
 
 def _root_may_hide(w, trials) -> bool:

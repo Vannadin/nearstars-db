@@ -977,27 +977,47 @@ def _straddled_wall(out):
     return None
 
 
-def _nearest_wall(out):
+def _nearest_wall(out, reach_log=None):
     """Directing 10-17: no solved stretch changes sign, but the solved F falls in |F| toward a wall: the root lies past
-    that wall, so its refusal names the cause, not «F does not change sign» nor the first scan point. Of the walls whose
-    nearest solved trial has a smaller |F| than the next solved trial of the same stretch, and whose far side does not
-    resume with F of the same sign (F dipping into a refusing stretch and out again is not «past the wall»), the one
-    with the smallest such |F|. None when no wall qualifies; a one-trial stretch shows no trend."""
+    that wall, so its refusal names the cause, not «F does not change sign» nor the first scan point.
+    prereg-gap-wall §2.2: for each wall, its stretch is the solved trials on its solved side with no refusing trial
+    between them and the wall. The trend is read as side_point reads a secant: the stretch's two scan points nearest
+    the wall; with fewer, its nearest and farthest solved trials, only when they are at least NARROW·|x| apart (a
+    narrower pair's secant sits in F's noise: K8's floor), else no trend. A wall qualifies when |F| falls toward it,
+    F does not resume past it with the same sign (a dip is not «past the wall»), and the linear zero d = |a.F|/s from
+    the nearest point a does not land beyond the refusing stretch: d ≤ |e − a|, e the nearest solved trial across the
+    wall, else the closure range's end beyond it (gap-wall note 1: §2.2's lower bound |w − a| ≤ d is dropped, since
+    the solved trials up to the wall already show F has no zero before it, and the bound refused W4's own case). Of the qualifying walls, the one with the smallest |a.F|. None
+    when no wall qualifies. A wall failing the reach alone is appended to `reach_log` (W5's named count)."""
     order = sorted((t for t in out.trials if t.kind != "isolated"), key=lambda t: t.x)
+    refused = [t.x for t in order if t.F is None]
+    detail = getattr(out, "detail", None) or {}
+    lo, hi = detail.get("lo"), detail.get("hi")
     best = None
     for w in out.walls:
         sgn = 1.0 if w.solved_side > w.x else -1.0
-        side = sorted((t for t in order if t.F is not None and (t.x - w.x) * sgn > 0.0), key=lambda t: abs(t.x - w.x))
-        if not side:
+        side = sorted((t for t in order if t.F is not None and (t.x - w.x) * sgn > 0.0
+                       and not any(min(t.x, w.x) < r < max(t.x, w.x) for r in refused)),
+                      key=lambda t: abs(t.x - w.x))
+        scan = [t for t in side if t.kind == "scan"]
+        if len(scan) >= 2:
+            a, b = scan[0], scan[1]
+        elif len(side) >= 2 and abs(side[-1].x - side[0].x) >= cl.NOISE_STOP_MIN_WIDTH * abs(side[0].x):
+            a, b = side[0], side[-1]
+        else:
             continue
-        a = side[0]
-        b = side[1] if len(side) > 1 and not any(min(side[0].x, side[1].x) < t.x < max(side[0].x, side[1].x)
-                                                  and t.F is None for t in order) else None
-        if b is None or abs(a.F) >= abs(b.F):
+        if abs(a.F) >= abs(b.F):
             continue
         across = next((t for t in sorted((t for t in order if (t.x - w.x) * sgn < 0.0), key=lambda t: abs(t.x - w.x))
                        if t.F is not None), None)
         if across is not None and across.F * a.F > 0.0:
+            continue
+        s = abs(a.F - b.F) / abs(a.x - b.x)
+        d = abs(a.F) / s
+        end = across.x if across is not None else (lo if sgn > 0.0 else hi)
+        if end is not None and d > abs(end - a.x):     # note 1: the upper bound only (W4); no range known, no bound
+            if reach_log is not None:
+                reach_log.append({"wall": w.x, "a": a.x, "d": d, "far_end": end})
             continue
         if best is None or abs(a.F) < best[0]:
             best = (abs(a.F), w)
@@ -1250,6 +1270,8 @@ def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
         ctx.record(t.kind, x=t.x, F=t.F, stop=None if t.stop is None else t.stop.kind)
     for e in out.detail.get("noise_stops", []):       # prereg-k8-stop: every firing, its s_loc/s0 and «named»
         ctx.record("noise_stop", **e)
+    for g in out.detail.get("gaps", []):              # prereg-gap-wall §1.2: every shot gap and what it changed
+        ctx.record("gap_shots", **g)
     unlocated = [w for w in out.walls if not w.located]
     if out.kind in ("no_bracket", "no_solved") and unlocated:
         # note 2 item 8: a wall whose position WALL_SHOTS could not fix leaves the search incomplete
@@ -1367,6 +1389,10 @@ def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
         # P1R-G2-R-08: the residual of the bracket that failed (closure's problem record), else the last solved trial
         failed = next((p for p in out.detail.get("problems", []) if p and p[0] == "unconverged"), None)
         last = failed[2] if failed is not None else next((t.F for t in reversed(out.trials) if t.F is not None), None)
+        if failed is not None and cl.in_gap(failed[1], out.detail.get("gaps", [])):
+            # prereg-gap-wall §1.2 (68 n2): the problem reported is a gap's; it is named, at Brent's last iterate
+            return refusals.no_answer("unconverged", where, budget_name=budget, budget_value=value,
+                                      last_residual=last, x=failed[1], pass_kind="gap"), warm
         return refusals.no_answer("unconverged", where, budget_name=budget, budget_value=value,
                                   last_residual=last), warm
     walls = []
@@ -1379,8 +1405,12 @@ def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
     if out.kind == "no_solved":
         first = _gap_trial(out) or min(out.trials, key=lambda t: t.x)
         scan = [[t.x, t.F, None if t.stop is None else t.stop.kind] for t in sorted(out.trials, key=lambda t: t.x)]
-        return _to_refusal(first.stop, where, first.x, kind, "scan", scan=scan), warm
-    straddled = _straddled_wall(out) or _nearest_wall(out)
+        return _to_refusal(first.stop, where, first.x, kind, "gap" if first.kind == "gap" else "scan",
+                           scan=scan), warm                 # R2-R-S-05: a gap shot is named as one
+    reach_log: list = []
+    straddled = _straddled_wall(out) or _nearest_wall(out, reach_log)
+    for e in reach_log:                               # prereg-gap-wall W5 (68 n3): a trend whose zero lands outside
+        ctx.record("nearest_wall_reach", **e)         # the refusing stretch (curved F) falls back to no_bracket
     if straddled is not None:
         scan = [[t.x, t.F, None if t.stop is None else t.stop.kind] for t in sorted(out.trials, key=lambda t: t.x)]
         return _to_refusal(straddled.stop, where, straddled.x, kind, "wall", scan=scan), warm

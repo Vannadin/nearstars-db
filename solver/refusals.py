@@ -32,7 +32,7 @@ SOLVE_COMMON = ("x", "closure_kind", "pass_kind")
 #: refusal at the lowest-x wall is the Outcome, with the scan in the evidence»; b9 2026-10-09).
 SOLVE_OPTIONAL = ("state", "scan", "walls", "solved_regions",
                   "first_attempt")   # phase-1 design note 18: a retried closure's first residual failure
-PASS_KINDS = ("scan", "wall", "brent", "accepted", "band", "probe")
+PASS_KINDS = ("scan", "wall", "brent", "accepted", "band", "probe", "gap")   # gap: prereg-gap-wall §1.2
 #: A wall record (b9 2026-10-09): the trial x, what stopped it (a refusal id or a NoAnswer reason), the reached state,
 #: and whether the wall's position was located.
 WALL_FIELDS = ("x", "outcome_kind", "id_or_reason", "state", "located")
