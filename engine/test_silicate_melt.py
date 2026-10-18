@@ -76,6 +76,8 @@ def main() -> int:
     ok(abs(bdg(DENG_SWITCH_PA / GPA) - 6420.0 + 6.53) < 0.05,
        f"2: 교차 T {bdg(DENG_SWITCH_PA / GPA):.2f} K 가 인쇄 삼중점 6420 K 에서 −6.53 K 가 아니다")
     ok(abs(ppv(180) - bdg(180) - 17.98) < 0.5, "2: 인쇄 삼중점 180 GPa 의 두 적합 차(기록) +17.98 K")
+    ok(_silicate_melt_point(177e9) == ppv(177.0) and _silicate_melt_point(170e9) == bdg(170.0),
+       "2: 173.6–180 GPa 는 ppv, 그 아래는 bdg (갈아타기 자리, 68 n2)")
 
     # ── 3. 거절 — 이름을 대는가 ─────────────────────────────────────────────
     ok(silicate_solidus(501e9) is None and silicate_liquidus(501e9) is None,

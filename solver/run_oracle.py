@@ -45,9 +45,9 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: registration §4), so the oracle's engine is that item's engine/ tree, declared here by its git tree id. ORACLE_TREE
 #: stays the phase-1 commit (the frozen-table blobs `table_read` checks were not touched by the item).
 #: Rebased onto the stage-A line (gap-wall ad2f5b67, whose melt-window base changed engine/), with the item's §7
-#: structure-trigger commit, the audit text fixes and the window-edge item: the engine/ tree is now 10bcd3fa;
+#: structure-trigger commit, the audit text fixes and the window-edge item: the engine/ tree is now 9f4a960f;
 #: re-declared in the same commit as each engine/ change (the 10-16 ruling; 68 n5).
-ORACLE_ENGINE_TREE = "10bcd3fa6a03809146ca03ec33a3c40d8b0fb949"
+ORACLE_ENGINE_TREE = "9f4a960f4b85f7c6c9064ec8c8f60ecff0b511c2"
 REPO = Path(lm._ENGINE).parent
 
 

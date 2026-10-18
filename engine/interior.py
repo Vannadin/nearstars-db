@@ -1833,7 +1833,11 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                         h, h0, e0 = h - e1 * (h - h0) / (e1 - e0), h, e1
                         dm, dp, di, dv = _rk(h)
                         PHASE_CUT_REWALKS[0] += 1
-                    stage_pmin[0] = _head_floor * (1.0 + 4e-12) if _head_floor > 0.0 else 0.0   # 걸음 머리 묶음으로 되돌림
+                    # 걸음 머리 묶음으로 되돌림. 이 뒤에 이 걸음에서 _rk 를 다시 부르는 자리(암석권 바닥 · 물기둥 상 경계)는 h 를
+                    #   줄이기만 하므로 단계 압력이 착지점 p_b 위에 머문다 — 머리 묶음의 하한이 바로 이 p_b(_cut_floor 가 같은
+                    #   경계를 낸다)라 그 단계들은 묶음에 안 걸리고, 0 으로 두었어도 같은 산술이다(68 B1 (c) 의 논증). 머리 묶음을
+                    #   두는 것은 그 자리들이 미래에 h 를 늘릴 때를 위한 것이다.
+                    stage_pmin[0] = _head_floor * (1.0 + 4e-12) if _head_floor > 0.0 else 0.0
                     basal_crossed = False
 
         # 표면 암석권 바닥 — 반지름 경계(기저층 꼭대기와 같은 RK4 재걷기). 층 바닥 온도는 걸음 끝의 단열 온도.
