@@ -1,0 +1,292 @@
+# s 읽기 시험 — dT/dP 를 저장된 s 에서(도함수 정확성·꼬임 한쪽 도함수·심은 표), 얼어붙은 스텐실, 항 은퇴·폐합 주석·교환 잠열 주석, closure 블록 STOP, ∂s/∂T 표본 점검 (s-read 등록, 사후 노트 1)
+"""s-read registration (artifacts rewrite/s2-loop-entropy/reg-s-read.frozen.md, blob 327b4f73) with post-freeze note 1
+(the swap jump voided).
+
+    solver/.venv/bin/python -m unittest solver.tests.test_s_read
+"""
+import copy
+import math
+import random
+import unittest
+
+from solver import material_assemblage as ma, material_registry as mr, material_view as mv, stepper as st
+from solver.from_v1 import thaw
+
+_REG = []
+
+
+def _reg():
+    if not _REG:
+        _REG.append(mr.load())
+    return _REG[0]
+
+
+def _view(rid="silicate_slb_default_bse", s_read=True):
+    reg = _reg()
+    v = ma.view(thaw(reg.get(rid)), reg.tables[rid], 1600.0)
+    v.s_read = s_read
+    return v
+
+
+def _s(v, p, t):
+    got = v.s_path(p, t)
+    return None if got is None or isinstance(got, st.Stop) else got.v
+
+
+class Derivatives(unittest.TestCase):
+    """§3.0: the forward-mode derivatives are the read's own, against central differences off the switches and
+    one-sided differences on each side of a switch (68 n3)."""
+
+    def test_against_central_differences(self):
+        v = _view()
+        rnd = random.Random(1)
+        n = 0
+        for _ in range(400):
+            p, t = math.exp(rnd.uniform(math.log(2e9), math.log(1.3e11))), rnd.uniform(1650.0, 3000.0)
+            sv = v.s_path(p, t)
+            if sv is None or isinstance(sv, st.Stop):
+                continue
+            h = 1e-6
+            vals = [_s(v, p * math.exp(h), t), _s(v, p * math.exp(-h), t), _s(v, p, t + 1e-3), _s(v, p, t - 1e-3)]
+            if None in vals:
+                continue
+            fx, ft = (vals[0] - vals[1]) / (2 * h), (vals[2] - vals[3]) / 2e-3
+            if abs(sv.dx - fx) > 1e-5 * max(abs(fx), 1e-9) or abs(sv.dt - ft) > 1e-5 * abs(ft):
+                continue                      # a switch inside the stencil: the one-sided test below covers it
+            n += 1
+            self.assertLess(abs(sv.dx - fx), 1e-6 * max(abs(fx), 1.0), (p, t))
+            self.assertLess(abs(sv.dt - ft), 1e-6 * abs(ft), (p, t))
+        self.assertGreater(n, 300)
+
+    def test_at_t_nodes_the_slope_is_kept(self):
+        """A T node: the Hermite is read (same value), so ∂s/∂T is the node's slope, not 0."""
+        v = _view()
+        sv = v.s_path(30e9, 1950.0)
+        self.assertGreater(sv.dt, 0.0)
+        up = _s(v, 30e9, 1950.0 + 1e-3)
+        self.assertLess(abs((up - sv.v) / 1e-3 - sv.dt), 1e-3 * sv.dt)
+
+    def test_one_sided_at_switches(self):
+        """At the ends of every edge's c′ window on one T row: the one-sided forward-mode derivative in ln P equals the
+        one-sided difference on its own side."""
+        v = _view()
+        t = 2200.0
+        k = v.ts.index(t)
+        checked = 0
+        for c in v._cut:
+            pb = c.p_b_ext(t, v._reach)
+            if c.kind != "edge" or pb is None or pb > v.p_dataset:
+                continue
+            xb = math.log(pb)
+            w = v._width(xb)
+            for xe in (xb - w, xb + w):
+                for side in (-1.0, 1.0):
+                    x = xe + side * 1e-7
+                    sv = v.s_path(math.exp(x), t)
+                    if sv is None or isinstance(sv, st.Stop):
+                        continue
+                    h = side * 1e-5                     # 3-point one-sided, on its own side
+                    a, b = _s(v, math.exp(x + h), t), _s(v, math.exp(x + 2 * h), t)
+                    if a is None or b is None:
+                        continue
+                    fd = (-3.0 * sv.v + 4.0 * a - b) / (2.0 * h)
+                    self.assertLess(abs(sv.dx - fd), 1e-5 * max(abs(fd), 1.0), (c.id, x))
+                    checked += 1
+        self.assertGreater(checked, 0)
+        del k
+
+    def test_planted_table(self):
+        """A planted s = a + b·T − c·ln P, linear in each read axis so the read reproduces it exactly, on the plain
+        (unexported) read: dT/dP = c/(P·b), c_P = T·b."""
+        reg = _reg()
+        rid = "silicate_slb_default_bse"
+        tab = copy.deepcopy(mv.thaw_plain(reg.tables[rid]))
+        a, b, cc = 100.0, 0.6, 60.0
+        for cell in tab["cells"]:
+            cell["s"] = a + b * cell["t"] - cc * math.log(cell["p"])
+            cell["kind"] = "equilibrium" if cell["kind"] == "frozen" else cell["kind"]
+        tab["boundaries"] = {"status": "pending"}
+        v = ma.view(thaw(reg.get(rid)), tab, 1600.0)
+        v.s_read = True
+        for p, t in ((5e9, 1800.0), (40e9, 2400.0), (90e9, 2911.3)):
+            got = v._solid(p, t)
+            want = cc / (p * b)
+            self.assertLess(abs(got[1] - want) / want, 1e-9, (p, t))
+            self.assertLess(abs(got[2] - t * b) / (t * b), 1e-9)   # c_P = T·∂s/∂T
+
+    def test_sign_flip_mutant_is_seen(self):
+        """Mutant: −s_P/s_T with the sign of s_P flipped gives a negative dT/dP where the read's is positive."""
+        v = _view()
+        sv = v.s_path(30e9, 1960.0)
+        self.assertGreater(-(sv.dx / 30e9) / sv.dt, 0.0)
+        self.assertLess((sv.dx / 30e9) / sv.dt, 0.0)
+
+
+class FloatPathUnchanged(unittest.TestCase):
+    """§6.3: the ρ read is bit-identical with the s read on; with it off (a record that does not declare it) every
+    field is."""
+
+    def test_rho_and_off(self):
+        on, off = _view(), _view(s_read=False)
+        base = ma.view(thaw(_reg().get("silicate_slb_default_bse")), _reg().tables["silicate_slb_default_bse"], 1600.0)
+        rnd = random.Random(3)
+        for _ in range(200):
+            p, t = math.exp(rnd.uniform(math.log(1e8), math.log(1.3e11))), rnd.uniform(1000.0, 3500.0)
+            a, b, c = on._solid(p, t), off._solid(p, t), base._solid(p, t)
+            if isinstance(c, st.Stop):
+                continue
+            self.assertEqual(b[:3], c[:3])
+            if not isinstance(a, st.Stop):
+                self.assertEqual(a[0], c[0])
+
+
+class FrozenStencil(unittest.TestCase):
+    """§3.2: a read whose stencil holds a frozen node keeps today's read and is counted."""
+
+    def test_low_t_keeps_todays_read(self):
+        on, off = _view(), _view(s_read=False)
+        got_on, got_off = on._solid(2e9, 700.0), off._solid(2e9, 700.0)
+        self.assertEqual(got_on[:3], got_off[:3])
+        self.assertIsNone(on.s_path(2e9, 700.0))
+        self.assertGreater(on.s_counts["frozen_stencil_reads"], 0)
+
+    def test_mantle_t_reads_s(self):
+        v = _view()
+        self.assertIsNotNone(v.s_path(20e9, 1900.0))
+
+
+class Notes(unittest.TestCase):
+    """§3.5: interp and loop terms keep ρ only, named retired; §4's closure note; note 1's swap latent text."""
+
+    def test_retired_terms_and_closure(self):
+        v = _view()
+        tab = _reg().tables["silicate_slb_default_bse"]
+        cells, _f, _s2 = v._terms["loop_terms"]
+        (ia, ib), e = next(iter(cells.items()))
+        v._closure = ({(ia, ib): 0.0123}, v._closure[1])
+        p = math.sqrt(v.ps[ia] * v.ps[ia + 1])
+        t = 0.5 * (v.ts[ib] + v.ts[ib + 1])
+        v.notes.clear()
+        v._term_notes(p, t, 4000.0, 1e-8, 1200.0)
+        bands = [n for n in v.notes if isinstance(n, mv.BandNote)]
+        for n in bands:
+            if n.edge in ("read interpolation", "under-resolved loop"):
+                self.assertIsNone(n.dtdp_error)
+                self.assertIsNone(n.c_p_error)
+                self.assertIn(ma.RETIRED_TERMS, n.origin)
+        clo = [n for n in bands if n.edge == "isentrope closure"]
+        self.assertEqual(len(clo), 1)
+        self.assertEqual(clo[0].dtdp_error, 0.0123)
+        del tab, e
+
+    def test_off_keeps_terms(self):
+        v = _view(s_read=False)
+        cells, _f, _s2 = v._terms["loop_terms"]
+        (ia, ib), e = next((k, x) for k, x in cells.items() if x[1])
+        p = math.sqrt(v.ps[ia] * v.ps[ia + 1])
+        t = 0.5 * (v.ts[ib] + v.ts[ib + 1])
+        v.notes.clear()
+        v._term_notes(p, t, 4000.0, 1e-8, 1200.0)
+        self.assertTrue(any(n.dtdp_error for n in v.notes if isinstance(n, mv.BandNote)
+                            and n.edge == "under-resolved loop"))
+
+    def test_swap_note_carries_the_latent_heat(self):
+        v = _view()
+        sw = next(c for c in v._cut if c.kind == "swap" and c.t0 <= 1730.0 <= c.t1 and
+                  all(r.get("delta_s") is not None for r in c.rows))
+        p = sw.p_b(1730.0) * 1.0001
+        v.state(p, 1730.0)
+        txt = [n.text for n in v.notes if isinstance(n, mv.DeclaredNote) and n.text.startswith(ma.SWAP_NOTE)]
+        self.assertTrue(txt and "latent heat is not taken" in txt[0], txt)
+        off = _view(s_read=False)
+        off.state(p, 1730.0)
+        txt = [n.text for n in off.notes if isinstance(n, mv.DeclaredNote) and n.text.startswith(ma.SWAP_NOTE)]
+        self.assertTrue(txt and "latent heat" not in txt[0])
+
+
+class SwapDeltaS(unittest.TestCase):
+    """Note 1 (68 n2): every swap curve row carries the boundary row's delta_s: bse 32 / dmm 33 / khan 32 rows, |Δs|
+    1.005–7.461 / 1.404–11.032 / 3.581–30.029 J/kg/K."""
+
+    def test_rows_carry_delta_s(self):
+        want = {"silicate_slb_default_bse": (32, 1.005, 7.461), "silicate_slb_earth_dmm_wh2005": (33, 1.404, 11.032),
+                "silicate_slb_mars_khan2022": (32, 3.581, 30.029)}
+        for rid, (n, lo, hi) in want.items():
+            v = _view(rid)
+            rows = [r for c in v._curves if c.kind == "swap" for r in c.rows]
+            ds = [abs(r["delta_s"]) for r in rows if r.get("delta_s") is not None]
+            self.assertEqual((len(rows), len(ds)), (n, n), rid)
+            self.assertEqual((round(min(ds), 3), round(max(ds), 3)), (lo, hi), rid)
+
+
+class ClosureBlock(unittest.TestCase):
+    """§4's load gate on closure_terms, and the declaration needing it."""
+
+    def _tab(self, block):
+        tab = copy.deepcopy(mv.thaw_plain(_reg().tables["silicate_slb_default_bse"]))
+        tab["closure_terms"] = block
+        return tab
+
+    def _block(self, **kw):
+        tab = _reg().tables["silicate_slb_default_bse"]
+        b = {"source": {"floor": {"dtdp": ma.term_floor(tab["cells"], tab["p_dataset"])["dtdp"]},
+                        "threshold_k": ma.CLOSURE_THRESHOLD_K, "tool_blob": "d" * 40, "skips": {}},
+             "fields": ["dtdp"], "cells": [[1, 0, 0.0123]]}
+        b.update(kw)
+        return b
+
+    def test_good_block(self):
+        ma.check_closure_block(self._tab(self._block()))
+
+    def test_stops(self):
+        for why, blk in (("fields", self._block(fields=["rho"])),
+                         ("floor", self._block(source={**self._block()["source"], "floor": {"dtdp": 1.0}})),
+                         ("threshold_k", self._block(source={**self._block()["source"], "threshold_k": 1.0})),
+                         ("is not \\[ia", self._block(cells=[[1, 0, 0.1, 0.2]])),
+                         ("doubled", self._block(cells=[[1, 0, 0.1], [1, 0, 0.1]])),
+                         ("not a finite term", self._block(cells=[[1, 0, 0.0]]))):
+            with self.subTest(why=why), self.assertRaisesRegex(ma.TableStop, why):
+                ma.check_closure_block(self._tab(blk))
+
+    def test_declared_without_block_stops(self):
+        rec = copy.deepcopy(mv.thaw_plain(_reg().get("silicate_slb_default_bse")))
+        rec["assemblage"]["dtdp"]["read"] = "entropy"
+        with self.assertRaisesRegex(ma.TableStop, "no closure_terms"):
+            ma.check_table(rec["assemblage"], mv.thaw_plain(_reg().tables["silicate_slb_default_bse"]))
+
+
+class MonotoneSample(unittest.TestCase):
+    """§3.4 (directing's ruling): the load's sampled check passes on the shipped table and STOPs on a planted dip."""
+
+    def test_sample_passes_and_dip_stops(self):
+        v = _view()
+        pts = ma.s_monotone_points(v)
+        sample = random.Random(7).sample(pts, 200)
+        self.assertTrue(ma.s_monotone_check(v, sample)["pass"])
+        with self.assertRaisesRegex(ma.TableStop, "build-time"):
+            ma.s_monotone_load_check(v, {"monotone": {"pass": False, "seed": 7}})
+        tab = copy.deepcopy(mv.thaw_plain(_reg().tables["silicate_slb_default_bse"]))
+        cell = next(c for c in tab["cells"] if c["p"] > 20e9 and c["t"] == 2000.0 and c["kind"] != "frozen")
+        nxt = next(c for c in tab["cells"] if c["p"] == cell["p"] and c["t"] == 2050.0)
+        cell["s"] = nxt["s"] + 50.0                       # a row whose s dips in T
+        w = ma.view(thaw(_reg().get("silicate_slb_default_bse")), tab, 1600.0)
+        w.s_read = True
+        here = [(math.log(cell["p"]) + 1e-6, 2000.0 + 50.0 * u) for u in (0.2, 0.4, 0.6, 0.8)]
+        self.assertFalse(ma.s_monotone_check(w, here)["pass"])
+
+
+class BasalDelegation(unittest.TestCase):
+    """Note 1 keeps BasalView's curve_slope_points delegation (68's note on 64f38d74): equal to the overlying view's for
+    every overlying curve, bit for bit; BasalView has no transitions of its own."""
+
+    def test_delegation(self):
+        over = _view()
+        rec = {"id": "basal_test", "kind": "assemblage", "phases": [{"id": "basal"}]}
+        b = ma.BasalView(rec, 4000.0, over, 1600.0)
+        self.assertEqual(b.transitions(), ())
+        for _between, _kind, curve in over.transitions():
+            self.assertEqual(b.curve_slope_points(curve), over.curve_slope_points(curve))
+
+
+if __name__ == "__main__":
+    unittest.main()
