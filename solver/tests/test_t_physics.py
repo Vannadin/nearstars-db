@@ -119,8 +119,10 @@ class EventGuard(unittest.TestCase):
 
 
 M_RULER = 0.05 * 5.972e24
-RULER_T0, RULER_STEP, RULER_N = 1900.0, 0.05, 41          # declared before the run (note 4 item 1): the solidus onset
-                                                            # event fires there (≈ 1700–2100 K on this body)
+RULER_T0, RULER_STEP, RULER_N = 1762.5, 0.05, 41          # melt-window post-freeze note 1 (directing's rule): the
+# midpoint of the first and last T_pot of the scan 1650–1900 K by 25 K whose accepted pass lands the solidus onset on
+# the isentropic window (1675 and 1850 K). The old 1900 K (note 4 item 1: «≈ 1700–2100 K on this body») lies outside
+# that range there: the walk stays in the window to the centre, so no onset was crossed and test_smooth was vacuous
 
 
 def _coreless(t):
@@ -147,6 +149,15 @@ class Ruler(unittest.TestCase):
 
     def test_smooth(self):
         self.assertLessEqual(_ruler(), 1e-6)
+
+    def test_onset_lands_in_every_pass(self):
+        """melt-window post-freeze note 1 (68 B1): the ruler's subject is the solidus onset landing, so the onset event
+        is landed in each of the RULER_N accepted passes (the pass at the solved x)."""
+        for i in range(RULER_N):
+            body = _coreless(RULER_T0 + RULER_STEP * i)
+            _ans, x = sv.solve(body, OPT)
+            out = sv.inward(body, sv._views_at(body, sv._views(body), x), x, OPT)
+            self.assertTrue(any(e.startswith("onset:") for e in out.events), (i, out.events))
 
     def test_control_planted_step(self):
         orig_state, orig_onset = lm.LegacyView.state, events.onset_events
