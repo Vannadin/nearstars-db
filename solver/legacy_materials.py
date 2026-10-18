@@ -284,6 +284,21 @@ class LegacyView:
         except (eos.PhaseGap, ValueError) as exc:          # G3-C-01: the engine's second refusal channel
             return self._refusal(exc, p, t)
 
+    def typed_notes(self, p: float, t: float) -> tuple:
+        """The typed notes this view exposes to material_notes.collect (melt-window registration B4, class rule): only
+        the window-seam note, for a silicate melt phase read inside the window at P ≥ WINDOW_SEAM_P. state() is
+        unchanged, so every other answer through this view keeps its notes bit for bit."""
+        if t <= 0.0 or p <= 0.0 or not isinstance(self.mat, eos.Material):
+            return ()
+        try:
+            ph = self.mat.phase_at(max(p, self.p_stop))
+        except (eos.PhaseGap, ValueError):
+            return ()
+        if getattr(ph, "melt", None) != "silicate":
+            return ()
+        n = window_seam_note(self.material_id, max(p, self.p_stop), t, ph.melt_variant)
+        return () if n is None else (n,)
+
     def porosity(self, p: float) -> float:
         """φ(P) of the declared porosity law (0 without one), as the old stage applies it (interior.porosity_at)."""
         return interior.porosity_at(self.mat, p, self.phi0, self.p_cap) if self.phi0 > 0.0 else 0.0
@@ -483,8 +498,9 @@ def silicate_melt_mix(p: float, t: float, variant: str, rho_s: float, dtdp_s: fl
     record's ρ_s, its dT/dP field and the table's c_P (silicate record registration post-freeze note 3 §1; r2 78af8983).
     Returns (ρ, dT/dP, φ). φ = `eos.silicate_melt_fraction(p, t, variant)`, 0 below the solidus (ρ_s and dtdp_s exactly);
     at φ ≥ 1 the RTpress liquid alone, with no solid read; in the window 1/ρ = (1 − φ)/ρ_s + φ/ρ_ℓ and
-    dT/dP = [(1 − φ)c_P,s·dtdp_s + φc_P,ℓ·dtdp_ℓ]/c_P,mix × c_P,mix/(c_P,mix + L), c_P,mix = (1 − φ)c_P,s + φc_P,ℓ and
-    L = `eos.Material._latent_cp` (called, never copied: C120b keeps the latent formula in one place), as
+    dT/dP = `eos.Material._latent_window`(mixed, c_P,mix), the isentropic window (c_P,mix·mixed + L·X)/(c_P,mix + L)
+    with mixed = [(1 − φ)c_P,s·dtdp_s + φc_P,ℓ·dtdp_ℓ]/c_P,mix and c_P,mix = (1 − φ)c_P,s + φc_P,ℓ (melt-window
+    registration §3 (b); called, never copied: C120b keeps the latent formula in one place), as
     `interior._adiabatic_dtdp` forms it. RTpress's own refusal (eos.PhaseGap) propagates."""
     import rtpress
     phi = silicate_melt_phi(p, t, variant)
@@ -495,12 +511,30 @@ def silicate_melt_mix(p: float, t: float, variant: str, rho_s: float, dtdp_s: fl
     if phi >= 1.0:
         return rho_l, dtdp_l, 1.0
     rho = 1.0 / ((1.0 - phi) / rho_s + phi / rho_l)
-    lat = eos.Material._latent_cp(_MeltPhase(variant), p, t)
     w_s, w_l = (1.0 - phi) * cp_s, phi * cp_l
     mixed = (w_s * dtdp_s + w_l * dtdp_l) / (w_s + w_l) if w_s + w_l > 0.0 else dtdp_l
-    cp_mix = w_s + w_l
-    g = mixed * cp_mix / (cp_mix + lat) if lat > 0.0 and cp_mix > 0.0 else mixed
-    return rho, g, phi
+    return rho, eos.Material._latent_window(_MeltPhase(variant), p, t, mixed, w_s + w_l), phi
+
+
+#: the window-seam note's pressure (melt-window registration §2 B2): at and above the 140 GPa rock → MgSiO₃ seam the
+#: melting curves jump (140, 180, 200 GPa) and no latent term covers a jump crossed inside the window; module-level so
+#: the planted test can lower it into a validation walk's window
+WINDOW_SEAM_P = eos.SILICATE_ROCK_MAX_PA
+WINDOW_SEAM_PHASE = "silicate_melt_window"
+WINDOW_SEAM_NOTE = ("melt window past the 140 GPa curve seam: the solidus/liquidus jump at 140, 180 and 200 GPa and no "
+                    "latent term covers a jump crossed inside the window (melt-window registration §2: 140 and 200 GPa "
+                    "end the window, forfeiting up to ≈ 220–317 K; 180 GPa ≈ 28–40 K; 20 GPa ≤ 2 K)")
+
+
+def window_seam_note(material_id: str, p: float, t: float, variant: str):
+    """The typed seam note for a read at (p, t), or None: 0 < φ < 1 at P ≥ WINDOW_SEAM_P (registration §2 B2, B4)."""
+    if p < WINDOW_SEAM_P:
+        return None
+    phi = silicate_melt_phi(p, t, variant)
+    if not 0.0 < phi < 1.0:
+        return None
+    from solver import material_view as mv
+    return mv.DeclaredNote(material_id, WINDOW_SEAM_PHASE, WINDOW_SEAM_NOTE)
 
 
 def silicate_melt_phi(p: float, t: float, variant: str) -> float:

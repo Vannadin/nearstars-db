@@ -13,6 +13,8 @@ Kinds (compare.NOTE_KINDS, comparator note 15):
   without them, the read's |ρ| and |dT/dP|), where, and the edges summed (directing 10-17: separate error sources add,
   the sum is the conservative band; registration reg-interp-term §4, §7.4);
 - `material_declared_note`: one per (layer, material, phase, text), with the P range met;
+  a view that is not a record view contributes it through `typed_notes(p, t)` when it has one (LegacyView: the melt
+  window's seam note only; melt-window registration B4);
 - `material_source_seam`: one per source seam the layer's temperature crossed (from below t to t or above; the
   upper side owns t), with its measured step (material_joins.seam_delta);
 - `material_disclosure`: an assemblage record's declared disclosures (`of: record`), on every answer that read it;
@@ -47,12 +49,33 @@ def _span(d, p, t):
     d["p_max"] = max(d.get("p_max", p), p)
 
 
+def _typed_notes(layer, view, path, typed) -> list:
+    """material_declared_note per (phase, text) from a non-record view's `typed_notes(p, t)` on the accepted nodes, with
+    the P range met. Only DeclaredNote is taken; any other object is a TypeError, never dropped silently."""
+    declared = {}
+    for p, t in _reads(path):
+        for n in typed(p, t):
+            if not isinstance(n, mv.DeclaredNote):
+                raise TypeError(f"{view.material_id}: typed_notes gave {type(n).__name__}, not a DeclaredNote")
+            _span(declared.setdefault((n.material_id, n.phase, n.text), {}), p, t)
+    return [result.Note("material_declared_note", f"{mid} {phase}: {text}", {
+        "layer": layer.id, "material": mid, "phase": phase, "text": text, "p_min": d["p_min"], "p_max": d["p_max"]})
+        for (mid, phase, text), d in declared.items()]
+
+
 def collect(body, views, acc) -> tuple:
     out = []
     for layer in reversed(body.layers):
         view = views.get(layer.id)
         path = acc.profiles.get(layer.id)
-        if not isinstance(view, mv.RecordView) or not path:
+        if not path:
+            continue
+        if not isinstance(view, mv.RecordView):
+            # melt-window registration B4, the class rule: typed notes from any view that exposes them (LegacyView: the
+            # window-seam note only), as material_declared_note
+            typed = getattr(view, "typed_notes", None)
+            if typed is not None:
+                out.extend(_typed_notes(layer, view, path, typed))
             continue
         mid = view.material_id
         bands, declared, phases_read, ts, rereads, sums = {}, {}, [], [], [], {}

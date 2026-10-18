@@ -1206,14 +1206,33 @@ class Material:
         w = 1.0 if x >= 1.0 else x * x * (3.0 - 2.0 * x)
         return w * SILICATE_MELT_DH / (liq - sol)
 
+    @staticmethod
+    def _latent_window(ph, p: float, t: float, mixed: float, cp_mix: float) -> float:
+        """부분용융 창의 등엔트로피 dT/dP [K/Pa] — melt-window 등록(rewrite/melt-window/reg-melt-window.frozen.md) §2–§3.
+
+            dT/dP = (c_mix·mixed + L·X) / (c_mix + L),   X = T_sol′ + φ·(T_liq′ − T_sol′),   L = `_latent_cp`
+
+        T ds = c_mix dT − c_mix·mixed dP + ΔH·w dφ = 0 에서 나온다: 창의 기울기는 고체·액체 단열선(mixed, c_P 가중)과
+        등-φ 선(X)을 c_mix : L 로 가중한 평균이다. 분자의 L·X 가 Monteux+ 2016 식 (16) 의 α′ 를 Clausius–Clapeyron
+        (T·Δv = ΔH·dT_m/dP) 로 쓴 것이라 용융 밀도가 필요 없다. 창의 세 자리(interior._adiabatic_dtdp, Material.grad_ad,
+        legacy_materials.silicate_melt_mix)가 모두 이것을 부른다 — 잠열 식은 `_latent_cp` 와 이곳에만 있다 (C120b).
+        L = 0(창 밖·φ ≥ 1·곡선 밖) 이거나 c_mix ≤ 0 이면 mixed 를 그대로 돌려준다."""
+        lat = Material._latent_cp(ph, p, t)
+        if not (lat > 0.0 and cp_mix > 0.0):
+            return mixed
+        sol = silicate_solidus(p, ph.melt_variant)
+        liq = silicate_liquidus(p, ph.melt_variant)
+        d_sol, d_liq = silicate_melt_slopes(p, ph.melt_variant)
+        x = d_sol + (t - sol) / (liq - sol) * (d_liq - d_sol)
+        return (cp_mix * mixed + lat * x) / (cp_mix + lat)
+
     def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """(∂lnT/∂lnP)_S = γ P / K_S. 혼합이 이걸 c_P 로 가중해 합친다.
 
-        부분용융 창 안에서는 기울기에 C_p/C′_p 를 곱한다 — ∇_ad ∝ 1/c_p 이고 잠열이
-        겉보기 비열을 키우므로(식 (17), _latent_cp) 단열선이 창에서 평평해진다.
-        인쇄된 식 (16)의 α′ 은 비채택이다: 식 (15)의 용융 밀도를 채택하지 않는 채로
-        α′ 만 넣으면 고체 밀도 기둥에 용융 팽창 기울기를 섞는 비일관이 된다
-        (SILICATE_MELT_DH 블록 주석)."""
+        부분용융 창 안에서는 등엔트로피 꼴 `_latent_window` 를 쓴다 — 겉보기 비열(식 (17),
+        _latent_cp)과 압력 항 L·X 를 함께. 압력 항은 식 (16) 의 α′ 를 Clausius–Clapeyron 으로
+        쓴 것이라 식 (15) 의 용융 밀도가 필요 없다 (melt-window 등록, r2 862ea239). 그래서 창의
+        단열선은 Monteux 식 (19) 처럼 한 상의 단열선보다 가파르다."""
         _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         if t <= 0.0 or p <= 0.0:
             return 0.0
@@ -1228,8 +1247,9 @@ class Material:
         ph = self.phase_at(p)
         lat = self._latent_cp(ph, p, t)
         phi = self.melt_phi(p, t)
+        cp_mix = 0.0
         if phi > 0.0:
-            # C120 덧붙임 4 — 잠열 곱은 그대로 두고, 그 안의 고체 ∇_ad 자리만 φ 의 c_p 가중(고체 · RTpress 액체)으로.
+            # C120 덧붙임 4 — 고체 ∇_ad 자리는 φ 의 c_p 가중(고체 · RTpress 액체).
             _rho_l, grad_l, cp_l = rtpress.liquid(p, t)
             if phi >= 1.0:
                 grad = grad_l
@@ -1237,10 +1257,10 @@ class Material:
                 cp_s = self.c_p(p, t, t_pot) - lat
                 w_s, w_l = (1.0 - phi) * cp_s, phi * cp_l
                 grad = (w_s * grad + w_l * grad_l) / (w_s + w_l) if w_s + w_l > 0.0 else grad_l
+                cp_mix = w_s + w_l
         if lat > 0.0:
-            base = self.c_p(p, t, t_pot) - lat
-            if base > 0.0:
-                grad *= base / (base + lat)
+            # melt-window 등록 §3 (b) — 잠열은 `_latent_window` 한 곳에서, c_mix 로(68 B1: 오늘의 c_s 가 아니라). ∇ ↔ dT/dP.
+            grad = self._latent_window(ph, p, t, grad * t / p, cp_mix) * p / t
         return grad
 
 
@@ -3400,10 +3420,10 @@ SILICATE_MELT_MAX_PA = 500e9                  # 이 위는 자료 있는 전사 
 # 잠열과 부분용융 열역학 — Monteux+ 2016 §2.2.2, Solomatov 2007 을 따른 인쇄식.
 #   식 (6):  φ = (T − T_sol)/(T_liq − T_sol)            ← 용융분율, 인쇄된 정의
 #   식 (17): C′_p = C_p + ΔH/(T_liq − T_sol)            ← 겉보기 비열 (채택)
-#   식 (16): α′ = α + Δρ/(ρ(T_liq−T_sol)) 는 **인쇄돼 있으나 비채택** — 식 (15)의
-#   용융 밀도를 채택하지 않으므로(밀도는 고체 EOS 그대로), 16만 넣으면 고체 밀도
-#   기둥에 용융 팽창 기울기를 섞는 비일관이 된다. 기록만 남긴다: Δρ/ρ = 1.5 %
-#   (Monteux Table 1, Tosi et al.).
+#   식 (16): α′ = α + Δρ/(ρ(T_liq−T_sol)) — Clausius–Clapeyron(T·Δv = ΔH·dT_m/dP)으로 써서
+#   채택한다(melt-window 등록 §2: `Material._latent_window` 의 L·X). 그 꼴은 식 (15) 의 용융
+#   밀도가 필요 없어, 밀도는 고체 EOS · RTpress 부피 가법 그대로다. 함의된 Δv = ΔH·X/T 는
+#   SLB/RTpress 부피와 대조하지 않았다(등록 §5). 참고: Δρ/ρ = 1.5 % (Monteux Table 1, Tosi et al.).
 LATENT_EDGE_PHI = 0.05       # 후보 ㉮ — 잠열 항을 창 가장자리 φ 0.05 안에서 매끄럽게 켜고 끔
 SILICATE_MELT_DH = 4.0e5      # J/kg. Monteux+ 2016 Table 1, ΔH (Ghosh & McSween 1998)
 # 단일점 융해(140 GPa 위 순수 MgSiO₃)의 명목 부분용융 폭. **선언이고 채워 넣은
@@ -3485,6 +3505,25 @@ def _silicate_melt_point(p: float) -> float | None:
     return t0 * ((gpa - p0) / a + 1.0) ** (1.0 / c)
 
 
+def _simon_pa_slope(p: float, t0: float, p_scale: float, c: float) -> float:
+    """`_simon_pa` 의 dT/dP [K/Pa] — 해석 미분 t0/(c·p_scale)·(P/p_scale + 1)^(1/c − 1)."""
+    return t0 / (c * p_scale) * (p / p_scale + 1.0) ** (1.0 / c - 1.0)
+
+
+def _silicate_melt_point_slope(p: float) -> float | None:
+    """`_silicate_melt_point` 의 dT/dP [K/Pa], 값과 같은 가지(Deng bdg → ppv → Fei)의 해석 미분."""
+    if p > SILICATE_MELT_MAX_PA:
+        return None
+    gpa = p / GPA
+    if p >= DENG_CEILING_PA:
+        t0, p_ref, ex = FEI_UPPER
+        return t0 * ex / (p_ref * GPA) * (gpa / p_ref) ** (ex - 1.0)
+    t0, p0, a, c = DENG_PPV if p >= DENG_TRIPLE_PA else DENG_BDG
+    if gpa < DENG_BDG_FLOOR_GPA:
+        _silicate_melt_point(p)                        # 같은 이름 댄 ValueError
+    return t0 / (c * a * GPA) * ((gpa - p0) / a + 1.0) ** (1.0 / c - 1.0)
+
+
 def _silicate_variant_check(variant: str) -> None:
     if variant not in ("peridotitic", "chondritic"):
         raise ValueError(
@@ -3532,6 +3571,27 @@ def silicate_liquidus(p: float, variant: str = "peridotitic",
         return _simon_pa(p, *coef) - shift
     tm = _silicate_melt_point(p)
     return None if tm is None else tm + 0.5 * SILICATE_MELT_POINT_WIDTH - shift
+
+
+def silicate_melt_slopes(p: float, variant: str = "peridotitic",
+                         d_fe: float | None = None) -> tuple[float, float] | None:
+    """(dT_sol/dP, dT_liq/dP) [K/Pa] at p — 용융 창 등엔트로피 꼴의 X 가 읽는 기울기 (melt-window 등록 §3 (a)).
+
+    각 기울기는 `silicate_solidus` / `silicate_liquidus` 가 그 P 에서 값으로 고르는 **같은 가지**의 해석 미분이다
+    (HZ96 식 (10)/(11), Monteux 식 (12)/(13), Deng bdg/ppv, Fei). 이음매 P 에서는 값 함수가 고른 가지를 따른다. 철 부화
+    `d_fe` 는 P 와 무관한 평행 이동이라 기울기에 아무것도 더하지 않는다 — 조성 검사만 같이 한다. 500 GPa 위·P < 0 은
+    None (곡선 없음, 값 함수와 같다)."""
+    _silicate_variant_check(variant)
+    if p < 0.0 or p > SILICATE_MELT_MAX_PA:
+        return None
+    _iron_shift(variant, d_fe)
+    if p < MONTEUX_JOIN_PA:
+        return _simon_pa_slope(p, *MONTEUX_SOL_LOW), _simon_pa_slope(p, *MONTEUX_LIQ_LOW)
+    if p < SILICATE_ROCK_MAX_PA:
+        coef = MONTEUX_LIQ_F if variant == "peridotitic" else MONTEUX_LIQ_A
+        return _simon_pa_slope(p, *MONTEUX_SOL_HIGH), _simon_pa_slope(p, *coef)
+    tm = _silicate_melt_point_slope(p)
+    return None if tm is None else (tm, tm)
 
 
 def silicate_melt_fraction(p: float, t: float, variant: str = "peridotitic",

@@ -1749,6 +1749,9 @@ class AssemblageView(mv.RecordView):
             self._cell_notes(cells, p, t)
             self._term_notes(pe, t, rho_s, g_s, cp_s)
             rho, g, _ = _lm().silicate_melt_mix(pe, t, self.variant, rho_s, g_s, cp_s)
+            seam = _lm().window_seam_note(self.material_id, pe, t, self.variant)   # melt-window registration B2/B4
+            if seam is not None:
+                self.notes.append(seam)
         except _lm().eos.PhaseGap as e:             # RTpress's own refusal
             return self._refuse(p, t, "input.material_out_of_data", f"RTpress liquid: {e}")
         return (rho, g, tuple(self.notes))

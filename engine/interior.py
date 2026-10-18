@@ -802,10 +802,9 @@ def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:
     cp_s = mat.c_p(p, t, t_pot) - lat
     w_s, w_l = (1.0 - phi) * cp_s, phi * cp_l
     mixed = (w_s * dtdp_s + w_l * dtdp_l) / (w_s + w_l) if w_s + w_l > 0.0 else dtdp_l
-    # C120b(prereg-c120b-latent bda25a6a) — 순수 층 창 안에 혼합 층 `Material.grad_ad` 와 같은 잠열 곱 c_p,mix/(c_p,mix + L).
-    #   L 은 `Material._latent_cp` 를 **부르기만** 한다 — 잠열 식은 그 한 곳에만 있다.
-    cp_mix = w_s + w_l
-    return mixed * cp_mix / (cp_mix + lat) if lat > 0.0 and cp_mix > 0.0 else mixed
+    # C120b · melt-window 등록 §3 (b) — 창의 dT/dP 는 `Material._latent_window` 한 곳(등엔트로피 꼴, 압력 항 L·X 포함)에서.
+    #   잠열 식은 `_latent_cp` · `_latent_window` 밖에 없다.
+    return mat._latent_window(ph, p, t, mixed, w_s + w_l)
 
 
 def _grad_ad_at(mat, p: float, t: float, t_pot: float = 0.0) -> float:
