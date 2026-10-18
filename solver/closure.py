@@ -22,6 +22,16 @@ SCREEN_K = 10.0              # note 15 §1: a root may hide beside a wall when |
 WALL_SHOTS = 24
 CLOSE_TOL = 1e-12
 CLOSE_ITERS = 100            # Brent iterations per root (fixed by the S2 dated line)
+# The noise stop (stage-A registration prereg-k8-stop, frozen 3ea24b5d; directing 10-18): F near a root is jagged at its
+# walk's resolution σ_F, 10–10 000× above CLOSE_TOL·|x|, and below it Brent bisects noise. With s0 the secant of the
+# bracket Brent is handed (only when that bracket is ≥ NOISE_STOP_MIN_WIDTH·|x| wide: a hair-wide pair's secant is
+# itself noise, phase-1 note 10), Brent stops and returns b once |F_b| > NOISE_STOP_K·s0·|m|. On a smooth F that needs
+# a local slope > K/2 = 4·s0 (measured 0.87–0.89); in the noise band it fires once |m| < σ_F/(K·s0).
+NOISE_STOP_K = 8.0
+NOISE_STOP_MIN_WIDTH = 1e-6
+# the registration's curvature watch: a firing whose noise-free local slope (the narrowest bracket of the call still
+# ≥ NOISE_STOP_MIN_WIDTH·|x| wide) is ≥ CURVATURE_WATCH·s0 is named in its log entry
+CURVATURE_WATCH = 3.5
 # A1 impl note 8 (directing, 2026-10-10): a refusing shot is a wall only when confirmed by a second shot a little
 # further from the solved side (CONFIRM_FRAC of the gap, at least CONFIRM_MIN·|x|). If that shot solves, the refusal
 # is isolated (e.g. one unlanded event at Earth 2064.76 K, x = 6437400.24 m): recorded as kind "isolated", never a
@@ -90,11 +100,15 @@ def scan_points(lo: float, hi: float, n: int = N_SCAN) -> list:
 
 
 def _brent(F, a: float, fa: float, b: float, fb: float, trials: list, lo: float = -math.inf, hi: float = math.inf,
-           confirm: bool = True):
-    """Brent's method (zeroin) on a bracket with fa·fb < 0, to |Δx| ≤ CLOSE_TOL·|x|. Bisection fallback guarantees
-    shrink. A refusing evaluation inside a solved bracket is reported (it splits the bracket). Returns (root, None,
-    final bracket (x_b, F_b, x_c, F_c)) or (None, problem, None); the final bracket names where a jump would sit
-    (phase-1 design note 8)."""
+           confirm: bool = True, noise_log: list | None = None):
+    """Brent's method (zeroin) on a bracket with fa·fb < 0, to |Δx| ≤ CLOSE_TOL·|x|, or to F's noise (the noise stop,
+    NOISE_STOP_K above). Bisection fallback guarantees shrink. A refusing evaluation inside a solved bracket is
+    reported (it splits the bracket). Returns (root, None, final bracket (x_b, F_b, x_c, F_c)) or (None, problem, None);
+    the final bracket names where a jump would sit (phase-1 design note 8). A noise stop appends its entry to
+    `noise_log` when one is given."""
+    width0 = abs(b - a)
+    s0 = abs(fb - fa) / width0 if width0 >= NOISE_STOP_MIN_WIDTH * max(abs(a), abs(b)) and width0 > 0.0 else None
+    s_loc = s0                   # the secant of the narrowest bracket still ≥ NOISE_STOP_MIN_WIDTH·|x| (noise-free)
     c, fc = a, fa
     d = e = b - a
     isolated = set()             # G2-C-01: x where a landing failed and its confirming shot solved
@@ -109,6 +123,15 @@ def _brent(F, a: float, fa: float, b: float, fb: float, trials: list, lo: float 
         m = 0.5 * (c - b)
         if abs(m) <= tol or fb == 0.0:
             return b, None, (b, fb, c, fc)
+        if s0 is not None:
+            if abs(c - b) >= NOISE_STOP_MIN_WIDTH * abs(b):
+                s_loc = abs(fc - fb) / abs(c - b)
+            if abs(fb) > NOISE_STOP_K * s0 * abs(m):          # the noise stop
+                if noise_log is not None:
+                    ratio = s_loc / s0 if s0 > 0.0 else float("inf")
+                    noise_log.append({"x": b, "F_b": fb, "m": m, "s0": s0, "s_loc": s_loc, "ratio": ratio,
+                                      "named": ratio >= CURVATURE_WATCH})
+                return b, None, (b, fb, c, fc)
         if abs(e) >= tol and abs(fa) > abs(fb):
             s = fb / fa
             if a == c:
@@ -245,13 +268,14 @@ def refine(F, x0: float, lo: float, hi: float, h_rel: float = 1e-4, tries: int =
     def root_at(a, fa, b, fb):
         if a > b:
             a, fa, b, fb = b, fb, a, fa
+        noise: list = []
         x, prob, final = (a, None, None) if fa == 0.0 else (b, None, None) if fb == 0.0 else \
-            _brent(F, a, fa, b, fb, trials, confirm=False)
+            _brent(F, a, fa, b, fb, trials, confirm=False, noise_log=noise)
         if x is None:
             return None
         return Outcome("root", roots=[x], walls=[], trials=trials,
                        detail={"problems": [], "lo": lo, "hi": hi, "n_scan": len(trials),
-                               "brackets": {x: {"scan": (a, fa, b, fb), "final": final}}})
+                               "brackets": {x: {"scan": (a, fa, b, fb), "final": final}}, "noise_stops": noise})
     if f0 * f1 <= 0.0:
         return root_at(x0, f0, x1, f1)
     s = (f1 - f0) / (x1 - x0)
@@ -299,7 +323,9 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
     brackets: dict = {}          # root → {"scan": (x_a, F_a, x_b, F_b), "final": Brent's last bracket or None}
     # phase-1 note 15 §1: walls are located coarse first; a wall is refined to WALL_TOL (and the search run again with
     # the new trials, N4) when the outcome reads it (any outcome but one root) or a root may hide beside it
-    out = _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_wall_trials, WALL_TOL_COARSE)
+    noise: list = []             # the noise stop's log (prereg-k8-stop): one entry per firing Brent call
+    out = _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_wall_trials, WALL_TOL_COARSE,
+                  noise)
     hide = [w for w in walls if out.kind != "root" or _root_may_hide(w, trials)]
     if not hide:
         return out
@@ -308,7 +334,7 @@ def solve_scalar(F, lo: float, hi: float, n_scan: int = N_SCAN, use_wall_trials:
     for a, b in zip(order, order[1:]):                   # the refined walls' own pairs: not new walls
         if (a.F is None) != (b.F is None):
             done_pairs.add((a.x, b.x))
-    return _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_wall_trials, WALL_TOL)
+    return _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_wall_trials, WALL_TOL, noise)
 
 
 def _refusal_p(stop) -> float | None:
@@ -385,7 +411,8 @@ def _root_may_hide(w, trials) -> bool:
     return abs(a.F) <= SCREEN_K * s * abs(w.x - a.x)
 
 
-def _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_wall_trials, wall_tol):
+def _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_wall_trials, wall_tol,
+            noise_log=None):
     for _round in range(MAX_SPLITS + 1):
         order = sorted((t for t in trials if t.kind != "isolated"), key=lambda t: t.x)
         for a, b in zip(order, order[1:]):
@@ -410,7 +437,7 @@ def _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_
             if a.F * b.F < 0.0:
                 key = (a.x, b.x)
                 if key not in closed:
-                    closed[key] = _brent(F, a.x, a.F, b.x, b.F, trials, lo, hi)
+                    closed[key] = _brent(F, a.x, a.F, b.x, b.F, trials, lo, hi, noise_log=noise_log)
                 x, prob, final = closed[key]
                 if x is not None:
                     roots.append(x)
@@ -430,7 +457,8 @@ def _rounds(F, lo, hi, n_scan, trials, walls, done_pairs, closed, brackets, use_
                        detail={"budget": "MAX_SPLITS", "lo": lo, "hi": hi, "n_scan": n_scan})
     if not pts:
         return Outcome("no_solved", walls=walls, trials=trials)
-    detail = {"problems": problems, "lo": lo, "hi": hi, "n_scan": n_scan, "brackets": brackets}
+    detail = {"problems": problems, "lo": lo, "hi": hi, "n_scan": n_scan, "brackets": brackets,
+              "noise_stops": noise_log if noise_log is not None else []}
     if len(roots) == 1 and not problems:
         return Outcome("root", roots=roots, walls=walls, trials=trials, detail=detail)
     if len(roots) >= 2:

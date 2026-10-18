@@ -1237,6 +1237,8 @@ def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
     out = cl.solve_scalar(F, body.closure.lo, body.closure.hi, options.n_scan)
     for t in out.trials:                              # design §A1.5: passes tagged scan / wall / brent
         ctx.record(t.kind, x=t.x, F=t.F, stop=None if t.stop is None else t.stop.kind)
+    for e in out.detail.get("noise_stops", []):       # prereg-k8-stop: every firing, its s_loc/s0 and «named»
+        ctx.record("noise_stop", **e)
     unlocated = [w for w in out.walls if not w.located]
     if out.kind in ("no_bracket", "no_solved") and unlocated:
         # note 2 item 8: a wall whose position WALL_SHOTS could not fix leaves the search incomplete
