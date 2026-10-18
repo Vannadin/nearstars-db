@@ -172,9 +172,18 @@ def curve_p_scale(view, curve) -> float:
     50 K, so the landing tolerance event_tol·scale is relative to P as phase 1's seams (scale = p_b) have it. A fixed
     1e9 gave 1e-3 Pa, 6e-14 of P at 17 GPa, under the ±4e-3 Pa that re-steps reproduce P to there; the landing never
     put a new-side iterate within it and chattered (pre-run on 68e47ffc, C1: 28 earth and venus O9 states on exported
-    edges). 1e9 where the curve is absent at every sample."""
+    edges). 1e9 where the curve is absent at every sample.
+    g's spread is σ_P + |dP_b/dT|·σ_T, so where the view gives the curve's slope (curve_slope_points: an assemblage
+    curve) the scale is also at least the largest |P_b| + T·|dP_b/dT| over it, 1e-12 of the terms g is made of as
+    gibbs_scale has it (venus-pocket registration: venus edge275 read 81–97 K into its extension, dP_b/dT 1.4e8 Pa/K,
+    a re-step's T round-off of 1e-10 K moved g by 0.015 Pa against a tol of 4e-3 Pa, solve.event_chatter). A curve
+    constant in T keeps its old scale bit for bit."""
     pbs = [abs(pb) for t in CURVE_SCALE_TS if (pb := view.boundary_pressure(curve, t)) is not None]
-    return max(pbs) if pbs and max(pbs) > 0.0 else 1.0e9
+    scale = max(pbs) if pbs and max(pbs) > 0.0 else 1.0e9
+    pts = getattr(view, "curve_slope_points", None)
+    for t, pb, slope in (pts(curve) if pts is not None else ()):
+        scale = max(scale, abs(pb) + t * slope)
+    return scale
 
 
 def _knot_box(lib_a, lib_b):

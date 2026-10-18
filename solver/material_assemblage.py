@@ -1788,6 +1788,30 @@ class AssemblageView(mv.RecordView):
             return c.p_b_ext(t, self._reach) if i < len(self._cut) else c.p_b(t)
         return super().boundary_pressure(curve, t)
 
+    def curve_slope_points(self, curve) -> tuple:
+        """(T, P_b, |dP_b/dT|) where |P_b| + T·|dP_b/dT| is largest on each piece of the curve as boundary_pressure
+        reads it, for its landing scale (events.curve_p_scale; venus-pocket registration): both ends of every row
+        segment (P_b linear in T there, so the sum is largest at an end), and for a cut run each extension's reach end
+        (ln P_b linear in T, so P_b and its slope grow together toward it). A one-row or constant piece gives slope 0;
+        any other curve form gives none."""
+        if curve.get("form") != "assemblage_curve":
+            return ()
+        i = curve["id"]
+        c = self._events[i]
+        rs = c.rows
+        out = []
+        for a, b in zip(rs, rs[1:]):
+            s = abs((b["p_b"] - a["p_b"]) / (b["t"] - a["t"]))
+            out += [(a["t"], a["p_b"], s), (b["t"], b["p_b"], s)]
+        if i < len(self._cut) and len(rs) > 1:
+            for t_e, e, o in ((c.t1 + self._reach, rs[-1], rs[-2]), (c.t0 - self._reach, rs[0], rs[1])):
+                pb = c.p_b_ext(t_e, self._reach)
+                if pb is None:
+                    continue
+                k = 0.0 if e["p_b"] == o["p_b"] else abs(math.log(e["p_b"]) - math.log(o["p_b"])) / abs(e["t"] - o["t"])
+                out.append((t_e, pb, abs(pb) * k))
+        return tuple(out)
+
     def source_seams(self) -> tuple:
         return ()
 
