@@ -65,14 +65,14 @@ def _melt_curve_names(mat) -> list:
 
 
 def curve_seams(mat) -> set:
-    """Pressures where an onset curve changes branch or ends (eos.silicate_solidus at 097a8aa3): the HZ96 → Monteux
-    eq. (12) join at MONTEUX_JOIN_PA (20 GPa, a −1 K step), the rock → MgSiO₃ melt-point join at SILICATE_ROCK_MAX_PA
-    (140 GPa, +1732 K) and the curve's end at SILICATE_MELT_MAX_PA (500 GPa). Each is a seam event, so a curve is
-    never read across its own jump (r2 S5 B2)."""
+    """Pressures where an onset curve changes branch or ends: eos.melt_curve_seams (window-edge registration §2.3 — the
+    curves' own branch constants, not a hand list: 20 GPa HZ96 → Monteux, 140 GPa rock → MgSiO₃, the Deng bdg → ppv
+    crossing ≈ 173.6 GPa, 200 GPa Deng → Fei) and the curve's end at SILICATE_MELT_MAX_PA (500 GPa). Each is a seam
+    event, so a curve is never read across its own jump (r2 S5 B2; at 33a6ac21 the hand list missed 180 and 200 GPa)."""
     if "고상선" not in _melt_curve_names(mat):
         return set()
     from solver.legacy_materials import eos
-    return {float(eos.MONTEUX_JOIN_PA), float(eos.SILICATE_ROCK_MAX_PA), float(eos.SILICATE_MELT_MAX_PA)}
+    return {float(b) for b in eos.melt_curve_seams()} | {float(eos.SILICATE_MELT_MAX_PA)}
 
 
 def seam_events(mat) -> list:

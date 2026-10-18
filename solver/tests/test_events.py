@@ -148,8 +148,9 @@ class RealSilicate(unittest.TestCase):
     def test_solidus_seams_are_seams(self):
         mat = lm.interior.MATERIALS["silicate"]
         names = [e.name for e in events.seam_events(mat)]
-        for p_b in (20e9, 140e9, 500e9):
+        for p_b in (20e9, 140e9, lm.interior.eos.DENG_SWITCH_PA, 200e9, 500e9):   # window-edge §2.3: the Deng crossing, 200
             self.assertIn(f"seam:{p_b:.9g}", names)
+        self.assertEqual(events.curve_seams(mat) - {500e9}, set(lm.interior.eos.melt_curve_seams()))
         self.assertEqual(events.curve_seams(lm.interior.MATERIALS["fe_prem"]), set())     # control: no solidus
 
 

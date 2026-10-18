@@ -17,7 +17,7 @@ from eos import (silicate_solidus, silicate_liquidus, silicate_melt_fraction,
                  silicate_melt_refusal, _silicate_melt_point, _simon_pa,
                  MONTEUX_SOL_LOW, MONTEUX_LIQ_LOW, MONTEUX_SOL_HIGH,
                  MONTEUX_LIQ_A, MONTEUX_LIQ_F, DENG_BDG, DENG_PPV, FEI_UPPER,
-                 SILICATE_MELT_DH, SILICATE_MELT_POINT_WIDTH, MATERIALS, GPA)
+                 SILICATE_MELT_DH, SILICATE_MELT_POINT_WIDTH, MATERIALS, GPA, DENG_SWITCH_PA)
 
 
 def main() -> int:
@@ -65,10 +65,17 @@ def main() -> int:
              "140 GPa 암석(A-liq)→구현 리퀴더스"),
             (silicate_liquidus(140e9) - _simon_pa(140e9, *MONTEUX_LIQ_F), 396.72,
              "140 GPa 암석(F-liq)→구현 리퀴더스"),
-            (ppv(180) - bdg(180), 17.98, "180 GPa bdg→ppv (인쇄 삼중점)"),
+            (_silicate_melt_point(DENG_SWITCH_PA * (1 + 1e-12)) - _silicate_melt_point(DENG_SWITCH_PA * (1 - 1e-12)), 0.0,
+             "Deng bdg→ppv 갈아타기(두 적합의 교차, r2 de96ceaa) — 값 계단 0"),
             (fei(200) - ppv(200), 296.65, "200 GPa ppv→Fei 상계"),
             (fei(500) - ppv(500), 47.62, "500 GPa 사슬 폐합 비교 (Deng 외삽 vs Fei)")]:
         ok(abs(got - want) < 0.5, f"2: 계단 {name} = {got:+.2f} K, 기록 {want:+.2f}")
+    # 창 가장자리 등록 (r2 de96ceaa): 갈아타기는 교차 173.609 GPa — 인쇄 삼중점 180 GPa / 6420 K 와 7 K 어긋남을 병기하고,
+    #   예전 자리(180 GPa)의 두 적합 차(+17.98 K)는 그 인공물의 기록으로 남긴다.
+    ok(abs(DENG_SWITCH_PA / GPA - 173.609) < 1e-3, f"2: Deng 갈아타기 {DENG_SWITCH_PA / GPA:.4f} GPa, 기록 173.609")
+    ok(abs(bdg(DENG_SWITCH_PA / GPA) - 6420.0 + 6.53) < 0.05,
+       f"2: 교차 T {bdg(DENG_SWITCH_PA / GPA):.2f} K 가 인쇄 삼중점 6420 K 에서 −6.53 K 가 아니다")
+    ok(abs(ppv(180) - bdg(180) - 17.98) < 0.5, "2: 인쇄 삼중점 180 GPa 의 두 적합 차(기록) +17.98 K")
 
     # ── 3. 거절 — 이름을 대는가 ─────────────────────────────────────────────
     ok(silicate_solidus(501e9) is None and silicate_liquidus(501e9) is None,

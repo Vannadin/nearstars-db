@@ -114,6 +114,11 @@ INTERPOLATE_LAYERS = True
 STENCIL_BOUNDS = True
 # C157 셈(값 밖) — 경계 착지(할선) 재걷기 수
 PHASE_CUT_REWALKS = [0]
+# 창 가장자리 등록 §2.2 — 규산염 녹는 곡선 이음매(eos.melt_curve_seams)에 착지한 걸음 수(값 밖, 상 경계 착지와 따로 센다)
+MELT_SEAM_CUTS = [0]
+#: 창 가장자리 등록 N1 — False 는 녹는 곡선 이음매 착지 앞의 경로(대조만). `_cut_floor` 만 읽는다: 차분 발판(K_T)은 고체 밀도를
+#   차분하고 고체 밀도는 녹는 곡선을 안 읽으므로 이음매가 발판을 자르지 않는다(68 note 1 B2).
+MELT_SEAMS_LANDED = True
 # C157 ③ 뒷받침 거절문의 머리 — C162 가 표 짓기에서 이 거절만 멈춤으로 남기려고 읽는다(규칙 3 «서면 멈춤»)
 BACKSTOP_REASON_HEAD = "사격 질량이 p_c 에서 뛴다"
 # C157 메모 5 — 경계 스침. 접선 접근의 |T − T_경계| 한도 [K] · 고리 마지막 쌍의 민감도 S 한도(§5 0 행 전수가 가름) · 문구 머리.
@@ -145,6 +150,10 @@ SURF_RHO = True
 SURF_RHO_FALLBACKS = [0]
 #: C164 메모 1 칼날 1 — 상 경계 착지 걸음의 단계 밀도를 옛 상 쪽에 묶는다(False 는 C164 앞, 대조만)
 CUT_STAGE_OLD_SIDE = True
+#: 창 가장자리 등록 note 1 (68 b′) — **모든 걸음**의 단계 밀도를 걸음 머리 상 쪽에 묶는다(머리 상의 아래 끝 · 이음매가 있으면):
+#   착지 걸음만 묶으면 끝이 경계 바로 위(≈1e-11)에 떨어지는 묶지 않은 걸음의 k4 단계가 경계 밑(새 상)을 읽어, 끝이 경계를
+#   넘느냐에 따라 두 피적분 사이를 뒤집었다(23.83 GPa en → prem: 반지름 30–52 m, 사격 질량 뜀). False 는 그 앞(대조만).
+STAGE_CLAMP_EVERY_STEP = True
 # ── 적응 걸음 (prereg-adaptive-rk45, 동결 975c1447 — 뼈대, 아직 안 켬) ──────────────────────────
 #: False 면 고정 걸음 RK4 그대로(비교 · 되돌림용 손잡이). 계수표는 원문 대조를 마쳤다(DP45_* 주석).
 #: 오너 2026-09-28 «ㅇㅇ» — 값 이동(지구 CMB −21 K · 판도라 −13 K, 고정 1500 이 격자 수렴 띠보다 치우친 쪽이 고쳐짐)을 받음.
@@ -1087,7 +1096,12 @@ def _cut_floor(mat, p: float) -> float:
     if not isinstance(mat, eos.Material) or mat.name in PHASE_CUT_EXCLUDED:
         return 0.0
     lo_b, _hi = mat.stencil_bounds(p)
-    return lo_b if lo_b > mat.phases[0].p_min else 0.0
+    lo_b = lo_b if lo_b > mat.phases[0].p_min else 0.0
+    # 창 가장자리 등록 §2.2 — 규산염 녹는 곡선을 읽는 재료(상 하나라도 melt == "silicate")는 그 곡선의 이음매에도 착지한다:
+    #   창 안 dT/dP 가 곡선을 φ 로 읽어 이음매에서 피적분이 뛴다(ea, 2026-10-19). 걸음 자르기의 경계 집합에만 든다.
+    if MELT_SEAMS_LANDED and any(getattr(ph, "melt", None) == "silicate" for ph in mat.phases):
+        lo_b = max([lo_b] + [b for b in eos.melt_curve_seams() if b < p])
+    return lo_b
 
 
 def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
@@ -1576,6 +1590,11 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                     8.0 / 3.0 * math.pi * rr ** 4 * rr_rho,
                     4.0 * math.pi * rr * rr * phi)
 
+        # 창 가장자리 note 1 — 걸음 머리 상의 아래 끝(상 경계 · 열 세트 이음매 · 녹는 곡선 이음매) 밑을 단계가 읽지 않게. k1 앞에서
+        #   매 걸음 새로 정한다(앞 걸음의 묶음이 새 상 쪽에 착지한 머리를 옛 상으로 읽게 두지 않는다).
+        _head_floor = (_cut_floor(mat, p) if INTERPOLATE_LAYERS and STENCIL_BOUNDS and CUT_STAGE_OLD_SIDE
+                       and STAGE_CLAMP_EVERY_STEP else 0.0)
+        stage_pmin[0] = _head_floor * (1.0 + 4e-12) if _head_floor > 0.0 else 0.0
         k1 = deriv(r, m, p)
         dT_last = [None]         # 마지막 DP 걸음의 T 증분(결정 ③) — 걸음 끝 온도 갱신이 쓴다
 
@@ -1795,6 +1814,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             if p_b > 0.0 and p + dp < p_b < p:
                 f = (p - p_b) / (-dp)
                 if 0.0 < f < 1.0:
+                    if p_b in eos.melt_curve_seams():
+                        MELT_SEAM_CUTS[0] += 1
                     h = f * h
                     # C164 메모 — 착지 걸음의 RK4 단계는 끝까지 옛 상(경계 위 압력)의 밀도로: 새 쪽 착지점의 마지막 단계(k4)가
                     #   새 상 밀도를 읽으면 착지 걸음 길이에 비례하는 반지름 오차가 남았다(등온 지구 en/PREM, 1500 걸음 +57 m)
@@ -1812,7 +1833,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                         h, h0, e0 = h - e1 * (h - h0) / (e1 - e0), h, e1
                         dm, dp, di, dv = _rk(h)
                         PHASE_CUT_REWALKS[0] += 1
-                    stage_pmin[0] = 0.0
+                    stage_pmin[0] = _head_floor * (1.0 + 4e-12) if _head_floor > 0.0 else 0.0   # 걸음 머리 묶음으로 되돌림
                     basal_crossed = False
 
         # 표면 암석권 바닥 — 반지름 경계(기저층 꼭대기와 같은 RK4 재걷기). 층 바닥 온도는 걸음 끝의 단열 온도.

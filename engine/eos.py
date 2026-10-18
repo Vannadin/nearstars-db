@@ -3574,7 +3574,28 @@ DENG_PPV = (5600.0, 120.0, 113.60, 2.85)      # Tm = 5600·((P−120)/113.60 + 1
 # 않는다** — 산문이 아니라 계수 안에 사는 범위 한계(서베이 ⑬ 신규 종류 (f)). 체제상
 # 140 GPa 아래로는 안 내려가지만, 잘못 호출되면 조용한 복소수 대신 이름을 대게 한다.
 DENG_BDG_FLOOR_GPA = 20.0 - 8.11              # = 11.89, 계수의 성질이지 논문의 진술이 아니다
-DENG_TRIPLE_PA = 180e9                        # 인쇄된 bdg/ppv/액체 삼중점 (교차는 173.6)
+DENG_TRIPLE_PA = 180e9                        # 인쇄된 bdg/ppv/액체 삼중점 (교차는 173.6) — 기록, 갈아타기 자리는 아래 교차
+
+
+def _deng_crossing_pa() -> float:
+    """Deng bdg 와 ppv 두 적합의 교차 압력 [Pa] — 같은 상수(DENG_BDG · DENG_PPV)에서 이분으로 (r2 de96ceaa: 녹는 곡선은
+    고체–고체–액체 삼중점을 값 연속으로 지나고 기울기만 꺾인다; 인쇄 삼중점 180 GPa 에서 갈아타면 +17.98 K 계단이 적합의
+    인공물로 남는다). 160–180 GPa 에서 bdg − ppv 는 + → − 로 한 번 바뀐다."""
+    def d(gpa):
+        b0, bp, ba, bc = DENG_BDG
+        q0, qp, qa, qc = DENG_PPV
+        return b0 * ((gpa - bp) / ba + 1.0) ** (1.0 / bc) - q0 * ((gpa - qp) / qa + 1.0) ** (1.0 / qc)
+    lo, hi = 160.0, 180.0
+    assert d(lo) > 0.0 > d(hi), "Deng 두 적합이 160–180 GPa 에서 한 번 교차하지 않는다"
+    for _ in range(200):
+        mid = 0.5 * (lo + hi)
+        if mid in (lo, hi):
+            break
+        lo, hi = (mid, hi) if d(mid) > 0.0 else (lo, mid)
+    return 0.5 * (lo + hi) * GPA
+
+
+DENG_SWITCH_PA = _deng_crossing_pa()          # ≈ 173.609 GPa — bdg → ppv 갈아타기 (값 연속, 기울기만 꺾임; r2 de96ceaa)
 DENG_CEILING_PA = 200e9                       # 논문 자신의 외삽 경고 경계
 FEI_UPPER = (6295.0, 140.0, 0.317)            # Fei+ 2021: Tm = 6295·(P/140)^0.317 [K, GPa]
 SILICATE_MELT_MAX_PA = 500e9                  # 이 위는 자료 있는 전사 가능 곡선이 없다
@@ -3654,7 +3675,7 @@ def _silicate_melt_point(p: float) -> float | None:
     if p >= DENG_CEILING_PA:                       # 200–500 GPa: Fei+ 2021 상계
         t0, p_ref, ex = FEI_UPPER
         return t0 * (gpa / p_ref) ** ex
-    if p >= DENG_TRIPLE_PA:                        # 180–200 GPa: Deng ppv
+    if p >= DENG_SWITCH_PA:                        # 173.6–200 GPa: Deng ppv (두 적합의 교차에서 갈아탐)
         t0, p0, a, c = DENG_PPV
         return t0 * ((gpa - p0) / a + 1.0) ** (1.0 / c)
     if gpa < DENG_BDG_FLOOR_GPA:
@@ -3662,7 +3683,7 @@ def _silicate_melt_point(p: float) -> float | None:
             f"Deng+ 2023 bridgmanite 적합은 {DENG_BDG_FLOOR_GPA:.2f} GPa 아래에서 "
             f"산술적으로 정의되지 않는다 ((P−20)/8.11+1 ≤ 0, {gpa:.2f} GPa 요청) — "
             "계수 안에 사는 범위 한계다. 이 압력의 곡선은 Monteux 암석 가지가 맡는다.")
-    t0, p0, a, c = DENG_BDG                        # 140–180 GPa: Deng bdg
+    t0, p0, a, c = DENG_BDG                        # 140–173.6 GPa: Deng bdg
     return t0 * ((gpa - p0) / a + 1.0) ** (1.0 / c)
 
 
@@ -3679,10 +3700,18 @@ def _silicate_melt_point_slope(p: float) -> float | None:
     if p >= DENG_CEILING_PA:
         t0, p_ref, ex = FEI_UPPER
         return t0 * ex / (p_ref * GPA) * (gpa / p_ref) ** (ex - 1.0)
-    t0, p0, a, c = DENG_PPV if p >= DENG_TRIPLE_PA else DENG_BDG
+    t0, p0, a, c = DENG_PPV if p >= DENG_SWITCH_PA else DENG_BDG
     if gpa < DENG_BDG_FLOOR_GPA:
         _silicate_melt_point(p)                        # 같은 이름 댄 ValueError
     return t0 / (c * a * GPA) * ((gpa - p0) / a + 1.0) ** (1.0 / c - 1.0)
+
+
+def melt_curve_seams() -> tuple[float, ...]:
+    """창 가장자리 등록 §2.1 — 규산염 녹는 곡선(고상선 · 액상선 · 단일 녹는점)이 정의 가지를 바꾸는 압력 [Pa], 곡선이
+    가지를 고르는 바로 그 상수에서: Monteux 저압 → 고압 (20 GPa, 값 −1 K · 기울기), 암석 → MgSiO₃ (140 GPa, 값),
+    Deng bdg → ppv (두 적합의 교차, 기울기), Deng → Fei (200 GPa, 값). 손 목록이 아니다 — 곡선이 가지를 더 얻으면 여기에
+    더해야 하고, test_melt_seams 가 곡선을 훑어 빠진 것을 잡는다. 정의역 끝(SILICATE_MELT_MAX_PA)은 이음매가 아니라 끝이다."""
+    return (MONTEUX_JOIN_PA, SILICATE_ROCK_MAX_PA, DENG_SWITCH_PA, DENG_CEILING_PA)
 
 
 def _silicate_variant_check(variant: str) -> None:
