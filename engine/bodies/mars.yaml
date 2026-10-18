@@ -225,8 +225,9 @@ inputs:
     fit: true
     source: "owner core box 2026-09-10 (S 13–19 · O 1–4 · C 0.5–1.4 wt%) and owner declaration 2026-09-20 (box_ceiling)"
     counter_evidence_searched: >
-      C107 (interior-core.md): with this box the layered family's core is not reached; the two box corners give
-      S 18.9062 (floor) against 13.8438 wt% (ceiling) at halvings 6, so the choice of corner is a declaration.
+      C107 (interior-core.md): with this box the layered family's core is not reached, so the choice of corner is
+      a declaration. (C107's corner S values were measured under the one-anchor core of 2026-09-20; the frozen fit
+      now reads S 14.7813 wt% at box_ceiling and 20.5000 at box_floor: core two-anchor note 1 §7.)
       The box is the owner's (2026-09-10), not a fit range. Huang+ 2023 samples Fe–S to about c_S 0.3 mole
       fraction (Fig. 2, SI Fig. S3; S ≈ 0–22.8 wt% at this file's O and C) at two anchors, 19 GPa / 2100 K and
       35 GPa / 2400 K (Table 1, SI Table S5); the engine reads both (owner-direction a7181489). No source held

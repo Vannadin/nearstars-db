@@ -4825,7 +4825,7 @@ def solve(mass_earth: float,
         and getattr(core_ph, "p_graded_above", 0.0) else ("ok", ""))
     if core_reach != "ok":
         notes.append(
-            "**핵의 밀도 적합이 자기 앵커 위에서 답했다** — " + core_reach_why +
+            "**핵의 밀도 적합이 등급 구간 밖에서 답했다** — " + core_reach_why +   # 머리는 등급 하나만 말하지 않는다(r2 N2: c_S 등급도 낸다)
             f". ⚠ 이 풀이에서 그 구간의 질의는 {reach_graded} 회이고 그중 측정 상한 위가 "
             f"{reach_beyond} 회다 — **버려진 사격 시도를 포함한 수**이고, 등급을 지는 것은 "
             "그 수가 아니라 **답의 중심압**이다. 등급을 analog 로 내린다.")

@@ -474,8 +474,8 @@ class LegacyMaterials:
 
 def build_fe_core_light(s: float, o: float, c: float):
     """The liquid Fe–S–O–C core material at S = s, O = o, C = c (mass fractions), as `interior._sulphur_core` builds it
-    at 097a8aa3 (interior.py:5859 ff.: core_mole_fractions → huang_core_phase(x) in a Material with the fit-floor
-    reasons)."""
+    (core_mole_fractions → the two-anchor Huang+ 2023 phases in a Material with the fit-floor reasons; core two-anchor
+    registration §1–§2; at 097a8aa3 it was huang_core_phase(x, "19GPa"), one anchor)."""
     x = eos.core_mole_fractions({"S": s, "O": o, "C": c})
     name = f"fe_core_fit_s{s * 100:.4f}_{_pin_of(o, c)}"
     return eos.Material(
