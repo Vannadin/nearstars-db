@@ -186,7 +186,7 @@ class Ruler(unittest.TestCase):
             body = _coreless(RULER_T0 + RULER_STEP * i)
             _ans, x = sv.solve(body, OPT)
             out = sv.inward(body, sv._views_at(body, sv._views(body), x), x, OPT)
-            self.assertTrue(any(e.startswith("onset:") for e in out.events), (i, out.events))
+            self.assertIn("onset:고상선", out.events, i)                 # the ruler's subject exactly (68's nit)
 
     def test_control_planted_step(self):
         orig_state, orig_onset = lm.LegacyView.state, events.onset_events
