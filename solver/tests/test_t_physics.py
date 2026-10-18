@@ -60,16 +60,45 @@ class SplitInvariance(unittest.TestCase):
     (note 4 item 2). Control: a 1 K temperature jump planted at one internal split interface moves a key past that
     bound (moving a split between same-material layers would change nothing, so it cannot be the control)."""
 
+    #: design note 19 (K = 8 noise stop): core_pressure's bound also reads k·σ̂/|P_c|, σ̂ over 11 re-walks at the base
+    #: root (x*·(1 + j·1e-10), j = −5…5, a line in x, 9 dof), k = √2·t₉⁻¹(1 − 0.05/2) for one comparison
+    K_NOISE = 3.199173339927709
+    NOISE_KEYS = ("core_pressure",)
+
     @classmethod
     def setUpClass(cls):
         e = _earth()
-        cls.base = _q(sv.solve(e, OPT)[0])
+        ans, x = sv.solve(e, OPT)
+        cls.base = _q(ans)
+        sigma = cls._pass_noise(e, x)
         fine = _q(sv.solve(e, dataclasses.replace(OPT, rtol=OPT.rtol / 10.0))[0])
         # design note 7: T keys of a lidded body carry the lid fixed point's own tolerance, which the rtol pair cannot see
         lidded = any(l.thermal == "conductive" for l in e.layers)
         floor = {k: (OPT.lid_t_tol if lidded and k in T_KEYS else 0.0) for k in cls.base}
-        cls.bound = {k: max(T1, abs(fine[k] - v) / abs(v), floor[k]) for k, v in cls.base.items() if v}
+        noise = {k: (cls.K_NOISE * sigma[k] / abs(v) if k in cls.NOISE_KEYS else 0.0) for k, v in cls.base.items() if v}
+        cls.bound = {k: max(T1, abs(fine[k] - v) / abs(v), floor[k], noise[k]) for k, v in cls.base.items() if v}
         cls.e = e
+
+    @staticmethod
+    def _pass_noise(e, x):
+        """{key: σ̂}: each key's residual sd about a line in x over 11 accepted passes at x·(1 + j·1e-10)."""
+        views = sv._views(e, registry=sv.registry_for(e, OPT), silicate=OPT.silicate_records)
+        xs, rows = [], []
+        for j in range(-5, 6):
+            xx = x * (1.0 + j * 1e-10)
+            vx = sv._views_at(e, views, xx)
+            p = sv.inward(e, vx, xx, OPT, want_graze=False)
+            xs.append(xx)
+            rows.append({q.key: q.point for q in sv._quantities(e, p, "", xx, vx)})
+        mx = statistics.fmean(xs)
+        out = {}
+        for k in rows[0]:
+            ys = [r[k] for r in rows]
+            my = statistics.fmean(ys)
+            sxx = sum((u - mx) ** 2 for u in xs)
+            slope = sum((u - mx) * (v - my) for u, v in zip(xs, ys)) / sxx
+            out[k] = math.sqrt(sum((v - my - slope * (u - mx)) ** 2 for u, v in zip(xs, ys)) / (len(xs) - 2))
+        return out
 
     def _split(self, jumps=None):
         core, mantle, lid = self.e.layers
