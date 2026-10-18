@@ -1271,6 +1271,8 @@ class AssemblageView(mv.RecordView):
         #: (R1) §4: a cut curve's side reach past its ends, two T rows (the stencil's reach)
         self._reach = EXT_ROWS * (self.ts[1] - self.ts[0]) if len(self.ts) > 1 else 0.0
         self._parts, self._runcache = {}, {}
+        #: PROTOTYPE: the highest frozen node T (rows above it hold no frozen run; _flag_reads' precheck)
+        self._t_frozen_max = max((c["t"] for c in table["cells"] if c["kind"] == "frozen"), default=-math.inf)
         self._read_memo = {}
         self._wn_of = None                               # _width's node widths and their max, for the lnps they came from
         #: the column cut of a read: p_dataset, lifted to the taper's end for the zone's SLB-extrapolated read (note 7 §2)
@@ -1516,6 +1518,8 @@ class AssemblageView(mv.RecordView):
             if self._curves:
                 got = self._read(p, td, pr, x, ia, ib, fields=("s",), force=force)
                 v = got if isinstance(got, st.Stop) else got["s"]
+                if not isinstance(got, st.Stop) and not self._frozen_hit:
+                    self._flag_reads(pr, t, ib, force)
             else:
                 def val(ka, kb):
                     c = self._cell(ka, kb)
@@ -1541,6 +1545,46 @@ class AssemblageView(mv.RecordView):
         if self._frozen_hit:
             return None
         return v if isinstance(v, Dual) else Dual(v)
+
+    def _flag_reads(self, pr, t, ib, force=None):
+        """PROTOTYPE (68 B1 on ff886051): the frozen flag on data constant in the cell at fixed P. Every stencil row's
+        side values over every edge of its own partition whose window can hold x anywhere in the cell's T span
+        (x_b at the cell's two node T, the span widened by the larger w), whatever the blend weight, read for their
+        frozen runs only. Rows at T above the table's highest frozen T hold no frozen run and are skipped."""
+        n_t = len(self.ts)
+        rows = range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1)
+        if self.ts[rows[0]] > self._t_frozen_max:
+            return
+        x = math.log(pr)
+        rel = sorted({c for k in rows for _, c in self._partition(k)}, key=lambda c: c.id)
+        sides = {}
+        for c in rel:
+            pb = c.p_b_ext(t, self._reach)
+            sides[c] = None if pb is None else (-1 if pr < pb else 1)
+        if force:
+            sides.update({c: s_ for c, s_ in force.items() if c in sides})
+        for k in rows:
+            if self.ts[k] > self._t_frozen_max:
+                continue
+            part = set(self._partition(k).cs)
+            ext = []
+            for c in rel:
+                if c.kind != "edge" or c not in part:
+                    continue
+                ends = [c.p_b_ext(self.ts[j], self._reach) for j in (ib, ib + 1)]
+                ends = [math.log(e) for e in ends if e is not None]
+                if not ends:
+                    continue
+                wm = max(self._width(e) for e in ends)
+                if min(ends) - wm < x < max(ends) + wm:
+                    ext.append(c)
+            for sig in itertools.product((-1, 1), repeat=len(ext)):
+                sd = {**sides, **dict(zip(ext, sig))}
+                r = self._region(k, sd, x)
+                if self._row_value("s", k, r, x, False) is None:
+                    self._row_reach("s", k, r)
+                if self._frozen_hit:
+                    return
 
     def _with_s(self, p, t, pr, ia, ib, got):
         """Today's read `got` (ρ, dT/dP, c_P, cells) with dT/dP = −(∂s/∂P)_T/(∂s/∂T)_P and c_P = T·(∂s/∂T)_P of the s read
@@ -1790,7 +1834,7 @@ class AssemblageView(mv.RecordView):
                 for s_, h in zip(sig, hs):
                     wgt *= h if s_ > 0 else 1.0 - h
                 if wgt == 0.0:
-                    continue
+                    continue                             # the frozen flag reads it anyway (_flag_reads)
                 if sig == own_sig:
                     val = own
                 else:
@@ -1872,7 +1916,7 @@ class AssemblageView(mv.RecordView):
         finally:                                         # the side reads leave no mark or count on the read
             self._marks.update(marks)
             self.cut_counts.update(counts)
-        return total if kept == 1.0 else total / kept
+        return total / kept                              # 68 n1: always divided (Σ W is 1 only to rounding)
 
     def _row_reach(self, f, k, r):
         """A corner row's value for a side read in region r where _row_value has none (r empty and no run on one side):
