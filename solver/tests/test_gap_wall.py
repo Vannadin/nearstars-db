@@ -54,6 +54,9 @@ class GapShotsAfterEveryScan(unittest.TestCase):
         self.assertEqual([round(r, 9) for r in g["roots_from_gap"]], [44.0])
         self.assertEqual((g["outcome_kind"], g["kind_without"]), ("two_roots", "root"))
         self.assertGreater(g["calls"], g["shots"])           # the gap's walls and Brent trials count too
+        xs = [t.x for t in out.trials]
+        self.assertIn(g["lo"], xs); self.assertIn(g["hi"], xs)   # the bounding scan points are trials …
+        self.assertEqual(g["calls"], sum(1 for x in xs if g["lo"] < x < g["hi"]))   # … and not counted (68 on B1)
         with mock.patch.object(cl, "_gap_shots", _only_when_nothing_solved(cl._gap_shots)):
             no = cl.solve_scalar(F_root_and_pair, 1.0, 100.0)
         self.assertEqual((no.kind, [round(r, 9) for r in no.roots]), ("root", [80.0]))
@@ -100,6 +103,20 @@ class GapShotsAfterEveryScan(unittest.TestCase):
                 mock.patch.object(cl, "in_gap", lambda x, gaps: False):
             got, _w = sv._solve(body, context.Options(sensitivity_dt=0.0), None, None, None)
         self.assertNotIn("pass_kind", got.evidence)
+
+    def test_r_s_05_a_no_solved_refusal_naming_a_gap_shot_says_gap(self):
+        """R2-R-S-05 (68 B1 on 6c42834b): nothing solves and the narrowest opposite-wall pair's lower side is a gap
+        shot: the refusal names it with pass_kind «gap». Mutant: always «scan»."""
+        body, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
+        node = {"m": 1.0, "r": 1.0, "P": 3.5e11, "T": 6000.0}
+        rec = mv.RecordRefusal("fe_core_planted", 3.5e11, 6000.0, "input.material_out_of_data", "planted")
+        def ref(x, p):
+            return cl.Trial(x, None, st.Stop("refused", {"p": p, "material_id": "fe_core_planted"}), "scan")
+        trials = [ref(1.0, 3.0e11), cl.Trial(2.0, None, st.Stop("refused", rec, node), "gap"), ref(3.5, 1.4e10)]
+        out = cl.Outcome("no_solved", walls=[], trials=trials, detail={"gaps": []})
+        with mock.patch.object(cl, "solve_scalar", return_value=out):
+            got, _w = sv._solve(body, context.Options(sensitivity_dt=0.0), None, None, None)
+        self.assertEqual((got.evidence["x"], got.evidence["pass_kind"]), (2.0, "gap"))
 
     def test_g4_gap_is_a_registered_pass_kind(self):
         """G4 (R2-R-S-05): «gap» is a pass kind the registry accepts."""
@@ -215,6 +232,15 @@ class NearestWallOnScanPoints(unittest.TestCase):
         open_end = [_t(1.0, 1.0), _t(2.0, 0.9), _t(3.0, None, "wall"), _t(4.0, None)]
         self.assertIsNone(sv._nearest_wall(self._out(open_end, hi=8.0)))      # range end 8: zero at 11 lies past it
         self.assertIs(sv._nearest_wall(self._out(open_end, hi=20.0)), self.wall)
+
+    def test_w1b_a_solved_trial_past_a_refusing_one_is_not_the_stretchs(self):
+        """§2.2 step 1 (68 B1 on 6c42834b; review 2 T-03): the stretch stops at a refusing trial. Here the stretch
+        holds one scan point (2.5) and a wall trial (2.0), so the trend is read on them and falls toward the wall.
+        Counting the scan point at 1.0, beyond the refusing 1.5, would read 2.5 and 1.0 instead, where |F| rises.
+        Mutant: drop the refused-between filter (None)."""
+        out = self._out([_t(1.0, 0.2), _t(1.5, None), _t(2.0, 1.0, "wall"), _t(2.5, 0.5), _t(3.0, None, "wall"),
+                         _t(4.0, None)])
+        self.assertIs(sv._nearest_wall(out), self.wall)
 
     def test_w3_a_short_stretch_reads_its_ends_only_when_wide_enough(self):
         """W3: one scan point and a wall trial far enough apart give the trend; two trials closer than
