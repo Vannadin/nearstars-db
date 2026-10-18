@@ -161,14 +161,34 @@ def chain_reads_digest(path: Path | None = None) -> str:
     return hashlib.sha256(json.dumps(proj, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:16]
 
 
+def anchor_fixings_read(inputs: dict) -> tuple[str, ...]:
+    """황 앵커에서 이 몸의 표가 읽는 고정 — `_solver` 와 **같은 갈래 판정**에서 뽑는다(몸 이름도 «core_light_elements 선언» 도
+    아니다; 지휘석 10-16, 핵 두 앵커 항목). 선언 조성이면 읽지 않고, 핵+층 반지름을 선언했으면 선언 고정 하나, 그 밖은 읽지 않는다."""
+    import interior
+    if inputs.get("composition_intent") is not None or inputs.get("core_mass_fraction") is not None:
+        return ()
+    if interior._declared_value(inputs.get("core_plus_layer_radius_km")):
+        return (interior._declared_value(inputs.get("light_element_fixing")),)
+    return ()
+
+
 def triggers(inputs: dict) -> dict:
     keys = structure_keys()
     return {"declared": {k: inputs.get(k) for k in keys},
             "chain_reads": chain_reads_digest(),
             "code": {f: _code_digest(HERE / f) for f in CODE_FILES},
             "bytes": {f: hashlib.sha256((HERE / f).read_bytes()).hexdigest()[:16] for f in BYTE_FILES},
-            "sulphur_fixings": json.loads((HERE / SULPHUR_ANCHOR).read_text(encoding="utf-8")).get("fixings"),
+            # 이 몸이 읽는 고정만 (`anchor_fixings_read`) — 안 읽는 몸은 None 이라 앵커가 움직여도 안 낡는다
+            "sulphur_fixings": _fixings_read(inputs),
             "mantle_table": _mantle_table_digest(inputs.get("mantle_composition"))}
+
+
+def _fixings_read(inputs: dict) -> dict | None:
+    pins = anchor_fixings_read(inputs)
+    if not pins:
+        return None
+    fixings = json.loads((HERE / SULPHUR_ANCHOR).read_text(encoding="utf-8")).get("fixings") or {}
+    return {p: fixings.get(p) for p in pins}
 
 
 def _mantle_table_digest(decl) -> str | None:
@@ -259,9 +279,9 @@ def _solver(body, s0):
             b = copy.deepcopy(body); b.results = {}
             b.inputs["potential_temperature"] = float(t)
             return interior._solve_from_state(b, p_hint)
-    elif interior._declared_value(declared.get("core_plus_layer_radius_km")):
+    elif anchor_fixings_read(declared):              # 방아쇠와 같은 판정 (`anchor_fixings_read`)
         anchor = json.loads(interior.SULPHUR_ANCHOR_FILE.read_text(encoding="utf-8"))
-        pin = interior._declared_value(declared.get("light_element_fixing"))
+        pin = anchor_fixings_read(declared)[0]
         if anchor["fixings"][pin].get("bracket_miss"):
             raise SystemExit(f"{body.name}: 굳힌 황 맞춤에서 고정 `{pin}` 은 괄호 밖으로 굳혀졌다 — 값이 없다 "
                              "(층 판 덧붙임 2) — 표를 못 짓는다")
@@ -1065,7 +1085,9 @@ def _moved(then: dict, now: dict) -> tuple[list[str], list[str]]:
                 (code if part == "code" or (part == "bytes" and k.endswith(".py")) else data).append(f"{part}.{k}")
     if now.get("chain_reads") != then.get("chain_reads"):
         data.append("chain_reads")              # C159 — 옛 꼴 표(칸 없음)도 여기서 한 번 낡음으로 이름 댄다(규칙 4)
-    if now["sulphur_fixings"] != then.get("sulphur_fixings"):
+    # 지금 읽는 고정만 대조한다: 옛 꼴 표는 앵커의 fixings 전부를 들었으므로 그 안에서 같은 고정을 꺼내 본다 (핵 두 앵커 항목)
+    now_s, then_s = now.get("sulphur_fixings"), then.get("sulphur_fixings")
+    if now_s is not None and {p: (then_s or {}).get(p) for p in now_s} != now_s:
         data.append("sulphur_fixings")
     if now.get("mantle_table") != then.get("mantle_table"):
         data.append("mantle_table")

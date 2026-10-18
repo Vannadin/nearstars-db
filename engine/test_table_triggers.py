@@ -69,6 +69,26 @@ data, code = sg._moved(old_form, {**then})
 check("규칙 4 — 옛 꼴 방아쇠(chain.yaml 바이트 · chain_reads 없음)는 데이터 움직임으로 이름 댄다",
       "bytes.chain.yaml" in data and "chain_reads" in data, f"{data} / {code}")
 
+# 핵 두 앵커 항목 (지휘석 10-16) — 황 앵커 방아쇠는 그 몸이 **읽는 고정**뿐: 선언에서 뽑고(`anchor_fixings_read`), 양방향으로 본다
+fix_old = {"box_ceiling": {"core_sulphur_wt": 0.18}, "box_floor": {"bracket_miss": True}}
+fix_new = {"box_ceiling": {"core_sulphur_wt": 0.14}, "box_floor": {"core_sulphur_wt": 0.20}}
+reader = {"core_plus_layer_radius_km": {"value": 1830.0}, "light_element_fixing": {"value": "box_ceiling"}}
+nonreader = {"composition_intent": "earth_like"}
+check("황 고정 — 핵+층 반지름을 선언한 몸은 선언 고정 하나를 읽는다", sg.anchor_fixings_read(reader) == ("box_ceiling",),
+      str(sg.anchor_fixings_read(reader)))
+check("황 고정 — 선언 조성 몸 · 아무것도 선언 안 한 몸은 안 읽는다",
+      sg.anchor_fixings_read(nonreader) == () and sg.anchor_fixings_read({}) == ())
+base_t = {"declared": {}, "code": {}, "bytes": {}, "chain_reads": base, "mantle_table": None}
+data, code = sg._moved({**base_t, "sulphur_fixings": {"box_ceiling": fix_old["box_ceiling"]}},
+                       {**base_t, "sulphur_fixings": {"box_ceiling": fix_new["box_ceiling"]}})
+check("황 고정 — 읽는 몸은 앵커가 움직이면 낡는다(데이터)", data == ["sulphur_fixings"] and not code, f"{data} / {code}")
+data, code = sg._moved({**base_t, "sulphur_fixings": fix_old}, {**base_t, "sulphur_fixings": {"box_ceiling": fix_new["box_ceiling"]}})
+check("황 고정 — 옛 꼴(앵커 전부를 든 표)도 읽는 고정만 대조해 낡는다", data == ["sulphur_fixings"], f"{data}")
+data, code = sg._moved({**base_t, "sulphur_fixings": fix_old}, {**base_t, "sulphur_fixings": {"box_ceiling": fix_old["box_ceiling"]}})
+check("황 고정 — 읽는 고정이 그대로면 다른 고정이 움직여도 안 낡는다", data == [], f"{data}")
+data, code = sg._moved({**base_t, "sulphur_fixings": fix_old}, {**base_t, "sulphur_fixings": None})
+check("황 고정 — 안 읽는 몸은 앵커가 움직여도 안 낡는다(옛 꼴 표의 fixings 를 무시)", data == [] and not code, f"{data} / {code}")
+
 # 수락 4 — 열진화 입력을 선언한 몸은 표가 있어야 한다: 빈 표 폴더에서 셋 다 FAIL
 check("규칙 3 — 열진화 입력을 선언한 출하 몸 = earth · mars · venus", sg.history_bodies() == ["earth", "mars", "venus"],
       str(sg.history_bodies()))

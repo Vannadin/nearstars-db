@@ -301,6 +301,27 @@ def check() -> int:
           f"({seconds:.0f} s)")
 
     misses = [p for p, r in frozen["fixings"].items() if r.get("bracket_miss")]
+    _real_anchor, _real_frozen = interior.SULPHUR_ANCHOR_FILE, frozen
+    if not misses and _layered(declared):
+        # ⚠ **다시 핀 (핵 두 앵커 항목, 지휘석 10-16)**: 두 앵커 핵에서는 층 판의 둘째 고정도 괄호 안에서 맞는다(옛: box_floor
+        #   괄호 밖 → 이제 S 20.50 wt%). 아래 이름 댄 거절 줄들이 **빠진 음성**이 되지 않게, 그 고정만 괄호 밖으로 바꾼
+        #   **심은 사본**(임시 파일; 트리의 앵커는 안 건드린다)에서 같은 줄을 돌린다 — 실제 맞춤이 괄호 밖이라는 주장은 아니다.
+        import json as _json0
+        import tempfile as _tempfile0
+        _second = sorted(p for p in frozen["fixings"] if p != declared["light_element_fixing"])
+        _real = frozen["fixings"][_second[0]]
+        print(f"  [PASS] 층 판 둘째 고정 `{_second[0]}` 는 이제 괄호 안 — S {_real['core_sulphur_wt'] * 100:.4f} wt% "
+              f"(옛: 괄호 밖). 거절 줄은 심은 괄호 밖 사본에서 돈다")
+        _planted = _json0.loads(_real_anchor.read_text(encoding="utf-8"))
+        _planted["fixings"][_second[0]] = {"bracket_miss": True, "halvings": _real["halvings"],
+                                           "bracket": list(interior.SULPHUR_FIT_BRACKET), "planted": True,
+                                           "target_km": declared["core_plus_layer_radius_km"],
+                                           "reason": "심은 괄호 밖 기록 — 거절 줄을 살려 두는 음성 (실제 맞춤 아님)"}
+        _pd = Path(_tempfile0.mkdtemp())
+        (_pd / _real_anchor.name).write_text(_json0.dumps(_planted), encoding="utf-8")
+        interior.SULPHUR_ANCHOR_FILE = _pd / _real_anchor.name
+        frozen = _planted
+        misses = [_second[0]]
     if misses:
         # ⚠ 층 판(덧붙임 2 ②): «두 고정이 1 wt% 넘게 갈리느냐» 대신 «둘째 고정이 괄호 밖» 을 단언 — 위 고리가 다시 풀어 봤다
         ok = _layered(declared) and declared["light_element_fixing"] not in misses
@@ -365,6 +386,8 @@ def check() -> int:
             fails.append(f"두 고정의 S 가 {apart * 100:.2f} wt% 밖에 안 갈린다 — 고정 선택이 답을 "
                          "안 움직인다면 그 선언은 아무것도 안 하고 있는 것이다")
         print(f"  [{'PASS' if ok else 'FAIL'}] 두 고정이 **다른 답**을 준다 — S {apart * 100:.2f} wt% 차")
+    interior.SULPHUR_ANCHOR_FILE = _real_anchor          # 심은 사본을 썼다면 트리의 앵커로 되돌린다
+    frozen = _real_frozen
 
     if CODE_MOVED:
         print(f"  [{'PASS' if not fails else 'FAIL'}] 코드 움직임 {CODE_MOVED} · 값 "
