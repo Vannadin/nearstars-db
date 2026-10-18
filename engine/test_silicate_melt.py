@@ -113,7 +113,9 @@ def main() -> int:
        f"5: 창 안 c_p 증가 {cp_in - cp_out:.0f} ≠ ΔH/(T_liq−T_sol) = {lat:.0f} J/kg/K")
     g_out = m.grad_ad(p, sol - 50.0)
     g_in = m.grad_ad(p, t_in)
-    ok(g_in < g_out, "5: 창 안에서 단열선이 평평해지지 않는다 (∇_ad 미감쇠)")
+    # melt-window 등록(2026-10-18): 옛 단언 «창 안에서 단열선이 평평해진다(g_in < g_out)» 은 식 (17) 만 쓴 비등엔트로피
+    #   꼴을 박아 둔 것이었다. 등엔트로피 꼴(압력 항 L·X)에서 두 상 단열선은 한 상보다 가파르다 (Monteux 식 19).
+    ok(g_in > g_out, "5: 창 안 단열선이 한 상(고체) 단열선보다 가파르지 않다 — 등엔트로피 꼴(압력 항 L·X)이 빠졌다")
     # 단일점 구간(>140 GPa)의 명목 폭 — 선언값 그대로 창이 있다
     w = silicate_liquidus(300e9) - silicate_solidus(300e9)
     ok(abs(w - SILICATE_MELT_POINT_WIDTH) < 1e-9,
