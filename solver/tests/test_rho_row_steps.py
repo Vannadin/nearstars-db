@@ -60,6 +60,39 @@ class BuildKnowsRowSteps(unittest.TestCase):
                 rb.falls_at(v, t, _ib(v, t), math.log(5.0e9), math.log(5.3e9))
 
 
+class SwapOnTheGrid(unittest.TestCase):
+    def test_a_swap_on_a_grid_point_is_listed_not_screened(self):
+        # PC rev3b: a one-row swap pair (bse swap168/170 at 850 K, khan swap123/124 at 1100 K) has a constant P_b equal
+        # to a stencil row's partition point, so xs is a grid point and its downward jump (−9.1e-5 kg/m³ on bse) sat at
+        # a half-cell's end; the strict skip let it bisect to the floor («unresolved»)
+        for rid, t, ids in ((BSE, 753.125, (168, 170)), ("silicate_slb_mars_khan2022", 1003.125, (123, 124))):
+            with self.subTest(rid=rid):
+                v = _view(rid)
+                xs = next(math.log(c.p_b_ext(t, v._reach)) for c in v._cut if c.kind == "swap"
+                          and v._events.index(c) == ids[0])
+                _iv, _un, stops, _fl, sj, _ex = rb.falls_at(v, t, _ib(v, t), xs - 0.01, xs + 0.01)
+                self.assertEqual(stops, [])
+                got = [j for j in sj if j["curve"] in ids]
+                self.assertEqual(sorted(j["curve"] for j in got), sorted(ids))
+                self.assertTrue(all(j["jump"] < 0.0 and j["x"] == xs for j in got), got)   # listed for the gate
+
+    def test_the_strict_skip_stops_there(self):
+        # the mutant: rho_fall_build with the old open skip (a < xs < b), loaded from its own source — the half-cell
+        # ending on xs is screened and STOPs
+        import types
+        src = open(rb.__file__, encoding="utf-8").read()
+        self.assertEqual(src.count("any(a <= xs_ <= b for xs_, _c in swaps)"), 1)
+        mut = types.ModuleType("rho_fall_build_open_skip")
+        mut.__file__ = rb.__file__
+        exec(compile(src.replace("any(a <= xs_ <= b for xs_, _c in swaps)", "any(a < xs_ < b for xs_, _c in swaps)"),
+                     rb.__file__, "exec"), mut.__dict__)
+        v = _view(BSE)
+        t = 753.125
+        xs = next(math.log(c.p_b_ext(t, v._reach)) for c in v._cut if c.kind == "swap" and v._events.index(c) == 168)
+        with self.assertRaises(mut.Unresolved):
+            mut.falls_at(v, t, _ib(v, t), xs - 0.01, xs + 0.01)
+
+
 class RepairSplitsAtUpwardSteps(unittest.TestCase):
     def test_upward_split_downward_bridged(self):
         v = _view(BSE)

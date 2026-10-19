@@ -287,9 +287,6 @@ def falls_at(v, t, ib, xlo, xhi):
             swap_jumps.append({"t": t, "x": xs_, "curve": cid, "r_before": lo_r[0], "r_after": hi_r[0],
                                "jump": hi_r[0] - lo_r[0], "rel": (hi_r[0] - lo_r[0]) / lo_r[0]})
 
-    def across_swap(a, b):
-        return any(a < xs_ < b for xs_, _c in swaps)
-
     def slope(i):
         if vals[i] is None or vals[i + 1] is None:
             return 0.0
@@ -299,8 +296,11 @@ def falls_at(v, t, ib, xlo, xhi):
         if fa is None or fb is None:
             unscreened.append({"t": t, "a": a, "b": b})
             return
-        if across_swap(a, b) and b - a <= 2.0 * SWAP_EPS * (1.0 + 1e-6):
-            return                                       # the swap's own jump: listed above, not a fall
+        if any(a <= xs_ <= b for xs_, _c in swaps) and b - a <= 2.0 * SWAP_EPS * (1.0 + 1e-6):
+            # the swap's own jump: listed above, not a fall. Closed at both ends: a swap's xs can be a grid point (a
+            # one-row curve's constant P_b is a stencil row's partition point, bit for bit), and the jump then sits at
+            # a half-cell's end (rev3b: bse swap168/170, khan swap123/124)
+            return
         if any(a <= xs_ <= b for xs_ in down) and b - a <= 2.0 * SWAP_EPS * (1.0 + 1e-3):
             # a downward row step (its own P_b is a grid point too, so the step sits in one of the two half-cells): a
             # fall, bridged, where R drops across the half-cell; the other half is smooth and passes as any cell
