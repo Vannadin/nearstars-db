@@ -7,7 +7,9 @@
 import bisect
 import copy
 import math
+import inspect
 import random
+import textwrap
 import unittest
 from unittest import mock
 
@@ -415,6 +417,83 @@ class OpenEnds(unittest.TestCase):
             self.assertEqual(len(got), 1 if on else 0)
             if on:
                 self.assertEqual(got[0].fields["flat"], self.PINNED[v.material_id]["flat"])
+
+
+class FlagConstantInCell(unittest.TestCase):
+    """s-read post-freeze note 4 §4 (r2 B5 on 677f85d0..0d7732d3): the s path's frozen flag is constant inside a T cell
+    at fixed P, on the records, wherever no cut curve's P_b_ext(T) crosses that P inside the cell (the one change note 4
+    §2 keeps: a landed event). Mutants: the edge's window taken at the read's own T, and a side assignment of weight 0
+    skipped (today's before note 4): both flip the flag mid-cell."""
+
+    U = (1e-9, 0.25, 0.5, 0.75, 1.0 - 1e-9)
+
+    @classmethod
+    def _flips(cls, rid, flag_reads=None):
+        v = _view(rid)
+        flips, n = [], 0
+        with (mock.patch.object(ma.AssemblageView, "_flag_reads", flag_reads) if flag_reads else _nothing()):
+            for ib in range(1, len(v.ts) - 2):
+                if v.ts[ib - 1] > v._t_frozen_max:
+                    break
+                d = v.ts[ib + 1] - v.ts[ib]
+                for ia in range(len(v.ps) - 1):
+                    if v.ps[ia + 1] > v.p_dataset:
+                        break
+                    for f in (0.25, 0.5, 0.75):
+                        p = math.exp(v.lnps[ia] + f * (v.lnps[ia + 1] - v.lnps[ia]))
+                        ts = [v.ts[ib] + u * d for u in cls.U]
+                        if any(len({q > p for q in (c.p_b_ext(t, v._reach) for t in ts) if q is not None}) > 1
+                               for c in v._cut):
+                            continue                  # a cut curve crosses P in the cell: the side map changes there
+                        n += 1
+                        fl = {v._s_path(p, t, p, ia, ib) is None for t in ts}
+                        if len(fl) > 1:
+                            flips.append((p, v.ts[ib]))
+        return n, flips
+
+    @staticmethod
+    def _mutant(old, new):
+        src = textwrap.dedent(inspect.getsource(ma.AssemblageView._flag_reads))
+        assert src.count(old) == 1, old
+        ns = dict(vars(ma))
+        exec(src.replace(old, new), ns)
+        return ns["_flag_reads"]
+
+    def test_constant_on_the_records(self):
+        for rid in ("silicate_slb_default_bse", "silicate_slb_earth_dmm_wh2005", "silicate_slb_mars_khan2022"):
+            n, flips = self._flips(rid)
+            with self.subTest(rid=rid):
+                self.assertGreater(n, 1000)
+                self.assertEqual(flips, [])
+
+    def test_window_at_the_read_t_is_red(self):
+        mut = self._mutant("ends = [c.p_b_ext(self.ts[j], self._reach) for j in (ib, ib + 1)]",
+                           "ends = [c.p_b_ext(t, self._reach)]")
+        self.assertGreater(len(self._flips("silicate_slb_default_bse", mut)[1]), 0)
+
+    def test_zero_weight_skipped_is_red(self):
+        mut = self._mutant("for sig in itertools.product((-1, 1), repeat=len(ext)):",
+                           "for sig in [tuple(sides[c] if sides[c] is not None else 1 for c in ext)]:")
+        self.assertGreater(len(self._flips("silicate_slb_default_bse", mut)[1]), 0)
+
+    def test_record_example(self):
+        """Note 4 §3's example, bse ia 66 ib 17: constant over the cell's T at 1.043, 1.066 and 1.089 GPa. At this tip
+        it is frozen at all three P (r2 n3: note 4 §3 had the last two clear on 7713659e; the rule, constancy, holds)."""
+        v = _view()
+        ia, ib = 66, 17
+        d = v.ts[ib + 1] - v.ts[ib]
+        for p in (1.043e9, 1.066e9, 1.089e9):
+            self.assertEqual(min(max(bisect.bisect_left(v.ps, p, 1) - 1, 0), len(v.ps) - 2), ia)
+            fl = [v._s_path(p, v.ts[ib] + u * d, p, ia, ib) is None for u in self.U]
+            self.assertEqual(fl, [True] * len(self.U), p)
+
+
+class _nothing:
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
 
 
 class BasalDelegation(unittest.TestCase):
