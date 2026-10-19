@@ -87,6 +87,7 @@ class Stack:
         #: C145 — the continuation state from the last accepted state (main "nearest" branch only)
         self.track: ft.Track | None = None
         self.fold_events: list = []
+        self.fold_rejected: list = []            # c1 4b26cbcd (4): (t, equation, root, neighbour) of a refused fold
         self.multi_root_evals = 0
         self.root_jumps: list = []
         self.root_notes: list = []
@@ -172,8 +173,8 @@ def _continued(s: Stack, layers, r_l: float, r_c: float, tr: ft.Track):
     def hb(du):
         return lambda db: layers(du, db)[1]["delta_b"] - db
 
-    def inner(du):
-        return ft.local_root(hb(du), tr.b, 0.0, max(r_l - du - r_c, 1.0))
+    def inner(du):                                   # c1 4b26cbcd (1): carried, not NaN once it leaves ±w_b
+        return ft.carried_root(hb(du), tr.b, 0.0, max(r_l - du - r_c, 1.0))
 
     def outer(du):
         db = inner(du)
@@ -200,7 +201,7 @@ def track_at(s: Stack, t_c: float, t_m: float, d_l: float, t_l: float, prev: ft.
     b = ft.accept(hb, None if prev is None else prev.b, d_b, 0.0, max(r_l - d_u - r_c, 1.0))
 
     def outer(du):
-        db = ft.local_root(lambda x: layers(du, x)[1]["delta_b"] - x, b, 0.0, max(r_l - du - r_c, 1.0))
+        db = ft.carried_root(lambda x: layers(du, x)[1]["delta_b"] - x, b, 0.0, max(r_l - du - r_c, 1.0))
         return math.nan if db is None else layers(du, db)[0]["delta_u"] - du
     u = ft.accept(outer, None if prev is None else prev.u, d_u, 0.0, r_l - r_c, reach=ft.OUTER_NEIGHBOUR_CELLS)
     return ft.Track(u, b)
@@ -241,7 +242,7 @@ def solve_boundary_layers(s: Stack, t_c: float, t_m: float, d_l: float, t_l: flo
         for k in range(1, scan + 1):
             b = top * k / scan
             fb = h(b)
-            if (fa > 0) != (fb > 0):
+            if ft.changes_sign(fa, fb):
                 roots.append(bisect(h, a, b, fa))
             a, fa = b, fb
         return roots
@@ -452,7 +453,12 @@ def switch_branch(s: Stack, y: list, t_gyr: float, ev: ft.Lost) -> None:
     tr = s.track
     d_u0, d_b0 = _continued(s, layers, r_l, r_c, tr)
     dead = dead_u = None
-    if ev.equation == "δ_b":
+    root = tr.b if ev.equation == "δ_b" else tr.u
+    if not ft.pair_closing(root):
+        # c1 4b26cbcd (4): the neighbour ahead is not a closing partner, so the continuation still holds the root:
+        # no interval is excluded (the scan keeps the branch) and the rejected fold is recorded, not as a fold
+        s.fold_rejected.append((t_gyr, ev.equation, root.x, root.ahead()))
+    elif ev.equation == "δ_b":
         nb, cell = tr.b.ahead(), max(r_l - d_u0 - r_c, 1.0) / ft.FULL_SCAN
         dead = (min(d_b0, nb) - cell, max(d_b0, nb) + cell)
     else:
@@ -464,8 +470,19 @@ def switch_branch(s: Stack, y: list, t_gyr: float, ev: ft.Lost) -> None:
         raise sm.Refused(f"no branch after the fold of {ev.equation} at t = {t_gyr:.6f} Gyr (C145 §2.4)")
     d_u1, d_b1, t_b1 = sol[0], sol[1], sol[5]
     before, after = (d_b0, d_b1) if ev.equation == "δ_b" else (d_u0, d_u1)
-    s.fold_events.append((t_gyr, ev.equation, before, after, ev.tol_s / GYR_S, t_c - t_b1))
+    if dead is not None or dead_u is not None:
+        s.fold_events.append((t_gyr, ev.equation, before, after, ev.tol_s / GYR_S, t_c - t_b1))
     s.track = track_at(s, t_c, t_m, d_l, t_l, None, d_u1, d_b1)
+
+
+def _refused_fields(s) -> dict:
+    """A refused run's events, read from the stack as a finished run reports them (r2 on the gain-cap PC run: a
+    refused result carried none). cap_events / cap_straddles where the stack keeps them."""
+    out = {"fold_events": list(s.fold_events), "fold_rejected": list(s.fold_rejected)}
+    for k in ("cap_events", "cap_straddles"):
+        if hasattr(s, k):
+            out[k] = list(getattr(s, k))
+    return out
 
 
 def _tau_s(y: list, f: dict) -> float:
@@ -504,7 +521,7 @@ def run(s: Stack, cap_myr: float) -> dict:
         try:
             f1 = state_terms(s, *y, t, grad, mode="accept")
         except sm.Refused as e:
-            return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
+            return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n, **_refused_fields(s)}
         rows.append({"ddl": f1["ddl"], "lid_net": -s.mantle.params["k"] * f1["lid_gradient"] - f1["q_m"],
                      "crust_term": s.lid.params["rho_crust"] * (s.mantle.params["latent"] + s.mantle.params["cp"]
                                                          * (y[1] - s.body["t_surface"])) * f1["ddcr"],
@@ -545,16 +562,16 @@ def run(s: Stack, cap_myr: float) -> dict:
             else:
                 y_new, h_used, ev = step(y, t, h), h, None
         except sm.Refused as e:
-            return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
+            return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n, **_refused_fields(s)}
         except ft.Lost as e:
             return {"refused": f"the adopted root of {e.equation} left its bracket and halving gave up at "
-                               f"t = {t:.6f} Gyr (C145 §2.1)", "refused_at_gyr": t, "rows": rows, "n_steps": n}
+                               f"t = {t:.6f} Gyr (C145 §2.1)", "refused_at_gyr": t, "rows": rows, "n_steps": n, **_refused_fields(s)}
         if h_used == 0.0:
             # the fold sits at this very state: switch here and redo the row on the new branch
             try:
                 switch_branch(s, y, t, ev)
             except sm.Refused as e:
-                return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
+                return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n, **_refused_fields(s)}
             rows.pop()
             continue
         h = h_used
@@ -567,27 +584,27 @@ def run(s: Stack, cap_myr: float) -> dict:
             try:
                 switch_branch(s, y, t, ev)
             except sm.Refused as e:
-                return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
+                return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n, **_refused_fields(s)}
         t_l = sm.lid_base_temperature(y[1], s.e_star, s.opt["a_rh"], s.opt["r_gas"])
         v_sil, v_cr = _shell(s.r_p, s.r_c), _shell(s.r_p, s.r_p - y[3])
         h_pm = sm.primitive_heat((s.body["age_gyr"] - t) * 1000.0, s.mantle.params["rho"], s.body["concentration"])
         try:
             h_m, h_cr = lid_heat(s, h_pm, v_sil, v_cr)
         except sm.Refused as e:
-            return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
+            return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n, **_refused_fields(s)}
         grad = lid.step(h, d_l=y[2], d_cr=y[3], t_l=t_l, h_m=h_m, h_cr=h_cr)
         if s.layer_grid is not None:
             try:
                 s.layer_q = s.layer_grid.step(h, t_c=y[0], t_i=s.layer_t_i, h_d=s.basal.params["lambda_d"] * h_pm,
                                               t_now=t)
             except sm.Refused as e:
-                return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
+                return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n, **_refused_fields(s)}
     return {"rows": rows, "n_steps": n, "cap_myr": cap_myr, "h_min_myr": h_min / GYR_S * 1e3,
             "max_lambda_over_ceiling": worst,
             "guard_stage_hits": list(s.guard_stage_hits), "guard_iter_hits": list(s.guard_iter_hits),
             "fixed_point_limit_hits": list(s.fixed_point_limit_hits),
             "multi_root_evals": s.multi_root_evals, "root_jumps": list(s.root_jumps), "root_notes": list(s.root_notes),
-            "fold_events": list(s.fold_events),
+            "fold_events": list(s.fold_events), "fold_rejected": list(s.fold_rejected),
             "path_checks": list(s.path_checks),
             "layer": None if s.layer_grid is None else {
                 "describe": s.layer_grid.describe(), "margin": s.layer_grid.margin,
