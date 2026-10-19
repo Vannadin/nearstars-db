@@ -97,76 +97,61 @@ def _bse_view():
 
 
 class ReachZeroEnds(unittest.TestCase):
-    """Post-freeze note 1 (r2 2c9018f3, addenda 1 ff656fed, 2 705a59e9 and 3 dcac2b96, rule (J)): past a reach-0 end
-    every row holding the curve is made step-free at P_b(T_end) and the end row's own step is added outside the T
-    cubic with the smoothstep θ (1 at T_end, 0 at the next node, 0 farther out): one step, at P_b(T_end), with the
-    swap's sign, landed; a T kink at T_end on the stepped side, named («curve-end fade»)."""
+    """Post-freeze note 1 (r2 addendum 4 143d0a96): past a reach-0 end the read takes no side for the curve and each
+    stencil row holding it steps at its own P_b(T_k), weighted by its T weight; every such step is a landed event
+    (form assemblage_row_step) while the read cell's stencil holds the row. Monotone ρ is the ρ repair's."""
 
     @classmethod
     def setUpClass(cls):
         cls.v = _bse_view()
         cls.c = next(c for c in cls.v._cut if c.kind == "swap" and c.t0 == 1600.0 and c.stop_lo)
+        cls.steps = [x[2] for x in cls.v.transitions() if x[2]["form"] == "assemblage_row_step"]
 
-    def jump(self, p, field="rho"):
-        lo, hi = p * math.exp(-1e-9), p * math.exp(1e-9)
-        if field == "s":
-            return self.v.s_path(hi, T_STEP).v - self.v.s_path(lo, T_STEP).v
-        return self.v.state(hi, T_STEP)[0] - self.v.state(lo, T_STEP)[0]
+    def events(self, t):
+        return sorted(q for e in self.steps if (q := self.v.boundary_pressure(e, t)) is not None)
 
-    def test_no_step_at_the_outer_row_own_p_b(self):
-        # before the fix: ρ −0.63 kg/m³ here (row 1650's +47.9 through a negative cubic weight)
-        p = self.c.p_b(1650.0)                           # row 1650's own P_b (23.3415 GPa, a P node)
-        self.assertLess(abs(self.jump(p)), 1e-3)
-        self.assertLess(abs(self.jump(p, "s")), 1e-4)
+    def test_events_are_the_holding_rows_own_p_b(self):
+        self.assertEqual(self.events(T_STEP), sorted([self.c.p_b(1600.0), self.c.p_b(1650.0)]))
+        self.assertEqual(self.events(1525.0), [self.c.p_b(1600.0)])      # 1650 is out of [1500, 1550]'s stencil
+        self.assertEqual(self.events(1475.0), [])                          # 1600 is out of [1450, 1500]'s stencil
+        self.assertEqual(self.events(1600.0), [])                          # the curve has its P_b there
 
-    def test_the_landed_step_has_the_swap_sign(self):
-        pb = self.c.p_b(1600.0)
-        self.assertGreater(self.jump(pb), 1.0)            # the 660: ρ rises across it
-
-    def test_the_second_cell_has_no_step(self):
-        # rule (J): past the cell next to the end θ = 0 and every holding row is step-free, so at P_b(T_end) the read is
-        # continuous at 1525 K (the end row 1600 is an outer row there)
-        p = self.c.p_b(1600.0)
-        lo, hi = p * math.exp(-1e-9), p * math.exp(1e-9)
-        self.assertLess(abs(self.v.state(hi, 1525.0)[0] - self.v.state(lo, 1525.0)[0]), 1e-3)
-
-    def test_the_step_inside_the_cubic_is_red(self):
-        # the mutant: no fades, so the holding rows keep their steps (at the forced P_b(T_end)) inside the T cubic; in
-        # the second cell the end row's step then enters through an outer row's weight
-        from unittest import mock
-        v = _bse_view()
-        p = self.c.p_b(1600.0)
-        with mock.patch.object(type(v), "_fades", lambda self, rel, t, pbs: ()):
-            j = v.state(p * math.exp(1e-9), 1525.0)[0] - v.state(p * math.exp(-1e-9), 1525.0)[0]
-        self.assertGreater(abs(j), 0.1)
-
-    def test_the_fade_is_exact_at_the_end_row(self):
-        # θ = 1 at T_end: the read is the end row's own value on its own side (C⁰ with the curve's own range)
-        p = self.c.p_b(1600.0)
-        for f in (-1e-3, 1e-3):
-            q = p * math.exp(f)
-            self.assertAlmostEqual(self.v.state(q, 1600.0 - 1e-6)[0], self.v.state(q, 1600.0)[0], delta=1e-3)
-
-    def test_the_end_fades_are_named(self):
-        ends = self.v.curve_end_fades()
-        self.assertIn((1600.0, self.c.p_b(1600.0), -1), ends)
-
-    def test_the_event_is_the_read_s_step(self):
-        i = self.v._events.index(self.c)
-        bp = lambda t: self.v.boundary_pressure({"form": "assemblage_curve", "id": i}, t)
-        self.assertEqual(bp(T_STEP), self.c.p_b(1600.0))    # the cell next to the end: landed at P_b(T_end)
-        self.assertIsNone(bp(1540.0))                        # the second cell: no step, no event
-        self.assertIsNone(bp(1550.0))                        # the end row's weight is 0 at the far node
-        # the read's discontinuity sits where the event says: bisect the ρ jump
-        lo, hi = math.log(self.c.p_b(1600.0)) - 1e-3, math.log(self.c.p_b(1600.0)) + 1e-3
-        r = lambda x: self.v.state(math.exp(x), T_STEP)[0]
+    def bisect_step(self, p, t, field=0):
+        lo, hi = math.log(p) - 1e-4, math.log(p) + 1e-4
+        r = lambda x: self.v.state(math.exp(x), t)[field]
+        a, b = r(lo), r(hi)
         for _ in range(60):
             mid = 0.5 * (lo + hi)
-            if r(mid) - r(lo) > 0.5 * (r(hi) - r(lo)):
-                hi = mid
-            else:
+            if abs(r(mid) - a) < abs(r(mid) - b):
                 lo = mid
-        self.assertAlmostEqual(math.exp(hi) / bp(T_STEP), 1.0, delta=1e-9)
+            else:
+                hi = mid
+        return math.exp(hi)
+
+    def test_the_read_steps_at_the_events(self):
+        # the walk lands on the read's discontinuities only if they are where the events say (1568.5 K: row 1650's
+        # +47.9 kg/m³ enters with a negative T weight, −0.63; row 1600's with a positive one)
+        for q in self.events(T_STEP):
+            j = self.v.state(q * math.exp(1e-9), T_STEP)[0] - self.v.state(q * math.exp(-1e-9), T_STEP)[0]
+            self.assertGreater(abs(j), 0.1, q)
+            self.assertAlmostEqual(self.bisect_step(q, T_STEP) / q, 1.0, delta=1e-9)
+
+    def test_the_s_path_steps_at_the_same_events(self):
+        for q in self.events(T_STEP):
+            j = self.v.s_path(q * math.exp(1e-9), T_STEP).v - self.v.s_path(q * math.exp(-1e-9), T_STEP).v
+            self.assertGreater(abs(j), 1e-3, q)
+
+    def test_no_events_is_red(self):
+        # the mutant: no row-step events; a step of the read is then where no event is
+        from unittest import mock
+        v = _bse_view()
+        with mock.patch.object(type(v), "_row_step_p", lambda self, i, t: None):
+            got = [q for x in v.transitions() if x[2]["form"] == "assemblage_row_step"
+                   if (q := v.boundary_pressure(x[2], T_STEP)) is not None]
+        self.assertEqual(got, [])
+        q = self.c.p_b(1650.0)
+        self.assertGreater(abs(self.v.state(q * math.exp(1e-9), T_STEP)[0] - self.v.state(q * math.exp(-1e-9), T_STEP)[0]),
+                           0.1)                                            # the read does step there: unlanded
 
 if __name__ == "__main__":
     unittest.main()

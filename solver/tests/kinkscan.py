@@ -47,7 +47,14 @@ from solver import material_assemblage as ma
 REL, CAND = 1e-3, 20.0
 FIELDS = ("rho", "dtdp", "c_p")
 BOUNDS = {"clip (T)": {"rho": 2 * 16924.0, "dtdp": 2 * 64120.0, "c_p": 2 * 488361.0},
-          "T row line": {"rho": 2 * 1.021, "dtdp": 2 * 7.686, "c_p": 2 * 1.683}}
+          "T row line": {"rho": 2 * 1.021, "dtdp": 2 * 7.686, "c_p": 2 * 1.683},
+          # swap extension note 1 (r2 addendum 4 (3)): a reach-0 end's holding row stepping at its own P_b, weighted by its
+          # T weight, a landed event (assemblage_row_step); a value step, so the slope ratio is large; 2× the max over
+          # P lines at 10/50/90 % of both cells past each of the 26 ends (bse / dmm / mars 3.2e5 / 1.35e7 / 4.17e7 ρ,
+          # 2.29e5 / 4.73e7 / 1.99e8 dT/dP, 1.06e7 / 5.98e8 / 4.96e7 c_P; engine ea-swap-ext, scratch rowstep_scan.py)
+          "reach-0 weighted row step": {"rho": 2 * 4.172e7, "dtdp": 2 * 1.990e8, "c_p": 2 * 5.976e8}}
+#: per record: the count of «reach-0 weighted row step» kinks on those lines (a scan over them fails above twice it)
+ROWSTEPS = {"silicate_slb_default_bse": 45, "silicate_slb_earth_dmm_wh2005": 64, "silicate_slb_mars_khan2022": 108}
 #: per record: the full scan's narrow-loop ramp count and their least width (ln P)
 RAMPS = {"silicate_slb_default_bse": (14, 1e-6), "silicate_slb_earth_dmm_wh2005": (8, 1e-6),
          "silicate_slb_mars_khan2022": (14, 1e-6)}
@@ -198,24 +205,23 @@ def scan(v, p_lines=(), t_lines=(), n=4000):
     x_lo, x_hi = math.log(v.ps[0]), math.log(v.p_dataset)
     with _instrumented(v, probe):
         for t in p_lines:
-            sw = [math.log(q) for c in v._cut if c.kind == "swap"
-                  and (q := c.p_b_ext(t, v._reach) or (v._end_step(c, t) if hasattr(v, "_end_step") else None))
-                  is not None]                           # with a reach-0 end's landed step (swap extension note 1)
+            sw = [math.log(q) for c in v._cut if c.kind == "swap" and (q := c.p_b_ext(t, v._reach)) is not None]
+            rs = [math.log(q) for i in range(len(getattr(v, "_row_steps", ())))
+                  if (q := v._row_step_p(i, t)) is not None]   # swap extension note 1: holding rows' own P_b, landed
             h = (x_hi - x_lo) / n
             for x, fi, r, cl, w in line(lambda x: read(math.exp(x), t), lambda x, fi: state(math.exp(x), t, fi),
                                         x_lo, x_hi, n, 1e-6, 1e-5):
                 if not any(abs(x - s) < 2 * h for s in sw):
+                    if any(abs(x - s) < 2 * h for s in rs):
+                        cl = "reach-0 weighted row step"
                     out.append({"line": "P", "P": math.exp(x), "T": t, "field": FIELDS[fi], "jump_rel": r, "class": cl,
                                 "width": w})
-        fades = v.curve_end_fades() if hasattr(v, "curve_end_fades") else ()
         for p in t_lines:
             m = max(len(v.ts) * 20, 400)
             for tq, fi, r, cl, w in line(lambda t: read(p, t), lambda t, fi: state(p, t, fi), v.ts[0], v.ts[-1], m,
                                          1e-4, 1e-3):
                 sw = [math.log(q) for c in v._cut if c.kind == "swap" and (q := c.p_b_ext(tq, v._reach)) is not None]
                 if not any(abs(math.log(p) - s) < 1e-4 for s in sw):
-                    if cl == "T row line" and any(abs(tq - te) < 1e-3 and p > pe for te, pe, _side in fades):
-                        cl = "curve-end fade"
                     out.append({"line": "T", "P": p, "T": tq, "field": FIELDS[fi], "jump_rel": r, "class": cl,
                                 "width": w})
     return out
@@ -239,10 +245,11 @@ def violations(kinks, rid, full=False):
     out = [k for k in ramps if k["width"] < 0.5 * w_min]
     if full and len(ramps) > 2 * n_ramp:
         out.append({"class": "narrow-loop ramp", "count": len(ramps), "declared": n_ramp})
+    n_row = sum(k["class"] == "reach-0 weighted row step" for k in kinks)
+    if full and rid in ROWSTEPS and n_row > 2 * ROWSTEPS[rid]:
+        out.append({"class": "reach-0 weighted row step", "count": n_row, "declared": ROWSTEPS[rid]})
     n_clip = sum(k["class"] == "clip (T)" for k in kinks)
     if full and n_clip > 2 * CLIPS[rid]:
         out.append({"class": "clip (T)", "count": n_clip, "declared": CLIPS[rid]})
-    # «curve-end fade» (swap extension note 1, rule (J)): the T kink at a reach-0 swap end's T row, above its P_b; C⁰,
-    # landed as a T event, sized per end and disclosed (no bound: r2 addendum 3)
-    return out + [k for k in kinks if k["class"] not in ("narrow-loop ramp", "curve-end fade")
+    return out + [k for k in kinks if k["class"] != "narrow-loop ramp"
                   and (k["class"] not in BOUNDS or k["jump_rel"] > BOUNDS[k["class"]][k["field"]])]
