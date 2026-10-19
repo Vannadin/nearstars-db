@@ -130,7 +130,8 @@ def _layers_fn(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float):
         cap_ = s.delta_b_cap_fraction * (r_l - up_["delta_u"] - r_c)
         lo_ = sm.lower_layer(t_m, t_bot, t_b_, eta_m_, eta_c_, rho_m=st.RHO_MANTLE_KG_M3, alpha=st.ALPHA_SILICATE_PER_K,
                              g=g, k_m=st.K_MANTLE_W_PER_M_K, c_pm=st.CP_MANTLE_J_PER_KG_K, r_p=r_p, r_c=r_c,
-                             t_s=st.T_SURFACE_K, delta_b_cap=cap_)
+                             t_s=st.T_SURFACE_K, delta_b_cap=cap_,
+                             gain_beta=None if s.layer is not None else st.ALPHA_SILICATE_PER_K * g * t_m / st.CP_MANTLE_J_PER_KG_K)
         return up_, lo_, t_b_, p_m_, eta_m_
 
     return layers
@@ -387,7 +388,7 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
         ddl = 0.0
     return {"dtc": dtc, "dtm": dtm, "ddl": ddl, "ddcr": d_cr_rate, "t_l": t_l, "t_b": t_b, "delta_u": d_u,
             "delta_b": d_b, "q_m": up["q_m"], "q_c": lo["q_c"], "ra": up["ra"], "subcritical": up["subcritical"],
-            "guarded": guard_gap is not None, "guard_gap": guard_gap, "delta_b_raw_over_shell": lo["delta_b_raw"] / (r_l - d_u - r_c),
+            "guarded": guard_gap is not None, "gain_capped": lo["gain_capped"], "guard_gap": guard_gap, "delta_b_raw_over_shell": lo["delta_b_raw"] / (r_l - d_u - r_c),
             "tc_tb_gap": abs(t_c - t_b),
             "eps_m": eps, "stefan": stefan, "h_m": h_m, "h_cr": h_cr, "p_m": p_m,
             "ceiling": sm.crust_enrichment_ceiling(v_cr, v_sil - v_cr), "lid_gradient": lid_gradient,
@@ -481,11 +482,19 @@ def run(s: Setup, cap_myr: float) -> dict:
     h_min = None
     n_remesh, remesh_loss = 0, []
     worst = (0.0, None)
+    side_prev = None
     while True:
         try:
             f1 = state_terms(s, *y, t, grad, mode="accept")
         except sm.Refused as e:
             return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
+        # gain-cap prereg: on the printed bottom T_c − T_b may change sign only across the δ_b gain cap — off it the
+        # printed closure has a pole there, and a continuation that steps across it does so silently (r2 5c663b57 §4)
+        side = (y[0] - f1["t_b"] > 0.0, f1["gain_capped"])
+        if side_prev is not None and side[0] != side_prev[0] and not (side[1] or side_prev[1]) and s.layer is None:
+            return {"refused": f"T_c − T_b changed sign between accepted rows off the δ_b gain cap at t = {t:.6f} Gyr "
+                               f"(gain-cap prereg)", "refused_at_gyr": t, "rows": rows, "n_steps": n}
+        side_prev = side
         # v2-9 ③ diagnosis: conduction out of the lid base minus the heat the mantle brings, beside dD_l/dt
         rows.append({"ddl": f1["ddl"], "lid_net": -st.K_MANTLE_W_PER_M_K * f1["lid_gradient"] - f1["q_m"],
                      "crust_term": st.RHO_CRUST_KG_M3 * (st.L_MANTLE_J_PER_KG + st.CP_MANTLE_J_PER_KG_K

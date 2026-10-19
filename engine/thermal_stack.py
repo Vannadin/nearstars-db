@@ -160,6 +160,7 @@ def _layers_fn(s: Stack, t_c: float, t_m: float, d_l: float, t_l: float):
         lo_ = sm.lower_layer(t_m, t_bot, t_b_, eta_m_, eta_c_, rho_m=s.mantle.params["rho"], alpha=s.mantle.params["alpha"],
                              g=g, k_m=s.mantle.params["k"], c_pm=s.mantle.params["cp"], r_p=r_p, r_c=r_c,
                              t_s=s.body["t_surface"], delta_b_cap=cap_,
+                             gain_beta=None if jump else s.mantle.params["alpha"] * g * t_m / s.mantle.params["cp"],
                              ra_delta_b=s.opt["ra_delta_b"])
         return up_, lo_, t_b_, p_m_, eta_m_
 
@@ -433,7 +434,7 @@ def state_terms(s: Stack, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
         ddl = 0.0
     return {"dtc": dtc, "dtm": dtm, "ddl": ddl, "ddcr": d_cr_rate, "t_l": t_l, "t_b": t_b, "delta_u": d_u,
             "delta_b": d_b, "q_m": up["q_m"], "q_c": lo["q_c"], "ra": up["ra"], "subcritical": up["subcritical"],
-            "guarded": guard_gap is not None, "guard_gap": guard_gap, "delta_b_raw_over_shell": lo["delta_b_raw"] / (r_l - d_u - r_c),
+            "guarded": guard_gap is not None, "gain_capped": lo["gain_capped"], "guard_gap": guard_gap, "delta_b_raw_over_shell": lo["delta_b_raw"] / (r_l - d_u - r_c),
             "tc_tb_gap": abs(t_c - t_b),
             "eps_m": eps, "stefan": stefan, "h_m": h_m, "h_cr": h_cr, "p_m": p_m,
             "ceiling": sm.crust_enrichment_ceiling(v_cr, v_sil - v_cr), "lid_gradient": lid_gradient,
@@ -500,11 +501,19 @@ def run(s: Stack, cap_myr: float) -> dict:
     n = 0
     h_min = None
     worst = (0.0, None)
+    side_prev = None
     while True:
         try:
             f1 = state_terms(s, *y, t, grad, mode="accept")
         except sm.Refused as e:
             return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
+        # gain-cap prereg: on the printed bottom T_c − T_b may change sign only across the δ_b gain cap — off it the
+        # printed closure has a pole there, and a continuation that steps across it does so silently (r2 5c663b57 §4)
+        side = (y[0] - f1["t_b"] > 0.0, f1["gain_capped"])
+        if side_prev is not None and side[0] != side_prev[0] and not (side[1] or side_prev[1]) and s.mantle.params["bottom"] != "grid_flux+jump":
+            return {"refused": f"T_c − T_b changed sign between accepted rows off the δ_b gain cap at t = {t:.6f} Gyr "
+                               f"(gain-cap prereg)", "refused_at_gyr": t, "rows": rows, "n_steps": n}
+        side_prev = side
         rows.append({"ddl": f1["ddl"], "lid_net": -s.mantle.params["k"] * f1["lid_gradient"] - f1["q_m"],
                      "crust_term": s.lid.params["rho_crust"] * (s.mantle.params["latent"] + s.mantle.params["cp"]
                                                          * (y[1] - s.body["t_surface"])) * f1["ddcr"],

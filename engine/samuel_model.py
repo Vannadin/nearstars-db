@@ -100,9 +100,16 @@ def upper_layer(t_m: float, t_l: float, t_c: float, t_b: float, eta_m: float, *,
 
 
 # ── Lower boundary layer — 2021 eq. (17) and (13), PDF pp. 11–12 ───────────────────────────────
+#: the gain cap's loop gain at its edge (judgment, gain-cap prereg): below 1, because at exactly 1 the root δ_b has a
+#: vertical tangent at the cap's edge and the C145 continuation reads it as a fold (dev run, fake profile: δ_u event
+#: at 0.6542 Gyr with gain 1; none to 4.5 Gyr with 0.5 or 0.25)
+GAIN_CAP_LOOP_GAIN = 0.5
+
+
 def lower_layer(t_m: float, t_c: float, t_b: float, eta_m: float, eta_c: float, *, rho_m: float,
                 alpha: float, g: float, k_m: float, c_pm: float, r_p: float, r_c: float,
-                t_s: float, delta_b_cap: float | None = None, ra_delta_b: tuple | None = None) -> dict:
+                t_s: float, delta_b_cap: float | None = None, ra_delta_b: tuple | None = None,
+                gain_beta: float | None = None) -> dict:
     """Ra_i, Ra_δb = 0.28 Ra_i^0.21, δ_b = (κ η_c Ra_δb / (ρ_m α g |T_c − T_b|))^(1/3), q_c = k_m (T_c − T_b)/δ_b.
 
     `η_c = η((T_b + T_c)/2, P_c)` is the caller's to evaluate — the pressure is an argument there.
@@ -110,7 +117,16 @@ def lower_layer(t_m: float, t_c: float, t_b: float, eta_m: float, eta_c: float, 
     ⚠ **δ_b guard — our derivation** (pre-registration v2-14; no printed rule). As T_b → T_c the printed
     δ_b diverges; it is held to `delta_b_cap` with `min`, and the held value is the δ_c of q_c too. The
     unheld value and whether the guard bit are returned so a run can print them. `delta_b_cap=None`
-    applies no guard."""
+    applies no guard.
+
+    ⚠ **Gain cap — our derivation, graded judgment** (amends v2-14; r2 ruling 5c663b57, owner direction
+    2026-10-19 16:10). Where the caller's T_b falls with δ_b at the rate β = α g T_m / C_pm (the printed bottom,
+    T_c fixed: T_c − T_b = β (δ_b − δ*)), the printed δ_b = (A / |T_c − T_b|)^(1/3), A = κ η_c Ra_δb / (ρ_m α g),
+    has a pole at T_b = T_c, and no root of δ_b = G(δ_b) passes through it. `gain_beta=β` holds δ_b to
+    δ_gain = (3kA/β)^(1/4), where the loop gain |∂G/∂δ_b| = β δ_b⁴ / (3A) reaches k = `GAIN_CAP_LOOP_GAIN` < 1:
+    the inner root is then unique and continuous through T_b = T_c, with a finite slope, and q_c passes through 0. The tighter of the two caps holds; `gain_capped`
+    says the gain cap was the one that bit. `gain_beta=None` (a basal layer's jump bottom, where T_i − T′_b
+    does not move with δ_b) applies none. Where neither cap bites the result is bit-identical to the printed form."""
     kappa = k_m / (rho_m * c_pm)
     d_t_i = t_m - t_s + max(t_c - t_b, 0.0)
     ra_i = rho_m * alpha * g * d_t_i * (r_p - r_c) ** 3 / (eta_m * kappa)
@@ -119,10 +135,16 @@ def lower_layer(t_m: float, t_c: float, t_b: float, eta_m: float, eta_c: float, 
     ra_db = coeff * ra_i ** expo
     gap = abs(t_c - t_b)
     raw = (kappa * eta_c * ra_db / (rho_m * alpha * g * gap)) ** (1.0 / 3.0) if gap > 0.0 else math.inf
-    guarded = delta_b_cap is not None and raw > delta_b_cap
-    delta_b = delta_b_cap if guarded else raw
+    cap, gain_capped, d_gain = delta_b_cap, False, None
+    if gain_beta is not None:
+        d_gain = (3.0 * GAIN_CAP_LOOP_GAIN * kappa * eta_c * ra_db / (rho_m * alpha * g) / gain_beta) ** 0.25
+        if cap is None or d_gain < cap:
+            cap, gain_capped = d_gain, True
+    guarded = cap is not None and raw > cap
+    gain_capped = gain_capped and guarded
+    delta_b = cap if guarded else raw
     return {"ra_i": ra_i, "ra_delta_b": ra_db, "delta_b": delta_b, "delta_b_raw": raw, "guarded": guarded,
-            "q_c": k_m * (t_c - t_b) / delta_b}
+            "gain_capped": gain_capped, "delta_gain": d_gain, "q_c": k_m * (t_c - t_b) / delta_b}
 
 
 # ── Crust growth — 2019 SI eqs (16)–(18), PDF p5 ───────────────────────────────────────────────
