@@ -16,6 +16,7 @@ import json
 import bisect
 import itertools
 import math
+import os
 from collections.abc import Sequence
 from types import MappingProxyType
 
@@ -983,6 +984,10 @@ class _Run(tuple):
 #: the loop cells worse than C⁰'s tent (p95 CI lower bounds 1.02–1.09); κ = 2 on the tune half of the cells, accepted
 #: on the other half. ρ keeps κ = 1: a sharper ρ blend broke the ρ-monotone test where a side read has R < L
 #: (H′·(R − L) < 0; κ = 1.5 two violations, κ = 2 seven).
+#: PROTOTYPE (68 design rev 2 a0f8cec9, option (A), directing-approved): the ρ read inside every merged ρ window
+#: [x_b − w, x_b + w] at the read's T is the monotone cubic Hermite through the window union's one-side edge states
+#: (Fritsch–Carlson two-slope clip; a net fall takes the secant). False: rowblend's read alone (the negative control)
+RHO_BRIDGE = os.environ.get("NS_RHO_BRIDGE", "1") != "0"     # PROTOTYPE switch for the paired measurements
 BLEND_SHARP = MappingProxyType({"rho": 1.0, "dtdp_eq": 2.0, "c_p": 2.0, "s": 1.0})   # s: κ 1, as ρ (s-read §3.1)
 
 #: the bump's length past an open run end, in units of the end segment's width (item 5d998d40: the smallest of the
@@ -1285,7 +1290,11 @@ class AssemblageView(mv.RecordView):
         #: with a run (_row_reach; side reads leave no count), and side assignments the blend dropped (item 5d998d40)
         self.cut_counts = {"reads": 0, "empty_region_reads": 0, "row_drop_reads": 0, "row_drop_max": 0,
                            "cap_refusals": 0, "no_run_refusals": 0, "by_count_reads": 0, "corrections": 0,
-                           "side_fallbacks": 0, "reach_rows": 0, "blend_drops": 0}
+                           "side_fallbacks": 0, "reach_rows": 0, "blend_drops": 0,
+                           # PROTOTYPE ρ bridge: reads it set, unions with no edge state (beyond p_dataset or a refusing
+                           # edge read), net falls (secant), and reads where the Fritsch–Carlson clip bound
+                           "bridge_reads": 0, "bridge_no_edge": 0, "bridge_net_fall": 0, "bridge_clip": 0}
+        self._in_bridge = False
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
         #: s-read registration (frozen 327b4f73): the solid dT/dP and c_P from the stored s, declared by the record
         #: (assemblage.dtdp.read «entropy», written by the generator with the closure block); a tool may set it on a
@@ -1985,6 +1994,8 @@ class AssemblageView(mv.RecordView):
         try:
             for f in (fields or ("rho", "dtdp_eq", "c_p")):
                 v = self._value(f, x, t, ia, ib, sides, near=near)     # PROTOTYPE: the row-level blend
+                if f == "rho" and near and RHO_BRIDGE and not self._in_bridge and not isinstance(t, Dual):
+                    v = self._rho_bridge(x, t, ib, rel, pbs, v)
                 if near:
                     if f == "rho":
                         self.cut_counts["corrections"] += len(near)
@@ -2026,6 +2037,90 @@ class AssemblageView(mv.RecordView):
             r = self._region(kb, sides, x)
             corners += [self._cell(ja, kb) for ja in (ia, ia + 1) if self._region_of(ja, kb) == r]
         return out["rho"], out["dtdp_eq"], out["c_p"], [c for c in corners if c is not None]
+
+    def _rho_bridge(self, x, t, ib, rel, pbs, own):
+        """PROTOTYPE (68 design rev 2, option (A)): ρ inside the ρ window union holding x, at the read's T.
+        - Windows: every edge of the stencil rows' partitions with a P_b_ext at t, [x_b − w, x_b + w] with the blend's
+          own x_b and w; windows that overlap are merged, and the union [x0, x1] holding x is the bridge's span.
+        - Edge states: rowblend's read at x0 and at x1 (no window holds either, so no blend term), value and ∂/∂ln P
+          through the read's own Dual, taken from the outside: x0's P cell is the one below it, x1's the one above.
+        - Inside: the cubic Hermite through (x0, r0, d0) and (x1, r1, d1), the slopes Fritsch–Carlson clipped against
+          Δ = (r1 − r0)/(x1 − x0): negative ones set to 0, and both scaled by 3/√(α² + β²) when α² + β² > 9
+          (α = d0/Δ, β = d1/Δ). Monotone in P. C¹ at x0 and x1 where the clip does not bind.
+        - r1 < r0: no monotone connection; the secant, counted (bridge_net_fall).
+        - An edge beyond the table (below its floor node or above the column cut) or an edge read that refuses: the
+          read keeps `own`, counted (bridge_no_edge).
+        A Dual x (a tool's ∂ρ/∂ln P) runs through the same Hermite, so its derivative is M′; a Dual T (the s path) never
+        reaches here."""
+        ivs = []
+        for c in rel:
+            if c.kind != "edge" or pbs[c] is None:
+                continue
+            xb = _log(pbs[c])
+            w = self._width(xb)
+            ivs.append((xb - w, xb + w))
+        ivs.sort()
+        span = None
+        for a, b in ivs:
+            if span is not None and a <= span[1]:
+                span = (span[0], max(span[1], b))
+                continue
+            if span is not None and span[0] < x < span[1]:
+                break
+            span = (a, b)
+        if span is None or not span[0] < x < span[1]:
+            return own
+        x0, x1 = span
+        e0, e1 = self._edge_read(x0, t, ib, below=True), self._edge_read(x1, t, ib, below=False)
+        if e0 is None or e1 is None:
+            self.cut_counts["bridge_no_edge"] += 1
+            return own
+        self.cut_counts["bridge_reads"] += 1
+        (r0, d0), (r1, d1) = e0, e1
+        dx = x1 - x0
+        dl = (r1 - r0) / dx
+        if dl < 0.0:
+            self.cut_counts["bridge_net_fall"] += 1
+            return r0 + dl * (x - x0)
+        if dl == 0.0:
+            return r0 + 0.0 * (x - x0)                   # a Dual x keeps its derivative slot (0)
+        a, b = d0 / dl, d1 / dl
+        clip = a < 0.0 or b < 0.0
+        a, b = max(a, 0.0), max(b, 0.0)
+        if a * a + b * b > 9.0:
+            tau = 3.0 / math.sqrt(a * a + b * b)
+            a, b, clip = a * tau, b * tau, True
+        if clip:
+            self.cut_counts["bridge_clip"] += 1
+        return _hermite(x, (x0, dx, r0, r1, a * dl, b * dl))
+
+    def _edge_read(self, xe, t, ib, below):
+        """(ρ, ∂ρ/∂ln P) of rowblend's read at ln P = xe and the read's T, through its Dual, on scratch notes, counts,
+        marks and memo (as the s path); the P cell is the one below xe (`below`) or above it, so a node's slope is the
+        outside one. None beyond the table (floor node, column cut) or when the read refuses."""
+        pr = math.exp(xe)
+        if pr < self.ps[0] or pr > self._top:
+            return None
+        if below:
+            ia = min(max(bisect.bisect_left(self.ps, pr, 1) - 1, 0), len(self.ps) - 2)
+        else:
+            ia = min(max(bisect.bisect_right(self.ps, pr) - 1, 0), len(self.ps) - 2)
+        n, counts, marks, memo = len(self.notes), dict(self.cut_counts), self._marks, self._read_memo
+        self._in_bridge = True
+        try:
+            got = self._read(pr, t, pr, Dual(xe, 1.0, 0.0), ia, ib, fields=("rho",))
+        except (_NoRead, CellMissing):
+            got = None
+        finally:
+            self._in_bridge = False
+            del self.notes[n:]
+            self.cut_counts.clear()
+            self.cut_counts.update(counts)
+            self._marks, self._read_memo = marks, memo
+        if got is None or isinstance(got, st.Stop):
+            return None
+        v = got["rho"]
+        return (v.v, v.dx) if isinstance(v, Dual) else (v, 0.0)
 
     def _close_marks(self):
         """One count per read, whatever the field and δ calls (68 N1)."""
