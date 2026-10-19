@@ -19,7 +19,10 @@ T = T_ib + (T_ib+1 − T_ib)·j/nsub, j = 0 … nsub:
   point where R regains that value after it (bisected); it is widened by C_WIDEN·extent on each side. A fall that does
   not regain before 3 × the local window half-width past its start or before p_dataset is listed «unrecovered» and
   left out.
-- **Net-fall STOP:** at the sample, R(b′) < R(a′) for a widened interval.
+- **Net fall** (r2 a69976dc): at the sample, R(b′) < R(a′) for a widened interval. (1) b′ moves right, the side that
+  regains, up to the next landed step or p_dataset, until R(b′) ≥ R(a′) («widened»). (2) Else, if b′ is a landed
+  step's near side, the read ends the bridge flat at R(a′) and the step's jump absorbs the fall («absorbed»; the jump
+  from R(a′) must stay ≥ 0). (3) Otherwise a STOP, naming its bound.
 The set S_i of T node i is the union of the widened intervals from every sample in cells i − 1 and i, overlaps merged.
 Output: {"record", "ps", "ts", "stamp", "sets": {i: [[a′, b′], …]}, "unrecovered", "stops", "samples"}."""
 from __future__ import annotations
@@ -340,6 +343,7 @@ def falls_at(v, t, ib, xlo, xhi):
         screen(grid[i], grid[i + 1], vals[i], vals[i + 1], m_est)
     # falling points → fall intervals
     intervals, unrecovered, stops, seen = [], [], [], []
+    widened, absorbed = [], []                           # r2 a69976dc: the net-fall rules 1 and 2, recorded
     top = math.log(v.p_dataset)
     for xf in sorted(set(falling)):
         if any(a <= xf <= c for a, c in seen):
@@ -398,11 +402,59 @@ def falls_at(v, t, ib, xlo, xhi):
             stops.append({"t": t, "why": "a widened end the read can't evaluate", "a": lo_, "b": hi_})
             continue
         if r_hi[0] < r_lo[0]:
-            stops.append({"t": t, "why": "net fall over the widened interval", "a": lo_, "b": hi_,
-                          "r_a": r_lo[0], "r_b": r_hi[0]})
+            # r2 a69976dc (the khan 2000 K net fall; no size floor): (1) b′ widens right, the side that regains, up
+            # to the next landed step or p_dataset; (2) no regain up to a landed step: b′ moves to its near side, the
+            # read ends the bridge flat at R(a′) there (_fall_bridge) and the step's jump absorbs the fall, which must
+            # stay ≥ 0; (3) otherwise a STOP, naming its bound
+            got, why = _widen(g, gv, lo_, hi_, r_lo[0], right, step)
+            xs_, cid = next(((xs_, c_) for xs_, c_ in swaps if xs_ - SWAP_EPS == right), (None, None))
+            if got is not None:
+                widened.append({"t": t, "a": lo_, "b": got, "was_b": hi_, "net": r_hi[0] - r_lo[0]})
+                hi_ = got
+            elif why == "bound" and xs_ is not None and (far := g(xs_ + SWAP_EPS)) is not None:
+                # no regain up to a landed step: the bridge runs flat at R(a′) to its near side
+                ab = {"t": t, "by": cid, "x": xs_, "a": lo_, "b": right, "was_b": hi_, "dR": r_lo[0] - r_hi[0],
+                      "jump": far[0] - r_lo[0]}
+                if ab["jump"] >= 0.0:
+                    absorbed.append(ab)
+                    hi_ = right
+                else:
+                    stops.append({"t": t, "why": "net fall over the widened interval", "a": lo_, "b": hi_,
+                                  "r_a": r_lo[0], "r_b": r_hi[0],
+                                  "bound": f"swap {cid} (its jump from R(a′) would be negative: {ab['jump']:.6g})"})
+            else:
+                bound = ("a refusing read" if why == "refusing read" else
+                         "p_dataset" if right >= top - 1e-12 else "the window's end" if right >= xhi else "table edge")
+                stops.append({"t": t, "why": "net fall over the widened interval", "a": lo_, "b": hi_,
+                              "r_a": r_lo[0], "r_b": r_hi[0], "bound": bound})
         intervals.append((lo_, hi_, a, c))
     return intervals, unrecovered, stops, floor_cells, swap_jumps, {"unreadable": sorted(set(unreadable)),
-                                                                   "unscreened": unscreened, "row_steps": row_steps}
+                                                                   "unscreened": unscreened, "row_steps": row_steps,
+                                                                   "widened": widened, "absorbed": absorbed}
+
+
+def _widen(g, gv, lo, hi, r_lo, right, step):
+    """r2 a69976dc rule 1: (hi′, None) with hi′ ≤ right the first point past hi where R regains R(lo) (the regaining
+    side: a fall's start is its local max, so only the end moves); else (None, why): "bound" (no regain up to right) or
+    "refusing read". Walked on the regain search's step, the last step clamped to the bound (never across a landed
+    step); bisected keeping the end that holds, so R(b′) ≥ R(a′) exactly."""
+    x = hi
+    while x < right:
+        x1 = min(x + step, right)
+        q = g(x1)
+        if q is None:
+            return None, "refusing read"
+        if q[0] >= r_lo:
+            bad, ok = x, x1                              # R(bad) < R(lo) ≤ R(ok)
+            for _ in range(60):
+                m = 0.5 * (bad + ok)
+                if gv(m)[0] >= r_lo:
+                    ok = m
+                else:
+                    bad = m
+            return ok, None
+        x = x1
+    return None, "bound"
 
 
 def _merge(ivs):
@@ -425,7 +477,8 @@ def cell_falls(v, ib, nsub=16, xr=None):
         try:
             ivs, un, st, fl, sj, ur = falls_at(v, t, ib, xlo, xhi)
         except Unresolved as e:
-            ivs, un, st, fl, sj, ur = [], [], [{"t": t, "why": str(e)}], [], [], {"unreadable": [], "unscreened": []}
+            ivs, un, st, fl, sj, ur = [], [], [{"t": t, "why": str(e)}], [], [], {"unreadable": [], "unscreened": [],
+                                                                                "row_steps": []}
         for j_ in sj:
             j_["v_ratio"] = j_["r_after"] / j_["r_before"]          # V₋/V₊ at one mass: ρ₊/ρ₋
             if j_["jump"] < 0.0:
@@ -441,7 +494,8 @@ def cell_falls(v, ib, nsub=16, xr=None):
                     j_["gibbs_error"] = f"{type(e).__name__}: {str(e)[:200]}"
         out.append({"t": t, "intervals": [list(iv) for iv in ivs], "unrecovered": un, "stops": st, "floor_cells": fl,
                     "swap_jumps": sj, "unreadable": len(ur["unreadable"]), "unscreened": ur["unscreened"],
-                    "row_steps": ur["row_steps"]})
+                    "row_steps": ur["row_steps"], "widened": ur.get("widened", []),
+                    "absorbed": ur.get("absorbed", [])})
     return out
 
 
@@ -554,7 +608,10 @@ def document(v, per_cell):
             "floor_cells": _floor_list([f_ for c in per_cell.values() for smp in c for f_ in smp["floor_cells"]]),
             "swap_jumps": [j for c in per_cell.values() for smp in c for j in smp["swap_jumps"]],
             # swap extension note 1: the reach-0 holding-row steps met (upward: landed; downward: bridged)
-            "row_steps": [j for c in per_cell.values() for smp in c for j in smp.get("row_steps", ())]}
+            "row_steps": [j for c in per_cell.values() for smp in c for j in smp.get("row_steps", ())],
+            # r2 a69976dc: net falls regained by widening (rule 1) and absorbed by a landed step's jump (rule 2)
+            "widened": [j for c in per_cell.values() for smp in c for j in smp.get("widened", ())],
+            "absorbed": [j for c in per_cell.values() for smp in c for j in smp.get("absorbed", ())]}
 
 
 # n4 (r2): floor cells are listed per 1e-7 ln P, so kinks closer than that share a row.

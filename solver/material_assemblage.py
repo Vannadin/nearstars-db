@@ -1336,7 +1336,8 @@ class AssemblageView(mv.RecordView):
                            "side_fallbacks": 0, "reach_rows": 0, "blend_drops": 0,
                            # PROTOTYPE ρ bridge: reads it set, unions with no edge state (beyond p_dataset or a refusing
                            # edge read), net falls (secant), and reads where the Fritsch–Carlson clip bound
-                           "bridge_reads": 0, "bridge_no_edge": 0, "bridge_net_fall": 0, "bridge_clip": 0}
+                           "bridge_reads": 0, "bridge_no_edge": 0, "bridge_net_fall": 0, "bridge_clip": 0,
+                           "bridge_flat_end": 0}
         self._in_bridge = False
         self._fall_sets = None                           # PROTOTYPE rev 3: {T node index: [(a′, b′) in ln P]}, loaded once
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
@@ -2135,7 +2136,11 @@ class AssemblageView(mv.RecordView):
                         elif x < xs_ < hi_:
                             hi_ = xs_ - SWAP_EPS
                     if lo_ < x < hi_:
-                        got = self._fall_bridge(x, t, ib, lo_, hi_)
+                        # r2 a69976dc rule 2: an end on a landed step's near side (split here, or the set's own end
+                        # where the build clipped it) ends a net-fall bridge flat, the step's jump absorbing the fall
+                        on = 2.0 * SWAP_EPS * (1.0 + 1e-6)
+                        flat = any(hi_ < xs_ <= hi_ + on for xs_ in swaps)
+                        got = self._fall_bridge(x, t, ib, lo_, hi_, flat)
                     break
             pieces.append(got)
         if pieces[0] is None and pieces[1] is None:
@@ -2162,10 +2167,12 @@ class AssemblageView(mv.RecordView):
                 out.append(xs_)
         return out
 
-    def _fall_bridge(self, x, t, ib, x0, x1):
+    def _fall_bridge(self, x, t, ib, x0, x1, flat=False):
         """The monotone cubic Hermite through (x0, R, R′) and (x1, R, R′) at the read's T, R′ from the outside (_edge_read),
         its slopes Fritsch–Carlson clipped against Δ = (R1 − R0)/(x1 − x0): negative ones set to 0, both scaled by
-        3/√(α² + β²) when α² + β² > 9. R1 < R0: the secant (bridge_net_fall). An end the table can't read: None
+        3/√(α² + β²) when α² + β² > 9. R1 < R0: the secant (bridge_net_fall), or flat at R0 when `flat` (x1 on a landed step's
+        near side, r2 a69976dc rule 2: the step's jump absorbs the fall; bridge_flat_end). An end the table can't read:
+        None
         (bridge_no_edge; the set keeps R there). Counted per call: bridge_reads, bridge_clip."""
         e0, e1 = self._edge_read(x0, t, ib, below=True), self._edge_read(x1, t, ib, below=False)
         if e0 is None or e1 is None:
@@ -2177,6 +2184,9 @@ class AssemblageView(mv.RecordView):
         dl = (r1 - r0) / dx
         if dl < 0.0:
             self.cut_counts["bridge_net_fall"] += 1
+            if flat:
+                self.cut_counts["bridge_flat_end"] += 1
+                return r0 + 0.0 * (x - x0)
             return r0 + dl * (x - x0)
         if dl == 0.0:
             return r0 + 0.0 * (x - x0)                   # a Dual x keeps its derivative slot (0)
