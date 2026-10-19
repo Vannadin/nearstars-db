@@ -745,6 +745,11 @@ class _Curve:
         self.t0, self.t1 = self.rows[0]["t"], self.rows[-1]["t"]
         self.p_range = (min(r["p_b"] for r in self.rows), max(r["p_b"] for r in self.rows))
         self._ts = [r["t"] for r in self.rows]                      # the rows' T, for p_b's bisection
+        #: swap-extension registration (frozen 8402255e): in a record with the boundary block's `extension`, a swap
+        #: curve's true outer ends take reach 0 (the extension rows, certified ones included as rows, settle each side);
+        #: a run end inside a curve (next to rows read across) keeps the extrapolation, unchanged
+        self.stop_lo = bool(self.rows[0].get("reach0_lo"))
+        self.stop_hi = bool(self.rows[-1].get("reach0_hi"))
 
     def p_b(self, t):
         if t < self.t0 or t > self.t1:
@@ -769,11 +774,11 @@ class _Curve:
             return pb
         rs = self.rows
         if t > self.t1:
-            if t - self.t1 > reach:
+            if self.stop_hi or t - self.t1 > reach:
                 return None
             e, o = rs[-1], (rs[-2] if len(rs) > 1 else None)
         else:
-            if self.t0 - t > reach:
+            if self.stop_lo or self.t0 - t > reach:
                 return None
             e, o = rs[0], (rs[1] if len(rs) > 1 else None)
         if o is None or o["p_b"] == e["p_b"]:
@@ -807,6 +812,14 @@ def curve_groups(boundaries):
         else:
             for e in r["edges"]:
                 groups.setdefault(("edge", left, right, e["phase"]), []).append({**base, "p_b": e["p_b"]})
+    # swap-extension registration: certified extension rows are swap rows of their curve (none in today's tables)
+    for r in (boundaries.get("extension") or {}).get("rows", ()):
+        if r.get("certified"):
+            left, right = _labels(r["left"]), _labels(r["right"])
+            groups.setdefault(("swap", left, right, None), []).append(
+                {"t": r["t"], "p_lo": r["p_lo"], "p_hi": r["p_hi"], "left": left, "right": right,
+                 "left_label": r["left"], "right_label": r["right"], "band": None, "across": row_across(r),
+                 "p_b": r["p_b"], "delta_s": r.get("delta_s"), "extension": True})
     return groups
 
 
@@ -839,6 +852,11 @@ def build_curves(boundaries, ts):
                 open_ = [[r] for r in now]
             prev_t = t
         out += [_Curve(len(out) + i, key[0], key[3], run) for i, run in enumerate(open_)]
+    if boundaries.get("extension") is not None:      # the swap-extension registration: reach 0 at true outer ends
+        for c in out:
+            if c.kind == "swap":
+                c.rows[0]["reach0_lo"] = c.rows[-1]["reach0_hi"] = True
+                c.stop_lo = c.stop_hi = True
     for i, c in enumerate(out):
         c.id = i
     return out
