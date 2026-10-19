@@ -62,10 +62,11 @@ class BuildKnowsRowSteps(unittest.TestCase):
 
 class SwapOnTheGrid(unittest.TestCase):
     def test_a_swap_on_a_grid_point_is_listed_not_screened(self):
-        # PC rev3b: a one-row swap pair (bse swap168/170 at 850 K, khan swap123/124 at 1100 K) has a constant P_b equal
-        # to a stencil row's partition point, so xs is a grid point and its downward jump (−9.1e-5 kg/m³ on bse) sat at
-        # a half-cell's end; the strict skip let it bisect to the floor («unresolved»)
-        for rid, t, ids in ((BSE, 753.125, (168, 170)), ("silicate_slb_mars_khan2022", 1003.125, (123, 124))):
+        # PC rev3b: a one-row swap pair (bse swap168/170 at 850 K, khan swap123/124 at 1100 K) has its P_b on its own
+        # row's partition point, so xs is a grid point and its jump sits at a half-cell's end; the strict skip let a
+        # downward one bisect to the floor («unresolved»). Since note 2 (reach 0 for coincident-edge swaps) the pair
+        # has a P_b at its own row only, where it still meets the grid
+        for rid, t, ids in ((BSE, 850.0, (168, 170)), ("silicate_slb_mars_khan2022", 1100.0, (123, 124))):
             with self.subTest(rid=rid):
                 v = _view(rid)
                 xs = next(math.log(c.p_b_ext(t, v._reach)) for c in v._cut if c.kind == "swap"
@@ -74,7 +75,7 @@ class SwapOnTheGrid(unittest.TestCase):
                 self.assertEqual(stops, [])
                 got = [j for j in sj if j["curve"] in ids]
                 self.assertEqual(sorted(j["curve"] for j in got), sorted(ids))
-                self.assertTrue(all(j["jump"] < 0.0 and j["x"] == xs for j in got), got)   # listed for the gate
+                self.assertTrue(all(j["x"] == xs for j in got), got)                     # listed for the gate
 
     def test_the_strict_skip_stops_there(self):
         # the mutant: rho_fall_build with the old open skip (a < xs < b), loaded from its own source — the half-cell
@@ -86,9 +87,9 @@ class SwapOnTheGrid(unittest.TestCase):
         mut.__file__ = rb.__file__
         exec(compile(src.replace("any(a <= xs_ <= b for xs_, _c in swaps)", "any(a < xs_ < b for xs_, _c in swaps)"),
                      rb.__file__, "exec"), mut.__dict__)
-        v = _view(BSE)
-        t = 753.125
-        xs = next(math.log(c.p_b_ext(t, v._reach)) for c in v._cut if c.kind == "swap" and v._events.index(c) == 168)
+        v = _view("silicate_slb_mars_khan2022")
+        t = 1100.0                                       # the pair's own row: its jump there is downward (−0.40)
+        xs = next(math.log(c.p_b_ext(t, v._reach)) for c in v._cut if c.kind == "swap" and v._events.index(c) == 123)
         with self.assertRaises(mut.Unresolved):
             mut.falls_at(v, t, _ib(v, t), xs - 0.01, xs + 0.01)
 

@@ -1015,6 +1015,14 @@ def read_blob():
     swap-extension records: sets keyed by id and nodes alone loaded silently on regenerated records)."""
     data = open(__file__, "rb").read()
     return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+
+
+def record_yaml_sha256(material_id):
+    """The sha256 of the record's yaml (solver/materials/<id>.yaml): with the table's own sha256 (record_sha256), the
+    fall-set stamp's other half — the yaml carries the boundaries' extension pin, which can change with the table
+    unchanged (r2 e843daa8)."""
+    from solver import material_registry as mr
+    return hashlib.sha256((mr.MATERIALS_DIR / f"{material_id}.yaml").read_bytes()).hexdigest()
 SWAP_EPS = 1e-9          # ln P: a split interval's end, this far from the landed swap on x's side (rho_fall_build's)
 BLEND_SHARP = MappingProxyType({"rho": 1.0, "dtdp_eq": 2.0, "c_p": 2.0, "s": 1.0})   # s: κ 1, as ρ (s-read §3.1)
 
@@ -1288,6 +1296,7 @@ class AssemblageView(mv.RecordView):
         #: 16.280025 GPa, 1450 K) are a step, not two edges: read as a swap, no (c′) blend, with SWAP_NOTE (68 N2,
         #: r2's Q1 degenerate limit); both land as events at one P, and the first landed leaves the other on its new side
         self.coincident = 0
+        extension = b.get("extension") is not None
         by_ts = {}
         for c in self._cut:
             by_ts.setdefault(tuple(r["t"] for r in c.rows), []).append(c)
@@ -1297,6 +1306,15 @@ class AssemblageView(mv.RecordView):
                        for b in group):
                     if a.kind == "edge":
                         self.coincident += 1
+                        a.was_edge = True
+                        a.kind = "swap"
+                        if extension:
+                            # r2 6c6c1e94 (swap-extension post-freeze note 2): past a coincident pair's rows the same
+                            # edges exist as their own runs, read as edges, so an extrapolated step there is a second,
+                            # unlocated representation of one transition — reach 0 at both ends, as a swap curve's
+                            # true ends; set here, before the row steps are listed, so its ends are row-step sources
+                            a.rows[0]["reach0_lo"] = a.rows[-1]["reach0_hi"] = True
+                            a.stop_lo = a.stop_hi = True
                     a.kind = "swap"
         #: the event curves (transitions): the cut runs, landed at their extended P_b ((R1) §4), then the runs read
         #: across, at their own P_b; indices are the ids the event names carry
@@ -2085,7 +2103,8 @@ class AssemblageView(mv.RecordView):
 
     def _fall_set_load(self):
         """The build's interval sets for this record (rev 3), from NS_FALL_SETS/<record id>.json; {} when there is none.
-        A file whose stamps (record id, P and T node lists) don't match this view is a STOP (r2's s-read rule)."""
+        A file whose stamps (record id, P and T node lists; the table's and the record yaml's sha256, the read's blob)
+        don't match this view is a STOP (r2's s-read rule; r2 e843daa8 for the yaml)."""
         if self._fall_sets is None:
             self._fall_sets = {}
             if FALL_SETS_DIR:
@@ -2100,6 +2119,10 @@ class AssemblageView(mv.RecordView):
                         raise TableStop(f"fall-set file {path.name} was built on record sha256 "
                                         f"{stamp.get('record_sha256')!r}, not this record's "
                                         f"{self.record['assemblage']['sha256']}", check="fall sets")
+                    if stamp.get("record_yaml_sha256") != record_yaml_sha256(self.material_id):
+                        raise TableStop(f"fall-set file {path.name} was built on record yaml sha256 "
+                                        f"{stamp.get('record_yaml_sha256')!r}, not this record's "
+                                        f"{record_yaml_sha256(self.material_id)}", check="fall sets")
                     if stamp.get("read_blob") != read_blob():
                         raise TableStop(f"fall-set file {path.name} was built on read blob {stamp.get('read_blob')!r}, "
                                         f"not this read's {read_blob()}", check="fall sets")

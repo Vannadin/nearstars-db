@@ -23,6 +23,10 @@ T = T_ib + (T_ib+1 − T_ib)·j/nsub, j = 0 … nsub:
   regains, up to the next landed step or p_dataset, until R(b′) ≥ R(a′) («widened»). (2) Else, if b′ is a landed
   step's near side, the read ends the bridge flat at R(a′) and the step's jump absorbs the fall («absorbed»; the jump
   from R(a′) must stay ≥ 0). (3) Otherwise a STOP, naming its bound.
+- **A widened end where the read refuses** (r2 8e0d13fa, rev3b class 3) is clipped at the refusal boundary (the last
+  readable point, bisected) and listed «clipped»; the net-fall rules then apply to the clipped interval.
+- **At the floor, the fall line** (r2 8e0d13fa, rev3b class 2): a cell whose ends and secant are all ≥ THR is no fall
+  though R decreases; it is accepted and listed «slow_floor» with its secant.
 The set S_i of T node i is the union of the widened intervals from every sample in cells i − 1 and i, overlaps merged.
 Output: {"record", "ps", "ts", "stamp", "sets": {i: [[a′, b′], …]}, "unrecovered", "stops", "samples"}."""
 from __future__ import annotations
@@ -278,14 +282,20 @@ def falls_at(v, t, ib, xlo, xhi):
     falling = []                                         # points where g < THR
     step_fall = {}                                       # a downward row step's fall point → the step's ln P
     floor_cells = []                                     # cells accepted at H_MIN (rising ends, R not falling)
+    slow_floor = []                                      # r2 8e0d13fa: at H_MIN, ends and secant ≥ THR, R decreasing
     swap_jumps = []                                      # every swap's jump at t (68 addendum 1: listed, never bridged)
     for xs_, cid in swaps:
         if isinstance(cid, str):
             continue                                     # a row step: listed in row_steps, not a swap at t
         lo_r, hi_r = g(xs_ - SWAP_EPS), g(xs_ + SWAP_EPS)
         if lo_r is not None and hi_r is not None:
+            c_ = v._events[cid]
             swap_jumps.append({"t": t, "x": xs_, "curve": cid, "r_before": lo_r[0], "r_after": hi_r[0],
-                               "jump": hi_r[0] - lo_r[0], "rel": (hi_r[0] - lo_r[0]) / lo_r[0]})
+                               "jump": hi_r[0] - lo_r[0], "rel": (hi_r[0] - lo_r[0]) / lo_r[0],
+                               # r2 e843daa8 / directing 10-20: a coincident edge pair the read re-kinds as a swap, and
+                               # how far its P_b is extrapolated in T past its own rows (0: on them, a true crossing)
+                               "coincident_edge": bool(getattr(c_, "was_edge", False)),
+                               "extrap_k": max(c_.t0 - t, t - c_.t1, 0.0)})
 
     def slope(i):
         if vals[i] is None or vals[i + 1] is None:
@@ -324,9 +334,14 @@ def falls_at(v, t, ib, xlo, xhi):
         if h < H_MIN:
             # a kink in R′ (both ends rising, R′ jumping) never passes the R″ estimate, which grows as 1/h there; at the
             # resolution floor a cell whose ends rise and whose R does not fall is accepted, counted and listed (68
-            # addendum 1, question B); one whose R falls is a STOP
+            # addendum 1, question B). r2 8e0d13fa (rev3b class 2): THR is the fall line, so a cell whose ends and
+            # secant are all ≥ THR is no fall either though R decreases ("slow_floor", listed with its secant); a
+            # cell below the line anywhere is a STOP
             if fa[1] >= THR and fb[1] >= THR and fb[0] >= fa[0]:
                 floor_cells.append({"t": t, "x": a})
+                return
+            if fa[1] >= THR and fb[1] >= THR and d >= THR:
+                slow_floor.append({"t": t, "x": a, "secant": d})
                 return
             raise Unresolved(f"unresolved at ln P {a:.9f} (T {t:.3f} K)")
         m = 0.5 * (a + b)
@@ -344,6 +359,7 @@ def falls_at(v, t, ib, xlo, xhi):
     # falling points → fall intervals
     intervals, unrecovered, stops, seen = [], [], [], []
     widened, absorbed = [], []                           # r2 a69976dc: the net-fall rules 1 and 2, recorded
+    clipped = []                                         # r2 8e0d13fa: widened ends clipped at a refusal boundary
     top = math.log(v.p_dataset)
     for xf in sorted(set(falling)):
         if any(a <= xf <= c for a, c in seen):
@@ -397,6 +413,22 @@ def falls_at(v, t, ib, xlo, xhi):
         ext = c - a
         lo_, hi_ = max(a - C_WIDEN * ext, left), min(c + C_WIDEN * ext, right)
         seen.append((a, c))
+        # r2 8e0d13fa (rev3b class 3): a widened end where the read refuses is clipped at the refusal boundary, the
+        # last readable point on the interval's side (bisected), and recorded; a net fall after it STOPs naming it
+        for side, end, inner in (("lo", lo_, a), ("hi", hi_, c)):
+            if g(end) is None:
+                bad, ok = end, inner                     # g(bad) refuses, g(ok) reads
+                for _ in range(60):
+                    m = 0.5 * (bad + ok)
+                    if g(m) is None:
+                        bad = m
+                    else:
+                        ok = m
+                clipped.append({"t": t, "side": side, "was": end, "now": ok})
+                if side == "lo":
+                    lo_ = ok
+                else:
+                    hi_ = ok
         r_lo, r_hi = g(lo_), g(hi_)
         if r_lo is None or r_hi is None:
             stops.append({"t": t, "why": "a widened end the read can't evaluate", "a": lo_, "b": hi_})
@@ -430,7 +462,8 @@ def falls_at(v, t, ib, xlo, xhi):
         intervals.append((lo_, hi_, a, c))
     return intervals, unrecovered, stops, floor_cells, swap_jumps, {"unreadable": sorted(set(unreadable)),
                                                                    "unscreened": unscreened, "row_steps": row_steps,
-                                                                   "widened": widened, "absorbed": absorbed}
+                                                                   "widened": widened, "absorbed": absorbed,
+                                                                   "clipped": clipped, "slow_floor": slow_floor}
 
 
 def _widen(g, gv, lo, hi, r_lo, right, step):
@@ -495,7 +528,8 @@ def cell_falls(v, ib, nsub=16, xr=None):
         out.append({"t": t, "intervals": [list(iv) for iv in ivs], "unrecovered": un, "stops": st, "floor_cells": fl,
                     "swap_jumps": sj, "unreadable": len(ur["unreadable"]), "unscreened": ur["unscreened"],
                     "row_steps": ur["row_steps"], "widened": ur.get("widened", []),
-                    "absorbed": ur.get("absorbed", [])})
+                    "absorbed": ur.get("absorbed", []), "clipped": ur.get("clipped", []),
+                    "slow_floor": ur.get("slow_floor", [])})
     return out
 
 
@@ -587,12 +621,32 @@ def gate(v, jumps):
     return stops, exceptions
 
 
+def _coincident_edge_census(jumps, g_stops, g_exc):
+    """Directing 10-20 (r2 e843daa8): the coincident-edge «swaps» met — jumps, their gate verdicts, how many on their own
+    rows (a true crossing) and how far their P_b is extrapolated past them."""
+    ce = [j for j in jumps if j.get("coincident_edge")]
+    key = lambda j: (j["t"], j["x"], j["curve"])          # noqa: E731
+    stop_k, exc_k = {key(j) for j in g_stops if "curve" in j}, {key(j) for j in g_exc}
+    down = [j for j in ce if j["jump"] < 0.0]
+    classes = {}
+    for j in down:
+        classes[j.get("class", "not evaluated")] = classes.get(j.get("class", "not evaluated"), 0) + 1
+    return {"n": len(ce), "curves": sorted({j["curve"] for j in ce}), "upward": len(ce) - len(down),
+            "downward": len(down), "downward_by_class": classes,
+            "gate_stops": sum(1 for j in down if key(j) in stop_k), "gate_exceptions": sum(1 for j in down if key(j) in exc_k),
+            "on_rows": sum(1 for j in ce if j["extrap_k"] == 0.0), "extrapolated": sum(1 for j in ce if j["extrap_k"] > 0.0),
+            "extrap_k_max": max((j["extrap_k"] for j in ce), default=None),
+            "rel_range": [min((j["rel"] for j in ce), default=None), max((j["rel"] for j in ce), default=None)],
+            "abs_jump_max": max((abs(j["jump"]) for j in ce), default=None)}
+
+
 def document(v, per_cell):
     jumps = [j for c in per_cell.values() for smp in c for j in smp["swap_jumps"]]
     g_stops, g_exc = gate(v, jumps)
     unscreened = [u for c in per_cell.values() for smp in c for u in smp["unscreened"]]
     return {"record": v.material_id, "ps": list(v.ps), "ts": list(v.ts),
-            "stamp": {**_stamp(), "record_sha256": v.record["assemblage"]["sha256"], "read_blob": _ma().read_blob()},
+            "stamp": {**_stamp(), "record_sha256": v.record["assemblage"]["sha256"],
+                      "record_yaml_sha256": _ma().record_yaml_sha256(v.material_id), "read_blob": _ma().read_blob()},
             "sets": {str(k): s for k, s in sets_from(v, per_cell).items()},
             "unrecovered": [u for c in per_cell.values() for smp in c for u in smp["unrecovered"]],
             # every STOP: the samples' own (net fall, unresolved, a refusal inside a fall search) and the swap gate's
@@ -611,7 +665,12 @@ def document(v, per_cell):
             "row_steps": [j for c in per_cell.values() for smp in c for j in smp.get("row_steps", ())],
             # r2 a69976dc: net falls regained by widening (rule 1) and absorbed by a landed step's jump (rule 2)
             "widened": [j for c in per_cell.values() for smp in c for j in smp.get("widened", ())],
-            "absorbed": [j for c in per_cell.values() for smp in c for j in smp.get("absorbed", ())]}
+            "absorbed": [j for c in per_cell.values() for smp in c for j in smp.get("absorbed", ())],
+            # r2 8e0d13fa: widened ends clipped at a refusal boundary (class 3), and floor cells accepted on the fall
+            # line with R decreasing (class 2), each with its secant
+            "clipped": [j for c in per_cell.values() for smp in c for j in smp.get("clipped", ())],
+            "slow_floor": [j for c in per_cell.values() for smp in c for j in smp.get("slow_floor", ())],
+            "coincident_edge": _coincident_edge_census(jumps, g_stops, g_exc)}
 
 
 # n4 (r2): floor cells are listed per 1e-7 ln P, so kinks closer than that share a row.

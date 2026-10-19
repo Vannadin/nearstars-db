@@ -28,6 +28,7 @@ def _fake(swap_at=None, jump=0.0):
     `swap_at` (ln P). Returns (the view class, R, g)."""
     class Swap:
         kind = "swap"
+        t0 = t1 = 0.0
 
         def p_b_ext(self, t, reach):
             return math.exp(swap_at)
@@ -182,6 +183,86 @@ class Rule3OtherBoundStops(unittest.TestCase):
         self.assertTrue(nf, stops)
         self.assertEqual(nf[0]["bound"], "the window's end")
         self.assertEqual(ex["absorbed"], [])
+
+
+def _mutant(old, new):
+    """rho_fall_build with one source line replaced (a rule taken back), as its own module."""
+    import types
+    src = open(rb.__file__, encoding="utf-8").read()
+    assert src.count(old) == 1, old
+    mut = types.ModuleType("rho_fall_build_mutant")
+    mut.__file__ = rb.__file__
+    exec(compile(src.replace(old, new), rb.__file__, "exec"), mut.__dict__)
+    return mut
+
+
+def _ibt(v, t):
+    import bisect
+    return min(max(bisect.bisect_right(v.ts, t) - 1, 0), len(v.ts) - 2)
+
+
+DMM, BSE = "silicate_slb_earth_dmm_wh2005", "silicate_slb_default_bse"
+
+
+class FloorOnTheFallLine(unittest.TestCase):
+    # r2 8e0d13fa (rev3b class 2): a floor cell whose ends and secant are ≥ THR is no fall though R decreases
+    CELLS = ((DMM, 1946.875, 23.202116088), (BSE, 884.375, 20.491211847), (BSE, 3675.0, 24.070046623))
+
+    def test_the_slow_descents_build(self):
+        for rid, t, x in self.CELLS:
+            with self.subTest(rid=rid, t=t):
+                v = rb._view(rid)
+                _iv, _un, stops, _fl, _sj, ex = rb.falls_at(v, t, _ibt(v, t), x - 0.01, x + 0.01)
+                self.assertEqual(stops, [])
+                self.assertTrue(ex["slow_floor"])
+                for c in ex["slow_floor"]:
+                    self.assertGreaterEqual(c["secant"], rb.THR)
+                    self.assertLess(c["secant"], 0.0)            # R does decrease there
+
+    def test_the_old_floor_rule_stops(self):
+        mut = _mutant("if fa[1] >= THR and fb[1] >= THR and d >= THR:", "if False:")
+        rid, t, x = self.CELLS[0]
+        v = rb._view(rid)
+        with self.assertRaises(mut.Unresolved):
+            mut.falls_at(v, t, _ibt(v, t), x - 0.01, x + 0.01)
+
+
+class WideningClippedAtARefusal(unittest.TestCase):
+    # r2 8e0d13fa (rev3b class 3): dmm 4200 K, cell 79 — the read refuses below ln P ≈ 23.055 (eos_edge) and the
+    # widened a′ reached it
+    def test_the_widened_end_is_clipped(self):
+        v = rb._view(DMM)
+        _iv, _un, stops, _fl, _sj, ex = rb.falls_at(v, 4200.0, 79, 22.9, 23.2)
+        self.assertEqual([s_ for s_ in stops if s_["why"] == "a widened end the read can't evaluate"], [])
+        (cl,) = [c for c in ex["clipped"] if c["side"] == "lo"]
+        un = []
+        g = rb._reader(v, 4200.0, 79, un)
+        self.assertIsNone(g(cl["was"]))
+        self.assertIsNotNone(g(cl["now"]))
+        self.assertLess(cl["now"] - cl["was"], 0.02)
+
+    def test_without_the_clip_it_stops(self):
+        mut = _mutant("            if g(end) is None:\n", "            if False:\n")
+        v = rb._view(DMM)
+        _iv, _un, stops, _fl, _sj, _ex = mut.falls_at(v, 4200.0, 79, 22.9, 23.2)
+        self.assertTrue([s_ for s_ in stops if s_["why"] == "a widened end the read can't evaluate"])
+
+
+class CoincidentEdgeCensus(unittest.TestCase):
+    # directing 10-20 (r2 e843daa8): the coincident edge pairs re-kinded as swaps are marked, with their extrapolation
+    def test_bse_850_is_a_coincident_edge_pair_on_its_row(self):
+        # since swap-extension note 2 the pair has a P_b only on its own row (reach 0), where it is a true crossing
+        v = rb._view(BSE)
+        t = 850.0
+        _iv, _un, _st, _fl, sj, _ex = rb.falls_at(v, t, _ibt(v, t), 23.774, 23.794)
+        ce = [j for j in sj if j["curve"] in (168, 170)]
+        self.assertEqual(len(ce), 2)
+        self.assertTrue(all(j["coincident_edge"] and j["extrap_k"] == 0.0 for j in ce), ce)
+        census = rb._coincident_edge_census(sj, [], [])
+        self.assertEqual((census["n"], census["on_rows"], census["extrapolated"]), (2, 2, 0))
+        _iv, _un, _st, _fl, sj2, _ex = rb.falls_at(v, 753.125, _ibt(v, 753.125), 23.774, 23.794)
+        self.assertEqual([j for j in sj2 if j["curve"] in (168, 170)], [])     # none 97 K past its row
+        self.assertTrue(all(not j["coincident_edge"] for j in sj if j["curve"] not in (168, 170)))
 
 
 if __name__ == "__main__":

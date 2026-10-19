@@ -22,7 +22,8 @@ class FallSetStamp(unittest.TestCase):
     def load(self, edit):
         v = ma.view(thaw(self.rec), self.tab, 1600.0)
         d = {"record": RID, "ps": list(v.ps), "ts": list(v.ts), "stops": [], "sets": {"3": [[1.0, 2.0]]},
-             "stamp": {"record_sha256": v.record["assemblage"]["sha256"], "read_blob": ma.read_blob()}}
+             "stamp": {"record_sha256": v.record["assemblage"]["sha256"],
+                       "record_yaml_sha256": ma.record_yaml_sha256(RID), "read_blob": ma.read_blob()}}
         edit(d)
         with tempfile.TemporaryDirectory() as tmp:
             (Path(tmp) / f"{RID}.json").write_text(json.dumps(d))
@@ -39,6 +40,18 @@ class FallSetStamp(unittest.TestCase):
     def test_other_record_sha_stops(self):
         with self.assertRaisesRegex(ma.TableStop, "record sha256"):
             self.load(lambda d: d["stamp"].update(record_sha256="0" * 64))
+
+    def test_other_record_yaml_stops(self):
+        # r2 e843daa8: the yaml carries the extension pin; a set built on another yaml (or before this stamp) is refused
+        with self.assertRaisesRegex(ma.TableStop, "record yaml sha256"):
+            self.load(lambda d: d["stamp"].update(record_yaml_sha256="0" * 64))
+        with self.assertRaisesRegex(ma.TableStop, "record yaml sha256"):
+            self.load(lambda d: d["stamp"].pop("record_yaml_sha256"))
+
+    def test_record_yaml_sha_is_the_file(self):
+        import hashlib
+        self.assertEqual(ma.record_yaml_sha256(RID),
+                         hashlib.sha256((mr.MATERIALS_DIR / f"{RID}.yaml").read_bytes()).hexdigest())
 
     def test_other_read_blob_stops(self):
         with self.assertRaisesRegex(ma.TableStop, "read blob"):
