@@ -984,10 +984,12 @@ class _Run(tuple):
 #: the loop cells worse than C⁰'s tent (p95 CI lower bounds 1.02–1.09); κ = 2 on the tune half of the cells, accepted
 #: on the other half. ρ keeps κ = 1: a sharper ρ blend broke the ρ-monotone test where a side read has R < L
 #: (H′·(R − L) < 0; κ = 1.5 two violations, κ = 2 seven).
-#: PROTOTYPE (68 design rev 2 a0f8cec9, option (A), directing-approved): the ρ read inside every merged ρ window
-#: [x_b − w, x_b + w] at the read's T is the monotone cubic Hermite through the window union's one-side edge states
-#: (Fritsch–Carlson two-slope clip; a net fall takes the secant). False: rowblend's read alone (the negative control)
+#: PROTOTYPE (68 design rev 3 b2599b5d, fall-local): ρ inside the build's fall intervals S_i, S_i+1 of the read's T cell
+#: is the smoothstep-in-T mix of the two sets' monotone Hermites (Fritsch–Carlson two-slope clip; a net fall takes the
+#: secant); outside them the read is rowblend's, bit for bit. The sets come from NS_FALL_SETS/<record id>.json
+#: (rho_fall_build.py). False, or no set file: rowblend's read alone (the negative control)
 RHO_BRIDGE = os.environ.get("NS_RHO_BRIDGE", "1") != "0"     # PROTOTYPE switch for the paired measurements
+FALL_SETS_DIR = os.environ.get("NS_FALL_SETS")
 BLEND_SHARP = MappingProxyType({"rho": 1.0, "dtdp_eq": 2.0, "c_p": 2.0, "s": 1.0})   # s: κ 1, as ρ (s-read §3.1)
 
 #: the bump's length past an open run end, in units of the end segment's width (item 5d998d40: the smallest of the
@@ -1295,6 +1297,7 @@ class AssemblageView(mv.RecordView):
                            # edge read), net falls (secant), and reads where the Fritsch–Carlson clip bound
                            "bridge_reads": 0, "bridge_no_edge": 0, "bridge_net_fall": 0, "bridge_clip": 0}
         self._in_bridge = False
+        self._fall_sets = None                           # PROTOTYPE rev 3: {T node index: [(a′, b′) in ln P]}, loaded once
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
         #: s-read registration (frozen 327b4f73): the solid dT/dP and c_P from the stored s, declared by the record
         #: (assemblage.dtdp.read «entropy», written by the generator with the closure block); a tool may set it on a
@@ -1994,8 +1997,8 @@ class AssemblageView(mv.RecordView):
         try:
             for f in (fields or ("rho", "dtdp_eq", "c_p")):
                 v = self._value(f, x, t, ia, ib, sides, near=near)     # PROTOTYPE: the row-level blend
-                if f == "rho" and near and RHO_BRIDGE and not self._in_bridge and not isinstance(t, Dual):
-                    v = self._rho_bridge(x, t, ib, rel, pbs, v)
+                if f == "rho" and RHO_BRIDGE and not self._in_bridge and not isinstance(t, Dual):
+                    v = self._rho_fall(x, t, ib, v)
                 if near:
                     if f == "rho":
                         self.cut_counts["corrections"] += len(near)
@@ -2038,43 +2041,54 @@ class AssemblageView(mv.RecordView):
             corners += [self._cell(ja, kb) for ja in (ia, ia + 1) if self._region_of(ja, kb) == r]
         return out["rho"], out["dtdp_eq"], out["c_p"], [c for c in corners if c is not None]
 
-    def _rho_bridge(self, x, t, ib, rel, pbs, own):
-        """PROTOTYPE (68 design rev 2, option (A)): ρ inside the ρ window union holding x, at the read's T.
-        - Windows: every edge of the stencil rows' partitions with a P_b_ext at t, [x_b − w, x_b + w] with the blend's
-          own x_b and w; windows that overlap are merged, and the union [x0, x1] holding x is the bridge's span.
-        - Edge states: rowblend's read at x0 and at x1 (no window holds either, so no blend term), value and ∂/∂ln P
-          through the read's own Dual, taken from the outside: x0's P cell is the one below it, x1's the one above.
-        - Inside: the cubic Hermite through (x0, r0, d0) and (x1, r1, d1), the slopes Fritsch–Carlson clipped against
-          Δ = (r1 − r0)/(x1 − x0): negative ones set to 0, and both scaled by 3/√(α² + β²) when α² + β² > 9
-          (α = d0/Δ, β = d1/Δ). Monotone in P. C¹ at x0 and x1 where the clip does not bind.
-        - r1 < r0: no monotone connection; the secant, counted (bridge_net_fall).
-        - An edge beyond the table (below its floor node or above the column cut) or an edge read that refuses: the
-          read keeps `own`, counted (bridge_no_edge).
-        A Dual x (a tool's ∂ρ/∂ln P) runs through the same Hermite, so its derivative is M′; a Dual T (the s path) never
-        reaches here."""
-        ivs = []
-        for c in rel:
-            if c.kind != "edge" or pbs[c] is None:
-                continue
-            xb = _log(pbs[c])
-            w = self._width(xb)
-            ivs.append((xb - w, xb + w))
-        ivs.sort()
-        span = None
-        for a, b in ivs:
-            if span is not None and a <= span[1]:
-                span = (span[0], max(span[1], b))
-                continue
-            if span is not None and span[0] < x < span[1]:
-                break
-            span = (a, b)
-        if span is None or not span[0] < x < span[1]:
+    def _fall_set_load(self):
+        """The build's interval sets for this record (rev 3), from NS_FALL_SETS/<record id>.json; {} when there is none.
+        A file whose stamps (record id, P and T node lists) don't match this view is a STOP (r2's s-read rule)."""
+        if self._fall_sets is None:
+            self._fall_sets = {}
+            if FALL_SETS_DIR:
+                import pathlib
+                path = pathlib.Path(FALL_SETS_DIR) / f"{self.material_id}.json"
+                if path.exists():
+                    d = json.loads(path.read_text(encoding="utf-8"))
+                    if d.get("record") != self.material_id or d.get("ps") != list(self.ps) or d.get("ts") != list(self.ts):
+                        raise TableStop(f"fall-set file {path.name} does not match this record's table", check="fall sets")
+                    self._fall_sets = {int(k): [tuple(iv) for iv in v] for k, v in d["sets"].items()}
+        return self._fall_sets
+
+    def _rho_fall(self, x, t, ib, own):
+        """PROTOTYPE (68 design rev 3): ρ at (x, T), T in the cell [T_i, T_i+1] (i = ib). For k ∈ {i, i + 1}, ρ_k is the
+        monotone Hermite through R's states at the ends of the S_k interval holding x (_fall_bridge), or R itself when
+        none does; ρ = (1 − θ)·ρ_i + θ·ρ_i+1, θ the smoothstep of τ = (T − T_i)/(T_i+1 − T_i). In no interval of either
+        set: `own`, bit for bit."""
+        sets = self._fall_set_load()
+        if not sets:
             return own
-        x0, x1 = span
+        pieces = []
+        for k in (ib, ib + 1):
+            got = None
+            for a, b in sets.get(k, ()):
+                if a < x < b:
+                    got = self._fall_bridge(x, t, ib, a, b)
+                    break
+            pieces.append(got)
+        if pieces[0] is None and pieces[1] is None:
+            return own
+        tau = min(max((t - self.ts[ib]) / (self.ts[ib + 1] - self.ts[ib]), 0.0), 1.0)
+        th = tau * tau * (3.0 - 2.0 * tau)
+        r0 = own if pieces[0] is None else pieces[0]
+        r1 = own if pieces[1] is None else pieces[1]
+        return (1.0 - th) * r0 + th * r1
+
+    def _fall_bridge(self, x, t, ib, x0, x1):
+        """The monotone cubic Hermite through (x0, R, R′) and (x1, R, R′) at the read's T, R′ from the outside (_edge_read),
+        its slopes Fritsch–Carlson clipped against Δ = (R1 − R0)/(x1 − x0): negative ones set to 0, both scaled by
+        3/√(α² + β²) when α² + β² > 9. R1 < R0: the secant (bridge_net_fall). An end the table can't read: None
+        (bridge_no_edge; the set keeps R there). Counted per call: bridge_reads, bridge_clip."""
         e0, e1 = self._edge_read(x0, t, ib, below=True), self._edge_read(x1, t, ib, below=False)
         if e0 is None or e1 is None:
             self.cut_counts["bridge_no_edge"] += 1
-            return own
+            return None
         self.cut_counts["bridge_reads"] += 1
         (r0, d0), (r1, d1) = e0, e1
         dx = x1 - x0
