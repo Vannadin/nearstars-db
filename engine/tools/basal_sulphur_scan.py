@@ -61,7 +61,7 @@ def _one(args):
     if res.applicable:
         v = res.values
         out.update(core_km=v["core_radius_fraction"] * dec["radius_earth"] * interior.EARTH_RADIUS_M / 1e3,
-                   nmoi=v["nmoi"], layer_km=v["basal_layer_thickness_km"], top_km=v["core_plus_layer_radius_solved_km"],
+                   nmoi=v["nmoi"], layer_km=v["basal_layer_thickness_solved_km"], top_km=v["core_plus_layer_radius_solved_km"],
                    p_base=v["cmb_pressure"], state=v["basal_silicate_state"], cmf=v.get("core_mass_fraction"))
     else:
         out["reason"] = str(getattr(res, "reason", ""))[:200]

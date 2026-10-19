@@ -260,7 +260,7 @@ def controls(body_yaml: str, silicate_records: bool = False) -> dict:
 
 
 RHO_RANGE = (0.5, 2.0)               # r2 on the registration, (2): outside it the term is not representative
-# old interior_layers units → the rewrite's SI. No «km»: the rewrite emits its km keys (basal_layer_thickness_km,
+# old interior_layers units → the rewrite's SI. No «km»: the rewrite emits its km keys (basal_layer_thickness_solved_km,
 # core_plus_layer_radius_solved_km) in km, so km ↔ km is factor 1 (r2 N3; compare_map's km → m row is for other keys)
 OLD_UNIT_SCALE = MappingProxyType({"R_earth": 6.371e6, "GPa": 1e9})
 

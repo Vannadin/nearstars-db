@@ -706,7 +706,7 @@ def _quantities(body, p: PassOut, sid: str, x, views=None):
         r_base = next((b[3] for b in p.boundaries if b[0].endswith(f"/{basal.id}")), None)
         r_top = next((b[3] for b in p.boundaries if b[0].startswith(f"{basal.id}/")), None)
         if r_base is not None and r_top is not None:
-            out += [q("basal_layer_thickness_km", "km", (r_top - r_base) / 1e3, result.Where("layer", basal.id)),
+            out += [q("basal_layer_thickness_solved_km", "km", (r_top - r_base) / 1e3, result.Where("layer", basal.id)),
                     q("core_plus_layer_radius_solved_km", "km", r_top / 1e3, result.Where("layer", basal.id))]
     cmb = body.interface("cmb")
     for name, _k, m_b, r_b, p_b, t_up, t_lo in p.boundaries:
