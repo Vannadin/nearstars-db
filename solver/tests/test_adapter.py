@@ -248,7 +248,8 @@ class ExcludedSetLiteral(unittest.TestCase):
                                  ("interior", "_CALL"), ("interior", "_ENTRY"), ("interior", "_PIN"),
                                  ("structure_grid", "BUILDING"), ("structure_grid", "JUDGE_A_ONLY"),
                                  ("structure_grid", "GRID_DIR"), ("interior", "MELT_SEAMS_LANDED"),
-                                 ("interior", "STAGE_CLAMP_EVERY_STEP")})
+                                 ("interior", "STAGE_CLAMP_EVERY_STEP"), ("interior", "_FOLD_DEPTH"),
+                                 ("interior", "FOLD_DOUBLED"), ("interior", "STEPS")})
 
 
 class WaterMixture(unittest.TestCase):

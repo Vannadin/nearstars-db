@@ -2594,9 +2594,17 @@ def shoot(*args, **kw) -> tuple[Structure, bool]:
         # 덧붙임 58 ② — 바깥 호출마다 번호를 매기고, 돌려준 구조가 어느 호출의 것인지 남긴다(이어 돌기는 안쪽이 먼저 남김)
         saved, _CALL[0] = _CALL[0], _FAMILY_TRAIL["calls"]
         _FAMILY_TRAIL["calls"] += 1
+        top = _FOLD_DEPTH[0] == 0
+        _FOLD_DEPTH[0] += 1
         try:
             st, ok = _shoot_body(*args, **kw)
+        except ValueError as exc:
+            # 핵 접힘 등록 §2.1 — 가장 바깥 사격의 C152 거절이 0 을 사이에 둔 괄호를 쥐었으면 {dm = 0} 위 이어 걷기로
+            if not (FOLD_CONTINUATION and top and fold_trigger(exc)):
+                raise
+            st, ok = _fold_continue(exc, args, kw)
         finally:
+            _FOLD_DEPTH[0] -= 1
             call, _CALL[0] = _CALL[0], saved
         _FAMILY_TRAIL["returned"].setdefault(id(st), call)
         return st, ok
@@ -2696,6 +2704,260 @@ def _graze_suffix() -> str:
     """C152 뜀 · 예산 거절 문구 끝 — 쌍이 있으면 늘 민감도 S 를 싣고(메모 7 규칙 1), 표지면 스침까지. 쌍이 없으면 빈 문자열."""
     pair = _loop_pair()
     return "" if pair is None else " — " + format_graze(*pair)
+
+
+# ── 핵 사격의 접힘: C152 거절을 {dm = 0} 위 이어 걷기로 (core-tc-fold-registration, 동결 fbbce52e; note 1) ─────────────
+# 고정 T_c 에서 질량이 중심압에 단조가 아니면(`_shoot_pressure` 의 전제가 깨지면) 해 곡선 {dm = 0} 이 T_c 에서 접히고, 온도
+#   고리는 0 을 사이에 둔 괄호를 쥔 채 C152 로 «해가 없다» 고 거절한다. 그 거절의 괄호에서 씨앗을 받아 곡선을 걷고, T_s = T_pot
+#   교차를 모아 상태로 묶는다(rootfind.fold_walk · fold_states · core_warm_choice). 고리가 답하는 몸은 여기 닿지 않는다.
+FOLD_CONTINUATION = True        # FLAG — False 면 오늘의 C152 거절 그대로(N1 음성 대조)
+FOLD_E_TS_FLOOR_K = 2.0         # §3 e_s 의 이산화 바닥(T_s 로 2 K, S1 이 올 때까지)
+FOLD_TC_MAX_FACTOR = 3.0        # C1 선언 영역의 T_c 상한 = 3·T_pot (고리 첫 추측 2·T_pot 위); 하한은 T_pot — 단열선은 바깥으로 식는다
+FOLD_BAND_DS = 1e-4             # R1 — dy/ds 를 잴 곡선 위 이웃 두 점의 호 간격 (u, v 로그 단위)
+FOLD_RUNS = [0]                 # 이어 걷기가 돈 횟수(값 밖 셈)
+_FOLD_DEPTH = [0]               # 이어 걷기 · F12 훑기 · 두 배 STEPS 풀이 안에서는 또 걷지 않는다
+_FOLD_INFO: dict[int, dict] = {}   # id(구조) → 이어 걷기의 사실(풀이마다 비움) — solve 가 메모로 단다
+FOLD_OFF_DOMAIN = "core_fold_off_domain"
+FOLD_BUDGET_ID = "core_fold_budget"
+FOLD_STATES_ID = "core_fold_states"
+
+
+def _fold_tagged(exc: ValueError, seed, site) -> ValueError:
+    """C152 거절에 마지막 괄호(씨앗)와 자리(jump · budget · stall)를 단다 — 거절 문장은 그대로."""
+    exc.fold_seed, exc.fold_site = seed, site
+    return exc
+
+
+def fold_trigger(exc) -> bool:
+    """§2.1 (note 1 로 넓힘) — C152 거절(뜀 자리 · 예산 · 정체)이 0 을 사이에 둔 마지막 괄호(y_lo · y_hi < 0)를 쥐고 있었는가, 폭과 무관.
+    동결 (b) «폭 0 괄호» 는 그 부분집합이고 (a) 뜀 자리는 그대로다. 부호가 안 바뀐 괄호는 폭 0 이어도 아니다."""
+    seed = getattr(exc, "fold_seed", None)
+    return (getattr(exc, "fold_site", None) in ("jump", "budget", "stall") and seed is not None
+            and seed[2] * seed[5] < 0.0 and seed[1] is not None and seed[4] is not None)
+
+
+def _fold_bound(args, kw) -> dict:
+    import inspect
+    b = inspect.signature(_shoot_body_raw).bind(*args, **kw)
+    b.apply_defaults()
+    return dict(b.arguments)
+
+
+def _fold_integrate(a: dict, p_c: float, t_c: float):
+    return integrate(p_c, a["mass_kg"], a["cmf"], a["imf"], a["core_material"], a["phi0"], a["p_cap"], a["gmf"],
+                     a["envelope_z"], a["envelope_z_rock_fraction"], a["differentiated"], t_c, float(a["potential_temperature"]),
+                     a["boundary_temperature_jump"], a["mantle_rock_fraction"], a["serpentinisation"],
+                     a["differentiation_front"], a["crust_rock_fraction"], a["crust_porosity"], a["envelope_z_profile"],
+                     ammonia_mass_fraction=a["ammonia_mass_fraction"], interface_jumps=a["interface_jumps"],
+                     basal_layer=a["basal_layer"], lithosphere=a["lithosphere"])
+
+
+def _fold_attempt(exc, a: dict) -> dict:
+    """한 T_pot 에서 이어 걷기 한 벌: W2 씨앗 다시 쏘기 → fold_walk → fold_states. 결과 dict(kind: states · off_domain ·
+    budget, walk, states, seed, cost)."""
+    import time
+    t_pot = float(a["potential_temperature"])
+    stack = _stack(a["cmf"], a["imf"], a["core_material"], a["gmf"], a["envelope_z"], a["envelope_z_rock_fraction"],
+                   a["differentiated"], a["serpentinisation"], a["differentiation_front"], a["crust_rock_fraction"],
+                   a["crust_porosity"], a["envelope_z_profile"])
+    p_lo = max(1.0e2, getattr(stack[0][1], "shoot_lo", 0.0))
+    p_hi = stack[0][1].p_max
+    sh_args = (a["mass_kg"], a["cmf"], a["imf"], a["core_material"], a["phi0"], a["p_cap"], a["gmf"], a["envelope_z"],
+               a["envelope_z_rock_fraction"], a["differentiated"])
+    sh_kw = {k: a[k] for k in ("boundary_temperature_jump", "mantle_rock_fraction", "serpentinisation",
+                               "differentiation_front", "crust_rock_fraction", "crust_porosity", "envelope_z_profile",
+                               "ammonia_mass_fraction", "interface_jumps")}
+    if a["basal_layer"]:
+        sh_kw["basal_layer"] = a["basal_layer"]
+    if a["lithosphere"]:
+        sh_kw["lithosphere"] = a["lithosphere"]
+    cpu0 = time.process_time()
+    # W2 (note 1 ④) — 괄호의 두 끝을 SHOOT_TOL 로 다시 쏜다; 씨앗은 |y| 가 작은 끝(같으면 아래 끝), 못 닫히면 다른 끝
+    t_lo, pc_lo, _y_lo, t_hi, pc_hi, _y_hi = exc.fold_seed
+    ends = []
+    for t_e, p_e in ((t_lo, pc_lo), (t_hi, pc_hi)):
+        try:
+            st_e, ok_e = _shoot_pressure(*sh_args, t_center=t_e, t_pot=t_pot, p_hint=p_e, tol=SHOOT_TOL, **sh_kw)
+        except (PhaseGap, Unbound, NoCompactRoot, GridExceeded, ValueError):
+            continue
+        if ok_e and st_e.t_surface > 0.0:
+            ends.append((abs(math.log(st_e.t_surface / t_pot)), t_e, st_e.p_center))
+    out = {"seed_bracket": (t_lo, pc_lo, t_hi, pc_hi), "evals": 0}
+    if not ends:
+        out.update(kind="off_domain", why="neither end of the bracket closes at SHOOT_TOL (W2)", walk=None, states=[],
+                   cpu=time.process_time() - cpu0)
+        return out
+    _gy, t_s0, p_s0 = min(ends)
+    out["seed"] = (t_s0, p_s0)
+
+    v_lo, v_hi = math.log(t_pot), math.log(FOLD_TC_MAX_FACTOR * t_pot)
+
+    def F(u: float, v: float):
+        p_c = math.exp(u)
+        if not (p_lo <= p_c <= p_hi and v_lo <= v <= v_hi):
+            raise rootfind.FoldOutside
+        try:
+            st = _fold_integrate(a, p_c, math.exp(v))
+        except (PhaseGap, Unbound, NoCompactRoot, GridExceeded, ValueError):
+            raise rootfind.FoldOutside from None
+        if not st.t_surface > 0.0:
+            raise rootfind.FoldOutside
+        return st.mass_kg / a["mass_kg"] - 1.0, math.log(st.t_surface / t_pot)
+
+    walk = rootfind.fold_walk(F, (math.log(p_s0), math.log(t_s0)), SHOOT_TOL, direction=-1.0)
+    FOLD_RUNS[0] += 1
+    e_ts = max(SHOOT_TOL * t_pot, FOLD_E_TS_FLOOR_K)
+    e_g = math.log1p(e_ts / t_pot)
+    # 교차는 고리의 수락(T_SURFACE_TOL) 안에서만 상태다 — 곡선 위에서 g 가 뛰어 넘은 자리는 교차가 아니다(증거로 남김)
+    real = [c for c in walk.crossings if abs(math.expm1(c[3])) <= T_SURFACE_TOL]
+    jumps = [c for c in walk.crossings if c not in real]
+    walk.crossings = real
+    states = rootfind.fold_states(walk, e_g)
+    out.update(walk=walk, states=states, g_jumps=jumps, e_ts=e_ts, cpu=time.process_time() - cpu0, F=F)
+    if walk.status == "budget":
+        out.update(kind="budget", why=f"the walk spent its budget of {rootfind.FOLD_BUDGET} attempts before both legs "
+                                      f"reached the domain's edge ({len(states)} state(s) so far)")
+    elif walk.status == "seed":
+        out.update(kind="off_domain", why="the re-shot seed could not be put on {dm = 0}")
+    elif not states:
+        out.update(kind="off_domain", why=f"the walk left the declared domain at both ends without a crossing of "
+                                          f"T_s = T_pot (legs end: {walk.leg_ends}; g jumps {len(jumps)})")
+    else:
+        out["kind"] = "states"
+    return out
+
+
+def _fold_refusal(head: str, att: dict, t_pot: float, extra: str = "") -> ValueError:
+    w = att.get("walk")
+    tail = (f"; walk {len(w.points)} points, {w.evals} integrations, {att['cpu']:.1f} s CPU, legs {w.leg_ends}"
+            if w is not None else "")
+    return ValueError(f"{head} — 핵 사격 접힘 이어 걷기(core-tc-fold)가 T_pot {t_pot:g} K 에서 상태를 못 냈다: {att['why']}"
+                      f"{extra}{tail} (씨앗 괄호 {att['seed_bracket']})")
+
+
+def _fold_band(att: dict, cross, a: dict) -> dict:
+    """R1 — 답 자리 교차에서 곡선을 따라 ±FOLD_BAND_DS 의 두 점(보정기로 곡선 위)을 적분해 dy/ds 를 잰다; b_y = |dy/ds|·e_s,
+    e_s = e_Ts / |dT_s/ds| (보정 허용 SHOOT_TOL·T_pot 와 2 K 바닥 중 큰 것을 s 로 옮긴 것)."""
+    t_pot = float(a["potential_temperature"])
+    w = att["walk"]
+    pts = sorted(w.points, key=lambda p: abs(p[0] - cross[0]))
+    tu, tv, gu, gv = pts[0][5], pts[0][6], pts[0][7], pts[0][8]
+    ys = []
+    for sgn in (-1.0, 1.0):
+        u, v = cross[1] + sgn * FOLD_BAND_DS * tu, cross[2] + sgn * FOLD_BAND_DS * tv
+        n2 = gu * gu + gv * gv
+        for _ in range(rootfind.FOLD_CORR_ITERS):
+            st = _fold_integrate(a, math.exp(u), math.exp(v))
+            dm = st.mass_kg / a["mass_kg"] - 1.0
+            if abs(dm) <= SHOOT_TOL:
+                break
+            u, v = u - dm * gu / n2, v - dm * gv / n2
+        ys.append((math.hypot(u - cross[1], v - cross[2]) * sgn, st))
+    (s_a, st_a), (s_b, st_b) = ys
+    ds = s_b - s_a
+    fields = {"T_c [K]": lambda s_: s_.t_center, "P_c [GPa]": lambda s_: s_.p_center / 1e9,
+              "R [km]": lambda s_: s_.radius_m / 1e3, "r_cmb [km]": lambda s_: s_.core_radius_m / 1e3,
+              "P_cmb [GPa]": lambda s_: (s_.p_cmb or 0.0) / 1e9, "T_cmb [K]": lambda s_: s_.t_cmb or 0.0,
+              "nmoi": lambda s_: s_.nmoi}
+    dts = (st_b.t_surface - st_a.t_surface) / ds
+    e_s = att["e_ts"] / abs(dts) if dts else float("inf")
+    return {k: abs((f(st_b) - f(st_a)) / ds) * e_s for k, f in fields.items()}
+
+
+def _fold_answer(att: dict, cross, a: dict, extra_note: str = ""):
+    """C3 — 찾은 (P_c, T_c) 에서 적분 한 번(다시 쏘지 않음), 사격 길의 뒤 단계(바닥 · 물 거절)를 그대로; 메모 사실을 단다."""
+    t_pot = float(a["potential_temperature"])
+    st = _fold_integrate(a, math.exp(cross[1]), math.exp(cross[2]))
+    _refuse_if_below_floor(st, a["core_material"])
+    _refuse_if_water_filled(st)
+    w = att["walk"]
+    band = _fold_band(att, cross, a)
+    info = {"turning": [(math.exp(t[2]), math.exp(t[1]) / 1e9, t_pot * math.exp(t[3])) for t in w.turning],
+            "length": (w.points[-1][0] - w.points[0][0]) if w.points else 0.0, "evals": w.evals, "cpu": att["cpu"],
+            "crossings": len(w.crossings), "states": len(att["states"]), "band": band, "e_ts": att["e_ts"],
+            "seed": att["seed"], "extra": extra_note}
+    if not FOLD_DOUBLED[0]:
+        info["doubled"] = _fold_doubled(a)
+    _FOLD_INFO[id(st)] = info
+    return st, True
+
+
+FOLD_DOUBLED = [False]          # R2 의 두 배 STEPS 풀이 안 — 그 안에서는 또 두 배로 풀지 않는다
+
+
+def _fold_doubled(a: dict):
+    """R2 — b_y 가 띠의 지배 항일 때 STEPS 두 배로 한 번 풀어 그 y 를 옆에 적는다. 옛 사슬의 이 출력들에는 다른 띠 항이
+    없으므로 b_y 가 늘 지배 항이다(note 1). 결과: {필드: 값} 또는 거절 문장의 앞."""
+    global STEPS
+    saved, depth = STEPS, _FOLD_DEPTH[0]
+    FOLD_DOUBLED[0] = True
+    STEPS = 2 * saved
+    _FOLD_DEPTH[0] = 0                  # 두 배 풀이는 가장 바깥 사격처럼 — 그 안의 접힘도 이어 걷는다(그 안에서 또 두 배는 안 함)
+    try:
+        st2, ok2 = shoot(**a)
+        return {"STEPS": STEPS, "converged": ok2, "T_c [K]": st2.t_center, "P_c [GPa]": st2.p_center / 1e9,
+                "R [km]": st2.radius_m / 1e3, "T_cmb [K]": st2.t_cmb}
+    except (ValueError, PhaseGap) as why:
+        return {"STEPS": STEPS, "refused": str(why)[:160]}
+    finally:
+        STEPS = saved
+        _FOLD_DEPTH[0] = depth
+        FOLD_DOUBLED[0] = False
+
+
+def _fold_continue(exc, args, kw):
+    """§2 — 걸음 한 벌, 상태 하나면 답, 둘 이상이면 F12(core_warm_choice), 상태가 없으면 이름 댄 거절."""
+    a = _fold_bound(args, kw)
+    t_pot = float(a["potential_temperature"])
+    att = _fold_attempt(exc, a)
+    if att["kind"] == "budget":
+        raise _fold_refusal(FOLD_BUDGET_ID, att, t_pot) from exc
+    if att["kind"] != "states":
+        raise _fold_refusal(FOLD_OFF_DOMAIN, att, t_pot) from exc
+    states = att["states"]
+    if len(states) == 1:
+        return _fold_answer(att, states[0][0], a)
+
+    def states_at(t):
+        b = dict(a, potential_temperature=t)
+        try:
+            st, ok = _shoot_body(**b)
+            return ("states", (st.t_center,)) if ok else ("other", "unconverged")
+        except ValueError as e2:
+            if not fold_trigger(e2):
+                return "other", str(e2)[:60]
+            at2 = _fold_attempt(e2, b)
+            if at2["kind"] != "states":
+                return "other", {"budget": FOLD_BUDGET_ID}.get(at2["kind"], FOLD_OFF_DOMAIN)
+            return "states", tuple(math.exp(c[2]) for c, _g in at2["states"])
+
+    tcs = [math.exp(c[2]) for c, _g in states]
+    chosen, trace, why = rootfind.core_warm_choice(states_at, t_pot, tcs)
+    if chosen is None:
+        sts = [(round(math.exp(c[2]), 4), round(math.exp(c[1]) / 1e9, 6), round(t_pot * math.exp(c[3]), 4)) for c, _g in states]
+        raise ValueError(f"{FOLD_STATES_ID} — 핵 사격 접힘의 상태가 둘 이상이고 F12 훑기가 못 골랐다: 상태 (T_c, P_c GPa, T_s) {sts}; "
+                         f"{why}; 훑기 {[(t, tuple(round(x, 3) for x in v)) for t, v in trace]}") from exc
+    k = tcs.index(chosen)
+    others = [(round(math.exp(c[2]), 4), round(math.exp(c[1]) / 1e9, 6)) for i, (c, _g) in enumerate(states) if i != k]
+    note = (f"core_root_choice — F12 (WARM_STEP_K {rootfind.WARM_STEP_K:g} K): 다른 상태 (T_c, P_c GPa) {others}; "
+            f"훑기 {[(t, tuple(round(x, 3) for x in v)) for t, v in trace]}")
+    return _fold_answer(att, states[k][0], a, note)
+
+
+def fold_note(info: dict) -> list:
+    """C6 · W1 · R1 · R2 — 이어 걷기로 낸 답의 메모 줄."""
+    turn = [(round(t, 3), round(p, 5), round(s, 2)) for t, p, s in info["turning"]]
+    notes = [f"core_fold_continued — 핵 사격 접힘을 이어 걷기로 풀었다(core-tc-fold): 지난 꺾임점 (T_c K, P_c GPa, T_s K) {turn}, "
+             f"걸음 길이 {info['length']:.4g} (ln 단위), 적분 {info['evals']} 번 · CPU {info['cpu']:.1f} s, 교차 {info['crossings']} · "
+             f"상태 {info['states']}, 씨앗 T_c {info['seed'][0]:.4f} K",
+             "core_fold_band — R1 띠 b_y = |dy/ds|·e_s (e_Ts " + f"{info['e_ts']:g} K): "
+             + " · ".join(f"{k} ±{v:.4g}" for k, v in info["band"].items())
+             + " — R2: 이 출력들에 다른 띠 항이 없어 b_y 가 지배 항, 등급 한 단계 내림"]
+    if "doubled" in info:
+        notes.append(f"core_fold_band — R2 STEPS 두 배 풀이: {info['doubled']}")
+    if info.get("extra"):
+        notes.append(info["extra"])
+    return notes
 
 
 def _shoot_body(*args, **kw) -> tuple[Structure, bool]:
@@ -2903,6 +3165,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
     wall_why = ""                # 그 온도에서 왜 묶이지 않았는가 (사다리의 문장)
     lo = hi = None               # (log T_c, log T_surf/T_pot): 아래쪽(차다) · 위쪽(뜨겁다)
     dlo = dhi = None             # C152 메모 4 — 같은 것을 부호를 읽을 수 있는 시행(decides)만으로. Brent 괄호는 이것
+    p_at: dict = {}              # 핵 접힘 등록 §2.2 — 괄호 끝 시행의 중심압 (log T_c → P_c): 이어 걷기의 씨앗
     dlo_tau = dhi_tau = None     # C152 메모 6 — 그 두 끝 시행의 사격 허용
     devs: list[float] = []
     bracketed = False
@@ -2958,6 +3221,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
         if got.t_surface <= 0.0:
             return
         pt = (math.log(t_now), math.log(got.t_surface / t_pot))
+        p_at[pt[0]] = got.p_center
         if pt[1] < 0.0:
             if lo is None or pt[0] > lo[0]:
                 lo = pt
@@ -2987,7 +3251,8 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
         except ValueError as e:
             if loose_pair is None or not str(e).startswith(TIGHT_REFUSAL_HEADS):
                 raise
-            raise ValueError(f"{e}{LOOSE_PAIR_HEAD}{format_graze(*loose_pair)}") from None
+            raise _fold_tagged(ValueError(f"{e}{LOOSE_PAIR_HEAD}{format_graze(*loose_pair)}"), getattr(e, "fold_seed", None),
+                               getattr(e, "fold_site", None)) from None
 
     def _rerun(t0, p0):
         return shoot(mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z, envelope_z_rock_fraction,
@@ -2996,6 +3261,12 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
                      envelope_z_profile, ammonia_mass_fraction=ammonia_mass_fraction,
                      interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere,
                      p_hint=p0, _t_start=t0, _loose=False, _passes=T_PASSES)
+
+    def fold_seed():
+        """핵 접힘 등록 §2.1 (note 1) — 마지막 괄호 (T_lo, P_lo, y_lo, T_hi, P_hi, y_hi), 없으면 None."""
+        if dlo is None or dhi is None:
+            return None
+        return (math.exp(dlo[0]), p_at.get(dlo[0]), dlo[1], math.exp(dhi[0]), p_at.get(dhi[0]), dhi[1])
 
     def bracket_loose():
         """C152 메모 6 — 0 을 사이에 둔 괄호가 있고 그 끝 하나라도 SHOOT_TOL 보다 성긴 사격이었나(느슨한 고리에서만)."""
@@ -3046,10 +3317,10 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
                     return tight_rerun(math.exp(x_best), st.p_center, "뜀")
                 # 괄호가 T_TOL 까지 좁아졌는데 어긋남이 허용 밖 — 근이 아니라 잔차의 뜀을 감쌌다(C152 규칙 2).
                 #   C152 메모 6 — 여기 닿는 것은 두 괄호 끝이 SHOOT_TOL 로 쏜 시행일 때뿐이다(빡빡한 허용에서 선 뜀).
-                raise ValueError(
+                raise _fold_tagged(ValueError(
                     f"표면온도 잔차가 뛴다 — 중심 온도 [{math.exp(x_l):.6g}, {math.exp(x_h):.6g}] K 사이에서 0 을 건너뛴다"
                     f"(괄호 폭 {x_h - x_l:.2e} ≤ T_TOL {T_TOL:g}, 가까운 끝의 어긋남 {abs(math.expm1(y_best)) * 100:.2f} %). "
-                    "그 사이에 표면 온도가 선언값과 같아지는 해가 없다 (C152)." + _graze_suffix())
+                    "그 사이에 표면 온도가 선언값과 같아지는 해가 없다 (C152)." + _graze_suffix()), fold_seed(), "jump")
             nxt = math.exp(x)
             root_t = nxt
         elif bracketed and lo is not None and (hi is not None or wall is not None):
@@ -3206,7 +3477,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
     if straddle_note and not _surface_temperature_met(st, t_pot) and bracket_loose():
         return tight_rerun(t_c, st.p_center, "예산")
     if (extensions or straddle_note) and not _surface_temperature_met(st, t_pot):
-        raise ValueError(
+        raise _fold_tagged(ValueError(
             f"표면온도 경계조건이 예산 안에 닫히지 않았다 — 마지막 어긋남 {devs[-1] * 100:.2f} % "
             f"(허용 {T_SURFACE_TOL * 100:.1f} %), 통과 {len(devs)} 걸음, 연장 {extensions} 벌. "
             "⚠ 어긋남은 **아직 줄고 있었다** — 비례 갱신이 뿌리를 넘나드는 진동의 감쇠가 1 % 근처에서 "
@@ -3218,7 +3489,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
             "답이 아니므로 내보내지 않는다. ⚠ **예산을 더 주는 것은 답이 아니다** — 감쇠율 0.878 에서 "
             "+28 걸음으로도 못 닿았다. 감쇠를 빠르게 하려면 비례 갱신에 완화계수 α < 1 이 필요하고, "
             "그것은 시행 걸음이 아니라 **갱신 규칙 변경**이라 붙는 천체의 경로도 바꾼다 — **C69 후보**다." + straddle_note
-            + _graze_suffix())
+            + _graze_suffix()), fold_seed(), "budget")
     print(f"  [고리] 시행 {len(devs)} 걸음 · 완화 걸린 걸음 {damped_steps} · "
           f"마지막 어긋남 {devs[-1]:.4e}" if devs else "  [고리] 시행 0 걸음")
     reps = _family_oscillation(fams)
@@ -3289,7 +3560,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
                          interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere,
                          p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=T_PASSES, _cont=True)
         convergence.note("interior._surface_temperature", met)   # C138 — 이름 없던 2367 행 길(T 형)
-        raise ValueError(_stall_reason(t_pot))
+        raise _fold_tagged(ValueError(_stall_reason(t_pot)), fold_seed(), "stall")
     convergence.note("interior._surface_temperature", met)   # C138 — 이름 없던 2367 행 길(T 형)
     if met and converged and reps is None and PLATEAU_PROBE and _REOPEN[0]:
         PLATEAU_REOPEN_SKIPS[0] += 1
@@ -4511,6 +4782,8 @@ def solve(mass_earth: float,
     _FAMILY_INFO.clear()
     surf_fallbacks0 = SURF_RHO_FALLBACKS[0]     # C164 규칙 3 — 이 풀이의 표면 반 걸음 rho0 물러남 셈의 시작점
     _GRAZE_INFO.clear()
+    if _SOLVE_DEPTH[0] <= 1:
+        _FOLD_INFO.clear()               # 핵 접힘 — 이어 걷기의 사실은 가장 바깥 풀이마다 비운다(R2 의 두 배 풀이는 안쪽)
     _FAMILY_TRAIL.update(trials=[], reclosed=[], closed=[], answer=None, dev=None, calls=0, returned={}, answer_call=None)
     _REF_INFO.clear()
     fe_liquid.reset_solve_state()        # C161 (4a) — 철 액체 기억은 풀이마다 비운다
@@ -4663,6 +4936,9 @@ def solve(mass_earth: float,
     fam_info = _FAMILY_INFO.get(id(st))
     if id(st) in _GRAZE_INFO:          # C157 메모 5 — 답에 스침 표지(값 그대로, 메모 한 줄)
         notes.append(_GRAZE_INFO[id(st)])
+    fold_info = _FOLD_INFO.get(id(st))
+    if fold_info is not None:          # 핵 접힘 등록 C6 · W1 · R1 · R2 — 이어 걷기로 낸 답의 메모
+        notes.extend(fold_note(fold_info))
     if st.plateau_band:                # C152 메모 8 ③ — 답에 평탄 띠(바깥 끝 가운데의 구조가 들고 온 메모 한 줄)
         notes.append(st.plateau_band)
     if SURF_RHO_FALLBACKS[0] > surf_fallbacks0:   # C164 규칙 3 — 조용한 차가운 표면은 없다: 셈을 메모로
@@ -5023,7 +5299,8 @@ def solve(mass_earth: float,
                             or silicate_extrapolated or thermal_moves
                             or thermal_unchecked or ice_x_reached
                             or ice_extrap_rho or ice_below_t
-                            or core_reach != "ok")
+                            or core_reach != "ok"
+                            or fold_info is not None)   # 핵 접힘 R2 — b_y 가 지배 항이면 등급 한 단계 내림
                else "calibrated"),
         inputs=inputs,
         cycles=(1, 3, 7),

@@ -165,6 +165,16 @@ _NODE = (
           "가상 천체의 기록 {file}:{key} 이(가) 측정 DB 에 있다 — 읽지 않는다 (가상 값은 오너 값 경로로만)"),
 )
 
+#: Old-chain core-shoot fold ids (core-tc-fold-registration.frozen.md §2 items 3, 4, 10; C4). The old chain raises them
+#: as the head of its refusal text (engine/interior.FOLD_*); their own group, after _NODE. A solver-level closure that
+#: calls the old chain sees them as its refusal.
+_CORE = (
+    Entry("core_fold_off_domain", ("t_pot", "why", "seed_bracket", "walk"),
+          "핵 사격 접힘 이어 걷기가 T_pot {t_pot} K 에서 선언 영역을 벗어나 상태를 못 냈다 — {why} (씨앗 괄호 {seed_bracket}, 걸음 {walk})"),
+    Entry("core_fold_states", ("t_pot", "states", "sweep", "why"),
+          "핵 사격 접힘의 상태가 둘 이상이고 F12 훑기가 못 골랐다 — T_pot {t_pot} K, 상태 {states}: {why} (훑기 {sweep})"),
+)
+
 #: NoAnswer evidence sets (D-A3-2). `unconverged`: b9's set; GridExceeded maps to MAX_STEPS_SOLVE (r2 N3).
 #: NODE_ITERATE_PASSES: `iterate.max_passes` of a chain node on a cycle (node-contract.frozen.md §3). Appended at the end.
 NO_ANSWER_BUDGETS = ("CLOSE_ITERS", "MAX_STEPS_SOLVE", "WALL_SHOTS", "MAX_SPLITS", "NODE_ITERATE_PASSES")
@@ -174,6 +184,8 @@ _NO_ANSWER = (
           optional=("x", "pass_kind", "state", "scan", "m_at", "first_attempt")),
     Entry("span_too_long", ("t_lo", "t_hi", "width", "bound"),
           "[{t_lo}, {t_hi}] 폭 {width} 이(가) 잇기 한도 {bound} 보다 길어 빈 칸으로 둔다"),
+    Entry("core_fold_budget", ("t_pot", "budget_value", "states_so_far", "walk"),
+          "핵 사격 접힘 이어 걷기가 예산 {budget_value} 시도 안에 영역을 다 걷지 못했다 — T_pot {t_pot} K, 그때까지 상태 {states_so_far} (걸음 {walk})"),
 )
 
 
@@ -199,7 +211,7 @@ def _solve_entry(e):
                  tuple(f for f in SOLVE_OPTIONAL if not (req and f == "state")) + e.optional, e.preamble, solve=True)
 
 
-REGISTRY = _index(tuple(_solve_entry(e) for e in _SOLVE) + _INPUT + _NODE)
+REGISTRY = _index(tuple(_solve_entry(e) for e in _SOLVE) + _INPUT + _NODE + _CORE)
 NO_ANSWER_REGISTRY = _index(_NO_ANSWER)
 if tuple(NO_ANSWER_REGISTRY) != NO_ANSWER_REASONS:      # not an assert: it must hold under python -O too
     raise ImportError("NoAnswer registry and NO_ANSWER_REASONS disagree")

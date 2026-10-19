@@ -34,7 +34,7 @@ SIDES = ("lower", "upper", "equal_by_convention")               # R-C153-1/2
 LABEL_KINDS = ("known_wrong", "oracle_bias", "expected_verdict_change", "board_choice")   # D-A3-4
 LABEL_SCOPES = ("validation sample", "shipped")
 SPAN_KINDS = ("refusal", "no_answer", "bridged", "break")       # D-A3-5
-NO_ANSWER_REASONS = ("unconverged", "span_too_long")            # D-A3-2, §X3
+NO_ANSWER_REASONS = ("unconverged", "span_too_long", "core_fold_budget")   # D-A3-2, §X3; core-tc-fold C4
 #: Post-freeze note 1 (owner Q4 ②): a direct solve outside a table carries the numerical band only where a sample
 #: check or an on-demand re-solve measured it. Otherwise `Sources.solver_not_measured` is True (a typed flag; readers
 #: branch on the flag, never on this text, X3) and `solver_reason` is this registry string.
