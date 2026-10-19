@@ -76,6 +76,15 @@ class Setup:
         #: C145 — the continuation state from the last accepted state (main "nearest" branch only)
         self.track: ft.Track | None = None
         self.fold_events: list = []
+        #: gain-cap prereg — the cap label the step control holds (None before the first row), the located cap
+        #: events (t, from, to, T_c − T_b), crossings reported but not landed (the «event off» mutant), and the
+        #: largest measured inner-closure gain with its row (gain, t, T_c − T_b, capped)
+        self.cap_ref = None
+        self.cap_events: list = []
+        self.cap_straddles: list = []
+        self.cap_pending = None
+        self.cap_seen: list = []
+        self.gain_max = None
         self.multi_root_evals = 0
         self.root_jumps: list = []      # (t, old δ_b, new δ_b, T_c − T_b)
         self.root_notes: list = []
@@ -302,6 +311,14 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
         s.fixed_point_limit_hits.append((t_gyr, math.nan, math.nan))
         raise sm.Refused(f"no bracket for δ_u at t = {t_gyr:.4f} Gyr (v2-17 supplement)")
     d_u, d_b, rts, up, lo, t_b, p_m, eta_m, note = sol
+    if mode == "accept" and s.layer is None:
+        # gain-cap prereg: the inner closure's measured gain at its root (A moves with δ_b through η_c and Ra_i)
+        g_in = sm.closure_gain(lambda x: _layers_fn(s, t_c, t_m, d_l, t_l)(d_u, x)[1]["delta_b"], d_b)
+        if s.gain_max is None or g_in > s.gain_max[0]:
+            s.gain_max = (g_in, t_gyr, t_c - t_b, lo["guarded"])
+        if g_in > sm.gain_guard_limit():
+            raise sm.Refused(f"inner closure gain {g_in:.4f} > (1 + k)/2 = {sm.gain_guard_limit()} at t = {t_gyr:.6f} Gyr "
+                             f"(gain-cap prereg)")
     if note:
         s.root_notes.append(f"{t_gyr:.4f} Gyr: {note}")
     if len(rts) > 1:
@@ -388,7 +405,8 @@ def state_terms(s: Setup, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
         ddl = 0.0
     return {"dtc": dtc, "dtm": dtm, "ddl": ddl, "ddcr": d_cr_rate, "t_l": t_l, "t_b": t_b, "delta_u": d_u,
             "delta_b": d_b, "q_m": up["q_m"], "q_c": lo["q_c"], "ra": up["ra"], "subcritical": up["subcritical"],
-            "guarded": guard_gap is not None, "gain_capped": lo["gain_capped"], "guard_gap": guard_gap, "delta_b_raw_over_shell": lo["delta_b_raw"] / (r_l - d_u - r_c),
+            "guarded": guard_gap is not None, "gain_capped": lo["gain_capped"],
+            "cap": "gain" if lo["gain_capped"] else ("shell" if lo["guarded"] else "none"), "guard_gap": guard_gap, "delta_b_raw_over_shell": lo["delta_b_raw"] / (r_l - d_u - r_c),
             "tc_tb_gap": abs(t_c - t_b),
             "eps_m": eps, "stefan": stefan, "h_m": h_m, "h_cr": h_cr, "p_m": p_m,
             "ceiling": sm.crust_enrichment_ceiling(v_cr, v_sil - v_cr), "lid_gradient": lid_gradient,
@@ -482,19 +500,26 @@ def run(s: Setup, cap_myr: float) -> dict:
     h_min = None
     n_remesh, remesh_loss = 0, []
     worst = (0.0, None)
-    side_prev = None
+    redo_at = None
     while True:
         try:
             f1 = state_terms(s, *y, t, grad, mode="accept")
         except sm.Refused as e:
             return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
-        # gain-cap prereg: on the printed bottom T_c − T_b may change sign only across the δ_b gain cap — off it the
-        # printed closure has a pole there, and a continuation that steps across it does so silently (r2 5c663b57 §4)
-        side = (y[0] - f1["t_b"] > 0.0, f1["gain_capped"])
+        # gain-cap prereg: on the printed bottom T_c − T_b may change sign only on a δ_b cap (either one) — off them the
+        # printed closure has a pole there, and a continuation that steps across it does so silently (r2 5c663b57 §4).
+        # The reference is the last kept row, so a redo after a branch switch at t compares against it, not the popped row.
+        side = (y[0] - f1["t_b"] > 0.0, f1["guarded"])
+        side_prev = rows[-1]["cap_side"] if rows else None
         if side_prev is not None and side[0] != side_prev[0] and not (side[1] or side_prev[1]) and s.layer is None:
-            return {"refused": f"T_c − T_b changed sign between accepted rows off the δ_b gain cap at t = {t:.6f} Gyr "
-                               f"(gain-cap prereg)", "refused_at_gyr": t, "rows": rows, "n_steps": n}
-        side_prev = side
+            why = (f"the branch switch at t = {t:.6f} Gyr moved T_c − T_b across 0 off the δ_b caps" if redo_at == t else
+                   f"T_c − T_b changed sign between accepted rows off the δ_b caps at t = {t:.6f} Gyr")
+            return {"refused": why + " (gain-cap prereg)", "refused_at_gyr": t, "rows": rows, "n_steps": n}
+        if s.cap_ref is None:
+            s.cap_ref = f1["cap"]
+        if s.cap_pending is not None:
+            s.cap_events.append(s.cap_pending + (y[0] - f1["t_b"],))
+            s.cap_pending = None
         # v2-9 ③ diagnosis: conduction out of the lid base minus the heat the mantle brings, beside dD_l/dt
         rows.append({"ddl": f1["ddl"], "lid_net": -st.K_MANTLE_W_PER_M_K * f1["lid_gradient"] - f1["q_m"],
                      "crust_term": st.RHO_CRUST_KG_M3 * (st.L_MANTLE_J_PER_KG + st.CP_MANTLE_J_PER_KG_K
@@ -503,7 +528,8 @@ def run(s: Setup, cap_myr: float) -> dict:
                      "q_m": f1["q_m"], "q_c": f1["q_c"], "eps_m": f1["eps_m"], "stefan": f1["stefan"],
                      "subcritical": f1["subcritical"], "p_m": f1["p_m"], "ceiling": f1["ceiling"],
                      "guarded": f1["guarded"], "guard_gap": f1["guard_gap"], "delta_b_raw_over_shell": f1["delta_b_raw_over_shell"],
-                     "tc_tb_gap": f1["tc_tb_gap"], "t_b": f1["t_b"], "layer": f1["layer"]})
+                     "tc_tb_gap": f1["tc_tb_gap"], "t_b": f1["t_b"], "layer": f1["layer"],
+                     "cap": f1["cap"], "cap_side": side})
         if s.lam / f1["ceiling"] > worst[0]:
             worst = (s.lam / f1["ceiling"], t)
         remaining = (AGE_GYR - t) * GYR_S
@@ -513,18 +539,28 @@ def run(s: Setup, cap_myr: float) -> dict:
         k1 = _rates(f1)
         tracked = s.track is not None and s.root_branch == "nearest"
 
-        def step(y0, t0, hh):
-            # one RK4 step on the step-start branch; with a track, the end state must keep the root too (C145)
+        def step(y0, t0, hh, caps=False):
+            # one RK4 step on the step-start branch; with a track, the end state must keep the root too (C145).
+            # Gain-cap prereg: every stage's δ_b cap label is kept (`s.cap_seen`); with `caps` a label other than
+            # the held one raises `CapCross`, so `ft.land` can bisect to the switch.
             dt = hh / GYR_S
+            s.cap_seen = []
+
+            def terms(yy, tt):
+                f = state_terms(s, *yy, tt, grad)
+                s.cap_seen.append(f["cap"])
+                if caps and f["cap"] != s.cap_ref:
+                    raise ft.CapCross(f["cap"])
+                return f
             y2 = [a + 0.5 * hh * b for a, b in zip(y0, k1)]
-            k2 = _rates(state_terms(s, *y2, t0 + 0.5 * dt, grad))
+            k2 = _rates(terms(y2, t0 + 0.5 * dt))
             y3 = [a + 0.5 * hh * b for a, b in zip(y0, k2)]
-            k3 = _rates(state_terms(s, *y3, t0 + 0.5 * dt, grad))
+            k3 = _rates(terms(y3, t0 + 0.5 * dt))
             y4 = [a + hh * b for a, b in zip(y0, k3)]
-            k4 = _rates(state_terms(s, *y4, t0 + dt, grad))
+            k4 = _rates(terms(y4, t0 + dt))
             y_end = [a + hh * (b + 2 * c + 2 * d + e) / 6.0 for a, b, c, d, e in zip(y0, k1, k2, k3, k4)]
             if tracked:
-                state_terms(s, *y_end, t0 + dt, grad)
+                terms(y_end, t0 + dt)
             return y_end
         try:
             if tracked:
@@ -535,6 +571,26 @@ def run(s: Setup, cap_myr: float) -> dict:
                     y_new = step(y, t, h_used) if h_used > 0.0 else y
             else:
                 y_new, h_used, ev = step(y, t, h), h, None
+            # gain-cap prereg: a δ_b cap that binds, releases or changes inside the kept step is landed on, as a
+            # fold is; `s.cap_seen` holds the kept step's labels (its last run)
+            past = next((c for c in s.cap_seen if c != s.cap_ref), None) if h_used > 0.0 else None
+            if past is not None and not ft.CAP_EVENTS:
+                s.cap_straddles.append((t, s.cap_ref, past, h_used / GYR_S))
+                s.cap_ref = s.cap_seen[-1]
+            elif past is not None:
+                y_lo, lo_s, to, tol_s = ft.land(lambda a, b, c: step(a, b, c, caps=True), y, t, h_used, GYR_S)
+                to = to or past
+                s.cap_pending = (t + lo_s / GYR_S, s.cap_ref, to, tol_s / GYR_S)
+                s.cap_ref, ev = to, None
+                if lo_s == 0.0:
+                    # the switch sits at this very state: hold the new label and redo the row
+                    s.cap_events.append(s.cap_pending + (y[0] - rows[-1]["t_b"],))
+                    s.cap_pending = None
+                    rows.pop()
+                    redo_at = t
+                    continue
+                h_used = lo_s
+                y_new = step(y, t, h_used)
         except sm.Refused as e:
             return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
         except ft.Lost as e:
@@ -547,6 +603,7 @@ def run(s: Setup, cap_myr: float) -> dict:
             except sm.Refused as e:
                 return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n}
             rows.pop()
+            redo_at = t
             continue
         h = h_used
         h_min = h if h_min is None else min(h_min, h)
@@ -592,6 +649,7 @@ def run(s: Setup, cap_myr: float) -> dict:
             "fixed_point_limit_hits": list(s.fixed_point_limit_hits),
             "multi_root_evals": s.multi_root_evals, "root_jumps": list(s.root_jumps), "root_notes": list(s.root_notes),
             "fold_events": list(s.fold_events),
+            "cap_events": list(s.cap_events), "cap_straddles": list(s.cap_straddles), "gain_max": s.gain_max,
             "path_checks": list(s.path_checks), "remesh_loss_j": remesh_loss,
             "layer": None if s.layer_grid is None else {
                 "describe": s.layer_grid.describe(), "margin": s.layer_grid.margin,

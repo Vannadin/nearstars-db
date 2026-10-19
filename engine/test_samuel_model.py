@@ -80,6 +80,102 @@ check("v2-14 — away from T_b = T_c the guard changes nothing, bit for bit",
       not capd["guarded"] and capd["delta_b"] == free["delta_b"] and capd["q_c"] == free["q_c"],
       f"δ_b {free['delta_b'] / 1e3:.2f} km")
 
+# Gain cap (gain-cap prereg T1–T4; r2 ruling 5c663b57, amends v2-14). On the printed bottom T_c − T_b = β (δ_b − δ*),
+# β = α g T_m / C_pm, so the printed δ_b has a pole at T_b = T_c; the cap δ_gain = (3kA/β)^(1/4) holds the loop gain to k.
+beta = st.ALPHA_SILICATE_PER_K * 3.7 * 1900.0 / st.CP_MANTLE_J_PER_KG_K
+at0 = sm.lower_layer(1900.0, 2150.0, 2150.0, 1e21, 1e20, delta_b_cap=cap_m, gain_beta=beta, **lo_kw)
+check("gain cap T1 — at T_b = T_c: δ_b = δ_gain, finite, the gain cap bites, q_c = 0",
+      at0["gain_capped"] and at0["delta_b"] == at0["delta_gain"] and math.isfinite(at0["delta_b"]) and at0["q_c"] == 0.0,
+      f"δ_gain {at0['delta_gain'] / 1e3:.2f} km (shell cap {cap_m / 1e3:.1f} km)")
+kappa = st.K_MANTLE_W_PER_M_K / (st.RHO_MANTLE_KG_M3 * st.CP_MANTLE_J_PER_KG_K)
+a_coef = kappa * 1e20 * at0["ra_delta_b"] / (st.RHO_MANTLE_KG_M3 * st.ALPHA_SILICATE_PER_K * 3.7)
+gain = beta * at0["delta_gain"] ** 4 / (3.0 * a_coef)
+check(f"gain cap T2 — the loop gain β δ_gain⁴ / (3A) at the cap is k = {sm.GAIN_CAP_LOOP_GAIN}",
+      abs(gain / sm.GAIN_CAP_LOOP_GAIN - 1.0) < 1e-12, f"{gain!r}")
+
+
+def pole_sweep(gain_beta):
+    """T3: the root count of h(δ_b) = δ_b(lower_layer) − δ_b on 1024 cells of [0, 600 km], and the single roots, as
+    δ* sweeps 50 → 400 km (101 values) so that T_c − T_b at the root runs through 0."""
+    out = []
+    for j in range(101):
+        d_star = 50e3 + 350e3 * j / 100
+
+        def h(d):
+            return sm.lower_layer(1900.0, 2150.0, 2150.0 - beta * (d - d_star), 1e21, 1e20, gain_beta=gain_beta,
+                                  **lo_kw)["delta_b"] - d
+        rts, a, fa = [], 0.0, h(0.0)
+        for k in range(1, 1025):
+            b = 600e3 * k / 1024
+            fb = h(b)
+            if (fa > 0) != (fb > 0):
+                rts.append(0.5 * (a + b))
+            a, fa = b, fb
+        out.append((d_star, rts))
+    return out
+
+
+capped, printed = pole_sweep(beta), pole_sweep(None)
+ones = [(ds, r[0]) for ds, r in capped if len(r) == 1]
+jump = max(abs(b[1] - a[1]) for a, b in zip(ones, ones[1:]))
+gaps = [beta * (r - ds) for ds, r in ones]
+check("gain cap T3 — one root at every δ*, moving continuously through T_c = T_b (jump ≤ 2 × the δ* spacing)",
+      len(ones) == len(capped) and jump <= 2 * 3.5e3 and min(gaps) < 0.0 < max(gaps),
+      f"root counts {sorted({len(r) for _, r in capped})} · largest jump {jump / 1e3:.2f} km · "
+      f"T_c − T_b at the root {min(gaps):+.1f} … {max(gaps):+.1f} K")
+check("gain cap T3 mutant — without the cap the pole splits the roots (3 at some δ* on the gap < 0 side)",
+      any(len(r) == 3 for _, r in printed), f"root counts {sorted({len(r) for _, r in printed})}")
+
+
+def guard_sweep(dlneta_dt):
+    """T6: a planted closure whose A moves with δ_b through η_c((T_b + T_c)/2) — g = 10 m/s², T_m 1100 K, T_c 1200 K,
+    η_c(T_c) = 4e23 Pa s, |∂ln η/∂T| = `dlneta_dt` at T_c — swept over δ* (31 values, 100 → 700 km). Returns the largest
+    measured gain at a root (bisected) and the number of δ* with more than one root."""
+    kw = {**lo_kw, "g": 10.0}
+    b10 = st.ALPHA_SILICATE_PER_K * 10.0 * 1100.0 / st.CP_MANTLE_J_PER_KG_K
+    e_r = dlneta_dt * 1200.0 ** 2
+    worst, multi = -math.inf, 0
+    for j in range(31):
+        d_star = 100e3 + 600e3 * j / 30
+
+        def big_g(d):
+            t_b = 1200.0 - b10 * (d - d_star)
+            eta_c = 4e23 * math.exp(e_r * (2.0 / (t_b + 1200.0) - 1.0 / 1200.0))
+            return sm.lower_layer(1100.0, 1200.0, t_b, 1e21, eta_c, gain_beta=b10, **kw)["delta_b"]
+        rts, a, fa = [], 1.0, big_g(1.0) - 1.0
+        for k in range(1, 513):
+            b = 1500e3 * k / 512
+            fb = big_g(b) - b
+            if (fa > 0) != (fb > 0):
+                lo_, hi_, f_lo = a, b, fa
+                for _ in range(60):
+                    m = 0.5 * (lo_ + hi_)
+                    fm = big_g(m) - m
+                    if (fm > 0) == (f_lo > 0):
+                        lo_, f_lo = m, fm
+                    else:
+                        hi_ = m
+                rts.append(0.5 * (lo_ + hi_))
+            a, fa = b, fb
+        multi += len(rts) > 1
+        worst = max([worst] + [sm.closure_gain(big_g, r) for r in rts])
+    return worst, multi
+
+
+cold, mars_like = guard_sweep(0.04), guard_sweep(300e3 / (8.314 * 2150.0 ** 2))
+check(f"gain guard T6 — a cold, strongly T-dependent closure exceeds (1 + k)/2 = {sm.gain_guard_limit()} and is not unique",
+      cold[0] > sm.gain_guard_limit() and cold[1] > 0, f"max gain {cold[0]:.3f} · δ* with > 1 root {cold[1]}")
+check("gain guard T6 control — the same closure at Mars strength (E* 300 kJ/mol at 2150 K) stays under it, unique",
+      mars_like[0] <= sm.gain_guard_limit() and mars_like[1] == 0,
+      f"max gain {mars_like[0]:.3f} · δ* with > 1 root {mars_like[1]}")
+steep = sm.closure_gain(lambda d: 600e3 - 3.0 * d, 150e3)
+check("gain guard T7 — the signed slope passes a steep falling root (gap > 0 side); |G′| would refuse it",
+      steep <= sm.gain_guard_limit() < abs(steep), f"G′ {steep:.3f}")
+low = sm.lower_layer(1900.0, 2300.0, 2150.0, 1e21, 1e20, delta_b_cap=cap_m, gain_beta=beta, **lo_kw)
+check("gain cap T4 — where neither cap bites, the result is bit-identical to the printed call",
+      not low["guarded"] and not low["gain_capped"] and low["delta_b"] == capd["delta_b"] and low["q_c"] == capd["q_c"],
+      f"δ_b {low['delta_b'] / 1e3:.2f} km < δ_gain {low['delta_gain'] / 1e3:.2f} km")
+
 # 2019 SI eq. (22) with Λ as H_cr/H_pm (v2-4): total heat is conserved, H_m hits 0 at the ceiling,
 # and a Λ above it refuses rather than clipping. The volumes are a 50 km crust on the a–f mantle.
 v_sil = 4 / 3 * math.pi * (st.R_PLANET_M ** 3 - st.R_CORE_NO_BML_M ** 3)

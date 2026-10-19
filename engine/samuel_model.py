@@ -106,6 +106,22 @@ def upper_layer(t_m: float, t_l: float, t_c: float, t_b: float, eta_m: float, *,
 GAIN_CAP_LOOP_GAIN = 0.5
 
 
+
+def closure_gain(G, d_b: float, eps_rel: float = 1e-6) -> float:
+    """Gain-cap prereg, the measured guard (68 · r2 B1(a)): the signed one-sided slopes of the inner closure
+    G(δ_b) = lower_layer(…)["delta_b"] at its root δ_b (G(δ_b) = δ_b), G′₋ = (δ_b − G(δ_b − ε))/ε and
+    G′₊ = (G(δ_b + ε) − δ_b)/ε with ε = eps_rel·δ_b, and their max. One-sided, so it never averages across a cap's
+    kink; signed, so the steep negative slope of the gap > 0 side (falling from the pole) is safe. With A fixed the
+    cap bounds it by k; A's δ_b dependence (η_c(T_b), Ra_i) adds to it, so the guard measures instead of assuming."""
+    e = eps_rel * d_b if d_b > 0.0 else eps_rel
+    return max((d_b - G(d_b - e)) / e, (G(d_b + e) - d_b) / e)
+
+
+def gain_guard_limit() -> float:
+    """The guard's limit, (1 + k)/2 with k = `GAIN_CAP_LOOP_GAIN` — halfway from the cap's own k to 1."""
+    return 0.5 * (1.0 + GAIN_CAP_LOOP_GAIN)
+
+
 def lower_layer(t_m: float, t_c: float, t_b: float, eta_m: float, eta_c: float, *, rho_m: float,
                 alpha: float, g: float, k_m: float, c_pm: float, r_p: float, r_c: float,
                 t_s: float, delta_b_cap: float | None = None, ra_delta_b: tuple | None = None,

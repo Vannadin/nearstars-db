@@ -235,6 +235,41 @@ def pick_after(roots: list, d_star: float, dead: tuple | None = None):
     return min(keep, key=lambda x: (abs(x - d_star), -x))
 
 
+
+#: gain-cap prereg: land the step control on every δ_b cap bind, release and which-cap switch (False: the «event
+#: off» mutant — a crossing inside a kept step is only reported as a straddle)
+CAP_EVENTS = True
+
+
+class CapCross(Exception):
+    """A δ_b cap began or stopped binding, or the binding cap changed, inside a step (gain-cap prereg). `to` is the
+    cap label past it: "none", "shell" (v2-14's fraction of the shell) or "gain" (the gain cap)."""
+
+    def __init__(self, to: str):
+        super().__init__(f"δ_b cap → {to}")
+        self.to = to
+
+
+def land(step, y: list, t_gyr: float, h_s: float, gyr_s: float):
+    """Gain-cap prereg: a kept step of length `h_s` crosses a cap switch. Its length is bisected, as a fold's is
+    (§2.3), to `event_tolerance_s`; `step` raises `CapCross` past the switch (a `Lost` inside counts as past).
+    Returns (y_lo, lo, to, tol): the longest step that stays on the step-start side, and the label past it from the
+    shortest one that leaves (None when no trial raised `CapCross`)."""
+    tol = event_tolerance_s(h_s, gyr_s)
+    lo, hi, y_lo, to = 0.0, h_s, y, None
+    while hi - lo > tol:
+        mid = 0.5 * (lo + hi)
+        try:
+            y_mid = step(y, t_gyr, mid)
+        except CapCross as c:
+            hi, to = mid, c.to
+        except Lost:
+            hi = mid
+        else:
+            lo, y_lo = mid, y_mid
+    return y_lo, lo, to, tol
+
+
 def event_tolerance_s(h_s: float, gyr_s: float) -> float:
     """§2.3: min(1e-9 Gyr, 1e-6 × the current step), in seconds."""
     return min(EVENT_TOL_GYR * gyr_s, EVENT_TOL_STEP * h_s)

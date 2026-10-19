@@ -127,6 +127,75 @@ r, ev, tries, gap = fixture_run(lambda t: (lambda x: (x - (C0 + 5000.0 * t)) * (
 check("C145 ⑥ E0 window a — a 20 km pair, no fold: no event, no branch change",
       not ev and abs(r.x - (C0 + 25e3)) < 1.0, f"end {r.x:.1f} m · tries {tries}")
 
+# Gain cap T5 (gain-cap prereg) — R2's stack on a planted hydrostatic profile (3500 kg/m³ · 3.71 m/s², a 20 GPa step at
+# 1830 km) crosses T_c = T_b. With the cap it runs to 4.5 Gyr with no fold event, and samuel_run ends bit-identical
+# (T2 §7). Mutants: no cap → the named off-cap sign-change refusal; loop gain 1 → a refusal (the cap edge's vertical tangent).
+import samuel_model as sm              # noqa: E402
+
+
+class PlantedProfile:
+    radius_m, core_radius_m = 3389.5e3, 1830e3
+
+    def pressure(self, r):
+        return 3500.0 * 3.71 * (self.radius_m - r) + (2e10 if r < self.core_radius_m else 0.0)
+
+    def gravity(self, r):
+        return 3.71
+
+
+def planted(which):
+    if which == "sr":
+        return sr.run(sr.Setup(lam=20.0, profile=PlantedProfile(), g=3.71, g_c=0.0), 10.0)
+    return ts.run(ts.samuel_stack(lam=20.0, profile=PlantedProfile(), g=3.71), 10.0)
+
+
+def sign_changes(rows):
+    return sum((a["t_c"] - a["t_b"] > 0) != (b["t_c"] - b["t_b"] > 0) for a, b in zip(rows, rows[1:]))
+
+
+cap_ts, cap_sr = planted("ts"), planted("sr")
+end = lambda o: (o["rows"][-1]["t"], o["rows"][-1]["t_c"], o["rows"][-1]["t_m"])  # noqa: E731
+check("gain cap T5 — planted crossing: 4.5 Gyr, no fold event, T_c − T_b changes sign; samuel_run bit-identical",
+      "refused" not in cap_ts and not cap_ts["fold_events"] and sign_changes(cap_ts["rows"]) >= 1
+      and "refused" not in cap_sr and end(cap_ts) == end(cap_sr) and cap_ts["cap_events"] == cap_sr["cap_events"],
+      f"{cap_ts.get('refused') or cap_sr.get('refused') or ''} sign changes {sign_changes(cap_ts['rows'])} · "
+      f"end T_c {end(cap_ts)[1]:.4f} T_m {end(cap_ts)[2]:.4f} · samuel_run {end(cap_sr)[1]:.4f} {end(cap_sr)[2]:.4f}")
+ce = cap_ts.get("cap_events", [])
+check("gain cap T5 — every cap bind and release is a located event (tolerance ≤ 1e-9 Gyr), none straddled",
+      any(e[1] == "none" for e in ce) and any(e[2] == "none" for e in ce) and all(e[3] <= 1e-9 for e in ce)
+      and not cap_ts["cap_straddles"], f"{len(ce)} events: " + " · ".join(f"{e[0]:.6f} {e[1]}→{e[2]}" for e in ce))
+gm = cap_ts.get("gain_max")
+check(f"gain cap T5 — the measured inner-closure gain stays ≤ (1 + k)/2 = {sm.gain_guard_limit()}, its row reported",
+      gm is not None and gm[0] <= sm.gain_guard_limit(),
+      f"max {gm[0]:.4f} at {gm[1]:.6f} Gyr, T_c − T_b {gm[2]:+.2f} K, capped {gm[3]}" if gm else "none")
+ft.CAP_EVENTS = False
+try:
+    ev_off = planted("ts")
+finally:
+    ft.CAP_EVENTS = True
+check("gain cap T5 mutant — events off: the crossings are reported as straddling steps, none located",
+      not ev_off["cap_events"] and len(ev_off["cap_straddles"]) == len(ce),
+      f"{len(ev_off['cap_straddles'])} straddles · end T_c {end(ev_off)[1]:.4f} (landed {end(cap_ts)[1]:.4f})")
+plain_lower, plain_limit = sm.lower_layer, sm.gain_guard_limit
+sm.lower_layer = lambda *a, **k: plain_lower(*a, **{**k, "gain_beta": None})
+try:
+    no_cap = planted("ts")
+    sm.gain_guard_limit = lambda: math.inf
+    no_cap_no_guard = planted("ts")
+finally:
+    sm.lower_layer, sm.gain_guard_limit = plain_lower, plain_limit
+check("gain cap T5 mutant — without the cap the gain guard refuses near the pole",
+      "inner closure gain" in no_cap.get("refused", ""), f"{no_cap.get('refused', 'ran')[:120]}")
+check("gain cap T5 mutant — without the cap and the guard, the named check refuses the off-cap sign change",
+      "off the δ_b caps" in no_cap_no_guard.get("refused", ""), f"{no_cap_no_guard.get('refused', 'ran')[:120]}")
+k_plain, sm.GAIN_CAP_LOOP_GAIN = sm.GAIN_CAP_LOOP_GAIN, 1.0
+try:
+    k_one = planted("ts")
+finally:
+    sm.GAIN_CAP_LOOP_GAIN = k_plain
+check("gain cap T5 mutant — at loop gain 1 the cap's edge refuses (vertical tangent)", "refused" in k_one,
+      f"{k_one.get('refused', 'ran')[:120]}")
+
 # R2 — plate 2's six regression pins, through the stack.
 out = ts.run(ts.samuel_stack(lam=20.0, profile=prof, g=G), 10.0)
 # 거절된 판은 접힘 사건 · 여섯 핀 칸이 없다 — KeyError 로 죽지 않고 거절 까닭을 이름 댄 FAIL 로 찍는다(줄은 빨강 그대로).
