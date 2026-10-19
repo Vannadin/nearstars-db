@@ -2754,7 +2754,7 @@ def _fold_integrate(a: dict, p_c: float, t_c: float):
 
 def _fold_attempt(exc, a: dict) -> dict:
     """한 T_pot 에서 이어 걷기 한 벌: W2 씨앗 다시 쏘기 → fold_walk → fold_states. 결과 dict(kind: states · off_domain ·
-    budget, walk, states, seed, cost)."""
+    budget · no_seed (note 2), walk, states, seed, cost)."""
     import time
     t_pot = float(a["potential_temperature"])
     stack = _stack(a["cmf"], a["imf"], a["core_material"], a["gmf"], a["envelope_z"], a["envelope_z_rock_fraction"],
@@ -2845,37 +2845,48 @@ def _fold_failure(exc, att: dict, t_pot: float) -> ValueError:
     return _fold_refusal(head, att, t_pot, f"; 원래 거절: {exc}")
 
 
+FOLD_FIELDS = {"T_c [K]": lambda s_: s_.t_center, "P_c [GPa]": lambda s_: s_.p_center / 1e9,
+               "R [km]": lambda s_: s_.radius_m / 1e3, "r_cmb [km]": lambda s_: s_.core_radius_m / 1e3,
+               "P_cmb [GPa]": lambda s_: (s_.p_cmb or 0.0) / 1e9, "T_cmb [K]": lambda s_: s_.t_cmb or 0.0,
+               "nmoi": lambda s_: s_.nmoi}
+
+
 def _fold_band(att: dict, cross, a: dict) -> dict:
     """R1 — 답 자리 교차에서 곡선을 따라 ±FOLD_BAND_DS 의 두 점(보정기로 곡선 위)을 적분해 dy/ds 를 잰다; b_y = |dy/ds|·e_s,
-    e_s = e_Ts / |dT_s/ds| (보정 허용 SHOOT_TOL·T_pot 와 2 K 바닥 중 큰 것을 s 로 옮긴 것)."""
-    t_pot = float(a["potential_temperature"])
+    e_s = e_Ts / |dT_s/ds| (보정 허용 SHOOT_TOL·T_pot 와 2 K 바닥 중 큰 것을 s 로 옮긴 것). 68 B3 — 두 점 모두 |dm| ≤ SHOOT_TOL 로
+    수렴해야 잰다; 못 닿거나 적분이 거절하면 {"not_measured": 까닭} — 찾은 상태는 그대로 답으로 나가고 메모가 그 까닭을 댄다."""
     w = att["walk"]
     pts = sorted(w.points, key=lambda p: abs(p[0] - cross[0]))
     tu, tv, gu, gv = pts[0][5], pts[0][6], pts[0][7], pts[0][8]
+    n2 = gu * gu + gv * gv
     ys = []
     for sgn in (-1.0, 1.0):
         u, v = cross[1] + sgn * FOLD_BAND_DS * tu, cross[2] + sgn * FOLD_BAND_DS * tv
-        n2 = gu * gu + gv * gv
-        for _ in range(rootfind.FOLD_CORR_ITERS):
-            st = _fold_integrate(a, math.exp(u), math.exp(v))
-            dm = st.mass_kg / a["mass_kg"] - 1.0
-            if abs(dm) <= SHOOT_TOL:
-                break
-            u, v = u - dm * gu / n2, v - dm * gv / n2
+        st, ok = None, False
+        try:
+            for _ in range(rootfind.FOLD_CORR_ITERS + 1):
+                st = _fold_integrate(a, math.exp(u), math.exp(v))
+                dm = st.mass_kg / a["mass_kg"] - 1.0
+                if abs(dm) <= SHOOT_TOL:
+                    ok = True
+                    break
+                u, v = u - dm * gu / n2, v - dm * gv / n2
+        except (PhaseGap, Unbound, NoCompactRoot, GridExceeded, ValueError) as why:
+            return {"not_measured": f"the curve point at s {sgn * FOLD_BAND_DS:+g} refused: {str(why)[:100]}"}
+        if not ok:
+            return {"not_measured": f"the curve point at s {sgn * FOLD_BAND_DS:+g} did not close to SHOOT_TOL in "
+                                    f"{rootfind.FOLD_CORR_ITERS} corrector steps (|dm| {abs(dm):.2e})"}
         ys.append((math.hypot(u - cross[1], v - cross[2]) * sgn, st))
     (s_a, st_a), (s_b, st_b) = ys
     ds = s_b - s_a
-    fields = {"T_c [K]": lambda s_: s_.t_center, "P_c [GPa]": lambda s_: s_.p_center / 1e9,
-              "R [km]": lambda s_: s_.radius_m / 1e3, "r_cmb [km]": lambda s_: s_.core_radius_m / 1e3,
-              "P_cmb [GPa]": lambda s_: (s_.p_cmb or 0.0) / 1e9, "T_cmb [K]": lambda s_: s_.t_cmb or 0.0,
-              "nmoi": lambda s_: s_.nmoi}
     dts = (st_b.t_surface - st_a.t_surface) / ds
     e_s = att["e_ts"] / abs(dts) if dts else float("inf")
-    return {k: abs((f(st_b) - f(st_a)) / ds) * e_s for k, f in fields.items()}
+    return {k: abs((f(st_b) - f(st_a)) / ds) * e_s for k, f in FOLD_FIELDS.items()}
 
 
 def _fold_answer(att: dict, cross, a: dict, extra_note: str = ""):
-    """C3 — 찾은 (P_c, T_c) 에서 적분 한 번(다시 쏘지 않음), 사격 길의 뒤 단계(바닥 · 물 거절)를 그대로; 메모 사실을 단다."""
+    """C3 — 찾은 (P_c, T_c) 에서 적분 한 번(다시 쏘지 않음), 사격 길의 뒤 단계(바닥 · 물 거절)를 그대로; 메모 사실을 단다.
+    실어 보내는 띠(지휘석 10-19, 68 n1): 키마다 max(R1 의 b_y, |STEPS 두 배 풀이의 이동|) — 걷기 자신의 이산화를 덮는다."""
     t_pot = float(a["potential_temperature"])
     st = _fold_integrate(a, math.exp(cross[1]), math.exp(cross[2]))
     _refuse_if_below_floor(st, a["core_material"])
@@ -2887,7 +2898,10 @@ def _fold_answer(att: dict, cross, a: dict, extra_note: str = ""):
             "crossings": len(w.crossings), "states": len(att["states"]), "band": band, "e_ts": att["e_ts"],
             "seed": att["seed"], "extra": extra_note}
     if not FOLD_DOUBLED[0]:
-        info["doubled"] = _fold_doubled(a)
+        dbl = _fold_doubled(a)
+        info["doubled"] = dbl
+        if "not_measured" not in band and "refused" not in dbl:
+            info["shipped"] = {k: max(b, abs(dbl[k] - FOLD_FIELDS[k](st))) for k, b in band.items()}
     _FOLD_INFO[id(st)] = info
     return st, True
 
@@ -2897,22 +2911,26 @@ FOLD_DOUBLED = [False]          # R2 의 두 배 STEPS 풀이 안 — 그 안에
 
 def _fold_doubled(a: dict):
     """R2 — b_y 가 띠의 지배 항일 때 STEPS 두 배로 한 번 풀어 그 y 를 옆에 적는다. 옛 사슬의 이 출력들에는 다른 띠 항이
-    없으므로 b_y 가 늘 지배 항이다(note 1). 결과: {필드: 값} 또는 거절 문장의 앞."""
+    없으므로 b_y 가 늘 지배 항이다(note 3). 결과: {필드: 값} 또는 {"refused": 거절 문장의 앞}. 68 n2 — 그 풀이의 시행이 바깥
+    풀이의 가족 기록(_FAMILY_TRAIL)에 섞이지 않게 저장했다가 되돌린다; STEPS · _FOLD_DEPTH · FOLD_DOUBLED 도 finally 에서."""
+    import copy
     global STEPS
     saved, depth = STEPS, _FOLD_DEPTH[0]
+    trail = copy.deepcopy(_FAMILY_TRAIL)
     FOLD_DOUBLED[0] = True
     STEPS = 2 * saved
     _FOLD_DEPTH[0] = 0                  # 두 배 풀이는 가장 바깥 사격처럼 — 그 안의 접힘도 이어 걷는다(그 안에서 또 두 배는 안 함)
     try:
         st2, ok2 = shoot(**a)
-        return {"STEPS": STEPS, "converged": ok2, "T_c [K]": st2.t_center, "P_c [GPa]": st2.p_center / 1e9,
-                "R [km]": st2.radius_m / 1e3, "T_cmb [K]": st2.t_cmb}
+        return dict({"STEPS": STEPS, "converged": ok2}, **{k: f(st2) for k, f in FOLD_FIELDS.items()})
     except (ValueError, PhaseGap) as why:
         return {"STEPS": STEPS, "refused": str(why)[:160]}
     finally:
         STEPS = saved
         _FOLD_DEPTH[0] = depth
         FOLD_DOUBLED[0] = False
+        _FAMILY_TRAIL.clear()
+        _FAMILY_TRAIL.update(trail)
 
 
 def _fold_continue(exc, args, kw):
@@ -2931,6 +2949,8 @@ def _fold_continue(exc, args, kw):
         try:
             st, ok = _shoot_body(**b)
             return ("states", (st.t_center,)) if ok else ("other", "unconverged")
+        except PhaseGap as e2:                 # 68 B2: anything but states — a PhaseGap included — ends as core_fold_states
+            return "other", str(e2)[:60]
         except ValueError as e2:
             if not fold_trigger(e2):
                 return "other", str(e2)[:60]
@@ -2952,17 +2972,31 @@ def _fold_continue(exc, args, kw):
     return _fold_answer(att, states[k][0], a, note)
 
 
+def _fold_grade_down(grade: str) -> str:
+    """R2 (68 B4, 지휘석 10-19) — 이어 걷기로 낸 답은 그렇지 않았을 등급보다 한 단계 아래(analog → judgment). 옛 사슬은 답에 등급
+    하나라 답 전체를 내린다(동결 문장은 y 마다)."""
+    from payload import GRADES
+    return GRADES[min(GRADES.index(grade) + 1, len(GRADES) - 1)]
+
+
 def fold_note(info: dict) -> list:
-    """C6 · W1 · R1 · R2 — 이어 걷기로 낸 답의 메모 줄."""
+    """C6 · W1 · R1 · R2 — 이어 걷기로 낸 답의 메모 줄. 실어 보내는 띠는 키마다 max(b_y, |두 배 STEPS 이동|)."""
     turn = [(round(t, 3), round(p, 5), round(s, 2)) for t, p, s in info["turning"]]
     notes = [f"core_fold_continued — 핵 사격 접힘을 이어 걷기로 풀었다(core-tc-fold): 지난 꺾임점 (T_c K, P_c GPa, T_s K) {turn}, "
              f"걸음 길이 {info['length']:.4g} (ln 단위), 적분 {info['evals']} 번 · CPU {info['cpu']:.1f} s, 교차 {info['crossings']} · "
-             f"상태 {info['states']}, 씨앗 T_c {info['seed'][0]:.4f} K",
-             "core_fold_band — R1 띠 b_y = |dy/ds|·e_s (e_Ts " + f"{info['e_ts']:g} K): "
-             + " · ".join(f"{k} ±{v:.4g}" for k, v in info["band"].items())
-             + " — R2: 이 출력들에 다른 띠 항이 없어 b_y 가 지배 항, 등급 한 단계 내림"]
+             f"상태 {info['states']}, 씨앗 T_c {info['seed'][0]:.4f} K"]
+    band = info["band"]
+    if "not_measured" in band:
+        notes.append(f"core_fold_band — R1 not measured: {band['not_measured']} — 등급은 그대로 한 단계 내림")
+    else:
+        notes.append("core_fold_band — R1 b_y = |dy/ds|·e_s (e_Ts " + f"{info['e_ts']:g} K): "
+                     + " · ".join(f"{k} ±{v:.4g}" for k, v in band.items())
+                     + " — R2: 이 출력들에 다른 띠 항이 없어 b_y 가 지배 항, 답의 등급 한 단계 내림")
     if "doubled" in info:
         notes.append(f"core_fold_band — R2 STEPS 두 배 풀이: {info['doubled']}")
+    if "shipped" in info:
+        notes.append("core_fold_band — 실어 보내는 띠 max(b_y, |두 배 STEPS 이동|): "
+                     + " · ".join(f"{k} ±{v:.4g}" for k, v in info["shipped"].items()))
     if info.get("extra"):
         notes.append(info["extra"])
     return notes
@@ -5292,24 +5326,23 @@ def solve(mass_earth: float,
                 "핵질량분율이나 얼음질량분율을 관측 반지름에서 역산할 것 "
                 "(infer_composition)." )
 
+    # 등급은 적합의 좋음이 아니라 **답이 이 레시피가 검증할 수 없는 선언에 기대는가** 를 말한다. φ₀ 도 Z 도 강착과 진화가
+    # 정하는 값이라 여기서 도출되지 않고, 미분화는 측정 앵커가 없다.
+    grade0 = ("analog" if (initial_porosity > 0 or envelope_z > 0
+                           or boundary_temperature_jump > 0 or mantle_rock_fraction > 0
+                           or bool(jumps)
+                           or serpentinisation > 0 or crust_mass > 0.0
+                           or not differentiated or giant_declared
+                           or silicate_extrapolated or thermal_moves
+                           or thermal_unchecked or ice_x_reached
+                           or ice_extrap_rho or ice_below_t
+                           or core_reach != "ok")
+              else "calibrated")
     return Result(
         recipe=RECIPE, version=VERSION,
         regime="integrated_" + ("_".join(st.phases) if len(st.phases) > 1 else st.phases[0]),
         reason=reason,
-        # 등급은 적합의 좋음이 아니라 **답이 이 레시피가 검증할 수 없는 선언에 기대는가**
-        # 를 말한다. φ₀ 도 Z 도 강착과 진화가 정하는 값이라 여기서 도출되지 않고,
-        # 미분화는 측정 앵커가 없다.
-        grade=("analog" if (initial_porosity > 0 or envelope_z > 0
-                            or boundary_temperature_jump > 0 or mantle_rock_fraction > 0
-                            or bool(jumps)
-                            or serpentinisation > 0 or crust_mass > 0.0
-                            or not differentiated or giant_declared
-                            or silicate_extrapolated or thermal_moves
-                            or thermal_unchecked or ice_x_reached
-                            or ice_extrap_rho or ice_below_t
-                            or core_reach != "ok"
-                            or fold_info is not None)   # 핵 접힘 R2 — b_y 가 지배 항이면 등급 한 단계 내림
-               else "calibrated"),
+        grade=grade0 if fold_info is None else _fold_grade_down(grade0),   # 68 B4: 이어 걷기의 답은 그 등급의 한 단계 아래
         inputs=inputs,
         cycles=(1, 3, 7),
         converged=converged,

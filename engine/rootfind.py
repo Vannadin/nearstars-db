@@ -75,10 +75,16 @@ EASY_ITERS = 2
 #: FOLD_EASY_RUN easy steps in a row; the budget counts predictor–corrector attempts over both legs
 FOLD_H0 = 2e-3
 FOLD_H_MIN = 1e-7
-FOLD_H_MAX = 2e-2
+FOLD_H_MAX = 5e-3
 FOLD_EASY_RUN = 3
 FOLD_CORR_ITERS = 8
-FOLD_BUDGET = 600
+FOLD_BUDGET = 1500
+#: 68 B1 / directing 10-19 — a step may not step over an S-turn: an accepted step's change of g is at most FOLD_DG_MAX
+#: (ln units; ≈ 1 % of T_s) and its tangent turns by at most FOLD_TURN_MAX radians, else the step halves. Where T_s moves
+#: steeply along the curve (the S-turns: g swings ~0.08 over ~0.01 in u at mars 549ab2f4) the steps shrink to resolve
+#: it; elsewhere they grow to FOLD_H_MAX. Verified by a re-walk with every step limit at 1/8 (pc-tc-fold.sh «fine»)
+FOLD_DG_MAX = 1e-2
+FOLD_TURN_MAX = 0.2
 #: the crossing locator's iteration cap (Illinois on the step fraction)
 FOLD_CROSS_ITERS = 40
 #: F12 on the core chain — the same values as solver/solve.py's WARM_STEP_K / WARM_STEPS_MAX (a test asserts equality)
@@ -105,10 +111,13 @@ class FoldWalk:
         self.leg_ends: list = []
 
 
-def _grad(F, u, v, f0, walk):
-    du = F(u + FOLD_FD_STEP, v)[0]
-    dv = F(u, v + FOLD_FD_STEP)[0]
+def _grad(F, u, v, f0, walk, g0=None):
+    """∇dm by forward differences; with g0, also ∇g from the same two evaluations (returned as walk.last_ggrad)."""
+    du, gdu = F(u + FOLD_FD_STEP, v)
+    dv, gdv = F(u, v + FOLD_FD_STEP)
     walk.evals += 2
+    if g0 is not None:
+        walk.last_ggrad = ((gdu - g0) / FOLD_FD_STEP, (gdv - g0) / FOLD_FD_STEP)
     return (du - f0) / FOLD_FD_STEP, (dv - f0) / FOLD_FD_STEP
 
 
@@ -139,7 +148,8 @@ def _correct(F, u, v, gu, gv, tol_dm, walk):
     return None
 
 
-def fold_walk(F, seed, tol_dm: float, direction: float = -1.0, budget: int = FOLD_BUDGET, h0: float = FOLD_H0):
+def fold_walk(F, seed, tol_dm: float, direction: float = -1.0, budget: int = FOLD_BUDGET, h0: float = FOLD_H0,
+              h_max: float | None = None, dg_max: float | None = None, turn_max: float | None = None):
     """C1/C2 — pure arc-length continuation on {dm = 0} from `seed` = (u, v): first the leg whose tangent has
     du/ds of sign `direction` (−1: toward the shallow end, smaller P_c), to the domain's edge, then back through the seed
     to the other edge (item 8: the walk does not stop at its first crossing). Collects every crossing of g = 0 (located
@@ -157,10 +167,12 @@ def fold_walk(F, seed, tol_dm: float, direction: float = -1.0, budget: int = FOL
         walk.status = "seed"
         return walk
     u0, v0, dm0, g0, _it = got
-    gu, gv = _grad(F, u0, v0, dm0, walk)
+    gu, gv = _grad(F, u0, v0, dm0, walk, g0)
     legs = []
+    lim = (FOLD_H_MAX if h_max is None else h_max, FOLD_DG_MAX if dg_max is None else dg_max,
+           FOLD_TURN_MAX if turn_max is None else turn_max)
     for sense in (direction, -direction):
-        pts = _leg(F, (u0, v0, dm0, g0, gu, gv), sense, tol_dm, budget, h0, walk)
+        pts = _leg(F, (u0, v0, dm0, g0, gu, gv), sense, tol_dm, budget, h0, walk, *lim)
         legs.append((sense, pts))
         if walk.status == "budget":
             break
@@ -172,7 +184,7 @@ def fold_walk(F, seed, tol_dm: float, direction: float = -1.0, budget: int = FOL
     return walk
 
 
-def _leg(F, start, sense, tol_dm, budget, h0, walk):
+def _leg(F, start, sense, tol_dm, budget, h0, walk, h_max=FOLD_H_MAX, dg_max=FOLD_DG_MAX, turn_max=FOLD_TURN_MAX):
     u, v, dm, g, gu, gv = start
     tu, tv = -gv, gu
     nt = math.hypot(tu, tv)
@@ -181,7 +193,12 @@ def _leg(F, start, sense, tol_dm, budget, h0, walk):
         tu, tv = -tu, -tv
     pts = [(0.0, u, v, dm, g, tu, tv, gu, gv)]
     s, h, easy = 0.0, h0, 0
+    ggrad = getattr(walk, "last_ggrad", None)
     while True:
+        if ggrad is not None:                 # 68 B1: the step covers at most dg_max of g at the local slope dg/ds
+            slope = abs(ggrad[0] * tu + ggrad[1] * tv)
+            if slope > 0.0:
+                h = min(h, max(FOLD_H_MIN, dg_max / slope))
         if walk.attempts >= budget:
             walk.status = "budget"
             walk.leg_ends.append(("budget", u, v))
@@ -192,7 +209,7 @@ def _leg(F, start, sense, tol_dm, budget, h0, walk):
             got = _correct(F, u + h * tu, v + h * tv, gu, gv, tol_dm, walk)
             if got is not None:
                 nu, nv, ndm, ng, it = got
-                ngu, ngv = _grad(F, nu, nv, ndm, walk)
+                ngu, ngv = _grad(F, nu, nv, ndm, walk, ng)
         except FoldOutside:
             got, outside = None, True
         if got is None:
@@ -210,12 +227,18 @@ def _leg(F, start, sense, tol_dm, budget, h0, walk):
         ntu, ntv = ntu / nn, ntv / nn
         if ntu * tu + ntv * tv < 0.0:      # keep the orientation along the curve
             ntu, ntv = -ntu, -ntv
+        turn = math.acos(max(-1.0, min(1.0, ntu * tu + ntv * tv)))
+        if (abs(ng - g) > dg_max or turn > turn_max) and h > FOLD_H_MIN:   # 68 B1: never step over an S-turn
+            h *= 0.5
+            easy = 0
+            continue
         s += math.hypot(nu - u, nv - v)
         u, v, dm, g, gu, gv, tu, tv = nu, nv, ndm, ng, ngu, ngv, ntu, ntv
+        ggrad = getattr(walk, "last_ggrad", None)
         pts.append((s, u, v, dm, g, tu, tv, gu, gv))
         easy = easy + 1 if it <= EASY_ITERS else 0
         if easy >= FOLD_EASY_RUN:
-            h, easy = min(2.0 * h, FOLD_H_MAX), 0
+            h, easy = min(2.0 * h, h_max), 0
 
 
 def _scan(F, walk, tol_dm):

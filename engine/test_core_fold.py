@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import math
 import sys
+import types
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -171,6 +172,114 @@ def renames(exc, att, t_pot):        # mutant «(a) renames»: no seed reported 
 
 check("control: the mutant «(a) renames» puts core_fold_off_domain first, so the (a) check above kills it",
       not str(renames(orig, dict(base, kind="no_seed", why="x", walk=None), 1745.0)).startswith(str(orig)))
+
+print("(7) 68 B1: a step never steps over an S-turn (slope- and turn-limited steps, H_MAX 5e-3)")
+
+
+def _sig(x):
+    return 1.0 / (1.0 + math.exp(-x)) if x > -700.0 else 0.0
+
+
+def s_feature(c):
+    """dm = v − u; g a two-step S-feature of width 1e-3, crossings at c and c + 6e-3, excursion 0.05 between."""
+    def F(u, v):
+        if abs(u) > 1.0:
+            raise rf.FoldOutside
+        return v - u, 0.05 - 0.1 * (_sig((u - c) / 1e-3) - _sig((u - c - 6e-3) / 1e-3))
+    return F
+
+
+centres = [0.40 + 0.01 * i for i in range(21)]
+found = [len(rf.fold_walk(s_feature(c), (0.0, 0.0), 1e-12, direction=1.0).crossings) for c in centres]
+check("every one of 21 planted S-features is resolved: two crossings each", found == [2] * 21, f"{found}")
+old = [len(rf.fold_walk(s_feature(c), (0.0, 0.0), 1e-12, direction=1.0, h_max=2e-2, dg_max=float("inf"),
+                        turn_max=float("inf")).crossings) for c in centres]
+check("control (mutant: 1b2fc17e's H_MAX 2e-2 without the limits) steps over some of them", min(old) == 0,
+      f"missed {sum(1 for n in old if n == 0)} of 21")
+
+print("(8) 68 B2: a PhaseGap in the F12 sweep ends as core_fold_states")
+import eos  # noqa: E402
+
+two = {"kind": "states", "states": [((0.0, math.log(39.6e9), math.log(3134.0), 0.0), []),
+                                    ((0.1, math.log(39.2e9), math.log(3136.0), 0.0), [])],
+       "seed_bracket": None, "cpu": 0.0}
+saved = (interior._fold_attempt, interior._shoot_body)
+interior._fold_attempt = lambda exc, a: two
+
+
+def gap_body(*a, **k):
+    raise eos.PhaseGap("fake_core", 51e9, "가짜 천장", temperature_k=None, too_cold=False)
+
+
+interior._shoot_body = gap_body
+try:
+    try:
+        interior._fold_continue(ValueError("x"), (6.4e23, 0.21, 0.0, "fe_prem"), {"potential_temperature": 1800.0})
+        got = "answered"
+    except ValueError as e:
+        got = str(e)
+    except eos.PhaseGap as e:
+        got = f"PhaseGap escaped: {e}"
+finally:
+    interior._fold_attempt, interior._shoot_body = saved
+check("the sweep's PhaseGap at T_pot + 10 K ends core_fold_states, not a foreign PhaseGap",
+      got.startswith(interior.FOLD_STATES_ID + " — "), got[:90])
+
+print("(9) 68 B3: R1 from converged curve points only; a failure keeps the state with a named note")
+att = {"walk": types.SimpleNamespace(points=[(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0)]), "e_ts": 2.0}
+a_ = {"mass_kg": 1.0, "potential_temperature": 1800.0}
+
+
+def st_at(u, v, mass=1.0):
+    return types.SimpleNamespace(mass_kg=mass, t_surface=1800.0 * (1.0 + u), t_center=math.exp(v), p_center=math.exp(u),
+                                 radius_m=3.4e6 * (1.0 + u), core_radius_m=1.7e6, p_cmb=19e9, t_cmb=2300.0, nmoi=0.36)
+
+
+saved_i = interior._fold_integrate
+try:
+    interior._fold_integrate = lambda a, p, t: st_at(math.log(p), math.log(t))
+    ok_band = interior._fold_band(att, (0.0, 0.0, 0.0, 0.0), a_)
+    interior._fold_integrate = lambda a, p, t: st_at(math.log(p), math.log(t), mass=1.0 + 1e-3)   # never closes
+    off_band = interior._fold_band(att, (0.0, 0.0, 0.0, 0.0), a_)
+
+    def raising(a, p, t):
+        raise ValueError("적분이 실패했다 — 가짜")
+    interior._fold_integrate = raising
+    raise_band = interior._fold_band(att, (0.0, 0.0, 0.0, 0.0), a_)
+finally:
+    interior._fold_integrate = saved_i
+check("on-curve neighbours: b_y measured for every output", "not_measured" not in ok_band and len(ok_band) == 7,
+      str(ok_band)[:80])
+check("neighbours that never close: «not_measured», no band from off-curve points",
+      "did not close" in off_band.get("not_measured", ""), str(off_band)[:80])
+check("a neighbour that refuses: «not_measured», not a refusal", "refused" in raise_band.get("not_measured", ""),
+      str(raise_band)[:80])
+info = {"turning": [], "length": 0.0, "evals": 0, "cpu": 0.0, "crossings": 1, "states": 1, "band": raise_band,
+        "e_ts": 2.0, "seed": (3134.0, 39.6e9), "extra": ""}
+check("the note names the band failure", any("R1 not measured" in n for n in interior.fold_note(info)))
+
+print("(10) 68 B4 and n3: the grade drops one step; the doubled solve restores its state when it raises")
+check("one step down: analog → judgment, calibrated → analog", (interior._fold_grade_down("analog"),
+      interior._fold_grade_down("calibrated")) == ("judgment", "analog"))
+before = (interior.STEPS, interior._FOLD_DEPTH[0], interior.FOLD_DOUBLED[0], repr(interior._FAMILY_TRAIL))
+saved_s = interior.shoot
+
+
+def bad_shoot(**k):
+    interior._FAMILY_TRAIL["trials"].append("planted")
+    raise RuntimeError("planted")
+
+
+interior.shoot = bad_shoot
+try:
+    try:
+        interior._fold_doubled({})
+    except RuntimeError:
+        pass
+finally:
+    interior.shoot = saved_s
+after = (interior.STEPS, interior._FOLD_DEPTH[0], interior.FOLD_DOUBLED[0], repr(interior._FAMILY_TRAIL))
+check("STEPS, _FOLD_DEPTH, FOLD_DOUBLED and _FAMILY_TRAIL are restored after a raising doubled shoot", before == after)
 
 print(f"test_core_fold: {'모두 통과' if not fails else f'FAIL {fails}'}")
 sys.exit(1 if fails else 0)
