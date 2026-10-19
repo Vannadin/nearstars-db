@@ -103,16 +103,21 @@ class Rule2SwapAbsorbs(unittest.TestCase):
                 self.assertLess(ab["dR"], 2e-3)          # 1.05e-3 kg/m³ on the PC and here
                 self.assertGreater(ab["jump"], 100.0)    # +283 kg/m³: the landed step stays upward
 
-    def _read_ends(self, v, flat_on):
+    def _read_ends(self, v, flat_on, sliver_on=True):
         _iv, _un, _st, _fl, _sj, ex = rb.falls_at(v, T, 36, XLO, XHI)
         ab = ex["absorbed"][0]
         sets = {35: [(ab["a"], ab["b"])], 36: [(ab["a"], ab["b"])], 37: [(ab["a"], ab["b"])]}
         orig = ma.AssemblageView._fall_bridge
-        bridge = orig if flat_on else (lambda self, x, t, ib, x0, x1, flat=False: orig(self, x, t, ib, x0, x1, False))
+
+        def bridge(self, x, t, ib, x0, x1, flat=False, sliver=False):
+            if sliver and not sliver_on:
+                return None                              # the mutant: R itself in the sliver
+            return orig(self, x, t, ib, x0, x1, flat and flat_on, sliver)
         with mock.patch.object(type(v), "_fall_set_load", lambda self: sets), \
                 mock.patch.object(type(v), "_fall_bridge", bridge):
             r = lambda x: v.state(math.exp(x), T)[0]     # noqa: E731
-            return [r(x) for x in (ab["a"] + 1e-6, 0.5 * (ab["a"] + ab["b"]), ab["b"] - 1e-6)], ab, r
+            xs = (ab["a"] + 1e-6, 0.5 * (ab["a"] + ab["b"]), ab["b"] - 1e-6, ab["x"] - 0.5 * rb.SWAP_EPS)
+            return [r(x) for x in xs], ab, r
 
     def test_the_read_ends_flat_and_the_swap_stays_upward(self):
         v = _khan()
@@ -120,6 +125,14 @@ class Rule2SwapAbsorbs(unittest.TestCase):
         self.assertGreaterEqual(vals[1] - vals[0], 0.0)
         self.assertGreaterEqual(vals[2] - vals[1], 0.0)  # no fall to the swap's near side
         self.assertGreater(r(ab["x"] + 2e-9) - vals[2], 100.0)
+
+    def test_the_sliver_before_the_swap_reads_flat(self):
+        # r2 c40f792a: a read at x_swap − SWAP_EPS/2 (past b′, before the swap) is the flat R(a′), not R falling by ΔR
+        v = _khan()
+        vals, ab, _r = self._read_ends(v, True)
+        self.assertEqual(vals[3], vals[1])
+        vals_m, _ab, _r = self._read_ends(v, True, sliver_on=False)
+        self.assertLess(vals_m[3], vals_m[1] - 0.5 * ab["dR"])          # the mutant «own in the sliver» falls
 
     def test_the_secant_mutant_falls(self):
         # the old read: the secant from R(a′) to R(b′) ships the 1e-3 fall
