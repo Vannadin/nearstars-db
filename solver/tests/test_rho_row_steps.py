@@ -70,7 +70,7 @@ class RepairSplitsAtUpwardSteps(unittest.TestCase):
         down = next(math.log(q) for i in range(len(v._row_steps)) if (q := v._row_step_p(i, t)) is not None
                     and v.ts[v._row_steps[i][1]] == 600.0)
         sets = {ib: [(down - 0.004, up + 0.004)], ib + 1: [(down - 0.004, up + 0.004)]}  # one interval over both
-        with mock.patch.object(type(v), "_fall_set_load", lambda self: sets):
+        with mock.patch.object(ma, "RHO_BRIDGE", True), mock.patch.object(type(v), "_fall_set_load", lambda self: sets):
             self.assertEqual(v._row_steps_up(t, ib), [up])
             r = lambda x: v.state(math.exp(x), t)[0]    # noqa: E731
             self.assertGreater(r(up + 2e-9) - r(up - 2e-9), 1.0)            # the upward step stays (split there)
