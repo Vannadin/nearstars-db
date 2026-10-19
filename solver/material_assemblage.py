@@ -2054,6 +2054,9 @@ class AssemblageView(mv.RecordView):
                     d = json.loads(path.read_text(encoding="utf-8"))
                     if d.get("record") != self.material_id or d.get("ps") != list(self.ps) or d.get("ts") != list(self.ts):
                         raise TableStop(f"fall-set file {path.name} does not match this record's table", check="fall sets")
+                    if d.get("stops"):                   # r2 n3: a build with STOPs ships no sets
+                        raise TableStop(f"fall-set file {path.name} carries {len(d['stops'])} build STOP(s)",
+                                        check="fall sets")
                     self._fall_sets = {int(k): [tuple(iv) for iv in v] for k, v in d["sets"].items()}
         return self._fall_sets
 
