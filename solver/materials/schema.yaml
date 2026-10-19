@@ -158,6 +158,8 @@ assemblage_pins:
   compact_sha256: {shape: text, required: true}
   rebuilt:        {shape: list, required: true}
   boundary_tool:  {shape: record, of: assemblage_tool}      # boundary_pass.py, with an exported boundaries block
+  extension_tool: {shape: record, of: assemblage_tool}      # boundary_pass.py --extend, with the boundaries block's
+                                                           # extension (swap extension rows, frozen 8402255e)
 
 assemblage_builder:
   role:   {shape: enum, values: [strict, above_cap], required: true}
