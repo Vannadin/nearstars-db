@@ -59,8 +59,14 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 # run now stays on the upper branch and the six move by more than noise (old → new, PC WSL reference):
 # 2101.23 → 2090.23 · 1941.78 → 1932.40 · -49.27 → -51.17 · 285.66 → 283.41 · 2043.57 → 2038.27 · 1.2632 → 1.1532.
 # A 1e-13 shake of the Mars profile now moves T_c today by ≤ 9e-11 K (was up to 0.108 K, C144).
-FROZEN_L20 = {"T_c today": 2090.23, "T_m today": 1932.40, "T_c(1) − T_c0": -51.17, "T_m(1) − T_m0": 283.41,
-              "T_m peak": 2038.27, "T_m peak time": 1.1532}
+# C145 NaN class (c1 4b26cbcd, 2026-10-19; post-result re-freeze, directing): the old pins predate a false refusal.
+# The tracker read NaN (the inner root slid out of its ±w bracket) as a sign, planted a false δ_u neighbour and
+# declared a fold at 0.749176 Gyr whose excluded interval held the live root, so the base refused there; with the
+# inner root carried, NaN edges never a sign and a fold judged on finite values only, the run goes to 4.5 Gyr with no
+# fold and the six move (old → new, Mac, the PC check when runs resume): 2090.23 → 2094.64 · 1932.40 → 1937.36 ·
+# -51.17 → -50.33 · 283.41 → 287.34 · 2038.27 → 2042.46 · 1.1532 → 1.1612.
+FROZEN_L20 = {"T_c today": 2094.64, "T_m today": 1937.36, "T_c(1) − T_c0": -50.33, "T_m(1) − T_m0": 287.34,
+              "T_m peak": 2042.46, "T_m peak time": 1.1612}
 FROZEN_TOL = {"T_m peak time": 0.0005}  # Gyr; every other value K, to the frozen decimal
 
 

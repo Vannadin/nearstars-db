@@ -136,14 +136,16 @@ if "refused" in out:
     print(f"  test_thermal_stack — 실패 {fails}")
     sys.exit(1)
 v = sr.curve_values(out["rows"])
-print(f"  [C145 접힘 사건] R2: {len(out['fold_events'])} — {out['fold_events']}")
+print(f"  [C145 접힘 사건] R2: {len(out['fold_events'])} — {out['fold_events']} · 거절된 접힘 {out['fold_rejected']}")
+print(f"  [T_c − T_b 부호] R2: {out['tc_tb_sign']}")
 # the same pins and widths as test_samuel_run.FROZEN_L20 / FROZEN_TOL (K to the frozen decimal; peak time 0.0005 Gyr)
 # C116: moved with INFER_TOL 5e-7 (Mars's core mass fraction); old values beside FROZEN_L20
 # C118: moved again with the phase-boundary step cut (Mars's Fe-S core crosses 19 GPa); old values beside FROZEN_L20
 # speed stack (2026-09-29): moved again with Mars's table rebuilt on the new shot path; old values beside FROZEN_L20
 # C145 (2026-10-01): moved with the continuation of the δ_b root (no artefact jump at 0.783 Gyr); old values beside FROZEN_L20
-for key, want, tol in (("T_c today", 2090.23, 0.005), ("T_m today", 1932.40, 0.005), ("T_c(1) − T_c0", -51.17, 0.005),
-                       ("T_m(1) − T_m0", 283.41, 0.005), ("T_m peak", 2038.27, 0.005), ("T_m peak time", 1.1532, 0.0005)):
+# C145 NaN class (2026-10-19): the old pins predate a false refusal (0.749176 Gyr); old values beside FROZEN_L20
+for key, want, tol in (("T_c today", 2094.64, 0.005), ("T_m today", 1937.36, 0.005), ("T_c(1) − T_c0", -50.33, 0.005),
+                       ("T_m(1) − T_m0", 287.34, 0.005), ("T_m peak", 2042.46, 0.005), ("T_m peak time", 1.1612, 0.0005)):
     check(f"R2 — {key} = {want}", abs(v[key] - want) <= tol, f"{v[key]:.6f}")
 
 print(f"  test_thermal_stack — {'모두 통과' if not fails else f'실패 {fails}'}")
