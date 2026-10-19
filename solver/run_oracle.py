@@ -45,9 +45,11 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: registration §4), so the oracle's engine is that item's engine/ tree, declared here by its git tree id. ORACLE_TREE
 #: stays the phase-1 commit (the frozen-table blobs `table_read` checks were not touched by the item).
 #: Rebased onto the stage-A line (gap-wall ad2f5b67, whose melt-window base changed engine/), with the item's §7
-#: structure-trigger commit, the audit text fixes and the window-edge item: the engine/ tree is now 9f4a960f;
-#: re-declared in the same commit as each engine/ change (the 10-16 ruling; 68 n5).
-ORACLE_ENGINE_TREE = "60b7c10295ab0e53c3ef4ace7ed9c79edbc51343"
+#: structure-trigger commit, the audit text fixes, the window-edge item and tc-fold (whose engine/ tree was 60b7c102);
+#: re-declared in the same commit as each engine/ change (the 10-16 ruling; 68 n5). Stage A composition: the C145 NaN
+#: fix (1c25dab3 … d502785f, engine/ only) replayed on tc-fold-sA with the ρ line (no engine/ change), declared once at
+#: the composed tip (directing 10-20): bf6ff298.
+ORACLE_ENGINE_TREE = "bf6ff298c969feaefaeb9dc95b7e9a1ff1b149d6"
 REPO = Path(lm._ENGINE).parent
 
 
