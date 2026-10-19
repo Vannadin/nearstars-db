@@ -59,7 +59,7 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 `fallback_solvers` [—] · `trial_unconverged` [—] · `trial_bracket_invalid` [—] ·
 `finish_subst_from_tc` [K] · `finish_subst_to_tc` [K] · `finish_subst_delta_tc` [K] · `finish_subst_y` [—] ·
 `core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—] ·
-`basal_silicate_state` [—] · `core_plus_layer_radius_solved_km` [km] · `basal_layer_thickness_km` [km]
+`basal_silicate_state` [—] · `core_plus_layer_radius_solved_km` [km] · `basal_layer_thickness_solved_km` [km]
 
 ⚠ **경계 온도는 한 관례를 따른다 (C153).** 이 풀이가 경계에서 내는 온도는 그 경계를 지나 이어진 단열선에, 선언된 점프(`interface_temperature_jumps`, 그리고 얼음/외피의 `boundary_temperature_jump`)만 더한 값이다. 한쪽 이름이 붙은 키도 그 경계에 점프가 선언되지 않으면 다른 쪽과 같다. 오늘처럼 어떤 천체도 `core/rock` 점프를 선언하지 않으면 `cmb_temperature` · `cmb_temperature_core` · `cmb_temperature_mantle` 셋이 모두 맨틀 쪽 값이고, `core_temperature` 는 거기서 D″ 층 없이 올린 핵 단열선의 값이다. 물리적인 핵 쪽 CMB 온도는 `core_state` 가 선언으로 받는 `core_cmb_temperature` 이거나 `core_history` 의 T_c 다 (C150 — 여기서 지구가 2546.8 K 로 나오고 Sinmyo+ 2019 의 ≤ 3760 K 와 다른 것은 D″ 층이지 오류가 아니다).
 

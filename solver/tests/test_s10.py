@@ -109,7 +109,7 @@ class Mars(unittest.TestCase):
         q = {x.key: x.point for x in self.ans.quantities}
         self.assertEqual(q["core_radius"], 1695000.0)
         self.assertEqual(q["core_plus_layer_radius_solved_km"], 1845.0)
-        self.assertEqual(q["basal_layer_thickness_km"], 150.0)
+        self.assertEqual(q["basal_layer_thickness_solved_km"], 150.0)
 
     def test_read_check_on_mars(self):
         chain = lv.run_chain("engine/bodies/mars.yaml", self.ans)
