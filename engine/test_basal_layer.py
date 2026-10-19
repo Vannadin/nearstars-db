@@ -40,8 +40,8 @@ check("S-B2 — thickness 0 is no layer, bit-identical", zero.values == base.val
 lay = solve(basal_layer_thickness_km=D_KM, basal_layer_density=RHO)
 v = lay.values
 check("S-경계 — the solved thickness is the declared one (1e-6)",
-      abs(v["basal_layer_thickness_km"] - D_KM) < 1e-6 * D_KM,
-      f"{v['basal_layer_thickness_km']!r} km · top {v['core_plus_layer_radius_solved_km']:.3f} km")
+      abs(v["basal_layer_thickness_solved_km"] - D_KM) < 1e-6 * D_KM,
+      f"{v['basal_layer_thickness_solved_km']!r} km · top {v['core_plus_layer_radius_solved_km']:.3f} km")
 rec: list = []
 p_c = v["core_pressure"] * 1e9
 t_c = v["core_temperature"]

@@ -54,7 +54,7 @@ literature, separate recipes.
 `fallback_solvers` [—] · `trial_unconverged` [—] · `trial_bracket_invalid` [—] ·
 `finish_subst_from_tc` [K] · `finish_subst_to_tc` [K] · `finish_subst_delta_tc` [K] · `finish_subst_y` [—] ·
 `core_mass_fraction` [—] · `ice_mass_fraction` [—] · `composition` [—] · `core_sulphur_wt` [—] ·
-`basal_silicate_state` [—] · `core_plus_layer_radius_solved_km` [km] · `basal_layer_thickness_km` [km]
+`basal_silicate_state` [—] · `core_plus_layer_radius_solved_km` [km] · `basal_layer_thickness_solved_km` [km]
 
 ⚠ **Interface temperatures follow one convention (C153).** A temperature this solve reports at an interface is the adiabat continued through it, plus declared jumps only (`interface_temperature_jumps`, and `boundary_temperature_jump` for ice/envelope). A key named for one side equals the other side unless a jump is declared there: with no `core/rock` jump, which is every body today, `cmb_temperature`, `cmb_temperature_core` and `cmb_temperature_mantle` are all the mantle side, and `core_temperature` is the core adiabat from that value with no D″ layer. The physical core side of the CMB is `core_state`'s declared `core_cmb_temperature` or `core_history`'s T_c (C150: Earth 2546.8 K here against ≤ 3760 K, Sinmyo+ 2019, is the D″ layer, not an error).
 
