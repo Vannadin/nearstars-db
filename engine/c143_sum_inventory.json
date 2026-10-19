@@ -375,6 +375,21 @@
 "sum((f(a + (i + 0.5) * h) * 4 * math.pi * (a + (i + 0.5) * h) ** 2 * h for i in range(n)))"
 ],
 [
+"engine/test_core_fold.py",
+"<module>",
+"sum((1 for c in cs41 if len(rf.fold_walk(s_narrow(c), (0.0, 0.0), 1e-12, direction=1.0).crossings) == 2))"
+],
+[
+"engine/test_core_fold.py",
+"<module>",
+"sum((1 for c in cs41 if len(rf.fold_walk(s_narrow(c), (0.0, 0.0), 1e-12, direction=1.0, dg_max=float('inf'), turn_max=float('inf')).crossings) == 2))"
+],
+[
+"engine/test_core_fold.py",
+"<module>",
+"sum((1 for n in old if n == 0))"
+],
+[
 "engine/test_core_history.py",
 "<module>",
 "sum((1 for c in ws['per_corner'].values() if c['min'] > 0.0))"
