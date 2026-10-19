@@ -3002,9 +3002,12 @@ def fold_note(info: dict) -> list:
     if "shipped" in info:
         notes.append("core_fold_band — 실어 보내는 띠 max(b_y, |두 배 STEPS 이동|): "
                      + " · ".join(f"{k} ±{v:.4g}" for k, v in info["shipped"].items()))
-    elif "refused" in info.get("doubled", {}):
-        # 지휘석 10-19 (r2 q2): 두 배 풀이가 거절해도 찾은 상태는 나간다(B3 와 같은 규칙) — 실어 보낼 띠를 못 쟀다고 이름 댄다
-        notes.append(f"core_fold_band — shipped band not measured — doubled solve refused: {info['doubled']['refused']}")
+    elif "refused" in info.get("doubled", {}) and "not_measured" not in band:
+        # 지휘석 · 68 10-19 (r2 q2): 두 배 풀이가 거절해도 찾은 상태는 나간다(동결 §3 R2 «never refused for it», B3 와 같은 규칙).
+        #   그 이동 항은 0 이 아니라 모르는 값이라 b_y 를 «실어 보내는 띠» 로 쓰지 않는다(좁히는 것이 된다) — b_y 는 아래 한계로만
+        notes.append("core_fold_band — shipped band not measured: the doubled-STEPS solve refused ("
+                     + info["doubled"]["refused"][:120] + "); b_y (R1 only, a lower bound) "
+                     + " · ".join(f"{k} ±{v:.4g}" for k, v in band.items()))
     if info.get("extra"):
         notes.append(info["extra"])
     return notes

@@ -47,7 +47,7 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: Rebased onto the stage-A line (gap-wall ad2f5b67, whose melt-window base changed engine/), with the item's §7
 #: structure-trigger commit, the audit text fixes and the window-edge item: the engine/ tree is now 9f4a960f;
 #: re-declared in the same commit as each engine/ change (the 10-16 ruling; 68 n5).
-ORACLE_ENGINE_TREE = "e1bed3ca1a9999d357c852c87e13463f5baf29e3"
+ORACLE_ENGINE_TREE = "bd964fd0d6648aab33b28c13fe851afb0cea40b4"
 REPO = Path(lm._ENGINE).parent
 
 

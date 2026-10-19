@@ -328,9 +328,12 @@ check("solve's Result grade is _answer_grade(grade0, fold_info) (the wiring, not
 print("(14) directing 10-19 (r2 q2): a refused doubled-STEPS solve keeps the state and names the unmeasured shipped band")
 info_r = dict(info, band={"T_c [K]": 0.05}, doubled={"STEPS": 3000, "refused": "적분이 실패했다 — 가짜"})
 notes_r = interior.fold_note(info_r)
-check("the note «shipped band not measured — doubled solve refused: <reason>», no shipped band",
-      any(n == "core_fold_band — shipped band not measured — doubled solve refused: 적분이 실패했다 — 가짜" for n in notes_r)
-      and not any("실어 보내는 띠" in n for n in notes_r), str(notes_r)[:120])
+nr = [n for n in notes_r if "shipped band not measured" in n]
+check("the note names the refused doubled solve and labels b_y a lower bound (R1 only)",
+      nr == ["core_fold_band — shipped band not measured: the doubled-STEPS solve refused (적분이 실패했다 — 가짜); "
+             "b_y (R1 only, a lower bound) T_c [K] ±0.05"], str(nr)[:140])
+check("68's mutant: nothing presents b_y as the shipped band (no «실어 보내는 띠», no «shipped band =»)",
+      not any("실어 보내는 띠" in n or "shipped band =" in n for n in notes_r))
 
 print(f"test_core_fold: {'모두 통과' if not fails else f'FAIL {fails}'}")
 sys.exit(1 if fails else 0)
