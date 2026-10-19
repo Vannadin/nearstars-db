@@ -176,9 +176,11 @@ def fold_walk(F, seed, tol_dm: float, direction: float = -1.0, budget: int | Non
         return walk
     u0, v0, dm0, g0, _it = got
     gu, gv = _grad(F, u0, v0, dm0, walk, g0)
+    seed_ggrad = walk.last_ggrad
     legs = []
     lim = (walk.limits["h_max"], walk.limits["dg_max"], walk.limits["turn_max"])
     for sense in (direction, -direction):
+        walk.last_ggrad = seed_ggrad        # 68: each leg's first step is capped by the seed's ∇g, not the other leg's end
         pts = _leg(F, (u0, v0, dm0, g0, gu, gv), sense, tol_dm, budget, h0, walk, *lim)
         legs.append((sense, pts))
         if walk.status == "budget":

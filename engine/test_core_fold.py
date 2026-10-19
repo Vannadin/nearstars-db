@@ -296,5 +296,34 @@ check("unpatched, the walk records the shipped limits", rf.fold_walk(plant(), (0
       == {"budget": rf.FOLD_BUDGET, "h0": rf.FOLD_H0, "h_max": rf.FOLD_H_MAX, "dg_max": rf.FOLD_DG_MAX,
           "turn_max": rf.FOLD_TURN_MAX})
 
+print("(12) 68 R1: the guards themselves — a feature H_MAX 5e-3 alone steps over")
+
+
+def s_narrow(c):
+    """width 3e-4, crossings 2e-3 apart: H_MAX 5e-3 without the guards resolves 22/41 positions; each guard alone off
+    loses some (post-check off 40/41, predictive cap off 37/41, measured at ba7bcf70)."""
+    def F(u, v):
+        if abs(u) > 1.0:
+            raise rf.FoldOutside
+        return v - u, 0.05 - 0.1 * (_sig((u - c) / 3e-4) - _sig((u - c - 2e-3) / 3e-4))
+    return F
+
+
+cs41 = [0.40 + 0.0037 * i for i in range(41)]
+got41 = sum(1 for c in cs41 if len(rf.fold_walk(s_narrow(c), (0.0, 0.0), 1e-12, direction=1.0).crossings) == 2)
+check("the guards resolve all 41 narrow S-features", got41 == 41, f"{got41}/41")
+off41 = sum(1 for c in cs41 if len(rf.fold_walk(s_narrow(c), (0.0, 0.0), 1e-12, direction=1.0, dg_max=float("inf"),
+                                                turn_max=float("inf")).crossings) == 2)
+check("control (guards off, H_MAX 5e-3 kept) misses some of them", off41 < 41, f"{off41}/41")
+
+print("(13) 68 R2: solve's grade goes through _answer_grade")
+check("_answer_grade: a fold answer one step down, any other unchanged",
+      (interior._answer_grade("analog", {}), interior._answer_grade("analog", None),
+       interior._answer_grade("calibrated", {"band": {}})) == ("judgment", "analog", "analog"))
+import inspect  # noqa: E402
+src_solve = inspect.getsource(interior.solve)
+check("solve's Result grade is _answer_grade(grade0, fold_info) (the wiring, not only the helper)",
+      "grade=_answer_grade(grade0, fold_info)" in src_solve)
+
 print(f"test_core_fold: {'모두 통과' if not fails else f'FAIL {fails}'}")
 sys.exit(1 if fails else 0)

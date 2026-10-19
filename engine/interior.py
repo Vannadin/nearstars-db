@@ -2979,6 +2979,11 @@ def _fold_grade_down(grade: str) -> str:
     return GRADES[min(GRADES.index(grade) + 1, len(GRADES) - 1)]
 
 
+def _answer_grade(grade0: str, fold_info) -> str:
+    """solve 의 답 등급 — 이어 걷기(fold_info 있음)로 낸 답이면 grade0 의 한 단계 아래, 아니면 grade0 (68 R2: 연결을 시험하려고 함수로)."""
+    return grade0 if fold_info is None else _fold_grade_down(grade0)
+
+
 def fold_note(info: dict) -> list:
     """C6 · W1 · R1 · R2 — 이어 걷기로 낸 답의 메모 줄. 실어 보내는 띠는 키마다 max(b_y, |두 배 STEPS 이동|)."""
     turn = [(round(t, 3), round(p, 5), round(s, 2)) for t, p, s in info["turning"]]
@@ -5342,7 +5347,7 @@ def solve(mass_earth: float,
         recipe=RECIPE, version=VERSION,
         regime="integrated_" + ("_".join(st.phases) if len(st.phases) > 1 else st.phases[0]),
         reason=reason,
-        grade=grade0 if fold_info is None else _fold_grade_down(grade0),   # 68 B4: 이어 걷기의 답은 그 등급의 한 단계 아래
+        grade=_answer_grade(grade0, fold_info),   # 68 B4: 이어 걷기의 답은 그 등급의 한 단계 아래
         inputs=inputs,
         cycles=(1, 3, 7),
         converged=converged,
