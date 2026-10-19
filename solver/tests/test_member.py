@@ -3,6 +3,7 @@
 import dataclasses
 import json
 import os
+import types
 import unittest
 from pathlib import Path
 
@@ -18,13 +19,16 @@ def _q(a, k):
     return next(q.point for q in a.quantities if q.key == k)
 
 
-def tier_error(y1, y10, y100):
+def tier_error(y1, y10, y100, at_floor: bool = False):
     """One solve's error estimate at rtol from three tiers (rtol, /10, /100; o9-forward-member-note amendment 2, 68's
     measurement): where the tiers converge monotonically with per-decade ratio ρ = (y1−y10)/(y10−y100) > 1, the
     geometric tail e = |y1−y10|·ρ/(ρ−1); otherwise (non-monotone, ρ ≤ 1, or an exact repeat) the largest span
-    max(|y1−y10|, |y1−y100|). Absolute, in y's units."""
+    max(|y1−y10|, |y1−y100|). Absolute, in y's units.
+    `at_floor`: one of the three tiers' closures ended at K8's noise stop (prereg-k8-stop). That tier sits at F's noise
+    floor, not on the geometric sequence, so ρ → 1 would blow the tail up (the PC's mars cmb_temperature, ρ 1.111 →
+    e/|y| 4.0e-7). The span is used instead: the class of SplitInvariance's design note 19 (68, directing 10-19)."""
     d1, d2 = y1 - y10, y10 - y100
-    if d2 != 0.0 and d1 / d2 > 1.0:
+    if not at_floor and d2 != 0.0 and d1 / d2 > 1.0:
         rho = d1 / d2
         return abs(d1) * rho / (rho - 1.0)
     return max(abs(d1), abs(y1 - y100))
@@ -37,18 +41,40 @@ def tier_error(y1, y10, y100):
 E_CEILING = 1e-7
 
 
-def identity_bound(y, inv, fwd):
+def identity_bound(y, inv, fwd, inv_floor: bool = False, fwd_floor: bool = False):
     """(bound, None) for one key from the inverse's and the forward's three tiers, or (None, why) when either solve's
-    e/|y| is over E_CEILING (its ρ named)."""
+    e/|y| is over E_CEILING (its ρ named). `*_floor`: that solve's tiers logged a K8 noise stop (`tier_error`'s at_floor);
+    the ceiling is unchanged (68: no relaxation without a hard cap and a measured need)."""
     out = 0.0
-    for name, t in (("inverse", inv), ("forward", fwd)):
-        e = tier_error(*t) / y
+    for name, t, fl in (("inverse", inv, inv_floor), ("forward", fwd, fwd_floor)):
+        e = tier_error(*t, at_floor=fl) / y
         if e > E_CEILING:
             d1, d2 = t[0] - t[1], t[1] - t[2]
             rho = d1 / d2 if d2 != 0.0 else float("inf")
-            return None, f"{name} e/|y| {e:.3e} over the ceiling {E_CEILING:g} (ρ {rho:.6g}): resolution not measured"
+            return None, (f"{name} e/|y| {e:.3e} over the ceiling {E_CEILING:g} (ρ {rho:.6g}"
+                          + (", at K8's noise floor" if fl else "") + "): resolution not measured")
         out += e
     return max(1e-8, out), None
+
+
+class _NoiseStops:
+    """Counts K8 noise stops (SolveContext.record «noise_stop», prereg-k8-stop) over the solves run inside it — a
+    test-local wrap, no solver change. `with _NoiseStops() as n: sv.solve(...)`, then `n.count`."""
+
+    def __enter__(self):
+        self.count, self._orig = 0, context.SolveContext.record
+        outer = self
+
+        def record(ctx, kind, **data):
+            if kind == "noise_stop":
+                outer.count += 1
+            return outer._orig(ctx, kind, **data)
+        context.SolveContext.record = record
+        return self
+
+    def __exit__(self, *exc):
+        context.SolveContext.record = self._orig
+        return False
 
 
 class Identity(unittest.TestCase):
@@ -63,18 +89,21 @@ class Identity(unittest.TestCase):
         body, _ = from_v1.load_v1(f"engine/bodies/{stem}.yaml")
         o10 = dataclasses.replace(OPT, rtol=OPT.rtol / 10.0)
         o100 = dataclasses.replace(OPT, rtol=OPT.rtol / 100.0)
-        a, x = sv.solve(body, OPT)
-        a10, _ = sv.solve(body, o10)
-        a100, _ = sv.solve(body, o100)
+        with _NoiseStops() as n_inv:
+            a, x = sv.solve(body, OPT)
+            a10, _ = sv.solve(body, o10)
+            a100, _ = sv.solve(body, o100)
         fb = mb.forward_member(body, a, x)
         self.assertEqual(fb.closure.kind, "R")
-        f, _ = sv.solve(fb, OPT)
-        f10, _ = sv.solve(fb, o10)
-        f100, _ = sv.solve(fb, o100)
+        with _NoiseStops() as n_fwd:
+            f, _ = sv.solve(fb, OPT)
+            f10, _ = sv.solve(fb, o10)
+            f100, _ = sv.solve(fb, o100)
         self.assertIsInstance(f, result.Answer, getattr(f, "text", None))
         for k in keys:
             y = abs(_q(a, k))
-            bound, why = identity_bound(y, (_q(a, k), _q(a10, k), _q(a100, k)), (_q(f, k), _q(f10, k), _q(f100, k)))
+            bound, why = identity_bound(y, (_q(a, k), _q(a10, k), _q(a100, k)), (_q(f, k), _q(f10, k), _q(f100, k)),
+                                        inv_floor=n_inv.count > 0, fwd_floor=n_fwd.count > 0)
             self.assertIsNone(why, f"{stem} {k}: {why}")
             self.assertLessEqual(abs(_q(f, k) - _q(a, k)) / y, bound, k)
 
@@ -98,6 +127,39 @@ class Identity(unittest.TestCase):
         self.assertIsNone(why)
         self.assertAlmostEqual(bound, 4e-8, delta=1e-20)
         self.assertEqual(identity_bound(1.0, (1.0, 1.0, 1.0), (1.0, 1.0, 1.0)), (1e-8, None))
+
+    def test_noise_floor_span(self):
+        """K8's noise stop in a tier → the span, not the tail (68, directing 10-19). Planted on the PC's own lines for mars
+        inverse cmb_temperature (member-tiers-pc d822d57b): d1/y −4.013e-8, d2/y −3.612e-8, ρ 1.111."""
+        y = 1959.6141346148568
+        t = (y, y + 4.013e-8 * y, y + 4.013e-8 * y + 3.612e-8 * y)
+        fwd = (y, y, y)
+        bound, why = identity_bound(y, t, fwd)                          # mutant «drop (1)»: the PC red (4.0e-7)
+        self.assertIsNone(bound)
+        self.assertIn("4.01", why)
+        bound, why = identity_bound(y, t, fwd, inv_floor=True)          # with (1): the span 7.625e-8 < 1e-7
+        self.assertIsNone(why)
+        self.assertAlmostEqual(bound, 7.625e-8, delta=1e-11)
+        # negative (68): at the noise floor and the span itself over the ceiling → still «resolution not measured»
+        wide = (y, y + 1.2e-7 * y, y + 2.4e-7 * y)
+        bound, why = identity_bound(y, wide, fwd, inv_floor=True)
+        self.assertIsNone(bound)
+        self.assertIn("at K8's noise floor", why)
+        self.assertIn("resolution not measured", why)
+        # no noise stop, tiers not converging (ρ 1.01): the geometric rule still fires the ceiling
+        bound, why = identity_bound(1.0, (2.01e-8, 1e-8, 0.0), (0.0, 0.0, 0.0), inv_floor=False, fwd_floor=True)
+        self.assertIsNone(bound)
+        self.assertIn("ρ 1.01", why)
+
+    def test_noise_stop_reader(self):
+        """_NoiseStops counts «noise_stop» records and restores SolveContext.record on exit."""
+        orig = context.SolveContext.record
+        with _NoiseStops() as n:
+            self.assertIsNot(context.SolveContext.record, orig)
+            context.SolveContext.record(types.SimpleNamespace(trace=[]), "noise_stop", x=1.0)
+            context.SolveContext.record(types.SimpleNamespace(trace=[]), "scan", x=1.0)
+        self.assertEqual(n.count, 1)
+        self.assertIs(context.SolveContext.record, orig)
 
     def test_venus(self):
         self._check("venus", ("radius", "core_mass_fraction", "core_radius", "nmoi", "cmb_temperature"))
