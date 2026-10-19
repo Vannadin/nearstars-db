@@ -164,6 +164,60 @@ class Derivatives(unittest.TestCase):
         self.assertGreater(checked, 0)
         del k
 
+    def _one_sided(self, v, x, t, side):
+        """(forward-mode ∂s/∂ln P, the 3-point one-sided difference on its own side) at ln P = x, or None."""
+        sv = v.s_path(math.exp(x), t)
+        if sv is None or isinstance(sv, st.Stop):
+            return None
+        h = side * 1e-5
+        a, b = _s(v, math.exp(x + h), t), _s(v, math.exp(x + 2 * h), t)
+        if a is None or b is None:
+            return None
+        return sv.dx, (-3.0 * sv.v + 4.0 * a - b) / (2.0 * h)
+
+    def test_one_sided_at_region_switches_and_clips(self):
+        """§3.0's other switches (r2 B5): every cut curve's own P_b (the side decision, a region switch), and every run
+        end facing a gap inside its region (the Fritsch–Carlson clip the bridge shares), on T rows and mid-rows of bse:
+        the forward-mode derivative on each side equals the one-sided difference on that side."""
+        v = _view()
+        n = {"region": 0, "clip": 0}
+        for t in (1950.0, 2200.0, 2225.0, 2600.0, 4000.0, 4225.0):     # gaps inside a region of s: 4000 K up
+            k = min(range(len(v.ts)), key=lambda j: abs(v.ts[j] - t))
+            sites = [("region", math.log(pb)) for c in v._cut
+                     if (pb := c.p_b_ext(t, v._reach)) is not None and pb < v.p_dataset]
+            for qs in v._runs("s", k).values():
+                for a, b in zip(qs, qs[1:]):              # the ends facing a gap: set_end's clip
+                    sites += [("clip", a[0][-1]), ("clip", b[0][0])]
+            for kind, x0 in sites:
+                for side in (-1.0, 1.0):
+                    got = self._one_sided(v, x0 + side * 1e-7, t, side)
+                    if got is None:
+                        continue
+                    self.assertLess(abs(got[0] - got[1]), 1e-5 * max(abs(got[1]), 1.0), (kind, x0, t, side))
+                    n[kind] += 1
+        self.assertGreater(n["region"], 0)
+        self.assertGreater(n["clip"], 0)
+
+    def test_c1_across_every_edge_window(self):
+        """§3.1 «Edge» (r2 B5): across an edge's (c′) window ends the blended s read is C¹ in P (H′ = 0 there, so the
+        blend meets the one-sided read), on bse's edges at 2200 K: s and ∂s/∂ln P agree across each end."""
+        v = _view()
+        t, n = 2200.0, 0
+        for c in v._cut:
+            pb = c.p_b_ext(t, v._reach)
+            if c.kind != "edge" or pb is None or pb > v.p_dataset:
+                continue
+            xb = math.log(pb)
+            w = v._width(xb)
+            for xe in (xb - w, xb + w):
+                lo, hi = v.s_path(math.exp(xe - 1e-9), t), v.s_path(math.exp(xe + 1e-9), t)
+                if lo is None or hi is None or isinstance(lo, st.Stop) or isinstance(hi, st.Stop):
+                    continue
+                self.assertLess(abs(lo.v - hi.v), 1e-9 * abs(lo.v), (c.id, xe))
+                self.assertLess(abs(lo.dx - hi.dx), 1e-6 * max(abs(lo.dx), 1.0), (c.id, xe))
+                n += 1
+        self.assertGreater(n, 0)
+
     def test_planted_table(self):
         """A planted s = a + b·T − c·ln P, linear in each read axis so the read reproduces it exactly, on the plain
         (unexported) read: dT/dP = c/(P·b), c_P = T·b."""
@@ -507,6 +561,64 @@ class BasalDelegation(unittest.TestCase):
         self.assertEqual(b.transitions(), ())
         for _between, _kind, curve in over.transitions():
             self.assertEqual(b.curve_slope_points(curve), over.curve_slope_points(curve))
+
+    def test_not_delegated_is_red(self):
+        """Note 1's mutant (r2 B5): BasalView.curve_slope_points not delegated, so its landing scale falls back to the
+        P term alone; some sloped curve's scale then differs from the overlying view's."""
+        from solver import events
+        over = _view()
+        rec = {"id": "basal_test", "kind": "assemblage", "phases": [{"id": "basal"}]}
+        b = ma.BasalView(rec, 4000.0, over, 1600.0)
+        curves = [c for _b, _k, c in over.transitions() if c.get("form") == "assemblage_curve"]
+
+        def slope_term(c):                                # the slope term the overlying view's points carry
+            return max((abs(pb) + t * sl for t, pb, sl in over.curve_slope_points(c)), default=0.0)
+
+        self.assertTrue(all(events.curve_p_scale(b, c) >= slope_term(c) for c in curves))
+        with mock.patch.object(ma.BasalView, "curve_slope_points", lambda self, curve: ()):
+            self.assertTrue(any(events.curve_p_scale(b, c) < slope_term(c) for c in curves))
+
+
+class Taper(unittest.TestCase):
+    """§3.3 (r2 B5): in the taper zone above p_dataset the SLB side's dT/dP and c_P are the lifted s read's
+    (−(∂s/∂P)/(∂s/∂T), T·∂s/∂T at the lifted column cut), and c_P mixes as (1 − w)·(T·∂s/∂T + the 136 GPa match's
+    shift) + w·c_P,h, as dT/dP does."""
+
+    def test_zone_reads_the_lifted_s_read(self):
+        from solver.from_v1 import thaw as th
+        reg = _reg()
+        rid = "silicate_slb_default_bse"
+        got = reg.get(rid)
+        hid = got["assemblage"]["handover"]
+        ho = ma.HandOver(th(reg.records[hid]), reg.tables[hid], rid, 1.5 * float(got["assemblage"]["p_dataset"]))
+        v = ma.view(th(got), reg.tables[rid], 1600.0, 0.0, 0.0, ho)
+        v.s_read = True
+        p, t = 1.2 * v.p_dataset, 3000.0
+        seen = []
+        real = ma.AssemblageView._s_path
+
+        def spy(self, p_, t_, pr, ia, ib, force=None):
+            out = real(self, p_, t_, pr, ia, ib, force)
+            seen.append((p_, t_, self._top, out))
+            return out
+
+        with mock.patch.object(ma.AssemblageView, "_s_path", spy):
+            lifted = v._quiet(v._lifted, p, t)
+        own = [x for x in seen if x[0] == p and x[1] == t]
+        self.assertTrue(own and own[0][2] > v.p_dataset)                  # read at the lifted cut
+        sv = own[0][3]
+        self.assertEqual(lifted[1], -(sv.dx / p) / sv.dt)
+        self.assertEqual(lifted[2], t * sv.dt)
+        z = v._blend(p, t)
+        w = z[4]
+        self.assertTrue(0.0 < w < 1.0)
+        cut0, lift0 = v._quiet(v._table_read, v.p_dataset, t), v._quiet(v._lifted, v.p_dataset, t)
+        th_ = ho.thermal(p, t)[0]
+        for i in (1, 2):
+            want = (1.0 - w) * (lifted[i] + (1.0 - w) * (cut0[i] - lift0[i])) + w * th_[i - 1]
+            self.assertAlmostEqual(z[i], want, delta=1e-12 * abs(want))
+        off = ma.view(th(got), reg.tables[rid], 1600.0, 0.0, 0.0, ho)
+        self.assertNotEqual(off._blend(p, t)[2], z[2])                     # the s read moves it: the test reads it
 
 
 if __name__ == "__main__":
