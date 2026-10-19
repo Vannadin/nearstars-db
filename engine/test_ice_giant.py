@@ -855,11 +855,15 @@ def _declarations(frozen: dict, fails: list[str]) -> None:
           f"{st.mass_kg / base.mass_kg:.3f} 배, 반지름 {st.radius_m / base.radius_m:.3f} 배")
 
 
-def _live(frozen: dict, fails: list[str]) -> None:
+def _live(frozen: dict, fails: list[str]) -> dict:
+    """전체 풀이 둘을 굳힌 값과 대조한다. 돌려주는 것은 이름 → 이 트리의 풀이 결과 — 교란-불변이 같은 프로세스의
+    안 민 풀이를 기준으로 쓴다(`_clamp_invariance`)."""
+    solved = {}
     for name, rec in frozen["bodies"].items():
         t0 = time.perf_counter()
         res = _solve(name)
         dt = time.perf_counter() - t0
+        solved[name] = res
         if not rec["applicable"]:
             same = (not res.applicable) and res.reason == rec["reason"]
             if not same:
@@ -938,49 +942,78 @@ def _live(frozen: dict, fails: list[str]) -> None:
         print(f"  [{'PASS' if ok else 'FAIL'}] {name} — 격자 {base} → {base * 4}: "
               f"반지름 상대차 {drift:.1e} (< {GRID_TOL:.0e}; 발표값과의 차 "
               f"{abs(v['radius'] / r_pub - 1):.1e} 의 {abs(v['radius'] / r_pub - 1) / max(drift, 1e-12):.0f} 분의 1)")
+    return solved
 
 
-def _clamp_invariance(frozen: dict, fails: list[str]) -> None:
+def _clamp_invariance(frozen: dict, fails: list[str], solved: dict) -> None:
     """교란-불변 회귀 (브리프 34 항목 B, A2 의 V1+ 를 게이트로 승격 — 게이트 +22 s, 1205 s 의
     2 % 라 승격이 쌈). 주장은 세상이 아니라 우리 코드에 대한 것이다: **천왕성의 수렴한 해는
     초이온 예측 구역(P > 355 GPa · 0 < T < 1800 K — French+ 2016 Fig. 4 의 경계가 우리 1800 K
     천장 아래로 지나간 곳)의 ice_x 값에 무관하다.** 구역 밀도를 +5 % 밀고 전체를 다시 풀어
-    굳힌 앵커와 비트 대조한다 — A2(2026-09-01)에서 ±5 %(발화 1,754회)와 첫-접촉 거절이 전부
+    **같은 트리 · 같은 프로세스의 안 민 풀이**(`_live` 의 결과)와 비트 대조한다. 앵커와 대조하던 때(~10-19)는 안 민
+    풀이가 움직이면(33a6ac21: 사격이 괄호 안 다른 길로 T_TOL 아래만큼 다른 끝점에 닿음) 교란과 무관하게 빨개졌다 —
+    주장은 «교란이 해를 안 바꾼다» 이고 그 기준은 같은 트리의 해다. 앵커 대조는 `_live` 가 따로 한다. A2(2026-09-01)에서 ±5 %(발화 1,754회)와 첫-접촉 거절이 전부
     비트 동일이었다. 이 검사가 깨지는 날은 솔버 변경이 그 무관함을 깨뜨린 날이고, 그때 C6 의
     상시 감시가 다시 열린다. 범위 제한: 현 로스터의 천왕성에 대한 실측이지 일반 보증이 아니다."""
     import eos as _eos
-    h2o = _eos.MATERIALS["h2o"]
-    cls = type(h2o)
-    orig = cls.density
 
-    def bumped(self, p, t=0.0, t_pot=0.0):
-        if (self is h2o and p > 355e9 and 0.0 < t < 1800.0
-                and getattr(self.phase_at(p), "name", "") == "ice_x"):
-            return orig(self, p, t, t_pot) * 1.05
-        return orig(self, p, t, t_pot)
+    def bumped_solve(mat, zone):
+        """`mat` 의 밀도를 `zone(상, P, T)` 인 자리에서만 +5 % 밀고 천왕성을 다시 푼다. (결과, 민 횟수)."""
+        cls = type(mat)
+        orig = cls.density
+        hits = [0]
+
+        def bumped(self, p, t=0.0, t_pot=0.0):
+            if self is mat and zone(self, p, t):
+                hits[0] += 1
+                return orig(self, p, t, t_pot) * 1.05
+            return orig(self, p, t, t_pot)
+
+        cls.density = bumped
+        try:
+            return _solve(name), hits[0]
+        finally:
+            cls.density = orig
+
+    def moved_from(res):
+        return [k for k in BIT_KEYS if repr(res.values[k]) != repr(base.values[k])]
 
     name = "Uranus"
-    rec = frozen["bodies"][name]
-    cls.density = bumped
-    try:
-        t0 = time.perf_counter()
-        res = _solve(name)
-        dt = time.perf_counter() - t0
-    finally:
-        cls.density = orig
+    base = solved.get(name)
+    if base is None or not base.applicable:
+        fails.append(f"교란-불변: {name} 의 안 민 풀이가 없거나 거절이라 기준이 없다")
+        print("  [FAIL] 교란-불변 — 기준(안 민 풀이) 없음")
+        return
+    h2o = _eos.MATERIALS["h2o"]
+    t0 = time.perf_counter()
+    res, hits = bumped_solve(h2o, lambda self, p, t: (p > 355e9 and 0.0 < t < 1800.0
+                                                      and getattr(self.phase_at(p), "name", "") == "ice_x"))
+    dt = time.perf_counter() - t0
     if not res.applicable:
         fails.append(f"교란-불변: {name} 이 구역 교란에서 거절됐다 — {res.reason[:80]}")
         print(f"  [FAIL] 교란-불변 — 거절 ({dt:.0f} s)")
         return
-    moved = [k for k in BIT_KEYS if repr(res.values[k]) != rec["values"][k]]
-    ok = not moved and res.converged
+    moved = moved_from(res)
+    # 민 자리를 풀이가 한 번도 안 읽으면 «무관» 은 공짜다 — 구역은 사격의 시행이 밟는다(10-19 맥 43f89a45: 115 201 회).
+    ok = not moved and res.converged and hits > 0
     if not ok:
-        fails.append("교란-불변이 깨졌다 — 수렴한 해가 초이온 예측 구역의 ice_x 값에 의존하기 "
-                     "시작했다: " + (", ".join(moved) if moved else "converged=False")
-                     + ". 무엇이 시험 회랑의 결과를 답에 연결했는지 추적하라 (브리프 34 A2)")
-    print(f"  [{'PASS' if ok else 'FAIL'}] 교란-불변 ({dt:.0f} s): 구역(>355 GPa · <1800 K) 밀도 +5 % "
-          f"에서도 천왕성 해가 앵커와 비트 동일 — 수렴한 해는 그 구역에 무관 (A2, 브리프 34)")
-
+        fails.append("교란-불변이 깨졌다 — " + ("민 구역을 풀이가 한 번도 안 읽었다(교란이 닿지 않아 검사가 빈다)" if hits == 0 else
+                     "수렴한 해가 초이온 예측 구역의 ice_x 값에 의존하기 시작했다: " + (", ".join(moved) if moved else "converged=False")
+                     + ". 무엇이 시험 회랑의 결과를 답에 연결했는지 추적하라 (브리프 34 A2)"))
+    print(f"  [{'PASS' if ok else 'FAIL'}] 교란-불변 ({dt:.0f} s): 구역(>355 GPa · <1800 K) 밀도 +5 % ({hits} 회 읽힘) "
+          f"에서도 천왕성 해가 같은 트리의 안 민 풀이와 비트 동일 — 수렴한 해는 그 구역에 무관 (A2, 브리프 34)")
+    # 심은 음성 — 같은 민 장치 · 같은 대조를 수렴한 해가 실제로 지나는 재료(뜨거운 물 `h2o_hot`, 355 GPa 위)에 걸면
+    #   해가 움직여야 한다. 안 움직이면 대조가 눈을 감은 것이다(10-19 맥: 수렴점 적분이 h2o_hot 을 820 GPa 까지 읽고 ice_x 는 안 읽는다).
+    t0 = time.perf_counter()
+    neg, neg_hits = bumped_solve(_eos.MATERIALS["h2o_hot"], lambda self, p, t: p > 355e9)
+    dt = time.perf_counter() - t0
+    neg_moved = moved_from(neg) if neg.applicable else ["(거절)"]
+    ok = bool(neg_moved) and neg_hits > 0
+    if not ok:
+        fails.append(f"교란-불변 음성: 지나는 재료(h2o_hot > 355 GPa)를 +5 % 밀어도 해가 비트 동일 — 대조가 변화를 못 잡는다 "
+                     f"({neg_hits} 회 읽힘)")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 교란-불변 음성 ({dt:.0f} s): h2o_hot > 355 GPa +5 % ({neg_hits} 회 읽힘) 는 해를 "
+          f"움직인다 — {', '.join(neg_moved) or '없음'}")
 
 def main() -> int:
     if "--price" in sys.argv:
@@ -1011,8 +1044,8 @@ def main() -> int:
         _fast(frozen, fails)
     else:
         _fingerprint(frozen, fails, full=True)
-        _live(frozen, fails)
-        _clamp_invariance(frozen, fails)
+        solved = _live(frozen, fails)
+        _clamp_invariance(frozen, fails, solved)
         # 가드 행 센서스 H1 (2026-10-06) — C5 선언 두 행은 `--fast` 에서만 불려 게이트(전체 모드)가 한 번도 안 돌렸다.
         #   굳힌 수렴점에서 적분 두 번(초 단위)이라 전체 모드에도 싣는다.
         _declarations(frozen, fails)
