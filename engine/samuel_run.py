@@ -457,10 +457,23 @@ def switch_branch(s: Setup, y: list, t_gyr: float, ev: ft.Lost) -> None:
     s.track = track_at(s, t_c, t_m, d_l, t_l, None, d_u1, d_b1)
 
 
+def tc_tb_sign(rows: list) -> dict:
+    """The sign of T_c − T_b over the accepted rows (directing 10-19, the gain-cap decision: a cap is needed only if
+    it changes): the count of sign changes between consecutive rows, the least |T_c − T_b| and its time, the rows."""
+    gaps = [(r["t"], r["t_c"] - r["t_b"]) for r in rows if r.get("t_b") is not None]
+    changes = sum(1 for (_, a), (_, b) in zip(gaps, gaps[1:]) if (a > 0) != (b > 0))
+    t_min, g_min = min(gaps, key=lambda z: abs(z[1])) if gaps else (None, None)
+    return {"rows": len(gaps), "sign_changes": changes, "min_abs_k": None if g_min is None else abs(g_min),
+            "min_at_gyr": t_min}
+
+
 def _refused_fields(s) -> dict:
     """A refused run's events, read from the stack as a finished run reports them (r2 on the gain-cap PC run: a
     refused result carried none). cap_events / cap_straddles where the stack keeps them."""
     out = {"fold_events": list(s.fold_events), "fold_rejected": list(s.fold_rejected)}
+    rows = getattr(s, "_rows", None)
+    if rows is not None:
+        out["tc_tb_sign"] = tc_tb_sign(rows)
     for k in ("cap_events", "cap_straddles"):
         if hasattr(s, k):
             out[k] = list(getattr(s, k))
@@ -493,6 +506,7 @@ def run(s: Setup, cap_myr: float) -> dict:
     lid.start(y[2], t_l0)
     grad = (st.T_SURFACE_K - t_l0) / y[2]
     rows = []
+    s._rows = rows                               # read by _refused_fields (a refused run's T_c − T_b log)
     t = t0
     n = 0
     h_min = None
@@ -599,7 +613,7 @@ def run(s: Setup, cap_myr: float) -> dict:
             "guard_stage_hits": list(s.guard_stage_hits), "guard_iter_hits": list(s.guard_iter_hits),
             "fixed_point_limit_hits": list(s.fixed_point_limit_hits),
             "multi_root_evals": s.multi_root_evals, "root_jumps": list(s.root_jumps), "root_notes": list(s.root_notes),
-            "fold_events": list(s.fold_events), "fold_rejected": list(s.fold_rejected),
+            "fold_events": list(s.fold_events), "fold_rejected": list(s.fold_rejected), "tc_tb_sign": tc_tb_sign(rows),
             "path_checks": list(s.path_checks), "remesh_loss_j": remesh_loss,
             "layer": None if s.layer_grid is None else {
                 "describe": s.layer_grid.describe(), "margin": s.layer_grid.margin,
