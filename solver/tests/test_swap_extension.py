@@ -141,6 +141,15 @@ class ReachZeroEnds(unittest.TestCase):
             j = self.v.s_path(q * math.exp(1e-9), T_STEP).v - self.v.s_path(q * math.exp(-1e-9), T_STEP).v
             self.assertGreater(abs(j), 1e-3, q)
 
+    def test_a_row_step_never_carries_a_coexistence_hook(self):
+        # r2 b4d0c0f4 n1: a row step is the read's weighted artefact past a curve's end, not a univariant crossing at
+        # that T, so it carries no latent heat; the coexistence segment (reg-coexistence §3.3: a `coexist` factory on
+        # each cut swap run) must never attach to it. Today no event has a hook; this pins the row steps' curve dicts
+        # to {form, id}, so a hook added to them is red here
+        self.assertTrue(self.steps)
+        for e in self.steps:
+            self.assertEqual(set(e), {"form", "id"}, e)
+
     def test_no_events_is_red(self):
         # the mutant: no row-step events; a step of the read is then where no event is
         from unittest import mock
