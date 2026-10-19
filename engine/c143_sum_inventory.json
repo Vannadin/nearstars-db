@@ -140,6 +140,11 @@
 "sum((w / m.rho_seed(mass_kg) for m, w in self.parts if w > 0.0))"
 ],
 [
+"engine/fold_track.py",
+"carry_summary",
+"sum((1 for *_r, n in log if n > 1))"
+],
+[
 "engine/interior.py",
 "_dp",
 "sum((DP45_B4[i] * ks[i][j] for i in range(7)))"
@@ -288,6 +293,11 @@
 "engine/samuel_run.py",
 "a_layer",
 "sum(((at(rows, 't_m', tt) - v) ** 2 for tt, v in winm))"
+],
+[
+"engine/samuel_run.py",
+"tc_tb_sign",
+"sum((1 for (_, a), (_, b) in zip(gaps, gaps[1:]) if (a > 0) != (b > 0)))"
 ],
 [
 "engine/stagnant_lid.py",
@@ -478,6 +488,11 @@
 "engine/test_tidal_response.py",
 "main",
 "sum((lay.mass for lay in ocean))"
+],
+[
+"engine/thermal_stack.py",
+"tc_tb_sign",
+"sum((1 for (_, a), (_, b) in zip(gaps, gaps[1:]) if (a > 0) != (b > 0)))"
 ],
 [
 "engine/tidal_response.py",
