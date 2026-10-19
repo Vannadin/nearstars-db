@@ -430,6 +430,11 @@ def _view(rid):
     return ma.view(thaw(reg.get(rid)), reg.tables[rid], 1600.0)
 
 
+def _ma():
+    from solver import material_assemblage as ma
+    return ma
+
+
 def _stamp():
     import hashlib
     import subprocess
@@ -500,7 +505,8 @@ def document(v, per_cell):
     jumps = [j for c in per_cell.values() for smp in c for j in smp["swap_jumps"]]
     g_stops, g_exc = gate(v, jumps)
     unscreened = [u for c in per_cell.values() for smp in c for u in smp["unscreened"]]
-    return {"record": v.material_id, "ps": list(v.ps), "ts": list(v.ts), "stamp": _stamp(),
+    return {"record": v.material_id, "ps": list(v.ps), "ts": list(v.ts),
+            "stamp": {**_stamp(), "record_sha256": v.record["assemblage"]["sha256"], "read_blob": _ma().read_blob()},
             "sets": {str(k): s for k, s in sets_from(v, per_cell).items()},
             "unrecovered": [u for c in per_cell.values() for smp in c for u in smp["unrecovered"]],
             # every STOP: the samples' own (net fall, unresolved, a refusal inside a fall search) and the swap gate's
@@ -531,7 +537,7 @@ def setup(argv):
 
 
 def identity(argv):
-    return {"record": argv[0], **_stamp()}
+    return {"record": argv[0], **_stamp(), "read_blob": _ma().read_blob()}   # parts of one build share one read
 
 
 def run(payload):

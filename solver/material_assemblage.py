@@ -1008,6 +1008,13 @@ class _Run(tuple):
 #: (rho_fall_build.py). False, or no set file: rowblend's read alone (the negative control)
 RHO_BRIDGE = os.environ.get("NS_RHO_BRIDGE", "1") != "0"     # PROTOTYPE switch for the paired measurements
 FALL_SETS_DIR = os.environ.get("NS_FALL_SETS")
+
+
+def read_blob():
+    """The git blob of this module as loaded: a fall-set file is built on one read and loads only on it (r2 on the
+    swap-extension records: sets keyed by id and nodes alone loaded silently on regenerated records)."""
+    data = open(__file__, "rb").read()
+    return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
 SWAP_EPS = 1e-9          # ln P: a split interval's end, this far from the landed swap on x's side (rho_fall_build's)
 BLEND_SHARP = MappingProxyType({"rho": 1.0, "dtdp_eq": 2.0, "c_p": 2.0, "s": 1.0})   # s: κ 1, as ρ (s-read §3.1)
 
@@ -2072,6 +2079,14 @@ class AssemblageView(mv.RecordView):
                     d = json.loads(path.read_text(encoding="utf-8"))
                     if d.get("record") != self.material_id or d.get("ps") != list(self.ps) or d.get("ts") != list(self.ts):
                         raise TableStop(f"fall-set file {path.name} does not match this record's table", check="fall sets")
+                    stamp = d.get("stamp") or {}
+                    if stamp.get("record_sha256") != self.record["assemblage"]["sha256"]:
+                        raise TableStop(f"fall-set file {path.name} was built on record sha256 "
+                                        f"{stamp.get('record_sha256')!r}, not this record's "
+                                        f"{self.record['assemblage']['sha256']}", check="fall sets")
+                    if stamp.get("read_blob") != read_blob():
+                        raise TableStop(f"fall-set file {path.name} was built on read blob {stamp.get('read_blob')!r}, "
+                                        f"not this read's {read_blob()}", check="fall sets")
                     if d.get("stops"):                   # r2 n3: a build with STOPs ships no sets
                         raise TableStop(f"fall-set file {path.name} carries {len(d['stops'])} build STOP(s)",
                                         check="fall sets")
