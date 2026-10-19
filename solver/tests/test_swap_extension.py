@@ -2,6 +2,7 @@
 """The read's half of the swap-extension registration (frozen 8402255e; r2's addenda, with the Q2 ruling: reach 0 only
 at a swap curve's true outer ends, an interior check and its mutant)."""
 import copy
+import math
 import unittest
 
 from solver import material_assemblage as ma
@@ -80,6 +81,69 @@ class SwapExtensionRead(unittest.TestCase):
         self.assertEqual(c.p_b(850.0), 5e9 + 4e6 * 150.0)
         self.assertIsNone(c.p_b_ext(900.0, 100.0))       # past the last certified row: reach 0
 
+
+
+BSE = "silicate_slb_default_bse"
+T_STEP = 1568.5                      # in the cell [1550, 1600], next to swap277's reach-0 end at 1600 K
+
+
+def _bse_view():
+    from solver import material_registry as mr
+    from solver.tests import test_assemblage_c1 as tc
+    reg = mr.load()
+    if BSE not in reg.tables or "extension" not in reg.tables[BSE].get("boundaries", {}):
+        raise unittest.SkipTest("the regenerated bse record (with the extension block) is not shipped here")
+    return tc._view(reg, BSE)
+
+
+class ReachZeroEnds(unittest.TestCase):
+    """Post-freeze note 1 (r2 2c9018f3, addendum 1 ff656fed): past a reach-0 end, an outer stencil row holding the
+    curve is dropped; the one remaining step is at P_b(T_end), with the swap's sign, and is landed."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.v = _bse_view()
+        cls.c = next(c for c in cls.v._cut if c.kind == "swap" and c.t0 == 1600.0 and c.stop_lo)
+
+    def jump(self, p, field="rho"):
+        lo, hi = p * math.exp(-1e-9), p * math.exp(1e-9)
+        if field == "s":
+            return self.v.s_path(hi, T_STEP).v - self.v.s_path(lo, T_STEP).v
+        return self.v.state(hi, T_STEP)[0] - self.v.state(lo, T_STEP)[0]
+
+    def test_no_step_at_the_outer_row_own_p_b(self):
+        # before the fix: ρ −0.63 kg/m³ here (row 1650's +47.9 through a negative cubic weight)
+        p = self.c.p_b(1650.0)                           # row 1650's own P_b (23.3415 GPa, a P node)
+        self.assertLess(abs(self.jump(p)), 1e-3)
+        self.assertLess(abs(self.jump(p, "s")), 1e-4)
+
+    def test_the_landed_step_has_the_swap_sign(self):
+        pb = self.c.p_b(1600.0)
+        self.assertGreater(self.jump(pb), 1.0)            # the 660: ρ rises across it
+
+    def test_keeping_the_outer_row_is_red(self):
+        from unittest import mock
+        v = _bse_view()
+        p = self.c.p_b(1650.0)
+        with mock.patch.object(type(v), "_end_drop", lambda self, k, ib, sides: False):
+            self.assertLess(v.state(p * math.exp(1e-9), T_STEP)[0] - v.state(p * math.exp(-1e-9), T_STEP)[0], -0.1)
+
+    def test_the_event_is_the_read_s_step(self):
+        i = self.v._events.index(self.c)
+        bp = lambda t: self.v.boundary_pressure({"form": "assemblage_curve", "id": i}, t)
+        self.assertEqual(bp(T_STEP), self.c.p_b(1600.0))    # the cell next to the end: landed at P_b(T_end)
+        self.assertIsNone(bp(1540.0))                        # the second cell: no step, no event
+        self.assertIsNone(bp(1550.0))                        # the end row's weight is 0 at the far node
+        # the read's discontinuity sits where the event says: bisect the ρ jump
+        lo, hi = math.log(self.c.p_b(1600.0)) - 1e-3, math.log(self.c.p_b(1600.0)) + 1e-3
+        r = lambda x: self.v.state(math.exp(x), T_STEP)[0]
+        for _ in range(60):
+            mid = 0.5 * (lo + hi)
+            if r(mid) - r(lo) > 0.5 * (r(hi) - r(lo)):
+                hi = mid
+            else:
+                lo = mid
+        self.assertAlmostEqual(math.exp(hi) / bp(T_STEP), 1.0, delta=1e-9)
 
 if __name__ == "__main__":
     unittest.main()
