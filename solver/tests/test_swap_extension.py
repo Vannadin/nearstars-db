@@ -97,8 +97,9 @@ def _bse_view():
 
 
 class ReachZeroEnds(unittest.TestCase):
-    """Post-freeze note 1 (r2 2c9018f3, addendum 1 ff656fed): past a reach-0 end, an outer stencil row holding the
-    curve is dropped; the one remaining step is at P_b(T_end), with the swap's sign, and is landed."""
+    """Post-freeze note 1 (r2 2c9018f3, addenda 1 ff656fed and 2 705a59e9): past a reach-0 end every row holding the
+    curve takes its side against P_b(T_end), and a node past the end leaves the end row out of its T slope; the one
+    remaining step is at P_b(T_end), with the swap's sign, and is landed."""
 
     @classmethod
     def setUpClass(cls):
@@ -121,11 +122,13 @@ class ReachZeroEnds(unittest.TestCase):
         pb = self.c.p_b(1600.0)
         self.assertGreater(self.jump(pb), 1.0)            # the 660: ρ rises across it
 
-    def test_keeping_the_outer_row_is_red(self):
+    def test_the_own_geometry_fallback_is_red(self):
+        # the mutant: no forced side and no node exclusion past a reach-0 end (the pre-fix read)
         from unittest import mock
         v = _bse_view()
         p = self.c.p_b(1650.0)
-        with mock.patch.object(type(v), "_end_drop", lambda self, k, ib, sides: False):
+        with mock.patch.object(type(v), "_node_excl", lambda self, ib: None), \
+                mock.patch.object(type(v), "_side_pb", lambda self, c, t: c.p_b_ext(t, self._reach)):
             self.assertLess(v.state(p * math.exp(1e-9), T_STEP)[0] - v.state(p * math.exp(-1e-9), T_STEP)[0], -0.1)
 
     def test_the_event_is_the_read_s_step(self):
