@@ -990,6 +990,7 @@ class _Run(tuple):
 #: (rho_fall_build.py). False, or no set file: rowblend's read alone (the negative control)
 RHO_BRIDGE = os.environ.get("NS_RHO_BRIDGE", "1") != "0"     # PROTOTYPE switch for the paired measurements
 FALL_SETS_DIR = os.environ.get("NS_FALL_SETS")
+SWAP_EPS = 1e-9          # ln P: a split interval's end, this far from the landed swap on x's side (rho_fall_build's)
 BLEND_SHARP = MappingProxyType({"rho": 1.0, "dtdp_eq": 2.0, "c_p": 2.0, "s": 1.0})   # s: κ 1, as ρ (s-read §3.1)
 
 #: the bump's length past an open run end, in units of the end segment's width (item 5d998d40: the smallest of the
@@ -2060,16 +2061,29 @@ class AssemblageView(mv.RecordView):
         """PROTOTYPE (68 design rev 3): ρ at (x, T), T in the cell [T_i, T_i+1] (i = ib). For k ∈ {i, i + 1}, ρ_k is the
         monotone Hermite through R's states at the ends of the S_k interval holding x (_fall_bridge), or R itself when
         none does; ρ = (1 − θ)·ρ_i + θ·ρ_i+1, θ the smoothstep of τ = (T − T_i)/(T_i+1 − T_i). In no interval of either
-        set: `own`, bit for bit."""
+        set: `own`, bit for bit. An interval holding a cut swap's P_b(T) is split at it (68 addendum 1)."""
         sets = self._fall_set_load()
         if not sets:
             return own
         pieces = []
+        swaps = None
         for k in (ib, ib + 1):
             got = None
             for a, b in sets.get(k, ()):
                 if a < x < b:
-                    got = self._fall_bridge(x, t, ib, a, b)
+                    # 68 addendum 1: a landed swap is never bridged — an interval holding a swap's P_b(T) is split there
+                    # and x's own side repaired alone, its end read one SWAP_EPS off the swap on x's side
+                    if swaps is None:
+                        swaps = [_log(pe) for c in self._cut if c.kind == "swap"
+                                 for pe in (c.p_b_ext(t, self._reach),) if pe is not None]
+                    lo_, hi_ = a, b
+                    for xs_ in swaps:
+                        if lo_ < xs_ <= x:
+                            lo_ = xs_ + SWAP_EPS
+                        elif x < xs_ < hi_:
+                            hi_ = xs_ - SWAP_EPS
+                    if lo_ < x < hi_:
+                        got = self._fall_bridge(x, t, ib, lo_, hi_)
                     break
             pieces.append(got)
         if pieces[0] is None and pieces[1] is None:
