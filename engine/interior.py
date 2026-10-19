@@ -2896,11 +2896,12 @@ def _fold_answer(att: dict, cross, a: dict, extra_note: str = ""):
     info = {"turning": [(math.exp(t[2]), math.exp(t[1]) / 1e9, t_pot * math.exp(t[3])) for t in w.turning],
             "length": (w.points[-1][0] - w.points[0][0]) if w.points else 0.0, "evals": w.evals, "cpu": att["cpu"],
             "crossings": len(w.crossings), "states": len(att["states"]), "band": band, "e_ts": att["e_ts"],
-            "seed": att["seed"], "extra": extra_note}
+            "seed": att["seed"], "extra": extra_note, "y": {k: f(st) for k, f in FOLD_FIELDS.items()}}
     if not FOLD_DOUBLED[0]:
         dbl = _fold_doubled(a)
         info["doubled"] = dbl
-        if "not_measured" not in band and "refused" not in dbl:
+        # 지휘석 10-19: 수렴한 두 배 풀이만 실어 보내는 띠에 들어간다 — 안 수렴한 y 는 «did not converge» 메모로만
+        if "not_measured" not in band and "refused" not in dbl and dbl.get("converged"):
             info["shipped"] = {k: max(b, abs(dbl[k] - FOLD_FIELDS[k](st))) for k, b in band.items()}
     _FOLD_INFO[id(st)] = info
     return st, True
@@ -2993,6 +2994,17 @@ def fold_note(info: dict) -> list:
     band = info["band"]
     if "not_measured" in band:
         notes.append(f"core_fold_band — R1 not measured: {band['not_measured']} — 등급은 그대로 한 단계 내림")
+        # 지휘석 10-19: R1 이 없으면 실어 보내는 띠도 없다 — 두 배 풀이의 이동은 R2 항 하나라 아래 한계로만 적는다(어느 갈래도 «실어 보내는 띠» 아님)
+        dbl = info.get("doubled")
+        if dbl is not None and "refused" in dbl:
+            notes.append("core_fold_band — shipped band not measured: R1 not measured and the doubled solve refused ("
+                         + dbl["refused"][:120] + ")")
+        elif dbl is not None and not dbl.get("converged"):
+            notes.append("core_fold_band — shipped band not measured: R1 not measured and the doubled solve did not converge")
+        elif dbl is not None:
+            notes.append("core_fold_band — shipped band not measured: R1 not measured (" + band["not_measured"][:120]
+                         + "); |doubled STEPS shift| (R2 only, a lower bound) "
+                         + " · ".join(f"{k} ±{abs(dbl[k] - y):.4g}" for k, y in info["y"].items()))
     else:
         notes.append("core_fold_band — R1 b_y = |dy/ds|·e_s (e_Ts " + f"{info['e_ts']:g} K): "
                      + " · ".join(f"{k} ±{v:.4g}" for k, v in band.items())
@@ -3008,6 +3020,9 @@ def fold_note(info: dict) -> list:
         notes.append("core_fold_band — shipped band not measured: the doubled-STEPS solve refused ("
                      + info["doubled"]["refused"][:120] + "); b_y (R1 only, a lower bound) "
                      + " · ".join(f"{k} ±{v:.4g}" for k, v in band.items()))
+    elif "doubled" in info and not info["doubled"].get("converged") and "not_measured" not in band:
+        notes.append("core_fold_band — shipped band not measured: the doubled-STEPS solve did not converge; "
+                     "b_y (R1 only, a lower bound) " + " · ".join(f"{k} ±{v:.4g}" for k, v in band.items()))
     if info.get("extra"):
         notes.append(info["extra"])
     return notes

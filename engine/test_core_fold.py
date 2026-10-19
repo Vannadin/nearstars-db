@@ -335,5 +335,47 @@ check("the note names the refused doubled solve and labels b_y a lower bound (R1
 check("68's mutant: nothing presents b_y as the shipped band (no «실어 보내는 띠», no «shipped band =»)",
       not any("실어 보내는 띠" in n or "shipped band =" in n for n in notes_r))
 
+print("(14b/14c) directing 10-19: R1 not measured — the doubled shift is a lower bound, never the shipped band")
+y0 = {"T_c [K]": 3000.0, "R [km]": 3390.0}
+info_b = dict(info, y=y0, doubled={"STEPS": 3000, "converged": True, "T_c [K]": 3000.25, "R [km]": 3389.9})
+nb_ = [n for n in interior.fold_note(info_b) if "shipped band not measured" in n]
+check("14b: R1 not measured, doubled converged — «R1 not measured (<why>); |doubled STEPS shift| (R2 only, a lower bound)»",
+      len(nb_) == 1 and nb_[0].startswith("core_fold_band — shipped band not measured: R1 not measured (" + raise_band["not_measured"][:40])
+      and nb_[0].endswith("|doubled STEPS shift| (R2 only, a lower bound) T_c [K] ±0.25 · R [km] ±0.1"), str(nb_)[:200])
+info_c = dict(info, y=y0, doubled={"STEPS": 3000, "refused": "적분이 실패했다 — 가짜 2"})
+nc_ = [n for n in interior.fold_note(info_c) if "shipped band not measured" in n]
+check("14c: both fail — «R1 not measured and the doubled solve refused (<why>)»",
+      nc_ == ["core_fold_band — shipped band not measured: R1 not measured and the doubled solve refused (적분이 실패했다 — 가짜 2)"],
+      str(nc_)[:200])
+info_d = dict(info, y=y0, doubled={"STEPS": 3000, "converged": False, "T_c [K]": 3001.0, "R [km]": 3389.0})
+nd_ = [n for n in interior.fold_note(info_d) if "shipped band not measured" in n]
+check("14c′: doubled solve unconverged — named, no shift printed",
+      nd_ == ["core_fold_band — shipped band not measured: R1 not measured and the doubled solve did not converge"], str(nd_)[:200])
+
+
+def presents_lower_bound_as_shipped(notes):
+    """A note set with no shipped band (R1 or R2 missing) must never carry the shipped-band wording."""
+    return any("실어 보내는 띠" in n or "shipped band =" in n or "shipped band:" in n for n in notes)
+
+
+for tag, inf in (("14", info_r), ("14b", info_b), ("14c", info_c), ("14c′", info_d)):
+    check(f"{tag}: nothing presents a lower bound as the shipped band", not presents_lower_bound_as_shipped(interior.fold_note(inf)))
+mutant = [n.replace("shipped band not measured: R1 not measured (", "실어 보내는 띠 (") for n in interior.fold_note(info_b)]
+check("mutant (14b's line reworded as the shipped band) is caught by that check", presents_lower_bound_as_shipped(mutant))
+info_s = dict(info_b, band={"T_c [K]": 0.05, "R [km]": 0.01}, shipped={"T_c [K]": 0.25, "R [km]": 0.1})
+check("control: a measured R1 with a converged doubled solve does carry the shipped band",
+      presents_lower_bound_as_shipped(interior.fold_note(info_s)))
+
+print("(14d) directing 10-19: an unconverged doubled solve never enters «shipped» (R1 measured)")
+info_u = dict(info, y=y0, band={"T_c [K]": 0.05}, doubled={"STEPS": 3000, "converged": False, "T_c [K]": 3001.0})
+nu_ = [n for n in interior.fold_note(info_u) if "shipped band not measured" in n]
+check("14d: the note names the unconverged doubled solve and labels b_y a lower bound",
+      nu_ == ["core_fold_band — shipped band not measured: the doubled-STEPS solve did not converge; "
+              "b_y (R1 only, a lower bound) T_c [K] ±0.05"], str(nu_)[:200])
+check("14d: nothing presents a lower bound as the shipped band", not presents_lower_bound_as_shipped(interior.fold_note(info_u)))
+src_ans = inspect.getsource(interior._fold_answer)
+check("14d: _fold_answer builds «shipped» only from a converged doubled solve (the wiring)",
+      'and dbl.get("converged"):' in src_ans and 'info["shipped"]' in src_ans)
+
 print(f"test_core_fold: {'모두 통과' if not fails else f'FAIL {fails}'}")
 sys.exit(1 if fails else 0)
