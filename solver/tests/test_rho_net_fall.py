@@ -60,8 +60,8 @@ class Rule1Widens(unittest.TestCase):
         # R dips 1e-3 below R(a′) at b′ = 2 and rises at 0.01 per ln P: it regains at 2.1
         r = lambda x: 1000.0 - 1e-3 + 0.01 * (x - 2.0)   # noqa: E731
         g = lambda x: (r(x), 0.01 / r(x))                 # noqa: E731
-        got, why = rb._widen(g, g, 1.0, 2.0, 1000.0, 3.0, 0.01)
-        self.assertIsNone(why)
+        got, refused = rb._widen(g, g, 1.0, 2.0, 1000.0, 3.0, 0.01)
+        self.assertFalse(refused)
         self.assertAlmostEqual(got, 2.1, places=9)
         self.assertGreaterEqual(r(got), 1000.0)           # the end that holds: R(b′) ≥ R(a′) exactly
 
@@ -69,7 +69,7 @@ class Rule1Widens(unittest.TestCase):
         # the regain lies past the bound (a landed step's near side at 2.05): no widening
         r = lambda x: 1000.0 - 1e-3 + 0.01 * (x - 2.0)   # noqa: E731
         g = lambda x: (r(x), 0.01 / r(x))                 # noqa: E731
-        self.assertEqual(rb._widen(g, g, 1.0, 2.0, 1000.0, 2.05, 0.01), (None, "bound"))
+        self.assertEqual(rb._widen(g, g, 1.0, 2.0, 1000.0, 2.05, 0.01), (None, False))
 
     def test_falls_at_widens_a_net_fall(self):
         # R = 1000 + 0.004·cos(π(x − 2)) on a fake read (no swaps): the fall from the max at 2 regains near 4, widened
@@ -84,7 +84,7 @@ class Rule1Widens(unittest.TestCase):
         self.assertGreaterEqual(r(w["b"]), r(w["a"]))
         self.assertIn((w["a"], w["b"]), [(a, b) for a, b, _a, _c in iv])
         with mock.patch.object(rb, "_reader", lambda v, t, ib, un: g), mock.patch.object(rb, "_widen",
-                                                                                        lambda *a: (None, "bound")):
+                                                                                        lambda *a: (None, False)):
             _iv, _un, stops2, _fl, _sj, _ex = rb.falls_at(Fake(), 0.0, 0, 1.2, 5.6)
         self.assertEqual([s_["bound"] for s_ in stops2], ["the window's end"])   # the mutant (no widening): STOP
 
