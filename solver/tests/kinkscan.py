@@ -198,19 +198,24 @@ def scan(v, p_lines=(), t_lines=(), n=4000):
     x_lo, x_hi = math.log(v.ps[0]), math.log(v.p_dataset)
     with _instrumented(v, probe):
         for t in p_lines:
-            sw = [math.log(q) for c in v._cut if c.kind == "swap" and (q := c.p_b_ext(t, v._reach)) is not None]
+            sw = [math.log(q) for c in v._cut if c.kind == "swap"
+                  and (q := c.p_b_ext(t, v._reach) or (v._end_step(c, t) if hasattr(v, "_end_step") else None))
+                  is not None]                           # with a reach-0 end's landed step (swap extension note 1)
             h = (x_hi - x_lo) / n
             for x, fi, r, cl, w in line(lambda x: read(math.exp(x), t), lambda x, fi: state(math.exp(x), t, fi),
                                         x_lo, x_hi, n, 1e-6, 1e-5):
                 if not any(abs(x - s) < 2 * h for s in sw):
                     out.append({"line": "P", "P": math.exp(x), "T": t, "field": FIELDS[fi], "jump_rel": r, "class": cl,
                                 "width": w})
+        fades = v.curve_end_fades() if hasattr(v, "curve_end_fades") else ()
         for p in t_lines:
             m = max(len(v.ts) * 20, 400)
             for tq, fi, r, cl, w in line(lambda t: read(p, t), lambda t, fi: state(p, t, fi), v.ts[0], v.ts[-1], m,
                                          1e-4, 1e-3):
                 sw = [math.log(q) for c in v._cut if c.kind == "swap" and (q := c.p_b_ext(tq, v._reach)) is not None]
                 if not any(abs(math.log(p) - s) < 1e-4 for s in sw):
+                    if cl == "T row line" and any(abs(tq - te) < 1e-3 and p > pe for te, pe, _side in fades):
+                        cl = "curve-end fade"
                     out.append({"line": "T", "P": p, "T": tq, "field": FIELDS[fi], "jump_rel": r, "class": cl,
                                 "width": w})
     return out
@@ -237,5 +242,7 @@ def violations(kinks, rid, full=False):
     n_clip = sum(k["class"] == "clip (T)" for k in kinks)
     if full and n_clip > 2 * CLIPS[rid]:
         out.append({"class": "clip (T)", "count": n_clip, "declared": CLIPS[rid]})
-    return out + [k for k in kinks if k["class"] != "narrow-loop ramp"
+    # «curve-end fade» (swap extension note 1, rule (J)): the T kink at a reach-0 swap end's T row, above its P_b; C⁰,
+    # landed as a T event, sized per end and disclosed (no bound: r2 addendum 3)
+    return out + [k for k in kinks if k["class"] not in ("narrow-loop ramp", "curve-end fade")
                   and (k["class"] not in BOUNDS or k["jump_rel"] > BOUNDS[k["class"]][k["field"]])]
