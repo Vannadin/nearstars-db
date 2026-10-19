@@ -8,8 +8,9 @@ its 50 neighbouring cells (and a round-off floor of 1e-12·|y|); each candidate 
 value seam (|Δy| at ±1e-9·P > 1e-6 K, or 1e-6 relative for dT/dP), a slope seam (one-sided slopes over 1e-6·P differ by
 > 1e-3 relative), or dropped. Every seam found must lie within 1e-6 relative of eos.melt_curve_seams() (the curves) or of
 that set ∪ the material's own phase bounds (the dT/dP scan, which reads the solid part too), and every listed seam must
-be found. Positive controls: the five known seams (20 slope, 140 value both variants, the Deng crossing ≈ 173.6 slope,
-200 value; 23.83 GPa in the dT/dP scan) and a planted 1 K step and 1 % kink; negative control: a smooth curve.
+be found. Positive controls: the known seams (20 slope, 140 value both variants, the Deng crossing ≈ 173.6 slope;
+23.83 GPa in the dT/dP scan) and a planted 1 K step and 1 % kink; negative controls: a smooth curve, and 200 GPa (no
+longer a seam: Deng ppv runs to 500 GPa, owner 2026-10-19 — a seam found there is an «extra»).
 """
 from __future__ import annotations
 

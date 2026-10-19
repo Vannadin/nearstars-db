@@ -16,8 +16,9 @@ import eos
 from eos import (silicate_solidus, silicate_liquidus, silicate_melt_fraction,
                  silicate_melt_refusal, _silicate_melt_point, _simon_pa,
                  MONTEUX_SOL_LOW, MONTEUX_LIQ_LOW, MONTEUX_SOL_HIGH,
-                 MONTEUX_LIQ_A, MONTEUX_LIQ_F, DENG_BDG, DENG_PPV, FEI_UPPER,
-                 SILICATE_MELT_DH, SILICATE_MELT_POINT_WIDTH, MATERIALS, GPA, DENG_SWITCH_PA)
+                 MONTEUX_LIQ_A, MONTEUX_LIQ_F, DENG_BDG, DENG_PPV, FEI_UPPER, FEI_LOWER,
+                 SILICATE_MELT_DH, SILICATE_MELT_POINT_WIDTH, MATERIALS, GPA, DENG_SWITCH_PA,
+                 silicate_melt_grade)
 
 
 def main() -> int:
@@ -33,6 +34,7 @@ def main() -> int:
     bdg = lambda g: DENG_BDG[0] * ((g - DENG_BDG[1]) / DENG_BDG[2] + 1) ** (1 / DENG_BDG[3])
     ppv = lambda g: DENG_PPV[0] * ((g - DENG_PPV[1]) / DENG_PPV[2] + 1) ** (1 / DENG_PPV[3])
     fei = lambda g: FEI_UPPER[0] * (g / FEI_UPPER[1]) ** FEI_UPPER[2]
+    fei_lo = lambda g: FEI_LOWER[0] * (g / FEI_LOWER[1]) ** FEI_LOWER[2]
     for g, tab in [(20, 2875), (40, 4000), (75, 5000), (120, 5750), (160, 6250)]:
         ok(abs(bdg(g) - tab) <= 50.0,
            f"1: Deng bdg {g} GPa — 적합 {bdg(g):.1f} 이 Table I {tab} 에서 ±50 K 밖")
@@ -41,7 +43,18 @@ def main() -> int:
            f"1: Deng ppv {g} GPa — 적합 {ppv(g):.1f} 이 Table I {tab} 에서 ±50 K 밖")
     ok(abs(ppv(500.0) - 9376.0) < 1.0,
        f"1: Deng 인쇄 외삽점 재현 실패 — {ppv(500.0):.1f} ≠ 9376 (전사가 틀어졌다)")
-    ok(abs(fei(140.0) - 6295.0) < 1e-9, "1: Fei 상계가 자기 앵커(140 GPa, 6295 K)를 안 낸다")
+    # Fei+ 2021 p. 5 의 두 곡선은 사슬이 아니라 괄호다 (오너 2026-10-19, r2 cb6cc923): 200–500 GPa 모든 P 에서
+    #   사슬(Deng ppv 외삽)이 그 사이에 든다. 인쇄 표(r2): 200 GPa 6583 < 6752 < 7049, 500 GPa 8354 < 9377 < 9424.
+    br = [(g, fei_lo(g), _silicate_melt_point(g * GPA), fei(g)) for g in [200.0 + 0.5 * i for i in range(601)]]
+    out = [(g, round(lo), round(t), round(hi)) for g, lo, t, hi in br if not lo < t < hi]
+    ok(not out, f"1: 200–500 GPa 사슬이 Fei+ 2021 괄호 밖 — {out[:4]}")
+    for g, lo, t, hi in [(200.0, 6583, 6752, 7049), (500.0, 8354, 9377, 9424)]:
+        ok(abs(fei_lo(g) - lo) < 1.0 and abs(_silicate_melt_point(g * GPA) - t) < 1.0 and abs(fei(g) - hi) < 1.0,
+           f"1: {g:.0f} GPa 괄호 (Fei 하계, 사슬, Fei 상계) = ({fei_lo(g):.0f}, {_silicate_melt_point(g * GPA):.0f}, "
+           f"{fei(g):.0f}), r2 표 ({lo}, {t}, {hi})")
+    ok(silicate_melt_grade(199e9) == ("ok", "") and silicate_melt_grade(201e9)[0] == "graded-extrapolation"
+       and "Fei+ 2021" in silicate_melt_grade(300e9)[1] and silicate_melt_grade(501e9)[0] == "refused",
+       "1: 녹는 곡선 등급 — 200 GPa 위 graded-extrapolation (Fei 괄호 이름), 500 GPa 위 refused")
     # Monteux 20 GPa 조인: 리퀴더스 셋 0.040 K, 솔리더스 1.002 K — 그리고 오식 스케일
     # (1336e9)이면 745.6 K 로 벌어진다. 이 잔차 셋이 소수점 함정의 삼중 고정핀이다.
     l3 = [_simon_pa(20e9, *c) for c in (MONTEUX_LIQ_LOW, MONTEUX_LIQ_A, MONTEUX_LIQ_F)]
@@ -67,8 +80,9 @@ def main() -> int:
              "140 GPa 암석(F-liq)→구현 리퀴더스"),
             (_silicate_melt_point(DENG_SWITCH_PA * (1 + 1e-12)) - _silicate_melt_point(DENG_SWITCH_PA * (1 - 1e-12)), 0.0,
              "Deng bdg→ppv 갈아타기(두 적합의 교차, r2 de96ceaa) — 값 계단 0"),
-            (fei(200) - ppv(200), 296.65, "200 GPa ppv→Fei 상계"),
-            (fei(500) - ppv(500), 47.62, "500 GPa 사슬 폐합 비교 (Deng 외삽 vs Fei)")]:
+            (_silicate_melt_point(200e9 * (1 + 1e-12)) - _silicate_melt_point(200e9 * (1 - 1e-12)), 0.0,
+             "200 GPa — 갈아타기 없음, 값 계단 0 (옛 Deng → Fei 상계 +296.65 K 는 오너 2026-10-19 로 뺌)"),
+            (_silicate_melt_point(500e9) - fei(500), -47.62, "500 GPa 사슬 폐합 비교 (사슬 = Deng 외삽 − Fei 상계점)")]:
         ok(abs(got - want) < 0.5, f"2: 계단 {name} = {got:+.2f} K, 기록 {want:+.2f}")
     # 창 가장자리 등록 (r2 de96ceaa): 갈아타기는 교차 173.609 GPa — 인쇄 삼중점 180 GPa / 6420 K 와 7 K 어긋남을 병기하고,
     #   예전 자리(180 GPa)의 두 적합 차(+17.98 K)는 그 인공물의 기록으로 남긴다.

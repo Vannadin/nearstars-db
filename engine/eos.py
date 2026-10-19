@@ -3523,9 +3523,13 @@ SILICATE_PV_TO_TFD = 1.35e4 * GPA    # Seager+ 2007 §III.3 — BME4 가 TFD 로
 #                   값 연속, 기울기만 꺾임(r2 de96ceaa, 창 가장자리 항목). 인쇄된 bdg/ppv/액체
 #                   삼중점은 180 GPa/6420 K 로 기록에 남긴다(논문 내부 불일치 병기 — 삼중점은
 #                   원자료에서, 교차는 두 적합에서 왔다; 교차 T 는 인쇄 삼중점보다 6.5 K 낮다).
-#   173.6 – 200 GPa Deng+ 2023 post-perovskite. 200 GPa = 논문 자신의 경고 경계
-#                   ("extrapolating beyond ~200 GPa is subject to uncertainty").
-#   200 – 500 GPa   Fei+ 2021 상계 (Z-머신 충격압축; 멜팅 구속은 ~500 GPa 까지).
+#   173.6 – 500 GPa Deng+ 2023 post-perovskite, 한 적합. 200 GPa 위는 **graded-extrapolation**
+#                   (논문 자신의 경고 "extrapolating beyond ~200 GPa is subject to uncertainty",
+#                   500 GPa ±656 K) — Fei+ 2021 이 인쇄한 두 곡선 [6000·(P/140)^0.26, 6295·(P/140)^0.317]
+#                   사이에 200–500 GPa 모든 P 에서 든다(괄호 시험). 옛 200 GPa Deng → Fei 상계 갈아타기
+#                   (+296.65 K 계단: 중심 추정과 상계라는 다른 종류의 수 사이의 틈)는 오너 결정
+#                   2026-10-19 로 뺐다(r2 cb6cc923 / 874157b2, 창 가장자리 항목에 접음). T_m 은
+#                   200–500 GPa 에서 Fei 상계 − Deng 만큼 내려간다(200: −296.7, 300: −201.2, 500: −47.6 K).
 #   500 GPa 위      **이름 대고 거절** — 여섯 논문 어디에도 자료가 있는 전사 가능한
 #                   MgSiO₃ 곡선이 없다 (규산염 사다리는 13.5 TPa 까지 가는데도).
 #
@@ -3597,8 +3601,10 @@ def _deng_crossing_pa() -> float:
 
 
 DENG_SWITCH_PA = _deng_crossing_pa()          # ≈ 173.609 GPa — bdg → ppv 갈아타기 (값 연속, 기울기만 꺾임; r2 de96ceaa)
-DENG_CEILING_PA = 200e9                       # 논문 자신의 외삽 경고 경계
-FEI_UPPER = (6295.0, 140.0, 0.317)            # Fei+ 2021: Tm = 6295·(P/140)^0.317 [K, GPa]
+DENG_CEILING_PA = 200e9                       # 논문 자신의 외삽 경고 경계 — 등급 경계(silicate_melt_grade), 갈아타기 자리 아님
+# Fei+ 2021 (2021NatCo..12..876F) p. 5 가 인쇄한 MgSiO₃ 융해 곡선 둘 [K, GPa] — 사슬이 아니라 괄호(200–500 GPa)
+FEI_UPPER = (6295.0, 140.0, 0.317)            # «the upper bound»: Tm = 6295·(P/140)^0.317
+FEI_LOWER = (6000.0, 140.0, 0.26)             # 500 GPa 융해 T 가 ~1000 K 낮을 때(혼합상 읽기): Tm = 6000·(P/140)^0.26
 SILICATE_MELT_MAX_PA = 500e9                  # 이 위는 자료 있는 전사 가능 곡선이 없다
 # 잠열과 부분용융 열역학 — Monteux+ 2016 §2.2.2, Solomatov 2007 을 따른 인쇄식.
 #   식 (6):  φ = (T − T_sol)/(T_liq − T_sol)            ← 용융분율, 인쇄된 정의
@@ -3669,14 +3675,11 @@ def _simon_pa(p: float, t0: float, p_scale: float, c: float) -> float:
 
 
 def _silicate_melt_point(p: float) -> float | None:
-    """140–500 GPa 순수 MgSiO₃ 단일 녹는점 [K]. 사슬: Deng bdg → ppv → Fei 상계."""
+    """140–500 GPa 순수 MgSiO₃ 단일 녹는점 [K]. 사슬: Deng bdg → ppv (200 GPa 위는 등급 외삽, silicate_melt_grade)."""
     if p > SILICATE_MELT_MAX_PA:
         return None
     gpa = p / GPA
-    if p >= DENG_CEILING_PA:                       # 200–500 GPa: Fei+ 2021 상계
-        t0, p_ref, ex = FEI_UPPER
-        return t0 * (gpa / p_ref) ** ex
-    if p >= DENG_SWITCH_PA:                        # 173.6–200 GPa: Deng ppv (두 적합의 교차에서 갈아탐)
+    if p >= DENG_SWITCH_PA:                        # 173.6–500 GPa: Deng ppv (두 적합의 교차에서 갈아탐)
         t0, p0, a, c = DENG_PPV
         return t0 * ((gpa - p0) / a + 1.0) ** (1.0 / c)
     if gpa < DENG_BDG_FLOOR_GPA:
@@ -3694,13 +3697,10 @@ def _simon_pa_slope(p: float, t0: float, p_scale: float, c: float) -> float:
 
 
 def _silicate_melt_point_slope(p: float) -> float | None:
-    """`_silicate_melt_point` 의 dT/dP [K/Pa], 값과 같은 가지(Deng bdg → ppv → Fei)의 해석 미분."""
+    """`_silicate_melt_point` 의 dT/dP [K/Pa], 값과 같은 가지(Deng bdg → ppv)의 해석 미분."""
     if p > SILICATE_MELT_MAX_PA:
         return None
     gpa = p / GPA
-    if p >= DENG_CEILING_PA:
-        t0, p_ref, ex = FEI_UPPER
-        return t0 * ex / (p_ref * GPA) * (gpa / p_ref) ** (ex - 1.0)
     t0, p0, a, c = DENG_PPV if p >= DENG_SWITCH_PA else DENG_BDG
     if gpa < DENG_BDG_FLOOR_GPA:
         _silicate_melt_point(p)                        # 같은 이름 댄 ValueError
@@ -3710,9 +3710,22 @@ def _silicate_melt_point_slope(p: float) -> float | None:
 def melt_curve_seams() -> tuple[float, ...]:
     """창 가장자리 등록 §2.1 — 규산염 녹는 곡선(고상선 · 액상선 · 단일 녹는점)이 정의 가지를 바꾸는 압력 [Pa], 곡선이
     가지를 고르는 바로 그 상수에서: Monteux 저압 → 고압 (20 GPa, 값 −1 K · 기울기), 암석 → MgSiO₃ (140 GPa, 값),
-    Deng bdg → ppv (두 적합의 교차, 기울기), Deng → Fei (200 GPa, 값). 손 목록이 아니다 — 곡선이 가지를 더 얻으면 여기에
-    더해야 하고, test_melt_seams 가 곡선을 훑어 빠진 것을 잡는다. 정의역 끝(SILICATE_MELT_MAX_PA)은 이음매가 아니라 끝이다."""
-    return (MONTEUX_JOIN_PA, SILICATE_ROCK_MAX_PA, DENG_SWITCH_PA, DENG_CEILING_PA)
+    Deng bdg → ppv (두 적합의 교차, 기울기). 200 GPa 는 이음매가 아니다(Deng ppv 가 500 GPa 까지 한 적합, 오너 2026-10-19).
+    손 목록이 아니다 — 곡선이 가지를 더 얻으면 여기에 더해야 하고, test_melt_seams 가 곡선을 훑어 빠진 것을 잡는다.
+    정의역 끝(SILICATE_MELT_MAX_PA)은 이음매가 아니라 끝이다."""
+    return (MONTEUX_JOIN_PA, SILICATE_ROCK_MAX_PA, DENG_SWITCH_PA)
+
+
+def silicate_melt_grade(p: float) -> tuple[str, str]:
+    """규산염 녹는 곡선의 등급 — 200 GPa(DENG_CEILING_PA) 위 500 GPa 까지는 `graded-extrapolation`: Deng ppv 적합의 외삽이고
+    Fei+ 2021 이 인쇄한 두 곡선 사이에 든다(오너 2026-10-19, r2 cb6cc923). 그 아래는 `ok`, 500 GPa 위는 곡선 밖(None 과 같은 자리)."""
+    if p > SILICATE_MELT_MAX_PA:
+        return "refused", silicate_melt_refusal(p)
+    if p > DENG_CEILING_PA:
+        return ("graded-extrapolation",
+                f"{p / GPA:.0f} GPa: Deng+ 2023 ppv fit extrapolated beyond ~200 GPa (±656 K at 500 GPa, the paper's own "
+                "caveat), inside Fei+ 2021's printed pair [6000(P/140)^0.26, 6295(P/140)^0.317]")
+    return "ok", ""
 
 
 def _silicate_variant_check(variant: str) -> None:

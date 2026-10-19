@@ -67,8 +67,9 @@ def _melt_curve_names(mat) -> list:
 def curve_seams(mat) -> set:
     """Pressures where an onset curve changes branch or ends: eos.melt_curve_seams (window-edge registration §2.3 — the
     curves' own branch constants, not a hand list: 20 GPa HZ96 → Monteux, 140 GPa rock → MgSiO₃, the Deng bdg → ppv
-    crossing ≈ 173.6 GPa, 200 GPa Deng → Fei) and the curve's end at SILICATE_MELT_MAX_PA (500 GPa). Each is a seam
-    event, so a curve is never read across its own jump (r2 S5 B2; at 33a6ac21 the hand list missed 180 and 200 GPa)."""
+    crossing ≈ 173.6 GPa; 200 GPa is no seam since Deng ppv runs to 500 GPa, owner 2026-10-19) and the curve's end at
+    SILICATE_MELT_MAX_PA (500 GPa). Each is a seam event, so a curve is never read across its own jump (r2 S5 B2; at
+    33a6ac21 the hand list missed 180 and 200 GPa)."""
     if "고상선" not in _melt_curve_names(mat):
         return set()
     from solver.legacy_materials import eos
