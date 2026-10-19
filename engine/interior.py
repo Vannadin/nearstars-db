@@ -2784,7 +2784,7 @@ def _fold_attempt(exc, a: dict) -> dict:
             ends.append((abs(math.log(st_e.t_surface / t_pot)), t_e, st_e.p_center))
     out = {"seed_bracket": (t_lo, pc_lo, t_hi, pc_hi), "evals": 0}
     if not ends:
-        out.update(kind="off_domain", why="neither end of the bracket closes at SHOOT_TOL (W2)", walk=None, states=[],
+        out.update(kind="no_seed", why="neither end of the bracket closes at SHOOT_TOL (W2)", walk=None, states=[],
                    cpu=time.process_time() - cpu0)
         return out
     _gy, t_s0, p_s0 = min(ends)
@@ -2818,7 +2818,7 @@ def _fold_attempt(exc, a: dict) -> dict:
         out.update(kind="budget", why=f"the walk spent its budget of {rootfind.FOLD_BUDGET} attempts before both legs "
                                       f"reached the domain's edge ({len(states)} state(s) so far)")
     elif walk.status == "seed":
-        out.update(kind="off_domain", why="the re-shot seed could not be put on {dm = 0}")
+        out.update(kind="no_seed", why="the re-shot seed could not be put on {dm = 0}")
     elif not states:
         out.update(kind="off_domain", why=f"the walk left the declared domain at both ends without a crossing of "
                                           f"T_s = T_pot (legs end: {walk.leg_ends}; g jumps {len(jumps)})")
@@ -2833,6 +2833,16 @@ def _fold_refusal(head: str, att: dict, t_pot: float, extra: str = "") -> ValueE
             if w is not None else "")
     return ValueError(f"{head} — 핵 사격 접힘 이어 걷기(core-tc-fold)가 T_pot {t_pot:g} K 에서 상태를 못 냈다: {att['why']}"
                       f"{extra}{tail} (씨앗 괄호 {att['seed_bracket']})")
+
+
+def _fold_failure(exc, att: dict, t_pot: float) -> ValueError:
+    """핵 접힘 등록 note 3 — 상태를 못 낸 이어 걷기의 거절. (a) 걷지 않았다(씨앗 없음: W2 의 두 끝이 안 닫히거나 씨앗이 곡선에
+    안 올라감): 원래 C152 거절 그대로, 꼬리 «(core-tc-fold: no seed — 까닭)» 만. (b) 걸었는데 교차가 없다: core_fold_off_domain,
+    (c) 예산이 끝났다: core_fold_budget — 둘 다 원래 거절을 원인으로 글자 그대로 싣는다(«원래 거절: …»)."""
+    if att["kind"] == "no_seed":
+        return ValueError(f"{exc} (core-tc-fold: no seed — {att['why']})")
+    head = FOLD_BUDGET_ID if att["kind"] == "budget" else FOLD_OFF_DOMAIN
+    return _fold_refusal(head, att, t_pot, f"; 원래 거절: {exc}")
 
 
 def _fold_band(att: dict, cross, a: dict) -> dict:
@@ -2910,10 +2920,8 @@ def _fold_continue(exc, args, kw):
     a = _fold_bound(args, kw)
     t_pot = float(a["potential_temperature"])
     att = _fold_attempt(exc, a)
-    if att["kind"] == "budget":
-        raise _fold_refusal(FOLD_BUDGET_ID, att, t_pot) from exc
     if att["kind"] != "states":
-        raise _fold_refusal(FOLD_OFF_DOMAIN, att, t_pot) from exc
+        raise _fold_failure(exc, att, t_pot) from exc
     states = att["states"]
     if len(states) == 1:
         return _fold_answer(att, states[0][0], a)

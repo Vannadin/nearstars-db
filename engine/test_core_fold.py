@@ -145,5 +145,32 @@ check("control: the mutant «width == 0 only» misses the 19.6 K straddle (so th
       not width_zero_only(planted("budget", -1e-2, 6e-3)))
 check("the switch defaults on", interior.FOLD_CONTINUATION is True)
 
+print("(6) a continuation without a state (note 3)")
+orig = ValueError("표면온도 잔차가 뛴다 — 중심 온도 [3135.2, 3135.25] K 사이에서 0 을 건너뛴다 (C152).")
+w0 = rf.fold_walk(plant(v_star=5.0), (0.05, 0.05 ** 3 - 0.05), TOL)                 # (b): the whole curve, no crossing
+base = {"seed_bracket": (3135.2, 39.6e9, 3135.25, 39.3e9), "cpu": 1.0}
+fa = interior._fold_failure(orig, dict(base, kind="no_seed", why="neither end of the bracket closes at SHOOT_TOL (W2)",
+                                       walk=None), 1745.0)
+check("(a) no walk: the original C152 refusal stands, first, with only the no-seed tail",
+      str(fa).startswith(str(orig)) and str(fa).endswith("(core-tc-fold: no seed — neither end of the bracket closes at "
+                                                         "SHOOT_TOL (W2))"), str(fa)[:80])
+check("(b) the planted walk ran edge to edge without a crossing", w0.status == "done" and not w0.crossings
+      and [e[0] for e in w0.leg_ends] == ["edge", "edge"])
+fb = interior._fold_failure(orig, dict(base, kind="off_domain", why="no crossing", walk=w0), 1745.0)
+check("(b) core_fold_off_domain heads it and carries the original refusal verbatim",
+      str(fb).startswith(interior.FOLD_OFF_DOMAIN + " — ") and f"원래 거절: {orig}" in str(fb), str(fb)[:60])
+wb = rf.fold_walk(plant(), (0.05, 0.05 ** 3 - 0.05), TOL, budget=5)
+fc = interior._fold_failure(orig, dict(base, kind="budget", why="budget", walk=wb), 1745.0)
+check("(c) core_fold_budget heads it and carries the original refusal verbatim",
+      str(fc).startswith(interior.FOLD_BUDGET_ID + " — ") and f"원래 거절: {orig}" in str(fc), str(fc)[:60])
+
+
+def renames(exc, att, t_pot):        # mutant «(a) renames»: no seed reported as core_fold_off_domain
+    return interior._fold_refusal(interior.FOLD_OFF_DOMAIN, att, t_pot, f"; 원래 거절: {exc}")
+
+
+check("control: the mutant «(a) renames» puts core_fold_off_domain first, so the (a) check above kills it",
+      not str(renames(orig, dict(base, kind="no_seed", why="x", walk=None), 1745.0)).startswith(str(orig)))
+
 print(f"test_core_fold: {'모두 통과' if not fails else f'FAIL {fails}'}")
 sys.exit(1 if fails else 0)
