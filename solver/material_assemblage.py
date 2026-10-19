@@ -2119,28 +2119,38 @@ class AssemblageView(mv.RecordView):
             return own
         pieces = []
         swaps = None
+        on = 2.0 * SWAP_EPS * (1.0 + 1e-6)
+
+        def landed():
+            nonlocal swaps
+            if swaps is None:
+                swaps = [_log(pe) for c in self._cut if c.kind == "swap"
+                         for pe in (c.p_b_ext(t, self._reach),) if pe is not None]
+                swaps += self._row_steps_up(t, ib)       # swap extension note 1: an upward row step is landed
+            return swaps
         for k in (ib, ib + 1):
             got = None
             for a, b in sets.get(k, ()):
-                if a < x < b:
+                # r2 c40f792a: x in the sliver [b, x_swap) between a set's end on a landed step's near side and the
+                # step itself belongs to the interval, so a flat end covers it up to the step
+                if a < x < b or (b <= x < b + on and any(b < xs_ <= b + on and x < xs_ for xs_ in landed())):
                     # 68 addendum 1: a landed swap is never bridged — an interval holding a swap's P_b(T) is split there
                     # and x's own side repaired alone, its end read one SWAP_EPS off the swap on x's side
-                    if swaps is None:
-                        swaps = [_log(pe) for c in self._cut if c.kind == "swap"
-                                 for pe in (c.p_b_ext(t, self._reach),) if pe is not None]
-                        swaps += self._row_steps_up(t, ib)       # swap extension note 1: an upward row step is landed
                     lo_, hi_ = a, b
-                    for xs_ in swaps:
+                    for xs_ in landed():
                         if lo_ < xs_ <= x:
                             lo_ = xs_ + SWAP_EPS
                         elif x < xs_ < hi_:
                             hi_ = xs_ - SWAP_EPS
+                    # r2 a69976dc rule 2: an end on a landed step's near side (split here, or the set's own end where
+                    # the build clipped it) ends a net-fall bridge flat, the step's jump absorbing the fall
+                    flat = any(hi_ < xs_ <= hi_ + on for xs_ in swaps)
                     if lo_ < x < hi_:
-                        # r2 a69976dc rule 2: an end on a landed step's near side (split here, or the set's own end
-                        # where the build clipped it) ends a net-fall bridge flat, the step's jump absorbing the fall
-                        on = 2.0 * SWAP_EPS * (1.0 + 1e-6)
-                        flat = any(hi_ < xs_ <= hi_ + on for xs_ in swaps)
                         got = self._fall_bridge(x, t, ib, lo_, hi_, flat)
+                    elif flat and lo_ < hi_ <= x and any(hi_ < xs_ <= hi_ + on and x < xs_ for xs_ in swaps):
+                        # the sliver [x_swap − SWAP_EPS, x_swap): the flat value R(a′) when the bridge ends flat;
+                        # otherwise R itself, which is continuous there (no step before the swap)
+                        got = self._fall_bridge(x, t, ib, lo_, hi_, flat, sliver=True)
                     break
             pieces.append(got)
         if pieces[0] is None and pieces[1] is None:
@@ -2167,11 +2177,12 @@ class AssemblageView(mv.RecordView):
                 out.append(xs_)
         return out
 
-    def _fall_bridge(self, x, t, ib, x0, x1, flat=False):
+    def _fall_bridge(self, x, t, ib, x0, x1, flat=False, sliver=False):
         """The monotone cubic Hermite through (x0, R, R′) and (x1, R, R′) at the read's T, R′ from the outside (_edge_read),
         its slopes Fritsch–Carlson clipped against Δ = (R1 − R0)/(x1 − x0): negative ones set to 0, both scaled by
         3/√(α² + β²) when α² + β² > 9. R1 < R0: the secant (bridge_net_fall), or flat at R0 when `flat` (x1 on a landed step's
-        near side, r2 a69976dc rule 2: the step's jump absorbs the fall; bridge_flat_end). An end the table can't read:
+        near side, r2 a69976dc rule 2: the step's jump absorbs the fall; bridge_flat_end). `sliver`: x lies in
+        [x1, x_swap) (r2 c40f792a): R0 when the bridge ends flat, else None (R itself). An end the table can't read:
         None
         (bridge_no_edge; the set keeps R there). Counted per call: bridge_reads, bridge_clip."""
         e0, e1 = self._edge_read(x0, t, ib, below=True), self._edge_read(x1, t, ib, below=False)
@@ -2182,6 +2193,11 @@ class AssemblageView(mv.RecordView):
         (r0, d0), (r1, d1) = e0, e1
         dx = x1 - x0
         dl = (r1 - r0) / dx
+        if sliver:
+            if dl < 0.0 and flat:
+                self.cut_counts["bridge_flat_end"] += 1
+                return r0 + 0.0 * (x - x0)
+            return None
         if dl < 0.0:
             self.cut_counts["bridge_net_fall"] += 1
             if flat:
