@@ -106,9 +106,11 @@ class ReachZeroEnds(unittest.TestCase):
         cls.v = _bse_view()
         cls.c = next(c for c in cls.v._cut if c.kind == "swap" and c.t0 == 1600.0 and c.stop_lo)
         cls.steps = [x[2] for x in cls.v.transitions() if x[2]["form"] == "assemblage_row_step"]
+        #: this curve's own (note 2's coincident-edge pairs add their own events elsewhere, e.g. 16.29 GPa at 1450 K)
+        cls.mine = [e for e in cls.steps if cls.v._row_steps[e["id"]][0] is cls.c]
 
     def events(self, t):
-        return sorted(q for e in self.steps if (q := self.v.boundary_pressure(e, t)) is not None)
+        return sorted(q for e in self.mine if (q := self.v.boundary_pressure(e, t)) is not None)
 
     def test_events_are_the_holding_rows_own_p_b(self):
         self.assertEqual(self.events(T_STEP), sorted([self.c.p_b(1600.0), self.c.p_b(1650.0)]))
@@ -161,6 +163,49 @@ class ReachZeroEnds(unittest.TestCase):
         q = self.c.p_b(1650.0)
         self.assertGreater(abs(self.v.state(q * math.exp(1e-9), T_STEP)[0] - self.v.state(q * math.exp(-1e-9), T_STEP)[0]),
                            0.1)                                            # the read does step there: unlanded
+
+class CoincidentEdgeSwapsReachZero(unittest.TestCase):
+    """Swap-extension post-freeze note 2 (r2 6c6c1e94): a coincident edge pair the read re-kinds as a swap takes reach 0
+    at both ends, as a swap curve's true ends; past its rows the same edges are read as their own runs, so an
+    extrapolated step there would be a second, unlocated representation of one transition."""
+
+    def test_a_one_row_pair_has_no_p_b_past_its_row_and_a_row_step_event(self):
+        v = _bse_view()
+        for i in (168, 170):                               # ri+cpx+gt+st → ri+gt+capv+st+nal, one row at 850 K
+            c = v._events[i]
+            self.assertTrue(getattr(c, "was_edge", False))
+            self.assertEqual((c.t0, c.t1), (850.0, 850.0))
+            self.assertTrue(c.stop_lo and c.stop_hi)
+            for t in (800.0, 825.0, 875.0, 900.0):
+                self.assertIsNone(c.p_b_ext(t, v._reach), t)
+            self.assertIsNotNone(c.p_b_ext(850.0, v._reach))
+        steps = [x[2] for x in v.transitions() if x[2]["form"] == "assemblage_row_step"]
+        mine = [e for e in steps if v._row_steps[e["id"]][0] in (v._events[168], v._events[170])]
+        self.assertEqual(len(mine), 2)
+        for e in mine:
+            self.assertEqual(v.boundary_pressure(e, 825.0), v._events[168].p_b(850.0))
+            self.assertIsNone(v.boundary_pressure(e, 850.0))        # the pair has its own P_b there
+        self.assertEqual([c for c in v._cut if c.kind == "swap" and not (c.stop_lo and c.stop_hi)], [])
+
+    def test_flags_left_to_build_curves_is_red(self):
+        # the mutant: flags only where build_curves sets them (before the re-kinding) — the pair extrapolates its step
+        import types
+        from solver import material_registry as mr
+        from solver.from_v1 import thaw
+        src = open(ma.__file__, encoding="utf-8").read()
+        self.assertEqual(src.count("                        if extension:\n"), 1)
+        mut = types.ModuleType("material_assemblage_flags_before_rekind")
+        mut.__file__ = ma.__file__
+        exec(compile(src.replace("                        if extension:\n", "                        if False:\n"),
+                     ma.__file__, "exec"), mut.__dict__)
+        reg = mr.load()
+        if "extension" not in reg.tables[BSE].get("boundaries", {}):
+            raise unittest.SkipTest("the regenerated bse record is not shipped here")
+        v = mut.view(thaw(reg.get(BSE)), reg.tables[BSE], 1600.0)
+        c = v._events[168]
+        self.assertFalse(c.stop_lo or c.stop_hi)
+        self.assertIsNotNone(c.p_b_ext(800.0, v._reach))       # the extrapolated step 50 K past its only row
+
 
 if __name__ == "__main__":
     unittest.main()
