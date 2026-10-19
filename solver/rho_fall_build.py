@@ -438,12 +438,12 @@ def falls_at(v, t, ib, xlo, xhi):
             # to the next landed step or p_dataset; (2) no regain up to a landed step: b′ moves to its near side, the
             # read ends the bridge flat at R(a′) there (_fall_bridge) and the step's jump absorbs the fall, which must
             # stay ≥ 0; (3) otherwise a STOP, naming its bound
-            got, why = _widen(g, gv, lo_, hi_, r_lo[0], right, step)
+            got, refused = _widen(g, gv, lo_, hi_, r_lo[0], right, step)
             xs_, cid = next(((xs_, c_) for xs_, c_ in swaps if xs_ - SWAP_EPS == right), (None, None))
             if got is not None:
                 widened.append({"t": t, "a": lo_, "b": got, "was_b": hi_, "net": r_hi[0] - r_lo[0]})
                 hi_ = got
-            elif why == "bound" and xs_ is not None and (far := g(xs_ + SWAP_EPS)) is not None:
+            elif not refused and xs_ is not None and (far := g(xs_ + SWAP_EPS)) is not None:
                 # no regain up to a landed step: the bridge runs flat at R(a′) to its near side
                 ab = {"t": t, "by": cid, "x": xs_, "a": lo_, "b": right, "was_b": hi_, "dR": r_lo[0] - r_hi[0],
                       "jump": far[0] - r_lo[0]}
@@ -455,7 +455,7 @@ def falls_at(v, t, ib, xlo, xhi):
                                   "r_a": r_lo[0], "r_b": r_hi[0],
                                   "bound": f"swap {cid} (its jump from R(a′) would be negative: {ab['jump']:.6g})"})
             else:
-                bound = ("a refusing read" if why == "refusing read" else
+                bound = ("a refusing read" if refused else
                          "p_dataset" if right >= top - 1e-12 else "the window's end" if right >= xhi else "table edge")
                 stops.append({"t": t, "why": "net fall over the widened interval", "a": lo_, "b": hi_,
                               "r_a": r_lo[0], "r_b": r_hi[0], "bound": bound})
@@ -467,16 +467,17 @@ def falls_at(v, t, ib, xlo, xhi):
 
 
 def _widen(g, gv, lo, hi, r_lo, right, step):
-    """r2 a69976dc rule 1: (hi′, None) with hi′ ≤ right the first point past hi where R regains R(lo) (the regaining
-    side: a fall's start is its local max, so only the end moves); else (None, why): "bound" (no regain up to right) or
-    "refusing read". Walked on the regain search's step, the last step clamped to the bound (never across a landed
-    step); bisected keeping the end that holds, so R(b′) ≥ R(a′) exactly."""
+    """r2 a69976dc rule 1: (hi′, False) with hi′ ≤ right the first point past hi where R regains R(lo) (the regaining
+    side: a fall's start is its local max, so only the end moves); else (None, refused): refused True when a read
+    refused on the way, False when R did not regain up to right. Walked on the regain search's step, the last step
+    clamped to the bound (never across a landed step); bisected keeping the end that holds, so R(b′) ≥ R(a′) exactly
+    (suites-1020 X3: a flag, never a string compared)."""
     x = hi
     while x < right:
         x1 = min(x + step, right)
         q = g(x1)
         if q is None:
-            return None, "refusing read"
+            return None, True
         if q[0] >= r_lo:
             bad, ok = x, x1                              # R(bad) < R(lo) ≤ R(ok)
             for _ in range(60):
@@ -485,9 +486,9 @@ def _widen(g, gv, lo, hi, r_lo, right, step):
                     ok = m
                 else:
                     bad = m
-            return ok, None
+            return ok, False
         x = x1
-    return None, "bound"
+    return None, False
 
 
 def _merge(ivs):
