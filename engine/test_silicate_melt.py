@@ -55,6 +55,12 @@ def main() -> int:
     ok(silicate_melt_grade(199e9) == ("ok", "") and silicate_melt_grade(201e9)[0] == "graded-extrapolation"
        and "Fei+ 2021" in silicate_melt_grade(300e9)[1] and silicate_melt_grade(501e9)[0] == "refused",
        "1: 녹는 곡선 등급 — 200 GPa 위 graded-extrapolation (Fei 괄호 이름), 500 GPa 위 refused")
+    ok(silicate_melt_grade(200e9) == ("ok", ""), "1: 200 GPa 자체는 ok (등급은 200 GPa 초과부터, 68 n2)")
+    # 괄호는 T_m 의 주장이다 (r2 N2): 선언 액상선 T_m + 75 K 는 461.04 GPa 위에서 Fei 상계를 넘고 500 GPa 에서 +27.38 K
+    #   (Fei ±600 K 안). 그 자리가 움직이면 명목 폭이나 사슬이 바뀐 것이다.
+    over = lambda g: silicate_liquidus(g * GPA) - fei(g)          # noqa: E731
+    ok(over(461.03) < 0.0 < over(461.05) and abs(over(500.0) - 27.38) < 0.01,
+       f"1: 액상선이 Fei 상계를 넘는 자리 — 461.04 GPa 사이가 아니거나 500 GPa 초과 {over(500.0):+.2f} K ≠ +27.38")
     # Monteux 20 GPa 조인: 리퀴더스 셋 0.040 K, 솔리더스 1.002 K — 그리고 오식 스케일
     # (1336e9)이면 745.6 K 로 벌어진다. 이 잔차 셋이 소수점 함정의 삼중 고정핀이다.
     l3 = [_simon_pa(20e9, *c) for c in (MONTEUX_LIQ_LOW, MONTEUX_LIQ_A, MONTEUX_LIQ_F)]

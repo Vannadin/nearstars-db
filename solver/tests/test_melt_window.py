@@ -169,6 +169,61 @@ class SeamNoteUnit(unittest.TestCase):
         self.assertEqual(lv.typed_notes(130 * GPA, t_at(130 * GPA, 0.3)), ())
 
 
+class GradeNoteUnit(unittest.TestCase):
+    """The melting-curve grade note's rule at the read (light; window-edge item, directing's N1): MELT_GRADE_P < P ≤ 500 GPa,
+    through both views' entry points, whatever φ (every silicate melt read reads the curves)."""
+
+    def test_rule(self):
+        n = lm.melt_grade_note("m", 300 * GPA)
+        self.assertEqual((n.phase, n.text), (lm.MELT_GRADE_PHASE, lm.MELT_GRADE_NOTE))
+        self.assertIn("graded-extrapolation", n.text)
+        self.assertIn("Fei+ 2021", n.text)
+        self.assertEqual(eos.silicate_melt_grade(300 * GPA), ("graded-extrapolation", eos.SILICATE_MELT_GRADE_REASON))
+        for p in (200 * GPA, 150 * GPA, 501 * GPA):                       # the bound itself, below, past the curve's end
+            self.assertIsNone(lm.melt_grade_note("m", p), p)
+        lv = lm.LegacyView("silicate", interior.MATERIALS["silicate"], 1600.0)
+        sub = eos.silicate_solidus(300 * GPA) - 500.0                       # sub-solidus: no window, still the curve's read
+        self.assertEqual([x.phase for x in lv.typed_notes(300 * GPA, sub)], [lm.MELT_GRADE_PHASE])
+        self.assertEqual(lv.typed_notes(150 * GPA, eos.silicate_solidus(150 * GPA) - 500.0), ())
+        self.assertEqual(lm.LegacyView("fe_prem", interior.MATERIALS["fe_prem"], 1600.0).typed_notes(300 * GPA, 5000.0),
+                         ())                                                # control: no silicate curve, no note
+
+
+@unittest.skipUnless(HEAVY, "NEARSTARS_HEAVY=1 (PC job)")
+class GradeNoteAnswers(unittest.TestCase):
+    """The grade note on Answer.notes from a full solve (directing's N1): MELT_GRADE_P lowered to 5 GPa, so earth 2083's
+    silicate walk reads «past the bound»; one material_declared_note per silicate layer, «on» and «off»; unpatched, none
+    (earth's mantle stays below 136 GPa)."""
+
+    def _rec(self, on, grade_p=None):
+        from solver import context, material_registry as mr, run_oracle as ro
+        opt = context.Options(sensitivity_dt=0.0, materials="registry", silicate_records=on)
+        patches = [mock.patch.object(lm, "MELT_GRADE_P", grade_p)] if grade_p is not None else []
+        for pt in patches:
+            pt.start()
+        try:
+            return ro.one("engine/bodies/earth.yaml", 2083.0, opt, False, None, mr.load())
+        finally:
+            for pt in patches:
+                pt.stop()
+
+    def _grade(self, rec):
+        return [n for n in rec["notes"] if n["kind"] == "material_declared_note"
+                and n["fields"]["text"] == lm.MELT_GRADE_NOTE]
+
+    def test_planted_on_and_off(self):
+        for on in (True, False):
+            rec = self._rec(on, grade_p=5 * GPA)
+            self.assertEqual(rec["outcome_kind"], "answer", on)
+            per_layer = {}
+            for n in self._grade(rec):
+                per_layer[n["fields"]["layer"]] = per_layer.get(n["fields"]["layer"], 0) + 1
+                self.assertGreater(n["fields"]["p_max"], 5 * GPA, on)
+            self.assertTrue(per_layer, on)
+            self.assertTrue(all(c == 1 for c in per_layer.values()), (on, per_layer))
+            self.assertEqual(self._grade(self._rec(on)), [], on)          # unpatched: none
+
+
 @unittest.skipUnless(HEAVY, "NEARSTARS_HEAVY=1 (PC job)")
 class SeamNoteAnswers(unittest.TestCase):
     """§4.1 seam note on Answer.notes from full solves (directing's ruling on B4): WINDOW_SEAM_P lowered to 5 GPa, inside

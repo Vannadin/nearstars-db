@@ -3900,7 +3900,7 @@ def _silicate_melt_verdict(st, potential_temperature, variant: str) -> tuple[str
         return (SILICATE_STATE_UNDECIDED, 0.0,
                 "**암석 기둥의 고체·액체를 판정하지 않았다** — 포텐셜 온도가 선언되지 "
                 "않아 온도가 흐르지 않는다. 녹는곡선은 이제 있으므로(Monteux+ 2016 · "
-                "Deng+ 2023 · Fei+ 2021, 압력대별 사슬) 온도를 선언하면 이 행은 "
+                "Deng+ 2023, 압력대별 사슬; Fei+ 2021 은 200–500 GPa 괄호) 온도를 선언하면 이 행은 "
                 "판정으로 바뀐다.")
     samples = sorted((p_pa, t_k) for p_pa, t_k in st.rock_samples
                      if p_pa >= 0.0 and t_k > 0.0)

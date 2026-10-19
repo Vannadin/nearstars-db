@@ -296,8 +296,9 @@ class LegacyView:
             return ()
         if getattr(ph, "melt", None) != "silicate":
             return ()
-        n = window_seam_note(self.material_id, max(p, self.p_stop), t, ph.melt_variant)
-        return () if n is None else (n,)
+        pe = max(p, self.p_stop)
+        return tuple(n for n in (window_seam_note(self.material_id, pe, t, ph.melt_variant),
+                                 melt_grade_note(self.material_id, pe)) if n is not None)
 
     def porosity(self, p: float) -> float:
         """φ(P) of the declared porosity law (0 without one), as the old stage applies it (interior.porosity_at)."""
@@ -518,14 +519,15 @@ def silicate_melt_mix(p: float, t: float, variant: str, rho_s: float, dtdp_s: fl
 
 
 #: the window-seam note's pressure (melt-window registration §2 B2): at and above the 140 GPa rock → MgSiO₃ seam the
-#: melting curves jump (140, 200 GPa; the 173.6 GPa Deng join is continuous) and no latent term covers a jump crossed inside the window; module-level so
+#: melting curves jump (140 GPa; the 173.6 GPa Deng join is continuous, and 200 GPa is no seam since Deng ppv runs to 500 GPa) and no latent term covers a jump crossed inside the window; module-level so
 #: the planted test can lower it into a validation walk's window
 WINDOW_SEAM_P = eos.SILICATE_ROCK_MAX_PA
 WINDOW_SEAM_PHASE = "silicate_melt_window"
-WINDOW_SEAM_NOTE = ("melt window past the 140 GPa curve seam: the solidus/liquidus jump at 140 and 200 GPa and no "
-                    "latent term covers a jump crossed inside the window (melt-window registration §2: 140 and 200 GPa "
-                    "end the window, forfeiting up to ≈ 220–317 K; 20 GPa ≤ 2 K; the Deng bdg → ppv join at 173.6 GPa "
-                    "is continuous in value since the window-edge item)")
+WINDOW_SEAM_NOTE = ("melt window past the 140 GPa curve seam: the solidus/liquidus jump at 140 GPa and no "
+                    "latent term covers a jump crossed inside the window (melt-window registration §2: 140 GPa "
+                    "ends the window, forfeiting up to ≈ 220–317 K; 20 GPa ≤ 2 K; the Deng bdg → ppv join at 173.6 GPa "
+                    "is continuous in value since the window-edge item, and 200 GPa is no seam since Deng ppv runs to "
+                    "500 GPa)")
 
 
 def window_seam_note(material_id: str, p: float, t: float, variant: str):
@@ -537,6 +539,23 @@ def window_seam_note(material_id: str, p: float, t: float, variant: str):
         return None
     from solver import material_view as mv
     return mv.DeclaredNote(material_id, WINDOW_SEAM_PHASE, WINDOW_SEAM_NOTE)
+
+
+#: the melting-curve grade note's pressure (window-edge item, owner 2026-10-19; directing's N1): a silicate melt read above
+#: it reads Deng's ppv fit past its own ~200 GPa caveat, graded-extrapolation inside Fei+ 2021's printed pair; module-level
+#: so the planted test can lower it into a validation walk
+MELT_GRADE_P = eos.DENG_CEILING_PA
+MELT_GRADE_PHASE = "silicate_melt_curve_grade"
+MELT_GRADE_NOTE = "graded-extrapolation: " + eos.SILICATE_MELT_GRADE_REASON
+
+
+def melt_grade_note(material_id: str, p: float):
+    """The typed grade note for a silicate melt-curve read at p, or None: MELT_GRADE_P < p ≤ 500 GPa (the curve's end; above
+    it the curve refuses by name). Every silicate melt phase read reads the curves (φ), so the rule is on P alone."""
+    if not MELT_GRADE_P < p <= eos.SILICATE_MELT_MAX_PA:
+        return None
+    from solver import material_view as mv
+    return mv.DeclaredNote(material_id, MELT_GRADE_PHASE, MELT_GRADE_NOTE)
 
 
 def silicate_melt_phi(p: float, t: float, variant: str) -> float:

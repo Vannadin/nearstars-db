@@ -1736,6 +1736,9 @@ class AssemblageView(mv.RecordView):
         self.notes.clear()
         pe = max(p, self.p_stop) if p > 0.0 else max(1.0e5, self.p_stop)
         phi = _lm().silicate_melt_phi(pe, t, self.variant)
+        grade = _lm().melt_grade_note(self.material_id, pe)    # window-edge item: φ read the curve past 200 GPa (graded)
+        if grade is not None:
+            self.notes.append(grade)
         try:
             if phi >= 1.0:                       # the liquid alone: no solid cell is read (note 3 §1)
                 rho, g, _ = _lm().silicate_melt_mix(pe, t, self.variant, None, None, None)

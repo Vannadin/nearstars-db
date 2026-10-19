@@ -11,7 +11,9 @@ was BUILT and the conditions carried.
 chain (rock to 140 GPa: Monteux+ 2016 eqs (10)–(13) read in the cached primary, the
 solidus scale 1.336×10⁹ Pa confirmed at its own line; pure MgSiO₃ above: Deng+ 2023
 bdg to the printed 180 GPa triple point, ppv to Deng's own 200 GPa caveat line, Fei+
-2021 upper bound to 500 GPa; named refusal above). `Phase.melt = "silicate"` on the
+2021 upper bound to 500 GPa; named refusal above). *Updated 2026-10-19 (window-edge item): bdg → ppv now
+switches at the fits' crossing, 173.6 GPa. Deng ppv runs to 500 GPa as one fit, graded-extrapolation above
+200 GPa (owner ruling; r2 cb6cc923). Fei+ 2021's printed pair is a bracket on 200–500 GPa, not a segment.* `Phase.melt = "silicate"` on the
 three mgsio3 phases; `Phase.melt_variant` carries the composition branch;
 `SILICATE_CHONDRITIC` is the never-melted variant and `interior._stack` seeds it from
 `differentiated` (undifferentiated rock+metal layer, and the C11 primitive crust —
@@ -89,7 +91,10 @@ that declaration, which is why the basis must be named.* (A material-kind declar
 not smoothed);
 180 GPa bdg→ppv **+17.98 K** (printed triple point; the fits' own crossing at
 173.6 GPa carried as the paper's internal inconsistency); 200 GPa ppv→Fei
-**+296.7 K**; 500 GPa closure comparison +47.6 K.
+**+296.7 K**; 500 GPa closure comparison +47.6 K. *Updated 2026-10-19 (window-edge item): the switch moved to
+the crossing, so the 180 GPa step is now 0 and +17.98 K stays as the record; the 200 GPa switch is dropped, so
+that step is 0 too. The Fei anchor check became a bracket check (Fei lower < chain < Fei upper on 200–500 GPa).
+The 500 GPa comparison now reads chain − Fei upper = −47.6 K.*
 
 ## 4. The motivating question, measured (NOT adopted)
 

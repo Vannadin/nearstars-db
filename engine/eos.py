@@ -3499,7 +3499,7 @@ SILICATE_PV_TO_TFD = 1.35e4 * GPA    # Seager+ 2007 §III.3 — BME4 가 TFD 로
 # 철(Zhang & Rogers 2022)과 물(IAPWS·Reinhardt)에는 녹는곡선이 있는데 규산염에는
 # 없었다 — 그래서 솔버가 "암석 맨틀이 녹았는가" 를 말하지 못했다. 여기의 사슬이
 # 그 구멍을 닫는다. **형태는 오너 결정(2026-09-02, 브리프 36 + 정정)**: 암석 자료가
-# 있는 데까지 암석을 쓰고(0–140 GPa, Monteux), 그 위는 순수 MgSiO₃(Deng·Fei)로
+# 있는 데까지 암석을 쓰고(0–140 GPa, Monteux), 그 위는 순수 MgSiO₃(Deng·Fei — 2026-10-19 부터 Deng 한 사슬, Fei 는 200–500 GPa 괄호)로
 # 갈아타되 이음매의 계단을 **물질 종류 차이의 선언**으로 라벨하고 절대 뭉개지 않는다.
 #
 #   0 – 20 GPa      Monteux+ 2016 식 (10)/(11) — Herzberg & Zhang 1996 의 실험 적합.
@@ -3530,6 +3530,8 @@ SILICATE_PV_TO_TFD = 1.35e4 * GPA    # Seager+ 2007 §III.3 — BME4 가 TFD 로
 #                   (+296.65 K 계단: 중심 추정과 상계라는 다른 종류의 수 사이의 틈)는 오너 결정
 #                   2026-10-19 로 뺐다(r2 cb6cc923 / 874157b2, 창 가장자리 항목에 접음). T_m 은
 #                   200–500 GPa 에서 Fei 상계 − Deng 만큼 내려간다(200: −296.7, 300: −201.2, 500: −47.6 K).
+#                   ⚠ 괄호는 **T_m 의 주장**이다: 선언 액상선 T_m + 75 K(명목 폭)는 461.04 GPa 위에서 Fei 상계를
+#                   넘는다(500 GPa 에서 +27.38 K, Fei ±600 K 안 — 물리 오류는 아님; r2 N2, test_silicate_melt 가 고정).
 #   500 GPa 위      **이름 대고 거절** — 여섯 논문 어디에도 자료가 있는 전사 가능한
 #                   MgSiO₃ 곡선이 없다 (규산염 사다리는 13.5 TPa 까지 가는데도).
 #
@@ -3717,15 +3719,21 @@ def melt_curve_seams() -> tuple[float, ...]:
 
 
 def silicate_melt_grade(p: float) -> tuple[str, str]:
-    """규산염 녹는 곡선의 등급 — 200 GPa(DENG_CEILING_PA) 위 500 GPa 까지는 `graded-extrapolation`: Deng ppv 적합의 외삽이고
-    Fei+ 2021 이 인쇄한 두 곡선 사이에 든다(오너 2026-10-19, r2 cb6cc923). 그 아래는 `ok`, 500 GPa 위는 곡선 밖(None 과 같은 자리)."""
+    """규산염 녹는 곡선의 등급 — 200 GPa(DENG_CEILING_PA) 초과 500 GPa 까지는 `graded-extrapolation`: Deng ppv 적합의 외삽이고
+    Fei+ 2021 이 인쇄한 두 곡선 사이에 든다(오너 2026-10-19, r2 cb6cc923). 200 GPa 까지는 `ok`, 500 GPa 위는 곡선 밖(None 과 같은
+    자리). 걷기의 답에는 solver/legacy_materials.melt_grade_note 가 이 사유를 DeclaredNote 로 싣는다."""
     if p > SILICATE_MELT_MAX_PA:
         return "refused", silicate_melt_refusal(p)
     if p > DENG_CEILING_PA:
-        return ("graded-extrapolation",
-                f"{p / GPA:.0f} GPa: Deng+ 2023 ppv fit extrapolated beyond ~200 GPa (±656 K at 500 GPa, the paper's own "
-                "caveat), inside Fei+ 2021's printed pair [6000(P/140)^0.26, 6295(P/140)^0.317]")
+        return "graded-extrapolation", SILICATE_MELT_GRADE_REASON
     return "ok", ""
+
+
+#: 200–500 GPa 녹는 곡선 등급의 사유 — P 없는 한 문장이라 한 걷기에 노트 하나로 모인다
+SILICATE_MELT_GRADE_REASON = (
+    "silicate melting curve above 200 GPa: the Deng+ 2023 post-perovskite fit extrapolated beyond its own ~200 GPa "
+    "caveat (±656 K at 500 GPa), inside Fei+ 2021's printed pair [6000(P/140)^0.26, 6295(P/140)^0.317] at every P to "
+    "500 GPa (T_m's claim; the declared liquidus T_m + 75 K crosses Fei's upper curve above 461 GPa)")
 
 
 def _silicate_variant_check(variant: str) -> None:
@@ -3782,7 +3790,7 @@ def silicate_melt_slopes(p: float, variant: str = "peridotitic",
     """(dT_sol/dP, dT_liq/dP) [K/Pa] at p — 용융 창 등엔트로피 꼴의 X 가 읽는 기울기 (melt-window 등록 §3 (a)).
 
     각 기울기는 `silicate_solidus` / `silicate_liquidus` 가 그 P 에서 값으로 고르는 **같은 가지**의 해석 미분이다
-    (HZ96 식 (10)/(11), Monteux 식 (12)/(13), Deng bdg/ppv, Fei). 이음매 P 에서는 값 함수가 고른 가지를 따른다. 철 부화
+    (HZ96 식 (10)/(11), Monteux 식 (12)/(13), Deng bdg/ppv). 이음매 P 에서는 값 함수가 고른 가지를 따른다. 철 부화
     `d_fe` 는 P 와 무관한 평행 이동이라 기울기에 아무것도 더하지 않는다 — 조성 검사만 같이 한다. 500 GPa 위·P < 0 은
     None (곡선 없음, 값 함수와 같다)."""
     _silicate_variant_check(variant)
@@ -3838,8 +3846,8 @@ SILICATE = Material(
            thermal_source_state="solid", thermal_source_composition="MgSiO3",
            alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
            t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat",
-           melt="silicate", melt_ref=SILICATE_MELT_REF + " + Deng+ 2023 + Fei+ 2021 — "
-           "압력대별 사슬, 조성은 differentiated 시딩 (블록 주석)",
+           melt="silicate", melt_ref=SILICATE_MELT_REF + " + Deng+ 2023 — 압력대별 사슬; Fei+ 2021 은 200–500 GPa 괄호 — "
+           "조성은 differentiated 시딩 (블록 주석)",
            join="MgSiO3 enstatite (Seager+ 2007 Table 1)", fit_state="solid",
            join_note="밀도는 MgSiO₃ enstatite 단성분 적합, 곡선은 맨틀 암석 솔리더스(20 GPa 아래는 Monteux 가 조성 하나만 인쇄해 변종이 갈리지 않는다; 이 재료의 변종은 peridotitic) — 이 재료가 맨틀 암석의 대리라는 선언을 여기 적는다 (브리프 36). 이 상은 23.83 GPa 아래라 140 GPa 이음매를 보지 않는다"),
      Phase("mgsio3_prem", "bm2", 3980.0, 206.0 * GPA, 4.0, SILICATE_PREM_TO_PV,
@@ -3847,7 +3855,7 @@ SILICATE = Material(
            p_min=SILICATE_EN_TO_PREM, thermal_source_state="solid", thermal_source_composition="MgSiO3",
            alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
            t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat",
-           melt="silicate", melt_ref=SILICATE_MELT_REF + " + Deng+ 2023 + Fei+ 2021 — "
+           melt="silicate", melt_ref=SILICATE_MELT_REF + " + Deng+ 2023 — 압력대별 사슬; Fei+ 2021 은 200–500 GPa 괄호 — "
            "500 GPa 위는 곡선 밖 (silicate_melt_refusal)",
            join="PREM lower mantle aggregate (Zeng+ 2016 §II)", fit_state="solid",
            join_note="밀도는 PREM 하부맨틀 집합체 적합, 곡선은 맨틀 암석 솔리더스(변종 peridotitic; 20–140 GPa 는 Monteux 의 A-콘드라이트 식 (12)를 양쪽 조성이 같이 쓴다) — 맨틀 암석의 대리라는 선언 (브리프 36). **대리의 값**: 140 GPa 에서 암석 곡선 → 순수 광물 단일점 − 75 K 로 넘어가며 솔리더스가 **+1732.1 K** 뛴다 (코드가 실제로 돌려주는 두 곡선 사이의 계단, silicate-melt-context-notes.md §3, eddd3a6b/39420387) — 선언으로 실어 간다"),
