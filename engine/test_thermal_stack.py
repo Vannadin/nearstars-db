@@ -196,6 +196,40 @@ finally:
 check("gain cap T5 mutant — at loop gain 1 the cap's edge refuses (vertical tangent)", "refused" in k_one,
       f"{k_one.get('refused', 'ran')[:120]}")
 
+# The named sign check reads the last kept row (68 Q2): a capped row on the other side, popped for a redo, is not the
+# reference; the redone row off the caps on that side refuses, naming the branch switch.
+kept, popped_side, redone = [{"cap_side": (True, False)}], (False, True), (False, False)
+check("gain cap — the sign check after a redo compares with the last kept row and names the branch switch",
+      "branch switch at t" in (ft.sign_refusal(kept, redone, 0.75, 0.75) or "")
+      and ft.sign_refusal([{"cap_side": popped_side}], redone, 0.75, 0.75) is None
+      and ft.sign_refusal(kept, (True, False), 0.76, 0.75) is None,
+      ft.sign_refusal(kept, redone, 0.75, 0.75) or "no refusal")
+
+# A cap label that chatters at one state (a stub flipping it on every evaluation past 0.3 Gyr) must end in a named
+# refusal, not loop (68 B1); a call cap turns a regression into a FAIL instead of a hang.
+plain_terms, calls = ts.state_terms, [0]
+
+
+def chattering(st_, *a, **k):
+    calls[0] += 1
+    if calls[0] > 400000:
+        raise RuntimeError("call cap — the cap redo loops")
+    f = plain_terms(st_, *a, **k)
+    if a[4] > 0.3:
+        f = {**f, "cap": ("gain", "none")[calls[0] % 2]}
+    return f
+
+
+ts.state_terms = chattering
+try:
+    chat = planted("ts")
+except RuntimeError as e:
+    chat = {"refused": f"FAIL {e}"}
+finally:
+    ts.state_terms = plain_terms
+check("gain cap — a chattering cap label refuses by name at one state, without looping",
+      "chatters" in chat.get("refused", ""), f"{chat.get('refused', 'ran')[:120]} · {calls[0]} evaluations")
+
 # R2 — plate 2's six regression pins, through the stack.
 out = ts.run(ts.samuel_stack(lam=20.0, profile=prof, g=G), 10.0)
 # 거절된 판은 접힘 사건 · 여섯 핀 칸이 없다 — KeyError 로 죽지 않고 거절 까닭을 이름 댄 FAIL 로 찍는다(줄은 빨강 그대로).

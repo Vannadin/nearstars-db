@@ -168,6 +168,8 @@ check(f"gain guard T6 — a cold, strongly T-dependent closure exceeds (1 + k)/2
 check("gain guard T6 control — the same closure at Mars strength (E* 300 kJ/mol at 2150 K) stays under it, unique",
       mars_like[0] <= sm.gain_guard_limit() and mars_like[1] == 0,
       f"max gain {mars_like[0]:.3f} · δ* with > 1 root {mars_like[1]}")
+check("gain guard — the limit is pinned at (1 + k)/2 = 0.75 with k = 0.5",
+      sm.GAIN_CAP_LOOP_GAIN == 0.5 and sm.gain_guard_limit() == 0.75, f"k {sm.GAIN_CAP_LOOP_GAIN!r} · limit {sm.gain_guard_limit()!r}")
 steep = sm.closure_gain(lambda d: 600e3 - 3.0 * d, 150e3)
 check("gain guard T7 — the signed slope passes a steep falling root (gap > 0 side); |G′| would refuse it",
       steep <= sm.gain_guard_limit() < abs(steep), f"G′ {steep:.3f}")

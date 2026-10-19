@@ -270,6 +270,19 @@ def land(step, y: list, t_gyr: float, h_s: float, gyr_s: float):
     return y_lo, lo, to, tol
 
 
+
+def sign_refusal(rows: list, side: tuple, t_gyr: float, redo_at) -> str | None:
+    """Gain-cap prereg §2.5: the named sign check on the printed bottom. `side` = (T_c − T_b > 0, on either δ_b cap)
+    at the new accepted row; the reference is the last **kept** row, `rows[-1]["cap_side"]` — never a row popped for
+    a redo. Returns the refusal text, or None. A redo at the same t (`redo_at`) is a branch switch, named as such."""
+    prev = rows[-1]["cap_side"] if rows else None
+    if prev is None or side[0] == prev[0] or side[1] or prev[1]:
+        return None
+    if redo_at == t_gyr:
+        return f"the branch switch at t = {t_gyr:.6f} Gyr moved T_c − T_b across 0 off the δ_b caps (gain-cap prereg)"
+    return f"T_c − T_b changed sign between accepted rows off the δ_b caps at t = {t_gyr:.6f} Gyr (gain-cap prereg)"
+
+
 def event_tolerance_s(h_s: float, gyr_s: float) -> float:
     """§2.3: min(1e-9 Gyr, 1e-6 × the current step), in seconds."""
     return min(EVENT_TOL_GYR * gyr_s, EVENT_TOL_STEP * h_s)

@@ -500,7 +500,7 @@ def run(s: Setup, cap_myr: float) -> dict:
     h_min = None
     n_remesh, remesh_loss = 0, []
     worst = (0.0, None)
-    redo_at = None
+    redo_at = cap_redo_at = h_last = None
     while True:
         try:
             f1 = state_terms(s, *y, t, grad, mode="accept")
@@ -510,11 +510,9 @@ def run(s: Setup, cap_myr: float) -> dict:
         # printed closure has a pole there, and a continuation that steps across it does so silently (r2 5c663b57 §4).
         # The reference is the last kept row, so a redo after a branch switch at t compares against it, not the popped row.
         side = (y[0] - f1["t_b"] > 0.0, f1["guarded"])
-        side_prev = rows[-1]["cap_side"] if rows else None
-        if side_prev is not None and side[0] != side_prev[0] and not (side[1] or side_prev[1]) and s.layer is None:
-            why = (f"the branch switch at t = {t:.6f} Gyr moved T_c − T_b across 0 off the δ_b caps" if redo_at == t else
-                   f"T_c − T_b changed sign between accepted rows off the δ_b caps at t = {t:.6f} Gyr")
-            return {"refused": why + " (gain-cap prereg)", "refused_at_gyr": t, "rows": rows, "n_steps": n}
+        why = ft.sign_refusal(rows, side, t, redo_at) if s.layer is None else None
+        if why:
+            return {"refused": why, "refused_at_gyr": t, "rows": rows, "n_steps": n}
         if s.cap_ref is None:
             s.cap_ref = f1["cap"]
         if s.cap_pending is not None:
@@ -580,10 +578,18 @@ def run(s: Setup, cap_myr: float) -> dict:
             elif past is not None:
                 y_lo, lo_s, to, tol_s = ft.land(lambda a, b, c: step(a, b, c, caps=True), y, t, h_used, GYR_S)
                 to = to or past
-                s.cap_pending = (t + lo_s / GYR_S, s.cap_ref, to, tol_s / GYR_S)
+                if lo_s == 0.0 and cap_redo_at == t:
+                    # a second cap redo at the same state: the label chatters at the boundary — refuse, never loop
+                    return {"refused": f"δ_b cap label chatters at t = {t:.6f} Gyr ({s.cap_ref} ↔ {to}; gain-cap prereg)",
+                            "refused_at_gyr": t, "rows": rows, "n_steps": n}
+                # an untracked step labels no end state: a switch reached only there is seen one step late, so its
+                # tolerance is that step, not the bisection's
+                tol_rec = tol_s if tracked or h_last is None else max(tol_s, h_last)
+                s.cap_pending = (t + lo_s / GYR_S, s.cap_ref, to, tol_rec / GYR_S)
                 s.cap_ref, ev = to, None
                 if lo_s == 0.0:
                     # the switch sits at this very state: hold the new label and redo the row
+                    cap_redo_at = t
                     s.cap_events.append(s.cap_pending + (y[0] - rows[-1]["t_b"],))
                     s.cap_pending = None
                     rows.pop()
@@ -606,6 +612,7 @@ def run(s: Setup, cap_myr: float) -> dict:
             redo_at = t
             continue
         h = h_used
+        h_last = h
         h_min = h if h_min is None else min(h_min, h)
         dt_gyr = h / GYR_S
         y = y_new
