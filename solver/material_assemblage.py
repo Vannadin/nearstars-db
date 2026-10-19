@@ -1831,6 +1831,9 @@ class AssemblageView(mv.RecordView):
         rows = {}
         for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1):
             corner = k in (ib, ib + 1)
+            if self._end_drop(k, ib, sides):
+                self._marks["dropped"].add(k)
+                continue
             r = self._region(k, sides, x)
             if corner and check:
                 for j in (ia, ia + 1):
@@ -1846,6 +1849,33 @@ class AssemblageView(mv.RecordView):
                 v = self._row_blend(f, k, x, sides, near, v)
             rows[k] = v
         return _cubic1_t(t, self.ts, _Seq(rows, n_t), ib)
+
+    def _end_drop(self, k, ib, sides):
+        """Swap extension rows, post-freeze note 1 (r2 2c9018f3 addendum 1): an outer stencil row (ib − 1 or ib + 2)
+        whose partition holds a swap curve with a reach-0 end and no side at the read's T (the read is past that end)
+        is dropped, so _cubic1_t takes its one-sided slope there. That row's own step (at its own P_b) would otherwise
+        enter through the cubic's slope terms with a negative weight, sign-flipped (bse 1568.5 K, 23.3415 GPa: row
+        1650's +47.9 kg/m³ as −0.63). The corner rows are read as they describe themselves; their weight is ≥ 0, so
+        the one remaining step, at P_b(T_end) in the cell next to the end, has the swap's sign (a landed event,
+        boundary_pressure). Only curves of a record with the extension block carry the flags: other records are
+        bit-identical."""
+        if k in (ib, ib + 1):
+            return False
+        return any(sides.get(c) is None and (c.stop_lo or c.stop_hi) for _, c in self._partition(k))
+
+    def _end_step(self, c, t):
+        """The landed step of a reach-0 end (_end_drop): P_b(T_end) while the read's T lies in the cell next to the end
+        (the end row a corner row there with a weight > 0), else None."""
+        ts = self.ts
+        if c.stop_lo:
+            j = bisect.bisect_left(ts, c.t0)
+            if 0 < j < len(ts) and ts[j] == c.t0 and ts[j - 1] < t < c.t0:
+                return c.p_b(c.t0)
+        if c.stop_hi:
+            j = bisect.bisect_left(ts, c.t1)
+            if j + 1 < len(ts) and ts[j] == c.t1 and c.t1 < t < ts[j + 1]:
+                return c.p_b(c.t1)
+        return None
 
     def _row_blend(self, f, k, x, sides, near, own):
         """PROTOTYPE (row-level (c′) blend): row k's value at x mixed over the edges of `near` that are in row k's own
@@ -1978,6 +2008,8 @@ class AssemblageView(mv.RecordView):
         n_t = len(self.ts)
         rows = {}
         for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1):
+            if self._end_drop(k, ib, sides):
+                continue
             r = self._region(k, sides, x)
             v = self._row_value(f, k, r, x, False)
             if v is None and k in (ib, ib + 1):
@@ -2329,7 +2361,12 @@ class AssemblageView(mv.RecordView):
         if curve.get("form") == "assemblage_curve":
             i = curve["id"]
             c = self._events[i]
-            return c.p_b_ext(t, self._reach) if i < len(self._cut) else c.p_b(t)
+            if i >= len(self._cut):
+                return c.p_b(t)
+            pb = c.p_b_ext(t, self._reach)
+            if pb is None and getattr(c, "stop_lo", False) | getattr(c, "stop_hi", False):
+                pb = self._end_step(c, t)                # swap extension note 1: the landed step past a reach-0 end
+            return pb
         return super().boundary_pressure(curve, t)
 
     def curve_slope_points(self, curve) -> tuple:
