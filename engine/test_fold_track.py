@@ -71,11 +71,66 @@ b2 = ft.Root(110.3e3, dx=10.0, hi=112.5e3)  # a known neighbour above at 112.5: 
 got2 = ft.carried_root(slid, b2, 0.0, 300e3)
 check("(1) carried_root never goes past the midpoint toward a known neighbour", got2 is None, f"{got2}")
 
+# B1 (r2 5cee6df2): the carried bracket holds three roots; the one carried is the middle (the predicted x + Δx)
+X0 = 100e3
+three = lambda x: (x - X0 - 1.7e3) * (x - X0 - 2.2e3) * (x - X0 - 2.7e3)  # noqa: E731
+b3 = ft.Root(X0, dx=2.2e3, lo=X0 - 3e3)    # w = min(4·2.2, ½·3) km = 1.5 km: local_root fails, doubled to 3 km
+check("B1 local_root alone finds none", ft.local_root(three, b3, 0.0, 300e3) is None)
+carries = []
+got3 = ft.carried_root(three, b3, 0.0, 300e3, log=carries)
+check("B1 carried_root takes the root nearest x + Δx (the middle of three)", got3 is not None
+      and abs(got3 - (X0 + 2.2e3)) < 1e-3, f"{got3}")
+check("B1 the carry is logged with the roots seen", len(carries) == 1 and carries[0][3] == 3, str(carries))
+first = ft.bisect(three, X0 - 1.5e3, X0 + 3e3, three(X0 - 1.5e3))   # the old rule: bisect the first sign change
+check("B1 the «first sign change» mutant is red here (lands on another root)", abs(first - (X0 + 2.2e3)) > 100.0,
+      f"{first}")
+sm_ = ft.carry_summary(carries)
+check("B1 carry_summary", sm_["n"] == 1 and sm_["multi_root"] == 1 and sm_["max_roots"] == 3
+      and abs(sm_["max_carry_m"] - 2.2e3) < 1e-3, str(sm_))
+
 # (4) a neighbour that is not a closing partner is not a fold's pair
 far = ft.Root(119.416e3, dx=-560.0, lo=114.734e3, g=1.0)        # 4.7 km apart, scale max(4·0.56, 1) km = 2.24 km
 near = ft.Root(119.416e3, dx=-560.0, lo=119.0e3, g=1.0)
 check("(4) pair_closing — a neighbour 4.7 km off is not closing", not ft.pair_closing(far))
 check("(4) pair_closing — a neighbour within twice the bracket scale is", ft.pair_closing(near))
+
+# B2 (r2 5cee6df2): a rejected fold keeps the branch only if the full scan returns the continued root
+from types import SimpleNamespace          # noqa: E402
+from unittest import mock                  # noqa: E402
+import samuel_run as sr                    # noqa: E402
+
+
+def switch(mod, scan_root):
+    """mod.switch_branch on stubs: the continuation holds (119.2, 110.1) km, the full scan returns `scan_root`."""
+    u = ft.Root(119.416e3, dx=-560.0, lo=114.734e3, g=1.0)                # its neighbour 4.7 km off: not closing
+    b = ft.Root(110.283e3, dx=-130.0)
+    s = SimpleNamespace(r_p=3389.5e3, r_base=1830e3, e_star=3e5, opt={"a_rh": 2.21, "r_gas": 8.314},
+                        track=ft.Track(u, b), fold_rejected=[], fold_events=[])
+    ev = SimpleNamespace(equation="δ_u", tol_s=1.0)
+    with mock.patch.object(mod.sm, "lid_base_temperature", lambda *a: 1000.0), \
+            mock.patch.object(mod, "_layers_fn", lambda *a: None), \
+            mock.patch.object(mod, "_continued", lambda *a: (119.2e3, 110.1e3)), \
+            mock.patch.object(mod, "solve_boundary_layers" if mod is ts else "solve_layers",
+                              lambda *a, **k: (*scan_root, None, None, None, 1900.0)), \
+            mock.patch.object(mod, "track_at", lambda *a: "restarted"):
+        try:
+            mod.switch_branch(s, [2000.0, 1700.0, 100e3], 0.75, ev)
+            return s, None
+        except mod.sm.Refused as e:
+            return s, str(e)
+
+
+for mod in (ts, sr):
+    name = mod.__name__
+    s_, err = switch(mod, (119.25e3, 110.12e3))
+    check(f"B2 {name}: the scan's root is the continued one → the branch is kept, the rejection recorded",
+          err is None and s_.track == "restarted" and len(s_.fold_rejected) == 1 and s_.fold_events == [], str(err))
+    s_, err = switch(mod, (131.0e3, 110.1e3))                             # another branch, 11.8 km off
+    check(f"B2 {name}: another branch → refused by name", err is not None
+          and err.startswith("fold rejected, but the continued root is gone at t = 0.750000 Gyr"), str(err))
+    with mock.patch.object(ft, "FLOOR_M", 1e9):                          # the mutant: no distance check
+        s_, err = switch(mod, (131.0e3, 110.1e3))
+    check(f"B2 {name}: the no-check mutant is red here (takes the other branch silently)", err is None, str(err))
 
 # the T_c − T_b sign log (directing 10-19, the gain-cap decision)
 rows = [{"t": 0.1, "t_c": 2000.0, "t_b": 1990.0}, {"t": 0.2, "t_c": 1990.0, "t_b": 1995.0},
@@ -83,6 +138,28 @@ rows = [{"t": 0.1, "t_c": 2000.0, "t_b": 1990.0}, {"t": 0.2, "t_c": 1990.0, "t_b
 lg = ts.tc_tb_sign(rows)
 check("tc_tb_sign — sign changes and the least |T_c − T_b|", lg["sign_changes"] == 2 and lg["min_abs_k"] == 0.5
       and lg["min_at_gyr"] == 0.3, str(lg))
+
+# the pole (directing 10-20): a T_c − T_b sign change between accepted rows is a named refusal in both runners
+for mod in (ts, sr):
+    name = mod.__name__
+    crossing = [{"t": 0.1, "t_c": 2000.0, "t_b": 1999.0}, {"t": 0.2, "t_c": 1990.0, "t_b": 1990.5}]
+    try:
+        mod.pole_check(crossing)
+        err = None
+    except mod.sm.Refused as e:
+        err = str(e)
+    check(f"pole {name}: a crossing refuses by name", err is not None and err.startswith(
+        "T_c − T_b changed sign between t = 0.100000 and 0.200000 Gyr (+1.000 → -0.500 K)"), str(err))
+    try:
+        mod.pole_check([crossing[0], {"t": 0.2, "t_c": 1990.0, "t_b": 1989.0}])
+        mod.pole_check([crossing[0], {"t": 0.2, "t_c": 1990.0, "t_b": None}])
+        mod.pole_check(crossing[:1])
+        ok = True
+    except mod.sm.Refused:
+        ok = False
+    check(f"pole {name}: one sign, a row without T_b, a single row — no refusal", ok)
+    lg = mod.tc_tb_sign(crossing)
+    check(f"pole {name}: the mutant (the sign log alone) only counts it — silent", lg["sign_changes"] == 1, str(lg))
 
 print(f"  test_fold_track — {'모두 통과' if not fails else f'실패 {fails}'}")
 sys.exit(1 if fails else 0)

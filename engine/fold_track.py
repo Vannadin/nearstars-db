@@ -114,12 +114,15 @@ def local_root(h, r: Root, lo: float, hi: float):
     return bisect(h, a, b, fa)
 
 
-def carried_root(h, r: Root, lo: float, hi: float, reach: int = NEIGHBOUR_CELLS):
+def carried_root(h, r: Root, lo: float, hi: float, reach: int = NEIGHBOUR_CELLS, log: list | None = None):
     """`local_root`, and when the root has left its ±w bracket, the same root carried further (c1 4b26cbcd (1)): the
     bracket is doubled about x until h changes sign between finite ends, never past the midpoint toward a known
     neighbour (that is the neighbour's ground) nor, with none known on a side, past `reach` full-scan cells. A root
     that is nearly still (w at FLOOR) while it slides with the outer unknown is so followed instead of read as NaN.
-    None when no sign change is found within those limits."""
+    The final bracket can hold more than one root (r2 5cee6df2 B1: on the printed closure the gap < 0 pair and the
+    gap > 0 root across the pole), so it is scanned on FULL_SCAN cells and the root nearest the predicted position
+    x + Δx is taken, never the first sign change. Each carry is logged to `log` as (x, x + Δx, the root taken, the
+    roots seen). None when no sign change is found within those limits, or the scan finds no root between finite cells."""
     got = local_root(h, r, lo, hi)
     if got is not None:
         return got
@@ -134,7 +137,14 @@ def carried_root(h, r: Root, lo: float, hi: float, reach: int = NEIGHBOUR_CELLS)
             return None
         fa, fb = h(a), h(b)
         if changes_sign(fa, fb):
-            return bisect(h, a, b, fa)
+            roots = scan(h, a, b, FULL_SCAN)
+            if not roots:
+                return None
+            want = r.x + r.dx
+            got = min(roots, key=lambda z: (abs(z - want), -z))
+            if log is not None:
+                log.append((r.x, want, got, len(roots)))
+            return got
         if a <= a_lim and b >= b_lim:
             return None
 
@@ -264,6 +274,14 @@ def accept(h, prev: Root | None, x: float, lo: float, hi: float, reach: int = NE
         r.dhi = r.hi - prev.hi if (r.hi is not None and prev.hi is not None) else 0.0
     r.g = hump_sign(h, r)
     return r
+
+
+def carry_summary(log: list) -> dict:
+    """r2 5cee6df2 B1: the carries of a run — how many, the farthest carry and the farthest off the prediction (m),
+    how many saw more than one root, and the most roots seen."""
+    return {"n": len(log), "max_carry_m": max((abs(g - x) for x, _w, g, _n in log), default=None),
+            "max_off_prediction_m": max((abs(g - w) for _x, w, g, _n in log), default=None),
+            "multi_root": sum(1 for *_r, n in log if n > 1), "max_roots": max((n for *_r, n in log), default=None)}
 
 
 def pair_closing(r: Root) -> bool:

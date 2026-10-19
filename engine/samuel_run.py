@@ -77,6 +77,7 @@ class Setup:
         self.track: ft.Track | None = None
         self.fold_events: list = []
         self.fold_rejected: list = []            # c1 4b26cbcd (4): (t, equation, root, neighbour) of a refused fold
+        self.carries: list = []                  # r2 5cee6df2 B1: every carried inner root (ft.carried_root's log)
         self.multi_root_evals = 0
         self.root_jumps: list = []      # (t, old δ_b, new δ_b, T_c − T_b)
         self.root_notes: list = []
@@ -144,7 +145,7 @@ def _continued(s: "Setup", layers, r_l: float, r_c: float, tr: ft.Track):
         return lambda db: layers(du, db)[1]["delta_b"] - db
 
     def inner(du):                                   # c1 4b26cbcd (1): carried, not NaN once it leaves ±w_b
-        return ft.carried_root(hb(du), tr.b, 0.0, max(r_l - du - r_c, 1.0))
+        return ft.carried_root(hb(du), tr.b, 0.0, max(r_l - du - r_c, 1.0), log=s.carries)
 
     def outer(du):
         db = inner(du)
@@ -171,7 +172,8 @@ def track_at(s: "Setup", t_c: float, t_m: float, d_l: float, t_l: float, prev: f
     b = ft.accept(hb, None if prev is None else prev.b, d_b, 0.0, max(r_l - d_u - r_c, 1.0))
 
     def outer(du):
-        db = ft.carried_root(lambda x: layers(du, x)[1]["delta_b"] - x, b, 0.0, max(r_l - du - r_c, 1.0))
+        db = ft.carried_root(lambda x: layers(du, x)[1]["delta_b"] - x, b, 0.0, max(r_l - du - r_c, 1.0),
+                             log=s.carries)
         return math.nan if db is None else layers(du, db)[0]["delta_u"] - du
     u = ft.accept(outer, None if prev is None else prev.u, d_u, 0.0, r_l - r_c, reach=ft.OUTER_NEIGHBOUR_CELLS)
     return ft.Track(u, b)
@@ -451,6 +453,14 @@ def switch_branch(s: Setup, y: list, t_gyr: float, ev: ft.Lost) -> None:
     if sol is None or sol[1] is None:
         raise sm.Refused(f"no branch after the fold of {ev.equation} at t = {t_gyr:.6f} Gyr (C145 §2.4)")
     d_u1, d_b1, t_b1 = sol[0], sol[1], sol[5]
+    if dead is None and dead_u is None:
+        # r2 5cee6df2 B2: a rejected fold keeps the branch only if the scan's root is the continued one, within each
+        # root's own bracket scale; else the fold was real (its partner located coarsely) and the scan found another
+        # branch, which is never taken silently
+        if (abs(d_u1 - d_u0) > max(ft.K_BRACKET * abs(tr.u.dx), ft.FLOOR_M)
+                or abs(d_b1 - d_b0) > max(ft.K_BRACKET * abs(tr.b.dx), ft.FLOOR_M)):
+            raise sm.Refused(f"fold rejected, but the continued root is gone at t = {t_gyr:.6f} Gyr (C145 §2.4, "
+                             f"r2 5cee6df2 B2): continued ({d_u0:.1f}, {d_b0:.1f}) m, scan ({d_u1:.1f}, {d_b1:.1f}) m")
     before, after = (d_b0, d_b1) if ev.equation == "δ_b" else (d_u0, d_u1)
     if dead is not None or dead_u is not None:
         s.fold_events.append((t_gyr, ev.equation, before, after, ev.tol_s / GYR_S, t_c - t_b1))
@@ -467,10 +477,23 @@ def tc_tb_sign(rows: list) -> dict:
             "min_at_gyr": t_min}
 
 
+def pole_check(rows: list) -> None:
+    """Refuses by name when T_c − T_b changes sign between the last two accepted rows (directing 10-20): the printed
+    closure's pole (r2 5c663b57 §4), across which the inner δ_b branch changes side silently. The gain cap that was
+    to handle it is not landed (dropped on R2's 0 sign changes over 556 rows), so a body that reaches the pole fails
+    loudly here instead of returning a result."""
+    gaps = [(r["t"], r["t_c"] - r["t_b"]) for r in rows[-2:] if r.get("t_b") is not None]
+    if len(gaps) == 2 and (gaps[0][1] > 0) != (gaps[1][1] > 0):
+        (t0, g0), (t1, g1) = gaps
+        raise sm.Refused(f"T_c − T_b changed sign between t = {t0:.6f} and {t1:.6f} Gyr ({g0:+.3f} → {g1:+.3f} K): "
+                         f"the printed closure's pole, which no landed rule handles (r2 5c663b57 §4)")
+
+
 def _refused_fields(s) -> dict:
     """A refused run's events, read from the stack as a finished run reports them (r2 on the gain-cap PC run: a
     refused result carried none). cap_events / cap_straddles where the stack keeps them."""
-    out = {"fold_events": list(s.fold_events), "fold_rejected": list(s.fold_rejected)}
+    out = {"fold_events": list(s.fold_events), "fold_rejected": list(s.fold_rejected),
+           "carries": ft.carry_summary(s.carries)}
     rows = getattr(s, "_rows", None)
     if rows is not None:
         out["tc_tb_sign"] = tc_tb_sign(rows)
@@ -526,6 +549,10 @@ def run(s: Setup, cap_myr: float) -> dict:
                      "subcritical": f1["subcritical"], "p_m": f1["p_m"], "ceiling": f1["ceiling"],
                      "guarded": f1["guarded"], "guard_gap": f1["guard_gap"], "delta_b_raw_over_shell": f1["delta_b_raw_over_shell"],
                      "tc_tb_gap": f1["tc_tb_gap"], "t_b": f1["t_b"], "layer": f1["layer"]})
+        try:
+            pole_check(rows)
+        except sm.Refused as e:
+            return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n, **_refused_fields(s)}
         if s.lam / f1["ceiling"] > worst[0]:
             worst = (s.lam / f1["ceiling"], t)
         remaining = (AGE_GYR - t) * GYR_S
@@ -614,6 +641,7 @@ def run(s: Setup, cap_myr: float) -> dict:
             "fixed_point_limit_hits": list(s.fixed_point_limit_hits),
             "multi_root_evals": s.multi_root_evals, "root_jumps": list(s.root_jumps), "root_notes": list(s.root_notes),
             "fold_events": list(s.fold_events), "fold_rejected": list(s.fold_rejected), "tc_tb_sign": tc_tb_sign(rows),
+            "carries": ft.carry_summary(s.carries),
             "path_checks": list(s.path_checks), "remesh_loss_j": remesh_loss,
             "layer": None if s.layer_grid is None else {
                 "describe": s.layer_grid.describe(), "margin": s.layer_grid.margin,

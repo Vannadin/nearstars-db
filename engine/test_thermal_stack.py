@@ -127,6 +127,26 @@ r, ev, tries, gap = fixture_run(lambda t: (lambda x: (x - (C0 + 5000.0 * t)) * (
 check("C145 ⑥ E0 window a — a 20 km pair, no fold: no event, no branch change",
       not ev and abs(r.x - (C0 + 25e3)) < 1.0, f"end {r.x:.1f} m · tries {tries}")
 
+# the pole (directing 10-20): a run whose T_c − T_b changes sign ends in the named refusal, not a result. T_b is
+# shifted to T_c + 5 K on accepted rows past 0.05 Gyr (the run's own gap is ≥ 0.43 K and keeps its sign on R2).
+for mod, mk in ((ts, lambda: ts.samuel_stack(lam=20.0, profile=prof, g=G)),
+                (sr, lambda: sr.Setup(lam=20.0, profile=prof, g=G, g_c=prof.gravity(st.R_CORE_NO_BML_M)))):
+    orig = mod.state_terms
+
+    def shifted(s_, t_c, t_m, d_l, d_cr, t_gyr, grad, mode="stage", _o=orig):
+        f = _o(s_, t_c, t_m, d_l, d_cr, t_gyr, grad, mode=mode)
+        if mode == "accept" and t_gyr > 0.05:
+            f = {**f, "t_b": t_c + 5.0}
+        return f
+    mod.state_terms = shifted
+    try:
+        pol = mod.run(mk(), 10.0)
+    finally:
+        mod.state_terms = orig
+    check(f"pole — {mod.__name__}: a run across T_c = T_b refuses by name",
+          pol.get("refused", "").startswith("T_c − T_b changed sign between t = ") and pol["refused_at_gyr"] < 0.2
+          and "tc_tb_sign" in pol, f"{pol.get('refused', 'no refusal')[:160]} at {pol.get('refused_at_gyr')}")
+
 # R2 — plate 2's six regression pins, through the stack.
 out = ts.run(ts.samuel_stack(lam=20.0, profile=prof, g=G), 10.0)
 # 거절된 판은 접힘 사건 · 여섯 핀 칸이 없다 — KeyError 로 죽지 않고 거절 까닭을 이름 댄 FAIL 로 찍는다(줄은 빨강 그대로).
@@ -138,12 +158,14 @@ if "refused" in out:
 v = sr.curve_values(out["rows"])
 print(f"  [C145 접힘 사건] R2: {len(out['fold_events'])} — {out['fold_events']} · 거절된 접힘 {out['fold_rejected']}")
 print(f"  [T_c − T_b 부호] R2: {out['tc_tb_sign']}")
+print(f"  [안쪽 근 이어 따라감] R2: {out['carries']}")
 # the same pins and widths as test_samuel_run.FROZEN_L20 / FROZEN_TOL (K to the frozen decimal; peak time 0.0005 Gyr)
 # C116: moved with INFER_TOL 5e-7 (Mars's core mass fraction); old values beside FROZEN_L20
 # C118: moved again with the phase-boundary step cut (Mars's Fe-S core crosses 19 GPa); old values beside FROZEN_L20
 # speed stack (2026-09-29): moved again with Mars's table rebuilt on the new shot path; old values beside FROZEN_L20
 # C145 (2026-10-01): moved with the continuation of the δ_b root (no artefact jump at 0.783 Gyr); old values beside FROZEN_L20
-# C145 NaN class (2026-10-19): the old pins predate a false refusal (0.749176 Gyr); old values beside FROZEN_L20
+# C145 NaN class (2026-10-19): the move is layered Mars (db3c73b4), now reachable; the tracker fix removes the false
+# refusal at 0.749176 Gyr (r2 5cee6df2 n1); old values beside FROZEN_L20
 for key, want, tol in (("T_c today", 2094.64, 0.005), ("T_m today", 1937.36, 0.005), ("T_c(1) − T_c0", -50.33, 0.005),
                        ("T_m(1) − T_m0", 287.34, 0.005), ("T_m peak", 2042.46, 0.005), ("T_m peak time", 1.1612, 0.0005)):
     check(f"R2 — {key} = {want}", abs(v[key] - want) <= tol, f"{v[key]:.6f}")
