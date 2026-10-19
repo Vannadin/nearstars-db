@@ -46,8 +46,9 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: stays the phase-1 commit (the frozen-table blobs `table_read` checks were not touched by the item).
 #: Rebased onto the stage-A line (gap-wall ad2f5b67, whose melt-window base changed engine/), with the item's §7
 #: structure-trigger commit and the audit text fixes: the item's engine/ tree is now a677ffec (was 1ac0df8b on c38326ff);
-#: re-declared in the same commit as each engine/ change (the 10-16 ruling; 68 n5).
-ORACLE_ENGINE_TREE = "a677ffec15d7dd62a084251f1033ad175d1b969c"
+#: re-declared in the same commit as each engine/ change (the 10-16 ruling; 68 n5). The C145 NaN fix (1c25dab3 …
+#: d502785f, engine/ only) left it undeclared (suites-1020): bd0d525a is that line's engine/ tree.
+ORACLE_ENGINE_TREE = "bd0d525a704cea9fd35365e745eb05f5f17b53f7"
 REPO = Path(lm._ENGINE).parent
 
 
