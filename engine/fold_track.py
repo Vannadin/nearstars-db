@@ -73,6 +73,12 @@ class Track:
         self.u, self.b = u, b
 
 
+def changes_sign(fa: float, fb: float) -> bool:
+    """A sign change between two finite values. A finite↔NaN edge is never one (c1 4b26cbcd (2): NaN > 0 is False,
+    so `(fa > 0) != (fb > 0)` took a finite-positive → NaN edge for a root and bisected onto the NaN boundary)."""
+    return not (math.isnan(fa) or math.isnan(fb)) and (fa > 0) != (fb > 0)
+
+
 def bisect(f, a: float, b: float, fa: float) -> float:
     """The solves' own bracket bisection (same arithmetic)."""
     for _ in range(BISECT_ITERS):
@@ -103,9 +109,34 @@ def local_root(h, r: Root, lo: float, hi: float):
     if not a < b:
         return None
     fa, fb = h(a), h(b)
-    if math.isnan(fa) or math.isnan(fb) or (fa > 0) == (fb > 0):
+    if not changes_sign(fa, fb):
         return None
     return bisect(h, a, b, fa)
+
+
+def carried_root(h, r: Root, lo: float, hi: float, reach: int = NEIGHBOUR_CELLS):
+    """`local_root`, and when the root has left its ±w bracket, the same root carried further (c1 4b26cbcd (1)): the
+    bracket is doubled about x until h changes sign between finite ends, never past the midpoint toward a known
+    neighbour (that is the neighbour's ground) nor, with none known on a side, past `reach` full-scan cells. A root
+    that is nearly still (w at FLOOR) while it slides with the outer unknown is so followed instead of read as NaN.
+    None when no sign change is found within those limits."""
+    got = local_root(h, r, lo, hi)
+    if got is not None:
+        return got
+    cell = (hi - lo) / FULL_SCAN
+    a_lim = max(lo, r.x - (0.5 * (r.x - r.lo) if r.lo is not None else reach * cell))
+    b_lim = min(hi, r.x + (0.5 * (r.hi - r.x) if r.hi is not None else reach * cell))
+    w = half_width(r)
+    while True:
+        w *= 2.0
+        a, b = max(a_lim, r.x - w), min(b_lim, r.x + w)
+        if not a < b:
+            return None
+        fa, fb = h(a), h(b)
+        if changes_sign(fa, fb):
+            return bisect(h, a, b, fa)
+        if a <= a_lim and b >= b_lim:
+            return None
 
 
 def hump(h, a: float, b: float, sign: float) -> tuple[float, float]:
@@ -144,7 +175,16 @@ def lost(h, r: Root, equation: str) -> Lost:
     nb = r.ahead()
     if nb is None or r.g == 0.0:
         return Lost(equation, False)
-    _, g_now = hump(h, r.x, nb, r.g)
+    seen = []
+
+    def hn(x):                                       # c1 4b26cbcd (3): a fold is judged on finite values only
+        v = h(x)
+        if math.isnan(v):
+            seen.append(x)
+        return v
+    _, g_now = hump(hn, r.x, nb, r.g)
+    if seen or math.isnan(g_now):
+        return Lost(equation, False)                 # a NaN in the pair's interval is unknown: halve, never a fold
     return Lost(equation, r.g * g_now <= 0.0)
 
 
@@ -154,7 +194,7 @@ def scan(h, lo: float, hi: float, n: int) -> list:
     for k in range(1, n + 1):
         b = lo + (hi - lo) * k / n
         fb = h(b)
-        if (fa > 0) != (fb > 0):
+        if changes_sign(fa, fb):
             roots.append(bisect(h, a, b, fa))
         a, fa = b, fb
     return roots
@@ -176,7 +216,7 @@ def neighbours(h, x: float, lo: float, hi: float, reach: int = NEIGHBOUR_CELLS) 
                 if not lo <= b <= hi:
                     break
                 fb = h(b)
-                if (fa > 0) != (fb > 0):
+                if changes_sign(fa, fb):
                     found = bisect(h, min(a, b), max(a, b), fa if a < b else fb)
                     break
                 a, fa = b, fb
@@ -200,7 +240,7 @@ def _continue_neighbour(h, nb, dnb: float, x: float, side: float, lo: float, hi:
     if not a < b:
         return None
     fa, fb = h(a), h(b)
-    if math.isnan(fa) or math.isnan(fb) or (fa > 0) == (fb > 0):
+    if not changes_sign(fa, fb):
         return None
     return bisect(h, a, b, fa)
 
@@ -224,6 +264,14 @@ def accept(h, prev: Root | None, x: float, lo: float, hi: float, reach: int = NE
         r.dhi = r.hi - prev.hi if (r.hi is not None and prev.hi is not None) else 0.0
     r.g = hump_sign(h, r)
     return r
+
+
+def pair_closing(r: Root) -> bool:
+    """c1 4b26cbcd (4): at a located fold (t*, to `event_tolerance_s`) the dying pair is closer than the root's own
+    bracket scale, max(K·|Δx|, FLOOR); a neighbour ahead farther than twice that is not its partner, so the
+    continuation still holds the root and there was no fold — `switch_branch` then excludes nothing."""
+    nb = r.ahead()
+    return nb is not None and abs(nb - r.x) <= 2.0 * max(K_BRACKET * abs(r.dx), FLOOR_M)
 
 
 def pick_after(roots: list, d_star: float, dead: tuple | None = None):
