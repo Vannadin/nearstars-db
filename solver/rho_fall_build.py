@@ -62,30 +62,110 @@ def _builder():
     return _BA["m"]
 
 
-def swap_gibbs(v, curve_id, t, p_b):
-    """68 addendum 2 (r2 ruling ce571b67): at a downward swap jump, the generator's G per atom of the swap's two
-    assemblages at (P_b, T): ΔG = G₊ − G₋ (J/mol·atom), with the generator's own tangent-plane tolerance TP_TOL. The
-    sides' labels are the curve's nearest row's. None for both when the generator module is not given."""
-    m = _builder()
-    row = v._events[curve_id].nearest(t)
-    out = {"left": row["left_label"], "right": row["right_label"], "g_left": None, "g_right": None, "dg": None,
-           "tol": None, "composition_same": True,
-           "composition_why": "one bulk per record: both sides are equilibria of the same bulk"}
-    if m is None:
-        return out
-    comp = v.material_id.removeprefix("silicate_slb_")
-    bulk = m.atomic_bulk(m.COMPOSITIONS[comp]["oxides_wt"])
-    import numpy as np
-    with np.errstate(all="raise"):
-        res = m.equilibrate_node(bulk, p_b, t, {})
-    kl, kr = m.canon_key(row["left_label"]), m.canon_key(row["right_label"])
-    gl, gr = (res.get(kl) or {}).get("g_atom"), (res.get(kr) or {}).get("g_atom")
-    out.update(g_left=gl, g_right=gr, dg=None if gl is None or gr is None else gr - gl, tol=m.TP_TOL,
-               candidates=sorted(res))
+def _two_sides(m, bulk, kl, kr, p, t, warm):
+    """(G, V) per atom of each label's equilibrium at (p, t), the generator's own solve at its final tol, warm-started
+    per label; None for a side that does not converge."""
+    out = []
+    for k in (kl, kr):
+        ok, rock, _why = m._equilibrate(bulk, k, warm.get(k), p, t, tol=m.EQ_TOL_FINAL)
+        if not ok:
+            ok, rock, _why = m._equilibrate(bulk, k, None, p, t, tol=m.EQ_TOL_FINAL)
+        if not ok:
+            out.append(None)
+            continue
+        warm[k] = m._state(rock)
+        n = sum(rock.formula.values())
+        out.append((float(rock.molar_gibbs / n), float(rock.molar_volume / n)))
     return out
 
 
-def _reader(v, t, ib):
+def swap_gibbs(v, curve_id, t, p_b, p_lo, p_hi):
+    """A downward swap jump at (P_b_ext(T), T), classed by r2's rulings (ce571b67 with addendum 1, bbcbcd23); G and V
+    per atom from the records generator's own solve (build_assemblage.py at EQ_TOL_FINAL), labels from the curve's
+    nearest row, ΔG = G₊ − G₋ and ΔV = V₊ − V₋ (right minus left).
+    - **row-located** (T within the curve's own rows, t0 … t1): ΔG at P_b against the generator's TP_TOL (addendum 2's
+      gate: |ΔG| > TP_TOL is a STOP).
+    - **extension band** (T outside its rows, P_b_ext extrapolated): the true crossing at T, ΔG(P) = 0 between the two
+      labels, bisected on [p_lo, p_hi] (the neighbouring swaps at T), with P_true, the displacement P_true − P_b_ext
+      and ΔV at P_true: ΔV ≤ 0 «read-extension step» (the record is sound); ΔV > 0 «record STOP»; no sign change on the
+      bracket «read-extension STOP».
+    The bulk is one per record, so both sides share it (composition_same, by construction)."""
+    m = _builder()
+    c = v._events[curve_id]
+    row = c.nearest(t)
+    located = c.t0 <= t <= c.t1
+    out = {"class": "row-located" if located else "extension band", "left": row["left_label"],
+           "right": row["right_label"], "composition_same": True,
+           "composition_why": "one bulk per record: build_assemblage.py builds a record from «bulk = atomic_bulk("
+                               "COMPOSITIONS[comp_key][\"oxides_wt\"])» and equilibrates every candidate on it"}
+    if m is None:
+        out["verdict"] = "not evaluated (NS_BUILD_ASSEMBLAGE not set)"
+        return out
+    import numpy as np
+    comp = v.material_id.removeprefix("silicate_slb_")
+    bulk = m.atomic_bulk(m.COMPOSITIONS[comp]["oxides_wt"])
+    kl, kr = m.canon_key(row["left_label"]), m.canon_key(row["right_label"])
+    cands = set(m.candidates(p_b))
+    out["labels_are_candidates"] = kl in cands and kr in cands       # r2 n2: both sides are the generator's own
+    warm = {}
+    with np.errstate(all="raise"):
+        at_b = _two_sides(m, bulk, kl, kr, p_b, t, warm)
+        if None in at_b:
+            out.update(verdict="a side does not converge at P_b", tol=m.TP_TOL)
+            return out
+        dg_b = at_b[1][0] - at_b[0][0]
+        out.update(dg_at_pb=dg_b, dv_at_pb=at_b[1][1] - at_b[0][1], tol=m.TP_TOL)
+        if located:
+            out["verdict"] = "STOP: |ΔG| > TP_TOL at a row-located swap" if abs(dg_b) > m.TP_TOL else "within TP_TOL"
+            return out
+        # the bracket grows from P_b outward on both sides (ln P steps 0.002, doubling), never past the neighbouring
+        # swaps at T, and stops where a side stops converging: the root must lie where both labels exist
+        xb_, br = math.log(p_b), None
+        lo_lim, hi_lim = math.log(p_lo), math.log(p_hi)
+        step, alive = 0.002, {-1: True, 1: True}
+        while br is None and (alive[-1] or alive[1]):
+            for sgn in (-1, 1):
+                if not alive[sgn]:
+                    continue
+                x2 = xb_ + sgn * step
+                if (sgn < 0 and x2 <= lo_lim) or (sgn > 0 and x2 >= hi_lim):
+                    alive[sgn] = False
+                    continue
+                s2 = _two_sides(m, bulk, kl, kr, math.exp(x2), t, warm)
+                if None in s2:
+                    alive[sgn] = False
+                    continue
+                f2 = s2[1][0] - s2[0][0]
+                if (f2 > 0) != (dg_b > 0):
+                    br = (min(xb_, x2), max(xb_, x2), dg_b if x2 > xb_ else f2)
+                    break
+            step *= 2.0
+        if br is None:
+            out["verdict"] = "read-extension STOP: no crossing between the neighbouring swaps where both labels exist"
+            return out
+        out.update(p_lo=p_lo, p_hi=p_hi, bracket_gpa=[math.exp(br[0]) / 1e9, math.exp(br[1]) / 1e9])
+        a, b, fa = br
+        for _ in range(30):                              # to ~1e-9 in ln P
+            mid = 0.5 * (a + b)
+            sm = _two_sides(m, bulk, kl, kr, math.exp(mid), t, warm)
+            if None in sm:
+                out["verdict"] = "read-extension STOP: a side does not converge in the bisection"
+                return out
+            fm = sm[1][0] - sm[0][0]
+            if (fm > 0) == (fa > 0):
+                a, fa = mid, fm
+            else:
+                b = mid
+        p_true = math.exp(0.5 * (a + b))
+        st_ = _two_sides(m, bulk, kl, kr, p_true, t, warm)
+        dv = st_[1][1] - st_[0][1]
+        out.update(p_true=p_true, displacement=p_true - p_b, dv_true=dv, dv_rel=dv / st_[0][1],
+                   verdict="read-extension step (record sound: ΔV ≤ 0 at the true crossing)" if dv <= 0.0 else
+                   "record STOP: ΔV > 0 at the true crossing")
+    return out
+
+
+def _reader(v, t, ib, unreadable):
     from solver import material_assemblage as ma, stepper as stp
     memo = {}
 
@@ -100,7 +180,7 @@ def _reader(v, t, ib):
         v._in_bridge = True
         try:
             got = v._read(pr, t, pr, ma.Dual(x, 1.0, 0.0), ia, ib, fields=("rho",))
-        except Exception:                                # a corner with no run, a missing cell: no value
+        except (ma._NoRead, ma.CellMissing):             # the read's own refusals (as _edge_read); anything else raises
             got = None
         finally:
             v._in_bridge = was
@@ -110,6 +190,7 @@ def _reader(v, t, ib):
             v._marks, v._read_memo = marks, memo_r
         if got is None or isinstance(got, stp.Stop):
             out = None
+            unreadable.append(x)
         else:
             r = got["rho"]                               # a piece with no x dependence comes back as a float
             out = (r.v, r.dx / r.v) if isinstance(r, ma.Dual) else (r, 0.0)
@@ -131,7 +212,16 @@ def _bisect(f, a, b, fa, n=60):
 
 def falls_at(v, t, ib, xlo, xhi):
     """The widened fall intervals of R(·, t) on [xlo, xhi], with the unrecovered falls and net-fall STOPs."""
-    g = _reader(v, t, ib)
+    unreadable = []                                      # r2 B1: points the read refuses, counted and listed
+    g = _reader(v, t, ib, unreadable)
+
+    def gv(z):
+        """g(z), raising where the read refuses (a bisection never invents a value: r2 B1)."""
+        q = g(z)
+        if q is None:
+            raise Unresolved(f"the read refuses at ln P {z:.9f} (T {t:.3f} K) inside a fall search")
+        return q
+    unscreened = []                                      # cells with a refusing end: a refusal boundary, listed
     swaps = []                                           # every cut swap's P_b_ext(t): a landed event, never bridged
     for c in v._cut:
         if c.kind == "swap":
@@ -183,6 +273,7 @@ def falls_at(v, t, ib, xlo, xhi):
 
     def screen(a, b, fa, fb, m_est, depth=0):
         if fa is None or fb is None:
+            unscreened.append({"t": t, "a": a, "b": b})
             return
         if across_swap(a, b) and b - a <= 2.0 * SWAP_EPS * (1.0 + 1e-6):
             return                                       # the swap's own jump: listed above, not a fall
@@ -210,6 +301,7 @@ def falls_at(v, t, ib, xlo, xhi):
         m = 0.5 * (a + b)
         fm = g(m)
         if fm is None:
+            unscreened.append({"t": t, "a": a, "b": b})
             return
         m_loc = SAFETY * max(abs(fm[1] - fa[1]) / (h / 2), abs(fb[1] - fm[1]) / (h / 2))
         screen(a, m, fa, fm, max(m_loc, m_est / 2.0), depth + 1)
@@ -228,7 +320,8 @@ def falls_at(v, t, ib, xlo, xhi):
         left = max([xlo] + [xs_ + SWAP_EPS for xs_, _c in swaps if xs_ < xf])
         right = min([xhi] + [xs_ - SWAP_EPS for xs_, _c in swaps if xs_ > xf])
         # the local max before: g crosses 0 going down; walk left on a fine step, then bisect
-        step = (grid[1] - grid[0]) / 4.0 if len(grid) > 1 else 1e-4
+        j_ = min(max(bisect.bisect_right(v.lnps, xf) - 1, 0), len(v.lnps) - 2)     # r2 B2: xf's own P cell
+        step = (v.lnps[j_ + 1] - v.lnps[j_]) / SUB_P / 4.0
         a = xf
         while True:
             q = g(a - step)
@@ -236,7 +329,7 @@ def falls_at(v, t, ib, xlo, xhi):
                 a = max(a - step, left) if q is not None else a
                 break
             if q[1] >= 0.0:
-                a = _bisect(lambda z: (g(z) or (0, 1))[1], a - step, a, q[1])
+                a = _bisect(lambda z: gv(z)[1], a - step, a, q[1])
                 break
             a -= step
         e = xf                                           # the end of the falling run: g back above 0
@@ -245,7 +338,7 @@ def falls_at(v, t, ib, xlo, xhi):
             if q is None or e + step > right:
                 break
             if q[1] >= 0.0:
-                e = _bisect(lambda z: (g(z) or (0, 1))[1], e, e + step, -1.0)
+                e = _bisect(lambda z: gv(z)[1], e, e + step, -1.0)
                 break
             e += step
         ra = g(a)
@@ -258,7 +351,7 @@ def falls_at(v, t, ib, xlo, xhi):
             if q is None:
                 break
             if q[0] >= ra[0]:
-                c = _bisect(lambda z: (g(z) or (ra[0], 0))[0] - ra[0], x, x + step, (g(x) or (ra[0] - 1, 0))[0] - ra[0])
+                c = _bisect(lambda z: gv(z)[0] - ra[0], x, x + step, gv(x)[0] - ra[0])
                 break
             x += step
         if c is None:
@@ -277,7 +370,8 @@ def falls_at(v, t, ib, xlo, xhi):
             stops.append({"t": t, "why": "net fall over the widened interval", "a": lo_, "b": hi_,
                           "r_a": r_lo[0], "r_b": r_hi[0]})
         intervals.append((lo_, hi_, a, c))
-    return intervals, unrecovered, stops, floor_cells, swap_jumps
+    return intervals, unrecovered, stops, floor_cells, swap_jumps, {"unreadable": sorted(set(unreadable)),
+                                                                   "unscreened": unscreened}
 
 
 def _merge(ivs):
@@ -298,18 +392,24 @@ def cell_falls(v, ib, nsub=16, xr=None):
     for j in range(nsub + 1):
         t = v.ts[ib] + (v.ts[ib + 1] - v.ts[ib]) * j / nsub
         try:
-            ivs, un, st, fl, sj = falls_at(v, t, ib, xlo, xhi)
+            ivs, un, st, fl, sj, ur = falls_at(v, t, ib, xlo, xhi)
         except Unresolved as e:
-            ivs, un, st, fl, sj = [], [], [{"t": t, "why": str(e)}], [], []
+            ivs, un, st, fl, sj, ur = [], [], [{"t": t, "why": str(e)}], [], [], {"unreadable": [], "unscreened": []}
         for j_ in sj:
             j_["v_ratio"] = j_["r_after"] / j_["r_before"]          # V₋/V₊ at one mass: ρ₊/ρ₋
             if j_["jump"] < 0.0:
                 try:
-                    j_.update(swap_gibbs(v, j_["curve"], t, math.exp(j_["x"])))
+                    xs_all = sorted(math.log(pe) for c in v._cut if c.kind == "swap"
+                                    for pe in (c.p_b_ext(t, v._reach),) if pe is not None)
+                    below = [z for z in xs_all if z < j_["x"] - 1e-12]
+                    above = [z for z in xs_all if z > j_["x"] + 1e-12]
+                    p_lo = math.exp(below[-1]) if below else v.ps[0]
+                    p_hi = math.exp(above[0]) if above else v.p_dataset
+                    j_.update(swap_gibbs(v, j_["curve"], t, math.exp(j_["x"]), p_lo, p_hi))
                 except Exception as e:                   # an equilibration that fails is recorded, not a crash
                     j_["gibbs_error"] = f"{type(e).__name__}: {str(e)[:200]}"
         out.append({"t": t, "intervals": [list(iv) for iv in ivs], "unrecovered": un, "stops": st, "floor_cells": fl,
-                    "swap_jumps": sj})
+                    "swap_jumps": sj, "unreadable": len(ur["unreadable"]), "unscreened": ur["unscreened"]})
     return out
 
 
@@ -352,16 +452,70 @@ def _floor_list(fl):
     return sorted(by.values(), key=lambda e: e["x"])
 
 
+def _band_rho(v, x, t):
+    """The record's shipped ρ band at the cell holding (x, T): the sum of its per-cell relative ρ terms (interp_terms,
+    loop_terms; the read ships them as BandNotes); None when the cell carries none."""
+    ia = min(max(bisect.bisect_right(v.lnps, x) - 1, 0), len(v.lnps) - 2)
+    ib = min(max(bisect.bisect_right(v.ts, t) - 1, 0), len(v.ts) - 2)
+    tot, any_ = 0.0, False
+    for key in ("interp_terms", "loop_terms"):
+        cells = v._terms[key][0]
+        e = cells.get((ia, ib)) if cells else None
+        if e and e[0]:
+            tot, any_ = tot + abs(e[0]), True
+    return tot if any_ else None
+
+
+def gate(v, jumps):
+    """r2's swap rulings applied (68 addenda 2, r2 addendum 1, bbcbcd23), per downward jump: (STOP list, exceptions).
+    row-located: |ΔG| > TP_TOL, a side unconverged, or a composition change → STOP; else |Δρ/ρ| ≤ the cell's ρ band →
+    «a record defect within its band» (a declared exception), above it → record STOP. extension band: «record STOP» or
+    «read-extension STOP» verdicts STOP; a read-extension step is listed with its band comparison (68 / directing's
+    call). A jump not evaluated (no generator) is a STOP: the gate can't be passed unread."""
+    stops, exceptions = [], []
+    for j in jumps:
+        if j["jump"] >= 0.0:
+            continue
+        band = _band_rho(v, j["x"], j["t"])
+        j["band_rho"] = band
+        within = band is not None and abs(j["rel"]) <= band
+        verdict = j.get("verdict", "not evaluated")
+        if j.get("class") == "row-located":
+            if verdict != "within TP_TOL" or not j.get("composition_same", False):
+                stops.append({**j, "gate": verdict})
+            elif within:
+                exceptions.append({**j, "gate": "a record defect within its band"})
+            else:
+                stops.append({**j, "gate": "record STOP: |Δρ/ρ| above the cell's ρ band"})
+        elif verdict.startswith("read-extension step"):
+            exceptions.append({**j, "gate": "read-extension step, " + ("within" if within else "above") + " the band"})
+        else:
+            stops.append({**j, "gate": verdict})
+    return stops, exceptions
+
+
 def document(v, per_cell):
+    jumps = [j for c in per_cell.values() for smp in c for j in smp["swap_jumps"]]
+    g_stops, g_exc = gate(v, jumps)
+    unscreened = [u for c in per_cell.values() for smp in c for u in smp["unscreened"]]
     return {"record": v.material_id, "ps": list(v.ps), "ts": list(v.ts), "stamp": _stamp(),
             "sets": {str(k): s for k, s in sets_from(v, per_cell).items()},
             "unrecovered": [u for c in per_cell.values() for smp in c for u in smp["unrecovered"]],
-            "stops": [s_ for c in per_cell.values() for smp in c for s_ in smp["stops"]],
+            # every STOP: the samples' own (net fall, unresolved, a refusal inside a fall search) and the swap gate's
+            "stops": [s_ for c in per_cell.values() for smp in c for s_ in smp["stops"]] + g_stops,
+            "swap_exceptions": g_exc,
+            "swap_counts": {"row-located": sum(1 for j in jumps if j["jump"] < 0 and j.get("class") == "row-located"),
+                            "extension band": sum(1 for j in jumps if j["jump"] < 0 and j.get("class") == "extension band"),
+                            "upward": sum(1 for j in jumps if j["jump"] >= 0)},
+            "unreadable_points": sum(smp["unreadable"] for c in per_cell.values() for smp in c),
+            "unscreened_cells": unscreened[:500], "unscreened_count": len(unscreened),
             "samples": sum(len(c) for c in per_cell.values()),
             # listed per ln P position (1e-7), each with its sample count and T range: a P node's kink recurs at every T
             "floor_cells": _floor_list([f_ for c in per_cell.values() for smp in c for f_ in smp["floor_cells"]]),
             "swap_jumps": [j for c in per_cell.values() for smp in c for j in smp["swap_jumps"]]}
 
+
+# n4 (r2): floor cells are listed per 1e-7 ln P, so kinks closer than that share a row.
 
 # ── the unitq job: one unit per T cell ──
 _V = {}
