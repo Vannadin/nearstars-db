@@ -700,6 +700,27 @@ MULTI_NOTE = ("two or more exported boundaries inside one grid cell: read linear
 #: step»; (A″), owner f43dac2a)
 NODE_NOTE = ("node-resolved phase change read across: C¹ over its grid cell, never forced into a step (registration "
              "§3.3; read rule (A″), owner f43dac2a)")
+#: s-read post-freeze note 3 §2.4: the declared note of a band read (0 < w < 1), whose s is not conserved
+BAND_NOTE = "band read: s not conserved over ≤ one T row"
+
+
+@dataclasses.dataclass(frozen=True)
+class BandTrap:
+    """s-read post-freeze note 3 §2.4: a band read whose two reads have opposite signs (dT/dP_today · dT/dP_s < 0), so
+    the blended field has a zero inside the T row. The view only marks the read (68 B2): solve refuses an accepted
+    pass whose T_ad reads carry it (solve.frozen_band_trapped); material_notes.collect never reads it."""
+    material_id: str
+    p: float
+    t: float
+    w: float
+    dtdp_today: float
+    dtdp_s: float
+
+
+def _smoothstep(u: float) -> float:
+    """S(u) = 3u² − 2u³ on [0, 1] (note 3 §2.2), clamped outside."""
+    u = min(max(u, 0.0), 1.0)
+    return u * u * (3.0 - 2.0 * u)
 
 
 def _labels(label) -> frozenset:
@@ -1369,7 +1390,10 @@ class AssemblageView(mv.RecordView):
                          ((blk.get("source") or {}).get("floor") or {}).get("dtdp") or term_floor(
                              table["cells"], self.p_dataset).get("dtdp", 0.0))
         #: the s path's counts (§6.4): reads taken by it, reads kept on today's read for a frozen stencil node (§3.2)
-        self.s_counts = {"s_reads": 0, "frozen_stencil_reads": 0}
+        #: note 3: band reads (0 < w < 1), of them trapping (§2.4), reads at w = 0 next to a flagged cell (today's
+        #: read, no band), and the neighbour flag reads the precheck let through (§2.3's cost line)
+        self.s_counts = {"s_reads": 0, "frozen_stencil_reads": 0, "band_reads": 0, "band_trapping_reads": 0,
+                         "band_w0_reads": 0, "flag_reads": 0}
 
     # the table read ──────────────────────────────────────────────────────────────────────────────────────────
     def _refuse(self, p, t, rid, why):
@@ -1668,11 +1692,45 @@ class AssemblageView(mv.RecordView):
         if sv is None:
             self.s_counts["frozen_stencil_reads"] += 1
             return got
+        w = self._band_w(p, t, pr, ia, ib)
+        if w == 0.0:                                     # note 3 §2.2: today's read, bit for bit, no blend arithmetic
+            self.s_counts["band_w0_reads"] += 1
+            return got
         if not sv.dt > 0.0:
             return self._refuse(p, t, "input.material_out_of_data",
                                 f"(∂s/∂T)_P = {sv.dt!r} ≤ 0 in the s read at ({p:g} Pa, {t:g} K) (s-read registration §3.4)")
-        self.s_counts["s_reads"] += 1
-        return got[0], -(sv.dx / pr) / sv.dt, t * sv.dt, got[3]
+        dtdp_s, cp_s = -(sv.dx / pr) / sv.dt, t * sv.dt
+        if w == 1.0:                                     # the s read, bit for bit
+            self.s_counts["s_reads"] += 1
+            return got[0], dtdp_s, cp_s, got[3]
+        self.s_counts["band_reads"] += 1                  # note 3 §2.2: the C¹ blend over one T row; ρ is today's
+        self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID, BAND_NOTE))
+        if got[1] * dtdp_s < 0.0:                        # §2.4: a trapping band read, marked for solve
+            self.s_counts["band_trapping_reads"] += 1
+            self.notes.append(BandTrap(self.material_id, p, t, w, got[1], dtdp_s))
+        return got[0], (1.0 - w) * got[1] + w * dtdp_s, (1.0 - w) * got[2] + w * cp_s, got[3]
+
+    def _band_w(self, p, t, pr, ia, ib):
+        """s-read post-freeze note 3 §2.2: w = S_lo · S_hi for a read in T cell ib whose own s path holds no frozen node.
+        F_lo is the s read at (P, T_ib) from cell ib − 1 holding a frozen stencil, F_hi the same at (P, T_ib+1) from
+        cell ib + 1; a cell outside the grid has no flag. The flags are note 4's, constant in their cell at fixed P, so
+        w is C¹ in T across every node. Precheck (§2.3): F_lo is read only when T_ib−2 is at or below the table's
+        highest frozen T, F_hi only when T_ib is."""
+        lo = ib >= 1 and self.ts[max(ib - 2, 0)] <= self._t_frozen_max
+        hi = ib + 1 <= len(self.ts) - 2 and self.ts[ib] <= self._t_frozen_max
+        w = 1.0
+        if not (lo or hi):
+            return w
+        d = self.ts[ib + 1] - self.ts[ib]
+        if lo:
+            self.s_counts["flag_reads"] += 1
+            if self._s_path(p, self.ts[ib], pr, ia, ib - 1) is None:
+                w *= _smoothstep((t - self.ts[ib]) / d)
+        if hi:
+            self.s_counts["flag_reads"] += 1
+            if self._s_path(p, self.ts[ib + 1], pr, ia, ib + 1) is None:
+                w *= _smoothstep((self.ts[ib + 1] - t) / d)
+        return w
 
     def _node_note(self, t, ia):
         """NODE_NOTE with the curve's P_b range and its ±half-cell band range, for each node-resolved curve whose P_b(t)

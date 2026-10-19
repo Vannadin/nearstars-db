@@ -70,6 +70,11 @@ _SOLVE = (
     # note 17 §6 (G1-R-07): an event's g undefined at a secant iterate (its curve absent there), not a cap tripping
     Entry("solve.event_undefined", ("event_name",),
           "경계 사건 '{event_name}' 의 함수가 착지 탐색 중 정의되지 않았다 (곡선이 그 자리에 없다)"),
+    # s-read post-freeze note 3 §2.4 (r2 B1, directing): an accepted pass whose T_ad reads a trapping switch band
+    Entry("solve.frozen_band_trapped", ("layer_id", "material_id", "p", "t", "w", "dtdp_today", "dtdp_s"),
+          "층 '{layer_id}' 의 받아들인 걸음이 물질 '{material_id}' 의 동결 전환 띠에서 갇힌다 ({p} Pa, {t} K, w {w}) — "
+          "오늘 읽기 dT/dP {dtdp_today} 와 s 읽기 dT/dP {dtdp_s} 의 부호가 반대라 섞은 장이 띠 안에서 0 을 지난다",
+          preamble="온도가 물리적인 단열선이 아닌 곳에 붙들려 답을 믿을 수 없다."),
 )
 
 #: Input refusals (A7: D-A7-1..5, D-A2-7). `where` names the file and key, e.g. «mars.yaml:inputs.mass_earth».

@@ -1217,6 +1217,27 @@ def _with_first(outcome, first):
     return outcome
 
 
+def _band_trap(body, views, acc):
+    """s-read post-freeze note 3 §2.4: the first T_ad node of the accepted pass whose read carries a trapping band mark
+    (material_assemblage.BandTrap), as the refusal's evidence, else None. Adiabatic reads only (68 B1): the walk's T_ad
+    and the lid's T_ad pass (y[2] on every node); a conductive lid's local-T reads supply ρ only and are never checked.
+    The view stays stateless and marks; this is the one place a mark becomes a refusal."""
+    from solver import material_assemblage as ma
+    for layer in body.layers:
+        view, path = views.get(layer.id), acc.profiles.get(layer.id)
+        if not path or not getattr(view, "s_read", False):
+            continue
+        for _m, y, _k in path:
+            got = view.state(y[1], y[2], None)
+            if isinstance(got, st.Stop):
+                continue
+            for n in got[2]:
+                if isinstance(n, ma.BandTrap):
+                    return {"layer_id": layer.id, "material_id": n.material_id, "p": n.p, "t": n.t, "w": n.w,
+                            "dtdp_today": n.dtdp_today, "dtdp_s": n.dtdp_s}
+    return None
+
+
 def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
     """solve()'s body. `_first` / `_id_options` are note 18's retry: the first attempt's residual-check record, and
     the caller's options, which keep the solve_id the request's. The retry calls _solve, not the module's `solve`, so
@@ -1320,6 +1341,10 @@ def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
                                      pass_kind="accepted", check="residual", F_root=acc.F, tol_F=tol_f,
                                      n_acc=here["n_acc"], rtol=options.rtol,
                                      bracket=bracket["final"], probes=None, first_attempt=_first), x
+        trap = _band_trap(body, views, acc)              # s-read note 3 §2.4: before the Answer is built (68 B2)
+        if trap is not None:
+            return refusals.make("solve.frozen_band_trapped", where, x=x, closure_kind=kind, pass_kind="accepted",
+                                 **trap), x
         notes = []
         if _first is not None:                          # note 18: the retry is disclosed on the Answer it gave
             notes.append(result.Note("closure_retried", "the first closure failed note 8's residual check, so the solve "
