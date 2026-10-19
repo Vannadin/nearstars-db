@@ -97,9 +97,10 @@ def _bse_view():
 
 
 class ReachZeroEnds(unittest.TestCase):
-    """Post-freeze note 1 (r2 2c9018f3, addenda 1 ff656fed and 2 705a59e9): past a reach-0 end every row holding the
-    curve takes its side against P_b(T_end), and a node past the end leaves the end row out of its T slope; the one
-    remaining step is at P_b(T_end), with the swap's sign, and is landed."""
+    """Post-freeze note 1 (r2 2c9018f3, addenda 1 ff656fed, 2 705a59e9 and 3 dcac2b96, rule (J)): past a reach-0 end
+    every row holding the curve is made step-free at P_b(T_end) and the end row's own step is added outside the T
+    cubic with the smoothstep θ (1 at T_end, 0 at the next node, 0 farther out): one step, at P_b(T_end), with the
+    swap's sign, landed; a T kink at T_end on the stepped side, named («curve-end fade»)."""
 
     @classmethod
     def setUpClass(cls):
@@ -122,14 +123,33 @@ class ReachZeroEnds(unittest.TestCase):
         pb = self.c.p_b(1600.0)
         self.assertGreater(self.jump(pb), 1.0)            # the 660: ρ rises across it
 
-    def test_the_own_geometry_fallback_is_red(self):
-        # the mutant: no forced side and no node exclusion past a reach-0 end (the pre-fix read)
+    def test_the_second_cell_has_no_step(self):
+        # rule (J): past the cell next to the end θ = 0 and every holding row is step-free, so at P_b(T_end) the read is
+        # continuous at 1525 K (the end row 1600 is an outer row there)
+        p = self.c.p_b(1600.0)
+        lo, hi = p * math.exp(-1e-9), p * math.exp(1e-9)
+        self.assertLess(abs(self.v.state(hi, 1525.0)[0] - self.v.state(lo, 1525.0)[0]), 1e-3)
+
+    def test_the_step_inside_the_cubic_is_red(self):
+        # the mutant: no fades, so the holding rows keep their steps (at the forced P_b(T_end)) inside the T cubic; in
+        # the second cell the end row's step then enters through an outer row's weight
         from unittest import mock
         v = _bse_view()
-        p = self.c.p_b(1650.0)
-        with mock.patch.object(type(v), "_node_excl", lambda self, ib: None), \
-                mock.patch.object(type(v), "_side_pb", lambda self, c, t: c.p_b_ext(t, self._reach)):
-            self.assertLess(v.state(p * math.exp(1e-9), T_STEP)[0] - v.state(p * math.exp(-1e-9), T_STEP)[0], -0.1)
+        p = self.c.p_b(1600.0)
+        with mock.patch.object(type(v), "_fades", lambda self, rel, t, pbs: ()):
+            j = v.state(p * math.exp(1e-9), 1525.0)[0] - v.state(p * math.exp(-1e-9), 1525.0)[0]
+        self.assertGreater(abs(j), 0.1)
+
+    def test_the_fade_is_exact_at_the_end_row(self):
+        # θ = 1 at T_end: the read is the end row's own value on its own side (C⁰ with the curve's own range)
+        p = self.c.p_b(1600.0)
+        for f in (-1e-3, 1e-3):
+            q = p * math.exp(f)
+            self.assertAlmostEqual(self.v.state(q, 1600.0 - 1e-6)[0], self.v.state(q, 1600.0)[0], delta=1e-3)
+
+    def test_the_end_fades_are_named(self):
+        ends = self.v.curve_end_fades()
+        self.assertIn((1600.0, self.c.p_b(1600.0), -1), ends)
 
     def test_the_event_is_the_read_s_step(self):
         i = self.v._events.index(self.c)

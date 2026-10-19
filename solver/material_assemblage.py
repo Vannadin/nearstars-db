@@ -1070,12 +1070,9 @@ def _slope_t(d0, d1):
     return _clip_fc(0.0 if q == 0.0 else d0 * d1 * (d0 + d1) / q, d0, d1)
 
 
-def _cubic1_t(x, xs, ys, i, excl=None):
+def _cubic1_t(x, xs, ys, i):
     """The T-last interpolation of a read's rows: as _cubic1 (its node returns and CellMissing), with node slopes by
-    _slope_t and end slopes the end secant, so it is C¹ in the row values except where the clip binds.
-    `excl` (swap extension note 1, r2 addendum 2): (l0, r0, l1, r1), a neighbour row left out of a node's slope — node
-    i's left / right neighbour, node i + 1's left / right — decided per node, never per cell, so both cells at a node
-    take one slope; a node with one neighbour left takes that side's secant."""
+    _slope_t and end slopes the end secant, so it is C¹ in the row values except where the clip binds."""
     y0, y1 = ys[i], ys[i + 1]
     u = (x - xs[i]) / (xs[i + 1] - xs[i])
     node = not isinstance(u, Dual)                   # a Dual reads the Hermite at a node too: same value, its slope
@@ -1090,15 +1087,8 @@ def _cubic1_t(x, xs, ys, i, excl=None):
     d = (y1 - y0) / h
     has_l = i - 1 >= 0 and ys[i - 1] is not None
     has_r = i + 2 < len(xs) and ys[i + 2] is not None
-    if excl is None:
-        m0 = _slope_t((y0 - ys[i - 1]) / (x0 - xs[i - 1]), d) if has_l else d
-        m1 = _slope_t(d, (ys[i + 2] - y1) / (xs[i + 2] - x1)) if has_r else d
-    else:
-        l0, r0, l1, r1 = excl
-        sl = (y0 - ys[i - 1]) / (x0 - xs[i - 1]) if has_l and not l0 else None
-        sr = (ys[i + 2] - y1) / (xs[i + 2] - x1) if has_r and not r1 else None
-        m0 = d if sl is None else (sl if r0 else _slope_t(sl, d))
-        m1 = d if sr is None else (sr if l1 else _slope_t(d, sr))
+    m0 = _slope_t((y0 - ys[i - 1]) / (x0 - xs[i - 1]), d) if has_l else d
+    m1 = _slope_t(d, (ys[i + 2] - y1) / (xs[i + 2] - x1)) if has_r else d
     return _hermite(x, (x0, h, y0, y1, m0, m1))
 
 
@@ -1333,7 +1323,6 @@ class AssemblageView(mv.RecordView):
                            # edge read), net falls (secant), and reads where the Fritsch–Carlson clip bound
                            "bridge_reads": 0, "bridge_no_edge": 0, "bridge_net_fall": 0, "bridge_clip": 0}
         self._in_bridge = False
-        self._held_memo, self._excl_memo = {}, {}         # swap extension note 1: rows' reach-0 curves, node exclusions
         self._fall_sets = None                           # PROTOTYPE rev 3: {T node index: [(a′, b′) in ln P]}, loaded once
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
         #: s-read registration (frozen 327b4f73): the solid dT/dP and c_P from the stored s, declared by the record
@@ -1832,7 +1821,7 @@ class AssemblageView(mv.RecordView):
             self._read_memo[mk] = (sides, r, by_count)
         return r
 
-    def _value(self, f, x, t, ia, ib, sides, check=True, near=()):
+    def _value(self, f, x, t, ia, ib, sides, check=True, near=(), fades=()):
         """One field at (x, t) through the row regions, T last (_cubic1 as the uncut path). A corner row (ib, ib+1)
         that names no region, or has no usable run, raises _NoRead; an outer row then drops (its choice changes only
         with the sides). `check`: a read-side corner node of the read cell with no value is CellMissing (D-M2).
@@ -1855,30 +1844,83 @@ class AssemblageView(mv.RecordView):
                 continue
             if near:
                 v = self._row_blend(f, k, x, sides, near, v)
+            for fd in fades:                             # swap extension note 1 (J): the row made step-free
+                if fd[0] in self._partition(k).cs and x >= fd[1]:
+                    v -= self._fade_delta(f, k, sides, fd)
             rows[k] = v
-        return _cubic1_t(t, self.ts, _Seq(rows, n_t), ib, self._node_excl(ib))
+        out = _cubic1_t(t, self.ts, _Seq(rows, n_t), ib)
+        for fd in fades:                                 # + θ(τ)·Δ_end·H(x − x_e), the end row's own step
+            if fd[3] and x >= fd[1]:
+                out += fd[3] * self._fade_delta(f, fd[2], sides, fd)
+        return out
 
-    def _held(self, k):
-        """Row k's swap curves with a reach-0 end (a record with the extension block), memoised per row."""
-        got = self._held_memo.get(k)
+    def _fade_delta(self, f, k, sides, fd):
+        """Row k's own step of fade fd's curve at x_e = ln P_b(T_end): its new side's value minus its old side's, each
+        read at x_e as the read reads a row there (region, run, the (c′) row blend over the edges near x_e). Memoised
+        per read. 0 where a side has no value there (counted)."""
+        c, xe, _k_end, _th, near_e, sides_e = fd
+        mk = ("fade", f, k, c.id)
+        got = self._read_memo.get(mk)
         if got is None:
-            got = self._held_memo[k] = frozenset(c for _, c in self._partition(k) if c.stop_lo or c.stop_hi)
+            vals = []
+            for s_ in (1, -1):
+                sd = {**sides_e, c: s_}                  # every other curve's side as at x_e: Δ is one number
+                r = self._region(k, sd, xe)
+                v = self._row_value(f, k, r, xe, False)
+                if v is not None and near_e:
+                    v = self._row_blend(f, k, xe, sd, near_e, v)
+                vals.append(v)
+            if None in vals:
+                self.cut_counts["side_fallbacks"] += 1
+                got = 0.0
+            else:
+                got = vals[0] - vals[1]
+            self._read_memo[mk] = got
         return got
 
-    def _node_excl(self, ib):
-        """Swap extension note 1 (r2 addendum 2 (a)): at each node of the cell, a neighbour row whose partition holds a
-        reach-0 curve that the node's own row does not (the node lies past that curve's end) is left out of the node's
-        T slope. Decided per node, so both cells at a node take one slope (C¹ in T); the end row so never enters a cell
-        past the end but through the corner's own value. None (no change, bit-identical) when no row is affected."""
-        got = self._excl_memo.get(ib)
-        if got is None:
-            n_t = len(self.ts)
+    def _fades(self, rel, t, pbs):
+        """Swap extension note 1 (r2 addendum 3, rule (J)): the reach-0 curves past their end at T whose rows the
+        stencil holds, as (curve, x_e, k_end, θ, near at x_e). x_e = ln P_b(T_end); θ the smoothstep of the cell
+        fraction, 1 at T_end and 0 at the cell's far node, in the cell next to the end only (0 farther out); near the
+        edges whose (c′) window holds x_e; sides_e every curve's side at x_e (so Δ does not move with x). In id order
+        (rel is)."""
+        out = []
+        for c in rel:
+            if not (c.stop_lo or c.stop_hi) or c.p_b_ext(t, self._reach) is not None:
+                continue
+            te = c.t0 if (c.stop_lo and t < c.t0) else (c.t1 if (c.stop_hi and t > c.t1) else None)
+            if te is None:
+                continue
+            k_end = bisect.bisect_left(self.ts, te)
+            xe = _log(c.p_b(te))
+            th = 0.0
+            if c.stop_lo and t < c.t0 and k_end > 0 and self.ts[k_end - 1] < t:
+                u = (t - self.ts[k_end - 1]) / (te - self.ts[k_end - 1])
+                th = u * u * (3.0 - 2.0 * u)
+            elif c.stop_hi and t > c.t1 and k_end + 1 < len(self.ts) and t < self.ts[k_end + 1]:
+                u = (self.ts[k_end + 1] - t) / (self.ts[k_end + 1] - te)
+                th = u * u * (3.0 - 2.0 * u)
+            near_e = []
+            for e in rel:
+                if e.kind != "edge" or pbs[e] is None:
+                    continue
+                xb = _log(pbs[e])
+                if abs(xe - xb) >= self._node_widths()[1] * (1.0 + 1e-12):
+                    continue
+                w = self._width(xb)
+                if abs(xe - xb) < w:
+                    near_e.append((e, xb, w))
+            sides_e = {e: (None if pbs[e] is None else (-1 if xe < _log(pbs[e]) else 1)) for e in rel}
+            out.append((c, xe, k_end, th, tuple(near_e), sides_e))
+        return tuple(out)
 
-            def left_out(j, k):                          # neighbour k of node j
-                return 0 <= k < n_t and bool(self._held(k) - self._held(j))
-            out = (left_out(ib, ib - 1), left_out(ib, ib + 1), left_out(ib + 1, ib), left_out(ib + 1, ib + 2))
-            got = self._excl_memo[ib] = (out if any(out) else False)
-        return got or None
+    def curve_end_fades(self):
+        """The named «curve-end fade» class (note 1, rule (J)): per reach-0 swap end, (T_end, P_b(T_end), the T side
+        past the end): the read is C⁰ with a T kink at T = T_end for P above P_b(T_end), a T event there for the
+        stepper (68's side)."""
+        return tuple((c.t0 if lo else c.t1, c.p_b(c.t0 if lo else c.t1), -1 if lo else 1)
+                     for c in self._cut if c.kind == "swap" for lo in (True, False)
+                     if (c.stop_lo if lo else c.stop_hi))
 
     def _side_pb(self, c, t):
         """The P that decides the read's side of curve c at T: its extended P_b; past a reach-0 end, the end row's own
@@ -2007,7 +2049,7 @@ class AssemblageView(mv.RecordView):
                     if not all(k in rows for k in (ib, ib + 1)):
                         self.cut_counts["blend_drops"] += 1
                         continue
-                    val = _cubic1_t(t, self.ts, _Seq(rows, n_t), ib, self._node_excl(ib))
+                    val = _cubic1_t(t, self.ts, _Seq(rows, n_t), ib)
                 total += wgt * val
                 kept += wgt
         finally:                                         # the side reads leave no mark or count on the read
@@ -2078,10 +2120,11 @@ class AssemblageView(mv.RecordView):
             w = self._width(xb)
             if abs(x - xb) < w:
                 near.append((c, xb, w))
+        fades = self._fades(rel, t, pbs)
         out = {}
         try:
             for f in (fields or ("rho", "dtdp_eq", "c_p")):
-                v = self._value(f, x, t, ia, ib, sides, near=near)     # PROTOTYPE: the row-level blend
+                v = self._value(f, x, t, ia, ib, sides, near=near, fades=fades)     # PROTOTYPE: the row-level blend
                 if f == "rho" and RHO_BRIDGE and not self._in_bridge and not isinstance(t, Dual):
                     v = self._rho_fall(x, t, ib, v)
                 if near:
