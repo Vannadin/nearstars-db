@@ -704,17 +704,23 @@ NODE_NOTE = ("node-resolved phase change read across: C¹ over its grid cell, ne
 BAND_NOTE = "band read: s not conserved over ≤ one T row"
 
 
-@dataclasses.dataclass(frozen=True)
-class BandTrap:
+class BandTrap(tuple):
     """s-read post-freeze note 3 §2.4: a band read whose two reads have opposite signs (dT/dP_today · dT/dP_s < 0), so
     the blended field has a zero inside the T row. The view only marks the read (68 B2): solve refuses an accepted
-    pass whose T_ad reads carry it (solve.frozen_band_trapped); material_notes.collect never reads it."""
-    material_id: str
-    p: float
-    t: float
-    w: float
-    dtdp_today: float
-    dtdp_s: float
+    pass whose T_ad reads carry it (solve.frozen_band_trapped); material_notes.collect never reads it. A plain tuple
+    (material_id, p, t, w, dtdp_today, dtdp_s), not a dataclass: the module is also built from source (mutant tests)."""
+    __slots__ = ()
+    _fields = ("material_id", "p", "t", "w", "dtdp_today", "dtdp_s")
+
+    def __new__(cls, material_id, p, t, w, dtdp_today, dtdp_s):
+        return super().__new__(cls, (material_id, p, t, w, dtdp_today, dtdp_s))
+
+    material_id = property(lambda self: self[0])
+    p = property(lambda self: self[1])
+    t = property(lambda self: self[2])
+    w = property(lambda self: self[3])
+    dtdp_today = property(lambda self: self[4])
+    dtdp_s = property(lambda self: self[5])
 
 
 def _smoothstep(u: float) -> float:
