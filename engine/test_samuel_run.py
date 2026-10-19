@@ -59,12 +59,14 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 # run now stays on the upper branch and the six move by more than noise (old → new, PC WSL reference):
 # 2101.23 → 2090.23 · 1941.78 → 1932.40 · -49.27 → -51.17 · 285.66 → 283.41 · 2043.57 → 2038.27 · 1.2632 → 1.1532.
 # A 1e-13 shake of the Mars profile now moves T_c today by ≤ 9e-11 K (was up to 0.108 K, C144).
-# C145 NaN class (c1 4b26cbcd, 2026-10-19; post-result re-freeze, directing): the old pins predate a false refusal.
-# The tracker read NaN (the inner root slid out of its ±w bracket) as a sign, planted a false δ_u neighbour and
-# declared a fold at 0.749176 Gyr whose excluded interval held the live root, so the base refused there; with the
-# inner root carried, NaN edges never a sign and a fold judged on finite values only, the run goes to 4.5 Gyr with no
-# fold and the six move (old → new, Mac, the PC check when runs resume): 2090.23 → 2094.64 · 1932.40 → 1937.36 ·
-# -51.17 → -50.33 · 283.41 → 287.34 · 2038.27 → 2042.46 · 1.1532 → 1.1612.
+# C145 NaN class (c1 4b26cbcd, 2026-10-19; post-result re-freeze, directing): the move is layered Mars, now
+# reachable; the tracker fix removes the false refusal (r2 5cee6df2 n1). The old pins (3b38f1d6) were frozen on the
+# pre-layered declaration; since the layered Mars (db3c73b4) the base refused at 0.749176 Gyr, where the tracker read
+# NaN (the inner root slid out of its ±w bracket) as a sign, planted a false δ_u neighbour and declared a fold whose
+# excluded interval held the live root. With the inner root carried, NaN edges never a sign and a fold judged on
+# finite values only, the run reaches 4.5 Gyr with no fold, and the six show layered Mars's move (old → new, Mac, the
+# PC check pending): 2090.23 → 2094.64 · 1932.40 → 1937.36 · -51.17 → -50.33 · 283.41 → 287.34 · 2038.27 → 2042.46 ·
+# 1.1532 → 1.1612.
 FROZEN_L20 = {"T_c today": 2094.64, "T_m today": 1937.36, "T_c(1) − T_c0": -50.33, "T_m(1) − T_m0": 287.34,
               "T_m peak": 2042.46, "T_m peak time": 1.1612}
 FROZEN_TOL = {"T_m peak time": 0.0005}  # Gyr; every other value K, to the frozen decimal
@@ -114,7 +116,8 @@ check("v2-17 — a cold start gives the same δ_u, δ_b where the inner root is 
 for e in out["fold_events"]:
     print(f"      접힘 @ {e[0]:.6f} Gyr: {e[1]} {e[2] / 1e3:.3f} → {e[3] / 1e3:.3f} km (허용 {e[4]:.1e} Gyr), "
           f"T_c − T_b {e[5]:+.3f} K")
-print(f"      근 여럿 평가 {out['multi_root_evals']} · 접힘 사건 {len(out['fold_events'])}")
+print(f"      근 여럿 평가 {out['multi_root_evals']} · 접힘 사건 {len(out['fold_events'])} · 거절된 접힘 {out['fold_rejected']}")
+print(f"      안쪽 근 이어 따라감 {out['carries']} · T_c − T_b 부호 {out['tc_tb_sign']}")
 
 # regression — the six data-free values
 c = sr.curve_values(rows)
