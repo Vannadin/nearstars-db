@@ -66,7 +66,8 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 # excluded interval held the live root. With the inner root carried, NaN edges never a sign and a fold judged on
 # finite values only, the run reaches 4.5 Gyr with no fold, and the six show layered Mars's move (old → new, Mac, the
 # PC check pending): 2090.23 → 2094.64 · 1932.40 → 1937.36 · -51.17 → -50.33 · 283.41 → 287.34 · 2038.27 → 2042.46 ·
-# 1.1532 → 1.1612.
+# 1.1532 → 1.1612. The run passes the printed pole (T_c = T_b) at 0.426 K, at 1.081 Gyr: a future refusal there is
+# the pole (pole_check), not this fix; the gain cap (cleared 74205ba5) is the ready answer (r2 2dc5bff3 m1).
 FROZEN_L20 = {"T_c today": 2094.64, "T_m today": 1937.36, "T_c(1) − T_c0": -50.33, "T_m(1) − T_m0": 287.34,
               "T_m peak": 2042.46, "T_m peak time": 1.1612}
 FROZEN_TOL = {"T_m peak time": 0.0005}  # Gyr; every other value K, to the frozen decimal

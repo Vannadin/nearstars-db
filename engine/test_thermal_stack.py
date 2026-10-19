@@ -129,23 +129,38 @@ check("C145 ⑥ E0 window a — a 20 km pair, no fold: no event, no branch chang
 
 # the pole (directing 10-20): a run whose T_c − T_b changes sign ends in the named refusal, not a result. T_b is
 # shifted to T_c + 5 K on accepted rows past 0.05 Gyr (the run's own gap is ≥ 0.43 K and keeps its sign on R2).
-for mod, mk in ((ts, lambda: ts.samuel_stack(lam=20.0, profile=prof, g=G)),
-                (sr, lambda: sr.Setup(lam=20.0, profile=prof, g=G, g_c=prof.gravity(st.R_CORE_NO_BML_M)))):
+# r2 2dc5bff3 P1: only on the printed bottom. A basal-layer run (grid_flux+jump) shifted the same way runs on past the
+# sign change; it is stopped at 0.1 Gyr by a planted refusal, which it must reach instead of the pole at 0.0577.
+def _pole_run(mod, mk, stop_at=None):
     orig = mod.state_terms
 
     def shifted(s_, t_c, t_m, d_l, d_cr, t_gyr, grad, mode="stage", _o=orig):
+        if stop_at is not None and t_gyr > stop_at:
+            raise mod.sm.Refused("planted stop")
         f = _o(s_, t_c, t_m, d_l, d_cr, t_gyr, grad, mode=mode)
         if mode == "accept" and t_gyr > 0.05:
             f = {**f, "t_b": t_c + 5.0}
         return f
     mod.state_terms = shifted
     try:
-        pol = mod.run(mk(), 10.0)
+        return mod.run(mk(), 10.0)
     finally:
         mod.state_terms = orig
+
+
+for mod, mk, mk_layer in (
+        (ts, lambda: ts.samuel_stack(lam=20.0, profile=prof, g=G),
+         lambda: ts.samuel_stack(lam=10.0, profile=prof, g=G, model="bml", layer=LAYER)),
+        (sr, lambda: sr.Setup(lam=20.0, profile=prof, g=G, g_c=prof.gravity(st.R_CORE_NO_BML_M)),
+         lambda: sr.Setup(lam=10.0, profile=prof, g=G, g_c=0.0, model="bml", layer=LAYER))):
+    pol = _pole_run(mod, mk)
     check(f"pole — {mod.__name__}: a run across T_c = T_b refuses by name",
           pol.get("refused", "").startswith("T_c − T_b changed sign between t = ") and pol["refused_at_gyr"] < 0.2
           and "tc_tb_sign" in pol, f"{pol.get('refused', 'no refusal')[:160]} at {pol.get('refused_at_gyr')}")
+    pol = _pole_run(mod, mk_layer, stop_at=0.1)
+    check(f"pole — {mod.__name__}: a basal-layer run across T_c = T_b runs on (no pole on a jump bottom)",
+          pol.get("refused") == "planted stop" and pol.get("tc_tb_sign", {}).get("sign_changes", 0) >= 1,
+          f"{pol.get('refused', 'no refusal')[:120]} at {pol.get('refused_at_gyr')} · {pol.get('tc_tb_sign')}")
 
 # R2 — plate 2's six regression pins, through the stack.
 out = ts.run(ts.samuel_stack(lam=20.0, profile=prof, g=G), 10.0)
@@ -165,7 +180,9 @@ print(f"  [안쪽 근 이어 따라감] R2: {out['carries']}")
 # speed stack (2026-09-29): moved again with Mars's table rebuilt on the new shot path; old values beside FROZEN_L20
 # C145 (2026-10-01): moved with the continuation of the δ_b root (no artefact jump at 0.783 Gyr); old values beside FROZEN_L20
 # C145 NaN class (2026-10-19): the move is layered Mars (db3c73b4), now reachable; the tracker fix removes the false
-# refusal at 0.749176 Gyr (r2 5cee6df2 n1); old values beside FROZEN_L20
+# refusal at 0.749176 Gyr (r2 5cee6df2 n1); old values beside FROZEN_L20. R2 passes the printed pole at 0.426 K
+# (1.081 Gyr): a future refusal there is the pole (pole_check), not this fix; the gain cap (cleared 74205ba5) is the
+# ready answer (r2 2dc5bff3 m1)
 for key, want, tol in (("T_c today", 2094.64, 0.005), ("T_m today", 1937.36, 0.005), ("T_c(1) − T_c0", -50.33, 0.005),
                        ("T_m(1) − T_m0", 287.34, 0.005), ("T_m peak", 2042.46, 0.005), ("T_m peak time", 1.1612, 0.0005)):
     check(f"R2 — {key} = {want}", abs(v[key] - want) <= tol, f"{v[key]:.6f}")

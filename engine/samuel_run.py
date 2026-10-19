@@ -479,7 +479,9 @@ def tc_tb_sign(rows: list) -> dict:
 
 def pole_check(rows: list) -> None:
     """Refuses by name when T_c − T_b changes sign between the last two accepted rows (directing 10-20): the printed
-    closure's pole (r2 5c663b57 §4), across which the inner δ_b branch changes side silently. The gain cap that was
+    closure's pole (r2 5c663b57 §4), across which the inner δ_b branch changes side silently. Called on the printed
+    bottom only (r2 2dc5bff3 P1): with a basal layer the lower boundary is T_i − T′_b = 1.43·R·T_m²/E*, which does not
+    move with δ_b, so a sign change of T_c − T_b there is no pole. The gain cap that was
     to handle it is not landed (dropped on R2's 0 sign changes over 556 rows), so a body that reaches the pole fails
     loudly here instead of returning a result."""
     gaps = [(r["t"], r["t_c"] - r["t_b"]) for r in rows[-2:] if r.get("t_b") is not None]
@@ -550,7 +552,8 @@ def run(s: Setup, cap_myr: float) -> dict:
                      "guarded": f1["guarded"], "guard_gap": f1["guard_gap"], "delta_b_raw_over_shell": f1["delta_b_raw_over_shell"],
                      "tc_tb_gap": f1["tc_tb_gap"], "t_b": f1["t_b"], "layer": f1["layer"]})
         try:
-            pole_check(rows)
+            if s.layer is None:                   # r2 2dc5bff3 P1: the pole is the printed bottom's only
+                pole_check(rows)
         except sm.Refused as e:
             return {"refused": str(e), "refused_at_gyr": t, "rows": rows, "n_steps": n, **_refused_fields(s)}
         if s.lam / f1["ceiling"] > worst[0]:
