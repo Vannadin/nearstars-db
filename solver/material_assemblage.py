@@ -777,6 +777,12 @@ class _Curve:
         #: a run end inside a curve (next to rows read across) keeps the extrapolation, unchanged
         self.stop_lo = bool(self.rows[0].get("reach0_lo"))
         self.stop_hi = bool(self.rows[-1].get("reach0_hi"))
+        #: silicate post-freeze note 8 (edge extension): the full curve a cut run belongs to (itself for a full curve),
+        #: whether each end is an interior run end (the parent continues past it as rows read across), and Δ_c per end,
+        #: the distance to the next table T row past it (set by the view; None: reach / EXT_ROWS, the uniform grid's)
+        self.parent = self
+        self.interior_lo = self.interior_hi = False
+        self.dc_lo = self.dc_hi = None
 
     def p_b(self, t):
         if t < self.t0 or t > self.t1:
@@ -808,12 +814,59 @@ class _Curve:
             if self.stop_lo or self.t0 - t > reach:
                 return None
             e, o = rs[0], (rs[1] if len(rs) > 1 else None)
+        if self.kind == "edge":
+            return self._edge_ext(t, t > self.t1, e, o, reach)
         if o is None or o["p_b"] == e["p_b"]:
             return e["p_b"]
         # ln P linear past the end, from the end row's exact value: never reaches 0 (linear in P did, on default_bse's
         # steep cpx edge at 2250 K, and a clamp there flipped the read's side off any event), and a constant curve
         # extends to its own value bit for bit (an exp-log round trip left a 2e-8 Pa sliver that named no region)
         return e["p_b"] * _exp((t - e["t"]) * (math.log(e["p_b"]) - math.log(o["p_b"])) / (e["t"] - o["t"]))
+
+    def _edge_ext(self, t, hi, e, o, reach):
+        """Silicate post-freeze note 8 §2 (68's design eecf1761): an edge's position past a run end, within the reach.
+        τ is the distance past the end, Δ_c the next T row's, s = τ/Δ_c.
+        (a) A true curve end: x_b = ln P_e ± s1·g(τ), s1 the inside one-sided d ln P_b/dT at the end row (P linear in T
+            inside; 0 for a one-row curve or a flat last segment), g(τ) = τ − τ²/(2Δ_c) up to Δ_c and Δ_c/2 after: C¹ at
+            the end row (g′(0) = 1) and at Δ_c (g′ = 0), flat on the outer-only cell.
+        (b) An interior run end (the parent continues as rows read across): x_eff = x_r(t_e) + [x_r(T) − x_r(t_e)]·ψ(s),
+            ψ = 1 − 3s² + 2s³, up to Δ_c, and x_r(t_e) after, x_r the parent's real ln P_b.
+        A Dual T carries the slope (_exp, _log)."""
+        tau = (t - e["t"]) if hi else (e["t"] - t)
+        dc = (self.dc_hi if hi else self.dc_lo) or reach / EXT_ROWS
+        if self.interior_hi if hi else self.interior_lo:
+            if tau >= dc:
+                return e["p_b"]
+            u = tau / dc
+            psi = 1.0 - u * u * (3.0 - 2.0 * u)
+            return e["p_b"] * _exp((_log(self.parent.p_b(t)) - math.log(e["p_b"])) * psi)
+        if o is None or o["p_b"] == e["p_b"]:
+            return e["p_b"]
+        s1 = (e["p_b"] - o["p_b"]) / ((e["t"] - o["t"]) * e["p_b"])
+        g = tau - tau * tau / (2.0 * dc) if tau <= dc else 0.5 * dc
+        return e["p_b"] * _exp((s1 if hi else -s1) * g)
+
+    def edge_slope_entry(self, hi, reach):
+        """Note 8 §3: the landing-scale entry (T_x, P_max, bound of |dP/dT|) over an edge run end's whole extension.
+        (a) a true end: σ the signed d ln P_b/dτ continuing the inside slope, P_max = P_e·exp(max(σ, 0)·Δ_c/2), slope
+        bound P_max·|σ|; (b) an interior end: M = |ΔP_r|/(Δ_c·min P_r) over the parent's segment past t_e, P_max the
+        larger P_r, slope bound 1.25·M·P_max. T_x = t_e + Δ_c at an upper end, t_e at a lower one. None at a stopped
+        end."""
+        if self.stop_hi if hi else self.stop_lo:
+            return None
+        rs = self.rows
+        e, o = (rs[-1], rs[-2] if len(rs) > 1 else None) if hi else (rs[0], rs[1] if len(rs) > 1 else None)
+        dc = (self.dc_hi if hi else self.dc_lo) or reach / EXT_ROWS
+        tx = e["t"] + dc if hi else e["t"]
+        if self.interior_hi if hi else self.interior_lo:
+            pa, pb = e["p_b"], self.parent.p_b(e["t"] + dc if hi else e["t"] - dc)
+            m = abs(pb - pa) / (dc * min(pa, pb))
+            pmax = max(pa, pb)
+            return tx, pmax, 1.25 * m * pmax
+        s1 = 0.0 if o is None or o["p_b"] == e["p_b"] else (e["p_b"] - o["p_b"]) / ((e["t"] - o["t"]) * e["p_b"])
+        sig = s1 if hi else -s1
+        pmax = e["p_b"] * math.exp(max(sig, 0.0) * dc / 2.0)
+        return tx, pmax, pmax * abs(sig)
 
     def side_of(self, p, t):
         """The side of (p, t): −1 left, +1 right, by P_b at t, or at the nearest row's T past the curve's ends."""
@@ -900,7 +953,10 @@ def _cut_runs(curves, across=False):
                 run.append(r)
                 continue
             if run:
-                out.append(_Curve(len(out), c.kind, c.phase, run))
+                cr = _Curve(len(out), c.kind, c.phase, run)
+                cr.parent = c                                # note 8 (b): an end inside the parent is interior
+                cr.interior_lo, cr.interior_hi = run[0] is not c.rows[0], run[-1] is not c.rows[-1]
+                out.append(cr)
                 run = []
     return out
 
@@ -1363,6 +1419,10 @@ class AssemblageView(mv.RecordView):
                         self._row_steps.append((c, k))
         #: (R1) §4: a cut curve's side reach past its ends, two T rows (the stencil's reach)
         self._reach = EXT_ROWS * (self.ts[1] - self.ts[0]) if len(self.ts) > 1 else 0.0
+        for c in self._cut + self._curves:              # note 8: Δ_c, the next table T row past each end
+            j0, j1 = self.ts.index(c.t0), self.ts.index(c.t1)
+            c.dc_lo = c.t0 - self.ts[j0 - 1] if j0 > 0 else None
+            c.dc_hi = self.ts[j1 + 1] - c.t1 if j1 + 1 < len(self.ts) else None
         self._parts, self._runcache = {}, {}
         #: PROTOTYPE: the highest frozen node T (rows above it hold no frozen run; _flag_reads' precheck)
         self._t_frozen_max = max((c["t"] for c in table["cells"] if c["kind"] == "frozen"), default=-math.inf)
@@ -2493,9 +2553,10 @@ class AssemblageView(mv.RecordView):
     def curve_slope_points(self, curve) -> tuple:
         """(T, P_b, |dP_b/dT|) where |P_b| + T·|dP_b/dT| is largest on each piece of the curve as boundary_pressure
         reads it, for its landing scale (events.curve_p_scale; venus-pocket registration): both ends of every row
-        segment (P_b linear in T there, so the sum is largest at an end), and for a cut run each extension's reach end
-        (ln P_b linear in T, so P_b and its slope grow together toward it). A one-row or constant piece gives slope 0;
-        any other curve form gives none."""
+        segment (P_b linear in T there, so the sum is largest at an end), and for a cut run each extension: a swap's
+        reach end (ln P_b linear in T, so P_b and its slope grow together toward it), an edge's bound entry over its
+        whole extension (silicate post-freeze note 8 §3, _Curve.edge_slope_entry). A one-row or constant piece gives
+        slope 0; any other curve form gives none."""
         if curve.get("form") != "assemblage_curve":
             return ()
         i = curve["id"]
@@ -2505,7 +2566,12 @@ class AssemblageView(mv.RecordView):
         for a, b in zip(rs, rs[1:]):
             s = abs((b["p_b"] - a["p_b"]) / (b["t"] - a["t"]))
             out += [(a["t"], a["p_b"], s), (b["t"], b["p_b"], s)]
-        if i < len(self._cut) and len(rs) > 1:
+        if i < len(self._cut) and c.kind == "edge":     # silicate post-freeze note 8 §3: a bound over the extension
+            for hi in (True, False):
+                got = c.edge_slope_entry(hi, self._reach)
+                if got is not None:
+                    out.append(got)
+        elif i < len(self._cut) and len(rs) > 1:
             for t_e, e, o in ((c.t1 + self._reach, rs[-1], rs[-2]), (c.t0 - self._reach, rs[0], rs[1])):
                 pb = c.p_b_ext(t_e, self._reach)
                 if pb is None:

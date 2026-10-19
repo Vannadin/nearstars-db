@@ -107,15 +107,21 @@ class PlantedLanding(unittest.TestCase):
 
 class RecordScales(unittest.TestCase):
     def test_edge275(self):
-        """venus's pocket curve: two rows (2250 K, 2300 K), a cut run, so its 100 K extension's upper reach end sets
-        the scale: P_b(2400)·(1 + 2400·ln(P_2300/P_2250)/50)."""
+        """venus's pocket curve: two rows (2250 K, 2300 K), a cut run with true ends, so its upper end's extension sets
+        the scale. Silicate post-freeze note 8 §3: the entry is (t1 + Δ_c, P_max, P_max·|σ|), σ = s1 the inside one-sided
+        d ln P_b/dT at the end row and P_max = P_e·exp(σ·Δ_c/2); it replaced 1a7's P_b(2400)·(1 + 2400·k) (ln secant k)."""
         v = _view("silicate_slb_default_bse")
         (c,) = [c for b, _k, c in v.transitions() if b[0].startswith("edge275:")]
-        rows = v._events[c["id"]].rows
-        k = math.log(rows[1]["p_b"] / rows[0]["p_b"]) / (rows[1]["t"] - rows[0]["t"])
-        pb = v.boundary_pressure(c, 2400.0)
-        self.assertAlmostEqual(events.curve_p_scale(v, c), pb + 2400.0 * pb * k, delta=1e-9 * pb * 2400.0 * k)
-        self.assertGreater(events.curve_p_scale(v, c) / _old_scale(v, c), 90.0)
+        cc = v._events[c["id"]]
+        rows = cc.rows
+        self.assertFalse(cc.interior_hi)
+        s1 = (rows[1]["p_b"] - rows[0]["p_b"]) / ((rows[1]["t"] - rows[0]["t"]) * rows[1]["p_b"])
+        dc = cc.dc_hi
+        self.assertEqual(dc, 50.0)
+        pmax = rows[1]["p_b"] * math.exp(max(s1, 0.0) * dc / 2.0)
+        want = pmax + (rows[1]["t"] + dc) * pmax * abs(s1)
+        self.assertAlmostEqual(events.curve_p_scale(v, c), want, delta=1e-9 * want)
+        self.assertGreater(events.curve_p_scale(v, c) / _old_scale(v, c), 10.0)
 
     def test_never_smaller_and_flat_curves_bit_identical(self):
         """Every assemblage curve: the scale never falls below 35b7a24b's; a curve with no slope anywhere keeps it bit
@@ -172,7 +178,65 @@ class DenseSup(unittest.TestCase):
                             continue
                         sup = max(sup, abs(p0) + t * abs((p2 - p1) / (t2 - t1)))
                 want = max(_old_scale(v, c), sup)
-                self.assertLess(abs(events.curve_p_scale(v, c) / want - 1.0), 1e-6, (rid, c["id"], kind))
+                got = events.curve_p_scale(v, c)
+                if cut and cc.kind == "edge":                  # note 8 §3: a bound, ≥ the sup and within its looseness
+                    loose = max([1.0] + [_looseness(cc, hi, v._reach) for hi in (True, False)])
+                    self.assertGreaterEqual(got, want * (1.0 - 1e-6), (rid, c["id"], kind))
+                    self.assertLessEqual(got, want * loose * (1.0 + 1e-6), (rid, c["id"], kind, loose))
+                else:
+                    self.assertLess(abs(got / want - 1.0), 1e-6, (rid, c["id"], kind))
+
+
+def _looseness(c, hi, reach):
+    """Note 8 §3's stated looseness of an edge end's entry: exp(|σ|·Δ_c/2)·(1 + Δ_c/t_e) at a true end,
+    1.25·(P_max/min P)·(1 + Δ_c/t_e) at an interior end; 1 at a stopped end."""
+    got = c.edge_slope_entry(hi, reach)
+    if got is None:
+        return 1.0
+    rs = c.rows
+    e, o = (rs[-1], rs[-2] if len(rs) > 1 else None) if hi else (rs[0], rs[1] if len(rs) > 1 else None)
+    dc = (c.dc_hi if hi else c.dc_lo) or reach / ma.EXT_ROWS
+    if c.interior_hi if hi else c.interior_lo:
+        pb = c.parent.p_b(e["t"] + dc if hi else e["t"] - dc)
+        return 1.25 * (max(e["p_b"], pb) / min(e["p_b"], pb)) * (1.0 + dc / e["t"])
+    s1 = 0.0 if o is None or o["p_b"] == e["p_b"] else (e["p_b"] - o["p_b"]) / ((e["t"] - o["t"]) * e["p_b"])
+    return math.exp(abs(s1) * dc / 2.0) * (1.0 + dc / e["t"])
+
+
+class EdgeEntries(unittest.TestCase):
+    """Silicate post-freeze note 8 §3's test: on every edge end of the three tables, a 2000-point Dual scan of
+    |P_b_ext| + T·|dP_b_ext/dT| over [0, reach] past the end; the end's entry is ≥ the scan max and within the stated
+    looseness (true and interior ends counted apart)."""
+
+    def test_every_edge_end(self):
+        n = {"true": 0, "interior": 0}
+        for rid in SILICATE:
+            v = _view(rid)
+            for c in v._cut:
+                if c.kind != "edge":
+                    continue
+                for hi in (True, False):
+                    ent = c.edge_slope_entry(hi, v._reach)
+                    if ent is None:
+                        continue
+                    t_e = c.t1 if hi else c.t0
+                    top = 0.0
+                    for j in range(1, 2001):
+                        tau = v._reach * j / 2000
+                        t = ma.Dual(t_e + tau if hi else t_e - tau, 0.0, 1.0)
+                        pb = c.p_b_ext(t, v._reach)
+                        if pb is None:
+                            continue
+                        pb = pb if isinstance(pb, ma.Dual) else ma.Dual(pb)
+                        top = max(top, abs(pb.v) + t.v * abs(pb.dt))
+                    bound = ent[1] + ent[0] * ent[2]
+                    with self.subTest(rid=rid, curve=c.id, hi=hi):
+                        self.assertGreaterEqual(bound, top * (1.0 - 1e-12))
+                        self.assertLessEqual(bound, top * _looseness(c, hi, v._reach) * (1.0 + 1e-12))
+                    n["interior" if (c.interior_hi if hi else c.interior_lo) else "true"] += 1
+        print(f"  edge ends scanned: {n}")
+        self.assertGreater(n["true"], 0)
+        self.assertGreater(n["interior"], 0)
 
 
 class PlantedMaxima(unittest.TestCase):
@@ -190,13 +254,24 @@ class PlantedMaxima(unittest.TestCase):
         self.assertEqual(events.curve_p_scale(v, c), 2.0e9 + 1050.0 * 2.0e7)      # not the lower end's 2.1e10
 
     def test_lower_reach_end(self):
+        """A cut edge falling with T: its lower end's extension rises. Note 8 §3: σ = −s1 = 0.01/K, P_max = P_e·e^{σΔ/2},
+        entry (t0, P_max, P_max·σ), so the scale is P_max·(1 + t0·σ)."""
         v, c = self._planted([(1000.0, 2.0e9), (1050.0, 1.0e9)], cut=True)
+        sig = (2.0e9 - 1.0e9) / ((1050.0 - 1000.0) * 2.0e9)
+        pmax = 2.0e9 * math.exp(sig * 25.0)
+        want = pmax * (1.0 + 1000.0 * sig)
+        self.assertLess(abs(events.curve_p_scale(v, c) / want - 1.0), 1e-12)
+        self.assertGreater(want, 2.0e9 + 1000.0 * 2.0e7)                       # beyond every segment end
+
+    def test_lower_reach_end_of_a_swap_keeps_the_ln_secant(self):
+        """Swaps keep 1a7's entry (note 8 §1): P_b_ext at the reach end × (1 + T·k), k the ln secant."""
+        v, c = self._planted([(1000.0, 2.0e9), (1050.0, 1.0e9)], cut=True)
+        v._cut[0].kind = "swap"
         k = math.log(2.0)
         t_e = 1000.0 - v._reach
         pb = 2.0e9 * math.exp((t_e - 1000.0) * (math.log(2.0e9) - math.log(1.0e9)) / (1000.0 - 1050.0))
         want = pb + t_e * pb * k / 50.0
         self.assertLess(abs(events.curve_p_scale(v, c) / want - 1.0), 1e-12)
-        self.assertGreater(want, 2.0e9 + 1000.0 * 2.0e7)                       # beyond every segment end
 
 
 @unittest.skipUnless(HEAVY, "NEARSTARS_HEAVY=1 (PC job)")
