@@ -1070,9 +1070,12 @@ def _slope_t(d0, d1):
     return _clip_fc(0.0 if q == 0.0 else d0 * d1 * (d0 + d1) / q, d0, d1)
 
 
-def _cubic1_t(x, xs, ys, i):
+def _cubic1_t(x, xs, ys, i, excl=None):
     """The T-last interpolation of a read's rows: as _cubic1 (its node returns and CellMissing), with node slopes by
-    _slope_t and end slopes the end secant, so it is C¹ in the row values except where the clip binds."""
+    _slope_t and end slopes the end secant, so it is C¹ in the row values except where the clip binds.
+    `excl` (swap extension note 1, r2 addendum 2): (l0, r0, l1, r1), a neighbour row left out of a node's slope — node
+    i's left / right neighbour, node i + 1's left / right — decided per node, never per cell, so both cells at a node
+    take one slope; a node with one neighbour left takes that side's secant."""
     y0, y1 = ys[i], ys[i + 1]
     u = (x - xs[i]) / (xs[i + 1] - xs[i])
     node = not isinstance(u, Dual)                   # a Dual reads the Hermite at a node too: same value, its slope
@@ -1087,8 +1090,15 @@ def _cubic1_t(x, xs, ys, i):
     d = (y1 - y0) / h
     has_l = i - 1 >= 0 and ys[i - 1] is not None
     has_r = i + 2 < len(xs) and ys[i + 2] is not None
-    m0 = _slope_t((y0 - ys[i - 1]) / (x0 - xs[i - 1]), d) if has_l else d
-    m1 = _slope_t(d, (ys[i + 2] - y1) / (xs[i + 2] - x1)) if has_r else d
+    if excl is None:
+        m0 = _slope_t((y0 - ys[i - 1]) / (x0 - xs[i - 1]), d) if has_l else d
+        m1 = _slope_t(d, (ys[i + 2] - y1) / (xs[i + 2] - x1)) if has_r else d
+    else:
+        l0, r0, l1, r1 = excl
+        sl = (y0 - ys[i - 1]) / (x0 - xs[i - 1]) if has_l and not l0 else None
+        sr = (ys[i + 2] - y1) / (xs[i + 2] - x1) if has_r and not r1 else None
+        m0 = d if sl is None else (sl if r0 else _slope_t(sl, d))
+        m1 = d if sr is None else (sr if l1 else _slope_t(d, sr))
     return _hermite(x, (x0, h, y0, y1, m0, m1))
 
 
@@ -1323,6 +1333,7 @@ class AssemblageView(mv.RecordView):
                            # edge read), net falls (secant), and reads where the Fritsch–Carlson clip bound
                            "bridge_reads": 0, "bridge_no_edge": 0, "bridge_net_fall": 0, "bridge_clip": 0}
         self._in_bridge = False
+        self._held_memo, self._excl_memo = {}, {}         # swap extension note 1: rows' reach-0 curves, node exclusions
         self._fall_sets = None                           # PROTOTYPE rev 3: {T node index: [(a′, b′) in ln P]}, loaded once
         self._marks = {"dropped": set(), "empty": False, "by_count": False}
         #: s-read registration (frozen 327b4f73): the solid dT/dP and c_P from the stored s, declared by the record
@@ -1597,7 +1608,7 @@ class AssemblageView(mv.RecordView):
         rel = sorted({c for k in rows for _, c in self._partition(k)}, key=lambda c: c.id)
         sides = {}
         for c in rel:
-            pb = c.p_b_ext(t, self._reach)
+            pb = self._side_pb(c, t)
             sides[c] = None if pb is None else (-1 if pr < pb else 1)
         if force:
             sides.update({c: s_ for c, s_ in force.items() if c in sides})
@@ -1831,9 +1842,6 @@ class AssemblageView(mv.RecordView):
         rows = {}
         for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1):
             corner = k in (ib, ib + 1)
-            if self._end_drop(k, ib, sides):
-                self._marks["dropped"].add(k)
-                continue
             r = self._region(k, sides, x)
             if corner and check:
                 for j in (ia, ia + 1):
@@ -1848,23 +1856,44 @@ class AssemblageView(mv.RecordView):
             if near:
                 v = self._row_blend(f, k, x, sides, near, v)
             rows[k] = v
-        return _cubic1_t(t, self.ts, _Seq(rows, n_t), ib)
+        return _cubic1_t(t, self.ts, _Seq(rows, n_t), ib, self._node_excl(ib))
 
-    def _end_drop(self, k, ib, sides):
-        """Swap extension rows, post-freeze note 1 (r2 2c9018f3 addendum 1): an outer stencil row (ib − 1 or ib + 2)
-        whose partition holds a swap curve with a reach-0 end and no side at the read's T (the read is past that end)
-        is dropped, so _cubic1_t takes its one-sided slope there. That row's own step (at its own P_b) would otherwise
-        enter through the cubic's slope terms with a negative weight, sign-flipped (bse 1568.5 K, 23.3415 GPa: row
-        1650's +47.9 kg/m³ as −0.63). The corner rows are read as they describe themselves; their weight is ≥ 0, so
-        the one remaining step, at P_b(T_end) in the cell next to the end, has the swap's sign (a landed event,
-        boundary_pressure). Only curves of a record with the extension block carry the flags: other records are
-        bit-identical."""
-        if k in (ib, ib + 1):
-            return False
-        return any(sides.get(c) is None and (c.stop_lo or c.stop_hi) for _, c in self._partition(k))
+    def _held(self, k):
+        """Row k's swap curves with a reach-0 end (a record with the extension block), memoised per row."""
+        got = self._held_memo.get(k)
+        if got is None:
+            got = self._held_memo[k] = frozenset(c for _, c in self._partition(k) if c.stop_lo or c.stop_hi)
+        return got
+
+    def _node_excl(self, ib):
+        """Swap extension note 1 (r2 addendum 2 (a)): at each node of the cell, a neighbour row whose partition holds a
+        reach-0 curve that the node's own row does not (the node lies past that curve's end) is left out of the node's
+        T slope. Decided per node, so both cells at a node take one slope (C¹ in T); the end row so never enters a cell
+        past the end but through the corner's own value. None (no change, bit-identical) when no row is affected."""
+        got = self._excl_memo.get(ib)
+        if got is None:
+            n_t = len(self.ts)
+
+            def left_out(j, k):                          # neighbour k of node j
+                return 0 <= k < n_t and bool(self._held(k) - self._held(j))
+            out = (left_out(ib, ib - 1), left_out(ib, ib + 1), left_out(ib + 1, ib), left_out(ib + 1, ib + 2))
+            got = self._excl_memo[ib] = (out if any(out) else False)
+        return got or None
+
+    def _side_pb(self, c, t):
+        """The P that decides the read's side of curve c at T: its extended P_b; past a reach-0 end, the end row's own
+        P_b(T_end) (r2 addendum 2 (b): every row holding the curve steps at that one located P; between P_b(T_end) and
+        a row's own P_b the row is read on the forced side, a disclosed approximation, note 1)."""
+        pb = c.p_b_ext(t, self._reach)
+        if pb is None and (c.stop_lo or c.stop_hi):
+            if c.stop_lo and t < c.t0:
+                return c.p_b(c.t0)
+            if c.stop_hi and t > c.t1:
+                return c.p_b(c.t1)
+        return pb
 
     def _end_step(self, c, t):
-        """The landed step of a reach-0 end (_end_drop): P_b(T_end) while the read's T lies in the cell next to the end
+        """The landed step of a reach-0 end (_side_pb): P_b(T_end) while the read's T lies in the cell next to the end
         (the end row a corner row there with a weight > 0), else None."""
         ts = self.ts
         if c.stop_lo:
@@ -1978,7 +2007,7 @@ class AssemblageView(mv.RecordView):
                     if not all(k in rows for k in (ib, ib + 1)):
                         self.cut_counts["blend_drops"] += 1
                         continue
-                    val = _cubic1_t(t, self.ts, _Seq(rows, n_t), ib)
+                    val = _cubic1_t(t, self.ts, _Seq(rows, n_t), ib, self._node_excl(ib))
                 total += wgt * val
                 kept += wgt
         finally:                                         # the side reads leave no mark or count on the read
@@ -2008,8 +2037,6 @@ class AssemblageView(mv.RecordView):
         n_t = len(self.ts)
         rows = {}
         for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1):
-            if self._end_drop(k, ib, sides):
-                continue
             r = self._region(k, sides, x)
             v = self._row_value(f, k, r, x, False)
             if v is None and k in (ib, ib + 1):
@@ -2037,7 +2064,7 @@ class AssemblageView(mv.RecordView):
         # corrections below are summed in this order, so a set made the answers differ in their last bits run to run
         rel = sorted({c for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1) for _, c in self._partition(k)},
                      key=lambda c: c.id)
-        pbs = {c: c.p_b_ext(t, self._reach) for c in rel}
+        pbs = {c: self._side_pb(c, t) for c in rel}
         sides = {c: (None if pb is None else (-1 if pr < pb else 1)) for c, pb in pbs.items()}
         if force:
             sides.update({c: s_ for c, s_ in force.items() if c in sides})
@@ -2143,7 +2170,7 @@ class AssemblageView(mv.RecordView):
                     # and x's own side repaired alone, its end read one SWAP_EPS off the swap on x's side
                     if swaps is None:
                         swaps = [_log(pe) for c in self._cut if c.kind == "swap"
-                                 for pe in (c.p_b_ext(t, self._reach),) if pe is not None]
+                                 for pe in (c.p_b_ext(t, self._reach) or self._end_step(c, t),) if pe is not None]
                     lo_, hi_ = a, b
                     for xs_ in swaps:
                         if lo_ < xs_ <= x:
@@ -2476,7 +2503,7 @@ def boundary_disclosures(record, table) -> dict:
             ia = max(i for i in range(len(ps) - 1) if ps[i] <= pb)
             ib = min(ts.index(t), len(ts) - 2)
             rel = {cc for k in range(max(ib - 1, 0), min(ib + 2, len(ts) - 1) + 1) for _, cc in v._partition(k)}
-            side = {cc: (None if (q := cc.p_b_ext(t, v._reach)) is None else (-1 if pb < q else 1)) for cc in rel}
+            side = {cc: (None if (q := v._side_pb(cc, t)) is None else (-1 if pb < q else 1)) for cc in rel}
             try:
                 left = v._value("rho", math.log(pb), t, ia, ib, {**side, c: -1}, False)
                 right = v._value("rho", math.log(pb), t, ia, ib, {**side, c: 1}, False)
