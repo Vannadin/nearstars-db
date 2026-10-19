@@ -160,7 +160,7 @@ def swap_gibbs(v, curve_id, t, p_b, p_lo, p_hi):
         st_ = _two_sides(m, bulk, kl, kr, p_true, t, warm)
         dv = st_[1][1] - st_[0][1]
         out.update(p_true=p_true, displacement=p_true - p_b, dv_true=dv, dv_rel=dv / st_[0][1],
-                   verdict="read-extension step (record sound: ΔV ≤ 0 at the true crossing)" if dv <= 0.0 else
+                   verdict="read-extension step (record sound: ΔV ≤ 0 at the nearest crossing found)" if dv <= 0.0 else
                    "record STOP: ΔV > 0 at the true crossing")
     return out
 
@@ -484,7 +484,9 @@ def gate(v, jumps):
             if verdict != "within TP_TOL" or not j.get("composition_same", False):
                 stops.append({**j, "gate": verdict})
             elif within:
-                exceptions.append({**j, "gate": "a record defect within its band"})
+                # r2 m2 (fc64f79e): with ΔV ≤ 0 at P_b the equilibria step upward, so the downward jump is the read's
+                exceptions.append({**j, "gate": ("a read defect within its band" if (j.get("dv_at_pb") or 0.0) <= 0.0
+                                                 else "a record defect within its band")})
             else:
                 stops.append({**j, "gate": "record STOP: |Δρ/ρ| above the cell's ρ band"})
         elif verdict.startswith("read-extension step"):
