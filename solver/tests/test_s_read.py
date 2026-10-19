@@ -8,6 +8,7 @@ import copy
 import math
 import random
 import unittest
+from unittest import mock
 
 from solver import material_assemblage as ma, material_registry as mr, material_view as mv, stepper as st
 from solver.from_v1 import thaw
@@ -269,6 +270,26 @@ class MonotoneSample(unittest.TestCase):
         self.assertTrue(ma.s_monotone_check(v, sample)["pass"])
         with self.assertRaisesRegex(ma.TableStop, "build-time"):
             ma.s_monotone_load_check(v, {"monotone": {"pass": False, "seed": 7}})
+
+    def test_a_pass_built_on_another_read_stops(self):
+        """r2 B2 on 677f85d0..0d7732d3: the build-time pass names the material_assemblage.py blob it ran on; the load
+        STOPs when that is not this module's own (the read changes under a fixed table: the row blend moved bse's
+        minimum ∂s/∂T from −1.61 to −1.96). module_blob() is `git hash-object` of the module's bytes."""
+        import subprocess
+        from pathlib import Path
+        here = Path(ma.__file__)
+        got = subprocess.run(["git", "hash-object", str(here)], capture_output=True, text=True, cwd=here.parent)
+        if got.returncode == 0:
+            self.assertEqual(ma.module_blob(), got.stdout.strip())
+        v = _view()
+        with self.assertRaisesRegex(ma.TableStop, "ran on material_assemblage.py"):
+            ma.s_monotone_load_check(v, {"monotone": {"pass": True, "seed": 7, "material_assemblage_blob": "0" * 40}})
+        with self.assertRaisesRegex(ma.TableStop, "ran on material_assemblage.py"):
+            ma.s_monotone_load_check(v, {"monotone": {"pass": True, "seed": 7}})        # no identity: stale too
+        with mock.patch.object(ma, "s_monotone_check", return_value={"pass": True, "failures": []}) as chk:
+            ma.s_monotone_load_check(v, {"monotone": {"pass": True, "seed": 7,
+                                                      "material_assemblage_blob": ma.module_blob()}})
+        chk.assert_called_once()                          # its own blob: the identity passes and the sample runs
         tab = copy.deepcopy(mv.thaw_plain(_reg().tables["silicate_slb_default_bse"]))
         cell = next(c for c in tab["cells"] if c["p"] > 20e9 and c["t"] == 2000.0 and c["kind"] != "frozen")
         nxt = next(c for c in tab["cells"] if c["p"] == cell["p"] and c["t"] == 2050.0)

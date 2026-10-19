@@ -2817,14 +2817,29 @@ def s_monotone_build(record, table):
     return s_monotone_check(v)
 
 
+def module_blob() -> str:
+    """The git blob id of this module's bytes as loaded (sha1 of «blob <n>\\0» + bytes, as `git hash-object`): the
+    identity the generator writes into closure_terms.monotone (gen engine_identity). Read per call (once per table
+    load), so no module state is kept (A6)."""
+    with open(__file__, "rb") as f:
+        data = f.read()
+    return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+
+
 def s_monotone_load_check(v, block):
-    """The load's sampled §3.4 check: the closure block's build-time result must pass, and MONOTONE_LOAD_SAMPLE points
-    drawn from the full sample with the block's seed must show ∂s/∂T > 0. Raises TableStop."""
+    """The load's sampled §3.4 check: the closure block's build-time result must pass, on this module's own bytes (r2
+    B2: a pass built on another read is stale), and MONOTONE_LOAD_SAMPLE points drawn from the full sample with the
+    block's seed must show ∂s/∂T > 0. Raises TableStop."""
     import random
     mono = block.get("monotone") or {}
     if mono.get("pass") is not True or not isinstance(mono.get("seed"), int):
         raise TableStop(f"closure_terms: the build-time ∂s/∂T check is missing or did not pass ({mono.get('failures')})",
                         check="s monotone")
+    own = module_blob()
+    if mono.get("material_assemblage_blob") != own:          # r2 B2 on 677f85d0..0d7732d3: the read under the pass
+        raise TableStop(f"closure_terms: the build-time ∂s/∂T check ran on material_assemblage.py "
+                        f"{mono.get('material_assemblage_blob')!r}, not this module ({own}): rebuild it on "
+                        "this read (s-read §3.4)", check="s monotone")
     pts = s_monotone_points(v)
     sample = random.Random(mono["seed"]).sample(pts, min(MONOTONE_LOAD_SAMPLE, len(pts)))
     got = s_monotone_check(v, sample)
