@@ -281,5 +281,20 @@ finally:
 after = (interior.STEPS, interior._FOLD_DEPTH[0], interior.FOLD_DOUBLED[0], repr(interior._FAMILY_TRAIL))
 check("STEPS, _FOLD_DEPTH, FOLD_DOUBLED and _FAMILY_TRAIL are restored after a raising doubled shoot", before == after)
 
+print("(11) every walk limit is read at call time (directing 10-19, r2 B1)")
+saved_l = (rf.FOLD_BUDGET, rf.FOLD_H0, rf.FOLD_H_MAX, rf.FOLD_DG_MAX, rf.FOLD_TURN_MAX)
+try:
+    rf.FOLD_BUDGET, rf.FOLD_H0 = 7, 1.25e-4
+    rf.FOLD_H_MAX, rf.FOLD_DG_MAX, rf.FOLD_TURN_MAX = 6.25e-4, 1.25e-3, 0.025
+    wp = rf.fold_walk(plant(), (0.05, 0.05 ** 3 - 0.05), TOL)
+finally:
+    rf.FOLD_BUDGET, rf.FOLD_H0, rf.FOLD_H_MAX, rf.FOLD_DG_MAX, rf.FOLD_TURN_MAX = saved_l
+check("patched FOLD_BUDGET and FOLD_H0 take effect: the walk records them and stops at budget 7",
+      wp.limits == {"budget": 7, "h0": 1.25e-4, "h_max": 6.25e-4, "dg_max": 1.25e-3, "turn_max": 0.025}
+      and wp.status == "budget" and wp.attempts == 7, f"{wp.limits} {wp.status} {wp.attempts}")
+check("unpatched, the walk records the shipped limits", rf.fold_walk(plant(), (0.05, 0.05 ** 3 - 0.05), TOL).limits
+      == {"budget": rf.FOLD_BUDGET, "h0": rf.FOLD_H0, "h_max": rf.FOLD_H_MAX, "dg_max": rf.FOLD_DG_MAX,
+          "turn_max": rf.FOLD_TURN_MAX})
+
 print(f"test_core_fold: {'모두 통과' if not fails else f'FAIL {fails}'}")
 sys.exit(1 if fails else 0)

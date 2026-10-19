@@ -109,6 +109,7 @@ class FoldWalk:
         self.attempts = 0
         self.status = "done"
         self.leg_ends: list = []
+        self.limits: dict = {}
 
 
 def _grad(F, u, v, f0, walk, g0=None):
@@ -148,13 +149,20 @@ def _correct(F, u, v, gu, gv, tol_dm, walk):
     return None
 
 
-def fold_walk(F, seed, tol_dm: float, direction: float = -1.0, budget: int = FOLD_BUDGET, h0: float = FOLD_H0,
+def fold_walk(F, seed, tol_dm: float, direction: float = -1.0, budget: int | None = None, h0: float | None = None,
               h_max: float | None = None, dg_max: float | None = None, turn_max: float | None = None):
     """C1/C2 — pure arc-length continuation on {dm = 0} from `seed` = (u, v): first the leg whose tangent has
     du/ds of sign `direction` (−1: toward the shallow end, smaller P_c), to the domain's edge, then back through the seed
     to the other edge (item 8: the walk does not stop at its first crossing). Collects every crossing of g = 0 (located
     to |dm| ≤ tol_dm on the curve, g by Illinois on the step fraction) and every turning point of v(s)."""
+    # every limit is read at call time from the module (directing 10-19, r2 B1): a patched FOLD_BUDGET or FOLD_H0 takes
+    # effect like the other three; the walk records what it used
+    budget = FOLD_BUDGET if budget is None else budget
+    h0 = FOLD_H0 if h0 is None else h0
     walk = FoldWalk()
+    walk.limits = {"budget": budget, "h0": h0, "h_max": FOLD_H_MAX if h_max is None else h_max,
+                   "dg_max": FOLD_DG_MAX if dg_max is None else dg_max,
+                   "turn_max": FOLD_TURN_MAX if turn_max is None else turn_max}
     try:
         u0, v0 = seed
         dm0, g0 = F(u0, v0)
@@ -169,8 +177,7 @@ def fold_walk(F, seed, tol_dm: float, direction: float = -1.0, budget: int = FOL
     u0, v0, dm0, g0, _it = got
     gu, gv = _grad(F, u0, v0, dm0, walk, g0)
     legs = []
-    lim = (FOLD_H_MAX if h_max is None else h_max, FOLD_DG_MAX if dg_max is None else dg_max,
-           FOLD_TURN_MAX if turn_max is None else turn_max)
+    lim = (walk.limits["h_max"], walk.limits["dg_max"], walk.limits["turn_max"])
     for sense in (direction, -direction):
         pts = _leg(F, (u0, v0, dm0, g0, gu, gv), sense, tol_dm, budget, h0, walk, *lim)
         legs.append((sense, pts))
