@@ -2127,6 +2127,7 @@ class AssemblageView(mv.RecordView):
                     if swaps is None:
                         swaps = [_log(pe) for c in self._cut if c.kind == "swap"
                                  for pe in (c.p_b_ext(t, self._reach),) if pe is not None]
+                        swaps += self._row_steps_up(t, ib)       # swap extension note 1: an upward row step is landed
                     lo_, hi_ = a, b
                     for xs_ in swaps:
                         if lo_ < xs_ <= x:
@@ -2144,6 +2145,22 @@ class AssemblageView(mv.RecordView):
         r0 = own if pieces[0] is None else pieces[0]
         r1 = own if pieces[1] is None else pieces[1]
         return (1.0 - th) * r0 + th * r1
+
+    def _row_steps_up(self, t, ib):
+        """Swap extension note 1 (r2 addendum 4 (4)): the reach-0 holding-row steps at T (_row_step_p) whose step in
+        the read is upward, in ln P. An upward one is a landed step and splits a fall interval as a swap does; a
+        downward one is not a swap at that T and is bridged. The sign from _edge_read one SWAP_EPS either side."""
+        out = []
+        for i in range(len(self._row_steps)):
+            q = self._row_step_p(i, t)
+            if q is None:
+                continue
+            xs_ = _log(q)
+            lo_r = self._edge_read(xs_ - SWAP_EPS, t, ib, below=True)
+            hi_r = self._edge_read(xs_ + SWAP_EPS, t, ib, below=False)
+            if lo_r is not None and hi_r is not None and hi_r[0] >= lo_r[0]:
+                out.append(xs_)
+        return out
 
     def _fall_bridge(self, x, t, ib, x0, x1):
         """The monotone cubic Hermite through (x0, R, R′) and (x1, R, R′) at the read's T, R′ from the outside (_edge_read),

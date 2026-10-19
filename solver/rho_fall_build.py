@@ -228,6 +228,24 @@ def falls_at(v, t, ib, xlo, xhi):
             pe = c.p_b_ext(t, v._reach)
             if pe is not None and xlo < math.log(pe) < xhi:
                 swaps.append((math.log(pe), v._events.index(c)))
+    # swap extension note 1 (r2 addendum 4 (4)): a reach-0 end's holding-row steps (the read's landed events,
+    # _row_step_p): an upward one is a landed step, like a swap's (listed, never bridged, the intervals stop at it); a
+    # downward one is a fall to bridge, never an «unresolved» cell
+    row_steps, down = [], []
+    for i in range(len(getattr(v, "_row_steps", ()))):
+        q = v._row_step_p(i, t)
+        if q is None or not xlo < math.log(q) < xhi:
+            continue
+        xs_ = math.log(q)
+        lo_r, hi_r = g(xs_ - SWAP_EPS), g(xs_ + SWAP_EPS)
+        if lo_r is None or hi_r is None:
+            continue
+        jump = hi_r[0] - lo_r[0]
+        row_steps.append({"t": t, "x": xs_, "row": v.ts[v._row_steps[i][1]], "jump": jump})
+        if jump >= 0.0:
+            swaps.append((xs_, f"row{i}"))
+        else:
+            down.append(xs_)
     swaps.sort()
     grid = list(v.lnps)                                  # the P cell bounds (68 addendum 1)
     for j in range(len(v.lnps) - 1):
@@ -250,14 +268,17 @@ def falls_at(v, t, ib, xlo, xhi):
                     xb = math.log(pe)
                     w = v._width(xb)
                     grid += [xb, xb - w, xb + w]
-    for xs_, _c in swaps:
+    for xs_ in [x_ for x_, _c in swaps] + down:
         grid += [xs_ - SWAP_EPS, xs_ + SWAP_EPS]
     grid = sorted({x for x in grid if xlo <= x <= xhi})
     vals = [g(x) for x in grid]
     falling = []                                         # points where g < THR
+    step_fall = {}                                       # a downward row step's fall point → the step's ln P
     floor_cells = []                                     # cells accepted at H_MIN (rising ends, R not falling)
     swap_jumps = []                                      # every swap's jump at t (68 addendum 1: listed, never bridged)
     for xs_, cid in swaps:
+        if isinstance(cid, str):
+            continue                                     # a row step: listed in row_steps, not a swap at t
         lo_r, hi_r = g(xs_ - SWAP_EPS), g(xs_ + SWAP_EPS)
         if lo_r is not None and hi_r is not None:
             swap_jumps.append({"t": t, "x": xs_, "curve": cid, "r_before": lo_r[0], "r_after": hi_r[0],
@@ -277,6 +298,13 @@ def falls_at(v, t, ib, xlo, xhi):
             return
         if across_swap(a, b) and b - a <= 2.0 * SWAP_EPS * (1.0 + 1e-6):
             return                                       # the swap's own jump: listed above, not a fall
+        if any(a <= xs_ <= b for xs_ in down) and b - a <= 2.0 * SWAP_EPS * (1.0 + 1e-3):
+            # a downward row step (its own P_b is a grid point too, so the step sits in one of the two half-cells): a
+            # fall, bridged, where R drops across the half-cell; the other half is smooth and passes as any cell
+            if fb[0] < fa[0]:
+                falling.append(b)
+                step_fall[b] = next(xs_ for xs_ in down if a <= xs_ <= b)
+            return
         if fa[1] < THR:
             falling.append(a)
             return
@@ -323,7 +351,7 @@ def falls_at(v, t, ib, xlo, xhi):
         j_ = min(max(bisect.bisect_right(v.lnps, xf) - 1, 0), len(v.lnps) - 2)     # r2 B2: xf's own P cell
         step = (v.lnps[j_ + 1] - v.lnps[j_]) / SUB_P / 4.0
         a = xf
-        while True:
+        while xf not in step_fall:                       # a slope fall: walk to the local max before it
             q = g(a - step)
             if q is None or a - step < left:
                 a = max(a - step, left) if q is not None else a
@@ -332,8 +360,11 @@ def falls_at(v, t, ib, xlo, xhi):
                 a = _bisect(lambda z: gv(z)[1], a - step, a, q[1])
                 break
             a -= step
-        e = xf                                           # the end of the falling run: g back above 0
-        while True:
+        if xf in step_fall:                              # a downward row step: the jump's two sides
+            a, e = step_fall[xf] - SWAP_EPS, step_fall[xf] + SWAP_EPS
+        else:
+            e = xf                                       # the end of the falling run: g back above 0
+        while xf not in step_fall:
             q = g(e + step)
             if q is None or e + step > right:
                 break
@@ -371,7 +402,7 @@ def falls_at(v, t, ib, xlo, xhi):
                           "r_a": r_lo[0], "r_b": r_hi[0]})
         intervals.append((lo_, hi_, a, c))
     return intervals, unrecovered, stops, floor_cells, swap_jumps, {"unreadable": sorted(set(unreadable)),
-                                                                   "unscreened": unscreened}
+                                                                   "unscreened": unscreened, "row_steps": row_steps}
 
 
 def _merge(ivs):
@@ -409,7 +440,8 @@ def cell_falls(v, ib, nsub=16, xr=None):
                 except Exception as e:                   # an equilibration that fails is recorded, not a crash
                     j_["gibbs_error"] = f"{type(e).__name__}: {str(e)[:200]}"
         out.append({"t": t, "intervals": [list(iv) for iv in ivs], "unrecovered": un, "stops": st, "floor_cells": fl,
-                    "swap_jumps": sj, "unreadable": len(ur["unreadable"]), "unscreened": ur["unscreened"]})
+                    "swap_jumps": sj, "unreadable": len(ur["unreadable"]), "unscreened": ur["unscreened"],
+                    "row_steps": ur["row_steps"]})
     return out
 
 
@@ -520,7 +552,9 @@ def document(v, per_cell):
             "samples": sum(len(c) for c in per_cell.values()),
             # listed per ln P position (1e-7), each with its sample count and T range: a P node's kink recurs at every T
             "floor_cells": _floor_list([f_ for c in per_cell.values() for smp in c for f_ in smp["floor_cells"]]),
-            "swap_jumps": [j for c in per_cell.values() for smp in c for j in smp["swap_jumps"]]}
+            "swap_jumps": [j for c in per_cell.values() for smp in c for j in smp["swap_jumps"]],
+            # swap extension note 1: the reach-0 holding-row steps met (upward: landed; downward: bridged)
+            "row_steps": [j for c in per_cell.values() for smp in c for j in smp.get("row_steps", ())]}
 
 
 # n4 (r2): floor cells are listed per 1e-7 ln P, so kinks closer than that share a row.
