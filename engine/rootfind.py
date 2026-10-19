@@ -113,18 +113,29 @@ def _grad(F, u, v, f0, walk):
 
 
 def _correct(F, u, v, gu, gv, tol_dm, walk):
-    """Chord Newton on dm along the gradient direction from (u, v): returns (u, v, dm, g, iters) or None."""
-    n2 = gu * gu + gv * gv
-    if not n2 > 0.0:
+    """The corrector: from (u, v), a 1-D root of dm along the fixed direction n = ∇dm/|∇dm| (the last accepted point's
+    gradient, so the correction stays across the curve), started with the slope |∇dm| and updated by the secant of the
+    corrector's own evaluations — one evaluation per iteration, superlinear where dm is smooth along n (a chord with the
+    old gradient only converges linearly where ∂dm/∂v and ∂dm/∂u differ by decades: mars at 891d0615, ratio ≈ 0.28 per
+    iteration). Returns (u, v, dm, g, iters) or None."""
+    nrm = math.hypot(gu, gv)
+    if not nrm > 0.0:
         return None
+    nu, nv = gu / nrm, gv / nrm
+    t, slope = 0.0, nrm
+    dm, g = F(u, v)
+    walk.evals += 1
     for it in range(FOLD_CORR_ITERS + 1):
-        dm, g = F(u, v)
-        walk.evals += 1
         if abs(dm) <= tol_dm:
-            return u, v, dm, g, it
-        if it == FOLD_CORR_ITERS:
+            return u + t * nu, v + t * nv, dm, g, it
+        if it == FOLD_CORR_ITERS or not slope:
             return None
-        u, v = u - dm * gu / n2, v - dm * gv / n2
+        t1 = t - dm / slope
+        dm1, g1 = F(u + t1 * nu, v + t1 * nv)
+        walk.evals += 1
+        if t1 != t and dm1 != dm:
+            slope = (dm1 - dm) / (t1 - t)
+        t, dm, g = t1, dm1, g1
     return None
 
 
