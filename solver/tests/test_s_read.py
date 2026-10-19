@@ -4,6 +4,7 @@
 
     solver/.venv/bin/python -m unittest solver.tests.test_s_read
 """
+import bisect
 import copy
 import math
 import random
@@ -38,26 +39,91 @@ class Derivatives(unittest.TestCase):
     """§3.0: the forward-mode derivatives are the read's own, against central differences off the switches and
     one-sided differences on each side of a switch (68 n3)."""
 
-    def test_against_central_differences(self):
-        v = _view()
-        rnd = random.Random(1)
-        n = 0
-        for _ in range(400):
-            p, t = math.exp(rnd.uniform(math.log(2e9), math.log(1.3e11))), rnd.uniform(1650.0, 3000.0)
+    HP, HT = 1e-6, 1e-3                    # the central differences' steps: ln P, K
+    RECORDS = ("silicate_slb_default_bse", "silicate_slb_earth_dmm_wh2005", "silicate_slb_mars_khan2022")
+
+    @classmethod
+    def _switch(cls, v, p, t):
+        """Why (p, t) lies within two steps of a switch of the read, by an independent locator (r2 B4 on
+        677f85d0..0d7732d3), else None: a T node, a P node (the limiter acts at nodes), a cut curve's P_b over T ± 2h_T,
+        an edge's (c′) window ends at ±w and its blend's central ±w/2, a run end of s or its bump end (L) in a stencil
+        row, or a change of the note 3 band weight / frozen flag across P ± 2h_P."""
+        x = math.log(p)
+        if min(abs(t - tk) for tk in v.ts) < 2 * cls.HT:
+            return "T node"
+        if min(abs(x - xp) for xp in v.lnps) < 2 * cls.HP:
+            return "P node"
+        ia = min(max(bisect.bisect_left(v.ps, p, 1) - 1, 0), len(v.ps) - 2)
+        ib = min(max(bisect.bisect_right(v.ts, t) - 1, 0), len(v.ts) - 2)
+        for c in v._cut:
+            xs = [q for q in (c.p_b_ext(tt, v._reach) for tt in (t - 2 * cls.HT, t, t + 2 * cls.HT)) if q is not None]
+            if not xs:
+                continue
+            lo, hi = math.log(min(xs)), math.log(max(xs))
+            spans = [(lo, hi)]
+            if c.kind == "edge":
+                w = v._width(0.5 * (lo + hi))
+                spans += [(lo + d, hi + d) for d in (-w, w, -w / 2, w / 2)]
+            if any(a - 2 * cls.HP <= x <= b + 2 * cls.HP for a, b in spans):
+                return "curve"
+        for k in range(max(ib - 1, 0), min(ib + 2, len(v.ts) - 1) + 1):
+            for qs in v._runs("s", k).values():
+                for q in qs:
+                    if any(abs(x - e) < 2 * cls.HP for e in (q[0][0], q[0][-1], q[0][0] - q.L_lo, q[0][-1] + q.L_hi)):
+                        return "run end"
+        ws = []
+        for pp in (p * math.exp(-2 * cls.HP), p * math.exp(2 * cls.HP)):
+            ws.append(None if v._s_path(pp, t, pp, ia, ib) is None else v._band_w(pp, t, pp, ia, ib))
+        if ws[0] != ws[1]:
+            return "flag"
+        return None
+
+    def _check(self, rid, n=2000, seed=1):
+        """§3.0 on `n` points of record `rid`: the forward-mode derivatives against central differences, 0
+        disagreements beyond 1e-6 relative off the located switches. Returns (agreeing, skips by reason, bad)."""
+        v = _view(rid)
+        rnd = random.Random(seed)
+        ok, skips, bad = 0, {}, []
+        for _ in range(n):
+            p = math.exp(rnd.uniform(math.log(2e9), math.log(min(1.3e11, v.p_dataset))))
+            t = rnd.uniform(v.ts[0] + 1.0, v.ts[-1] - 1.0)
             sv = v.s_path(p, t)
-            if sv is None or isinstance(sv, st.Stop):
+            why = "frozen stencil or refused" if sv is None or isinstance(sv, st.Stop) else self._switch(v, p, t)
+            if why is None:
+                vals = [_s(v, p * math.exp(self.HP), t), _s(v, p * math.exp(-self.HP), t), _s(v, p, t + self.HT),
+                        _s(v, p, t - self.HT)]
+                why = "a neighbour frozen" if None in vals else None
+            if why is not None:
+                skips[why] = skips.get(why, 0) + 1
                 continue
-            h = 1e-6
-            vals = [_s(v, p * math.exp(h), t), _s(v, p * math.exp(-h), t), _s(v, p, t + 1e-3), _s(v, p, t - 1e-3)]
-            if None in vals:
-                continue
-            fx, ft = (vals[0] - vals[1]) / (2 * h), (vals[2] - vals[3]) / 2e-3
-            if abs(sv.dx - fx) > 1e-5 * max(abs(fx), 1e-9) or abs(sv.dt - ft) > 1e-5 * abs(ft):
-                continue                      # a switch inside the stencil: the one-sided test below covers it
-            n += 1
-            self.assertLess(abs(sv.dx - fx), 1e-6 * max(abs(fx), 1.0), (p, t))
-            self.assertLess(abs(sv.dt - ft), 1e-6 * abs(ft), (p, t))
-        self.assertGreater(n, 300)
+            fx, ft = (vals[0] - vals[1]) / (2 * self.HP), (vals[2] - vals[3]) / (2 * self.HT)
+            if abs(sv.dx - fx) > 1e-6 * max(abs(fx), 1.0) or abs(sv.dt - ft) > 1e-6 * max(abs(ft), 1e-3):
+                bad.append((p, t, sv.dx, fx, sv.dt, ft))
+            else:
+                ok += 1
+        return ok, skips, bad
+
+    def test_against_central_differences(self):
+        """§3.0: 2000 points per record on all three, skips chosen by the locator alone (never by disagreement), and 0
+        disagreements; the skip counts are printed (r2 B4)."""
+        for rid in self.RECORDS:
+            ok, skips, bad = self._check(rid)
+            print(f"  {rid}: {ok} agree, skipped {skips}")
+            with self.subTest(rid=rid):
+                self.assertEqual(bad, [])
+                self.assertGreater(ok, 900)
+
+    def test_a_local_derivative_error_is_red(self):
+        """r2 B4's planted local mutant: the open-end bump's derivative scaled by 1.01 (its value kept); bse goes red."""
+        real = ma._bump
+
+        def bump(a, s0, s1, L):
+            r = real(a, s0, s1, L)
+            return ma.Dual(r.v, 1.01 * r.dx, 1.01 * r.dt) if isinstance(r, ma.Dual) else r
+
+        with mock.patch.object(ma, "_bump", bump):
+            _ok, _skips, bad = self._check(self.RECORDS[0])
+        self.assertGreater(len(bad), 0)
 
     def test_at_t_nodes_the_slope_is_kept(self):
         """A T node: the Hermite is read (same value), so ∂s/∂T is the node's slope, not 0."""
