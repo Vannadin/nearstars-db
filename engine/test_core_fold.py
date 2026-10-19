@@ -325,5 +325,12 @@ src_solve = inspect.getsource(interior.solve)
 check("solve's Result grade is _answer_grade(grade0, fold_info) (the wiring, not only the helper)",
       "grade=_answer_grade(grade0, fold_info)" in src_solve)
 
+print("(14) directing 10-19 (r2 q2): a refused doubled-STEPS solve keeps the state and names the unmeasured shipped band")
+info_r = dict(info, band={"T_c [K]": 0.05}, doubled={"STEPS": 3000, "refused": "적분이 실패했다 — 가짜"})
+notes_r = interior.fold_note(info_r)
+check("the note «shipped band not measured — doubled solve refused: <reason>», no shipped band",
+      any(n == "core_fold_band — shipped band not measured — doubled solve refused: 적분이 실패했다 — 가짜" for n in notes_r)
+      and not any("실어 보내는 띠" in n for n in notes_r), str(notes_r)[:120])
+
 print(f"test_core_fold: {'모두 통과' if not fails else f'FAIL {fails}'}")
 sys.exit(1 if fails else 0)
