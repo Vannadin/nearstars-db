@@ -139,8 +139,11 @@ class RecordScales(unittest.TestCase):
 class DenseSup(unittest.TestCase):
     """68 B1 on d8eb7aa7: on every assemblage curve of the three records, curve_p_scale equals max(35b7a24b's scale, the
     dense sup of |P_b| + T·|ΔP_b/ΔT| over the curve as read: every row segment and, for a cut run, each extension out
-    to its reach) to 1e-6 relative; and no reach end of a cut run reads None (curve_slope_points' `continue` on None is
-    unreachable on the shipped records, curve-scale post-result note 1)."""
+    to its reach) to 1e-6 relative; and a reach end of a cut run reads None exactly when that end is a reach-0 end.
+    Swap-extension notes 1 and 2 (frozen 8402255e; r2 6c6c1e94): on the regenerated records every swap curve's true end,
+    and every coincident-edge swap's, takes reach 0, so no P_b exists past it (bse swap277's end at 1800 K: cells_disagree
+    at 1850 K, a physical end). curve-scale post-result note 1's «no None» predates that rule (the frozen-rule-vs-old-test
+    rule, suites-1020); the other ends still extrapolate and must read."""
 
     def test_every_curve(self):
         for rid in SILICATE:
@@ -151,8 +154,11 @@ class DenseSup(unittest.TestCase):
                 cc = v._events[c["id"]]
                 cut = c["id"] < len(v._cut)
                 if cut and len(cc.rows) > 1:
-                    for t_e in (cc.t1 + v._reach, cc.t0 - v._reach):
-                        self.assertIsNotNone(cc.p_b_ext(t_e, v._reach), (rid, c["id"], t_e))
+                    for t_e, stop in ((cc.t1 + v._reach, cc.stop_hi), (cc.t0 - v._reach, cc.stop_lo)):
+                        if stop:                                   # a reach-0 end: no P_b past it
+                            self.assertIsNone(cc.p_b_ext(t_e, v._reach), (rid, c["id"], t_e))
+                        else:
+                            self.assertIsNotNone(cc.p_b_ext(t_e, v._reach), (rid, c["id"], t_e))
                 lo, hi = cc.t0 - (v._reach if cut else 0.0), cc.t1 + (v._reach if cut else 0.0)
                 knots = sorted({lo, hi, *(r["t"] for r in cc.rows)})
                 sup = 0.0
