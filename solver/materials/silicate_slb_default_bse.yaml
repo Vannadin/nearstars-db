@@ -17,7 +17,7 @@ primary_family:
   reason: frozen S1
 assemblage:
   file: tables/silicate_slb_default_bse.json.gz
-  sha256: bfab62a736ddcfeb51b7f1400a17bbfc49ecbf0ee1a53a24c135c182827f78a8
+  sha256: 15b8ebcb55ae4da63805fdcb16e923b0e6a4e25f9175c3a7f98ade48dc40be96
   p_dataset: 136000000000.0
   interpolation: c1_lnp_t
   melt_variant: peridotitic
@@ -926,7 +926,10 @@ assemblage:
     boundary_tool:
       blob: 0b5299e498698a23a8ef40a816415998b4ada015
       sha256: 9ab86ebaf77f4141e9a832e95347db8f88bbf13807169bc5bcbabd7acc0c33b9
-    compact_sha256: bfab62a736ddcfeb51b7f1400a17bbfc49ecbf0ee1a53a24c135c182827f78a8
+    extension_tool:
+      blob: 1867138f1675f3c2472b14e71472a20713882301
+      sha256: 8dd7def13e8456675837727dcbfd16c30a0136018af697802b7748dc0435c8dc
+    compact_sha256: 15b8ebcb55ae4da63805fdcb16e923b0e6a4e25f9175c3a7f98ade48dc40be96
     rebuilt: []
 phases:
 - id: slb_assemblage
