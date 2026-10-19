@@ -300,6 +300,57 @@ class MonotoneSample(unittest.TestCase):
         self.assertFalse(ma.s_monotone_check(w, here)["pass"])
 
 
+class OpenEnds(unittest.TestCase):
+    """§3.1 X1 (iii) (r2 B3 on 677f85d0..0d7732d3): the per-record count of s's open run ends with s∞ = 0 (the read flat
+    in P past the bump, dT/dP 0 there), pinned per record; in boundary_disclosures and, with the s read on, as the
+    record's material_disclosure on the answer."""
+
+    PINNED = {"silicate_slb_default_bse": {"ends": 1022, "flat": 131, "one_node": 173},
+              "silicate_slb_earth_dmm_wh2005": {"ends": 1104, "flat": 123, "one_node": 217},
+              "silicate_slb_mars_khan2022": {"ends": 1092, "flat": 100, "one_node": 181}}
+
+    def test_count_per_record(self):
+        reg = _reg()
+        for rid, want in self.PINNED.items():
+            with self.subTest(rid=rid):
+                self.assertEqual(_view(rid).s_open_ends(), want)
+                d = ma.boundary_disclosures(thaw(reg.get(rid)), mv.thaw_plain(reg.tables[rid]))
+                self.assertEqual(d["s_open_ends"], want)
+
+    def test_flat_means_flat(self):
+        """Each counted end reads constant in P past L: the run's s∞ is 0, so the line part adds nothing."""
+        v = _view()
+        n = 0
+        for k in range(len(v.ts)):
+            for qs in v._runs("s", k).values():
+                q = qs[-1]
+                if len(q[0]) > 1 and q.f_hi == 0.0:
+                    x = q[0][-1] + q.L_hi
+                    self.assertEqual(q.value(x + 0.5), q.value(x))
+                    n += 1
+        self.assertGreater(n, 0)
+
+    def test_note_on_the_answer(self):
+        from solver import material_notes as mn
+
+        class _L:
+            id = "mantle"
+
+        class _B:
+            layers = (_L(),)
+
+        class _Acc:
+            profiles = {"mantle": [(0.0, (0.0, 30e9, 2000.0, 2000.0), None)]}
+
+        for on in (True, False):
+            v = _view(s_read=on)
+            got = [n for n in mn.collect(_B(), {"mantle": v}, _Acc())
+                   if n.kind == "material_disclosure" and n.fields.get("of") == "s_open_ends"]
+            self.assertEqual(len(got), 1 if on else 0)
+            if on:
+                self.assertEqual(got[0].fields["flat"], self.PINNED[v.material_id]["flat"])
+
+
 class BasalDelegation(unittest.TestCase):
     """Note 1 keeps BasalView's curve_slope_points delegation (68's note on 64f38d74): equal to the overlying view's for
     every overlying curve, bit for bit; BasalView has no transitions of its own."""

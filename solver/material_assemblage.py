@@ -1451,6 +1451,7 @@ class AssemblageView(mv.RecordView):
         #: view of a record that does not declare it yet (closure_terms.py measures the new read on the pre-block table)
         self.s_read = asm["dtdp"].get("read") == "entropy"
         self._frozen_hit = False
+        self._open_ends = None                           # s_open_ends(), counted once on first use
         blk = table.get("closure_terms") or {}
         self._closure = ({(r[0], r[1]): r[2] for r in blk.get("cells", ())},
                          ((blk.get("source") or {}).get("floor") or {}).get("dtdp") or term_floor(
@@ -2510,6 +2511,25 @@ class AssemblageView(mv.RecordView):
         got = self.state(p, t)
         return got if isinstance(got, st.Stop) else got[1]
 
+    def s_open_ends(self) -> dict:
+        """s-read §3.1 X1 (iii) (r2 B3): the open ends of s's runs over every row — the first and last run of each
+        region, facing no run of it — and how many have s∞ = 0 (the run's secants change sign, or PCHIP's end slope
+        and the gentlest secant disagree in sign), so the read is flat in P past the bump length L and dT/dP is 0 there.
+        One-node runs (constant) are counted apart. Fixed per view."""
+        got = self._open_ends
+        if got is None:
+            ends = flat = one = 0
+            for k in range(len(self.ts)):
+                for qs in self._runs("s", k).values():
+                    for q, hi in ((qs[0], False), (qs[-1], True)):
+                        ends += 1
+                        if len(q[0]) == 1:
+                            one += 1
+                        elif (q.f_hi if hi else q.f_lo) == 0.0:
+                            flat += 1
+            got = self._open_ends = {"ends": ends, "flat": flat, "one_node": one}
+        return got
+
     def phase_read(self, p: float, t: float):
         pe = max(p, self.p_stop) if p > 0.0 else max(1.0e5, self.p_stop)
         if _lm().silicate_melt_phi(pe, t, self.variant) >= 1.0:
@@ -2721,6 +2741,7 @@ def boundary_disclosures(record, table) -> dict:
                                                                               ps[j] / 1e9, tk)
     past = {kd: _dist(list(d.values())) for kd, d in past.items()}
     return {"status": "exported",
+            "s_open_ends": v.s_open_ends(),                  # s-read §3.1 X1 (iii) (r2 B3)
             "curves": {k: sum(1 for c in v._curves if c.kind == k) for k in ("swap", "edge", "node")},
             "read": {"counts": {m: sum(1 for x in modes if x["mode"] == m) for m in ("cut", "across", "node")},
                      "rows": modes},

@@ -18,6 +18,7 @@ Kinds (compare.NOTE_KINDS, comparator note 15):
 - `material_source_seam`: one per source seam the layer's temperature crossed (from below t to t or above; the
   upper side owns t), with its measured step (material_joins.seam_delta);
 - `material_disclosure`: an assemblage record's declared disclosures (`of: record`), on every answer that read it;
+  with the s read on, the count of its flat open ends of s (`of: s_open_ends`, s-read §3.1 X1 (iii));
   the cross-check disclosures of every phase read; a disclosed formula-check fail whose
   `boundary` pair holds a phase read (that phase's field test evaluates the boundary), or, with no `boundary`, of
   every record read;
@@ -160,6 +161,15 @@ def collect(body, views, acc) -> tuple:
                     out.append(result.Note("material_disclosure", f"{mid} {ph['id']}: {text}", {
                         "layer": layer.id, "material": mid, "phase": ph["id"], "of": "cross_check",
                         "between": list(j["between"]), "text": text}))
+        if ts and getattr(view, "s_read", False):     # s-read §3.1 X1 (iii) (r2 B3): the record's flat open ends of s
+            oe = view.s_open_ends()
+            out.append(result.Note("material_disclosure", f"{mid}: s read flat in P past {oe['flat']} of {oe['ends']} "
+                                   "open run ends of s (s∞ = 0), dT/dP 0 there", {
+                                       "layer": layer.id, "material": mid, "of": "s_open_ends", "text":
+                                       f"the s read is flat in P past the bump length at {oe['flat']} of {oe['ends']} "
+                                       f"open run ends of s, where s∞ = 0, so dT/dP is 0 there; {oe['one_node']} "
+                                       "more are one-node runs (s-read registration §3.1 X1 (iii))",
+                                       **{k: oe[k] for k in ("ends", "flat", "one_node")}}))
         if ts:                                       # an assemblage record's disclosures, on every answer reading it
             for text in (view.record.get("assemblage") or {}).get("disclosures", ()):     # (silicate registration §2.1)
                 out.append(result.Note("material_disclosure", f"{mid}: {text}", {
