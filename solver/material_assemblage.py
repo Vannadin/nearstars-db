@@ -2278,42 +2278,14 @@ class AssemblageView(mv.RecordView):
         sets = self._fall_set_load()
         if not sets:
             return own
-        pieces = []
-        swaps = None
-        on = 2.0 * SWAP_EPS * (1.0 + 1e-6)
+        memo = []                                        # the cut swaps' P_b_ext(T), taken once and only when needed
 
-        def landed():
-            nonlocal swaps
-            if swaps is None:
-                swaps = [_log(pe) for c in self._cut if c.kind == "swap"
-                         for pe in (c.p_b_ext(t, self._reach),) if pe is not None]
-                swaps += self._row_steps_up(t, ib)       # swap extension note 1: an upward row step is landed
-            return swaps
-        for k in (ib, ib + 1):
-            got = None
-            for a, b in sets.get(k, ()):
-                # r2 c40f792a: x in the sliver [b, x_swap) between a set's end on a landed step's near side and the
-                # step itself belongs to the interval, so a flat end covers it up to the step
-                if a < x < b or (b <= x < b + on and any(b < xs_ <= b + on and x < xs_ for xs_ in landed())):
-                    # 68 addendum 1: a landed swap is never bridged — an interval holding a swap's P_b(T) is split there
-                    # and x's own side repaired alone, its end read one SWAP_EPS off the swap on x's side
-                    lo_, hi_ = a, b
-                    for xs_ in landed():
-                        if lo_ < xs_ <= x:
-                            lo_ = xs_ + SWAP_EPS
-                        elif x < xs_ < hi_:
-                            hi_ = xs_ - SWAP_EPS
-                    # r2 a69976dc rule 2: an end on a landed step's near side (split here, or the set's own end where
-                    # the build clipped it) ends a net-fall bridge flat, the step's jump absorbing the fall
-                    flat = any(hi_ < xs_ <= hi_ + on for xs_ in swaps)
-                    if lo_ < x < hi_:
-                        got = self._fall_bridge(x, t, ib, lo_, hi_, flat)
-                    elif flat and lo_ < hi_ <= x and any(hi_ < xs_ <= hi_ + on and x < xs_ for xs_ in swaps):
-                        # the sliver [x_swap − SWAP_EPS, x_swap): the flat value R(a′) when the bridge ends flat;
-                        # otherwise R itself, which is continuous there (no step before the swap)
-                        got = self._fall_bridge(x, t, ib, lo_, hi_, flat, sliver=True)
-                    break
-            pieces.append(got)
+        def cut_swaps():
+            if not memo:
+                memo.append([_log(pe) for c in self._cut if c.kind == "swap" for pe in (c.p_b_ext(t, self._reach),)
+                             if pe is not None])
+            return memo[0]
+        pieces = [self._fall_piece(x, t, ib, k, sets, cut_swaps)[0] for k in (ib, ib + 1)]
         if pieces[0] is None and pieces[1] is None:
             return own
         tau = min(max((t - self.ts[ib]) / (self.ts[ib + 1] - self.ts[ib]), 0.0), 1.0)
@@ -2322,13 +2294,51 @@ class AssemblageView(mv.RecordView):
         r1 = own if pieces[1] is None else pieces[1]
         return (1.0 - th) * r0 + th * r1
 
+    def _fall_piece(self, x, t, ib, k, sets, cut_swaps):
+        """Piece k of _rho_fall read from cell ib: (value or None, the interval (lo, hi) it bridges or None, the landed
+        list or None when x is in no interval; `cut_swaps` a callable giving the cut swaps' ln P_b_ext(T)). rev3d D1/D2: its discrete inputs are fixed per node — the interval is S_k's, the landed list is taken
+        with cell k's stencil s_k = min(k, n_T − 2) from either cell (_row_steps_up(t, s_k)); only the edge values
+        come from the reading cell ib, whose read is C⁰ across T_k."""
+        on = 2.0 * SWAP_EPS * (1.0 + 1e-6)
+        swaps = None
+
+        def landed():
+            nonlocal swaps
+            if swaps is None:
+                swaps = cut_swaps() + self._row_steps_up(t, min(k, len(self.ts) - 2))
+            return swaps
+        for a, b in sets.get(k, ()):
+            # r2 c40f792a: x in the sliver [b, x_swap) between a set's end on a landed step's near side and the step
+            # itself belongs to the interval, so a flat end covers it up to the step
+            if a < x < b or (b <= x < b + on and any(b < xs_ <= b + on and x < xs_ for xs_ in landed())):
+                # 68 addendum 1: a landed swap is never bridged — an interval holding a swap's P_b(T) is split there and
+                # x's own side repaired alone, its end read one SWAP_EPS off the swap on x's side
+                lo_, hi_ = a, b
+                for xs_ in landed():
+                    if lo_ < xs_ <= x:
+                        lo_ = xs_ + SWAP_EPS
+                    elif x < xs_ < hi_:
+                        hi_ = xs_ - SWAP_EPS
+                # r2 a69976dc rule 2: an end on a landed step's near side (split here, or the set's own end where the
+                # build clipped it) ends a net-fall bridge flat, the step's jump absorbing the fall
+                flat = any(hi_ < xs_ <= hi_ + on for xs_ in swaps)
+                if lo_ < x < hi_:
+                    return self._fall_bridge(x, t, ib, lo_, hi_, flat), (lo_, hi_), swaps
+                if flat and lo_ < hi_ <= x and any(hi_ < xs_ <= hi_ + on and x < xs_ for xs_ in swaps):
+                    # the sliver [x_swap − SWAP_EPS, x_swap): the flat value R(a′) when the bridge ends flat; otherwise R
+                    # itself, which is continuous there (no step before the swap)
+                    return self._fall_bridge(x, t, ib, lo_, hi_, flat, sliver=True), (lo_, hi_), swaps
+                return None, None, swaps
+        return None, None, swaps
+
     def _row_steps_up(self, t, ib):
         """Swap extension note 1 (r2 addendum 4 (4)): the reach-0 holding-row steps at T (_row_step_p) whose step in
         the read is upward, in ln P. An upward one is a landed step and splits a fall interval as a swap does; a
-        downward one is not a swap at that T and is bridged. The sign from _edge_read one SWAP_EPS either side."""
+        downward one is not a swap at that T and is bridged. The sign from _edge_read one SWAP_EPS either side. rev3d
+        D2: `ib` is the stencil the list is taken with (the bridge's s_k), for the row-step test and the sign alike."""
         out = []
         for i in range(len(self._row_steps)):
-            q = self._row_step_p(i, t)
+            q = self._row_step_p(i, t, ib)
             if q is None:
                 continue
             xs_ = _log(q)
@@ -2565,13 +2575,15 @@ class AssemblageView(mv.RecordView):
             tuple(((f"rowstep{i}:{c.rows[0]['left_label']}@{self.ts[k]:g}", f"{c.rows[0]['right_label']}"), "solid_solid",
                    {"form": "assemblage_row_step", "id": i}) for i, (c, k) in enumerate(self._row_steps))
 
-    def _row_step_p(self, i, t):
-        """Row step i's P (its row's own P_b of the curve) while the read at T has no P_b for the curve and the read
-        cell's stencil (ib − 1 … ib + 2) holds the row, else None (note 1, r2 addendum 4 (2))."""
+    def _row_step_p(self, i, t, ib=None):
+        """Row step i's P (its row's own P_b of the curve) while the read at T has no P_b for the curve and the
+        stencil (ib − 1 … ib + 2) holds the row, else None (note 1, r2 addendum 4 (2)). `ib` None: the cell holding T
+        (the read's own events: boundary_pressure, the stepper); rev3d D2: the bridge passes its s_k."""
         c, k = self._row_steps[i]
         if c.p_b_ext(t, self._reach) is not None or not self.ts[0] <= t <= self.ts[-1]:
             return None
-        ib = min(max(bisect.bisect_right(self.ts, t) - 1, 0), len(self.ts) - 2)
+        if ib is None:
+            ib = min(max(bisect.bisect_right(self.ts, t) - 1, 0), len(self.ts) - 2)
         return c.p_b(self.ts[k]) if ib - 1 <= k <= ib + 2 else None
 
     def boundary_pressure(self, curve, t):
