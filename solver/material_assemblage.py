@@ -752,11 +752,13 @@ def row_across(r) -> bool:
     the pass's tolerance: delta_rho present and the pass's own over_tolerance flag False. A swap is always cut; an edge
     over tolerance, with delta_rho None (a side unsolved at P_b) or not converged cuts its row. The engine reads the
     pass's flag, never re-derives it from the value. A row the generator marks `cut_reason: "gap"` (records-stream note,
-    across-gap rows, frozen 247f1b0b: a one-row across gap between two rows that cut the same pair) is cut."""
-    if r.get("cut_reason") == "gap":
-        return False
+    across-gap rows, frozen 247f1b0b: a one-row across gap between two rows that cut the same pair) is cut. The note
+    covers edge rows only: a node-resolved row stays read across, and a gap mark on one is a load STOP
+    (check_boundaries; r2 C1 on 50055cb2)."""
     if r.get("node_resolved"):
         return True
+    if r.get("cut_reason") == "gap":
+        return False
     if r["class"] == "swap":
         return False
     es = r.get("edges") or ()
@@ -975,6 +977,11 @@ def check_boundaries(table, by, ps):
                             f"{lo['assemblage']!r}/{hi['assemblage']!r}", check="boundaries")
         if lo["kind"] == "frozen" or hi["kind"] == "frozen":
             raise TableStop(f"{where}: a frozen cell is not a boundary side (r2 H6)", check="boundaries")
+        if r.get("cut_reason") is not None and (r.get("cut_reason") != "gap" or r.get("node_resolved")
+                                                 or r["class"] == "swap"):
+            raise TableStop(f"{where}: cut_reason {r.get('cut_reason')!r} on a {'node-resolved ' if r.get('node_resolved') else ''}"
+                            f"{r['class']} row: the across-gap rows note marks edge rows only (r2 C1 on 50055cb2)",
+                            check="boundaries")
         pbs = [r["p_b"]] if r.get("node_resolved") or r["class"] == "swap" else [e["p_b"] for e in r["edges"]]
         for pb in pbs:
             if not (_finite(pb) and r["p_lo"] < pb < r["p_hi"]):

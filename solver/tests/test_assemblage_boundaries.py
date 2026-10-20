@@ -652,6 +652,16 @@ class ReadRule(unittest.TestCase):
         for r in gap["boundaries"]["rows"]:
             r["cut_reason"] = "gap"
         self.assertEqual(len(view(gap)._cut), 1)
+        # r2 C1 / n2 on 50055cb2: a node-resolved row stays across under the mark, and the load STOPs on such a mark
+        node = {"class": "swap_two_edges", "node_resolved": True, "edges": []}
+        self.assertTrue(ma.row_across({**node, "cut_reason": "gap"}))
+        nr = node_resolved(table())
+        r0 = nr["boundaries"]["rows"][0]
+        self.assertTrue(r0.get("node_resolved"))
+        r0["cut_reason"] = "gap"
+        cells = {(c["p"], c["t"]): c for c in nr["cells"]}
+        with self.assertRaisesRegex(ma.TableStop, "marks edge rows only"):
+            ma.check_boundaries(nr, cells, sorted({c["p"] for c in nr["cells"]}))
 
     def test_within_tolerance_edge_reads_across(self):
         """Read across: no cut curve, no step at P_b, the read within 1e-6 of cubic2 (pending), still landed as an event;
