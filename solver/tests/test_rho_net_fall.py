@@ -23,6 +23,17 @@ def _khan():
         raise unittest.SkipTest(f"{KHAN}: {e}")
 
 
+class _Uncapped(unittest.TestCase):
+    """rev3d D4 caps the widening at the cell's ρ band / 10. These plants test the rules downstream of it (rules 1–3,
+    the rev3b class 3 clip), as built before the cap: the band is set out of reach (τ_w 100, never crossed, so each
+    end sits at C_WIDEN·extent as before). D4 itself is test_rho_rev3d's."""
+
+    def setUp(self):
+        p = mock.patch.object(rb, "_band_at", lambda v, x, ib: 1e3)
+        p.start()
+        self.addCleanup(p.stop)
+
+
 def _fake(swap_at=None, jump=0.0):
     """A fake read for falls_at: R = 1000 + 0.004·cos(π(x − 2)) on ln P cells of 1, plus `jump` past a landed swap at
     `swap_at` (ln P). Returns (the view class, R, g)."""
@@ -59,7 +70,7 @@ def _swap299(v):
     return c
 
 
-class Rule1Widens(unittest.TestCase):
+class Rule1Widens(_Uncapped):
     def test_widen_regains_inside_the_bound(self):
         # R dips 1e-3 below R(a′) at b′ = 2 and rises at 0.01 per ln P: it regains at 2.1
         r = lambda x: 1000.0 - 1e-3 + 0.01 * (x - 2.0)   # noqa: E731
@@ -93,7 +104,7 @@ class Rule1Widens(unittest.TestCase):
         self.assertEqual([s_["bound"] for s_ in stops2], ["the window's end"])   # the mutant (no widening): STOP
 
 
-class Rule2SwapAbsorbs(unittest.TestCase):
+class Rule2SwapAbsorbs(_Uncapped):
     def test_khan_2000_is_absorbed_by_swap299(self):
         v = _khan()
         for ib in (35, 36):                              # 2000 K is both cells' end sample
@@ -167,7 +178,7 @@ class Rule2SwapAbsorbs(unittest.TestCase):
             self.assertGreaterEqual(ab["jump"], 0.0)
 
 
-class Rule3OtherBoundStops(unittest.TestCase):
+class Rule3OtherBoundStops(_Uncapped):
     def test_a_downward_swap_cannot_absorb(self):
         # the same with a downward swap (−1): its jump from R(a′) is negative, so the STOP stands, naming the swap
         Fake, r, g = _fake(5.1, -1.0)
@@ -239,7 +250,7 @@ class FloorOnTheFallLine(unittest.TestCase):
             mut.falls_at(v, t, _ibt(v, t), x - 0.01, x + 0.01)
 
 
-class WideningClippedAtARefusal(unittest.TestCase):
+class WideningClippedAtARefusal(_Uncapped):
     # r2 8e0d13fa (rev3b class 3): dmm 4200 K, cell 79 — the read refuses below ln P ≈ 23.055 (eos_edge) and the
     # widened a′ reached it
     def test_the_widened_end_is_clipped(self):

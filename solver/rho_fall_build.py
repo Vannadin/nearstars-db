@@ -47,6 +47,11 @@ H_MIN = 1e-6         # ln P
 C_WIDEN = 0.5        # 68 rev 3: c, a declared judgment
 REGAIN_W = 3.0       # unrecovered past this many window half-widths
 SWAP_EPS = 1e-9      # ln P: a landed swap's two sides are read this far from its P_b(t)
+W_S = 0.01           # rev3d D3: a stencil row's two adjacent curve positions closer than this are a sliver (ln P)
+N_S = 32             # rev3d D3: forced subcells across a sliver
+TAU_W_DIV = 10.0     # rev3d D4: the widening stops where R has moved by the cell's ρ band / TAU_W_DIV
+TAU_W_RULE = ("τ_w = (the ρ band of the cell holding the uncapped end, its sample's own ib, ia by bisect_left)/10; "
+              "no band → τ_w = 0 (rev3d D4, amendment 1)")
 
 
 class Unresolved(Exception):
@@ -255,6 +260,70 @@ def _absorber(swaps, zero_x, right):
     return xs_, cid
 
 
+def _band_at(v, x, ib):
+    """rev3d amendment 1: the ρ band of the cell (ia, ib) holding x, ia as the read takes it (bisect_left), ib passed
+    in (the sample's own cell): the sum of its interp_terms + loop_terms relative ρ terms, None when it carries none."""
+    pr = math.exp(x)
+    ia = min(max(bisect.bisect_left(v.ps, pr, 1) - 1, 0), len(v.ps) - 2)
+    tot, any_ = 0.0, False
+    for key in ("interp_terms", "loop_terms"):
+        cells = v._terms[key][0]
+        e = cells.get((ia, ib)) if cells else None
+        if e and e[0]:
+            tot, any_ = tot + abs(e[0]), True
+    return tot if any_ else None
+
+
+def _cap(v, g, ib, t, x0, limit, sgn, step, caps, no_band):
+    """rev3d D4: the widened end on one side (sgn −1: the max side, left of a; +1: the regain side, right of c) and its
+    τ_w. Walked from x0 toward limit on the fine step; the first sample past R(x0)·(1 ± τ_w) brackets the crossing,
+    bisected to H_MIN keeping the near side (R(end) on the threshold's x0 side). No crossing: limit. A refusing
+    sample ends the walk there, and the class 3 clip then bisects it back to the readable side and lists it, as for an
+    uncapped end. τ_w = 0 where the cell
+    holds no ρ band: the end stays at x0, listed in no_band."""
+    band = _band_at(v, x0, ib)
+    if band is None:
+        no_band.append({"record": v.material_id, "ib": ib, "t": t, "x": x0, "side": "hi" if sgn > 0 else "lo"})
+        return x0, 0.0
+    tau = band / TAU_W_DIV
+    r0 = g(x0)
+    if r0 is None:
+        return x0, tau
+    thr = r0[0] * (1.0 + sgn * tau)
+    past = (lambda r: r >= thr) if sgn > 0 else (lambda r: r <= thr)
+    x, end = x0, limit
+    while (x < limit) if sgn > 0 else (x > limit):
+        x1 = min(x + step, limit) if sgn > 0 else max(x - step, limit)
+        q = g(x1)
+        if q is None:
+            end = x1                                     # the refusing point: the class 3 clip bisects it back, listed
+            break
+        if past(q[0]):
+            near, far = x, x1
+            while abs(far - near) > H_MIN:
+                m = 0.5 * (near + far)
+                qm = g(m)
+                if qm is None or past(qm[0]):
+                    far = m
+                else:
+                    near = m
+            end = near
+            break
+        x = x1
+    caps.append({"t": t, "ib": ib, "side": "hi" if sgn > 0 else "lo", "x0": x0, "end": end, "tau_w": tau,
+                 "band": band, "at_limit": end == limit})
+    return end, tau
+
+
+def _sliver_dips(slivers, grid, vals):
+    """rev3d §5 (r2 n1): per refined sliver its gap and the span of its negative-g subcells (the dip D3 resolves)."""
+    out = []
+    for x0, x1 in slivers:
+        neg = [x for x, q in zip(grid, vals) if x0 <= x <= x1 and q is not None and q[1] < THR]
+        out.append({"x0": x0, "gap": x1 - x0, "dip_span": (max(neg) - min(neg)) if neg else 0.0, "dip_points": len(neg)})
+    return out
+
+
 def falls_at(v, t, ib, xlo, xhi):
     """The widened fall intervals of R(·, t) on [xlo, xhi], with the unrecovered falls and net-fall STOPs."""
     unreadable = []                                      # r2 B1: points the read refuses, counted and listed
@@ -315,6 +384,15 @@ def falls_at(v, t, ib, xlo, xhi):
                     grid += [xb, xb - w, xb + w]
     for xs_ in [x_ for x_, _c in swaps] + down:
         grid += [xs_ - SWAP_EPS, xs_ + SWAP_EPS]
+    # rev3d D3: a stencil row's sliver (two adjacent curve positions of one row closer than W_S) is subdivided into
+    # N_S equal subcells before the adaptive tests (a dip between them can rise at both ends and in its secant)
+    slivers = []
+    for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1):
+        xs_k = sorted(math.log(pb) for pb, _c in v._partition(k))
+        for x0, x1 in zip(xs_k, xs_k[1:]):
+            if 0.0 < x1 - x0 < W_S and x1 > xlo and x0 < xhi:
+                slivers.append((x0, x1))
+                grid += [x0 + (x1 - x0) * q / N_S for q in range(N_S + 1)]
     grid = sorted({x for x in grid if xlo <= x <= xhi})
     vals = [g(x) for x in grid]
     falling = []                                         # points where g < THR
@@ -412,6 +490,7 @@ def falls_at(v, t, ib, xlo, xhi):
         screen(grid[i], grid[i + 1], vals[i], vals[i + 1], m_est)
     # falling points → fall intervals
     intervals, unrecovered, stops, seen = [], [], [], []
+    caps, no_band = [], []                               # rev3d D4: each capped end; ends with no ρ band (τ_w = 0)
     widened, absorbed = [], []                           # r2 a69976dc: the net-fall rules 1 and 2, recorded
     clipped = []                                         # r2 8e0d13fa: widened ends clipped at a refusal boundary
     top = math.log(v.p_dataset)
@@ -465,7 +544,12 @@ def falls_at(v, t, ib, xlo, xhi):
             seen.append((a, e))
             continue
         ext = c - a
-        lo_, hi_ = max(a - C_WIDEN * ext, left), min(c + C_WIDEN * ext, right)
+        # rev3d D4 (+ amendment 1): C_WIDEN·extent stays the ceiling; inside it each side stops where R has moved by
+        # τ_w = (the cell's ρ band at the uncapped end)/TAU_W_DIV from that end's own value — the regain side at
+        # R(x) = R(c)·(1 + τ_w), x ≥ c, the max side at R(x) = R(a)·(1 − τ_w), x ≤ a — bisected to H_MIN on the
+        # threshold's near side; a cell with no band gives τ_w = 0 (no widening past the end), listed
+        lo_, cap_lo = _cap(v, g, ib, t, a, max(a - C_WIDEN * ext, left), -1, step, caps, no_band)
+        hi_, cap_hi = _cap(v, g, ib, t, c, min(c + C_WIDEN * ext, right), +1, step, caps, no_band)
         seen.append((a, c))
         # r2 8e0d13fa (rev3b class 3): a widened end where the read refuses is clipped at the refusal boundary, the
         # last readable point on the interval's side (bisected), and recorded; a net fall after it STOPs naming it
@@ -502,7 +586,12 @@ def falls_at(v, t, ib, xlo, xhi):
                 intervals.append((lo_, hi_, a, c))
                 continue
             if got is not None:
-                widened.append({"t": t, "a": lo_, "b": got, "was_b": hi_, "net": r_hi[0] - r_lo[0]})
+                # rev3d D4: rule 1 is not capped (regaining is required); its excess over the regain end's own value
+                # is reported against that end's τ_w, listed by name above it
+                rc_ = g(c)
+                exc = None if rc_ is None or (rg := g(got)) is None else rg[0] / rc_[0] - 1.0
+                widened.append({"t": t, "a": lo_, "b": got, "was_b": hi_, "net": r_hi[0] - r_lo[0],
+                                "excess": exc, "tau_w": cap_hi})
                 hi_ = got
             elif not refused and xs_ is not None and (far := g(xs_ + SWAP_EPS)) is not None:
                 # no regain up to a landed step: the bridge runs flat at R(a′) to its near side
@@ -525,7 +614,9 @@ def falls_at(v, t, ib, xlo, xhi):
     return intervals, unrecovered, stops, floor_cells, swap_jumps, {"unreadable": sorted(set(unreadable)),
                                                                    "unscreened": unscreened, "row_steps": row_steps,
                                                                    "widened": widened, "absorbed": absorbed,
-                                                                   "clipped": clipped, "slow_floor": slow_floor}
+                                                                   "clipped": clipped, "slow_floor": slow_floor,
+                                                                   "caps": caps, "no_band": no_band,
+                                                                   "slivers": _sliver_dips(slivers, grid, vals)}
 
 
 def _widen(g, gv, lo, hi, r_lo, right, step):
@@ -592,18 +683,70 @@ def cell_falls(v, ib, nsub=16, xr=None):
                     "swap_jumps": sj, "unreadable": len(ur["unreadable"]), "unscreened": ur["unscreened"],
                     "row_steps": ur["row_steps"], "widened": ur.get("widened", []),
                     "absorbed": ur.get("absorbed", []), "clipped": ur.get("clipped", []),
-                    "slow_floor": ur.get("slow_floor", [])})
+                    "slow_floor": ur.get("slow_floor", []), "caps": ur.get("caps", []),
+                    "no_band": ur.get("no_band", []), "slivers": ur.get("slivers", [])})
     return out
 
 
-def sets_from(v, per_cell):
-    """S_i = the merged widened intervals of every sample in cells i − 1 and i."""
+def sets_from(v, per_cell, dropped=None):
+    """S_i = the merged widened intervals of every sample in cells i − 1 and i, each kept only where its two edges read
+    at every one of those samples under the stencil of the cell holding the sample — both at the shared node T_i
+    (rev3d D1, amendment 1: read-faithful, as piece i is evaluated). An end that fails is clipped inward to the first
+    point that reads everywhere, on the build's fine step (the rev3b class 3 rule under both stencils); an interval
+    with no such point is dropped. `dropped`, a list, receives each clip and drop («unreadable_end»)."""
     sets = {}
     for i in range(len(v.ts)):
         ivs = [(iv[0], iv[1]) for ib in (i - 1, i) for smp in per_cell.get(ib, ()) for iv in smp["intervals"]]
-        if ivs:
-            sets[i] = _merge(ivs)
+        if not ivs:
+            continue
+        samples = [(smp["t"], ib) for ib in (i - 1, i) for smp in per_cell.get(ib, ())]
+        kept = []
+        for a, b in _merge(ivs):
+            got = _node_readable(v, a, b, samples, dropped, i)
+            if got is not None:
+                kept.append(list(got))
+        if kept:
+            sets[i] = kept
     return sets
+
+
+def _node_readable(v, a, b, samples, dropped, node):
+    """rev3d D1: (a, b), clipped inward until both edges read (_edge_read, the bridge's own edge reads) at every
+    (T, stencil) of `samples`; None when the interval has no such pair. Each change is recorded in `dropped`."""
+    def ok(x, below):
+        return all(v._edge_read(x, t, ib, below) is not None for t, ib in samples)
+    j_ = min(max(bisect.bisect_right(v.lnps, 0.5 * (a + b)) - 1, 0), len(v.lnps) - 2)
+    step = (v.lnps[j_ + 1] - v.lnps[j_]) / SUB_P / 4.0
+    def inward(x, lim, below, sgn):
+        """The first point from x toward lim (sgn +1 right, −1 left) where the edge reads at every sample, bisected to
+        H_MIN between the last failing and the first readable step; None when none is found before lim."""
+        if ok(x, below):
+            return x
+        bad, y = x, x
+        while (y < lim) if sgn > 0 else (y > lim):
+            y = min(y + step, lim) if sgn > 0 else max(y - step, lim)
+            if ok(y, below):
+                good = y
+                while abs(good - bad) > H_MIN:
+                    m = 0.5 * (bad + good)
+                    if ok(m, below):
+                        good = m
+                    else:
+                        bad = m
+                return good
+            bad = y
+        return None
+    a2 = inward(a, b, True, +1)
+    b2 = None if a2 is None else inward(b, a2, False, -1)
+    if a2 is None or b2 is None:
+        a2 = b2 = a
+    if not a2 < b2:
+        if dropped is not None:
+            dropped.append({"node": node, "a": a, "b": b, "what": "unreadable_end: dropped"})
+        return None
+    if (a2, b2) != (a, b) and dropped is not None:
+        dropped.append({"node": node, "a": a, "b": b, "now": [a2, b2], "what": "unreadable_end: clipped"})
+    return a2, b2
 
 
 def _view(rid):
@@ -726,15 +869,53 @@ def _zero_height_list(jumps):
     return sorted(by.values(), key=lambda e: (e["t"], e["x"], e["pair"]))
 
 
+def _caps_summary(caps):
+    """rev3d amendment 1's stamp lines: the rule, τ_w's range over banded capped ends, and how many sit at the table's
+    floor τ_w (the smallest banded value, the term floor's band)."""
+    taus = sorted(c["tau_w"] for c in caps)
+    if not taus:
+        return {"tau_w_rule": TAU_W_RULE, "tau_w_range": None, "tau_w_floor_ends": 0, "capped_ends": 0}
+    lo = taus[0]
+    return {"tau_w_rule": TAU_W_RULE, "tau_w_range": {"min": lo, "median": taus[len(taus) // 2], "max": taus[-1]},
+            "tau_w_floor_ends": sum(1 for x in taus if x == lo), "capped_ends": len(taus),
+            "at_ceiling": sum(1 for c in caps if c["at_limit"])}
+
+
+def _sliver_margin(slivers):
+    if not slivers:
+        return {"refined": 0}
+    dips = [s_ for s_ in slivers if s_["dip_points"]]
+    narrow = min(dips, key=lambda s_: s_["dip_span"]) if dips else None
+    return {"refined": len(slivers), "widest_gap": max(s_["gap"] for s_ in slivers), "W_S": W_S, "N_S": N_S,
+            "dips": len(dips), "narrowest_dip": narrow,
+            "under_two_subcells": [s_ for s_ in dips if s_["dip_span"] < 2.0 * s_["gap"] / N_S]}
+
+
 def document(v, per_cell):
     jumps = [j for c in per_cell.values() for smp in c for j in smp["swap_jumps"]]
+    dropped = []
+    caps = [c_ for c in per_cell.values() for smp in c for c_ in smp.get("caps", ())]
+    no_band = [c_ for c in per_cell.values() for smp in c for c_ in smp.get("no_band", ())]
+    widened = [j for c in per_cell.values() for smp in c for j in smp.get("widened", ())]
+    slivers = [s_ for c in per_cell.values() for smp in c for s_ in smp.get("slivers", ())]
     g_stops, g_exc = gate(v, jumps)
     zh = _zero_height_list(jumps)
     unscreened = [u for c in per_cell.values() for smp in c for u in smp["unscreened"]]
     return {"record": v.material_id, "ps": list(v.ps), "ts": list(v.ts),
-            "stamp": {**_stamp(edge_tol=_view_tol(v)), "record_sha256": v.record["assemblage"]["sha256"],
+            "stamp": {**_stamp(edge_tol=_view_tol(v)), **{k: x for k, x in _caps_summary(caps).items()
+                                                          if k in ("tau_w_rule", "tau_w_range", "tau_w_floor_ends")},
+                      "no_band_ends": len(no_band), "record_sha256": v.record["assemblage"]["sha256"],
                       "record_yaml_sha256": _ma().record_yaml_sha256(v.material_id), "read_blob": _ma().read_blob()},
-            "sets": {str(k): s for k, s in sets_from(v, per_cell).items()},
+            "sets": {str(k): s for k, s in sets_from(v, per_cell, dropped).items()},
+            # rev3d D1: interval ends clipped or dropped because they don't read at every sample under its cell's stencil
+            "unreadable_end": dropped,
+            # rev3d D4: every capped end (τ_w per cell, amendment 1), the ends with no ρ band, and rule 1's excess above
+            # the regain end's τ_w, by name
+            "caps_summary": _caps_summary(caps),
+            "no_band_end": no_band,
+            "widen_excess": [w for w in widened if w.get("excess") is not None and w["excess"] > (w.get("tau_w") or 0.0)],
+            # rev3d §5 (r2 n1): the sliver margin, the widest refined gap and the narrowest dip D3 found
+            "sliver_margin": _sliver_margin(slivers),
             "unrecovered": [u for c in per_cell.values() for smp in c for u in smp["unrecovered"]],
             # every STOP: the samples' own (net fall, unresolved, a refusal inside a fall search) and the swap gate's
             "stops": [s_ for c in per_cell.values() for smp in c for s_ in smp["stops"]] + g_stops,
