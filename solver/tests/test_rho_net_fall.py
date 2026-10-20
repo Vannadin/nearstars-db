@@ -206,9 +206,17 @@ DMM, BSE = "silicate_slb_earth_dmm_wh2005", "silicate_slb_default_bse"
 
 class FloorOnTheFallLine(unittest.TestCase):
     # r2 8e0d13fa (rev3b class 2): a floor cell whose ends and secant are ≥ THR is no fall though R decreases
-    CELLS = ((DMM, 1946.875, 23.202116088), (BSE, 884.375, 20.491211847), (BSE, 3675.0, 24.070046623))
+    CELLS = ((DMM, 1946.875, 23.202116088), (BSE, 884.375, 20.491211847))
+    #: the rev3b PC's third cell; silicate note 8's edge extension (8bfb1c15) changed the read there, and it now screens
+    #: as fall-free (no slow descent left): it must still build with no STOP
+    GONE = ((BSE, 3675.0, 24.070046623),)
 
     def test_the_slow_descents_build(self):
+        for rid, t, x in self.GONE:
+            with self.subTest(rid=rid, t=t, gone=True):
+                v = rb._view(rid)
+                _iv, _un, stops, _fl, _sj, ex = rb.falls_at(v, t, _ibt(v, t), x - 0.01, x + 0.01)
+                self.assertEqual((stops, ex["slow_floor"]), ([], []))
         for rid, t, x in self.CELLS:
             with self.subTest(rid=rid, t=t):
                 v = rb._view(rid)
