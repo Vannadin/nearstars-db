@@ -428,9 +428,12 @@ class OpenEnds(unittest.TestCase):
     in P past the bump, dT/dP 0 there), pinned per record; in boundary_disclosures and, with the s read on, as the
     record's material_disclosure on the answer."""
 
-    PINNED = {"silicate_slb_default_bse": {"ends": 1022, "flat": 131, "one_node": 173},
-              "silicate_slb_earth_dmm_wh2005": {"ends": 1104, "flat": 123, "one_node": 217},
-              "silicate_slb_mars_khan2022": {"ends": 1092, "flat": 100, "one_node": 181}}
+    #: on Job A's records (engine 8fc7ee28; r2's Job B triage c83d296d, class 2): the gap marks cut 39 / 42 / 40 rows,
+    #: which splits runs and adds ends; on 1af9bf1b's records the counts were 1022 / 131 / 173, 1104 / 123 / 217 and
+    #: 1092 / 100 / 181
+    PINNED = {"silicate_slb_default_bse": {"ends": 1100, "flat": 129, "one_node": 227},
+              "silicate_slb_earth_dmm_wh2005": {"ends": 1188, "flat": 114, "one_node": 279},
+              "silicate_slb_mars_khan2022": {"ends": 1170, "flat": 100, "one_node": 213}}
 
     def test_count_per_record(self):
         reg = _reg()
