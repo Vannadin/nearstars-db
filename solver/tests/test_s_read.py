@@ -220,7 +220,8 @@ class Derivatives(unittest.TestCase):
 
     def test_planted_table(self):
         """A planted s = a + b·T − c·ln P, linear in each read axis so the read reproduces it exactly, on the plain
-        (unexported) read: dT/dP = c/(P·b), c_P = T·b."""
+        (unexported) read: dT/dP = c/(P·b), c_P = T·b. (r2 n4: §3.0 writes s = a + b·ln T − c·P; this form is linear
+        in both read axes, so the check is exact.)"""
         reg = _reg()
         rid = "silicate_slb_default_bse"
         tab = copy.deepcopy(mv.thaw_plain(reg.tables[rid]))

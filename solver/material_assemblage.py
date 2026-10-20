@@ -1014,7 +1014,9 @@ class _Run(tuple):
       read the truth closer, but broke the ρ-monotone test at bse 11.93 GPa, 925 K (a loop cell's end segment);
     - an end facing a gap inside its region takes s_e Fritsch–Carlson clipped against the gap's secant (set_end, from
       _runs), shared with the bridge (_bridge)."""
-    #: s-read §3.2: True when the run holds a frozen node (set by AssemblageView._runs; a bare run holds none)
+    #: s-read §3.2: True when the run holds a frozen node (set by AssemblageView._runs; a bare run holds none). A
+    #: superset of §3.2's stencil (r2 n1 on 677f85d0..0d7732d3): any frozen node of the run marks every read of it, so
+    #: a row whose freeze T varies with P keeps today's read conservatively, also far from its frozen nodes
     frozen = False
 
     def __new__(cls, xs, ys, js, r, capped=True):
@@ -1533,12 +1535,15 @@ class AssemblageView(mv.RecordView):
     def _quiet(self, fn, *args):
         """fn(*args) with the notes it appends dropped: the zone's internal reads (the 136 GPa match, the ρ-rise check)
         are not the answer's reads, so a cold view's first zone read carries the same notes as a warm one's (68 N1 on
-        7582ff4a)."""
-        n = len(self.notes)
+        7582ff4a). The s path's counts are restored too (r2 n2 on 677f85d0..0d7732d3: the 136 GPa match's two reads
+        counted as s reads)."""
+        n, sc = len(self.notes), dict(self.s_counts)
         try:
             return fn(*args)
         finally:
             del self.notes[n:]
+            self.s_counts.clear()
+            self.s_counts.update(sc)
 
     def _rise_ok(self, kb):
         """Note 7 §5: None if the zone's ρ rises with P along T row kb, else the refusal text; found once per row, at
