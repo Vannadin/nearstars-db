@@ -250,10 +250,13 @@ class InteriorEnds(unittest.TestCase):
 
     def test_psi_tracking_mutant_is_red_at_curve_83(self):
         """Delta 1's control: ψ tracking in the corner cell puts curve 83's fall between the 875 K cell centres (the
-        Envelope test's −1.011e-4); the held boundary does not (+2.660e-4). The fall itself is the base's, G3's to gate."""
-        self.assertGreater(self._step_875(), 0.0)
-        with mock.patch.object(ma._Curve, "_edge_ext", _mutant(*PSI)):
-            self.assertLess(self._step_875(), -1e-4)
+        Envelope test's −1.011e-4); the held boundary does not (+2.660e-4). The fall itself is the base's, G3's to gate.
+        Pinned to the repair off (r2's Job B triage c83d296d, class 3): with the repair on and the fall sets loaded, the
+        repair bridges the mutant's fall, so the control would measure the repair, not the boundary."""
+        with mock.patch.object(ma, "RHO_BRIDGE", False):
+            self.assertGreater(self._step_875(), 0.0)
+            with mock.patch.object(ma._Curve, "_edge_ext", _mutant(*PSI)):
+                self.assertLess(self._step_875(), -1e-4)
 
 
 class _Null:
