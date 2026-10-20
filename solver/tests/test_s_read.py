@@ -474,6 +474,44 @@ class OpenEnds(unittest.TestCase):
                 self.assertEqual(got[0].fields["flat"], self.PINNED[v.material_id]["flat"])
 
 
+class OpenEndsWithABasalLayer(unittest.TestCase):
+    """68 C1 on cd0010fb: a basal layer under an s-reading view has the overlying view's s_read but no s path of its own;
+    collect gives exactly one s_open_ends note, the owning layer's, and does not fail. Mutant: the guard dropped
+    raises."""
+
+    def _collect(self, collect):
+        over = _view()
+        b = ma.BasalView({"id": "basal_test", "kind": "assemblage", "phases": [{"id": "basal"}]}, 4000.0, over, 1600.0)
+
+        class _L:
+            def __init__(self, i):
+                self.id = i
+
+        class _B:
+            layers = (_L("basal"), _L("mantle"))
+
+        class _Acc:
+            profiles = {"mantle": [(0.0, (0.0, 30e9, 2000.0, 2000.0), None)],
+                        "basal": [(0.0, (0.0, 120e9, 2600.0, 2600.0), None)]}
+
+        return collect(_B(), {"mantle": over, "basal": b}, _Acc())
+
+    def test_one_note_from_the_owner(self):
+        from solver import material_notes as mn
+        got = [n for n in self._collect(mn.collect) if n.kind == "material_disclosure" and n.fields.get("of") == "s_open_ends"]
+        self.assertEqual([n.fields["layer"] for n in got], ["mantle"])
+
+    def test_without_the_guard_raises(self):
+        from solver import material_notes as mn
+        src = textwrap.dedent(inspect.getsource(mn.collect))
+        old = ' and hasattr(view, "s_open_ends"):'
+        self.assertEqual(src.count(old), 1)
+        ns = dict(vars(mn))
+        exec(src.replace(old, ":"), ns)
+        with self.assertRaises(AttributeError):
+            self._collect(ns["collect"])
+
+
 class FlagConstantInCell(unittest.TestCase):
     """s-read post-freeze note 4 §4 (r2 B5 on 677f85d0..0d7732d3): the s path's frozen flag is constant inside a T cell
     at fixed P, on the records, wherever no cut curve's P_b_ext(T) crosses that P inside the cell (the one change note 4

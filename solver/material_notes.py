@@ -161,7 +161,9 @@ def collect(body, views, acc) -> tuple:
                     out.append(result.Note("material_disclosure", f"{mid} {ph['id']}: {text}", {
                         "layer": layer.id, "material": mid, "phase": ph["id"], "of": "cross_check",
                         "between": list(j["between"]), "text": text}))
-        if ts and getattr(view, "s_read", False):     # s-read §3.1 X1 (iii) (r2 B3): the record's flat open ends of s
+        # s-read §3.1 X1 (iii) (r2 B3): the record's flat open ends of s, from the view that owns the s path (a basal
+        # layer's s read is its overlying record's, disclosed on that layer; 68 C1 on cd0010fb)
+        if ts and getattr(view, "s_read", False) and hasattr(view, "s_open_ends"):
             oe = view.s_open_ends()
             out.append(result.Note("material_disclosure", f"{mid}: s read flat in P past {oe['flat']} of {oe['ends']} "
                                    "open run ends of s (s∞ = 0), dT/dP 0 there", {
