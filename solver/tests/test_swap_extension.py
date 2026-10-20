@@ -191,6 +191,15 @@ class ReachZeroEnds(unittest.TestCase):
         self.assertGreater(abs(self.v.state(q * math.exp(1e-9), T_STEP)[0] - self.v.state(q * math.exp(-1e-9), T_STEP)[0]),
                            0.1)                                            # the read does step there: unlanded
 
+def _pair850(v):
+    """bse's one-row coincident pair at 850 K (ri+cpx+gt+st → ri+gt+capv+st+nal), found by position: the one-row
+    events at 850 K landing at the pair's P_b. Ids follow the records' cut runs (168/170 before the across-gap marks,
+    153/155 after); the position does not."""
+    pb = [c.p_b(850.0) for c in v._events if c.t0 == c.t1 == 850.0 and getattr(c, "was_edge", False)]
+    ref = pb[0] if pb else None
+    return [i for i, c in enumerate(v._events) if c.t0 == c.t1 == 850.0 and ref is not None and c.p_b(850.0) == ref]
+
+
 class CoincidentEdgeSwapsReachZero(unittest.TestCase):
     """Swap-extension post-freeze note 2 (r2 6c6c1e94): a coincident edge pair the read re-kinds as a swap takes reach 0
     at both ends, as a swap curve's true ends; past its rows the same edges are read as their own runs, so an
@@ -198,7 +207,9 @@ class CoincidentEdgeSwapsReachZero(unittest.TestCase):
 
     def test_a_one_row_pair_has_no_p_b_past_its_row_and_a_row_step_event(self):
         v = _bse_view()
-        for i in (168, 170):                               # ri+cpx+gt+st → ri+gt+capv+st+nal, one row at 850 K
+        pair = _pair850(v)
+        self.assertEqual(len(pair), 2, pair)
+        for i in pair:                                     # ri+cpx+gt+st → ri+gt+capv+st+nal, one row at 850 K
             c = v._events[i]
             self.assertTrue(getattr(c, "was_edge", False))
             self.assertEqual((c.t0, c.t1), (850.0, 850.0))
@@ -207,10 +218,10 @@ class CoincidentEdgeSwapsReachZero(unittest.TestCase):
                 self.assertIsNone(c.p_b_ext(t, v._reach), t)
             self.assertIsNotNone(c.p_b_ext(850.0, v._reach))
         steps = [x[2] for x in v.transitions() if x[2]["form"] == "assemblage_row_step"]
-        mine = [e for e in steps if v._row_steps[e["id"]][0] in (v._events[168], v._events[170])]
+        mine = [e for e in steps if v._row_steps[e["id"]][0] in [v._events[i] for i in pair]]
         self.assertEqual(len(mine), 2)
         for e in mine:
-            self.assertEqual(v.boundary_pressure(e, 825.0), v._events[168].p_b(850.0))
+            self.assertEqual(v.boundary_pressure(e, 825.0), v._events[pair[0]].p_b(850.0))
             self.assertIsNone(v.boundary_pressure(e, 850.0))        # the pair has its own P_b there
         self.assertEqual([c for c in v._cut if c.kind == "swap" and not (c.stop_lo and c.stop_hi)], [])
 
@@ -228,8 +239,10 @@ class CoincidentEdgeSwapsReachZero(unittest.TestCase):
         reg = mr.load()
         if "extension" not in reg.tables[BSE].get("boundaries", {}):
             raise unittest.SkipTest("the regenerated bse record is not shipped here")
+        pb = _bse_view()._events[_pair850(_bse_view())[0]].p_b(850.0)
         v = mut.view(thaw(reg.get(BSE)), reg.tables[BSE], 1600.0)
-        c = v._events[168]
+        (i,) = [i for i, c in enumerate(v._events) if c.t0 == c.t1 == 850.0 and c.p_b(850.0) == pb][:1]
+        c = v._events[i]
         self.assertFalse(c.stop_lo or c.stop_hi)
         self.assertIsNotNone(c.p_b_ext(800.0, v._reach))       # the extrapolated step 50 K past its only row
 

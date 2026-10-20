@@ -260,17 +260,19 @@ class CoincidentEdgeCensus(unittest.TestCase):
     # directing 10-20 (r2 e843daa8): the coincident edge pairs re-kinded as swaps are marked, with their extrapolation
     def test_bse_850_is_a_coincident_edge_pair_on_its_row(self):
         # since swap-extension note 2 the pair has a P_b only on its own row (reach 0), where it is a true crossing
+        from solver.tests.test_swap_extension import _pair850     # by position: the gap marks renumber the ids
         v = rb._view(BSE)
+        pair = _pair850(v)
         t = 850.0
         _iv, _un, _st, _fl, sj, _ex = rb.falls_at(v, t, _ibt(v, t), 23.774, 23.794)
-        ce = [j for j in sj if j["curve"] in (168, 170)]
+        ce = [j for j in sj if j["curve"] in pair]
         self.assertEqual(len(ce), 2)
         self.assertTrue(all(j["coincident_edge"] and j["extrap_k"] == 0.0 for j in ce), ce)
         census = rb._coincident_edge_census(sj, [], [])
         self.assertEqual((census["n"], census["on_rows"], census["extrapolated"]), (2, 2, 0))
         _iv, _un, _st, _fl, sj2, _ex = rb.falls_at(v, 753.125, _ibt(v, 753.125), 23.774, 23.794)
-        self.assertEqual([j for j in sj2 if j["curve"] in (168, 170)], [])     # none 97 K past its row
-        self.assertTrue(all(not j["coincident_edge"] for j in sj if j["curve"] not in (168, 170)))
+        self.assertEqual([j for j in sj2 if j["curve"] in pair], [])     # none 97 K past its row
+        self.assertTrue(all(not j["coincident_edge"] for j in sj if j["curve"] not in pair))
 
 
 if __name__ == "__main__":
