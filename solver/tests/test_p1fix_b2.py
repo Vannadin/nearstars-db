@@ -392,8 +392,13 @@ class EarthAbsolute(unittest.TestCase):
 PINNED_EARTH = {                       # record blob 29ffc940
     "radius": 6390103.2933283085, "nmoi": 0.32971838204611453, "core_radius": 3485043.53751115,
     "cmb_pressure": 135254666993.38823, "core_pressure": 358352625161.5081, "cmb_temperature": 2527.3154329600775,
-    "core_temperature": 3197.1409514076045, "core_radius_fraction": 0.545381408959346,
+    "core_temperature": 3197.2526014468026, "core_radius_fraction": 0.545381408959346,
 }
+# core_temperature re-pinned (centre-series post-freeze note 2, its «Resolution (directing 10-18)»): from 29ffc940's
+# 3197.1409514076045 to the PC's own read at Job B's TIP af8408a7, 3197.2526014468026 K (+3.49e-5, the centre series'
+# (dT/dP)_ε·ΔP), quoted from the PC suite (repair 1 and 0 alike) in Job B's judge of record (artifacts
+# ea-jobB-out-af8408a7 2595d66b, pc/ea-jobB/out-af8408a7/judge-81fb95db.txt, blob 6c662a63); the other keys stay at
+# 29ffc940 (the series moves none of them, and they pass at 1e-6 there)
 
 
 if __name__ == "__main__":
