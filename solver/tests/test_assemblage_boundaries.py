@@ -637,6 +637,22 @@ class ReadRule(unittest.TestCase):
             self.assertFalse(ma.row_across({**row, "edges": [b]}), bad)
             self.assertFalse(ma.row_across({**row, "edges": [e, b]}), bad)   # one bad edge cuts the row
 
+    def test_gap_mark_cuts(self):
+        """Records-stream note, across-gap rows (frozen 247f1b0b): a row the generator marks cut_reason «gap» is cut,
+        whatever its edges; the mark on a row that the pass already cuts changes nothing; and a gap-marked row joins
+        its group's curve as a cut row."""
+        e = within_tol(1200.0)[0]
+        row = {"class": "edge_in", "converged": True, "edges": [e]}
+        self.assertTrue(ma.row_across(row))
+        self.assertFalse(ma.row_across({**row, "cut_reason": "gap"}))
+        self.assertFalse(ma.row_across({**row, "edges": [{**e, "over_tolerance": True}], "cut_reason": "gap"}))
+        tb = table(cls="edge_in", right="ol+opx+gt", edges=within_tol)
+        self.assertEqual(view(tb)._cut, [])
+        gap = copy.deepcopy(tb)
+        for r in gap["boundaries"]["rows"]:
+            r["cut_reason"] = "gap"
+        self.assertEqual(len(view(gap)._cut), 1)
+
     def test_within_tolerance_edge_reads_across(self):
         """Read across: no cut curve, no step at P_b, the read within 1e-6 of cubic2 (pending), still landed as an event;
         the planted control (the same rows over tolerance) cuts."""

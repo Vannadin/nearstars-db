@@ -751,7 +751,10 @@ def row_across(r) -> bool:
     an edge class (edge_in, edge_out, swap_two_edges) whose every edge is converged with both sides solved and within
     the pass's tolerance: delta_rho present and the pass's own over_tolerance flag False. A swap is always cut; an edge
     over tolerance, with delta_rho None (a side unsolved at P_b) or not converged cuts its row. The engine reads the
-    pass's flag, never re-derives it from the value."""
+    pass's flag, never re-derives it from the value. A row the generator marks `cut_reason: "gap"` (records-stream note,
+    across-gap rows, frozen 247f1b0b: a one-row across gap between two rows that cut the same pair) is cut."""
+    if r.get("cut_reason") == "gap":
+        return False
     if r.get("node_resolved"):
         return True
     if r["class"] == "swap":
