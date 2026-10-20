@@ -462,16 +462,43 @@ class GapOnMars(unittest.TestCase):
                        chain=False, registry=mr.load())
 
     @staticmethod
+    def _mark():
+        """The ceiling reason's own fixed words: eos.HUANG_CEILING_REASON before its {max_gpa} field («GPa 는 두 앵커 액체
+        핵 규칙의 천장»); refused if the template ever leaves fewer than 8 characters there (r2 R2 on 41923235)."""
+        from solver import legacy_materials  # noqa: F401  (puts engine/ on sys.path)
+        import eos
+        mark = eos.HUANG_CEILING_REASON.split("({max_gpa")[0].split("}")[-1].strip()
+        if len(mark) < 8:
+            raise AssertionError(f"the ceiling reason's fixed words are {mark!r}: too short to name it")
+        return mark
+
+    @staticmethod
     def _names_the_ceiling(node, ceiling, mark):
-        """The refusal names the core's ceiling: its reason text, or a refused pressure at or past the ceiling."""
+        """The refusal names the core's ceiling by its own reason text; a p beside that text must be at the ceiling or
+        past it (to 1e-9 rel). A p alone never qualifies: the R scan also meets the core fit's 350 GPa top (r2 R1)."""
         if isinstance(node, dict):
-            p = node.get("p")
-            if isinstance(p, (int, float)) and p >= ceiling * (1.0 - 1e-9):
-                return True
+            texts = [v for v in node.values() if isinstance(v, str) and mark in v]
+            if texts:
+                p = node.get("p")
+                return not isinstance(p, (int, float)) or p >= ceiling * (1.0 - 1e-9)
             return any(GapOnMars._names_the_ceiling(v, ceiling, mark) for v in node.values())
         if isinstance(node, (list, tuple)):
             return any(GapOnMars._names_the_ceiling(v, ceiling, mark) for v in node)
         return isinstance(node, str) and mark in node
+
+    def test_the_ceiling_matcher(self):
+        """Plants (r2 R1, R2): the ceiling's reason names it; another reason with p at the fit's 350 GPa top does not;
+        the ceiling's text with a p under the ceiling does not; the mark is the reason's own words."""
+        from solver import legacy_materials  # noqa: F401
+        import eos
+        mark, c = self._mark(), eos.HUANG_P_CEILING
+        why = eos.HUANG_CEILING_REASON.format(p_gpa=51.3, max_gpa=51.0)
+        self.assertTrue(self._names_the_ceiling({"id": "solve.no_root", "evidence": {"why": why}}, c, mark))
+        self.assertTrue(self._names_the_ceiling({"evidence": {"record": {"p": 51.3e9, "reason": why}}}, c, mark))
+        self.assertFalse(self._names_the_ceiling({"evidence": {"record": {"p": 3.5e11, "reason": "past the fit's top"}}},
+                                                 c, mark))
+        self.assertFalse(self._names_the_ceiling({"evidence": {"record": {"p": 4.0e10, "reason": why}}}, c, mark))
+        self.assertIn(mark, why)
 
     @unittest.skipUnless(__import__("os").environ.get("NEARSTARS_HEAVY") == "1",
                          "NEARSTARS_HEAVY=1 (a mars member solve with the records on, minutes)")
@@ -481,8 +508,7 @@ class GapOnMars(unittest.TestCase):
         if not _mars_shipped():
             self.skipTest("no shipped mars assemblage record with its table")
         rec = self._solve(2450.0)
-        ceiling = eos.HUANG_P_CEILING
-        mark = eos.HUANG_CEILING_REASON.split("({max_gpa")[0].split("}")[-1].strip()   # «GPa 는 … 천장»
+        ceiling, mark = eos.HUANG_P_CEILING, self._mark()
         if rec["outcome_kind"] == "answer":
             (pc,) = [q["point"] for q in rec["quantities"] if q["key"] == "core_pressure"]
             self.assertLess(pc, ceiling, "an answer past the core's ceiling")
