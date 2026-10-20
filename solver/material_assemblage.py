@@ -777,8 +777,9 @@ class _Curve:
         #: a run end inside a curve (next to rows read across) keeps the extrapolation, unchanged
         self.stop_lo = bool(self.rows[0].get("reach0_lo"))
         self.stop_hi = bool(self.rows[-1].get("reach0_hi"))
-        #: silicate post-freeze note 8 (edge extension): the full curve a cut run belongs to (itself for a full curve),
-        #: whether each end is an interior run end (the parent continues past it as rows read across), and Δ_c per end,
+        #: silicate post-freeze note 8 (edge extension) and its delta 1: the full curve a cut run belongs to (itself for
+        #: a full curve), whether each end is an interior run end (the parent continues past it as rows read across: the
+        #: run holds its own end row's boundary there), and Δ_c per end,
         #: the distance to the next table T row past it (set by the view; None: reach / EXT_ROWS, the uniform grid's)
         self.parent = self
         self.interior_lo = self.interior_hi = False
@@ -829,17 +830,14 @@ class _Curve:
         (a) A true curve end: x_b = ln P_e ± s1·g(τ), s1 the inside one-sided d ln P_b/dT at the end row (P linear in T
             inside; 0 for a one-row curve or a flat last segment), g(τ) = τ − τ²/(2Δ_c) up to Δ_c and Δ_c/2 after: C¹ at
             the end row (g′(0) = 1) and at Δ_c (g′ = 0), flat on the outer-only cell.
-        (b) An interior run end (the parent continues as rows read across): x_eff = x_r(t_e) + [x_r(T) − x_r(t_e)]·ψ(s),
-            ψ = 1 − 3s² + 2s³, up to Δ_c, and x_r(t_e) after, x_r the parent's real ln P_b.
-        A Dual T carries the slope (_exp, _log)."""
+        (b′) An interior run end (the parent continues as rows read across): x_eff = x_r(t_e), the run row's own
+            boundary, for 0 < τ ≤ reach (note 8 delta 1, 6c819825, voiding note 8's ψ tracking): row t_e is a node
+            sample at its own T, and the phase change past the end is carried by the rows read across.
+        A Dual T carries the slope (_exp)."""
+        if self.interior_hi if hi else self.interior_lo:
+            return e["p_b"]
         tau = (t - e["t"]) if hi else (e["t"] - t)
         dc = (self.dc_hi if hi else self.dc_lo) or reach / EXT_ROWS
-        if self.interior_hi if hi else self.interior_lo:
-            if tau >= dc:
-                return e["p_b"]
-            u = tau / dc
-            psi = 1.0 - u * u * (3.0 - 2.0 * u)
-            return e["p_b"] * _exp((_log(self.parent.p_b(t)) - math.log(e["p_b"])) * psi)
         if o is None or o["p_b"] == e["p_b"]:
             return e["p_b"]
         s1 = (e["p_b"] - o["p_b"]) / ((e["t"] - o["t"]) * e["p_b"])
@@ -847,22 +845,16 @@ class _Curve:
         return e["p_b"] * _exp((s1 if hi else -s1) * g)
 
     def edge_slope_entry(self, hi, reach):
-        """Note 8 §3: the landing-scale entry (T_x, P_max, bound of |dP/dT|) over an edge run end's whole extension.
-        (a) a true end: σ the signed d ln P_b/dτ continuing the inside slope, P_max = P_e·exp(max(σ, 0)·Δ_c/2), slope
-        bound P_max·|σ|; (b) an interior end: M = |ΔP_r|/(Δ_c·min P_r) over the parent's segment past t_e, P_max the
-        larger P_r, slope bound 1.25·M·P_max. T_x = t_e + Δ_c at an upper end, t_e at a lower one. None at a stopped
-        end."""
-        if self.stop_hi if hi else self.stop_lo:
+        """Note 8 §3: the landing-scale entry (T_x, P_max, bound of |dP/dT|) over a true edge end's whole extension: σ
+        the signed d ln P_b/dτ continuing the inside slope, P_max = P_e·exp(max(σ, 0)·Δ_c/2), slope bound P_max·|σ|,
+        T_x = t_e + Δ_c at an upper end, t_e at a lower one. None at a stopped end and at an interior end (note 8 delta
+        1: P = P_b(t_e) with slope 0 past it, which the end row's segment entry already covers)."""
+        if (self.stop_hi if hi else self.stop_lo) or (self.interior_hi if hi else self.interior_lo):
             return None
         rs = self.rows
         e, o = (rs[-1], rs[-2] if len(rs) > 1 else None) if hi else (rs[0], rs[1] if len(rs) > 1 else None)
         dc = (self.dc_hi if hi else self.dc_lo) or reach / EXT_ROWS
         tx = e["t"] + dc if hi else e["t"]
-        if self.interior_hi if hi else self.interior_lo:
-            pa, pb = e["p_b"], self.parent.p_b(e["t"] + dc if hi else e["t"] - dc)
-            m = abs(pb - pa) / (dc * min(pa, pb))
-            pmax = max(pa, pb)
-            return tx, pmax, 1.25 * m * pmax
         s1 = 0.0 if o is None or o["p_b"] == e["p_b"] else (e["p_b"] - o["p_b"]) / ((e["t"] - o["t"]) * e["p_b"])
         sig = s1 if hi else -s1
         pmax = e["p_b"] * math.exp(max(sig, 0.0) * dc / 2.0)

@@ -188,28 +188,25 @@ class DenseSup(unittest.TestCase):
 
 
 def _looseness(c, hi, reach):
-    """Note 8 §3's stated looseness of an edge end's entry: exp(|σ|·Δ_c/2)·(1 + Δ_c/t_e) at a true end,
-    1.25·(P_max/min P)·(1 + Δ_c/t_e) at an interior end; 1 at a stopped end."""
-    got = c.edge_slope_entry(hi, reach)
-    if got is None:
+    """Note 8 §3's stated looseness of a true edge end's entry: exp(|σ|·Δ_c/2)·(1 + Δ_c/t_e); 1 where the end has no
+    entry (a stopped end, or an interior end under note 8 delta 1)."""
+    if c.edge_slope_entry(hi, reach) is None:
         return 1.0
     rs = c.rows
     e, o = (rs[-1], rs[-2] if len(rs) > 1 else None) if hi else (rs[0], rs[1] if len(rs) > 1 else None)
     dc = (c.dc_hi if hi else c.dc_lo) or reach / ma.EXT_ROWS
-    if c.interior_hi if hi else c.interior_lo:
-        pb = c.parent.p_b(e["t"] + dc if hi else e["t"] - dc)
-        return 1.25 * (max(e["p_b"], pb) / min(e["p_b"], pb)) * (1.0 + dc / e["t"])
     s1 = 0.0 if o is None or o["p_b"] == e["p_b"] else (e["p_b"] - o["p_b"]) / ((e["t"] - o["t"]) * e["p_b"])
     return math.exp(abs(s1) * dc / 2.0) * (1.0 + dc / e["t"])
 
 
 class EdgeEntries(unittest.TestCase):
-    """Silicate post-freeze note 8 §3's test: on every edge end of the three tables, a 2000-point Dual scan of
+    """Silicate post-freeze note 8 §3's test: on every true edge end of the three tables, a 2000-point Dual scan of
     |P_b_ext| + T·|dP_b_ext/dT| over [0, reach] past the end; the end's entry is ≥ the scan max and within the stated
-    looseness (true and interior ends counted apart)."""
+    looseness. Interior ends have no entry (note 8 delta 1: P_b(t_e) held, slope 0) and the interior Dual scan is
+    retired."""
 
     def test_every_edge_end(self):
-        n = {"true": 0, "interior": 0}
+        n = {"true": 0, "interior_no_entry": 0}
         for rid in SILICATE:
             v = _view(rid)
             for c in v._cut:
@@ -217,6 +214,10 @@ class EdgeEntries(unittest.TestCase):
                     continue
                 for hi in (True, False):
                     ent = c.edge_slope_entry(hi, v._reach)
+                    if c.interior_hi if hi else c.interior_lo:
+                        self.assertIsNone(ent)
+                        n["interior_no_entry"] += 1
+                        continue
                     if ent is None:
                         continue
                     t_e = c.t1 if hi else c.t0
@@ -233,10 +234,10 @@ class EdgeEntries(unittest.TestCase):
                     with self.subTest(rid=rid, curve=c.id, hi=hi):
                         self.assertGreaterEqual(bound, top * (1.0 - 1e-12))
                         self.assertLessEqual(bound, top * _looseness(c, hi, v._reach) * (1.0 + 1e-12))
-                    n["interior" if (c.interior_hi if hi else c.interior_lo) else "true"] += 1
-        print(f"  edge ends scanned: {n}")
+                    n["true"] += 1
+        print(f"  edge ends: {n}")
         self.assertGreater(n["true"], 0)
-        self.assertGreater(n["interior"], 0)
+        self.assertGreater(n["interior_no_entry"], 0)
 
 
 class PlantedMaxima(unittest.TestCase):

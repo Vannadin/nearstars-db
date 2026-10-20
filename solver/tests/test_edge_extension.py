@@ -3,7 +3,7 @@
 a8c67010; 68's design eecf1761, r2 clear ef6b62b6) and s-read post-freeze note 5 (86f56c0a): an edge curve's position
 past a cut run's end.
 - (a) a true curve end: x_b = ln P_e ± s1·g(τ), g = τ − τ²/(2Δ_c) up to Δ_c, Δ_c/2 after, None past the reach;
-- (b) an interior run end: x_eff = x_r(t_e) + [x_r(T) − x_r(t_e)]·ψ(s), ψ = 1 − 3s² + 2s³, x_r(t_e) after;
+- (b′) an interior run end (note 8 delta 1, 6c819825): x_eff = x_r(t_e), the run row's own boundary, for 0 < τ ≤ reach;
 - swaps keep the ln-linear extension.
 Plants and the seven mutants of note 8 §4, each built from the module's own source.
 
@@ -72,8 +72,9 @@ class Shape(unittest.TestCase):
         self.assertGreater(self.check_in_range(), 0)
 
     def check_shape(self):
-        """C¹ at the end row and at Δ_c (|Δ d ln P/dT| ≤ 1e-12 relative to the inside slope's scale), flat on
-        [Δ_c, reach], None past the reach; an interior end starts on the parent (value and slope)."""
+        """A true end: C¹ at the end row and at Δ_c (|Δ d ln P/dT| ≤ 1e-12 relative to the inside slope's scale), flat
+        on [Δ_c, reach]. An interior end (delta 1): P_b(t_e) held from the end row on, C⁰ at t_e, slope 0 past it. Both:
+        None past the reach."""
         counts = {"true": 0, "interior": 0}
         for v in self.views.values():
             for c, hi in _ends(v):
@@ -83,10 +84,15 @@ class Shape(unittest.TestCase):
                 interior = c.interior_hi if hi else c.interior_lo
                 h = 1e-13 * dc
                 if interior:
-                    pr = c.parent
-                    xr = _slope(pr, te + sgn * h, v._reach)          # the parent's own slope on the open side
-                    scale = max(abs(xr), 1e-12)
-                    self.assertAlmostEqual(c.p_b_ext(te + sgn * h, v._reach) / pr.p_b(te + sgn * h), 1.0, delta=1e-12)
+                    pe = c.rows[-1 if hi else 0]["p_b"]
+                    held = [c.p_b_ext(te + sgn * v._reach * j / 16, v._reach) for j in range(1, 17)]
+                    with self.subTest(curve=c.id, hi=hi, at="held"):
+                        self.assertEqual(set(held), {pe})
+                        self.assertEqual(c.p_b_ext(te, v._reach), pe)
+                        self.assertEqual(_slope(c, te + sgn * h, v._reach), 0.0)
+                        self.assertIsNone(c.p_b_ext(te + sgn * (v._reach + 1e-6), v._reach))
+                    counts["interior"] += 1
+                    continue
                 else:
                     rs = c.rows
                     e, o = (rs[-1], rs[-2] if len(rs) > 1 else None) if hi else (rs[0], rs[1] if len(rs) > 1 else None)
@@ -199,14 +205,55 @@ class Mutants(unittest.TestCase):
                   _mutant("    if pb is not None:\n        return pb\n",
                           "    if pb is not None and self.kind != 'edge':\n        return pb\n", fn="p_b_ext"))
 
-    def test_parent_throughout_the_reach(self):  # x_r in the outer-only cell
+    def test_parent_throughout_the_reach(self):  # x_r in the outer-only cell (delta 1 §4: stays red)
         self._red(Shape.check_shape, "_edge_ext",
-                  _mutant("        if tau >= dc:\n            return e[\"p_b\"]\n",
+                  _mutant("    if self.interior_hi if hi else self.interior_lo:\n        return e[\"p_b\"]\n",
+                          "    if self.interior_hi if hi else self.interior_lo:\n"
                           "        return self.parent.p_b_ext(t, reach)\n"))
 
-    def test_psi_linear(self):                   # C¹ at t_e + Δ_c
-        self._red(Shape.check_shape, "_edge_ext",
-                  _mutant("psi = 1.0 - u * u * (3.0 - 2.0 * u)", "psi = 1.0 - u"))
+
+PSI = ("    if self.interior_hi if hi else self.interior_lo:\n        return e[\"p_b\"]\n",
+       "    if self.interior_hi if hi else self.interior_lo:\n"
+       "        dc = (self.dc_hi if hi else self.dc_lo) or reach / EXT_ROWS\n"
+       "        tau = (t - e[\"t\"]) if hi else (e[\"t\"] - t)\n"
+       "        if tau >= dc:\n            return e[\"p_b\"]\n"
+       "        u = tau / dc\n        psi = 1.0 - u * u * (3.0 - 2.0 * u)\n"
+       "        return e[\"p_b\"] * _exp((_log(self.parent.p_b(t)) - math.log(e[\"p_b\"])) * psi)\n")
+
+
+class InteriorEnds(unittest.TestCase):
+    """Note 8 delta 1 §4's plants and the ψ mutant."""
+
+    def test_one_row_interior_runs_are_the_base_read(self):
+        """A one-row interior run holds its own P_b over its whole extension: the base read (af12d75b), which kept a
+        one-row curve constant, bit for bit; no-touch set (c) gains these ends."""
+        n = 0
+        for rid in RECORDS:
+            v = _view(rid, s_read=False)
+            for c in v._cut:
+                if c.kind != "edge" or len(c.rows) != 1:
+                    continue
+                for hi in (True, False):
+                    if not (c.interior_hi if hi else c.interior_lo):
+                        continue
+                    sgn = 1.0 if hi else -1.0
+                    for j in range(1, 9):
+                        self.assertEqual(c.p_b_ext(c.t0 + sgn * v._reach * j / 8, v._reach), c.rows[0]["p_b"])
+                    n += 1
+        self.assertGreater(n, 0)
+
+    def _step_875(self):
+        """The Envelope test's step at bse 875 K between the 11.64 and 12.22 GPa cell centres (ia 115 → 116)."""
+        v = _view("silicate_slb_default_bse", s_read=False)
+        a, b = (v._solid(math.sqrt(v.ps[j] * v.ps[j + 1]), 875.0)[0] for j in (115, 116))
+        return b / a - 1.0
+
+    def test_psi_tracking_mutant_is_red_at_curve_83(self):
+        """Delta 1's control: ψ tracking in the corner cell puts curve 83's fall between the 875 K cell centres (the
+        Envelope test's −1.011e-4); the held boundary does not (+2.660e-4). The fall itself is the base's, G3's to gate."""
+        self.assertGreater(self._step_875(), 0.0)
+        with mock.patch.object(ma._Curve, "_edge_ext", _mutant(*PSI)):
+            self.assertLess(self._step_875(), -1e-4)
 
 
 class _Null:
