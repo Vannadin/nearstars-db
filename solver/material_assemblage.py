@@ -704,6 +704,12 @@ NODE_NOTE = ("node-resolved phase change read across: C¹ over its grid cell, ne
 BAND_NOTE = "band read: s not conserved over ≤ one T row"
 
 
+@dataclasses.dataclass(frozen=True)
+class BandReadNote(mv.DeclaredNote):
+    """BAND_NOTE as a type: control flow tells a band read's note by its class, never by its text (X3, r2 on the
+    a8e37d1b suite). Rendered as any DeclaredNote (phase, text)."""
+
+
 class BandTrap(tuple):
     """s-read post-freeze note 3 §2.4: a band read whose two reads have opposite signs (dT/dP_today · dT/dP_s < 0), so
     the blended field has a zero inside the T row. The view only marks the read (68 B2): solve refuses an accepted
@@ -1778,7 +1784,7 @@ class AssemblageView(mv.RecordView):
             self.s_counts["s_reads"] += 1
             return got[0], dtdp_s, cp_s, got[3]
         self.s_counts["band_reads"] += 1                  # note 3 §2.2: the C¹ blend over one T row; ρ is today's
-        self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID, BAND_NOTE))
+        self.notes.append(BandReadNote(self.material_id, PHASE_ID, BAND_NOTE))
         if got[1] * dtdp_s < 0.0:                        # §2.4: a trapping band read, marked for solve
             self.s_counts["band_trapping_reads"] += 1
             self.notes.append(BandTrap(self.material_id, p, t, w, got[1], dtdp_s))
@@ -3013,8 +3019,8 @@ class BasalView(mv.RecordView):
         for n in got[2]:
             if isinstance(n, BandTrap):
                 self.notes.append(BandTrap(self.material_id, *n[1:]))
-            elif isinstance(n, mv.DeclaredNote) and n.text == BAND_NOTE:
-                self.notes.append(mv.DeclaredNote(self.material_id, self._phase_id, BAND_NOTE))
+            elif isinstance(n, BandReadNote):
+                self.notes.append(BandReadNote(self.material_id, self._phase_id, BAND_NOTE))
         return (self.density_declared, got[1], tuple(self.notes))
 
     @property

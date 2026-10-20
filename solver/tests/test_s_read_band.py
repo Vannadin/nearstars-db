@@ -193,6 +193,30 @@ class BasalAndQuietCheck(unittest.TestCase):
         rec = {"id": "basal_test", "kind": "assemblage", "phases": [{"id": "basal"}]}
         return over, ma.BasalView(rec, 4000.0, over, 1600.0)
 
+    def test_basal_forwards_the_band_note_by_type(self):
+        """X3 (r2 on the a8e37d1b suite): BasalView forwards a band read's note by its class (BandReadNote), so a plain
+        DeclaredNote carrying the same text is not forwarded, and the forwarded note keeps the class."""
+        rid, ia, k, _trap = POINTS[0]
+        over, b = self._basal(rid)
+        p = _at(over, ia)
+        t = over.ts[k] + (over.ts[k + 1] - over.ts[k]) / 2
+        got = b.state(p, t)
+        fwd = [n for n in got[2] if isinstance(n, ma.BandReadNote)]
+        self.assertTrue(fwd)
+        self.assertEqual({(n.material_id, n.text) for n in fwd}, {("basal_test", ma.BAND_NOTE)})
+        real = type(over).state
+
+        def plain(view, p_, t_, guess_rho=None):
+            g = real(view, p_, t_, guess_rho)
+            notes = tuple(mv_ if not isinstance(mv_, ma.BandReadNote) else
+                          ma.mv.DeclaredNote(mv_.material_id, mv_.phase, mv_.text) for mv_ in g[2])
+            return g[0], g[1], notes
+        over2, b2 = self._basal(rid)
+        with mock.patch.object(type(over2), "state", plain):
+            got2 = b2.state(p, t)
+        self.assertFalse([n for n in got2[2] if isinstance(n, ma.mv.DeclaredNote) and n.material_id == "basal_test"
+                          and n.text == ma.BAND_NOTE])
+
     def test_basal_trapping_refuses_and_same_sign_answers(self):
         for rid, ia, k, trap in (POINTS[2], POINTS[0]):
             over, b = self._basal(rid)
