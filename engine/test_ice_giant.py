@@ -4,6 +4,7 @@
     python3 engine/test_ice_giant.py              전체 풀이 둘 (~1.5 분) + 굳힌 값과 비트 대조
     python3 engine/test_ice_giant.py --fast       적분 한 번 + 경로 지문만 (1 초). 반복 작업용
     python3 engine/test_ice_giant.py --refresh    전체 재계산 → ice_giant_anchor.json 갱신 (이 기계의 값도 instr 로)
+    python3 engine/test_ice_giant.py --rename-key OLD NEW   출력 키 이름만 바꿈 (값 비트 그대로, 재계산 없음)
     python3 engine/test_ice_giant.py --table      문서의 얼음거대행성 표를 다시 낸다
     python3 engine/test_ice_giant.py --price-check  몸마다 한 프로세스로 instr 를 재어 이 기계의 굳힌 값과 견준다 (C146)
 
@@ -505,6 +506,26 @@ def refresh() -> int:
     out["price"] = price
     ANCHOR_FILE.write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"굳혔다 → {ANCHOR_FILE.name}")
+    return 0
+
+
+def rename_key(old: str, new: str) -> int:
+    """굳힌 앵커의 출력 키 이름만 바꾼다 (지휘석 10-21, 선택 (a)): 몸마다 values 의 `old` 를 같은 자리에 `new` 로, 값은
+    비트 그대로, 다른 키·입력 해시·instr 는 손대지 않는다. 출력 이름을 바꾼 커밋(basal_layer_thickness_solved_km)에서만
+    쓴다 — 값이 움직인 것은 `--refresh` 와 그 판정의 몫이지 여기 몫이 아니다."""
+    frozen = json.loads(ANCHOR_FILE.read_text(encoding="utf-8"))
+    n = 0
+    for name, rec in frozen["bodies"].items():
+        vals = rec.get("values")
+        if not isinstance(vals, dict) or old not in vals:
+            continue
+        if new in vals:
+            print(f"{name}: `{new}` 가 이미 있다 — 바꾸지 않는다")
+            return 1
+        rec["values"] = {(new if k == old else k): x for k, x in vals.items()}
+        n += 1
+    ANCHOR_FILE.write_text(json.dumps(frozen, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"{ANCHOR_FILE.name}: {n} 몸의 `{old}` → `{new}` (값 그대로)")
     return 0
 
 
@@ -1024,6 +1045,9 @@ def main() -> int:
         return price_check()
     if "--refresh" in sys.argv:
         return refresh()
+    if "--rename-key" in sys.argv:
+        i = sys.argv.index("--rename-key")
+        return rename_key(sys.argv[i + 1], sys.argv[i + 2])
     if "--table" in sys.argv:
         table()
         return 0
