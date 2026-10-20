@@ -27,6 +27,10 @@ T = T_ib + (T_ib+1 − T_ib)·j/nsub, j = 0 … nsub:
   readable point, bisected) and listed «clipped»; the net-fall rules then apply to the clipped interval.
 - **At the floor, the fall line** (r2 8e0d13fa, rev3b class 2): a cell whose ends and secant are all ≥ THR is no fall
   though R decreases; it is accepted and listed «slow_floor» with its secant.
+- **rev3c: zero-height coincident downsteps** (68's design, r2 clear 1916061f, artifacts main f11695a0 blob 40d180cc): a
+  coincident edge pair's downward jump on its own row within the table's EDGE_DRHO_TOL is height 0 — kept as a landed
+  bound, never a fall, no ΔG solve, not gated, never an absorber, listed «zero_height»; above τ_e or past its rows a
+  STOP.
 The set S_i of T node i is the union of the widened intervals from every sample in cells i − 1 and i, overlaps merged.
 Output: {"record", "ps", "ts", "stamp", "sets": {i: [[a′, b′], …]}, "unrecovered", "stops", "samples"}."""
 from __future__ import annotations
@@ -217,6 +221,40 @@ def _bisect(f, a, b, fa, n=60):
     return 0.5 * (a + b)
 
 
+def _edge_tol(rid):
+    """τ_e: the table's own boundaries.source.edge_drho_tol from the registry (rev3c §2; never re-derived), or None."""
+    from solver import material_registry as mr
+    tb = mr.load().tables.get(rid) or {}
+    return ((tb.get("boundaries") or {}).get("source") or {}).get("edge_drho_tol")
+
+
+def _view_tol(v):
+    """_edge_tol for v's record, read once per view (kept on the view, not in module state)."""
+    if not hasattr(v, "_rev3c_tol"):
+        v._rev3c_tol = (_edge_tol(v.material_id),)
+    return v._rev3c_tol[0]
+
+
+def _zero_height(j, tol):
+    """rev3c §2, the single decision point: the reason a swap jump is a zero-height case, or None. It qualifies when it is
+    a coincident edge pair (was_edge), on the pair's own row (extrap_k 0), downward, and |rel| ≤ τ_e (the table's
+    edge_drho_tol; None: nothing qualifies)."""
+    if tol is None or not j.get("coincident_edge") or j.get("extrap_k", 0.0) != 0.0 or not j["jump"] < 0.0:
+        return None
+    if abs(j["rel"]) > tol:
+        return None
+    return f"a coincident edge pair's downstep on its own row within EDGE_DRHO_TOL ({abs(j['rel']):.4g} ≤ {tol:g})"
+
+
+def _absorber(swaps, zero_x, right):
+    """rev3c §3.4: the landed swap on a net fall's `right` bound that rule 2 may credit, or None when there is none or it
+    is a zero-height case (its far side's lower value is never credited)."""
+    xs_, cid = next(((xs_, c_) for xs_, c_ in swaps if xs_ - SWAP_EPS == right), (None, None))
+    if xs_ is None or any(abs(xs_ - z) <= 1e-12 for z in zero_x):
+        return None
+    return xs_, cid
+
+
 def falls_at(v, t, ib, xlo, xhi):
     """The widened fall intervals of R(·, t) on [xlo, xhi], with the unrecovered falls and net-fall STOPs."""
     unreadable = []                                      # r2 B1: points the read refuses, counted and listed
@@ -296,6 +334,22 @@ def falls_at(v, t, ib, xlo, xhi):
                                # how far its P_b is extrapolated in T past its own rows (0: on them, a true crossing)
                                "coincident_edge": bool(getattr(c_, "was_edge", False)),
                                "extrap_k": max(c_.t0 - t, t - c_.t1, 0.0)})
+    # rev3c §3.1: a coincident pair's downstep on its own row within τ_e is height 0, with its pair's ids; above τ_e or
+    # past its rows it STOPs here, before gate()
+    tol = _view_tol(v) if any(j["coincident_edge"] and j["jump"] < 0.0 for j in swap_jumps) else None
+    zero_x, ce_stops = [], []
+    for j in swap_jumps:
+        if not (j["coincident_edge"] and j["jump"] < 0.0):
+            continue
+        if _zero_height(j, tol) is not None:
+            pair = sorted(i for i, c2 in enumerate(v._events) if getattr(c2, "was_edge", False) and c2.kind == "swap"
+                          and (q := c2.p_b_ext(t, v._reach)) is not None and abs(math.log(q) - j["x"]) <= 1e-12)
+            j.update(zero_height=True, tol=tol, pair=pair)
+            zero_x.append(j["x"])
+        elif tol is not None:
+            j["pre_gate_stop"] = True
+            ce_stops.append({**j, "gate": ("coincident-edge jump past its rows" if j["extrap_k"] > 0.0
+                                           else "coincident-edge downstep above EDGE_DRHO_TOL")})
 
     def slope(i):
         if vals[i] is None or vals[i + 1] is None:
@@ -439,7 +493,14 @@ def falls_at(v, t, ib, xlo, xhi):
             # read ends the bridge flat at R(a′) there (_fall_bridge) and the step's jump absorbs the fall, which must
             # stay ≥ 0; (3) otherwise a STOP, naming its bound
             got, refused = _widen(g, gv, lo_, hi_, r_lo[0], right, step)
-            xs_, cid = next(((xs_, c_) for xs_, c_ in swaps if xs_ - SWAP_EPS == right), (None, None))
+            xs_, cid = _absorber(swaps, zero_x, right) or (None, None)
+            zero_bound = next((z for z in zero_x if abs(z - SWAP_EPS - right) <= 1e-12), None)
+            if got is None and not refused and zero_bound is not None:
+                stops.append({"t": t, "why": "net fall over the widened interval", "a": lo_, "b": hi_, "r_a": r_lo[0],
+                              "r_b": r_hi[0], "bound": f"a zero-height coincident pair at ln P {zero_bound!r} (not an "
+                                                       "absorber)"})
+                intervals.append((lo_, hi_, a, c))
+                continue
             if got is not None:
                 widened.append({"t": t, "a": lo_, "b": got, "was_b": hi_, "net": r_hi[0] - r_lo[0]})
                 hi_ = got
@@ -460,6 +521,7 @@ def falls_at(v, t, ib, xlo, xhi):
                 stops.append({"t": t, "why": "net fall over the widened interval", "a": lo_, "b": hi_,
                               "r_a": r_lo[0], "r_b": r_hi[0], "bound": bound})
         intervals.append((lo_, hi_, a, c))
+    stops += ce_stops
     return intervals, unrecovered, stops, floor_cells, swap_jumps, {"unreadable": sorted(set(unreadable)),
                                                                    "unscreened": unscreened, "row_steps": row_steps,
                                                                    "widened": widened, "absorbed": absorbed,
@@ -515,7 +577,7 @@ def cell_falls(v, ib, nsub=16, xr=None):
                                                                                 "row_steps": []}
         for j_ in sj:
             j_["v_ratio"] = j_["r_after"] / j_["r_before"]          # V₋/V₊ at one mass: ρ₊/ρ₋
-            if j_["jump"] < 0.0:
+            if j_["jump"] < 0.0 and not j_.get("zero_height"):     # rev3c §3.5: a physical zero needs no ΔG
                 try:
                     xs_all = sorted(math.log(pe) for c in v._cut if c.kind == "swap"
                                     for pe in (c.p_b_ext(t, v._reach),) if pe is not None)
@@ -556,7 +618,7 @@ def _ma():
     return ma
 
 
-def _stamp():
+def _stamp(edge_tol=None):
     import hashlib
     import subprocess
     from pathlib import Path
@@ -565,7 +627,8 @@ def _stamp():
     return {"tool_blob": hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest(),
             "engine": subprocess.run(["git", "-C", str(eng), "rev-parse", "HEAD"], capture_output=True,
                                      text=True).stdout.strip(),
-            "rules": {"THR": THR, "SUB_P": SUB_P, "SAFETY": SAFETY, "H_MIN": H_MIN, "C_WIDEN": C_WIDEN, "REGAIN_W": REGAIN_W}}
+            "rules": {"THR": THR, "SUB_P": SUB_P, "SAFETY": SAFETY, "H_MIN": H_MIN, "C_WIDEN": C_WIDEN, "REGAIN_W": REGAIN_W,
+                      "EDGE_DRHO_TOL": edge_tol}}
 
 
 def _floor_list(fl):
@@ -600,8 +663,10 @@ def gate(v, jumps):
     call). A jump not evaluated (no generator) is a STOP: the gate can't be passed unread."""
     stops, exceptions = [], []
     for j in jumps:
-        if j["jump"] >= 0.0:
+        if j["jump"] >= 0.0 or j.get("zero_height"):     # rev3c §3.6: a zero-height case is not gated
             continue
+        if j.get("pre_gate_stop"):
+            continue                                     # rev3c §2: a failing coincident pair STOPped before the gate
         band = _band_rho(v, j["x"], j["t"])
         j["band_rho"] = band
         within = band is not None and abs(j["rel"]) <= band
@@ -627,26 +692,47 @@ def _coincident_edge_census(jumps, g_stops, g_exc):
     rows (a true crossing) and how far their P_b is extrapolated past them."""
     ce = [j for j in jumps if j.get("coincident_edge")]
     key = lambda j: (j["t"], j["x"], j["curve"])          # noqa: E731
-    stop_k, exc_k = {key(j) for j in g_stops if "curve" in j}, {key(j) for j in g_exc}
+    exc_k = {key(j) for j in g_exc}
     down = [j for j in ce if j["jump"] < 0.0]
+    zero = [j for j in down if j.get("zero_height")]
     classes = {}
     for j in down:
         classes[j.get("class", "not evaluated")] = classes.get(j.get("class", "not evaluated"), 0) + 1
     return {"n": len(ce), "curves": sorted({j["curve"] for j in ce}), "upward": len(ce) - len(down),
             "downward": len(down), "downward_by_class": classes,
-            "gate_stops": sum(1 for j in down if key(j) in stop_k), "gate_exceptions": sum(1 for j in down if key(j) in exc_k),
+            # rev3c §3.7: every downward coincident jump that is not a zero-height case STOPs (before the gate, or in
+            # it when the table carries no τ_e); on its own row that is «above EDGE_DRHO_TOL»
+            "gate_stops": sum(1 for j in down if not j.get("zero_height")),
+            "gate_exceptions": sum(1 for j in down if key(j) in exc_k),
+            "zero_height": len({(tuple(j["pair"]), j["t"], round(j["x"], 12)) for j in zero}),
+            "above_tol": sum(1 for j in down if not j.get("zero_height") and j["extrap_k"] == 0.0),
             "on_rows": sum(1 for j in ce if j["extrap_k"] == 0.0), "extrapolated": sum(1 for j in ce if j["extrap_k"] > 0.0),
             "extrap_k_max": max((j["extrap_k"] for j in ce), default=None),
             "rel_range": [min((j["rel"] for j in ce), default=None), max((j["rel"] for j in ce), default=None)],
             "abs_jump_max": max((abs(j["jump"]) for j in ce), default=None)}
 
 
+def _zero_height_list(jumps):
+    """rev3c §3.7: one entry per zero-height case, keyed by (pair, T, ln P to 1e-12), with n the (sample × member) rows
+    it merges."""
+    by = {}
+    for j in jumps:
+        if not j.get("zero_height"):
+            continue
+        k = (tuple(j["pair"]), j["t"], round(j["x"], 12))
+        e = by.setdefault(k, {"pair": list(j["pair"]), "t": j["t"], "x": j["x"], "p_gpa": math.exp(j["x"]) / 1e9,
+                              "jump": j["jump"], "rel": j["rel"], "tol": j["tol"], "n": 0})
+        e["n"] += 1
+    return sorted(by.values(), key=lambda e: (e["t"], e["x"], e["pair"]))
+
+
 def document(v, per_cell):
     jumps = [j for c in per_cell.values() for smp in c for j in smp["swap_jumps"]]
     g_stops, g_exc = gate(v, jumps)
+    zh = _zero_height_list(jumps)
     unscreened = [u for c in per_cell.values() for smp in c for u in smp["unscreened"]]
     return {"record": v.material_id, "ps": list(v.ps), "ts": list(v.ts),
-            "stamp": {**_stamp(), "record_sha256": v.record["assemblage"]["sha256"],
+            "stamp": {**_stamp(edge_tol=_view_tol(v)), "record_sha256": v.record["assemblage"]["sha256"],
                       "record_yaml_sha256": _ma().record_yaml_sha256(v.material_id), "read_blob": _ma().read_blob()},
             "sets": {str(k): s for k, s in sets_from(v, per_cell).items()},
             "unrecovered": [u for c in per_cell.values() for smp in c for u in smp["unrecovered"]],
@@ -655,7 +741,9 @@ def document(v, per_cell):
             "swap_exceptions": g_exc,
             "swap_counts": {"row-located": sum(1 for j in jumps if j["jump"] < 0 and j.get("class") == "row-located"),
                             "extension band": sum(1 for j in jumps if j["jump"] < 0 and j.get("class") == "extension band"),
-                            "upward": sum(1 for j in jumps if j["jump"] >= 0)},
+                            "upward": sum(1 for j in jumps if j["jump"] >= 0), "zero_height": len(zh)},
+            "zero_height": zh,
+            "edge_tol": _view_tol(v) if _view_tol(v) is not None else "no edge_drho_tol",       # rev3c §2
             "unreadable_points": sum(smp["unreadable"] for c in per_cell.values() for smp in c),
             "unscreened_cells": unscreened[:500], "unscreened_count": len(unscreened),
             "samples": sum(len(c) for c in per_cell.values()),
