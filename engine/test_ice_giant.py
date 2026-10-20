@@ -524,6 +524,9 @@ def rename_key(old: str, new: str) -> int:
             return 1
         rec["values"] = {(new if k == old else k): x for k, x in vals.items()}
         n += 1
+    if not n:
+        print(f"`{old}` 없음 — 바꾸지 않는다")      # 68 n1 on b4c54f9f: no silent no-op write
+        return 1
     ANCHOR_FILE.write_text(json.dumps(frozen, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"{ANCHOR_FILE.name}: {n} 몸의 `{old}` → `{new}` (값 그대로)")
     return 0
