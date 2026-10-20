@@ -4,6 +4,7 @@ at a swap curve's true outer ends, an interior check and its mutant)."""
 import copy
 import math
 import unittest
+from unittest import mock
 
 from solver import material_assemblage as ma
 
@@ -132,7 +133,13 @@ class ReachZeroEnds(unittest.TestCase):
 
     def test_the_read_steps_at_the_events(self):
         # the walk lands on the read's discontinuities only if they are where the events say (1568.5 K: row 1650's
-        # +47.9 kg/m³ enters with a negative T weight, −0.63; row 1600's with a positive one)
+        # +47.9 kg/m³ enters with a negative T weight, −0.63; row 1600's with a positive one). The read here is the
+        # repair-off read (directing on r2's rev 3 triage 9de49e95): with fall sets loaded, the ρ repair bridges a
+        # falling step (test_the_repair_bridges_the_falling_step)
+        with mock.patch.object(ma, "RHO_BRIDGE", False):
+            self._steps_at_the_events()
+
+    def _steps_at_the_events(self):
         for q in self.events(T_STEP):
             j = self.v.state(q * math.exp(1e-9), T_STEP)[0] - self.v.state(q * math.exp(-1e-9), T_STEP)[0]
             self.assertGreater(abs(j), 0.1, q)
@@ -153,8 +160,28 @@ class ReachZeroEnds(unittest.TestCase):
             self.assertEqual(set(e), {"form", "id"}, e)
 
     def test_no_events_is_red(self):
-        # the mutant: no row-step events; a step of the read is then where no event is
-        from unittest import mock
+        # the mutant: no row-step events; a step of the read is then where no event is (the repair-off read, as above)
+        with mock.patch.object(ma, "RHO_BRIDGE", False):
+            self._no_events_is_red()
+
+    def test_the_repair_bridges_the_falling_step(self):
+        """With the ρ repair on and this record's fall set loaded (NS_FALL_SETS, rev 3), a falling step at an event is
+        bridged: no read across an event falls; the repair-off read does fall there, so the case is live."""
+        if not self.v._fall_set_load():
+            self.skipTest("no fall set loaded for bse (NS_FALL_SETS)")
+        falls = 0
+        for q in self.events(T_STEP):
+            lo, hi = q * math.exp(-1e-9), q * math.exp(1e-9)
+            with mock.patch.object(ma, "RHO_BRIDGE", False):
+                off = self.v.state(hi, T_STEP)[0] - self.v.state(lo, T_STEP)[0]
+            with mock.patch.object(ma, "RHO_BRIDGE", True):
+                on = self.v.state(hi, T_STEP)[0] - self.v.state(lo, T_STEP)[0]
+            if off < -0.1:
+                falls += 1
+                self.assertGreater(on, -1e-6 * self.v.state(lo, T_STEP)[0], q)
+        self.assertGreater(falls, 0)
+
+    def _no_events_is_red(self):
         v = _bse_view()
         with mock.patch.object(type(v), "_row_step_p", lambda self, i, t: None):
             got = [q for x in v.transitions() if x[2]["form"] == "assemblage_row_step"
