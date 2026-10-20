@@ -55,7 +55,7 @@ class BuildKnowsRowSteps(unittest.TestCase):
         # the mutant: no row steps known (as before the fix) — the downward step reaches the floor and STOPs
         v = _view(BSE)
         t = 656.25
-        with mock.patch.object(type(v), "_row_step_p", lambda self, i, t: None):
+        with mock.patch.object(type(v), "_row_step_p", lambda self, i, t, ib=None: None):
             with self.assertRaises(rb.Unresolved):
                 rb.falls_at(v, t, _ib(v, t), math.log(5.0e9), math.log(5.3e9))
 

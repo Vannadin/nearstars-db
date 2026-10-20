@@ -160,6 +160,52 @@ class Plants(_Cases):
         self.assertLessEqual(rx, max(ra, r_own) * (1.0 + tau) + 1e-8 * r_own)
 
 
+class ClipNetFall(_Cases):
+    """68 B1 on a7f3251b: a D1 clip that leaves R(b₂) < R(a₂) at a sample, with no landed step to absorb it, STOPs
+    («net fall after unreadable-end clip»); the mutant (the check removed) lets it through to the bridge's secant."""
+
+    def _plant(self):
+        """The first (case, node interval, sample (T, ib), x) where R(x) < R(a) inside an S_k interval: refusing the
+        upper edge past x clips b into the fall at that sample."""
+        for case in (CASE_A, CASE_B):
+            v, k, _x, sets, _d = self.local(case)
+            dt = v.ts[k] - v.ts[k - 1]
+            samples = [(v.ts[ib] + dt * j / NSUB, ib) for ib in (k - 1, k) for j in range(NSUB + 1)]
+            for a, b in sets.get(k, ()):
+                for t, ib in samples:
+                    ea = v._edge_read(a, t, ib, True)
+                    if ea is None:
+                        continue
+                    for q in range(1, 64):
+                        xd = a + (b - a) * q / 64
+                        r = v._edge_read(xd, t, ib, False)
+                        if r is not None and r[0] < ea[0]:
+                            real_er = ma.AssemblageView._edge_read
+
+                            def er(self, xe, t_, ib_, below, xd=xd):
+                                if not below and xe > xd:
+                                    return None          # the plant: the upper edge refuses past xd
+                                return real_er(self, xe, t_, ib_, below)
+                            return v, k, a, b, er, samples
+        self.skipTest("no fall inside an S_k interval in the cases' windows")
+
+    def test_a_clip_into_the_fall_stops(self):
+        v, k, a, b, er, samples = self._plant()
+        stops = []
+        with mock.patch.object(ma.AssemblageView, "_edge_read", er):
+            got = rfb._node_readable(v, a, b, samples, [], k, stops)
+        self.assertLess(got[1], b)
+        self.assertEqual([s_["why"] for s_ in stops], ["net fall after unreadable-end clip"])
+
+    def test_m_the_check_removed(self):
+        v, k, a, b, er, samples = self._plant()
+        stops = []
+        with mock.patch.object(ma.AssemblageView, "_edge_read", er), \
+                mock.patch.object(rfb, "_clip_net_fall", lambda *a_: []):
+            rfb._node_readable(v, a, b, samples, [], k, stops)
+        self.assertEqual(stops, [])
+
+
 class Mutants(_Cases):
     """Each red on its plant (§5)."""
 

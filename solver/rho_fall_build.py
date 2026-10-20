@@ -347,7 +347,7 @@ def falls_at(v, t, ib, xlo, xhi):
     # downward one is a fall to bridge, never an «unresolved» cell
     row_steps, down = [], []
     for i in range(len(getattr(v, "_row_steps", ()))):
-        q = v._row_step_p(i, t)
+        q = v._row_step_p(i, t, ib)                      # 68 n1 on a7f3251b: the sample's own cell, not T-derived
         if q is None or not xlo < math.log(q) < xhi:
             continue
         xs_ = math.log(q)
@@ -598,6 +598,12 @@ def falls_at(v, t, ib, xlo, xhi):
                 ab = {"t": t, "by": cid, "x": xs_, "a": lo_, "b": right, "was_b": hi_, "dR": r_lo[0] - r_hi[0],
                       "jump": far[0] - r_lo[0]}
                 if ab["jump"] >= 0.0:
+                    # 68 n1: a row step absorbing here must be in the landed list of each node the sample feeds, or
+                    # the read would not end the bridge flat there
+                    if isinstance(cid, str):
+                        ab["unlanded_for_nodes"] = [k for k in (ib, ib + 1)
+                                                    if not any(abs(z - xs_) <= 1e-12
+                                                               for z in v._row_steps_up(t, min(k, len(v.ts) - 2)))]
                     absorbed.append(ab)
                     hi_ = right
                 else:
@@ -688,12 +694,17 @@ def cell_falls(v, ib, nsub=16, xr=None):
     return out
 
 
-def sets_from(v, per_cell, dropped=None):
+def sets_from(v, per_cell, dropped=None, stops=None):
     """S_i = the merged widened intervals of every sample in cells i − 1 and i, each kept only where its two edges read
     at every one of those samples under the stencil of the cell holding the sample — both at the shared node T_i
     (rev3d D1, amendment 1: read-faithful, as piece i is evaluated). An end that fails is clipped inward to the first
     point that reads everywhere, on the build's fine step (the rev3b class 3 rule under both stencils); an interval
-    with no such point is dropped. `dropped`, a list, receives each clip and drop («unreadable_end»)."""
+    with no such point is dropped. `dropped`, a list, receives each clip and drop («unreadable_end»). A clipped interval
+    is held to the net-fall rules again at every one of its samples (68 B1 on a7f3251b, as rev3b class 3 re-applies
+    them): R(b₂) ≥ R(a₂), else rule 2 where b₂ sits on a landed step's near side (s_k's list) whose far side regains
+    R(a₂), else a STOP «net fall after unreadable-end clip» in `stops`. The split ends inside an interval (a landed
+    step's x_s ± SWAP_EPS) are not checked here: the read counts any of them that refuses (bridge_no_edge, 0 on G3's
+    lattices, 68 n2)."""
     sets = {}
     for i in range(len(v.ts)):
         ivs = [(iv[0], iv[1]) for ib in (i - 1, i) for smp in per_cell.get(ib, ()) for iv in smp["intervals"]]
@@ -702,7 +713,7 @@ def sets_from(v, per_cell, dropped=None):
         samples = [(smp["t"], ib) for ib in (i - 1, i) for smp in per_cell.get(ib, ())]
         kept = []
         for a, b in _merge(ivs):
-            got = _node_readable(v, a, b, samples, dropped, i)
+            got = _node_readable(v, a, b, samples, dropped, i, stops)
             if got is not None:
                 kept.append(list(got))
         if kept:
@@ -710,7 +721,7 @@ def sets_from(v, per_cell, dropped=None):
     return sets
 
 
-def _node_readable(v, a, b, samples, dropped, node):
+def _node_readable(v, a, b, samples, dropped, node, stops=None):
     """rev3d D1: (a, b), clipped inward until both edges read (_edge_read, the bridge's own edge reads) at every
     (T, stencil) of `samples`; None when the interval has no such pair. Each change is recorded in `dropped`."""
     def ok(x, below):
@@ -744,9 +755,33 @@ def _node_readable(v, a, b, samples, dropped, node):
         if dropped is not None:
             dropped.append({"node": node, "a": a, "b": b, "what": "unreadable_end: dropped"})
         return None
-    if (a2, b2) != (a, b) and dropped is not None:
-        dropped.append({"node": node, "a": a, "b": b, "now": [a2, b2], "what": "unreadable_end: clipped"})
+    if (a2, b2) != (a, b):
+        if dropped is not None:
+            dropped.append({"node": node, "a": a, "b": b, "now": [a2, b2], "what": "unreadable_end: clipped"})
+        bad = _clip_net_fall(v, a2, b2, samples, node)
+        if bad and stops is not None:
+            stops.append({"why": "net fall after unreadable-end clip", "node": node, "a": a2, "b": b2, "was": [a, b],
+                          "samples": bad[:5], "n": len(bad)})
     return a2, b2
+
+
+def _clip_net_fall(v, a, b, samples, node):
+    """68 B1: the samples (T, ib) where the clipped interval's bridge would be a net fall that rule 2 doesn't absorb —
+    R(b) < R(a) with no landed upward step (a cut swap's P_b_ext(T), or s_k's row steps) within 2·SWAP_EPS above b
+    whose far side reads ≥ R(a)."""
+    on = 2.0 * SWAP_EPS * (1.0 + 1e-6)
+    sk = min(node, len(v.ts) - 2)
+    bad = []
+    for t, ib in samples:
+        ea, eb = v._edge_read(a, t, ib, True), v._edge_read(b, t, ib, False)
+        if ea is None or eb is None or eb[0] >= ea[0]:
+            continue
+        landed = [math.log(pe) for c in v._cut if c.kind == "swap" for pe in (c.p_b_ext(t, v._reach),) if pe is not None]
+        landed += v._row_steps_up(t, sk)
+        far = [v._edge_read(xs_ + SWAP_EPS, t, ib, False) for xs_ in landed if b < xs_ <= b + on]
+        if not any(f is not None and f[0] >= ea[0] for f in far):
+            bad.append({"t": t, "ib": ib, "r_a": ea[0], "r_b": eb[0]})
+    return bad
 
 
 def _view(rid):
@@ -893,7 +928,7 @@ def _sliver_margin(slivers):
 
 def document(v, per_cell):
     jumps = [j for c in per_cell.values() for smp in c for j in smp["swap_jumps"]]
-    dropped = []
+    dropped, clip_stops = [], []
     caps = [c_ for c in per_cell.values() for smp in c for c_ in smp.get("caps", ())]
     no_band = [c_ for c in per_cell.values() for smp in c for c_ in smp.get("no_band", ())]
     widened = [j for c in per_cell.values() for smp in c for j in smp.get("widened", ())]
@@ -906,7 +941,7 @@ def document(v, per_cell):
                                                           if k in ("tau_w_rule", "tau_w_range", "tau_w_floor_ends")},
                       "no_band_ends": len(no_band), "record_sha256": v.record["assemblage"]["sha256"],
                       "record_yaml_sha256": _ma().record_yaml_sha256(v.material_id), "read_blob": _ma().read_blob()},
-            "sets": {str(k): s for k, s in sets_from(v, per_cell, dropped).items()},
+            "sets": {str(k): s for k, s in sets_from(v, per_cell, dropped, clip_stops).items()},
             # rev3d D1: interval ends clipped or dropped because they don't read at every sample under its cell's stencil
             "unreadable_end": dropped,
             # rev3d D4: every capped end (τ_w per cell, amendment 1), the ends with no ρ band, and rule 1's excess above
@@ -918,7 +953,7 @@ def document(v, per_cell):
             "sliver_margin": _sliver_margin(slivers),
             "unrecovered": [u for c in per_cell.values() for smp in c for u in smp["unrecovered"]],
             # every STOP: the samples' own (net fall, unresolved, a refusal inside a fall search) and the swap gate's
-            "stops": [s_ for c in per_cell.values() for smp in c for s_ in smp["stops"]] + g_stops,
+            "stops": [s_ for c in per_cell.values() for smp in c for s_ in smp["stops"]] + g_stops + clip_stops,
             "swap_exceptions": g_exc,
             "swap_counts": {"row-located": sum(1 for j in jumps if j["jump"] < 0 and j.get("class") == "row-located"),
                             "extension band": sum(1 for j in jumps if j["jump"] < 0 and j.get("class") == "extension band"),

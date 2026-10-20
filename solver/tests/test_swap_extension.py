@@ -183,7 +183,7 @@ class ReachZeroEnds(unittest.TestCase):
 
     def _no_events_is_red(self):
         v = _bse_view()
-        with mock.patch.object(type(v), "_row_step_p", lambda self, i, t: None):
+        with mock.patch.object(type(v), "_row_step_p", lambda self, i, t, ib=None: None):
             got = [q for x in v.transitions() if x[2]["form"] == "assemblage_row_step"
                    if (q := v.boundary_pressure(x[2], T_STEP)) is not None]
         self.assertEqual(got, [])
