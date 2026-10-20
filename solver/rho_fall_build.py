@@ -692,7 +692,7 @@ def _coincident_edge_census(jumps, g_stops, g_exc):
     rows (a true crossing) and how far their P_b is extrapolated past them."""
     ce = [j for j in jumps if j.get("coincident_edge")]
     key = lambda j: (j["t"], j["x"], j["curve"])          # noqa: E731
-    exc_k = {key(j) for j in g_exc}
+    stop_k, exc_k = {key(j) for j in g_stops if "curve" in j}, {key(j) for j in g_exc}
     down = [j for j in ce if j["jump"] < 0.0]
     zero = [j for j in down if j.get("zero_height")]
     classes = {}
@@ -700,12 +700,12 @@ def _coincident_edge_census(jumps, g_stops, g_exc):
         classes[j.get("class", "not evaluated")] = classes.get(j.get("class", "not evaluated"), 0) + 1
     return {"n": len(ce), "curves": sorted({j["curve"] for j in ce}), "upward": len(ce) - len(down),
             "downward": len(down), "downward_by_class": classes,
-            # rev3c §3.7: every downward coincident jump that is not a zero-height case STOPs (before the gate, or in
-            # it when the table carries no τ_e); on its own row that is «above EDGE_DRHO_TOL»
-            "gate_stops": sum(1 for j in down if not j.get("zero_height")),
+            # rev3c §3.7 (68 n1 on bf370f23): the STOPs, before the gate (pre_gate_stop) or in it (no τ_e); «above
+            # EDGE_DRHO_TOL» only where τ_e was compared, on the pair's own row
+            "gate_stops": sum(1 for j in down if j.get("pre_gate_stop") or key(j) in stop_k),
             "gate_exceptions": sum(1 for j in down if key(j) in exc_k),
             "zero_height": len({(tuple(j["pair"]), j["t"], round(j["x"], 12)) for j in zero}),
-            "above_tol": sum(1 for j in down if not j.get("zero_height") and j["extrap_k"] == 0.0),
+            "above_tol": sum(1 for j in down if j.get("pre_gate_stop") and j["extrap_k"] == 0.0),
             "on_rows": sum(1 for j in ce if j["extrap_k"] == 0.0), "extrapolated": sum(1 for j in ce if j["extrap_k"] > 0.0),
             "extrap_k_max": max((j["extrap_k"] for j in ce), default=None),
             "rel_range": [min((j["rel"] for j in ce), default=None), max((j["rel"] for j in ce), default=None)],
