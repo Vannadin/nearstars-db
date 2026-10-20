@@ -441,18 +441,67 @@ class GapBetweenOppositeWalls(unittest.TestCase):
 
 class GapOnMars(unittest.TestCase):
     """The real case behind GapBetweenOppositeWalls: mars O9 2450 K with the silicate records on. Its R scan refuses at
-    every one of its 17 points (deep trials, then the core fit's 350 GPa top, then under its 11.93 GPa turning point);
-    the answer is R ≈ 3602 km inside the 3584–3685 km gap (legacy 3593.4 km). Mutant: no gap shots (no answer)."""
+    many trial points (deep trials, then the core's two-anchor ceiling at 51 GPa, then under its turning point), and the
+    member answers between them.
+
+    Re-pinned to the behaviour, not a value (directing's ruling E12, from r2's reading f6a33da6, 2026-10-20): the 2450 K
+    member is F's own smooth zero 6e-4 in S inside the ceiling's refusals, at a hot-end T_pot far above any present Mars
+    T_p. A small move of the core EOS, the anchor S or the mantle reads can flip it into the ceiling's named refusal,
+    which is equally correct physics. So the member either answers inside the ceiling or refuses by the ceiling's own
+    reason, with no third outcome; and the declared state keeps a margin under the ceiling (11.9 GPa at af8408a7: P_c
+    39.07 GPa against 51.0 GPa), checked against a stated floor."""
+
+    #: the declared state's margin under the ceiling must stay above this (half of af8408a7's 11.9 GPa: a drop past it
+    #: means the declared Mars has moved toward the fit's extrapolation edge, a FINDING for review, not a re-pin)
+    MARGIN_FLOOR_GPA = 6.0
+
+    @staticmethod
+    def _solve(state):
+        from solver import context, material_registry as mr, run_oracle as ro
+        return ro._one("engine/bodies/mars.yaml", state, context.Options(materials="registry", silicate_records=True),
+                       chain=False, registry=mr.load())
+
+    @staticmethod
+    def _names_the_ceiling(node, ceiling, mark):
+        """The refusal names the core's ceiling: its reason text, or a refused pressure at or past the ceiling."""
+        if isinstance(node, dict):
+            p = node.get("p")
+            if isinstance(p, (int, float)) and p >= ceiling * (1.0 - 1e-9):
+                return True
+            return any(GapOnMars._names_the_ceiling(v, ceiling, mark) for v in node.values())
+        if isinstance(node, (list, tuple)):
+            return any(GapOnMars._names_the_ceiling(v, ceiling, mark) for v in node)
+        return isinstance(node, str) and mark in node
 
     @unittest.skipUnless(__import__("os").environ.get("NEARSTARS_HEAVY") == "1",
                          "NEARSTARS_HEAVY=1 (a mars member solve with the records on, minutes)")
-    def test_mars_2450_answers_inside_the_gap(self):
-        from solver import context, material_registry as mr, run_oracle as ro
-        reg = mr.load()
+    def test_mars_2450_answers_inside_the_ceiling_or_refuses_by_it(self):
+        from solver import legacy_materials  # noqa: F401  (puts engine/ on sys.path)
+        import eos
         if not _mars_shipped():
             self.skipTest("no shipped mars assemblage record with its table")
-        rec = ro._one("engine/bodies/mars.yaml", 2450.0, context.Options(materials="registry", silicate_records=True),
-                      chain=False, registry=reg)
+        rec = self._solve(2450.0)
+        ceiling = eos.HUANG_P_CEILING
+        mark = eos.HUANG_CEILING_REASON.split("({max_gpa")[0].split("}")[-1].strip()   # «GPa 는 … 천장»
+        if rec["outcome_kind"] == "answer":
+            (pc,) = [q["point"] for q in rec["quantities"] if q["key"] == "core_pressure"]
+            self.assertLess(pc, ceiling, "an answer past the core's ceiling")
+        else:
+            self.assertEqual(rec["outcome_kind"], "refusal", rec["outcome_kind"])
+            self.assertTrue(self._names_the_ceiling(rec.get("refusal"), ceiling, mark),
+                            f"a refusal that is not the ceiling's own: {rec.get('refusal')}")
+
+    @unittest.skipUnless(__import__("os").environ.get("NEARSTARS_HEAVY") == "1",
+                         "NEARSTARS_HEAVY=1 (the mars declared solve with the records on, a minute)")
+    def test_declared_state_keeps_its_margin_under_the_ceiling(self):
+        from solver import legacy_materials  # noqa: F401
+        import eos
+        if not _mars_shipped():
+            self.skipTest("no shipped mars assemblage record with its table")
+        rec = self._solve("declared")
         self.assertEqual(rec["outcome_kind"], "answer", rec.get("refusal"))
-        (radius,) = [q["point"] for q in rec["quantities"] if q["key"] == "radius"]
-        self.assertTrue(3.599e6 < radius < 3.664e6, radius)
+        (pc,) = [q["point"] for q in rec["quantities"] if q["key"] == "core_pressure"]
+        margin = (eos.HUANG_P_CEILING - pc) / eos.GPA
+        self.assertGreater(margin, self.MARGIN_FLOOR_GPA,
+                           f"FINDING: Mars's declared P_c {pc / eos.GPA:.3f} GPa leaves {margin:.3f} GPa under the core's "
+                           f"ceiling, below the stated floor {self.MARGIN_FLOOR_GPA} GPa")
