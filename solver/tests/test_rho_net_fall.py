@@ -52,7 +52,11 @@ def _fake(swap_at=None, jump=0.0):
 
 
 def _swap299(v):
-    return next(c for c in v._cut if c.kind == "swap" and v._events.index(c) == 299)
+    """khan's 1950–2000 K swap, found by position (its rows and its P_b at 2000 K), not by id: the gap marks renumber
+    the cut runs (299 before them, 271 after); the name keeps the old id."""
+    (c,) = [c for c in v._cut if c.kind == "swap" and (c.t0, c.t1) == (1950.0, 2000.0)
+            and abs(c.p_b(2000.0) / 23317173540.3313 - 1.0) <= 1e-12]
+    return c
 
 
 class Rule1Widens(unittest.TestCase):
@@ -98,7 +102,7 @@ class Rule2SwapAbsorbs(unittest.TestCase):
                 self.assertEqual(stops, [])
                 self.assertEqual(ex["widened"], [])
                 (ab,) = ex["absorbed"]
-                self.assertEqual(ab["by"], 299)          # the clip is swap299 itself
+                self.assertEqual(ab["by"], v._events.index(_swap299(v)))     # the clip is swap299 itself
                 self.assertAlmostEqual(ab["b"], ab["x"] - rb.SWAP_EPS, delta=1e-15)
                 self.assertGreater(ab["dR"], 0.0)
                 self.assertLess(ab["dR"], 2e-3)          # 1.05e-3 kg/m³ on the PC and here

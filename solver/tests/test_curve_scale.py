@@ -111,7 +111,8 @@ class RecordScales(unittest.TestCase):
         the scale. Silicate post-freeze note 8 §3: the entry is (t1 + Δ_c, P_max, P_max·|σ|), σ = s1 the inside one-sided
         d ln P_b/dT at the end row and P_max = P_e·exp(σ·Δ_c/2); it replaced 1a7's P_b(2400)·(1 + 2400·k) (ln secant k)."""
         v = _view("silicate_slb_default_bse")
-        (c,) = [c for b, _k, c in v.transitions() if b[0].startswith("edge275:")]
+        (c,) = [c for b, _k, c in v.transitions() if b[0].startswith("edge") and b[0].endswith(":ol+opx+plg")
+                and (v._events[c["id"]].t0, v._events[c["id"]].t1) == (2250.0, 2300.0)]    # by position: edge275 → 252
         cc = v._events[c["id"]]
         rows = cc.rows
         self.assertFalse(cc.interior_hi)

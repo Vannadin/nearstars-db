@@ -26,6 +26,18 @@ def _shipped_bse():
     return isinstance(reg, mr.Registry) and "silicate_slb_default_bse" in reg.tables
 
 
+
+def _edge427(v, events):
+    """default_bse's wa+gt+fp|gt+fp edge on its 2450–2550 K rows (edge427 before the across-gap marks, edge370 after):
+    found by its labels and the T it covers at the case's 2501.8 K, not by the id in its name."""
+    out = []
+    for e in events.record_events(v):
+        if e.name.startswith("phase:edge") and e.name.endswith(":wa+gt+fp|gt+fp"):
+            c = v._events[int(e.name.split(":")[1][len("edge"):])]
+            if c.p_b(2501.797174057437) is not None:
+                out.append(e)
+    return out
+
 class RecordEvents(unittest.TestCase):
     def test_h2o_events_from_its_declarations(self):
         """Seams, solid–solid curves (seam events), melting curves (terminal) and the 130 K source-seam isotherm."""
@@ -221,7 +233,7 @@ class RecordEvents(unittest.TestCase):
             hid = got["assemblage"]["handover"]
             ho = ma.HandOver(thaw(reg.records[hid]), reg.tables[hid], rid, 1.5 * float(got["assemblage"]["p_dataset"]))
             rv = ma.view(thaw(got), reg.tables[rid], 2135.3511104889826, 0.0, 0.0, ho)
-            (re_,) = [e for e in events.record_events(rv) if e.name == "phase:edge427:wa+gt+fp|gt+fp"]
+            (re_,) = _edge427(rv, events)
             cases.append((re_, (3372110.8592750556, 16.9e9, 2501.797174057437, 2501.797174057437, 5.5e35, 0.0)))
         for ev, y in cases:
             self.assertEqual(ev.component, 1, ev.name)
@@ -263,7 +275,7 @@ class RecordEvents(unittest.TestCase):
         hid = got["assemblage"]["handover"]
         ho = ma.HandOver(thaw(reg.records[hid]), reg.tables[hid], rid, 1.5 * float(got["assemblage"]["p_dataset"]))
         v = ma.view(thaw(got), reg.tables[rid], 2135.3511104889826, 0.0, 0.0, ho)
-        (ev,) = [e for e in events.record_events(v) if e.name == "phase:edge427:wa+gt+fp|gt+fp"]
+        (ev,) = _edge427(v, events)
         x = 5.902044125836793e+24
         y = (3372110.8592750556, 15773166429.591904, 2501.797174057437, 2501.797174057437, 5.519101142731295e+35, 0.0)
         k1 = (2.0319501618785867e-18, -2.4243255396972823e-13, -4.304052193708393e-21, -4.304052193708393e-21,
