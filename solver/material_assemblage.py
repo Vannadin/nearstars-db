@@ -3006,7 +3006,19 @@ class BasalView(mv.RecordView):
         self.notes.extend(dataclasses.replace(n, material_id=self.material_id, error=None, c_p_error=None,
                                               c_p_origin=None)
                           for n in got[2] if isinstance(n, mv.BandNote) and n.dtdp_error is not None)
+        # s-read note 3 (r2 B1 on e2386b42): the layer's dT/dP is the overlying read's, so a band read there is this
+        # layer's too: its BAND_NOTE and a BandTrap mark ride on, attributed to the basal record, for solve._band_trap
+        for n in got[2]:
+            if isinstance(n, BandTrap):
+                self.notes.append(BandTrap(self.material_id, *n[1:]))
+            elif isinstance(n, mv.DeclaredNote) and n.text == BAND_NOTE:
+                self.notes.append(mv.DeclaredNote(self.material_id, self._phase_id, BAND_NOTE))
         return (self.density_declared, got[1], tuple(self.notes))
+
+    @property
+    def s_read(self):
+        """The overlying view's: the layer's dT/dP is its read (s-read note 3's trap check reads this layer then)."""
+        return getattr(self.overlying, "s_read", False)
 
     def density(self, p: float, t: float):
         got = self.state(p, t)

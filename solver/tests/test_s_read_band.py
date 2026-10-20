@@ -164,6 +164,86 @@ class BandOnRecord(unittest.TestCase):
                 self.assertLess(v._band_w(p, tn + sgn * h, p, ia, k) / h, 1e-5 / d)
 
 
+class _Layer:
+    def __init__(self, lid):
+        self.id = lid
+
+
+class _Body:
+    def __init__(self, *ids):
+        self.layers = tuple(_Layer(i) for i in ids)
+
+
+class _Acc:
+    def __init__(self, profiles):
+        self.profiles = profiles
+
+
+def _path(p, ts):
+    return [(0.0, (0.0, p, t, t), None) for t in ts]
+
+
+class BasalAndQuietCheck(unittest.TestCase):
+    """r2 B1 on e2386b42: a basal layer's dT/dP is the overlying read's, so its band reads carry BAND_NOTE and the
+    BandTrap mark too (attributed to the basal record), and _band_trap checks a basal layer whose overlying view reads
+    s. 68 B2 on e2386b42: _band_trap's re-reads leave the views' s_counts, cut_counts, marks and notes as they were."""
+
+    def _basal(self, rid):
+        over = _view(rid)
+        rec = {"id": "basal_test", "kind": "assemblage", "phases": [{"id": "basal"}]}
+        return over, ma.BasalView(rec, 4000.0, over, 1600.0)
+
+    def test_basal_trapping_refuses_and_same_sign_answers(self):
+        for rid, ia, k, trap in (POINTS[2], POINTS[0]):
+            over, b = self._basal(rid)
+            p = _at(over, ia)
+            t = over.ts[k] + (over.ts[k + 1] - over.ts[k]) / 2
+            got = b.state(p, t)
+            with self.subTest(rid=rid, trap=trap):
+                self.assertTrue(b.s_read)
+                self.assertIn(ma.BAND_NOTE, [n.text for n in got[2] if isinstance(n, ma.mv.DeclaredNote)])
+                marks = [n for n in got[2] if isinstance(n, ma.BandTrap)]
+                self.assertEqual(bool(marks), trap)
+                ev = sv._band_trap(_Body("basal"), {"basal": b}, _Acc({"basal": _path(p, (t,))}))
+                if trap:
+                    self.assertEqual(marks[0].material_id, "basal_test")
+                    self.assertEqual((ev["layer_id"], ev["material_id"]), ("basal", "basal_test"))
+                else:
+                    self.assertIsNone(ev)
+        _over, b = self._basal("silicate_slb_default_bse")
+        b.overlying.s_read = False
+        self.assertFalse(b.s_read)
+
+    def _state(self, v):
+        marks = getattr(v, "_marks", {})
+        return ({k: (set(x) if isinstance(x, set) else x) for k, x in marks.items()},
+                dict(getattr(v, "s_counts", {})), dict(getattr(v, "cut_counts", {})), list(v.notes))
+
+    def test_the_scan_leaves_no_trace(self):
+        rid, ia, k, _trap = POINTS[2]
+        over, b = self._basal(rid)
+        p = _at(over, ia)
+        mid = over.ts[k] + (over.ts[k + 1] - over.ts[k]) / 2
+        for ts in ((1900.0, 2000.0, 2100.0), (mid,)):           # a path with no trap, and one into a trapping band
+            over.state(p, 2500.0)                                 # some prior read: its notes stand on the view
+            for view, layer in ((over, "mantle"), (b, "basal")):
+                before = [self._state(x) for x in (over, b)]
+                sv._band_trap(_Body(layer), {layer: view}, _Acc({layer: _path(p, ts)}))
+                with self.subTest(ts=ts, layer=layer):
+                    self.assertEqual([self._state(x) for x in (over, b)], before)
+
+    def test_without_the_restore_is_red(self):
+        """Mutant: _band_trap without _quiet_views; the trap-free path's re-reads move the counts."""
+        import contextlib
+        rid, ia, _k, _trap = POINTS[2]
+        over = _view(rid)
+        p = _at(over, ia)
+        before = self._state(over)
+        with mock.patch.object(sv, "_quiet_views", lambda v: contextlib.nullcontext()):
+            sv._band_trap(_Body("mantle"), {"mantle": over}, _Acc({"mantle": _path(p, (1900.0, 2000.0))}))
+        self.assertNotEqual(self._state(over), before)
+
+
 class PlantedSwitch(unittest.TestCase):
     """§6, 68's planted test: two constant fields of opposite sign across a switch node, f_today = +a below and
     f_s = −b above. Unblended (§3.2 as frozen) the walk chatters on the node; blended over one row with note 3's w it

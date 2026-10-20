@@ -1227,15 +1227,50 @@ def _band_trap(body, views, acc):
         view, path = views.get(layer.id), acc.profiles.get(layer.id)
         if not path or not getattr(view, "s_read", False):
             continue
-        for _m, y, _k in path:
-            got = view.state(y[1], y[2], None)
-            if isinstance(got, st.Stop):
-                continue
-            for n in got[2]:
-                if isinstance(n, ma.BandTrap):
-                    return {"layer_id": layer.id, "material_id": n.material_id, "p": n.p, "t": n.t, "w": n.w,
-                            "dtdp_today": n.dtdp_today, "dtdp_s": n.dtdp_s}
+        with _quiet_views(view):                     # 68 B2 on e2386b42: the re-reads leave no count, mark or note
+            for _m, y, _k in path:
+                got = view.state(y[1], y[2], None)
+                if isinstance(got, st.Stop):
+                    continue
+                for n in got[2]:
+                    if isinstance(n, ma.BandTrap):
+                        return {"layer_id": layer.id, "material_id": n.material_id, "p": n.p, "t": n.t, "w": n.w,
+                                "dtdp_today": n.dtdp_today, "dtdp_s": n.dtdp_s}
     return None
+
+
+class _quiet_views:
+    """Saves and restores the read state a view.state call moves (s_counts, cut_counts, _marks, notes), on the view and
+    on a basal view's overlying view: _band_trap's re-reads are checks, not reads (68 B2 on e2386b42)."""
+
+    FIELDS = ("s_counts", "cut_counts", "_marks", "notes")
+
+    def __init__(self, view):
+        self.views = [x for x in (view, getattr(view, "overlying", None)) if x is not None]
+
+    def __enter__(self):
+        self.saved = []
+        for v in self.views:
+            got = {}
+            for f in self.FIELDS:
+                x = getattr(v, f, None)
+                if isinstance(x, dict):
+                    got[f] = {k: (set(y) if isinstance(y, set) else y) for k, y in x.items()}
+                elif isinstance(x, list):
+                    got[f] = list(x)
+            self.saved.append((v, got))
+        return self
+
+    def __exit__(self, *exc):
+        for v, got in self.saved:
+            for f, x in got.items():
+                cur = getattr(v, f)
+                if isinstance(cur, dict):
+                    cur.clear()
+                    cur.update(x)
+                else:
+                    cur[:] = x
+        return False
 
 
 def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
