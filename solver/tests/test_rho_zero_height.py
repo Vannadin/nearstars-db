@@ -1,7 +1,7 @@
 # ρ rev3c 시험 — 일치 가장자리 쌍의 허용 오차 안 내림 계단은 높이 0: 떨어짐 아님·ΔG 없음·게이트 밖·흡수 안 됨·목록에 듦 (68 설계 40d180cc, r2 clear 1916061f)
 """ρ rev 3, rev3c (artifacts main f11695a0, rewrite/rho-bridge/rev3c-zero-height.md, blob 40d180cc): the plants P1–P5
-and the mutants M1–M7 of §5, khan only, in a narrow window ln P x_s ± 0.3 at T 1100 K (x_s the coincident pair 123/124's
-ln P_b, 24.852 GPa).
+and the mutants M1–M7 of §5, khan only, in a narrow window ln P x_s ± 0.3 at T 1100 K (x_s the coincident pair's ln P_b, 24.852 GPa;
+the pair is found by position, its ids follow the records: 123/124 before the across-gap marks, 117/118 after).
 
     solver/.venv/bin/python -m unittest solver.tests.test_rho_zero_height
 """
@@ -21,6 +21,13 @@ T = 1100.0
 W = 0.3
 
 
+def _pair(v):
+    """The coincident pair at (T, x_s), found by position: the was_edge swap events landing at x_s at T (to 1e-12).
+    Event ids follow the records' cut runs (the across-gap marks renumbered 123/124 to 117/118), the position does not."""
+    return sorted(i for i, c in enumerate(v._events) if getattr(c, "was_edge", False) and c.kind == "swap"
+                  and (q := c.p_b_ext(T, v._reach)) is not None and abs(math.log(q) - X_S) <= 1e-12)
+
+
 def _mutant(fn, old, new, owner=rfb):
     src = textwrap.dedent(inspect.getsource(getattr(owner, fn)))
     assert src.count(old) == 1, (fn, old)
@@ -34,6 +41,8 @@ class _Base(unittest.TestCase):
     def setUpClass(cls):
         cls.v = rfb._view(RID)
         cls.ib = cls.v.ts.index(T)
+        cls.pair = _pair(cls.v)
+        assert len(cls.pair) == 2, cls.pair
 
     def setUp(self):
         for a in ("_rev3c_tol",):                       # the view-kept τ_e: re-read per test (M1 patches it)
@@ -42,7 +51,7 @@ class _Base(unittest.TestCase):
 
     def p1(self):
         ivs, _un, stops, _fl, sj, _ur = rfb.falls_at(self.v, T, self.ib, X_S - W, X_S + W)
-        mine = [j for j in sj if j["curve"] in (123, 124)]
+        mine = [j for j in sj if j["curve"] in self.pair]
         return ivs, stops, mine
 
     def p2(self):
@@ -55,12 +64,12 @@ class _Base(unittest.TestCase):
 class Plants(_Base):
     def test_p1_both_curves_zero_height_no_interval_through_x_s(self):
         ivs, stops, mine = self.p1()
-        self.assertEqual(sorted(j["curve"] for j in mine), [123, 124])
+        self.assertEqual(sorted(j["curve"] for j in mine), self.pair)
         for j in mine:
             self.assertTrue(j.get("zero_height"))
             self.assertAlmostEqual(j["rel"], -8.9056e-05, delta=1e-9)
             self.assertEqual(j["tol"], 7.5e-4)
-            self.assertEqual(j["pair"], [123, 124])
+            self.assertEqual(j["pair"], self.pair)
         self.assertEqual(stops, [])
         self.assertFalse(any(a < X_S < b for a, b, *_ in ivs))
 
@@ -69,7 +78,8 @@ class Plants(_Base):
         self.assertEqual(doc["stops"], [])
         self.assertEqual(len(doc["zero_height"]), 1)
         z = doc["zero_height"][0]
-        self.assertEqual((z["pair"], z["n"], z["t"]), ([123, 124], 4, T))
+        self.assertEqual((z["pair"], z["n"], z["t"]), (self.pair, 4, T))
+        self.assertLess(abs(z["x"] - X_S), 1e-12)
         self.assertEqual(doc["swap_counts"]["zero_height"], 1)
         self.assertEqual(doc["coincident_edge"]["gate_stops"], 0)
         self.assertEqual(doc["coincident_edge"]["zero_height"], 1)
@@ -77,8 +87,9 @@ class Plants(_Base):
 
     def test_p3_the_read_is_untouched(self):
         v = self.v
-        self.assertEqual((v._events[123].kind, v._events[124].kind), ("swap", "swap"))
-        self.assertTrue(v._events[123].was_edge and v._events[124].was_edge)
+        a, b = self.pair
+        self.assertEqual((v._events[a].kind, v._events[b].kind), ("swap", "swap"))
+        self.assertTrue(v._events[a].was_edge and v._events[b].was_edge)
         p_lo, p_hi = math.exp(X_S - 2 * rfb.SWAP_EPS), math.exp(X_S + 2 * rfb.SWAP_EPS)
         with mock.patch.object(ma, "RHO_BRIDGE", False):
             base = v.state(p_hi, T)[0] - v.state(p_lo, T)[0]
@@ -115,7 +126,7 @@ class Mutants(_Base):
     def test_m1_tol_zero(self):
         with mock.patch.object(rfb, "_edge_tol", lambda rid: 0.0):
             _ivs, stops, _mine = self.p1()
-            self.assertEqual(sorted(s_["curve"] for s_ in stops if "curve" in s_), [123, 124])
+            self.assertEqual(sorted(s_["curve"] for s_ in stops if "curve" in s_), self.pair)
             self.assertTrue(all(s_["gate"] == "coincident-edge downstep above EDGE_DRHO_TOL" for s_ in stops))
             self.setUp()
             self.assertNotEqual(self.p2()["stops"], [])
