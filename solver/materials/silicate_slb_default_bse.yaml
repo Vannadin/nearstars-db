@@ -17,7 +17,7 @@ primary_family:
   reason: frozen S1
 assemblage:
   file: tables/silicate_slb_default_bse.json.gz
-  sha256: 15b8ebcb55ae4da63805fdcb16e923b0e6a4e25f9175c3a7f98ade48dc40be96
+  sha256: ba992ff58b5185c80000bb7d4496dc163288e8d4efc6becf91705b77c9385969
   p_dataset: 136000000000.0
   interpolation: c1_lnp_t
   melt_variant: peridotitic
@@ -51,12 +51,12 @@ assemblage:
     point holds a cut swap take their classes'' floors (registration reg-interp-term §1)'
   - 'the read''s band carries a per-cell «under-resolved loop» term (compact loop_terms) where a divariant loop is narrower
     than the grid (census k 3, W 3, 1 % floor): the 9-point truth error of the read in the loop''s cells less the cell''s
-    «read interpolation» term, max(0, e_truth − e_interp), relative to max(|v|, F_f) as interp_terms; 15 of its cells have
+    «read interpolation» term, max(0, e_truth − e_interp), relative to max(|v|, F_f) as interp_terms; 16 of its cells have
     no ok truth point and take the census variant''s 9-point |v − v_variant| (the loop alone) less e_interp instead: 10.3–10.8
-    GPa × 750–800 K; 10.8–11.4 GPa × 750–800 K; 10.8–11.4 GPa × 800–850 K; 22.5–23.6 GPa × 800–850 K; 22.5–23.6 GPa × 850–900
-    K; 0.815–0.856 GPa × 900–950 K; 0.856–0.899 GPa × 900–950 K; 22.5–23.6 GPa × 900–950 K; 23.6–24.8 GPa × 900–950 K; 23.6–24.8
-    GPa × 950–1000 K; 24.8–26 GPa × 1050–1100 K; 24.8–26 GPa × 1100–1150 K; 102–107 GPa × 1200–1250 K; 107–113 GPa × 1200–1250
-    K; 107–113 GPa × 1250–1300 K (registration §7)'
+    GPa × 750–800 K; 10.8–11.4 GPa × 750–800 K; 10.8–11.4 GPa × 800–850 K; 21.4–22.5 GPa × 800–850 K; 22.5–23.6 GPa × 800–850
+    K; 22.5–23.6 GPa × 850–900 K; 0.815–0.856 GPa × 900–950 K; 0.856–0.899 GPa × 900–950 K; 22.5–23.6 GPa × 900–950 K; 23.6–24.8
+    GPa × 900–950 K; 23.6–24.8 GPa × 950–1000 K; 24.8–26 GPa × 1050–1100 K; 24.8–26 GPa × 1100–1150 K; 102–107 GPa × 1200–1250
+    K; 107–113 GPa × 1200–1250 K; 107–113 GPa × 1250–1300 K (registration §7)'
   floor_band:
     origin: 'the floor node''s own compressibility: |dρ|/ρ ≤ (1e5 Pa)/K_T, K_T = ρ·∂P/∂ρ over the first two P nodes at fixed
       T (§3.1, r2 N2)'
@@ -929,7 +929,7 @@ assemblage:
     extension_tool:
       blob: 1867138f1675f3c2472b14e71472a20713882301
       sha256: 8dd7def13e8456675837727dcbfd16c30a0136018af697802b7748dc0435c8dc
-    compact_sha256: 15b8ebcb55ae4da63805fdcb16e923b0e6a4e25f9175c3a7f98ade48dc40be96
+    compact_sha256: ba992ff58b5185c80000bb7d4496dc163288e8d4efc6becf91705b77c9385969
     rebuilt: []
 phases:
 - id: slb_assemblage

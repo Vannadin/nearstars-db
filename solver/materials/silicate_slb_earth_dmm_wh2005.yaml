@@ -17,7 +17,7 @@ primary_family:
   reason: frozen S1
 assemblage:
   file: tables/silicate_slb_earth_dmm_wh2005.json.gz
-  sha256: a7ec918e189e952423c45f923852fe839a620720397de6e956496d0cb398c974
+  sha256: 11182d8e539fcb3c61acc0ec309fcb8cdfafecc4d560f413778654661fea934d
   p_dataset: 136000000000.0
   interpolation: c1_lnp_t
   melt_variant: peridotitic
@@ -52,12 +52,12 @@ assemblage:
     point holds a cut swap take their classes'' floors (registration reg-interp-term §1)'
   - 'the read''s band carries a per-cell «under-resolved loop» term (compact loop_terms) where a divariant loop is narrower
     than the grid (census k 3, W 3, 1 % floor): the 9-point truth error of the read in the loop''s cells less the cell''s
-    «read interpolation» term, max(0, e_truth − e_interp), relative to max(|v|, F_f) as interp_terms; 13 of its cells have
+    «read interpolation» term, max(0, e_truth − e_interp), relative to max(|v|, F_f) as interp_terms; 14 of its cells have
     no ok truth point and take the census variant''s 9-point |v − v_variant| (the loop alone) less e_interp instead: 10.3–10.8
-    GPa × 750–800 K; 11.9–12.5 GPa × 750–800 K; 10.3–10.8 GPa × 800–850 K; 10.8–11.4 GPa × 800–850 K; 11.9–12.5 GPa × 800–850
-    K; 23.6–24.8 GPa × 1000–1050 K; 97.2–102 GPa × 1000–1050 K; 102–107 GPa × 1000–1050 K; 23.6–24.8 GPa × 1050–1100 K; 34.9–36.6
-    GPa × 1250–1300 K; 36.6–38.5 GPa × 1250–1300 K; 38.5–40.4 GPa × 1250–1300 K; 34.9–36.6 GPa × 1300–1350 K (registration
-    §7)'
+    GPa × 750–800 K; 11.4–11.9 GPa × 750–800 K; 11.9–12.5 GPa × 750–800 K; 10.3–10.8 GPa × 800–850 K; 10.8–11.4 GPa × 800–850
+    K; 11.9–12.5 GPa × 800–850 K; 23.6–24.8 GPa × 1000–1050 K; 97.2–102 GPa × 1000–1050 K; 102–107 GPa × 1000–1050 K; 23.6–24.8
+    GPa × 1050–1100 K; 34.9–36.6 GPa × 1250–1300 K; 36.6–38.5 GPa × 1250–1300 K; 38.5–40.4 GPa × 1250–1300 K; 34.9–36.6 GPa
+    × 1300–1350 K (registration §7)'
   floor_band:
     origin: 'the floor node''s own compressibility: |dρ|/ρ ≤ (1e5 Pa)/K_T, K_T = ρ·∂P/∂ρ over the first two P nodes at fixed
       T (§3.1, r2 N2)'
@@ -892,7 +892,7 @@ assemblage:
     extension_tool:
       blob: 1867138f1675f3c2472b14e71472a20713882301
       sha256: 8dd7def13e8456675837727dcbfd16c30a0136018af697802b7748dc0435c8dc
-    compact_sha256: a7ec918e189e952423c45f923852fe839a620720397de6e956496d0cb398c974
+    compact_sha256: 11182d8e539fcb3c61acc0ec309fcb8cdfafecc4d560f413778654661fea934d
     rebuilt: []
   transition_check:
     tool:

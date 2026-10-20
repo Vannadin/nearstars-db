@@ -17,7 +17,7 @@ primary_family:
   reason: frozen S1
 assemblage:
   file: tables/silicate_slb_mars_khan2022.json.gz
-  sha256: 7fc274f78db5db22136dde85c570a3e4a39c3916b24e1d3dc28a3fb6b65189b4
+  sha256: 39aa36c3a79f8c9342f3f2facec0e8412b723ab37ed019e080511c338e7b3f3b
   p_dataset: 136000000000.0
   interpolation: c1_lnp_t
   melt_variant: peridotitic
@@ -904,7 +904,7 @@ assemblage:
     extension_tool:
       blob: 1867138f1675f3c2472b14e71472a20713882301
       sha256: 8dd7def13e8456675837727dcbfd16c30a0136018af697802b7748dc0435c8dc
-    compact_sha256: 7fc274f78db5db22136dde85c570a3e4a39c3916b24e1d3dc28a3fb6b65189b4
+    compact_sha256: 39aa36c3a79f8c9342f3f2facec0e8412b723ab37ed019e080511c338e7b3f3b
     rebuilt: []
 phases:
 - id: slb_assemblage
