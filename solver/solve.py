@@ -537,13 +537,18 @@ def _basal_view(body, layer, views, registry):
 
 def _file_requires_switch(path) -> bool:
     """A record file declaring `requires_switch` (read before any load, so registry_for stays None for a body whose
-    only record-named layers need the switch; test_switchover's «a body naming no record loads no registry»)."""
-    from solver.yamlio import LoadError, parse
+    only record-named layers need the switch; test_switchover's «a body naming no record loads no registry»).
+    Review 2 SP-S-05: read from the file's top-level `requires_switch:` line, not a YAML parse of the whole record
+    (registry_for runs on every _solve, and the parse of 9 records was ~4 % of a solve). A line this scan misses only
+    makes the body load the registry, whose own read of the field (_requires_switch) still gates the record."""
     try:
-        doc = parse(path.read_text(encoding="utf-8"))
-    except (LoadError, OSError):
+        with open(path, encoding="utf-8") as f:
+            for line in f:
+                if line.startswith("requires_switch:"):
+                    return line.split(":", 1)[1].split("#", 1)[0].strip().strip("'\"") == "silicate_records"
+    except OSError:
         return False                                # a broken file is the registry load's to name, not this check's
-    return isinstance(doc, Mapping) and doc.get("requires_switch") == "silicate_records"
+    return False
 
 
 def _requires_switch(registry, rid) -> bool:

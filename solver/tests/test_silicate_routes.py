@@ -552,6 +552,32 @@ class SolveId(unittest.TestCase):
             self.assertNotEqual(sv._material_bytes(moved), ids[0])
 
 
+class SwitchScan(unittest.TestCase):
+    def test_registry_for_parses_no_record_with_the_switch_off(self):
+        """Review 2 SP-S-05: registry_for, run on every _solve, decides which files are record names with the switch
+        off without a YAML parse of each record; the file scan agrees with a full parse on every shipped record.
+        Before the fix it parsed all nine records per call, and this test fails (the parse count)."""
+        from solver import yamlio
+        calls = []
+        real = yamlio.parse
+
+        def spy(*a, **k):
+            calls.append(1)
+            return real(*a, **k)
+        yamlio.parse = spy
+        try:
+            for name in ("earth", "mars"):
+                sv.registry_for(body(name), context.Options())
+        finally:
+            yamlio.parse = real
+        self.assertEqual(calls, [])
+        files = [f for f in mr.MATERIALS_DIR.glob("*.yaml") if f.name not in mr.NOT_RECORDS]
+        self.assertTrue(any(sv._file_requires_switch(f) for f in files))
+        for f in files:
+            doc = real(f.read_text(encoding="utf-8"))
+            self.assertEqual(sv._file_requires_switch(f), doc.get("requires_switch") == "silicate_records", f.name)
+
+
 class SurfaceFloor(unittest.TestCase):
     def test_record_top_view_takes_the_legacy_floor(self):
         """A body whose top layer is a record view (no p_floor attribute) takes the legacy material's floor by name, and
