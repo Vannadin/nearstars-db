@@ -387,6 +387,8 @@ class Notes(unittest.TestCase):
         errs = [n.dtdp_error for p, t in nodes for n in v.state(p, t)[2] if isinstance(n, mv.BandNote)]
         self.assertEqual(bands[0].fields["dtdp_error"], max(errs))    # review 2 M-C1a-05: a dT/dP band, not ρ's
         self.assertIsNone(bands[0].fields["error"])
+        self.assertIn(f"dT/dP error {max(errs)}", bands[0].text)       # review 2 n1: the band in words, not «None»
+        self.assertNotIn("None", bands[0].text)
         self.assertEqual((bands[0].fields["p_min"], bands[0].fields["p_max"]), (3.6e11, 3.7e11))   # only past 350 GPa
 
 
