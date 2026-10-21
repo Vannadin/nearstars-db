@@ -375,23 +375,41 @@ class HandOverRecord(unittest.TestCase):
         self.assertEqual(sorted(reg.tables["silicate_prem_test"]["blocks"]), ["silicate_slb_x"])
 
     def test_shape_and_pins_refuse(self):
+        """Each edit stops by the clause it plants (review 2 T-09: the test accepted any LoadStop, and six clauses had no
+        case): the STOP id and the rule's own words, per edit."""
         from solver import material_registry as mr
-        def no_table(r):
-            del r["handover_table"]
-        def bad_thermal(r):
-            del r["phases"][0]["thermal"]["from_assemblage"]
-        def bad_sha(r):
-            r["handover_table"]["sha256"] = "0" * 64
-        def other_blocks(r):
-            r["handover_table"]["blocks"] = ["silicate_slb_y"]
-        def stray(r):
-            r["phases"][0]["eos"]["form"] = "bm2"
-        for edit in (no_table, bad_thermal, bad_sha, other_blocks, stray):
-            got = self.load(rec_edit=edit)
-            self.assertIsInstance(got, mr.LoadStop, edit.__name__)
-        got = self.load(table_edit=lambda tb: tb["blocks"]["silicate_slb_x"]["rows"][0]["c_p"].append(1.0))
-        self.assertIsInstance(got, mr.LoadStop)
-
+        shape = ("material.kind_rule", "a handover phase is a single record's")
+        table = ("material.assemblage_table", "differ from the record's")
+        rows = ("material.assemblage_table", "P nodes not rising, or a row's values do not match its nodes")
+        path = ("material.assemblage_table", "handover_table.file is a path under solver/materials")
+        cases = (
+            ("no_table", dict(rec_edit=lambda r: r.pop("handover_table")), shape),
+            ("bad_thermal", dict(rec_edit=lambda r: r["phases"][0]["thermal"].pop("from_assemblage")), shape),
+            ("bad_sha", dict(rec_edit=lambda r: r["handover_table"].update(sha256="0" * 64)),
+             ("material.assemblage_table", "sha256")),
+            ("other_blocks", dict(rec_edit=lambda r: r["handover_table"].update(blocks=["silicate_slb_y"])), table),
+            ("stray", dict(rec_edit=lambda r: r["phases"][0]["eos"].update(form="bm2")),
+             ("material.kind_rule", "from_assemblage belongs to a handover phase")),
+            ("BM2 params", dict(rec_edit=lambda r: r["phases"][0]["eos"]["params"].pop("k0p")), shape),
+            ("not single", dict(rec_edit=lambda r: r.update(kind="branched", choice="chain")), shape),
+            ("absolute file", dict(rec_edit=lambda r: r["handover_table"].update(file="/tmp/x.json.gz")), path),
+            ("file with ..", dict(rec_edit=lambda r: r["handover_table"].update(file="../x.json.gz")), path),
+            ("table id", dict(table_edit=lambda tb: tb.update(id="other")), table),
+            ("P nodes not rising", dict(table_edit=lambda tb: tb["blocks"]["silicate_slb_x"].update(
+                p_nodes=[2.04e11, 1.36e11])), rows),
+            ("row longer than its nodes", dict(table_edit=lambda tb: [r.update(dtdp=r["dtdp"] + [8e-9],
+                                                                               c_p=r["c_p"] + [1180.0])
+                                                                      for r in tb["blocks"]["silicate_slb_x"]["rows"]]),
+             rows),
+            ("c_p longer than dtdp", dict(table_edit=lambda tb: tb["blocks"]["silicate_slb_x"]["rows"][0]["c_p"].append(
+                1.0)), rows),
+        )
+        for name, kw, (sid, words) in cases:
+            with self.subTest(name):
+                got = self.load(**kw)
+                self.assertIsInstance(got, mr.LoadStop, name)
+                self.assertEqual(got.id, sid, name)
+                self.assertIn(words, str(got.evidence.get("why", "")), name)
 
 if __name__ == "__main__":
     unittest.main()
