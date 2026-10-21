@@ -148,11 +148,13 @@ def onset_event(mat, p_stop: float = 0.0) -> list:
     return onset_events(mat, p_stop)
 
 
-def layer_events(src, p_stop: float = 0.0) -> list:
+def layer_events(src, p_stop: float = 0.0, t_index: int = 2) -> list:
     """The events of one layer, from its view (switch-over registration §2): a phase-2 record view builds them from its
-    own declarations (record_events); any other view, or a bare legacy material, from the legacy material as before."""
+    own declarations (record_events); any other view, or a bare legacy material, from the legacy material as before.
+    `t_index`: the state component a record view's curves are read at (record_events): T_ad, y[2], in a segment; the
+    lid's own T, y[3], where its density reads (review 2 S-C-02). Onset events watch T_ad either way."""
     if hasattr(src, "record") and hasattr(src, "transitions"):
-        return record_events(src)
+        return record_events(src, t_index)
     mat = getattr(src, "mat", None) or src
     return seam_events(mat) + ammonia_events(mat) + onset_events(mat, p_stop)
 
@@ -241,7 +243,7 @@ def gibbs_scale(lib_a, lib_b, box=None) -> float:
     return best if best else 1.0e9
 
 
-def record_events(view) -> list:
+def record_events(view, t_index: int = 2) -> list:
     """Switch-over registration §2: a record view's events.
     - P seams: seams() (phase windows, thermal-set seams), landed as legacy's seam events.
     - Field boundaries from transitions(): a solid–solid curve is a seam event g = P − P_b(T_ad) (None where the curve is
@@ -251,7 +253,9 @@ def record_events(view) -> list:
     - Source-seam isotherms: T_ad = t (design note 5).
     - Onset curves: none for a record that declares none (legacy's onset_curves gives none for iron either); a view
       that declares `onset_curve_names` (the assemblage kind: legacy silicate's solidus, registration §3.1) gets
-      phase 1's solidus seam and onset events, as legacy silicate does."""
+      phase 1's solidus seam and onset events, as legacy silicate does.
+    `t_index`: the T the field boundaries and source seams are read at (y[2] in a segment, y[3] in the lid: review 2
+    S-C-02); onset events watch T_ad, y[2], as legacy's lid does."""
     out = [st.Event(f"seam:{p_b:.9g}", (lambda m, y, p_b=p_b: y[1] - p_b), scale=p_b, terminal=False, seam=True,
                     component=1) for p_b in view.seams()]
     by_id = {ph.id: ph for ph in view.phases}
@@ -263,7 +267,7 @@ def record_events(view) -> list:
             def g(m, y, a=a, b=b):
                 from solver import material_library as ml
                 try:
-                    ra, rb = a.library.at(y[1], y[2]), b.library.at(y[1], y[2])
+                    ra, rb = a.library.at(y[1], y[t_index]), b.library.at(y[1], y[t_index])
                 except ml.LibraryOutOfRange:            # 68 N64: only «outside its spline» means no boundary here
                     return None
                 dv = 1.0 / ra["rho"] - 1.0 / rb["rho"]
@@ -273,7 +277,7 @@ def record_events(view) -> list:
             scale = gibbs_scale(a.library, b.library) if hasattr(a, "library") and hasattr(b, "library") else 1.0e9
         else:
             def g(m, y, curve=curve):
-                pb = view.boundary_pressure(curve, y[2])
+                pb = view.boundary_pressure(curve, y[t_index])
                 return None if pb is None else y[1] - pb
             scale = curve_p_scale(view, curve)
         # a curve g = P − P_b(T) lands with its landing stages held on the old side in P (component 1, as curve_seams):
@@ -285,8 +289,8 @@ def record_events(view) -> list:
         out.append(st.Event(name, g, scale=scale, terminal=(kind == "melting"), seam=(kind != "melting"),
                             component=comp))
     for t_s, between in view.source_seams():
-        out.append(st.Event(f"source_seam:{between[0]}|{between[1]}", (lambda m, y, t_s=t_s: y[2] - t_s),
-                            scale=t_s, terminal=False, seam=True, component=2))
+        out.append(st.Event(f"source_seam:{between[0]}|{between[1]}", (lambda m, y, t_s=t_s: y[t_index] - t_s),
+                            scale=t_s, terminal=False, seam=True, component=t_index))
     if getattr(view, "onset_curve_names", ()):     # a record view declaring legacy onset curves (the assemblage kind,
         out += seam_events_of_curves(view)          # silicate registration §3.1): phase 1's solidus seams and onsets
         out += onset_events(view, getattr(view, "p_stop", 0.0))

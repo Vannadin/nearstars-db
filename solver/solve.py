@@ -152,6 +152,19 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
     return st.run(rhs.make_rhs(view), m0, y0, m_end, sopt, evs, on_accept=monitor)
 
 
+def _lid_wiring(lv_, want_graze: bool = True) -> dict:
+    """The lid pass's events, step cap, band test and graze monitor for its view `lv_` (G1-C-04: the lid is the
+    mantle material, with the same note-12 step cap and band test read at the lid's own T, y[3], note 13a item 4;
+    G1-R-02 = G2-R-01: its landed events and its graze reach the pass record; the monitor reads T_ad, y[2], which the
+    lid's onset events watch)."""
+    mat = getattr(lv_, "mat", None) or lv_      # review 2 S-C-02: a record view (no .mat) is its own source, as in _plan
+    return {"events": events.layer_events(lv_, getattr(lv_, "p_stop", 0.0), t_index=3),
+            "h_cap": events.step_cap(mat, t_index=3),
+            "step_check": events.band_check(mat, t_index=3),   # a factory
+            "monitor": (lambda: events.GrazeMonitor(mat, getattr(lv_, "p_stop", 0.0), t_index=2))
+            if want_graze else None}
+
+
 def surface_floor(body, top_view) -> float:
     """The surface pressure when the body declares none: the top view's p_floor; a record view has none of its own
     (an h2o top layer raised AttributeError, the N2 ocean probe 10-17), so the legacy material's, by the layer's
@@ -184,7 +197,6 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
     if layers[-1].thermal == "conductive":
         lt = layers[-1]
         lv_ = views[lt.id]
-        lid_mat = getattr(lv_, "mat", None)
         got = lid.lid_pass(lv_, M, R, lt.extent.value, p_s, sf.t_s, t_pot, rs,
                            rhs.PassOptions(rtol=opt.rtol, eps=opt.eps, r_floor_frac=opt.r_floor_frac,
                                            max_steps=opt.max_steps_solve,
@@ -194,15 +206,7 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
                                            event_restarts_step=opt.event_restarts_step,
                                            event_restarts_run=opt.event_restarts_solve),
                            lid_iters=opt.lid_iters, lid_t_tol=opt.lid_t_tol, layer_id=lt.id,
-                           events=events.layer_events(lv_, getattr(lv_, "p_stop", 0.0)) if lid_mat is not None else (),
-                           # G1-C-04: the lid is the mantle material; it takes the same note-12 step cap, read at
-                           # the lid's own T, y[3] (note 13a item 4), and the same band test
-                           h_cap=events.step_cap(lid_mat, t_index=3) if lid_mat is not None else None,
-                           step_check=events.band_check(lid_mat, t_index=3) if lid_mat is not None else None,  # a factory
-                           # G1-R-02 = G2-R-01: the lid's landed events and its graze reach the pass record
-                           monitor=(lambda: events.GrazeMonitor(lid_mat or lv_, getattr(lv_, "p_stop", 0.0),
-                                                                t_index=2))
-                           if want_graze else None)
+                           **_lid_wiring(lv_, want_graze))
         if isinstance(got, st.Stop):
             return _at(got, y, m)                    # a lid stop: the segment's start (note 13 §3)
         m, y = got.m, got.y
