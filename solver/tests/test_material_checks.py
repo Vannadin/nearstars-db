@@ -76,5 +76,25 @@ class RhoTerm(unittest.TestCase):
         self.assertIsInstance(mc.evaluate(f"rho({ph['id']} @ P=1.5e9, T=300)", ph, {}), mc.CheckStop)
 
 
+
+class BalancedArguments(unittest.TestCase):
+    def test_call_arguments_keep_their_own_parentheses(self):
+        """Review 2 M-C2-10: the grammar reads a curve()/melt_p()/rho()/spread argument up to its own closing
+        parenthesis, so an argument holding a call is not cut at the inner call's «)»: before the fix
+        «curve(boundaries[0] @ T=T0 + max(1, 2) * 3)» became «__curve__(0, (T0 + max(1, 2)) * 3)» — evaluated at
+        T = 3006 K for 1006 K — and this test fails. Controls: plain arguments rewrite as before."""
+        rw = mc._rewrite_spreads
+        self.assertEqual(rw("curve(boundaries[0] @ T=T0 + max(1, 2) * 3)"), "__curve__(0, (T0 + max(1, 2) * 3))")
+        self.assertEqual(rw("melt_p(a, b @ T=T0 + abs(-2) * 3)"), '__melt__("a", "b", (T0 + abs(-2) * 3))')
+        self.assertEqual(rw("rho(ice @ P=max(1e9, 2e9), T=min(300, 400) + 1)"),
+                         '__rho__("ice", (max(1e9, 2e9)), (min(300, 400) + 1))')
+        self.assertEqual(rw("gamma_spread(sets[1] @ P=max(35e9, 1), T=2400.0 ; printed=abs(-2.66))"),
+                         '__spread__("gamma_spread", 1, (max(35e9, 1)), (2400.0), (abs(-2.66)))')
+        self.assertEqual(rw("curve(boundaries[0] @ T=T0 + 6) * 2"), "__curve__(0, (T0 + 6)) * 2")
+        self.assertEqual(rw("2 * curve(boundaries[1] @ T=300)"), "2 * __curve__(1, (300))")
+        self.assertEqual(rw("rho(ice @ P=curve(boundaries[0] @ T=300), T=300)"),       # nested: no «internal» refusal
+                         '__rho__("ice", (__curve__(0, (300))), (300))')
+        self.assertIsInstance(mc.evaluate("__curve__(0, 300)", {"thermal": {}}, {}), mc.CheckStop)   # still not spellable
+
 if __name__ == "__main__":
     unittest.main()

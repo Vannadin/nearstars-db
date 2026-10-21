@@ -41,10 +41,17 @@ _SPREAD_CALL = "__spread__"
 _CURVE_CALL = "__curve__"
 _MELT_CALL = "__melt__"
 _RHO_CALL = "__rho__"
-_CURVE = re.compile(r"curve\(\s*boundaries\[(\d+)\]\s*@\s*T\s*=\s*([^)]*)\)")
-_MELT = re.compile(r"melt_p\(\s*([A-Za-z_][\w]*)\s*,\s*([A-Za-z_][\w]*)\s*@\s*T\s*=\s*([^)]*)\)")
-_RHO = re.compile(r"(?<![\w.])rho\(\s*([A-Za-z_][\w]*)\s*@\s*P\s*=\s*([^,]*),\s*T\s*=\s*([^)]*)\)")
-_SPREAD = re.compile(r"(gamma_spread|dpdt_spread)\(\s*(sets\[\d+\])\s*@\s*([^;]*);\s*printed\s*=\s*([^)]*)\)")
+# review 2 M-C2-10: a call's argument is read up to its own closing parenthesis (_calls), not by «[^)]*», which cut an
+# argument holding a call at the inner call's «)» and moved the rest of the expression inside: the heads find the
+# call, the bodies read its (balanced) argument text whole
+_CURVE = re.compile(r"curve\(")
+_CURVE_BODY = re.compile(r"\s*boundaries\[(\d+)\]\s*@\s*T\s*=\s*(.+)\Z", re.S)
+_MELT = re.compile(r"melt_p\(")
+_MELT_BODY = re.compile(r"\s*([A-Za-z_][\w]*)\s*,\s*([A-Za-z_][\w]*)\s*@\s*T\s*=\s*(.+)\Z", re.S)
+_RHO = re.compile(r"(?<![\w.])rho\(")
+_RHO_BODY = re.compile(r"\s*([A-Za-z_][\w]*)\s*@\s*(.+)\Z", re.S)
+_SPREAD = re.compile(r"(gamma_spread|dpdt_spread)\(")
+_SPREAD_BODY = re.compile(r"\s*(sets\[\d+\])\s*@\s*(.+)\Z", re.S)
 _OPS = MappingProxyType({ast.Add: lambda a, b: a + b, ast.Sub: lambda a, b: a - b, ast.Mult: lambda a, b: a * b,
                          ast.Div: lambda a, b: a / b, ast.Pow: lambda a, b: a ** b})
 
@@ -146,21 +153,95 @@ class _Eval:
         raise _Stop("material.check_grammar", f"«{ast.unparse(node)[:60]}» is outside the check grammar")
 
 
+def _split_top(s: str, sep: str) -> list:
+    """s split at `sep` where no parenthesis or bracket is open."""
+    out, depth, cur = [], 0, []
+    for ch in s:
+        if ch in "([":
+            depth += 1
+        elif ch in ")]":
+            depth -= 1
+        if ch == sep and depth == 0:
+            out.append("".join(cur))
+            cur = []
+        else:
+            cur.append(ch)
+    out.append("".join(cur))
+    return out
+
+
+def _calls(expr: str, head, build) -> str:
+    """Every call `head` finds in expr, its argument read to its own closing parenthesis (balanced) and handed to
+    build(match, argument) → the replacement, or None to leave the call as written."""
+    out, i = [], 0
+    while True:
+        m = head.search(expr, i)
+        if m is None:
+            out.append(expr[i:])
+            return "".join(out)
+        depth, k = 1, m.end()
+        while k < len(expr) and depth:
+            depth += {"(": 1, ")": -1}.get(expr[k], 0)
+            k += 1
+        if depth:
+            raise _Stop("material.check_grammar", f"«{expr[m.start():m.start() + 60]}» has no closing parenthesis")
+        arg = expr[m.end():k - 1]
+        got = build(m, arg)
+        out.append(expr[i:m.start()])
+        out.append(expr[m.start():k] if got is None else got)
+        i = k
+
+
+def _at_pt(kind: str, at: str) -> dict:
+    kv = dict(x.split("=", 1) for x in (y.strip() for y in _split_top(at, ",")) if x)
+    kv = {k.strip(): v.strip() for k, v in kv.items()}
+    if set(kv) != {"P", "T"}:
+        raise _Stop("material.check_grammar", f"{kind} takes «@ P=…, T=…», got {at!r}")
+    return kv
+
+
 def _rewrite_spreads(expr: str) -> str:
-    """`gamma_spread(sets[1] @ P=a, T=b ; printed=v)` → `_spread("gamma_spread", 1, (a), (b), (v))`."""
-    def sub(m):
-        kind, s, at, printed = m.group(1), m.group(2), m.group(3), m.group(4)
-        kv = dict(x.split("=", 1) for x in (y.strip() for y in at.split(",")) if x)
-        if set(kv) != {"P", "T"}:
-            raise _Stop("material.check_grammar", f"{kind} takes «@ P=…, T=…», got {at!r}")
-        return f'{_SPREAD_CALL}("{kind}", {int(s[5:-1])}, ({kv["P"]}), ({kv["T"]}), ({printed}))'
+    """`gamma_spread(sets[1] @ P=a, T=b ; printed=v)` → `_spread("gamma_spread", 1, (a), (b), (v))`; likewise curve(),
+    rho() and melt_p() into their internal calls, each argument read whole (balanced parentheses; review 2 M-C2-10)."""
     for internal in (_SPREAD_CALL, _CURVE_CALL, _MELT_CALL, _RHO_CALL):    # 68 G1: internal calls are not spellable by a record
         if internal in expr:
             raise _Stop("material.check_grammar", f"«{internal}» is internal")
-    expr = _CURVE.sub(lambda m: f"{_CURVE_CALL}({int(m.group(1))}, ({m.group(2)}))", expr)
-    expr = _RHO.sub(lambda m: f'{_RHO_CALL}("{m.group(1)}", ({m.group(2)}), ({m.group(3)}))', expr)
-    expr = _MELT.sub(lambda m: f'{_MELT_CALL}("{m.group(1)}", "{m.group(2)}", ({m.group(3)}))', expr)
-    return _SPREAD.sub(sub, expr)
+    return _rewrite(expr)
+
+
+def _rewrite(expr: str) -> str:
+    """_rewrite_spreads' work, also on an argument that already holds rewritten internal calls (nested)."""
+    def curve(m, arg):
+        b = _CURVE_BODY.match(arg)
+        return None if b is None else f"{_CURVE_CALL}({int(b.group(1))}, ({_rewrite(b.group(2).strip())}))"
+
+    def rho(m, arg):
+        b = _RHO_BODY.match(arg)
+        if b is None:
+            return None
+        kv = _at_pt("rho", b.group(2))
+        return (f'{_RHO_CALL}("{b.group(1)}", ({_rewrite(kv["P"])}), '
+                f'({_rewrite(kv["T"])}))')
+
+    def melt(m, arg):
+        b = _MELT_BODY.match(arg)
+        return None if b is None else (f'{_MELT_CALL}("{b.group(1)}", "{b.group(2)}", '
+                                       f'({_rewrite(b.group(3).strip())}))')
+
+    def spread(m, arg):
+        kind = m.group(1)
+        parts = _split_top(arg, ";")
+        b = _SPREAD_BODY.match(parts[0])
+        pr = re.match(r"\s*printed\s*=\s*(.+)\Z", parts[1], re.S) if len(parts) == 2 else None
+        if b is None or pr is None:
+            return None
+        kv = _at_pt(kind, b.group(2))
+        return (f'{_SPREAD_CALL}("{kind}", {int(b.group(1)[5:-1])}, ({_rewrite(kv["P"])}), '
+                f'({_rewrite(kv["T"])}), ({_rewrite(pr.group(1).strip())}))')
+    expr = _calls(expr, _CURVE, curve)
+    expr = _calls(expr, _RHO, rho)
+    expr = _calls(expr, _MELT, melt)
+    return _calls(expr, _SPREAD, spread)
 
 
 def evaluate(expr: str, phase: Mapping, state: Mapping, spread=None, record_fns=None) -> float | CheckStop:
