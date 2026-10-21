@@ -81,7 +81,9 @@ def edge_probes(rec):
     for i, ph in enumerate(rec["phases"]):
         w = ph["window"]
         mid_t = 0.5 * (float(w.get("t_min", 300.0)) + float(w.get("t_max", 3000.0)))
-        mid_p = 0.5 * (float(w["p_min"]) + min(float(w["p_max"]), 1e11))
+        p_hi = float(w["p_max"]) if math.isfinite(float(w["p_max"])) else max(10.0 * float(w["p_min"]), 1e10)
+        mid_p = 0.5 * (float(w["p_min"]) + p_hi)       # review 2 M-C2-20: inside the window for any p_min (it was
+        # 0.5·(p_min + min(p_max, 1e11)), below p_min when p_min > 1e11); answers_inside's rule for an infinite p_max
         for name, e in ph["edges"].items():
             if name not in w:                                       # 68 N21
                 raise AssertionError(f"phase {ph['id']}: edge {name} declared without a bound in the window")

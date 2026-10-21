@@ -421,5 +421,16 @@ class P4Probes(unittest.TestCase):
         self.assertEqual([g[0] for g in got], ["toy_solid"])
         self.assertEqual(p4.answers_inside(copy.deepcopy(GOOD)), [])
 
+    def test_t_edge_probes_stay_inside_the_p_window(self):
+        """Review 2 M-C2-20: the T-edge probes sit at a P inside the phase's window for any window; with p_min above
+        1e11 the probe P was 0.5·(p_min + 1e11) < p_min, so «just beyond its t edge it still answers» could never fire
+        there, and this test fails. Also an infinite p_max (answers_inside's rule)."""
+        from solver import material_p4 as p4
+        for pmin, pmax in ((2.0e11, 3.0e11), (2.0e11, math.inf), (0.0, 1.0e11)):
+            rec = plant(lambda d: PH(d)["window"].update(p_min=pmin, p_max=pmax))
+            ps = [p for _i, name, p, _t, _e in p4.edge_probes(rec) if name.startswith("t_")]
+            self.assertTrue(ps)
+            self.assertTrue(all(pmin < p < pmax for p in ps), (pmin, pmax, ps))
+
 if __name__ == "__main__":
     unittest.main()
