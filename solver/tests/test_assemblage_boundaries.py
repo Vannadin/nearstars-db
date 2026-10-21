@@ -553,6 +553,26 @@ class Transitions(unittest.TestCase):
         y = [0.0, pb_const(1200.0) * 1.01, 1200.0]
         self.assertAlmostEqual(evs[0].g(0.0, y), pb_const(1200.0) * 0.01, delta=1.0)
 
+    def test_basal_layer_lands_the_overlying_curves(self):
+        """Review 2 R-M-03: a BasalView reads the overlying view's dT/dP at its own (P, T), so the overlying view's
+        exported curves (their cut runs and swaps step in value) are its events too: the same phase events, with the
+        same g, as the overlying view's own. Before the fix the basal view's transitions() was empty and the layer
+        crossed the curves unlanded; this test fails there."""
+        over = view(table())
+        rec = {"id": "silicate_basal_const", "kind": "layer_density", "phases": [{"id": "basal_melt"}]}
+        bv = ma.BasalView(rec, 4050.0, over, 1600.0)
+        self.assertEqual(bv.transitions(), over.transitions())
+        (tr,) = bv.transitions()
+        for t in (1200.0, 1450.0, 1501.0):
+            self.assertEqual(bv.boundary_pressure(tr[2], t), over.boundary_pressure(tr[2], t))
+        mine = [e for e in events.record_events(bv) if e.name.startswith("phase:")]
+        theirs = [e for e in events.record_events(over) if e.name.startswith("phase:")]
+        self.assertEqual([e.name for e in mine], [e.name for e in theirs])
+        y = [0.0, pb_const(1200.0) * 1.01, 1200.0]
+        self.assertEqual([e.g(0.0, y) for e in mine], [e.g(0.0, y) for e in theirs])
+        self.assertEqual([(e.scale, e.component, e.seam, e.terminal) for e in mine],
+                         [(e.scale, e.component, e.seam, e.terminal) for e in theirs])
+
     def test_curve_events_land_on_the_old_side(self):
         """A record's curve event g = P − P_b(T) holds its landing stages on the old side in P (component 1, as
         curve_seams). Toy: a curve as steep as Mars's swap 304 extension (9.4e6 Pa/K) with dT/dP dropping 4 % across

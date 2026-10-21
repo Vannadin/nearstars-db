@@ -3000,8 +3000,8 @@ def _smoothstep(s):
 
 class BasalView(mv.RecordView):
     """The basal record (silicate registration §4 Q6, §7.4a): ρ is the layer's declared density, graded «declared»;
-    dT/dP, the onset curves and the melt window are the overlying assemblage view's at the same (P, T). A RecordView
-    subclass, so the notes collector reads it."""
+    dT/dP, the onset curves, the melt window and the exported curves (review 2 R-M-03) are the overlying assemblage
+    view's at the same (P, T). A RecordView subclass, so the notes collector reads it."""
 
     def __init__(self, record, density: float, overlying, t_pot: float, p_stop: float = 0.0):
         self.material_id = record["id"]
@@ -3071,7 +3071,14 @@ class BasalView(mv.RecordView):
         return ()
 
     def transitions(self) -> tuple:
-        return ()
+        """The overlying view's exported curves (review 2 R-M-03): the layer's dT/dP is its read at the same (P, T),
+        so the curves where that read steps or kinks (cut runs, swaps) are this layer's events too, landed with the
+        overlying view's own P_b (boundary_pressure) and landing scale (curve_slope_points)."""
+        return tuple(self.overlying.transitions())
+
+    def boundary_pressure(self, curve, t):
+        """Delegated to the overlying view, whose curves transitions() exports (review 2 R-M-03)."""
+        return self.overlying.boundary_pressure(curve, t)
 
     def curve_slope_points(self, curve) -> tuple:
         """Delegated to the overlying view, so a curve read through this view keeps curve-scale's full landing scale
