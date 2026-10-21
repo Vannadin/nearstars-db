@@ -358,6 +358,7 @@ def _assemblage_view(body, layer, rid, p_stop, registry):
     hrec = registry.get(hid) if hid else None
     if hrec is not None and not isinstance(hrec, mr.LoadStop) and rid in registry.tables.get(hid, {}).get("blocks", {}):
         ho = ma.HandOver(thaw(hrec), registry.tables[hid], rid, 1.5 * float(got["assemblage"]["p_dataset"]))
+        ho.record = thaw(hrec)                  # review 2 S-C-01: _material_bytes hashes it (set here, not in the class)
     return ma.view(thaw(got), table, body.surface.t_pot or 0.0, p_stop, floor, ho), None
 
 
@@ -803,7 +804,9 @@ def _canonical(body) -> dict:
 def _material_bytes(views) -> bytes:
     """«Material data bytes» of solve_id: the adapter's record of engine modules and data files read
     (`legacy_materials.material_bytes`), plus each layer's view id and material id; a fixture view without a material
-    contributes its repr; a record view contributes its record as canonical JSON (switch-over note 4)."""
+    contributes its repr; a record view contributes its record as canonical JSON (switch-over note 4), and the
+    hand-over record it reads above p_dataset, when it holds one, the same way (review 2 S-C-01: that record carries
+    its own values and its table pin)."""
     import hashlib
     import json
     h = hashlib.sha256(lm.material_bytes())
@@ -812,6 +815,10 @@ def _material_bytes(views) -> bytes:
         h.update(lid.encode())
         if getattr(v, "record", None) is not None:      # a record view: its record, canonical (never a repr: addresses)
             h.update(json.dumps(result.plain(v.record), sort_keys=True, separators=(",", ":")).encode())
+            ho = getattr(v, "handover", None)
+            if ho is not None:                          # a hand-over without its record is not hashable: fail loudly
+                h.update(b"handover")
+                h.update(json.dumps(result.plain(ho.record), sort_keys=True, separators=(",", ":")).encode())
         elif getattr(v, "mat", None) is None:
             h.update(repr(vars(v)).encode())
     return h.digest()

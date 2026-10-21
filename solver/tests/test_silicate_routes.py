@@ -513,6 +513,33 @@ class SolveId(unittest.TestCase):
             moved = {**views, lid: ma.view(rec, reg.tables[views[lid].material_id], 1600.0)}
             self.assertNotEqual(sv._material_bytes(moved), ids[0])
 
+    def test_handover_record_binds_solve_id(self):
+        """Review 2 S-C-01: the hand-over record a view reads above p_dataset enters the material bytes, so a changed
+        hand-over record (its values, or its table pin) moves solve_id. Before the fix only the assemblage record was
+        hashed, and this test fails (equal bytes)."""
+        from solver.from_v1 import thaw
+        b = body("earth")
+        with tempfile.TemporaryDirectory() as d:
+            reg = registry(d, allow_development=True)
+            views = sv._views(b, registry=reg, silicate=True)
+            lid = next(l.id for l in b.layers if l.material == "silicate")
+            v = views[lid]
+            self.assertIsNotNone(v.handover, "Earth's switched mantle view holds the hand-over")
+            hid, rid = v.handover.material_id, v.material_id
+            base = sv._material_bytes(views)
+            hrec = thaw(reg.get(hid))
+            p_end = v.handover.p_end
+            same = ma.HandOver(thaw(reg.get(hid)), reg.tables[hid], rid, p_end)
+            same.record = thaw(reg.get(hid))
+            self.assertEqual(sv._material_bytes({**views, lid: ma.view(thaw(reg.get(rid)), reg.tables[rid],
+                                                                         v.t_pot, v.p_stop, v.p_floor, same)}), base)
+            prm = hrec["phases"][0]["eos"]["params"]
+            prm["rho0"] = {**prm["rho0"], "value": float(prm["rho0"]["value"]) * 1.001}
+            moved = ma.HandOver(hrec, reg.tables[hid], rid, p_end)
+            moved.record = hrec
+            self.assertNotEqual(sv._material_bytes({**views, lid: ma.view(thaw(reg.get(rid)), reg.tables[rid],
+                                                                            v.t_pot, v.p_stop, v.p_floor, moved)}), base)
+
 
 class SurfaceFloor(unittest.TestCase):
     def test_record_top_view_takes_the_legacy_floor(self):
