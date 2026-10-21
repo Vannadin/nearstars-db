@@ -337,6 +337,21 @@ class BasalRecord(unittest.TestCase):
         self.assertIsNone(v)
         self.assertEqual(why[0], "record_context")
 
+    def test_hand_over_record_named_by_a_layer_refuses(self):
+        """Review 2 R-M-02: a layer naming the hand-over record (a context record: eos form «handover», read only
+        through an assemblage record above p_dataset) refuses by record_context, as the basal record does, instead of
+        reaching a RecordView whose first read raised ValueError («form 'handover' is not built in this view»). Before
+        the fix _record_view built that view, and this test fails."""
+        hid = next(r for r, rec in self.reg.records.items()
+                   if any(ph["eos"]["form"] == "handover" for ph in rec["phases"]))
+        b = with_layer(self.mars, "mantle", material=hid, params=None, composition=None)
+        v, why = sv._record_view(b, next(l for l in b.layers if l.id == "mantle"), False, 0.0, self.reg)
+        self.assertIsNone(v)
+        self.assertEqual(why[0], "record_context")
+        self.assertIn(hid, why[1])
+        got = sv._views(b, registry=self.reg, silicate=True)
+        self.assertEqual((got.id, got.evidence["rule"]), ("input.cross_field", "record_context"))
+
     def test_notes_attributed_to_the_basal_record(self):
         """68: the overlying view's band note rides with the basal answer under the basal record's id."""
         views = sv._views(self.mars, registry=self.reg, silicate=True)

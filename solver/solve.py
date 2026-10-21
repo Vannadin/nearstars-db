@@ -401,9 +401,14 @@ def _record_view(body, layer, on_me, p_stop, registry):
         return None, ("record_unavailable", (rid, got))
     if on_me:
         return None, ("closure_axis", f"the record {rid!r} has no fit axis {body.closure.name!r}")
-    if any(ph["eos"]["form"] == "layer_density" for ph in got["phases"]):   # built only by the basal route (Q6)
+    forms = {ph["eos"]["form"] for ph in got["phases"]}
+    if "layer_density" in forms:                              # built only by the basal route (Q6)
         return None, ("record_context", f"the record {rid!r} reads the layer above it; it is built by the silicate "
                                         "basal route only")
+    if forms & (set(mr.CONTEXT_FORMS) - {"layer_density", "assemblage"}):   # review 2 R-M-02: every context form
+        return None, ("record_context", f"the record {rid!r} is a context record (form {sorted(forms)}): it is read "
+                                        "only through the record that names it (the hand-over: an assemblage record "
+                                        "above its p_dataset), never as a layer's own material")
     if got["kind"] == "assemblage":                           # a layer naming an assemblage record directly
         if layer.params:
             return None, ("record_params", f"layer {layer.id!r} declares {sorted(layer.params)} on the record "
