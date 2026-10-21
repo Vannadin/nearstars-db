@@ -590,6 +590,47 @@ class LidEvents(unittest.TestCase):
         self.assertEqual(landed[True], landed[False])
 
 
+class GrazeAcrossLid(unittest.TestCase):
+    def test_one_monitor_across_the_lid_base(self):
+        """Review 2 X-04 (silicate registration §3.1's «name» row, frozen :213/:216): Earth's lid and mantle both read
+        one material, so the switched solve keeps one GrazeMonitor across the lid→mantle boundary: the mantle's first
+        segment gets the lid's accepted monitor, now reading the segment's T (t_index 3). A planted mantle view with
+        name None starts a second one. Before the fix the segment loop always started a new monitor (the lid's own
+        never reached it), and this test fails."""
+        from solver import lid
+        reg = mr.load()
+        b = body("earth")
+        got = {}
+        real_lid, real_seg = lid.lid_pass, sv._segment
+
+        def lid_spy(*a, **k):
+            res = real_lid(*a, **k)
+            got["lid"] = getattr(res, "monitor", None)
+            return res
+
+        def seg_spy(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
+            got.setdefault("seg", monitor)
+            return real_seg(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events)
+        for planted in (False, True):
+            got.clear()
+            views = sv._views(b, registry=reg, silicate=True)
+            mantle = next(l.id for l in b.layers if l.material == "silicate" and l.thermal == "adiabatic")
+            if planted:
+                views[mantle].name = None
+            sv.lid.lid_pass, sv._segment = lid_spy, seg_spy
+            try:
+                sv.inward(b, views, 6.371e6, context.Options(silicate_records=True))
+            finally:
+                sv.lid.lid_pass, sv._segment = real_lid, real_seg
+            self.assertIsNotNone(got.get("lid"), planted)
+            self.assertIsNotNone(got.get("seg"), planted)
+            if planted:
+                self.assertIsNot(got["seg"], got["lid"])
+            else:
+                self.assertIs(got["seg"], got["lid"])
+                self.assertEqual(got["seg"].t_index, 3)
+
+
 class SwitchScan(unittest.TestCase):
     def test_registry_for_parses_no_record_with_the_switch_off(self):
         """Review 2 SP-S-05: registry_for, run on every _solve, decides which files are record names with the switch

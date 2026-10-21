@@ -221,7 +221,19 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
         start = len(layers) - 2
         if start >= 0:
             out.boundaries.append((f"{layers[start].id}/{lt.id}", "layer", m, y[0], y[1], y[3], y[3]))
+        lid_mon = got.monitor
+    else:
+        lid_mon = None
     graze_mon = None
+    if lid_mon is not None and start >= 0:
+        # review 2 X-04 (silicate registration §3.1's «name» row): a mantle of the lid's own material keeps the lid's
+        # monitor across the lid base, now reading the segment's T, as two same-material segments share one
+        # (P1R-G1-C-09); the name test below decides, as it does between segments
+        nxt = views[layers[start].id]
+        name = getattr(getattr(nxt, "mat", None) or nxt, "name", None)
+        if name is not None and getattr(lid_mon.mat, "name", None) == name:
+            lid_mon.t_index = 3
+            graze_mon = lid_mon
     for j in range(start, -1, -1):
         layer = layers[j]
         view = views[layer.id]
