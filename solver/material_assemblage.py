@@ -1140,6 +1140,16 @@ END_CAPPED = frozenset({"rho"})
 #: x_b(T) (_row_step_lambdas), as its step does; other cut swaps always land. False: every cut swap always lands (the
 #: delta's mutant)
 SWAP_STEP_LAMBDA = True
+#: s-read post-freeze note 5 amendment 1 + its delta 1 (68; artifacts 3486dc52, d91925e8): in the s path an edge's (c′)
+#: window, placed at the read's T, is held toward its position at each of the curve's T events T_e (t0, t1, t0 − reach,
+#: t1 + reach inside the table) inside the zone |T − T_e| < Δ_e, Δ_e = min(ΔT, ½ · the gap to the curve's nearest other
+#: event): x̂ = x_b(T_e) + (x_b(T) − x_b(T_e))·S(|T − T_e|/Δ_e), so dx̂/dT = 0 at T_e and the s read's dT/dP and c_P are
+#: C⁰ there (they stepped at every edge end: test_c0 plant (d)). w and the edge's side stay the read's (r2 C1). False:
+#: the read-T window everywhere (the taper-off mutant)
+S_EDGE_TAPER = True
+#: the overlap mutant (the delta's §2): half-width ΔT for every event and the nearer event chosen, so two partial zones
+#: meet with S < 1 on both sides and x̂ breaks C⁰ there. False in the engine
+S_TAPER_OVERLAP = False
 
 
 def _capped(se, s_inf):
@@ -1448,6 +1458,7 @@ class AssemblageView(mv.RecordView):
             c.dc_lo = c.t0 - self.ts[j0 - 1] if j0 > 0 else None
             c.dc_hi = self.ts[j1 + 1] - c.t1 if j1 + 1 < len(self.ts) else None
         self._parts, self._runcache = {}, {}
+        self._zones_memo = {}                            # note 5 amendment 1: each curve's T-event zones
         #: PROTOTYPE: the highest frozen node T (rows above it hold no frozen run; _flag_reads' precheck)
         self._t_frozen_max = max((c["t"] for c in table["cells"] if c["kind"] == "frozen"), default=-math.inf)
         self._read_memo = {}
@@ -2019,6 +2030,8 @@ class AssemblageView(mv.RecordView):
         `near` in that row's own partition, before the one T interpolation (_row_blend)."""
         n_t = len(self.ts)
         rows = {}
+        if f == "s" and near and S_EDGE_TAPER:            # note 5 amendment 1: the window held near the curve's events
+            near = self._tapered(near, t)
         for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1):
             corner = k in (ib, ib + 1)
             r = self._region(k, sides, x)
@@ -2036,6 +2049,43 @@ class AssemblageView(mv.RecordView):
                 v = self._row_blend(f, k, x, sides, near, v)
             rows[k] = v
         return _cubic1_t(t, self.ts, _Seq(rows, n_t), ib)
+
+    def _taper_zones(self, c):
+        """Note 5 amendment 1 delta 1: [(T_e, Δ_e, x_b(T_e))] for curve c's T events inside the table where its window
+        exists — t0, t1, t0 − reach, t1 + reach — with Δ_e = min(ΔT, ½ · the gap to the curve's nearest other event)
+        (ΔT for every event under the overlap mutant). Fixed per view."""
+        got = self._zones_memo.get(c)
+        if got is None:
+            dT = self.ts[1] - self.ts[0]
+            ev = sorted({e for e in (c.t0, c.t1, c.t0 - self._reach, c.t1 + self._reach) if self.ts[0] < e < self.ts[-1]})
+            got = []
+            for i, e in enumerate(ev):
+                pe = c.p_b_ext(e, self._reach)
+                if pe is None:
+                    continue
+                gaps = [abs(e - q) for j, q in enumerate(ev) if j != i]
+                half = dT if S_TAPER_OVERLAP else min([dT] + [0.5 * g for g in gaps])
+                got.append((e, half, _log(pe)))
+            self._zones_memo[c] = got
+        return got
+
+    def _tapered(self, near, t):
+        """The s read's (c′) list with each edge's x_b moved to x̂ inside its zones (note 5 amendment 1): x̂ = x_b(T_e) +
+        (x_b(T) − x_b(T_e))·S(|T − T_e|/Δ_e), T a Dual in the s path so x̂ carries dx̂/dT (0 at T_e). Its width and the
+        read's side stay (r2 C1)."""
+        tv = t.v if isinstance(t, Dual) else t
+        out = []
+        for c, xb, w in near:
+            zs = [z for z in self._taper_zones(c) if abs(tv - z[0]) < z[1]]
+            if S_TAPER_OVERLAP and len(zs) > 1:
+                zs = [min(zs, key=lambda z: abs(tv - z[0]))]
+            if zs:
+                te, half, xe = zs[0]
+                d = t - te
+                u = (d if tv >= te else -d) / half
+                xb = (xb - xe) * (u * u * (3.0 - 2.0 * u)) + xe
+            out.append((c, xb, w))
+        return out
 
     def _row_blend(self, f, k, x, sides, near, own):
         """PROTOTYPE (row-level (c′) blend): row k's value at x mixed over the edges of `near` that are in row k's own
