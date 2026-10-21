@@ -1487,6 +1487,10 @@ class AssemblageView(mv.RecordView):
 
     def _solid(self, p, t):
         """(ρ_s, dT/dP_s, c_P,s, the corner cells) from the C¹ read at (P, T), or a Stop (§3.1–§3.2)."""
+        if t <= 0.0 and self.t_pot <= 0.0:         # review 2 R-M-04: a body with no T_pot integrates at T = 0
+            return self._refuse(p, t, "input.material_out_of_data",
+                                "no temperature path declared (the body has no T_pot, so the read is at T = 0); an "
+                                "assemblage record is read only along a declared temperature path")
         if t < T_FLOOR:
             return self._refuse(p, t, "input.material_out_of_data",
                                 f"below the table's {T_FLOOR:g} K floor (registration §3.1)")

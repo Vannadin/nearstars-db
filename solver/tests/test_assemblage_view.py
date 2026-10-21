@@ -153,6 +153,21 @@ class Window(unittest.TestCase):
         self.assertIn(f"{PS[10]:g}", got.record.why)
         self.assertNotIsInstance(v._solid(PS[10] * 1.2, 2300.0), st.Stop)
 
+    def test_no_temperature_path_is_named(self):
+        """Review 2 R-M-04: a body with no T_pot builds its views at t_pot 0 and integrates at T = 0; the assemblage
+        view refuses that read naming the missing temperature path, not the table's 200 K floor (which hid the
+        cause). Before the fix the reason named the floor, and this test fails. A declared T_pot below the floor still
+        refuses by the floor."""
+        tb = table()
+        v0 = ma.view(record(tb["p_dataset"]), tb, 0.0)
+        got = v0._solid(PS[10], 0.0)
+        self.assertIsInstance(got, st.Stop)
+        self.assertEqual(got.record.refusal, "input.material_out_of_data")
+        self.assertIn("no temperature path", got.record.why)
+        self.assertNotIn("floor", got.record.why)
+        cold = view()._solid(PS[10], 150.0)
+        self.assertIn("200 K floor", cold.record.why)
+
     def test_eos_edge_one_node_above(self):
         """68: a column ended by the EOS edge refuses one node above its last cell, with cause eos_edge."""
         v = view(table(tops={10: 2350.0}))
