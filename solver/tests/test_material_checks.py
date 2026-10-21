@@ -96,5 +96,15 @@ class BalancedArguments(unittest.TestCase):
                          '__rho__("ice", (__curve__(0, (300))), (300))')
         self.assertIsInstance(mc.evaluate("__curve__(0, 300)", {"thermal": {}}, {}), mc.CheckStop)   # still not spellable
 
+    def test_a_name_ending_in_a_call_name_is_not_the_call(self):
+        """Review 2 n2 (r2 214f37c0): curve(, melt_p( and the spread calls take rho('s look-behind, so a name or
+        attribute ending in the call's name is left as it is. Before, «mycurve(…)» was rewritten as «my__curve__(…)»
+        and this test fails."""
+        rw = mc._rewrite_spreads
+        for e in ("mycurve(boundaries[0] @ T=300)", "x.curve(boundaries[0] @ T=300)", "my_melt_p(a, b @ T=300)",
+                  "x.gamma_spread(sets[1] @ P=1, T=2 ; printed=3)", "myrho(ice @ P=1, T=2)"):
+            self.assertEqual(rw(e), e, e)
+        self.assertEqual(rw("2*curve(boundaries[1] @ T=300)"), "2*__curve__(1, (300))")      # an operator before: read
+
 if __name__ == "__main__":
     unittest.main()
