@@ -1,6 +1,6 @@
 # ρ rev3c 시험 — 일치 가장자리 쌍의 허용 오차 안 내림 계단은 높이 0: 떨어짐 아님·ΔG 없음·게이트 밖·흡수 안 됨·목록에 듦 (68 설계 40d180cc, r2 clear 1916061f)
 """ρ rev 3, rev3c (artifacts main f11695a0, rewrite/rho-bridge/rev3c-zero-height.md, blob 40d180cc): the plants P1–P5
-and the mutants M1–M7 of §5, khan only, in a narrow window ln P x_s ± 0.3 at T 1100 K (x_s the coincident pair's ln P_b, 24.852 GPa;
+and the mutants M1–M7 of §5 (P3 restated as P3a / P3b by rev3d amendment 2 delta 3, artifacts f7958487), khan only, in a narrow window ln P x_s ± 0.3 at T 1100 K (x_s the coincident pair's ln P_b, 24.852 GPa;
 the pair is found by position, its ids follow the records: 123/124 before the across-gap marks, 117/118 after).
 
     solver/.venv/bin/python -m unittest solver.tests.test_rho_zero_height
@@ -85,23 +85,58 @@ class Plants(_Base):
         self.assertEqual(doc["coincident_edge"]["zero_height"], 1)
         self.assertEqual(doc["stamp"]["rules"]["EDGE_DRHO_TOL"], 7.5e-4)
 
-    def test_p3_the_read_is_untouched(self):
+    def _jump_at_x_s(self, bridge, sets=None):
         v = self.v
-        a, b = self.pair
-        self.assertEqual((v._events[a].kind, v._events[b].kind), ("swap", "swap"))
-        self.assertTrue(v._events[a].was_edge and v._events[b].was_edge)
         p_lo, p_hi = math.exp(X_S - 2 * rfb.SWAP_EPS), math.exp(X_S + 2 * rfb.SWAP_EPS)
-        with mock.patch.object(ma, "RHO_BRIDGE", False):
-            base = v.state(p_hi, T)[0] - v.state(p_lo, T)[0]
         saved = v._fall_sets
         try:
-            v._fall_sets = {self.ib: [[X_S - 0.01, X_S + 0.01]]}     # a synthetic set straddling x_s at node ib
-            with mock.patch.object(ma, "RHO_BRIDGE", True):
-                on = v.state(p_hi, T)[0] - v.state(p_lo, T)[0]
+            if sets is not None:
+                v._fall_sets = sets
+            with mock.patch.object(ma, "RHO_BRIDGE", bridge):
+                return v.state(p_hi, T)[0] - v.state(p_lo, T)[0]
         finally:
             v._fall_sets = saved
+
+    def test_p3a_the_read_is_untouched_on_the_builds_sets(self):
+        # rev3d amendment 2 delta 3 (68, artifacts f7958487) P3a, restating rev3c's P3: with the view's own fall sets the
+        # jump across x_s ± 2·SWAP_EPS with the bridge on is the base jump to 1e-6 relative (no interval passes through
+        # x_s: P1, P2)
+        a, b = self.pair
+        self.assertEqual((self.v._events[a].kind, self.v._events[b].kind), ("swap", "swap"))
+        self.assertTrue(self.v._events[a].was_edge and self.v._events[b].was_edge)
+        base = self._jump_at_x_s(False)
         self.assertLess(base, 0.0)
+        on = self._jump_at_x_s(True)
         self.assertLess(abs(on - base) / abs(base), 1e-6)
+
+    def _c0_in_t(self):
+        """P3b: under the synthetic set straddling x_s at node ib, ρ's largest relative change in T between 1100 ± 1e-7 K
+        and 1100.0, on each side of x_s (x_s ∓ 1e-4)."""
+        v = self.v
+        saved = v._fall_sets
+        out = {}
+        try:
+            v._fall_sets = {self.ib: [[X_S - 0.01, X_S + 0.01]]}
+            with mock.patch.object(ma, "RHO_BRIDGE", True):
+                for dx in (-1e-4, 1e-4):
+                    p = math.exp(X_S + dx)
+                    at = v.state(p, T)[0]
+                    out[dx] = max(abs(v.state(p, T + d)[0] - at) / at for d in (-1e-7, 1e-7))
+        finally:
+            v._fall_sets = saved
+        return out
+
+    def test_p3b_c0_in_t_under_a_synthetic_set(self):
+        # delta 3 P3b: delta 2's P12 under rev3c's synthetic set — C⁰ in T within 1e-9·ρ on both sides of x_s
+        for dx, j in self._c0_in_t().items():
+            self.assertLessEqual(j, 1e-9, dx)
+
+    def test_p3b_mutant_swap_always_lands(self):
+        # SWAP_STEP_LAMBDA False (every cut swap always lands): the one-point jump at T = 1100.0 on both sides (r2: 2.5e-4
+        # at −1e-4, 1.3e-4 at +1e-4 on df6e1ae0)
+        with mock.patch.object(ma, "SWAP_STEP_LAMBDA", False):
+            for dx, j in self._c0_in_t().items():
+                self.assertGreater(j, 1e-6, dx)
 
     def test_p4_absorber(self):
         x = 1.0

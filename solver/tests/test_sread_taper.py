@@ -140,13 +140,13 @@ class DualAwareShortcuts(unittest.TestCase):
         return abs(b[1] - a[1]) / abs(a[1])
 
     def test_smooth(self):
-        s6, s7 = self._s(1e-6), self._s(1e-7)
-        self.assertLess(s7, 0.2 * s6, (s6, s7))           # ∝ h: smooth
+        s6, s8 = self._s(1e-6), self._s(1e-8)
+        self.assertLess(s8 / s6, 0.1, (s6, s8))           # delta 4 §2's test: not a step (68: 0.0100)
 
     def test_mutant_value_only(self):
         with mock.patch.object(ma, "DUAL_AWARE_SHORTCUTS", False):
-            s6, s7 = self._s(1e-6), self._s(1e-7)
-            self.assertGreater(s7, s6, (s6, s7))         # grows as h shrinks: the dropped term
+            s6, s8 = self._s(1e-6), self._s(1e-8)
+            self.assertTrue(0.1 <= s8 / s6 <= 10.0, (s6, s8))   # §2: a step (68: 7.59)
 
 
 if __name__ == "__main__":

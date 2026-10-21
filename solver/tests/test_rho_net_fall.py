@@ -56,6 +56,9 @@ def _fake(swap_at=None, jump=0.0):
 
         def _width(self, x):
             return 1.0
+
+        def _swap_has_lambda(self, c):
+            return False                                 # rev3d amendment 2 delta 2: the fake's swap owns no step
     up = (lambda x: jump if swap_at is not None and x > swap_at else 0.0)               # noqa: E731
     r = lambda x: 1000.0 + 0.004 * math.cos(math.pi * (x - 2.0)) + up(x)               # noqa: E731
     g = lambda x: (r(x), -0.004 * math.pi * math.sin(math.pi * (x - 2.0)) / r(x))      # noqa: E731
