@@ -706,6 +706,59 @@ class MethodTermMaterials(unittest.TestCase):
         self.assertLess(max(got[1]) - min(got[1]), 1e-5)
         self.assertGreater(max(got[None]) - min(got[None]), 1.0)          # the control: unheld, it depends on dr
 
+    def test_silicate_switch_reaches_every_solve(self):
+        """Review 2 T-01: with silicate_records on, every solve one_state makes (the adaptive one, run_oracle's declared
+        pair, the fixed T_pot one), controls' solves and run's header all carry the switch, and main's
+        «--silicate-records on» reaches controls and run. The spy hands every call one real Earth answer (solved once,
+        switch off), so the paths past the first solve execute. Mutant: drop silicate_records=silicate_records from
+        any of method_term's Options (e.g. :136's base) and this test fails."""
+        from pathlib import Path
+        from unittest import mock
+        from solver import method_term as mt, result, run_oracle as ro
+        shipped = mr.load()
+        earth = "engine/bodies/earth.yaml"
+        b = from_v1.load_v1(str(Path(__file__).resolve().parents[2] / earth), registry=shipped)
+        ans, _w = sv.solve(b[0] if isinstance(b, tuple) else b, context.Options(sensitivity_dt=0.0), registry=shipped)
+        self.assertIsInstance(ans, result.Answer)
+        seen = []
+
+        def spy(body, options=context.Options(), warm=None, views=None, registry=None):
+            seen.append(options.silicate_records)
+            return ans, None
+        with mock.patch.object(sv, "solve", spy), mock.patch.object(ro.lv, "run_chain", lambda *a, **k: None), \
+                mock.patch.object(ro, "_legacy", lambda rec, chain: None), mock.patch.object(mt, "_registry",
+                                                                                             lambda r=None: shipped):
+            for state in ("declared", 2000.0):
+                seen.clear()
+                mt.one_state(earth, state, "t", registry=shipped, silicate_records=True)
+                self.assertGreaterEqual(len(seen), 2, state)
+                self.assertTrue(all(seen), (state, seen))
+            seen.clear()
+            mt.controls(earth, True)
+            self.assertGreaterEqual(len(seen), 4)
+            self.assertTrue(all(seen), seen)
+        heads = []
+
+        class Stop(Exception):
+            pass
+
+        def header(options, sid):
+            heads.append(options.silicate_records)
+            raise Stop
+        with mock.patch.object(ro, "_header", header), mock.patch.object(mt, "_registry", lambda r=None: shipped):
+            import tempfile
+            with tempfile.TemporaryDirectory() as d:
+                with self.assertRaises(Stop):
+                    mt.run(earth, str(Path(d) / "points.json"), str(Path(d) / "out.jsonl"), mt.STEPS, True)
+        self.assertEqual(heads, [True])
+        got = []
+        with mock.patch.object(mt, "controls", lambda body_yaml, silicate_records=False: got.append(silicate_records)
+                               or {"holds": True}), \
+                mock.patch.object(mt, "run", lambda *a: got.append(a[-1]) or 0):
+            mt.main(["controls", earth, "--silicate-records", "on"])
+            mt.main(["run", earth, "points.json", "out.jsonl", "--silicate-records", "on"])
+        self.assertEqual(got, [True, True])
+
     def test_every_solve_follows_it(self):
         """68 H1 on 13035f6e: every solve one_state makes, not only the first. With the shipped registry, the spy passes
         each call through (the old chain off, it is legacy and not a solve of this term) and records it: the declared
