@@ -112,6 +112,22 @@ class Edges(unittest.TestCase):
         self.assertEqual(low[0], v.density(1.0e9, 1700.0))
         self.assertEqual(low[:2], v.state(1.0e9, 1700.0)[:2])
 
+    def test_a_clamped_read_says_so(self):
+        """Review 2 C1 (r2 214f37c0): a read that answers at the clamped P carries a DeclaredNote naming the P it was
+        read at, below p_stop and at P ≤ 0 alike; an unclamped read carries none. Without the note the clamp was
+        silent, and this test fails."""
+        v = mv.RecordView(fe_prem(False), T_POT, 1.0e9)
+        clamp = lambda got: [n for n in got[2] if isinstance(n, mv.DeclaredNote) and "not the asked P" in n.text]  # noqa: E731
+        low, zero, at = v.state(1.0e8, 1700.0), v.state(0.0, 1700.0), v.state(1.0e9, 1700.0)
+        self.assertNotIsInstance(zero, st.Stop)
+        self.assertEqual([n.text for n in clamp(low)],
+                         [mv.CLAMP_NOTE.format(pe=1.0e9, why="the asked P lies below p_stop")])
+        self.assertEqual([n.text for n in clamp(zero)],
+                         [mv.CLAMP_NOTE.format(pe=1.0e9, why="the asked P is ≤ 0, read at 1 bar or p_stop")])
+        self.assertIn("1e+09 Pa", clamp(low)[0].text)
+        self.assertEqual(clamp(at), [])
+        self.assertEqual(low[:2], at[:2])                 # a note only: the values are the clamped P's
+
     def test_view_holds_its_own_copy(self):
         """68 N27: changing the caller's record after construction does not reach the view."""
         rec = fe_prem(False)

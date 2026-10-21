@@ -66,6 +66,9 @@ class DeclaredNote:
     text: str
 
 
+CLAMP_NOTE = "values read at P = {pe:.6g} Pa, not the asked P: {why} (review 2 M-C1a-04)"
+
+
 @dataclass(frozen=True)
 class BandNote:
     """A declared band surfaced with a value (design §I): it never changes the value."""
@@ -1119,6 +1122,10 @@ class RecordView:
         ph = self._phase_at(pe, t)
         if not isinstance(ph, st.Stop):
             self._declared_notes(ph, p, t)
+            if pe != p:                                    # review 2 C1 (r2 214f37c0): the clamp is said, not silent
+                self.notes.append(DeclaredNote(self.material_id, ph.id, CLAMP_NOTE.format(
+                    pe=pe, why="the asked P is ≤ 0, read at 1 bar or p_stop" if p <= 0.0 else "the asked P lies below "
+                                                                                              "p_stop")))
             from solver import material_joins as mj
             pref = mj.preferred_source(self, self.phases.index(ph))
             if pref is not None and self._taper_join(ph) is None:     # values from the cross-check's preferred source
