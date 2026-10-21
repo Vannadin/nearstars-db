@@ -36,6 +36,7 @@ class LidResult:
     graze: object = None         # the accepted pass's closest graze of T_ad, or None
     discarded: dict = None       # summed counters of the other passes (T_b⁰ and the non-final iterates), for cost
     band_grazes: tuple = ()      # the accepted pass's band-floor acceptances (notes 13 §1 / 13a)
+    monitor: object = None       # the accepted pass's graze monitor, which the layer below may continue (review 2 X-04)
 
 
 def _lid_rhs(view, a: float | None, b: float | None):
@@ -109,6 +110,7 @@ def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_
             res = st.run(_lid_rhs(view, a, b), mass, (radius, p_s, t_pot, t0, 0.0, 0.0), 0.0, sopt_,
                          [base, *events], on_accept=on_accept)
         last["graze"] = None if mon is None else mon.best
+        last["monitor"] = mon
         for k, v in last.get("counters", {}).items():         # the previous pass is now a discarded one
             discarded[k] = discarded.get(k, 0) + v
         last["counters"] = dict(vars(res.counters))
@@ -136,7 +138,7 @@ def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_
             r, p, t_ad, t_prof, i_moi, v_pore = res.y
             return LidResult(res.x, (r, p, t_ad, t_new, i_moi, v_pore), t_new, a, b, t_prof, tuple(trail), res.path,
                              last["counters"], tuple(e for e in res.events if e[0] != "lid_base"), last.get("graze"),
-                             discarded, tuple(getattr(res, "band_grazes", ())))
+                             discarded, tuple(getattr(res, "band_grazes", ())), last.get("monitor"))
         t_b = t_new
     return st.Stop("lid_unconverged", {"layer_id": layer_id, "trail": tuple(trail), "iters": lid_iters,
                                        "tol": lid_t_tol})
