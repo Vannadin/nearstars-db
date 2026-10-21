@@ -220,7 +220,8 @@ class TaperBoth(unittest.TestCase):
 
 class Shipped(unittest.TestCase):
     def test_a_loop_cell_on_the_shipped_records(self):
-        """Each shipped record: a read at the centre of its largest dT/dP loop cell carries the cell's terms."""
+        """Each shipped record: a read at the centre of its largest dT/dP loop cell carries the cell's terms; under the s
+        read the record declares (F13), its ρ term alone, and no loop note where that is 0 (s-read §3.5)."""
         reg = mr.load()
         for rid in ("silicate_slb_default_bse", "silicate_slb_earth_dmm_wh2005", "silicate_slb_mars_khan2022"):
             with self.subTest(rid=rid):
@@ -233,8 +234,13 @@ class Shipped(unittest.TestCase):
                     got = v.state(p, t)
                     if not isinstance(got, tuple):
                         continue                                      # a refusing centre (melt, window): the next
-                    (n,) = [x for x in got[2] if isinstance(x, mv.BandNote) and x.edge == "under-resolved loop"]
-                    self.assertEqual([n.error, n.dtdp_error, n.c_p_error], e)
+                    ns = [x for x in got[2] if isinstance(x, mv.BandNote) and x.edge == "under-resolved loop"]
+                    if v.s_read and not e[0]:                 # s default (F13): dT/dP and c_P terms retired (s-read §3.5),
+                        self.assertEqual(ns, [])              # so a cell with no ρ term carries no loop note at all
+                        continue
+                    (n,) = ns
+                    want = [e[0], None, None] if v.s_read else e    # s default (F13): only the ρ term stands
+                    self.assertEqual([n.error, n.dtdp_error, n.c_p_error], want)
                     ok += 1
                     if ok == 3:
                         break

@@ -380,8 +380,10 @@ class ClosureBlock(unittest.TestCase):
     def test_declared_without_block_stops(self):
         rec = copy.deepcopy(mv.thaw_plain(_reg().get("silicate_slb_default_bse")))
         rec["assemblage"]["dtdp"]["read"] = "entropy"
+        table = mv.thaw_plain(_reg().tables["silicate_slb_default_bse"])
+        table.pop("closure_terms", None)             # s default (F13): the shipped table carries the block; plant its absence
         with self.assertRaisesRegex(ma.TableStop, "no closure_terms"):
-            ma.check_table(rec["assemblage"], mv.thaw_plain(_reg().tables["silicate_slb_default_bse"]))
+            ma.check_table(rec["assemblage"], table)
 
 
 class MonotoneSample(unittest.TestCase):
