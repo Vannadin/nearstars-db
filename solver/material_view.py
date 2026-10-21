@@ -1113,20 +1113,23 @@ class RecordView:
 
     def state(self, p: float, t: float, guess_rho=None):
         self.notes.clear()
-        ph = self._phase_at(max(p, self.p_stop) if p > 0.0 else max(1.0e5, self.p_stop), t)
+        # review 2 M-C1a-04: every read of this state at the P its phase is chosen at, max(P, p_stop) (1 bar at P ≤ 0),
+        # as legacy reads ρ and as this view's dtdp already does; a read at P ≤ 0 no longer reaches log(0)
+        pe = max(p, self.p_stop) if p > 0.0 else max(1.0e5, self.p_stop)
+        ph = self._phase_at(pe, t)
         if not isinstance(ph, st.Stop):
             self._declared_notes(ph, p, t)
             from solver import material_joins as mj
             pref = mj.preferred_source(self, self.phases.index(ph))
             if pref is not None and self._taper_join(ph) is None:     # values from the cross-check's preferred source
-                got = mj.source_state(self, self.phases.index(ph), pref, p, t)
+                got = mj.source_state(self, self.phases.index(ph), pref, pe, t)
                 if isinstance(got, st.Stop):
                     return got
                 return (got[0], got[1], tuple(self.notes))
             tj = self._taper_join(ph)
             if tj is not None:                             # impl note 4 item 1: the phase's value comes from its sources
                 from solver import material_joins as mj
-                got = mj.taper_state(self, tj[0], tj[1], p, t)
+                got = mj.taper_state(self, tj[0], tj[1], pe, t)
                 if isinstance(got, st.Stop):
                     return got
                 rho, dtdp, note = got
@@ -1146,7 +1149,7 @@ class RecordView:
                     self.notes.append(BandNote(self.material_id, f"{ph.id} {tj[1]['kind']}", "relative", note["band"],
                                                None, note["grade"], origin, dte, dto))
                 return (rho, dtdp, tuple(self.notes))
-        rho = self.density(p, t)
+        rho = self.density(pe, t)
         if isinstance(rho, st.Stop):
             return rho
         g = self.dtdp(p, t)

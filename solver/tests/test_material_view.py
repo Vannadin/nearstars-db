@@ -95,6 +95,23 @@ class Edges(unittest.TestCase):
         self.assertIsInstance(s, st.Stop)
         self.assertEqual(s.record.refusal, "material.check_unknown_name")
 
+    def test_state_reads_at_p_stop_and_refuses_p_zero(self):
+        """Review 2 M-C1a-04: state() reads density at the P it chose its phase at, max(P, p_stop) (1 bar at P ≤ 0),
+        as legacy and this view's dtdp do, so a read below p_stop answers with density(p_stop), and a read at P ≤ 0
+        answers as at 1 bar instead of raising ValueError (math.log(0) in the adiabat table). Before the fix
+        state(0, T) raised and state(1e8, T) with p_stop 1e9 refused («thermal pressure exceeds the total»), and this
+        test fails."""
+        rec = fe_prem(False)
+        v0 = mv.RecordView(rec, T_POT)
+        got, bar = v0.state(0.0, 1700.0), v0.state(1.0e5, 1700.0)     # fe_prem at 1 bar refuses by name (thermal
+        self.assertIsInstance(got, st.Stop)                                # pressure exceeds the total): P = 0 now
+        self.assertEqual((got.record.refusal, got.record.why), (bar.record.refusal, bar.record.why))   # the same
+        v = mv.RecordView(rec, T_POT, 1.0e9)
+        low = v.state(1.0e8, 1700.0)
+        self.assertNotIsInstance(low, st.Stop)
+        self.assertEqual(low[0], v.density(1.0e9, 1700.0))
+        self.assertEqual(low[:2], v.state(1.0e9, 1700.0)[:2])
+
     def test_view_holds_its_own_copy(self):
         """68 N27: changing the caller's record after construction does not reach the view."""
         rec = fe_prem(False)
