@@ -939,6 +939,23 @@ def manifest_shas(text: str, name: str = "sources.yaml") -> frozenset | LoadStop
     return frozenset(r["sha256"] for r in rows)
 
 
+def _box_order(x, path, file):
+    """Review 2 M-C2-04: every box is ordered — wherever a mapping holds p_min and p_max (or t_min and t_max) as numbers,
+    min ≤ max (.inf allowed above). Windows, γ windows, data ranges, overlaps, sampling and refusal boxes, constants
+    spans and field boxes alike; an inverted one loaded, never answered and slipped past P4."""
+    if isinstance(x, Mapping):
+        for lo, hi in (("p_min", "p_max"), ("t_min", "t_max")):
+            a, b = x.get(lo), x.get(hi)
+            if _is_number(a) and _is_number(b) and float(a) > float(b):
+                raise _Stop("material.bad_shape", file=file, path=f"{path}.{lo}", expected=f"{lo} ≤ {hi}",
+                            got=f"{lo} {a!r} > {hi} {b!r}")
+        for k, v in x.items():
+            _box_order(v, f"{path}.{k}", file)
+    elif isinstance(x, (list, tuple)):
+        for i, v in enumerate(x):
+            _box_order(v, f"{path}[{i}]", file)
+
+
 def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping | LoadStop:
     """One record's load rules; the record (deep-frozen) or the first STOP."""
     cites: list = []
@@ -949,6 +966,7 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
                 raise _Stop("material.unregistered_source", file=file, path=path, sha256=str(sha))
         if raw["id"] != Path(file).stem:
             raise _Stop("material.id_mismatch", file=file, id=raw["id"])
+        _box_order(raw, "record", file)
         _kind(raw, file)
         _curves(raw, file)
         _source_seams(raw, file)

@@ -95,6 +95,10 @@ CONTROLS = (
                                           d["phases"].append(dict(PH(d), id="toy_b"))),
      "material.kind_rule"),
     ("library form without pin", lambda d: PH(d)["eos"].update(form="library"), "material.kind_rule"),
+    # review 2 M-C2-04: every box is ordered (p_min ≤ p_max, t_min ≤ t_max); an inverted one loaded and never answered
+    ("inverted window", lambda d: PH(d)["window"].update(p_min=5.0e12, p_max=1.0e12), "material.bad_shape"),
+    ("inverted T in the field box", lambda d: PH(d)["field"]["box"].update(t_min=3000.0, t_max=1000.0),
+     "material.bad_shape"),
 )
 
 
