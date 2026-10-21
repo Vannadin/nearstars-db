@@ -507,3 +507,48 @@ class Amendment2Review(unittest.TestCase):
             stops = []
             rfb.sets_from(_fresh(BSE), per, [], stops)
         self.assertTrue([s for s in stops if s.get("why") == "row step not fully landed by the read"], stops[:3])
+
+
+#: khan's S_17..S_19 around x_s 23.93622 as F13-A built them on the F13 records at 16be158e (artifacts
+#: ea-f13a-out-16be158e b3587407, pc/ea-f13/out-f13a-16be158e/sets/silicate_slb_mars_khan2022.json), the intervals the
+#: reads at 1100 K use there — a fixture for the one-row swap hand-over pin
+H_SETS = {17: [[23.935511244634238, 23.938354614172734], [23.96528401110338, 24.014119487816476]],
+          18: [[23.935511244634238, 23.938354614172734]],
+          19: [[23.935521502708813, 23.93832383994901]]}
+H_T, H_XS = 1100.0, 23.936222
+
+
+class OneRowSwapHandOver(unittest.TestCase):
+    """The disclosed defect of the F13 records (owner-direction 2026-10-22 01:43, main 4fdb9bf3; rev3d amendment 2 delta
+    2, 68 a0c2fdf9, fixed with E24's records build): khan's one-row swaps 117 and 118 (t0 = t1 = 1100 K) always land at
+    exactly 1100 K while their holding-row step is bridged (λ = 0) at every other T, so the repaired read breaks C⁰ in T
+    at that one T (5.16e-5 relative at x_s ± 1e-4). test_preconditions pins the site (it goes red when a rebuild moves
+    it); test_c0_in_t_at_the_one_row_swap is the expected failure E24's fix turns green — that commit removes the
+    decorator."""
+
+    def _view(self):
+        v = _fresh(KHAN)
+        v._fall_sets = {k: [tuple(iv) for iv in ivs] for k, ivs in H_SETS.items()}
+        return v
+
+    def test_preconditions(self):
+        v = self._view()
+        cs = {c.id: c for c in v._cut if c.id in (117, 118)}
+        self.assertEqual(sorted(cs), [117, 118])
+        for c in cs.values():
+            self.assertEqual((c.kind, c.t0, c.t1), ("swap", H_T, H_T))
+            self.assertAlmostEqual(math.log(c.p_b(H_T)), H_XS, places=5)
+        with mock.patch.object(ma, "RHO_BRIDGE", False):            # today's read is continuous there
+            for dx in (-1e-4, 1e-4):
+                at, near = v._solid(math.exp(H_XS + dx), H_T)[0], v._solid(math.exp(H_XS + dx), H_T + 1e-12)[0]
+                self.assertLessEqual(abs(at - near), 1e-9 * at)
+
+    @unittest.expectedFailure
+    def test_c0_in_t_at_the_one_row_swap(self):
+        v = self._view()
+        with mock.patch.object(ma, "RHO_BRIDGE", True):
+            for dx in (-1e-4, 1e-4):
+                x = math.exp(H_XS + dx)
+                at = v._solid(x, H_T)[0]
+                lo, hi = v._solid(x, H_T - 1e-12)[0], v._solid(x, H_T + 1e-12)[0]
+                self.assertLessEqual(max(abs(at - lo), abs(at - hi)), 1e-9 * at, (dx, lo, at, hi))
