@@ -1119,6 +1119,13 @@ def source_conflicts(rec: Mapping, file: str) -> LoadStop | None:
             return LoadStop("material.source_conflict", MappingProxyType(
                 {**ev, "max_r": None, "node": (bad["p"], bad["t"]), "sigma_allow": None,
                  "sigma_allow_formed": f"side {side} cannot answer at this node; narrow the overlap"}))
+        nf = next((x for x in out["nodes"] if "r" in x and not (math.isfinite(x["sigma_allow"])
+                                                                 and not math.isnan(x["r"]))), None)
+        if nf is not None:                          # review 2 M-C2-01: a NaN σ (a refusing moved-parameter view)
+            return LoadStop("material.source_conflict", MappingProxyType(     # masked every other node's r
+                {**ev, "max_r": None, "node": (nf["p"], nf["t"]), "sigma_allow": None,
+                 "sigma_allow_formed": f"σ_allow not finite at this node ({nf['sigma_allow']!r}): a source's σ could "
+                                       "not be formed there; the gate cannot pass unseen"}))
         if out["max_r"] > K_GATE:
             n = max((x for x in out["nodes"] if "r" in x), key=lambda x: x["r"])
             return LoadStop("material.source_conflict", MappingProxyType(
