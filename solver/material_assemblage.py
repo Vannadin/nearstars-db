@@ -1154,6 +1154,19 @@ S_TAPER_OVERLAP = False
 #: centre); S_TAPER_NO_DW — the zone without its Δ_w cap. Both False in the engine
 S_TAPER_SPLIT = False
 S_TAPER_NO_DW = False
+#: delta 4 §5 (68, de721186): a shortcut on a possibly-Dual weight (a skip at 0, a 0/1 return) is taken only when the
+#: value and every derivative are at the shortcut's value (_at); value-only, a weight whose value rounds to 0 while its
+#: T-derivative does not was skipped, dropping (1 − H)′·(side value) from ∂s/∂T in a ~1e-8 band of u at each window
+#: edge. False: the value-only test (the mutant)
+DUAL_AWARE_SHORTCUTS = True
+
+
+def _at(v, c):
+    """True when v equals the constant c and, for a Dual, its derivatives are 0 too (delta 4 §5); the value alone under
+    the mutant."""
+    if not isinstance(v, Dual) or not DUAL_AWARE_SHORTCUTS:
+        return v == c
+    return v.v == c and v.dx == 0.0 and v.dt == 0.0
 
 
 def _capped(se, s_inf):
@@ -1194,7 +1207,7 @@ def _slope_t(d0, d1):
     §1 class 4); van Albada is smooth there, and the clip (which keeps ρ monotone) binds only at a sign change (its
     |m| ≤ 1.21·min|d| for secants of one sign)."""
     q = d0 * d0 + d1 * d1
-    return _clip_fc(0.0 if q == 0.0 else d0 * d1 * (d0 + d1) / q, d0, d1)
+    return _clip_fc(0.0 if _at(q, 0.0) else d0 * d1 * (d0 + d1) / q, d0, d1)
 
 
 def _cubic1_t(x, xs, ys, i):
@@ -2175,7 +2188,7 @@ class AssemblageView(mv.RecordView):
                 wgt = 1.0
                 for s_, h in zip(sig, hs):
                     wgt *= h if s_ > 0 else 1.0 - h
-                if wgt == 0.0:
+                if _at(wgt, 0.0):
                     continue                             # the frozen flag reads it anyway (_flag_reads)
                 if sig == own_sig:
                     val = own
@@ -2193,7 +2206,7 @@ class AssemblageView(mv.RecordView):
         finally:
             self._marks.update(marks)
             self.cut_counts.update(counts)
-        return total if kept == 1.0 else total / kept
+        return total if _at(kept, 1.0) else total / kept
 
     def _node_widths(self):
         """([node-centred ln-P cell width per node], their max), found once per lnps list (found again if lnps is
@@ -2243,7 +2256,7 @@ class AssemblageView(mv.RecordView):
                 wgt = 1.0
                 for s_, h in zip(sig, hs):
                     wgt *= h if s_ > 0 else 1.0 - h
-                if wgt == 0.0:
+                if _at(wgt, 0.0):
                     continue
                 if sig == mine:
                     val = own
