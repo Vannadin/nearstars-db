@@ -45,12 +45,14 @@ def failures(block, repo=ARTIFACTS) -> list:
 
 def _names_row(repo, commit, transition) -> bool:
     """Review 2 T-13 (a): a ruling counts only where the commit's own rulings file names the row: some file the commit
-    adds or changes holds the row's transition text at that commit (an existing sha alone ruled every row)."""
+    adds or changes holds the row's transition text at that commit, bounded (no letter, digit, «_», «+» or «=» either
+    side: «fp+st=bg» is not found in «fp+st=bgx»; review 2 n4) (an existing sha alone ruled every row)."""
     files = subprocess.run(["git", "-C", str(repo), "show", "--format=", "--name-only", commit], capture_output=True,
                            text=True).stdout.split("\n")
     for f in (x for x in files if x):
         got = subprocess.run(["git", "-C", str(repo), "show", f"{commit}:{f}"], capture_output=True, text=True)
-        if got.returncode == 0 and transition and transition in got.stdout:
+        if got.returncode == 0 and transition and re.search(rf"(?<![\w+=]){re.escape(transition)}(?![\w+=])",
+                                                            got.stdout):     # review 2 n4: token-bounded
             return True
     return False
 
@@ -123,6 +125,18 @@ class Controls(unittest.TestCase):
             self.assertEqual(failures(b, Path(d)), [])
             b = self.block([{"transition": "fp+st=bg", "verdict": "FAIL", "ruling": other}])
             self.assertIn("names no such row", failures(b, Path(d))[0][1])
+
+    def test_the_row_match_is_token_bounded(self):
+        """Review 2 n4 (r2 214f37c0): a ruling file naming «fp+st=bgx» or «fp+st=bg+wa» does not rule «fp+st=bg»; one
+        naming it in a sentence or a table cell does. Before (a plain substring), the first two ruled it and this test
+        fails."""
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            longer = _repo(d, {"a.md": "fp+st=bgx: ruled\nfp+st=bg+wa: ruled"})
+            plain = _repo(d, {"b.md": "| fp+st=bg | NOT LOCATED | ruled |"})
+            row = lambda c: self.block([{"transition": "fp+st=bg", "verdict": "FAIL", "ruling": c}])   # noqa: E731
+            self.assertIn("names no such row", failures(row(longer), Path(d))[0][1])
+            self.assertEqual(failures(row(plain), Path(d)), [])
 
     def test_il_drop_rows_fail_the_gate(self):
         """r2's il-drop control, assertion (2): with the il assemblages dropped from the export the tool's ak = bg rows
