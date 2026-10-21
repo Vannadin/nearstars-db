@@ -255,6 +255,29 @@ class Routes(unittest.TestCase):
             self.assertIsNone(v)
             self.assertEqual(why[0], "record_params")
 
+    def test_direct_record_checks_the_declared_composition(self):
+        """Review 2 R-S-03: a layer naming an assemblage record directly with a declared composition is checked against
+        the record's composition_key, as the silicate_decl route matches it: the record's own fingerprint answers, one
+        changed oxide refuses by record_composition naming both keys. Before the fix the branch returned before any
+        composition guard and answered on the record whatever the layer declared; this test fails there."""
+        with tempfile.TemporaryDirectory() as d:
+            reg = registry(d, allow_development=True)
+            mars = body("mars")
+            decl = next(l for l in mars.layers if l.material == "silicate_decl")
+            rid = "silicate_slb_mars_khan2022"
+            same = with_layer(mars, decl.id, material=rid)
+            v, why = sv._record_view(same, next(l for l in same.layers if l.id == decl.id), False, 0.0, reg)
+            self.assertIsNone(why)
+            self.assertIsNotNone(v)
+            moved = dict(decl.composition.value)
+            moved["MgO"] += 0.01
+            other = with_layer(mars, decl.id, material=rid,
+                               composition=dataclasses.replace(decl.composition, value=moved))
+            v, why = sv._record_view(other, next(l for l in other.layers if l.id == decl.id), False, 0.0, reg)
+        self.assertIsNone(v)
+        self.assertEqual(why[0], "record_composition")
+        self.assertIn(MARS_KEY, why[1])
+
     def test_silicate_with_composition_stays_legacy(self):
         """R11: `silicate` with a declared composition is not routed (only the no-composition line is): it refuses
         as today, switched on or off."""

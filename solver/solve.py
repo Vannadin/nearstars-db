@@ -413,6 +413,16 @@ def _record_view(body, layer, on_me, p_stop, registry):
         if layer.params:
             return None, ("record_params", f"layer {layer.id!r} declares {sorted(layer.params)} on the record "
                                            f"{rid!r}, which reads none of them")
+        if layer.composition is not None:                     # review 2 R-S-03: as the silicate_decl route matches it
+            from solver import material_assemblage as ma
+            try:
+                key = ma.composition_key(_comp(layer))
+            except (KeyError, TypeError, ValueError, ZeroDivisionError) as e:
+                return None, ("record_composition", f"layer {layer.id!r} declares a composition with no CFMASNa "
+                                                    f"reduction on the record {rid!r}: {e!r}")
+            if key != got["composition_key"]:
+                return None, ("record_composition", f"layer {layer.id!r} declares composition key {key} on the record "
+                                                    f"{rid!r}, built for composition key {got['composition_key']}")
         return _assemblage_view(body, layer, rid, p_stop, registry)
     if layer.composition is not None:                          # G4-C-01's class on the record path (r2, p1review)
         return None, ("record_composition", f"layer {layer.id!r} declares a composition on the record {rid!r}, "
