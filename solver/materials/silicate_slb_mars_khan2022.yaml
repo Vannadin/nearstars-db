@@ -17,7 +17,7 @@ primary_family:
   reason: frozen S1
 assemblage:
   file: tables/silicate_slb_mars_khan2022.json.gz
-  sha256: 39aa36c3a79f8c9342f3f2facec0e8412b723ab37ed019e080511c338e7b3f3b
+  sha256: c226b04dc325af2a81ea84214aa4f0296e96aa117086b1c39e7d566dffc88dd2
   p_dataset: 136000000000.0
   interpolation: c1_lnp_t
   melt_variant: peridotitic
@@ -56,6 +56,17 @@ assemblage:
     K; 8.07–8.48 GPa × 600–650 K; 8.48–8.9 GPa × 600–650 K; 7.69–8.07 GPa × 650–700 K; 8.48–8.9 GPa × 650–700 K; 13.2–13.8
     GPa × 650–700 K; 23.6–24.8 GPa × 650–700 K; 13.2–13.8 GPa × 700–750 K; 0.739–0.776 GPa × 750–800 K; 0.776–0.815 GPa ×
     750–800 K; 0.739–0.776 GPa × 800–850 K (registration §7)'
+  - 'the solid dT/dP is read from the record''s stored s, −(∂s/∂P)_T/(∂s/∂T)_P of the s read (s-read registration, frozen
+    327b4f73); its per-cell «isentrope closure» term (compact closure_terms) lists 0 cell(s) whose contour departs from the
+    read''s own s map by more than 0.1 K (tool e1f7a139; integrations skipped: contour enters a frozen stencil 32, contour
+    enters the switch band 213, contour leaves the P_b_ext reach inside the cell 659, input.material_above_solid_window 258,
+    input.material_out_of_data 7)'
+  - with the s read, the dT/dP and c_P terms of interp_terms and loop_terms are retired (s-read registration §3.5); their
+    ρ terms stand
+  - 'c_P: no band after the s-read registration (c_P is T·(∂s/∂T)_P of the s read; §3.4)'
+  - '(∂s/∂T)_P > 0 of the s read checked at build time on 142292 of 221997 sample points (minimum 0.03725 J/kg/K² at 128.4
+    GPa, 3325.0 K; 79705 skipped: frozen stencil or refusing read), and on 400 of them at load (seed in the block): sample
+    evidence, not a proof (s-read §3.4)'
   floor_band:
     origin: 'the floor node''s own compressibility: |dρ|/ρ ≤ (1e5 Pa)/K_T, K_T = ρ·∂P/∂ρ over the first two P nodes at fixed
       T (§3.1, r2 N2)'
@@ -888,6 +899,7 @@ assemblage:
       table_builders:
       - a920db596415d90972f40c81c6905e6e884dccb738611f2e6491e3ebb3501a3c
       tool_sha256: dee8fb899abcede4c26a2a2d638369f24e897dbd5127f99a23ddc02cf25553ee
+    read: entropy
   pins:
     status: pinned
     table_blob: 5fd586dc1db9eb6845b6be248aa3d26bebc56fa5
@@ -904,7 +916,7 @@ assemblage:
     extension_tool:
       blob: 1867138f1675f3c2472b14e71472a20713882301
       sha256: 8dd7def13e8456675837727dcbfd16c30a0136018af697802b7748dc0435c8dc
-    compact_sha256: 39aa36c3a79f8c9342f3f2facec0e8412b723ab37ed019e080511c338e7b3f3b
+    compact_sha256: c226b04dc325af2a81ea84214aa4f0296e96aa117086b1c39e7d566dffc88dd2
     rebuilt: []
 phases:
 - id: slb_assemblage
