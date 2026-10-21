@@ -243,8 +243,8 @@ class Mutants(_Cases):
         """M2 retired (r2 cfeaf0e3 on amendment 2): with §1 a row step's height comes from the reading cell, so the
         stencil a presence is taken with matters only where the read itself steps. Invariant instead: wherever the s_k
         presence and the T-derived presence differ (T_k ± 1e-4, every node within 3 of the step's row, all three
-        tables), the reading cell's read has no step at x_s — h is its slope share over 2·SWAP_EPS to 1e-12·ρ (measured
-        ≤ 4.4e-14) — and λ = 0; the count is printed."""
+        tables), the reading cell's read has no step at x_s — h is its slope share over 2·SWAP_EPS (≤ 3.7e-9·ρ, not 0) to
+        1e-12·ρ (measured ≤ 4.4e-14) — so λ·D ≤ 1e-12·ρ, λ = 0 measured (r2 47410c19); the count is printed."""
         n = 0
         for rid in (BSE, "silicate_slb_earth_dmm_wh2005", KHAN):
             v = _fresh(rid)
