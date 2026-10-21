@@ -48,8 +48,12 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: structure-trigger commit, the audit text fixes, the window-edge item and tc-fold (whose engine/ tree was 60b7c102);
 #: re-declared in the same commit as each engine/ change (the 10-16 ruling; 68 n5). Stage A composition: the C145 NaN
 #: fix (1c25dab3 … d502785f, engine/ only) replayed on tc-fold-sA with the ρ line (no engine/ change), declared once at
-#: the composed tip (directing 10-20): bf6ff298.
-ORACLE_ENGINE_TREE = "bf6ff298c969feaefaeb9dc95b7e9a1ff1b149d6"
+#: the composed tip (directing 10-20): bf6ff298. Stage A's candidate tip (rev3d 50f044c0 + the triage-fixes stack,
+#: directing 10-21 (b)): engine/ changes only by 1f3a028c's output-key rename basal_layer_thickness_km →
+#: basal_layer_thickness_solved_km in interior.py, plus test and tool files (test_ice_giant + its anchor's key,
+#: test_hobby_table, test_basal_layer, tools/basal_sulphur_scan); the four declared records equal ff6ce10f's with that
+#: key mapped and solve_id aside: da0b9372.
+ORACLE_ENGINE_TREE = "da0b937263dd880f8593b0b2176ccff9baf89534"
 REPO = Path(lm._ENGINE).parent
 
 
