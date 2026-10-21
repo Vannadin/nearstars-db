@@ -577,6 +577,44 @@ class SolveId(unittest.TestCase):
                                                                             v.t_pot, v.p_stop, v.p_floor, moved)}), base)
 
 
+class LidEvents(unittest.TestCase):
+    def test_switched_lid_lands_the_onset_as_switched_off(self):
+        """Review 2 S-C-02: an assemblage-view lid gets its layer events, so on Earth at a hot T_pot (1750 K, where the
+        lid's T_ad crosses the peridotite solidus) the switched lid lands the same onset events as the switch-off
+        solve's lid. The lid pass runs through solve's own wiring (_lid_wiring) with the solve's options. Before the
+        fix an AssemblageView lid (no .mat) passed no events and landed none, and this test fails."""
+        import math
+        from solver import lid, rhs
+        reg = mr.load()
+        b = body("earth")
+        b = dataclasses.replace(b, surface=dataclasses.replace(b.surface, t_pot=1750.0))
+        lt = b.layers[-1]
+        self.assertEqual(lt.thermal, "conductive")
+        landed = {}
+        for sil in (False, True):
+            views = sv._views(b, registry=reg, silicate=sil)
+            lv = views[lt.id]
+            if sil:
+                self.assertIsInstance(lv, ma.AssemblageView)
+            opt = context.Options(silicate_records=sil)
+            M, R = b.mass, 6.371e6
+            rs = rhs.r_scale_of(M, 3.0 * M / (4.0 * math.pi * R ** 3))
+            res = lid.lid_pass(lv, M, R, lt.extent.value, sv.surface_floor(b, lv) if b.surface.p_s is None
+                               else b.surface.p_s, b.surface.t_s, 1750.0, rs,
+                               rhs.PassOptions(rtol=opt.rtol, eps=opt.eps, r_floor_frac=opt.r_floor_frac,
+                                               max_steps=opt.max_steps_solve,
+                                               event_min_progress=opt.event_min_progress, fixed_dr=opt.fixed_dr,
+                                               event_rewalks=opt.event_rewalks,
+                                               event_restarts_step=opt.event_restarts_step,
+                                               event_restarts_run=opt.event_restarts_solve),
+                               lid_iters=opt.lid_iters, lid_t_tol=opt.lid_t_tol, layer_id=lt.id,
+                               **sv._lid_wiring(lv, True))
+            self.assertIsInstance(res, lid.LidResult, (sil, res))
+            landed[sil] = [e[0] for e in res.events if e[0].startswith("onset:")]
+        self.assertTrue(landed[False], "the switch-off lid lands the solidus onset at 1750 K")
+        self.assertEqual(landed[True], landed[False])
+
+
 class SwitchScan(unittest.TestCase):
     def test_registry_for_parses_no_record_with_the_switch_off(self):
         """Review 2 SP-S-05: registry_for, run on every _solve, decides which files are record names with the switch
