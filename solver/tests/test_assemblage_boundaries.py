@@ -1018,6 +1018,10 @@ class Envelope(unittest.TestCase):
                         bad.append((v.ps[ia], t, got[2]))
             self.assertEqual(bad, [], rid)
 
+    # E24 (68): ρ edge-window envelope breach, fallback 19:29 (owner direction 2026-10-21; the edge-span rules A/A′/A″/
+    # single-edge all failed the truth gate). E24's fix commit removes this decorator in the same commit (directing);
+    # until then unittest reports an «unexpected success» if anything else makes the test pass.
+    @unittest.expectedFailure
     @unittest.skipUnless(_shipped(), "no shipped assemblage record with its table (the engine branch without records)")
     def test_rho_rises_where_the_table_rises(self):
         """Directing 10-17: along P at fixed T, ρ at consecutive cell centres rises wherever the table's nodes of both
