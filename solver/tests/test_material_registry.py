@@ -409,5 +409,17 @@ class DirectTable(TRegistry):
         self.assertIsInstance(v.state(5.0e9, 450.0), st.Stop)                  # past the grid: refused by its edge
 
 
+
+class P4Probes(unittest.TestCase):
+    def test_a_phase_refusing_at_its_own_window_middle_is_reported(self):
+        """Review 2 M-C2-03: P4's «answers nowhere» reports a phase whose own window refuses at its middle (the case it
+        exists for); it skips only a middle another phase holds. Before the fix a refusing _phase_at was skipped, so an
+        inverted window answered nowhere unreported, and this test fails. Control: GOOD answers at its middle."""
+        from solver import material_p4 as p4
+        bad = plant(lambda d: PH(d)["window"].update(p_min=5.0e12, p_max=1.0e12))
+        got = p4.answers_inside(bad)
+        self.assertEqual([g[0] for g in got], ["toy_solid"])
+        self.assertEqual(p4.answers_inside(copy.deepcopy(GOOD)), [])
+
 if __name__ == "__main__":
     unittest.main()
