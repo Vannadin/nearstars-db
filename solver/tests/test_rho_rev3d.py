@@ -239,14 +239,32 @@ class Mutants(_Cases):
             bad = [1 for _x2, lo, hi in _p1(v0, k, sets_m) if (lo[0] is None) != (hi[0] is None)]
         self.assertTrue(bad)
 
-    def test_m2_row_steps_from_t(self):
-        """M2: _row_step_p re-deriving ib from T (the stencil gains the holding row at T_k) — P1 or P3 red."""
-        real = ma.AssemblageView._row_step_p
-        w = _fresh(KHAN)
-        w._fall_sets = B_SETS
-        with mock.patch.object(type(w), "_row_step_p", lambda self, i, t, ib=None: real(self, i, t)):
-            red = [p for p in B_POINTS if _r2(w, p, 2300.0) > 1e-9]
-        self.assertTrue(red)
+    def test_m2_retired_presence_invariant(self):
+        """M2 retired (r2 cfeaf0e3 on amendment 2): with §1 a row step's height comes from the reading cell, so the
+        stencil a presence is taken with matters only where the read itself steps. Invariant instead: wherever the s_k
+        presence and the T-derived presence differ (T_k ± 1e-4, every node within 3 of the step's row, all three
+        tables), the reading cell's read has no step at x_s — h is its slope share over 2·SWAP_EPS to 1e-12·ρ (measured
+        ≤ 4.4e-14) — and λ = 0; the count is printed."""
+        n = 0
+        for rid in (BSE, "silicate_slb_earth_dmm_wh2005", KHAN):
+            v = _fresh(rid)
+            for i, (_c, kr) in enumerate(v._row_steps):
+                for k in range(max(kr - 3, 1), min(kr + 4, len(v.ts) - 1)):
+                    for t in (v.ts[k] - 1e-4, v.ts[k] + 1e-4):
+                        a, b = v._row_step_p(i, t, k), v._row_step_p(i, t)
+                        if (a is None) == (b is None):
+                            continue
+                        n += 1
+                        ib = min(max(sum(1 for q in v.ts if q <= t) - 1, 0), len(v.ts) - 2)
+                        xs = math.log(a or b)
+                        lo, hi = v._edge_read(xs - ma.SWAP_EPS, t, ib, True), v._edge_read(xs + ma.SWAP_EPS, t, ib, False)
+                        if lo is not None and hi is not None:
+                            share = 0.5 * (lo[1] + hi[1]) * 2.0 * ma.SWAP_EPS
+                            self.assertLessEqual(abs(hi[0] - lo[0] - share), 1e-12 * lo[0], (rid, i, k, t))
+                        lam = [z[1] for z in v._row_step_lambdas(t, k, ib, xs - 1e-3, xs + 1e-3) if abs(z[0] - xs) < 1e-12]
+                        self.assertTrue(all(x == 0.0 for x in lam), (rid, i, k, t, lam))
+        print(f"M2 invariant: {n} presence differences, no step (h = the slope share) and λ = 0 at each")
+        self.assertGreater(n, 0)
 
     def test_m3_no_sliver_subdivision(self):
         """M3: no sliver subdivision (W_S 0) — P4 red."""
@@ -443,3 +461,49 @@ class Amendment2Build(unittest.TestCase):
             st, ab = self._scan(_fresh(BSE))
         self.assertEqual(ab, [])
         self.assertEqual(len(st), 3)
+
+
+class _TwoSteps:
+    """A stand-in view for _row_step_lambdas: R(x) = 4000 + x·1 (a gentle slope) + 100 past each row step it shows."""
+    ts = [1000.0, 1050.0, 1100.0]
+    cut_counts = {}
+
+    def __init__(self, steps, shown=None):
+        self.steps, self.shown = steps, steps if shown is None else shown
+        self._row_steps = [None] * len(self.shown)
+
+    def _row_step_p(self, i, t, ib=None):
+        return math.exp(self.shown[i])
+
+    def _edge_read(self, x, t, ib, below):
+        return (4000.0 + x + 100.0 * sum(1 for z in self.steps if x > z), 1.0)
+
+
+class Amendment2Review(unittest.TestCase):
+    """68's HOLD on 8aa2fcea: B2 the sub-bridge bounded by the other row steps; B1 §3 at the merged set."""
+
+    def test_p11_two_tall_steps_each_land_fully(self):
+        """P11 (68 B2 / r2 cfeaf0e3): two well-separated upward steps (h 100 each, local falls ≈ 0.01) in one swap-free
+        interval: each lands at λ = 1. Mutant: the swap-only cut (the other step not bounding the sub-bridge: shown
+        alone, its jump inside Rng′) — λ ≈ ½."""
+        lo, hi, s1, s2 = 23.0, 23.03, 23.01, 23.02
+        got = ma.AssemblageView._row_step_lambdas(_TwoSteps([s1, s2]), 1025.0, 1, 0, lo, hi)
+        self.assertEqual([round(z[1], 12) for z in got], [1.0, 1.0], got)
+        for s in (s1, s2):
+            (z,) = ma.AssemblageView._row_step_lambdas(_TwoSteps([s1, s2], shown=[s]), 1025.0, 1, 0, lo, hi)
+            self.assertLess(z[1], 0.6, z)
+
+    def test_b1_the_merged_set_checks_the_reads_landing(self):
+        """bse cells 9–10 at ln P 22.3834 (row step 16): sets_from records no «row step not fully landed by the read»
+        STOP; with the read's λ forced to ½ it does, at the node's samples."""
+        v = _fresh(BSE)
+        per = {ib: rfb.cell_falls(v, ib, nsub=NSUB, xr=(22.375, 22.392)) for ib in (9, 10)}
+        stops = []
+        rfb.sets_from(v, per, [], stops)
+        self.assertEqual([s for s in stops if s.get("why") == "row step not fully landed by the read"], [])
+        rl = ma.AssemblageView._row_step_lambdas
+        with mock.patch.object(ma.AssemblageView, "_row_step_lambdas",
+                               lambda self, *a: [(z[0], min(z[1], 0.5), z[2], z[3]) for z in rl(self, *a)]):
+            stops = []
+            rfb.sets_from(_fresh(BSE), per, [], stops)
+        self.assertTrue([s for s in stops if s.get("why") == "row step not fully landed by the read"], stops[:3])
