@@ -1150,6 +1150,10 @@ S_EDGE_TAPER = True
 #: the overlap mutant (the delta's §2): half-width ΔT for every event and the nearer event chosen, so two partial zones
 #: meet with S < 1 on both sides and x̂ breaks C⁰ there. False in the engine
 S_TAPER_OVERLAP = False
+#: delta 3 (68, fdae174c) mutants: S_TAPER_SPLIT — membership and side at the read-T x_b with H at x̂ (a42e6796's split
+#: centre); S_TAPER_NO_DW — the zone without its Δ_w cap. Both False in the engine
+S_TAPER_SPLIT = False
+S_TAPER_NO_DW = False
 
 
 def _capped(se, s_inf):
@@ -2030,8 +2034,11 @@ class AssemblageView(mv.RecordView):
         `near` in that row's own partition, before the one T interpolation (_row_blend)."""
         n_t = len(self.ts)
         rows = {}
-        if f == "s" and near and S_EDGE_TAPER:            # note 5 amendment 1: the window held near the curve's events
-            near = self._tapered(near, t)
+        if f == "s" and S_EDGE_TAPER:                     # note 5 amendment 1: the window held near the curve's events
+            if S_TAPER_SPLIT:
+                near = self._tapered(near, t) if near else near
+            else:                                         # delta 3: one centre — membership, H and side all at x̂
+                sides, near = self._one_centre(x, t, sides, near)
         for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1):
             corner = k in (ib, ib + 1)
             r = self._region(k, sides, x)
@@ -2050,6 +2057,40 @@ class AssemblageView(mv.RecordView):
             rows[k] = v
         return _cubic1_t(t, self.ts, _Seq(rows, n_t), ib)
 
+    def _one_centre(self, x, t, sides, near):
+        """Delta 3 (68, fdae174c): every edge with a read-T position whose T is inside one of its zones has its window
+        wholly at x̂ — the (c′) list holds it when |x − x̂| < w(x̂), with x̂ and w(x̂), and its side is x's against x̂;
+        edges outside their zones keep the read's list entry and side. Returns (sides, near)."""
+        tv = t.v if isinstance(t, Dual) else t
+        xv = x.v if isinstance(x, Dual) else x
+        zoned = {}
+        for c in sides:
+            if c.kind != "edge":
+                continue
+            zs = [z for z in self._taper_zones(c) if abs(tv - z[0]) < z[1]]
+            if not zs:
+                continue
+            if S_TAPER_OVERLAP and len(zs) > 1:          # the overlap mutant: the nearer of two overlapping zones
+                zs = [min(zs, key=lambda z: abs(tv - z[0]))]
+            pe = c.p_b_ext(t, self._reach)
+            if pe is None:
+                continue
+            te, half, xe = zs[0]
+            d = t - te
+            u = (d if tv >= te else -d) / half
+            zoned[c] = (_log(pe) - xe) * (u * u * (3.0 - 2.0 * u)) + xe
+        if not zoned:
+            return sides, near
+        sides = dict(sides)
+        out = [e for e in near if e[0] not in zoned]
+        for c, xh in zoned.items():
+            xhv = xh.v if isinstance(xh, Dual) else xh
+            sides[c] = -1 if xv < xhv else 1
+            w = self._width(xh)
+            if abs(xv - xhv) < (w.v if isinstance(w, Dual) else w):
+                out.append((c, xh, w))
+        return sides, out
+
     def _taper_zones(self, c):
         """Note 5 amendment 1 delta 1: [(T_e, Δ_e, x_b(T_e))] for curve c's T events inside the table where its window
         exists — t0, t1, t0 − reach, t1 + reach — with Δ_e = min(ΔT, ½ · the gap to the curve's nearest other event)
@@ -2065,9 +2106,32 @@ class AssemblageView(mv.RecordView):
                     continue
                 gaps = [abs(e - q) for j, q in enumerate(ev) if j != i]
                 half = dT if S_TAPER_OVERLAP else min([dT] + [0.5 * g for g in gaps])
+                if not (S_TAPER_OVERLAP or S_TAPER_SPLIT or S_TAPER_NO_DW):
+                    half = min(half, self._zone_dw(c, e, _log(pe), half))
                 got.append((e, half, _log(pe)))
             self._zones_memo[c] = got
         return got
+
+    def _zone_dw(self, c, e, xe, cap):
+        """Delta 3's Δ_w(e) ≤ cap: the largest Δ with max over |T − e| ≤ Δ of |x_b(T) − x_b(e)| ≤ ½ · min w over that
+        zone (x_b the read's own placement, ln P_b_ext), by bisection on 48 samples of each trial zone; so |x̂ − x_b| ≤ w/2
+        and no read outside both windows changes side. Fixed per view (through _taper_zones)."""
+        def ok(d):
+            dev, wmin = 0.0, float("inf")
+            for j in range(-24, 25):
+                pe = c.p_b_ext(e + d * j / 24.0, self._reach)
+                if pe is None:
+                    continue
+                xb = _log(pe)
+                dev, wmin = max(dev, abs(xb - xe)), min(wmin, self._width(xb))
+            return dev <= 0.5 * wmin
+        if ok(cap):
+            return cap
+        lo, hi = 0.0, cap
+        for _ in range(40):
+            mid = 0.5 * (lo + hi)
+            lo, hi = (mid, hi) if ok(mid) else (lo, mid)
+        return lo
 
     def _tapered(self, near, t):
         """The s read's (c′) list with each edge's x_b moved to x̂ inside its zones (note 5 amendment 1): x̂ = x_b(T_e) +

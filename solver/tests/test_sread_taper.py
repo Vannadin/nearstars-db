@@ -79,5 +79,51 @@ class EdgeTaper(unittest.TestCase):
         self.assertGreater(compared, 0)
 
 
+@mock.patch.object(ma, "RHO_BRIDGE", False)
+class OneCentre(unittest.TestCase):
+    """Delta 3 (68, artifacts b2f12b69): one centre x̂ for membership, H and side, and the zone cap Δ_w.
+    - The split-centre mutant (S_TAPER_SPLIT: membership and side at x_b, H at x̂ — a42e6796) steps dT/dP by 17 % at bse
+      x = 25.401553779105, T = 1775 K (curve 5's window edge inside its 1750 K zone); the rule is continuous there.
+    - Δ_w keeps |x̂ − x_b| ≤ w/2 over every zone: bse curve 252 (the fastest edge, Δ_w 1.75 K at 2250 K) holds it;
+      with Δ_w removed (S_TAPER_NO_DW) it breaks. No readable point lies between the two windows on that edge (the read
+      refuses where x̂ and x_b part by more than 2w), so the mutant is read off the guarantee itself."""
+    S_X, S_T = 25.401553779105, 1775.0
+
+    def _jump(self):
+        v = _view()
+        a, b = v._solid(math.exp(self.S_X), self.S_T - 1e-8), v._solid(math.exp(self.S_X), self.S_T + 1e-8)
+        return abs(b[1] - a[1]) / abs(a[1])
+
+    def test_one_centre_continuous(self):
+        self.assertLessEqual(self._jump(), 1e-7)
+
+    def test_mutant_split_centre(self):
+        with mock.patch.object(ma, "S_TAPER_SPLIT", True):
+            self.assertGreater(self._jump(), 1e-2)
+
+    @staticmethod
+    def _worst_sep(v, cid=252):
+        c = next(c for c in v._cut if c.id == cid)
+        worst = 0.0
+        for te, half, xe in v._taper_zones(c):
+            for k in range(-40, 41):
+                t = te + half * k / 40.5
+                pe = c.p_b_ext(t, v._reach)
+                if pe is None:
+                    continue
+                xb = math.log(pe)
+                u = abs(t - te) / half
+                xh = xe + (xb - xe) * u * u * (3.0 - 2.0 * u)
+                worst = max(worst, abs(xh - xb) / v._width(xb))
+        return worst
+
+    def test_dw_keeps_half_a_window(self):
+        self.assertLessEqual(self._worst_sep(_view()), 0.5 + 1e-9)
+
+    def test_mutant_no_dw(self):
+        with mock.patch.object(ma, "S_TAPER_NO_DW", True):
+            self.assertGreater(self._worst_sep(_view()), 0.5)
+
+
 if __name__ == "__main__":
     unittest.main()
