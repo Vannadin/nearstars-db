@@ -332,7 +332,14 @@ def registry_for(body, options, loaded=None):
         names = {f.stem for f in files if not _file_requires_switch(f)}
     if not any(l.material in names for l in body.layers):
         return None
-    reg = mr.load() if loaded is None else loaded
+    if loaded is None:                              # review 2 SP-M-06: only the records this body can read
+        only = {l.material for l in body.layers if l.material in names and l.material not in SILICATE_ROUTES}
+        if options.silicate_records:
+            only |= {r for r in SILICATE_ROUTES.values() if r is not None} | set(SILICATE_SWITCHED_RECORDS)
+        decl = options.silicate_records and any(l.material == "silicate_decl" for l in body.layers)
+        reg = mr.load(only=None if decl else only)  # silicate_decl matches a key across every assemblage record
+    else:
+        reg = loaded
     if isinstance(reg, mr.LoadStop):
         return refusals.make("input.material_registry", f"{body.name}.materials", load_stop=reg.id,
                              detail=result.plain(dict(reg.evidence)))
