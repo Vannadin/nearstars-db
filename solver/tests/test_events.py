@@ -92,6 +92,24 @@ class GrazeRecord(unittest.TestCase):
         self.assertTrue(events.onset_graze_tag(mon.best, 20.0))
         self.assertFalse(events.onset_graze_tag(mon.best, 5.0))
 
+    def test_monitor_reads_the_named_t_index(self):
+        """Review 2 SP-S-13: GrazeMonitor takes the state component it reads T at (t_index, default 3, a segment's T),
+        as step_cap and band_check do, so the lid hands it T_ad by index (t_index=2) instead of rebuilding each state
+        with y[2] copied into slot 3. Lid-like states: T_ad (y[2]) grazes the curve, the profile T (y[3]) stays 50 K
+        away. t_index=2 finds the graze exactly as the old monitor fed the rebuilt tuple; the default reads y[3] and
+        finds none. Before the fix GrazeMonitor took no t_index, and this test fails."""
+        view = self._view()
+        ps = [self.P0 * (0.9 + 0.2 * i / 40) for i in range(41)]
+        states = [(0.0, p, 1600.0 + 2e-8 * p, 1650.0 + 2e-8 * p, 0.0, 0.0) for p in ps]
+        lid_mon, old, seg = events.GrazeMonitor(view, t_index=2), events.GrazeMonitor(view), events.GrazeMonitor(view)
+        for k, y in enumerate(states):
+            lid_mon(float(k), y)
+            old(float(k), (y[0], y[1], y[2], y[2], *y[4:]))
+            seg(float(k), y)
+        self.assertIsNotNone(lid_mon.best)
+        self.assertEqual(lid_mon.best, old.best)
+        self.assertIsNone(seg.best)
+
     def test_control_far_curve_is_not_a_graze(self):
         # the same shape 5 K away: the extremum is outside GRAZE_K, so no record
         view = Synthetic(lambda p: 1600.0 + 2e-8 * p - 5.0 - 1e-21 * (p - self.P0) ** 2)

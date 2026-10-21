@@ -523,18 +523,21 @@ class Graze:
 
 class GrazeMonitor:
     """Node rule of the old detector (interior.py:1432–1452 at 097a8aa3), kept: per curve, the last two nodes; the
-    middle one of three is a graze when Δg changes sign there and |g| ≤ GRAZE_K. The closest graze is kept."""
+    middle one of three is a graze when Δg changes sign there and |g| ≤ GRAZE_K. The closest graze is kept.
+    `t_index`: the state component T is read at, as step_cap and band_check take it (review 2 SP-S-13): a segment's
+    T, y[3] (the default), or T_ad, y[2], for the lid, whose onset events watch T_ad."""
 
-    def __init__(self, mat, p_stop: float = 0.0):
+    def __init__(self, mat, p_stop: float = 0.0, t_index: int = 3):
         self.mat = mat
         self.p_stop = p_stop
+        self.t_index = t_index
         self.hist: dict = {}
         self.best: Graze | None = None
         self.joins = sorted(curve_seams(mat))
         self.branch = None
 
     def __call__(self, m: float, y: tuple) -> None:
-        p, t = y[1], y[3]
+        p, t = y[1], y[self.t_index]
         oc = getattr(self.mat, "onset_curves", None)
         if oc is None or t <= 0.0:
             return
