@@ -2920,6 +2920,7 @@ class HandOver:
 
     def __init__(self, record, table, slb_id, p_end=None):
         self.material_id = record["id"]
+        self.record = record                    # review 2 S-C-01 (68 n1): solve._material_bytes hashes it
         self.p_end = float(p_end) if p_end is not None else P_HANDOVER_END   # the taper's end: 1.5·p_dataset
         prm = record["phases"][0]["eos"]["params"]
         self.rho0, self.k0 = float(prm["rho0"]["value"]), float(prm["k0"]["value"])

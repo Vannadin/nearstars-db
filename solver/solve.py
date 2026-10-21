@@ -358,7 +358,6 @@ def _assemblage_view(body, layer, rid, p_stop, registry):
     hrec = registry.get(hid) if hid else None
     if hrec is not None and not isinstance(hrec, mr.LoadStop) and rid in registry.tables.get(hid, {}).get("blocks", {}):
         ho = ma.HandOver(thaw(hrec), registry.tables[hid], rid, 1.5 * float(got["assemblage"]["p_dataset"]))
-        ho.record = thaw(hrec)                  # review 2 S-C-01: _material_bytes hashes it (set here, not in the class)
     return ma.view(thaw(got), table, body.surface.t_pot or 0.0, p_stop, floor, ho), None
 
 

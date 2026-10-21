@@ -530,13 +530,11 @@ class SolveId(unittest.TestCase):
             hrec = thaw(reg.get(hid))
             p_end = v.handover.p_end
             same = ma.HandOver(thaw(reg.get(hid)), reg.tables[hid], rid, p_end)
-            same.record = thaw(reg.get(hid))
             self.assertEqual(sv._material_bytes({**views, lid: ma.view(thaw(reg.get(rid)), reg.tables[rid],
                                                                          v.t_pot, v.p_stop, v.p_floor, same)}), base)
             prm = hrec["phases"][0]["eos"]["params"]
             prm["rho0"] = {**prm["rho0"], "value": float(prm["rho0"]["value"]) * 1.001}
             moved = ma.HandOver(hrec, reg.tables[hid], rid, p_end)
-            moved.record = hrec
             self.assertNotEqual(sv._material_bytes({**views, lid: ma.view(thaw(reg.get(rid)), reg.tables[rid],
                                                                             v.t_pot, v.p_stop, v.p_floor, moved)}), base)
 
