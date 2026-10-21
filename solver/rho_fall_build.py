@@ -58,24 +58,24 @@ class Unresolved(Exception):
     pass
 
 
-_BA = {}
-
-
 def _builder():
     """The records generator's own module (rewrite/phase2-records/build_assemblage.py, BurnMan 2.1.0), from
-    NS_BUILD_ASSEMBLAGE (its directory); imported only when a downward swap jump needs its ΔG."""
-    if "m" not in _BA:
-        import importlib.util
-        import os
-        d = os.environ.get("NS_BUILD_ASSEMBLAGE")
-        if not d:
-            _BA["m"] = None
-        else:
-            spec = importlib.util.spec_from_file_location("build_assemblage", os.path.join(d, "build_assemblage.py"))
-            m = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(m)
-            _BA["m"] = m
-    return _BA["m"]
+    NS_BUILD_ASSEMBLAGE (its directory); imported only when a downward swap jump needs its ΔG. Kept in sys.modules under
+    a private name (the import system's own table, not module state of this file: phase1-design §A6), so it is executed
+    once per process."""
+    import importlib.util
+    import os
+    import sys
+    d = os.environ.get("NS_BUILD_ASSEMBLAGE")
+    if not d:
+        return None
+    name = "_ns_build_assemblage"
+    if name not in sys.modules:
+        spec = importlib.util.spec_from_file_location(name, os.path.join(d, "build_assemblage.py"))
+        m = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(m)
+        sys.modules[name] = m
+    return sys.modules[name]
 
 
 def _two_sides(m, bulk, kl, kr, p, t, warm):
