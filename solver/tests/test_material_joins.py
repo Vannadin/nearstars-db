@@ -322,6 +322,33 @@ class BlendGate(unittest.TestCase):
         self.assertIsNotNone(mr.source_conflicts(self._blend(band / 4.0), "toy.yaml"))
         self.assertIsNone(mr.source_conflicts(self._blend(band / 4.0, kind="cross_check"), "toy.yaml"))
 
+    def test_a_non_finite_sigma_stops_the_gate(self):
+        """Review 2 M-C2-01: a node whose σ is not finite (source_sigma's NaN when a moved-parameter view refuses) is a
+        STOP naming the node, wherever it sits on the grid: Python's max kept a leading NaN, so max_r was NaN and
+        «NaN > k» let the gate pass, masking every other node too. Here the first node's σ is NaN and a later node's
+        r is far above k; before the fix the gate passed (None), and this test fails. Control: all finite, it fires
+        on the high node as before."""
+        from unittest import mock
+        from solver import material_registry as mr
+        rec = self._blend(1.0)
+        real = mj.source_sigma
+        seen = []
+
+        def nan_first(view, pi, sid, p, t):
+            seen.append((p, t))
+            return math.nan if (p, t) == seen[0] else 1e-6
+        with mock.patch.object(mj, "source_sigma", nan_first):
+            got = mr.source_conflicts(rec, "toy.yaml")
+        self.assertIsNotNone(got)
+        self.assertEqual(got.id, "material.source_conflict")
+        self.assertEqual(got.evidence["node"], seen[0])
+        self.assertIn("not finite", got.evidence["sigma_allow_formed"])
+        with mock.patch.object(mj, "source_sigma", lambda *a: 1e-6):
+            ctrl = mr.source_conflicts(rec, "toy.yaml")
+        self.assertIsNotNone(ctrl)
+        self.assertGreater(ctrl.evidence["max_r"], mr.K_GATE)
+        self.assertIs(mj.source_sigma, real)
+
     def test_a_node_a_side_cannot_answer_stops_the_gate(self):
         """68 H1: one planted Stop node inside the grid is material.source_conflict naming the side, never skipped."""
         from unittest import mock
