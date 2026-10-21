@@ -2297,7 +2297,7 @@ class AssemblageView(mv.RecordView):
                 memo.append([_log(pe) for c in self._cut if c.kind == "swap" for pe in (c.p_b_ext(t, self._reach),)
                              if pe is not None])
             return memo[0]
-        pieces = [self._fall_piece(x, t, ib, k, sets, cut_swaps)[0] for k in (ib, ib + 1)]
+        pieces = [self._fall_piece(x, t, ib, k, sets, cut_swaps, own)[0] for k in (ib, ib + 1)]
         if pieces[0] is None and pieces[1] is None:
             return own
         tau = min(max((t - self.ts[ib]) / (self.ts[ib + 1] - self.ts[ib]), 0.0), 1.0)
@@ -2306,14 +2306,16 @@ class AssemblageView(mv.RecordView):
         r1 = own if pieces[1] is None else pieces[1]
         return (1.0 - th) * r0 + th * r1
 
-    def _fall_piece(self, x, t, ib, k, sets, cut_swaps):
+    def _fall_piece(self, x, t, ib, k, sets, cut_swaps, own=None):
         """Piece k of _rho_fall read from cell ib: (value or None, the interval (lo, hi) it bridges or None, the landed
         list or None when x is in no interval, the row step in transition {x_s, lam} or None; `cut_swaps` a callable
         giving the cut swaps' ln P_b_ext(T)). rev3d D1/D2: its discrete inputs are fixed per node — the interval is S_k's,
         the row steps' presence taken with cell k's stencil s_k = min(k, n_T − 2) from either cell; amendment 2 §1: a
         row step's height (its sign) from the reading cell ib's own read; §2: a row step lands with λ = S(clamp(h/h₀, 0,
         1)) (_row_step_lambdas) — λ = 1 landed (split), λ = 0 bridged, between them the piece is (1 − λ)·unsplit +
-        λ·split; at most one step per piece in transition, two a named STOP; cut swaps always landed."""
+        λ·split; at most one step per piece in transition, two a named STOP; cut swaps always landed. `own`: the read's
+        own value at x (with its Dual), standing in where a blended piece leaves x to the read (68 B3 on 8aa2fcea);
+        None (the P1 tools): the edge read at x."""
         on = 2.0 * SWAP_EPS * (1.0 + 1e-6)
         sk = min(k, len(self.ts) - 2)
         for a, b in sets.get(k, ()):
@@ -2342,15 +2344,15 @@ class AssemblageView(mv.RecordView):
             got1 = self._piece_with(x, t, ib, a, b, cs + full + [xs_t])
             if got0 is None and got1 is None:
                 continue
-            own = []
+            mine = [] if own is None else [own]
 
             def val(g):
                 if g is not None and g[0] is not None:
                     return g[0]
-                if not own:                              # R itself where a piece leaves x to the read
+                if not mine:                             # R itself where a piece leaves x to the read
                     e = self._edge_read(x.v if isinstance(x, Dual) else x, t, ib, below=True)
-                    own.append(None if e is None else e[0])
-                return own[0]
+                    mine.append(None if e is None else e[0])
+                return mine[0]
             v0, v1 = val(got0), val(got1)
             info = {"x_s": xs_t, "lam": lam}
             base = got0 if got0 is not None else got1
@@ -2396,32 +2398,40 @@ class AssemblageView(mv.RecordView):
         λ·Rng > 1e-12·ρ (r2 877c7679, the floor): below it λ = 0, counted in cut_counts["row_step_floored"]. Coincident
         steps (P_b equal to 1e-9) are one. The build calls this for its rule-2 «absorbed» check (§3)."""
         on = 2.0 * SWAP_EPS * (1.0 + 1e-6)
-        out, ends = [], None
+        present = []                                     # (x_s, coincident ones once)
         for i in range(len(self._row_steps)):
             q = self._row_step_p(i, t, sk)
             if q is None:
                 continue
             xs_ = _log(q)
-            if not lo < xs_ <= hi + on or any(abs(xs_ - z[0]) <= 1e-9 for z in out):
-                continue
-            a_ = self._edge_read(xs_ - SWAP_EPS, t, ib, below=True)
-            b_ = self._edge_read(xs_ + SWAP_EPS, t, ib, below=False)
+            if lo < xs_ <= hi + on and not any(abs(xs_ - z) <= 1e-9 for z in present):
+                present.append(xs_)
+        out, reads = [], {}
+
+        def r(x_, below):
+            if (x_, below) not in reads:
+                e = self._edge_read(x_, t, ib, below=below)
+                reads[(x_, below)] = None if e is None else e[0]
+            return reads[(x_, below)]
+        ups = [z for z in present if (lo_r := r(z - SWAP_EPS, True)) is not None
+               and (hi_r := r(z + SWAP_EPS, False)) is not None and hi_r > lo_r]
+        for xs_ in sorted(present):
+            a_, b_ = r(xs_ - SWAP_EPS, True), r(xs_ + SWAP_EPS, False)
             if a_ is None or b_ is None:
                 continue
-            if ends is None:
-                ends = [None if e is None else e[0]
-                        for e in (self._edge_read(lo, t, ib, below=True), self._edge_read(hi, t, ib, below=False))]
-            # amendment 2 delta 1 (68; r2 877c7679's sub-bridge): Rng′, the fall around the step on the sub-bridge, its own
-            # jump excluded — max(|R(x_s − ε) − R(lo′)|, |R(hi′) − R(x_s + ε)|)
-            # (a side counts only where the sub-bridge extends past the step on it: an interval ending on the step's near
-            # side — the build's rule-2 end — has no far side inside it, and R(hi) there is the step's own foot)
-            rng = max(abs(a_[0] - ends[0]) if ends[0] is not None and lo < xs_ - SWAP_EPS else 0.0,
-                      abs(ends[1] - b_[0]) if ends[1] is not None and hi > xs_ + SWAP_EPS else 0.0)
-            h = b_[0] - a_[0]
-            h0 = max(1e-6 * abs(a_[0]), 2.0 * rng)
+            # the step's sub-bridge (68 B2 / r2 cfeaf0e3 on 8aa2fcea): bounded by the interval's ends and by the nearest
+            # other present upward row step on each side (h > 0 in the reading cell: non-circular), so its jump stays out
+            # of this step's Rng′
+            lo_s = max([lo] + [z + SWAP_EPS for z in ups if z < xs_])
+            hi_s = min([hi] + [z - SWAP_EPS for z in ups if z > xs_])
+            left = abs(a_ - r(lo_s, True)) if lo_s < xs_ - SWAP_EPS and r(lo_s, True) is not None else 0.0
+            right = abs(r(hi_s, False) - b_) if hi_s > xs_ + SWAP_EPS and r(hi_s, False) is not None else 0.0
+            rng = max(left, right)                       # Rng′: the fall around the step, its own jump excluded
+            h = b_ - a_
+            h0 = max(1e-6 * abs(a_), 2.0 * rng)
             u = min(max(h / h0, 0.0), 1.0)
             lam = ROW_STEP_LAMBDA(u)
-            if 0.0 < lam < 1.0 and lam * rng <= 1e-12 * abs(a_[0]):
+            if 0.0 < lam < 1.0 and lam * rng <= 1e-12 * abs(a_):
                 lam = 0.0                                # below the floor: bridged (≤ 1e-12·ρ of a jump), counted
                 self.cut_counts["row_step_floored"] = self.cut_counts.get("row_step_floored", 0) + 1
             out.append((xs_, lam, h, h0))

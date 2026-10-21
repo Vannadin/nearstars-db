@@ -701,7 +701,7 @@ def cell_falls(v, ib, nsub=16, xr=None):
     return out
 
 
-def sets_from(v, per_cell, dropped=None, stops=None):
+def sets_from(v, per_cell, dropped=None, stops=None, verified=None):
     """S_i = the merged widened intervals of every sample in cells i − 1 and i, each kept only where its two edges read
     at every one of those samples under the stencil of the cell holding the sample — both at the shared node T_i
     (rev3d D1, amendment 1: read-faithful, as piece i is evaluated). An end that fails is clipped inward to the first
@@ -722,10 +722,42 @@ def sets_from(v, per_cell, dropped=None, stops=None):
         for a, b in _merge(ivs):
             got = _node_readable(v, a, b, samples, dropped, i, stops)
             if got is not None:
+                _landed_end_check(v, got[0], got[1], samples, i, stops, verified)
                 kept.append(list(got))
         if kept:
             sets[i] = kept
     return sets
+
+
+def _landed_end_check(v, a, b, samples, node, stops, verified=None):
+    """Rev3d amendment 2 §3 at the merged set (68 B1 / r2 cfeaf0e3 on 8aa2fcea): a flat end — b on the near side of a row
+    step present for the node (b < x_s ≤ b + 2·SWAP_EPS) where the bridge is a net fall — stands only if the read lands
+    that step fully there. At each of the node's samples (T, cell) the read's own path is run on the final interval:
+    _fall_piece at a point just inside b, piece `node`, S_k = {node: [(a, b)]}; the step must be in its landed list with
+    no transition left on it. Otherwise a STOP «row step not fully landed by the read» naming the node, the sample and
+    the step, in `stops`; each re-verified end is appended to `verified`."""
+    on = 2.0 * SWAP_EPS * (1.0 + 1e-6)
+    sk = min(node, len(v.ts) - 2)
+    x = b - 1e-12
+    for t, ib in samples:
+        steps = [math.log(q) for j in range(len(v._row_steps)) if (q := v._row_step_p(j, t, sk)) is not None]
+        hits = [xs_ for xs_ in steps if b < xs_ <= b + on]
+        if not hits:
+            continue
+        ea, eb = v._edge_read(a, t, ib, True), v._edge_read(b, t, ib, False)
+        if ea is None or eb is None or eb[0] >= ea[0]:
+            continue                                     # not a net fall here: the flat end is not relied on
+        cs = lambda t_=t: [math.log(pe) for c in v._cut if c.kind == "swap" for pe in (c.p_b_ext(t_, v._reach),)
+                           if pe is not None]
+        got = v._fall_piece(x, t, ib, node, {node: [(a, b)]}, cs)
+        landed, info = got[2] or [], got[3]
+        for xs_ in hits:
+            ok = any(abs(z - xs_) <= 1e-12 for z in landed) and not (info and abs(info["x_s"] - xs_) <= 1e-12)
+            if verified is not None:
+                verified.append({"node": node, "t": t, "ib": ib, "x_s": xs_, "landed": ok})
+            if not ok and stops is not None:
+                stops.append({"t": t, "ib": ib, "node": node, "why": "row step not fully landed by the read",
+                              "a": a, "b": b, "x_s": xs_, "transition": info})
 
 
 def _node_readable(v, a, b, samples, dropped, node, stops=None):
@@ -942,13 +974,17 @@ def document(v, per_cell):
     slivers = [s_ for c in per_cell.values() for smp in c for s_ in smp.get("slivers", ())]
     g_stops, g_exc = gate(v, jumps)
     zh = _zero_height_list(jumps)
+    verified = []
     unscreened = [u for c in per_cell.values() for smp in c for u in smp["unscreened"]]
     return {"record": v.material_id, "ps": list(v.ps), "ts": list(v.ts),
             "stamp": {**_stamp(edge_tol=_view_tol(v)), **{k: x for k, x in _caps_summary(caps).items()
                                                           if k in ("tau_w_rule", "tau_w_range", "tau_w_floor_ends")},
                       "no_band_ends": len(no_band), "record_sha256": v.record["assemblage"]["sha256"],
                       "record_yaml_sha256": _ma().record_yaml_sha256(v.material_id), "read_blob": _ma().read_blob()},
-            "sets": {str(k): s for k, s in sets_from(v, per_cell, dropped, clip_stops).items()},
+            "sets": {str(k): s for k, s in sets_from(v, per_cell, dropped, clip_stops, verified).items()},
+            # rev3d amendment 2 §3 (68 B1 / r2 cfeaf0e3): the flat ends at row steps re-verified through the read's
+            # own _fall_piece on the final S_k — the count, and every one the read does not land fully (each a STOP)
+            "landed_ends": {"verified": len(verified), "not_landed": [z for z in verified if not z["landed"]]},
             # rev3d D1: interval ends clipped or dropped because they don't read at every sample under its cell's stencil
             "unreadable_end": dropped,
             # rev3d D4: every capped end (τ_w per cell, amendment 1), the ends with no ρ band, and rule 1's excess above
