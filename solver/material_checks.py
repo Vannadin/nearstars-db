@@ -44,13 +44,13 @@ _RHO_CALL = "__rho__"
 # review 2 M-C2-10: a call's argument is read up to its own closing parenthesis (_calls), not by «[^)]*», which cut an
 # argument holding a call at the inner call's «)» and moved the rest of the expression inside: the heads find the
 # call, the bodies read its (balanced) argument text whole
-_CURVE = re.compile(r"curve\(")
+_CURVE = re.compile(r"(?<![\w.])curve\(")
 _CURVE_BODY = re.compile(r"\s*boundaries\[(\d+)\]\s*@\s*T\s*=\s*(.+)\Z", re.S)
-_MELT = re.compile(r"melt_p\(")
+_MELT = re.compile(r"(?<![\w.])melt_p\(")
 _MELT_BODY = re.compile(r"\s*([A-Za-z_][\w]*)\s*,\s*([A-Za-z_][\w]*)\s*@\s*T\s*=\s*(.+)\Z", re.S)
 _RHO = re.compile(r"(?<![\w.])rho\(")
 _RHO_BODY = re.compile(r"\s*([A-Za-z_][\w]*)\s*@\s*(.+)\Z", re.S)
-_SPREAD = re.compile(r"(gamma_spread|dpdt_spread)\(")
+_SPREAD = re.compile(r"(?<![\w.])(gamma_spread|dpdt_spread)\(")
 _SPREAD_BODY = re.compile(r"\s*(sets\[\d+\])\s*@\s*(.+)\Z", re.S)
 _OPS = MappingProxyType({ast.Add: lambda a, b: a + b, ast.Sub: lambda a, b: a - b, ast.Mult: lambda a, b: a * b,
                          ast.Div: lambda a, b: a / b, ast.Pow: lambda a, b: a ** b})
