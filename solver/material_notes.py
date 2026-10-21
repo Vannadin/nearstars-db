@@ -121,7 +121,7 @@ def collect(body, views, acc) -> tuple:
                     sums[f] = {"band": band, "edges": edges, "p": p, "t": t}
         for edge, d in bands.items():
             n = d["note"]
-            out.append(result.Note("material_band", f"{mid} {edge}: {n.form} error {d['error']} ({n.grade}; "
+            out.append(result.Note("material_band", f"{mid} {edge}: {_band_text(n, d)} ({n.grade}; "
                                    f"{n.origin})", {
                                        "layer": layer.id, "material": mid, "edge": edge, "form": n.form,
                                        "error": d["error"], "method": n.method, "grade": n.grade, "origin": n.origin,
@@ -192,3 +192,14 @@ def collect(body, views, acc) -> tuple:
             out.append(result.Note("material_grade", f"{mid} carries a user-declared source (grade «declared»)", {
                 "layer": layer.id, "material": mid, "grade": "declared"}))
     return tuple(out)
+
+
+def _band_text(n, d) -> str:
+    """A band note's error in words: ρ's when it has one, else the field the band rides on (review 2 n1, r2 214f37c0:
+    the γ-set band moved to dT/dP in M-C1a-05 and the text read «error None»)."""
+    if d["error"] is not None:
+        return f"{n.form} error {d['error']}"
+    for lab, k in (("dT/dP", "dtdp_error"), ("c_P", "c_p_error")):
+        if d.get(k) is not None:
+            return f"{n.form} {lab} error {d[k]}"
+    return f"{n.form} error None"
