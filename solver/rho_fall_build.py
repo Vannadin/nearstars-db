@@ -597,15 +597,22 @@ def falls_at(v, t, ib, xlo, xhi):
                 # no regain up to a landed step: the bridge runs flat at R(a′) to its near side
                 ab = {"t": t, "by": cid, "x": xs_, "a": lo_, "b": right, "was_b": hi_, "dR": r_lo[0] - r_hi[0],
                       "jump": far[0] - r_lo[0]}
-                if ab["jump"] >= 0.0:
-                    # 68 n1: a row step absorbing here must be in the landed list of each node the sample feeds, or
-                    # the read would not end the bridge flat there
-                    if isinstance(cid, str):
-                        ab["unlanded_for_nodes"] = [k for k in (ib, ib + 1)
-                                                    if not any(abs(z - xs_) <= 1e-12
-                                                               for z in v._row_steps_up(t, min(k, len(v.ts) - 2)))]
+                if ab["jump"] >= 0.0 and isinstance(cid, str):
+                    # rev3d amendment 2 §3: a row step absorbs for node k only if the read's own piece-k rule lands it
+                    # fully there (λ = 1 at this T, from this cell, over this interval: _row_step_lambdas, called, not
+                    # copied); otherwise not absorbed — rule 1 has already failed, so the STOP
+                    ab["unlanded_for_nodes"] = [k for k in (ib, ib + 1)
+                                                if not any(abs(z[0] - xs_) <= 1e-12 and z[1] >= 1.0
+                                                           for z in v._row_step_lambdas(t, min(k, len(v.ts) - 2), ib,
+                                                                                        lo_, right))]
+                if ab["jump"] >= 0.0 and not ab.get("unlanded_for_nodes"):
                     absorbed.append(ab)
                     hi_ = right
+                elif ab["jump"] >= 0.0:
+                    stops.append({"t": t, "why": "net fall over the widened interval", "a": lo_, "b": hi_,
+                                  "r_a": r_lo[0], "r_b": r_hi[0],
+                                  "bound": f"row step {cid} not fully landed by the read for node(s) "
+                                           f"{ab['unlanded_for_nodes']} (rev3d amendment 2 §3)"})
                 else:
                     stops.append({"t": t, "why": "net fall over the widened interval", "a": lo_, "b": hi_,
                                   "r_a": r_lo[0], "r_b": r_hi[0],
@@ -777,7 +784,7 @@ def _clip_net_fall(v, a, b, samples, node):
         if ea is None or eb is None or eb[0] >= ea[0]:
             continue
         landed = [math.log(pe) for c in v._cut if c.kind == "swap" for pe in (c.p_b_ext(t, v._reach),) if pe is not None]
-        landed += v._row_steps_up(t, sk)
+        landed += [z[0] for z in v._row_step_lambdas(t, sk, ib, a, b) if z[1] >= 1.0]   # amendment 2 §3: the read's own
         far = [v._edge_read(xs_ + SWAP_EPS, t, ib, False) for xs_ in landed if b < xs_ <= b + on]
         if not any(f is not None and f[0] >= ea[0] for f in far):
             bad.append({"t": t, "ib": ib, "r_a": ea[0], "r_b": eb[0]})

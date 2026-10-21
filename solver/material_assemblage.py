@@ -1123,6 +1123,8 @@ def record_yaml_sha256(material_id):
     from solver import material_registry as mr
     return hashlib.sha256((mr.MATERIALS_DIR / f"{material_id}.yaml").read_bytes()).hexdigest()
 SWAP_EPS = 1e-9          # ln P: a split interval's end, this far from the landed swap on x's side (rho_fall_build's)
+#: rev3d amendment 2 §2: a row step's landing weight in u = clamp(h/h₀, 0, 1), the smoothstep (the mutant hook: a step)
+ROW_STEP_LAMBDA = lambda u: u * u * (3.0 - 2.0 * u)                     # noqa: E731
 BLEND_SHARP = MappingProxyType({"rho": 1.0, "dtdp_eq": 2.0, "c_p": 2.0, "s": 1.0})   # s: κ 1, as ρ (s-read §3.1)
 
 #: the bump's length past an open run end, in units of the end segment's width (item 5d998d40: the smallest of the
@@ -2306,49 +2308,133 @@ class AssemblageView(mv.RecordView):
 
     def _fall_piece(self, x, t, ib, k, sets, cut_swaps):
         """Piece k of _rho_fall read from cell ib: (value or None, the interval (lo, hi) it bridges or None, the landed
-        list or None when x is in no interval; `cut_swaps` a callable giving the cut swaps' ln P_b_ext(T)). rev3d D1/D2: its discrete inputs are fixed per node — the interval is S_k's, the landed list is taken
-        with cell k's stencil s_k = min(k, n_T − 2) from either cell (_row_steps_up(t, s_k)); only the edge values
-        come from the reading cell ib, whose read is C⁰ across T_k."""
+        list or None when x is in no interval, the row step in transition {x_s, lam} or None; `cut_swaps` a callable
+        giving the cut swaps' ln P_b_ext(T)). rev3d D1/D2: its discrete inputs are fixed per node — the interval is S_k's,
+        the row steps' presence taken with cell k's stencil s_k = min(k, n_T − 2) from either cell; amendment 2 §1: a
+        row step's height (its sign) from the reading cell ib's own read; §2: a row step lands with λ = S(clamp(h/h₀, 0,
+        1)) (_row_step_lambdas) — λ = 1 landed (split), λ = 0 bridged, between them the piece is (1 − λ)·unsplit +
+        λ·split; at most one step per piece in transition, two a named STOP; cut swaps always landed."""
         on = 2.0 * SWAP_EPS * (1.0 + 1e-6)
-        swaps = None
-
-        def landed():
-            nonlocal swaps
-            if swaps is None:
-                swaps = cut_swaps() + self._row_steps_up(t, min(k, len(self.ts) - 2))
-            return swaps
+        sk = min(k, len(self.ts) - 2)
         for a, b in sets.get(k, ()):
-            # r2 c40f792a: x in the sliver [b, x_swap) between a set's end on a landed step's near side and the step
-            # itself belongs to the interval, so a flat end covers it up to the step
-            if a < x < b or (b <= x < b + on and any(b < xs_ <= b + on and x < xs_ for xs_ in landed())):
-                # 68 addendum 1: a landed swap is never bridged — an interval holding a swap's P_b(T) is split there and
-                # x's own side repaired alone, its end read one SWAP_EPS off the swap on x's side
-                lo_, hi_ = a, b
-                for xs_ in landed():
-                    if lo_ < xs_ <= x:
-                        lo_ = xs_ + SWAP_EPS
-                    elif x < xs_ < hi_:
-                        hi_ = xs_ - SWAP_EPS
-                # r2 a69976dc rule 2: an end on a landed step's near side (split here, or the set's own end where the
-                # build clipped it) ends a net-fall bridge flat, the step's jump absorbing the fall
-                flat = any(hi_ < xs_ <= hi_ + on for xs_ in swaps)
-                if lo_ < x < hi_:
-                    return self._fall_bridge(x, t, ib, lo_, hi_, flat), (lo_, hi_), swaps
-                if flat and lo_ < hi_ <= x and any(hi_ < xs_ <= hi_ + on and x < xs_ for xs_ in swaps):
-                    # the sliver [x_swap − SWAP_EPS, x_swap): the flat value R(a′) when the bridge ends flat; otherwise R
-                    # itself, which is continuous there (no step before the swap)
-                    return self._fall_bridge(x, t, ib, lo_, hi_, flat, sliver=True), (lo_, hi_), swaps
-                return None, None, swaps
-        return None, None, swaps
+            if not (a < x < b or b <= x < b + on):
+                continue
+            cs = cut_swaps()
+            lo_c, hi_c = a, b                            # the interval cut at the always-landed swaps on x's side
+            for xs_ in cs:
+                if lo_c < xs_ <= x:
+                    lo_c = xs_ + SWAP_EPS
+                elif x < xs_ < hi_c:
+                    hi_c = xs_ - SWAP_EPS
+            steps = self._row_step_lambdas(t, sk, ib, lo_c, hi_c)
+            full = [z[0] for z in steps if z[1] >= 1.0]
+            trans = [z for z in steps if 0.0 < z[1] < 1.0]
+            if len(trans) > 1:
+                self.cut_counts["bridge_two_transitions"] = self.cut_counts.get("bridge_two_transitions", 0) + 1
+                raise TableStop(f"two row steps in transition in one piece (rev3d amendment 2 §2): piece {k} at T "
+                                f"{float(t)}, ln P {[round(z[0], 9) for z in trans]}", check="fall bridge")
+            got0 = self._piece_with(x, t, ib, a, b, cs + full)
+            if not trans:
+                if got0 is not None:
+                    return got0 + (None,)
+                continue
+            xs_t, lam = trans[0][0], trans[0][1]
+            got1 = self._piece_with(x, t, ib, a, b, cs + full + [xs_t])
+            if got0 is None and got1 is None:
+                continue
+            own = []
 
-    def _row_steps_up(self, t, ib):
-        """Swap extension note 1 (r2 addendum 4 (4)): the reach-0 holding-row steps at T (_row_step_p) whose step in
-        the read is upward, in ln P. An upward one is a landed step and splits a fall interval as a swap does; a
-        downward one is not a swap at that T and is bridged. The sign from _edge_read one SWAP_EPS either side. rev3d
-        D2: `ib` is the stencil the list is taken with (the bridge's s_k), for the row-step test and the sign alike."""
+            def val(g):
+                if g is not None and g[0] is not None:
+                    return g[0]
+                if not own:                              # R itself where a piece leaves x to the read
+                    e = self._edge_read(x.v if isinstance(x, Dual) else x, t, ib, below=True)
+                    own.append(None if e is None else e[0])
+                return own[0]
+            v0, v1 = val(got0), val(got1)
+            info = {"x_s": xs_t, "lam": lam}
+            base = got0 if got0 is not None else got1
+            if v0 is None or v1 is None:
+                return (None, base[1], base[2], info)
+            return ((1.0 - lam) * v0 + lam * v1, base[1], base[2], info)
+        return None, None, None, None
+
+    def _piece_with(self, x, t, ib, a, b, landed):
+        """The piece over S_k's interval (a, b) with `landed` the steps that split it (rev3d's body of _fall_piece, for a
+        fixed landed list): (value or None, (lo, hi) or None, landed), or None when x is not this interval's."""
+        on = 2.0 * SWAP_EPS * (1.0 + 1e-6)
+        # r2 c40f792a: x in the sliver [b, x_swap) between a set's end on a landed step's near side and the step itself
+        # belongs to the interval, so a flat end covers it up to the step
+        if not (a < x < b or (b <= x < b + on and any(b < xs_ <= b + on and x < xs_ for xs_ in landed))):
+            return None
+        # 68 addendum 1: a landed swap is never bridged — an interval holding a swap's P_b(T) is split there and x's own
+        # side repaired alone, its end read one SWAP_EPS off the swap on x's side
+        lo_, hi_ = a, b
+        for xs_ in landed:
+            if lo_ < xs_ <= x:
+                lo_ = xs_ + SWAP_EPS
+            elif x < xs_ < hi_:
+                hi_ = xs_ - SWAP_EPS
+        # r2 a69976dc rule 2: an end on a landed step's near side (split here, or the set's own end where the build
+        # clipped it) ends a net-fall bridge flat, the step's jump absorbing the fall
+        flat = any(hi_ < xs_ <= hi_ + on for xs_ in landed)
+        if lo_ < x < hi_:
+            return self._fall_bridge(x, t, ib, lo_, hi_, flat), (lo_, hi_), landed
+        if flat and lo_ < hi_ <= x and any(hi_ < xs_ <= hi_ + on and x < xs_ for xs_ in landed):
+            # the sliver [x_swap − SWAP_EPS, x_swap): the flat value R(a′) when the bridge ends flat; otherwise R itself,
+            # which is continuous there (no step before the swap)
+            return self._fall_bridge(x, t, ib, lo_, hi_, flat, sliver=True), (lo_, hi_), landed
+        return None, None, landed
+
+    def _row_step_lambdas(self, t, sk, ib, lo, hi):
+        """Rev3d amendment 2 §1–§2: [(x_s, λ, h, h₀)] for the row steps present for piece k (stencil sk,
+        _row_step_p(i, T, s_k)) in (lo, hi + 2·SWAP_EPS]; h = R(x_s + ε) − R(x_s − ε) in the reading cell ib's own read
+        (§1: the sign as before rev3d), h₀ = max(1e-6·ρ(x_s), 2·Rng′), Rng′ = max(|R(x_s − ε) − R(lo)|, |R(hi) − R(x_s + ε)|)
+        in that read, the fall around the step with its own jump excluded (amendment 2 delta 1; Rng including the jump
+        capped λ at ½), λ = S(clamp(h/h₀, 0, 1)), S the smoothstep (ROW_STEP_LAMBDA). (lo, hi) is the sub-bridge
+        holding x_s: the interval cut at the always-landed swaps (r2 877c7679). A step is «in transition» only when
+        λ·Rng > 1e-12·ρ (r2 877c7679, the floor): below it λ = 0, counted in cut_counts["row_step_floored"]. Coincident
+        steps (P_b equal to 1e-9) are one. The build calls this for its rule-2 «absorbed» check (§3)."""
+        on = 2.0 * SWAP_EPS * (1.0 + 1e-6)
+        out, ends = [], None
+        for i in range(len(self._row_steps)):
+            q = self._row_step_p(i, t, sk)
+            if q is None:
+                continue
+            xs_ = _log(q)
+            if not lo < xs_ <= hi + on or any(abs(xs_ - z[0]) <= 1e-9 for z in out):
+                continue
+            a_ = self._edge_read(xs_ - SWAP_EPS, t, ib, below=True)
+            b_ = self._edge_read(xs_ + SWAP_EPS, t, ib, below=False)
+            if a_ is None or b_ is None:
+                continue
+            if ends is None:
+                ends = [None if e is None else e[0]
+                        for e in (self._edge_read(lo, t, ib, below=True), self._edge_read(hi, t, ib, below=False))]
+            # amendment 2 delta 1 (68; r2 877c7679's sub-bridge): Rng′, the fall around the step on the sub-bridge, its own
+            # jump excluded — max(|R(x_s − ε) − R(lo′)|, |R(hi′) − R(x_s + ε)|)
+            # (a side counts only where the sub-bridge extends past the step on it: an interval ending on the step's near
+            # side — the build's rule-2 end — has no far side inside it, and R(hi) there is the step's own foot)
+            rng = max(abs(a_[0] - ends[0]) if ends[0] is not None and lo < xs_ - SWAP_EPS else 0.0,
+                      abs(ends[1] - b_[0]) if ends[1] is not None and hi > xs_ + SWAP_EPS else 0.0)
+            h = b_[0] - a_[0]
+            h0 = max(1e-6 * abs(a_[0]), 2.0 * rng)
+            u = min(max(h / h0, 0.0), 1.0)
+            lam = ROW_STEP_LAMBDA(u)
+            if 0.0 < lam < 1.0 and lam * rng <= 1e-12 * abs(a_[0]):
+                lam = 0.0                                # below the floor: bridged (≤ 1e-12·ρ of a jump), counted
+                self.cut_counts["row_step_floored"] = self.cut_counts.get("row_step_floored", 0) + 1
+            out.append((xs_, lam, h, h0))
+        return out
+
+    def _row_steps_up(self, t, sk, ib=None):
+        """Swap extension note 1 (r2 addendum 4 (4)): the reach-0 holding-row steps present at T for stencil sk
+        (_row_step_p) whose step is upward, in ln P; rev3d amendment 2 §1: the sign from the reading cell ib's own read
+        (_edge_read one SWAP_EPS either side; ib None: sk). The landing itself is _row_step_lambdas's (λ)."""
+        ib = sk if ib is None else ib
         out = []
         for i in range(len(self._row_steps)):
-            q = self._row_step_p(i, t, ib)
+            q = self._row_step_p(i, t, sk)
             if q is None:
                 continue
             xs_ = _log(q)
