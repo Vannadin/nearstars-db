@@ -944,6 +944,32 @@ def manifest_shas(text: str, name: str = "sources.yaml") -> frozenset | LoadStop
     return frozenset(r["sha256"] for r in rows)
 
 
+#: Review 2 M-C2-12: the refusal ids a record may name (an edge's or an edge_above's `refusal`, a refusal region's `id`),
+#: the ids a record view gives for a refused read (material_view's RecordRefusal at a window or region); a record's
+#: refusal text is returned verbatim, so a misspelt id loaded, passed P4 (which compared the string with itself) and
+#: reached the answer
+RECORD_REFUSAL_IDS = frozenset({"input.material_out_of_data", "input.material_above_solid_window"})
+
+
+def _refusal_ids(x, path, file):
+    """Every `refusal` text and every refusal region's `id` in the record names a RECORD_REFUSAL_IDS entry."""
+    if isinstance(x, Mapping):
+        for k, v in x.items():
+            sub = f"{path}.{k}"
+            if k == "refusal" and isinstance(v, str) and v not in RECORD_REFUSAL_IDS:
+                raise _Stop("material.bad_shape", file=file, path=sub, expected=f"one of {sorted(RECORD_REFUSAL_IDS)}",
+                            got=repr(v)[:60])
+            if k == "refusals" and isinstance(v, (list, tuple)):
+                for i, r in enumerate(v):
+                    if isinstance(r, Mapping) and r.get("id") not in RECORD_REFUSAL_IDS:
+                        raise _Stop("material.bad_shape", file=file, path=f"{sub}[{i}].id",
+                                    expected=f"one of {sorted(RECORD_REFUSAL_IDS)}", got=repr(r.get("id"))[:60])
+            _refusal_ids(v, sub, file)
+    elif isinstance(x, (list, tuple)):
+        for i, v in enumerate(x):
+            _refusal_ids(v, f"{path}[{i}]", file)
+
+
 def _box_order(x, path, file):
     """Review 2 M-C2-04: every box is ordered — wherever a mapping holds p_min and p_max (or t_min and t_max) as numbers,
     min ≤ max (.inf allowed above). Windows, γ windows, data ranges, overlaps, sampling and refusal boxes, constants
@@ -972,6 +998,7 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
         if raw["id"] != Path(file).stem:
             raise _Stop("material.id_mismatch", file=file, id=raw["id"])
         _box_order(raw, "record", file)
+        _refusal_ids(raw, "record", file)
         _kind(raw, file)
         _curves(raw, file)
         _source_seams(raw, file)

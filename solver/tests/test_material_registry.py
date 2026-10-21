@@ -100,6 +100,9 @@ CONTROLS = (
     ("inverted T in the field box", lambda d: PH(d)["field"]["box"].update(t_min=3000.0, t_max=1000.0),
      "material.bad_shape"),
     # review 2 M-C2-05: refusal regions are read by a field record only; on any other kind they loaded, never applied
+    # review 2 M-C2-12: a record's refusal ids are checked at load against the ids a record view may give
+    ("edge refusal id misspelt", lambda d: PH(d)["edges"]["t_min"].update(refusal="inptu.material_out_of_dta"),
+     "material.bad_shape"),
     ("refusal region on a single record", lambda d: d.update(refusals=[{
         "id": "input.material_out_of_data", "box": {"p_min": 1.0e10, "p_max": 2.0e10, "t_min": 1000.0, "t_max": 2000.0},
         "reason": "planted"}]), "material.kind_rule"),
