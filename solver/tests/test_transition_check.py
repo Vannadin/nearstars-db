@@ -37,7 +37,22 @@ def failures(block, repo=ARTIFACTS) -> list:
         elif subprocess.run(["git", "-C", str(repo), "cat-file", "-e", f"{c}^{{commit}}"],
                             capture_output=True).returncode != 0:
             out.append((r.get("transition"), f"ruling {c} is not a commit of the artifacts repo"))
+        elif not _names_row(repo, c, r.get("transition")):
+            out.append((r.get("transition"), f"ruling {c} names no such row: no file it adds or changes holds "
+                                             f"«{r.get('transition')}»"))
     return out
+
+
+def _names_row(repo, commit, transition) -> bool:
+    """Review 2 T-13 (a): a ruling counts only where the commit's own rulings file names the row: some file the commit
+    adds or changes holds the row's transition text at that commit (an existing sha alone ruled every row)."""
+    files = subprocess.run(["git", "-C", str(repo), "show", "--format=", "--name-only", commit], capture_output=True,
+                           text=True).stdout.split("\n")
+    for f in (x for x in files if x):
+        got = subprocess.run(["git", "-C", str(repo), "show", f"{commit}:{f}"], capture_output=True, text=True)
+        if got.returncode == 0 and transition and transition in got.stdout:
+            return True
+    return False
 
 
 def shipped_blocks():
@@ -61,14 +76,23 @@ class Shipped(unittest.TestCase):
                 self.assertEqual(b["passed"], all(r["verdict"] in PASSING for r in b["rows"]))
 
 
-def head_commit():
-    return subprocess.run(["git", "-C", str(ARTIFACTS), "rev-parse", "HEAD"], capture_output=True,
-                          text=True).stdout.strip()
+def _repo(d, files: dict, message="ruling"):
+    """A throwaway git repo at d with one commit adding `files` {name: text}; its sha (machine-independent controls:
+    review 2 T-13 (b))."""
+    run = lambda *a: subprocess.run(["git", "-C", str(d), *a], capture_output=True, text=True, check=True)   # noqa: E731
+    if not (Path(d) / ".git").exists():
+        run("init", "-q")
+    for name, text in files.items():
+        (Path(d) / name).write_text(text, encoding="utf-8")
+        run("add", name)
+    run("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "-m", message)
+    return run("rev-parse", "HEAD").stdout.strip()
 
 
 class Controls(unittest.TestCase):
     """The planted controls (scope note §4): a FAIL with no ruling, and a ruling to a nonexistent commit, both fail;
-    r2's il-drop control (2): the il-dropped export's ak = bg rows, FAIL in a block with no ruling, fail the gate."""
+    r2's il-drop control (2): the il-dropped export's ak = bg rows, FAIL in a block with no ruling, fail the gate.
+    Rulings are checked against a throwaway repo (review 2 T-13), so the verdicts do not depend on a sibling checkout."""
 
     def block(self, rows):
         return {"rows": rows, "passed": all(r["verdict"] in PASSING for r in rows)}
@@ -78,15 +102,27 @@ class Controls(unittest.TestCase):
         self.assertEqual([f[0] for f in failures(b)], ["fp+st=bg"])
 
     def test_ruling_to_a_nonexistent_commit(self):
-        b = self.block([{"transition": "fp+st=bg", "verdict": "FAIL", "ruling": "0" * 40}])
-        self.assertIn("not a commit of the artifacts repo", failures(b)[0][1])
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            _repo(d, {"x.md": "nothing"})
+            b = self.block([{"transition": "fp+st=bg", "verdict": "FAIL", "ruling": "0" * 40}])
+            self.assertIn("not a commit of the artifacts repo", failures(b, Path(d))[0][1])
         b = self.block([{"transition": "fp+st=bg", "verdict": "FAIL", "ruling": "r2 said fine"}])
         self.assertIn("not a full commit sha", failures(b)[0][1])
+        b = self.block([{"transition": "fp+st=bg", "verdict": "FAIL", "ruling": "0" * 40}])
+        self.assertIn("cannot be checked", failures(b, Path("/nonexistent-artifacts"))[0][1])
 
-    @unittest.skipUnless((ARTIFACTS / ".git").exists(), "the artifacts checkout is beside the worktree")
-    def test_ruling_to_a_real_commit_passes(self):
-        b = self.block([{"transition": "fp+st=bg", "verdict": "FAIL", "ruling": head_commit()}])
-        self.assertEqual(failures(b), [])
+    def test_ruling_must_name_the_row(self):
+        """Review 2 T-13 (a): a real commit whose files name the row rules it; a real commit that names other rows does
+        not (before the fix any existing sha ruled every row, and this test fails)."""
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            good = _repo(d, {"rulings.md": "fp+st=bg: NOT LOCATED, ruled acceptable (r2)"})
+            other = _repo(d, {"other.md": "ol=wa: ruled"})
+            b = self.block([{"transition": "fp+st=bg", "verdict": "FAIL", "ruling": good}])
+            self.assertEqual(failures(b, Path(d)), [])
+            b = self.block([{"transition": "fp+st=bg", "verdict": "FAIL", "ruling": other}])
+            self.assertIn("names no such row", failures(b, Path(d))[0][1])
 
     def test_il_drop_rows_fail_the_gate(self):
         """r2's il-drop control, assertion (2): with the il assemblages dropped from the export the tool's ak = bg rows
