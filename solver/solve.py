@@ -200,7 +200,8 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
                            h_cap=events.step_cap(lid_mat, t_index=3) if lid_mat is not None else None,
                            step_check=events.band_check(lid_mat, t_index=3) if lid_mat is not None else None,  # a factory
                            # G1-R-02 = G2-R-01: the lid's landed events and its graze reach the pass record
-                           monitor=(lambda: events.GrazeMonitor(lid_mat or lv_, getattr(lv_, "p_stop", 0.0)))
+                           monitor=(lambda: events.GrazeMonitor(lid_mat or lv_, getattr(lv_, "p_stop", 0.0),
+                                                                t_index=2))
                            if want_graze else None)
         if isinstance(got, st.Stop):
             return _at(got, y, m)                    # a lid stop: the segment's start (note 13 §3)

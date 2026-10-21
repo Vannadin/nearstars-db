@@ -78,8 +78,8 @@ def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_
     `t_b_seed` replaces T_b⁰ (a test control). `events` are the layer's S5 events (seams, onset curves); `h_cap` is
     the material's note-12 step cap, as `_segment` passes it (G1-C-04); `step_check` a factory of notes 13 §1 / 13a's
     band test, one fresh test per pass. `monitor` () → a fresh on_accept callable
-    with a `best` graze: one per pass, the accepted pass's kept (G1-R-02). It is handed the state with T = T_ad,
-    since the lid's onset events watch T_ad (y[2]) and the monitor reads y[3]."""
+    with a `best` graze: one per pass, the accepted pass's kept (G1-R-02). It is built to read T_ad (t_index=2),
+    since the lid's onset events watch T_ad (y[2]); the state reaches it as stepped."""
     if t_s is None:
         return st.Stop("lid_input", {"layer_id": layer_id, "field": "surface_temperature_k", "value": None})
     if not (0.0 < depth < radius):
@@ -97,7 +97,7 @@ def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_
     def run(a, b):
         t0 = t_pot if a is None else t_s
         mon = monitor() if monitor is not None else None
-        on_accept = None if mon is None else (lambda m, y: mon(m, (y[0], y[1], y[2], y[2], *y[4:])))
+        on_accept = mon                         # the monitor reads T_ad by its own t_index (review 2 SP-S-13)
         if opt.fixed_dr > 0.0:
             res = fixed_grid.run_r(_lid_rhs(view, a, b), mass, (radius, p_s, t_pot, t0, 0.0, 0.0), 0.0, r_b,
                                    "lid_base", opt.fixed_dr, events, on_accept=on_accept, max_steps=opt.max_steps,
