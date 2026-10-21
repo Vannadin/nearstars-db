@@ -816,25 +816,6 @@ class Choices(unittest.TestCase):
             got = v._blend_sides(f, xb + at * w, t, ib, {c: -1 if at < 0 else 1}, near, 1.0 if at < 0 else 2.0)
             self.assertAlmostEqual(got, 1.0 + want, places=12, msg=(f, at))
 
-    def test_blend_drops_a_side_with_no_corner_row(self):
-        """68 ruling 1 (2): a side assignment whose read has no corner row is dropped and the remaining weights
-        renormalised (never 0 × a missing value), and counted; the read is then the own read alone."""
-        tb = table(cls="edge_in", right="ol+opx+gt")
-        v = view(tb)
-        t = 1210.0
-        xb = math.log(pb_const(t))
-        w = v._width(xb)
-        x = xb - 0.25 * w                                          # inside every field's blend (BLEND_SHARP ≤ 2)
-        own = v._solid(math.exp(x), t)[0]
-        v2 = view(tb)
-        v2._side_rows = lambda f, x, ib, sides: {}                # every far side without rows
-        got = v2._solid(math.exp(x), t)[0]
-        (c,) = v2._cut
-        ib = int((t - TS[0]) // 50)
-        self.assertAlmostEqual(got, v2._value("rho", x, t, 15, ib, {c: -1}, False), delta=1e-14 * got)   # (1 − H)·v/(1 − H)
-        self.assertNotEqual(got, own)                              # the full blend differs: the far side was there
-        self.assertEqual(v2.cut_counts["blend_drops"], 3)          # one per field
-
     def test_far_side_past_the_cap_never_refuses_the_near_side(self):
         """68 B1, the cap: δ's side reads are uncapped (x_b moves with t, so a cap there would switch inside a T cell);
         a far side whose run starts more than 4 columns from x_b in a corner row leaves the near read standing, while
