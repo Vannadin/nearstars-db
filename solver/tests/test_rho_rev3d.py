@@ -404,7 +404,8 @@ class Amendment2(unittest.TestCase):
 
     def test_p10_khan_254_hand_over_lands_fully(self):
         """P10 (delta 1): khan curve 254 at 2000 K — swap 271's cut swap hands over to its holding-row step 7 (h ≈ 283
-        kg/m³): λ = 1 and R2 ≤ 1e-9. Mutant: Rng including the step's own jump (λ ≤ ½) — red (≈ 80 kg/m³ at T_k)."""
+        kg/m³): λ = 1 and R2 ≤ 1e-9. Mutant: Rng including the step's own jump — λ ≤ ½ (under delta 2 the hand-over stays
+        C⁰ with it, so the mutant is read off λ, not R2)."""
         v = _khan(KHAN_254)
         (z,) = v._row_step_lambdas(2000.00005, 36, 36, 23.82767187441592, 23.87543686958455)
         self.assertEqual(z[1], 1.0)
@@ -421,8 +422,13 @@ class Amendment2(unittest.TestCase):
                 h0 = max(1e-6 * vals[0], 2.0 * (max(vals) - min(vals)))
                 out.append((xs_, ma.ROW_STEP_LAMBDA(min(max(h / h0, 0.0), 1.0)), h, h0))
             return out
+        # rev3d amendment 2 delta 2 (a56d8326): swap 271 owns step 7, so both take λ from _row_step_lambdas and the
+        # hand-over stays C⁰ under the mutant too (R2 2.4e-14): the mutant shows in the step's λ itself (≤ ½, not 1)
         with mock.patch.object(ma.AssemblageView, "_row_step_lambdas", with_jump):
-            self.assertGreater(_r2_solid(_khan(KHAN_254), 254, 2000.0), 1e-9)
+            v = _khan(KHAN_254)
+            (z,) = [q for q in v._row_step_lambdas(2000.00005, 36, 36, 23.82767187441592, 23.87543686958455)
+                    if abs(q[0] - z[0]) <= 1e-9]
+            self.assertLessEqual(z[1], 0.5)
 
     def test_the_floor_counts_and_bridges(self):
         """r2 877c7679: khan piece 35 at 1900.00005 K holds row steps 6 and 7 at λ ~1e-15 (h ~1e-5 against a fall of ~285
