@@ -804,6 +804,11 @@ def _kind(rec: Mapping, file):
     kind = rec["kind"]
     if kind == "single" and len(ids) != 1:
         raise _Stop("material.kind_rule", file=file, why="a single record has one phase")
+    if rec.get("refusals") and not (kind == "branched" and rec.get("choice") == "field"):
+        # review 2 M-C2-05: the view applies refusal regions only in _field_at (a field record); elsewhere they loaded,
+        # never applied (the record answered bare values inside them) and P4 reported them as hit
+        raise _Stop("material.kind_rule", file=file,
+                    why="refusal regions are read by a field record only (kind branched, choice field)")
     if kind == "branched":
         choice = rec.get("choice")
         if choice is None:                                    # impl note 6 item 1
