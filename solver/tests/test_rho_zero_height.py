@@ -1,6 +1,6 @@
 # ρ rev3c 시험 — 일치 가장자리 쌍의 허용 오차 안 내림 계단은 높이 0: 떨어짐 아님·ΔG 없음·게이트 밖·흡수 안 됨·목록에 듦 (68 설계 40d180cc, r2 clear 1916061f)
 """ρ rev 3, rev3c (artifacts main f11695a0, rewrite/rho-bridge/rev3c-zero-height.md, blob 40d180cc): the plants P1–P5
-and the mutants M1–M7 of §5 (P3 restated as P3a / P3b by rev3d amendment 2 delta 3, artifacts f7958487), khan only, in a narrow window ln P x_s ± 0.3 at T 1100 K (x_s the coincident pair's ln P_b, 24.852 GPa;
+and the mutants M1–M7 of §5 (P3 restated as P3a / P3b by rev3d amendment 2 delta 3, artifacts f7958487; P3a as P3a-i = P1 and P3a-ii by delta 4), khan only, in a narrow window ln P x_s ± 0.3 at T 1100 K (x_s the coincident pair's ln P_b, 24.852 GPa;
 the pair is found by position, its ids follow the records: 123/124 before the across-gap marks, 117/118 after).
 
     solver/.venv/bin/python -m unittest solver.tests.test_rho_zero_height
@@ -55,6 +55,8 @@ class _Base(unittest.TestCase):
         return ivs, stops, mine
 
     def p2(self):
+        """P2's document at nsub = 1: it samples the nodes only (1050, 1100, 1150 K), so it does not see the pair's step
+        read off the row as a fall at the cells' interior sub-T (rev3d amendment 2 delta 4 §1; the build's nsub 16 does)."""
         env = {k: v_ for k, v_ in os.environ.items() if k != "NS_BUILD_ASSEMBLAGE"}
         with mock.patch.dict(os.environ, env, clear=True):
             per = {ib: rfb.cell_falls(self.v, ib, nsub=1, xr=(X_S - W, X_S + W)) for ib in (self.ib - 1, self.ib)}
@@ -85,29 +87,44 @@ class Plants(_Base):
         self.assertEqual(doc["coincident_edge"]["zero_height"], 1)
         self.assertEqual(doc["stamp"]["rules"]["EDGE_DRHO_TOL"], 7.5e-4)
 
-    def _jump_at_x_s(self, bridge, sets=None):
+    def _jump_at_x_s(self, t, sets):
+        """The jump across x_s ± 2·SWAP_EPS at T = t with the bridge on and `sets` as the view's fall sets, and ρ above."""
         v = self.v
         p_lo, p_hi = math.exp(X_S - 2 * rfb.SWAP_EPS), math.exp(X_S + 2 * rfb.SWAP_EPS)
         saved = v._fall_sets
         try:
-            if sets is not None:
-                v._fall_sets = sets
-            with mock.patch.object(ma, "RHO_BRIDGE", bridge):
-                return v.state(p_hi, T)[0] - v.state(p_lo, T)[0]
+            v._fall_sets = sets
+            with mock.patch.object(ma, "RHO_BRIDGE", True):
+                hi = v.state(p_hi, t)[0]
+                return hi - v.state(p_lo, t)[0], hi
         finally:
             v._fall_sets = saved
 
-    def test_p3a_the_read_is_untouched_on_the_builds_sets(self):
-        # rev3d amendment 2 delta 3 (68, artifacts f7958487) P3a, restating rev3c's P3: with the view's own fall sets the
-        # jump across x_s ± 2·SWAP_EPS with the bridge on is the base jump to 1e-6 relative (no interval passes through
-        # x_s: P1, P2)
+    def _p3a_ii(self):
+        """P3a-ii: on F13-A's built sets (test_rho_delta2's H_SETS, nodes 17–19) the jump at T = 1100.0 against the jump
+        at 1100 ± 1e-7, relative to ρ."""
+        from solver.tests.test_rho_delta2 import H_SETS
+        sets = {k: [tuple(iv) for iv in ivs] for k, ivs in H_SETS.items()}
+        # delta 4 §3: a run on _fall_sets None asserts nothing — the installed sets must hold node ib's interval over x_s
+        self.assertTrue(any(a < X_S < b for a, b in sets[self.ib]), sets[self.ib])
+        at, rho = self._jump_at_x_s(T, sets)
+        self._at = at
+        return max(abs(self._jump_at_x_s(T + d, sets)[0] - at) for d in (-1e-7, 1e-7)) / rho
+
+    def test_p3a_ii_the_row_matches_its_neighbours_on_the_built_sets(self):
+        # rev3d amendment 2 delta 4 (68): rev3c's «zero height: not a fall» is a node-row statement (P3a-i is P1). Off the
+        # row the pair's step, carried by the T interpolation, is an ordinary within-τ_e downstep the build bridges (sets
+        # 17–19 start at x_s); on those sets the row's jump equals its neighbours' within 1e-9·ρ (delta 2's P12)
         a, b = self.pair
         self.assertEqual((self.v._events[a].kind, self.v._events[b].kind), ("swap", "swap"))
         self.assertTrue(self.v._events[a].was_edge and self.v._events[b].was_edge)
-        base = self._jump_at_x_s(False)
-        self.assertLess(base, 0.0)
-        on = self._jump_at_x_s(True)
-        self.assertLess(abs(on - base) / abs(base), 1e-6)
+        self.assertLessEqual(self._p3a_ii(), 1e-9)
+
+    def test_p3a_ii_mutant_swap_always_lands(self):
+        # SWAP_STEP_LAMBDA False: the row keeps the pair's −0.3996 kg/m³ jump while its neighbours are bridged
+        with mock.patch.object(ma, "SWAP_STEP_LAMBDA", False):
+            self.assertGreater(self._p3a_ii(), 1e-6)
+            self.assertAlmostEqual(self._at, -0.39956, delta=1e-4)     # the row's jump back at the base
 
     def _c0_in_t(self):
         """P3b: under the synthetic set straddling x_s at node ib, ρ's largest relative change in T between 1100 ± 1e-7 K
