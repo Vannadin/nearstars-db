@@ -1021,14 +1021,33 @@ def check_record(raw, file: str, registered: frozenset = frozenset()) -> Mapping
 
 
 def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None,
-         allow_development: bool = False) -> Registry | LoadStop:
+         allow_development: bool = False, only=None) -> Registry | LoadStop:
     """Every record in `directory` (schema and manifest excepted), checked; the registry or the first STOP.
-    `allow_development` admits a development assemblage record; only tests set it (never an env var or an Option)."""
+    `allow_development` admits a development assemblage record; only tests set it (never an env var or an Option).
+    `only` (review 2 SP-M-06): the record ids a solve names; then just those files and the records they name in turn
+    (an assemblage record's hand-over) are read and checked, so a solve naming fe_prem does not parse, check and hash
+    every record, and a STOP in a record it never reads does not refuse it. None: every record, as before."""
     registered = read_manifest(Path(directory) / "sources.yaml" if manifest is None else manifest)
     if isinstance(registered, LoadStop):
         return registered
     out, unavailable, shas, tables = {}, {}, {}, {}   # shas: a library's tree sha, computed once per load (68 N30)
-    for f in sorted(Path(directory).glob("*.yaml")):
+    files = sorted(Path(directory).glob("*.yaml"))
+    if only is not None:
+        want, seen = set(only), set()
+        while want - seen:                           # the named records and what they name (the hand-over), by stem
+            for stem in sorted(want - seen):
+                seen.add(stem)
+                f = Path(directory) / f"{stem}.yaml"
+                if not f.is_file() or f.name in NOT_RECORDS:
+                    continue
+                try:
+                    ho = (parse(f.read_text(encoding="utf-8")).get("assemblage") or {}).get("handover")
+                except (LoadError, OSError, AttributeError):
+                    ho = None                        # the check below names a broken file
+                if isinstance(ho, str):
+                    want.add(ho)
+        files = [f for f in files if f.stem in seen]
+    for f in files:
         if f.name in NOT_RECORDS:
             continue
         try:

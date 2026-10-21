@@ -680,6 +680,26 @@ class SwitchScan(unittest.TestCase):
         for f in files:
             doc = real(f.read_text(encoding="utf-8"))
             self.assertEqual(sv._file_requires_switch(f), doc.get("requires_switch") == "silicate_records", f.name)
+class ScopedLoad(unittest.TestCase):
+    def test_a_solve_loads_only_the_records_it_names(self):
+        """Review 2 SP-M-06: registry_for loads the records the body can read (its layers' record ids, with the switch
+        on the routes' records and the basal record, and what they name: an assemblage record's hand-over), not every
+        record; so a STOP in a record the body never reads does not refuse it. Before the fix load() took no scope
+        and registry_for returned all shipped records for an fe_prem body, and this test fails."""
+        reg = sv.registry_for(body("earth"), context.Options())
+        self.assertNotIsInstance(reg, result.Refusal)
+        self.assertEqual(set(reg.records), {"fe_prem"})
+        on = sv.registry_for(body("earth"), context.Options(silicate_records=True))
+        hid = on.records["silicate_slb_default_bse"]["assemblage"]["handover"]
+        self.assertTrue({"fe_prem", "silicate_slb_default_bse", hid} <= set(on.records))
+        self.assertNotIn("h2o", on.records)
+        with tempfile.TemporaryDirectory() as d:
+            copy_shipped(d)
+            (Path(d) / "zz_broken.yaml").write_text("id: zz_broken\nkind: nonsense\n", encoding="utf-8")
+            self.assertIsInstance(mr.load(Path(d)), mr.LoadStop)                 # the full load stops on it
+            got = mr.load(Path(d), only={"fe_prem"})                            # a solve naming fe_prem does not
+            self.assertNotIsInstance(got, mr.LoadStop)
+            self.assertEqual(set(got.records), {"fe_prem"})
 
 
 class SurfaceFloor(unittest.TestCase):
