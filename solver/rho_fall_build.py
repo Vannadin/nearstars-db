@@ -1023,37 +1023,8 @@ def document(v, per_cell):
 
 # n4 (r2): floor cells are listed per 1e-7 ln P, so kinks closer than that share a row.
 
-# ── the unitq job: one unit per T cell ──
-_V = {}
-
-
-def setup(argv):
-    if argv[0] not in _V:
-        _V[argv[0]] = _view(argv[0])
-    v = _V[argv[0]]
-    return {"units": [(["ib", ib], {"rid": argv[0], "ib": ib}) for ib in range(len(v.ts) - 1)]}
-
-
-def identity(argv):
-    return {"record": argv[0], **_stamp(), "read_blob": _ma().read_blob()}   # parts of one build share one read
-
-
-def run(payload):
-    if payload["rid"] not in _V:
-        _V[payload["rid"]] = _view(payload["rid"])
-    return cell_falls(_V[payload["rid"]], payload["ib"])
-
-
-def plan(state, results):
-    todo = [(k, p) for k, p in state["units"] if canon(k) not in results]  # noqa: F821 (set by unitq)
-    if todo:
-        return todo
-    rid = state["units"][0][1]["rid"]
-    if rid not in _V:
-        _V[rid] = _view(rid)
-    per_cell = {p["ib"]: results[canon(k)] for k, p in state["units"]}  # noqa: F821
-    doc = document(_V[rid], per_cell)
-    return {"files": {f"{rid}.json": json.dumps(doc) + "\n"}}
+# the unitq job entry (one unit per T cell) is scripts/rho_fall_build_job.py: its per-worker view cache is a runner's
+# state, kept out of solver/ (§A6; directing 10-21)
 
 
 def main(argv):
