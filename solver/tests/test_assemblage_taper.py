@@ -268,6 +268,30 @@ class Taper(unittest.TestCase):
             self.assertEqual(n.grade, ma.TAPER_GRADE)
         self.assertGreater((1 - w) * bc, w * ho.thermal(p, t)[0][2])
 
+    def test_zone_dtdp_band_counted_once(self):
+        """Review 2 M-C1b-01: in the zone, state() carries the cell's dT/dP band only inside the taper note's
+        max((1 − w)·band_cell, w·band_HO) (note 7 §4), not again as «dT/dP model consistency», so the summed dT/dP band
+        is the taper's and does not step at the zone's end. Before the fix the cell band was added a second time (the
+        sum near the end read band_cell + band_HO, then fell by band_cell past it), and this test fails."""
+        v = view(handover())
+        t = 2000.0
+
+        def summed(p):
+            got = v.state(p, t)
+            self.assertNotIsInstance(got, st.Stop)
+            notes = [n for n in got[2] if isinstance(n, mv.BandNote)]
+            return notes, sum(n.dtdp_error or 0.0 for n in notes)
+        for p in (PD * 1.01, math.sqrt(PD * PE), PE * (1.0 - 1e-6)):
+            notes, tot = summed(p)
+            self.assertEqual([n.edge for n in notes if n.edge == "dT/dP model consistency"], [], p)
+            (tap,) = [n for n in notes if n.edge == "taper to the hand-over"]
+            self.assertEqual(tot, sum(n.dtdp_error or 0.0 for n in notes if n.edge != "dT/dP model consistency"))
+            self.assertGreater(tap.dtdp_error, 0.0)
+        below, above = summed(PE * (1.0 - 1e-6))[1], summed(PE * (1.0 + 1e-6))[1]
+        self.assertAlmostEqual(below, above, delta=1e-6 * above)
+        _notes, _tot = summed(PD * 0.999)                # below the zone the cell's band stands as before
+        self.assertIn("dT/dP model consistency", [n.edge for n in _notes])
+
     def test_below_the_top_bit_identical(self):
         """Reads at P ≤ p_dataset do not change with the hand-over present (note 7 §2)."""
         a, b = view(), view(handover())

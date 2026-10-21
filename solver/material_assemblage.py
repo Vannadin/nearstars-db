@@ -2426,7 +2426,9 @@ class AssemblageView(mv.RecordView):
         if m.get("by_count"):
             self.cut_counts["by_count_reads"] += 1
 
-    def _cell_notes(self, cells, p, t):
+    def _cell_notes(self, cells, p, t, band=True):
+        """The corner cells' declared notes, and their «dT/dP model consistency» band unless `band` is False: above
+        p_dataset the taper note already carries the cell's band, folded once (note 7 §4; review 2 M-C1b-01)."""
         for c in cells:
             if c["kind"] == "frozen":
                 self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID,
@@ -2436,7 +2438,7 @@ class AssemblageView(mv.RecordView):
                 self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID,
                                                   "solid above the solidus cap: SLB extrapolated in T (metastable "
                                                   "solid); melt mixed by the phase-1 rule (C120)"))
-        bands = [c["dtdp_eq_band"] for c in cells if c.get("dtdp_eq_band") is not None]
+        bands = [c["dtdp_eq_band"] for c in cells if c.get("dtdp_eq_band") is not None] if band else []
         if bands:
             self.notes.append(mv.BandNote(self.material_id, "dT/dP model consistency", "relative", None, None,
                                           "equilibrium isentrope (route A)", self.band_origin, max(bands),
@@ -2516,7 +2518,7 @@ class AssemblageView(mv.RecordView):
                 r = got.record
                 return self._refuse(p, t, r.refusal, r.why if pe == p else f"{r.why} (read at {pe:g} Pa)")
             rho_s, g_s, cp_s, cells = got
-            self._cell_notes(cells, p, t)
+            self._cell_notes(cells, p, t, band=pe <= self.p_dataset)
             self._term_notes(pe, t, rho_s, g_s, cp_s)
             rho, g, _ = _lm().silicate_melt_mix(pe, t, self.variant, rho_s, g_s, cp_s)
             seam = _lm().window_seam_note(self.material_id, pe, t, self.variant)   # melt-window registration B2/B4
