@@ -58,6 +58,9 @@ class LidGraze(unittest.TestCase):
         seen, passes = [], []
 
         class Mon:
+            t_index = 2                                                # as inward's factory builds it (SP-S-13)
+            mat = None                                                 # names no material: no hand-over (X-04)
+
             def __init__(self):
                 self.best = NS(curve="planted", material="m", p=1.0, g=float(len(passes)), m=0.0)
                 passes.append(self)
@@ -69,9 +72,10 @@ class LidGraze(unittest.TestCase):
         # the lid pass as inward calls it (its r_scale, options and events), with the planted monitor in place of
         # inward's: a hand-built call (r_scale 6e6, default PassOptions) sat on the lid's noise floor and stopped
         # lid_unconverged once A5's fsum moved the last digits (the f7a5b95c suite)
-        real, results = lid.lid_pass, []
+        real, results, built = lid.lid_pass, [], []
 
         def call(*a, **k):
+            built.append(k["monitor"]())
             got = real(*a, **{**k, "monitor": Mon})
             results.append(got)
             return got
@@ -80,7 +84,10 @@ class LidGraze(unittest.TestCase):
         got = results[-1]
         self.assertIsInstance(got, lid.LidResult, got)
         self.assertTrue(seen)
-        self.assertTrue(all(a == b for a, b in seen))                  # T handed to the monitor is T_ad
+        # review 2 SP-S-13: the monitor gets the state as stepped (T_ad at y[2], the lid's T at y[3], not rebuilt) and
+        # inward's own monitor reads T_ad by its t_index
+        self.assertTrue(any(a != b for a, b in seen))
+        self.assertTrue(built and all(b.t_index == 2 for b in built))
         self.assertGreater(len(passes), 1)
         self.assertIs(got.graze, passes[-1].best)                     # the accepted (last) pass's
 
