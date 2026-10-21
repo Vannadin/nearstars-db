@@ -193,7 +193,26 @@ def answers_inside(rec) -> list:
         p = 0.5 * (float(w["p_min"]) + p_hi)
         t = 0.5 * (float(w.get("t_min", 300.0)) + float(w.get("t_max", 3000.0)))
         got = v._phase_at(p, t)
-        if isinstance(got, st.Stop) or got.id != ph["id"]:
+        if isinstance(got, st.Stop):
+            # review 2 M-C2-03: no phase answers at this phase's own middle (an inverted window, a misordered chain, a
+            # region or edge over it): reported unless the phase answers somewhere on a 5 × 5 grid of its window
+            # (a field record's phase window is wider than its field, so its middle may sit in a declared refusal)
+            lo_t, hi_t = float(w.get("t_min", 300.0)), float(w.get("t_max", 3000.0))
+            fr = (0.1, 0.3, 0.5, 0.7, 0.9)
+            somewhere = False
+            for fp in fr:
+                for ft in fr:
+                    pp, tt = float(w["p_min"]) + fp * (p_hi - float(w["p_min"])), lo_t + ft * (hi_t - lo_t)
+                    g = v._phase_at(pp, tt)
+                    if not isinstance(g, st.Stop) and g.id == ph["id"] and not isinstance(v.state(pp, tt), st.Stop):
+                        somewhere = True
+                        break
+                if somewhere:
+                    break
+            if not somewhere:
+                out.append((ph["id"], p, t, getattr(got.record, "why", repr(got.record))))
+            continue
+        if got.id != ph["id"]:
             continue                                    # another phase holds the middle (a branched record)
         s = v.state(p, t)
         if isinstance(s, st.Stop):
