@@ -597,13 +597,15 @@ class _nothing:
 
 class BasalDelegation(unittest.TestCase):
     """Note 1 keeps BasalView's curve_slope_points delegation (68's note on 64f38d74): equal to the overlying view's for
-    every overlying curve, bit for bit; BasalView has no transitions of its own."""
+    every overlying curve, bit for bit. Since review 2 R-M-03 (2bfe6a83) BasalView's transitions are the overlying
+    view's too (the basal layer lands the curves its dT/dP read steps or kinks at), so they are checked equal."""
 
     def test_delegation(self):
         over = _view()
         rec = {"id": "basal_test", "kind": "assemblage", "phases": [{"id": "basal"}]}
         b = ma.BasalView(rec, 4000.0, over, 1600.0)
-        self.assertEqual(b.transitions(), ())
+        self.assertEqual(b.transitions(), over.transitions())
+        self.assertTrue(b.transitions())
         for _between, _kind, curve in over.transitions():
             self.assertEqual(b.curve_slope_points(curve), over.curve_slope_points(curve))
 
