@@ -102,10 +102,13 @@ class C1(unittest.TestCase):
         4a60fad7: the stage 5c form): a field whose steps don't resolve its jump to the floor is «C⁰ unresolved», a
         FINDING, never a pass. The four edges where the s read crosses the narrow bg→ppv loops (bse 34/36 at 118 GPa,
         42/43 at 23.5–24 GPa: two-phase slivers ~1/230 of the blend width, the read C¹ with a steep slope across them)
-        must be among those checked; their resolved h and allowance are printed."""
+        must be among those checked; their resolved h and allowance are printed. Both reads, s on and off, explicitly
+        (r2 n1 on 19178a16: the records' default doesn't leave the other unchecked)."""
         reg = mr.load()
-        for rid in RECORDS:
+        for rid, s_on in ((r, m) for r in RECORDS for m in (False, True)):
             v = _view(reg, rid)
+            v.s_read = s_on
+            rid_m = f"{rid} (s read {'on' if s_on else 'off'})"
             n, bad, unres, named = 0, [], [], {}
             for c in v._cut:
                 if c.kind != "edge":
@@ -128,19 +131,21 @@ class C1(unittest.TestCase):
                         if c.id in NAMED_EDGES.get(rid, ()):
                             named.setdefault(c.id, []).append((t, [(q["h"], q["allowance"]) for q in got]))
             for cid in sorted(named):
-                print(f"{rid} edge {cid}: (T, [(resolved h, allowance) per field]) {named[cid][:2]}")
-            self.assertGreater(n, 100, rid)
-            self.assertEqual(sorted(named), sorted(NAMED_EDGES.get(rid, ())), rid)
-            self.assertEqual(unres[:5], [], f"{rid}: C⁰ unresolved at the floor (a FINDING for review)")
-            self.assertEqual(bad[:5], [], rid)
+                print(f"{rid_m} edge {cid}: (T, [(resolved h, allowance) per field]) {named[cid][:2]}")
+            self.assertGreater(n, 100, rid_m)
+            self.assertEqual(sorted(named), sorted(NAMED_EDGES.get(rid, ())), rid_m)
+            self.assertEqual(unres[:5], [], f"{rid_m}: C⁰ unresolved at the floor (a FINDING for review)")
+            self.assertEqual(bad[:5], [], rid_m)
 
     @unittest.skipUnless(_shipped(), "no shipped assemblage records with their tables")
     def test_c0_plants_go_red(self):
         """r2 4a60fad7 (a): a jump planted at bse edge 34's P_b_ext (1650 K) in dT/dP, 1e-6 and 1e-8 of the field's size,
         goes red (resolved, not ok); the same point unplanted passes. The 1e-8 plant shows the floor sits below the band
-        the test claims (1e-9 of the field's size)."""
+        the test claims (1e-9 of the field's size). On the s read, explicitly (r2 n1 on 19178a16): the read F13 ships,
+        where the loop edges need the deepest resolution."""
         reg = mr.load()
         v = _view(reg, "silicate_slb_default_bse")
+        v.s_read = True
         c = next(c for c in v._cut if c.id == 34)
         t = 1650.0
         xb = math.log(c.p_b_ext(t, v._reach))
