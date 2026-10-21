@@ -701,6 +701,20 @@ class ScopedLoad(unittest.TestCase):
             self.assertNotIsInstance(got, mr.LoadStop)
             self.assertEqual(set(got.records), {"fe_prem"})
 
+    def test_a_scoped_load_holds_the_full_loads_records(self):
+        """Review 2 n3 (r2 214f37c0): «the same records, fewer of them», measured. For every id a scoped load holds, its
+        record and its table equal the full load's, with the switch off and on."""
+        full = mr.load()
+        self.assertIsInstance(full, mr.Registry)
+        for opts in (context.Options(), context.Options(silicate_records=True)):
+            reg = sv.registry_for(body("earth"), opts)
+            self.assertLess(len(reg.records), len(full.records))
+            for rid in reg.records:
+                with self.subTest(rid=rid, switch=opts.silicate_records):
+                    self.assertEqual(reg.records[rid], full.records[rid])
+                    self.assertEqual(reg.tables.get(rid), full.tables.get(rid))
+            self.assertEqual(set(reg.tables), set(full.tables) & set(reg.records))
+
 
 class SurfaceFloor(unittest.TestCase):
     def test_record_top_view_takes_the_legacy_floor(self):
