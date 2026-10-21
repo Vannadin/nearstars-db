@@ -253,6 +253,7 @@ class FloatPathUnchanged(unittest.TestCase):
     def test_rho_and_off(self):
         on, off = _view(), _view(s_read=False)
         base = ma.view(thaw(_reg().get("silicate_slb_default_bse")), _reg().tables["silicate_slb_default_bse"], 1600.0)
+        base.s_read = False                          # pins s explicitly (F13: the record declares the s read)
         rnd = random.Random(3)
         for _ in range(200):
             p, t = math.exp(rnd.uniform(math.log(1e8), math.log(1.3e11))), rnd.uniform(1000.0, 3500.0)
@@ -660,6 +661,7 @@ class Taper(unittest.TestCase):
             want = (1.0 - w) * (lifted[i] + (1.0 - w) * (cut0[i] - lift0[i])) + w * th_[i - 1]
             self.assertAlmostEqual(z[i], want, delta=1e-12 * abs(want))
         off = ma.view(th(got), reg.tables[rid], 1600.0, 0.0, 0.0, ho)
+        off.s_read = False                           # pins s explicitly (F13: the record declares the s read)
         self.assertNotEqual(off._blend(p, t)[2], z[2])                     # the s read moves it: the test reads it
 
 
