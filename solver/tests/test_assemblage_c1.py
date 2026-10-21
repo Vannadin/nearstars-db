@@ -1,8 +1,9 @@
 # 광물 집합 읽기 C¹ 항목(5d998d40) 시험 — 실제 기록에서 변 P_b 의 C⁰, 곁 읽기가 남기는 표시·노트 없음, 꺾임 조사 부분집합의 이름 붙은 부류·한도
 """The C¹ read's acceptance in the suite, on the shipped records (a TIP; skipped on the engine branch alone).
-- C⁰ at every cut edge (68 ruling 1 (1)): across x_b the read's step over ±1e-9 in ln P is half its step over ±2e-9
-  (only the slope's share, no jump), to 1e-9 of the field's size there, in all three fields, every third row,
-  wherever neither side refuses. The blend's C⁰ there rests on the own read equalling the same-side side read.
+- C⁰ at every cut edge (68 ruling 1 (1)): across x_b in ln P by the J₄ test (stage 5c's form, r2 4a60fad7), to 1e-9 of
+  the field's size there, in all three fields, every third row, wherever neither side refuses; unresolved at the
+  floor is a FINDING; planted jumps of 1e-6 and 1e-8 go red. The blend's C⁰ there rests on the own read equalling the
+  same-side side read.
 - Side reads leave nothing on the read (ruling 1 (3)): inside the windows a read's notes and counts are its own read's
   (the blend switched off), and a point read cold (fresh view) and warm (after the other points) is the same.
 - Slope jumps (68 ruling 4): kinkscan's subset of lines finds no kink outside the named classes or above their bounds;
@@ -36,6 +37,60 @@ def _view(reg, rid):
     return ma.view(thaw(reg.get(rid)), reg.tables[rid], 1600.0)
 
 
+#: r2 4a60fad7: the edges where the s read crosses the narrow bg→ppv loops, checked by name
+NAMED_EDGES = {"silicate_slb_default_bse": (34, 36, 42, 43)}
+#: the J₄ ladder in ln P (start, floor: reads down to ±floor/8; under the s read the loop edges 43 resolve at 7.8e-9) and the round-off floor's multiplier on ε|v| (stage 5c,
+#: r2 32cf0efe: J₄'s weights (|8| + |6| + |1|)/3 = 5 over two-read differences, 1.6 ε|v| each: 16)
+C0_H0, C0_H_FLOOR, C0_FLOOR_K = 1e-6, 1e-10, 16.0
+
+
+def _j3(s, h):
+    return (8.0 * s(h / 4.0) - 6.0 * s(h / 2.0) + s(h)) / 3.0
+
+
+def _c0_j4(s, v_abs, tol):
+    """The stage 5c C⁰ test (r2 32cf0efe, B1 on ac9af31a, addendum db668a80): J = J₃(h/2) + (J₃(h/2) − J₃(h))/7,
+    allowance |J₃(h) − J₃(h/2)|/7 + C0_FLOOR_K·ε·|v|; resolved when allowance ≤ tol/2, then ok when |J| ≤ tol + allowance;
+    else h halves from C0_H0 down to C0_H_FLOOR, and still unresolved there is «C⁰ unresolved» (not ok)."""
+    h = C0_H0
+    while True:
+        a, b = _j3(s, h), _j3(s, h / 2.0)
+        est, allow = b + (b - a) / 7.0, abs(a - b) / 7.0 + C0_FLOOR_K * 2.220446049250313e-16 * v_abs
+        q = {"J": est, "allowance": allow, "tol": tol, "h": h}
+        if allow <= tol / 2.0:
+            return {**q, "resolved": True, "ok": abs(est) <= tol + allow}
+        if h / 2.0 < C0_H_FLOOR * (1.0 - 1e-12):
+            return {**q, "resolved": False, "ok": False}
+        h /= 2.0
+
+
+def _edge_c0(v, xb, t, plant=None):
+    """Per field, _c0_j4 of s(h) = v(x_b + h) − v(x_b − h) in ln P at T; tol 1e-9 of the field's size there (max of
+    |v| at x_b and half a window either side, not a 0 crossing). None when a read refuses (a refusal boundary).
+    `plant` (field, rel): a jump of rel × the field's size added above x_b (the plants)."""
+    cache = {}
+
+    def read(x):
+        if x not in cache:
+            g = v._solid(math.exp(x), t)
+            if not isinstance(g, tuple):
+                raise LookupError
+            cache[x] = g
+        return cache[x]
+    try:
+        w = v._width(xb)
+        mid, far = read(xb), [read(xb + e * w) for e in (-0.5, 0.5)]
+        out = []
+        for f in range(3):
+            scale = max(abs(mid[f]), abs(far[0][f]), abs(far[1][f]))
+            add = (lambda x, f=f, sc=scale: plant[1] * sc if (plant and plant[0] == f and x > xb) else 0.0)
+            s = (lambda h, f=f: (read(xb + h)[f] + add(xb + h)) - (read(xb - h)[f] + add(xb - h)))
+            out.append(_c0_j4(s, scale, 1e-9 * scale))
+        return out
+    except LookupError:
+        return None
+
+
 def _noscale(n):
     return dataclasses.replace(n, scale=None) if isinstance(n, mv.BandNote) else n
 
@@ -43,10 +98,15 @@ def _noscale(n):
 class C1(unittest.TestCase):
     @unittest.skipUnless(_shipped(), "no shipped assemblage records with their tables")
     def test_continuous_at_every_cut_edge(self):
+        """C⁰ in ln P across every cut edge's P_b_ext (every third row, T and T + 17 K), each field, by the J₄ test (r2
+        4a60fad7: the stage 5c form): a field whose steps don't resolve its jump to the floor is «C⁰ unresolved», a
+        FINDING, never a pass. The four edges where the s read crosses the narrow bg→ppv loops (bse 34/36 at 118 GPa,
+        42/43 at 23.5–24 GPa: two-phase slivers ~1/230 of the blend width, the read C¹ with a steep slope across them)
+        must be among those checked; their resolved h and allowance are printed."""
         reg = mr.load()
         for rid in RECORDS:
             v = _view(reg, rid)
-            n, bad = 0, []
+            n, bad, unres, named = 0, [], [], {}
             for c in v._cut:
                 if c.kind != "edge":
                     continue
@@ -55,19 +115,41 @@ class C1(unittest.TestCase):
                         pb = c.p_b_ext(t, v._reach)
                         if pb is None or not v.ps[0] < pb < v.p_dataset:
                             continue
-                        got = [v._solid(pb * math.exp(e), t) for e in (-2e-9, -1e-9, 1e-9, 2e-9)]
-                        far = [v._solid(pb * math.exp(e * v._width(math.log(pb))), t) for e in (-0.5, 0.5)]
-                        if not all(isinstance(g, tuple) for g in got + far):
+                        xb = math.log(pb)
+                        got = _edge_c0(v, xb, t)
+                        if got is None:
                             continue                         # a refusal boundary
                         n += 1
-                        for f in range(3):
-                            a2, a1, b1, b2 = (g[f] for g in got)
-                            scale = max(abs(a1), abs(far[0][f]), abs(far[1][f]))   # the field's size here, not a 0 crossing
-                            # continuous: the step across x_b over 2e-9 is half the one over 4e-9 (the slope's share)
-                            if abs((b1 - a1) - 0.5 * (b2 - a2)) > 1e-9 * scale:
-                                bad.append((c.id, pb / 1e9, t, f, a1, b1))
+                        for f, q in enumerate(got):
+                            if not q["resolved"]:
+                                unres.append((c.id, pb / 1e9, t, f, q["h"], q["allowance"]))
+                            elif not q["ok"]:
+                                bad.append((c.id, pb / 1e9, t, f, q["J"], q["tol"] + q["allowance"]))
+                        if c.id in NAMED_EDGES.get(rid, ()):
+                            named.setdefault(c.id, []).append((t, [(q["h"], q["allowance"]) for q in got]))
+            for cid in sorted(named):
+                print(f"{rid} edge {cid}: (T, [(resolved h, allowance) per field]) {named[cid][:2]}")
             self.assertGreater(n, 100, rid)
+            self.assertEqual(sorted(named), sorted(NAMED_EDGES.get(rid, ())), rid)
+            self.assertEqual(unres[:5], [], f"{rid}: C⁰ unresolved at the floor (a FINDING for review)")
             self.assertEqual(bad[:5], [], rid)
+
+    @unittest.skipUnless(_shipped(), "no shipped assemblage records with their tables")
+    def test_c0_plants_go_red(self):
+        """r2 4a60fad7 (a): a jump planted at bse edge 34's P_b_ext (1650 K) in dT/dP, 1e-6 and 1e-8 of the field's size,
+        goes red (resolved, not ok); the same point unplanted passes. The 1e-8 plant shows the floor sits below the band
+        the test claims (1e-9 of the field's size)."""
+        reg = mr.load()
+        v = _view(reg, "silicate_slb_default_bse")
+        c = next(c for c in v._cut if c.id == 34)
+        t = 1650.0
+        xb = math.log(c.p_b_ext(t, v._reach))
+        clean = _edge_c0(v, xb, t)
+        self.assertTrue(all(q["ok"] for q in clean), clean)
+        for jump in (1e-6, 1e-8):
+            with self.subTest(jump=jump):
+                got = _edge_c0(v, xb, t, plant=(1, jump))
+                self.assertTrue(got[1]["resolved"] and not got[1]["ok"], got[1])
 
     @unittest.skipUnless(_shipped(), "no shipped assemblage records with their tables")
     def test_side_reads_leave_no_note(self):
