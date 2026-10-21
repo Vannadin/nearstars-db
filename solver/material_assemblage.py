@@ -1020,8 +1020,8 @@ class _Run(tuple):
       run's (68 N3): the end-two secants' gentler one differs on the shipped records (run
       ends of ≥ 3 nodes, three fields, ~2300 per record: 23–26 % are 0 under one rule only, end-two/all p90 2.9–3.9) and
       read the truth closer, but broke the ρ-monotone test at bse 11.93 GPa, 925 K (a loop cell's end segment);
-    - an end facing a gap inside its region takes s_e Fritsch–Carlson clipped against the gap's secant (set_end, from
-      _runs), shared with the bridge (_bridge)."""
+    - an end facing a gap inside its region takes s_e Fritsch–Carlson clipped between its own end secant and the gap's
+      secant (set_end, from _runs), shared with the bridge (_bridge)."""
     #: s-read §3.2: True when the run holds a frozen node (set by AssemblageView._runs; a bare run holds none). A
     #: superset of §3.2's stencil (r2 n1 on 677f85d0..0d7732d3): any frozen node of the run marks every read of it, so
     #: a row whose freeze T varies with P keeps today's read conservatively, also far from its frozen nodes
@@ -1058,14 +1058,20 @@ class _Run(tuple):
             self.coeffs[n - 2] = c1[:4] + (c1[4], self.m_hi)
 
     def set_end(self, hi, s_gap, keep=False):
-        """The end facing a gap inside the region (hi: the run's last node): PCHIP's end slope clipped against the
-        gap's secant, so the end segment and the bridge share it. keep: the gap's far side is a one-node run (68 z3),
-        so the end's own slope (the open end's s_n) is clipped instead: the bridge's clip of it is then a no-op, and on
-        the shipped records it binds nowhere (no value change: 3 / 9 / 9 such ends, the clip binding at none)."""
+        """The end facing a gap inside the region (hi: the run's last node): PCHIP's end slope Fritsch–Carlson clipped
+        between the run's own end secant and the gap's secant, so the end segment and the bridge share it, and an end
+        where the data turn (the two secants of opposite sign) takes slope 0 (review 2 M-C1b-04: clipped against the
+        gap's secant alone, a turning end kept its sign and the bridge overshot the node). keep: the gap's far side is
+        a one-node run (68 z3), so the end's own slope (the open end's s_n) is clipped instead: the bridge's clip of it
+        is then a no-op, and on the shipped records it binds nowhere (no value change: 3 / 9 / 9 such ends, the clip
+        binding at none)."""
+        xs, ys = self[0], self[1]
         if hi:
-            self.m_hi = _clip_fc(self.m_hi if keep else self.se_hi, s_gap, s_gap)
+            s_run = (ys[-1] - ys[-2]) / (xs[-1] - xs[-2])
+            self.m_hi = _clip_fc(self.m_hi if keep else self.se_hi, s_run, s_gap)
         else:
-            self.m_lo = _clip_fc(self.m_lo if keep else self.se_lo, s_gap, s_gap)
+            s_run = (ys[1] - ys[0]) / (xs[1] - xs[0])
+            self.m_lo = _clip_fc(self.m_lo if keep else self.se_lo, s_gap, s_run)
         self._ends()
 
     def value(self, x):
@@ -1197,7 +1203,7 @@ def _bridge(x, a, b):
     """The value at x in the gap between two runs of one region (a ends before b starts): C⁰'s linear join of a's end
     and b's start (secant s) plus, at each end, the open end's bump (_bump) from that end's slope to s, over
     L = min(END_BUMP·h_end, h/2) (h/2 for a run of one node, slope 0). _runs set both end slopes to PCHIP's end slope
-    Fritsch–Carlson clipped against s (_Run.set_end), the slope each run's end segment takes too, so the read is C¹ at
+    Fritsch–Carlson clipped between the run's end secant and s (_Run.set_end), the slope each run's end segment takes too, so the read is C¹ at
     both run ends, s in the gap's middle, and monotone where the two ends are, as |m| ≤ 3|s| keeps the bump's least
     slope s − (m − s)/3 of s's sign (item 5d998d40, 68 ruling 4: in place of the linear join, which kinked at both ends;
     the hold-out truth: the cubic Hermite with those slopes read mars's gap-bridge ρ worse than C⁰, CI 1.20–1.77; this

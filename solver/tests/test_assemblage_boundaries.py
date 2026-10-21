@@ -846,6 +846,24 @@ class Choices(unittest.TestCase):
         self.assertTrue(any(ma.LIQUID_ALONE_NOTE in getattr(n, "text", "") for n in got[2]))
         self.assertEqual(v.phase_read(p, t), ma.PHASE_ID)
 
+    def test_gap_end_turning_at_its_node(self):
+        """Review 2 M-C1b-04: an end whose own last secant and the gap's secant differ in sign (a local extremum at the
+        node) takes slope 0 (Fritsch–Carlson against both secants), so neither the run's end segment nor the bridge
+        leaves the node the wrong way: both stay between the end values. Before the fix the clip saw the gap's secant
+        twice and kept PCHIP's end slope (+1 here), and the bridge rose to 3.023, above both ends (3 and 2); this test
+        fails there (the review's probe p3). An end that does not turn keeps its slope."""
+        for capped in (True, False):
+            a = ma._Run([0.0, 1.0, 2.0], [1.0, 2.0, 3.0], [0, 1, 2], 0, capped=capped)
+            b = ma._Run([4.0, 5.0, 6.0], [2.0, 1.5, 1.0], [4, 5, 6], 0, capped=capped)
+            s = (b[1][0] - a[1][-1]) / (b[0][0] - a[0][-1])
+            a.set_end(True, s)
+            b.set_end(False, s)
+            self.assertEqual(a.m_hi, 0.0, capped)
+            self.assertEqual(b.m_lo, b.se_lo, capped)
+            top = max(ma._bridge(2.0 + 2.0 * i / 4000, a, b) for i in range(1, 4000))
+            self.assertLessEqual(top, 3.0, capped)
+            self.assertLessEqual(max(a.value(1.0 + i / 1000) for i in range(1001)), 3.0, capped)
+
     def test_gap_inside_a_region_reads_by_a_bridge(self):
         """68 H1, item 5d998d40 (68 ruling 4): an outer row with a missing node inside a region reads across the gap by
         the cubic Hermite bridge from one run's end to the next with their end slopes (not the nearest run's value, and
