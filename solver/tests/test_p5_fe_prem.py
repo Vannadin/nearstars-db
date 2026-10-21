@@ -257,6 +257,20 @@ class FormulaChecks(unittest.TestCase):
         self.assertNotIsInstance(got, mc.CheckStop, got)
         self.assertAlmostEqual(got, 0.47418, places=4)
 
+    def test_edge_band_rides_in_the_dtdp_slot(self):
+        """Review 2 M-C1a-05: the γ set's edge band (max of the γ and (∂P/∂T)_V spreads) is a relative error on dT/dP,
+        so the read's note carries it as dtdp_error with error (the ρ term, e_ρ: c9ab28cf, reg-interp-term §4) None;
+        material_notes then sums it into dT/dP, not into ρ. Before the fix it rode in the ρ slot (error 0.474,
+        dtdp_error None) at Earth's centre, past 350 GPa, and this test fails."""
+        from solver import material_view as mv
+        got = mv.RecordView(self.rec, 1600.0).state(355e9, 5500.0)
+        notes = [n for n in got[2] if isinstance(n, mv.BandNote) and "γ set past" in n.edge]
+        self.assertEqual(len(notes), 1)
+        n = notes[0]
+        self.assertIsNone(n.error)
+        self.assertAlmostEqual(n.dtdp_error, 0.47418, places=4)
+        self.assertEqual(n.dtdp_origin, self.rec["phases"][0]["thermal"]["sets"][1]["edge_above"]["band"]["origin"])
+
     def test_planted_seager_alpha_fails(self):
         from solver.from_v1 import thaw
         c = self.checks["P_TH at 6000 K"]

@@ -942,8 +942,11 @@ class RecordView:
                 err = self._band_error(ph, s)
                 if isinstance(err, st.Stop):
                     return err
+                # review 2 M-C1a-05: the band is a relative error on γ and (∂P/∂T)_V, i.e. on dT/dP, so it rides in
+                # the dT/dP slot; `error` is the ρ term (e_ρ, c9ab28cf / reg-interp-term §4)
                 self.notes.append(BandNote(self.material_id, f"{ph.id} γ set past {s.p_max:g} Pa", s.edge_band["form"],
-                                           err, s.edge_band.get("method"), s.edge_band["grade"], s.edge_band["origin"]))
+                                           None, s.edge_band.get("method"), s.edge_band["grade"], s.edge_band["origin"],
+                                           dtdp_error=err, dtdp_origin=s.edge_band["origin"]))
             if s.evaluator is not None:
                 return self._ev(s, p, t, "gruneisen")
             if s.c_v <= 0.0 or rho <= 0.0:
