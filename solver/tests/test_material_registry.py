@@ -435,5 +435,34 @@ class P4Probes(unittest.TestCase):
             self.assertTrue(ps)
             self.assertTrue(all(pmin < p < pmax for p in ps), (pmin, pmax, ps))
 
+
+class RefusalVocabulary(unittest.TestCase):
+    def test_the_view_ids_are_the_load_rules_ids(self):
+        """Review 2 C2 (r2 214f37c0): RECORD_REFUSAL_IDS is kept by hand beside the ids material_view and
+        material_assemblage give, so it is checked against them. Every literal id a RecordRefusal(...) or _refuse(...)
+        call in those two files names is in RECORD_REFUSAL_IDS ∪ {material.field_overlap} (the record-defect id, which
+        a record may not name), and every RECORD_REFUSAL_IDS entry is one of them (no stale entry). A new view id that
+        records need, left out of the list, would STOP them at load; this test fails instead."""
+        import ast
+        from pathlib import Path
+        from solver import material_registry as mr
+        got = set()
+        for name in ("material_view.py", "material_assemblage.py"):
+            tree = ast.parse((Path(mr.__file__).parent / name).read_text(encoding="utf-8"))
+            for c in ast.walk(tree):
+                if not isinstance(c, ast.Call):
+                    continue
+                f = c.func.attr if isinstance(c.func, ast.Attribute) else getattr(c.func, "id", None)
+                at = {"RecordRefusal": 3, "_refuse": 2}.get(f)
+                if at is None or len(c.args) <= at:
+                    continue
+                a = c.args[at]
+                if isinstance(a, ast.Constant) and isinstance(a.value, str):
+                    got.add(a.value)
+        self.assertGreater(len(got), 1)
+        self.assertLessEqual(got, mr.RECORD_REFUSAL_IDS | {"material.field_overlap"})
+        self.assertEqual(got - {"material.field_overlap"}, set(mr.RECORD_REFUSAL_IDS))
+        self.assertNotIn("material.field_overlap", mr.RECORD_REFUSAL_IDS)
+
 if __name__ == "__main__":
     unittest.main()
