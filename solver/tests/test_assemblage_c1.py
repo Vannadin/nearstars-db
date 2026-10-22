@@ -6,13 +6,16 @@
   same-side side read.
 - Side reads leave nothing on the read (ruling 1 (3)): inside the windows a read's notes and counts are its own read's
   (the blend switched off), and a point read cold (fresh view) and warm (after the other points) is the same.
-- Slope jumps (68 ruling 4): kinkscan's subset of lines finds no kink outside the named classes or above their bounds;
+- Slope jumps (68 ruling 4): kinkscan's subset of lines finds no kink outside the named classes or above their bounds
+  but the pinned known ones (data/c1_known_violations.json, each with its owner tag; red on a new or grown one);
   the full scan does the same once per landing, outside the suite (landing_kink_scan.py, a PC round task).
 
 Run from the worktree root:  <solver venv>/python -m unittest solver.tests.test_assemblage_c1
 """
 import dataclasses
+import json
 import math
+import os
 import unittest
 
 from solver import material_assemblage as ma, material_registry as mr, material_view as mv
@@ -26,6 +29,61 @@ SUBSET = {"silicate_slb_default_bse": ((1068.5, 1568.5), (0.9606,)),
           "silicate_slb_mars_khan2022": ((1668.5, 1768.5), (120.3063,))}
 
 RECORDS = ("silicate_slb_default_bse", "silicate_slb_earth_dmm_wh2005", "silicate_slb_mars_khan2022")
+
+#: the subset's known violations, pinned with an owner tag each (68 README §7–§12, directing 10-23): written by
+#: c1_known_violations_writer.py from TIP's shipped records at s on with their fall sets; the test is red on any
+#: violation not pinned or grown past 2× its pinned jump_rel, and prints the pins no longer seen («resolved»)
+PIN_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "c1_known_violations.json")
+#: the closed owner tags (68 §7 (a), §8 Q1, §9; directing 10-23 «owner-pending»: s-read entries awaiting the owner's
+#: ruling, which block stage A's push while any remain)
+PIN_TAGS = frozenset({"kinkscan-b′", "E24", "E26", "records", "pre-existing-AF", "unattributed", "s-read", "owner-pending"})
+
+
+def _load_pins(path=PIN_FILE):
+    """The fixture, checked on load: every pin's tag in PIN_TAGS and a cite and a trigger on each, else ValueError."""
+    with open(path, encoding="utf-8") as f:
+        d = json.load(f)
+    for rid, pins in d["pins"].items():
+        for p in pins:
+            if p.get("tag") not in PIN_TAGS:
+                raise ValueError(f"{rid}: unknown owner tag {p.get('tag')!r}")
+            if not p.get("cite") or not p.get("trigger"):
+                raise ValueError(f"{rid}: a pin without its cite or trigger ({p.get('tag')}, {p.get('field')})")
+    return d
+
+
+def _scan_steps(v):
+    """kinkscan.scan's own coarse steps, the pins' matching tolerance: fixed-T lines in ln P (n steps to p_dataset),
+    fixed-P lines in T (max(20·rows, 400) steps)."""
+    n = ks.scan.__defaults__[-1]
+    return {"P": (math.log(v.p_dataset) - math.log(v.ps[0])) / n, "T": (v.ts[-1] - v.ts[0]) / max(len(v.ts) * 20, 400)}
+
+
+def _pin_match(k, p, steps):
+    """A violation k is pin p: same line, field and class, the line's fixed coordinate exact, the scanned one within
+    one scan step (ln P on a fixed-T line, T on a fixed-P line)."""
+    if "line" not in k or (k["line"], k["field"], k["class"]) != (p["line"], p["field"], p["class"]):
+        return False
+    if k["line"] == "P":
+        return k["T"] == p["T"] and abs(math.log(k["P"]) - math.log(p["P"])) <= steps["P"]
+    return k["P"] == p["P"] and abs(k["T"] - p["T"]) <= steps["T"]
+
+
+def _against_pins(kinks_violations, pins, steps):
+    """(new, grown, resolved, matched): violations matched one to one to their nearest pin; new = unpinned, grown =
+    (violation, pin) past 2× the pin's jump_rel, resolved = pins nothing matched."""
+    left, new, grown, matched = list(pins), [], [], []
+    for k in kinks_violations:
+        m = [p for p in left if _pin_match(k, p, steps)]
+        if not m:
+            new.append(k)
+            continue
+        p = min(m, key=lambda q: abs(math.log(k["P"] / q["P"])) + abs(k["T"] - q["T"]))
+        left.remove(p)
+        matched.append(p)
+        if k["jump_rel"] > 2.0 * p["jump_rel"]:
+            grown.append((k, p))
+    return new, grown, left, matched
 
 
 def _shipped():
@@ -193,16 +251,57 @@ class C1(unittest.TestCase):
 
     @unittest.skipUnless(_shipped(), "no shipped assemblage records with their tables")
     def test_kinks_named_and_bounded_subset(self):
+        """kinkscan's subset finds no violation outside the pinned known ones (PIN_FILE), and none grown past 2× its pin;
+        each run prints per table the pins resolved, the unattributed count and the owner-pending count («landing
+        blocked until the owner rules»), and whether fall sets were loaded (the E24 pin is sets-only)."""
         reg = mr.load()
+        d = _load_pins()
         named = 0
         for rid, (t_lines_at, p_gpa) in SUBSET.items():
             v = _view(reg, rid)
             _ts, ps = ks.full_lines(v)
             p_lines = [min(ps, key=lambda q: abs(q / 1e9 - g)) for g in p_gpa]
             kinks = ks.scan(v, p_lines=t_lines_at, t_lines=p_lines)
-            self.assertEqual(ks.violations(kinks, rid), [], rid)
+            steps = _scan_steps(v)
+            self.assertEqual(steps, d["steps"][rid], rid)    # the tolerance the pins were written with
+            new, grown, resolved, matched = _against_pins(ks.violations(kinks, rid), d["pins"][rid], steps)
+            tags = {t: sum(p["tag"] == t for p in d["pins"][rid]) for t in sorted(PIN_TAGS)}
+            sha = v.record["assemblage"]["sha256"]
+            print(f"\n{rid}: {len(matched)} pinned violations seen, {len(resolved)} pins resolved (remove them), "
+                  f"unattributed {tags['unattributed']}; fall sets {'loaded' if ma.FALL_SETS_DIR else 'none'}; "
+                  f"records {'as pinned' if sha == d['source']['records_sha256'][rid] else 'CHANGED since the pins'}")
+            print(f"{rid}: owner-pending {tags['owner-pending']}: landing blocked until the owner rules")
+            for p in resolved:
+                print(f"   resolved: {p['tag']} {p['line']} P {p['P']:.6g} T {p['T']:.6g} {p['field']} {p['class']}")
+            self.assertEqual(new, [], f"{rid}: violations not pinned")
+            self.assertEqual([(k, p) for k, p in grown], [], f"{rid}: pinned violations grown past 2× their jump_rel")
             named += len(kinks)
         self.assertGreater(named, 0)                         # the scan sees the named classes it bounds
+
+    def test_pins_load_and_match(self):
+        """The fixture's checks, on stand-ins: an unknown tag and a pin without a cite fail the load; a violation one
+        step off its pin matches, two steps off is new; one at 2× + ε its pin's jump_rel is grown; a pin unmatched is
+        resolved; two equal violations need two pins."""
+        import tempfile
+        steps = {"P": 0.01, "T": 2.0}
+        pin = {"line": "P", "P": 1e9, "T": 1500.0, "field": "dtdp", "class": "unnamed", "jump_rel": 10.0, "width": None,
+               "tag": "owner-pending", "cite": "c", "trigger": "t"}
+        for bad in ({**pin, "tag": "s read"}, {**pin, "cite": ""}):
+            with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+                json.dump({"pins": {"r": [bad]}}, f)
+            with self.assertRaises(ValueError):
+                _load_pins(f.name)
+            os.remove(f.name)
+        near = {**pin, "P": 1e9 * math.exp(0.0099)}
+        far = {**pin, "P": 1e9 * math.exp(0.0201)}
+        self.assertEqual(_against_pins([near], [pin], steps)[0], [])
+        self.assertEqual(_against_pins([far], [pin], steps)[0], [far])
+        self.assertEqual(len(_against_pins([{**pin, "jump_rel": 20.0001}], [pin], steps)[1]), 1)
+        self.assertEqual(_against_pins([{**pin, "jump_rel": 20.0}], [pin], steps)[1], [])
+        self.assertEqual(_against_pins([], [pin], steps)[2], [pin])
+        self.assertEqual(len(_against_pins([pin, pin], [pin], steps)[0]), 1)
+        self.assertEqual(_against_pins([{**pin, "T": 1500.5}], [pin], steps)[0], [{**pin, "T": 1500.5}])   # fixed T exact
+        self.assertTrue(_load_pins()["pins"])            # the shipped fixture loads
 
     def test_landing_scan_is_the_full_scan(self):
         """The full scan runs once per landing outside the suite (solver/tests/landing_kink_scan.py, a phase-1 task of
