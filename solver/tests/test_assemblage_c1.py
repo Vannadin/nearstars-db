@@ -60,13 +60,14 @@ def _scan_steps(v):
 
 
 def _pin_match(k, p, steps):
-    """A violation k is pin p: same line, field and class, the line's fixed coordinate exact, the scanned one within
-    one scan step (ln P on a fixed-T line, T on a fixed-P line)."""
+    """A violation k is pin p: same line, field and class, the line's fixed coordinate equal (T exactly; P, an exp of
+    the grid, to 1e-12), the scanned one within one scan step (ln P on a fixed-T line, T on a fixed-P line)."""
     if "line" not in k or (k["line"], k["field"], k["class"]) != (p["line"], p["field"], p["class"]):
         return False
-    if k["line"] == "P":
+    if k["line"] == "P":                             # fixed T: a SUBSET constant
         return k["T"] == p["T"] and abs(math.log(k["P"]) - math.log(p["P"])) <= steps["P"]
-    return k["P"] == p["P"] and abs(k["T"] - p["T"]) <= steps["T"]
+    # fixed P: full_lines' exp of the grid's ln P, so equal to 1e-12 (another libm may differ by an ulp)
+    return abs(k["P"] / p["P"] - 1.0) <= 1e-12 and abs(k["T"] - p["T"]) <= steps["T"]
 
 
 def _against_pins(kinks_violations, pins, steps):
@@ -263,7 +264,8 @@ class C1(unittest.TestCase):
             p_lines = [min(ps, key=lambda q: abs(q / 1e9 - g)) for g in p_gpa]
             kinks = ks.scan(v, p_lines=t_lines_at, t_lines=p_lines)
             steps = _scan_steps(v)
-            self.assertEqual(steps, d["steps"][rid], rid)    # the tolerance the pins were written with
+            for ax in ("P", "T"):                            # the tolerance the pins were written with (to 1e-12: libm)
+                self.assertLessEqual(abs(steps[ax] / d["steps"][rid][ax] - 1.0), 1e-12, (rid, ax))
             new, grown, resolved, matched = _against_pins(ks.violations(kinks, rid), d["pins"][rid], steps)
             tags = {t: sum(p["tag"] == t for p in d["pins"][rid]) for t in sorted(PIN_TAGS)}
             sha = v.record["assemblage"]["sha256"]
@@ -301,6 +303,9 @@ class C1(unittest.TestCase):
         self.assertEqual(_against_pins([], [pin], steps)[2], [pin])
         self.assertEqual(len(_against_pins([pin, pin], [pin], steps)[0]), 1)
         self.assertEqual(_against_pins([{**pin, "T": 1500.5}], [pin], steps)[0], [{**pin, "T": 1500.5}])   # fixed T exact
+        tp = {**pin, "line": "T"}                        # fixed P: to 1e-12, an ulp of libm is not a new kink
+        self.assertEqual(_against_pins([{**tp, "P": 1e9 * (1 + 1e-13)}], [tp], steps)[0], [])
+        self.assertEqual(len(_against_pins([{**tp, "P": 1e9 * (1 + 1e-11)}], [tp], steps)[0]), 1)
         self.assertTrue(_load_pins()["pins"])            # the shipped fixture loads
 
     def test_landing_scan_is_the_full_scan(self):
