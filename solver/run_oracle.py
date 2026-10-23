@@ -52,8 +52,11 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: directing 10-21 (b)): engine/ changes only by 1f3a028c's output-key rename basal_layer_thickness_km →
 #: basal_layer_thickness_solved_km in interior.py, plus test and tool files (test_ice_giant + its anchor's key,
 #: test_hobby_table, test_basal_layer, tools/basal_sulphur_scan); the four declared records equal ff6ce10f's with that
-#: key mapped and solve_id aside: da0b9372.
-ORACLE_ENGINE_TREE = "da0b937263dd880f8593b0b2176ccff9baf89534"
+#: key mapped and solve_id aside: da0b9372. The NaN-sign fix (ea-nanbisect: a NaN is never a sign, bisections refuse a
+#: NaN probe; rootfind's audit counter registered, the c143 inventory's two sign-counter lines) changes engine/ for
+#: NaN inputs only, so the four declared records must equal TIP 8d3f4aae's, header and solve_id aside (pc-nanbisect.sh
+#: §1c; a difference there voids this line): f6a8b686.
+ORACLE_ENGINE_TREE = "f6a8b686bfd9d797e237c4f7a7ed55b5e167e6b5"
 REPO = Path(lm._ENGINE).parent
 
 

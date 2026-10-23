@@ -97,6 +97,7 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("structure_grid", "JUDGE_A_ONLY"): (FLAG, "quick build: member a only at firing points, set and cleared in finally by quick_build (C161 note 3)", None),
     ("structure_grid", "SOLVE_KINDS"): (COUNTER, "structure solves by kind during a table build (C161 H-count)", None),
     ("structure_grid", "GRID_DIR"): (FLAG, "table directory override", None),
+    ("rootfind", "_AUDIT"): (COUNTER, "nanbisect audit: NaN refusals by site and bisection residual ratios, filled only under NS_NAN_AUDIT and dumped at exit, a count outside values", None),
 }
 
 

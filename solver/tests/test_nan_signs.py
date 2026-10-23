@@ -5,7 +5,11 @@ mutant shows it); the fixed bisection refuses, and a finite root is unchanged bi
 
 Run from the worktree root:  <solver venv>/python -m unittest solver.tests.test_nan_signs
 """
+import json
+import os
+import tempfile
 import unittest
+from unittest import mock
 
 from solver import rho_fall_build as rfb, signs as sg
 
@@ -35,7 +39,13 @@ class NaNSigns(unittest.TestCase):
     def test_bisect_refuses_a_nan_band(self):
         old = _old_bisect(_hole, 0.0, 1.0, -1.0)
         self.assertLess(min(abs(old - 0.2), abs(old - 0.7)), 1e-9)      # the mutant lands on a NaN edge
-        self.assertIsNone(rfb._bisect(_hole, 0.0, 1.0, -1.0))
+        # the plant's own refusal goes to its own audit file, so a run's NS_NAN_AUDIT holds shipped-path events only
+        with tempfile.TemporaryDirectory() as d:
+            f = os.path.join(d, "audit.jsonl")
+            with mock.patch.object(sg, "_AUDIT_FILE", f):
+                self.assertIsNone(rfb._bisect(_hole, 0.0, 1.0, -1.0))
+            ev = [json.loads(line) for line in open(f)]
+        self.assertEqual([e["nan"] for e in ev if e["nan"]], [{"rho_fall_build._bisect": 1}])
 
     def test_finite_root_bit_identical(self):
         f = lambda x: x * x - 0.3                                       # noqa: E731

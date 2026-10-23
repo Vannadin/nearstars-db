@@ -297,7 +297,7 @@
 [
 "engine/samuel_run.py",
 "tc_tb_sign",
-"sum((1 for (_, a), (_, b) in zip(gaps, gaps[1:]) if (a > 0) != (b > 0)))"
+"sum((1 for (_, a), (_, b) in zip(gaps, gaps[1:]) if ft.changes_sign(a, b)))"
 ],
 [
 "engine/stagnant_lid.py",
@@ -507,7 +507,7 @@
 [
 "engine/thermal_stack.py",
 "tc_tb_sign",
-"sum((1 for (_, a), (_, b) in zip(gaps, gaps[1:]) if (a > 0) != (b > 0)))"
+"sum((1 for (_, a), (_, b) in zip(gaps, gaps[1:]) if ft.changes_sign(a, b)))"
 ],
 [
 "engine/tidal_response.py",
