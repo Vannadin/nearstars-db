@@ -266,7 +266,7 @@ class C1(unittest.TestCase):
             steps = _scan_steps(v)
             for ax in ("P", "T"):                            # the tolerance the pins were written with (to 1e-12: libm)
                 self.assertLessEqual(abs(steps[ax] / d["steps"][rid][ax] - 1.0), 1e-12, (rid, ax))
-            new, grown, resolved, matched = _against_pins(ks.violations(kinks, rid), d["pins"][rid], steps)
+            new, grown, resolved, matched = _against_pins(ks.violations_with_hold(v, kinks, rid)[0], d["pins"][rid], steps)
             tags = {t: sum(p["tag"] == t for p in d["pins"][rid]) for t in sorted(PIN_TAGS)}
             sha = v.record["assemblage"]["sha256"]
             print(f"\n{rid}: {len(matched)} pinned violations seen, {len(resolved)} pins resolved (remove them), "
@@ -335,6 +335,89 @@ class C1(unittest.TestCase):
                 with mock.patch.object(lk, "full", return_value=([object()], viol)):
                     self.assertEqual(lk.main([out, rid]), rc)
                 self.assertEqual(json.load(open(out)), {rid: {"kinks": 1, "violations": [repr(x) for x in viol]}})
+
+
+#: the permanent (b′) plant (artifacts pc/ea-f13b/kink-plant.md, blob ade4f642; 68's two conditions): per record one
+#: fixed-P line where rev3d's s-off scan had accepted members, read with s off; and the accepted count there at TIP
+PLANT = {"silicate_slb_default_bse": 931943836.1517304, "silicate_slb_earth_dmm_wh2005": 693577755.6642308,
+         "silicate_slb_mars_khan2022": 666239746.8287351}
+PLANT_PIN = {"silicate_slb_default_bse": 3, "silicate_slb_earth_dmm_wh2005": 3, "silicate_slb_mars_khan2022": 3}   # ρ, dT/dP, c_P at each end (kmeas)
+
+
+class HoldClass(unittest.TestCase):
+    """The «interior-end hold (b′)» class (kinkscan.hold; note 8 delta 1 addendum 1, r2 c8a2fab3, 68 README §14–§15):
+    at s on on the subset lines every accepted member within its bound and every failing violation an E26 pin; the s-off plant
+    accepts its pinned count and the x_r mutant accepts none while still locating members; the shipped AF data and
+    census are checked on load."""
+
+    def test_shipped_data_checked_on_load(self):
+        import tempfile
+        from unittest import mock
+        for name in ("kinkscan_af_kinks.json", "kinkscan_af_lines.json", "e26_census.json"):
+            ks._SHIPPED.pop(name, None)
+            self.assertTrue(ks.shipped(name))
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(ks, "DATA", d), mock.patch.dict(ks._SHIPPED, clear=True):
+            with self.assertRaises(FileNotFoundError):
+                ks.shipped("kinkscan_af_kinks.json")
+            for bad in ({"data": {}}, {"provenance": {"af": "x"}, "sha256": "0" * 64, "data": {"r": []}}):
+                with open(os.path.join(d, "kinkscan_af_lines.json"), "w") as f:
+                    json.dump(bad, f)
+                ks._SHIPPED.clear()
+                with self.assertRaises(ValueError):
+                    ks.shipped("kinkscan_af_lines.json")
+
+    @unittest.skipUnless(_shipped(), "no shipped assemblage records with their tables")
+    def test_s_on_members_bounded(self):
+        """At s on on the subset's fixed-P lines: no candidate left for want of an AF lookup, every accepted member within
+        HOLD_BOUND, and every C⁰-failing member above the generic T-row bound one of the c1 fixture's E26 or owner-pending pins
+        (counted once, 68 §14 (iii))."""
+        reg = mr.load()
+        pins = _load_pins()
+        for rid, (_t_lines, p_gpa) in SUBSET.items():
+            v = _view(reg, rid)
+            self.assertTrue(v.s_read, rid)
+            _ts, ps = ks.full_lines(v)
+            p_lines = [min(ps, key=lambda q: abs(q / 1e9 - g)) for g in p_gpa]
+            members, no_af = ks.holds(v, ks.scan(v, t_lines=p_lines))
+            self.assertEqual(no_af, 0, rid)
+            acc = [k for k, h in members if h["accepted"]]
+            self.assertEqual([k for k in acc if k["jump_rel"] > ks.HOLD_BOUND[rid][k["field"]]], [], rid)
+            # E26's pins, and the owner-pending s-read pins that 68's census amendment 1 (README §18) moves to E26 once the
+            # fixture is re-tagged in its own commit
+            e26 = [p for p in pins["pins"][rid] if p["tag"] in ("E26", "owner-pending")]
+            steps = _scan_steps(v)
+            fails = [k for k, h in members if not h["c0"]["ok"]]
+            # a failing member that is itself a violation must be one of those pins (counted once, 68 §14 (iii)); one
+            # inside the generic bound is no violation and has no pin
+            viol = [k for k in fails if k["jump_rel"] > ks.BOUNDS["T row line"][k["field"]]]
+            self.assertEqual([k for k in viol if not any(_pin_match(k, p, steps) for p in e26)], [], rid)
+            print(f"\n{rid}: (b′) members {len(members)} at s on, accepted {len(acc)} (within HOLD_BOUND), C⁰-failing "
+                  f"{len(fails)} ({len(viol)} above the T-row bound, each a c1 pin)")
+
+    @unittest.skipUnless(_shipped(), "no shipped assemblage records with their tables")
+    def test_plant_and_xr_mutant(self):
+        """The s-off plant (68 §17): unmutated accepted = PLANT_PIN per table; under x_r (1) members located over the
+        plant as a whole, (2) each pinned member absent or not accepted, (3) none accepted; no AF lookup missing."""
+        reg = mr.load()
+        located = 0
+        for rid, p in PLANT.items():
+            v = _view(reg, rid)
+            v.s_read = False
+            members, no_af = ks.holds(v, ks.scan(v, t_lines=[p]))
+            self.assertEqual(no_af, 0, rid)
+            self.assertEqual(sum(h["accepted"] for _k, h in members), PLANT_PIN[rid], rid)
+            with ks.xr_mutant():
+                w = _view(reg, rid)
+                w.s_read = False
+                mm, no_af_m = ks.holds(w, ks.scan(w, t_lines=[p]))
+            self.assertEqual(no_af_m, 0, rid)
+            self.assertEqual([k for k, h in mm if h["accepted"]], [], rid)     # (3) none accepted under x_r
+            located += len(mm)
+            pinned = [k for k, h in members if h["accepted"]]
+            for k in pinned:                       # (2) each pinned member absent under x_r, or a member not accepted
+                self.assertFalse(any(m["field"] == k["field"] and abs(m["T"] - k["T"]) <= _scan_steps(v)["T"] and hm["accepted"]
+                                     for m, hm in mm), (rid, k))
+        self.assertGreater(located, 0)                # (1) the mutant locates members over the plant as a whole (68 §17)
 
 
 class RunEnd(unittest.TestCase):
