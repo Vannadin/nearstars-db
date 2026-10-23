@@ -42,6 +42,7 @@ from __future__ import annotations
 import convergence
 
 import math
+import rootfind as rf                     # NaN is never a sign (pc/ea-f13b/nanbisect/plan.md)
 import sys
 from pathlib import Path
 
@@ -119,11 +120,15 @@ def close_t_i(l_prime: float, mu_l: float, mu_i: float, damage_l: float, damage_
 
     lo, hi = 1.0e-9, 1.0 - 1.0e-9
     f_lo, f_hi = residual(lo), residual(hi)
-    if f_lo * f_hi > 0.0:
+    if not rf.nan_free(f_lo, f_hi, site="transitional_lid.eq59.bracket") or f_lo * f_hi > 0.0:
         return {"refused": f"no bracket for eq. (59) on (0, 1): residual {f_lo:+.3e} … {f_hi:+.3e}"}
     for i in range(max_iter):
         mid = 0.5 * (lo + hi)
         f_mid = residual(mid)
+        if f_mid != f_mid:                           # a NaN probe: refuse by name (nanbisect plan)
+            rf.nan_seen("transitional_lid.eq59.bisect")
+            convergence.note("transitional_lid.eq59_bisect", False)
+            return {"refused": f"eq. (59) residual is NaN at T = {mid:.6g} inside the bracket"}
         if abs(f_mid) < tol or hi - lo < tol:
             dl = delta_l(l_prime, mu_l, damage_l, ra, mid, m, p)
             dm = delta_m(mu_i, damage_i, ra, mid, m, p)

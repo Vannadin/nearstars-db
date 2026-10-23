@@ -2566,7 +2566,8 @@ def _litho_bracket(points: list, radius_at, tol: float):
     좁힘은 **순수 이분**, 횟수 ⌈log₂(W₀ / tol)⌉(괄호 폭에서 도출). 돌려주는 것: `(None, 까닭)` — 괄호 못 잡음 ·
     또는 `(r, (폭, 이분 횟수, 계단 위 뿌리?, |g(r)|))` — r 은 마지막 괄호의 가운데, |g(r)| 는 그 자리의 남은 어긋남."""
     g = [points[k + 1] - points[k] for k in range(len(points) - 1)]
-    pair = next((k for k in range(len(g) - 2, -1, -1) if (g[k] > 0.0) != (g[k + 1] > 0.0)), None)
+    pair = next((k for k in range(len(g) - 2, -1, -1)                  # a NaN is never a sign (nanbisect plan)
+                 if rootfind.nan_free(g[k], g[k + 1], site="interior._litho_bracket.pair") and (g[k] > 0.0) != (g[k + 1] > 0.0)), None)
     if pair is None:
         return None, "괄호 못 잡음 — g 부호가 반복한 점 내내 같다"
     lo, hi, g_lo = points[pair], points[pair + 1], g[pair]
@@ -2575,6 +2576,9 @@ def _litho_bracket(points: list, radius_at, tol: float):
     for _ in range(n_bisect):
         mid = 0.5 * (lo + hi)
         g_mid = radius_at(mid) - mid
+        if g_mid != g_mid:                             # a NaN probe: refuse as «no bracket» (nanbisect plan)
+            rootfind.nan_seen("interior._litho_bracket.bisect")
+            return None, "괄호 좁히다 NaN — g 가 중점에서 NaN 이라 근으로 받지 않는다"
         if (g_mid > 0.0) == (g_lo > 0.0):
             lo, g_lo = mid, g_mid
         else:
@@ -5986,7 +5990,9 @@ def _three_layer_close(x0, y0, x1, y1, evaluate, nmoi):
     허용 `THREE_LAYER_NMOI_TOL` · 예산 6 그대로. `evaluate(x)` → (imf, res, y) 또는 None. 결과 (best, closed)."""
     best = None
     closed = False
-    root = rootfind.brent(x0, y0, x1, y1, 1e-12) if (y0 < 0.0) != (y1 < 0.0) and y0 != 0.0 and y1 != 0.0 else None
+    root = (rootfind.brent(x0, y0, x1, y1, 1e-12)
+            if rootfind.nan_free(y0, y1, site="interior._three_layer_close") and (y0 < 0.0) != (y1 < 0.0)
+            and y0 != 0.0 and y1 != 0.0 else None)
     y = None
     for _ in range(6):
         if root is None:
@@ -6435,13 +6441,16 @@ def fit_sulphur_to_core_radius(mass_earth: float, radius_earth: float,
 
     f_lo = frac(got_lo) - target_frac
     f_hi = frac(got_hi) - target_frac
-    if f_lo * f_hi > 0:
-        return None, got_hi              # 축이 목표를 안 감싼다 — 호출부가 이름 대고 거절한다
+    if not rootfind.nan_free(f_lo, f_hi, site="interior.sulfur_bracket") or f_lo * f_hi > 0:
+        return None, got_hi              # 축이 목표를 안 감싼다(또는 NaN 끝) — 호출부가 이름 대고 거절한다
     best = got_hi
     for _ in range(n):
         mid = 0.5 * (lo + hi)
         best = at(mid)
         if not best.applicable:
+            return None, best
+        if frac(best) != frac(best):                  # a NaN probe: refuse, as an inapplicable trial (nanbisect plan)
+            rootfind.nan_seen("interior.sulfur_bisect")
             return None, best
         if (frac(best) - target_frac) * f_lo <= 0:
             hi = mid

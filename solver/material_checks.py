@@ -22,6 +22,7 @@ import re
 from dataclasses import dataclass
 from types import MappingProxyType
 from typing import Mapping
+from solver import signs as sg                 # NaN is never a sign (pc/ea-f13b/nanbisect/plan.md)
 
 
 @dataclass(frozen=True)
@@ -290,11 +291,14 @@ def view_record_fns(view):
         try:
             f = lambda p: pa.library.at(p, t)["g"] - pb.library.at(p, t)["g"]     # noqa: E731
             flo, fhi = f(lo), f(hi)
-            if flo * fhi > 0.0:
+            if not sg.nan_free(flo, fhi, site="material_checks.melt_p.bracket") or flo * fhi > 0.0:
                 raise _Stop("material.check_grammar", f"melt_p: G of {a} and {b} do not cross at {t:g} K in the windows")
             for _ in range(80):
                 mid = 0.5 * (lo + hi)
                 fm = f(mid)
+                if fm != fm:                         # a NaN probe: never a sign (nanbisect plan)
+                    sg.nan_seen("material_checks.melt_p.bisect")
+                    raise _Stop("material.check_grammar", f"melt_p: ΔG of {a} and {b} is NaN at {mid:g} Pa, {t:g} K")
                 if (fm > 0.0) == (flo > 0.0):
                     lo, flo = mid, fm
                 else:

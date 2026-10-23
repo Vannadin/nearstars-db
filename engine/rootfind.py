@@ -14,14 +14,72 @@ from __future__ import annotations
 import math
 
 
+# ── NaN in sign tests (directing / c8 7335778d fold-b1; artifacts ea-jobA pc/ea-f13b/nanbisect/plan.md) ─────────────────
+# `(f > 0) == (fa > 0)` and `fa * fb > 0` read a NaN as «not > 0», so a bisection with a NaN probe moves an end onto it
+# and converges onto the finite↔NaN edge, and a bracket test with a NaN end passes either way. The rule: a NaN is never a
+# sign (nan_free guards the tests), and a bisection never moves an end onto one (checked raises NaNProbe, which each site
+# turns into its existing refusal). The finite arithmetic is untouched, so results without a NaN are bit-identical.
+class NaNProbe(ValueError):
+    """A NaN where a bracketed search needed a sign: the search refuses rather than converge onto a NaN edge."""
+
+
+#: 68 (pc/audit68-nanbisect, 4911b80e): with NS_NAN_AUDIT=<file>, every NaN refusal (site) and every bisection's return
+#: ratio |f| at the returned bracket end / max |f| over its initial ends (values already in hand: no extra evaluation)
+#: are appended to the file at exit, one JSON line per process; behaviour is unchanged either way. The ratio watches
+#: the jump class (a finite sign change across a discontinuity), which this fix does not close.
+_AUDIT_FILE = __import__("os").environ.get("NS_NAN_AUDIT")
+_AUDIT = {"nan": {}, "residual": {}}
+
+
+def _audit_dump():
+    import json
+    import os
+    with open(_AUDIT_FILE, "a") as fh:
+        fh.write(json.dumps({"pid": os.getpid(), "argv": __import__("sys").argv[:3], **_AUDIT}) + "\n")
+
+
+if _AUDIT_FILE:
+    __import__("atexit").register(_audit_dump)
+
+
+def nan_seen(site: str) -> None:
+    """Count a NaN refused at `site` (audit only)."""
+    if _AUDIT_FILE:
+        _AUDIT["nan"][site] = _AUDIT["nan"].get(site, 0) + 1
+
+
+def residual(site: str, f_end: float, *f_init: float) -> None:
+    """Record |f_end| / max |f_init| for a bisection's return at `site` (audit only; values already in hand)."""
+    if _AUDIT_FILE:
+        m = max((abs(x) for x in f_init if x == x), default=0.0)
+        _AUDIT["residual"].setdefault(site, []).append(abs(f_end) / m if m else None)
+
+
+def checked(f: float, site: str = "?") -> float:
+    """f itself, for a bisection's sign update; NaNProbe when f is NaN."""
+    if f != f:
+        nan_seen(site)
+        raise NaNProbe(f"a NaN probe in a bracketed search at {site} (never taken as a sign)")
+    return f
+
+
+def nan_free(*fs: float, site: str | None = None) -> bool:
+    """True when none of fs is NaN: a sign or bracket test is decided only on values that have a sign."""
+    ok = not any(f != f for f in fs)
+    if not ok and site:
+        nan_seen(site)
+    return ok
+
+
 def brent(a: float, fa: float, b: float, fb: float, xtol: float):
     """양 끝을 **곧바로** 검사한다(생성기는 첫 next 까지 몸통을 안 돌리므로, 검사를 밖에 둔다)."""
-    if (fa < 0.0) == (fb < 0.0) and fa != 0.0 and fb != 0.0:
-        raise ValueError("rootfind.brent: fa and fb do not straddle zero")
+    if not nan_free(fa, fb, site="rootfind.brent") or ((fa < 0.0) == (fb < 0.0) and fa != 0.0 and fb != 0.0):
+        raise ValueError("rootfind.brent: fa and fb do not straddle zero (or one is NaN)")
     return _brent(a, fa, b, fb, xtol)
 
 
 def _brent(a: float, fa: float, b: float, fb: float, xtol: float):
+    f0 = (fa, fb)
     if fa == 0.0:
         return a, fa, a, a
     if fb == 0.0:
@@ -29,6 +87,9 @@ def _brent(a: float, fa: float, b: float, fb: float, xtol: float):
     c, fc = a, fa
     d = e = b - a
     while True:
+        if fb != fb:                                # a NaN trial: refuse, ending on the last finite best (NaN plan)
+            nan_seen("rootfind._brent")
+            return a, fa, min(a, c), max(a, c)
         if (fb > 0.0) == (fc > 0.0):
             c, fc = a, fa
             d = e = b - a
@@ -38,6 +99,7 @@ def _brent(a: float, fa: float, b: float, fb: float, xtol: float):
         tol = 2.0 * 2.220446049250313e-16 * abs(b) + 0.5 * xtol
         m = 0.5 * (c - b)
         if abs(m) <= tol or fb == 0.0:
+            residual("rootfind._brent", fb, *f0)
             return b, fb, min(b, c), max(b, c)
         if abs(e) >= tol and abs(fa) > abs(fb):
             s = fb / fa
@@ -259,7 +321,7 @@ def _scan(F, walk, tol_dm):
         if a[4] == 0.0:
             walk.crossings.append((a[0], a[1], a[2], a[4]))
             continue
-        if (a[4] < 0.0) == (b[4] < 0.0) or b[4] == 0.0:
+        if not nan_free(a[4], b[4], site="rootfind._scan") or (a[4] < 0.0) == (b[4] < 0.0) or b[4] == 0.0:   # NaN: no crossing
             continue
         walk.crossings.append(_locate(F, a, b, tol_dm, walk))
     if pts and pts[-1][4] == 0.0:
@@ -287,6 +349,9 @@ def _locate(F, a, b, tol_dm, walk):
         if abs(g) < abs(best[3]):
             best = cand
         if g == 0.0 or hi - lo < 1e-12:
+            break
+        if g != g:                                  # a NaN on the curve: stop narrowing, keep the best (NaN plan)
+            nan_seen("rootfind._locate")
             break
         if (g < 0.0) == (flo < 0.0):
             lo, flo = th, g

@@ -23,6 +23,7 @@ a0…a5 이고 XC 는 **열**이다 — 그래서 위치가 아니라 **이름(H
 from __future__ import annotations
 
 import math
+import rootfind as rf                     # NaN is never a sign (pc/ea-f13b/nanbisect/plan.md)
 
 import convergence
 
@@ -341,6 +342,10 @@ def density_at(p_gpa: float, t: float, column: str = "HSE") -> float:
             fell_back = True
         f2 = pressure(x2, t, column) - p_gpa
         STATS["iterations"] += 1
+        if f2 != f2:                  # a NaN probe: never a sign; end as unconverged on the last finite x (nanbisect plan)
+            rf.nan_seen("ice_fr2015.density_at")
+            STATS["exhausted"] += 1
+            break
         if (fa < 0.0) != (f2 < 0.0):
             b = x2
         else:

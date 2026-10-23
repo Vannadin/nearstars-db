@@ -303,6 +303,8 @@ def bracket_valid(f_lo: float, f_hi: float) -> bool:
     재현되지 않는다. 그런 자리는 `bracket_checked=False` 와 이유를 남긴다.
     ⚠ **순수 메모 캐시는 이 부류가 아니다** — `fe_liquid.thermal_at` 은 입력으로만 키를 만들어
     추가 호출이 메모리만 쓴다.""" 
+    if f_lo != f_lo or f_hi != f_hi:                   # a NaN end has no sign: not a bracket (pc/ea-f13b/nanbisect)
+        return False
     return f_lo == 0.0 or f_hi == 0.0 or (f_lo > 0.0) != (f_hi > 0.0)
 
 

@@ -39,6 +39,7 @@ import bisect
 import json
 import math
 import sys
+from solver import signs as sg                 # NaN is never a sign (pc/ea-f13b/nanbisect/plan.md)
 
 THR = -1e-5          # a fall: ∂R/∂lnP / R below this (rho_window's rule)
 SUB_P = 16           # base grid points per P cell
@@ -152,7 +153,7 @@ def swap_gibbs(v, curve_id, t, p_b, p_lo, p_hi):
                     alive[sgn] = False
                     continue
                 f2 = s2[1][0] - s2[0][0]
-                if (f2 > 0) != (dg_b > 0):
+                if sg.nan_free(f2, dg_b, site="rho_fall_build.crossing") and (f2 > 0) != (dg_b > 0):
                     br = (min(xb_, x2), max(xb_, x2), dg_b if x2 > xb_ else f2)
                     break
             step *= 2.0
@@ -168,6 +169,10 @@ def swap_gibbs(v, curve_id, t, p_b, p_lo, p_hi):
                 out["verdict"] = "read-extension STOP: a side does not converge in the bisection"
                 return out
             fm = sm[1][0] - sm[0][0]
+            if fm != fm:                                 # a NaN probe: never a sign (nanbisect plan)
+                sg.nan_seen("rho_fall_build.read_extension.bisect")
+                out["verdict"] = "read-extension STOP: a side's ΔG is NaN in the bisection"
+                return out
             if (fm > 0) == (fa > 0):
                 a, fa = mid, fm
             else:
@@ -216,13 +221,19 @@ def _reader(v, t, ib, unreadable):
 
 
 def _bisect(f, a, b, fa, n=60):
+    """Bracket bisection; None when a probe is NaN (never a sign: the end is not moved onto it; nanbisect plan)."""
+    fa0, fb_ = fa, None
     for _ in range(n):
         m = 0.5 * (a + b)
         fm = f(m)
+        if fm != fm:
+            sg.nan_seen("rho_fall_build._bisect")
+            return None
         if (fm > 0) == (fa > 0):
             a, fa = m, fm
         else:
-            b = m
+            b, fb_ = m, fm
+    sg.residual("rho_fall_build._bisect", max(abs(fa), abs(fb_)) if fb_ is not None else abs(fa), fa0)
     return 0.5 * (a + b)
 
 
@@ -510,7 +521,8 @@ def falls_at(v, t, ib, xlo, xhi):
                 a = max(a - step, left) if q is not None else a
                 break
             if q[1] >= 0.0:
-                a = _bisect(lambda z: gv(z)[1], a - step, a, q[1])
+                got = _bisect(lambda z: gv(z)[1], a - step, a, q[1])
+                a = got if got is not None else a          # a NaN probe: keep the walked, finite end
                 break
             a -= step
         if xf in step_fall:                              # a downward row step: the jump's two sides
@@ -522,7 +534,8 @@ def falls_at(v, t, ib, xlo, xhi):
             if q is None or e + step > right:
                 break
             if q[1] >= 0.0:
-                e = _bisect(lambda z: gv(z)[1], e, e + step, -1.0)
+                got = _bisect(lambda z: gv(z)[1], e, e + step, -1.0)
+                e = got if got is not None else e          # a NaN probe: keep the walked, finite end
                 break
             e += step
         ra = g(a)

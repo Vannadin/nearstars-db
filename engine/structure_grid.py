@@ -760,7 +760,7 @@ def _fold(r) -> bool:
     band = _fold_band()
     pts = []
     for x in sorted(_call_trials(r), key=lambda x: x[1]):
-        if len(x) < 6 or not x[5] or x[4] is None:
+        if len(x) < 6 or not x[5] or x[4] is None or x[4] != x[4]:     # a NaN y has no sign (nanbisect plan)
             continue
         tau = x[6] if len(x) > 6 and x[6] is not None else None
         if tau is None or tau > interior.SIGN_TAU_LIN:

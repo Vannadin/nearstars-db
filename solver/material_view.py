@@ -26,6 +26,7 @@ from solver import material_library as ml
 from solver import material_registry as mr
 from solver import stepper as st
 from solver.result import freeze
+from solver import signs as sg                 # NaN is never a sign (pc/ea-f13b/nanbisect/plan.md)
 
 R_GAS = 8.314462618          # J/(mol·K), the value legacy fe_liquid uses (a formula input, not a read source)
 
@@ -344,6 +345,9 @@ class FrenchRedmer2015:
             if not (a < x2 < b):
                 x2 = 0.5 * (a + b)
             f2 = self._p(x2, t) - p_gpa
+            if f2 != f2:                                   # a NaN probe: the caller refuses, as outside (nanbisect)
+                sg.nan_seen("material_view._rho.secant")
+                return None
             if (fa < 0.0) != (f2 < 0.0):
                 b = x2
             else:
@@ -635,6 +639,9 @@ class RecordView:
                 if mid in (lo, hi):
                     break
                 fm = f(mid)
+                if fm != fm:                           # a NaN probe: no root taken (nanbisect plan)
+                    sg.nan_seen("material_view.t_of_p_lnsqrt.bisect")
+                    return None
                 if (fm > 0.0) == (flo > 0.0):
                     lo, flo = mid, fm
                 else:

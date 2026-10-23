@@ -19,6 +19,8 @@ from __future__ import annotations
 
 import math
 
+import rootfind as rf                     # the NaN rule (pc/ea-f13b/nanbisect/plan.md): a NaN is never a sign
+
 K_BRACKET = 4.0            # §2.1 k
 FLOOR_M = 1e3              # §2.1 floor, 1 km
 FULL_SCAN = 4096           # §2.4: cells of the event-time scan (E0: 48 lost a 20 km pair; 4096 resolved 0.21 km)
@@ -79,15 +81,23 @@ def changes_sign(fa: float, fb: float) -> bool:
     return not (math.isnan(fa) or math.isnan(fb)) and (fa > 0) != (fb > 0)
 
 
-def bisect(f, a: float, b: float, fa: float) -> float:
-    """The solves' own bracket bisection (same arithmetic)."""
+def bisect(f, a: float, b: float, fa: float) -> float | None:
+    """The solves' own bracket bisection (same arithmetic). None when a probe is NaN (directing / c8 7335778d: NaN > 0
+    is False, so the old loop moved b onto every NaN midpoint and converged onto the finite↔NaN edge as a root); the
+    callers read None as «no root here», as for no sign change. A finite sign change across a jump is still narrowed
+    to the jump (the residual audit records |f| there)."""
+    fa0, fb_ = fa, None
     for _ in range(BISECT_ITERS):
         m = 0.5 * (a + b)
         fm = f(m)
+        if fm != fm:
+            rf.nan_seen("fold_track.bisect")
+            return None
         if (fm > 0) == (fa > 0):
             a, fa = m, fm
         else:
-            b = m
+            b, fb_ = m, fm
+    rf.residual("fold_track.bisect", max(abs(fa), abs(fb_)) if fb_ is not None else abs(fa), fa0)
     return 0.5 * (a + b)
 
 
@@ -204,8 +214,8 @@ def scan(h, lo: float, hi: float, n: int) -> list:
     for k in range(1, n + 1):
         b = lo + (hi - lo) * k / n
         fb = h(b)
-        if changes_sign(fa, fb):
-            roots.append(bisect(h, a, b, fa))
+        if changes_sign(fa, fb) and (x := bisect(h, a, b, fa)) is not None:
+            roots.append(x)
         a, fa = b, fb
     return roots
 

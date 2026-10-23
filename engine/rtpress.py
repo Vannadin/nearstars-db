@@ -17,6 +17,7 @@ in P, C_V, γ and every other derivative).
 from __future__ import annotations
 
 import math
+import rootfind as rf                     # NaN is never a sign (pc/ea-f13b/nanbisect/plan.md)
 
 K_B = 8.617333262e-5          # eV/K
 PV = 160.2176634              # GPa·Å³ per eV
@@ -311,6 +312,9 @@ def _false_position(p: float, t: float, lo: float, hi: float) -> float:
             if not (lo < mid < hi):
                 mid = 0.5 * (lo + hi)
         f = pressure(mid, t) - p
+        if f != f:                                   # a NaN probe: hand back to volume_full (nanbisect plan)
+            rf.nan_seen("rtpress._false_position")
+            return None
         if (f > 0.0) == (f_lo > 0.0):
             lo, f_lo = mid, f
             if side == -1:
@@ -341,7 +345,7 @@ def volume(p: float, t: float) -> float:
     OUTSIDE["loop"] = OUTSIDE.get("loop", 0) + 1
     OUTSIDE.setdefault("loop_first", (p, t))
     v = _false_position(p, t, lo, vh)
-    if not _dpdv(v, t) < 0.0:
+    if v is None or not _dpdv(v, t) < 0.0:
         OUTSIDE["fallback"] = OUTSIDE.get("fallback", 0) + 1
         OUTSIDE["calls"] -= 1
         return volume_full(p, t)
@@ -376,13 +380,17 @@ def volume_full(p: float, t: float) -> float:
                 raise gap
             break
     g_lo, g_hi = pressure(lo, t) - p, pressure(hi, t) - p
-    if g_lo * g_hi > 0.0:
+    if not rf.nan_free(g_lo, g_hi, site="rtpress.volume_full.bracket") or g_lo * g_hi > 0.0:
         raise eos.PhaseGap(MATERIAL, p * 1e9, (
             f"rtpress: P {p:.4g} GPa at T {t:.1f} K has no root in V ∈ [{lo / V0:.3g}, {hi / V0:.4g}]·V₀ "
             f"(P spans {pressure(hi, t):.4g}–{pressure(lo, t):.4g} GPa)"), t)
     for _ in range(200):
         mid = 0.5 * (lo + hi)
         g = pressure(mid, t) - p
+        if g != g:                                   # a NaN probe: no root taken there (nanbisect plan)
+            rf.nan_seen("rtpress.volume_full.bisect")
+            raise eos.PhaseGap(MATERIAL, p * 1e9, f"rtpress: P(V) is NaN at V/V₀ = {mid / V0:.6g} inside the bracket "
+                               f"(T {t:.1f} K, P {p:.4g} GPa); no root is taken at a NaN edge", t)
         if (g > 0.0) == (g_lo > 0.0):
             lo, g_lo = mid, g
         else:

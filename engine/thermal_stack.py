@@ -228,13 +228,20 @@ def solve_boundary_layers(s: Stack, t_c: float, t_m: float, d_l: float, t_l: flo
         return d_u, d_b, rts, up, lo, t_b, p_m, eta_m, ""
 
     def bisect(f, a, b, fa):
+        # None on a NaN probe (directing / c8 7335778d: NaN > 0 is False, so this loop moved b onto every NaN midpoint
+        # and converged onto the finite↔NaN edge — outer() is NaN where no inner root exists); fixed in place (68 c3)
+        fa0, fb_ = fa, None
         for _ in range(BISECT_ITERS):
             m = 0.5 * (a + b)
             fm = f(m)
+            if fm != fm:
+                ft.rf.nan_seen("thermal_stack.bisect")
+                return None
             if (fm > 0) == (fa > 0):
                 a, fa = m, fm
             else:
-                b = m
+                b, fb_ = m, fm
+        ft.rf.residual("thermal_stack.bisect", max(abs(fa), abs(fb_)) if fb_ is not None else abs(fa), fa0)
         return 0.5 * (a + b)
 
     def inner_roots(du):
@@ -244,8 +251,8 @@ def solve_boundary_layers(s: Stack, t_c: float, t_m: float, d_l: float, t_l: flo
         for k in range(1, scan + 1):
             b = top * k / scan
             fb = h(b)
-            if ft.changes_sign(fa, fb):
-                roots.append(bisect(h, a, b, fa))
+            if ft.changes_sign(fa, fb) and (x := bisect(h, a, b, fa)) is not None:
+                roots.append(x)
             a, fa = b, fb
         return roots
 
@@ -292,6 +299,8 @@ def solve_boundary_layers(s: Stack, t_c: float, t_m: float, d_l: float, t_l: flo
     a, b, fa = (min(brackets, key=lambda br: abs(0.5 * (br[0] + br[1]) - ref_u)) if ref_u is not None
                 else brackets[0])
     d_u = bisect(outer, a, b, fa)
+    if d_u is None:                                  # a NaN probe: no root here, as for no bracket (NaN plan)
+        return None
     rts = inner_roots(d_u)
     d_b = choose(d_u, rts, record=prev is None)
     up, lo, t_b, p_m, eta_m = layers(d_u, d_b)
@@ -489,7 +498,7 @@ def tc_tb_sign(rows: list) -> dict:
     """The sign of T_c − T_b over the accepted rows (directing 10-19, the gain-cap decision: a cap is needed only if
     it changes): the count of sign changes between consecutive rows, the least |T_c − T_b| and its time, the rows."""
     gaps = [(r["t"], r["t_c"] - r["t_b"]) for r in rows if r.get("t_b") is not None]
-    changes = sum(1 for (_, a), (_, b) in zip(gaps, gaps[1:]) if (a > 0) != (b > 0))
+    changes = sum(1 for (_, a), (_, b) in zip(gaps, gaps[1:]) if ft.changes_sign(a, b))   # a NaN is no sign
     t_min, g_min = min(gaps, key=lambda z: abs(z[1])) if gaps else (None, None)
     return {"rows": len(gaps), "sign_changes": changes, "min_abs_k": None if g_min is None else abs(g_min),
             "min_at_gyr": t_min}

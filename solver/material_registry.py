@@ -32,6 +32,7 @@ from typing import Mapping
 
 from solver.yamlio import LoadError, load_data, parse
 from solver.result import freeze
+from solver import signs as sg                 # NaN is never a sign (pc/ea-f13b/nanbisect/plan.md)
 
 MATERIALS_DIR = Path(__file__).resolve().parent / "materials"
 SCHEMA = load_data(MATERIALS_DIR / "schema.yaml")
@@ -1247,12 +1248,15 @@ def triple_point_misses(rec: Mapping, file: str) -> LoadStop | None:
                                 f"of {p0:g}")
                 try:
                     flo, fhi = dg(lo), dg(hi)
-                    if flo * fhi > 0.0:
+                    if not sg.nan_free(flo, fhi, site="material_registry.min_g.bracket") or flo * fhi > 0.0:
                         return stop(f"min-G boundary {gib[i]}–{gib[j]} not found in [{lo:g}, {hi:g}] Pa (±{2 * dp:g} "
                                     f"of {p0:g}, inside both windows)")
                     for _ in range(60):
                         mid = 0.5 * (lo + hi)
                         fm = dg(mid)
+                        if fm != fm:                         # a NaN probe: a miss by name (nanbisect plan)
+                            sg.nan_seen("material_registry.min_g.bisect")
+                            return stop(f"min-G boundary {gib[i]}–{gib[j]}: ΔG is NaN at {mid:g} Pa, {t0:g} K")
                         if (fm > 0.0) == (flo > 0.0):
                             lo, flo = mid, fm
                         else:

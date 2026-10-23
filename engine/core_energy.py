@@ -31,6 +31,7 @@ from __future__ import annotations
 import convergence
 
 import math
+import rootfind as rf                     # NaN is never a sign (pc/ea-f13b/nanbisect/plan.md)
 
 import cmb_flux as cf
 import core_state as cs
@@ -228,7 +229,7 @@ def find_root(t_m_base: float, material_name: str, p_cmb: float, r_cmb: float, m
         t_hi = min(t_hi, 2.0 * cf.EQ39_DOMAIN.hi - t_m_base)     # keep T_a inside eqs 37–39's declared domain
     f_lo = balance(lo, t_m_base, material_name, p_cmb, r_cmb, m_core, dtc_dt, h)[0]
     f_hi = balance(t_hi, t_m_base, material_name, p_cmb, r_cmb, m_core, dtc_dt, h)[0]
-    if (f_lo > 0.0) == (f_hi > 0.0):
+    if not rf.nan_free(f_lo, f_hi, site="core_energy.bracket") or (f_lo > 0.0) == (f_hi > 0.0):
         return None
     hi = t_hi
     # ⚠ **기준 가지가 없다 — 정해진 횟수를 다 돌고 중점을 돌려준다** (브리프 189 Amendment 2).
@@ -237,13 +238,18 @@ def find_root(t_m_base: float, material_name: str, p_cmb: float, r_cmb: float, m
                      bracket_valid=convergence.bracket_valid(
                          f_lo, balance(hi, t_m_base, material_name, p_cmb, r_cmb,
                                        m_core, dtc_dt, h)[0]))
+    f0_lo = f_lo
     for _ in range(50):
         mid = 0.5 * (lo + hi)
         f_mid = balance(mid, t_m_base, material_name, p_cmb, r_cmb, m_core, dtc_dt, h)[0]
+        if f_mid != f_mid:                           # a NaN probe: no root, as for no bracket (NaN plan)
+            rf.nan_seen("core_energy.bisect")
+            return None
         if (f_mid > 0.0) == (f_lo > 0.0):
             lo, f_lo = mid, f_mid
         else:
             hi = mid
+    rf.residual("core_energy.bisect", f_lo, f0_lo)
     return 0.5 * (lo + hi)
 
 
