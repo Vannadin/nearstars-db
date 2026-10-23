@@ -445,18 +445,18 @@ def holds(v, kinks):
     return members, no_af
 
 
-def violations_with_hold(v, kinks, rid, full=False):
+def violations_with_hold(v, kinks, rid, full=False, members=None, apart=()):
     """violations() with the (b′) class counted apart (addendum 1 §2): accepted members leave the generic count and are
-    violations themselves above HOLD_BOUND, and candidates left for want of an AF lookup
-    are one count violation. Returns (violations, members)."""
-    members, no_af = holds(v, kinks)
+    violations themselves above HOLD_BOUND, and candidates left for want of an AF lookup are one count violation.
+    `members`, (members, no_af) from holds() when the caller has them; `apart`, further kinks the caller has counted
+    apart (the landing scan's E26 census matches), also left out of the generic count. Returns (violations, members)."""
+    members, no_af = holds(v, kinks) if members is None else members
     acc = [k for k, h in members if h["accepted"]]
-    rest = [k for k in kinks if not any(k is a for a in acc)]
+    rest = [k for k in kinks if not any(k is a for a in acc) and not any(k is a for a in apart)]
     out = violations(rest, rid, full=full)
     for k in acc:
-        b = HOLD_BOUND[rid]
-        if k["jump_rel"] > b[k["field"]]:
-            out.append({**k, "class": HOLD, "bound": b})
+        if k["jump_rel"] > HOLD_BOUND[rid][k["field"]]:
+            out.append({**k, "class": HOLD, "bound": HOLD_BOUND[rid]})
     if no_af:
         out.append({"class": HOLD, "no_af_lookup": no_af})
     return out, members

@@ -20,20 +20,26 @@ from solver.tests.test_assemblage_c1 import RECORDS, _shipped, _view
 def full(reg, rid):
     """The full scan of one record: every line kinkscan.full_lines gives, in both directions; (kinks, violations). The
     «interior-end hold (b′)» class is counted apart (ks.violations_with_hold, full=True): an accepted member is a
-    violation while its bound is none (s on, E26), and a member failing C⁰ at t_e is a violation unless it belongs to
-    E26's census in every field failing there (ks.e26_census_match, 68 §9 with amendment 1; README §15, §18)."""
+    violation above HOLD_BOUND. A member failing C⁰ at t_e is an edge T-end step: when every field failing there is in
+    E26's census (ks.e26_census_match, 68 §9 with amendment 1) it leaves the generic count as «E26 (census)», counted and
+    printed; otherwise it is one violation, its own (b′) entry, not also a generic one (68 README §15, §18, §20 B1)."""
     v = _view(reg, rid)
     ts, ps = ks.full_lines(v)
     kinks = ks.scan(v, p_lines=ts, t_lines=ps)
-    viol, members = ks.violations_with_hold(v, kinks, rid, full=True)
-    for k, h in members:                         # every field failing C⁰ at the end must be in E26's census (§9 am. 1)
+    members = ks.holds(v, kinks)
+    e26, miss = [], []
+    for k, h in members[0]:
         if h["c0"]["ok"]:
             continue
         bad = [f["field"] for f in h["c0"]["fields"] if not f["ok"]] or ["rho", "dtdp", "c_p"]
         out = [f for f in bad if f == "rho" or ks.e26_census_match(v, {**k, "field": f, "T": h["t_e"]},
                                                                     end=(h["curve"], h["side"])) is None]
-        if out:
-            viol.append({**k, "class": ks.HOLD, "c0_fails_outside_e26": out, "curve": h["curve"], "t_e": h["t_e"]})
+        (miss if out else e26).append((k, h, out))
+    viol, _m = ks.violations_with_hold(v, kinks, rid, full=True, members=members, apart=[k for k, _h, _o in e26 + miss])   # each counted once
+    for k, h, out in miss:
+        viol.append({**k, "class": ks.HOLD, "c0_fails_outside_e26": out, "curve": h["curve"], "t_e": h["t_e"]})
+    print(f"{rid}: (b′) members {len(members[0])}, accepted {sum(h['accepted'] for _k, h in members[0])}, "
+          f"E26 (census) {len(e26)}, C⁰-failing outside the census {len(miss)}", flush=True)
     return kinks, viol
 
 

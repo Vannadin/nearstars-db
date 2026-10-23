@@ -391,8 +391,9 @@ class HoldClass(unittest.TestCase):
             # inside the generic bound is no violation and has no pin
             viol = [k for k in fails if k["jump_rel"] > ks.BOUNDS["T row line"][k["field"]]]
             self.assertEqual([k for k in viol if not any(_pin_match(k, p, steps) for p in e26)], [], rid)
+            only_op = [k for k in viol if not any(_pin_match(k, p, steps) for p in e26 if p["tag"] == "E26")]
             print(f"\n{rid}: (b′) members {len(members)} at s on, accepted {len(acc)} (within HOLD_BOUND), C⁰-failing "
-                  f"{len(fails)} ({len(viol)} above the T-row bound, each a c1 pin)")
+                  f"{len(fails)} ({len(viol)} above the T-row bound, each a c1 pin; {len(only_op)} only an owner-pending one)")
 
     @unittest.skipUnless(_shipped(), "no shipped assemblage records with their tables")
     def test_plant_and_xr_mutant(self):
@@ -418,6 +419,30 @@ class HoldClass(unittest.TestCase):
                 self.assertFalse(any(m["field"] == k["field"] and abs(m["T"] - k["T"]) <= _scan_steps(v)["T"] and hm["accepted"]
                                      for m, hm in mm), (rid, k))
         self.assertGreater(located, 0)                # (1) the mutant locates members over the plant as a whole (68 §17)
+
+
+class LandingCensus(unittest.TestCase):
+    def test_census_match_moves_the_verdict(self):
+        """68 §20 B1: on the landing scan a C⁰-failing (b′) member above the generic T-row bound is no violation when
+        every failing field is in E26's census, and is one when it is not (stand-ins for the view, scan and census)."""
+        from unittest import mock
+        from solver.tests import landing_kink_scan as lk
+        rid = RECORDS[0]
+        k = {"line": "T", "P": 1e9, "T": 2000.0, "field": "dtdp", "class": "T row line",
+             "jump_rel": 10 * ks.BOUNDS["T row line"]["dtdp"], "width": None}
+        h = {"member": True, "accepted": False, "curve": 7, "side": "hi", "t_e": 2000.0,
+             "c0": {"ok": False, "fields": [{"field": "rho", "ok": True}, {"field": "dtdp", "ok": False},
+                                            {"field": "c_p", "ok": False}]}}
+        with mock.patch.object(lk, "_view", return_value=object()), \
+                mock.patch.object(ks, "full_lines", return_value=([], [])), \
+                mock.patch.object(ks, "scan", return_value=[k]), \
+                mock.patch.object(ks, "holds", return_value=([(k, h)], 0)):
+            with mock.patch.object(ks, "e26_census_match", return_value={"curve": 7}):
+                self.assertEqual(lk.full(None, rid)[1], [])                       # matched: counted as E26, not red
+            with mock.patch.object(ks, "e26_census_match", return_value=None):
+                viol = lk.full(None, rid)[1]
+            self.assertEqual([x.get("c0_fails_outside_e26") for x in viol if x.get("class") == ks.HOLD], [["dtdp", "c_p"]])
+            self.assertEqual(len([x for x in viol if x["class"] == "T row line"]), 0)   # not also a generic violation
 
 
 class RunEnd(unittest.TestCase):
