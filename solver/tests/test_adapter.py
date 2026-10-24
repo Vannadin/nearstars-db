@@ -111,6 +111,10 @@ class Reset(unittest.TestCase):
                 continue
             if (m, n) in lm.CONSTANT_MEMOS:
                 continue
+            if (m, n) in lm.AUDIT_ACCUMULATORS:
+                self.assertEqual(kind, process_state.COUNTER)  # audit-only counters accumulate across solves
+                self.assertIn("audit", why)
+                continue
             if (m, n) in lm.IMPORT_REGISTRIES:
                 self.assertIn("at import", why)          # the exclusion is exactly the import-time registries
                 continue
@@ -177,6 +181,26 @@ class StartFilledBeforeImport(unittest.TestCase):
         r = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True)
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertEqual(r.stdout.strip().splitlines()[-1], "(0.0, 0.0, 0.0)")
+
+
+class AuditAccumulates(unittest.TestCase):
+    def test_two_solve_process_dumps_both(self):
+        """68 on the NaN audit (run 2, ef942f11): a process that resets engine state between two solves dumps the audit
+        events of both. The mutant (the audit holder reset like any COUNTER, as at e5e65073) keeps the second only."""
+        import json, os, subprocess, sys, tempfile
+        code = ("import sys; sys.path.insert(0, 'engine'); import solver.legacy_materials as lm; import rootfind as rf;"
+                " lm.AUDIT_ACCUMULATORS = lm.AUDIT_ACCUMULATORS if sys.argv[1] == 'fixed' else frozenset();"
+                " rf.residual('audit_test', 1.0, 2.0); lm.reset_engine_state(); rf.residual('audit_test', 3.0, 4.0)")
+        got = {}
+        for mode in ("fixed", "mutant"):
+            with tempfile.TemporaryDirectory() as d:
+                f = os.path.join(d, "audit.jsonl")
+                r = subprocess.run([sys.executable, "-c", code, mode], capture_output=True, text=True,
+                                   env={**os.environ, "NS_NAN_AUDIT": f})
+                self.assertEqual(r.returncode, 0, r.stderr)
+                got[mode] = [x for line in open(f) for x in json.loads(line).get("residual", {}).get("audit_test", [])]
+        self.assertEqual(got["fixed"], [0.5, 0.75])
+        self.assertEqual(got["mutant"], [0.75])
 
 
 class SurfaceFallback(unittest.TestCase):

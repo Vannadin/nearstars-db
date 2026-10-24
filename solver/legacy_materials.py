@@ -134,6 +134,11 @@ CONSTANT_MEMOS = frozenset({
     ("water_table", "_CACHE"), ("water2_table", "_CACHE"), ("paleos", "_FACTS"),
     ("check_refs", "BASENAMES"), ("check_refs", "CACHE")})
 
+#: Audit-only COUNTERs that accumulate across solves for the whole process and are dumped at its exit (the NaN-sign
+#: audit, NS_NAN_AUDIT; empty without it). They sit outside every value, so resetting them per solve only loses events:
+#: NaN run 2 (artifacts ea-nanbisect-out-e5e65073 ef942f11) kept a multi-solve process's last solve alone. Not reset.
+AUDIT_ACCUMULATORS = frozenset({("rootfind", "_AUDIT")})
+
 #: Record-shaped MEMOs: a dict with fixed fields, at rest when every field is empty, None or 0.
 RECORD_MEMOS = frozenset({("interior", "_FAMILY_TRAIL")})
 
@@ -185,11 +190,12 @@ def reset_engine_state() -> list:
     - per-solve MEMO → its empty form (snapshotted at rest at import), in place;
     - COUNTER → its value at import, in place (keys kept).
     Not touched: FLAG entries (set and restored in `finally` by their owner, e.g. interior.COMPOSITIONS), the two
-    import-time registries (IMPORT_REGISTRIES) and the CONSTANT_MEMOS. Returns [(module, name, kind)] reset."""
+    import-time registries (IMPORT_REGISTRIES), the CONSTANT_MEMOS and the AUDIT_ACCUMULATORS. Returns
+    [(module, name, kind)] reset."""
     done = []
     initial = {(mod, name): init for (mod, name), (_k, _w, init) in process_state.REGISTRY.items()}
     for mod, name, kind, m in _registry_entries():
-        if (mod, name) in CONSTANT_MEMOS:
+        if (mod, name) in CONSTANT_MEMOS or (mod, name) in AUDIT_ACCUMULATORS:
             continue
         fresh = copy.deepcopy(initial[(mod, name)] if kind == process_state.START else _PRISTINE.get((mod, name)))
         cur = getattr(m, name)
