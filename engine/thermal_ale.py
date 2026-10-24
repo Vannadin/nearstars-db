@@ -38,6 +38,7 @@ import math
 
 import fold_track as ft
 import hop_track as hp
+import melt_exact
 import samuel_layer as lay
 import samuel_lid as sl
 import samuel_model as sm
@@ -59,7 +60,8 @@ STATS: dict = {}
 def reset_stats() -> None:
     STATS.clear()
     STATS.update(ddot_rejects=0, ddot_worst_rel=0.0, ddot_consistency_worst=0.0, shortened=0, shortened_cold=0,
-                 accepted=0, melt_iter_max=0, landings=0, ramp_capped=0)
+                 accepted=0, melt_iter_max=0, landings=0, ramp_capped=0, landed_before_fold=0, landings_cold=0,
+                 ramp_capped_cold=0)
 
 
 def _radius_at(s, p_pa: float, r_top: float, r_bot: float) -> float | None:
@@ -90,12 +92,7 @@ def event_signs(s, y: list, t_gyr: float, c: float) -> tuple:
     cv = s.body["curves"]
     p_x = s.body["melt_extraction_below_pa"]
     rx, rs = _radius_at(s, p_x, r_top, r_bot), _radius_at(s, cv["seam_gpa"] * 1e9, r_top, r_bot)
-    if rx is not None:
-        t_deep = sm.solidus(s.melt_p(rx) / 1e9, cv)
-        d_ref = sm.crust_reference_thickness(s.r_p, s.r_c, s.body["crust_reference_fraction"])
-        t_shal = sm.depleted_solidus(t_deep, y[3], d_ref, s.body["delta_t_sol"])
-    a_, b_, c_ = cv["low"]
-    seam_lo, seam_hi = a_ + b_ * cv["seam_gpa"] + c_ * cv["seam_gpa"] ** 2, cv["high"][0]
+    t_deep, t_shal, seam_hi, seam_lo = event_thresholds(s, y[3])
     out = [f["stefan"] > 0.0]
     for k in (-1.0, 0.0, 1.0):
         tm = y[1] + k
@@ -120,7 +117,11 @@ def _land(s, step, y0: list, t: float, y_new: list, h_used: float, sg0: tuple) -
         mid = 0.5 * (lo + hi)
         hp.restore(s, snap)
         hp.STEP["ratio"] = mid / hp.STEP["h_last"] if hp.STEP["h_last"] else 1.0
-        y_mid = step(list(y0), t, mid)
+        try:
+            y_mid = step(list(y0), t, mid)
+        except ft.Lost as e:                          # 68: a loss inside the landing bisection is its own refusal
+            hp.restore(s, snap)
+            raise sm.Refused(f"a trial inside the event landing lost {e.equation} at t = {t + mid / GYR_S:.6f} Gyr") from e
         if event_signs(s, y_mid, t + mid / GYR_S, 1.0) == sg0:
             lo = mid
         else:
@@ -128,6 +129,21 @@ def _land(s, step, y0: list, t: float, y_new: list, h_used: float, sg0: tuple) -
     hp.restore(s, snap)
     STATS["landings"] += 1
     return hi
+
+
+def event_thresholds(s, d_cr: float) -> tuple:
+    """The solidus values the event pairs compare with, from melt_exact's own branch rule (r2 S2): at r_x the deep
+    side (p > P_x: undepleted) and the shallow side (depleted), on the line of P_x's side of the seam; at r_s the high
+    and the low line, each depleted when the seam is shallower than P_x."""
+    cv, p_x = s.body["curves"], s.body["melt_extraction_below_pa"]
+    kw = dict(d_cr=d_cr, d_ref=sm.crust_reference_thickness(s.r_p, s.r_c, s.body["crust_reference_fraction"]),
+              delta_t_sol=s.body["delta_t_sol"], curves=cv)
+    seam, px = cv["seam_gpa"], p_x / 1e9
+    t_deep = melt_exact.solidus_branch(px, False, px > seam, **kw)
+    t_shal = melt_exact.solidus_branch(px, True, px > seam, **kw)
+    shallow_seam = seam * 1e9 < p_x
+    return t_deep, t_shal, melt_exact.solidus_branch(seam, shallow_seam, True, **kw), \
+        melt_exact.solidus_branch(seam, shallow_seam, False, **kw)
 
 
 def in_ramp(signs: tuple) -> bool:
@@ -433,9 +449,16 @@ def _run(s, cap_myr: float, opts: dict) -> dict:
                             h_try = cap / RAMP_DIVISOR           # §7.5: a step starting inside a ramp
                             STATS["ramp_capped"] += 1
                     y_new, h_used, ev = hp.advance(step, y0, t, h_try, GYR_S, s)
-                    if opts["events"] and ev is None and h_used > 0.0:
-                        h_used = _land(s, step, y0, t, y_new, h_used, sg0)
-                    if (ev is not None or h_used != h) and h_used > 0.0:
+                    h_adv = h_used                               # advance's own length: Lost halving or a fold
+                    if opts["events"] and h_used > 0.0:
+                        hp.STEP["ratio"] = h_used / hp.STEP["h_last"] if hp.STEP["h_last"] else 1.0
+                        h_land = _land(s, step, y0, t, y_new, h_used, sg0)
+                        if h_land < h_used:
+                            h_used = h_land
+                            if ev is not None:                   # 68: an event before the fold in the same step is
+                                STATS["landed_before_fold"] += 1  # landed; the next step meets the fold again
+                                ev = None
+                    if (ev is not None or h_used != h_try) and h_used > 0.0:
                         hp.restore(s, snap)
                         hp.STEP["ratio"] = h_used / hp.STEP["h_last"] if hp.STEP["h_last"] else 1.0
                         y_new = step(y0, t, h_used)
@@ -445,10 +468,13 @@ def _run(s, cap_myr: float, opts: dict) -> dict:
                 return refuse(e)
             except ft.Lost as e:
                 return refuse(f"the adopted root of {e.equation} left its bracket and halving gave up at t = {t:.6f} Gyr")
-            if h_used != h:
-                STATS["shortened"] += 1
+            if tracked and h_adv != h_try or not tracked and h_used != h:
+                STATS["shortened"] += 1                  # 68 G1 / r2 S1: Lost halving and folds only (§7.2's gate)
                 if t - t0 < COLD_GYR:
                     STATS["shortened_cold"] += 1
+            if t - t0 < COLD_GYR and tracked:
+                STATS["landings_cold"] += h_used < h_adv
+                STATS["ramp_capped_cold"] += h_try < h
             if h_used == 0.0:
                 try:
                     hp.switch_branch(s, y, t, ev, c=0.0)    # y is the step start, where s.track is

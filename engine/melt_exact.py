@@ -18,6 +18,24 @@ _GL_X = (-math.sqrt(3.0 / 5.0), 0.0, math.sqrt(3.0 / 5.0))
 _GL_W = (5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0)
 
 
+def solidus_branch(p_gpa: float, shallow: bool, high: bool, *, d_cr: float, d_ref: float, delta_t_sol: float,
+                   curves: dict | None = None) -> float:
+    """The solidus this rule uses on one piece: the low or high printed line (by the piece's side of the seam), depleted
+    when the piece is shallower than the extraction pressure. thermal_ale's event thresholds read the same function
+    (r2 S2), so the events sit where this rule's melting set changes."""
+    cv = sm._curves(curves)
+    if high:
+        a_, b_, c_ = cv["high"]
+        x_ = p_gpa - cv["seam_gpa"]
+        t_sol = a_ + b_ * x_ + c_ * x_ ** 2
+    else:
+        a_, b_, c_ = cv["low"]
+        t_sol = a_ + b_ * p_gpa + c_ * p_gpa ** 2
+    if shallow:
+        t_sol = sm.depleted_solidus(t_sol, d_cr, d_ref, delta_t_sol)
+    return t_sol
+
+
 def melt_integrals(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_pa, *, d_cr: float, d_ref: float,
                    delta_t_sol: float, extraction_below_pa: float, shells: int, curves: dict | None = None) -> dict:
     out = {"shallow_phi_v": 0.0, "shallow_v": 0.0, "deep_phi_v": 0.0, "deep_v": 0.0}
@@ -30,16 +48,8 @@ def melt_integrals(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_
 
     def sol_liq(r, shallow, high):
         p_gpa = pressure_pa(r) / 1e9
-        if high:
-            a_, b_, c_ = cv["high"]
-            x_ = p_gpa - seam
-            t_sol = a_ + b_ * x_ + c_ * x_ ** 2
-        else:
-            a_, b_, c_ = cv["low"]
-            t_sol = a_ + b_ * p_gpa + c_ * p_gpa ** 2
-        if shallow:
-            t_sol = sm.depleted_solidus(t_sol, d_cr, d_ref, delta_t_sol)
-        return t_sol, sm.liquidus(p_gpa, curves)
+        return (solidus_branch(p_gpa, shallow, high, d_cr=d_cr, d_ref=d_ref, delta_t_sol=delta_t_sol, curves=curves),
+                sm.liquidus(p_gpa, curves))
 
     def bisect_root(f, a, b, fa):
         for _ in range(60):
