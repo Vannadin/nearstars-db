@@ -49,11 +49,6 @@ class Stop:
     state: object = None    # phase-1 note 13 §3: {m, r, P, T} of the last accepted node, set by the pass (solve.inward)
 
 
-#: Test-only mutant switch of the coexistence exit (68 B1/B4 on note 4): None in every solve; a test patches it to
-#: "rearm_from_node" (g_prev from the exit node itself) or "exit_k1_old" (k1 on the curve, the old branch) to show red.
-_COEXIST_MUTANT = None
-
-
 class CoexistToken(dict):
     """A coexistence segment's run-local state (reg-coexistence §3.1; note 4 B2″): the only `enter` result that starts a
     segment. It lives in the run, never in the view, and is returned in Result.coexist."""
@@ -503,14 +498,18 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
                     if gy is not None and gy * g0c < 0.0:
                         break
                     yy = tuple(math.nextafter(w, toward) if j == c else w for j, w in enumerate(yy))
-                k1 = f(x, y if _COEXIST_MUTANT == "exit_k1_old" else yy)   # the new side one ulp past the curve (68 B4)
+                # the exit's k1 and the curve's re-arming g both read the new side one ulp past the curve (68 B1/B4);
+                # a hook may name the two states (`exit_states`; the tests' mutant subclasses do), else both are yy
+                ex = getattr(cev.coexist, "exit_states", None)
+                y_k1, y_arm = ex(tok, y, yy) if ex is not None else (yy, yy)
+                k1 = f(x, y_k1)
                 if isinstance(k1, Stop):
                     return stop("refused", k1)
                 if hasattr(cev.coexist, "note_exit"):
                     cev.coexist.note_exit(tok, x, y, k1)
                 path.append((x, y, k1))               # the exit's second node, same m (s-read note 1's duplicate x)
                 g_prev = {ev.name: ev.g(x, y) for ev in live}
-                g_prev[cev.name] = cev.g(x, y if _COEXIST_MUTANT == "rearm_from_node" else yy)
+                g_prev[cev.name] = cev.g(x, y_arm)
                 last_fire[cev.name] = x
                 reenter = (cev, x, g0c)
                 seg = None

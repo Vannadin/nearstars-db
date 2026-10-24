@@ -397,20 +397,24 @@ class _StrictView(_View):
 class ExitArming(unittest.TestCase):
     """68 B1 / B4 (note 4 §3): exits at g = 0 and ±1 ulp of the curve; the g_prev-from-node and old-branch-k1 mutants."""
 
-    def _hook(self, where):
+    def _hook(self, where, mutant=None):
         class At(cx.Segment):
             def project(self, tok, y):
                 y2 = super().project(tok, y)
                 p = p_b(y2[3])
                 p = {"on": p, "old": math.nextafter(p, -math.inf), "new": math.nextafter(p, math.inf)}[where]
                 return (y2[0], p, y2[2], y2[3]) + tuple(y2[4:])
-        return At("phase:planted|swap", s_side, rho_side, p_b, t_b, lambda t: K)
+
+        class Mutant(At):
+            """68 n2: the mutants live in a test-side hook subclass (stepper's `exit_states`), not in shipped code:
+            «rearm_from_node» re-arms g from the exit node itself, «exit_k1_old» takes k1 on the curve (the old side)."""
+            def exit_states(self, tok, y, yy):
+                return (yy, y) if mutant == "rearm_from_node" else (y, yy)
+        return (Mutant if mutant else At)("phase:planted|swap", s_side, rho_side, p_b, t_b, lambda t: K)
 
     def _run(self, where, mutant=None):
-        from unittest import mock
         m0, y0 = _start()
-        with mock.patch.object(st, "_COEXIST_MUTANT", mutant):
-            return st.run(rh.make_rhs(_StrictView()), m0, y0, 3.95e24, _opt(), _events(self._hook(where)))
+        return st.run(rh.make_rhs(_StrictView()), m0, y0, 3.95e24, _opt(), _events(self._hook(where, mutant)))
 
     def test_exits_at_the_curve_and_one_ulp_either_side_leave_one_segment(self):
         for where in ("on", "old", "new"):
