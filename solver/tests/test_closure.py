@@ -35,7 +35,9 @@ def _mars_shipped():
     """The shipped mars assemblage record with its table (the engine branch without records has none)."""
     from solver import material_registry as mr
     reg = mr.load()
-    return isinstance(reg, mr.Registry) and "silicate_slb_mars_khan2022" in reg.tables
+    if not isinstance(reg, mr.Registry):          # a refused registry is an error by name, never a skip (E24 rule 7)
+        raise RuntimeError(f"the registry refused: {reg.id} {dict(reg.evidence)}")
+    return "silicate_slb_mars_khan2022" in reg.tables
 
 class Walls(unittest.TestCase):
     def test_root_on_solved_side_and_wall_located(self):

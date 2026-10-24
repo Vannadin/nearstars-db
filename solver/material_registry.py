@@ -888,6 +888,8 @@ def _assemblage_table(rec: Mapping, file, directory: Path, allow_development: bo
         ma.check_table(a, table)
         from solver import coexist as cx                # coexistence note 4: the hooks' load checks (cut rows, Clapeyron)
         cx.check_table(table)
+        from solver import fall_sets as fs              # E24 rule 5: the ρ repair's sets load eagerly, per record
+        fs.check_record(rec, table)
     except ma.TableStop as e:
         raise _Stop("material.assemblage_table", file=file, why=str(e)) from None
     if table.get("p_dataset") != a["p_dataset"]:

@@ -992,10 +992,16 @@ class Choices(unittest.TestCase):
 def _shipped():
     from solver import material_registry as mr
     reg = mr.load()
-    if not isinstance(reg, mr.Registry):
-        return []
+    if not isinstance(reg, mr.Registry):          # a refused registry is an error by name, never a skip (E24 rule 7)
+        raise RuntimeError(f"the registry refused: {reg.id} {dict(reg.evidence)}")
     return [(rid, reg.records[rid], reg.tables[rid]) for rid in sorted(reg.records)
             if reg.records[rid]["kind"] == "assemblage" and rid in reg.tables]
+
+
+
+def _e24_xfail(f):
+    """Fall-sets registration rule 7: E24's xfail holds only with the ρ repair off."""
+    return unittest.expectedFailure(f) if not ma.RHO_BRIDGE else f
 
 
 class Envelope(unittest.TestCase):
@@ -1019,9 +1025,10 @@ class Envelope(unittest.TestCase):
             self.assertEqual(bad, [], rid)
 
     # E24 (68): ρ edge-window envelope breach, fallback 19:29 (owner direction 2026-10-21; the edge-span rules A/A′/A″/
-    # single-edge all failed the truth gate). E24's fix commit removes this decorator in the same commit (directing);
-    # until then unittest reports an «unexpected success» if anything else makes the test pass.
-    @unittest.expectedFailure
+    # single-edge all failed the truth gate). The ρ repair's shipped sets close it (fall-sets registration rule 7): an
+    # expected failure only with the repair off (NS_RHO_BRIDGE=0), decided from the flag alone, so a refused set load
+    # errors this test by name and never selects the xfail (68 B2).
+    @_e24_xfail
     @unittest.skipUnless(_shipped(), "no shipped assemblage record with its table (the engine branch without records)")
     def test_rho_rises_where_the_table_rises(self):
         """Directing 10-17: along P at fixed T, ρ at consecutive cell centres rises wherever the table's nodes of both

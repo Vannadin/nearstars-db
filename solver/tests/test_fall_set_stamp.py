@@ -1,13 +1,14 @@
-# ρ 보수 fall-set 파일의 출처 표시 시험 — 레코드 sha256 과 읽기 blob 이 맞을 때만 실림, 아니면 STOP
+# ρ 보수 fall-set 파일의 출처 표시 시험 — 레코드 sha256·yaml·읽기 폐포 도장이 맞을 때만 실림, 아니면 STOP
 """The fall-set file's stamp (r2 on the swap-extension records): a set built on one record and one read loads only on
-them; id and nodes alone are not enough."""
+them; id and nodes alone are not enough. The read is stamped by its import closure (fall-sets registration rule 4,
+r2 w1/w2), and a file with the old read_blob stamp alone refuses by name."""
 import json
 import os
 import tempfile
 import unittest
 from pathlib import Path
 
-from solver import material_assemblage as ma, material_registry as mr
+from solver import fall_sets as fs, material_assemblage as ma, material_registry as mr
 from solver.from_v1 import thaw
 
 RID = "silicate_slb_mars_khan2022"
@@ -23,7 +24,8 @@ class FallSetStamp(unittest.TestCase):
         v = ma.view(thaw(self.rec), self.tab, 1600.0)
         d = {"record": RID, "ps": list(v.ps), "ts": list(v.ts), "stops": [], "sets": {"3": [[1.0, 2.0]]},
              "stamp": {"record_sha256": v.record["assemblage"]["sha256"],
-                       "record_yaml_sha256": ma.record_yaml_sha256(RID), "read_blob": ma.read_blob()}}
+                       "record_yaml_sha256": ma.record_yaml_sha256(RID),
+                       fs.STAMP_KEY: fs.tree_stamp({"engine": {}, "solver_data": {}})}}
         edit(d)
         with tempfile.TemporaryDirectory() as tmp:
             (Path(tmp) / f"{RID}.json").write_text(json.dumps(d))
@@ -53,9 +55,25 @@ class FallSetStamp(unittest.TestCase):
         self.assertEqual(ma.record_yaml_sha256(RID),
                          hashlib.sha256((mr.MATERIALS_DIR / f"{RID}.yaml").read_bytes()).hexdigest())
 
-    def test_other_read_blob_stops(self):
-        with self.assertRaisesRegex(ma.TableStop, "read blob"):
-            self.load(lambda d: d["stamp"].update(read_blob="0" * 40))
+    def test_read_blob_only_stamp_stops(self):
+        # every build before the closure stamp: refused by name, never loaded on a blind stamp (r2 w1)
+        def old(d):
+            d["stamp"].pop(fs.STAMP_KEY)
+            d["stamp"]["read_blob"] = ma.read_blob()
+        with self.assertRaisesRegex(ma.TableStop, "read_blob stamp; rebuild"):
+            self.load(old)
+
+    def test_other_closure_blob_stops(self):
+        with self.assertRaisesRegex(ma.TableStop, "material_view.py blob"):
+            self.load(lambda d: d["stamp"][fs.STAMP_KEY]["solver"].update(material_view="0" * 40))
+
+    def test_stops_carried_stop(self):
+        with self.assertRaisesRegex(ma.TableStop, "build STOP"):
+            self.load(lambda d: d.update(stops=[{"why": "planted"}]))
+
+    def test_other_nodes_stop(self):
+        with self.assertRaisesRegex(ma.TableStop, "does not match this record's table"):
+            self.load(lambda d: d.update(ps=d["ps"][:-1]))
 
     def test_unstamped_file_stops(self):
         # the files built before the stamp (rev 3's sets) carry neither key: they no longer load

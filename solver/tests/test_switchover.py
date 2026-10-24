@@ -23,7 +23,9 @@ def _record(rid):
 
 def _shipped_bse():
     reg = mr.load()
-    return isinstance(reg, mr.Registry) and "silicate_slb_default_bse" in reg.tables
+    if not isinstance(reg, mr.Registry):          # a refused registry is an error by name, never a skip (E24 rule 7)
+        raise RuntimeError(f"the registry refused: {reg.id} {dict(reg.evidence)}")
+    return "silicate_slb_default_bse" in reg.tables
 
 
 

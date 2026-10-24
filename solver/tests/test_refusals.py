@@ -21,8 +21,9 @@ SOLVE_IDS = ("solve.no_bracket", "solve.two_roots", "solve.material_domain", "so
 TEXT_NAMES = ("text", "reason", "message_old", "why")
 TEXT_KEYS = ("message_old", "why", "detail", "error", "rule")          # evidence fields that hold prose
 CASE_METHODS = ("lower", "upper", "casefold", "strip", "lstrip", "rstrip")
-X3_OK_MARKERS = 2             # pinned: result.py's construction guard; solve.py's SWAP_NOTE filter for a walked coexistence
-                              # segment (note 4 S6, 68 B4: the note carries no curve id); a new marker needs this changed
+X3_OK_MARKERS = 3             # pinned: result.py's construction guard; coexist.filter_notes' SWAP_NOTE filter for a walked
+                              # coexistence segment (note 4 S6, 68 B4: the note carries no curve id); fall_sets' import-line
+                              # scan of source files (E24 rule 1, the stamp's closure); a new marker needs this changed
 STR_METHODS = ("startswith", "endswith", "find", "rfind", "index", "rindex", "split", "count", "__contains__",
                "partition", "rpartition")
 RE_FUNCS = ("search", "match", "fullmatch", "findall", "finditer", "sub", "subn", "split")

@@ -1,0 +1,55 @@
+{
+ "landed_ends": {
+  "not_landed": [],
+  "verified": 0
+ },
+ "ps": [
+  1000000000.0,
+  2000000000.0,
+  3000000000.0,
+  4000000000.0
+ ],
+ "record": "planted_fall_record",
+ "samples": {
+  "0": [
+   {
+    "g": -0.01,
+    "x": 21.6
+   }
+  ],
+  "1": [],
+  "2": []
+ },
+ "sets": {
+  "0": [
+   [
+    21.5,
+    21.7
+   ]
+  ],
+  "1": [
+   [
+    21.5,
+    21.8
+   ],
+   [
+    22.0,
+    22.05
+   ]
+  ],
+  "2": []
+ },
+ "stamp": {
+  "read_blob": "cccccccccccccccccccccccccccccccccccccccc",
+  "record_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "record_yaml_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "tool_blob": "dddddddddddddddddddddddddddddddddddddddd"
+ },
+ "stops": [],
+ "ts": [
+  1000.0,
+  1500.0,
+  2000.0
+ ],
+ "unrecovered": []
+}
