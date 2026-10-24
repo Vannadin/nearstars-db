@@ -1,8 +1,19 @@
 # ALE 열역사 방식(D2 재설계 메모 §7) — 덮개를 고정 마디 u 에서 격자 이동 항과 함께 IMEX ARS(2,2,2) 로 푸는 T2 옆의 새 방식; thermal_stack·samuel_run·fold_track 은 그대로
 """The ALE-formulated thermal-history mode of the D2 redesign note §7 (artifacts review2-fix-c8 c8c7472c, cleared by 68
-and r2). A new mode beside T2 (`thermal_stack.run`): it calls T2's `state_terms` for the ODE rates and never edits
-`thermal_stack`, `samuel_run` or `fold_track`; the boundary-layer roots are tracked by `hop_track` (D), installed in
+and r2). A new mode beside T2 (`thermal_stack.run`): it calls T2's `state_terms` for the ODE rates and never changes
+T2's, `samuel_run`'s or `fold_track`'s behaviour; the boundary-layer roots are tracked by `hop_track` (D), installed in
 place of thermal_stack's `_continued` / `track_at` for the duration of `run` only.
+
+Mode options (D2 note §7.5; `s.opt["ale_options"]` overrides the defaults in `ALE_DEFAULTS`, all on in this mode):
+- `melt_rule` "exact": state_terms' melt integrals by `melt_exact` (splits at r_x and the solidus seam) through T2's
+  `s.opt["melt_rule"]`, whose default "midpoint" keeps T2 byte-identical; set for the run only.
+- `events`: the 13 event signs (`event_signs`: the stefan sign; T′(r_x) − T_sol and − T_sol,depleted; T′(r_s) −
+  T_sol,high and − T_sol,low; each at T_m − 1, T_m, T_m + 1 K, T_b moved with T_m) are compared at a step's start and
+  end; a change lands the step just past the first change (bisection of the step length to min(1e-9 Gyr, 1e-6 h)),
+  and the run re-steps to that length.
+- `ramp_cap`: a step starting inside a ramp (a family whose T_m + 1 and T_m − 1 signs differ) is capped at the run's
+  nominal step cap / 8 (f4 order rounds 4 and 4b).
+The options in force are returned as `manifest`.
 
 State: (T_c, T_m, D_l, D_cr) explicit; the lid profile θ on fixed nodes u_j = j/(n−1), r = r_p − D_l (1 − u)
 (u = 0 the base); the basal grid (plates with a layer) on its own fixed nodes.
@@ -39,13 +50,90 @@ DDOT_TOL = 1e-12            # §7.2: |g| ≤ 1e-12 |Ḋ|
 DDOT_ABS = 1e-30            # m/s, when Ḋ = 0
 DDOT_MAX_IT = 12
 COLD_GYR = 0.05             # §7.2 cold-start gate window
+ALE_DEFAULTS = {"melt_rule": "exact", "events": True, "ramp_cap": True}     # §7.5
+RAMP_DIVISOR = 8            # ramp cap = nominal step cap / 8 (order round 4b)
+LAND_TOL_GYR = 1e-9
 STATS: dict = {}
 
 
 def reset_stats() -> None:
     STATS.clear()
     STATS.update(ddot_rejects=0, ddot_worst_rel=0.0, ddot_consistency_worst=0.0, shortened=0, shortened_cold=0,
-                 accepted=0, melt_iter_max=0)
+                 accepted=0, melt_iter_max=0, landings=0, ramp_capped=0)
+
+
+def _radius_at(s, p_pa: float, r_top: float, r_bot: float) -> float | None:
+    a, b = r_bot, r_top
+    if not (s.melt_p(a) >= p_pa >= s.melt_p(b)):
+        return None
+    for _ in range(80):
+        m = 0.5 * (a + b)
+        if s.melt_p(m) >= p_pa:
+            a = m
+        else:
+            b = m
+    return 0.5 * (a + b)
+
+
+def event_signs(s, y: list, t_gyr: float, c: float) -> tuple:
+    """The 13 event signs at (y, t) (§7.5): stefan > 0, then per k = −1, 0, +1 K: T′(r_x) > T_sol(P_x),
+    T′(r_x) > T_sol,depleted(P_x), T′(r_s) > T_sol,high(seam), T′(r_s) > T_sol,low(seam). A radius outside the
+    convecting shell gives False for its pair. `c` is y's time fraction in the step (0 its start, 1 its end); the run
+    state, STEP included, is restored around the evaluation."""
+    snap = hp.snapshot(s)
+    hp.STEP["c"] = c
+    try:
+        f = state_terms(s, *y, t_gyr, s._ale_state["grad"])
+    finally:
+        hp.restore(s, snap)
+    r_top, r_bot = s.r_p - y[2] - f["delta_u"], s.r_base + f["delta_b"]
+    cv = s.body["curves"]
+    p_x = s.body["melt_extraction_below_pa"]
+    rx, rs = _radius_at(s, p_x, r_top, r_bot), _radius_at(s, cv["seam_gpa"] * 1e9, r_top, r_bot)
+    if rx is not None:
+        t_deep = sm.solidus(s.melt_p(rx) / 1e9, cv)
+        d_ref = sm.crust_reference_thickness(s.r_p, s.r_c, s.body["crust_reference_fraction"])
+        t_shal = sm.depleted_solidus(t_deep, y[3], d_ref, s.body["delta_t_sol"])
+    a_, b_, c_ = cv["low"]
+    seam_lo, seam_hi = a_ + b_ * cv["seam_gpa"] + c_ * cv["seam_gpa"] ** 2, cv["high"][0]
+    out = [f["stefan"] > 0.0]
+    for k in (-1.0, 0.0, 1.0):
+        tm = y[1] + k
+        tb = f["t_b"] * tm / y[1]
+
+        def temp(r):
+            return tb + (tm - tb) * (r - r_bot) / (r_top - r_bot)
+        out += [rx is not None and temp(rx) > t_deep, rx is not None and temp(rx) > t_shal,
+                rs is not None and temp(rs) > seam_hi, rs is not None and temp(rs) > seam_lo]
+    return tuple(out)
+
+
+def _land(s, step, y0: list, t: float, y_new: list, h_used: float, sg0: tuple) -> float:
+    """§7.5 landing: if any event sign differs between the step's start and end, the step length is bisected to
+    min(LAND_TOL_GYR, 1e-6 h) and the first change is landed just past (hi); returns the length to re-step to."""
+    if event_signs(s, y_new, t + h_used / GYR_S, 1.0) == sg0:
+        return h_used
+    tol = min(LAND_TOL_GYR * GYR_S, 1e-6 * h_used)
+    snap = hp.snapshot(s)
+    lo, hi = 0.0, h_used
+    while hi - lo > tol:
+        mid = 0.5 * (lo + hi)
+        hp.restore(s, snap)
+        hp.STEP["ratio"] = mid / hp.STEP["h_last"] if hp.STEP["h_last"] else 1.0
+        y_mid = step(list(y0), t, mid)
+        if event_signs(s, y_mid, t + mid / GYR_S, 1.0) == sg0:
+            lo = mid
+        else:
+            hi = mid
+    hp.restore(s, snap)
+    STATS["landings"] += 1
+    return hi
+
+
+def in_ramp(signs: tuple) -> bool:
+    """Between a family's T_m + 1 K and T_m − 1 K images: some pair's k = −1 and k = +1 signs differ."""
+    lo, hi = signs[1:5], signs[9:13]
+    return any(a != b for a, b in zip(lo, hi))
 
 
 # ── lid on fixed u nodes ──────────────────────────────────────────────────────────────────────────────────
@@ -268,7 +356,23 @@ def _consistency(f: dict, ddot: float) -> None:
 
 
 def run(s, cap_myr: float) -> dict:
-    """The ALE mode over the stack's history. Same row fields as thermal_stack.run's core set."""
+    """The ALE mode over the stack's history. Same row fields as thermal_stack.run's core set, plus `manifest`."""
+    opts = dict(ALE_DEFAULTS, **s.opt.get("ale_options", {}))
+    had_rule, old_rule = "melt_rule" in s.opt, s.opt.get("melt_rule")
+    s.opt["melt_rule"] = opts["melt_rule"]
+    try:
+        out = _run(s, cap_myr, opts)
+    finally:
+        if had_rule:
+            s.opt["melt_rule"] = old_rule
+        else:
+            del s.opt["melt_rule"]
+    out["manifest"] = {"mode": "ALE", "cap_myr": cap_myr, "step_fraction": ts.STEP_FRACTION, **opts,
+                       "ramp_divisor": RAMP_DIVISOR, "land_tol_gyr": LAND_TOL_GYR}
+    return out
+
+
+def _run(s, cap_myr: float, opts: dict) -> dict:
     reset_stats()
     t0 = s.body["t_initial_gyr"]
     cap = cap_myr * 1e-3 * GYR_S
@@ -322,7 +426,15 @@ def run(s, cap_myr: float) -> dict:
             try:
                 if tracked:
                     snap = hp.snapshot(s)
-                    y_new, h_used, ev = hp.advance(step, y0, t, h, GYR_S, s)
+                    h_try, sg0 = h, None
+                    if opts["events"]:
+                        sg0 = event_signs(s, y0, t, 0.0)
+                        if opts["ramp_cap"] and in_ramp(sg0) and h > cap / RAMP_DIVISOR:
+                            h_try = cap / RAMP_DIVISOR           # §7.5: a step starting inside a ramp
+                            STATS["ramp_capped"] += 1
+                    y_new, h_used, ev = hp.advance(step, y0, t, h_try, GYR_S, s)
+                    if opts["events"] and ev is None and h_used > 0.0:
+                        h_used = _land(s, step, y0, t, y_new, h_used, sg0)
                     if (ev is not None or h_used != h) and h_used > 0.0:
                         hp.restore(s, snap)
                         hp.STEP["ratio"] = h_used / hp.STEP["h_last"] if hp.STEP["h_last"] else 1.0
