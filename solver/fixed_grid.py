@@ -37,6 +37,43 @@ def _k_m(k):
     return (1.0 / k[0], *(c / k[0] for c in k[1:]))
 
 
+class _RHook:
+    """A coexistence hook (stepper.Event.coexist) seen in the r-form (note 4 S3): g and the segment's f wrapped through
+    _y_of, as the events' g are; the token and records pass through unchanged."""
+
+    def __init__(self, hook, f):
+        self.hook, self.f = hook, f
+
+    def enter(self, r, z):
+        return self.hook.enter(z[0], _y_of(r, z))
+
+    def rhs(self, tok, _fr):
+        fm = self.hook.rhs(tok, self.f)
+
+        def fr(r, z):
+            k = fm(z[0], _y_of(r, z))
+            if isinstance(k, st.Stop):
+                return k
+            if k[0] == 0.0:
+                return st.Stop("refused", {"reason": "dr/dm = 0", "m": z[0], "r": r})
+            return (1.0 / k[0], *(c / k[0] for c in k[1:]))
+        return fr
+
+    def exit_g(self, tok):
+        g = self.hook.exit_g(tok)
+        return lambda r, z: g(z[0], _y_of(r, z))
+
+    def exit_scale(self, tok):
+        return self.hook.exit_scale(tok)
+
+    def row_events(self, tok):
+        return [st.Event(ev.name, (lambda r, z, g=ev.g: g(z[0], _y_of(r, z))), ev.scale, ev.terminal, ev.seam,
+                         ev.component) for ev in self.hook.row_events(tok)]
+
+    def project(self, tok, z):
+        return self.hook.project(tok, z)              # P, T_ad, T sit at the same indices in z as in y
+
+
 def run_r(f, m0: float, y0: tuple, m_end: float, r_end: float, r_end_name: str, dr: float, events=(),
           on_accept=None, max_steps: int = 200000, event_min_progress: float = 0.0, event_restarts_step: int = 4,
           event_restarts_run: int = 2000, m_scale: float = 1.0) -> st.Result:
@@ -51,7 +88,7 @@ def run_r(f, m0: float, y0: tuple, m_end: float, r_end: float, r_end_name: str, 
         return (1.0 / k[0], *(c / k[0] for c in k[1:]))
 
     evs = [st.Event(ev.name, (lambda r, z, g=ev.g: g(z[0], _y_of(r, z))), ev.scale, ev.terminal, ev.seam,
-                     ev.component)
+                     ev.component, None if ev.coexist is None else _RHook(ev.coexist, f))
            for ev in events]
     evs.append(st.Event("_m_end", lambda r, z: z[0] - m_end, scale=m_scale))
     opt = st.Options(rtol=1.0, floors=tuple(math.inf for _ in y0), h0=dr, h_min=0.0, h_max=dr, max_steps=max_steps,
@@ -68,4 +105,5 @@ def run_r(f, m0: float, y0: tuple, m_end: float, r_end: float, r_end_name: str, 
         stop, event = st.Stop("event"), r_end_name
     elif stop.kind == "event" and event == "_m_end":
         stop, event = st.Stop("end"), None
-    return st.Result(res.y[0], _y_of(res.x, res.y), stop, event, res.h_last, path, landed, res.counters)
+    return st.Result(res.y[0], _y_of(res.x, res.y), stop, event, res.h_last, path, landed, res.counters,
+                     coexist=res.coexist)

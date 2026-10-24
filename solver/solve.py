@@ -46,6 +46,7 @@ class PassOut:
     entered: list = field(default_factory=list)          # layer ids the pass integrated, top to bottom
     events: list = field(default_factory=list)           # every landed event name, in order (phase, seam, onset, …)
     band_grazes: list = field(default_factory=list)      # notes 13 §1 / 13a: steps accepted at the band floor
+    coexist: list = field(default_factory=list)          # coexistence note 4: segments and records (values, not names)
     counters: dict = field(default_factory=dict)
     R: float = 0.0
     r_scale: float = 0.0
@@ -264,6 +265,7 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
         out.profiles[layer.id] = res.path
         out.events += [e[0] for e in res.events]
         out.band_grazes += list(res.band_grazes)
+        out.coexist += [dict(c, layer=layer.id) for c in getattr(res, "coexist", ())]
         if graze_mon is not None and graze_mon.best is not None and (out.graze is None
                                                                        or abs(graze_mon.best.g) < abs(out.graze.g)):
             out.graze = graze_mon.best
@@ -676,6 +678,15 @@ def _to_refusal(stop: st.Stop, where: str, x, kind: str, pass_kind: str, scan=No
         return refusals.make("solve.material_domain", where, material_id=rec.material_id, axis=rec.axis,
                              bound=rec.t if t_axis else rec.p, bound_kind=bk,
                              source="engine/eos.py (097a8aa3)", message_old=rec.message_old, t=rec.t, gap=rec.kind,
+                             **common)
+    if stop.kind in ("coexist_crossed", "coexist_reentered", "coexist_unfinished"):    # coexistence note 4 S6
+        fields = {k: rec.get(k) for k in refusals.REGISTRY[f"solve.{stop.kind}"].fields if k in rec}
+        if stop.kind == "coexist_unfinished":
+            fields.setdefault("reason", rec.get("reason", "the segment's curve ended before its exit"))
+        return refusals.make(f"solve.{stop.kind}", where, **fields, **common)
+    if stop.kind == "coexist_side_read":
+        return refusals.make("solve.coexist_unfinished", where, curve=rec.get("curve", "?"), m=x, P=rec.get("p"),
+                             T=rec.get("t"), reason=f"a side read refused ({rec.get('field')}, {rec.get('reason', '')})",
                              **common)
     if stop.kind == "chatter":
         return refusals.make("solve.event_chatter", where, event_name=rec["event"], count=rec["count"],
@@ -1488,6 +1499,12 @@ def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
                                      "still near a band edge: accepted there, the band's entry or exit may be a graze "
                                      "(phase-1 design notes 13 §1, 13a)", dict(bg)))
         notes += material_notes.collect(body, views, acc)   # switch-over §4: after every value, accepted pass only
+        if acc.coexist:                                  # coexistence note 4 S6: segments, findings, restarts; a walked
+            from solver import coexist as cx             # curve's SWAP_NOTE dropped (68 B4, keyed by curve)
+            cx_notes, drop = cx.notes(acc.coexist, views)
+            notes = [n for n in notes if not (n.kind == "material_declared_note" and any(
+                n.fields.get("layer") == lay and str(n.fields.get("text", "")).startswith(pf) for lay, pf in drop))]  # x3-ok: a declared SWAP_NOTE matched to the text rebuilt from the walked curve (68 B4)
+            notes += cx_notes
         ans = result.Answer(qs, lbs, profiles, (), tuple(notes))
         return ans, x
     if out.kind == "two_roots":

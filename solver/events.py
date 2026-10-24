@@ -286,8 +286,14 @@ def record_events(view, t_index: int = 2) -> list:
         # Pa, never ≤ 1e-3; solve.event_chatter). A gibbs boundary, its g in P, is held alike (directing 10-17: a planted
         # Ih|water1 walk chattered unheld at h0 3e-3); a melting curve is terminal and takes none
         comp = 1 if kind != "melting" else None
+        # coexistence (reg-coexistence §3.3, note 4 S5): a cut swap run walks its segment, a cut edge run records the
+        # read's δs (a FINDING), a row step its Δs (a restart); runs read across and other forms take none
+        hook = None                                     # the lid (t_index 3) keeps the sharp step: no isentrope (§2.3)
+        if kind == "solid_solid" and t_index == 2 and curve.get("form") in ("assemblage_curve", "assemblage_row_step"):
+            from solver import coexist as cx
+            hook = cx.view_hook(view, curve, name)
         out.append(st.Event(name, g, scale=scale, terminal=(kind == "melting"), seam=(kind != "melting"),
-                            component=comp))
+                            component=comp, coexist=hook))
     for t_s, between in view.source_seams():
         out.append(st.Event(f"source_seam:{between[0]}|{between[1]}", (lambda m, y, t_s=t_s: y[t_index] - t_s),
                             scale=t_s, terminal=False, seam=True, component=t_index))

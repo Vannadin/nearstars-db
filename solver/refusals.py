@@ -47,6 +47,12 @@ _SOLVE = (
           "물질 '{material_id}' 이(가) 값을 내지 않았다 — 축 {axis}, 종류 {bound_kind}, 도달값 {bound} (출처 {source})"),
     Entry("solve.unlocated_discontinuity", ("h", "h_min", "m_at", "err_norm", "rejected_in_row"),
           "걸음이 h_min {h_min} 밑으로 줄었는데 그 자리(m {m_at})에 찾은 경계가 없다 — 오차 {err_norm}, 연속 기각 {rejected_in_row}"),
+    Entry("solve.coexist_crossed", ("segment", "crossed", "m", "P", "T"),
+          "공존 구간 '{segment}' 위에서 다른 상 경계 '{crossed}' 를 만났다 (P {P}, T {T}) — 불변점은 만들지 않았다"),
+    Entry("solve.coexist_reentered", ("curve", "m", "P", "T", "exit_m"),
+          "공존 구간 '{curve}' 를 빠져나온 뒤(m {exit_m}) 최소 진척 안에 옛 쪽으로 돌아왔다 (P {P}, T {T})"),
+    Entry("solve.coexist_unfinished", ("curve", "m", "P", "T", "reason"),
+          "공존 구간 '{curve}' 가 끝나기 전에 걸음이 멈췄다 (P {P}, T {T}): {reason}"),
     Entry("solve.event_chatter", ("event_name", "count", "cap_name", "cap_value"),
           "경계 사건 '{event_name}' 이(가) {count} 번 되풀이돼 {cap_name} {cap_value} 에 걸렸다", optional=("g", "tol")),
     Entry("solve.layer_order", ("layer_id", "rule", "expected", "got_m", "got_r"),
@@ -206,6 +212,7 @@ def _index(entries: tuple) -> MappingProxyType:
 #: Phase-1 note 13 §3: refusals that a pass always reaches carry `state` (the last accepted node), required. Kinds
 #: that may also fire before any pass (layer_order) keep it optional; a pass-time one fills it.
 STATE_REQUIRED = ("solve.material_domain", "solve.material_record", "solve.melting_not_in_phase2",
+                  "solve.coexist_crossed", "solve.coexist_reentered", "solve.coexist_unfinished",
                   "solve.event_chatter", "solve.unlocated_discontinuity", "solve.lid_unconverged",
                   "solve.basal_unconverged", "solve.closure_discontinuous")
 

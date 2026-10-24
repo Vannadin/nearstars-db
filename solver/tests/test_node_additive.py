@@ -105,7 +105,10 @@ NODE_IDS = ("node.out_of_domain", "node.input_missing", "node.source_not_cached"
 ADDED_AFTER_C1 = {"input.no_table_for_composition": "silicate step 4 aa48d1bf",
                   "core_fold_off_domain": "core-tc-fold C4 (engine/tc-fold-c8)",
                   "core_fold_states": "core-tc-fold C4 (engine/tc-fold-c8)",
-                  "solve.frozen_band_trapped": "s-read post-freeze note 3 §2.4 (engine ea-sA-note3)"}
+                  "solve.frozen_band_trapped": "s-read post-freeze note 3 §2.4 (engine ea-sA-note3)",
+                  "solve.coexist_crossed": "coexistence post-freeze note 4 S6 (engine ea-coex-impl)",
+                  "solve.coexist_reentered": "coexistence post-freeze note 4 S6 (engine ea-coex-impl)",
+                  "solve.coexist_unfinished": "coexistence post-freeze note 4 S6 (engine ea-coex-impl)"}
 #: NoAnswer reasons added after C1, the same way; C1's PARENT_NO_ANSWER_IDS stay pinned.
 ADDED_NO_ANSWER_AFTER_C1 = {"core_fold_budget": "core-tc-fold C4 (engine/tc-fold-c8)"}
 

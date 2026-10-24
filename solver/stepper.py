@@ -49,6 +49,19 @@ class Stop:
     state: object = None    # phase-1 note 13 §3: {m, r, P, T} of the last accepted node, set by the pass (solve.inward)
 
 
+class CoexistToken(dict):
+    """A coexistence segment's run-local state (reg-coexistence §3.1; note 4 B2″): the only `enter` result that starts a
+    segment. It lives in the run, never in the view, and is returned in Result.coexist."""
+
+
+@dataclass(frozen=True)
+class CoexistRecord:
+    """An `enter` result that starts no segment (note 4 B2″): kind «sharp» (no segment in the read), «finding» (a
+    non-swap cut's δs, for BA) or «restart» (a curve end's Δs). Its values go to Result.coexist, never into a name."""
+    kind: str
+    values: dict
+
+
 @dataclass(frozen=True)
 class Event:
     """g(x, y) = 0 is located and landed on. `scale` sets the landing tolerance |g| ≤ tol·scale.
@@ -62,6 +75,9 @@ class Event:
     component: int | None = None  # g = y[component] − s(y), the seam's value s along the other components (a constant
                                   # P_b, or a record curve's P_b(T)): the landing re-steps read their stages on the
                                   # old side, the value taken from g on each call (_old_side; fixed_grid.py, C164 rule)
+    coexist: object = None        # coexistence segment (reg-coexistence §3.1, note 4 S1): the view's hook for a cut
+                                  # curve — enter(x, y) → CoexistToken | CoexistRecord | None; rhs(token, f), exit_g(token), exit_scale(token), row_events(token),
+                                  # project(token, y). None: today's behaviour, bit for bit
 
 
 @dataclass(frozen=True)
@@ -110,6 +126,7 @@ class Result:
     events: tuple = ()            # non-terminal events landed: (name, x, y)
     counters: Counters = field(default_factory=Counters)
     band_grazes: tuple = ()       # step_check's floor acceptances (notes 13 §1 / 13a)
+    coexist: tuple = ()           # note 4: the coexistence segments walked, one token each (entry, exit, Δs, φ, ρ jumps)
 
 
 def _axpy(y: Vec, h: float, ks: Sequence[Vec], w: Sequence[float]) -> Vec:
@@ -302,6 +319,10 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
         raise ValueError(f"event names collide: {sorted(n for n in set(names) if names.count(n) > 1)}")
     cnt = Counters()
     stepf = _stepper(opt)
+    live = list(events)                             # note 4 S2: the events in force (a segment swaps its curve's out)
+    seg = None                                      # (curve event, token, material f, exit name, old-side g sign)
+    reenter = None                                  # (curve name, x of its exit): a re-fire before min progress refuses
+    segs = []                                       # the segments' tokens, for Result.coexist
     direction = 1.0 if x1 >= x0 else -1.0
     x, y = x0, tuple(y0)
     k1 = f(x, y)
@@ -319,11 +340,11 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
     # chatter guard (one event re-firing), so distinct events landing in a row do not trip it
     in_row: dict = {}
     rejected_in_row = 0
-    g_prev = {ev.name: ev.g(x, y) for ev in events}
+    g_prev = {ev.name: ev.g(x, y) for ev in live}
 
     def stop(kind, record=None):
         return Result(x, y, Stop(kind, record), h_last=h, path=tuple(path), events=tuple(landed), counters=cnt,
-                      band_grazes=tuple(grazes))
+                      band_grazes=tuple(grazes), coexist=tuple(segs))
 
     while True:
         if cnt.accepted + cnt.rejected >= opt.max_steps:
@@ -367,8 +388,8 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             cnt.band_halved += 1
             h = h * 0.5
             continue
-        g_new = {ev.name: ev.g(x_new, y_new) for ev in events}
-        crossing = [ev for ev in events if _crossed(g_prev[ev.name], g_new[ev.name])]
+        g_new = {ev.name: ev.g(x_new, y_new) for ev in live}
+        crossing = [ev for ev in live if _crossed(g_prev[ev.name], g_new[ev.name])]
         if crossing:
             # seams first (r2 S5 B2): land the earliest seam crossed in this step; other events are then tested only
             # on the old side of it, so a curve whose branch changes at the seam is never read across it
@@ -385,7 +406,7 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
                 node, lo_side = got
                 if best is None or abs(node[0] - x) < abs(best[1][0] - x):
                     best, limit = (ev, node), lo_side
-            others = [ev for ev in events if not ev.seam]
+            others = [ev for ev in live if not ev.seam]
             if best is not None:
                 # P1R-G1-C-03 / G1-R-04: the other events are tested at the old-side end nearest the seam. The
                 # secant's last old-side iterate (limit) may be far from it, or absent; a re-step to just short of the
@@ -421,7 +442,16 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
                 if best is None or abs(node[0] - x) < abs(best[1][0] - x):
                     best = (ev, node)
             fired, (x_e, y_e, k_e) = best
+            g0_fired = g_prev[fired.name]
+            if seg is not None and fired.name != seg[3] and not fired.name.startswith("coexist-row:") \
+                    and fired.name.startswith("phase:"):     # 68 B3: any transitions() curve; melt stays terminal
+                # reg-coexistence §3.2: another phase curve crossed on the segment (an invariant point) is not built
+                return stop("refused", Stop("coexist_crossed", {"segment": seg[0].name, "crossed": fired.name, "m": x_e,
+                                                                "P": y_e[1], "T": y_e[3]}))
             xe = last_fire.get(fired.name)
+            if reenter is not None and fired.name == reenter[0].name and abs(x_e - reenter[1]) < opt.event_min_progress:
+                return stop("refused", Stop("coexist_reentered", {"curve": fired.name, "m": x_e, "P": y_e[1],
+                                                                  "T": y_e[3], "exit_m": reenter[1]}))
             if xe is not None and abs(x_e - xe) < opt.event_min_progress:
                 return stop("chatter", {"event": fired.name, "count": run_events, "cap_name": "EVENT_MIN_PROGRESS",
                                         "cap_value": opt.event_min_progress})
@@ -450,9 +480,56 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             last_fire[fired.name] = x
             if fired.terminal:
                 return Result(x, y, Stop("event"), event=fired.name, h_last=h, path=tuple(path),
-                              events=tuple(landed), counters=cnt, band_grazes=tuple(grazes))
+                              events=tuple(landed), counters=cnt, band_grazes=tuple(grazes), coexist=tuple(segs))
             landed.append((fired.name, x, y))
-            g_prev = {ev.name: ev.g(x, y) for ev in events}
+            if seg is not None and fired.name == seg[3]:
+                # note 4 S2 exit: T and T_ad projected onto T_b(P) (recorded in the token), back on the material; the
+                # curve re-armed from the one-ulp-past new-side state (68 B1), g0 the entry's old-side g_prev
+                cev, tok, f_mat, _name, g0c = seg
+                landed[-1] = (f"coexist-out:{cev.name}", x, y)
+                y = cev.coexist.project(tok, y)
+                f = f_mat
+                live = list(events)
+                c = cev.component
+                toward = math.inf if g0c < 0.0 else -math.inf
+                yy = y
+                for _ in range(64):
+                    gy = cev.g(x, yy)
+                    if gy is not None and gy * g0c < 0.0:
+                        break
+                    yy = tuple(math.nextafter(w, toward) if j == c else w for j, w in enumerate(yy))
+                k1 = f(x, yy)                         # the new-side read one ulp past the curve (68 B4)
+                if isinstance(k1, Stop):
+                    return stop("refused", k1)
+                path.append((x, y, k1))               # the exit's second node, same m (s-read note 1's duplicate x)
+                g_prev = {ev.name: ev.g(x, y) for ev in live}
+                g_prev[cev.name] = cev.g(x, yy)
+                last_fire[cev.name] = x
+                reenter = (cev, x, g0c)
+                seg = None
+                h = direction * min(abs(h), opt.h_max)
+                continue
+            if seg is None and fired.coexist is not None:
+                got = fired.coexist.enter(x, y)
+                if isinstance(got, CoexistToken):
+                    tok = got
+                    tok["kind"] = "segment"
+                    segs.append(tok)
+                    exit_name = f"coexist-out:{fired.name}"
+                    seg = (fired, tok, f, exit_name, g0_fired)
+                    f = fired.coexist.rhs(tok, f)
+                    live = [ev for ev in events if ev.name != fired.name] + \
+                        [Event(exit_name, fired.coexist.exit_g(tok), scale=fired.coexist.exit_scale(tok), terminal=False,
+                               seam=True)] + list(fired.coexist.row_events(tok))
+                    landed[-1] = (f"coexist-in:{fired.name}", x, y)
+                    k1 = f(x, y)                       # 68 B4: the segment's own k1, not _new_side_k1's material read
+                    if isinstance(k1, Stop):
+                        return stop("refused", k1)
+                    path.append((x, y, k1))            # the entry's second node, same m (68 n: material k1 kept first)
+                elif isinstance(got, CoexistRecord):  # note 4: a sharp step, a non-swap cut's δs, a curve end
+                    landed.append((f"coexist-{got.kind}:{fired.name}", x, y))     # 68 B2: a fixed name; values below
+                    segs.append({"kind": got.kind, "curve": fired.name, "m": x, "P": y[1], "T": y[3], **got.values})
+            g_prev = {ev.name: ev.g(x, y) for ev in live}
             h = direction * min(abs(h), opt.h_max)
             continue
         in_row.clear()
@@ -466,9 +543,21 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
         if on_accept is not None:
             on_accept(x, y)
         g_prev = g_new
+        if reenter is not None:                         # 68 B1: re-entry = the curve's g back on the old side at an
+            rc, rx, rg0 = reenter                       # accepted node before |x − x_exit| ≥ event_min_progress
+            if abs(x - rx) >= opt.event_min_progress:
+                reenter = None
+            else:
+                gr = g_new.get(rc.name)
+                if gr is not None and gr * rg0 > 0.0:
+                    return stop("refused", Stop("coexist_reentered", {"curve": rc.name, "m": x, "P": y[1], "T": y[3],
+                                                                      "exit_m": rx}))
+        if seg is not None and direction * (x - x1) >= 0.0:   # 68 B3: the layer ends on the segment
+            return stop("refused", Stop("coexist_unfinished", {"curve": seg[0].name, "m": x, "P": y[1], "T": y[3],
+                                                               "reason": "layer end on the segment"}))
         if direction * (x - x1) >= 0.0:
             return Result(x, y, Stop("end"), h_last=h, path=tuple(path), events=tuple(landed), counters=cnt,
-                          band_grazes=tuple(grazes))
+                          band_grazes=tuple(grazes), coexist=tuple(segs))
         h = direction * min(max(abs(next_h(h, en, True)), opt.h_min), opt.h_max)
 
 
