@@ -61,7 +61,7 @@ def reset_stats() -> None:
     STATS.clear()
     STATS.update(ddot_rejects=0, ddot_worst_rel=0.0, ddot_consistency_worst=0.0, shortened=0, shortened_cold=0,
                  accepted=0, melt_iter_max=0, landings=0, ramp_capped=0, landed_before_fold=0, landings_cold=0,
-                 ramp_capped_cold=0)
+                 ramp_capped_cold=0, landing_t=[])
 
 
 def _radius_at(s, p_pa: float, r_top: float, r_bot: float) -> float | None:
@@ -128,6 +128,7 @@ def _land(s, step, y0: list, t: float, y_new: list, h_used: float, sg0: tuple) -
             hi = mid
     hp.restore(s, snap)
     STATS["landings"] += 1
+    STATS["landing_t"].append(t + hi / GYR_S)      # §7.5 (c): evaluators keep interpolation stencils inside segments
     return hi
 
 
