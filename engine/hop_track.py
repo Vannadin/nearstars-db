@@ -27,7 +27,9 @@ EPS_ROOT_M = 1.0e-3        # §2: 1e-6 × FLOOR_M; T2 default max true residual 
 OPT = {"nan_safe": True, "residual": True, "guard": True, "scaled": True, "guard_a_clip": True}
 #: amendment A1 (forced by NC4, cleared by 68 10-23, ON for every counted rung): the guard's predictions x + Δx·ρ,
 #: ρ = h_trial / h_last
-STEP = {"ratio": 1.0, "h_last": None}
+STEP = {"ratio": 1.0, "h_last": None, "c": 1.0}
+#: f3 (10-24): the evaluated state's time fraction within the trial step (thermal_ale sets it per ARS stage: 0 at the
+#: step start and at accept, γ at stage 2, 1 at the end). The guard predicts x + Δx·ρ·c; T2's paths leave c = 1.
 STATS: dict = {}
 
 
@@ -255,7 +257,7 @@ def _guard(h, r: ft.Root, x_new: float, lo: float, hi: float, equation: str) -> 
     if not OPT["guard"]:
         return
     w = half_width(r)
-    rho = STEP["ratio"] if OPT["scaled"] else 1.0
+    rho = (STEP["ratio"] if OPT["scaled"] else 1.0) * STEP.get("c", 1.0)
     own = abs(x_new - (r.x + r.dx * rho))
     for nb, dnb in ((r.lo, r.dlo), (r.hi, r.dhi)):
         if nb is None:
@@ -370,7 +372,7 @@ def install():
     for the `with` block only."""
     saved = ts._continued, ts.track_at, ft.advance
     ts._continued, ts.track_at, ft.advance = continued, track_at, _ft_advance
-    STEP.update(ratio=1.0, h_last=None)
+    STEP.update(ratio=1.0, h_last=None, c=1.0)
     try:
         yield
     finally:

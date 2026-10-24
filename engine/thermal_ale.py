@@ -225,6 +225,7 @@ def _step(s, lid, th0: list, tb0, y0: list, t0: float, hh: float, k1: list):
     # stage 2
     y2 = [a + hh * G * b for a, b in zip(y0, k1)]
     t2 = t0 + G * dt
+    hp.STEP["c"] = G                                           # f3: the guard's prediction at this stage's time
     f_pre2 = state_terms(s, *y2, t2, s._ale_state["grad"])     # sets layer_t_i at y2; a, b of ddl
     tb2 = None
     if lg is not None:
@@ -242,6 +243,7 @@ def _step(s, lid, th0: list, tb0, y0: list, t0: float, hh: float, k1: list):
     # stage 3
     y3 = [a + hh * (DEL * b + (1 - DEL) * c) for a, b, c in zip(y0, k1, k2)]
     t3 = t0 + dt
+    hp.STEP["c"] = 1.0
     f_pre3 = state_terms(s, *y3, t3, base_gradient(th2, co2[0]))
     tb3 = None
     if lg is not None:
@@ -291,6 +293,7 @@ def run(s, cap_myr: float) -> dict:
     hp.reset_stats()
     with hp.install():
         while True:
+            hp.STEP["c"] = 0.0                       # f3: the accepted state is the step start (no predicted move)
             try:
                 f1 = state_terms(s, *y, t, grad, mode="accept")
             except sm.Refused as e:
