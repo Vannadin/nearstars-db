@@ -67,6 +67,34 @@ class FallSetStamp(unittest.TestCase):
         with self.assertRaisesRegex(ma.TableStop, "material_view.py blob"):
             self.load(lambda d: d["stamp"][fs.STAMP_KEY]["solver"].update(material_view="0" * 40))
 
+    def test_a_refusal_is_never_cached(self):
+        """68 B1: a caught refusal leaves no cached {} behind; the second read refuses again. Mutant: the old order
+        (the view's sets set to {} before the checks) reads {} the second time (red)."""
+        v = ma.view(thaw(self.rec), self.tab, 1600.0)
+        d = {"record": RID, "ps": list(v.ps), "ts": list(v.ts), "stops": [], "sets": {"3": [[1.0, 2.0]]},
+             "stamp": {"record_sha256": "0" * 64}}
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / f"{RID}.json").write_text(json.dumps(d))
+            old = ma.FALL_SETS_DIR
+            ma.FALL_SETS_DIR = tmp
+            try:
+                for _ in range(2):
+                    with self.assertRaisesRegex(ma.TableStop, "record sha256"):
+                        v._fall_set_load()
+
+                def mutant(view):
+                    try:
+                        return fs.load(view)
+                    finally:
+                        if view._fall_sets is None:
+                            view._fall_sets = {}
+                w = ma.view(thaw(self.rec), self.tab, 1600.0)
+                with self.assertRaises(ma.TableStop):
+                    mutant(w)
+                self.assertEqual(mutant(w), {})                  # the mutant goes inert: what B1 removes
+            finally:
+                ma.FALL_SETS_DIR = old
+
     def test_stops_carried_stop(self):
         with self.assertRaisesRegex(ma.TableStop, "build STOP"):
             self.load(lambda d: d.update(stops=[{"why": "planted"}]))

@@ -14,7 +14,9 @@ sets load and whether a load refuses, never a read value.
 
 Limits named (68 n5, n6; the registration's audits): the static half carries the engine modules on branches the census
 sweep never visits and the literal data paths in their source; a data file opened only on an unswept branch through a
-computed path is in neither half. The census sees Python-level opens (the «open» audit event: open, io.open,
+computed path is in neither half. The census sees one process and one thread (r2 n1): the audit hook and the profiler
+are per process and per thread, so a read routed through parallel_points or a worker would be invisible; today's reads
+are serial. The census sees Python-level opens (the «open» audit event: open, io.open,
 Path.read_*); a C extension's own fopen is invisible to it. At 1868f06c no module of the read's closure opens engine data
 through a C reader (np.load / fromfile / h5py / loadtxt: none), and seafreeze, which reads its own data in C, is out of
 the repo and reported by version only."""
@@ -123,12 +125,18 @@ def hook(event, args):
             SEEN["open"].add((os.path.relpath(p, ROOT).replace(os.sep, "/"), SEEN.get("window", "load")))
 sys.addaudithook(hook)
 ENG = os.path.join(ROOT, "engine") + os.sep
-CALLED = set()
+CALLED, LOADCALLED = set(), set()
+DEPTH = [0]                                            # inside an in-repo module's import: its own execution, not a call
 def prof(frame, event, arg):
-    if event == "call" and SEEN.get("window") == "read":
-        f = frame.f_code.co_filename
-        if f.startswith(ENG) and frame.f_code.co_name != "<module>":
-            CALLED.add(os.path.relpath(f, ROOT).replace(os.sep, "/"))
+    code = frame.f_code
+    if code.co_name == "<module>":
+        if code.co_filename.startswith(ROOT + os.sep) and event in ("call", "return"):
+            DEPTH[0] += 1 if event == "call" else -1
+        return
+    if event == "call" and not DEPTH[0]:
+        f = code.co_filename
+        if f.startswith(ENG):
+            (CALLED if SEEN.get("window") == "read" else LOADCALLED).add(os.path.relpath(f, ROOT).replace(os.sep, "/"))
 sys.path.insert(0, ROOT)
 from solver import fall_sets as fs
 if len(sys.argv) > 4 and sys.argv[4]:
@@ -140,7 +148,7 @@ mods = sorted({os.path.relpath(os.path.realpath(m.__file__), ROOT).replace(os.se
                for m in list(sys.modules.values()) if getattr(m, "__file__", None)
                and os.path.realpath(m.__file__).startswith(ROOT + os.sep)})
 print("CENSUS " + json.dumps({"modules": mods, "opens": sorted(SEEN["open"]), "called": sorted(CALLED),
-                              "points": out}))
+                              "called_at_load": sorted(LOADCALLED), "points": out}))
 """
 
 
@@ -282,7 +290,7 @@ def engine_census(records, sets_dir=None, root=REPO, plant=None) -> dict:
         eng[m] = blob(root / m)
     imported = sorted(m for m in d["modules"] if m.startswith("engine/") and m.count("/") == 1 and m not in eng)
     return {"engine": dict(sorted(eng.items())), "imported_not_read": imported, "solver_data": dict(sorted(sol.items())),
-            "modules": d["modules"], "points": d["points"]}
+            "called_at_load": d["called_at_load"], "modules": d["modules"], "points": d["points"]}
 
 
 _SIDE_MAIN = r'''
@@ -371,6 +379,7 @@ def closure_stamp(records, sets_dir=None, root=REPO) -> dict:
     cen = engine_census(records, sets_dir, root)
     out = tree_stamp(cen, root)
     out["census"] = {"engine": sorted(cen["engine"]), "imported_not_read": cen["imported_not_read"],
+                     "called_at_load": cen["called_at_load"],
                      "solver_data": sorted(cen["solver_data"]), "points": cen["points"]}
     return out
 
@@ -384,8 +393,11 @@ def drift(stamp, cen, root=REPO, closure_list=None) -> list:
     out += [f"engine load outside the stamp: {p}" for p in sorted(set(cen["engine"]) - eng)]
     out += [f"census entry no longer loaded: {p}" for p in sorted(listed - set(cen["engine"]))]
     out += [f"solver data outside the stamp: {p}" for p in sorted(set(cen["solver_data"]) - set(stamp.get("solver_data") or ()))]
-    if engine_static(root) != stamp.get("engine_static"):
+    st = engine_static(root)
+    if st != stamp.get("engine_static"):
         out.append("static engine closure changed")
+    out += [f"engine call at load outside the stamp and the static half: {p}" for p in cen.get("called_at_load", ())
+            if p not in eng and p not in st["modules"]]                     # 68 n7: expected none
     names = set(closure_list if closure_list is not None else closure(root)) | EXCLUDED
     out += [f"solver module outside the closure: {m}" for m in cen["modules"]
             if m.startswith("solver/") and m.count("/") == 1 and Path(m).stem not in names]
@@ -442,14 +454,30 @@ def parse_sets(d) -> dict:
     return {int(k): [tuple(iv) for iv in v] for k, v in d["sets"].items()}
 
 
-def export(full: Path, out_dir: Path, stamp: dict) -> Path:
+def build_tree(root=REPO) -> dict:
+    """The tree a build ran on (68 B2): the solver closure's blobs, the static engine half and the engine switches —
+    tree_stamp without a census (the census is the export's). rho_fall_build writes it into its document's stamp."""
+    st = tree_stamp({"engine": {}, "solver_data": {}}, root)
+    return {k: st[k] for k in ("solver", "engine", "engine_static", "switches")}
+
+
+def export(full: Path, out_dir: Path, stamp: dict, stale_test_only=False) -> Path:
     """The compact shipped file from a full build file: record, ps, ts, stamp, sets, stops, gzip -n with sorted keys
-    (byte-stable). The build's own stamp fields (record and yaml sha256, tool blobs, read_blob) are kept under «build»;
-    `stamp` is the tree's closure stamp (closure_stamp), written as «read_closure»."""
+    (byte-stable). The build's own stamp fields (record and yaml sha256, tool blobs, read_blob, build_tree) are kept
+    under «build»; `stamp` is the tree's closure stamp (closure_stamp), written as «read_closure».
+    68 B2: the export refuses unless the build's `build_tree` equals this tree's: an old build never gets a fresh
+    stamp. `stale_test_only` lets a test (or the Mac's stand-in sets) export an old build, and is refused for
+    DEFAULT_DIR, so such a file can never become the shipped one."""
     d = _read(Path(full))
     if d.get("stops"):
         raise _stop(f"build {Path(full).name} carries {len(d['stops'])} STOP(s): no shipped sets")
     b = d.get("stamp") or {}
+    if stale_test_only:
+        if Path(out_dir).resolve() == DEFAULT_DIR.resolve():
+            raise _stop("a stale-allowed export never writes the shipped directory")
+    elif b.get("build_tree") != build_tree():
+        raise _stop(f"build {Path(full).name} ran on another tree than this one "
+                    f"({'no build_tree in its stamp' if 'build_tree' not in b else 'build_tree differs'}): rebuild here")
     doc = {"record": d["record"], "ps": d["ps"], "ts": d["ts"], "sets": d["sets"], "stops": [],
            "stamp": {"record_sha256": b.get("record_sha256"), "record_yaml_sha256": b.get("record_yaml_sha256"),
                      STAMP_KEY: stamp, "build": b}}
@@ -464,16 +492,20 @@ def _is_registry_record(rid) -> bool:
 
 
 def load(self):
-    """AssemblageView._fall_set_load, installed (rule 2). Rules 3 and 4; the sets are read once per view."""
+    """AssemblageView._fall_set_load, installed (rule 2). Rules 3 and 4. Only a load that passes every check is cached
+    on the view (68 B1): a refusal re-raises on every access, so a caught refusal never leaves the view inert; a
+    registry record's file missing with the repair off reads nothing and is not cached either."""
     if self._fall_sets is not None:
         return self._fall_sets
     ma = _ma()
-    self._fall_sets = {}
     d = directory()
     path = find(d, self.material_id)
     if path is None:
-        if ma.RHO_BRIDGE and _is_registry_record(self.material_id):
-            raise _stop(f"fall sets: no file for {self.material_id} in {d}")
+        if _is_registry_record(self.material_id):
+            if ma.RHO_BRIDGE:
+                raise _stop(f"fall sets: no file for {self.material_id} in {d}")
+            return {}
+        self._fall_sets = {}
         return self._fall_sets
     doc = _read(path)
     if doc.get("record") != self.material_id or doc.get("ps") != list(self.ps) or doc.get("ts") != list(self.ts):
@@ -490,8 +522,9 @@ def load(self):
     if STAMP_KEY not in stamp:
         raise _stop(f"fall-set file {path.name} was built on a read_blob stamp; rebuild")
     check_stamp(stamp[STAMP_KEY], REPO, path.name)
-    self._fall_sets = parse_sets(doc)
-    return self._fall_sets
+    sets = parse_sets(doc)
+    self._fall_sets = sets
+    return sets
 
 
 def install(module):

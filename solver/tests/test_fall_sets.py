@@ -275,8 +275,8 @@ class ExportAndFixture(unittest.TestCase):
 
     def test_export_is_byte_stable(self):
         with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
-            fa = fs.export(FIX / "planted_fall_record.full.json", Path(a), {"fixture": "planted"})
-            fb = fs.export(FIX / "planted_fall_record.full.json", Path(b), {"fixture": "planted"})
+            fa = fs.export(FIX / "planted_fall_record.full.json", Path(a), {"fixture": "planted"}, stale_test_only=True)
+            fb = fs.export(FIX / "planted_fall_record.full.json", Path(b), {"fixture": "planted"}, stale_test_only=True)
             self.assertEqual(fa.read_bytes(), fb.read_bytes())
             self.assertEqual(fa.read_bytes(), (FIX / "compact" / "planted_fall_record.json.gz").read_bytes())
 
@@ -287,7 +287,29 @@ class ExportAndFixture(unittest.TestCase):
             f = Path(tmp) / "x.json"
             f.write_text(json.dumps(d))
             with self.assertRaisesRegex(ma.TableStop, "STOP"):
-                fs.export(f, Path(tmp), {})
+                fs.export(f, Path(tmp), {}, stale_test_only=True)
+
+    def test_a_build_from_another_tree_never_exports(self):
+        """68 B2: the build's own tree is checked at export. A build with no build_tree, or another tree's, refuses;
+        the same build with the check off (the stale_test_only mutant) exports (red without the check); stale_test_only
+        never writes the shipped directory; a build stamped with this tree exports."""
+        d = json.loads((FIX / "planted_fall_record.full.json").read_text())
+        with tempfile.TemporaryDirectory() as tmp:
+            f = Path(tmp) / "x.json"
+            for bt in (None, dict(fs.build_tree(), switches="00")):
+                if bt is None:
+                    d["stamp"].pop("build_tree", None)
+                else:
+                    d["stamp"]["build_tree"] = bt
+                f.write_text(json.dumps(d))
+                with self.assertRaisesRegex(ma.TableStop, "another tree"):
+                    fs.export(f, Path(tmp), {})
+                self.assertTrue(fs.export(f, Path(tmp), {}, stale_test_only=True).exists())
+            with self.assertRaisesRegex(ma.TableStop, "never writes the shipped directory"):
+                fs.export(f, fs.DEFAULT_DIR, {}, stale_test_only=True)
+            d["stamp"]["build_tree"] = fs.build_tree()
+            f.write_text(json.dumps(d))
+            self.assertTrue(fs.export(f, Path(tmp), {}).exists())
 
 
 class E24Conditional(unittest.TestCase):

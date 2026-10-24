@@ -848,6 +848,11 @@ def _ma():
     return ma
 
 
+def _fs():
+    from solver import fall_sets as fs
+    return fs
+
+
 def _stamp(edge_tol=None):
     import hashlib
     import subprocess
@@ -993,7 +998,8 @@ def document(v, per_cell):
             "stamp": {**_stamp(edge_tol=_view_tol(v)), **{k: x for k, x in _caps_summary(caps).items()
                                                           if k in ("tau_w_rule", "tau_w_range", "tau_w_floor_ends")},
                       "no_band_ends": len(no_band), "record_sha256": v.record["assemblage"]["sha256"],
-                      "record_yaml_sha256": _ma().record_yaml_sha256(v.material_id), "read_blob": _ma().read_blob()},
+                      "record_yaml_sha256": _ma().record_yaml_sha256(v.material_id), "read_blob": _ma().read_blob(),
+                      "build_tree": _fs().build_tree()},          # the tree this build ran on (E24, 68 B2): export checks
             "sets": {str(k): s for k, s in sets_from(v, per_cell, dropped, clip_stops, verified).items()},
             # rev3d amendment 2 §3 (68 B1 / r2 cfeaf0e3): the flat ends at row steps re-verified through the read's
             # own _fall_piece on the final S_k — the count, and every one the read does not land fully (each a STOP)
