@@ -338,7 +338,7 @@ def run(s, cap_myr: float) -> dict:
                     STATS["shortened_cold"] += 1
             if h_used == 0.0:
                 try:
-                    hp.switch_branch(s, y, t, ev)
+                    hp.switch_branch(s, y, t, ev, c=0.0)    # y is the step start, where s.track is
                 except sm.Refused as e:
                     return refuse(e)
                 except ft.Lost as e:                 # r2 h1: a loss inside the branch switch is a named refusal
@@ -362,7 +362,7 @@ def run(s, cap_myr: float) -> dict:
             STATS["accepted"] += 1
             if ev is not None:
                 try:
-                    hp.switch_branch(s, y, t, ev)
+                    hp.switch_branch(s, y, t, ev, c=1.0)    # 68 F1: y is the step end, s.track still the step start
                 except sm.Refused as e:
                     return refuse(e)
                 except ft.Lost as e:                 # r2 h1: a loss inside the branch switch is a named refusal

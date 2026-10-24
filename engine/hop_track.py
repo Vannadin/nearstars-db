@@ -438,9 +438,11 @@ def advance(step, y: list, t_gyr: float, h_s: float, gyr_s: float, s):
             return y_lo, lo, e
 
 
-def switch_branch(s, y: list, t_gyr: float, ev: ft.Lost) -> None:
-    """thermal_stack.switch_branch with this module's arithmetic; the full scan's result must pass the residual check."""
-    STEP["c"] = 0.0                               # r2 h1: the switch is evaluated at the step start
+def switch_branch(s, y: list, t_gyr: float, ev: ft.Lost, c: float = 0.0) -> None:
+    """thermal_stack.switch_branch with this module's arithmetic; the full scan's result must pass the residual check.
+    `c` is y's time fraction of the step that s.track's roots were carried from: 0 when y is the step start (a fold
+    at h_used = 0), 1 when y is the accepted step's end (68 F1)."""
+    STEP["c"] = c                                 # r2 h1 / 68 F1: the predictions move as far as y is from the track
     t_c, t_m, d_l = y[0], y[1], y[2]
     t_l = sm.lid_base_temperature(t_m, s.e_star, s.opt["a_rh"], s.opt["r_gas"])
     r_l, r_c = s.r_p - d_l, s.r_base
