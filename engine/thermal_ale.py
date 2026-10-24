@@ -452,7 +452,7 @@ def _run(s, cap_myr: float, opts: dict) -> dict:
                     h_adv = h_used                               # advance's own length: Lost halving or a fold
                     if opts["events"] and h_used > 0.0:
                         ratio_in = hp.STEP["ratio"]               # the check predicts at h_used; the re-step sets its own
-                        hp.STEP["ratio"] = h_used / hp.STEP["h_last"] if hp.STEP["h_last"] else 1.0
+                        hp.STEP["ratio"] = (h_used / hp.STEP["h_last"]) if hp.STEP["h_last"] else 1.0
                         h_land = _land(s, step, y0, t, y_new, h_used, sg0)
                         hp.STEP["ratio"] = ratio_in
                         if h_land < h_used:
