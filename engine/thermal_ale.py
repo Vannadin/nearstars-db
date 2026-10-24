@@ -285,6 +285,7 @@ def run(s, cap_myr: float) -> dict:
     rows = []
     s._rows = rows
     t, n, h_min = t0, 0, None
+    moved = False                                     # r2 aa2b6ec6: s.track's roots are from the previous accepted state
     refused = None
 
     def refuse(e):
@@ -294,7 +295,7 @@ def run(s, cap_myr: float) -> dict:
     with hp.install():
         hp.STEP["ale"] = True                         # 68 (l.141): continuations predict at the stage's time fraction
         while True:
-            hp.STEP["c"] = 0.0                       # f3: the accepted state is the step start (no predicted move)
+            hp.STEP["c"] = 1.0 if moved else 0.0     # r2 aa2b6ec6: a full step from s.track's state; 0 where the track is y's own
             try:
                 f1 = state_terms(s, *y, t, grad, mode="accept")
             except sm.Refused as e:
@@ -344,6 +345,7 @@ def run(s, cap_myr: float) -> dict:
                 except ft.Lost as e:                 # r2 h1: a loss inside the branch switch is a named refusal
                     return refuse(f"the branch switch after the {ev.equation} fold lost {e.equation} at t = {t:.6f} Gyr")
                 rows.pop()
+                moved = False                        # switch_branch rebuilt the track at y
                 continue
             h = h_used
             hp.STEP["h_last"] = h
@@ -360,6 +362,7 @@ def run(s, cap_myr: float) -> dict:
             t = s.body["age_gyr"] if h == remaining else t + h / GYR_S
             n += 1
             STATS["accepted"] += 1
+            moved = True
             if ev is not None:
                 try:
                     hp.switch_branch(s, y, t, ev, c=1.0)    # 68 F1: y is the step end, s.track still the step start
@@ -367,6 +370,7 @@ def run(s, cap_myr: float) -> dict:
                     return refuse(e)
                 except ft.Lost as e:                 # r2 h1: a loss inside the branch switch is a named refusal
                     return refuse(f"the branch switch after the {ev.equation} fold lost {e.equation} at t = {t:.6f} Gyr")
+                moved = False                        # switch_branch rebuilt the track at y
     return {"rows": rows, "n_steps": n, "cap_myr": cap_myr, "h_min_myr": h_min / GYR_S * 1e3, "stats": dict(STATS),
             "hop_stats": {k: v for k, v in hp.STATS.items() if k != "guard_log"},
             "fold_events": list(s.fold_events), "fold_rejected": list(s.fold_rejected)}

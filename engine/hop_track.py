@@ -349,7 +349,12 @@ def track_at(s, t_c: float, t_m: float, d_l: float, t_l: float, prev: ft.Track |
         db = carried_root(lambda x: layers(du, x)[1]["delta_b"] - x, b, 0.0, max(r_l - du - r_c, 1.0),
                           log=s.carries)
         return math.nan if db is None else layers(du, db)[0]["delta_u"] - du
-    u = accept(outer, None if prev is None else prev.u, d_u, 0.0, r_l - r_c, reach=ft.OUTER_NEIGHBOUR_CELLS)
+    c_in = STEP.get("c", 1.0)
+    STEP["c"] = 0.0                               # r2 aa2b6ec6: b is this state's own root (no predicted move)
+    try:
+        u = accept(outer, None if prev is None else prev.u, d_u, 0.0, r_l - r_c, reach=ft.OUTER_NEIGHBOUR_CELLS)
+    finally:
+        STEP["c"] = c_in
     t_now = s._rows[-1]["t"] if getattr(s, "_rows", None) else None
     if prev is not None:
         _margin(prev.b, b, "δ_b", t_now)
