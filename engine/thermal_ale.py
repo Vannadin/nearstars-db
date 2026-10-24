@@ -292,6 +292,7 @@ def run(s, cap_myr: float) -> dict:
                 "hop_stats": {k: v for k, v in hp.STATS.items() if k != "guard_log"}}
     hp.reset_stats()
     with hp.install():
+        hp.STEP["ale"] = True                         # 68 (l.141): continuations predict at the stage's time fraction
         while True:
             hp.STEP["c"] = 0.0                       # f3: the accepted state is the step start (no predicted move)
             try:
@@ -340,6 +341,8 @@ def run(s, cap_myr: float) -> dict:
                     hp.switch_branch(s, y, t, ev)
                 except sm.Refused as e:
                     return refuse(e)
+                except ft.Lost as e:                 # r2 h1: a loss inside the branch switch is a named refusal
+                    return refuse(f"the branch switch after the {ev.equation} fold lost {e.equation} at t = {t:.6f} Gyr")
                 rows.pop()
                 continue
             h = h_used
@@ -362,6 +365,8 @@ def run(s, cap_myr: float) -> dict:
                     hp.switch_branch(s, y, t, ev)
                 except sm.Refused as e:
                     return refuse(e)
+                except ft.Lost as e:                 # r2 h1: a loss inside the branch switch is a named refusal
+                    return refuse(f"the branch switch after the {ev.equation} fold lost {e.equation} at t = {t:.6f} Gyr")
     return {"rows": rows, "n_steps": n, "cap_myr": cap_myr, "h_min_myr": h_min / GYR_S * 1e3, "stats": dict(STATS),
             "hop_stats": {k: v for k, v in hp.STATS.items() if k != "guard_log"},
             "fold_events": list(s.fold_events), "fold_rejected": list(s.fold_rejected)}

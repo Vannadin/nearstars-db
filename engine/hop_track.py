@@ -120,6 +120,12 @@ def scan(h, lo: float, hi: float, n: int) -> list:
     return roots
 
 
+def _move_scale() -> float:
+    """The predicted-move factor for a continuation: ρ·c in the ALE mode (thermal_ale sets STEP['ale']), 1 on T2's
+    paths, whose arithmetic stays fold_track's (r2 h2: T2 + (D) keeps c = 1 — not fixed there, recorded only)."""
+    return STEP["ratio"] * STEP.get("c", 1.0) if (STEP.get("ale") and OPT["scaled"]) else 1.0
+
+
 def carried_root(h, r: ft.Root, lo: float, hi: float, reach: int = ft.NEIGHBOUR_CELLS, log: list | None = None):
     got = local_root(h, r, lo, hi)
     if got is not None:
@@ -138,7 +144,7 @@ def carried_root(h, r: ft.Root, lo: float, hi: float, reach: int = ft.NEIGHBOUR_
             roots = scan(h, a, b, ft.FULL_SCAN)
             if not roots:
                 return None
-            want = r.x + r.dx
+            want = r.x + r.dx * _move_scale()      # 68 (l.141): the prediction at this evaluation's time fraction
             got = min(roots, key=lambda z: (abs(z - want), -z))
             if log is not None:
                 log.append((r.x, want, got, len(roots)))
@@ -371,12 +377,15 @@ def install():
     """thermal_stack's `_continued` / `track_at` → this module's (and fold_track.advance wrapped for the step ratio),
     for the `with` block only."""
     saved = ts._continued, ts.track_at, ft.advance
+    saved_step = dict(STEP)
     ts._continued, ts.track_at, ft.advance = continued, track_at, _ft_advance
     STEP.update(ratio=1.0, h_last=None, c=1.0)
     try:
         yield
     finally:
         ts._continued, ts.track_at, ft.advance = saved
+        STEP.clear()
+        STEP.update(saved_step)                   # r2 n1: the step state is restored on exit too
 
 
 def snapshot(s) -> tuple:
@@ -431,6 +440,7 @@ def advance(step, y: list, t_gyr: float, h_s: float, gyr_s: float, s):
 
 def switch_branch(s, y: list, t_gyr: float, ev: ft.Lost) -> None:
     """thermal_stack.switch_branch with this module's arithmetic; the full scan's result must pass the residual check."""
+    STEP["c"] = 0.0                               # r2 h1: the switch is evaluated at the step start
     t_c, t_m, d_l = y[0], y[1], y[2]
     t_l = sm.lid_base_temperature(t_m, s.e_star, s.opt["a_rh"], s.opt["r_gas"])
     r_l, r_c = s.r_p - d_l, s.r_base
