@@ -100,6 +100,23 @@ class Missing(unittest.TestCase):
             self.assertIsInstance(self._in(tmp, mr.load), mr.Registry)
 
     @unittest.skipUnless(_shipped_present(), "no shipped sets in solver/materials/fall_sets")
+    def test_a_reused_shipped_id_is_not_the_shipped_record(self):
+        """A test registry's synthetic record under a shipped id (another table pin; test_silicate_routes builds
+        these) reads no shipped file and gets no refusal, at registry load and on its view. Mutant: shippedness by
+        id alone applies the shipped file to it and refuses (red)."""
+        import copy
+        from unittest import mock
+        reg = mr.load()
+        rec = copy.deepcopy(thaw(reg.get(RID)))
+        rec["assemblage"]["sha256"] = "0" * 64
+        v = ma.view(rec, reg.tables[RID], 1600.0)
+        self.assertFalse(fs.is_shipped(v))
+        self.assertEqual(v._fall_set_load(), {})
+        w = ma.view(rec, reg.tables[RID], 1600.0)
+        with mock.patch.object(fs, "is_shipped", lambda view: True), self.assertRaises(ma.TableStop):
+            w._fall_set_load()
+
+    @unittest.skipUnless(_shipped_present(), "no shipped sets in solver/materials/fall_sets")
     def test_non_registry_id_gets_none(self):
         v, _ = self._view()
         v.material_id = "planted_not_a_registry_record"

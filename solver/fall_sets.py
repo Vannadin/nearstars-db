@@ -8,7 +8,9 @@ sets load and whether a load refuses, never a read value.
 
 - `directory()`: `material_assemblage.FALL_SETS_DIR` (NS_FALL_SETS, read at call time) if set, else DEFAULT_DIR.
 - `load(view)` (installed as `_fall_set_load`): the record's sets, or a TableStop «fall sets» by name: a missing file
-  for a registry record with the repair on (rule 3); a file whose stamp differs from this tree's (rule 4).
+  for a shipped record (`is_shipped`: its id and its table pin are solver/materials/<id>.yaml's) with the repair on
+  (rule 3); a file whose stamp differs from this tree's (rule 4). A record that only reuses a shipped id reads no
+  shipped file and gets no refusal.
 - `closure()`, `engine_static()`, `engine_census(records)`, `closure_stamp(records)`: the stamp (rule 1).
 - `export(full, out, stamp)`: the compact, byte-stable shipped form.
 
@@ -487,8 +489,21 @@ def export(full: Path, out_dir: Path, stamp: dict, stale_test_only=False) -> Pat
     return out
 
 
-def _is_registry_record(rid) -> bool:
-    return (SOLVER / "materials" / f"{rid}.yaml").is_file()
+def _shipped_pin(rid):
+    """The table pin (assemblage.sha256) of the shipped record solver/materials/<rid>.yaml, or None."""
+    import yaml
+    f = SOLVER / "materials" / f"{rid}.yaml"
+    if not f.is_file():
+        return None
+    return ((yaml.safe_load(f.read_text(encoding="utf-8")) or {}).get("assemblage") or {}).get("sha256")
+
+
+def is_shipped(view) -> bool:
+    """A shipped record: its id names solver/materials/<id>.yaml and its table pin is that file's. A record that only
+    reuses a shipped id (a test registry's synthetic record in another directory) is not one: the shipped set file
+    under that id is another record's, so it neither loads nor refuses there."""
+    pin = _shipped_pin(view.material_id)
+    return pin is not None and pin == ((view.record or {}).get("assemblage") or {}).get("sha256")
 
 
 def load(self):
@@ -500,14 +515,18 @@ def load(self):
     ma = _ma()
     d = directory()
     path = find(d, self.material_id)
+    shipped = is_shipped(self)
     if path is None:
-        if _is_registry_record(self.material_id):
+        if shipped:
             if ma.RHO_BRIDGE:
                 raise _stop(f"fall sets: no file for {self.material_id} in {d}")
             return {}
         self._fall_sets = {}
         return self._fall_sets
     doc = _read(path)
+    if not shipped and (doc.get("stamp") or {}).get("record_sha256") != self.record["assemblage"]["sha256"]:
+        self._fall_sets = {}                              # another record's file under a reused id: not this record's
+        return self._fall_sets
     if doc.get("record") != self.material_id or doc.get("ps") != list(self.ps) or doc.get("ts") != list(self.ts):
         raise _stop(f"fall-set file {path.name} does not match this record's table")
     if doc.get("stops"):
