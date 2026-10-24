@@ -1501,10 +1501,7 @@ def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
         notes += material_notes.collect(body, views, acc)   # switch-over §4: after every value, accepted pass only
         if acc.coexist:                                  # coexistence note 4 S6: segments, findings, restarts; a walked
             from solver import coexist as cx             # curve's SWAP_NOTE dropped (68 B4, keyed by curve)
-            cx_notes, drop = cx.notes(acc.coexist, views)
-            notes = [n for n in notes if not (n.kind == "material_declared_note" and any(
-                n.fields.get("layer") == lay and str(n.fields.get("text", "")).startswith(pf) for lay, pf in drop))]  # x3-ok: a declared SWAP_NOTE matched to the text rebuilt from the walked curve (68 B4)
-            notes += cx_notes
+            notes = cx.filter_notes(list(notes), acc.coexist, views)
         ans = result.Answer(qs, lbs, profiles, (), tuple(notes))
         return ans, x
     if out.kind == "two_roots":

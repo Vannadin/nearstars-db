@@ -34,6 +34,11 @@ def rho_side(side, p, t):
     return RHO[side]
 
 
+def s_at(p, t):
+    """The planted read, unforced: its side by P against P_b(T), so it steps by DS at the curve."""
+    return s_side(1 if p >= p_b(t) else -1, p, t)
+
+
 class _View:
     """The material: the side by P against P_b(T), dT/dP = −s_P / s_T = (B/P) / (C/T) on either side."""
 
@@ -207,7 +212,7 @@ class Records(unittest.TestCase):
     """Non-swap cuts, curve ends and sharp steps: fixed names, values in Result.coexist (68 B1–B2, r2 v2)."""
 
     def _cut_run(self, kind):
-        hook = cx.CutFinding("phase:planted|cut", s_side, p_b, kind=kind)
+        hook = cx.CutFinding("phase:planted|cut", s_at, p_b, kind=kind)
         m0, y0 = _start()
         return st.run(rh.make_rhs(_View()), m0, y0, 3.95e24, _opt(), _events(None)[:0] + [
             st.Event("phase:planted|cut", (lambda m, y: y[1] - p_b(y[3])), scale=P0, terminal=False, seam=True,
@@ -257,8 +262,8 @@ class NamesStable(unittest.TestCase):
     def _names(self, dt):
         m0, (r, p, t, _t2, i, v) = _start()
         y0 = (r, p, t + dt, t + dt, i, v)
-        def s_var(side, p, t):                     # a cut whose read δs moves with T, so a value in a name would too
-            return s_side(-1, p, t) + ((-4.0 - 0.1 * (t - T0)) if side == 1 else 0.0)
+        def s_var(p, t):                           # a cut whose read δs moves with T, so a value in a name would too
+            return s_side(-1, p, t) + ((-4.0 - 0.1 * (t - T0)) if p >= p_b(t) + 1.5e7 else 0.0)
         cut = st.Event("phase:planted|cut", (lambda m, y: y[1] - (p_b(y[3]) + 1.5e7)), scale=P0, terminal=False,
                        seam=True, component=1, coexist=cx.CutFinding("phase:planted|cut", s_var,
                                                                      lambda t: p_b(t) + 1.5e7))
@@ -302,6 +307,30 @@ class LoadChecks(unittest.TestCase):
             cx.check_table(self._table(+2.0))
         self.assertEqual(e.exception.check, "coexist")
 
+    def _edges(self):
+        t = self._table()
+        e = lambda drho, ok: [{"phase": "x", "p_b": 2.5e9, "converged": True, "delta_rho": drho, "over_tolerance": ok}]
+        t["boundaries"]["rows"] += [
+            {"t": 1000.0, "p_lo": 2e9, "p_hi": 3e9, "left": "b", "right": "b+x", "class": "edge_in", "edges": e(None, None)},
+            {"t": 1100.0, "p_lo": 2e9, "p_hi": 3e9, "left": "b", "right": "b+x", "class": "edge_in", "edges": e(1.0, False)},
+            {"t": 1200.0, "p_lo": 2e9, "p_hi": 3e9, "left": "b", "right": "b+x", "class": "edge_in", "edges": e(1.0, True)}]
+        return t
+
+    def test_cut_edge_rows_both_directions(self):
+        cx.check_table(self._edges())
+        self.assertEqual(cx.cut_census(self._edges()), {"unsolved": 1, "over_tolerance": 1})
+
+    def test_cut_rows_mutants_are_stops(self):
+        """r2 R3: a run builder that loses the cut rows (forward) or also takes the rows read across (reverse)."""
+        from unittest import mock
+        from solver import material_assemblage as ma
+        real = ma._cut_runs
+        for name, fake in (("forward", lambda curves: []),
+                           ("reverse", lambda curves: real(curves) + real(curves, across=True))):
+            with mock.patch.object(ma, "_cut_runs", fake), self.assertRaises(ma.TableStop, msg=name) as e:
+                cx.check_table(self._edges())
+            self.assertIn("coexist_cut_rows", str(e.exception), name)
+
 
 class ShippedViews(unittest.TestCase):
     """r2 v1 on the shipped records: every cut edge row is in one cut run (an edge run, or a coincident pair read as a
@@ -323,6 +352,8 @@ class ShippedViews(unittest.TestCase):
             for i, c in enumerate(v._cut):
                 h = [hk for n, hk in hooks.items() if n.startswith(f"phase:{c.kind}{i}:")]
                 self.assertTrue(h and h[0] is not None, (rid, c.kind, i))
+            n_cut = sum(1 for r in reg.tables[rid]["boundaries"]["rows"] if cx.cut_reason(r) is not None)
+            self.assertEqual(sum(cx.cut_census(reg.tables[rid]).values()), n_cut, rid)
             for i in range(len(v._cut), len(v._events)):                    # runs read across: no hook (68 B3)
                 h = [hk for n, hk in hooks.items() if n.startswith(f"phase:{v._events[i].kind}{i}:")]
                 self.assertTrue(h and h[0] is None, (rid, i))
@@ -343,13 +374,185 @@ class SwapNoteFilter(unittest.TestCase):
             _events = [_C(9.8e9, 9.9e9), _C(9.8e9, 9.9e9), _C(22.7e9, 23.5e9)]
         rec = {"kind": "segment", "layer": "mantle", "curve": "phase:swap2:x|y", "entry": (1.0, 22.8e9, 1890.0),
                "exit": (22.84e9, 1895.0), "phi_range": [0.0, 1.0]}
-        notes, drop = cx.notes([rec], {"mantle": _V()})
+        notes, drop = cx.notes_of([rec], {"mantle": _V()})
         self.assertEqual(drop, {("mantle", f"{ma.SWAP_NOTE}; P {22.7:.4g}–{23.5:.4g} GPa")})
         self.assertEqual([n.kind for n in notes], ["coexistence_segment"])
 
     def test_no_segment_drops_nothing(self):
         rec = {"kind": "sharp", "layer": "mantle", "curve": "phase:swap0:x|y", "reason": "zero_length", "m": 1.0,
                "P": 9.85e9, "T": 1740.0}
-        notes, drop = cx.notes([rec], {"mantle": object()})
+        notes, drop = cx.notes_of([rec], {"mantle": object()})
         self.assertEqual(drop, set())
         self.assertEqual([n.kind for n in notes], ["coexistence_sharp_step"])
+
+
+class _StrictView(_View):
+    """The planted material reading its old branch exactly on the curve (P = P_b), as a record read does."""
+
+    def state(self, p, t, _guess):
+        side = 1 if p > p_b(t) else -1
+        return (RHO[side], (B_ / p) / (C_ / t))
+
+
+class ExitArming(unittest.TestCase):
+    """68 B1 / B4 (note 4 §3): exits at g = 0 and ±1 ulp of the curve; the g_prev-from-node and old-branch-k1 mutants."""
+
+    def _hook(self, where):
+        class At(cx.Segment):
+            def project(self, tok, y):
+                y2 = super().project(tok, y)
+                p = p_b(y2[3])
+                p = {"on": p, "old": math.nextafter(p, -math.inf), "new": math.nextafter(p, math.inf)}[where]
+                return (y2[0], p, y2[2], y2[3]) + tuple(y2[4:])
+        return At("phase:planted|swap", s_side, rho_side, p_b, t_b, lambda t: K)
+
+    def _run(self, where, mutant=None):
+        from unittest import mock
+        m0, y0 = _start()
+        with mock.patch.object(st, "_COEXIST_MUTANT", mutant):
+            return st.run(rh.make_rhs(_StrictView()), m0, y0, 3.95e24, _opt(), _events(self._hook(where)))
+
+    def test_exits_at_the_curve_and_one_ulp_either_side_leave_one_segment(self):
+        for where in ("on", "old", "new"):
+            res = self._run(where)
+            self.assertEqual(res.stop.kind, "end", where)
+            self.assertEqual([e[0] for e in res.events].count("coexist-in:phase:planted|swap"), 1, where)
+
+    def test_rearm_from_the_node_mutant_is_red(self):
+        res = self._run("old", mutant="rearm_from_node")
+        bad = res.stop.kind != "end" or [e[0] for e in res.events].count("coexist-in:phase:planted|swap") != 1
+        self.assertTrue(bad, "the mutant (g_prev from an exit node one ulp on the old side) must re-land or refuse")
+
+    def test_exit_k1_is_the_new_side(self):
+        res = self._run("on")
+        m_out = [e[1] for e in res.events if e[0].startswith("coexist-out")][0]
+        nodes = [p for p in res.path if p[0] == m_out]
+        r, k = nodes[-1][1][0], nodes[-1][2]
+        self.assertAlmostEqual(1.0 / (rh.FOUR_PI * r * r * k[0]), RHO[1], places=6)
+
+    def test_exit_k1_old_branch_mutant_is_red(self):
+        res = self._run("on", mutant="exit_k1_old")
+        m_out = [e[1] for e in res.events if e[0].startswith("coexist-out")][0]
+        nodes = [p for p in res.path if p[0] == m_out]
+        r, k = nodes[-1][1][0], nodes[-1][2]
+        self.assertAlmostEqual(1.0 / (rh.FOUR_PI * r * r * k[0]), RHO[-1], places=6)
+
+
+class MoreRoutes(unittest.TestCase):
+    """68 B3 plants: a source-seam isotherm on the segment lands and the segment goes on; a melting curve on it is
+    terminal as always; a zero-length segment through the stepper takes the named sharp step."""
+
+    def _run(self, extra, hook=None):
+        m0, y0 = _start()
+        return st.run(rh.make_rhs(_View()), m0, y0, 3.95e24, _opt(), _events(hook or _hook()) + list(extra))
+
+    def test_source_seam_isotherm_on_the_segment(self):
+        t_mid = 1702.0                                                      # inside 1699.08 → 1704.98 K
+        ev = st.Event("source_seam:a|b", (lambda m, y: y[3] - t_mid), scale=t_mid, terminal=False, seam=True,
+                      component=3)
+        res = self._run([ev])
+        names = [e[0] for e in res.events]
+        self.assertIn("source_seam:a|b", names)
+        self.assertIn("coexist-out:phase:planted|swap", names)
+
+    def test_melting_curve_on_the_segment_stays_terminal(self):
+        mid = 10.02e9
+        ev = st.Event("melt:solid|liquid", (lambda m, y: y[1] - mid), scale=mid, terminal=True, seam=False)
+        res = self._run([ev])
+        self.assertEqual((res.stop.kind, res.event), ("event", "melt:solid|liquid"))
+
+    def test_zero_length_segment_takes_the_sharp_step(self):
+        flat = cx.Segment("phase:planted|swap", (lambda side, p, t: s_side(-1, p, t)), rho_side, p_b, t_b,
+                          lambda t: K)
+        res = self._run([], hook=flat)
+        self.assertIn("coexist-sharp:phase:planted|swap", [e[0] for e in res.events])
+        self.assertEqual([c["reason"] for c in res.coexist if c["kind"] == "sharp"], ["zero_length"])
+
+
+class FindingIsNotBlind(unittest.TestCase):
+    """r2 R1 / 68 B1: the cut finding measures the read's own step, unforced and extrapolated; a planted gap cut with a
+    step gives δs = the step; the mutant (a read that ignores the step, as a forced side read inside an edge window
+    did) gives 0 and is red."""
+
+    def test_planted_step_is_measured(self):
+        ds, why = cx.CutFinding("c", s_at, p_b).step(P0, T0)
+        self.assertIsNone(why)
+        self.assertAlmostEqual(ds, DS, delta=1e-6)
+
+    def test_force_ignoring_mutant_is_red(self):
+        blind = cx.CutFinding("c", (lambda p, t: s_side(-1, p, t)), p_b)
+        ds, _why = blind.step(P0, T0)
+        self.assertNotAlmostEqual(ds, DS, delta=1.0)
+
+    def test_unread_side_is_none_not_zero(self):
+        ds, why = cx.CutFinding("c", (lambda p, t: st.Stop("refused")), p_b).step(P0, T0)
+        self.assertIsNone(ds)
+        self.assertIn("does not read", why)
+
+    @unittest.skipUnless(__import__("solver.tests.test_assemblage_c1", fromlist=["_shipped"])._shipped(),
+                         "no shipped assemblage records")
+    def test_shipped_gap_rows_read_continuous(self):
+        """At every gap-marked cut edge of bse, the extrapolated step is below the one-ε difference (the read's own
+        slope): the edge window keeps s continuous, so a 0 there is a measurement, not a blind probe."""
+        from solver import material_registry as mr
+        from solver.tests import test_assemblage_c1 as tc
+        reg = mr.load()
+        rid = "silicate_slb_default_bse"
+        v = tc._view(reg, rid)
+        gap = {(r["t"], r["p_lo"], r["p_hi"]) for r in reg.tables[rid]["boundaries"]["rows"] if r.get("cut_reason") == "gap"}
+        n = 0
+        for c in v._cut:
+            if c.kind != "edge" or not any((r["t"], r["p_lo"], r["p_hi"]) in gap for r in c.rows):
+                continue
+            r = c.rows[len(c.rows) // 2]
+            f = cx.CutFinding("c", (lambda p, t: cx.side_s(v, p, t, None)), lambda t, c=c: c.p_b_ext(t, v._reach))
+            ds, why = f.step(r["p_b"], r["t"])
+            if ds is None:
+                continue
+            a, b = cx.side_s(v, r["p_b"] * (1 - f.eps), r["t"], None), cx.side_s(v, r["p_b"] * (1 + f.eps), r["t"], None)
+            self.assertLessEqual(abs(ds), abs(b - a) + 1e-12, (c.id, r["t"]))
+            n += 1
+        self.assertGreater(n, 0)
+
+
+class FilterNotes(unittest.TestCase):
+    """68 B4 (note 4 §3): solve's note step drops the walked curve's SWAP_NOTE and keeps a sharp step's; the
+    filter-removed mutant keeps the walked one (red)."""
+
+    def _setup(self):
+        from solver import material_assemblage as ma, result
+
+        class _C:
+            def __init__(self, a, b):
+                self.p_range = (a, b)
+
+        class _V:
+            _events = [_C(9.8e9, 9.9e9), _C(22.7e9, 23.5e9)]
+        walked = f"{ma.SWAP_NOTE}; P {9.8:.4g}–{9.9:.4g} GPa; the step's latent heat …"
+        other = f"{ma.SWAP_NOTE}; P {22.7:.4g}–{23.5:.4g} GPa"
+        notes = [result.Note("material_declared_note", "x", {"layer": "mantle", "text": walked}),
+                 result.Note("material_declared_note", "y", {"layer": "mantle", "text": other})]
+        rec = {"kind": "segment", "layer": "mantle", "curve": "phase:swap0:a|b", "entry": (1.0, 9.85e9, 1740.0),
+               "exit": (9.88e9, 1746.0), "phi_range": [0.0, 1.0]}
+        return notes, rec, {"mantle": _V()}
+
+    def test_walked_curve_note_dropped_other_kept(self):
+        notes, rec, views = self._setup()
+        out = cx.filter_notes(notes, [rec], views)
+        texts = [n.fields.get("text") for n in out if n.kind == "material_declared_note"]
+        self.assertEqual(len(texts), 1)
+        self.assertIn("22.7", texts[0])
+        self.assertIn("coexistence_segment", [n.kind for n in out])
+
+    def test_filter_removed_mutant_is_red(self):
+        notes, rec, views = self._setup()
+        mutant = notes + cx.notes_of([rec], views)[0]                     # the notes appended, nothing dropped
+        self.assertNotEqual(len([n for n in mutant if n.kind == "material_declared_note"]),
+                            len([n for n in cx.filter_notes(notes, [rec], views) if n.kind == "material_declared_note"]))
+
+    def test_sharp_step_keeps_its_note(self):
+        notes, _rec, views = self._setup()
+        sharp = {"kind": "sharp", "layer": "mantle", "curve": "phase:swap0:a|b", "reason": "zero_length", "m": 1.0,
+                 "P": 9.85e9, "T": 1740.0}
+        out = cx.filter_notes(notes, [sharp], views)
+        self.assertEqual(len([n for n in out if n.kind == "material_declared_note"]), 2)

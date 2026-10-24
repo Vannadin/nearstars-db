@@ -126,6 +126,13 @@ class Segment:
                                     terminal=False, seam=True, component=1))
         return out
 
+    def note_entry(self, tok, m, y, k_mat):
+        """r2 v3 / n1: ρ_read, the material's own read at the landed node (repair applied), beside side_rho's."""
+        tok["rho_read_entry"] = 1.0 / (rh.FOUR_PI * y[0] * y[0] * k_mat[0]) if k_mat and k_mat[0] else None
+
+    def note_exit(self, tok, m, y, k_mat):
+        tok["rho_read_exit"] = 1.0 / (rh.FOUR_PI * y[0] * y[0] * k_mat[0]) if k_mat and k_mat[0] else None
+
     def project(self, tok, y):
         """At the exit: T and T_ad onto T_b(P), one recorded projection (≤ the step tolerance)."""
         t = self.t_b(y[1])
@@ -151,21 +158,34 @@ class SharpOnly:
 
 
 class CutFinding:
-    """A non-swap cut (a cut edge run; note 3 §3, 68 B1): no segment, T continuous; the read's δs at the crossing is
-    reported as a FINDING for BA. Also a curve end (a row-step seam; note 4 S5, r2 v2) with kind «restart»."""
+    """A non-swap cut (a cut edge run; note 3 §3, 68 B1): no segment, T continuous; the read's own step in s at the
+    crossing is reported as a FINDING for BA. Also a curve end (a row-step seam; note 4 S5, r2 v2) with kind «restart».
+    The step is measured on the **unforced** read either side of the cut, s(P_b(1 + ε), T) − s(P_b(1 − ε), T), taken at
+    ε and 2ε and extrapolated to ε → 0 (2·d(ε) − d(2ε)), so the read's own slope drops out (r2 R1: a forced side
+    read is overridden inside an edge window, which made the first measure vacuous). A side that does not read gives
+    ds None with its reason: counted as a FINDING, never as 0."""
 
-    def __init__(self, name, s_side, p_b, kind="finding"):
-        self.name, self.s_side, self.p_b, self.kind = name, s_side, p_b, kind
+    def __init__(self, name, s_at, p_b, kind="finding", eps=1e-7):
+        self.name, self.s_at, self.p_b, self.kind, self.eps = name, s_at, p_b, kind, eps
+
+    def step(self, p, t):
+        pb = self.p_b(t)
+        if pb is None:
+            pb = p
+        d = []
+        for e in (self.eps, 2.0 * self.eps):
+            a, b = self.s_at(pb * (1.0 - e), t), self.s_at(pb * (1.0 + e), t)
+            if isinstance(a, st.Stop) or isinstance(b, st.Stop):
+                return None, f"a side does not read ({(a if isinstance(a, st.Stop) else b).kind})"
+            d.append(b - a)
+        return 2.0 * d[0] - d[1], None
 
     def enter(self, m, y):
-        p, t = y[1], y[3]
-        pb = self.p_b(t)
-        side = 1 if pb is None or p >= pb else -1
-        a, b = self.s_side(-side, p, t), self.s_side(side, p, t)
-        if isinstance(a, st.Stop) or isinstance(b, st.Stop):
-            return st.CoexistRecord(self.kind, {"ds": None, "reason": "unread"})
-        return st.CoexistRecord(self.kind, {"ds": b - a})
-
+        ds, why = self.step(y[1], y[3])
+        vals = {"ds": ds}
+        if why is not None:
+            vals["reason"] = why
+        return st.CoexistRecord(self.kind, vals)
 
 # ── the assemblage view's side (note 4 S4), outside material_assemblage.py ─────────────────────────────────────────
 # material_assemblage.py's git blob is pinned by the records' closure_terms (s-read §3.4's build-time check) and by the
@@ -279,8 +299,8 @@ def view_hook(v, curve, name):
         return None
     if form == "assemblage_row_step":
         c, _k = v._row_steps[curve["id"]]
-        return CutFinding(name, (lambda side, p, t: side_s(v, p, t, {c: side})),
-                          (lambda t: v._row_step_p(curve["id"], t)), kind="restart")
+        return CutFinding(name, (lambda p, t: side_s(v, p, t, None)), (lambda t: v._row_step_p(curve["id"], t)),
+                          kind="restart")
     if form != "assemblage_curve" or curve["id"] >= len(v._cut):
         return None
     c = v._events[curve["id"]]
@@ -288,7 +308,7 @@ def view_hook(v, curve, name):
     def s_side(side, p, t):
         return side_s(v, p, t, {c: side})
     if c.kind == "edge":
-        return CutFinding(name, s_side, lambda t: c.p_b_ext(t, v._reach), kind="finding")
+        return CutFinding(name, (lambda p, t: side_s(v, p, t, None)), lambda t: c.p_b_ext(t, v._reach), kind="finding")
     if c.kind != "swap":
         return None
     inv = curve_inverse(v, c)
@@ -315,7 +335,8 @@ def check_table(table):
     """Load checks of an exported assemblage table for the coexistence hooks (note 4 S4, r2 v1 and 68 n; run by the
     registry after material_assemblage.check_table, raising its TableStop, check «coexist»):
     - every cut edge row (an edge-class row not read across) lies in a cut run, so no non-swap cut is left without a
-      hook (the FINDING rule and G1's restarts cannot be silently vacuous);
+      hook (the FINDING rule and G1's restarts cannot be silently vacuous), and every edge run row is an exported cut
+      edge row (r2 R3: both directions);
     - on every cut swap run of two or more rows, each row's signed delta_s agrees with Clapeyron for Δv < 0:
       sign(delta_s) = −sign(dP_b/dT) on its segment (r2 B1′).
     A table without an exported block has no curves and passes."""
@@ -332,6 +353,13 @@ def check_table(table):
     if lost:
         raise ma.TableStop(f"coexist_cut_rows: {len(lost)} cut edge row(s) in no cut run, first {lost[0]!r}",
                            check="coexist")
+    cut = {(r["t"], r["p_lo"], r["p_hi"]) for r in b.get("rows", ())
+           if r["class"] != "swap" and not r.get("node_resolved") and not ma.row_across(r)}
+    stray = [(r["t"], r["p_b"]) for c in runs if c.kind == "edge" for r in c.rows
+             if (r["t"], r["p_lo"], r["p_hi"]) not in cut]
+    if stray:
+        raise ma.TableStop(f"coexist_cut_rows: {len(stray)} cut edge run row(s) not an exported cut edge row, first "
+                           f"{stray[0]!r}", check="coexist")
     for c in runs:
         if c.kind != "swap" or len(c.rows) < 2:
             continue
@@ -347,7 +375,40 @@ def check_table(table):
                                        check="coexist")
 
 
-def notes(records, views, body_layers=()):
+
+def cut_reason(r):
+    """Why an exported edge-class row is cut (row_across's rule, read per reason for r2 R3's census): «gap» (the
+    generator's mark), «unsolved» (an edge with delta_rho None), «over_tolerance», «not_converged», «no_edges»; None
+    for a row read across. A row with several failing edges takes the first reason in that order."""
+    from solver import material_assemblage as ma
+    if r.get("node_resolved") or r["class"] == "swap" or ma.row_across(r):
+        return None
+    if r.get("cut_reason") == "gap":
+        return "gap"
+    es = r.get("edges") or ()
+    if not es:
+        return "no_edges"
+    for why, bad in (("unsolved", lambda e: e.get("delta_rho") is None),
+                     ("over_tolerance", lambda e: e.get("over_tolerance") is not False),
+                     ("not_converged", lambda e: not e.get("converged"))):
+        if any(bad(e) for e in es):
+            return why
+    raise AssertionError("row_across and cut_reason disagree")
+
+
+def cut_census(table):
+    """{reason: number of exported cut edge rows} of an assemblage table (r2 R3); {} without an exported block."""
+    b = table.get("boundaries") or {}
+    out = {}
+    if b.get("status") == "exported":
+        for r in b.get("rows", ()):
+            why = cut_reason(r)
+            if why is not None:
+                out[why] = out.get(why, 0) + 1
+    return out
+
+
+def notes_of(records, views):
     """solve's notes from Result.coexist (note 4 S6), and the SWAP_NOTE texts to drop (68 B4, keyed by curve: m2).
     Returns (notes, drop) — drop is a set of (layer id, SWAP_NOTE text prefix) for every curve walked as a segment;
     solve removes a material_declared_note whose (layer, text) starts with one (its own «; latent heat …» tail too)."""
@@ -389,3 +450,13 @@ def _run_id(event_name):
     import re
     m = re.match(r"phase:(?:swap|edge|node)(\d+):", event_name)
     return int(m.group(1)) if m else None
+
+
+def filter_notes(notes, records, views):
+    """solve's note step (note 4 S6; 68 B4 / m2): the coexistence notes appended, and each walked curve's own SWAP_NOTE
+    (a material_declared_note of that layer, its text rebuilt from the curve's P range) dropped; a sharp step's note
+    stays."""
+    cx_notes, drop = notes_of(records, views)
+    kept = [n for n in notes if not (n.kind == "material_declared_note" and any(
+        n.fields.get("layer") == lay and str(n.fields.get("text", "")).startswith(pf) for lay, pf in drop))]  # x3-ok: a declared SWAP_NOTE matched to the text rebuilt from the walked curve (68 B4)
+    return kept + cx_notes
