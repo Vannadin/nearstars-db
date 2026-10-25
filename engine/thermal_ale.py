@@ -7,8 +7,8 @@ place of thermal_stack's `_continued` / `track_at` for the duration of `run` onl
 Mode options (D2 note §7.5; `s.opt["ale_options"]` overrides the defaults in `ALE_DEFAULTS`, all on in this mode):
 - `melt_rule` "exact": state_terms' melt integrals by `melt_exact` (splits at r_x and the solidus seam) through T2's
   `s.opt["melt_rule"]`, whose default "midpoint" keeps T2 byte-identical; set for the run only.
-- `events`: the 13 event signs (`event_signs`: the stefan sign; T′(r_x) − T_sol and − T_sol,depleted; T′(r_s) −
-  T_sol,high and − T_sol,low; each at T_m − 1, T_m, T_m + 1 K, T_b moved with T_m) are compared at a step's start and
+- `events`: the 16 event signs (`event_signs`: the stefan sign; T′(r_x) − T_sol and − T_sol,depleted; T′(r_s) −
+  T_sol,high and − T_sol,low; T′(r_top) − T_sol(P(r_top)); each at T_m − 1, T_m, T_m + 1 K, T_b moved with T_m) are compared at a step's start and
   end; a change lands the step just past the first change (bisection of the step length to min(1e-9 Gyr, 1e-6 h)),
   and the run re-steps to that length.
 - `ramp_cap`: a step starting inside a ramp (a family whose T_m + 1 and T_m − 1 signs differ) is capped at the run's
@@ -78,9 +78,11 @@ def _radius_at(s, p_pa: float, r_top: float, r_bot: float) -> float | None:
 
 
 def event_signs(s, y: list, t_gyr: float, c: float) -> tuple:
-    """The 13 event signs at (y, t) (§7.5): stefan > 0, then per k = −1, 0, +1 K: T′(r_x) > T_sol(P_x),
-    T′(r_x) > T_sol,depleted(P_x), T′(r_s) > T_sol,high(seam), T′(r_s) > T_sol,low(seam). A radius outside the
-    convecting shell gives False for its pair. `c` is y's time fraction in the step (0 its start, 1 its end); the run
+    """The 16 event signs at (y, t) (§7.5): stefan > 0, then per k = −1, 0, +1 K: T′(r_x) > T_sol(P_x),
+    T′(r_x) > T_sol,depleted(P_x), T′(r_s) > T_sol,high(seam), T′(r_s) > T_sol,low(seam), and T′(r_top) >
+    T_sol(P(r_top)) by melt_exact's branch rule (the melting interval pinned at the convecting shell's top appears or
+    vanishes; t2ref reading 10-25, owner-direction 6a04615d (a)). A radius outside the convecting shell gives False for
+    its pair. `c` is y's time fraction in the step (0 its start, 1 its end); the run
     state, STEP included, is restored around the evaluation."""
     snap = hp.snapshot(s)
     hp.STEP["c"] = c
@@ -93,6 +95,10 @@ def event_signs(s, y: list, t_gyr: float, c: float) -> tuple:
     p_x = s.body["melt_extraction_below_pa"]
     rx, rs = _radius_at(s, p_x, r_top, r_bot), _radius_at(s, cv["seam_gpa"] * 1e9, r_top, r_bot)
     t_deep, t_shal, seam_hi, seam_lo = event_thresholds(s, y[3])
+    p_top = s.melt_p(r_top)
+    t_top = melt_exact.solidus_branch(p_top / 1e9, p_top < p_x, p_top / 1e9 > cv["seam_gpa"], d_cr=y[3],
+                                      d_ref=sm.crust_reference_thickness(s.r_p, s.r_c, s.body["crust_reference_fraction"]),
+                                      delta_t_sol=s.body["delta_t_sol"], curves=cv)
     out = [f["stefan"] > 0.0]
     for k in (-1.0, 0.0, 1.0):
         tm = y[1] + k
@@ -101,7 +107,7 @@ def event_signs(s, y: list, t_gyr: float, c: float) -> tuple:
         def temp(r):
             return tb + (tm - tb) * (r - r_bot) / (r_top - r_bot)
         out += [rx is not None and temp(rx) > t_deep, rx is not None and temp(rx) > t_shal,
-                rs is not None and temp(rs) > seam_hi, rs is not None and temp(rs) > seam_lo]
+                rs is not None and temp(rs) > seam_hi, rs is not None and temp(rs) > seam_lo, temp(r_top) > t_top]
     return tuple(out)
 
 
@@ -148,8 +154,10 @@ def event_thresholds(s, d_cr: float) -> tuple:
 
 
 def in_ramp(signs: tuple) -> bool:
-    """Between a family's T_m + 1 K and T_m − 1 K images: some pair's k = −1 and k = +1 signs differ."""
-    lo, hi = signs[1:5], signs[9:13]
+    """Between a family's T_m + 1 K and T_m − 1 K images: some function's k = −1 and k = +1 signs differ (the signs are
+    laid out stefan, then the same functions for k = −1, 0, +1)."""
+    per_k = (len(signs) - 1) // 3
+    lo, hi = signs[1:1 + per_k], signs[1 + 2 * per_k:1 + 3 * per_k]
     return any(a != b for a, b in zip(lo, hi))
 
 
