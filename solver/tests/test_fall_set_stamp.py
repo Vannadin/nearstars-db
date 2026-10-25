@@ -63,6 +63,12 @@ class FallSetStamp(unittest.TestCase):
         with self.assertRaisesRegex(ma.TableStop, "read_blob stamp; rebuild"):
             self.load(old)
 
+    def test_other_material_assemblage_blob_stops(self):
+        # the case test_other_read_blob_stops guarded before the closure stamp: a set built on another
+        # material_assemblage.py refuses by name (the stage-A block's T2 named its removal)
+        with self.assertRaisesRegex(ma.TableStop, "solver/material_assemblage.py blob"):
+            self.load(lambda d: d["stamp"][fs.STAMP_KEY]["solver"].update(material_assemblage="0" * 40))
+
     def test_other_closure_blob_stops(self):
         with self.assertRaisesRegex(ma.TableStop, "material_view.py blob"):
             self.load(lambda d: d["stamp"][fs.STAMP_KEY]["solver"].update(material_view="0" * 40))

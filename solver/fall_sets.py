@@ -485,8 +485,16 @@ def export(full: Path, out_dir: Path, stamp: dict, stale_test_only=False) -> Pat
                      STAMP_KEY: stamp, "build": b}}
     text = json.dumps(doc, sort_keys=True, separators=(",", ":")).encode()
     out = Path(out_dir) / f"{d['record']}.json.gz"
-    out.write_bytes(gzip.compress(text, mtime=0))
+    out.write_bytes(gzip_stable(text))
     return out
+
+
+def gzip_stable(text: bytes) -> bytes:
+    """gzip -n, the same bytes on every platform: mtime 0, and the header's OS byte (offset 9) set to 255, RFC 1952's
+    «unknown». zlib writes its own platform's code there (3 on Linux, 19 on macOS), which made the stage-A block's PC
+    export differ from the Mac fixture by that one byte; the deflate stream itself was identical."""
+    data = gzip.compress(text, mtime=0)
+    return data[:9] + b"\xff" + data[10:]
 
 
 def _shipped_pin(rid):

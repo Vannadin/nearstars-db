@@ -297,6 +297,17 @@ class ExportAndFixture(unittest.TestCase):
             self.assertEqual(fa.read_bytes(), fb.read_bytes())
             self.assertEqual(fa.read_bytes(), (FIX / "compact" / "planted_fall_record.json.gz").read_bytes())
 
+    def test_export_bytes_do_not_name_the_platform(self):
+        """The stage-A block's T3: zlib writes its platform's OS code into the gzip header (3 Linux, 19 macOS), so a
+        PC export differed from the Mac fixture in byte 9 alone. The export writes 255 there on every platform; the
+        mutant (plain gzip.compress) carries the platform's code (red)."""
+        import gzip
+        data = fs.gzip_stable(b"{}")
+        self.assertEqual(data[9], 255)
+        self.assertEqual(gzip.decompress(data), b"{}")
+        self.assertNotEqual(gzip.compress(b"{}", mtime=0)[9], 255)
+        self.assertEqual((FIX / "compact" / "planted_fall_record.json.gz").read_bytes()[9], 255)
+
     def test_build_with_stops_exports_nothing(self):
         d = json.loads((FIX / "planted_fall_record.full.json").read_text())
         d["stops"] = [{"why": "planted"}]
