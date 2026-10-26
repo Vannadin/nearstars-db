@@ -964,6 +964,122 @@ def _cut_runs(curves, across=False):
     return out
 
 
+class _Family:
+    """Form note §2: an edge family, a chain of cut edge curves of one boundary (same phase, same left and right labels
+    at the facing rows, facing rows ≤ FOLLOW_JOIN_STEPS table T steps and ≤ FOLLOW_JOIN_DP apart in P_b, member row
+    spans disjoint). x_F(T) is the monotone cubic Hermite (PCHIP, as _cubic1) through ln P_b of every member row, so
+    C¹ in T across the gaps; past the first or last member row it continues linearly with the PCHIP end slope up to
+    the reach, and is None beyond. ψ_F(t) is 1 on [first, last member row] and a smoothstep to 0 over the next table T
+    step past each end (0 where the table has no row past it)."""
+
+    def __init__(self, fid, members, ts):
+        self.id, self.members = fid, members
+        self.rts = [r["t"] for c in members for r in c.rows]
+        self.ys = [math.log(r["p_b"]) for c in members for r in c.rows]
+        self.t_lo, self.t_hi = self.rts[0], self.rts[-1]
+        j0, j1 = ts.index(self.t_lo), ts.index(self.t_hi)
+        self.step_lo = self.t_lo - ts[j0 - 1] if j0 > 0 else None
+        self.step_hi = ts[j1 + 1] - self.t_hi if j1 + 1 < len(ts) else None
+        n = len(self.rts)
+        if n == 1:
+            self.m_lo = self.m_hi = 0.0
+        elif FOLLOW_XF_PCHIP:
+            self.m_lo, self.m_hi = _coeffs(self.rts, self.ys, 0)[4], _coeffs(self.rts, self.ys, n - 2)[5]
+        else:
+            self.m_lo = (self.ys[1] - self.ys[0]) / (self.rts[1] - self.rts[0])
+            self.m_hi = (self.ys[-1] - self.ys[-2]) / (self.rts[-1] - self.rts[-2])
+
+    def x(self, t, reach):
+        """x_F(t) in ln P (a Dual for a Dual t), or None past the reach."""
+        tv = t.v if isinstance(t, Dual) else t
+        if tv < self.t_lo:
+            return None if self.t_lo - tv > reach else self.ys[0] + self.m_lo * (t - self.t_lo)
+        if tv > self.t_hi:
+            return None if tv - self.t_hi > reach else self.ys[-1] + self.m_hi * (t - self.t_hi)
+        n = len(self.rts)
+        if n == 1:
+            return self.ys[0] if not isinstance(t, Dual) else Dual(self.ys[0])
+        i = min(max(bisect.bisect_right(self.rts, tv) - 1, 0), n - 2)
+        if FOLLOW_XF_PCHIP:
+            return _cubic1(t, self.rts, self.ys, i)
+        u = (t - self.rts[i]) / (self.rts[i + 1] - self.rts[i])
+        return self.ys[i] + u * (self.ys[i + 1] - self.ys[i])
+
+    def psi(self, t):
+        tv = t.v if isinstance(t, Dual) else t
+        if tv < self.t_lo:
+            return 0.0 if self.step_lo is None else 1.0 - _smoothstep((self.t_lo - t) / self.step_lo)
+        if tv > self.t_hi:
+            return 0.0 if self.step_hi is None else 1.0 - _smoothstep((t - self.t_hi) / self.step_hi)
+        return 1.0
+
+
+def val_of(q):
+    """A Dual's value, a float itself."""
+    return q.v if isinstance(q, Dual) else q
+
+
+def _sat(d, c):
+    """Post-freeze note 1 §2: the odd C¹ saturation of a shift d at cap c: d for |d| ≤ c/2; sign(d)·(s − (s −
+    c/2)²/(2c)) for c/2 < s < 3c/2; sign(d)·c beyond (s = |d|)."""
+    s_ = abs(d)
+    sv, cv = val_of(s_), val_of(c)
+    if sv <= 0.5 * cv:
+        return d
+    if sv >= 1.5 * cv:
+        return c if val_of(d) > 0.0 else -c
+    m = s_ - (s_ - 0.5 * c) * (s_ - 0.5 * c) / (2.0 * c)
+    return m if val_of(d) > 0.0 else -m
+
+
+def build_families(cut, ts):
+    """Form note §2's families over the cut edge curves, deterministic: candidate joins (a's last row facing b's first,
+    b after a with disjoint spans) are taken by the nearest facing P_b, then by curve id, each curve with at most one
+    predecessor and one successor; every chain is a family, a single curve included. Returns (families, table), the
+    table listing every family's members and every refused join by criterion (the census reads it)."""
+    edges = sorted((c for c in cut if c.kind == "edge"), key=lambda c: c.id)
+    idx = {t: k for k, t in enumerate(ts)}
+    cands, refused = [], []
+    for a in edges:
+        fa = a.rows[-1]
+        for b in edges:
+            if b is a or b.phase != a.phase:
+                continue
+            fb = b.rows[0]
+            if fb["left"] != fa["left"]:
+                continue
+            dp = abs(fb["p_b"] - fa["p_b"])
+            steps = idx[b.t0] - idx[a.t1]
+            if dp > FOLLOW_JOIN_DP or not -FOLLOW_JOIN_STEPS <= steps <= FOLLOW_JOIN_STEPS:
+                continue
+            if b.t0 <= a.t1:
+                if a.id < b.id and a.t0 <= b.t1:       # r2 n5: overlapping member spans are never joined; listed once
+                    refused.append({"a": a.id, "b": b.id, "why": "overlapping spans"})
+                continue
+            if FOLLOW_RIGHT_LABELS and fb["right"] != fa["right"]:
+                refused.append({"a": a.id, "b": b.id, "why": "right labels differ"})
+                continue
+            cands.append((dp, a.id, b.id, a, b))
+    nxt, prv = {}, {}
+    if FOLLOW_JOINS:
+        for _dp, _ia, _ib, a, b in sorted(cands, key=lambda e: e[:3]):
+            if a in nxt or b in prv:
+                continue
+            nxt[a], prv[b] = b, a
+    fams = []
+    for c in edges:
+        if c in prv:
+            continue
+        chain = [c]
+        while chain[-1] in nxt:
+            chain.append(nxt[chain[-1]])
+        fams.append(_Family(len(fams), chain, ts))
+    table = {"families": [{"id": f.id, "members": [c.id for c in f.members],
+                           "parents": [c.parent.id for c in f.members], "t": [f.t_lo, f.t_hi]} for f in fams],
+             "refused": refused}
+    return fams, table
+
+
 def check_boundaries(table, by, ps):
     """The load checks of an exported block (scope note §3 (d)): every row is an adjacent non-frozen column pair of
     the table with exactly its labels (the label/geometry agreement on the row's own pair, 68 M2), every P_b lies
@@ -1154,6 +1270,33 @@ def _at(v, c):
     if not isinstance(v, Dual) or not DUAL_AWARE_SHORTCUTS:
         return v == c
     return v.v == c and v.dx == 0.0 and v.dt == 0.0
+
+
+#: §3 form (68, frozen rewrite/rebuild/s-follow-form.md, artifacts c15300b7): in the s path only, each stencil row is
+#: read at x_k = x − Δ_k, Δ_k the row's shift toward its edge family's position x_F(t), so an edge's s step moves with
+#: T at the family's dP_b/dT instead of staying pinned at each row's own P (diagnosis PB). False: the form removed,
+#: bit-identical to the rebuild's commit 2 (its removal mutant and the off state of the plan's §4 tie and CL control)
+S_FOLLOW = True
+#: the form's mutants (form note §4), each True/False in the engine as set here: FOLLOW_JOINS False is M2 (each piece
+#: its own family), FOLLOW_ON_RHO True is M3 (the shift on ρ too), FOLLOW_DUAL_DELTA False is M4 (Δ_k a float, no
+#: derivative), FOLLOW_XF_PCHIP False is M5 (x_F piecewise-linear in T), FOLLOW_GUARD False is M6 (no non-member guard),
+#: FOLLOW_RIGHT_LABELS False is M7 (joins on left labels only)
+FOLLOW_JOINS = True
+FOLLOW_ON_RHO = False
+FOLLOW_DUAL_DELTA = True
+FOLLOW_XF_PCHIP = True
+FOLLOW_GUARD = True
+FOLLOW_RIGHT_LABELS = True
+#: form note §2: consecutive members' facing rows at most this many table T steps apart, and this far apart in P_b
+FOLLOW_JOIN_STEPS = 2
+FOLLOW_JOIN_DP = 2.0e9
+#: post-freeze note 1 §2 [r2 B1]: every s read checks ∂x_k/∂x ≥ this for every stencil row; below it the read refuses
+FOLLOW_FOLD_FLOOR = 0.25
+FOLD_WHY = "s-read follow map folds (∂x_k/∂x < ¼ at row {t:g} K)"
+
+
+class _FollowFold(Exception):
+    """A stencil row's shifted read point x_k folds back (∂x_k/∂x below FOLLOW_FOLD_FLOOR): args (row index,)."""
 
 
 def _capped(se, s_inf):
@@ -1461,11 +1604,17 @@ class AssemblageView(mv.RecordView):
             j0, j1 = self.ts.index(c.t0), self.ts.index(c.t1)
             c.dc_lo = c.t0 - self.ts[j0 - 1] if j0 > 0 else None
             c.dc_hi = self.ts[j1 + 1] - c.t1 if j1 + 1 < len(self.ts) else None
+        #: §3 form (S_FOLLOW): the edge families of the cut edges and their table (form note §2), each family's T range
+        #: of ψ > 0 for a quick skip, and each member's family
+        self._families, self.family_table = build_families(self._cut, self.ts) if self._cut else ([], {})
+        self._fam_span = [(f, f.t_lo - (f.step_lo or 0.0), f.t_hi + (f.step_hi or 0.0)) for f in self._families]
+        self._fam_of = {c: f for f in self._families for c in f.members}
         self._parts, self._runcache = {}, {}
         #: PROTOTYPE: the highest frozen node T (rows above it hold no frozen run; _flag_reads' precheck)
         self._t_frozen_max = max((c["t"] for c in table["cells"] if c["kind"] == "frozen"), default=-math.inf)
         self._read_memo = {}
         self._wn_of = None                               # _width's node widths and their max, for the lnps they came from
+        self._family_consts()                            # needs _width: after _wn_of
         #: the column cut of a read: p_dataset, lifted to the taper's end for the zone's SLB-extrapolated read (note 7 §2)
         self._top = self.p_dataset
         #: the per-cell band terms by block (registration reg-interp-term §4, §7.4): {key: (cells, floor, source name)}
@@ -2025,29 +2174,38 @@ class AssemblageView(mv.RecordView):
             self._read_memo[mk] = (sides, r, by_count)
         return r
 
-    def _value(self, f, x, t, ia, ib, sides, check=True, near=()):
+    def _value(self, f, x, t, ia, ib, sides, check=True, near=(), shift=None):
         """One field at (x, t) through the row regions, T last (_cubic1 as the uncut path). A corner row (ib, ib+1)
         that names no region, or has no usable run, raises _NoRead; an outer row then drops (its choice changes only
         with the sides). `check`: a read-side corner node of the read cell with no value is CellMissing (D-M2).
         `near` (PROTOTYPE, the row-level blend): each row's own value is mixed with its side values over the edges of
-        `near` in that row's own partition, before the one T interpolation (_row_blend)."""
+        `near` in that row's own partition, before the one T interpolation (_row_blend).
+        `shift` (§3 form, S_FOLLOW): {row: (Δ_k, near_k)}; row k is read at x_k = x − Δ_k (its region, run, reach, cap
+        and corner check, the corner check's P cell taken at x_k) with near_k, its windows in the row's own frame."""
         n_t = len(self.ts)
         rows = {}
         for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1):
             corner = k in (ib, ib + 1)
-            r = self._region(k, sides, x)
+            xk, nk, ja = x, near, ia
+            if shift is not None:
+                dk, nk = shift[k]
+                if not _at(dk, 0.0):
+                    xk = x - dk
+                    xv = xk.v if isinstance(xk, Dual) else xk
+                    ja = min(max(bisect.bisect_right(self.lnps, xv) - 1, 0), len(self.ps) - 2)
+            r = self._region(k, sides, xk)
             if corner and check:
-                for j in (ia, ia + 1):
+                for j in (ja, ja + 1):
                     if self.ps[j] <= self._top and self._region_of(j, k) == r and self._val(f, j, k) is None:
                         raise CellMissing((j, k))
-            v = self._row_value(f, k, r, x, corner)
+            v = self._row_value(f, k, r, xk, corner)
             if v is None:
                 if corner:
                     raise _NoRead("run", k)
                 self._marks["dropped"].add(k)
                 continue
-            if near:
-                v = self._row_blend(f, k, x, sides, near, v)
+            if nk:
+                v = self._row_blend(f, k, xk, sides, nk, v)
             rows[k] = v
         return _cubic1_t(t, self.ts, _Seq(rows, n_t), ib)
 
@@ -2192,6 +2350,232 @@ class AssemblageView(mv.RecordView):
                                             # notes (68 B2 (d) on 652004f9); _blend_sides restores the marks
         return rows
 
+    def _follow(self, x, t, ia, ib, rel, sides, near, force=None):
+        """Form note §2–§3 with its post-freeze note 1 (68's rulings on ea's coding findings) for one read: (sides, near,
+        shift, probe), the family members' sides and windows from their family's position and every stencil row's shift
+        Δ_k with its windows in the row's frame; None when no family has ψ > 0 at t (the read is then today's, bit for
+        bit).
+        - Active families: ψ_F(t) > 0 and x_F(t) defined; w_F = _width(x_F(t)).
+        - Row k: Δ_{F,k} = σ(x_F(t) − x_F(T_k)) (0 where x_F(T_k) is undefined), σ the odd C¹ saturation at the
+          family's constant cap_F (_sat, _family_consts).
+        - Guard (note 1 §1): each guarded curve G gives φ_{G,F} = 1 within the family's constant D_F of x_G(t), a
+          smoothstep to 0 at 3·D_F; G is every cut curve whose position is defined at t (_guard_pos, x_G continued C¹
+          through χ_G's one-step end taper), weighted g_G = (1 − ψ of G's own family)·χ_G(t); a family is never guarded
+          by its own members.
+        - Every row's x_k = x − Δ_k must keep ∂x_k/∂x ≥ FOLLOW_FOLD_FLOOR (x's own Dual dx): else _FollowFold, a named
+          refusal (note 1 §2).
+        - a_F = ψ_F·φ_F·Π_G(1 − g_G·φ_{G,F}); Δ_k = (Σ a_F Δ_{F,k}/Σ a_F)·(1 − Π(1 − a_F)), 0 when Σ a_F = 0, and
+          Σ a_F Δ_{F,k} where Σ a_F's value is 0 with a slope (its limit).
+        - A member's centre and side point is a_F·x_F(t) + (1 − a_F)·ln P_b_ext(t); its window that centre ±
+          _width(centre); in row k's frame the centre is moved by a_F·Δ_{F,k}.
+        `probe`: {"saturated": row entries with |Δ_{F,k}| > cap_F/2 and a_F ≠ 0, "families": active ids, "caps",
+        "dbound": {id: cap_F / D_F}, "ramp": a guard ramp meets an acting family, "ramp_rows": those guards' row T}."""
+        tv = t.v if isinstance(t, Dual) else t
+        reach = self._reach
+        act = []
+        for fam, a, b in self._fam_span:
+            if not a <= tv <= b:
+                continue
+            psi = fam.psi(t)
+            if _at(psi, 0.0):
+                continue
+            xf = fam.x(t, reach)
+            if xf is None:
+                continue
+            act.append((fam, xf, psi, self._width(xf)))
+        if not act:
+            return None
+        xv = x.v if isinstance(x, Dual) else x
+        val = val_of
+        member = {c: e for e in act for c in e[0].members}
+        rows = range(max(ib - 1, 0), min(ib + 2, len(self.ts) - 1) + 1)
+        dfk = {}
+        for fam, xf, _psi, _wf in act:
+            for k in rows:
+                xn = fam.x(self.ts[k], reach)
+                dfk[(fam, k)] = _sat(0.0 if xn is None else xf - xn, fam.cap)
+        wmax = self._node_widths()[1]
+        guards = []
+        if FOLLOW_GUARD:                                 # every cut curve with a position at t (not only the stencil's)
+            for c in self._cut:
+                own = self._fam_of.get(c)
+                psi_own = own.psi(t) if own is not None else 0.0
+                if not isinstance(psi_own, Dual) and psi_own == 1.0:
+                    continue                             # its own family shifts fully here: no guard
+                got = self._guard_pos(c, t)
+                if got is None:
+                    continue
+                xg, chi, grow = got
+                if abs(xv - val(xg)) >= 2.0 * wmax * (1.0 + 1e-12):
+                    continue                             # beyond 3·D_F of x for every family (D_F < 0.6·w_F)
+                gw = chi * (1.0 - psi_own)
+                if not _at(gw, 0.0):
+                    guards.append((xg, gw, own, c))
+
+        def bump(xc, w):
+            d = abs(x - xc) / w
+            dv = val(d)
+            if dv <= 1.0:
+                return 1.0
+            if dv >= 2.0:
+                return 0.0
+            return 1.0 - _smoothstep(d - 1.0)
+
+        def hold(xg, dd):
+            d = abs(x - xg)
+            dv = val(d)
+            if dv <= val(dd):
+                return 1.0
+            if dv >= 3.0 * val(dd):
+                return 0.0
+            return 1.0 - _smoothstep((d - dd) / (2.0 * dd))
+        aw, ramps = [], set()
+        for fam, xf, psi, wf in act:
+            a = psi * bump(xf, wf)
+            if not _at(a, 0.0):
+                for xg, gw, own, gc in guards:
+                    if own is not fam:                   # a family is never guarded by its own members
+                        h_ = hold(xg, fam.dbound)
+                        if not isinstance(h_, float) or 0.0 < h_ < 1.0:
+                            ramps.add(gc)                # a guard ramp meets this family here (n9, n10)
+                        a = a * (1.0 - gw * h_)
+            aw.append(a)
+        afam = {e[0]: a for e, a in zip(act, aw)}
+        old_near = {e[0]: e for e in near}
+        sides2, near2, centre = dict(sides), [], {}
+        for c in rel:
+            if c in member:
+                fam, xf, _psi, _wf = member[c]
+                a = afam[fam]
+                pb = c.p_b_ext(t, reach)
+                if pb is None:
+                    xc = xf
+                elif _at(a, 0.0):
+                    xc = _log(pb)
+                elif not isinstance(a, Dual) and a == 1.0:
+                    xc = xf
+                else:
+                    xc = a * xf + (1.0 - a) * _log(pb)
+                if not (force and c in force):
+                    sides2[c] = -1 if xv < val(xc) else 1
+                w = self._width(xc)
+                if abs(xv - val(xc)) < val(w):
+                    near2.append((c, xc, w))
+                    centre[c] = (fam, a)
+            elif c in old_near:
+                near2.append(old_near[c])
+        sat = 0
+        shift = {}
+        for k in rows:
+            num, sa, prod = 0.0, 0.0, 1.0
+            for (fam, _xf, _psi, _wf), a in zip(act, aw):
+                if _at(a, 0.0):
+                    continue
+                d = dfk[(fam, k)]
+                sat += abs(val(d)) > 0.5 * fam.cap
+                num = num + a * d
+                sa = sa + a
+                prod = prod * (1.0 - a)
+            if _at(sa, 0.0):
+                dk = 0.0
+            elif val(sa) == 0.0:                         # a_F's value 0 with a slope: the combination's limit Σ a_F Δ_{F,k}
+                dk = num
+            else:
+                dk = (num / sa) * (1.0 - prod)
+            if not FOLLOW_DUAL_DELTA:
+                dk = val(dk)
+            elif isinstance(dk, Dual) and isinstance(x, Dual) and x.dx - dk.dx < FOLLOW_FOLD_FLOOR:
+                raise _FollowFold(k)                     # note 1 §2: the per-read fold check, x_k's own dx
+            nk = []
+            for e in near2:
+                if e[0] in centre:
+                    fam, a = centre[e[0]]
+                    nk.append((e[0], e[1] - a * dfk[(fam, k)], e[2]))
+                else:
+                    nk.append(e)
+            shift[k] = (dk, nk)
+        return sides2, near2, shift, {"saturated": sat, "families": [e[0].id for e in act],
+                                      "caps": {e[0].id: e[0].cap for e in act},
+                                      "dbound": {e[0].id: e[0].dbound for e in act},
+                                      "ramp": bool(ramps), "ramp_rows": sorted({r["t"] for gc in ramps for r in gc.rows})}
+
+    def _guard_pos(self, c, t):
+        """A guarded curve's position x_G(t) in ln P and its T weight χ_G(t), or None (post-freeze note 1 §1, r2 B3):
+        ln P_b(t) on its rows and ln P_b_ext(t) over its extension, χ_G 1; past its last defined T (its last row at a
+        stopped end, its reach's end otherwise) x_G continues linearly with the position's own one-sided slope there
+        (the last row segment's d ln P_b/dt at a stopped end; the extension's slope at a reach end, 0 for an edge's flat
+        extension), and χ_G falls by a smoothstep from 1 to 0 over the next table T step (Δ_c): C¹ in t throughout.
+        Returns (x_G, χ_G, None)."""
+        tv = t.v if isinstance(t, Dual) else t
+        if c.t0 <= tv <= c.t1:
+            return _log(c.p_b(t)), 1.0, None
+        hi = tv > c.t1
+        tau = (t - c.t1) if hi else (c.t0 - t)
+        dc = (c.dc_hi if hi else c.dc_lo) or self._reach / EXT_ROWS
+        stop = c.stop_hi if hi else c.stop_lo
+        if not stop:
+            pb = c.p_b_ext(t, self._reach)
+            if pb is not None:
+                return _log(pb), 1.0, None
+        end = 0.0 if stop else self._reach
+        u = (tau - end) / dc
+        if val_of(u) >= 1.0:
+            return None
+        te = (c.t1 + end) if hi else (c.t0 - end)
+        if stop:
+            rs = c.rows
+            e, o = (rs[-1], rs[-2] if len(rs) > 1 else None) if hi else (rs[0], rs[1] if len(rs) > 1 else None)
+            xe = math.log(e["p_b"])
+            slope = 0.0 if o is None else (e["p_b"] - o["p_b"]) / ((e["t"] - o["t"]) * e["p_b"])
+        else:                                            # the extension's value and one-sided slope at its reach end
+            q = _log(c.p_b_ext(Dual(te, 0.0, 1.0), self._reach))
+            xe, slope = (q.v, q.dt) if isinstance(q, Dual) else (q, 0.0)    # a constant extension: a float
+        return xe + slope * (t - te), 1.0 - _smoothstep(u), None
+
+    def _family_consts(self):
+        """Post-freeze note 1 §1–§2 [r2 B2, B4]: per family, over its whole span (member rows, gaps and end-linear
+        extensions to the reach), w_F,min = the least _width(x_F(t)), cap_F = (2/3)·w_F,min/(1 + √2), and D_F =
+        2h·max|dx_F/dt| + 0.01·w_F,min (h the table T step). The span is sampled every 1 K and at every member row and
+        reach end, with x_F's slope from its Dual (a named sampling of the span's max and min)."""
+        h = self._reach / EXT_ROWS
+        for f in self._families:
+            lo, hi = f.t_lo - self._reach, f.t_hi + self._reach
+            ts = sorted(set([lo + i for i in range(int(hi - lo) + 1)] + f.rts + [hi]))
+            wmin, smax = math.inf, 0.0
+            for t in ts:
+                xf = f.x(Dual(t, 0.0, 1.0), self._reach)
+                if xf is None:
+                    continue
+                xv, sl = (xf.v, xf.dt) if isinstance(xf, Dual) else (xf, 0.0)
+                wmin = min(wmin, self._width(xv))
+                smax = max(smax, abs(sl))
+            f.wmin = wmin
+            f.cap = (2.0 / 3.0) * wmin / (1.0 + math.sqrt(2.0))
+            f.dbound = 2.0 * h * smax + 0.01 * wmin
+
+    def follow_probe(self, p, t):
+        """The census's view of the form at (p, t) (no note, count or memo left): {"rows": {k: Δ_k as a Dual},
+        "saturated", "families", "caps", "dbound", "ramp", "ramp_rows"}; {"fold": row T} where the read refuses by the
+        fold check; None when no family is active or the view has no exported curves."""
+        if not self._curves:
+            return None
+        pr = max(p, self.ps[0])
+        ia = min(max(bisect.bisect_left(self.ps, pr, 1) - 1, 0), len(self.ps) - 2)
+        ib = min(max(bisect.bisect_right(self.ts, t) - 1, 0), len(self.ts) - 2)
+        x, td = Dual(math.log(pr), 1.0, 0.0), Dual(t, 0.0, 1.0)
+        n_t = len(self.ts)
+        rel = sorted({c for k in range(max(ib - 1, 0), min(ib + 2, n_t - 1) + 1) for _, c in self._partition(k)},
+                     key=lambda c: c.id)
+        pbs = {c: c.p_b_ext(td, self._reach) for c in rel}
+        sides = {c: (None if pb is None else (-1 if pr < pb else 1)) for c, pb in pbs.items()}
+        try:
+            got = self._follow(x, td, ia, ib, rel, sides, [])
+        except _FollowFold as e:                         # the read refuses here; the census counts it
+            return {"fold": self.ts[e.args[0]]}
+        if got is None:
+            return None
+        return {"rows": {k: v[0] for k, v in got[2].items()}, **got[3]}
+
     def _read(self, p, t, pr, x, ia, ib, fields=None, force=None):
         """The read of an exported-boundary record (R1): every field P first through the row regions, T last
         (_cubic1_t). Inside the (c′) window [x_b − w, x_b + w] of each cut edge near x, the read is the C¹ blend of
@@ -2224,15 +2608,26 @@ class AssemblageView(mv.RecordView):
             if abs(x - xb) < w:
                 near.append((c, xb, w))
         out = {}
+        follow = None
         try:
             for f in (fields or ("rho", "dtdp_eq", "c_p")):
-                v = self._value(f, x, t, ia, ib, sides, near=near)     # PROTOTYPE: the row-level blend
+                if S_FOLLOW and self._families and (f == "s" or (f == "rho" and FOLLOW_ON_RHO)):
+                    if follow is None:
+                        follow = self._follow(x, t, ia, ib, rel, sides, near, force) or ()
+                if S_FOLLOW and follow:
+                    sd, nr, sh, _probe = follow
+                    v = self._value(f, x, t, ia, ib, sd, near=nr, shift=sh)
+                else:
+                    v = self._value(f, x, t, ia, ib, sides, near=near)     # PROTOTYPE: the row-level blend
                 if f == "rho" and RHO_BRIDGE and not self._in_bridge and not isinstance(t, Dual):
                     v = self._rho_fall(x, t, ib, v)
                 if near:
                     if f == "rho":
                         self.cut_counts["corrections"] += len(near)
                 out[f] = v
+        except _FollowFold as e:
+            self._close_marks()
+            return self._refuse(p, t, "input.material_out_of_data", FOLD_WHY.format(t=self.ts[e.args[0]]))
         except _NoRead as e:
             self._close_marks()
             kind, k = e.args
