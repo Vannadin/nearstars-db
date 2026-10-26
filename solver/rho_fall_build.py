@@ -610,7 +610,7 @@ def falls_at(v, t, ib, xlo, xhi):
                 # no regain up to a landed step: the bridge runs flat at R(a′) to its near side
                 ab = {"t": t, "by": cid, "x": xs_, "a": lo_, "b": right, "was_b": hi_, "dR": r_lo[0] - r_hi[0],
                       "jump": far[0] - r_lo[0]}
-                if ab["jump"] >= 0.0 and isinstance(cid, str):
+                if ab["jump"] >= 0.0 and (isinstance(cid, str) or v._swap_has_lambda(v._events[cid])):
                     # rev3d amendment 2 §3: a row step absorbs for node k only if the read's own piece-k rule lands it
                     # fully there (λ = 1 at this T, from this cell, over this interval: _row_step_lambdas, called, not
                     # copied); otherwise not absorbed — rule 1 has already failed, so the STOP
@@ -760,8 +760,7 @@ def _landed_end_check(v, a, b, samples, node, stops, verified=None):
         ea, eb = v._edge_read(a, t, ib, True), v._edge_read(b, t, ib, False)
         if ea is None or eb is None or eb[0] >= ea[0]:
             continue                                     # not a net fall here: the flat end is not relied on
-        cs = lambda t_=t: [math.log(pe) for c in v._cut if c.kind == "swap" for pe in (c.p_b_ext(t_, v._reach),)
-                           if pe is not None]
+        cs = lambda t_=t: v._fixed_swaps(t_)            # delta 2 §3: the read's own always-landed list
         got = v._fall_piece(x, t, ib, node, {node: [(a, b)]}, cs)
         landed, info = got[2] or [], got[3]
         for xs_ in hits:
@@ -828,7 +827,7 @@ def _clip_net_fall(v, a, b, samples, node):
         ea, eb = v._edge_read(a, t, ib, True), v._edge_read(b, t, ib, False)
         if ea is None or eb is None or eb[0] >= ea[0]:
             continue
-        landed = [math.log(pe) for c in v._cut if c.kind == "swap" for pe in (c.p_b_ext(t, v._reach),) if pe is not None]
+        landed = v._fixed_swaps(t)                       # delta 2 §3: the read's always-landed swaps, then its λ = 1 ones
         landed += [z[0] for z in v._row_step_lambdas(t, sk, ib, a, b) if z[1] >= 1.0]   # amendment 2 §3: the read's own
         far = [v._edge_read(xs_ + SWAP_EPS, t, ib, False) for xs_ in landed if b < xs_ <= b + on]
         if not any(f is not None and f[0] >= ea[0] for f in far):

@@ -1136,6 +1136,10 @@ END_BUMP = 0.25
 #: test). dT/dP and c_P take PCHIP's end slope (item 5d998d40, the hold-out truth: the cap read mars's gap-bridge class
 #: worse than C⁰, p95 CI lower bounds 1.09 and 1.31; uncapped 0.17–0.37).
 END_CAPPED = frozenset({"rho"})
+#: rev3d amendment 2 delta 2 (68, a56d8326): a cut swap that owns a holding-row step lands with its own λ from its jump at
+#: x_b(T) (_row_step_lambdas), as its step does; other cut swaps always land. False: every cut swap always lands (the
+#: delta's mutant)
+SWAP_STEP_LAMBDA = True
 
 
 def _capped(se, s_inf):
@@ -1435,6 +1439,8 @@ class AssemblageView(mv.RecordView):
                 for k in ((j, j + 1) if lo else (j - 1, j)):
                     if 0 <= k < len(self.ts) and c.p_b(self.ts[k]) is not None and (c, k) not in self._row_steps:
                         self._row_steps.append((c, k))
+        #: rev3d amendment 2 delta 2: the cut swaps that own a holding-row step (_row_steps' curves), landing with a λ
+        self._step_swaps = frozenset(c for c, _k in self._row_steps)
         #: (R1) §4: a cut curve's side reach past its ends, two T rows (the stencil's reach)
         self._reach = EXT_ROWS * (self.ts[1] - self.ts[0]) if len(self.ts) > 1 else 0.0
         for c in self._cut + self._curves:              # note 8: Δ_c, the next table T row past each end
@@ -2294,8 +2300,7 @@ class AssemblageView(mv.RecordView):
 
         def cut_swaps():
             if not memo:
-                memo.append([_log(pe) for c in self._cut if c.kind == "swap" for pe in (c.p_b_ext(t, self._reach),)
-                             if pe is not None])
+                memo.append(self._fixed_swaps(t))
             return memo[0]
         pieces = [self._fall_piece(x, t, ib, k, sets, cut_swaps, own)[0] for k in (ib, ib + 1)]
         if pieces[0] is None and pieces[1] is None:
@@ -2305,6 +2310,17 @@ class AssemblageView(mv.RecordView):
         r0 = own if pieces[0] is None else pieces[0]
         r1 = own if pieces[1] is None else pieces[1]
         return (1.0 - th) * r0 + th * r1
+
+    def _swap_has_lambda(self, c):
+        """Delta 2: True for a cut swap that lands with its own λ (it owns a holding-row step), under SWAP_STEP_LAMBDA."""
+        return SWAP_STEP_LAMBDA and c in self._step_swaps
+
+    def _fixed_swaps(self, t):
+        """ln P_b_ext(T) of the cut swaps that always land (68 addendum 1): every cut swap but, under rev3d amendment 2
+        delta 2, those owning a holding-row step, which land with their own λ (_row_step_lambdas). The read's and the
+        build's one list (delta 2 §3)."""
+        return [_log(pe) for c in self._cut if c.kind == "swap" and not self._swap_has_lambda(c)
+                for pe in (c.p_b_ext(t, self._reach),) if pe is not None]
 
     def _fall_piece(self, x, t, ib, k, sets, cut_swaps, own=None):
         """Piece k of _rho_fall read from cell ib: (value or None, the interval (lo, hi) it bridges or None, the landed
@@ -2396,7 +2412,9 @@ class AssemblageView(mv.RecordView):
         capped λ at ½), λ = S(clamp(h/h₀, 0, 1)), S the smoothstep (ROW_STEP_LAMBDA). (lo, hi) is the sub-bridge
         holding x_s: the interval cut at the always-landed swaps (r2 877c7679). A step is «in transition» only when
         λ·Rng > 1e-12·ρ (r2 877c7679, the floor): below it λ = 0, counted in cut_counts["row_step_floored"]. Coincident
-        steps (P_b equal to 1e-9) are one. The build calls this for its rule-2 «absorbed» check (§3)."""
+        steps (P_b equal to 1e-9) are one. The build calls this for its rule-2 «absorbed» check (§3). Delta 2 (a56d8326):
+        a cut swap owning a holding-row step is present too, at its landed x_b(T) = ln P_b_ext(T), its λ the same function
+        of the reading cell's reads; such swaps are not in _fixed_swaps, so they bound no sub-bridge."""
         on = 2.0 * SWAP_EPS * (1.0 + 1e-6)
         present = []                                     # (x_s, coincident ones once)
         for i in range(len(self._row_steps)):
@@ -2406,6 +2424,16 @@ class AssemblageView(mv.RecordView):
             xs_ = _log(q)
             if lo < xs_ <= hi + on and not any(abs(xs_ - z) <= 1e-9 for z in present):
                 present.append(xs_)
+        if SWAP_STEP_LAMBDA:                             # delta 2: a step-owning cut swap, at its landed x_b(T)
+            for c in getattr(self, "_cut", ()):          # in the table's order: the dedupe keeps one representative
+                if c not in getattr(self, "_step_swaps", ()):
+                    continue
+                pe = c.p_b_ext(t, self._reach)
+                if pe is None:
+                    continue
+                xs_ = _log(pe)
+                if lo < xs_ <= hi + on and not any(abs(xs_ - z) <= 1e-9 for z in present):
+                    present.append(xs_)
         out, reads = [], {}
 
         def r(x_, below):
