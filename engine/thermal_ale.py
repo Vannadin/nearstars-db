@@ -8,7 +8,8 @@ Mode options (D2 note §7.5; `s.opt["ale_options"]` overrides the defaults in `A
 - `melt_rule` "exact": state_terms' melt integrals by `melt_exact` (splits at r_x and the solidus seam) through T2's
   `s.opt["melt_rule"]`, whose default "midpoint" keeps T2 byte-identical; set for the run only.
 - `events`: the 16 event signs (`event_signs`: the stefan sign; T′(r_x) − T_sol and − T_sol,depleted; T′(r_s) −
-  T_sol,high and − T_sol,low; T′(r_top) − T_sol(P(r_top)); each at T_m − 1, T_m, T_m + 1 K, T_b moved with T_m) are compared at a step's start and
+  T_sol,high and − T_sol,low; T′(r_top) − T_sol(P(r_top)); each at T_m − 1, T_m, T_m + 1 K, T_b moved with T_m), and on a
+  melting basal layer two more per interior layer node (T_i > T_sol,i, T_i > T_liq,i: the layer family, §7.5 note 2) are compared at a step's start and
   end; a change lands the step just past the first change (bisection of the step length to min(1e-9 Gyr, 1e-6 h)),
   and the run re-steps to that length.
 - `ramp_cap`: a step starting inside a ramp (a family whose T_m + 1 and T_m − 1 signs differ) is capped at the run's
@@ -77,13 +78,20 @@ def _radius_at(s, p_pa: float, r_top: float, r_bot: float) -> float | None:
     return 0.5 * (a + b)
 
 
-def event_signs(s, y: list, t_gyr: float, c: float) -> tuple:
+LAYER_FIRST = 16            # event_signs: the layer family's signs follow the 16 mantle signs
+K_FUNCS = 5                 # mantle functions per k image (in_ramp's layout)
+
+
+def event_signs(s, y: list, t_gyr: float, c: float, grid: list | None = None) -> tuple:
     """The 16 event signs at (y, t) (§7.5): stefan > 0, then per k = −1, 0, +1 K: T′(r_x) > T_sol(P_x),
     T′(r_x) > T_sol,depleted(P_x), T′(r_s) > T_sol,high(seam), T′(r_s) > T_sol,low(seam), and T′(r_top) >
     T_sol(P(r_top)) by melt_exact's branch rule (the melting interval pinned at the convecting shell's top appears or
     vanishes; t2ref reading 10-25, owner-direction 6a04615d (a)). A radius outside the convecting shell gives False for
     its pair. `c` is y's time fraction in the step (0 its start, 1 its end); the run
-    state, STEP included, is restored around the evaluation."""
+    state, STEP included, is restored around the evaluation.
+    `grid` (the basal grid's node temperatures belonging to y) adds the layer family on a melting layer: for each interior
+    node, T_i > T_sol,i and T_i > T_liq,i (the counted block's step-3 reading: the layer nodes' liquidus crossings are
+    kinks of q_c and dT_c/dt). Dirichlet nodes (T_c, T_i) are not the grid's own state and carry no sign."""
     snap = hp.snapshot(s)
     hp.STEP["c"] = c
     try:
@@ -108,13 +116,19 @@ def event_signs(s, y: list, t_gyr: float, c: float) -> tuple:
             return tb + (tm - tb) * (r - r_bot) / (r_top - r_bot)
         out += [rx is not None and temp(rx) > t_deep, rx is not None and temp(rx) > t_shal,
                 rs is not None and temp(rs) > seam_hi, rs is not None and temp(rs) > seam_lo, temp(r_top) > t_top]
+    lg = s.layer_grid
+    if grid is not None and lg is not None and lg.latent is not None:      # not `tb`: that name is T_b above
+        out += [x > a for x, a in zip(grid[1:-1], lg.t_sol[1:-1])] + [x > b for x, b in zip(grid[1:-1], lg.t_liq[1:-1])]
     return tuple(out)
 
 
-def _land(s, step, y0: list, t: float, y_new: list, h_used: float, sg0: tuple) -> float:
+def _land(s, step, y0: list, t: float, y_new: list, h_used: float, sg0: tuple, tb_of=None) -> float:
     """§7.5 landing: if any event sign differs between the step's start and end, the step length is bisected to
-    min(LAND_TOL_GYR, 1e-6 h) and the first change is landed just past (hi); returns the length to re-step to."""
-    if event_signs(s, y_new, t + h_used / GYR_S, 1.0) == sg0:
+    min(LAND_TOL_GYR, 1e-6 h) and the first change is landed just past (hi); returns the length to re-step to.
+    `tb_of(hh)` gives the basal grid state of the trial of length hh (the layer family), None without a layer."""
+    def tb(hh):
+        return tb_of(hh) if tb_of is not None else None
+    if event_signs(s, y_new, t + h_used / GYR_S, 1.0, tb(h_used)) == sg0:
         return h_used
     tol = min(LAND_TOL_GYR * GYR_S, 1e-6 * h_used)
     snap = hp.snapshot(s)
@@ -128,7 +142,7 @@ def _land(s, step, y0: list, t: float, y_new: list, h_used: float, sg0: tuple) -
         except ft.Lost as e:                          # 68: a loss inside the landing bisection is its own refusal
             hp.restore(s, snap)
             raise sm.Refused(f"a trial inside the event landing lost {e.equation} at t = {t + mid / GYR_S:.6f} Gyr") from e
-        if event_signs(s, y_mid, t + mid / GYR_S, 1.0) == sg0:
+        if event_signs(s, y_mid, t + mid / GYR_S, 1.0, tb(mid)) == sg0:
             lo = mid
         else:
             hi = mid
@@ -156,8 +170,7 @@ def event_thresholds(s, d_cr: float) -> tuple:
 def in_ramp(signs: tuple) -> bool:
     """Between a family's T_m + 1 K and T_m − 1 K images: some function's k = −1 and k = +1 signs differ (the signs are
     laid out stefan, then the same functions for k = −1, 0, +1)."""
-    per_k = (len(signs) - 1) // 3
-    lo, hi = signs[1:1 + per_k], signs[1 + 2 * per_k:1 + 3 * per_k]
+    lo, hi = signs[1:1 + K_FUNCS], signs[1 + 2 * K_FUNCS:1 + 3 * K_FUNCS]     # the layer family (after) has no k images
     return any(a != b for a, b in zip(lo, hi))
 
 
@@ -445,15 +458,20 @@ def _run(s, cap_myr: float, opts: dict) -> dict:
                 st0 = s._ale_state
                 y1, th1, tb1, g1, q1 = _step(s, lid, st0["th"][:], None if st0["tb"] is None else st0["tb"][:],
                                              yy, tt, hh, k1)
-                out.update(th=th1, tb=tb1, g=g1, q=q1)
+                out.update(th=th1, tb=tb1, g=g1, q=q1, h=hh)
                 return y1
+
+            def tb_of(hh):                                # the layer family: the trial of length hh's basal grid;
+                if out.get("h") != hh:                    # re-run when the last trial was another length (advance's fold
+                    step(y0, t, hh)                       # bisection), as _land's own trials do
+                return out["tb"]
             tracked = s.track is not None and s.opt["root_branch"] == "nearest"
             try:
                 if tracked:
                     snap = hp.snapshot(s)
                     h_try, sg0 = h, None
                     if opts["events"]:
-                        sg0 = event_signs(s, y0, t, 0.0)
+                        sg0 = event_signs(s, y0, t, 0.0, s._ale_state["tb"])
                         if opts["ramp_cap"] and in_ramp(sg0) and h > cap / RAMP_DIVISOR:
                             h_try = cap / RAMP_DIVISOR           # §7.5: a step starting inside a ramp
                             STATS["ramp_capped"] += 1
@@ -462,7 +480,7 @@ def _run(s, cap_myr: float, opts: dict) -> dict:
                     if opts["events"] and h_used > 0.0:
                         ratio_in = hp.STEP["ratio"]               # the check predicts at h_used; the re-step sets its own
                         hp.STEP["ratio"] = (h_used / hp.STEP["h_last"]) if hp.STEP["h_last"] else 1.0
-                        h_land = _land(s, step, y0, t, y_new, h_used, sg0)
+                        h_land = _land(s, step, y0, t, y_new, h_used, sg0, tb_of if s.layer_grid is not None else None)
                         hp.STEP["ratio"] = ratio_in
                         if h_land < h_used:
                             h_used = h_land
