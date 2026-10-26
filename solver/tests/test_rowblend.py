@@ -375,7 +375,8 @@ class R7Division(unittest.TestCase):
 
     def test_branch(self):
         src = inspect.getsource(ma.AssemblageView._row_blend)
-        self.assertEqual(src.count("return total if kept == 1.0 else total / kept"), 1)
+        # delta 4 §5: the shortcut is Dual-aware (_at); for floats _at is ==, so the branch below is unchanged
+        self.assertEqual(src.count("return total if _at(kept, 1.0) else total / kept"), 1)
         got, total, kept = self._blend((0.5, 0.5))
         self.assertEqual(kept, 1.0)
         self.assertEqual(got, total)                     # no division
