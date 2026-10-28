@@ -409,7 +409,7 @@ def restore(s, snap: tuple) -> None:
         s._ale_state = copy.deepcopy(snap[7])
 
 
-TRACKED = ("δ_u", "δ_b")                          # the equations whose loss can mark a fold
+TRACKED = ("δ_u", "δ_b")                          # the tracked roots (thermal_ale names a loss of anything else)
 
 
 def advance(step, y: list, t_gyr: float, h_s: float, gyr_s: float, s):
@@ -438,8 +438,8 @@ def advance(step, y: list, t_gyr: float, h_s: float, gyr_s: float, s):
                 try:
                     y_mid = trial(mid)
                 except ft.Lost as e2:
-                    if e2.equation not in TRACKED:        # fix A2: a stage loss (Ḋ_l) is not the fold's side
-                        restore(s, snap)
+                    if e2.equation != e.equation:         # fix A2 (r2 B1): only the folding equation's own loss
+                        restore(s, snap)                  # marks the fold's side; Ḋ_l or the other root refuses
                         raise sm.Refused(f"a trial inside the {e.equation} fold bisection lost {e2.equation} "
                                          f"at t = {t_gyr + mid / gyr_s:.6f} Gyr") from e2
                     hi = mid
