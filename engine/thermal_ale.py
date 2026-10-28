@@ -33,7 +33,9 @@ State: (T_c, T_m, D_l, D_cr) explicit; the lid profile θ on fixed nodes u_j = j
 - Cold start: T2's (D_l = 10 m, the lid started linear), no ramp, no minimum.
 Counts kept per run in `STATS` (§7.2, §7.4): Ḋ rejects, worst accepted |g|/|Ḋ| and |g|/max(|Ḋ|, |a|, |b ∇T|), the
 worst implied |δḊ| = |g|/|∂g/∂Ḋ| (m/s, ∂g/∂Ḋ from the secant's first pair), worst |ddl(stage) − Ḋ|/|Ḋ| at the
-final stage evaluation, shortened steps (and those with t < 0.05 Gyr), guard trips, fold events, refusals."""
+final stage evaluation, shortened steps (and those with t < 0.05 Gyr), guard trips, fold events, refusals; for §7.5
+note 4's landing guard, each landing's changed sign indices (`landing_idx`) and, with ale_options record_signs, each
+accepted state's sign vector (`signs`, [t, "0101…"]; record only, the path is unchanged)."""
 from __future__ import annotations
 
 import copy
@@ -64,7 +66,8 @@ def reset_stats() -> None:
     STATS.clear()
     STATS.update(ddot_rejects=0, ddot_worst_rel=0.0, ddot_worst_scaled=0.0, ddot_worst_dd=0.0,
                  ddot_consistency_worst=0.0, shortened=0, shortened_cold=0, accepted=0, melt_iter_max=0, landings=0,
-                 ramp_capped=0, landed_before_fold=0, landings_cold=0, ramp_capped_cold=0, landing_t=[])
+                 ramp_capped=0, landed_before_fold=0, landings_cold=0, ramp_capped_cold=0, landing_t=[],
+                 landing_idx=[], signs=[])
 
 
 def _radius_at(s, p_pa: float, r_top: float, r_bot: float) -> float | None:
@@ -130,7 +133,8 @@ def _land(s, step, y0: list, t: float, y_new: list, h_used: float, sg0: tuple, t
     `tb_of(hh)` gives the basal grid state of the trial of length hh (the layer family), None without a layer."""
     def tb(hh):
         return tb_of(hh) if tb_of is not None else None
-    if event_signs(s, y_new, t + h_used / GYR_S, 1.0, tb(h_used)) == sg0:
+    sg_hi = event_signs(s, y_new, t + h_used / GYR_S, 1.0, tb(h_used))
+    if sg_hi == sg0:
         return h_used
     tol = min(LAND_TOL_GYR * GYR_S, 1e-6 * h_used)
     snap = hp.snapshot(s)
@@ -144,13 +148,15 @@ def _land(s, step, y0: list, t: float, y_new: list, h_used: float, sg0: tuple, t
         except ft.Lost as e:                          # 68: a loss inside the landing bisection is its own refusal
             hp.restore(s, snap)
             raise sm.Refused(f"a trial inside the event landing lost {e.equation} at t = {t + mid / GYR_S:.6f} Gyr") from e
-        if event_signs(s, y_mid, t + mid / GYR_S, 1.0, tb(mid)) == sg0:
+        sg_mid = event_signs(s, y_mid, t + mid / GYR_S, 1.0, tb(mid))
+        if sg_mid == sg0:
             lo = mid
         else:
-            hi = mid
+            hi, sg_hi = mid, sg_mid
     hp.restore(s, snap)
     STATS["landings"] += 1
     STATS["landing_t"].append(t + hi / GYR_S)      # §7.5 (c): evaluators keep interpolation stencils inside segments
+    STATS["landing_idx"].append([i for i, (a, b) in enumerate(zip(sg0, sg_hi)) if a != b])   # note 4: which signs
     return hi
 
 
@@ -454,6 +460,9 @@ def _run(s, cap_myr: float, opts: dict) -> dict:
                          "delta_b": f1["delta_b"], "lid_gradient": grad})
             remaining = (s.body["age_gyr"] - t) * GYR_S
             if remaining <= 1e-9 * GYR_S:
+                if opts.get("record_signs"):                     # note 4: the last state's signs close the series
+                    sg_end = event_signs(s, y, t, 0.0, s._ale_state["tb"])
+                    STATS["signs"].append([t, "".join("1" if x else "0" for x in sg_end)])
                 break
             h = min(cap, ts.STEP_FRACTION * _tau_s(y, f1), remaining)
             k1 = _rates(f1)
@@ -478,8 +487,11 @@ def _run(s, cap_myr: float, opts: dict) -> dict:
                 if tracked:
                     snap = hp.snapshot(s)
                     h_try, sg0 = h, None
-                    if opts["events"]:
+                    if opts["events"] or opts.get("record_signs"):
                         sg0 = event_signs(s, y0, t, 0.0, s._ale_state["tb"])
+                        if opts.get("record_signs"):             # note 4: each accepted state's signs, for the guard
+                            STATS["signs"].append([t, "".join("1" if x else "0" for x in sg0)])
+                    if opts["events"]:
                         if opts["ramp_cap"] and in_ramp(sg0) and h > cap / RAMP_DIVISOR:
                             h_try = cap / RAMP_DIVISOR           # §7.5: a step starting inside a ramp
                             STATS["ramp_capped"] += 1
