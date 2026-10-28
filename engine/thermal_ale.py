@@ -26,12 +26,14 @@ State: (T_c, T_m, D_l, D_cr) explicit; the lid profile θ on fixed nodes u_j = j
   own lid-base gradient and basal fluxes); implicit part = both grids.
 - Ḋ_l in each implicit stage: ddl is affine in the lid-base gradient (samuel_model.lid_rate), ddl = a + b ∇T, with
   a, b from one state_terms at the stage; Ḋ solves g(Ḋ) = a + b ∇T(θ(Ḋ)) − Ḋ = 0 by the secant method to
-  |g| ≤ DDOT_TOL·|Ḋ| (DDOT_ABS when Ḋ = 0) in ≤ DDOT_MAX_IT iterations; an unconverged stage raises `Lost` (the trial
-  is rejected and halved, counted), never a silent cap.
+  |g| ≤ DDOT_TOL·max(|Ḋ|, |a|, |b ∇T|) (DDOT_ABS when all three are 0) in ≤ DDOT_MAX_IT iterations: g's rounding
+  floor scales with the terms it sums, not with their sum Ḋ, which crosses zero (fix A, post-freeze note 3). An
+  unconverged stage raises `Lost` (the trial is rejected and halved, counted), never a silent cap.
 - Base gradient: the 4-point one-sided stencil (−11, 18, −9, 2)/(6 Δr), fixed (§7.2).
 - Cold start: T2's (D_l = 10 m, the lid started linear), no ramp, no minimum.
-Counts kept per run in `STATS` (§7.2, §7.4): Ḋ rejects, worst accepted |g|/|Ḋ|, worst |ddl(stage) − Ḋ|/|Ḋ| at the
-final stage evaluation, shortened steps (and those with t < 0.05 Gyr), guard trips, fold events, refusals."""
+Counts kept per run in `STATS` (§7.2, §7.4): Ḋ rejects, worst accepted |g|/|Ḋ| and |g|/max(|Ḋ|, |a|, |b ∇T|), the
+worst implied |δḊ| = |g|/|∂g/∂Ḋ| (m/s, ∂g/∂Ḋ the last secant slope), worst |ddl(stage) − Ḋ|/|Ḋ| at the final stage
+evaluation, shortened steps (and those with t < 0.05 Gyr), guard trips, fold events, refusals."""
 from __future__ import annotations
 
 import copy
@@ -48,8 +50,8 @@ from thermal_stack import GYR_S, D_L_0_M, D_CR_0_M, state_terms, _rates, _tau_s,
 
 G = 1.0 - 1.0 / math.sqrt(2.0)
 DEL = 1.0 - 1.0 / (2.0 * G)
-DDOT_TOL = 1e-12            # §7.2: |g| ≤ 1e-12 |Ḋ|
-DDOT_ABS = 1e-30            # m/s, when Ḋ = 0
+DDOT_TOL = 1e-12            # §7.2, fix A: |g| ≤ 1e-12 max(|Ḋ|, |a|, |b ∇T|)
+DDOT_ABS = 1e-30            # m/s, when Ḋ, a and b ∇T are all 0
 DDOT_MAX_IT = 12
 COLD_GYR = 0.05             # §7.2 cold-start gate window
 ALE_DEFAULTS = {"melt_rule": "exact", "events": True, "ramp_cap": True}     # §7.5
@@ -60,9 +62,9 @@ STATS: dict = {}
 
 def reset_stats() -> None:
     STATS.clear()
-    STATS.update(ddot_rejects=0, ddot_worst_rel=0.0, ddot_consistency_worst=0.0, shortened=0, shortened_cold=0,
-                 accepted=0, melt_iter_max=0, landings=0, ramp_capped=0, landed_before_fold=0, landings_cold=0,
-                 ramp_capped_cold=0, landing_t=[])
+    STATS.update(ddot_rejects=0, ddot_worst_rel=0.0, ddot_worst_scaled=0.0, ddot_worst_dd=0.0,
+                 ddot_consistency_worst=0.0, shortened=0, shortened_cold=0, accepted=0, melt_iter_max=0, landings=0,
+                 ramp_capped=0, landed_before_fold=0, landings_cold=0, ramp_capped_cold=0, landing_t=[])
 
 
 def _radius_at(s, p_pa: float, r_top: float, r_bot: float) -> float | None:
@@ -255,20 +257,25 @@ def _lid_stage(s, lid, rhs: list, alpha: float, y: list, t_gyr: float, f_pre: di
 
     def g(dd):
         th_ = _lid_solve(lid, rhs, alpha, y, co, t_l, dd)
-        return acoef + bcoef * base_gradient(th_, dr) - dd, th_
+        bg_ = bcoef * base_gradient(th_, dr)
+        return acoef + bg_ - dd, th_, bg_
     d0 = f_pre["ddl"]
-    g0, th0 = g(d0)
+    g0, th0, _ = g(d0)
     d1 = d0 + (abs(d0) * 1e-6 if d0 else 1e-20)
-    g1, th1 = g(d1)
+    g1, th1, bg1 = g(d1)
     for _ in range(DDOT_MAX_IT):
-        if abs(g1) <= max(DDOT_TOL * abs(d1), DDOT_ABS):
+        scale = max(abs(d1), abs(acoef), abs(bg1))          # fix A: g's rounding floor scales with its terms
+        if abs(g1) <= max(DDOT_TOL * scale, DDOT_ABS):
             rel = abs(g1) / abs(d1) if d1 else 0.0
             STATS["ddot_worst_rel"] = max(STATS["ddot_worst_rel"], rel)
+            STATS["ddot_worst_scaled"] = max(STATS["ddot_worst_scaled"], abs(g1) / scale if scale else 0.0)
+            if g1 != g0:                                     # r2: the implied |δḊ| from the last secant slope
+                STATS["ddot_worst_dd"] = max(STATS["ddot_worst_dd"], abs(g1 * (d1 - d0) / (g1 - g0)))
             return th1, d1, rel, co
         if g1 == g0:
             break
         d0, g0, (d1) = d1, g1, d1 - g1 * (d1 - d0) / (g1 - g0)
-        g1, th1 = g(d1)
+        g1, th1, bg1 = g(d1)
     STATS["ddot_rejects"] += 1
     raise ft.Lost("Ḋ_l", False)
 
