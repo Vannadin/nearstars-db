@@ -32,8 +32,8 @@ State: (T_c, T_m, D_l, D_cr) explicit; the lid profile θ on fixed nodes u_j = j
 - Base gradient: the 4-point one-sided stencil (−11, 18, −9, 2)/(6 Δr), fixed (§7.2).
 - Cold start: T2's (D_l = 10 m, the lid started linear), no ramp, no minimum.
 Counts kept per run in `STATS` (§7.2, §7.4): Ḋ rejects, worst accepted |g|/|Ḋ| and |g|/max(|Ḋ|, |a|, |b ∇T|), the
-worst implied |δḊ| = |g|/|∂g/∂Ḋ| (m/s, ∂g/∂Ḋ the last secant slope), worst |ddl(stage) − Ḋ|/|Ḋ| at the final stage
-evaluation, shortened steps (and those with t < 0.05 Gyr), guard trips, fold events, refusals."""
+worst implied |δḊ| = |g|/|∂g/∂Ḋ| (m/s, ∂g/∂Ḋ from the secant's first pair), worst |ddl(stage) − Ḋ|/|Ḋ| at the
+final stage evaluation, shortened steps (and those with t < 0.05 Gyr), guard trips, fold events, refusals."""
 from __future__ import annotations
 
 import copy
@@ -263,14 +263,15 @@ def _lid_stage(s, lid, rhs: list, alpha: float, y: list, t_gyr: float, f_pre: di
     g0, th0, _ = g(d0)
     d1 = d0 + (abs(d0) * 1e-6 if d0 else 1e-20)
     g1, th1, bg1 = g(d1)
+    slope0 = (g1 - g0) / (d1 - d0)                     # 68 n1: ∂g/∂Ḋ from the first pair, above the floor
     for _ in range(DDOT_MAX_IT):
         scale = max(abs(d1), abs(acoef), abs(bg1))          # fix A: g's rounding floor scales with its terms
         if abs(g1) <= max(DDOT_TOL * scale, DDOT_ABS):
             rel = abs(g1) / abs(d1) if d1 else 0.0
             STATS["ddot_worst_rel"] = max(STATS["ddot_worst_rel"], rel)
             STATS["ddot_worst_scaled"] = max(STATS["ddot_worst_scaled"], abs(g1) / scale if scale else 0.0)
-            if g1 != g0:                                     # r2: the implied |δḊ| from the last secant slope
-                STATS["ddot_worst_dd"] = max(STATS["ddot_worst_dd"], abs(g1 * (d1 - d0) / (g1 - g0)))
+            if slope0:                                       # r2: the implied |δḊ| = |g|/|∂g/∂Ḋ|
+                STATS["ddot_worst_dd"] = max(STATS["ddot_worst_dd"], abs(g1 / slope0))
             return th1, d1, rel, co
         if g1 == g0:
             break
@@ -503,6 +504,8 @@ def _run(s, cap_myr: float, opts: dict) -> dict:
             except sm.Refused as e:
                 return refuse(e)
             except ft.Lost as e:
+                if e.equation not in hp.TRACKED:         # 68 n2: a stage loss, from halving, the re-step or tb_of
+                    return refuse(f"Ḋ_l coupling did not converge ({e.equation}) at t = {t:.6f} Gyr")
                 return refuse(f"the adopted root of {e.equation} left its bracket and halving gave up at t = {t:.6f} Gyr")
             if tracked and h_adv != h_try or not tracked and h_used != h:
                 STATS["shortened"] += 1                  # 68 G1 / r2 S1: Lost halving and folds only (§7.2's gate)
