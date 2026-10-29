@@ -26,6 +26,14 @@ only. Everything that changes a frozen fact goes through one loop.
      seat's code, EVC/compare tools, PC rounds); audit2 r2 takes the materials stream (the parallel
      seat's tables, records, declarations). Each clears its items alone, mechanics and reading both.
      Both read the same item only when it spans the two streams (e.g. a registration that binds both).
+     Stream assignment as of 2026-10-29: 68 = the parallel seat's D2/thermal-history stream, r2 = the
+     work seat's stream (S0, E18). Directing never defaults to a joint clear.
+   - **Second reading only where it has caught things (owner 2026-10-29, «그렇게 해»).** The other audit
+     seat reads once, in full, only (a) a prereg whose rules decide a pass/fail and (b) a final reading
+     that feeds an owner decision (e.g. the S0 final, a rebuild acceptance). Its HOLDs block; later revs
+     are re-read by the stream's own seat alone. Record notes, freeze checks, appends and small diffs get
+     the stream's seat only. Directing settles its rulings before a draft goes to audit, and the drafting
+     seat adds nothing after a clear unless a HOLD asks for it (additions go to the next note).
    - **One full pass per blob, every finding in one message.** The seat reads the blob through once
      and sends all findings at once (blocking and non-blocking); a fix's re-check covers the delta and
      what it touches. Directing dispatches PC test runs only after the reading clear. Owner 2026-10-13
