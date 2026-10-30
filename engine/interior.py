@@ -3295,11 +3295,17 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
     if lithosphere:
         kw["lithosphere"] = lithosphere
     if not potential_temperature:
-        return _shoot_pressure(*args, p_hint=p_hint, **kw)
+        st, ok = _shoot_pressure(*args, p_hint=p_hint, **kw)
+        if FREE_SOLVE_CONTRACT:          # item A K4 (census 10-30 dante_fixture): 온도 고리 없는 답 — 압력 사격이 유일한 탐색
+            _contract_tag(st, {"exit": "pressure-only"})
+        return st, ok
     t_pot = float(potential_temperature)
     if _PIN[0] is not None:          # 구조 표 덧붙임 60 — 자기 점검의 고정 T_c: 고리 없이 그 T_c 에서 사격 한 번
         t_pin, p_pin = _PIN[0]
-        return _shoot_pressure(*args, t_center=t_pin, t_pot=t_pot, p_hint=p_pin, tol=SHOOT_TOL, **kw)
+        st, ok = _shoot_pressure(*args, t_center=t_pin, t_pot=t_pot, p_hint=p_pin, tol=SHOOT_TOL, **kw)
+        if FREE_SOLVE_CONTRACT:          # item A K4: 고정 T_c 자기 점검 — T_c 탐색이 없다
+            _contract_tag(st, {"exit": "pinned-tc"})
+        return st, ok
     t_c = t_pot * 2.0 if _t_start is None else float(_t_start)   # 첫 추측. 비율로 다시 재므로 값 자체는 중요하지 않다
 
     # 직전 통과의 중심압을 괄호의 출발점으로 물려준다(prereg-shoot-warm-start, 동결 `f0122297`).
