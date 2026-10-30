@@ -2740,8 +2740,8 @@ CONTRACT_PIN_HEAD = "바깥 고리의 닫힌 근이 p_center 를 band/10 안에 
 CONTRACT_REFUSAL_HEAD = "바깥 고리가 닫힌 근에 닿지 않았다 (item A)"
 CONTRACT_EXITS: dict[int, tuple] = {}  # item A K4 — id(구조) → (구조, {exit, pin, …}) (가장 바깥 풀이마다 비움; 판정은 구조의 속성)
 #: item A A5 — 시험 전용 변형: 여기 든 자리 이름(L2 · L4 · L9 · L10 · L11 · P1 · P2 · P3 · P4 · P5 · P6 · P11 · R · handon · fold ·
-#:   locate · order · noise · pin — order 는 동결 본문의 순서(K3 가 서면 좁히기를 멈춤, post-freeze note 1 이 닫은 틈), noise 는
-#:   고정 문턱 1e-7(note 1 rev 2 가 점의 S 로 바꾼 것), pin 은 K3 관문)은 그 자리 하나만 ecb355d7 의 행동으로 되돌린다. 출하 길에서는 늘 비어 있다.
+#:   locate · order · noise · pin · retighten — order 는 동결 본문의 순서(K3 가 서면 좁히기를 멈춤, post-freeze note 1 이 닫은 틈), noise 는
+#:   고정 문턱 1e-7(note 1 rev 2 가 점의 S 로 바꾼 것), pin 은 K3 관문, retighten 은 note 2 의 SHOOT_TOL/k 다시 조임)은 그 자리 하나만 ecb355d7 의 행동으로 되돌린다. 출하 길에서는 늘 비어 있다.
 CONTRACT_SITES_OFF: set = set()
 
 
@@ -2766,25 +2766,29 @@ def _root_evidence(xl: float, yl: float, xm: float, ym: float, xh: float, yh: fl
     return "lin" if max(abs(yl), abs(yh)) <= 2.0 * min(abs(s1), abs(s2)) * (xh - xl) else None
 
 
-def _y_noise(*sts) -> float:
-    """item A note 1 rev 2 — 점들의 y 분해능: max(R_RES_FLOOR, CONTRACT_NOISE_C · S · SHOOT_TOL), S 는 아는 것 중 가장 큰 `shot_s`
-    (모르면 바닥 R_RES_FLOOR 만)."""
+def _y_noise(*sts, tol: float = SHOOT_TOL) -> tuple[float, bool]:
+    """item A note 1 rev 2 · note 2 — 점들의 y 분해능 (값, 바닥이었나): max(R_RES_FLOOR · tol/SHOOT_TOL, CONTRACT_NOISE_C · S · tol),
+    S 는 아는 것 중 가장 큰 `shot_s`, tol 은 그 사격들의 질량 허용(note 2 의 다시 조임이면 SHOOT_TOL/k). S 를 모르면 바닥만."""
+    floor = R_RES_FLOOR * tol / SHOOT_TOL
     s_known = [s_.shot_s for s_ in sts if getattr(s_, "shot_s", None) is not None]
-    return max(R_RES_FLOOR, CONTRACT_NOISE_C * max(s_known) * SHOOT_TOL) if s_known else R_RES_FLOOR
+    if not s_known:
+        return floor, True
+    return max(floor, CONTRACT_NOISE_C * max(s_known) * tol), False
 
 
-def _close_bracket(shoot_at, xl: float, yl: float, sl, xh: float, yh: float, sh):
+def _close_bracket(shoot_at, xl: float, yl: float, sl, xh: float, yh: float, sh, tol: float = SHOOT_TOL):
     """item A R · K3 (post-freeze note 1 rev 2) — 괄호 [xl, xh](yl < 0 < yh, 끝 구조 sl · sh)를 Brent(xtol 0)로 좁힌다: x 분해능
     (4ε|x|)이나 양 끝 |y| 가 그 점들의 y 분해능(`_y_noise`) 안이면 멈춤, 먼저 오는 쪽. 가운데 한 발로 R(문턱 = 그 분해능).
     답은 그 괄호에서 |y| 가 가장 작은 점. K3(관문, A4)은 그 답의 |y| × 괄호 밖 기울기 |Δ ln p_c / Δ y| — 기울기는 |y| 차가 분해능의
     열 배를 넘은 마지막 괄호에서(잡음 괄호의 Δy 로 나누지 않게); T_c 의 핀은 옆에 보고만. shoot_at(x, hint) → (구조, y 또는 None).
-    결과: (True, {x, pin, pin_tc, r, width, shots, noise}, 구조) 또는 (False, xl, xh, y_best, 까닭 'r' · 'pin' · 'shot').
+    tol 은 이 닫기의 사격 질량 허용(note 2: SHOOT_TOL/k). 결과: (True, {x, pin, pin_tc, r, width, shots, noise, noise_floor}, 구조)
+    또는 (False, xl, xh, y_best, 까닭 'r' · 'pin' · 'shot', wide) — wide 는 |y| 폭이 분해능의 열 배를 넘은 마지막 괄호.
     동결 순서(K3 가 서면 좁히기를 멈춤)는 시험 변형 'order', 고정 문턱 1e-7 은 시험 변형 'noise' 로만 되돌린다."""
     gen, y_x, shots = None, None, 0
     wide = (xl, yl, sl, xh, yh, sh)
     for _ in range(CONTRACT_SHOTS):
         e_l = abs(yl) <= abs(yh)
-        noise = _y_noise(sl, sh) if _contract("noise") else R_RES_FLOOR
+        noise = _y_noise(sl, sh, tol=tol)[0] if _contract("noise") else R_RES_FLOOR
         if yh - yl > 10.0 * noise:
             wide = (xl, yl, sl, xh, yh, sh)
         pin = _contract_pin(yl if e_l else yh, math.log(wide[2].p_center), wide[1], math.log(wide[5].p_center), wide[4])
@@ -2803,31 +2807,57 @@ def _close_bracket(shoot_at, xl: float, yl: float, sl, xh: float, yh: float, sh)
         if not xl < x < xh:
             break
         shots += 1
-        got, y_x = shoot_at(x, (sl if e_l else sh).p_center)
+        got, y_x = shoot_at(x, (sl if e_l else sh).p_center, tol)
         if y_x is None:
-            return False, xl, xh, (yl if e_l else yh), "shot"
+            return False, xl, xh, (yl if e_l else yh), "shot", wide
         if y_x < 0.0:
             xl, yl, sl = x, y_x, got
         else:
             xh, yh, sh = x, y_x, got
     e_l = abs(yl) <= abs(yh)
     xm = 0.5 * (xl + xh)
-    gm, ym = shoot_at(xm, (sl if e_l else sh).p_center)
+    gm, ym = shoot_at(xm, (sl if e_l else sh).p_center, tol)
     if ym is None:
-        return False, xl, xh, (yl if e_l else yh), "shot"
-    noise = _y_noise(sl, sh, gm) if _contract("noise") else R_RES_FLOOR
+        return False, xl, xh, (yl if e_l else yh), "shot", wide
+    noise, at_floor = _y_noise(sl, sh, gm, tol=tol) if _contract("noise") else (R_RES_FLOOR, True)
     r = _root_evidence(xl, yl, xm, ym, xh, yh, noise)
     if r is None and not _contract("R"):
         r = "mutant"                 # A5 변형 — R 을 건너뛴다
     if r is None:
-        return False, xl, xh, (yl if e_l else yh), "r"
+        return False, xl, xh, (yl if e_l else yh), "r", wide
     cand = min(((abs(yl), xl, sl), (abs(ym), xm, gm), (abs(yh), xh, sh)), key=lambda c_: c_[0])
     pin = _contract_pin(cand[0], math.log(wide[2].p_center), wide[1], math.log(wide[5].p_center), wide[4])
     info = {"x": cand[1], "pin": pin, "pin_tc": _contract_pin(cand[0], wide[0], wide[1], wide[3], wide[4]), "r": r,
-            "width": xh - xl, "shots": shots + 1, "noise": noise}
+            "width": xh - xl, "shots": shots + 1, "noise": noise, "noise_floor": at_floor}
     if pin > CONTRACT_PIN and _contract("pin"):
-        return False, xl, xh, cand[0], "pin"
+        return False, xl, xh, cand[0], "pin", wide
     return True, info, cand[2]
+
+
+#: item A post-freeze note 2 — K3 이 그 닫기의 y 잡음 때문에 못 서면 닫기 안의 사격만 질량 허용을 SHOOT_TOL/k 로 조여 다시 닫는다
+CONTRACT_RETIGHTEN_K = (10, 100)
+
+
+def _retighten_close(shoot_at, xl, yl, sl, xh, yh, sh):
+    """item A post-freeze note 2 — `_close_bracket` 을 SHOOT_TOL 로; K3 이 못 서면(까닭 'pin') 마지막 넓은 괄호(|y| 폭이 분해능의 열
+    배를 넘은 것)의 두 끝을 SHOOT_TOL/k 로 다시 쏘아(k = 10, 그다음 100) 다시 닫는다 — 다시 쏜 사격은 반복을 더 돌아 S 를 갖는다
+    (곧바로 닿아 S 가 없던 끝의 바닥 분해능도 여기서 풀린다). k = 100 에서도 못 서면 'pin'. 답의 info 에 k 를 단다."""
+    got = _close_bracket(shoot_at, xl, yl, sl, xh, yh, sh)
+    k_used = 1
+    for k in CONTRACT_RETIGHTEN_K:
+        if got[0] or got[4] != "pin" or not _contract("retighten"):
+            break
+        wl, wyl, _wsl, wh, wyh, _wsh = got[5]
+        tol = SHOOT_TOL / k
+        gl, yl2 = shoot_at(wl, _wsl.p_center, tol)
+        gh, yh2 = shoot_at(wh, _wsh.p_center, tol)
+        if yl2 is None or yh2 is None or not (yl2 < 0.0 < yh2):
+            return False, wl, wh, min(abs(wyl), abs(wyh)), "shot", got[5]
+        got = _close_bracket(shoot_at, wl, yl2, gl, wh, yh2, gh, tol=tol)
+        k_used = k
+    if got[0]:
+        got[1]["k"] = k_used
+    return got
 
 
 def _contract_tag(st, info: dict) -> None:
@@ -3480,22 +3510,22 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
         nonlocal st, converged, t_c
         (xl, yl), (xh, yh) = dlo, dhi
 
-        def shoot_at(x, hint):
-            got, ok = _shoot_pressure(*args, t_center=math.exp(x), t_pot=t_pot, p_hint=hint, tol=SHOOT_TOL, **kw)
-            used_tol[id(got)] = SHOOT_TOL
+        def shoot_at(x, hint, tol=SHOOT_TOL):
+            got, ok = _shoot_pressure(*args, t_center=math.exp(x), t_pot=t_pot, p_hint=hint, tol=tol, **kw)
+            used_tol[id(got)] = tol
             note(math.exp(x), got, ok)
             remember(got, ok, math.exp(x))
             if not ok or got.t_surface <= 0.0:
                 return got, None
             return got, math.log(got.t_surface / t_pot)
-        got_c = _close_bracket(shoot_at, xl, yl, trial_at[xl], xh, yh, trial_at[xh])
+        got_c = _retighten_close(shoot_at, xl, yl, trial_at[xl], xh, yh, trial_at[xh])
         if not got_c[0]:
             if got_c[4] == "pin":
                 raise _fold_tagged(ValueError(
                     f"{CONTRACT_PIN_HEAD} — 중심 온도 [{math.exp(got_c[1]):.9g}, {math.exp(got_c[2]):.9g}] K, 남은 |y| {got_c[3]:.2e}"
                     + _graze_suffix()), fold_seed(), "stall")
             return got_c[:4]
-        info, cs = got_c[1], got_c[2]
+        info, cs = got_c[1], got_c[2]   # info["k"]: the mass-tolerance divisor the close used (note 2)
         st, converged, t_c = cs, True, math.exp(info["x"])
         _contract_tag(st, dict(info, exit=tag))
         return (True,)

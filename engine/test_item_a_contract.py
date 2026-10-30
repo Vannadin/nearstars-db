@@ -97,7 +97,7 @@ def _fake_st(t_c, t_surf, p=1e11):
 
 
 def _close(y_of, xl, xh, order_off):
-    shoot_at = lambda x, hint: (_fake_st(math.exp(x), math.exp(y_of(x))), y_of(x))
+    shoot_at = lambda x, hint, tol=interior.SHOOT_TOL: (_fake_st(math.exp(x), math.exp(y_of(x))), y_of(x))
     if order_off:
         interior.CONTRACT_SITES_OFF.add("order")
     try:
@@ -129,7 +129,7 @@ def _close_s(y_of, xl, xh, s, p_of=None, off=()):
         st = _fake_st(math.exp(x), math.exp(y_of(x)), 1e11 if p_of is None else p_of(x))
         st.shot_s = s
         return st
-    shoot_at = lambda x, hint: (st_at(x), y_of(x))
+    shoot_at = lambda x, hint, tol=interior.SHOOT_TOL: (st_at(x), y_of(x))
     interior.CONTRACT_SITES_OFF.update(off)
     try:
         return interior._close_bracket(shoot_at, xl, y_of(xl), st_at(xl), xh, y_of(xh), st_at(xh))
@@ -159,6 +159,38 @@ k_off = _close_s(y_noisy, x18 - 1e-4, x18 + 1e-4, S_MARS, p_of=p_steep, off=("pi
 check("K3 gate (A4, frozen) — a close whose p_c pin exceeds band/10 is not an answer", not k_on[0] and k_on[4] == "pin",
       str(k_on)[:100])
 check("K3 gate control — with the gate off the same close answers", k_off[0], str(k_off)[:80])
+
+
+# post-freeze note 2 (directing 10-30): when K3 fails on the close's own y noise, the close's shots retighten to
+#   SHOOT_TOL/k (k = 10, then 100). A planted high-S shot whose noise scales with the shot's mass tolerance.
+def _retight(off=()):
+    r0, s_hi = L(1850.0), 150.0
+
+    def noise(x, tol):
+        h = math.sin(x * 1.2345678e12) * 43758.5453
+        u = 2.0 * (h - math.floor(h)) - 1.0
+        return s_hi * tol * (0.5 + 0.5 * abs(u)) * (1.0 if u >= 0.0 else -1.0)   # |noise| ≥ S·tol/2
+
+    def shoot_at(x, hint, tol=interior.SHOOT_TOL):
+        y = 0.9 * (x - r0) + noise(x, tol)
+        st = _fake_st(math.exp(x), math.exp(y), 1e11 * math.exp(1.8 * (x - r0)))   # dlnp/dy ≈ 2
+        st.shot_s = s_hi
+        return st, y
+    interior.CONTRACT_SITES_OFF.update(off)
+    try:
+        g0, y0 = shoot_at(r0 - 1e-3, 0.0)
+        g1, y1 = shoot_at(r0 + 1e-3, 0.0)
+        return interior._retighten_close(shoot_at, r0 - 1e-3, y0, g0, r0 + 1e-3, y1, g1)
+    finally:
+        interior.CONTRACT_SITES_OFF.difference_update(off)
+
+
+rt = _retight()
+rt_off = _retight(off=("retighten",))
+check("note 2 — a high-S close that fails K3 at SHOOT_TOL answers after retightening (k recorded)", rt[0] and rt[1]["k"] in (10, 100),
+      str(rt[1] if rt[0] else rt[:5])[:120])
+check("note 2 mutant — without the retightening the same close refuses on K3", not rt_off[0] and rt_off[4] == "pin",
+      str(rt_off[:5])[:100])
 
 # ④ the loop: a planted jump; FLAG off ends at L2 with an answer, FLAG on refuses with the jump refusal (the fold's trigger)
 T_POT = 1000.0
