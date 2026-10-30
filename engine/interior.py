@@ -2723,7 +2723,7 @@ def _graze_suffix() -> str:
 FOLD_CONTINUATION = True        # FLAG — False 면 오늘의 C152 거절 그대로(N1 음성 대조)
 #: item A (pc/ea-e18/item-a-prereg.frozen.md) — 자유 풀이 수렴 계약 스위치(FLAG). 답은 닫힌 찾기(Brent · 걸음 넘겨받기 · 접힘)에서만,
 #:   |y| < T_SURFACE_TOL 은 그 답의 수락일 뿐. 끄면 ecb355d7 의 출구 그대로(A1 음성 대조).
-FREE_SOLVE_CONTRACT = True
+FREE_SOLVE_CONTRACT = __import__("os").environ.get("NS_FREE_SOLVE_CONTRACT", "1") != "0"   # 전수 조사의 FLAG-off 판만 0
 #: item A K3 — p_center 핀: bse 표 바닥 띠 9.63e-6 의 1/10(상대). 몸마다의 띠는 전수 조사의 자 목록이 따로 본다(§1).
 CONTRACT_PIN = 9.63e-7
 #: item A R · K3 — 닫는 Brent(xtol 0) 사격의 상한(1e-6 폭에서 4ε|x| 까지 이분으로도 ≈ 30)
