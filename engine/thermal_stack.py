@@ -42,7 +42,7 @@ BISECT_ITERS = 50                      # v2-17 supplement: bracket solves
 INNER_SCAN = 48
 OUTER_SCAN = 32
 ROOT_JUMP_M = 5e3
-STEP_FRACTION = 0.1                    # core_history's h = min(cap, 0.1 τ), Brief 157
+STEP_FRACTION = 0.05                   # O8 (owner 10-30): h/2 with the callers' cap 5 Myr meets the band, h/1 did not (idx-55 note 2); was 0.1, core_history's Brief 157
 
 
 def _shell(r_out: float, r_in: float) -> float:

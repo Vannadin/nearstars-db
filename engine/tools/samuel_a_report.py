@@ -29,7 +29,7 @@ import samuel_structure as ss          # noqa: E402
 import samuel_thermal as st            # noqa: E402
 import thermal_stack as ts             # noqa: E402
 
-CAP_MYR = 10.0
+CAP_MYR = 5.0                          # O8 (owner 10-30): per-caller cap, h/2 with STEP_FRACTION 0.05
 K_DS = [4.0 + i for i in range(13)]
 LAMBDAS = [5.0 + i for i in range(16)]
 FE_TOP_MAIN = 94.1306                  # v2-24 ①: the most stratified allowed top value (bottom Fe# 100)

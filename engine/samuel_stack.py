@@ -30,7 +30,7 @@ MODELS = {
 
 def samuel_stack(*, lam: float, profile, g: float, model: str = "no_bml", layer: dict | None = None,
                  eps_mode: str = "derived", p_m_mode: str = "mid", melt_pressure: str = "engine",
-                 stefan_mode: str = "printed", lid_mode: str = "grid", lid_nodes: int = 41,
+                 stefan_mode: str = "printed", lid_mode: str = "grid", lid_nodes: int = 161,
                  melt_shells: int = 1920, fixed_lid_m: float | None = None, delta_b_cap_fraction: float = 0.5,
                  root_branch: str = "nearest", path_check_every: int = 0, r_c: float | None = None,
                  source_volume: bool = False, source_lid_heat: bool = False) -> Stack:

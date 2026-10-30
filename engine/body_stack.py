@@ -54,7 +54,7 @@ T_INITIAL_GYR = st.T_INITIAL_ROW_GYR
 RUN_CHOICE = dict(eps_mode="derived", p_m_mode="top", melt_pressure="engine", stefan_mode="printed",
                   lid_mode="grid", melt_shells=1920, delta_b_cap_fraction=0.5, root_branch="nearest",
                   path_check_every=0, hydrostatic_rho=st.RHO_MANTLE_KG_M3, hydrostatic_g=3.7)
-LID_NODES = 41
+LID_NODES = 161                       # O8 (owner 10-30): samuel_stack's lid default; A1-화성-비트 binds the two
 
 
 class Refused(Exception):

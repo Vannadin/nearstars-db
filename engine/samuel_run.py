@@ -2,7 +2,7 @@
 """Plate 2's integration: the no-layer Samuel model from t = 0.001 Gyr to 4.5 Gyr (pre-registration v2 §5 A0,
 v2-3 … v2-8; brief `c18bbe3c`).
 
-State `(T_c, T_m, D_l, D_cr)`. Classical RK4 with `h = min(cap, 0.1 τ)` — the same scheme as `core_history.integrate`,
+State `(T_c, T_m, D_l, D_cr)`. Classical RK4 with `h = min(cap, STEP_FRACTION · τ)` — the same scheme as `core_history.integrate`,
 **written again here, not called**: that function hard-wires its own `rates()` and its two-temperature
 state, and the pre-registration forbids editing it (v2 §1). The lid's temperature profile (`samuel_lid`)
 is not an RK state: it advances once per accepted step with the step's end values (operator splitting),
@@ -49,7 +49,7 @@ class Setup:
 
     def __init__(self, *, lam: float, profile, g: float, g_c: float, eps_mode: str = "derived",
                  p_m_mode: str = "mid", melt_pressure: str = "engine", stefan_mode: str = "printed",
-                 lid_mode: str = "grid", lid_nodes: int = 41, melt_shells: int = 1920,
+                 lid_mode: str = "grid", lid_nodes: int = 161, melt_shells: int = 1920,
                  fixed_lid_m: float | None = None, delta_b_cap_fraction: float = 0.5,
                  root_branch: str = "nearest", path_check_every: int = 0, model: str = "no_bml",
                  layer: dict | None = None):
@@ -423,7 +423,7 @@ def _start_layer(s: Setup, t_c: float, t_i: float) -> None:
     s.layer_q = s.layer_grid.fluxes()
 
 
-STEP_FRACTION = 0.1                    # core_history's h = min(cap, 0.1 τ), Brief 157
+STEP_FRACTION = 0.05                   # O8 (owner 10-30): h/2 with the callers' cap 5 Myr meets the band, h/1 did not (idx-55 note 2); moves with thermal_stack (T2 bit identity)
 
 
 def switch_branch(s: Setup, y: list, t_gyr: float, ev: ft.Lost) -> None:
@@ -518,7 +518,7 @@ def _tau_s(y: list, f: dict) -> float:
 
 
 def run(s: Setup, cap_myr: float) -> dict:
-    """RK4 from T_INITIAL_ROW_GYR to AGE_GYR with core_history's step rule, h = min(cap, 0.1 τ), landing
+    """RK4 from T_INITIAL_ROW_GYR to AGE_GYR with core_history's step rule, h = min(cap, STEP_FRACTION · τ), landing
     exactly on the end. A refusal (Λ above its ceiling) stops the run and is returned with its time."""
     t0 = st.T_INITIAL_ROW_GYR
     cap = cap_myr * 1e-3 * GYR_S

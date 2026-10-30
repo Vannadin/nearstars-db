@@ -25,7 +25,7 @@ import samuel_run as sr                # noqa: E402
 import samuel_structure as ss          # noqa: E402
 import samuel_thermal as st            # noqa: E402
 
-CAP_MYR = 10.0
+CAP_MYR = 5.0                          # O8 (owner 10-30): per-caller cap, h/2 with STEP_FRACTION 0.05
 FE_TOP = 94.1306
 PASS_4P = [(4.0, 8.0), (4.0, 9.0), (4.0, 10.0), (5.0, 9.0), (5.0, 10.0)]     # v2-28
 BEST_4P = (4.0, 10.0)

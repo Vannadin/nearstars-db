@@ -22,7 +22,7 @@ import samuel_structure as ss          # noqa: E402
 import samuel_thermal as st            # noqa: E402
 import thermal_stack as ts             # noqa: E402
 
-CAP_MYR = 10.0
+CAP_MYR = 5.0                          # O8 (owner 10-30): per-caller cap, h/2 with STEP_FRACTION 0.05
 LAMBDAS = [5.0 + i for i in range(16)]
 
 
