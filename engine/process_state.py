@@ -84,6 +84,8 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("interior", "MELT_SEAMS_LANDED"): (FLAG, "window-edge registration N1: False restores the path before melt-seam landing (controls only)", None),
     ("interior", "STAGE_CLAMP_EVERY_STEP"): (FLAG, "window-edge note 1: False restores the landing-step-only stage clamp (controls only)", None),
     ("interior", "_FOLD_INFO"): (MEMO, "core-tc-fold: continuation facts keyed by id(structure), cleared at each outermost solve", None),
+    ("interior", "CONTRACT_SITES_OFF"): (FLAG, "item A A5: test-only mutant switch, the sites restored to ecb355d7 behaviour; empty on every shipped path", None),
+    ("interior", "CONTRACT_EXITS"): (MEMO, "item A K4: the exit tag of each answer keyed by id(structure), cleared at each outermost solve", None),
     ("interior", "FOLD_RUNS"): (COUNTER, "core-tc-fold: continuation walks run, a count outside values", None),
     ("interior", "_FOLD_DEPTH"): (FLAG, "core-tc-fold: outer-shoot depth, so only the outermost shoot continues; reset in finally", None),
     ("interior", "STEPS"): (FLAG, "the integrator's step count, a build setting; core-tc-fold R2 doubles it for one solve and restores it in finally", None),

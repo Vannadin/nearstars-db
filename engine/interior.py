@@ -2715,6 +2715,99 @@ def _graze_suffix() -> str:
 #   고리는 0 을 사이에 둔 괄호를 쥔 채 C152 로 «해가 없다» 고 거절한다. 그 거절의 괄호에서 씨앗을 받아 곡선을 걷고, T_s = T_pot
 #   교차를 모아 상태로 묶는다(rootfind.fold_walk · fold_states · core_warm_choice). 고리가 답하는 몸은 여기 닿지 않는다.
 FOLD_CONTINUATION = True        # FLAG — False 면 오늘의 C152 거절 그대로(N1 음성 대조)
+#: item A (pc/ea-e18/item-a-prereg.frozen.md) — 자유 풀이 수렴 계약 스위치(FLAG). 답은 닫힌 찾기(Brent · 걸음 넘겨받기 · 접힘)에서만,
+#:   |y| < T_SURFACE_TOL 은 그 답의 수락일 뿐. 끄면 ecb355d7 의 출구 그대로(A1 음성 대조).
+FREE_SOLVE_CONTRACT = True
+#: item A K3 — p_center 핀: bse 표 바닥 띠 9.63e-6 의 1/10(상대). 몸마다의 띠는 전수 조사의 자 목록이 따로 본다(§1).
+CONTRACT_PIN = 9.63e-7
+#: item A R · K3 — 닫는 Brent(xtol 0) 사격의 상한(1e-6 폭에서 4ε|x| 까지 이분으로도 ≈ 30)
+CONTRACT_SHOTS = 80
+#: item A — 걸음 닫힘(L10)의 넘겨받기: T_c·exp(±2^k·T_TOL), k = 0 … 4
+CONTRACT_HANDON_K = 5
+#: item A P11 — 닿았으나 닫힌 근이 아닌 답의 이름 댄 거절 앞머리
+CONTRACT_REFUSAL_HEAD = "바깥 고리가 닫힌 근에 닿지 않았다 (item A)"
+CONTRACT_EXITS: dict[int, tuple] = {}  # item A K4 — id(구조) → (구조, {exit, pin, …}) (가장 바깥 풀이마다 비움; 판정은 구조의 속성)
+#: item A A5 — 시험 전용 변형: 여기 든 자리 이름(L2 · L4 · L9 · L10 · L11 · P1 · P2 · P3 · P4 · P5 · P6 · P11 · R · handon · fold ·
+#:   locate · order — order 는 동결 본문의 순서(K3 가 서면 좁히기를 멈춤), post-freeze note 1 이 닫은 틈)은 그 자리 하나만 ecb355d7 의 행동으로 되돌린다. 출하 길에서는 늘 비어 있다.
+CONTRACT_SITES_OFF: set = set()
+
+
+def _contract(site: str) -> bool:
+    """item A — 그 자리에서 계약이 켜져 있는가(FLAG 이고, 시험 변형이 그 자리를 끄지 않았다)."""
+    return FREE_SOLVE_CONTRACT and site not in CONTRACT_SITES_OFF
+
+
+def _root_evidence(xl: float, yl: float, xm: float, ym: float, xh: float, yh: float) -> str | None:
+    """item A R — 괄호 [xl, xh](yl < 0 < yh) 안 근의 직접 증거: 'res'(세 값 모두 사격 분해능의 열 배 안) · 'lin'(괄호 안
+    두 기울기가 양 끝 차와 같은 부호이고 양 끝 |y| 가 그 작은 기울기 × 폭의 두 배 안) · None(증거 없음 — 뜀이면 여기서 떨어진다)."""
+    r = 10.0 * SIGN_S_MAX * SHOOT_TOL
+    if max(abs(yl), abs(ym), abs(yh)) <= r:
+        return "res"
+    if not (xl < xm < xh):
+        return None
+    d = yh - yl
+    s1, s2 = (ym - yl) / (xm - xl), (yh - ym) / (xh - xm)
+    if d == 0.0 or s1 == 0.0 or s2 == 0.0 or (s1 > 0.0) != (d > 0.0) or (s2 > 0.0) != (d > 0.0):
+        return None
+    return "lin" if max(abs(yl), abs(yh)) <= 2.0 * min(abs(s1), abs(s2)) * (xh - xl) else None
+
+
+def _close_bracket(shoot_at, xl: float, yl: float, sl, xh: float, yh: float, sh):
+    """item A R · K3 (post-freeze note 1) — 괄호 [xl, xh](yl < 0 < yh, 끝 구조 sl · sh)를 Brent(xtol 0)로 늘 x 분해능(4ε|x|)까지
+    좁히고, 가운데 한 발로 R 을 본다. shoot_at(x, hint) → (구조, y 또는 None — 사격이 안 닫힘). 답은 그 괄호에서 |y| 가 가장 작은
+    점, K3 는 p_c · T_c 의 핀으로 보고만 한다(A4). 결과: (True, {x, pin, pin_tc, r, width, shots}, 구조) 또는 (False, xl, xh, y_best).
+    동결 순서(K3 가 서면 좁히기를 멈춤)는 시험 변형 'order' 로만 되돌린다."""
+    gen, y_x, shots = None, None, 0
+    for _ in range(CONTRACT_SHOTS):
+        e_l = abs(yl) <= abs(yh)
+        pin = _contract_pin(yl if e_l else yh, math.log(sl.p_center), yl, math.log(sh.p_center), yh)
+        if (pin <= CONTRACT_PIN and not _contract("order")) or xh - xl <= 4.0 * 2.220446049250313e-16 * abs(xh):
+            break
+        try:
+            if gen is None:
+                gen = rootfind.brent(xl, yl, xh, yh, 0.0)
+                x = next(gen)
+            else:
+                x = gen.send(y_x)
+        except StopIteration:
+            break
+        if not xl < x < xh:
+            break
+        shots += 1
+        got, y_x = shoot_at(x, (sl if e_l else sh).p_center)
+        if y_x is None:
+            return False, xl, xh, (yl if e_l else yh)
+        if y_x < 0.0:
+            xl, yl, sl = x, y_x, got
+        else:
+            xh, yh, sh = x, y_x, got
+    e_l = abs(yl) <= abs(yh)
+    xm = 0.5 * (xl + xh)
+    gm, ym = shoot_at(xm, (sl if e_l else sh).p_center)
+    if ym is None:
+        return False, xl, xh, (yl if e_l else yh)
+    r = _root_evidence(xl, yl, xm, ym, xh, yh)
+    if r is None and not _contract("R"):
+        r = "mutant"                 # A5 변형 — R 을 건너뛴다
+    if r is None:
+        return False, xl, xh, (yl if e_l else yh)
+    cand = min(((abs(yl), xl, sl), (abs(ym), xm, gm), (abs(yh), xh, sh)), key=lambda c_: c_[0])
+    info = {"x": cand[1], "pin": _contract_pin(cand[0], math.log(sl.p_center), yl, math.log(sh.p_center), yh),
+            "pin_tc": _contract_pin(cand[0], xl, yl, xh, yh), "r": r, "width": xh - xl, "shots": shots + 1}
+    return True, info, cand[2]
+
+
+def _contract_tag(st, info: dict) -> None:
+    """item A K4 — 답의 출구를 구조(속성 — 판정은 이것만 읽는다) · 기록(CONTRACT_EXITS, 구조를 함께 쥐어 id 가 다시 쓰이지 않게)
+    · 풀이 기록(_FAMILY_TRAIL["exits"]) 셋에 남긴다."""
+    st.contract_exit = info["exit"]
+    CONTRACT_EXITS[id(st)] = (st, info)
+    _FAMILY_TRAIL.setdefault("exits", []).append(dict(info))
+
+
+def _contract_pin(y_ans: float, lp_a: float, y_a: float, lp_b: float, y_b: float) -> float:
+    """item A K3 — |y_ans| · |Δ ln p_c / Δ y| over the pair (inf if the pair has one y)."""
+    return abs(y_ans) * abs((lp_b - lp_a) / (y_b - y_a)) if y_b != y_a else math.inf
 FOLD_E_TS_FLOOR_K = 2.0         # §3 e_s 의 이산화 바닥(T_s 로 2 K, S1 이 올 때까지)
 FOLD_TC_MAX_FACTOR = 3.0        # C1 선언 영역의 T_c 상한 = 3·T_pot (고리 첫 추측 2·T_pot 위); 하한은 T_pot — 단열선은 바깥으로 식는다
 FOLD_BAND_DS = 1e-4             # R1 — dy/ds 를 잴 곡선 위 이웃 두 점의 호 간격 (u, v 로그 단위)
@@ -2724,6 +2817,34 @@ _FOLD_INFO: dict[int, dict] = {}   # id(구조) → 이어 걷기의 사실(풀�
 FOLD_OFF_DOMAIN = "core_fold_off_domain"
 FOLD_BUDGET_ID = "core_fold_budget"
 FOLD_STATES_ID = "core_fold_states"
+
+
+def _fold_root_ok(info, cross) -> bool:
+    """item A §3 fold side — 정밀화된 교차의 θ 괄호 (lo, mid, hi) 가 R 을 지나고 K3(쌍: 괄호 양 끝의 u = ln P_c) 를 지나는가."""
+    if not info:
+        return cross[3] == 0.0                     # _scan 이 g = 0 인 걸음 점을 그대로 단 교차
+    if not info.get("refined"):
+        return False
+    lo, mid, hi = info["lo"], info["mid"], info["hi"]
+    if lo is hi:                                   # g = 0 이 정확히 맞았다
+        return True
+    (xl, ul, gl), (xh, uh, gh) = (lo[0], lo[1], lo[3]), (hi[0], hi[1], hi[3])
+    if gl > 0.0:                                   # R 은 yl < 0 < yh 꼴 — 부호가 반대면 θ 를 뒤집는다
+        (xl, ul, gl), (xh, uh, gh) = (-xh, uh, gh), (-xl, ul, gl)
+        xm = -mid[0]
+    else:
+        xm = mid[0]
+    if _root_evidence(xl, gl, xm, mid[3], xh, gh) is None:
+        return False
+    return _contract_pin(cross[3], ul, gl, uh, gh) <= CONTRACT_PIN
+
+
+def _fold_real(walk) -> list:
+    """접힘 걷기의 교차 중 상태로 받는 것. item A §3 fold side — 계약이 켜져 있으면 _locate 의 마지막 θ 괄호 양 끝과 가운데 한 점으로
+    R, 그 쌍으로 K3(못 좁혔으면 교차가 아니다); 꺼져 있으면 오늘의 |g| ≤ T_SURFACE_TOL."""
+    if _contract("fold"):
+        return [c for c in walk.crossings if _fold_root_ok(getattr(walk, "located", {}).get(c), c)]
+    return [c for c in walk.crossings if abs(math.expm1(c[3])) <= T_SURFACE_TOL]
 
 
 def _fold_tagged(exc: ValueError, seed, site) -> ValueError:
@@ -2808,12 +2929,13 @@ def _fold_attempt(exc, a: dict) -> dict:
             raise rootfind.FoldOutside
         return st.mass_kg / a["mass_kg"] - 1.0, math.log(st.t_surface / t_pot)
 
-    walk = rootfind.fold_walk(F, (math.log(p_s0), math.log(t_s0)), SHOOT_TOL, direction=-1.0)
+    walk = rootfind.fold_walk(F, (math.log(p_s0), math.log(t_s0)), SHOOT_TOL, direction=-1.0,
+                              refine=_contract("locate"))
     FOLD_RUNS[0] += 1
     e_ts = max(SHOOT_TOL * t_pot, FOLD_E_TS_FLOOR_K)
     e_g = math.log1p(e_ts / t_pot)
     # 교차는 고리의 수락(T_SURFACE_TOL) 안에서만 상태다 — 곡선 위에서 g 가 뛰어 넘은 자리는 교차가 아니다(증거로 남김)
-    real = [c for c in walk.crossings if abs(math.expm1(c[3])) <= T_SURFACE_TOL]
+    real = _fold_real(walk)
     jumps = [c for c in walk.crossings if c not in real]
     walk.crossings = real
     states = rootfind.fold_states(walk, e_g)
@@ -2893,6 +3015,8 @@ def _fold_answer(att: dict, cross, a: dict, extra_note: str = ""):
     실어 보내는 띠(지휘석 10-19, 68 n1): 키마다 max(R1 의 b_y, |STEPS 두 배 풀이의 이동|) — 걷기 자신의 이산화를 덮는다."""
     t_pot = float(a["potential_temperature"])
     st = _fold_integrate(a, math.exp(cross[1]), math.exp(cross[2]))
+    if FREE_SOLVE_CONTRACT:
+        _contract_tag(st, {"exit": "fold", "g": cross[3]})
     _refuse_if_below_floor(st, a["core_material"])
     _refuse_if_water_filled(st)
     w = att["walk"]
@@ -3301,11 +3425,73 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
             hi = pt
         if not decides(got, ok):
             return       # C152 메모 4 — 오늘의 lo/hi(걷기 · regula falsi)에는 들고, Brent 의 괄호에는 안 든다
+        trial_at[pt[0]] = got            # item A — 괄호 끝 시행의 구조(K3 의 ln p_c)
         if pt[1] < 0.0:
             if dlo is None or pt[0] > dlo[0]:
                 dlo, dlo_tau = pt, used_tol.get(id(got), SHOOT_TOL)
         elif dhi is None or pt[0] < dhi[0]:
             dhi, dhi_tau = pt, used_tol.get(id(got), SHOOT_TOL)
+
+    trial_at: dict = {}              # item A — 부호를 읽을 수 있는 시행의 구조 (ln T_c → 구조)
+
+    def jump_refusal(x_l, x_h, y_best):
+        """C152 규칙 2 의 뜀 거절(문장 그대로) — item A 에서는 R 이 근의 증거를 못 찾은 닫힘도 이리로(접힘이 받는다)."""
+        return _fold_tagged(ValueError(
+            f"표면온도 잔차가 뛴다 — 중심 온도 [{math.exp(x_l):.6g}, {math.exp(x_h):.6g}] K 사이에서 0 을 건너뛴다"
+            f"(괄호 폭 {x_h - x_l:.2e} ≤ T_TOL {T_TOL:g}, 가까운 끝의 어긋남 {abs(math.expm1(y_best)) * 100:.2f} %). "
+            "그 사이에 표면 온도가 선언값과 같아지는 해가 없다 (C152)." + _graze_suffix()), fold_seed(), "jump")
+
+    def contract_close(tag):
+        """item A R · K3 (post-freeze note 1) — 고리의 dlo/dhi 괄호를 `_close_bracket` 에 넘긴다(사격은 SHOOT_TOL, 시행은 이 고리의
+        기록에). 근의 증거가 있으면 (구조, 수렴, T_c) 를 고르고 (True,), 없으면 (False, x_l, x_h, y_best) — 부르는 쪽이 뜀 거절을 낸다."""
+        nonlocal st, converged, t_c
+        (xl, yl), (xh, yh) = dlo, dhi
+
+        def shoot_at(x, hint):
+            got, ok = _shoot_pressure(*args, t_center=math.exp(x), t_pot=t_pot, p_hint=hint, tol=SHOOT_TOL, **kw)
+            used_tol[id(got)] = SHOOT_TOL
+            note(math.exp(x), got, ok)
+            remember(got, ok, math.exp(x))
+            if not ok or got.t_surface <= 0.0:
+                return got, None
+            return got, math.log(got.t_surface / t_pot)
+        got_c = _close_bracket(shoot_at, xl, yl, trial_at[xl], xh, yh, trial_at[xh])
+        if not got_c[0]:
+            return got_c
+        info, cs = got_c[1], got_c[2]
+        st, converged, t_c = cs, True, math.exp(info["x"])
+        _contract_tag(st, dict(info, exit=tag))
+        return (True,)
+
+    def step_handon():
+        """item A L10 — 걸음 닫힘은 괄호가 없다: T_c·exp(±2^k·T_TOL) 로 0 을 사이에 둔 쌍을 찾아 contract_close 로.
+        쌍이 없으면 None(닫히지 않음 → 고리 뒤 P3 · P11)."""
+        if not _contract("handon"):          # A5 변형 — 넘겨받지 않고 걸음 닫힘을 그대로 답으로(ecb355d7 의 done)
+            _contract_tag(st, {"exit": "step-mutant"})
+            return (True,)
+        x0, p0 = math.log(t_c), st.p_center
+        for k in range(CONTRACT_HANDON_K):
+            if dlo is not None and dhi is not None:
+                break
+            for sg in (-1.0, 1.0):
+                t_k = math.exp(x0 + sg * (2.0 ** k) * T_TOL)
+                got, ok = _shoot_pressure(*args, t_center=t_k, t_pot=t_pot, p_hint=p0, tol=SHOOT_TOL, **kw)
+                used_tol[id(got)] = SHOOT_TOL
+                note(t_k, got, ok)
+                remember(got, ok, t_k)
+                if dlo is not None and dhi is not None:
+                    break
+        if dlo is None or dhi is None:
+            return None
+        return contract_close("step")
+
+    def _closed(s_):
+        # 구조 자체의 꼬리표로 판정한다 — id 는 수거된 구조의 것을 다시 쓸 수 있어 CONTRACT_EXITS 의 열쇠로는 판정하지 않는다
+        return s_.t_surface <= 0.0 or getattr(s_, "contract_exit", None) is not None
+
+    def accepted(s_, site):
+        """item A — 수락: 표면 온도가 닿고(A1), 그 자리에서 계약이 켜져 있으면 닫힌 찾기의 답(K1)."""
+        return _surface_temperature_met(s_, t_pot) and (not _contract(site) or _closed(s_))
 
     def tight_rerun(t0, p0, what):
         """C152 메모 6 — 괄호 끝 하나라도 느슨한 허용으로 쏜 시행이면 그 뜀 · 예산은 이 허용에서 판정되지 않은 것이다
@@ -3369,8 +3555,14 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
                 used_tol[id(st)] = SHOOT_TOL
                 note(t_c, st, converged)
                 remember(st, converged, t_c)
-                if converged and _surface_temperature_met(st, t_pot):
+                if converged and _surface_temperature_met(st, t_pot) and not _contract("L2"):
                     break        # (a) 닫히고 닿았다 — 근 위의 시행이다. 그 답으로 끝난다(감사 e2)
+                if _contract("L2") and converged and st.t_surface > 0.0 and not decides(st, converged):
+                    # item A L2 — 닫힌 사격의 y 가 부호 오차 안(근 바로 위): 괄호를 닫는 찾기로(R · K3)
+                    got_c = contract_close("brent")
+                    if got_c[0]:
+                        break
+                    raise jump_refusal(*got_c[1:])
                 if not decides(st, converged):
                     break        # (c) 안 닫혔다 — 고리 뒤의 오늘 단계(C138 최선 · 마무리 · 메모 3 · 괄호를 적은 거절)로
                 # (b) 닫히고 부호를 읽을 수 있다 — 아래에서 Brent 에 보낸다
@@ -3383,6 +3575,14 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
                     x = next(root)
             except StopIteration as fin:
                 x_best, y_best, x_l, x_h = fin.value
+                if _contract("L4"):
+                    # item A L4 — T_TOL 닫힘은 답이 아니다: 느슨한 끝이면 오늘처럼 다시 돌고, 아니면 R · K3 로 닫는다
+                    if bracket_loose():
+                        return tight_rerun(math.exp(x_best), st.p_center, "뜀")
+                    got_c = contract_close("brent")
+                    if got_c[0]:
+                        break
+                    raise jump_refusal(*got_c[1:])
                 if _surface_temperature_met(st, t_pot):
                     break
                 if bracket_loose():
@@ -3457,6 +3657,11 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
         note(t_c, st, converged)
         remember(st, converged, t_c)
         if stuck:
+            if _contract("L9") and done and st.t_surface > 0.0:
+                # item A L9/L10 — 비례 갱신이 근에 그대로 닿아(다음 걸음 = 지금) stuck 이 done 보다 먼저 섰다: 걸음 닫힘으로 넘겨받기
+                got_c = step_handon()
+                if got_c is not None and not got_c[0]:
+                    raise jump_refusal(*got_c[1:])
             break            # 괄호가 표의 온도 벽에서 같은 온도로 되돌렸다. 더 갈 데가 없다
         # ⚠ **통과 예산이 모자란 조성이 있다** (브리프 180 D, gate235 가 물 기둥에서 잡음). 물 많은
         #   암석체는 **등급 세트**의 γ(35 GPa 위 Dorogokupets, 지구 경계 1.1267 = 옛 0.2735 의 4.1 배)로
@@ -3470,14 +3675,19 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
         #   1.81 → 1.24 → **1.93 %**) 한 걸음만 보면 «커졌다» 가 되어 연장이 발화하지 않는다 — 첫 판이
         #   그랬고 그 수리는 no-op 였다.
         contracting = len(devs) >= 4 and min(devs[-3:]) < devs[-4]
-        if (passes == 0 and not _surface_temperature_met(st, t_pot)
+        if (passes == 0 and not accepted(st, "L11")
                 and extensions < (1 if bracketed else 2)
                 and (bracketed or contracting)):
             passes = T_PASSES    # 좁히는 갈래에는 한 벌, 줄어드는 진동에는 두 벌까지
             extensions += 1
         if done:
+            if _contract("L10") and st.t_surface > 0.0:
+                got_c = step_handon()          # item A L10 — 걸음 닫힘은 닫힌 찾기로 넘긴다
+                if got_c is not None and not got_c[0]:
+                    raise jump_refusal(*got_c[1:])
             break
     if (best is not None and best[1] is not st and best[0] < T_SURFACE_TOL
+            and (not _contract("P1") or _closed(best[1]))
             and (not _surface_temperature_met(st, t_pot) or not converged)):
         # C138 규칙 2 — 마지막 시행의 사격이 안 닫혔어도(표면은 허용 안이어도) 닫힌 앞 시행이 답.
         # 마지막 시험값은 벌어졌지만 그 전에 붙은 시험값이 있다. 그것이 답이다 (위 best 주석).
@@ -3507,14 +3717,16 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
                     got2, ok2 = _shoot_pressure(*args, t_center=t_k, t_pot=t_pot, p_hint=got_k.p_center, tol=SHOOT_TOL, **kw)
                 except (PhaseGap, Unbound, NoCompactRoot, GridExceeded):
                     continue
-                if ok2 and _surface_temperature_met(got2, t_pot):
+                if ok2 and _surface_temperature_met(got2, t_pot) and not _contract("P2"):
                     got2.crust_blocked = getattr(got_k, "crust_blocked", False)
                     got2.finish_subst = (t_fin, t_k, math.log(got2.t_surface / t_pot))
                     print(f"  [마무리 대체] T_c {t_fin:.6f} K 의 마무리 사격이 안 닫혀 닫힌 시행 {t_k:.6f} K 로 "
                           f"(|y| {abs(got2.finish_subst[2]):.2e}, 거리 {t_k - t_fin:+.3e} K)")
                     st, converged, t_c = got2, True, t_k
                     break
-        if st.t_surface > 0.0 and not _surface_temperature_met(st, t_pot) and not (dlo is not None and dhi is not None):
+        unclosed = _contract("P3") and st.t_surface > 0.0 and _surface_temperature_met(st, t_pot) and not _closed(st)
+        if (st.t_surface > 0.0 and (not _surface_temperature_met(st, t_pot) or (unclosed and not _cont))
+                and not (dlo is not None and dhi is not None)):
             # C152 — 0 을 사이에 둔 괄호가 있으면 이어 돌기(괄호를 잃는다) 대신 아래의 이름 댄 거절로 간다.
             # 끝맺음 구조의 표면 온도가 허용 밖 — 그 T_c 에서 SHOOT_TOL 로 온도 고리를 **이어** 돈다(지휘 선택 (a)):
             #   남은 통과 예산 · 연장 · 완화 · 대체는 지금 고리 규칙 그대로, 끝은 지금과 같은 판정.
@@ -3523,11 +3735,11 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
                          serpentinisation, differentiation_front, crust_rock_fraction, crust_porosity,
                          envelope_z_profile, ammonia_mass_fraction=ammonia_mass_fraction,
                          interface_jumps=interface_jumps, basal_layer=basal_layer, lithosphere=lithosphere,
-                         p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=max(passes, 1), _cont=_cont)
+                         p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=max(passes, 1), _cont=(_cont or unclosed))
     # C152 규칙 2 (감사 e2 HOLD 2) — 예산이 0 을 사이에 둔 괄호 안에서 끝났으면 아래 거절이 그 괄호를 함께 적는다.
     straddle_note = (f" (C152: 0 을 사이에 둔 괄호 [{math.exp(dlo[0]):.6g}, {math.exp(dhi[0]):.6g}] K 안에서 예산이 끝났다)"
                      if dlo is not None and dhi is not None else "")
-    if wall is not None and not _surface_temperature_met(st, t_pot):
+    if wall is not None and not accepted(st, "P4"):
         # **선언된 1 bar 온도에 닿는 중심 온도가 없다.** 벽 아래의 가장 뜨거운 묶인 해와 벽을 둘 다
         # 들고 나간다 — 버린 시험값이 아니라 실제로 도달한 두 상태다.
         raise ValueError(
@@ -3546,9 +3758,9 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
     # C152 규칙 2 — 0 을 사이에 둔 괄호 안에서 예산이 끝났으면 연장이 없었어도 같은 이름의 거절(괄호를 적어서).
     # C152 메모 6 — 0 을 사이에 둔 괄호 안의 예산 거절도 괄호 끝이 느슨했으면 SHOOT_TOL 고리로 한 번 다시(위와 같은 까닭).
     #   메모 7 — 물려받은 예산(덧붙임 2 A 의 이어 돌기) 갈래는 뺐다: 잰 집합에서 살린 점 없이 비용만(화성 S0 다시 돌기 2).
-    if straddle_note and not _surface_temperature_met(st, t_pot) and bracket_loose():
+    if straddle_note and not accepted(st, "P5") and bracket_loose():
         return tight_rerun(t_c, st.p_center, "예산")
-    if (extensions or straddle_note) and not _surface_temperature_met(st, t_pot):
+    if (extensions or straddle_note) and not accepted(st, "P6"):
         raise _fold_tagged(ValueError(
             f"표면온도 경계조건이 예산 안에 닫히지 않았다 — 마지막 어긋남 {devs[-1] * 100:.2f} % "
             f"(허용 {T_SURFACE_TOL * 100:.1f} %), 통과 {len(devs)} 걸음, 연장 {extensions} 벌. "
@@ -3633,6 +3845,14 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
                          p_hint=st.p_center, _t_start=t_c, _loose=False, _passes=T_PASSES, _cont=True)
         convergence.note("interior._surface_temperature", met)   # C138 — 이름 없던 2367 행 길(T 형)
         raise _fold_tagged(ValueError(_stall_reason(t_pot)), fold_seed(), "stall")
+    if _contract("P11") and met and st.t_surface > 0.0 and not _closed(st):
+        # item A P11 — 닿았으나 닫힌 근이 아니다: 답이 아니다. 정체(stall)로 꼬리표를 달아 접힘이 괄호를 쥐었으면 받게 한다.
+        convergence.note("interior._surface_temperature", False)
+        raise _fold_tagged(ValueError(f"{CONTRACT_REFUSAL_HEAD} — 표면 어긋남 {abs(st.t_surface / t_pot - 1.0):.2e} 은 "
+                                      f"허용 {T_SURFACE_TOL:g} 안이지만 그 시행은 R · K3 로 닫힌 근이 아니다"
+                                      f"{_graze_suffix()}"), fold_seed(), "stall")
+    if FREE_SOLVE_CONTRACT and st.t_surface <= 0.0:
+        _contract_tag(st, {"exit": "no-thermal"})
     convergence.note("interior._surface_temperature", met)   # C138 — 이름 없던 2367 행 길(T 형)
     if met and converged and reps is None and PLATEAU_PROBE and _REOPEN[0]:
         PLATEAU_REOPEN_SKIPS[0] += 1
@@ -4856,6 +5076,9 @@ def solve(mass_earth: float,
     _GRAZE_INFO.clear()
     if _SOLVE_DEPTH[0] <= 1:
         _FOLD_INFO.clear()               # 핵 접힘 — 이어 걷기의 사실은 가장 바깥 풀이마다 비운다(R2 의 두 배 풀이는 안쪽)
+        CONTRACT_EXITS.clear()           # item A K4 — 같은 자리에서
+        if FREE_SOLVE_CONTRACT:
+            _FAMILY_TRAIL["exits"] = []
     _FAMILY_TRAIL.update(trials=[], reclosed=[], closed=[], answer=None, dev=None, calls=0, returned={}, answer_call=None)
     _REF_INFO.clear()
     fe_liquid.reset_solve_state()        # C161 (4a) — 철 액체 기억은 풀이마다 비운다
