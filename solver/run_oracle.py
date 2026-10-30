@@ -52,8 +52,13 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: directing 10-21 (b)): engine/ changes only by 1f3a028c's output-key rename basal_layer_thickness_km →
 #: basal_layer_thickness_solved_km in interior.py, plus test and tool files (test_ice_giant + its anchor's key,
 #: test_hobby_table, test_basal_layer, tools/basal_sulphur_scan); the four declared records equal ff6ce10f's with that
-#: key mapped and solve_id aside: da0b9372.
-ORACLE_ENGINE_TREE = "da0b937263dd880f8593b0b2176ccff9baf89534"
+#: key mapped and solve_id aside: da0b9372. D2 landing with the O8 default configuration (engine/d2-default-c8; owner
+#: 10-30 a60a9db3, directing's ruling to re-declare in this landing): engine/ changes in hop_track, melt_exact,
+#: process_state, samuel_model, thermal_ale, thermal_stack (D2) and body_stack, samuel_run, samuel_stack (O8), plus
+#: tests and tools; no solver module imports them. Re-declared on the four declared answers dumped with the solver at
+#: this tip over engine/ = da0b9372 and over this tip's engine/, leaf-identical solve_id aside
+#: (artifacts pc/d2-default-c8/pc_oracle.sh, round 2): a2a10f1f.
+ORACLE_ENGINE_TREE = "a2a10f1f3dba0fee22eeddbd7d8f7f3afc695215"
 REPO = Path(lm._ENGINE).parent
 
 
