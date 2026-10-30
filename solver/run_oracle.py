@@ -56,7 +56,7 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: NaN probe; rootfind's audit counter registered, the c143 inventory's two sign-counter lines) changes engine/ for
 #: NaN inputs only, so the four declared records must equal TIP 8d3f4aae's, header and solve_id aside (pc-nanbisect.sh
 #: §1c; a difference there voids this line): f6a8b686.
-ORACLE_ENGINE_TREE = "f6a8b686bfd9d797e237c4f7a7ed55b5e167e6b5"
+ORACLE_ENGINE_TREE = "68eb232352a67dfaac82686af4aef0085792445d"
 REPO = Path(lm._ENGINE).parent
 
 
