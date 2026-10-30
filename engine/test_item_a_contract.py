@@ -119,7 +119,46 @@ note_w, froz_w = _close(y_wall, xj - 0.15, xj + 0.05, False), _close(y_wall, xj 
 check("note 1 «wall met» — narrowed to x resolution, R finds no root", not note_w[0], str(note_w)[:80])
 check("note 1 «wall met» control — the frozen order accepts a non-root on the wide bracket (red under the frozen order)",
       froz_w[0], str(froz_w)[:80])
-check("note 1 (3) — K3 reports p_c and T_c pins, and the shots used", note_e[0] and {"pin", "pin_tc", "shots"} <= set(note_e[1]))
+check("note 1 — the answer carries the p_c pin (K3), the T_c pin beside it, the shots and the noise used",
+      note_e[0] and {"pin", "pin_tc", "shots", "noise"} <= set(note_e[1]))
+
+
+# note 1 rev 2 (r2 B1, directing): the y resolution of a point is S·SHOOT_TOL; at Mars 1850 K interior.py documents S 147
+def _close_s(y_of, xl, xh, s, p_of=None, off=()):
+    def st_at(x):
+        st = _fake_st(math.exp(x), math.exp(y_of(x)), 1e11 if p_of is None else p_of(x))
+        st.shot_s = s
+        return st
+    shoot_at = lambda x, hint: (st_at(x), y_of(x))
+    interior.CONTRACT_SITES_OFF.update(off)
+    try:
+        return interior._close_bracket(shoot_at, xl, y_of(xl), st_at(xl), xh, y_of(xh), st_at(xh))
+    finally:
+        interior.CONTRACT_SITES_OFF.difference_update(off)
+
+
+x18 = L(3012.72)
+S_MARS = 147.0
+def wig(x):
+    """Shot noise of amplitude S·SHOOT_TOL, uncorrelated from one x to the next (a hash of x, so no continuous zero)."""
+    h = math.sin(x * 1.2345678e12) * 43758.5453
+    return S_MARS * interior.SHOOT_TOL * (2.0 * (h - math.floor(h)) - 1.0)
+y_noisy = lambda x: 0.9 * (x - x18) + wig(x)
+roots = [x18 + k * 3.7e-7 for k in range(20)]               # 20 continuous roots under the same noise
+n_on = [_close_s(lambda x, r=r: 0.9 * (x - r) + wig(x), r - 1e-4, r + 1e-4, S_MARS)[0] for r in roots]
+n_off = [_close_s(lambda x, r=r: 0.9 * (x - r) + wig(x), r - 1e-4, r + 1e-4, S_MARS, off=("noise",))[0] for r in roots]
+check("note 1 rev 2 — continuous roots under S 147 shot noise (Mars 1850 K) pass R, 20 of 20", all(n_on), f"{sum(n_on)}/20")
+check("note 1 rev 2 control — under a fixed 1e-7 threshold most of the same roots fail R (red under rev 1)",
+      sum(n_off) <= 10, f"{sum(n_off)}/20 pass")
+y_njump = lambda x: (0.9 * (x - x18) - 4e-4 if x < x18 else 0.01) + wig(x)
+check("note 1 rev 2 — a jump well above the S 147 noise still fails R",
+      not _close_s(y_njump, x18 - 1e-4, x18 + 1e-4, S_MARS)[0])
+p_steep = lambda x: 1e11 * math.exp(1e3 * (x - x18))                          # dlnp/dy ≈ 1100: the noise cannot pin p_c
+k_on = _close_s(y_noisy, x18 - 1e-4, x18 + 1e-4, S_MARS, p_of=p_steep)
+k_off = _close_s(y_noisy, x18 - 1e-4, x18 + 1e-4, S_MARS, p_of=p_steep, off=("pin",))
+check("K3 gate (A4, frozen) — a close whose p_c pin exceeds band/10 is not an answer", not k_on[0] and k_on[4] == "pin",
+      str(k_on)[:100])
+check("K3 gate control — with the gate off the same close answers", k_off[0], str(k_off)[:80])
 
 # ④ the loop: a planted jump; FLAG off ends at L2 with an answer, FLAG on refuses with the jump refusal (the fold's trigger)
 T_POT = 1000.0

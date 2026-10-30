@@ -2418,9 +2418,13 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             y1 = math.log(st.mass_kg / mass_kg)
     last_short = None            # 질량이 모자란 마지막 구조 (외피 없는 암석)
     last_long = None             # C157 ③ — 질량이 넘친 마지막 구조
+    prev_s = None                # item A note 1 rev 2 — 앞 반복의 (질량 잔차, ln T_s): 이 점의 y 분해능 S
     for _ in range(SHOOT_ITERS):
         if abs(st.mass_kg - mass_kg) / mass_kg < tol:
             convergence.note("interior._shoot_pressure", True, trial=True)
+            if FREE_SOLVE_CONTRACT and prev_s is not None and st.t_surface > 0.0 and y1 != prev_s[0]:
+                # S = |Δ ln T_s / Δ ln(m/M)| over the shot's last two iterates — the y noise of a SHOOT_TOL answer is S·SHOOT_TOL
+                st.shot_s = abs((math.log(st.t_surface) - prev_s[1]) / (y1 - prev_s[0]))
             return st, True
         if st.mass_kg < mass_kg:
             lo = math.exp(x1)
@@ -2465,6 +2469,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             convergence.note("interior._shoot_pressure", False, trial=True)   # C138 P — 채택 사격의 ok 는 겉 표지가 든다
             return st, False
         x0, y0 = x1, y1
+        if FREE_SOLVE_CONTRACT and st.t_surface > 0.0:
+            prev_s = (y1, math.log(st.t_surface))
         x1 = x2
         st = integrate(p_try(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
                     gmf, envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
@@ -2724,11 +2730,18 @@ CONTRACT_PIN = 9.63e-7
 CONTRACT_SHOTS = 80
 #: item A — 걸음 닫힘(L10)의 넘겨받기: T_c·exp(±2^k·T_TOL), k = 0 … 4
 CONTRACT_HANDON_K = 5
+#: item A note 1 rev 2 — 점의 y 분해능 = max(R_RES_FLOOR, CONTRACT_NOISE_C · S_local · SHOOT_TOL), S_local 은 그 점 사격의 S
+#:   (`shot_s`, 사격의 마지막 두 반복). 이 분해능이 좁히기를 멈추고(괄호 양 끝 |y| 가 그 안) R-res 의 문턱이 된다.
+CONTRACT_NOISE_C = 3.0
+R_RES_FLOOR = 1e-7
+#: item A K3 (A4, 동결대로 관문) — 닫힌 괄호의 p_c 핀이 band/10 을 넘으면 답이 아니다: 이름 댄 거절의 앞머리
+CONTRACT_PIN_HEAD = "바깥 고리의 닫힌 근이 p_center 를 band/10 안에 못 박지 못했다 (item A K3)"
 #: item A P11 — 닿았으나 닫힌 근이 아닌 답의 이름 댄 거절 앞머리
 CONTRACT_REFUSAL_HEAD = "바깥 고리가 닫힌 근에 닿지 않았다 (item A)"
 CONTRACT_EXITS: dict[int, tuple] = {}  # item A K4 — id(구조) → (구조, {exit, pin, …}) (가장 바깥 풀이마다 비움; 판정은 구조의 속성)
 #: item A A5 — 시험 전용 변형: 여기 든 자리 이름(L2 · L4 · L9 · L10 · L11 · P1 · P2 · P3 · P4 · P5 · P6 · P11 · R · handon · fold ·
-#:   locate · order — order 는 동결 본문의 순서(K3 가 서면 좁히기를 멈춤), post-freeze note 1 이 닫은 틈)은 그 자리 하나만 ecb355d7 의 행동으로 되돌린다. 출하 길에서는 늘 비어 있다.
+#:   locate · order · noise · pin — order 는 동결 본문의 순서(K3 가 서면 좁히기를 멈춤, post-freeze note 1 이 닫은 틈), noise 는
+#:   고정 문턱 1e-7(note 1 rev 2 가 점의 S 로 바꾼 것), pin 은 K3 관문)은 그 자리 하나만 ecb355d7 의 행동으로 되돌린다. 출하 길에서는 늘 비어 있다.
 CONTRACT_SITES_OFF: set = set()
 
 
@@ -2737,10 +2750,11 @@ def _contract(site: str) -> bool:
     return FREE_SOLVE_CONTRACT and site not in CONTRACT_SITES_OFF
 
 
-def _root_evidence(xl: float, yl: float, xm: float, ym: float, xh: float, yh: float) -> str | None:
-    """item A R — 괄호 [xl, xh](yl < 0 < yh) 안 근의 직접 증거: 'res'(세 값 모두 사격 분해능의 열 배 안) · 'lin'(괄호 안
+def _root_evidence(xl: float, yl: float, xm: float, ym: float, xh: float, yh: float, res: float | None = None) -> str | None:
+    """item A R — 괄호 [xl, xh](yl < 0 < yh) 안 근의 직접 증거: 'res'(세 값 모두 그 점들의 y 분해능 res 안 — 없으면 바닥 1e-7,
+    note 1 rev 2) · 'lin'(괄호 안
     두 기울기가 양 끝 차와 같은 부호이고 양 끝 |y| 가 그 작은 기울기 × 폭의 두 배 안) · None(증거 없음 — 뜀이면 여기서 떨어진다)."""
-    r = 10.0 * SIGN_S_MAX * SHOOT_TOL
+    r = R_RES_FLOOR if res is None else res
     if max(abs(yl), abs(ym), abs(yh)) <= r:
         return "res"
     if not (xl < xm < xh):
@@ -2752,16 +2766,31 @@ def _root_evidence(xl: float, yl: float, xm: float, ym: float, xh: float, yh: fl
     return "lin" if max(abs(yl), abs(yh)) <= 2.0 * min(abs(s1), abs(s2)) * (xh - xl) else None
 
 
+def _y_noise(*sts) -> float:
+    """item A note 1 rev 2 — 점들의 y 분해능: max(R_RES_FLOOR, CONTRACT_NOISE_C · S · SHOOT_TOL), S 는 아는 것 중 가장 큰 `shot_s`
+    (모르면 바닥 R_RES_FLOOR 만)."""
+    s_known = [s_.shot_s for s_ in sts if getattr(s_, "shot_s", None) is not None]
+    return max(R_RES_FLOOR, CONTRACT_NOISE_C * max(s_known) * SHOOT_TOL) if s_known else R_RES_FLOOR
+
+
 def _close_bracket(shoot_at, xl: float, yl: float, sl, xh: float, yh: float, sh):
-    """item A R · K3 (post-freeze note 1) — 괄호 [xl, xh](yl < 0 < yh, 끝 구조 sl · sh)를 Brent(xtol 0)로 늘 x 분해능(4ε|x|)까지
-    좁히고, 가운데 한 발로 R 을 본다. shoot_at(x, hint) → (구조, y 또는 None — 사격이 안 닫힘). 답은 그 괄호에서 |y| 가 가장 작은
-    점, K3 는 p_c · T_c 의 핀으로 보고만 한다(A4). 결과: (True, {x, pin, pin_tc, r, width, shots}, 구조) 또는 (False, xl, xh, y_best).
-    동결 순서(K3 가 서면 좁히기를 멈춤)는 시험 변형 'order' 로만 되돌린다."""
+    """item A R · K3 (post-freeze note 1 rev 2) — 괄호 [xl, xh](yl < 0 < yh, 끝 구조 sl · sh)를 Brent(xtol 0)로 좁힌다: x 분해능
+    (4ε|x|)이나 양 끝 |y| 가 그 점들의 y 분해능(`_y_noise`) 안이면 멈춤, 먼저 오는 쪽. 가운데 한 발로 R(문턱 = 그 분해능).
+    답은 그 괄호에서 |y| 가 가장 작은 점. K3(관문, A4)은 그 답의 |y| × 괄호 밖 기울기 |Δ ln p_c / Δ y| — 기울기는 |y| 차가 분해능의
+    열 배를 넘은 마지막 괄호에서(잡음 괄호의 Δy 로 나누지 않게); T_c 의 핀은 옆에 보고만. shoot_at(x, hint) → (구조, y 또는 None).
+    결과: (True, {x, pin, pin_tc, r, width, shots, noise}, 구조) 또는 (False, xl, xh, y_best, 까닭 'r' · 'pin' · 'shot').
+    동결 순서(K3 가 서면 좁히기를 멈춤)는 시험 변형 'order', 고정 문턱 1e-7 은 시험 변형 'noise' 로만 되돌린다."""
     gen, y_x, shots = None, None, 0
+    wide = (xl, yl, sl, xh, yh, sh)
     for _ in range(CONTRACT_SHOTS):
         e_l = abs(yl) <= abs(yh)
-        pin = _contract_pin(yl if e_l else yh, math.log(sl.p_center), yl, math.log(sh.p_center), yh)
-        if (pin <= CONTRACT_PIN and not _contract("order")) or xh - xl <= 4.0 * 2.220446049250313e-16 * abs(xh):
+        noise = _y_noise(sl, sh) if _contract("noise") else R_RES_FLOOR
+        if yh - yl > 10.0 * noise:
+            wide = (xl, yl, sl, xh, yh, sh)
+        pin = _contract_pin(yl if e_l else yh, math.log(wide[2].p_center), wide[1], math.log(wide[5].p_center), wide[4])
+        if pin <= CONTRACT_PIN and not _contract("order"):
+            break                                      # A5 변형 — 동결 본문의 순서
+        if xh - xl <= 4.0 * 2.220446049250313e-16 * abs(xh) or max(abs(yl), abs(yh)) <= noise:
             break
         try:
             if gen is None:
@@ -2776,7 +2805,7 @@ def _close_bracket(shoot_at, xl: float, yl: float, sl, xh: float, yh: float, sh)
         shots += 1
         got, y_x = shoot_at(x, (sl if e_l else sh).p_center)
         if y_x is None:
-            return False, xl, xh, (yl if e_l else yh)
+            return False, xl, xh, (yl if e_l else yh), "shot"
         if y_x < 0.0:
             xl, yl, sl = x, y_x, got
         else:
@@ -2785,15 +2814,19 @@ def _close_bracket(shoot_at, xl: float, yl: float, sl, xh: float, yh: float, sh)
     xm = 0.5 * (xl + xh)
     gm, ym = shoot_at(xm, (sl if e_l else sh).p_center)
     if ym is None:
-        return False, xl, xh, (yl if e_l else yh)
-    r = _root_evidence(xl, yl, xm, ym, xh, yh)
+        return False, xl, xh, (yl if e_l else yh), "shot"
+    noise = _y_noise(sl, sh, gm) if _contract("noise") else R_RES_FLOOR
+    r = _root_evidence(xl, yl, xm, ym, xh, yh, noise)
     if r is None and not _contract("R"):
         r = "mutant"                 # A5 변형 — R 을 건너뛴다
     if r is None:
-        return False, xl, xh, (yl if e_l else yh)
+        return False, xl, xh, (yl if e_l else yh), "r"
     cand = min(((abs(yl), xl, sl), (abs(ym), xm, gm), (abs(yh), xh, sh)), key=lambda c_: c_[0])
-    info = {"x": cand[1], "pin": _contract_pin(cand[0], math.log(sl.p_center), yl, math.log(sh.p_center), yh),
-            "pin_tc": _contract_pin(cand[0], xl, yl, xh, yh), "r": r, "width": xh - xl, "shots": shots + 1}
+    pin = _contract_pin(cand[0], math.log(wide[2].p_center), wide[1], math.log(wide[5].p_center), wide[4])
+    info = {"x": cand[1], "pin": pin, "pin_tc": _contract_pin(cand[0], wide[0], wide[1], wide[3], wide[4]), "r": r,
+            "width": xh - xl, "shots": shots + 1, "noise": noise}
+    if pin > CONTRACT_PIN and _contract("pin"):
+        return False, xl, xh, cand[0], "pin"
     return True, info, cand[2]
 
 
@@ -3457,7 +3490,11 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
             return got, math.log(got.t_surface / t_pot)
         got_c = _close_bracket(shoot_at, xl, yl, trial_at[xl], xh, yh, trial_at[xh])
         if not got_c[0]:
-            return got_c
+            if got_c[4] == "pin":
+                raise _fold_tagged(ValueError(
+                    f"{CONTRACT_PIN_HEAD} — 중심 온도 [{math.exp(got_c[1]):.9g}, {math.exp(got_c[2]):.9g}] K, 남은 |y| {got_c[3]:.2e}"
+                    + _graze_suffix()), fold_seed(), "stall")
+            return got_c[:4]
         info, cs = got_c[1], got_c[2]
         st, converged, t_c = cs, True, math.exp(info["x"])
         _contract_tag(st, dict(info, exit=tag))
