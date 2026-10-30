@@ -20,6 +20,7 @@ import copy
 import math
 
 import fold_track as ft
+import rootfind as rf
 import samuel_model as sm
 import thermal_stack as ts
 
@@ -174,7 +175,11 @@ def hump_sign(h, r: ft.Root) -> float:
     nb = r.ahead()
     if nb is None:
         return 0.0
-    return 1.0 if h(0.5 * (r.x + nb)) > 0 else -1.0
+    v = h(0.5 * (r.x + nb))
+    if v != v:                                       # D2-nan N6: a NaN is never a sign; 0.0 is «no hump», as above,
+        rf.nan_seen("hop_track.hump_sign")           # which lost() reads as no fold (Lost(False))
+        return 0.0
+    return 1.0 if v > 0 else -1.0
 
 
 def lost(h, r: ft.Root, equation: str) -> ft.Lost:
