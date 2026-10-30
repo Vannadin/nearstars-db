@@ -69,7 +69,11 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: 10-30): engine/ is the union of the NaN-sign fix (f6a8b686) and D2 + O8 (a2a10f1f), with no conflicting engine/ hunk.
 #: Re-declared at the merged tree; the basis is the integration package's declared-answer comparison of the merge against
 #: each parent (artifacts pc/stageA-d2-c8/): 98b1ad7955e958ac9d7393a405dd3e45923f94bc.
-ORACLE_ENGINE_TREE = "98b1ad7955e958ac9d7393a405dd3e45923f94bc"
+#: D2-nan (engine/d2-nan-c8; plan artifacts d2nan-pkg-c8 rev 1 e1234269, 68 clear 377a5faf): engine/ changes in
+#: melt_exact, thermal_ale and hop_track (the NaN rule at N1–N9; finite arithmetic unchanged) and the new
+#: test_d2_nan.py. Re-declared on the four declared answers dumped with the solver at this tip over engine/ =
+#: 98b1ad79 and over this tip's engine/, leaf-identical solve_id aside (artifacts pc/d2-nan-c8/, the PC package): a5180f4b.
+ORACLE_ENGINE_TREE = "a5180f4be751b98222176d8d1d46972398752bd0"
 REPO = Path(lm._ENGINE).parent
 
 
