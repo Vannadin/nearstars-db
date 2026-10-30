@@ -69,7 +69,7 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: 10-30): engine/ is the union of the NaN-sign fix (f6a8b686) and D2 + O8 (a2a10f1f), with no conflicting engine/ hunk.
 #: Re-declared at the merged tree; the basis is the integration package's declared-answer comparison of the merge against
 #: each parent (artifacts pc/stageA-d2-c8/): 98b1ad7955e958ac9d7393a405dd3e45923f94bc.
-ORACLE_ENGINE_TREE = "8f784fa296381b500fe3eb7b222cc0c5747b8fa3"
+ORACLE_ENGINE_TREE = "730efd60d768c815901c3d527b31458808cf7e24"
 REPO = Path(lm._ENGINE).parent
 
 

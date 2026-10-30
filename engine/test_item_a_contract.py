@@ -20,6 +20,11 @@ import eos  # noqa: E402
 import interior  # noqa: E402
 import rootfind  # noqa: E402
 
+# The census ran this file under NS_FREE_SOLVE_CONTRACT=0 too (its «off» run) and 10 checks went red there: they test
+# the contract, so the FLAG is set on here, whatever the environment says (every check below that needs it off sets
+# it off itself and back).
+interior.FREE_SOLVE_CONTRACT = True
+
 fails = 0
 
 
