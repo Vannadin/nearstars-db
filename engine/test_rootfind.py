@@ -210,11 +210,13 @@ check("메모 2 ④ — 같은 시행이 정밀하면 셈(부호 바뀜 2 번)",
       _fr(flipper + [_trial(FB, 3232.0, -0.02, tau=1e-4), _trial(FB, 3233.0, +0.006)]))
 
 # ⑦ C152 메모 3 — 마무리 사격(SHOOT_TOL)이 안 닫히면 닫히고 닿은 가까운 시행으로 바꾼다 · 표지 · 상한 없음
-def _run_finish(fail):
+def _run_finish(fail, contract=False):
     """y = 0.9 ln(T_c/1650), 위에서 단조로 다가감(괄호 없음 · C138 대체 없음): 시행 2000 · 1682.05 · 1653.18 K.
     T_TOL 3e-2 · T_SURFACE_TOL 5e-2 로 고리가 느슨한 시행 1653.18 K 에서 끝나 마무리 사격을 탄다. 닿는 다른 시행은 1682.05 K 뿐.
     fail(T_c) 이 참이면 SHOOT_TOL 사격이 안 닫힌다(mass(p_c) 뜀의 꼴)."""
     real, tt, ts = interior._shoot_pressure, interior.T_TOL, interior.T_SURFACE_TOL
+    fl = interior.FREE_SOLVE_CONTRACT
+    interior.FREE_SOLVE_CONTRACT = contract     # item A — 메모 3 의 대체 길은 계약 밖(FLAG off)의 길이다
 
     def fake(*a, t_center=None, t_pot=None, p_hint=None, tol=None, **k):
         st = _fake_st(t_center, T_POT * (t_center / 1650.0) ** 0.9)
@@ -229,6 +231,7 @@ def _run_finish(fail):
         return "refusal", str(e)
     finally:
         interior._shoot_pressure, interior.T_TOL, interior.T_SURFACE_TOL = real, tt, ts
+        interior.FREE_SOLVE_CONTRACT = fl
 
 
 k_n, v_n = _run_finish(lambda t: False)
@@ -239,6 +242,10 @@ k_s, v_s = _run_finish(lambda t: t < 1670.0)
 check("메모 3 ③ — 먼 쪽만 닫히면 그 시행이 답, 대체가 기록됨",
       k_s == "answer" and v_s[1] and v_s[2] is not None and abs(v_s[2][0] - 1653.18) < 0.01 and abs(v_s[2][1] - 1682.05) < 0.01
       and v_s[0] == v_s[2][1], str(v_s)[:120])
+# item A (pc/ea-e18/item-a-prereg.frozen.md §2 P2) — 계약을 켜면 느슨한 시행 · 메모 3 대체는 답이 아니다. 같은 꼴(먼 쪽만 닫힘)은
+#   닫힌 근을 못 쏴서 이름 댄 거절로 끝난다(재고정: 위 메모 3 ③ 은 FLAG off 의 길로 남김).
+k_sc, v_sc = _run_finish(lambda t: t < 1670.0, contract=True)
+check("item A — 계약 켬: 먼 쪽만 닫히는 꼴은 대체 답이 아니라 거절", k_sc == "refusal", str(v_sc)[:120])
 _kv = interior._finish_subst_values(types.SimpleNamespace(finish_subst=None))
 check("메모 3 — 대체 없으면 네 칸 모두 None", set(_kv) == {"finish_subst_from_tc", "finish_subst_to_tc", "finish_subst_delta_tc",
                                                     "finish_subst_y"} and all(v is None for v in _kv.values()))

@@ -212,7 +212,7 @@ def _correct(F, u, v, gu, gv, tol_dm, walk):
 
 
 def fold_walk(F, seed, tol_dm: float, direction: float = -1.0, budget: int | None = None, h0: float | None = None,
-              h_max: float | None = None, dg_max: float | None = None, turn_max: float | None = None):
+              h_max: float | None = None, dg_max: float | None = None, turn_max: float | None = None, refine: bool = False):
     """C1/C2 — pure arc-length continuation on {dm = 0} from `seed` = (u, v): first the leg whose tangent has
     du/ds of sign `direction` (−1: toward the shallow end, smaller P_c), to the domain's edge, then back through the seed
     to the other edge (item 8: the walk does not stop at its first crossing). Collects every crossing of g = 0 (located
@@ -251,7 +251,7 @@ def fold_walk(F, seed, tol_dm: float, direction: float = -1.0, budget: int | Non
     first = [(-s, u, v, dm, g, -tu, -tv, gu, gv) for s, u, v, dm, g, tu, tv, gu, gv in reversed(legs[0][1])]
     second = legs[1][1][1:] if len(legs) > 1 else []
     walk.points = first + second
-    _scan(F, walk, tol_dm)
+    _scan(F, walk, tol_dm, refine)
     return walk
 
 
@@ -312,7 +312,7 @@ def _leg(F, start, sense, tol_dm, budget, h0, walk, h_max=FOLD_H_MAX, dg_max=FOL
             h, easy = min(2.0 * h, h_max), 0
 
 
-def _scan(F, walk, tol_dm):
+def _scan(F, walk, tol_dm, refine=False):
     """Crossings of g between neighbouring points (located on the curve) and turning points of v(s)."""
     pts = walk.points
     for a, b in zip(pts, pts[1:]):
@@ -323,7 +323,7 @@ def _scan(F, walk, tol_dm):
             continue
         if not nan_free(a[4], b[4], site="rootfind._scan") or (a[4] < 0.0) == (b[4] < 0.0) or b[4] == 0.0:   # NaN: no crossing
             continue
-        walk.crossings.append(_locate(F, a, b, tol_dm, walk))
+        walk.crossings.append(_locate_refined(F, a, b, tol_dm, walk) if refine else _locate(F, a, b, tol_dm, walk))
     if pts and pts[-1][4] == 0.0:
         walk.crossings.append((pts[-1][0], pts[-1][1], pts[-1][2], 0.0))
 
@@ -363,6 +363,55 @@ def _locate(F, a, b, tol_dm, walk):
             if side == 1:
                 flo *= 0.5
             side = 1
+    return best
+
+
+#: item A (pc/ea-e18/item-a-prereg.frozen.md §3, fold side) — 교차를 호 위에서 이분으로 θ 분해능까지 좁히는 상한(2^-40 < 1e-12)
+LOCATE_BISECT_ITERS = 60
+
+
+def _locate_refined(F, a, b, tol_dm, walk):
+    """item A — g = 0 between a and b by bisection on θ until hi − lo < 1e-12, each trial put on the curve as `_locate`
+    does. The crossing tuple is `_locate`'s; `walk.located[crossing]` keeps the final θ bracket's ends and one midpoint
+    (θ, u, v, g) for the caller's root test, or `refined: False` when the narrowing stopped early (FoldOutside, NaN, a
+    curve point that does not close, or the cap)."""
+    s_a, ua, va, _dma, ga = a[:5]
+    s_b, ub, vb, _dmb, gb = b[:5]
+    gu, gv = a[7], a[8]
+    lo, hi = (0.0, ua, va, ga), (1.0, ub, vb, gb)
+    best = (s_a, ua, va, ga) if abs(ga) < abs(gb) else (s_b, ub, vb, gb)
+
+    def at(th):
+        try:
+            got = _correct(F, ua + th * (ub - ua), va + th * (vb - va), gu, gv, tol_dm, walk)
+        except FoldOutside:
+            return None
+        return None if got is None else (th, got[0], got[1], got[3])
+
+    refined = False
+    for _ in range(LOCATE_BISECT_ITERS):
+        if hi[0] - lo[0] < 1e-12:
+            refined = True
+            break
+        m = at(0.5 * (lo[0] + hi[0]))
+        if m is None or m[3] != m[3]:
+            break
+        if abs(m[3]) < abs(best[3]):
+            best = (s_a + m[0] * (s_b - s_a), m[1], m[2], m[3])
+        if m[3] == 0.0:
+            refined = True
+            lo = hi = m
+            break
+        if (m[3] < 0.0) == (lo[3] < 0.0):
+            lo = m
+        else:
+            hi = m
+    mid = at(0.5 * (lo[0] + hi[0])) if refined and lo is not hi else (lo if refined else None)
+    if mid is not None and mid[3] != mid[3]:
+        mid, refined = None, False
+    if not hasattr(walk, "located"):
+        walk.located = {}
+    walk.located[best] = {"refined": refined and mid is not None, "lo": lo, "hi": hi, "mid": mid}
     return best
 
 
