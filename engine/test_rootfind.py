@@ -275,9 +275,13 @@ check("메모 3 ⑦ 음성 — 같은 결과를 note_substituted 길로 적으�
       f"{_c.unconverged_inputs} · {_c.grade}")
 
 # ⑧ C152 메모 4 — 부호는 오차 밖에서만 읽는다: 느슨한(τ > τ_lin) 첫 사격의 반대 부호는 Brent 괄호를 못 연다 · 규칙 3/4 선후
-def _run_tol(y_of, wall=None):
-    """y_of(T_c, tol) → ln(T_surf/T_pot). 결과 · Brent 호출 수 · 벽 찾기 사격 수."""
+def _run_tol(y_of, wall=None, contract=False):
+    """y_of(T_c, tol) → ln(T_surf/T_pot). 결과 · Brent 호출 수 · 벽 찾기 사격 수(그리고 답의 item A 출구 꼬리표).
+    item A — 메모 4 의 꼴은 고리의 부호 규칙을 본다: 계약 밖(FLAG off)의 길로 고정하고, 계약 켬은 아래 쌍둥이가 본다
+    (계약의 닫기가 x 분해능까지 좁힐 때 Brent 를 따로 부르므로 «Brent 0» 은 FLAG off 의 셈이다)."""
     real, rb, nb = interior._shoot_pressure, rootfind.brent, [0]
+    fl = interior.FREE_SOLVE_CONTRACT
+    interior.FREE_SOLVE_CONTRACT = contract
     w0 = interior.WALL_LOCATE_SHOTS[0]
 
     def fake(*a, t_center=None, t_pot=None, p_hint=None, tol=None, **k):
@@ -292,11 +296,12 @@ def _run_tol(y_of, wall=None):
     try:
         with contextlib.redirect_stdout(io.StringIO()):
             st, ok = interior.shoot(6e24, 0.3, 0.0, "fe_prem", potential_temperature=T_POT)
-        out = ("answer", (st.t_center, ok))
+        out = ("answer", (st.t_center, ok, getattr(st, "contract_exit", None)))
     except (ValueError, eos.PhaseGap) as e:
         out = ("refusal", str(e))
     finally:
         interior._shoot_pressure, rootfind.brent = real, rb
+        interior.FREE_SOLVE_CONTRACT = fl
     return out, nb[0], interior.WALL_LOCATE_SHOTS[0] - w0
 
 
@@ -331,6 +336,12 @@ check("메모 4 ② — 괄호도 벽도 없는 고리(규칙 3): Brent 0 · 벽
 (k_4, v_4), nb_4, ws_4 = _run_tol(lambda t, tol: 0.5 * math.log(t / 3000.0), wall=2050.0)
 check("메모 4 ② — 괄호 없이 벽을 만나면 규칙 4 가 이김: 벽 찾기 사격 > 0", k_4 == "refusal" and nb_4 == 0 and ws_4 > 0,
       f"{str(v_4)[:60]} · brent {nb_4} · 벽 {ws_4}")
+# item A — 계약 켬 쌍둥이: 같은 꼴이 닫힌 근(걸음 넘겨받기 또는 Brent 닫힘)에서 참 근 2100 K 로 답하고 출구 꼬리표를 단다
+for _nm, _yf in (("메모 4 ①", lambda t, tol: _y(t) + (0.06 if tol > interior.SIGN_TAU_LIN else 0.0)),
+                 ("메모 4 ②", lambda t, tol: _y(t)), ("메모 4 ③", lambda t, tol: 1.8 * math.log(t / 2100.0))):
+    (_k, _v), _nb, _ = _run_tol(_yf, contract=True)
+    check(f"item A — 계약 켬: {_nm} 꼴은 닫힌 근 2100 K 에서 답", _k == "answer" and _v[1] and abs(_v[0] / 2100.0 - 1.0) < 1e-6
+          and _v[2] in ("brent", "step"), str(_v)[:90])
 
 # ⑩ C152 메모 6 — 느슨한 통과 · 빡빡한 놓침: 뜀 · 예산 거절은 SHOOT_TOL 고리만 낸다. 빡빡한 y 는 매끈(근 2100 K, 기울기 S),
 #   느슨한 시행은 −B·τ 로 치우친다(화성 1850 K: S 147 · τ 3.0e-3 에서 −0.0107). J 는 빡빡해도 남는 진짜 뜀.
