@@ -1069,7 +1069,7 @@ def integrate(*args, **kw):
     _note_loop_trial(kw.get("t_center", args[11] if len(args) > 11 else 0.0), structure)
     _ICE_GRID_DELTA[id(structure)] = (ice_fr2015.STATS["extrapolated_rho"] - before[0],
                                       ice_fr2015.STATS["below_t_min"] - before[1])
-    _ALIVE.append(structure)             # 덧붙임 60 후속 — 풀이 동안 붙잡아 id 가 재사용되지 않게
+    # E-id (frozen 29b23943): `_integrate_raw` holds each structure in _ALIVE at construction (덧붙임 60 후속의 붙잡기)
     return structure
 
 
@@ -1962,7 +1962,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             # 던졌고, 그 예외가 solve() 에서 물리인 척하는 거절로 나갔다 (5 M⊕ 서브넵튠의
             # 뜨거운 시험 온도에서 외피가 격자 밖까지 부풀었다, sub-neptune-context-notes.md).
             # 수렴해로 받아들여질 수는 없다: 겉질량이 목표와 SHOOT_TOL 안이 아니다.
-            return Structure(r, m, moi, core_radius if core_radius is not None else r,
+            early = Structure(r, m, moi, core_radius if core_radius is not None else r,
                              p_center, p_cmb if p_cmb is not None else p,
                              p_ice_base, phases, v_pore=v_pore, m_above_lab=m_above_lab,
                              p_silicate_max=p_si_max, t_center=t_center,
@@ -1974,6 +1974,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                              floor_truncated=floor_truncated,
                              hot_water_filled=(hw_steps, hw_mass, hw_first) if hw_steps else None,
                              boiling_flips=(bf_flips, bf_first) if bf_flips else None)
+            _ALIVE.append(early)              # E-id: held at construction, as below
+            return early
         raise GridExceeded(
             f"{MAX_STEPS} 걸음(중심 격자 dr 의 {MAX_STEPS / STEPS:.0f} 배 반지름, 여기서는 "
             f"{r / EARTH_RADIUS_M:.1f} R⊕) 안에 표면에 닿지 못했다 — 중심압 "
@@ -2004,6 +2006,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                      surface_reached=floor_truncated is None,
                      hot_water_filled=(hw_steps, hw_mass, hw_first) if hw_steps else None,
                      boiling_flips=(bf_flips, bf_first) if bf_flips else None)
+    _ALIVE.append(structure)          # E-id (frozen 29b23943): held before any id-keyed write
     if lithosphere is not None:
         _LITHO_INFO[id(structure)] = {"r_base": r_litho, "t_base": t_litho_base, "r_top": lithosphere["r_top"],
                                       "t_s": lithosphere["t_s"]}
