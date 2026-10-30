@@ -266,6 +266,28 @@ bad = [(k, o) for k, o in answers if o[0] == "A" and o[2] and o[3] not in ("bren
 check("K4 — every converged answer names brent, step, fold or no-thermal", not bad, str(bad)[:160])
 check("A1 — the mutant switch is empty after the tests", not interior.CONTRACT_SITES_OFF)
 
+# ⑥′ K4's two loop-free exits (census 10-30: dante_fixture answered with no tag): with no potential temperature the
+#   pressure shot is the answer's only search («pressure-only»); under the self-check's fixed T_c («pinned-tc»). Each is
+#   tagged with the FLAG on and left untagged with it off (ecb355d7's path, bit for bit).
+import types as _types
+_real_sp = interior._shoot_pressure
+interior._shoot_pressure = lambda *a, **k: (_types.SimpleNamespace(), True)
+try:
+    for flag in (True, False):
+        interior.FREE_SOLVE_CONTRACT = flag
+        st_free, _ok = interior._shoot_body_raw(1e22, 0.3, 0.0, "fe", potential_temperature=None)
+        interior._PIN[0] = (2000.0, 1e9)
+        try:
+            st_pin, _ok = interior._shoot_body_raw(1e22, 0.3, 0.0, "fe", potential_temperature=1600.0)
+        finally:
+            interior._PIN[0] = None
+        want = ("pressure-only", "pinned-tc") if flag else (None, None)
+        got = (getattr(st_free, "contract_exit", None), getattr(st_pin, "contract_exit", None))
+        check(f"K4 loop-free exits — FLAG {'on' if flag else 'off'}: {want}", got == want, str(got))
+finally:
+    interior._shoot_pressure = _real_sp
+    interior.FREE_SOLVE_CONTRACT = True
+
 # ⑦ fix line «closure by id» (found while coding, directing 10-30): a tagged structure that is freed must not let a later
 #   structure with the same id read as closed. The record holds the structure itself, and closure is read from the
 #   structure's own attribute. Under the first draft (record {id: info}, closure = «id in record») this check is red: CPython
