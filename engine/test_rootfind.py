@@ -361,6 +361,46 @@ check("메모 6 음성 — 빡빡해도 남는 뜀(±1 %)은 SHOOT_TOL 고리로
 check("메모 6 음성 — 괄호 두 끝이 이미 SHOOT_TOL 시행이면 다시 돌지 않고 그대로 거절",
       k8t == "refusal" and "잔차가 뛴다" in v8t and n8t == 0, f"{str(v8t)[:60]} · 다시 {n8t}")
 
+# C152 메모 7 (심은 판, structure_grid 의 진짜 지구 2081 K 판이 33a6ac21 로 사라져 옮김) — 다시 돈 고리의 «잔차가 뛴다» 거절에
+#   바꾼 느슨한 고리의 마지막 쌍(S · 스침)이 덧붙는다. 메모 6 음성의 꼴(빡빡해도 남는 뜀)에 쌍을 심는다(_loop_pair). 음성 — 쌍에
+#   스침이 없으면 S 만 실리고 스침은 없다. 변이 — 덧붙임 머리 목록을 비우면(TIGHT_REFUSAL_HEADS = ()) 쌍이 안 실린다.
+_PAIR7 = (6253.0, ("심은 고상선", "silicate", 16.627e9, -0.388))
+
+
+def _run7(pair, heads=None):
+    keep_lp, keep_h = interior._loop_pair, interior.TIGHT_REFUSAL_HEADS
+    served = [interior.TIGHT_RECHECKS[0]]
+
+    def planted():                       # 다시 돌기 입구의 한 번(느슨한 쌍을 잡는 호출)에만 심고, 나머지는 진짜 쌍
+        if interior.TIGHT_RECHECKS[0] > served[0]:
+            served[0] = interior.TIGHT_RECHECKS[0]
+            return pair
+        return keep_lp()
+    interior._loop_pair = planted
+    if heads is not None:
+        interior.TIGHT_REFUSAL_HEADS = heads
+    try:
+        return _run8(_y8(100.0, 2.0, J=0.01))
+    finally:
+        interior._loop_pair, interior.TIGHT_REFUSAL_HEADS = keep_lp, keep_h
+
+
+(k7, v7), n7 = _run7(_PAIR7)
+_s7, _g7 = interior.parse_graze(str(v7).split(interior.LOOSE_PAIR_HEAD.strip())[-1])
+check("메모 7 (심은 판) — 다시 돈 고리의 «잔차가 뛴다» 거절이 바꾼 느슨한 쌍의 스침(곡선 · GPa · g)과 S 를 싣는다",
+      k7 == "refusal" and "잔차가 뛴다" in v7 and n7 == 1 and interior.LOOSE_PAIR_HEAD.strip() in v7
+      and _g7 is not None and "심은 고상선" in _g7 and "16.627 GPa" in _g7 and _s7 == 6253.0
+      and "심은 고상선" not in str(v7).split(interior.LOOSE_PAIR_HEAD.strip())[0],
+      f"S {_s7} · 스침 {_g7} · 다시 {n7}")
+(k7n, v7n), _ = _run7((6253.0, None))
+_s7n, _g7n = interior.parse_graze(str(v7n).split(interior.LOOSE_PAIR_HEAD.strip())[-1])
+check("메모 7 (심은 판) 음성 — 쌍에 스침이 없으면 S 만 실리고 이름 댄 스침은 없다",
+      k7n == "refusal" and interior.LOOSE_PAIR_HEAD.strip() in v7n and _s7n == 6253.0 and _g7n is None, str(v7n)[-120:])
+(k7m, v7m), _ = _run7(_PAIR7, heads=())
+check("메모 7 (심은 판) 변이 — 덧붙임 머리 목록을 비우면 같은 거절에 쌍이 안 실린다(시험이 덧붙임을 읽는다)",
+      k7m == "refusal" and "잔차가 뛴다" in v7m and interior.LOOSE_PAIR_HEAD.strip() not in v7m and "심은 고상선" not in v7m,
+      str(v7m)[-120:])
+
 # ⑨ C157 — 피적분의 불연속은 이어지거나 찾아진다: 차분 발판은 상 경계를 안 넘고 · 사건은 새 쪽에 착지 · 사격은 뜀을 이름 댄다
 P_B = 23.83e9                                              # 가짜 두 상 재료의 경계(지구 en/PREM 자리)
 

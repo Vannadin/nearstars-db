@@ -56,7 +56,20 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: NaN probe; rootfind's audit counter registered, the c143 inventory's two sign-counter lines) changes engine/ for
 #: NaN inputs only, so the four declared records must equal TIP 8d3f4aae's, header and solve_id aside (pc-nanbisect.sh
 #: §1c; a difference there voids this line): f6a8b686.
-ORACLE_ENGINE_TREE = "f6a8b686bfd9d797e237c4f7a7ed55b5e167e6b5"
+#: On the D2 line (split from ae300563 at da0b9372): D2 landing with the O8 default configuration (engine/d2-default-c8; owner
+#: 10-30 a60a9db3, directing's ruling to re-declare in this landing): engine/ changes in hop_track, melt_exact,
+#: process_state, samuel_model, thermal_ale, thermal_stack (D2) and body_stack, samuel_run, samuel_stack (O8), plus
+#: tests and tools. Re-declared on the four declared answers dumped with the solver at this tip over engine/ =
+#: da0b9372 and over this tip's engine/, leaf-identical solve_id aside (artifacts pc/d2-default-c8/pc_oracle.sh,
+#: round 2): a2a10f1f. Expected, not the basis (68 B1): a solver process imports six of the nine — legacy_materials
+#: imports process_state, whose REGISTRY walk (_registry_entries) import_module's hop_track and thermal_ale, which
+#: bring thermal_stack, samuel_model and melt_exact — for the state reset and the at-rest check only; the changed
+#: constants feed thermal runs no oracle body calls (an Earth and a Mars declared solve call no function of the nine).
+#: D2 + O8 integrated onto stage A (merge of engine/d2-default-c8 10084664 into engine/stageA-sA 34d44eaa, directing
+#: 10-30): engine/ is the union of the NaN-sign fix (f6a8b686) and D2 + O8 (a2a10f1f), with no conflicting engine/ hunk.
+#: Re-declared at the merged tree; the basis is the integration package's declared-answer comparison of the merge against
+#: each parent (artifacts pc/stageA-d2-c8/): 98b1ad7955e958ac9d7393a405dd3e45923f94bc.
+ORACLE_ENGINE_TREE = "98b1ad7955e958ac9d7393a405dd3e45923f94bc"
 REPO = Path(lm._ENGINE).parent
 
 

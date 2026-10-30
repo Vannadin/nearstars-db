@@ -68,8 +68,14 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 # PC check pending): 2090.23 → 2094.64 · 1932.40 → 1937.36 · -51.17 → -50.33 · 283.41 → 287.34 · 2038.27 → 2042.46 ·
 # 1.1532 → 1.1612. The run passes the printed pole (T_c = T_b) at 0.426 K, at 1.081 Gyr: a future refusal there is
 # the pole (pole_check), not this fix; the gain cap (cleared 74205ba5) is the ready answer (r2 2dc5bff3 m1).
-FROZEN_L20 = {"T_c today": 2094.64, "T_m today": 1937.36, "T_c(1) − T_c0": -50.33, "T_m(1) − T_m0": 287.34,
-              "T_m peak": 2042.46, "T_m peak time": 1.1612}
+# O8 default configuration (owner 10-30 a60a9db3; STEP_FRACTION 0.1 → 0.05, lid nodes 41 → 161, this run's cap stays
+# 10 Myr as a regression pin, not the configuration): the six move with the finer step and lid (old → new, PC round 1,
+# d2-default-c8 ec7bb5c6): 2094.64 → 2094.30 · 1937.36 → 1936.85 · -50.33 → -50.34 · 287.34 → 287.27 · 2042.46 → 2042.35 ·
+# 1.1612 → 1.1640. The finer step's carry at 0.709015 Gyr sees the lower δ_b pair born below the adopted root (present
+# in the base run too from 0.716 Gyr, 41+ km away) and keeps the same top branch (3 m from the base path there); the
+# printed pole is passed at 0.427 K (1.074 Gyr).
+FROZEN_L20 = {"T_c today": 2094.30, "T_m today": 1936.85, "T_c(1) − T_c0": -50.34, "T_m(1) − T_m0": 287.27,
+              "T_m peak": 2042.35, "T_m peak time": 1.1640}
 FROZEN_TOL = {"T_m peak time": 0.0005}  # Gyr; every other value K, to the frozen decimal
 
 

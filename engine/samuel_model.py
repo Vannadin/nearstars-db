@@ -295,15 +295,18 @@ def melt_integrals(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_
 
 
 def stefan_number(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_pa, *, v_m: float,
-                  l_m: float, c_m: float, dt_k: float, **melt_kw) -> float:
+                  l_m: float, c_m: float, dt_k: float, melt_fn=None, **melt_kw) -> float:
     """St = (L_m V_melt / (C_m V_m)) dm_melt/dT_m — the form 2019 SI PDF p6 prints for deep melting, used
     for all melting (pre-registration v2-8): V_melt is the melting volume at T_m, and m_melt its mean φ,
-    differentiated centrally while the whole adiabat moves with T_m (T_b ∝ T_m in 2021 eq. (14))."""
+    differentiated centrally while the whole adiabat moves with T_m (T_b ∝ T_m in 2021 eq. (14)).
+    `melt_fn` replaces this module's melt_integrals (the ALE mode's exact rule, D2 §7.5); None keeps it."""
+    mf = melt_integrals if melt_fn is None else melt_fn
+
     def mean_phi(tm):
-        mi = melt_integrals(tm, t_b * tm / t_m, r_top, r_bot, pressure_pa, **melt_kw)
+        mi = mf(tm, t_b * tm / t_m, r_top, r_bot, pressure_pa, **melt_kw)
         v = mi["shallow_v"] + mi["deep_v"]
         return (mi["shallow_phi_v"] + mi["deep_phi_v"]) / v if v > 0 else 0.0
-    here = melt_integrals(t_m, t_b, r_top, r_bot, pressure_pa, **melt_kw)
+    here = mf(t_m, t_b, r_top, r_bot, pressure_pa, **melt_kw)
     v_melt = here["shallow_v"] + here["deep_v"]
     if v_melt == 0.0:
         return 0.0
@@ -311,10 +314,13 @@ def stefan_number(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_p
 
 
 def stefan_number_total(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_pa, *, v_m: float,
-                        l_m: float, c_m: float, dt_k: float, **melt_kw) -> float:
+                        l_m: float, c_m: float, dt_k: float, melt_fn=None, **melt_kw) -> float:
     """Comparison path, reported beside the main one (v2-8): (L_m / (C_m V_m)) d(∫ φ dV)/dT_m, the total
-    derivative — it also counts the melting volume's own growth, which the printed form holds fixed."""
+    derivative — it also counts the melting volume's own growth, which the printed form holds fixed.
+    `melt_fn` as in stefan_number."""
+    mf = melt_integrals if melt_fn is None else melt_fn
+
     def total(tm):
-        mi = melt_integrals(tm, t_b * tm / t_m, r_top, r_bot, pressure_pa, **melt_kw)
+        mi = mf(tm, t_b * tm / t_m, r_top, r_bot, pressure_pa, **melt_kw)
         return mi["shallow_phi_v"] + mi["deep_phi_v"]
     return l_m / (c_m * v_m) * (total(t_m + dt_k) - total(t_m - dt_k)) / (2.0 * dt_k)

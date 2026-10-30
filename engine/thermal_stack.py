@@ -30,6 +30,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import fold_track as ft                # noqa: E402
+import melt_exact                      # noqa: E402
 import samuel_layer as lay             # noqa: E402
 import samuel_lid as sl                # noqa: E402
 import samuel_model as sm              # noqa: E402
@@ -41,7 +42,7 @@ BISECT_ITERS = 50                      # v2-17 supplement: bracket solves
 INNER_SCAN = 48
 OUTER_SCAN = 32
 ROOT_JUMP_M = 5e3
-STEP_FRACTION = 0.1                    # core_history's h = min(cap, 0.1 τ), Brief 157
+STEP_FRACTION = 0.05                   # O8 (owner 10-30): h/2 with the callers' cap 5 Myr meets the band, h/1 did not (idx-55 note 2); was 0.1, core_history's Brief 157
 
 
 def _shell(r_out: float, r_in: float) -> float:
@@ -400,7 +401,14 @@ def state_terms(s: Stack, t_c: float, t_m: float, d_l: float, d_cr: float, t_gyr
     mkw = dict(d_cr=d_cr, d_ref=d_ref, delta_t_sol=s.body["delta_t_sol"],
                extraction_below_pa=s.body["melt_extraction_below_pa"], shells=s.opt["melt_shells"],
                curves=s.body["curves"])
-    mi = sm.melt_integrals(t_m, t_b, r_top, r_bot, s.melt_p, **mkw)
+    rule = s.opt.get("melt_rule", "midpoint")      # D2 §7.5: the ALE mode sets "exact"; T2's default path is unchanged
+    if rule == "midpoint":
+        mi = sm.melt_integrals(t_m, t_b, r_top, r_bot, s.melt_p, **mkw)
+    elif rule == "exact":
+        mi = melt_exact.melt_integrals(t_m, t_b, r_top, r_bot, s.melt_p, **mkw)
+        mkw["melt_fn"] = melt_exact.melt_integrals
+    else:
+        raise ValueError(f"unknown melt_rule {rule!r}")
     v_conv = _shell(r_top, r_bot)
     sfn = sm.stefan_number if s.opt["stefan_mode"] == "printed" else sm.stefan_number_total
     stefan = sfn(t_m, t_b, r_top, r_bot, s.melt_p, v_m=v_conv, l_m=s.mantle.params["latent"],
