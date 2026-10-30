@@ -2736,6 +2736,8 @@ CONTRACT_NOISE_C = 3.0
 R_RES_FLOOR = 1e-7
 #: item A K3 (A4, 동결대로 관문) — 닫힌 괄호의 p_c 핀이 band/10 을 넘으면 답이 아니다: 이름 댄 거절의 앞머리
 CONTRACT_PIN_HEAD = "바깥 고리의 닫힌 근이 p_center 를 band/10 안에 못 박지 못했다 (item A K3)"
+#: item A post-freeze note 2 (r2 N1) — SHOOT_TOL/k 로 다시 쏜 사격이 안 닫힌 거절의 앞머리(K3-at-100 과 따로 센다)
+CONTRACT_SHOT_HEAD = "다시 조인 사격이 안 닫혔다 (item A note 2)"
 #: item A P11 — 닿았으나 닫힌 근이 아닌 답의 이름 댄 거절 앞머리
 CONTRACT_REFUSAL_HEAD = "바깥 고리가 닫힌 근에 닿지 않았다 (item A)"
 CONTRACT_EXITS: dict[int, tuple] = {}  # item A K4 — id(구조) → (구조, {exit, pin, …}) (가장 바깥 풀이마다 비움; 판정은 구조의 속성)
@@ -2852,11 +2854,15 @@ def _retighten_close(shoot_at, xl, yl, sl, xh, yh, sh):
         gl, yl2 = shoot_at(wl, _wsl.p_center, tol)
         gh, yh2 = shoot_at(wh, _wsh.p_center, tol)
         if yl2 is None or yh2 is None or not (yl2 < 0.0 < yh2):
-            return False, wl, wh, min(abs(wyl), abs(wyh)), "shot", got[5]
+            return False, wl, wh, min(abs(wyl), abs(wyh)), f"shot@{k}", got[5]
         got = _close_bracket(shoot_at, wl, yl2, gl, wh, yh2, gh, tol=tol)
         k_used = k
+        if not got[0] and got[4] == "shot":
+            got = got[:4] + (f"shot@{k}",) + got[5:]
     if got[0]:
         got[1]["k"] = k_used
+    elif got[4] == "pin" and k_used > 1:
+        got = got[:4] + (f"pin@{k_used}",) + got[5:]
     return got
 
 
@@ -3520,9 +3526,14 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
             return got, math.log(got.t_surface / t_pot)
         got_c = _retighten_close(shoot_at, xl, yl, trial_at[xl], xh, yh, trial_at[xh])
         if not got_c[0]:
-            if got_c[4] == "pin":
+            if got_c[4].startswith("pin"):
                 raise _fold_tagged(ValueError(
-                    f"{CONTRACT_PIN_HEAD} — 중심 온도 [{math.exp(got_c[1]):.9g}, {math.exp(got_c[2]):.9g}] K, 남은 |y| {got_c[3]:.2e}"
+                    f"{CONTRACT_PIN_HEAD} — 중심 온도 [{math.exp(got_c[1]):.9g}, {math.exp(got_c[2]):.9g}] K, 남은 |y| {got_c[3]:.2e}, "
+                    f"다시 조임 {got_c[4]}" + _graze_suffix()), fold_seed(), "stall")
+            if got_c[4].startswith("shot@"):
+                # note 2 (r2 N1) — 다시 조인 사격(SHOOT_TOL/k)이 안 닫혔다: 질량(p_c) 적분의 결이 그 허용을 못 받는다. K3 실패와 따로 이름 댄다
+                raise _fold_tagged(ValueError(
+                    f"{CONTRACT_SHOT_HEAD} — 다시 조임 {got_c[4]}, 중심 온도 [{math.exp(got_c[1]):.9g}, {math.exp(got_c[2]):.9g}] K"
                     + _graze_suffix()), fold_seed(), "stall")
             return got_c[:4]
         info, cs = got_c[1], got_c[2]   # info["k"]: the mass-tolerance divisor the close used (note 2)
