@@ -415,6 +415,21 @@
 "sum((ATOMIC_MASS_U[el] * n for el, n in HILAIRET_FORMULA))"
 ],
 [
+"engine/test_item_a_contract.py",
+"<module>",
+"sum(n_off)"
+],
+[
+"engine/test_item_a_contract.py",
+"<module>",
+"sum(n_off)"
+],
+[
+"engine/test_item_a_contract.py",
+"<module>",
+"sum(n_on)"
+],
+[
 "engine/test_mantle_composition.py",
 "printed_sum",
 "sum((Decimal(repr(v)) for v in table.values()))"
