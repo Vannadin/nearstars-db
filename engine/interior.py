@@ -239,7 +239,7 @@ class Structure:
                  "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached",
                  "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void", "crust_blocked", "finish_subst",
                  "r_grad_base", "r_grad_top", "floor_truncated", "hot_water_filled", "boiling_flips", "hot_water_clamped",
-                 "onset_graze", "plateau_band")
+                 "onset_graze", "plateau_band", "shot_s", "contract_exit")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
@@ -290,6 +290,8 @@ class Structure:
         # C157 메모 5 — 기둥이 경계 곡선(고상선 · 물 경계)에 접선으로 가장 가까이 간 자리 (곡선, 재료, P, T − T_경계) · 없으면
         #   None. `integrate` 가 채운다. 값 밖(스침 표지의 재료만).
         self.onset_graze = None
+        self.shot_s = None               # item A note 1 rev 2 — 이 사격의 S = |Δ ln T_s / Δ ln(m/M)|(FLAG 켬, 사격이 채움)
+        self.contract_exit = None        # item A K4 — 답의 출구 꼬리표(닫힌 찾기가 채움; 닫힘 판정은 이것만 읽는다)
         self.plateau_band = None         # C152 메모 8 ③ — 평탄 띠 메모(이 구조가 바깥 끝 가운데의 답일 때만), 구조에 붙여 id 키 표가 없다
         # C152 메모 3 — 마무리 사격이 안 닫혀 닫힌 시행으로 바꿨으면 (고른 T_c, 바꾼 T_c, 그 ln(T_surf/T_pot)). shoot 이 채운다.
         self.finish_subst = None
@@ -2905,7 +2907,8 @@ def _fold_root_ok(info, cross) -> bool:
         xm = mid[0]
     if _root_evidence(xl, gl, xm, mid[3], xh, gh) is None:
         return False
-    return _contract_pin(cross[3], ul, gl, uh, gh) <= CONTRACT_PIN
+    info["pin"] = _contract_pin(cross[3], ul, gl, uh, gh)          # A4 — 접힘 답의 핀(꼬리표가 읽는다)
+    return info["pin"] <= CONTRACT_PIN
 
 
 def _fold_real(walk) -> list:
@@ -3085,7 +3088,8 @@ def _fold_answer(att: dict, cross, a: dict, extra_note: str = ""):
     t_pot = float(a["potential_temperature"])
     st = _fold_integrate(a, math.exp(cross[1]), math.exp(cross[2]))
     if FREE_SOLVE_CONTRACT:
-        _contract_tag(st, {"exit": "fold", "g": cross[3]})
+        loc = getattr(att["walk"], "located", {}).get(tuple(cross)) or {}
+        _contract_tag(st, {"exit": "fold", "g": cross[3], "pin": loc.get("pin", 0.0 if cross[3] == 0.0 else None)})
     _refuse_if_below_floor(st, a["core_material"])
     _refuse_if_water_filled(st)
     w = att["walk"]
