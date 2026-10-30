@@ -55,9 +55,12 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: key mapped and solve_id aside: da0b9372. D2 landing with the O8 default configuration (engine/d2-default-c8; owner
 #: 10-30 a60a9db3, directing's ruling to re-declare in this landing): engine/ changes in hop_track, melt_exact,
 #: process_state, samuel_model, thermal_ale, thermal_stack (D2) and body_stack, samuel_run, samuel_stack (O8), plus
-#: tests and tools; no solver module imports them. Re-declared on the four declared answers dumped with the solver at
-#: this tip over engine/ = da0b9372 and over this tip's engine/, leaf-identical solve_id aside
-#: (artifacts pc/d2-default-c8/pc_oracle.sh, round 2): a2a10f1f.
+#: tests and tools. Re-declared on the four declared answers dumped with the solver at this tip over engine/ =
+#: da0b9372 and over this tip's engine/, leaf-identical solve_id aside (artifacts pc/d2-default-c8/pc_oracle.sh,
+#: round 2): a2a10f1f. Expected, not the basis (68 B1): a solver process imports six of the nine — legacy_materials
+#: imports process_state, whose REGISTRY walk (_registry_entries) import_module's hop_track and thermal_ale, which
+#: bring thermal_stack, samuel_model and melt_exact — for the state reset and the at-rest check only; the changed
+#: constants feed thermal runs no oracle body calls (an Earth and a Mars declared solve call no function of the nine).
 ORACLE_ENGINE_TREE = "a2a10f1f3dba0fee22eeddbd7d8f7f3afc695215"
 REPO = Path(lm._ENGINE).parent
 
