@@ -1648,10 +1648,10 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                     def dT(pp, tt, kk):
                         return _stage_dtdr(mat, pp, tt, t, t_pot, p_stop, stage_pmin[0], _at_floor,
                                            column_steam_allowed and mat is dense_mat, stage_rho, dtdp, kk[1])
-                    # 첫 단계는 걸음 시작 기울기(`dtdp`, 같은 (p, t))를 다시 쓴다 — 읽는 자리가 p 그대로일 때(r2 N6)
+                    # 첫 단계는 걸음 시작 기울기(`dtdp`, 같은 (p, t))를 다시 쓴다 — 읽는 자리가 p 그대로일 때(r2 N6). 걸음 시작이
+                    #   브리지 자리일 수는 없다: 그 자리의 `dtdp` 가 위에서 이미 재료 자신을 불렀다(같은 (p, t) 의 «eos» 읽기).
                     pe1 = _at_floor(max(p, p_stop, stage_pmin[0]))
-                    j1 = dtdp * k1[1] if (pe1 == p and not (column_steam_allowed and mat is dense_mat
-                                                             and p < water2_table.P_MIN_PA)) else dT(p, t, k1)
+                    j1 = dtdp * k1[1] if pe1 == p else dT(p, t, k1)
                     k2 = deriv(r + hh / 2, m + hh / 2 * k1[0], p + hh / 2 * k1[1], t + hh / 2 * j1)
                     j2 = dT(p + hh / 2 * k1[1], t + hh / 2 * j1, k2)
                     k3 = deriv(r + hh / 2, m + hh / 2 * k2[0], p + hh / 2 * k2[1], t + hh / 2 * j2)

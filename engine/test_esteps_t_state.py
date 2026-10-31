@@ -6,6 +6,8 @@
 1. The stage dT reads density through `_stage_density`, the one function `deriv` uses (r2 B1 on bccdb6c9). On the C24
    IF97 bridge (dense water below 0.1 GPa), where the material itself refuses, the stage dT keeps the step-start slope
    and calls no material. The same holds for SURF_RHO's PhaseGap fallback and for rho0.
+   A hot pure-water column (0.01 M⊕, p_c 1 GPa, T_c 600 K) reaches the bridge inside `integrate` at STEPS 1500; the
+   stage dT of `_rk` must go through `_stage_density` there (r2's early note on 9a1f50c4).
 2. Earth's last thermal integration at fixed (p_c, T_c) with its lithosphere: surface T at STEPS 1500 against 9600 is
    within band/10 with the switch on, and at least 100 × band/10 off (design: 0.20 and 444).
 """
@@ -49,6 +51,33 @@ try:
     row(got == 7.0e-9 * -3.0e4, f"_stage_dtdr 브리지 → 걸음 시작 기울기 × dP/dr ({got!r})")
 except eos.PhaseGap as e:
     row(False, f"_stage_dtdr 브리지가 재료를 불러 거절: {str(e)[:120]}")
+
+print("\n적분기 안 — 뜨거운 순수 물 기둥(0.01 M⊕, p_c 1 GPa, T_c 600 K): `_rk` 의 단계 dT 가 브리지를 `_stage_density` 로 지난다")
+real, seen = interior._stage_density, {}
+
+
+def counting(*a, **k):
+    out = real(*a, **k)
+    key = (out[0], k.get("count", True))
+    seen[key] = seen.get(key, 0) + 1
+    return out
+
+
+steps0, sw0 = interior.STEPS, interior.FIXED_T_STATE
+try:
+    interior._stage_density = counting
+    interior.STEPS, interior.FIXED_T_STATE = 1500, True
+    try:
+        st = interior.integrate(1.0e9, 0.01 * 5.972e24, 0.0, 1.0, "fe_prem", 0.0, None, 0.0, 0.0, 1.0, True, 600.0, 580.0,
+                                0.0, 0.0, 0.0, 1.0, 0.0, False, None)
+        ok, what = True, f"R {st.radius_m:.0f} m · T_s {st.t_surface:.2f} K"
+    except eos.PhaseGap as e:
+        ok, what = False, f"PhaseGap: {str(e)[:120]}"
+    row(ok, f"적분이 끝난다 — {what}")
+    row(seen.get(("bridge", True), 0) >= 1 and seen.get(("bridge", False), 0) >= 1,
+        f"브리지 단계: deriv {seen.get(('bridge', True), 0)} · 단계 dT {seen.get(('bridge', False), 0)} (둘 다 ≥ 1)")
+finally:
+    interior._stage_density, interior.STEPS, interior.FIXED_T_STATE = real, steps0, sw0
 
 print("\n표면 밖 — 1 bar 밀도가 PhaseGap 이면 rho0(dT 는 세지 않는다), SURF_RHO 끔이면 rho0")
 n0 = interior.SURF_RHO_FALLBACKS[0]
