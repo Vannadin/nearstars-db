@@ -13,6 +13,7 @@ from __future__ import annotations
 import contextlib
 import io
 import json
+import re
 import sys
 import types
 from pathlib import Path
@@ -23,7 +24,7 @@ import structure_grid as sg  # noqa: E402
 import run  # noqa: E402
 
 fails = 0
-T_POT, P_JUMP = 1985.4441894853112, 287.533162648e9
+T_POT = 1985.4441894853112
 
 
 def check(name: str, ok: bool, detail: str = "") -> None:
@@ -77,6 +78,11 @@ check("the shipped defaults: STAGE_CLAMP_EVERY_STEP and MELT_SEAMS_LANDED are Tr
 r, calls = venus_calls()
 check("seams off, clamp off: venus 1985.444 refuses with the shot's mass jump (the defect this item fixes)",
       (not r.applicable) and interior.BACKSTOP_REASON_HEAD in (r.reason or ""), (r.reason or "")[:60])
+# E-steps: the jump's p_c is read from the refusal itself (the backstop prints its bracket end to 12 digits), not pinned —
+#   the fixed-step T state moved it from 287.533162648 to 287.530264703 GPa, and a pinned bracket then held no jump.
+_m = re.search(r"중심압 ([0-9.]+) GPa 에서 겉질량", r.reason or "")
+check("the refusal names the jump's p_c", _m is not None, (r.reason or "")[:80])
+P_JUMP = float(_m.group(1)) * 1e9 if _m else float("nan")
 args = min(calls, key=lambda c: abs(c[0][0] - P_JUMP))
 
 print("(a) the clamp on every step")

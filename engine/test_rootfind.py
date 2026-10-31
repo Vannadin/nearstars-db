@@ -474,7 +474,9 @@ def _sweep_y(bounds):
 
 _on, _off = _sweep_y(True), _sweep_y(False)
 check("C157 수락 3 — 녹는 경계를 지나는 적분의 y 가 p_c 에 이어짐(이웃 2 MPa, |dy − 중앙| ≤ 1e-6)", _on <= 1e-6, f"{_on:.2e}")
-check("C157 수락 3 음성 — C157 앞 발판(STENCIL_BOUNDS = False)이면 뜀(> 1e-5)", _off > 1e-5, f"{_off:.2e}")
+# E-steps: the control is red on the positive line's own bound (1e-6), not on a fixed 1e-5 — with T an RK4 state the
+#   old stencil's jump is 3.8e-6 (5.3e-5 on the Euler T), still 100 × the positive's 3e-8.
+check("C157 수락 3 음성 — C157 앞 발판(STENCIL_BOUNDS = False)이면 뜀(양성 줄의 문턱 1e-6 을 넘음)", _off > 1e-6, f"{_off:.2e}")
 
 _M, _P0 = 6e24, 3.5e11
 
