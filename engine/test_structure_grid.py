@@ -511,39 +511,65 @@ if _old_src:
     check("덧붙임 61 음성 — 고치기 전 코드는 지문 이분에서도 _NoAnswer 로 죽는다", _crashed_f)
 
 # 덧붙임 60 후속 — 한 풀이 안에서 버려진 시행 구조의 id 를 새 구조가 물려받아도 «그 구조를 낸 사격 호출» 기록이 섞이지 않는다.
-#   진짜 길(shoot → integrate)을 밟고 적분 알맹이만 가짜. 음성 — 붙잡기를 끄면 id 가 재사용되고 setdefault 가 옛 호출 번호를 남긴다.
+#   E-id(29b23943) 뒤로 붙잡기는 `_integrate_raw` 가 구조를 만드는 자리에 있다. 그래서 가짜는 `_shoot_body` 만 —
+#   진짜 길(shoot → integrate → _integrate_raw, 작은 철 몸 · T 없음, 한 번에 수십 ms)을 밟는다.
+#   음성 둘 — 붙잡기 목록을 끄면(_NoKeep) · 붙잡기 줄을 지운 변형 interior 면 id 가 재사용되고 setdefault 가 옛 호출 번호를 남긴다.
+import __future__  # noqa: E402
+import inspect     # noqa: E402
+
+
 class _NoKeep(list):
     def append(self, _x):
         pass
 
 
-def _id_reuse(keep):
+_REUSE_ARGS = (1.0e10, 0.01 * 5.972e24, 0.325, 0.0, "fe_prem", 0.0, None, 0.0, 0.0, 1.0, True, 0.0, 0.0, 0.0, 0.0, 0.0,
+               1.0, 0.0, False, None)
+
+
+def _id_reuse(mod, keep):
     """사격 여덟 번, 매번 구조를 버린다 → (마지막 구조의 기록된 호출, 실제 호출, id 재사용이 있었나)."""
-    saved = (interior._integrate_raw, interior._shoot_body, interior._ALIVE)
-    interior._FAMILY_TRAIL.update(trials=[], reclosed=[], closed=[], answer=None, dev=None, calls=0, returned={},
-                                  answer_call=None)
-    interior._integrate_raw = lambda *a, **k: interior.Structure(1.0, 1.0, 0.33, 0.5, 1.0, 1.0, 0.0, [])
-    interior._shoot_body = lambda *a, **k: (interior.integrate(), True)
-    interior._ALIVE = [] if keep else _NoKeep()
+    saved = (mod._shoot_body, mod._ALIVE)
+    mod._FAMILY_TRAIL.update(trials=[], reclosed=[], closed=[], answer=None, dev=None, calls=0, returned={},
+                             answer_call=None)
+    mod._shoot_body = lambda *a, **k: (mod.integrate(*_REUSE_ARGS), True)
+    mod._ALIVE = [] if keep else _NoKeep()
     try:
         ids = []
         for _ in range(8):
-            st, _ok = interior.shoot()
+            st, _ok = mod.shoot()
             ids.append(id(st))
             if _ < 7:
                 del st
-        return interior._FAMILY_TRAIL["returned"].get(id(st)), 7, len(set(ids)) < len(ids)
+        return mod._FAMILY_TRAIL["returned"].get(id(st)), 7, len(set(ids)) < len(ids)
     finally:
-        interior._integrate_raw, interior._shoot_body, interior._ALIVE = saved
-        interior._FAMILY_TRAIL.update(calls=0, returned={}, answer_call=None)
+        mod._shoot_body, mod._ALIVE = saved
+        mod._FAMILY_TRAIL.update(calls=0, returned={}, answer_call=None)
 
 
-_got, _want, _reused = _id_reuse(True)
+_got, _want, _reused = _id_reuse(interior, True)
 check("덧붙임 60 후속 — 풀이 동안 구조를 붙잡으면 id 가 안 겹치고 마지막 구조의 호출 번호가 맞다", _got == _want and not _reused,
       f"{_got} vs {_want} · 재사용 {_reused}")
-_got0, _want0, _reused0 = _id_reuse(False)
+_got0, _want0, _reused0 = _id_reuse(interior, False)
 check("덧붙임 60 후속 음성 — 붙잡기를 끄면 id 가 재사용되고 기록이 옛 호출 번호를 돌려준다(시험이 그 길을 밟는다)",
       _reused0 and _got0 != _want0, f"{_got0} vs {_want0} · 재사용 {_reused0}")
+_HOLD_LINE = "    _ALIVE.append(structure)          # E-id (frozen 29b23943): held before any id-keyed write\n"
+_rsrc = inspect.getsource(interior._integrate_raw)
+if _rsrc.count(_HOLD_LINE) == 1:             # 함수 하나만 interior 의 전역에서 다시 컴파일(모듈 재실행은 레시피를 두 번 등록)
+    _real_raw = interior._integrate_raw
+    exec(compile(_rsrc.replace(_HOLD_LINE, "    pass\n"), "interior@no-hold", "exec", __future__.annotations.compiler_flag,
+                 dont_inherit=True), interior.__dict__)
+    _mut_raw, interior._integrate_raw = interior._integrate_raw, _real_raw
+    try:
+        interior._integrate_raw = _mut_raw
+        _gotm, _wantm, _reusedm = _id_reuse(interior, True)
+    finally:
+        interior._integrate_raw = _real_raw
+    _okm = _reusedm and _gotm != _wantm
+else:
+    _okm, _gotm, _wantm, _reusedm = False, None, 7, f"붙잡기 줄 {_rsrc.count(_HOLD_LINE)} 곳(1 이어야)"
+check("덧붙임 60 후속 음성 — `_integrate_raw` 의 붙잡기 줄을 지운 변형은 목록이 켜져 있어도 id 가 재사용된다(E-id 의 자리를 잰다)",
+      _okm, f"{_gotm} vs {_wantm} · 재사용 {_reusedm}")
 
 # 덧붙임 60 후속(감사석 조건 3) — 이력 무관: 지구 선언 몸 2062 K 를 앞선 이력 둘(없음 · S0 T_c 고정 풀이 한 번)
 #   뒤에 풀어 값 · 바깥 호출 기록이 비트까지 같다. 음성 — 둘째 이력에만 id 충돌을 심으면(호출 1 이후 구조의 id 에 호출 0 을
