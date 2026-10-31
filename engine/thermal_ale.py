@@ -44,6 +44,7 @@ import math
 import fold_track as ft
 import hop_track as hp
 import melt_exact
+import rootfind as rf
 import samuel_layer as lay
 import samuel_lid as sl
 import samuel_model as sm
@@ -70,13 +71,25 @@ def reset_stats() -> None:
                  landing_idx=[], signs=[])
 
 
+def _nan_refused(site: str) -> "sm.Refused":
+    """The NaN rule (rootfind's header; D2-nan): a NaN is never a sign, so the ALE mode refuses by name."""
+    return sm.Refused(f"ALE mode: a NaN where a sign or a convergence is decided ({site}); a NaN is never a sign")
+
+
 def _radius_at(s, p_pa: float, r_top: float, r_bot: float) -> float | None:
     a, b = r_bot, r_top
-    if not (s.melt_p(a) >= p_pa >= s.melt_p(b)):
+    pa, pb = s.melt_p(a), s.melt_p(b)
+    if not rf.nan_free(pa, p_pa, pb, site="thermal_ale._radius_at"):    # N4: «outside the shell» is for finite ends only
+        raise _nan_refused("thermal_ale._radius_at")
+    if not (pa >= p_pa >= pb):
         return None
     for _ in range(80):
         m = 0.5 * (a + b)
-        if s.melt_p(m) >= p_pa:
+        pm = s.melt_p(m)
+        if pm != pm:                                    # N4: never move an end onto a NaN probe
+            rf.nan_seen("thermal_ale._radius_at")
+            raise _nan_refused("thermal_ale._radius_at")
+        if pm >= p_pa:
             a = m
         else:
             b = m
@@ -109,6 +122,9 @@ def event_signs(s, y: list, t_gyr: float, c: float, grid: list | None = None) ->
     rx, rs = _radius_at(s, p_x, r_top, r_bot), _radius_at(s, cv["seam_gpa"] * 1e9, r_top, r_bot)
     t_deep, t_shal, seam_hi, seam_lo = event_thresholds(s, y[3])
     p_top = s.melt_p(r_top)
+    if not rf.nan_free(*y, f["stefan"], f["t_b"], f["delta_u"], f["delta_b"], p_top, t_deep, t_shal, seam_hi, seam_lo,
+                       site="thermal_ale.event_signs"):       # N5: every operand of the signs below, before any sign
+        raise _nan_refused("thermal_ale.event_signs")
     t_top = melt_exact.solidus_branch(p_top / 1e9, p_top < p_x, p_top / 1e9 > cv["seam_gpa"], d_cr=y[3],
                                       d_ref=sm.crust_reference_thickness(s.r_p, s.r_c, s.body["crust_reference_fraction"]),
                                       delta_t_sol=s.body["delta_t_sol"], curves=cv)
@@ -123,6 +139,8 @@ def event_signs(s, y: list, t_gyr: float, c: float, grid: list | None = None) ->
                 rs is not None and temp(rs) > seam_hi, rs is not None and temp(rs) > seam_lo, temp(r_top) > t_top]
     lg = s.layer_grid
     if grid is not None and lg is not None and lg.latent is not None:      # not `tb`: that name is T_b above
+        if not rf.nan_free(*grid[1:-1], *lg.t_sol[1:-1], *lg.t_liq[1:-1], site="thermal_ale.event_signs"):   # N5
+            raise _nan_refused("thermal_ale.event_signs")
         out += [x > a for x, a in zip(grid[1:-1], lg.t_sol[1:-1])] + [x > b for x, b in zip(grid[1:-1], lg.t_liq[1:-1])]
     return tuple(out)
 
@@ -185,6 +203,8 @@ def in_ramp(signs: tuple) -> bool:
 # ── lid on fixed u nodes ──────────────────────────────────────────────────────────────────────────────────
 def lid_coeffs(lid, d_l: float, d_cr: float, h_m: float, h_cr: float):
     """LidGrid.step's operator on the mesh of thickness d_l: (Δr, ρc, H, w_lo, w_hi) per interior node."""
+    if not rf.nan_free(d_l, d_cr, site="thermal_ale.lid_coeffs"):     # N7: max(lo, nan) would make an all-crust lid
+        raise _nan_refused("thermal_ale.lid_coeffs")
     n = lid.n
     r = [lid.r_p - d_l + i * d_l / (n - 1) for i in range(n)]
     dr = d_l / (n - 1)
@@ -340,6 +360,8 @@ def _basal_solve(lg, rhs_e: list, alpha: float, t_c: float, t_i: float, t_start:
             slope = 1.0 / (hi - lo) if lo < t_k[i] < hi else 0.0
             lin.append((slope, sm.melt_fraction(t_k[i], lo, hi) - slope * t_k[i]))
         t_new = solve(lin)
+        if not rf.nan_free(*t_new, site="thermal_ale._basal_solve"):     # N8: max drops a NaN that is not first
+            raise _nan_refused("thermal_ale._basal_solve")
         change = max(abs(x - y) for x, y in zip(t_new, t_k))
         t_k = t_new
         if change < lay.MELT_TOL_K:
@@ -461,10 +483,17 @@ def _run(s, cap_myr: float, opts: dict) -> dict:
             remaining = (s.body["age_gyr"] - t) * GYR_S
             if remaining <= 1e-9 * GYR_S:
                 if opts.get("record_signs"):                     # note 4: the last state's signs close the series
-                    sg_end = event_signs(s, y, t, 0.0, s._ale_state["tb"])
+                    try:
+                        sg_end = event_signs(s, y, t, 0.0, s._ale_state["tb"])
+                    except sm.Refused as e:                      # D2-nan N5: refused by name, as inside the loop
+                        return refuse(e)
                     STATS["signs"].append([t, "".join("1" if x else "0" for x in sg_end)])
                 break
-            h = min(cap, ts.STEP_FRACTION * _tau_s(y, f1), remaining)
+            tau = _tau_s(y, f1)
+            if tau != tau:                                   # N9: min would drop a NaN τ and step at cap
+                rf.nan_seen("thermal_ale._run.tau")
+                return refuse(_nan_refused("thermal_ale._run.tau"))
+            h = min(cap, ts.STEP_FRACTION * tau, remaining)
             k1 = _rates(f1)
             if s.layer_grid is not None and s._ale_state["tb"] is None:
                 s._ale_state["tb"] = s.layer_grid.t[:]          # the basal grid starts inside the first state_terms

@@ -12,6 +12,7 @@ D_cr). A melting interval lying wholly inside one piece, with both piece ends be
 round 7 found none that is not pinned at r_x or the seam)."""
 import math
 
+import rootfind as rf
 import samuel_model as sm
 
 _GL_X = (-math.sqrt(3.0 / 5.0), 0.0, math.sqrt(3.0 / 5.0))
@@ -51,10 +52,17 @@ def melt_integrals(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_
         return (solidus_branch(p_gpa, shallow, high, d_cr=d_cr, d_ref=d_ref, delta_t_sol=delta_t_sol, curves=curves),
                 sm.liquidus(p_gpa, curves))
 
+    def nan_refused(site):
+        # the NaN rule (rootfind's header; D2-nan N1–N3): a NaN is never a sign, so the melting set refuses by name
+        return sm.Refused(f"melt_exact: a NaN where the melting set needs a sign ({site}); a NaN is never a sign")
+
     def bisect_root(f, a, b, fa):
         for _ in range(60):
             m = 0.5 * (a + b)
             fm = f(m)
+            if fm != fm:                                # N1: never move an end onto a NaN probe
+                rf.nan_seen("melt_exact.bisect_root")
+                return None
             if (fm > 0) == (fa > 0):
                 a, fa = m, fm
             else:
@@ -66,12 +74,16 @@ def melt_integrals(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_
             return
         g = lambda r: temp(r) - sol_liq(r, shallow, high)[0]  # noqa: E731
         ga, gb = g(a), g(b)
+        if not rf.nan_free(ga, gb, site="melt_exact.add"):      # N2
+            raise nan_refused("melt_exact.add")
         if ga > 0 and gb > 0:
             lo, hi = a, b
         elif ga <= 0 and gb <= 0:
             return
         else:
             x = bisect_root(g, a, b, ga)
+            if x is None:
+                raise nan_refused("melt_exact.bisect_root")
             lo, hi = (a, x) if ga > 0 else (x, b)
         if hi <= lo:
             return
@@ -91,8 +103,13 @@ def melt_integrals(t_m: float, t_b: float, r_top: float, r_bot: float, pressure_
         cuts = [a, b]
         for p_cut in (extraction_below_pa, seam * 1e9):
             pa_, pb_ = pressure_pa(a) - p_cut, pressure_pa(b) - p_cut
+            if not rf.nan_free(pa_, pb_, site="melt_exact.cuts"):  # N3
+                raise nan_refused("melt_exact.cuts")
             if (pa_ > 0) != (pb_ > 0):
-                cuts.append(bisect_root(lambda r, pc=p_cut: pressure_pa(r) - pc, a, b, pa_))
+                x = bisect_root(lambda r, pc=p_cut: pressure_pa(r) - pc, a, b, pa_)
+                if x is None:
+                    raise nan_refused("melt_exact.bisect_root")
+                cuts.append(x)
         cuts.sort()
         for lo_, hi_ in zip(cuts, cuts[1:]):
             mid = 0.5 * (lo_ + hi_)
