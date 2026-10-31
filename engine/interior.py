@@ -161,6 +161,8 @@ STAGE_CLAMP_EVERY_STEP = True
 #:   안에서 톱니 — 1985 K 위 1 K 이웃 Δr_b 3.3 %(고정 걸음은 매끄러움). 창 시작점 고정 규칙(가)도 못 막았고 교차 사건(나)은
 #:   한 점을 못 풀었다. 켜기는 따로 판(새 등록) — 위 값 이동도 그 판에서 들어간다.
 ADAPTIVE = False
+#: E-steps — 고정 걸음에서도 T 를 RK4 상태로(단계마다 그 자리 (P, T) 의 단열 기울기). 끄면 옛 길(걸음 시작 기울기로 T 를 한 번에)
+FIXED_T_STATE = True
 #: 걸음 오차 허용(결정 ①) · 걸음 상한 배수(결정 ②) · 하한 배수 — 모두 judgment(등록의 수).
 ADAPTIVE_RTOL = 1e-7
 H_MAX_FACTOR = 20.0
@@ -1106,6 +1108,58 @@ def _cut_floor(mat, p: float) -> float:
     return lo_b
 
 
+def _stage_density(mat, pp: float, t_rho: float, t_bridge: float, t_pot: float, p_stop: float, stage_floor: float,
+                   at_floor, steam_ok: bool, cache: dict | None = None, count: bool = True):
+    """걸음 단계 한 자리의 밀도(기공 전) — `deriv` 와 E-steps 의 단계 dT 가 함께 쓰는 **하나의** 길. (갈래, 읽은 P, ρ).
+
+    갈래(순서대로):
+    - «bridge» — C24 (2026-09-04): 걸음의 재료는 출발점에서 잠기는데, 조밀 액체 물(water2)로 잠긴 걸음의
+      RK4 반 걸음이 표의 압력 바닥(0.1 GPa) 아래로 내려가면 water2 가 이름 대며 거절했다 — 물 많은 암석체(얼음
+      0.1·0.3)가 못 풀린 자리. 바닥 아래는 IAPWS-IF97 r1·2 가 같은 유체를 덮고(이음매 ≤ 0.04 %,
+      test_water_column_steam) 다음 걸음의 liquid_material 도 STEAM 을 고르므로, 이 반 걸음만 IF97 로 잇는다.
+      판정과 그 온도는 **걸음 시작 T**(`t_bridge`) — a65520ef 그대로.
+    - «eos» — 재료 자신, 바닥 · 단계 하한 묶음(`at_floor(max(pp, p_stop, stage_floor))`).
+    - «surf» — C164 규칙 3: 표면 밖 반 걸음도 그 온도의 1 bar 밀도(차가운 rho0 로 뛰면 p = 0 에 피적분 뜀 · R 톱니).
+    - «surf_fallback» — 그 1 bar 밀도가 PhaseGap 이면 rho0(`count` 일 때만 SURF_RHO_FALLBACKS 를 센다 — `deriv` 의 셈).
+    - «rho0» — SURF_RHO 가 꺼졌을 때.
+    `cache` 는 «eos» · «surf» 의 (P, T) → ρ — 같은 걸음 안에서 dT 가 `deriv` 와 같은 자리를 다시 부르지 않게."""
+    if steam_ok and 0.0 < pp < water2_table.P_MIN_PA and steam_if97.in_domain(pp, t_bridge):
+        return "bridge", pp, COLUMN_STEAM.density(pp, t_bridge)
+    if pp > 0.0:
+        branch, pe = "eos", at_floor(max(pp, p_stop, stage_floor))
+    elif SURF_RHO:
+        branch, pe = "surf", at_floor(max(1.0e5, p_stop))
+    else:
+        return "rho0", pp, mat.rho0
+    key = (pe, t_rho)
+    if cache is not None and key in cache:
+        return branch, pe, cache[key]
+    try:
+        rho = mat.density(pe, t_rho, t_pot)
+    except eos.PhaseGap:
+        if branch == "eos":
+            raise
+        if count:
+            SURF_RHO_FALLBACKS[0] += 1
+        return "surf_fallback", pe, mat.rho0
+    if cache is not None:
+        cache[key] = rho
+    return branch, pe, rho
+
+
+def _stage_dtdr(mat, pp: float, tt: float, t_start: float, t_pot: float, p_stop: float, stage_floor: float, at_floor,
+                steam_ok: bool, cache: dict, dtdp_start: float, dpdr: float) -> float:
+    """E-steps — 고정 걸음 한 단계의 dT/dr = (dT/dP)(P_s, T_s) · dP/dr. 밀도는 `deriv` 와 같은 `_stage_density` 로
+    (단열 T 에서 — 암석권 안에서도 나르는 T 는 단열선). 대체 갈래(bridge · surf_fallback · rho0)에서는 재료를 다시
+    부르지 않고 걸음 시작 기울기 `dtdp_start` 를 쓴다 — a65520ef 의 오일러 몫이고, 그 갈래가 막아 주던 거절이 새로
+    생기지 않는다(r2 B1 on bccdb6c9). 셈(SURF_RHO_FALLBACKS)은 `deriv` 만 센다."""
+    branch, pe, rho = _stage_density(mat, pp, tt, t_start, t_pot, p_stop, stage_floor, at_floor, steam_ok, cache,
+                                     count=False)
+    if branch not in ("eos", "surf"):
+        return dtdp_start * dpdr
+    return _adiabatic_dtdp(mat, pe, rho, tt, t_pot) * dpdr
+
+
 def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
               core_material: str, phi0: float = 0.0,
               p_cap: float | None = None, gmf: float = 0.0,
@@ -1533,6 +1587,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                 else None)
         if grad:
             last_grad = grad
+        # E-steps — 고정 걸음이 T 를 RK4 상태로 나르는가(적응 걸음이 켜지면 그쪽 산술 그대로 — 고정 대체 걸음 포함, r2 N4)
+        t_rk = FIXED_T_STATE and not ADAPTIVE and t > 0.0 and not grad
 
         _lo_mat = getattr(mat, "shoot_lo", 0.0)
         # **걸음 안의 자리가 재료 자신의 적합 바닥을 넘어서는 것은 거절이 아니다 — 넘은 폭이
@@ -1555,6 +1611,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             그래서 프로파일에 기록되는 압력은 결코 바닥 아래가 아니다."""
             return _lo_mat if (_lo_mat and pp_eval < _lo_mat) else pp_eval
 
+        stage_rho = {}           # E-steps — 이 걸음에서 «eos» · «surf» 로 읽은 (P, T) → ρ (기공 전), `_stage_density` 의 cache
         stage_pmin = [0.0]       # C164 메모 — 상 경계 착지 걸음의 단계 밀도를 옛 상 쪽에 묶는 압력 하한(착지 걸음 동안만)
 
         def deriv(rr, mm, pp, tt=None):
@@ -1564,27 +1621,9 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             # 값으로 둔다 — 1 bar 의 수소-헬륨은 평균밀도의 10⁻⁴ 이라 질량에도
             # 반지름에도 유효숫자로 안 들어오고, 굳히지 않은 구간을 외삽하는 것보다
             # 이쪽이 정직하다.
-            if (column_steam_allowed and mat is dense_mat and 0.0 < pp < water2_table.P_MIN_PA
-                    and steam_if97.in_domain(pp, t)):
-                # C24 (2026-09-04): 걸음의 재료는 출발점에서 잠기는데, 조밀 액체 물(water2)로 잠긴 걸음의
-                # RK4 반 걸음이 표의 압력 바닥(0.1 GPa) 아래로 내려가면 water2 가 이름 대며 거절했다 —
-                # 물 많은 암석체(얼음 0.1·0.3)가 못 풀린 자리. 바닥 아래는 IAPWS-IF97 r1·2 가 같은 유체를
-                # 덮고(이음매 ≤ 0.04 %, test_water_column_steam) 다음 걸음의 liquid_material 도 STEAM 을
-                # 고르므로, 이 반 걸음만 IF97 로 잇는다. 오늘까지 이 갈래는 거절이었으니 앵커는 비트 그대로다.
-                rr_rho = COLUMN_STEAM.density(pp, t)
-            else:
-                t_rho = (t if tt is None else tt) if litho_a is None else litho_a / rr + litho_b
-                if pp > 0.0:
-                    rr_rho = mat.density(_at_floor(max(pp, p_stop, stage_pmin[0])), t_rho, t_pot)
-                elif SURF_RHO:
-                    # C164 규칙 3 — 표면 밖 반 걸음도 그 온도의 1 bar 밀도(차가운 rho0 로 뛰면 p = 0 에 피적분 뜀 · R 톱니)
-                    try:
-                        rr_rho = mat.density(_at_floor(max(1.0e5, p_stop)), t_rho, t_pot)
-                    except eos.PhaseGap:
-                        SURF_RHO_FALLBACKS[0] += 1
-                        rr_rho = mat.rho0
-                else:
-                    rr_rho = mat.rho0
+            t_rho = (t if tt is None else tt) if litho_a is None else litho_a / rr + litho_b
+            _branch, _pe, rr_rho = _stage_density(mat, pp, t_rho, t, t_pot, p_stop, stage_pmin[0], _at_floor,
+                                                  column_steam_allowed and mat is dense_mat, stage_rho if t_rk else None)
             phi = porosity_at(mat, pp, phi0, p_cap)
             rr_rho *= 1.0 - phi
             return (4.0 * math.pi * rr * rr * rr_rho,
@@ -1603,9 +1642,28 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
         def _rk(hh):
             """한 걸음 증분 (dm, dp, di, dv) — 고정 걸음이면 지금 RK4 그대로(같은 산술), 적응이면 DP45 5 차."""
             if not adapt_now:
-                k2 = deriv(r + hh / 2, m + hh / 2 * k1[0], p + hh / 2 * k1[1])
-                k3 = deriv(r + hh / 2, m + hh / 2 * k2[0], p + hh / 2 * k2[1])
-                k4 = deriv(r + hh, m + hh * k3[0], p + hh * k3[1])
+                if t_rk:
+                    # 암석권 안도 — 밀도는 전도 단면(litho_a/r + b)을 읽지만 나르는 T 는 단열선(표면 포텐셜 온도의 운반자)이다
+                    # E-steps — T 를 상태로: 단계의 T 로 밀도를 읽고, 걸음 끝 T 는 네 단계 증분의 RK4 조합(결정 ③ 과 같은 dT/dr)
+                    def dT(pp, tt, kk):
+                        return _stage_dtdr(mat, pp, tt, t, t_pot, p_stop, stage_pmin[0], _at_floor,
+                                           column_steam_allowed and mat is dense_mat, stage_rho, dtdp, kk[1])
+                    # 첫 단계는 걸음 시작 기울기(`dtdp`, 같은 (p, t))를 다시 쓴다 — 읽는 자리가 p 그대로일 때(r2 N6)
+                    pe1 = _at_floor(max(p, p_stop, stage_pmin[0]))
+                    j1 = dtdp * k1[1] if (pe1 == p and not (column_steam_allowed and mat is dense_mat
+                                                             and p < water2_table.P_MIN_PA)) else dT(p, t, k1)
+                    k2 = deriv(r + hh / 2, m + hh / 2 * k1[0], p + hh / 2 * k1[1], t + hh / 2 * j1)
+                    j2 = dT(p + hh / 2 * k1[1], t + hh / 2 * j1, k2)
+                    k3 = deriv(r + hh / 2, m + hh / 2 * k2[0], p + hh / 2 * k2[1], t + hh / 2 * j2)
+                    j3 = dT(p + hh / 2 * k2[1], t + hh / 2 * j2, k3)
+                    k4 = deriv(r + hh, m + hh * k3[0], p + hh * k3[1], t + hh * j3)
+                    j4 = dT(p + hh * k3[1], t + hh * j3, k4)
+                    dT_last[0] = hh / 6 * (j1 + 2 * j2 + 2 * j3 + j4)
+                else:
+                    dT_last[0] = None
+                    k2 = deriv(r + hh / 2, m + hh / 2 * k1[0], p + hh / 2 * k1[1])
+                    k3 = deriv(r + hh / 2, m + hh / 2 * k2[0], p + hh / 2 * k2[1])
+                    k4 = deriv(r + hh, m + hh * k3[0], p + hh * k3[1])
                 return (hh / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]),
                         hh / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]),
                         hh / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]),
@@ -1725,7 +1783,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                 moi += di * frac
                 v_pore += dv * frac
                 p_new = p + dp * frac
-                t = t * (p_new / p) ** grad if grad else t + dtdp * dp * frac
+                t = t * (p_new / p) ** grad if grad else t + (dT_last[0] if dT_last[0] is not None and not adapt_now else dtdp * dp) * frac
                 p = p_new
                 p_surface = p
                 t_surface = t
@@ -1757,7 +1815,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             moi += di * frac
             v_pore += dv * frac
             p_new = p_stop
-            t = t * (p_new / p) ** grad if grad else t + dtdp * dp * frac
+            t = t * (p_new / p) ** grad if grad else t + (dT_last[0] if dT_last[0] is not None and not adapt_now else dtdp * dp) * frac
             p = p_new
             p_surface = p_stop
             t_surface = t
@@ -1895,7 +1953,7 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
             m += dm * frac
             moi += di * frac
             v_pore += dv * frac
-            t = t * (_lo_mat / p) ** grad if grad else t + dtdp * dp * frac
+            t = t * (_lo_mat / p) ** grad if grad else t + (dT_last[0] if dT_last[0] is not None and not adapt_now else dtdp * dp) * frac
             p = _lo_mat
             p_surface = p
             t_surface = t
@@ -1916,8 +1974,8 @@ def _integrate_raw(p_center: float, mass_kg: float, cmf: float, imf: float,
                 r_grad_top = r
         # 온도는 압력을 따라간다 — dT = (dT/dP) dP. 열 상수가 없는 층에서는
         # dtdp 가 0 이라 온도가 그 층을 그대로 통과한다.
-        if adapt_now and dT_last[0] is not None:
-            t = t + dT_last[0]           # 결정 ③ — DP 가 나른 온도
+        if dT_last[0] is not None:
+            t = t + dT_last[0]           # 결정 ③ — DP · 고정 RK4(E-steps)가 나른 온도
         else:
             t = t * ((p + dp) / p) ** grad if grad else t + dtdp * dp
         p += dp
