@@ -5,7 +5,8 @@ gate, which fails on any skip, caught it on the PC).
 
 Every guard in solver/tests whose reason names shipped data — a «@unittest.skipUnless(cond, "… shipped …")» decorator,
 or «if not cond: self.skipTest("… shipped …")» — is found by reading the test sources, and its condition is evaluated in
-its own module. A NEARSTARS_HEAVY operand of an «and» is dropped (that half is the environment's, not the data's). When
+its own module. An operand of an «and» that reads a tier switch (env_tiers.yaml class «tier»: NEARSTARS_HEAVY,
+NS_SLOW_TESTS; HEAVY-onctl P3) is dropped (that half is the environment's, not the data's). When
 this tip ships the SLB records, every such condition must be true.
 A guard on shipped data must say «shipped» in its reason: the scan keys on that word, and one worded otherwise escapes
 it (68 n2 on e129f820; the ≥12 control catches only a lost guard)."""
@@ -14,19 +15,23 @@ import importlib
 import unittest
 from pathlib import Path
 
+import yaml
+
 from solver import material_registry as mr
 
 TESTS = Path(__file__).resolve().parent
 RECORDS = sorted(mr.MATERIALS_DIR.glob("silicate_slb_*.yaml"))          # the anchor: the record files, not a table glob
+TIER_ENVS = sorted(n for n, v in yaml.safe_load(TESTS.joinpath("env_tiers.yaml").read_text())["names"].items()
+                   if v["class"] == "tier")
 
 
 def _is_heavy(node):
     src = ast.unparse(node)
-    return src == "HEAVY" or "NEARSTARS_HEAVY" in src
+    return src == "HEAVY" or any(n in src for n in TIER_ENVS)     # P3: every tier, not NEARSTARS_HEAVY alone
 
 
 def _data_part(cond):
-    """The condition without its NEARSTARS_HEAVY operands (None if nothing else is left)."""
+    """The condition without its tier operands (None if nothing else is left)."""
     if isinstance(cond, ast.BoolOp) and isinstance(cond.op, ast.And):
         rest = [v for v in cond.values if not _is_heavy(v)]
         if not rest:
