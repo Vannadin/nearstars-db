@@ -100,8 +100,21 @@ def _header(options, solve_id):
             "dirty": bool(_git("status", "--porcelain", "--", "solver", "engine"))}
 
 
+#: R7b (E-steps landing, esteps-prereg §5.1 R7b and note 3): table_read's pin, the commit whose structure tables count as
+#: «the committed table». It was ORACLE_TREE (097a8aa3, the phase-1 commit), whose earth.json and venus.json R3 replaced
+#: with the reference machine's round 1 builds (earth 65c4697b, venus 2cb67e75; mars stays 2031a61e under the E18-mars
+#: hold, and Mars's history reads no table, note 3). ORACLE_TREE stays the phase-1 commit and stays in the header
+#: (owner-direction c573d894), so the pin is its own constant: the R3 commit. What moved, on the reference machine at
+#: that commit (artifacts pc-esteps-r9 62d8a22c): core_thermal_history earth T_c 3890.981530554493 K, q_cmb
+#: 3534249132139.734 W (on the 10-08 tables, Mac r3, registration §3.5.2: 3911.37 K, 3.728e12 W); venus 3809.373754511077 K, 3208626127667.47 W
+#: (3795.37 K, 3.058e12 W), and venus's entropy_history_verdict «fails» → «cannot-say» (registration §3.5.2). Why: R3's
+#: tables carry the E-steps code, R6's reference table and the melt-window isentrope (33a6ac21) the 10-08 tables predate.
+#: Basis: round 2's own oracle at the landing tip (E-steps note 2 §3) discloses the node's moves against 8390fb09.
+TABLE_TREE = "0fb25d95aca23cef63fe5bdbcac743ea844f63c4"
+
+
 def _committed_blob(rel_path: str) -> str:
-    return _git("rev-parse", f"{ORACLE_TREE}:{rel_path}")
+    return _git("rev-parse", f"{TABLE_TREE}:{rel_path}")
 
 
 def _legacy(rec, chain):
@@ -115,7 +128,7 @@ def _legacy(rec, chain):
     # notes: the Answer's notes plus the old chain's (core_balance_not_solved, switch-over note 7); all class R (note 15)
     rec["notes"] = list(rec.get("notes") or []) + list(chain.notes)
     # table_read: the history actually read O3's table, i.e. load_for returned a grid from a file whose blob equals the
-    # oracle tree's committed table (t2 note 2's frozen-table mode; r2 run_oracle B1)
+    # pinned table tree's committed table (t2 note 2's frozen-table mode; r2 run_oracle B1; TABLE_TREE since E-steps R7b)
     rec["table_read"] = any(ok and blob is not None and blob == _committed_blob(path) for path, blob, ok in
                             chain.table_reads)
 

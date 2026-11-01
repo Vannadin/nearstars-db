@@ -46,7 +46,7 @@ class Earth(unittest.TestCase):
         self.assertTrue(all(isinstance(n, dict) and isinstance(n.get("kind"), str) for n in self.rec["notes"]))
 
     def test_table_read_from_the_committed_table(self):
-        """B1: true because core_thermal_history read engine/structure_grid/earth.json at its 097a8aa3 blob."""
+        """B1: true because core_thermal_history read engine/structure_grid/earth.json at its TABLE_TREE blob (E-steps R7b)."""
         self.assertTrue(self.rec["table_read"])
         self.assertIn("core_thermal_history", self.rec["legacy_nodes"])
 
