@@ -48,7 +48,12 @@ else:
     print(f"  [기록] acceptance 9: rebuild {'identical' if _same == 'True' else 'DIFFERS'} on {_here} "
           f"(judged only on {_ref}, C148 note 2)")
 ref = eos.REFERENCE_ADIABAT["fe_prem"]
-PINS = {136e9: 2529.40, 330e9: 3108.07, 1000e9: 4031.53, 3000e9: 5072.76, 12000e9: 6432.07}     # K, to 0.01 K (re-pinned at the C157 reference re-freeze; E0 values before)
+PINS = {136e9: 2530.37, 330e9: 3109.26, 1000e9: 4033.09, 3000e9: 5074.76, 12000e9: 6434.73}     # K, to 0.01 K
+# Re-pinned at E-steps R6 (artifacts pc/ea-esteps/esteps-prereg.frozen.md §5.1 R6): the table regenerated on the reference
+# machine at L1 74fd9eb7 (blob 511cd56e; fe_prem's anchor on the fixed-step T state), read here: +0.97 to +2.66 K.
+# The move contains the base table's staleness (post-freeze note 1: code moves since the 10-08 build, 82e61195 bulk;
+# 33a6ac21, 3622bc4d small; ≤ 1.5e-3 K, below this 0.01 K resolution). Before: 2529.40, 3108.07, 4031.53, 5072.76,
+# 6432.07 (the C157 reference re-freeze; E0 values before that).
 for p, t in PINS.items():
     check(abs(ref(p) - t) < 0.01, f"T_ref({p / 1e9:g} GPa) = {ref(p):.4f} K, pinned {t}")
 print("  pins: " + " · ".join(f"{p / 1e9:g} GPa {ref(p):.2f} K" for p in PINS))
