@@ -77,7 +77,12 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: directing 10-31: item A's engine/ (interior, rootfind, process_state, c143 inventory) and D2-nan's (melt_exact,
 #: thermal_ale, hop_track) share no hunk. Re-declared at the merged tree; the basis is the integration package's
 #: declared-answer comparison of the merge against each parent: edbe4128.
-ORACLE_ENGINE_TREE = "edbe412867c9269fb9ca1e7bdbbe0a018318fd78"
+#: E-steps landing (esteps-prereg rev 3 + notes 1–3, §5.1 R7): engine/ changes in interior.py (the fixed-step T state,
+#: FIXED_T_STATE), reference_adiabats.json (R6), the earth and venus structure tables (R3), ice_giant_anchor.json (R5),
+#: chain.yaml's Earth note and chain-explorer.html (R9), plus tests. Re-declared at the landing's engine/ tree. Basis:
+#: the dump comparison, Mac r3 (registration §3.5.2: mars and pandora identical, earth and venus differ only in
+#: core_thermal_history), re-read by round 2's oracle at the landing tip (note 2 §3: oracle_judge base vs nofpc).
+ORACLE_ENGINE_TREE = "43b1021cb1293af80f12ba7a6423eba50063bf21"
 REPO = Path(lm._ENGINE).parent
 
 
