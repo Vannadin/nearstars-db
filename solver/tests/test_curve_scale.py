@@ -18,6 +18,10 @@ from solver.from_v1 import thaw
 #: planted re-step round-off in T_ad [K]: ±(0.5–1)×, deterministic in the step length's bits
 JITTER_K = 1.0e-9
 HEAVY = os.environ.get("NEARSTARS_HEAVY") == "1"
+#: HEAVY-onctl P4: the records' largest curve_p_scale / max|P_b| is 41.17 at 8390fb09 (default_bse's pocket curve,
+#: artifacts pc/heavy-onctl/out/kappa.txt); the bound is that plus a 10 % margin. The real-state chatter line, ≈ 50 from
+#: PlantedLanding's constants, is not measured, so it is not the bound (68 n2).
+MAX_SCALE_RATIO = 45.0
 SILICATE = ("silicate_slb_default_bse", "silicate_slb_earth_dmm_wh2005", "silicate_slb_mars_khan2022")
 _REG = []
 
@@ -123,6 +127,15 @@ class RecordScales(unittest.TestCase):
         want = pmax + (rows[1]["t"] + dc) * pmax * abs(s1)
         self.assertAlmostEqual(events.curve_p_scale(v, c), want, delta=1e-9 * want)
         self.assertGreater(events.curve_p_scale(v, c) / _old_scale(v, c), 10.0)
+
+    def test_no_record_curve_steeper_than_the_bound(self):
+        """HEAVY-onctl P4 (68 n1, n2 on 3ddfb48c): the largest curve_p_scale / max|P_b| over the shipped records stays
+        under MAX_SCALE_RATIO. A steeper curve is where the slope term starts to matter for real states (the HEAVY
+        control's real pair, OffUnchanged.test_on_control, must then be revisited); this catches it without HEAVY."""
+        worst = max((events.curve_p_scale(v, c) / _old_scale(v, c), rid, str(c.get("label") or c["id"]))
+                    for rid in SILICATE for v in (_view(rid),) for c in _curves(v))
+        self.assertLess(worst[0], MAX_SCALE_RATIO, worst)
+        self.assertGreater(worst[0], 40.0, worst)                # control: the scan sees the pocket curve (41.17)
 
     def test_never_smaller_and_flat_curves_bit_identical(self):
         """Every assemblage curve: the scale never falls below 35b7a24b's; a curve with no slope anywhere keeps it bit
@@ -279,8 +292,12 @@ class PlantedMaxima(unittest.TestCase):
 @unittest.skipUnless(HEAVY, "NEARSTARS_HEAVY=1 (PC job)")
 class OffUnchanged(unittest.TestCase):
     """Records «off» read no assemblage curve: every off solve here is bit-identical with the slope term removed
-    (curve_slope_points → ()), at the declared state and one hot T_pot per body. Control: venus 2284.29 «on» refuses
-    solve.event_chatter without the term and answers with it."""
+    (curve_slope_points → ()), at the declared state and one hot T_pot per body. Control (HEAVY-onctl, re-derived): at
+    venus 2284.29 «on» the real solve gives the same outcome with and without the term; with PlantedLanding's round-off
+    planted in the solve, it refuses solve.event_chatter on the pocket curve without the term and answers with it.
+    Until 8bfb1c15 (silicate note 8: an edge's tail past a true end is C¹ and flat) the real solve chattered without the
+    term in the pocket curve's ln-linear extension (2384.85 K, 3.2 GPa); today no record curve's scale ratio exceeds 41
+    (the pocket curve's), under the ≈ 50 real round-off needs, so the term is a guard on today's records."""
 
     def _solve(self, stem, t_pot, on, term):
         """run_oracle's record of (body, state): a T_pot state is solved on the body's member, as the rounds do."""
@@ -297,9 +314,26 @@ class OffUnchanged(unittest.TestCase):
             a, b = self._solve(stem, t, False, True), self._solve(stem, t, False, False)
             self.assertEqual(a, b, (stem, t))
 
+    def _solve_planted(self, stem, t_pot, on, term):
+        """_solve with PlantedLanding's re-step round-off in T_ad (±(0.5–1)·JITTER_K, from the step length's bits)."""
+        real = st.step
+
+        def jittered(f, x, y, h, k1, stage_f=None):
+            out = real(f, x, y, h, k1, stage_f)
+            if isinstance(out, st.Stop):
+                return out
+            u = struct.unpack("<q", struct.pack("<d", h))[0] * 2654435761 % 2001 / 2000.0
+            d = math.copysign(0.5 + 0.5 * u, u - 0.5) * JITTER_K
+            return (tuple(v + (d if j == 2 else 0.0) for j, v in enumerate(out[0])),) + tuple(out[1:])
+        with mock.patch.object(st, "step", jittered):
+            return self._solve(stem, t_pot, on, term)
+
     def test_on_control(self):
         old, new = self._solve("venus", 2284.29, True, False), self._solve("venus", 2284.29, True, True)
+        self.assertEqual([(r["outcome_kind"], (r["refusal"] or {}).get("id")) for r in (old, new)], [("answer", None)] * 2)
+        old, new = self._solve_planted("venus", 2284.29, True, False), self._solve_planted("venus", 2284.29, True, True)
         self.assertEqual((old["outcome_kind"], old["refusal"]["id"]), ("refusal", "solve.event_chatter"))
+        self.assertIn("ol+opx+plg|plg+ol+opx+cpx", old["refusal"]["evidence"]["event_name"])   # by labels (ids renumber)
         self.assertEqual(new["outcome_kind"], "answer")
 
 
