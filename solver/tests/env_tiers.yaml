@@ -45,6 +45,10 @@ tiers:
     landing: every engine/test_*.py unit
     why: under the gate a SKIP for missing data, a tool or a dependency is a FAIL (C134 amendment 1); the papers cache
       is gitignored, so a landing tree has it only through NEARSTARS_PAPERS (the PC's is /home/pylon/probe/papers-census)
+    # script-form tests (engine/test_*.py, scripts/**/test_*.py) that read a tier or gate switch directly: the file
+    # depends on that switch as a whole, so its unit runs with that tier's env too (68 B2 on the P1–P4 code). None today.
+    script_reads: {}
+    # in_gate() calls plus direct GATE_RUNNING reads, per file (gate_env.py, which defines in_gate(), excluded)
     in_gate_sites:
       engine/test_interior.py: 4
       engine/test_fermi.py: 3
