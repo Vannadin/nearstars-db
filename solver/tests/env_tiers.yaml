@@ -1,0 +1,84 @@
+# 시험 환경 계층 목록 — 시험 결과를 바꾸는 환경 스위치 전부와 착륙이 읽어야 할 계층(HEAVY-onctl rev 2 P1·P2, 68 clear 3ddfb48c)
+# Read by solver/tests/test_env_tiers.py (P2: every env name engine/, solver/ and scripts/ read is classed here; every
+# gated test and every in_gate() site is listed) and by the landing PC template and judge (P1: the tiers a landing runs
+# must equal `tiers`, each with its env exactly; a base red in any tier opens a ledger item at the landing that first
+# lists it, 68 n1 on 3ddfb48c).
+
+tiers:
+  heavy:
+    env: {NEARSTARS_HEAVY: "1", NS_SLOW_TESTS: "1"}
+    gated_by: NEARSTARS_HEAVY
+    landing: one unit per test id
+    why: venus/mars solves of minutes each; about 85 core-minutes in all (HEAVY-onctl §3.2)
+    tests:
+      - solver.tests.test_closure.GapOnMars.test_mars_2450_answers_inside_the_ceiling_or_refuses_by_it
+      - solver.tests.test_closure.GapOnMars.test_declared_state_keeps_its_margin_under_the_ceiling
+      - solver.tests.test_curve_scale.OffUnchanged.test_off_bit_identical
+      - solver.tests.test_curve_scale.OffUnchanged.test_on_control
+      - solver.tests.test_melt_window.GradeNoteAnswers.test_planted_on_and_off
+      - solver.tests.test_melt_window.SeamNoteAnswers.test_planted_on_and_off
+      - solver.tests.test_melt_window.SeamNoteAnswers.test_off_declared_notes_unchanged
+      - solver.tests.test_read_determinism.Determinism.test_solve_answer_sha
+      - solver.tests.test_t_mars.TwoRootsStable.test_same_count
+      - solver.tests.test_t_mars.MeltWindow.test_criterion
+      - solver.tests.test_t_mars.MeltWindow.test_control_planted_sawtooth_fails
+  slow:
+    env: {NS_SLOW_TESTS: "1"}
+    gated_by: NS_SLOW_TESTS
+    landing: the solver suite (unittest discover -s solver/tests)
+    why: the fall sets' census drift sweep, about 4 min per sweep
+    tests:
+      - solver.tests.test_fall_sets.CensusDrift.test_closure_stopping_at_the_module_is_red
+      - solver.tests.test_fall_sets.CensusDrift.test_census_matches_the_shipped_stamp
+      - solver.tests.test_fall_sets.CensusDrift.test_d2_modules_are_imported_not_read
+      - solver.tests.test_fall_sets.CensusDrift.test_extra_import_in_the_read_is_red
+      - solver.tests.test_fall_sets.CensusDrift.test_extra_data_open_in_the_read_is_red
+  paths:
+    env: {NEARSTARS_ARTIFACTS: "<an artifacts checkout>", NEARSTARS_PAPERS: "<the machine's papers cache>"}
+    landing: the solver suite and the heavy units (beside slow's env)
+    why: a test gated by a path skips silently when the path is absent; a landing names each path, so an absence is a
+      red by name, not a skip
+    path_gated:
+      solver.tests.test_member.OldMember.test_venus_point: NEARSTARS_ARTIFACTS
+  gate:
+    env: {GATE_RUNNING: "1", NEARSTARS_PAPERS: "<the machine's papers cache>"}
+    landing: every engine/test_*.py unit
+    why: under the gate a SKIP for missing data, a tool or a dependency is a FAIL (C134 amendment 1); the papers cache
+      is gitignored, so a landing tree has it only through NEARSTARS_PAPERS (the PC's is /home/pylon/probe/papers-census)
+    in_gate_sites:
+      engine/test_interior.py: 4
+      engine/test_fermi.py: 3
+      engine/test_fe_hcp.py: 2
+      engine/test_domain.py: 1
+      engine/test_ice_fr2015.py: 1
+      engine/test_paleos.py: 1
+
+# Every env name that code under engine/, solver/ and scripts/ reads or writes. class: tier (a test runs or skips),
+# gate (a SKIP becomes a FAIL), machine (per-machine baseline row or pool size), path (which data is read), behaviour
+# (what the code computes or logs; a landing runs each at its default, i.e. unset), internal (check.sh bookkeeping),
+# tool (not reached by any test).
+names:
+  NEARSTARS_HEAVY: {class: tier, why: the heavy tier above}
+  NS_SLOW_TESTS: {class: tier, why: the slow tier above}
+  GATE_RUNNING: {class: gate, why: engine/gate_env.in_gate(); check.sh exports it}
+  GATE_MACHINE: {class: machine, why: picks the per-machine row of a recorded baseline}
+  GATE_INNER_POOL: {class: machine, why: inner process pool size of a gate step}
+  GRID_POOL: {class: machine, why: structure_grid's pool size (--refresh)}
+  NEARSTARS_PAPERS: {class: path, why: the papers cache (gate_env.papers_dir, material_p4, check_paper_held)}
+  NEARSTARS_PAPERS_ABSENT: {class: path, why: «declared» makes material_p4's missing-paper case a declared absence}
+  NEARSTARS_ARTIFACTS: {class: path, why: the artifacts tree some tests read}
+  MANTLE_TABLE_DIR: {class: path, why: an override of engine/mantle_tables}
+  STRUCTURE_GRID_DIR: {class: path, why: an override of engine/structure_grid tables}
+  NS_FALL_SETS: {class: path, why: an override of the shipped fall sets}
+  NS_BUILD_ASSEMBLAGE: {class: path, why: the builder file rho_fall_build loads}
+  NS_RHO_BRIDGE: {class: behaviour, why: the ρ bridge, default on; a PROTOTYPE switch for paired measurements}
+  NS_FREE_SOLVE_CONTRACT: {class: behaviour, why: the free-solve contract, default on; the census's FLAG-off run}
+  NEARSTARS_REFERENCE_BUILD: {class: behaviour, why: set only by engine/tools/reference_adiabats.py while it builds}
+  NS_NAN_AUDIT: {class: behaviour, why: a NaN-audit log file (rootfind, signs); logging only}
+  NEARSTARS_LOOKUP_LOG: {class: behaviour, why: state lookup logging, default on}
+  BELT_FIT_DIAG: {class: tool, why: scripts/viz/fit_belts.py diagnostics directory}
+  GATE_STEP: {class: internal, why: scripts/gate_reads bookkeeping}
+  GATE_READS_LOG: {class: internal, why: scripts/gate_reads bookkeeping}
+  GATE_READS_RAW: {class: internal, why: scripts/gate_reads bookkeeping}
+  GATE_READS_ROOT: {class: internal, why: scripts/gate_reads bookkeeping}
+  ADS_API_TOKEN: {class: tool, why: the paper-fetch scripts under scripts/phase3 and scripts/refs}
