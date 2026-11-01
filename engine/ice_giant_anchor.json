@@ -1,14 +1,14 @@
 {
  "python": "3.12.3",
  "path_fingerprint": "15ff983667628225",
- "frozen_at": "2026-11-01",
+ "frozen_at": "2026-11-02",
  "steps": 1500,
  "inputs": {
   "ammonia_table.py": "96a9b5c4f3368313",
   "bands.py": "2dc2ee80a743740d",
   "body_class.py": "a33bf101d4a44d2b",
   "bounds.py": "1bf717571c8e24b3",
-  "chain.yaml": "1b1574d73140be04",
+  "chain.yaml": "a79c2f9549a0ce8a",
   "cmb_flux.py": "140da6bccb74c601",
   "convergence.py": "0467cd84c6dad2c1",
   "core_energy.py": "a10d83fba1fbad5f",
@@ -25,7 +25,7 @@
   "interior.py": "cab8ae0b147a74e5",
   "mantle_composition.py": "6505772035c64fe5",
   "mantle_flux.py": "7cf7bb526eb83f77",
-  "mars_sulphur_anchor.json": "9795aa625c4a15a8",
+  "mars_sulphur_anchor.json": "e631ce1bc6b18a23",
   "payload.py": "4190fe99856ad6a1",
   "porosity.py": "ca33b581de6e49bc",
   "radiogenic.py": "51e5d2e798d00c42",
@@ -84,7 +84,7 @@
  },
  "bodies": {
   "Uranus": {
-   "seconds": 531.4,
+   "seconds": 337.8,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -154,7 +154,7 @@
    "standalone_reproduces_solve": true
   },
   "Neptune": {
-   "seconds": 705.0,
+   "seconds": 329.9,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -240,13 +240,13 @@
   "Linux-x86_64": {
    "Uranus": {
     "instr_u": 6051184913003,
-    "seconds": 763.7,
-    "load1": 24.03
+    "seconds": 337.3,
+    "load1": 1.0
    },
    "Neptune": {
     "instr_u": 5808403959098,
-    "seconds": 810.4,
-    "load1": 22.27
+    "seconds": 325.2,
+    "load1": 1.0
    }
   }
  }

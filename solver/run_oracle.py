@@ -82,7 +82,12 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: chain.yaml's Earth note and chain-explorer.html (R9), plus tests. Re-declared at the landing's engine/ tree. Basis:
 #: the dump comparison, Mac r3 (registration §3.5.2: mars and pandora identical, earth and venus differ only in
 #: core_thermal_history), re-read by round 2's oracle at the landing tip (note 2 §3: oracle_judge base vs nofpc).
-ORACLE_ENGINE_TREE = "43b1021cb1293af80f12ba7a6423eba50063bf21"
+#: E-steps R10 (post-freeze note 5 §2): engine/ changes only in mars_sulphur_anchor.json and ice_giant_anchor.json,
+#: re-frozen on the reference machine for R9's chain.yaml byte pin (F1). No solve reads a changed field: interior
+#: reads S and halvings, unchanged; the changed fields reach the anchors' own tests, structure_grid's sulphur_fixings
+#: trigger and tools/methane_thresholds.py. Re-declared at R10's engine/ tree; read again by the R10 round's oracle
+#: at the new stage-2 TIP.
+ORACLE_ENGINE_TREE = "c5609d41a0e2513dbd8eaf94e71ab7f27a85597d"
 REPO = Path(lm._ENGINE).parent
 
 
