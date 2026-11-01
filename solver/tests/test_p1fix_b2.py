@@ -376,10 +376,12 @@ class SensitivityBranches(unittest.TestCase):
 
 
 class EarthAbsolute(unittest.TestCase):
-    """G2-T-10: Earth's declared answer pinned to absolute values: the PC landing record at 3d170377
-    (artifacts 64ed0626, batch-3d170377-landing/o9/earth/earth__declared.json, blob 29ffc940, Python 3.12.3), at 1e-6 relative,
-    which is past the Mac/PC band (Earth 4.1e-6 on the largest key at a moved state, ≤ 1e-8 at the declared state) and
-    far inside any constant's change."""
+    """G2-T-10: Earth's declared answer pinned to absolute values at 1e-6 relative, which is past the Mac/PC band (Earth
+    4.1e-6 on the largest key at a moved state, ≤ 1e-8 at the declared state) and far inside any constant's change. The
+    pins are the Mac read at the FE-PREM-COPY commit (the solver's fe_prem records regenerated from E-steps L1 74fd9eb7's
+    table, artifacts pc/ea-fpc/fpc-prereg.frozen.md F4), checked on the PC by the E-steps landing's round 2. History:
+    first pinned to the PC landing record at 3d170377 (artifacts 64ed0626, batch-3d170377-landing/o9/earth/
+    earth__declared.json, blob 29ffc940, Python 3.12.3)."""
 
     def test_declared_values(self):
         ans, _x = sv.solve(_earth(), context.Options(sensitivity_dt=0.0))
@@ -389,17 +391,21 @@ class EarthAbsolute(unittest.TestCase):
                 self.assertLess(abs(got[k] - v) / abs(v), 1e-6, (got[k], v))
 
 
-PINNED_EARTH = {                       # record blob 29ffc940
-    "radius": 6390103.2933283085, "nmoi": 0.32971838204611453, "core_radius": 3485043.53751115,
-    "cmb_pressure": 135254666993.38823, "core_pressure": 358352625161.5081, "cmb_temperature": 2527.3154329600775,
-    "core_temperature": 3197.2526014468026, "core_radius_fraction": 0.545381408959346,
+PINNED_EARTH = {                       # FE-PREM-COPY (Mac read on L1 74fd9eb7's table)
+    "radius": 6390094.818328119, "nmoi": 0.3297174686874677, "core_radius": 3485022.2502571186,
+    "cmb_pressure": 135256328309.83263, "core_pressure": 358359349989.2217, "cmb_temperature": 2527.3214774828584,
+    "core_temperature": 3197.2414189929395, "core_radius_fraction": 0.5453788009938993,
 }
+# Re-pinned «FE-PREM-COPY» (artifacts pc/ea-fpc/fpc-prereg.frozen.md F4): the records now follow the engine's table, so
+# Earth's fe_prem core moves (core_pressure 1.88e-5, 19.5 × band/10). The old pins, record blob 29ffc940 with
+# core_temperature from the 10-18 re-pin below: radius 6390103.2933283085, nmoi 0.32971838204611453, core_radius
+# 3485043.53751115, cmb_pressure 135254666993.38823, core_pressure 358352625161.5081, cmb_temperature 2527.3154329600775,
+# core_temperature 3197.2526014468026, core_radius_fraction 0.545381408959346.
 # core_temperature re-pinned (centre-series post-freeze note 2, its «Resolution (directing 10-18)»): from 29ffc940's
 # 3197.1409514076045 to the PC's own read at Job B's TIP af8408a7, 3197.2526014468026 K (+3.49e-5, the centre series'
 # (dT/dP)_ε·ΔP), quoted from the PC suite (repair 1 and 0 alike) in Job B's judge of record (artifacts
 # ea-jobB-out-af8408a7 2595d66b, pc/ea-jobB/out-af8408a7/judge-81fb95db.txt, blob 6c662a63); the other keys stay at
 # 29ffc940 (the series moves none of them, and they pass at 1e-6 there)
-
 
 if __name__ == "__main__":
     unittest.main()
