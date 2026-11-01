@@ -17,28 +17,39 @@ LIST = yaml.safe_load((Path(__file__).with_name("env_tiers.yaml")).read_text())
 TREES = ("engine", "solver", "scripts")
 
 
+SWITCHES = sorted(n for n, v in LIST["names"].items() if v["class"] in ("tier", "gate"))
+
+
 def _sources():
     for d in TREES:
         for p in sorted((ROOT / d).rglob("*.py")):
             if ".venv" not in p.parts and "__pycache__" not in p.parts:
-                yield p, p.read_text(errors="replace")
+                yield p.relative_to(ROOT).as_posix(), p.read_text(errors="replace")
 
 
-def _census():
-    names, sites, gated = {}, {}, {}
-    for p, src in _sources():
-        rel = p.relative_to(ROOT).as_posix()
+def _script_test(rel):
+    return rel.split("/")[0] in ("engine", "scripts") and rel.rsplit("/", 1)[-1].startswith("test_")
+
+
+def _census(extra=()):
+    """extra: planted (relative path, source) pairs, scanned as if they were in the tree."""
+    names, sites, gated, scripts = {}, {}, {}, {}
+    for rel, src in list(_sources()) + list(extra):
         for n in es.env_names(src):
             names.setdefault(n, []).append(rel)
         c = es.in_gate_sites(src)
         if c and rel != "engine/gate_env.py":                  # gate_env defines in_gate(); its docstring names it
             sites[rel] = c
         if rel.startswith("solver/tests/test_"):
-            gated.update(es.gated_tests(src, "solver.tests." + p.stem))
-    return names, sites, gated
+            gated.update(es.gated_tests(src, "solver.tests." + rel.rsplit("/", 1)[-1][:-3]))
+        if _script_test(rel):
+            r = es.script_reads(src, SWITCHES)
+            if r:
+                scripts[rel] = r
+    return names, sites, gated, scripts
 
 
-NAMES, SITES, GATED = _census()
+NAMES, SITES, GATED, SCRIPTS = _census()
 
 
 class Names(unittest.TestCase):
@@ -80,6 +91,10 @@ class GateSites(unittest.TestCase):
     def test_in_gate_sites_match_the_list(self):
         self.assertEqual(SITES, LIST["tiers"]["gate"]["in_gate_sites"])
 
+    def test_script_tests_reading_a_switch_are_listed(self):
+        """engine/ and scripts/ tests are scripts: one that reads a tier or gate switch directly is listed per file."""
+        self.assertEqual(SCRIPTS, LIST["tiers"]["gate"]["script_reads"])
+
 
 class Controls(unittest.TestCase):
     """Planted sources: each would be red against the list, so the scan cannot pass by seeing nothing."""
@@ -106,6 +121,22 @@ class Controls(unittest.TestCase):
                '    def test_c(self):\n        pass\n')
         self.assertEqual(es.gated_tests(src, "m"), {"m.T.test_c": {"NS_PLANTED_KEY"}})
         self.assertEqual(es.env_names(src), {"NS_PLANTED_KEY"})
+
+    def test_planted_script_form_reads_in_each_tree(self):
+        """68 B2: a script-form test in engine/ and one in scripts/ that read a tier switch, and a direct GATE_RUNNING
+        read, each make the census differ from the list until listed."""
+        heavy = 'import os\nif os.environ.get("NEARSTARS_HEAVY") != "1":\n    print("[SKIP] heavy only")\n'
+        gate = 'import os\nif os.environ.get("GATE_RUNNING") == "1":\n    raise SystemExit(1)\n'
+        planted = [("engine/test_planted_heavy.py", heavy), ("scripts/refs/test_planted_heavy.py", heavy),
+                   ("engine/test_planted_gate.py", gate)]
+        _n, sites, _g, scripts = _census(planted)
+        self.assertEqual({k: v for k, v in scripts.items() if "planted" in k},
+                         {"engine/test_planted_heavy.py": ["NEARSTARS_HEAVY"],
+                          "scripts/refs/test_planted_heavy.py": ["NEARSTARS_HEAVY"],
+                          "engine/test_planted_gate.py": ["GATE_RUNNING"]})
+        self.assertNotEqual(scripts, LIST["tiers"]["gate"]["script_reads"])
+        self.assertEqual(sites.get("engine/test_planted_gate.py"), 1)
+        self.assertNotEqual(sites, LIST["tiers"]["gate"]["in_gate_sites"])
 
     def test_planted_in_gate_site(self):
         src = "from engine import gate_env\nif gate_env.in_gate():\n    pass\nelif gate_env.in_gate():\n    pass\n"

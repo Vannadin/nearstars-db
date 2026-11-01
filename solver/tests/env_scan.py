@@ -4,11 +4,16 @@
 - `env_names(src)`: every env name the module reads or writes: `<x>.environ.get/pop/setdefault(N)`, `<x>.environ[N]`,
   `os.getenv(N)`, `N in <x>.environ`, `dict(os.environ, N=…)` and `{… for k in os.environ.items() if k != N}`
   are not reads and are not counted. N is a string literal or a module-level name bound to one.
-- `in_gate_sites(src)`: calls `<x>.in_gate()` or `in_gate()`.
+- `in_gate_sites(src)`: calls `<x>.in_gate()` or `in_gate()`, plus direct reads of GATE_RUNNING (68 B2 on the P1–P4
+  code: a test that reads the switch itself is a gate site too).
 - `gated_tests(src, module)`: {test id: env names} for TestCase methods whose run depends on an env read: a
   skip decorator on the method or its class, or an `if` in the method, setUp or setUpClass whose branch calls
   skipTest / raises SkipTest, where the decorator or the `if` test reads env directly or through a module-level
-  name bound to an env read."""
+  name bound to an env read.
+
+Not followed: a read inside a helper the test calls (e.g. `_shipped_present` → `fall_sets.directory()` reads
+NS_FALL_SETS). The landing units run under `env -i` with only their tier's assignment, so such a read sees its default
+there (68 n1 on the P1–P4 code)."""
 import ast
 
 _ENV_METHODS = ("get", "pop", "setdefault")
@@ -37,7 +42,12 @@ def _name_of(arg, consts):
 
 def _reads(node, consts):
     """Env names read anywhere under `node`."""
-    out = set()
+    return set(_read_list(node, consts))
+
+
+def _read_list(node, consts):
+    """Every env read under `node`, one entry per site."""
+    out = []
     for n in ast.walk(node):
         name = None
         if isinstance(n, ast.Call) and n.args:
@@ -52,7 +62,7 @@ def _reads(node, consts):
                 and _is_environ(n.comparators[0]):
             name = _name_of(n.left, consts)
         if name:
-            out.add(name)
+            out.append(name)
     return out
 
 
@@ -63,9 +73,16 @@ def env_names(src):
 
 def in_gate_sites(src):
     tree = ast.parse(src)
-    return sum(1 for n in ast.walk(tree) if isinstance(n, ast.Call)
-               and ((isinstance(n.func, ast.Attribute) and n.func.attr == "in_gate")
-                    or (isinstance(n.func, ast.Name) and n.func.id == "in_gate")))
+    calls = sum(1 for n in ast.walk(tree) if isinstance(n, ast.Call)
+                and ((isinstance(n.func, ast.Attribute) and n.func.attr == "in_gate")
+                     or (isinstance(n.func, ast.Name) and n.func.id == "in_gate")))
+    return calls + _read_list(tree, _consts(tree)).count("GATE_RUNNING")
+
+
+def script_reads(src, names):
+    """The names from `names` that a script-form test reads directly (68 B2: engine/ and scripts/ tests are scripts,
+    so `gated_tests` cannot see them; a direct read of a tier or gate switch makes the whole file depend on it)."""
+    return sorted(env_names(src) & set(names))
 
 
 def _aliases(tree, consts):
