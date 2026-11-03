@@ -13,6 +13,8 @@ Two things break a module there and not on 3.10+:
    - the type argument of `isinstance` / `issubclass` (`isinstance(x, int | None)`), with or without the future
      import, since that is an expression, not an annotation.
    A `|` inside a string annotation is not evaluated and is not flagged.
+   Stated limit (r2 n3): a union reached through an alias (`Opt = int | None` then `x: Opt`), a `cast(int | None, …)`
+   or a `TypeVar(bound=A | B)` is not followed; at 30f7cbcd the tree has none (r2's scan finds only re/os flag ORs).
 Each finding is one `[FAIL] py39 <file>:<line> — <what>` line; rc 1 if any, else «py39: PASS» and rc 0."""
 import ast
 import subprocess
