@@ -268,3 +268,9 @@
   globs: []
 "dynamo_table":
   globs: []
+"derived *":  # sg-gate: every entry's step and the census read engine/ and solver/ .py as text (closure digest, census header); measured with artifacts pc/sg-gate/trace/trace_reads.py on the Mac (--census, --entry 1-mars, --entry 8b-fe-prem), not by gate_reads
+  globs: ["engine/**.py", "solver/**.py"]
+  hand: true
+"derived/test_derived.py":  # sg-gate: its census control copies every tracked engine/ and solver/ file (the .md too); measured as above
+  globs: ["engine/**.py", "solver/**.py", "engine/**.md", "solver/**.md"]
+  hand: true
