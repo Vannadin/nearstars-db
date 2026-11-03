@@ -10,3 +10,12 @@
   mismatch_keys: [core_radius_fraction]
   values: {core_radius_fraction: [0.5002, 0.5398]}
   registered: "owner 2026-10-07 via directing; artifacts 37824fc pc/landing3/final/gate-c8a2cbb7.log (blob cbfb5136) line 4252"
+- id: SG-MARS-HOLD-ENGINE
+  kind: table_triggers          # a new row kind (below); the existing rows are kind step_mismatch by default
+  steps: ["structure_grid.py --check", "test_structure_grid.py"]
+  table: "mars.json"
+  triggers: [bytes.chain.yaml, bytes.reference_adiabats.json, chain_reads, declared.basal_layer_density,
+             declared.basal_layer_thickness_km, declared.core_light_elements, declared.mantle_composition,
+             mantle_table, sulphur_fixings]
+  ends: "the rebuild of mars.json at the end of the E18-mars hold (the same commit removes this row)"
+  registered: "directing 2026-11-04 ruling (i′) via ES-f6 note 3; hold: artifacts pc/sg-gate/sg-mars-hold-registration.md (owner landing «올려», 11-03)"

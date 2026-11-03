@@ -128,6 +128,63 @@ def _step_range(lines: list[str], step: str) -> list[str] | None:
     return None
 
 
+#: kind table_triggers (SG-MARS-HOLD-ENGINE, ES-f6 note 3 §3.1): each step's mars.json FAIL form, bound to that step
+TABLE_TRIGGER_FORMS = {
+    "structure_grid.py --check": re.compile(r"^\[FAIL\] (\S+) — 데이터 방아쇠 (\[.*\]) 가 움직였다 — "),
+    "test_structure_grid.py": re.compile(r"^\[FAIL\] (\S+) — 방아쇠 그대로 — 구조 표가 낡았다 — 방아쇠 (\[.*\]) 가 움직였다\. "),
+}
+
+
+def _step_bounds(lines: list[str], step: str):
+    """`_step_range` as (first, last) line indices, or None."""
+    head = f"[COST] {step} —"
+    for i in range(len(lines) - 1, -1, -1):
+        if lines[i].strip().startswith(head):
+            j = i - 1
+            while j >= 0 and not re.match(r"\s*\[(STEP|COST)\]", lines[j]):
+                j -= 1
+            return j + 1, i
+    return None
+
+
+def _trigger_set(text):
+    import ast
+    try:
+        v = ast.literal_eval(text)
+    except (ValueError, SyntaxError):
+        return None
+    return set(v) if isinstance(v, list) and all(isinstance(x, str) for x in v) else None
+
+
+def _table_trigger_rows(lines, table, notes):
+    """(claimed FAIL line indices, None) or (None, why): every FAIL line in a table_triggers row's step ranges must be
+    the step's exit line or the step's own form naming the row's table and exactly its trigger set."""
+    claimed = set()
+    for row in (r for r in table if r.get("kind") == "table_triggers"):
+        hit = False
+        for st in row["steps"]:
+            b = _step_bounds(lines, st)
+            if b is None:
+                continue
+            form = TABLE_TRIGGER_FORMS.get(st)
+            for i in range(b[0], b[1] + 1):
+                t = lines[i].strip()
+                if not t.startswith("[FAIL]"):
+                    continue
+                if t == f"[FAIL] {st} — 비0 종료 (이 단계가 fail=1 을 세웠다)":
+                    claimed.add(i)
+                    continue
+                m = form.match(t) if form else None
+                if m and m.group(1) == row["table"] and _trigger_set(m.group(2)) == set(row["triggers"]):
+                    claimed.add(i)
+                    hit = True
+                    continue
+                return None, f"{row['id']} — {st} 구간에 기대 밖 FAIL: {t[:90]} → 불인정"
+        if hit:
+            notes.append(f"기대 빨강 {row['id']} 만 있음 → 인정")
+    return claimed, None
+
+
 def expected_red_only(text: str, table: list[dict]) -> tuple[bool, list[str]]:
     """`rc≠0` 로그의 **모든** `[FAIL]` 줄이 기대 칸의 단계 FAIL 줄이고, 그 단계 구간의 `[어긋남]` 키
     집합이 칸의 `mismatch_keys` 와 정확히 같을 때만 참. ⚠ `[FAIL]` 이 0 줄이면 불인정 — 빈 집합에서
@@ -137,8 +194,13 @@ def expected_red_only(text: str, table: list[dict]) -> tuple[bool, list[str]]:
     if not fails:
         return False, ["rc≠0 인데 [FAIL] 줄 0 → 불인정"]
     notes: list[str] = []
+    claimed, why = _table_trigger_rows(lines, table, notes)
+    if why:
+        return False, [why]
+    fails = [l.strip() for i, l in enumerate(lines) if re.match(r"\s*\[FAIL\]", l) and i not in claimed]
+    steps_rows = [r for r in table if r.get("kind", "step_mismatch") == "step_mismatch"]
     for f in fails:
-        row = next((r for r in table if f.startswith(f"[FAIL] {r['step']} —")
+        row = next((r for r in steps_rows if f.startswith(f"[FAIL] {r['step']} —")
                     and f.endswith("(이 단계가 fail=1 을 세웠다)")), None)
         if row is None:
             return False, [f"기대 밖 FAIL: {f[:90]} → 불인정"]
