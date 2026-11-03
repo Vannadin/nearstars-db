@@ -87,7 +87,12 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: reads S and halvings, unchanged; the changed fields reach the anchors' own tests, structure_grid's sulphur_fixings
 #: trigger and tools/methane_thresholds.py. Re-declared at R10's engine/ tree; read again by the R10 round's oracle
 #: at the new stage-2 TIP.
-ORACLE_ENGINE_TREE = "c5609d41a0e2513dbd8eaf94e71ab7f27a85597d"
+#: ES-f6 (a)+(d1) landing (prereg-a clear 886a83c7, prereg-d clear 76df8079, post-freeze note 1): engine/ changes in
+#: interior.py (TABLE_POINT; the doubled shoot's trace isolated), structure_grid.py (the switch in _solve_raw's one),
+#: parallel_points.py (per-job flushed worker lines), process_state.py (the TABLE_POINT FLAG row), plus tests. No
+#: oracle body enters a changed function (note 1 §6, fold_reach at 42f28876). Re-declared at this engine/ tree; read
+#: again by the oracle at this tip against R10's tip dump, all four identical required.
+ORACLE_ENGINE_TREE = "e33dc3306a86155ef56671a894a66fdf60cf0e3e"
 REPO = Path(lm._ENGINE).parent
 
 
