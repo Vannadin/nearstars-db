@@ -215,6 +215,15 @@ def expected_red_only(text: str, table: list[dict]) -> tuple[bool, list[str]]:
         rng = _step_range(lines, row["step"])
         if rng is None:
             return False, [f"{row['id']} — [COST] 줄 없음, 구간을 못 정함 → 불인정"]
+        if row.get("derived_entry"):
+            # 파생 파일 관문 칸(sg-gate): 방아쇠 집합 대조는 derived/check.py 가 한다 — 그 구간에 이 id 의 EXPECTED RED
+            # 줄이 정확히 하나 있고 «not the red» 줄이 없을 때만 인정
+            tag = f"{row['derived_entry']}: EXPECTED RED, gate_expected_red.yaml id {row['id']} "
+            hits = [l for l in rng if l.strip().startswith(tag)]
+            if len(hits) != 1 or any("not the red gate_expected_red.yaml" in l for l in rng):
+                return False, [f"{row['id']} — {row['step']} 구간에 EXPECTED RED 줄 {len(hits)} 개 → 불인정"]
+            notes.append(f"기대 빨강 {row['id']} 만 있음 → 인정")
+            continue
         mis = {}
         for l in rng:
             m = re.match(r"\s*\[어긋남\]\s+(\S+)\s+엔진\s+(\S+)\s+·\s+보드\s+(\S+)", l)

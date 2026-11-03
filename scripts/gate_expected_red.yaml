@@ -19,3 +19,13 @@
              mantle_table, sulphur_fixings]
   ends: "the rebuild of mars.json at the end of the E18-mars hold (the same commit removes this row)"
   registered: "directing 2026-11-04 ruling (i′) via ES-f6 note 3; hold: artifacts pc/sg-gate/sg-mars-hold-registration.md (owner landing «올려», 11-03)"
+- id: SG-MARS-HOLD
+  # 파생 파일 관문(sg-gate) 항목 1-mars: mars.json 은 E18-mars 보류로 2031a61e 에 머물고, 데이터 방아쇠 아홉이 움직여 매 판 빨강이다.
+  #   derived/check.py 가 움직인 방아쇠 집합이 아래 아홉과 정확히 같을 때만 «EXPECTED RED» 를 찍는다(더 많아도 적어도 새 빨강).
+  #   lane_decide 는 그 단계 구간에 이 id 의 EXPECTED RED 줄이 있을 때만 인정한다. mars.json 재빌드 커밋이 이 칸을 뺀다.
+  step: "derived 1-mars"
+  derived_entry: 1-mars
+  triggers: [bytes.chain.yaml, bytes.reference_adiabats.json, chain_reads, declared.basal_layer_density,
+             declared.basal_layer_thickness_km, declared.core_light_elements, declared.mantle_composition,
+             mantle_table, sulphur_fixings]
+  registered: "pc/sg-gate/sg-mars-hold-registration.md 7aeef535"
