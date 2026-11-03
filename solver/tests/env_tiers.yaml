@@ -56,6 +56,8 @@ tiers:
       engine/test_domain.py: 1
       engine/test_ice_fr2015.py: 1
       engine/test_paleos.py: 1
+      derived/check.py: 2            # its own in_gate() (a direct GATE_RUNNING read) and one call (sg-gate B2 ruling)
+      derived/test_derived.py: 2     # the B2 lane control sets and clears it (a planted lane, no tier read)
 
 # Every env name that code under engine/, solver/ and scripts/ reads or writes. class: tier (a test runs or skips),
 # gate (a SKIP becomes a FAIL), machine (per-machine baseline row or pool size), path (which data is read), behaviour
@@ -70,7 +72,8 @@ names:
   GRID_POOL: {class: machine, why: structure_grid's pool size (--refresh)}
   NEARSTARS_PAPERS: {class: path, why: the papers cache (gate_env.papers_dir, material_p4, check_paper_held)}
   NEARSTARS_PAPERS_ABSENT: {class: path, why: «declared» makes material_p4's missing-paper case a declared absence}
-  NEARSTARS_ARTIFACTS: {class: path, why: the artifacts tree some tests read}
+  NEARSTARS_ARTIFACTS: {class: path, why: the artifacts tree some tests read; derived/check.py's out-of-tree builders}
+  NEARSTARS_EXTERNAL: {class: path, why: derived/check.py's external data for row 9 (sg-gate note 1 §4)}
   MANTLE_TABLE_DIR: {class: path, why: an override of engine/mantle_tables}
   STRUCTURE_GRID_DIR: {class: path, why: an override of engine/structure_grid tables}
   NS_FALL_SETS: {class: path, why: an override of the shipped fall sets}
