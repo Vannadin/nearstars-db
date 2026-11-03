@@ -1,8 +1,10 @@
-# 파이썬 3.9 호환 점검 — engine/·solver/·scripts/ 의 추적 .py 가 3.9 문법으로 읽히고, 실행 때 평가되는 PEP 604 합집합(`X | None`)이 없는가 (VR-base 7)
-"""python3 scripts/check_py39.py            gate mode: every tracked .py under engine/, solver/ and scripts/
+# 파이썬 3.9 호환 점검 — engine/·scripts/ 의 추적 .py 가 3.9 문법으로 읽히고, 실행 때 평가되는 PEP 604 합집합(`X | None`)이 없는가 (VR-base 7)
+"""python3 scripts/check_py39.py            gate mode: every tracked .py under engine/ and scripts/
    python3 scripts/check_py39.py FILE...   the named files only (tests)
 
-The Mac gate venv is Python 3.9. Two things break a module there and not on 3.10+:
+The Mac gate venv is Python 3.9, and the gate runs engine/ and scripts/ under it. solver/ is out of scope: it runs
+only in the 3.11 solver venv, never under the gate python (no check.sh step runs solver code; directing ruling (A)).
+Two things break a module there and not on 3.10+:
 1. **3.10+ syntax** (`match`, parenthesized context managers, …): `ast.parse(src, feature_version=(3, 9))` refuses it.
    `feature_version` is best-effort in CPython; the second rule is the one that caught VR-base 7.
 2. **A PEP 604 union evaluated at run time**, in a module without `from __future__ import annotations`:
@@ -18,7 +20,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DIRS = ("engine/", "solver/", "scripts/")
+DIRS = ("engine/", "scripts/")          # solver/: 3.11-venv only (see the docstring)
 
 
 def _has_union(node) -> bool:

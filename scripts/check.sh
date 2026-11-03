@@ -841,7 +841,7 @@ step "scripts/check_unwired_tests.py" bash -c 'python3 scripts/check_unwired_tes
 #   지금 있는 자리는 옮겨 가며 기준표를 낮춘다 (착지 3, verdict_of 초안 7f2d8d2e §2). AST 훑기, ~2 s.
 step "scripts/test_check_verdict_reads.py" bash -c 'python3 scripts/test_check_verdict_reads.py'
 step "scripts/check_verdict_reads.py" bash -c 'python3 scripts/check_verdict_reads.py'
-# 게이트 자신: engine/·solver/·scripts/ 가 파이썬 3.9(맥 게이트 venv)에서 읽히는가 — 3.10+ 문법과 실행 때 평가되는 `X | None` (VR-base 7). AST, ~2 s.
+# 게이트 자신: engine/·scripts/ 가 파이썬 3.9(맥 게이트 venv)에서 읽히는가 (solver/ 는 3.11 venv 전용) — 3.10+ 문법과 실행 때 평가되는 `X | None` (VR-base 7). AST, ~2 s.
 step "scripts/test_check_py39.py" bash -c 'python3 scripts/test_check_py39.py'
 step "scripts/check_py39.py" bash -c 'python3 scripts/check_py39.py'
 step "scripts/pipeline/validate.py" bash -c 'python3 scripts/pipeline/validate.py'

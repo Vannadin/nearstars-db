@@ -28,8 +28,8 @@
 "scripts/test_check_py39.py":  # by hand: synthetic sources in memory, reads no tracked file as data
   globs: []
   hand: true
-"scripts/check_py39.py":  # by hand: `git ls-files` lists every tracked .py under engine/, solver/ and scripts/ and parses each
-  globs: ["engine/**.py", "solver/**.py", "scripts/**.py"]
+"scripts/check_py39.py":  # by hand: `git ls-files` lists every tracked .py under engine/ and scripts/ and parses each
+  globs: ["engine/**.py", "scripts/**.py"]
   hand: true
 "scripts/pipeline/validate.py":
   globs: []
