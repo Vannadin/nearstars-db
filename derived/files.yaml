@@ -10,21 +10,24 @@ entries:
     row: 1
     files: [engine/structure_grid/earth.json]
     code: [engine/structure_grid.py:build]
-    data: [engine/bodies/earth.yaml, engine/chain.yaml]
+    # the build's run.load_body → transfers.check_body → load_others globs every body yaml (walk survey, note 1 §4)
+    data: ["engine/bodies/*.yaml", engine/chain.yaml]
     derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json]
     check: {kind: structure_table, table: engine/structure_grid/earth.json}
   1-venus:
     row: 1
     files: [engine/structure_grid/venus.json]
     code: [engine/structure_grid.py:build]
-    data: [engine/bodies/venus.yaml, engine/chain.yaml]
+    # the build's run.load_body → transfers.check_body → load_others globs every body yaml (walk survey, note 1 §4)
+    data: ["engine/bodies/*.yaml", engine/chain.yaml]
     derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json]
     check: {kind: structure_table, table: engine/structure_grid/venus.json}
   1-mars:
     row: 1
     files: [engine/structure_grid/mars.json]
     code: [engine/structure_grid.py:build]
-    data: [engine/bodies/mars.yaml, engine/chain.yaml]
+    # the build's run.load_body → transfers.check_body → load_others globs every body yaml (walk survey, note 1 §4)
+    data: ["engine/bodies/*.yaml", engine/chain.yaml]
     derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json]
     check: {kind: structure_table, table: engine/structure_grid/mars.json}
   2-reference-adiabats:
@@ -53,10 +56,13 @@ entries:
     row: 5
     files: [engine/c143_sum_inventory.json]
     code: [engine/test_c143_guard.py:main]
-    # measured (trace_reads on the check, 68 n3): it also reads these
-    data: [engine/chain.yaml]
+    # measured (trace_reads on the check, 68 n3): it also reads these. The census inside it reads every .py under
+    # engine/ and scripts/ as text (CENSUS_ROOTS, rglob; 68 B1 on 2be90e97): globs over tracked files, so a sum() in a
+    # module outside the closure moves the stamp; the derived .py tables it matches are listed under derived
+    data: [engine/chain.yaml, "engine/**/*.py", "scripts/**/*.py"]
     derived: [engine/reference_adiabats.json, engine/mantle_tables/0663e6a031cae4dc.json,
-              engine/mantle_tables/c6bd588831fd8229.json]
+              engine/mantle_tables/c6bd588831fd8229.json, engine/hhe_table.py, engine/ice_melt_table.py,
+              engine/water_table.py, engine/water2_table.py, engine/ammonia_table.py]
     check: {kind: command, argv: ["{python}", engine/test_c143_guard.py]}
   6-mantle-tables:
     row: 6
@@ -71,9 +77,9 @@ entries:
             solver/materials/fall_sets/silicate_slb_mars_khan2022.json.gz]
     code: [solver/rho_fall_build.py:main, solver/fall_sets.py:export]
     # measured (trace_reads on the check, 68 B3 / n3): the whole material registry it loads, not only the SLB yamls
+    # material_registry.load globs solver/materials/*.yaml (walk survey): a glob, so a new record moves the stamp
     data: [engine/chain.yaml, solver/data/bse_ms95.yaml, solver/data/presets.yaml, solver/data/roles.yaml,
-           solver/data/schema.yaml, solver/materials/schema.yaml, solver/materials/sources.yaml,
-           solver/materials/silicate_basal_const.yaml]
+           solver/data/schema.yaml, "solver/materials/*.yaml"]
     derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json,
               solver/materials/silicate_slb_default_bse.yaml, solver/materials/silicate_slb_earth_dmm_wh2005.yaml,
               solver/materials/silicate_slb_mars_khan2022.yaml, solver/materials/tables/silicate_slb_default_bse.json.gz,
