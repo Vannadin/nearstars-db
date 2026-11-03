@@ -492,6 +492,16 @@ class LoadCensus(unittest.TestCase):
         self.assertIn("byte-identical copy of engine/albedo_table.py", r.stdout)
         self.assertIn("[LOAD-RED] 10-graph-page", r.stdout)
 
+    def test_a_path_override_is_red(self):
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "noop.py"
+            f.write_text("def go():\n    pass\n")
+            r = subprocess.run([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", "10-graph-page", "--",
+                                "--call", f"{f}:go"], cwd=ck.REPO, capture_output=True, text=True,
+                               env=dict(os.environ, MANTLE_TABLE_DIR=d))
+        self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
+        self.assertIn("path override MANTLE_TABLE_DIR", r.stdout)
+
     def test_restore_writes_back_the_bytes_before_the_run(self):
         """68 on db1a128b: an uncommitted rebuild of an entry file survives a census (not reset to HEAD)."""
         with tempfile.TemporaryDirectory() as d:

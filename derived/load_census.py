@@ -418,6 +418,17 @@ def reads_outside(opened, declared: set, root: Path = REPO) -> list:
     return sorted(out)
 
 
+#: path overrides read by closure modules (note 1 §10 survey): set, the build reads another directory than the tree
+#: files its stamp hashes (the AMMONIA-path split, generalised). Literal reads, so the env census sees each name.
+def path_overrides() -> list:
+    read = {"MANTLE_TABLE_DIR": os.environ.get("MANTLE_TABLE_DIR"),           # mantle_composition.TABLE_DIR
+            "STRUCTURE_GRID_DIR": os.environ.get("STRUCTURE_GRID_DIR"),       # structure_grid.GRID_DIR
+            "NS_FALL_SETS": os.environ.get("NS_FALL_SETS"),                   # material_assemblage.FALL_SETS_DIR
+            "NS_BUILD_ASSEMBLAGE": os.environ.get("NS_BUILD_ASSEMBLAGE")}     # rho_fall_build's out-of-tree builder
+    return [f"path override {k}={v} is set: the build reads that directory, the stamp hashes the tree's files"
+            for k, v in read.items() if v]
+
+
 def entry_externals(name: str) -> tuple[dict, dict]:
     sys.path.insert(0, str(HERE))
     import check as ck
@@ -475,9 +486,10 @@ def main(argv) -> int:
           f"{', '.join(unjudged) if unjudged else 'none'}", flush=True)
     miss = [] if reports_n >= spawned_n else [f"{spawned_n - reports_n} of {spawned_n} Python child processes wrote no "
                                              f"census report (started with -I/-E, or killed): their loads are unseen"]
-    if out or ext_red or miss:
+    over = path_overrides()
+    if out or ext_red or miss or over:
         why = ([f"loaded outside the static closure ({len(out)} of {len(mods)} project modules): {', '.join(out)}"]
-               if out else []) + ext_red + miss
+               if out else []) + ext_red + miss + over
         print(f"[LOAD-RED] {name} — {'; '.join(why)} (target rc {rc})", flush=True)
         return 3
     print(f"[LOAD] {name} — {len(mods)} project modules loaded (children included), all inside the static closure"
