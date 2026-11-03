@@ -407,10 +407,12 @@ def run_check(e: dict, name: str | None = None) -> tuple[bool, str, list | None]
     if c["kind"] == "command":
         if name is not None and not e.get("census"):
             return census_command(name, c["argv"][1:], c.get("env")) + (None,)
-        ok, why = check_command(c["argv"], c.get("env"))
-        if name is not None:
+        if name is not None:                         # the check's own loads (and its children's) are judged too
+            ok, why = census_command(name, c["argv"][1:], c.get("env"))
             cok, cline = run_census(name, e)
             ok, why = ok and cok, f"{why}; {cline}"
+        else:
+            ok, why = check_command(c["argv"], c.get("env"))
         return ok, why, None
     raise SystemExit(f"STOP: unknown check kind {c['kind']!r}")
 
@@ -668,6 +670,10 @@ def main(argv=None) -> int:
                 print(f"PC {n} — {(e.get('census') or {}).get('how', 'where: pc')}")
                 continue
             ok, line = census_command(n, t[0], {**((e.get("check") or {}).get("env") or {}), **t[2]}, t[1])
+            chk = e.get("check") or {}
+            if e.get("census") and chk.get("kind") == "command":   # the check's own loads too, as at the landing
+                cok, cline = census_command(n, chk["argv"][1:], chk.get("env"))
+                ok, line = ok and cok, f"{line}; check: {cline}"
             loads_ok = "· [LOAD] " in line
             tag = "[LOAD]" if ok else "[LOAD-RED]" if not loads_ok else "[LOAD-INCOMPLETE]"
             print(f"{tag} {n} — {line}", flush=True)     # INCOMPLETE: loads inside, but the target exited non-zero

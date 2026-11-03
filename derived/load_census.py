@@ -10,9 +10,14 @@ After the target finishes (normally, by SystemExit, or by an exception), every m
 engine/, solver/ or scripts/ of this tree must be in the entry's closure (derived/check.py closure(), the stamped
 code), in the entry's listed derived .py files (stamped as derived), or be the target file itself (a check script that is
 not the build; also --allow). A module outside is printed by name on a [LOAD-RED] line and the exit code is 3; otherwise
-[LOAD] and the target's own exit code. Child processes are not seen, so a census run keeps one process: GRID_POOL=1, and
-every multiprocessing Pool (multiprocessing.Pool, a context's .Pool) is replaced by an in-process serial stand-in.
-With --restore, the entry's own files go back to HEAD and untracked files the run created are removed (each named).
+[LOAD] and the target's own exit code. Pools run in-process (GRID_POOL=1; multiprocessing pools and
+concurrent.futures.ProcessPoolExecutor replaced by serial stand-ins). Every Python child process (subprocess) gets
+derived/census_site/ first on PYTHONPATH: it reports its own loads, opens and children at exit, and they are judged by the
+same rule; a child that writes no report (-I/-E, or killed) is a named red. Module files that are neither stdlib,
+site-packages nor engine/solver/scripts are printed as unjudged.
+With --restore, the entry's own files go back to their bytes before the run and untracked files the run created are removed (each named).
+Every declared external input is traced: the files the run opens (and the paths handed to subprocesses) must include
+the stamped path, with the stamp's bytes; a different path, other bytes, or no open is a [LOAD-RED] naming both.
 """
 import json
 import os
@@ -26,22 +31,77 @@ REPO = HERE.parent
 PROJECT = ("engine", "solver", "scripts")
 
 
+TOOLING = {"derived/load_census.py", "derived/check.py", "derived/digest.py", "derived/census_site/sitecustomize.py"}
+
+
+def _system_prefixes() -> list:
+    """stdlib and site-packages directories of this interpreter: modules there are not the project's."""
+    import site
+    import sysconfig
+    paths = sysconfig.get_paths()
+    out = {paths.get(k) for k in ("stdlib", "platstdlib", "purelib", "platlib")}
+    try:
+        out |= set(site.getsitepackages()) | {site.getusersitepackages()}
+    except AttributeError:
+        pass
+    return sorted(os.path.realpath(x) for x in out if x)
+
+
+def classify(files, root: Path = REPO, prefixes=None) -> tuple[list, list]:
+    """(project, unjudged): project = repo-relative files under engine/, solver/, scripts/ (judged against the closure);
+    unjudged = every other module file that is not stdlib, site-packages or the census's own tooling (68 on db1a128b:
+    printed per row, so a module from another directory or checkout is never silent)."""
+    prefixes = _system_prefixes() if prefixes is None else prefixes
+    project, unjudged = set(), set()
+    for f in files:
+        real = os.path.realpath(f)
+        if real.endswith(".pyc"):                        # a sourceless load names its cache file; judge the source
+            real = real.replace("/__pycache__/", "/").rsplit(".", 2)[0] + ".py"
+        try:
+            rel = Path(real).relative_to(root).as_posix()
+        except ValueError:
+            rel = None
+        if rel is not None and rel.split("/")[0] in PROJECT:
+            project.add(rel)
+        elif rel is not None and rel in TOOLING:
+            continue
+        elif any(real == q or real.startswith(q + os.sep) for q in prefixes):
+            continue
+        else:
+            unjudged.add(rel if rel is not None else real)
+    return sorted(project), sorted(unjudged)
+
+
+def mirror_copies(files, root: Path = REPO) -> tuple[dict, list]:
+    """({copy: rel}, rest): an unjudged file whose path ends in engine/…, solver/… or scripts/… and whose bytes equal
+    that tree file's is judged as that module (check_graph_page runs the generator in a mirror). Anything else stays
+    unjudged."""
+    out, rest = {}, []
+    for f in files:
+        parts = Path(f).parts
+        hit = None
+        for i in range(len(parts) - 1, -1, -1):
+            if parts[i] in PROJECT:
+                rel = Path(*parts[i:])
+                t = root / rel
+                got = CHILD_SHA.get(f) or (_sha256(Path(f)) if os.path.isabs(f) and Path(f).is_file() else None)
+                if got and t.is_file() and got == _sha256(t):
+                    hit = rel.as_posix()
+                break
+        if hit:
+            out[f] = hit
+        else:
+            rest.append(f)
+    return out, rest
+
+
+def module_files() -> list:
+    return [f for m in list(sys.modules.values()) for f in [getattr(m, "__file__", None)] if isinstance(f, str)]
+
+
 def loaded(root: Path = REPO) -> list:
     """Repo-relative files of the project modules now in sys.modules (sorted)."""
-    out = set()
-    for m in list(sys.modules.values()):
-        f = getattr(m, "__file__", None)
-        if not f:
-            continue
-        try:
-            rel = Path(f).resolve().relative_to(root).as_posix()
-        except ValueError:
-            continue
-        if rel.endswith(".pyc"):                         # a sourceless load names its cache file; judge the source
-            rel = rel.replace("__pycache__/", "").rsplit(".", 2)[0] + ".py"
-        if rel.split("/")[0] in PROJECT:
-            out.add(rel)
-    return sorted(out)
+    return classify(module_files(), root)[0]
 
 
 def outside(name: str, mods: list, allow=()) -> list:
@@ -53,19 +113,30 @@ def outside(name: str, mods: list, allow=()) -> list:
     return [m for m in mods if m not in inside]
 
 
-def restore_own(name: str) -> str:
-    """After a build census in the working tree: the entry's own files back to HEAD; says whether the rebuild matched."""
-    import subprocess
+def snapshot_own(name: str, root: Path = REPO) -> dict:
+    """The entry's own files as they are before the run (bytes, or None when absent): what --restore writes back. Not
+    HEAD: a seat's uncommitted rebuild of an entry file must survive a census (68 on db1a128b)."""
     sys.path.insert(0, str(HERE))
     import check as ck
     files = ck.entries(ck.load_list())[name]["files"]
-    diff = subprocess.run(["git", "-C", str(REPO), "diff", "--name-only", "--", *files], capture_output=True,
-                          text=True, check=True).stdout.split()
-    if diff:
-        subprocess.run(["git", "-C", str(REPO), "checkout", "-q", "--", *diff], check=True)
-    return (f"  {name}: the census build rewrote its files byte-identical" if not diff else
-            f"  {name}: the census build's bytes differ in {diff} (restored from HEAD; a load census judges loads, "
-            f"not bytes: read this beside the entry's check)")
+    return {f: ((root / f).read_bytes() if (root / f).is_file() else None) for f in files}
+
+
+def restore_own(name: str, snap: dict, root: Path = REPO) -> str:
+    """After a build census: each of the entry's files back to its bytes before the run; says which the run changed."""
+    changed = []
+    for f, data in snap.items():
+        p = root / f
+        now = p.read_bytes() if p.is_file() else None
+        if now != data:
+            changed.append(f)
+            if data is None:
+                p.unlink()
+            else:
+                p.write_bytes(data)
+    return (f"  {name}: the census build left its files as they were before the run" if not changed else
+            f"  {name}: the census build changed {changed} (put back to the bytes before the run; a load census judges "
+            f"loads, not bytes: read this beside the entry's check)")
 
 
 class SerialPool:
@@ -101,12 +172,111 @@ class SerialPool:
 
 
 def serial_pools():
+    """Every process pool runs in this process: multiprocessing pools and concurrent.futures.ProcessPoolExecutor
+    (68 on db1a128b; a thread pool of one shares sys.modules)."""
+    import concurrent.futures
+    import concurrent.futures.process
+    import concurrent.futures.thread
     import multiprocessing
     import multiprocessing.context
     import multiprocessing.pool
     multiprocessing.Pool = SerialPool
     multiprocessing.pool.Pool = SerialPool
     multiprocessing.context.BaseContext.Pool = lambda self, *a, **k: SerialPool()
+
+    class SerialExecutor(concurrent.futures.thread.ThreadPoolExecutor):
+        def __init__(self, max_workers=None, mp_context=None, initializer=None, initargs=(), **_):
+            super().__init__(max_workers=1, initializer=initializer, initargs=initargs)
+
+    concurrent.futures.ProcessPoolExecutor = SerialExecutor
+    concurrent.futures.process.ProcessPoolExecutor = SerialExecutor
+
+
+SITE = HERE / "census_site"
+SPAWNED: list = []                                      # argv of every Python child this process started
+
+
+def _is_python(argv) -> bool:
+    exe = os.path.realpath(sys.executable)
+    for a in list(argv)[:6]:                             # also behind /usr/bin/time, perf stat --, env
+        a = os.fsdecode(a) if isinstance(a, (str, bytes, os.PathLike)) else ""
+        base = os.path.basename(a)
+        if a and (os.path.realpath(a) == exe or base.startswith("python") or base == "Python"):
+            return True
+    return False
+
+
+def patch_popen(report_dir: str):
+    """Every Python child gets the census site (first on its PYTHONPATH, whatever env the caller passed) and the report
+    dir; the site chains to the next sitecustomize on the path (gate_reads, c143_naive_sum). A child started with -I or
+    -E ignores PYTHONPATH and writes no report: the count below makes that a named red, never a silent pass."""
+    import subprocess
+    orig = subprocess.Popen.__init__
+    if getattr(orig, "_census", False):
+        return
+
+    def init(self, args, *a, **k):
+        argv = [args] if isinstance(args, (str, bytes, os.PathLike)) else list(args)
+        if _is_python(argv):
+            env = dict(k.get("env") if k.get("env") is not None else os.environ)
+            env["PYTHONPATH"] = str(SITE) + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
+            env["LOAD_CENSUS_REPORT"] = report_dir
+            env["GRID_POOL"] = "1"
+            k["env"] = env
+            SPAWNED.append([os.fsdecode(x) if isinstance(x, (str, bytes, os.PathLike)) else str(x) for x in argv][:4])
+        return orig(self, args, *a, **k)
+
+    init._census = True
+    subprocess.Popen.__init__ = init
+
+
+def write_child_report(report_dir: str):
+    """atexit in a child: its module files, opened paths and Python children, one JSON file per pid."""
+    main = [MAIN_FILE] if MAIN_FILE else []          # CPython drops __main__.__file__ once a script finishes
+    files, pre = module_files() + main, _system_prefixes()
+    sha = {}
+    for f in files:                                       # a mirror dir may be gone before the parent reads this
+        r = os.path.realpath(f)
+        if not any(r == q or r.startswith(q + os.sep) for q in pre) and os.path.isfile(r):
+            sha[r] = _sha256(Path(r))
+    d = {"pid": os.getpid(), "argv": sys.argv[:3], "files": files, "prefixes": pre, "sha": sha,
+         "opened": list(OPENED), "spawned": SPAWNED}
+    Path(report_dir, f"{os.getpid()}.json").write_text(json.dumps(d), encoding="utf-8")
+
+
+MAIN_FILE = None
+
+
+def child_setup():
+    """Called by census_site/sitecustomize.py in every Python child of a census run."""
+    global MAIN_FILE
+    report = os.environ["LOAD_CENSUS_REPORT"]
+    a0 = (sys.argv or [""])[0]
+    MAIN_FILE = os.path.abspath(a0) if a0.endswith(".py") and os.path.isfile(a0) else None
+    import atexit
+    sys.addaudithook(_audit)
+    serial_pools()
+    patch_popen(report)
+    atexit.register(write_child_report, report)
+
+
+CHILD_SHA: dict = {}                                    # sha256 of each non-system module file a child loaded
+
+
+def read_children(report_dir: str, root: Path = REPO) -> tuple:
+    """(project, unjudged, opened, Python children started in all, reports written) over every child report."""
+    project, unjudged, opened, reports = set(), set(), [], []
+    CHILD_SHA.clear()
+    for f in sorted(Path(report_dir).glob("*.json")):
+        d = json.loads(f.read_text(encoding="utf-8"))
+        reports.append(d)
+        p, u = classify(d["files"], root, d["prefixes"])
+        project |= set(p)
+        unjudged |= set(u)
+        opened += d["opened"]
+        CHILD_SHA.update(d.get("sha") or {})
+    spawned = len(SPAWNED) + sum(len(d["spawned"]) for d in reports)
+    return sorted(project), sorted(unjudged), opened, spawned, len(reports)
 
 
 def untracked(root: Path = REPO) -> set:
@@ -170,29 +340,148 @@ def target_files(target: list) -> list:
         return []                                        # an out-of-tree builder (8a–8d)
 
 
+OPENED: list = []                                       # every path the run opened or handed to a subprocess
+
+
+def _audit(event, args):
+    """Audit hook: Python file opens, and the path-like arguments of every subprocess (pdftotext reads its PDF there)."""
+    try:
+        if event == "open" and isinstance(args[0], (str, bytes)):
+            OPENED.append(os.fsdecode(args[0]))
+        elif event == "subprocess.Popen":
+            argv = args[1] if isinstance(args[1], (list, tuple)) else [args[1]]
+            OPENED.extend(os.fsdecode(a) for a in argv if isinstance(a, (str, bytes, os.PathLike)))
+    except Exception:                                    # an audit hook must never break the run it watches
+        pass
+
+
+def _sha256(p: Path) -> str:
+    import hashlib
+    h = hashlib.sha256()
+    with p.open("rb") as f:
+        for b in iter(lambda: f.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
+
+
+def external_reads(externals: dict, stamped_sha: dict, opened, cwd=None) -> tuple[list, list]:
+    """(reds, notes) for the declared external inputs (note 1 §10, directing's AMMONIA-path ruling).
+    externals: {name: (stamped path, declared relative path)}; stamped_sha: {name: sha256 the stamp holds} (may lack a
+    name: no stamp yet). For each name, the files the run opened whose path ends in the declared relative path (or has
+    its basename) are compared with the stamped path: a different path is red naming both (and the bytes of each); the
+    same path is red when its bytes now differ from the stamp's; no such open at all is red (the build did not read
+    the declared input where the stamp says)."""
+    reds, notes = [], []
+    cwd = Path(cwd or os.getcwd())
+    seen = []
+    for o in opened:
+        q = Path(o) if os.path.isabs(o) else cwd / o
+        seen.append(Path(os.path.normpath(q)))
+    for name, (stamped, rel) in externals.items():
+        st = Path(os.path.realpath(stamped))
+        rel_parts = Path(rel).parts
+        hits = sorted({q for q in seen if q.parts[-len(rel_parts):] == rel_parts or q.name == Path(rel).name})
+        if not hits:
+            reds.append(f"external {name}: the run opened no file at {rel!r}; the stamp hashes {stamped}")
+            continue
+        for q in hits:
+            real = Path(os.path.realpath(q))
+            got = _sha256(real) if real.is_file() else "absent"
+            if real != st:
+                want = _sha256(st) if st.is_file() else "absent"
+                reds.append(f"external {name}: the build opened {q} (sha256 {got[:16]}) but the stamp hashes {stamped} "
+                            f"(sha256 {want[:16]}): a different path")
+            elif name in stamped_sha and got != stamped_sha[name]:
+                reds.append(f"external {name}: the build opened the stamped path {q}, but its bytes (sha256 {got[:16]}) "
+                            f"differ from the stamp's ({stamped_sha[name][:16]})")
+            else:
+                notes.append(f"external {name}: opened the stamped path {q}, sha256 {got[:16]} "
+                             f"{'= the stamp' if name in stamped_sha else '(no stamp yet: bytes not compared)'}")
+    return reds, notes
+
+
+def reads_outside(opened, declared: set, root: Path = REPO) -> list:
+    """Existing files the run (or a child) opened outside the repo, the interpreter's stdlib/site-packages and the temp
+    dir: the survey of external reads (AMMONIA-path generalised). A declared external input is marked «*»."""
+    import tempfile
+    skip = _system_prefixes() + [os.path.realpath(tempfile.gettempdir()), os.path.realpath(sys.prefix),
+                                 os.path.realpath(sys.base_prefix), os.path.realpath(str(root)), "/dev", "/etc",
+                                 "/usr", "/System", "/Library", "/opt/homebrew", "/private/etc", "/private/var"]
+    out = set()
+    for o in opened:
+        if not os.path.isabs(o):
+            continue
+        r = os.path.realpath(o)
+        if not os.path.isfile(r) or any(r == q or r.startswith(q.rstrip(os.sep) + os.sep) for q in skip):
+            continue
+        out.add(r + (" *" if r in declared else ""))
+    return sorted(out)
+
+
+def entry_externals(name: str) -> tuple[dict, dict]:
+    sys.path.insert(0, str(HERE))
+    import check as ck
+    e = ck.entries(ck.load_list())[name]
+    ext = {}
+    for x, s in (e.get("external") or {}).items():
+        base = ck.env_dir(s["env"]) if s.get("env") else None
+        ext[x] = (str(Path(base) / s["path"]) if base else s["path"], s["path"])
+    st = ck.read_stamp(name) or {}
+    return ext, dict(st.get("external") or {})
+
+
 def main(argv) -> int:
     if "--" not in argv:
         raise SystemExit(__doc__)
+    import tempfile
     head, target = argv[:argv.index("--")], argv[argv.index("--") + 1:]
     name = head[head.index("--entry") + 1]
     allow = [head[i + 1] for i, a in enumerate(head) if a == "--allow"]
     restore = "--restore" in head
     own = target_files(target)
     before = untracked() if restore else set()
+    snap = snapshot_own(name) if restore else {}
+    reports = tempfile.mkdtemp(prefix="load-census-")
+    pre = set(module_files())                            # the census's own imports, before the run
+    sys.addaudithook(_audit)
+    patch_popen(reports)
     rc = run_target(target)
-    mods = loaded()
+    opened = list(OPENED)                                # the run's opens only, before the census reads its own files
+    mods, unjudged = classify([f for f in module_files() if f not in pre])
+    c_mods, c_unjudged, c_opened, spawned_n, reports_n = (*read_children(reports), )
+    import shutil
+    shutil.rmtree(reports, ignore_errors=True)
+    mirrored, unjudged = mirror_copies(sorted((set(unjudged) | set(c_unjudged)) - set(own)))
+    mods = sorted(set(mods) | set(c_mods) | set(mirrored.values()))
+    for src, rel in sorted(mirrored.items()):
+        print(f"  {name}: {src} is a byte-identical copy of {rel} (a mirror run): judged as {rel}", flush=True)
     out = outside(name, mods, allow + own)
+    ext, ext_sha = entry_externals(name)
+    ext_red, ext_notes = external_reads(ext, ext_sha, opened + c_opened, REPO)
     sys.stdout.flush()
-    if restore:                                          # a build census writes the entry's own files: put HEAD back
-        print(restore_own(name), flush=True)
+    if restore:                                          # a build census writes the entry's own files: put the pre-run bytes back
+        print(restore_own(name, snap), flush=True)
         new = remove_new(before)
         if new:
             print(f"  {name}: removed the untracked files the census run created: {', '.join(new)}", flush=True)
-    if out:
-        print(f"[LOAD-RED] {name} — loaded outside the static closure ({len(out)} of {len(mods)} project modules): "
-              f"{', '.join(out)} (target rc {rc})", flush=True)
+    for n in ext_notes:
+        print(f"  {name}: {n}", flush=True)
+    outer = reads_outside(opened + c_opened, {os.path.realpath(v[0]) for v in ext.values()})
+    print(f"  {name}: files read outside the tree, stdlib, site-packages and temp (declared external marked *): "
+          f"{', '.join(outer) if outer else 'none'}", flush=True)
+    print(f"  {name}: {len(SPAWNED)} Python child process(es) started by the target, {reports_n} child report(s) "
+          f"over {spawned_n} started in all", flush=True)
+    print(f"  {name}: unjudged module files (not stdlib, site-packages or engine/solver/scripts): "
+          f"{', '.join(unjudged) if unjudged else 'none'}", flush=True)
+    miss = [] if reports_n >= spawned_n else [f"{spawned_n - reports_n} of {spawned_n} Python child processes wrote no "
+                                             f"census report (started with -I/-E, or killed): their loads are unseen"]
+    if out or ext_red or miss:
+        why = ([f"loaded outside the static closure ({len(out)} of {len(mods)} project modules): {', '.join(out)}"]
+               if out else []) + ext_red + miss
+        print(f"[LOAD-RED] {name} — {'; '.join(why)} (target rc {rc})", flush=True)
         return 3
-    print(f"[LOAD] {name} — {len(mods)} project modules loaded, all inside the static closure (target rc {rc})",
+    print(f"[LOAD] {name} — {len(mods)} project modules loaded (children included), all inside the static closure"
+          f"{f'; {len(ext)} external input(s) read at the stamped path' if ext else ''} (target rc {rc})",
           flush=True)
     return rc
 
