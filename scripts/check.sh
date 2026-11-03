@@ -1179,6 +1179,9 @@ step "test_ice_fr2015.py" bash -c 'cd engine && exec python3 test_ice_fr2015.py'
 step "test_tidal_response.py" bash -c 'cd engine && exec python3 test_tidal_response.py'
 # 프로세스 전역 상태 레지스트리 밖 가변 상태 0 — 구조 격자 덧붙임 44 가 «게이트에 넣음» 으로 등록한 시험. ~1 s.
 step "test_process_state.py" bash -c 'cd engine && exec python3 test_process_state.py'
+# ES-f6 (a) §4.6 · §4.2 / (d) §3: 상태 조사 동결 목록과 표 점 깃발·일꾼 줄 시험 (r2 B2 on db4eab30). 각 ~2–4 s.
+step "test_state_survey.py" bash -c 'cd engine && exec python3 test_state_survey.py'
+step "test_esf6_pool.py" bash -c 'cd engine && exec python3 test_esf6_pool.py'
 step "test_rocky_roster.py" bash -c 'cd engine && exec python3 test_rocky_roster.py'
 # 조석 수송 축 (Brief 35). 이오 재현 실패가 측정 불변량으로 고정되어 있다 —
 # 이 테스트가 울리면 실패 서사 자체가 바뀐 것이니 멈추고 추적한다.

@@ -728,10 +728,12 @@ def _solve_raw(solve, jobs):
     def one(t, hint, entry):
         import interior
         interior._ENTRY[0] = entry
+        interior.TABLE_POINT[0] = True      # ES-f6 (a.1): a table point does not measure R2
         try:
             return _light(solve(t, p_hint=hint) if hint is not None else solve(t))
         finally:
             interior._ENTRY[0] = None
+            interior.TABLE_POINT[0] = False
     return parallel_points.solve_points(one, jobs, GRID_POOL)
 
 

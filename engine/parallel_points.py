@@ -8,14 +8,32 @@ picklable. With one job or ``pool <= 1`` everything runs here under the same rul
 """
 from __future__ import annotations
 
+import os
+import sys
+import time
+
 import process_state
 
 _FN = None
 
 
 def _one(job):
+    """ES-f6 (d1): a start and an end line per job, flushed — output only, no value or decision reads them."""
     process_state.reset()
-    return _FN(*job)
+    t0 = time.time()
+    print(f"점 시작 — {job[0]!r} · pid {os.getpid()} · {time.strftime('%H:%M:%S')}", flush=True)
+    try:
+        return _FN(*job)
+    finally:
+        print(f"점 끝 — {job[0]!r} · {time.time() - t0:.1f} s", flush=True)
+
+
+def _line_buffered():
+    """ES-f6 (d1): each forked worker writes stdout line by line (block buffering hid a 5.7 h point until exit)."""
+    try:
+        sys.stdout.reconfigure(line_buffering=True)
+    except (AttributeError, ValueError):
+        pass
 
 
 def solve_points(fn, jobs, pool: int):
@@ -25,5 +43,5 @@ def solve_points(fn, jobs, pool: int):
     if len(jobs) <= 1 or pool <= 1:
         return [_one(j) for j in jobs]
     import multiprocessing as mp
-    with mp.get_context("fork").Pool(min(pool, len(jobs))) as p:
+    with mp.get_context("fork").Pool(min(pool, len(jobs)), initializer=_line_buffered) as p:
         return p.map(_one, jobs, chunksize=1)
