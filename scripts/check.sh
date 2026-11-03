@@ -1259,6 +1259,8 @@ while IFS=$'\t' read -r _dn _dcmd; do
   step "derived $_dn" bash -c "exec ${_dcmd//\{python\}/python3}"
 done < <(python3 derived/check.py --steps | grep -v '^#')
 step "derived/test_derived.py" bash -c 'exec python3 derived/test_derived.py'
+# 시험 계층 조사(HEAVY-onctl P2) — env 이름·계층·in_gate 자리의 기본 거부 조사. 소스만 읽으니 맥에서도 돈다(지휘석 11-03: 목록에 빼지 말고 엮음)
+step "solver/tests/test_env_tiers.py" bash -c 'exec python3 -m unittest solver/tests/test_env_tiers.py'
 step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
 step "test_convergence_meaning.py" bash -c 'cd engine && exec python3 test_convergence_meaning.py'
 step "test_rootfind.py" bash -c 'cd engine && exec python3 test_rootfind.py'

@@ -274,3 +274,6 @@
 "derived/test_derived.py":  # sg-gate: its census control copies every tracked engine/ and solver/ file (the .md too); measured as above
   globs: ["engine/**.py", "solver/**.py", "engine/**.md", "solver/**.md"]
   hand: true
+"solver/tests/test_env_tiers.py":  # HEAVY-onctl P2 census: reads every engine/, solver/, scripts/ and derived/ .py as text (env names, tier sites); measured with sg-gate trace_reads on the Mac
+  globs: ["engine/**.py", "solver/**.py", "scripts/**.py", "derived/*.py"]
+  hand: true
