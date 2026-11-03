@@ -12,6 +12,8 @@ helpers live here too (engine's are in engine/rootfind.py).
   held in memory: the events are few in solver (engine/rootfind.py, which sees millions, counts in a registered
   counter instead).
 The finite arithmetic is untouched, so a run without a NaN is bit-identical."""
+from __future__ import annotations
+
 import json
 import os
 import sys

@@ -10,6 +10,8 @@ sign change bisected (60 steps) to its radius. V_melt adds the exact volume of t
 ∫ φ 4π r² dr over it by 3-point Gauss–Legendre, so both are continuous in the state (T_m, T_b, the layer radii,
 D_cr). A melting interval lying wholly inside one piece, with both piece ends below the solidus, is not seen (f4
 round 7 found none that is not pinned at r_x or the seam)."""
+from __future__ import annotations
+
 import math
 
 import rootfind as rf
