@@ -184,8 +184,10 @@ print(f"  [안쪽 근 이어 따라감] R2: {out['carries']}")
 # (1.081 Gyr): a future refusal there is the pole (pole_check), not this fix; the gain cap (cleared 74205ba5) is the
 # ready answer (r2 2dc5bff3 m1)
 # O8 (owner 10-30): moved with the default configuration; old values and the 0.709015 Gyr multi-root carry beside FROZEN_L20
-for key, want, tol in (("T_c today", 2094.30, 0.005), ("T_m today", 1936.85, 0.005), ("T_c(1) − T_c0", -50.34, 0.005),
-                       ("T_m(1) − T_m0", 287.27, 0.005), ("T_m peak", 2042.35, 0.005), ("T_m peak time", 1.1640, 0.0005)):
+# E-steps RK4-T (01f82725, landed in ee5b24fe): moved with the fixed step's T as an RK4 state; old values beside FROZEN_L20
+#   (post-landing owner disclosure: artifacts rewrite/owner-direction.md at 1ad0a2371; PC check b0be927da equal)
+for key, want, tol in (("T_c today", 2094.26, 0.005), ("T_m today", 1936.80, 0.005), ("T_c(1) − T_c0", -50.33, 0.005),
+                       ("T_m(1) − T_m0", 287.31, 0.005), ("T_m peak", 2042.37, 0.005), ("T_m peak time", 1.1641, 0.0005)):
     check(f"R2 — {key} = {want}", abs(v[key] - want) <= tol, f"{v[key]:.6f}")
 
 print(f"  test_thermal_stack — {'모두 통과' if not fails else f'실패 {fails}'}")

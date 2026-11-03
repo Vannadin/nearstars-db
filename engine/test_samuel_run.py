@@ -74,8 +74,14 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 # 1.1612 → 1.1640. The finer step's carry at 0.709015 Gyr sees the lower δ_b pair born below the adopted root (present
 # in the base run too from 0.716 Gyr, 41+ km away) and keeps the same top branch (3 m from the base path there); the
 # printed pole is passed at 0.427 K (1.074 Gyr).
-FROZEN_L20 = {"T_c today": 2094.30, "T_m today": 1936.85, "T_c(1) − T_c0": -50.34, "T_m(1) − T_m0": 287.27,
-              "T_m peak": 2042.35, "T_m peak time": 1.1640}
+# E-steps RK4-T (2026-11-03 re-pin, c8; directing): the fixed step carries T as an RK4 state (01f82725, landed in ee5b24fe;
+# bisect on the Mac: 8390fb09 reproduces the pins, 01f82725 gives the new values bit for bit, unchanged to the tip). A
+# value move from a landed change, disclosed to the owner after the landing (artifacts rewrite/owner-direction.md at
+# 1ad0a2371, «2026-11-03 ~09:40 … post-landing disclosure»; PC check b0be927da equal). These keys have no registered
+# band, so the fix line cannot be judged for them; relative sizes ≤ 2.8e-5 (old → new, Mac): 2094.30 → 2094.26 ·
+# 1936.85 → 1936.80 · -50.34 → -50.33 · 287.27 → 287.31 · 2042.35 → 2042.37 · 1.1640 → 1.1641.
+FROZEN_L20 = {"T_c today": 2094.26, "T_m today": 1936.80, "T_c(1) − T_c0": -50.33, "T_m(1) − T_m0": 287.31,
+              "T_m peak": 2042.37, "T_m peak time": 1.1641}
 FROZEN_TOL = {"T_m peak time": 0.0005}  # Gyr; every other value K, to the frozen decimal
 
 
