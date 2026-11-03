@@ -443,9 +443,11 @@ def census_target(e: dict):
     return target, (["--restore"] if c.get("restore") else []), env
 
 
-def census_command(name: str, target: list, env_extra=None, flags=()) -> tuple[bool, str]:
+def census_command(name: str, target: list, env_extra=None, flags=(), report=None) -> tuple[bool, str]:
     """Run TARGET under derived/load_census.py for entry NAME. ok only when the census holds AND the target exit is 0
-    (a build that failed is no census). The line names the [LOAD]/[LOAD-RED] verdict."""
+    (a build that failed is no census). The line names the [LOAD]/[LOAD-RED] verdict. REPORT, a list, gets every line
+    the census itself printed (restore, externals, outside-tree reads, children, unjudged files, mirrors, verdict),
+    not only the tail: `--load-census` prints them whole, the A-time evidence."""
     env = dict(os.environ, **(env_extra or {}))
     env.setdefault("PYTHONPATH", str(REPO))
     r = subprocess.run([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", name, *flags, "--", *target],
@@ -453,6 +455,8 @@ def census_command(name: str, target: list, env_extra=None, flags=()) -> tuple[b
     lines = (r.stdout + r.stderr).strip().splitlines()
     verdict = next((ln for ln in lines if ln.startswith("[LOAD")), f"[LOAD-RED] {name} — no census line (rc {r.returncode})")
     tail = " | ".join(t[:160] for t in lines[-3:])
+    if report is not None:
+        report += [ln for ln in lines if ln.startswith((f"  {name}: ", "[LOAD"))] or lines[-3:]
     return r.returncode == 0 and verdict.startswith("[LOAD]"), f"rc {r.returncode} · {verdict[:400]} · {tail}"
 
 
@@ -669,14 +673,18 @@ def main(argv=None) -> int:
             if t is None:
                 print(f"PC {n} — {(e.get('census') or {}).get('how', 'where: pc')}")
                 continue
-            ok, line = census_command(n, t[0], {**((e.get("check") or {}).get("env") or {}), **t[2]}, t[1])
+            rep, crep = [], []
+            ok, line = census_command(n, t[0], {**((e.get("check") or {}).get("env") or {}), **t[2]}, t[1], rep)
             chk = e.get("check") or {}
             if e.get("census") and chk.get("kind") == "command":   # the check's own loads too, as at the landing
-                cok, cline = census_command(n, chk["argv"][1:], chk.get("env"))
+                cok, cline = census_command(n, chk["argv"][1:], chk.get("env"), report=crep)
                 ok, line = ok and cok, f"{line}; check: {cline}"
             loads_ok = "· [LOAD] " in line
             tag = "[LOAD]" if ok else "[LOAD-RED]" if not loads_ok else "[LOAD-INCOMPLETE]"
             print(f"{tag} {n} — {line}", flush=True)     # INCOMPLETE: loads inside, but the target exited non-zero
+            for label, r_ in (("build", rep), ("check", crep)):
+                for ln in r_:
+                    print(f"    {label}| {ln.strip()}", flush=True)
             bad += not ok
         return 1 if bad else 0
     if a.show:
