@@ -149,14 +149,29 @@ def h_scope() -> None:
     pin = sg.anchor_fixings_read(body.inputs)[0]
     cmf = json.loads(interior.SULPHUR_ANCHOR_FILE.read_text(encoding="utf-8"))["fixings"][pin]["core_mass_fraction"]
     solve, _how, _ = sg._solver(body, types.SimpleNamespace(values={"core_mass_fraction": cmf}))
+    good, label = _scope_verdict(solve, interior.is_answer)
+    ok(good, label)
+    # r2 n1 (11-04): byte identity of two refusals is vacuous (both tuples are None). The control plants a solve that
+    #   refuses and must turn the verdict red.
+    refused = types.SimpleNamespace(applicable=False, reason="planted refusal (control)", values={}, cycles=(),
+                                    converged=None)
+    bad, _ = _scope_verdict(lambda t, p_hint=None: refused, interior.is_answer)
+    ok(not bad, "H-scope control: a solve that refuses turns H-scope red (not a vacuous byte match)")
+
+
+def _scope_verdict(solve, is_answer):
+    """(ok, label): Mars 1800 K solved after 1500 K and after 2060 K — both must be answers, then byte-identical."""
     keys = ("radius", "nmoi", "cmb_temperature", "core_pressure", "core_radius")
-    got = []
+    got, answers = [], []
     for prior in (1500.0, 2060.0):
         with contextlib.redirect_stdout(io.StringIO()):
             solve(prior)
             r = solve(1800.0)
+        answers.append(is_answer(r))
         got.append(tuple(r.values.get(k) for k in keys))
-    ok(got[0] == got[1], f"H-scope: Mars 1800 K after 1500 K and after 2060 K — byte-identical {got[0] == got[1]}")
+    same = got[0] == got[1]
+    return all(answers) and same, (f"H-scope: Mars 1800 K after 1500 K and after 2060 K — both answers {answers}, "
+                                   f"byte-identical {same}")
 
 
 def h_quick() -> None:
