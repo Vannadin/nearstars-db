@@ -110,8 +110,9 @@
   globs: []
 "test_water_hot.py":
   globs: []
-"test_ammonia.py":
-  globs: []
+"test_ammonia.py":  # §6 (AMMONIA-path) copies the generator and gate_env into a mirror: declared by hand at the fix, the next census confirms
+  globs: ["engine/gate_env.py", "engine/tools/make_ammonia_table.py"]
+  hand: true
 "test_water2.py":
   globs: []
 "test_interior.py":
