@@ -474,6 +474,46 @@ class LoadCensus(unittest.TestCase):
         r = self._run_child("stray")
         self.assertIn("stray_mod.py", r.stdout.split("unjudged module files")[1].splitlines()[0])
 
+    def _run_p1(self, mod, restore):
+        """68's P1 / P1b: a computed-name import of MOD from inside the target, for row 10 (its closure holds neither
+        solver/fall_sets.py nor engine/albedo_table.py), with and without --restore."""
+        self.assertNotIn("solver/fall_sets.py", self.row10)
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "plant_p1.py"
+            f.write_text(f"import importlib, sys\nsys.path.insert(0, {str(ck.REPO)!r})\n"
+                         f"sys.path.insert(0, {str(ck.REPO / 'engine')!r})\n"
+                         f"def p1():\n    importlib.import_module(''.join({[mod[:5], mod[5:]]!r}))\n", encoding="utf-8")
+            flags = ["--restore"] if restore else []
+            return subprocess.run([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", "10-graph-page",
+                                   *flags, "--", "--call", f"{f}:p1"], cwd=ck.REPO, capture_output=True, text=True)
+
+    def test_p1_a_module_check_py_imports_is_still_judged(self):
+        """68 HOLD B1 on 5db3db7f: check.py imports solver.fall_sets; when the census tooling imported check in-process,
+        solver/__init__ and solver/fall_sets were «loaded before the run» and never judged. P1 must be red, restore or not."""
+        for restore in (False, True):
+            r = self._run_p1("solver.fall_sets", restore)
+            self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
+            self.assertIn("solver/fall_sets.py", r.stdout.split("[LOAD-RED]")[1])
+            self.assertIn("project modules loaded before the target", r.stdout)
+            self.assertIn("(not judged; must be none from engine/ or solver/, and none the census tooling loaded): none",
+                          r.stdout)
+
+    def test_p1b_control_albedo_is_red(self):
+        r = self._run_p1("engine.albedo_table", True)
+        self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
+        self.assertIn("engine/albedo_table.py", r.stdout)
+
+    def test_the_census_process_loads_no_project_module_of_its_own(self):
+        """The class behind B1: after the census tooling has read the entry (snapshot, closure, externals), no engine/ or
+        solver/ module is in its process."""
+        code = ("import sys, json; sys.path.insert(0, %r); import load_census as lc; lc.snapshot_own('9-water-table');"
+                " lc.outside('9-water-table', []); lc.entry_externals('9-ammonia-table');"
+                " print(json.dumps(lc.classify(lc.module_files())[0]))" % str(HERE))
+        r = subprocess.run([sys.executable, "-B", "-c", code], cwd=ck.REPO, capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        mods = json.loads(r.stdout.strip().splitlines()[-1])
+        self.assertEqual([m for m in mods if m.split("/", 1)[0] in ("engine", "solver")], [])
+
     def test_census_report_keeps_every_census_line(self):
         """`--load-census` evidence: the census's own lines reach the report whole (68 point 3), not the last three of
         the run's output, and the target's own prints stay out."""

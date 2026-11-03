@@ -104,22 +104,48 @@ def loaded(root: Path = REPO) -> list:
     return classify(module_files(), root)[0]
 
 
+_INFO_CODE = r"""
+import json, sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+import check as ck
+name = sys.argv[2]
+e = ck.entries(ck.load_list())[name]
+inside = set(ck.closure(e["code"])) if e.get("code") else set()
+inside |= {p for p in e.get("derived", []) if p.endswith(".py")} | set(e["files"])
+ext = {}
+for x, s in (e.get("external") or {}).items():
+    base = ck.env_dir(s["env"]) if s.get("env") else None
+    ext[x] = [str(Path(base) / s["path"]) if base else s["path"], s["path"]]
+st = ck.read_stamp(name) or {}
+print(json.dumps({"files": e["files"], "inside": sorted(inside), "ext": ext, "ext_sha": dict(st.get("external") or {})}))
+"""
+_INFO: dict = {}
+
+
+def entry_info(name: str) -> dict:
+    """The entry's files, its closure (∪ listed derived .py ∪ its files), declared externals and stamped external sha256,
+    read by check.py in a **separate interpreter** (68 HOLD B1 on 5db3db7f): check.py imports solver.fall_sets, and a
+    project module the census tooling loads into the judged process would be masked as «loaded before the run»."""
+    if name not in _INFO:
+        import subprocess
+        r = subprocess.run([sys.executable, "-B", "-c", _INFO_CODE, str(HERE), name], cwd=REPO,
+                           capture_output=True, text=True)
+        if r.returncode != 0:
+            raise SystemExit(f"load census: reading entry {name} from derived/files.yaml failed: {r.stderr.strip()[-400:]}")
+        _INFO[name] = json.loads(r.stdout.strip().splitlines()[-1])
+    return _INFO[name]
+
+
 def outside(name: str, mods: list, allow=()) -> list:
-    sys.path.insert(0, str(HERE))
-    import check as ck
-    e = ck.entries(ck.load_list())[name]
-    inside = set(ck.closure(e["code"])) if e.get("code") else set()
-    inside |= {p for p in e.get("derived", []) if p.endswith(".py")} | set(e["files"]) | set(allow)
+    inside = set(entry_info(name)["inside"]) | set(allow)
     return [m for m in mods if m not in inside]
 
 
 def snapshot_own(name: str, root: Path = REPO) -> dict:
     """The entry's own files as they are before the run (bytes, or None when absent): what --restore writes back. Not
     HEAD: a seat's uncommitted rebuild of an entry file must survive a census (68 on db1a128b)."""
-    sys.path.insert(0, str(HERE))
-    import check as ck
-    files = ck.entries(ck.load_list())[name]["files"]
-    return {f: ((root / f).read_bytes() if (root / f).is_file() else None) for f in files}
+    return {f: ((root / f).read_bytes() if (root / f).is_file() else None) for f in entry_info(name)["files"]}
 
 
 def restore_own(name: str, snap: dict, root: Path = REPO) -> str:
@@ -430,30 +456,27 @@ def path_overrides() -> list:
 
 
 def entry_externals(name: str) -> tuple[dict, dict]:
-    sys.path.insert(0, str(HERE))
-    import check as ck
-    e = ck.entries(ck.load_list())[name]
-    ext = {}
-    for x, s in (e.get("external") or {}).items():
-        base = ck.env_dir(s["env"]) if s.get("env") else None
-        ext[x] = (str(Path(base) / s["path"]) if base else s["path"], s["path"])
-    st = ck.read_stamp(name) or {}
-    return ext, dict(st.get("external") or {})
+    info = entry_info(name)
+    return {x: tuple(v) for x, v in info["ext"].items()}, dict(info["ext_sha"])
 
 
 def main(argv) -> int:
     if "--" not in argv:
         raise SystemExit(__doc__)
     import tempfile
+    pre_tool = set(module_files())                       # before the census reads anything: what startup loaded
     head, target = argv[:argv.index("--")], argv[argv.index("--") + 1:]
     name = head[head.index("--entry") + 1]
     allow = [head[i + 1] for i, a in enumerate(head) if a == "--allow"]
     restore = "--restore" in head
     own = target_files(target)
+    entry_info(name)                                     # check.py runs in its own interpreter, never in this one
     before = untracked() if restore else set()
     snap = snapshot_own(name) if restore else {}
     reports = tempfile.mkdtemp(prefix="load-census-")
     pre = set(module_files())                            # the census's own imports, before the run
+    early = [m for m in classify(sorted(pre))[0] if m.split("/", 1)[0] in ("engine", "solver")]
+    tool_loaded = [m for m in classify(sorted(pre - pre_tool))[0]]   # project modules the tooling itself loaded
     sys.addaudithook(_audit)
     patch_popen(reports)
     rc = run_target(target)
@@ -487,9 +510,14 @@ def main(argv) -> int:
     miss = [] if reports_n >= spawned_n else [f"{spawned_n - reports_n} of {spawned_n} Python child processes wrote no "
                                              f"census report (started with -I/-E, or killed): their loads are unseen"]
     over = path_overrides()
-    if out or ext_red or miss or over:
+    before = sorted(set(early) | set(tool_loaded))
+    print(f"  {name}: project modules loaded before the target (not judged; must be none from engine/ or solver/, and "
+          f"none the census tooling loaded): {', '.join(classify(sorted(pre))[0]) or 'none'}", flush=True)
+    masked = [f"loaded into the census process before the target, so not judged (68 B1): {', '.join(before)}"] \
+        if before else []
+    if out or ext_red or miss or over or masked:
         why = ([f"loaded outside the static closure ({len(out)} of {len(mods)} project modules): {', '.join(out)}"]
-               if out else []) + ext_red + miss + over
+               if out else []) + ext_red + miss + over + masked
         print(f"[LOAD-RED] {name} — {'; '.join(why)} (target rc {rc})", flush=True)
         return 3
     print(f"[LOAD] {name} — {len(mods)} project modules loaded (children included), all inside the static closure"
