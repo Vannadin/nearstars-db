@@ -325,7 +325,7 @@ expect = FROZEN.replace("other_module_attr 21", "other_module_attr 23")
 check("the survey's SUMMARY equals the frozen line, with ES-f6's two named TABLE_POINT sites", summary == expect, summary)
 new_sites = sorted(e for e in rows["other_module_attr"] if "TABLE_POINT" in e)
 check("the two added sites are structure_grid's TABLE_POINT set and clear", len(new_sites) == 2
-      and all(e.startswith("structure_grid.py:") and "interior.TABLE_POINT (interior)" in e for e in new_sites), str(new_sites))
+      and all(e.split(":", 1)[0] == "structure_grid.py" and "interior.TABLE_POINT (interior)" in e for e in new_sites), str(new_sites))
 kd = keyed(rows, HERE)
 for row in LISTED_ROWS:              # r2 B1 on db4eab30: §4.6's «each blind-spot row's hit list equal», not the counts
     check(f"the «{row}» hit list equals the frozen list ({len(FROZEN_LISTS[row])})", kd[row] == FROZEN_LISTS[row],

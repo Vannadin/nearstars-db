@@ -274,7 +274,8 @@ class ExcludedSetLiteral(unittest.TestCase):
                                  ("structure_grid", "GRID_DIR"), ("interior", "MELT_SEAMS_LANDED"),
                                  ("interior", "STAGE_CLAMP_EVERY_STEP"), ("interior", "_FOLD_DEPTH"),
                                  ("interior", "FOLD_DOUBLED"), ("interior", "STEPS"),
-                                 ("interior", "CONTRACT_SITES_OFF")})        # item A: the per-site mutant switch
+                                 ("interior", "CONTRACT_SITES_OFF"),         # item A: the per-site mutant switch
+                                 ("interior", "TABLE_POINT")})               # ES-f6 (a.1): the table point switch
 
 
 class WaterMixture(unittest.TestCase):
