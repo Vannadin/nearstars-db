@@ -15,7 +15,7 @@ primary_family:
     (Zeng ignores T, note 2 item 2)'
 handover_table:
   file: tables/silicate_prem_zeng2016.json.gz
-  sha256: 291b9c562f89b99de26dac0ce07200c9d1333fd672eefcac69d489af435d7e58
+  sha256: 75bc34b42e08136b436295b0b7f41d093a2c035a69497a2918ac03d5a5dfd158
   blocks:
   - silicate_slb_default_bse
   - silicate_slb_earth_dmm_wh2005
