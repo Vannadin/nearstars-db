@@ -1,0 +1,155 @@
+# 파생 파일 목록 — engine/·solver/ 에 커밋된 파생 파일마다 빌드 진입점·입력·검사를 적고(sg-gate prereg 1765b55c §1 G1), 조사에서 빠지는 파일의 까닭을 적음
+# Read by derived/check.py (stamps, checks, census, landing steps) and by scripts/check.sh. derived/ is no entry's input.
+# code: build entry points (path:function); the stamped code is their static import closure, computed at check time.
+# data: in-tree inputs by git blob. derived: listed derived files this entry reads (the DAG). out_of_tree: artifacts paths,
+# read at artifacts origin/main from NEARSTARS_ARTIFACTS. packages: name (version stamped). external: name → {env, path}
+# (sha256 of the file; a missing env or file is red). check: the value or rebuild check run when the stamp moved.
+
+entries:
+  1-earth:
+    row: 1
+    files: [engine/structure_grid/earth.json]
+    code: [engine/structure_grid.py:build]
+    data: [engine/bodies/earth.yaml, engine/chain.yaml]
+    derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json]
+    check: {kind: structure_table, table: engine/structure_grid/earth.json}
+  1-venus:
+    row: 1
+    files: [engine/structure_grid/venus.json]
+    code: [engine/structure_grid.py:build]
+    data: [engine/bodies/venus.yaml, engine/chain.yaml]
+    derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json]
+    check: {kind: structure_table, table: engine/structure_grid/venus.json}
+  1-mars:
+    row: 1
+    files: [engine/structure_grid/mars.json]
+    code: [engine/structure_grid.py:build]
+    data: [engine/bodies/mars.yaml, engine/chain.yaml]
+    derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json]
+    check: {kind: structure_table, table: engine/structure_grid/mars.json}
+  2-reference-adiabats:
+    row: 2
+    files: [engine/reference_adiabats.json]
+    code: [engine/tools/reference_adiabats.py:build]
+    data: [engine/chain.yaml]
+    check: {kind: command, argv: ["{python}", engine/tools/reference_adiabats.py, --check]}
+  3-ice-giant-anchor:
+    row: 3
+    files: [engine/ice_giant_anchor.json]
+    code: [engine/test_ice_giant.py:refresh]
+    data: [engine/chain.yaml]
+    derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json]
+    check: {kind: command, argv: ["{python}", engine/test_ice_giant.py]}
+  4-mars-sulphur-anchor:
+    row: 4
+    files: [engine/mars_sulphur_anchor.json]
+    code: [engine/test_mars_sulphur.py:refresh]
+    data: [engine/bodies/mars.yaml, engine/chain.yaml]
+    check: {kind: command, argv: ["{python}", engine/test_mars_sulphur.py]}
+  5-c143-inventory:
+    row: 5
+    files: [engine/c143_sum_inventory.json]
+    code: [engine/test_c143_guard.py:main]
+    check: {kind: command, argv: ["{python}", engine/test_c143_guard.py]}
+  6-mantle-tables:
+    row: 6
+    files: [engine/mantle_tables/0663e6a031cae4dc.json, engine/mantle_tables/25cb82c1607ef8c7.json,
+            engine/mantle_tables/7f2146ace4f965b1.json, engine/mantle_tables/c6bd588831fd8229.json]
+    code: [engine/mantle_composition.py:build]
+    packages: [burnman]
+  7-fall-sets:
+    row: 7
+    files: [solver/materials/fall_sets/silicate_slb_default_bse.json.gz,
+            solver/materials/fall_sets/silicate_slb_earth_dmm_wh2005.json.gz,
+            solver/materials/fall_sets/silicate_slb_mars_khan2022.json.gz]
+    code: [solver/rho_fall_build.py:main, solver/fall_sets.py:export]
+    data: [engine/chain.yaml]
+    derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json,
+              solver/materials/silicate_slb_default_bse.yaml, solver/materials/silicate_slb_earth_dmm_wh2005.yaml,
+              solver/materials/silicate_slb_mars_khan2022.yaml]
+    check: {kind: command, argv: ["{python}", -m, unittest, solver.tests.test_fall_set_stamp]}
+  8a-h2o:
+    row: 8a
+    files: [solver/materials/h2o.yaml]
+    code: [solver/material_library.py, solver/material_registry.py, solver/material_joins.py, solver/material_view.py]
+    out_of_tree: [rewrite/phase2-records/gen_h2o.py]
+    packages: [SeaFreeze]
+  8b-fe-prem:
+    row: 8b
+    files: [solver/materials/fe_prem.yaml, solver/materials/fe_prem_legacy.yaml]
+    derived: [engine/reference_adiabats.json]
+    out_of_tree: [rewrite/phase2-records/gen_fe_prem.py]
+  8c-prem-handover:
+    row: 8c
+    files: [solver/materials/silicate_prem_zeng2016.yaml, solver/materials/tables/silicate_prem_zeng2016.json.gz]
+    derived: [solver/materials/silicate_slb_default_bse.yaml, solver/materials/tables/silicate_slb_default_bse.json.gz]
+    # the builder it executes (ac974604, a path argument) is pinned by blob inside the generator (BUILDER_BLOB)
+    out_of_tree: [rewrite/phase2-records/gen_prem_handover.py]
+  8d-silicate-slb:
+    row: 8d
+    files: [solver/materials/silicate_slb_default_bse.yaml, solver/materials/silicate_slb_earth_dmm_wh2005.yaml,
+            solver/materials/silicate_slb_mars_khan2022.yaml, solver/materials/tables/silicate_slb_default_bse.json.gz,
+            solver/materials/tables/silicate_slb_earth_dmm_wh2005.json.gz,
+            solver/materials/tables/silicate_slb_mars_khan2022.json.gz]
+    # the generator's measured import closure (regen8d PC trace, 6c1fd9664; loaded or read, sg-gate note 1 §2); the
+    # tables' builder ac974604 is read as bytes and pinned against the sidecar header, never loaded
+    out_of_tree: [rewrite/phase2-records/gen_silicate_records.py, rewrite/phase2-records/slb2024/dtdp_eq.py,
+                  rewrite/phase2-records/slb2024/strict_report.py,
+                  rewrite/phase2-records/slb2024/transition/transition_check.py]
+    packages: [burnman]
+  9-hhe-table:
+    row: 9
+    files: [engine/hhe_table.py]
+    code: [engine/tools/make_hhe_table.py:main]
+    external: {DirEOS2019: {env: NEARSTARS_EXTERNAL, path: DirTABLES-EOS2019/TABLEEOS_HHE_TP_IVL_Y0.275_v1}}
+  9-ice-melt-table:
+    row: 9
+    files: [engine/ice_melt_table.py]
+    code: [engine/tools/make_ice_melt_table.py:main]
+    external:
+      liquid: {env: NEARSTARS_EXTERNAL, path: highP-ice/figs-1-and-S1/coex-line-liquid.dat}
+      vii: {env: NEARSTARS_EXTERNAL, path: highP-ice/figs-1-and-S1/coex-line-superionic-ice.dat}
+      direct: {env: NEARSTARS_EXTERNAL, path: highP-ice/figs-1-and-S1/coex-direct-coexistence.dat}
+  9-water-table:
+    row: 9
+    files: [engine/water_table.py]
+    code: [engine/tools/make_water_table.py:main]
+    packages: [SeaFreeze]
+  9-water2-table:
+    row: 9
+    files: [engine/water2_table.py]
+    code: [engine/tools/make_water2_table.py:main]
+    packages: [SeaFreeze]
+  9-ammonia-table:
+    row: 9
+    files: [engine/ammonia_table.py]
+    code: [engine/tools/make_ammonia_table.py:main]
+    external: {Bethkenhagen2013: {env: NEARSTARS_PAPERS, path: 2013JChPh.138w4504B.pdf}}
+  10-graph-page:
+    row: 10
+    files: [engine/chain-explorer.html]
+    code: [engine/build_graph_page.py:build]
+    data: [engine/chain.yaml]
+    check: {kind: command, argv: ["{python}", engine/tools/check_graph_page.py]}
+
+# tracked files under engine/ and solver/ that are neither source, documents nor listed: regex → reason (prereg §0)
+exempt:
+  'engine/bodies/.*\.yaml': authored body declarations
+  'engine/bindings\.yaml': authored
+  'engine/chain\.yaml': authored chain
+  'engine/tools/core_items_kind\.yaml': authored
+  'engine/test_fixtures/.*': test fixtures
+  'engine/dependency-chain\.html': prose page, hand-written (build_graph_page names it so)
+  'engine/aqua-substitution-gaps/.*': frozen measurement records, never rebuilt
+  'solver/data/.*\.yaml': authored solver data
+  'solver/materials/sources\.yaml': authored
+  'solver/materials/schema\.yaml': authored
+  'solver/materials/silicate_basal_const\.yaml': authored, no generator line (68 B2)
+  'solver/tests/fixtures/.*': test fixtures
+  'solver/tests/env_tiers\.yaml': authored test tier list (HEAVY-onctl P2)
+  '(engine|solver)/requirements(-burnman)?\.txt': requirements files
+  'solver/\.gitignore': VCS config
+
+# make_*.py outputs that are not committed (census: named, not listed)
+not_tracked:
+  engine/aqua_table.py: make_aqua_table.py writes it; not committed
