@@ -509,7 +509,9 @@ class LoadCensus(unittest.TestCase):
         code = ("import sys, json; sys.path.insert(0, %r); import load_census as lc; lc.snapshot_own('9-water-table');"
                 " lc.outside('9-water-table', []); lc.entry_externals('9-ammonia-table');"
                 " print(json.dumps(lc.classify(lc.module_files())[0]))" % str(HERE))
-        r = subprocess.run([sys.executable, "-B", "-c", code], cwd=ck.REPO, capture_output=True, text=True)
+        with tempfile.TemporaryDirectory() as d:  # the entry read needs the env dir named, not its contents
+            env = dict(os.environ, NEARSTARS_PAPERS=os.environ.get("NEARSTARS_PAPERS") or d)
+            r = subprocess.run([sys.executable, "-B", "-c", code], cwd=ck.REPO, env=env, capture_output=True, text=True)
         self.assertEqual(r.returncode, 0, r.stderr)
         mods = json.loads(r.stdout.strip().splitlines()[-1])
         self.assertEqual([m for m in mods if m.split("/", 1)[0] in ("engine", "solver")], [])
