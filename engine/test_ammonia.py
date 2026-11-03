@@ -17,6 +17,11 @@
    at the solar-ratio water:ammonia mass fractions renormalised to two components. The
    numbers are printed and the deviation from pure water is reported — this is the first
    measured piece of the composition tier, for the ammonia share only.
+6. **The generator reads the paper cache (AMMONIA-path).** In a mirror of the generator, a non-PDF planted at the
+   tree's own `docs/phase3/_papers` and the real PDF at `$NEARSTARS_PAPERS`: the build must parse all 93 rows.
+   Swapped, it must fail. Either way the path read is `gate_env.papers_dir()`, the one a stamp hashes. (The build's
+   output is not compared with the committed `ammonia_table.py`: that file was extended by hand after generation,
+   C157 2a12511c and f681afbd, so the generator no longer reproduces it on the base either.)
 """
 from __future__ import annotations
 
@@ -54,6 +59,60 @@ def _row(rho, t):
         if r == rho:
             return p, u, f
     return None
+
+
+def _generator_reads_papers_env(check) -> None:
+    """Mirror engine/tools/make_ammonia_table.py and engine/gate_env.py into a temp tree. Plant a non-PDF at the mirror's
+    own docs/phase3/_papers (the path the generator used to read) and point NEARSTARS_PAPERS at the real cache: the build
+    must parse the whole table. Swap the two: the build must fail."""
+    import os
+    import shutil
+    import subprocess
+    import tempfile
+    from pathlib import Path
+
+    import gate_env
+
+    here = Path(__file__).resolve().parent
+    name = "2013JChPh.138w4504B.pdf"
+    real = gate_env.papers_dir() / name
+    missing = [w for w, ok in (("pdftotext", shutil.which("pdftotext")), (str(real), real.is_file())) if not ok]
+    if missing:
+        msg = f"생성기 입력 경로 — {', '.join(missing)} 없음"
+        if gate_env.in_gate():                     # C134 개정 1 — 게이트 안에서는 같은 문장이 실패다
+            check(False, msg)
+        else:
+            print(f"  [SKIP] {msg}")
+        return
+    with tempfile.TemporaryDirectory() as d:
+        m = Path(d)
+        (m / "engine" / "tools").mkdir(parents=True)
+        shutil.copy2(here / "gate_env.py", m / "engine" / "gate_env.py")
+        shutil.copy2(here / "tools" / "make_ammonia_table.py", m / "engine" / "tools" / "make_ammonia_table.py")
+        tree_cache, env_cache = m / "docs" / "phase3" / "_papers", m / "env-papers"
+        tree_cache.mkdir(parents=True)
+        env_cache.mkdir()
+        not_pdf = b"not the paper: a planted file at the generator's old path\n"
+
+        def build(env_dir: Path) -> subprocess.CompletedProcess:
+            out = m / "engine" / "ammonia_table.py"
+            if out.exists():
+                out.unlink()
+            env = dict(os.environ, NEARSTARS_PAPERS=str(env_dir))
+            return subprocess.run([sys.executable, "-B", str(m / "engine" / "tools" / "make_ammonia_table.py")],
+                                  cwd=m, env=env, capture_output=True, text=True)
+
+        (tree_cache / name).write_bytes(not_pdf)
+        shutil.copy2(real, env_cache / name)
+        r = build(env_cache)
+        built = m / "engine" / "ammonia_table.py"
+        ok = r.returncode == 0 and built.is_file() and ": 93 rows," in r.stdout
+        check(ok, "non-PDF 은 트리 경로에, 진짜 PDF 는 $NEARSTARS_PAPERS 에 → 93 행을 다 읽음"
+                  + ("" if ok else f" (rc {r.returncode}: {(r.stderr or r.stdout).strip()[-200:]})"))
+        (env_cache / name).write_bytes(not_pdf)
+        shutil.copy2(real, tree_cache / name)
+        r = build(env_cache)
+        check(r.returncode != 0, f"바꿔 심으면 실패 (rc {r.returncode}) — 트리 경로의 진짜 PDF 를 읽지 않음")
 
 
 def main() -> int:
@@ -185,6 +244,9 @@ def main() -> int:
         print(f"  {p_gpa:6.0f} {t:6.0f} {hot.c_p(p, t):8.0f} {NH3.c_p(p, t):8.0f} "
               f"{hot.grad_ad(p, t):7.3f} {NH3.grad_ad(p, t):7.3f} {mix.grad_ad(p, t):7.3f}")
     print("  (암모니아의 c_P 는 진동 보정이 든 u 의 온도 도함수다 — 규약 노출은 이 두 열뿐이다)")
+
+    print("\n생성기 입력 경로 (AMMONIA-path) — 생성기가 $NEARSTARS_PAPERS 의 PDF 를 읽는가")
+    _generator_reads_papers_env(check)
 
     print()
     if fails:
