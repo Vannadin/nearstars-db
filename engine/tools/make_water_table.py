@@ -94,6 +94,8 @@ def main():
         "measured against the spline at off-grid points is recorded below by the generator.",
         '"""',
         "",
+        "import smooth_table",
+        "",
         f"P_LO_PA = {P_LO_MPA * 1e6!r}",
         f"P_STEP_PA = {P_STEP_MPA * 1e6!r}",
         f"NP = {len(ps)}",
@@ -160,6 +162,11 @@ def in_domain(p_pa, t_k):
     return P_LO_PA <= p_pa <= P_MAX_PA and T_LO_K <= t_k <= T_MAX_K
 
 
+_XP = [P_LO_PA + k * P_STEP_PA for k in range(NP)]   # C157 메모 10 — 격자점 좌표(보간 축)
+_XT = [T_LO_K + k * T_STEP_K for k in range(NT)]
+_CACHE: dict = {}      # C157 메모 10 — 표마다 행 계수 캐시(표는 고정)
+
+
 def _cell(p_pa, t_k):
     fp = (p_pa - P_LO_PA) / P_STEP_PA
     ft = (t_k - T_LO_K) / T_STEP_K
@@ -169,10 +176,16 @@ def _cell(p_pa, t_k):
 
 
 def _bilinear(table, p_pa, t_k):
+    """C157 메모 10 — 이름은 그대로, 보간은 `smooth_table`(단조 3 차 에르미트, P 다음 T; MODE «linear» 면 오늘의 쌍선형).
+    들쭉날쭉한 행(천장 너머)은 없는 점이다."""
     i, j, u, v = _cell(p_pa, t_k)
-    r0, r1 = table[i], table[i + 1]
-    return ((1.0 - u) * ((1.0 - v) * r0[j] + v * r0[j + 1])
-            + u * ((1.0 - v) * r1[j] + v * r1[j + 1]))
+    if smooth_table.MODE == "linear":
+        r0, r1 = table[i], table[i + 1]
+        return ((1.0 - u) * ((1.0 - v) * r0[j] + v * r0[j + 1])
+                + u * ((1.0 - v) * r1[j] + v * r1[j + 1]))
+    return smooth_table.cubic2(p_pa, t_k, _XP, _XT,
+                               lambda kp, kt: table[kt][kp] if kp < len(table[kt]) else None, j, i,
+                               _CACHE.setdefault(id(table), {}))
 
 
 def density(p_pa, t_k):
