@@ -56,7 +56,7 @@ tiers:
       engine/test_domain.py: 1
       engine/test_ice_fr2015.py: 1
       engine/test_paleos.py: 1
-      derived/check.py: 2            # its own in_gate() (a direct GATE_RUNNING read) and one call (sg-gate B2 ruling)
+      derived/check.py: 4            # its own in_gate() (a direct GATE_RUNNING read), the B2 call, and the load census's B2 lane (2)
       derived/test_derived.py: 2     # the B2 lane control sets and clears it (a planted lane, no tier read)
 
 # Every env name that code under engine/, solver/ and scripts/ reads or writes. class: tier (a test runs or skips),

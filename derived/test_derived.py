@@ -305,5 +305,107 @@ class ExpectedRed(unittest.TestCase):
                           for c in ("default_bse", "earth_dmm_wh2005", "mars_khan2022")])
 
 
+class LoadCensus(unittest.TestCase):
+    """G1 load census and N18: modules loaded by a run, judged against the entry's static closure (derived/load_census.py)."""
+    PLANT = ("import importlib, sys\n"
+             "sys.path.insert(0, {engine!r})\n"
+             "def _imp(_):\n"
+             "    importlib.import_module(''.join(['albe', 'do_table']))   # a computed name: no static scan sees it\n"
+             "def direct():\n"
+             "    _imp(0)\n"
+             "def pooled():\n"
+             "    import multiprocessing\n"
+             "    with multiprocessing.get_context('fork').Pool(2) as p:\n"
+             "        p.map(_imp, [0])\n")
+
+    @classmethod
+    def setUpClass(cls):
+        import load_census as lc
+        cls.lc = lc
+        cls.row10 = set(ck.closure(ck.entries(DOC)["10-graph-page"]["code"]))
+
+    def _run(self, func):
+        self.assertNotIn("engine/albedo_table.py", self.row10)       # the control's precondition
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "plant_n18.py"
+            f.write_text(self.PLANT.format(engine=str(ck.REPO / "engine")), encoding="utf-8")
+            return subprocess.run([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", "10-graph-page", "--",
+                                   "--call", f"{f}:{func}"], cwd=ck.REPO, capture_output=True, text=True)
+
+    def test_n18_computed_import_is_named_red(self):
+        r = self._run("direct")
+        self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
+        self.assertIn("[LOAD-RED] 10-graph-page", r.stdout)
+        self.assertIn("engine/albedo_table.py", r.stdout)
+
+    def test_n18_in_a_pool_worker_is_seen(self):
+        """A pool worker's import is seen: the census replaces multiprocessing pools with an in-process stand-in."""
+        r = self._run("pooled")
+        self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
+        self.assertIn("engine/albedo_table.py", r.stdout)
+
+    def test_outside_keeps_closure_and_names_the_rest(self):
+        inside = sorted(self.row10)[0]
+        self.assertEqual(self.lc.outside("10-graph-page", [inside, "engine/albedo_table.py"]), ["engine/albedo_table.py"])
+
+    def test_target_files_of_unittest(self):
+        self.assertEqual(self.lc.target_files(["-m", "unittest", "solver.tests.test_fall_set_stamp"]),
+                         ["solver/__init__.py", "solver/tests/__init__.py", "solver/tests/test_fall_set_stamp.py"])
+
+    def test_census_target_pc_substitution_and_external_env(self):
+        self.assertIsNone(ck.census_target({"census": {"where": "pc", "how": "x"}}))
+        with tempfile.TemporaryDirectory() as d:
+            ext = ck.env_dir("NEARSTARS_EXTERNAL", given=d)
+            e = {"census": {"argv": ["engine/tools/x.py", "{external}/T"], "restore": True},
+                 "external": {"P": {"env": "NEARSTARS_EXTERNAL", "path": "T"}}}
+            orig, ck.env_dir = ck.env_dir, lambda var, given=None: ext
+            try:
+                target, flags, env = ck.census_target(e)
+            finally:
+                ck.env_dir = orig
+        self.assertEqual(target, ["engine/tools/x.py", f"{d}/T"])
+        self.assertEqual(flags, ["--restore"])
+        self.assertEqual(env, {"NEARSTARS_EXTERNAL": d})
+
+    def test_every_entry_has_a_census_and_checks_name_tolerance(self):
+        doc = json.loads(json.dumps(DOC))
+        e = doc["entries"]["10-graph-page"]
+        del e["check"]["tolerance"]
+        doc["entries"]["9-hhe-table"].pop("census")
+        reds = ck.census(doc)
+        self.assertIn("10-graph-page: its check names no tolerance (G1)", reds)
+        self.assertTrue(any(r.startswith("9-hhe-table: no load census (G1)") for r in reds), reds)
+
+    def test_rebuild_restamp_refuses_on_a_census_red(self):
+        """G1 «at each rebuild of the entry»: a stamp-only entry's rebuild restamp runs its census; a red refuses."""
+        orig, ck.run_census = ck.run_census, lambda name, e: (False, "[LOAD-RED] planted")
+        try:
+            with self.assertRaises(SystemExit) as cm:
+                ck.restamp("9-hhe-table", "rebuild:planted")
+        finally:
+            ck.run_census = orig
+        self.assertIn("load census", str(cm.exception))
+
+    def test_call_args_take_the_env_dirs(self):
+        e = {"census": {"call": "derived/census_targets.py:ammonia_table", "args": ["{papers}"]}}
+        orig, ck.env_dir = ck.env_dir, lambda var, given=None: "/P"
+        try:
+            target, _, _ = ck.census_target(e)
+        finally:
+            ck.env_dir = orig
+        self.assertEqual(target, ["--call", "derived/census_targets.py:ammonia_table", '["/P"]'])
+
+    def test_restore_removes_only_new_untracked(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            (root / "old.txt").write_text("x")
+            before = self.lc.untracked(root)
+            (root / "new.part").write_text("y")
+            self.assertEqual(self.lc.remove_new(before, root), ["new.part"])
+            self.assertTrue((root / "old.txt").is_file())
+            self.assertFalse((root / "new.part").exists())
+
+
 if __name__ == "__main__":
     unittest.main()

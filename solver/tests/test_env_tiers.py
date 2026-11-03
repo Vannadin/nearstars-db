@@ -101,7 +101,7 @@ class Controls(unittest.TestCase):
 
     def test_census_sees_the_known_tiers(self):
         self.assertGreaterEqual(len(NAMES), 20)
-        self.assertEqual(sum(SITES.values()), 16)          # 12 engine sites + derived/check.py's 2 + test_derived's 2 (sg-gate)
+        self.assertEqual(sum(SITES.values()), 18)          # 12 engine sites + derived/check.py's 4 + test_derived's 2 (sg-gate)
         self.assertGreaterEqual(sum(1 for e in GATED.values() if "NEARSTARS_HEAVY" in e), 11)
 
     def test_planted_decorator_gate(self):
