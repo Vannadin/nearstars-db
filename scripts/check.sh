@@ -1295,6 +1295,10 @@ step "test_lithosphere.py" bash -c 'cd engine && exec python3 test_lithosphere.p
 step "test_core_light_elements.py" bash -c 'cd engine && exec python3 test_core_light_elements.py'
 # 맨틀 조성 선언 (C74-2). 읽기 · 거절 · 선언 없는 몸 비트 동일 · A′-배관(표 격자점 대 BurnMan 직접, ≤ 1e-6) — 몸 파일은 아직 안 켬(지휘 ⓒ).
 step "test_mantle_composition.py" bash -c 'cd engine && exec python3 test_mantle_composition.py'
+# M1 «declared mass vs formula» (S3 D2 등록 §2.0, 동결 d65eb6c8; r2 B4 · 지휘석 11-04): 엔진이 만드는 BurnMan 광물의 끝성분 질량이
+#   화학식 질량과 같거나 동결 허용 목록(scripts/mass_allowlist.json, 원장 MARS-mass · geodynamics/burnman#760)과 정확히 같은가. ~3 s / 시험 ~20 s.
+step "scripts/test_check_mass_formula.py" bash -c 'python3 scripts/test_check_mass_formula.py'
+step "scripts/check_mass_formula.py" bash -c 'python3 scripts/check_mass_formula.py'
 # 맨틀 조성 표의 열이 수렴한 이웃을 따르는가 — 규칙 갈래 · 1 bar 와즐리아이트 막이 · 이름 대고 굳힘 (C160). BurnMan, ~7 s.
 step "test_column_rule.py" bash -c 'cd engine && exec python3 test_column_rule.py'
 # 취미용 표 가속이 값을 안 바꾸는가 — 압력식 재배열 · 따뜻한 근 찾기 · 풀이마다 초기화 · 빠른 판 (C161). ~21 s.
