@@ -1269,6 +1269,12 @@ step "test_table_triggers.py" bash -c 'cd engine && exec python3 test_table_trig
 # 기준 단열선 표를 오늘의 엔진으로 다시 지어 바이트 대조 (C148 덧붙임 2) — 기준 기계(Linux-x86_64)만 판정, 그 밖은 [기록]. ~10 초.
 step "engine/tools/reference_adiabats.py --check" bash -c 'exec python3 engine/tools/reference_adiabats.py --check'
 step "test_reference_adiabats.py" bash -c 'cd engine && exec python3 test_reference_adiabats.py'
+# 파생 파일 관문(sg-gate prereg 1765b55c G5) — 단계는 derived/files.yaml 에서 생성한다: 항목마다 하나(스탬프 대조, 움직였으면
+#   그 항목의 값·재빌드 검사) + 기본 거부 조사. 목록에서 빠진 항목은 조사가 잡는다(r2 N1). 위의 check_graph_page 단계는 그대로 둔다(quick 층이 이름으로 부른다).
+while IFS=$'\t' read -r _dn _dcmd; do
+  step "derived $_dn" bash -c "exec ${_dcmd//\{python\}/python3}"
+done < <(python3 derived/check.py --steps | grep -v '^#')
+step "derived/test_derived.py" bash -c 'exec python3 derived/test_derived.py'
 step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
 step "test_convergence_meaning.py" bash -c 'cd engine && exec python3 test_convergence_meaning.py'
 step "test_rootfind.py" bash -c 'cd engine && exec python3 test_rootfind.py'
