@@ -242,9 +242,11 @@ def read_stamp(name: str) -> dict | None:
 
 
 # ── value / rebuild checks (G2) ──────────────────────────────────────────────────────────────────────────────────────
-def check_structure_table(table: str) -> tuple[bool, str]:
-    """Row 1: structure_grid's own read rules for one table (quick mode, refusal cap, data triggers by _moved), and its
-    `_recheck` within ε — called because the sidecar's closure moved (the in-file code digest is not read, §1.1)."""
+def check_structure_table(table: str, recheck: bool = True) -> tuple[bool, str]:
+    """Row 1: structure_grid's own read rules for one table (quick mode, refusal cap, data triggers by _moved), and, when
+    `recheck`, its `_recheck` within ε — run because the sidecar's closure moved (the in-file code digest is not read,
+    §1.1). The read rules run on every call, stamp moved or not: a first stamp asserts nothing about values (§3), so a
+    table already stale on its data (mars under the E18 hold) is red at once, never green by its first stamp."""
     sys.path.insert(0, str(REPO / "engine"))
     import run
     import structure_grid as sg
@@ -259,6 +261,8 @@ def check_structure_table(table: str) -> tuple[bool, str]:
     data, _code_in_file = sg._moved(doc["triggers"], sg.triggers(body.inputs))
     if data:
         return False, f"data triggers moved {data}"
+    if not recheck:
+        return True, "read rules hold (quick mode, refusal cap, data triggers)"
     before = sg.GUARD_RUNS[0]
     worst, where = sg._recheck(doc, body)
     sg.GUARD_RUNS[0] += 1
@@ -312,6 +316,11 @@ def judge_entry(name: str, e: dict, art_env=None, out=print) -> int:
     if own:
         out(f"[RED] {name} — its own bytes differ from the stamp's ({own}): rebuilt without --restamp, or edited")
         return _named(name, out)
+    if not mv and (e.get("check") or {}).get("kind") == "structure_table":
+        ok, why = check_structure_table(e["check"]["table"], recheck=False)
+        if not ok:
+            out(f"[RED] {name} — stamp unchanged, but the table's own read rules fail: {why}")
+            return _named(name, out)
     if not mv:
         out(f"[GREEN] {name} — stamp unchanged ({len(now['code'])} closure modules, {len(now['data'])} data, "
             f"{len(now['derived'])} derived, {len(now['out_of_tree']) - ('_ref' in now['out_of_tree'])} out-of-tree)")
