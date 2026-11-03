@@ -39,7 +39,15 @@ def test_2_other_step_rejected():
 def test_3_rc0_accepted_with_green_note():
     import tempfile
     tmp_path = pathlib.Path(tempfile.mkdtemp())
+    real_load = ld._load_expected_red
     ld._load_expected_red = lambda: T
+    try:
+        _test_3_body(tmp_path)
+    finally:
+        ld._load_expected_red = real_load                     # r2 n2 (3b): restore, so later tests see the file
+
+
+def _test_3_body(tmp_path):
     (tmp_path / "gate-x.log").write_text(
         "GATE START\n" + "\n".join(body(M, [], fail=False)) +
         "\nGATE END sha=abc1234 date=2026-09-29+0900 lane=full rc=0\n")
@@ -325,6 +333,16 @@ def test_hold_n5_form_bound_to_its_step():
     form1 = next(l for l in PC_BLOCKS[SG] if "데이터 방아쇠" in l)
     b = [form1 if "방아쇠 그대로" in l else l for l in PC_BLOCKS[TS]]
     assert not _with([b])[0]
+
+
+def test_hold_n6_exit_only_range_rejected():
+    # r2 B1 (3b 8a2b9cf9): structure_grid.py --check dies with a traceback — no mars.json line, only the exit line
+    b = [l for l in PC_BLOCKS[SG] if "데이터 방아쇠" not in l]
+    assert b != PC_BLOCKS[SG] and any("비0 종료" in l for l in b)
+    b.insert(1, "Traceback (most recent call last):")
+    b.insert(2, "KeyError: 'mantle_table'")
+    ok, notes = _with([b])
+    assert not ok and any("종료 줄만" in n for n in notes), notes
 
 
 def test_hold_row_in_the_file_matches_the_frozen_text():

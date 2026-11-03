@@ -158,7 +158,8 @@ def _trigger_set(text):
 
 def _table_trigger_rows(lines, table, notes):
     """(claimed FAIL line indices, None) or (None, why): every FAIL line in a table_triggers row's step ranges must be
-    the step's exit line or the step's own form naming the row's table and exactly its trigger set."""
+    the step's own form naming the row's table and exactly its trigger set, or the step's exit line when that range
+    also holds the form line. An exit line with no form line in its range is 불인정 (r2 B1)."""
     claimed = set()
     for row in (r for r in table if r.get("kind") == "table_triggers"):
         hit = False
@@ -167,19 +168,26 @@ def _table_trigger_rows(lines, table, notes):
             if b is None:
                 continue
             form = TABLE_TRIGGER_FORMS.get(st)
+            exits, forms = [], []
             for i in range(b[0], b[1] + 1):
                 t = lines[i].strip()
                 if not t.startswith("[FAIL]"):
                     continue
                 if t == f"[FAIL] {st} — 비0 종료 (이 단계가 fail=1 을 세웠다)":
-                    claimed.add(i)
+                    exits.append(i)
                     continue
                 m = form.match(t) if form else None
                 if m and m.group(1) == row["table"] and _trigger_set(m.group(2)) == set(row["triggers"]):
-                    claimed.add(i)
-                    hit = True
+                    forms.append(i)
                     continue
                 return None, f"{row['id']} — {st} 구간에 기대 밖 FAIL: {t[:90]} → 불인정"
+            # r2 B1 (3b 8a2b9cf9): the exit line is the row's only when the step's own form line is in the same range;
+            # an exit-only range (a crash, a traceback) is not the hold's red
+            if exits and not forms:
+                return None, f"{row['id']} — {st} 구간에 종료 줄만 있고 방아쇠 줄이 없음 (죽은 단계?) → 불인정"
+            claimed.update(exits)
+            claimed.update(forms)
+            hit = hit or bool(forms)
         if hit:
             notes.append(f"기대 빨강 {row['id']} 만 있음 → 인정")
     return claimed, None
