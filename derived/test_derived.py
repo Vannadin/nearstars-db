@@ -123,6 +123,62 @@ class Closure(unittest.TestCase):
         self.assertGreater(len(mods), 4)
 
 
+class Globs(unittest.TestCase):
+    """68 n1 / n2 on 2be90e97 and B1's fix: data globs expand over tracked files only, and the DAG sees the expansion."""
+
+    def test_glob_rule(self):
+        rx = ck.glob_re("engine/**/*.py")
+        for f, want in (("engine/x.py", True), ("engine/tools/x.py", True), ("engine/a/b/x.py", True),
+                        ("engine2/x.py", False), ("engine/x.pyc", False), ("scripts/engine/x.py", False)):
+            self.assertEqual(bool(rx.match(f)), want, f)
+        self.assertFalse(ck.glob_re("phase4/*.yaml").match("phase4/sub/x.yaml"))
+
+    def test_untracked_and_venv_are_no_input(self):
+        files = ["phase4/a.yaml", "engine/.venv-gate/lib/x.py", "engine/x.py"]
+        self.assertEqual(ck.expand(["phase4/*.yaml", "engine/**/*.py"], files), ["phase4/a.yaml", "engine/x.py"])
+
+    def test_an_untracked_stray_stays_green(self):
+        """a stray untracked phase4/*.yaml on this machine leaves row 10's stamp as it is (tracked files only)."""
+        e = DOC["entries"]["10-graph-page"]
+        before = ck.stamp("10-graph-page", e)
+        stray = ck.REPO / "phase4" / "zz_untracked_stray_control.yaml"
+        self.assertFalse(stray.exists())
+        try:
+            stray.write_text("planted: 1\n", encoding="utf-8")
+            after = ck.stamp("10-graph-page", e)
+        finally:
+            stray.unlink()
+        self.assertEqual(ck.moved(before, after), [])
+
+    def test_a_glob_matching_an_unlisted_derived_file_is_refused(self):
+        doc = json.loads(json.dumps(DOC))
+        doc["entries"]["5-c143-inventory"]["derived"].remove("engine/water_table.py")
+        with self.assertRaises(SystemExit) as cm:
+            ck.dag_order(doc)
+        self.assertIn("glob matches the derived file engine/water_table.py", str(cm.exception))
+
+    def test_row5_reads_every_tracked_py_of_its_census(self):
+        """B1: row 5's inputs cover every tracked .py under engine/ and scripts/ (data, derived or code)."""
+        e = DOC["entries"]["5-c143-inventory"]
+        st = ck.stamp("5-c143-inventory", e)
+        have = set(st["data"]) | set(st["derived"]) | set(st["code"])
+        want = {f for f in ck.tracked_all() if f.endswith(".py") and f.split("/")[0] in ("engine", "scripts")}
+        self.assertEqual(want - have, set())
+
+
+class DynamicImports(unittest.TestCase):
+    """68 B1 class (measured on rows 4 and 7): modules imported by name at run time are in the closure."""
+
+    def test_registry_walk_and_package_init(self):
+        mods = ck.closure(DOC["entries"]["7-fall-sets"]["code"])
+        for m in ("engine/hop_track.py", "engine/thermal_stack.py", "engine/samuel_model.py", "solver/__init__.py"):
+            self.assertIn(m, mods)
+
+    def test_literal_import_module(self):
+        self.assertEqual(ck._dynamic_names("x.py", 'm = importlib.import_module("water_table")\n', ck.REPO),
+                         {"water_table"})
+
+
 class Restamp(unittest.TestCase):
     def test_reason_is_required_and_known(self):
         """N19's refusal half: no reason, or an unknown one, is refused (nothing written)."""

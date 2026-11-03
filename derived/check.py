@@ -114,9 +114,11 @@ def dag_order(doc) -> list:
             if p not in own:
                 raise SystemExit(f"STOP: {name}'s derived input {p} is not a listed derived file")
             ups.add(own[p])
-        for p in e.get("data", []):
-            if p in own:
-                raise SystemExit(f"STOP: {name} lists the derived file {p} under data; name it under derived")
+        files = tracked_all() if any("*" in p or "?" in p for p in e.get("data", [])) else None
+        for p in expand(e.get("data", []), files):        # after expansion (68 n2): a glob match counts too
+            if p in own and p not in e.get("derived", []):
+                raise SystemExit(f"STOP: {name}'s data {'glob matches' if p not in e.get('data', []) else 'lists'} the "
+                                 f"derived file {p}; name it under derived")
         if e.get("code"):                              # a listed derived .py in the code closure is an upstream too
             ups |= {own[m] for m in closure(e["code"]) if m in own}
         ups.discard(name)
@@ -173,7 +175,34 @@ def closure(code_specs, root=REPO) -> list:
             cand = sol / f"{m}.py"
             if cand.is_file() and m not in fs.EXCLUDED:
                 todo.append(cand)
+        for m in sorted(_dynamic_names(rel, text, root)):  # 68 B1 class: imports by name at run time (measured, rows 4, 7)
+            top, _, sub = m.partition(".")
+            cands = ([sol / f"{sub}.py"] if top == "solver" and sub else []) + [eng / f"{m}.py", f.parent / f"{m}.py"]
+            for cand in cands:
+                if cand.is_file() and (eng in cand.parents or sol in cand.parents):
+                    todo.append(cand)
+                    break
+        if rel.startswith("solver/") and (sol / "__init__.py").is_file():
+            todo.append(sol / "__init__.py")             # the package init runs on every solver import (measured, row 7)
     return sorted(seen)
+
+
+#: a literal module name passed to the import machinery: import_module("x"), __import__("x")
+_LITERAL_IMPORT = re.compile(r"""(?:import_module|__import__)\(\s*["']([\w.]+)["']""")
+#: modules that import every process_state.REGISTRY module by name (process_state.reset, legacy_materials'
+#: _registry_entries); transfers.check_code_defaults imports each CODE_DEFAULTS record's module="x"
+_REGISTRY_WALKERS = ("engine/process_state.py", "solver/legacy_materials.py")
+_REGISTRY_KEY = re.compile(r"""^\s*\(\s*["'](\w+)["']\s*,\s*["']\w+["']\s*\)\s*:""", re.M)
+_TRANSFER_MODULE = re.compile(r"""\bmodule\s*=\s*["'](\w+)["']""")
+
+
+def _dynamic_names(rel: str, text: str, root: Path) -> set:
+    names = set(_LITERAL_IMPORT.findall(text))
+    if rel in _REGISTRY_WALKERS:
+        names |= set(_REGISTRY_KEY.findall((Path(root) / "engine" / "process_state.py").read_text(encoding="utf-8")))
+    if rel == "engine/transfers.py":
+        names |= set(_TRANSFER_MODULE.findall(text))
+    return names
 
 
 # ── the stamp (G1) ───────────────────────────────────────────────────────────────────────────────────────────────────
@@ -230,12 +259,48 @@ def external_sha(specs) -> dict:
     return out
 
 
-def expand(paths) -> list:
-    """Data paths with a glob expanded at check time (sorted, repo-relative): a new matching file is a new input."""
+def glob_re(pat: str):
+    """A data glob as a regex over repo-relative paths: `**/` is zero or more directories, `*` and `?` stay in one."""
+    out, i = "", 0
+    while i < len(pat):
+        if pat.startswith("**/", i):
+            out, i = out + "(?:[^/]+/)*", i + 3
+        elif pat.startswith("**", i):
+            out, i = out + ".*", i + 2
+        elif pat[i] == "*":
+            out, i = out + "[^/]*", i + 1
+        elif pat[i] == "?":
+            out, i = out + "[^/]", i + 1
+        else:
+            out, i = out + re.escape(pat[i]), i + 1
+    return re.compile(out + r"\Z")
+
+
+def expand(paths, files=None) -> list:
+    """Data paths with a glob expanded at check time over TRACKED files only (68 n1 on 2be90e97: an untracked stray on
+    one machine is no input, and engine/.venv* is never swept); sorted, repo-relative. A new tracked match is a new input."""
     out = []
     for p in paths:
-        out += sorted(q.relative_to(REPO).as_posix() for q in REPO.glob(p)) if "*" in p else [p]
+        if "*" not in p and "?" not in p:
+            out.append(p)
+            continue
+        if files is None:
+            files = tracked_all()
+        rx = glob_re(p)
+        out += sorted(f for f in files if rx.match(f) and not any(s.startswith(".venv") for s in f.split("/")))
     return out
+
+
+def tracked_all(root=REPO) -> list:
+    r = subprocess.run(["git", "-C", str(root), "ls-files"], capture_output=True, text=True, check=True)
+    return [ln for ln in r.stdout.splitlines() if ln]
+
+
+def data_inputs(e: dict, files=None) -> list:
+    """The entry's data after expansion, without the listed derived files a glob also matches (they are stamped, and
+    ordered in the DAG, as `derived`; dag_order refuses a glob match that is a derived file not listed there)."""
+    der = set(e.get("derived", []))
+    return [p for p in expand(e.get("data", []), files) if p not in der]
 
 
 def stamp(name: str, e: dict, art_env=None) -> dict:
@@ -247,7 +312,7 @@ def stamp(name: str, e: dict, art_env=None) -> dict:
         "python": platform.python_version(),
         "files": {f: git_blob(REPO / f) for f in e["files"]},
         "code": {m: dg.digest(REPO / m) for m in mods},
-        "data": {p: git_blob(REPO / p) for p in expand(e.get("data", []))},
+        "data": {p: git_blob(REPO / p) for p in data_inputs(e)},
         "derived": {p: git_blob(REPO / p) for p in e.get("derived", [])},
         "out_of_tree": out_of_tree_blobs(e.get("out_of_tree", []), art_env),
         "packages": {p: importlib.metadata.version(p) for p in e.get("packages", [])},

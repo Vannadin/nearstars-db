@@ -268,11 +268,11 @@
   globs: []
 "dynamo_table":
   globs: []
-"derived *":  # sg-gate: every entry's step and the census read engine/ and solver/ .py as text (closure digest, census header); measured with artifacts pc/sg-gate/trace/trace_reads.py on the Mac (--census, --entry 1-mars, --entry 8b-fe-prem), not by gate_reads
-  globs: ["engine/**.py", "solver/**.py"]
+"derived *":  # sg-gate: every entry's step and the census read engine/ and solver/ .py as text (closure digest, census header), and row 5's stamp reads scripts/ .py too (68 B1 fix); measured with artifacts pc/sg-gate/trace/trace_reads.py on the Mac (--census, --entry 1-mars, --entry 8b-fe-prem), not by gate_reads
+  globs: ["engine/**.py", "solver/**.py", "scripts/**.py"]
   hand: true
 "derived/test_derived.py":  # sg-gate: its census control copies every tracked engine/ and solver/ file (the .md too); measured as above
-  globs: ["engine/**.py", "solver/**.py", "engine/**.md", "solver/**.md"]
+  globs: ["engine/**.py", "solver/**.py", "scripts/**.py", "engine/**.md", "solver/**.md"]
   hand: true
 "solver/tests/test_env_tiers.py":  # HEAVY-onctl P2 census: reads every engine/, solver/, scripts/ and derived/ .py as text (env names, tier sites); measured with sg-gate trace_reads on the Mac
   globs: ["engine/**.py", "solver/**.py", "scripts/**.py", "derived/*.py"]
