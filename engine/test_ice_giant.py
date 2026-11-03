@@ -1004,7 +1004,7 @@ def _clamp_invariance(frozen: dict, fails: list[str], solved: dict) -> None:
 
     name = "Uranus"
     base = solved.get(name)
-    if base is None or not base.applicable:
+    if base is None or not base.applicable:  # verdict-ok: 교란-불변의 기준 풀이가 거절이면 비교할 값이 없어 FAIL 로 적는다
         fails.append(f"교란-불변: {name} 의 안 민 풀이가 없거나 거절이라 기준이 없다")
         print("  [FAIL] 교란-불변 — 기준(안 민 풀이) 없음")
         return
@@ -1031,7 +1031,7 @@ def _clamp_invariance(frozen: dict, fails: list[str], solved: dict) -> None:
     t0 = time.perf_counter()
     neg, neg_hits = bumped_solve(_eos.MATERIALS["h2o_hot"], lambda self, p, t: p > 355e9)
     dt = time.perf_counter() - t0
-    neg_moved = moved_from(neg) if neg.applicable else ["(거절)"]
+    neg_moved = moved_from(neg) if neg.applicable else ["(거절)"]  # verdict-ok: 거절은 «움직임» 목록에 거절로 적는다(비트 대조, 답 세기 아님)
     ok = bool(neg_moved) and neg_hits > 0
     if not ok:
         fails.append(f"교란-불변 음성: 지나는 재료(h2o_hot > 355 GPa)를 +5 % 밀어도 해가 비트 동일 — 대조가 변화를 못 잡는다 "

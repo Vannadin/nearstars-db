@@ -507,14 +507,14 @@ try:
     _r = _cs.solve(core_pressure=45.0, cmb_pressure=25.0, core_temperature=1961.0,
                    cmb_temperature=1910.0, core_material="fe_s_19wt_19gpa",
                    core_cmb_temperature=2400.0, body_class="rocky")
-    row(_r.applicable and _r.values.get("core_gamma_fallback") == 0,
+    row(_r.applicable and _r.values.get("core_gamma_fallback") == 0,  # verdict-ok: 이 행은 «예외가 아니라 값» 을 본다 — 거절이 아님을 확인하지 답으로 세지 않는다
         "⚠ **p_cmb 25 GPa 의 이원계 핵**(괄호 창 위라 선언 갈래로 내려간다)이 예외가 아니라 값을 "
         f"낸다 — `{_r.regime}` · 폴백 카운트 {_r.values.get('core_gamma_fallback')} (옛 1: 이원계가 이제 자기 γ 를 든다). "
         "`_adiabat` 이 `core_gamma` 를 try 없이 부르던 자리이고, 그 천체가 노드를 터뜨렸다")
     _r60 = _cs.solve(core_pressure=60.0, cmb_pressure=25.0, core_temperature=1961.0,
                      cmb_temperature=1910.0, core_material="fe_s_19wt_19gpa",
                      core_cmb_temperature=2400.0, body_class="rocky")
-    row(not _r60.applicable and "천장(51.0 GPa)" in (_r60.reason or ""),
+    row(not _r60.applicable and "천장(51.0 GPa)" in (_r60.reason or ""),  # verdict-ok: 이름 댄 거절을 시험한다(거절 문구 대조)
         f"중심 60 GPa 는 51 GPa 천장 위라 이름 대고 거절한다 — `{_r60.regime}` «{(_r60.reason or '')[:60]}…»")
 except Exception as _e:
     row(False, f"p_cmb 25 GPa 이원계에서 {type(_e).__name__}: {str(_e)[:70]}")

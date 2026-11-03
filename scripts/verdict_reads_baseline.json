@@ -234,8 +234,7 @@
    "<module>": {
     "_rec17='답거절없음'if_r17.applicableelse'바닥거절'if'수렴한답의핵-맨틀경계가'in_rtelsef'이름댄거절«{nexthforhinC152_NAMEDifhin_rt}»'ifanyhin_rtforhinC152_NAMEDelse'그밖의거절'": 1,
     "row_consumer_ok0.24,'fe_s_13wt_19gpa'and_consumer_ok0.24,'fe_s_19wt_19gpa','⚠**화성이실제로선언한cmf0.24에서는Fe–S두재질이다풀린다**—0.24는자름자리0.302아래다.C60b가«선언된조성은거절한다»고적은것은프리셋의0.325를화성의선언으로읽은탓이다C59a'": 2,
-    "row_consumer_ok0.302and_consumer_ok0.303,'⚠소비경로`solve`도같이열렸다—두층의CMB가0.5kPa어긋나는것은그대로이지만,19GPa바로아래가더이상거절이아니라그폭이**판정을못가른다**옛줄은0.302/0.303에서갈렸다'": 2,
-    "row_r.applicableand_r.values.get'core_gamma_fallback'==1,f'⚠**p_cmb25GPa의이원계핵**괄호창위라선언갈래로내려간다이예외가아니라값을낸다—`{_r.regime}`·폴백카운트{_r.values.get'core_gamma_fallback'}.`_adiabat`이`core_gamma`를try없이부르던자리이고,그천체가노드를터뜨렸다'": 1
+    "row_consumer_ok0.302and_consumer_ok0.303,'⚠소비경로`solve`도같이열렸다—두층의CMB가0.5kPa어긋나는것은그대로이지만,19GPa바로아래가더이상거절이아니라그폭이**판정을못가른다**옛줄은0.302/0.303에서갈렸다'": 2
    },
    "_consumer_ok": {
     "returnboolres.applicable": 1
@@ -459,17 +458,12 @@
     "_hA=_hist_solve": 1,
     "_hB=_hist_solve": 1,
     "_hN=_hist_solveplant=True": 1,
-    "_w81=_refusal2081": 1,
-    "_w81n=_refusal2081": 1,
     "_w82n=_e82nor''if_r82nisNoneor_r82n.applicableelse_r82n.reasonor''": 1,
     "check'C152메모8③—화성1771.5K:답답판정이평탄띠메모를달고띠폭이100K넘다측정164K',interior.answer_verdict_rbisNoneand_w_bandisnotNoneand_w_band>100.0,f'{interior.answer_verdict_rb}·폭{_w_band}·T_c{_rb.values.get'core_temperature'if_rb.applicableelseNone}'": 1,
     "check'C152메모8③음성—평탄띠를끄면같은점의답에띠메모가없다',_rn.applicableandnot_bandn,f'띠{len_bandn}줄'": 1
    },
    "_hist_solve": {
     "returnr.valuesifr.applicableelser.reason,tr['calls'],tr['answer_call'],listtr['trials']": 1
-   },
-   "_refusal2081": {
-    "returnNoneifr.applicableelser.reasonor''": 1
    }
   },
   "engine/test_tectonic_regime.py": {
