@@ -83,7 +83,9 @@ entries:
     row: 8c
     files: [solver/materials/silicate_prem_zeng2016.yaml, solver/materials/tables/silicate_prem_zeng2016.json.gz]
     derived: [solver/materials/silicate_slb_default_bse.yaml, solver/materials/tables/silicate_slb_default_bse.json.gz]
-    # the builder it executes (ac974604, a path argument) is pinned by blob inside the generator (BUILDER_BLOB)
+    # the builder it executes (ac974604, a path argument) is pinned by blob inside the generator (BUILDER_BLOB); not on
+    # artifacts main at any path — extract it with `git -C $NEARSTARS_ARTIFACTS show
+    # 9b8f406f:rewrite/phase2-records/build_assemblage.py` (origin/silicate-rebuild-9b8f406f; 68 n2 on R1)
     out_of_tree: [rewrite/phase2-records/gen_prem_handover.py]
   8d-silicate-slb:
     row: 8d
