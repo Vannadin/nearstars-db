@@ -190,7 +190,7 @@ def main(argv) -> int:
             print(f"  {name}: removed the untracked files the census run created: {', '.join(new)}", flush=True)
     if out:
         print(f"[LOAD-RED] {name} — loaded outside the static closure ({len(out)} of {len(mods)} project modules): "
-              f"{', '.join(out)}", flush=True)
+              f"{', '.join(out)} (target rc {rc})", flush=True)
         return 3
     print(f"[LOAD] {name} — {len(mods)} project modules loaded, all inside the static closure (target rc {rc})",
           flush=True)
