@@ -2,6 +2,8 @@
 """python3 derived/test_derived.py   (prereg pc/sg-gate/prereg-sg-gate.frozen.md 1765b55c; the landing runs it as the
 census step's companion). Planted controls run on strings and scratch dicts; nothing in the tree is changed."""
 import json
+import os
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -135,9 +137,84 @@ class Restamp(unittest.TestCase):
 
 class OutOfTree(unittest.TestCase):
     def test_artifacts_absent_is_red_not_skipped(self):
-        """N12b: NEARSTARS_ARTIFACTS unset → the entry's stamp cannot be read (red)."""
+        """N12b: a NEARSTARS_ARTIFACTS that is not a checkout → the entry's stamp cannot be read (red)."""
         with self.assertRaises(LookupError):
-            ck.out_of_tree_blobs(["rewrite/phase2-records/gen_h2o.py"], art_env="")
+            ck.out_of_tree_blobs(["rewrite/phase2-records/gen_h2o.py"], art_env="/nonexistent/artifacts")
+
+    def test_failed_fetch_is_red_not_a_stale_main(self):
+        """68 B1: a checkout whose fetch fails is red (named), even though an old main ref is there to read."""
+        with tempfile.TemporaryDirectory() as d:
+            run = lambda *a: subprocess.run(["git", "-C", d, *a], capture_output=True, text=True, check=True)  # noqa
+            run("init", "-q")
+            run("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "--allow-empty", "-m", "x")
+            run("update-ref", "refs/remotes/origin/main", "HEAD")              # a stale main is present
+            run("remote", "add", "origin", "/nonexistent/remote.git")         # and the fetch must fail
+            with self.assertRaises(LookupError) as cm:
+                ck.artifacts_ref(Path(d))
+            self.assertIn("fetch failed", str(cm.exception))
+
+
+class NotRunLane(unittest.TestCase):
+    """Directing's B2 ruling: an unset input var is «NOT RUN» outside the gate lane, red inside it."""
+    E = {"files": ["engine/hhe_table.py"], "external": {"x": {"env": "NEARSTARS_EXTERNAL", "path": "nope"}}}
+
+    def _judge(self, gate):
+        lines = []
+        saved = {k: os.environ.pop(k, None) for k in ("NEARSTARS_EXTERNAL", "GATE_RUNNING")}
+        default = ck._default_dir
+        try:
+            ck._default_dir = lambda var: None                                # no default beside the repo
+            if gate:
+                os.environ["GATE_RUNNING"] = "1"
+            rc = ck.judge_entry("planted-ext", self.E, out=lines.append)
+        finally:
+            ck._default_dir = default
+            os.environ.pop("GATE_RUNNING", None)
+            for k, v in saved.items():
+                if v is not None:
+                    os.environ[k] = v
+        return rc, lines
+
+    def test_outside_the_gate_lane(self):
+        rc, lines = self._judge(False)
+        self.assertEqual((rc, lines), (0, ["NOT RUN planted-ext: NEARSTARS_EXTERNAL unset"]))
+
+    def test_inside_the_gate_lane(self):
+        rc, lines = self._judge(True)
+        self.assertEqual(rc, 1)
+        self.assertTrue(lines[0].startswith("[RED] planted-ext"), lines)
+
+
+class ExpectedRed(unittest.TestCase):
+    """68 B4: the item matches only its registered trigger set; any other red on the entry stays red."""
+    NINE = ["bytes.chain.yaml", "bytes.reference_adiabats.json", "chain_reads", "declared.basal_layer_density",
+            "declared.basal_layer_thickness_km", "declared.core_light_elements", "declared.mantle_composition",
+            "mantle_table", "sulphur_fixings"]
+
+    def _named(self, data):
+        lines, keep = [], ck.expected_red
+        ck.expected_red = lambda name: {"id": "SG-MARS-HOLD", "triggers": self.NINE, "registered": "planted"}
+        try:
+            ck._named("1-mars", lines.append, data)
+        finally:
+            ck.expected_red = keep
+        return lines
+
+    def test_the_registered_set_is_expected(self):
+        self.assertIn("EXPECTED RED", self._named(list(reversed(self.NINE)))[0])
+
+    def test_a_tenth_trigger_stays_red(self):
+        self.assertNotIn("EXPECTED RED", self._named(self.NINE + ["declared.mass_earth"])[0])
+
+    def test_a_red_that_is_no_trigger_failure_stays_red(self):
+        """own bytes edited, quick mode, the refusal cap, an unreadable input: data is None."""
+        self.assertNotIn("EXPECTED RED", self._named(None)[0])
+
+    def test_the_tree_lists_every_compact_8c_reads(self):
+        """68 B3: 8c's derived inputs are the three SLB compacts its generator reads (measured)."""
+        self.assertEqual(sorted(DOC["entries"]["8c-prem-handover"]["derived"]),
+                         [f"solver/materials/tables/silicate_slb_{c}.json.gz"
+                          for c in ("default_bse", "earth_dmm_wh2005", "mars_khan2022")])
 
 
 if __name__ == "__main__":

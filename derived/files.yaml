@@ -1,7 +1,7 @@
 # 파생 파일 목록 — engine/·solver/ 에 커밋된 파생 파일마다 빌드 진입점·입력·검사를 적고(sg-gate prereg 1765b55c §1 G1), 조사에서 빠지는 파일의 까닭을 적음
 # Read by derived/check.py (stamps, checks, census, landing steps) and by scripts/check.sh. derived/ is no entry's input.
 # code: build entry points (path:function); the stamped code is their static import closure, computed at check time.
-# data: in-tree inputs by git blob. derived: listed derived files this entry reads (the DAG). out_of_tree: artifacts paths,
+# data: in-tree inputs by git blob (a path with * is a glob, expanded at check time: a new match moves the stamp). derived: listed derived files this entry reads (the DAG). out_of_tree: artifacts paths,
 # read at artifacts origin/main from NEARSTARS_ARTIFACTS. packages: name (version stamped). external: name → {env, path}
 # (sha256 of the file; a missing env or file is red). check: the value or rebuild check run when the stamp moved.
 
@@ -37,6 +37,7 @@ entries:
     row: 3
     files: [engine/ice_giant_anchor.json]
     code: [engine/test_ice_giant.py:refresh]
+    # measured (trace_reads on the check, 68 n3): the listed reads are all it reads
     data: [engine/chain.yaml]
     derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json]
     check: {kind: command, argv: ["{python}", engine/test_ice_giant.py]}
@@ -44,12 +45,18 @@ entries:
     row: 4
     files: [engine/mars_sulphur_anchor.json]
     code: [engine/test_mars_sulphur.py:refresh]
-    data: [engine/bodies/mars.yaml, engine/chain.yaml]
+    # measured (trace_reads on the check, 68 n3): every body yaml (a glob), the reference adiabats and one mantle table
+    data: ["engine/bodies/*.yaml", engine/chain.yaml]
+    derived: [engine/reference_adiabats.json, engine/mantle_tables/0663e6a031cae4dc.json]
     check: {kind: command, argv: ["{python}", engine/test_mars_sulphur.py]}
   5-c143-inventory:
     row: 5
     files: [engine/c143_sum_inventory.json]
     code: [engine/test_c143_guard.py:main]
+    # measured (trace_reads on the check, 68 n3): it also reads these
+    data: [engine/chain.yaml]
+    derived: [engine/reference_adiabats.json, engine/mantle_tables/0663e6a031cae4dc.json,
+              engine/mantle_tables/c6bd588831fd8229.json]
     check: {kind: command, argv: ["{python}", engine/test_c143_guard.py]}
   6-mantle-tables:
     row: 6
@@ -63,10 +70,17 @@ entries:
             solver/materials/fall_sets/silicate_slb_earth_dmm_wh2005.json.gz,
             solver/materials/fall_sets/silicate_slb_mars_khan2022.json.gz]
     code: [solver/rho_fall_build.py:main, solver/fall_sets.py:export]
-    data: [engine/chain.yaml]
+    # measured (trace_reads on the check, 68 B3 / n3): the whole material registry it loads, not only the SLB yamls
+    data: [engine/chain.yaml, solver/data/bse_ms95.yaml, solver/data/presets.yaml, solver/data/roles.yaml,
+           solver/data/schema.yaml, solver/materials/schema.yaml, solver/materials/sources.yaml,
+           solver/materials/silicate_basal_const.yaml]
     derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json,
               solver/materials/silicate_slb_default_bse.yaml, solver/materials/silicate_slb_earth_dmm_wh2005.yaml,
-              solver/materials/silicate_slb_mars_khan2022.yaml]
+              solver/materials/silicate_slb_mars_khan2022.yaml, solver/materials/tables/silicate_slb_default_bse.json.gz,
+              solver/materials/tables/silicate_slb_earth_dmm_wh2005.json.gz,
+              solver/materials/tables/silicate_slb_mars_khan2022.json.gz, solver/materials/h2o.yaml,
+              solver/materials/fe_prem.yaml, solver/materials/fe_prem_legacy.yaml,
+              solver/materials/silicate_prem_zeng2016.yaml, solver/materials/tables/silicate_prem_zeng2016.json.gz]
     check: {kind: command, argv: ["{python}", -m, unittest, solver.tests.test_fall_set_stamp]}
   8a-h2o:
     row: 8a
@@ -82,7 +96,11 @@ entries:
   8c-prem-handover:
     row: 8c
     files: [solver/materials/silicate_prem_zeng2016.yaml, solver/materials/tables/silicate_prem_zeng2016.json.gz]
-    derived: [solver/materials/silicate_slb_default_bse.yaml, solver/materials/tables/silicate_slb_default_bse.json.gz]
+    # measured (sg-gate trace_reads on gen_prem_handover 61a03ce4, 68 B3): it reads all three SLB compacts; the merged
+    # tables c82f42b2 / 23e3cfe6 / 5fd586dc and the builder are pinned by blob inside the generator
+    derived: [solver/materials/tables/silicate_slb_default_bse.json.gz,
+              solver/materials/tables/silicate_slb_earth_dmm_wh2005.json.gz,
+              solver/materials/tables/silicate_slb_mars_khan2022.json.gz]
     # the builder it executes (ac974604, a path argument) is pinned by blob inside the generator (BUILDER_BLOB); not on
     # artifacts main at any path — extract it with `git -C $NEARSTARS_ARTIFACTS show
     # 9b8f406f:rewrite/phase2-records/build_assemblage.py` (origin/silicate-rebuild-9b8f406f; 68 n2 on R1)
@@ -131,7 +149,9 @@ entries:
     row: 10
     files: [engine/chain-explorer.html]
     code: [engine/build_graph_page.py:build]
-    data: [engine/chain.yaml]
+    # measured (trace_reads on check_graph_page, 68 n3): bindings and the phase-4 yamls besides chain.yaml
+    # (a glob: the page reads every phase4/*.yaml, so a new one moves the stamp)
+    data: [engine/chain.yaml, engine/bindings.yaml, "phase4/*.yaml"]
     check: {kind: command, argv: ["{python}", engine/tools/check_graph_page.py]}
 
 # tracked files under engine/ and solver/ that are neither source, documents nor listed: regex → reason (prereg §0)

@@ -8,6 +8,7 @@
     python3 derived/check.py --restamp NAME --why REASON   G6: rebuild:<blob> | check:<log blob> | ruling:<path>@<blob>
     python3 derived/check.py --show NAME           print the tip's stamp for NAME (no write)
     python3 derived/check.py --first-stamps        §3: every entry's first stamp from the tip (refused if any stamp exists)
+    python3 derived/check.py --moved NAME          the stamp comparison alone, no check run (rc 1 when moved)
 
 The stamp of an entry is everything its bytes depend on (G1): the §2 digest of every module in the static import closure
 of its build entry points (computed here as solver/fall_sets.engine_static computes it), the git blob of every in-tree
@@ -39,6 +40,42 @@ LIST = HERE / "files.yaml"
 STAMPS = HERE / "stamps"
 REASONS = ("rebuild", "check", "ruling")
 ARTIFACTS_REFS = ("refs/remotes/origin-all/remotes/origin/main", "refs/remotes/origin/main")   # PC first (68 rev-4 n1)
+
+
+class NotRun(LookupError):
+    """An input's env var is unset and no checked default exists (directing B2 ruling on 68 HOLD 0415aff69): outside the
+    gate lane the entry prints «NOT RUN <entry>: <VAR> unset», neither red nor green; inside it, it is red."""
+
+
+def in_gate() -> bool:
+    return os.environ.get("GATE_RUNNING") == "1"
+
+
+def _default_dir(var: str):
+    """A checked default beside the repo: NEARSTARS_ARTIFACTS must be the artifacts repo (tools/freeze.py and rewrite/),
+    NEARSTARS_EXTERNAL the external-data dir (MANIFEST.md). Anything else is no default."""
+    cand = {"NEARSTARS_ARTIFACTS": REPO.parent / "NearStars-artifacts",
+            "NEARSTARS_EXTERNAL": REPO.parent / "NearStars-external"}.get(var)
+    if cand is None:
+        return None
+    ok = ((cand / "tools" / "freeze.py").is_file() and (cand / "rewrite").is_dir() if var == "NEARSTARS_ARTIFACTS"
+          else (cand / "MANIFEST.md").is_file())
+    return str(cand) if ok else None
+
+
+def env_dir(var: str, given=None) -> str:
+    """The directory an env var names, else its checked default; NotRun when neither exists."""
+    # literal reads, so the env census (solver/tests/test_env_tiers, which scans derived/) sees each name
+    read = {"NEARSTARS_ARTIFACTS": os.environ.get("NEARSTARS_ARTIFACTS"),
+            "NEARSTARS_EXTERNAL": os.environ.get("NEARSTARS_EXTERNAL"),
+            "NEARSTARS_PAPERS": os.environ.get("NEARSTARS_PAPERS")}
+    v = read[var] if given is None else given
+    if v:
+        return v
+    d = _default_dir(var)
+    if d:
+        return d
+    raise NotRun(f"{var} unset")
 
 
 # ── the list ─────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -151,8 +188,11 @@ def sha256(path: Path) -> str:
 
 def artifacts_ref(art: Path) -> tuple[str, str]:
     """(ref, sha) of artifacts origin/main as fetched now; the suite run fetches it itself (68 n2, rev-4 n1)."""
-    subprocess.run(["git", "-C", str(art), "fetch", "-q", "origin", "+refs/*:refs/remotes/origin-all/*"],
-                   capture_output=True, text=True)
+    f = subprocess.run(["git", "-C", str(art), "fetch", "-q", "origin", "+refs/*:refs/remotes/origin-all/*"],
+                       capture_output=True, text=True)
+    if f.returncode != 0:                                   # frozen §1: a failed fetch is red, never a stale main (68 B1)
+        raise LookupError(f"the artifacts fetch failed (rc {f.returncode}: {(f.stderr or '').strip()[-160:]}); "
+                          "main is not compared stale")
     for ref in ARTIFACTS_REFS:
         r = subprocess.run(["git", "-C", str(art), "rev-parse", "--verify", "-q", ref], capture_output=True, text=True)
         if r.returncode == 0:
@@ -164,8 +204,8 @@ def out_of_tree_blobs(specs, art_env=None) -> dict:
     """{path: blob} of artifacts builder files at artifacts origin/main; a missing checkout or file raises LookupError."""
     if not specs:
         return {}
-    art = art_env if art_env is not None else os.environ.get("NEARSTARS_ARTIFACTS")
-    if not art or not Path(art).is_dir():
+    art = env_dir("NEARSTARS_ARTIFACTS", art_env)
+    if not Path(art).is_dir():
         raise LookupError(f"NEARSTARS_ARTIFACTS={art!r} is not a checkout (out-of-tree builders are red, not skipped)")
     ref, sha = artifacts_ref(Path(art))
     out = {"_ref": f"{ref} {sha}"}
@@ -182,13 +222,19 @@ def external_sha(specs) -> dict:
     """{name: sha256} of external data; a path is absolute, or relative to the directory its env var names."""
     out = {}
     for name, s in (specs or {}).items():
-        base = os.environ.get(s["env"]) if s.get("env") else None
-        if s.get("env") and not base:
-            raise LookupError(f"external {name}: {s['env']} is unset")
+        base = env_dir(s["env"]) if s.get("env") else None
         p = Path(base) / s["path"] if base else Path(s["path"])
         if not p.is_file():
             raise LookupError(f"external {name}: {p} is not a file")
         out[name] = sha256(p)
+    return out
+
+
+def expand(paths) -> list:
+    """Data paths with a glob expanded at check time (sorted, repo-relative): a new matching file is a new input."""
+    out = []
+    for p in paths:
+        out += sorted(q.relative_to(REPO).as_posix() for q in REPO.glob(p)) if "*" in p else [p]
     return out
 
 
@@ -201,7 +247,7 @@ def stamp(name: str, e: dict, art_env=None) -> dict:
         "python": platform.python_version(),
         "files": {f: git_blob(REPO / f) for f in e["files"]},
         "code": {m: dg.digest(REPO / m) for m in mods},
-        "data": {p: git_blob(REPO / p) for p in e.get("data", [])},
+        "data": {p: git_blob(REPO / p) for p in expand(e.get("data", []))},
         "derived": {p: git_blob(REPO / p) for p in e.get("derived", [])},
         "out_of_tree": out_of_tree_blobs(e.get("out_of_tree", []), art_env),
         "packages": {p: importlib.metadata.version(p) for p in e.get("packages", [])},
@@ -242,7 +288,7 @@ def read_stamp(name: str) -> dict | None:
 
 
 # ── value / rebuild checks (G2) ──────────────────────────────────────────────────────────────────────────────────────
-def check_structure_table(table: str, recheck: bool = True) -> tuple[bool, str]:
+def check_structure_table(table: str, recheck: bool = True) -> tuple[bool, str, list | None]:
     """Row 1: structure_grid's own read rules for one table (quick mode, refusal cap, data triggers by _moved), and, when
     `recheck`, its `_recheck` within ε — run because the sidecar's closure moved (the in-file code digest is not read,
     §1.1). The read rules run on every call, stamp moved or not: a first stamp asserts nothing about values (§3), so a
@@ -253,22 +299,22 @@ def check_structure_table(table: str, recheck: bool = True) -> tuple[bool, str]:
     path = REPO / table
     doc = json.loads(path.read_text(encoding="utf-8"))
     if doc.get("mode") == "quick":
-        return False, "a quick table (mode quick) sits in the reference place (C161)"
+        return False, "a quick table (mode quick) sits in the reference place (C161)", None
     over = sg.refusal_over_cap(doc.get("no_answer", []))
     if over:
-        return False, f"refusal span over the cap ({over}, C162)"
+        return False, f"refusal span over the cap ({over}, C162)", None
     body, _ = run.load_body(sg.BODIES_DIR / f"{doc['body'].lower()}.yaml")
     data, _code_in_file = sg._moved(doc["triggers"], sg.triggers(body.inputs))
     if data:
-        return False, f"data triggers moved {data}"
+        return False, f"data triggers moved {data}", sorted(data)
     if not recheck:
-        return True, "read rules hold (quick mode, refusal cap, data triggers)"
+        return True, "read rules hold (quick mode, refusal cap, data triggers)", None
     before = sg.GUARD_RUNS[0]
     worst, where = sg._recheck(doc, body)
     sg.GUARD_RUNS[0] += 1
     ok = worst <= sg.EPS
     return ok, (f"_recheck {'within' if ok else 'beyond'} ε: largest relative difference {worst:.3e} at {where} "
-                f"(ε {sg.EPS:.4e}, {len(doc['t_pot'])} points; GUARD_RUNS {before} → {sg.GUARD_RUNS[0]})")
+                f"(ε {sg.EPS:.4e}, {len(doc['t_pot'])} points; GUARD_RUNS {before} → {sg.GUARD_RUNS[0]})"), None
 
 
 def check_command(argv: list, env_extra=None) -> tuple[bool, str]:
@@ -280,14 +326,14 @@ def check_command(argv: list, env_extra=None) -> tuple[bool, str]:
     return r.returncode == 0, f"rc {r.returncode} · " + " | ".join(t[:160] for t in tail)
 
 
-def run_check(e: dict) -> tuple[bool, str] | None:
+def run_check(e: dict) -> tuple[bool, str, list | None] | None:
     c = e.get("check")
     if not c:
         return None
     if c["kind"] == "structure_table":
         return check_structure_table(c["table"])
     if c["kind"] == "command":
-        return check_command(c["argv"], c.get("env"))
+        return check_command(c["argv"], c.get("env")) + (None,)
     raise SystemExit(f"STOP: unknown check kind {c['kind']!r}")
 
 
@@ -306,6 +352,12 @@ def judge_entry(name: str, e: dict, art_env=None, out=print) -> int:
     then = read_stamp(name)
     try:
         now = stamp(name, e, art_env)
+    except NotRun as err:                                  # directing B2: named, not red, outside the gate lane
+        if not in_gate():
+            out(f"NOT RUN {name}: {err}")
+            return 0
+        out(f"[RED] {name} — an input cannot be read in the gate lane: {err}")
+        return 1
     except LookupError as err:
         out(f"[RED] {name} — an input cannot be read: {err}")
         return _named(name, out)
@@ -317,10 +369,10 @@ def judge_entry(name: str, e: dict, art_env=None, out=print) -> int:
         out(f"[RED] {name} — its own bytes differ from the stamp's ({own}): rebuilt without --restamp, or edited")
         return _named(name, out)
     if not mv and (e.get("check") or {}).get("kind") == "structure_table":
-        ok, why = check_structure_table(e["check"]["table"], recheck=False)
+        ok, why, data = check_structure_table(e["check"]["table"], recheck=False)
         if not ok:
             out(f"[RED] {name} — stamp unchanged, but the table's own read rules fail: {why}")
-            return _named(name, out)
+            return _named(name, out, data)
     if not mv:
         out(f"[GREEN] {name} — stamp unchanged ({len(now['code'])} closure modules, {len(now['data'])} data, "
             f"{len(now['derived'])} derived, {len(now['out_of_tree']) - ('_ref' in now['out_of_tree'])} out-of-tree)")
@@ -330,16 +382,21 @@ def judge_entry(name: str, e: dict, art_env=None, out=print) -> int:
         out(f"[RED] {name} — stamp moved ({'; '.join(mv[:8])}{' …' if len(mv) > 8 else ''}); no value check: rebuild "
             f"in this landing, or a ruling (G2, G6)")
         return _named(name, out)
-    ok, why = res
+    ok, why, data = res
     out(f"[{'GREEN' if ok else 'RED'}] {name} — stamp moved ({'; '.join(mv[:8])}{' …' if len(mv) > 8 else ''}); "
         f"check: {why}")
-    return 0 if ok else _named(name, out)
+    return 0 if ok else _named(name, out, data)
 
 
-def _named(name, out) -> int:
+def _named(name, out, data=None) -> int:
+    """68 B4: an item names the exact read-rule failure it expects (`triggers`, the moved data triggers); only a red that
+    is that failure, and nothing else, prints EXPECTED. Any other red on the entry stays a plain red."""
     item = expected_red(name)
-    if item:
+    if item and data is not None and sorted(item.get("triggers") or []) == sorted(data):
         out(f"  {name}: EXPECTED RED, gate_expected_red.yaml id {item.get('id')} — {item.get('registered', '')}")
+    elif item:
+        out(f"  {name}: not the red gate_expected_red.yaml id {item.get('id')} expects (its triggers "
+            f"{sorted(item.get('triggers') or [])}; this red {data if data is not None else 'is no data-trigger failure'})")
     return 1
 
 
@@ -412,6 +469,7 @@ def main(argv=None) -> int:
     g.add_argument("--restamp")
     g.add_argument("--show")
     g.add_argument("--first-stamps", action="store_true")
+    g.add_argument("--moved")
     ap.add_argument("--why")
     a = ap.parse_args(argv)
     doc = load_list()
@@ -453,6 +511,10 @@ def main(argv=None) -> int:
                                               encoding="utf-8")
             print(f"first stamp {n}")
         return 1 if bad else 0
+    if a.moved:                                    # the stamp comparison alone, no check run (the plant controls)
+        mv = moved(read_stamp(a.moved), stamp(a.moved, entries(doc)[a.moved]))
+        print(f"{'[MOVED]' if mv else '[UNMOVED]'} {a.moved} — {'; '.join(mv) if mv else 'stamp unchanged'}")
+        return 1 if mv else 0
     if a.show:
         print(json.dumps(stamp(a.show, entries(doc)[a.show]), indent=1, sort_keys=True))
         return 0
