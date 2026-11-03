@@ -25,6 +25,12 @@
 "scripts/check_verdict_reads.py":  # by hand: `git ls-files "*.py"` lists every tracked .py (then keeps engine/*.py, engine/tools/*.py, scripts/*.py) and reads the baseline; L3 gate C136 drift
   globs: ["**.py", "scripts/verdict_reads_baseline.json"]
   hand: true
+"scripts/test_check_py39.py":  # by hand: synthetic sources in memory, reads no tracked file as data
+  globs: []
+  hand: true
+"scripts/check_py39.py":  # by hand: `git ls-files` lists every tracked .py under engine/, solver/ and scripts/ and parses each
+  globs: ["engine/**.py", "solver/**.py", "scripts/**.py"]
+  hand: true
 "scripts/pipeline/validate.py":
   globs: []
 "scripts/refs/validate_plasma_temp.py":
