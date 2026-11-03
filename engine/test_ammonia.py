@@ -18,10 +18,9 @@
    numbers are printed and the deviation from pure water is reported — this is the first
    measured piece of the composition tier, for the ammonia share only.
 6. **The generator reads the paper cache (AMMONIA-path).** In a mirror of the generator, a non-PDF planted at the
-   tree's own `docs/phase3/_papers` and the real PDF at `$NEARSTARS_PAPERS`: the build must parse all 93 rows.
-   Swapped, it must fail. Either way the path read is `gate_env.papers_dir()`, the one a stamp hashes. (The build's
-   output is not compared with the committed `ammonia_table.py`: that file was extended by hand after generation,
-   C157 2a12511c and f681afbd, so the generator no longer reproduces it on the base either.)
+   tree's own `docs/phase3/_papers` and the real PDF at `$NEARSTARS_PAPERS`: the build must reproduce the committed
+   `ammonia_table.py` byte for byte (the generator emits C157's and f681afbd's additions since GEN-drift). Swapped, it
+   must fail. Either way the path read is `gate_env.papers_dir()`, the one a stamp hashes.
 """
 from __future__ import annotations
 
@@ -64,7 +63,7 @@ def _row(rho, t):
 def _generator_reads_papers_env(check) -> None:
     """Mirror engine/tools/make_ammonia_table.py and engine/gate_env.py into a temp tree. Plant a non-PDF at the mirror's
     own docs/phase3/_papers (the path the generator used to read) and point NEARSTARS_PAPERS at the real cache: the build
-    must parse the whole table. Swap the two: the build must fail."""
+    must write the committed ammonia_table.py bytes. Swap the two: the build must fail."""
     import os
     import shutil
     import subprocess
@@ -106,8 +105,8 @@ def _generator_reads_papers_env(check) -> None:
         shutil.copy2(real, env_cache / name)
         r = build(env_cache)
         built = m / "engine" / "ammonia_table.py"
-        ok = r.returncode == 0 and built.is_file() and ": 93 rows," in r.stdout
-        check(ok, "non-PDF 은 트리 경로에, 진짜 PDF 는 $NEARSTARS_PAPERS 에 → 93 행을 다 읽음"
+        ok = r.returncode == 0 and built.is_file() and built.read_bytes() == (here / "ammonia_table.py").read_bytes()
+        check(ok, "non-PDF 은 트리 경로에, 진짜 PDF 는 $NEARSTARS_PAPERS 에 → 굳힌 표와 바이트 동일"
                   + ("" if ok else f" (rc {r.returncode}: {(r.stderr or r.stdout).strip()[-200:]})"))
         (env_cache / name).write_bytes(not_pdf)
         shutil.copy2(real, tree_cache / name)
