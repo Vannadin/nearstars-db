@@ -474,6 +474,21 @@ class LoadCensus(unittest.TestCase):
         r = self._run_child("stray")
         self.assertIn("stray_mod.py", r.stdout.split("unjudged module files")[1].splitlines()[0])
 
+    def test_census_report_keeps_every_census_line(self):
+        """`--load-census` evidence: the census's own lines reach the report whole (68 point 3), not the last three of
+        the run's output, and the target's own prints stay out."""
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "noisy.py"
+            f.write_text("def noisy():\n    for i in range(8):\n        print('noise', i)\n", encoding="utf-8")
+            rep = []
+            ok, _ = ck.census_command("10-graph-page", ["--call", f"{f}:noisy"], report=rep)
+        self.assertTrue(ok, rep)
+        text = "\n".join(rep)
+        for part in ("files read outside the tree", "Python child process(es)", "unjudged module files",
+                     "[LOAD] 10-graph-page"):
+            self.assertIn(part, text)
+        self.assertNotIn("noise", text)
+
     def test_a_mirror_copy_is_judged_as_its_tree_module(self):
         """A child running a byte-identical copy of engine/albedo_table.py (a mirror, as check_graph_page does) is judged
         as that module, even when the mirror is gone by the end: row 10's closure has no albedo_table, so red."""
