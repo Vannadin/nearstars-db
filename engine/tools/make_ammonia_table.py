@@ -7,7 +7,9 @@ doi 10.1063/1.4810883).
     python3 engine/tools/make_ammonia_table.py
 
 **This script is not a runtime dependency.** It needs `pdftotext` (poppler) and the cached
-PDF at `docs/phase3/_papers/2013JChPh.138w4504B.pdf`; its output is a plain-Python module
+PDF `2013JChPh.138w4504B.pdf` in the paper cache, `gate_env.papers_dir()` (`$NEARSTARS_PAPERS`, else
+`docs/phase3/_papers`): the one path every other reader of a paper resolves and a stamp of this table hashes, so the
+bytes read and the bytes described are one file (AMMONIA-path). Its output is a plain-Python module
 with no imports, the same discipline as `make_hhe_table.py` and `make_water_table.py`.
 
 **The printed table is the distribution.** The paper has no repository, no data-availability
@@ -42,8 +44,10 @@ import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
-PDF = os.path.join(ROOT, "docs", "phase3", "_papers", "2013JChPh.138w4504B.pdf")
+sys.path.insert(0, os.path.dirname(HERE))              # engine/, for gate_env
+import gate_env  # noqa: E402
+
+PDF_NAME = "2013JChPh.138w4504B.pdf"
 TARGET = os.path.join(HERE, "..", "ammonia_table.py")
 
 EXPECT_T = (500, 700, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 10000)
@@ -299,8 +303,13 @@ def density(p_pa, t_k):
 '''
 
 
+def pdf_path() -> str:
+    """The PDF in the paper cache, resolved when the build runs (not at import)."""
+    return str(gate_env.papers_dir() / PDF_NAME)
+
+
 def main():
-    text = subprocess.run(["pdftotext", "-layout", PDF, "-"], check=True,
+    text = subprocess.run(["pdftotext", "-layout", pdf_path(), "-"], check=True,
                           capture_output=True, text=True).stdout
     if "234504" not in text[:2000] or "ammonia" not in text[:2000].lower():
         raise SystemExit("the cached PDF's first page does not read as J. Chem. Phys. 138, 234504")
