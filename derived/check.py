@@ -391,15 +391,74 @@ def check_command(argv: list, env_extra=None) -> tuple[bool, str]:
     return r.returncode == 0, f"rc {r.returncode} · " + " | ".join(t[:160] for t in tail)
 
 
-def run_check(e: dict) -> tuple[bool, str, list | None] | None:
+def run_check(e: dict, name: str | None = None) -> tuple[bool, str, list | None] | None:
+    """The entry's check. With `name`, the G1 load census rides on it (68 HOLD on 4e58f8a6, directing): a command check
+    runs inside derived/load_census.py, so the modules it loads are judged against the closure; row 1's in-process
+    check adds the one-point census build. A census red fails the check, named."""
     c = e.get("check")
     if not c:
         return None
     if c["kind"] == "structure_table":
-        return check_structure_table(c["table"])
+        ok, why, data = check_structure_table(c["table"])
+        if name is not None:
+            cok, cline = run_census(name, e)
+            ok, why = ok and cok, f"{why}; {cline}"
+        return ok, why, data
     if c["kind"] == "command":
-        return check_command(c["argv"], c.get("env")) + (None,)
+        if name is not None and not e.get("census"):
+            return census_command(name, c["argv"][1:], c.get("env")) + (None,)
+        ok, why = check_command(c["argv"], c.get("env"))
+        if name is not None:
+            cok, cline = run_census(name, e)
+            ok, why = ok and cok, f"{why}; {cline}"
+        return ok, why, None
     raise SystemExit(f"STOP: unknown check kind {c['kind']!r}")
+
+
+# ── the load census (G1, N18) ────────────────────────────────────────────────────────────────────────────────────────
+def census_target(e: dict):
+    """(target argv for derived/load_census.py, its flags, the env its declared externals name), or None when this
+    entry's census runs in the PC block."""
+    c = e.get("census")
+    if c is None:
+        chk = e.get("check") or {}
+        return (list(chk["argv"][1:]), [], {}) if chk.get("kind") == "command" else None
+    if c.get("where") == "pc":
+        return None
+    dirs = {}
+    for var, key in (("NEARSTARS_EXTERNAL", "{external}"), ("NEARSTARS_PAPERS", "{papers}"),
+                     ("NEARSTARS_ARTIFACTS", "{artifacts}")):
+        if any(key in str(a) for a in c.get("argv", []) + c.get("args", [])):
+            dirs[key] = env_dir(var)                     # NotRun when unset (B2), as for the stamp
+    sub = [str(a) for a in c.get("argv", [])]
+    for k, v in dirs.items():
+        sub = [a.replace(k, v) for a in sub]
+    args = [a for a in c.get("args", [])]
+    for k, v in dirs.items():
+        args = [a.replace(k, v) if isinstance(a, str) else a for a in args]
+    target = ["--call", c["call"], json.dumps(args)] if "call" in c else sub
+    env = {x["env"]: env_dir(x["env"]) for x in (e.get("external") or {}).values() if x.get("env")}   # the build's inputs
+    return target, (["--restore"] if c.get("restore") else []), env
+
+
+def census_command(name: str, target: list, env_extra=None, flags=()) -> tuple[bool, str]:
+    """Run TARGET under derived/load_census.py for entry NAME. ok only when the census holds AND the target exit is 0
+    (a build that failed is no census). The line names the [LOAD]/[LOAD-RED] verdict."""
+    env = dict(os.environ, **(env_extra or {}))
+    env.setdefault("PYTHONPATH", str(REPO))
+    r = subprocess.run([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", name, *flags, "--", *target],
+                       cwd=REPO, env=env, capture_output=True, text=True)
+    lines = (r.stdout + r.stderr).strip().splitlines()
+    verdict = next((ln for ln in lines if ln.startswith("[LOAD")), f"[LOAD-RED] {name} — no census line (rc {r.returncode})")
+    tail = " | ".join(t[:160] for t in lines[-3:])
+    return r.returncode == 0 and verdict.startswith("[LOAD]"), f"rc {r.returncode} · {verdict[:400]} · {tail}"
+
+
+def run_census(name: str, e: dict) -> tuple[bool, str]:
+    t = census_target(e)
+    if t is None:
+        return True, f"load census of {name} runs in the PC block ({(e.get('census') or {}).get('how', 'where: pc')})"
+    return census_command(name, t[0], {**((e.get("check") or {}).get("env") or {}), **t[2]}, t[1])
 
 
 def expected_red(name: str) -> dict | None:
@@ -442,7 +501,7 @@ def judge_entry(name: str, e: dict, art_env=None, out=print) -> int:
         out(f"[GREEN] {name} — stamp unchanged ({len(now['code'])} closure modules, {len(now['data'])} data, "
             f"{len(now['derived'])} derived, {len(now['out_of_tree']) - ('_ref' in now['out_of_tree'])} out-of-tree)")
         return 0
-    res = run_check(e)
+    res = run_check(e, name)
     if res is None:
         out(f"[RED] {name} — stamp moved ({'; '.join(mv[:8])}{' …' if len(mv) > 8 else ''}); no value check: rebuild "
             f"in this landing, or a ruling (G2, G6)")
@@ -473,6 +532,11 @@ def restamp(name: str, why: str, art_env=None) -> Path:
     e = entries(load_list())[name]
     if kind == "ruling" and e.get("check"):
         raise SystemExit(f"STOP: {name} has a value check; a ruling restamps only stamp-only entries (G6)")
+    if kind == "rebuild" and not e.get("check"):     # G1: a stamp-only entry's load census runs at each rebuild
+        ok, line = run_census(name, e)
+        print(f"{'[LOAD]' if ok else '[LOAD-RED]'} {name} — {line}", flush=True)
+        if not ok:
+            raise SystemExit(f"STOP: {name}'s load census at this rebuild is not clean; no restamp (G1)")
     now = stamp(name, e, art_env)
     now["why"] = why
     STAMPS.mkdir(exist_ok=True)
@@ -492,7 +556,8 @@ def tracked(root=REPO) -> list:
 
 def census(doc, files=None, root=REPO) -> list[str]:
     """Reds: a tracked file under engine/ or solver/ in no class; a .py with the generated header not listed; a make_*.py
-    output neither listed nor named not-tracked; a listed or exempt path that is not tracked."""
+    output neither listed nor named not-tracked; a listed or exempt path that is not tracked; a check without its
+    tolerance or reference machine; an entry with no load census (G1)."""
     files = tracked(root) if files is None else files
     listed = set(file_owner(doc))
     ex = doc.get("exempt", {})
@@ -515,6 +580,13 @@ def census(doc, files=None, root=REPO) -> list[str]:
     for f in sorted(listed):
         if f not in tset:
             reds.append(f"{f}: listed but not tracked")
+    for name, e in entries(doc).items():             # G1: a check names its tolerance and reference machine
+        c = e.get("check")
+        for k in ("tolerance", "reference_machine"):
+            if c and not str(c.get(k) or "").strip():
+                reds.append(f"{name}: its check names no {k} (G1)")
+        if not e.get("census") and (c or {}).get("kind") != "command":
+            reds.append(f"{name}: no load census (G1): neither a census field nor a command check it rides on")
     not_tracked = set(doc.get("not_tracked", {}))
     for mk in sorted(Path(root, "engine", "tools").glob("make_*.py")):
         target = f"engine/{mk.stem.removeprefix('make_')}.py"
@@ -535,6 +607,7 @@ def main(argv=None) -> int:
     g.add_argument("--show")
     g.add_argument("--first-stamps", action="store_true")
     g.add_argument("--moved")
+    g.add_argument("--load-census", metavar="NAME|all")
     ap.add_argument("--why")
     a = ap.parse_args(argv)
     doc = load_list()
@@ -580,6 +653,26 @@ def main(argv=None) -> int:
         mv = moved(read_stamp(a.moved), stamp(a.moved, entries(doc)[a.moved]))
         print(f"{'[MOVED]' if mv else '[UNMOVED]'} {a.moved} — {'; '.join(mv) if mv else 'stamp unchanged'}")
         return 1 if mv else 0
+    if a.load_census:                              # G1 load census now: every Mac-runnable entry, or one (A-time)
+        names = order if a.load_census == "all" else [a.load_census]
+        bad = 0
+        for n in names:
+            e = entries(doc)[n]
+            try:
+                t = census_target(e)
+            except NotRun as err:
+                print(f"NOT RUN {n}: {err}" if not in_gate() else f"[LOAD-RED] {n} — census input unset: {err}")
+                bad += in_gate()
+                continue
+            if t is None:
+                print(f"PC {n} — {(e.get('census') or {}).get('how', 'where: pc')}")
+                continue
+            ok, line = census_command(n, t[0], {**((e.get("check") or {}).get("env") or {}), **t[2]}, t[1])
+            loads_ok = "· [LOAD] " in line
+            tag = "[LOAD]" if ok else "[LOAD-RED]" if not loads_ok else "[LOAD-INCOMPLETE]"
+            print(f"{tag} {n} — {line}", flush=True)     # INCOMPLETE: loads inside, but the target exited non-zero
+            bad += not ok
+        return 1 if bad else 0
     if a.show:
         print(json.dumps(stamp(a.show, entries(doc)[a.show]), indent=1, sort_keys=True))
         return 0

@@ -4,6 +4,11 @@
 # data: in-tree inputs by git blob (a path with * is a glob, expanded at check time: a new match moves the stamp). derived: listed derived files this entry reads (the DAG). out_of_tree: artifacts paths,
 # read at artifacts origin/main from NEARSTARS_ARTIFACTS. packages: name (version stamped). external: name → {env, path}
 # (sha256 of the file; a missing env or file is red). check: the value or rebuild check run when the stamp moved.
+# census (G1 load census, N18): what derived/load_census.py runs in-process before comparing sys.modules with the
+# closure — default the check command; `call` file:function with args; `argv`; `restore` puts the entry's own files
+# back after a build and removes the untracked files it created; `where: pc` runs in the go-live PC block.
+# {external}/{papers}/{artifacts} are the env dirs; the entry's `external` env vars are passed to the census run.
+# check.tolerance / check.reference_machine: G1 «the check … with its tolerance and reference machine» (census red if absent).
 
 entries:
   1-earth:
@@ -13,7 +18,10 @@ entries:
     # the build's run.load_body → transfers.check_body → load_others globs every body yaml (walk survey, note 1 §4)
     data: ["engine/bodies/*.yaml", engine/chain.yaml]
     derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json]
-    check: {kind: structure_table, table: engine/structure_grid/earth.json}
+    check: {kind: structure_table, table: engine/structure_grid/earth.json,
+             tolerance: "structure_grid._recheck within ε (C161; G4 «row 1 keeps ε»)",
+             reference_machine: "Linux-x86_64 (the PC landing suites, G5)"}
+    census: {call: "engine/structure_grid.py:build", args: [Earth, null, [2004.686159407071]], restore: true}   # one grid point (G1)
   1-venus:
     row: 1
     files: [engine/structure_grid/venus.json]
@@ -21,7 +29,10 @@ entries:
     # the build's run.load_body → transfers.check_body → load_others globs every body yaml (walk survey, note 1 §4)
     data: ["engine/bodies/*.yaml", engine/chain.yaml]
     derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json]
-    check: {kind: structure_table, table: engine/structure_grid/venus.json}
+    check: {kind: structure_table, table: engine/structure_grid/venus.json,
+             tolerance: "structure_grid._recheck within ε (C161; G4 «row 1 keeps ε»)",
+             reference_machine: "Linux-x86_64 (the PC landing suites, G5)"}
+    census: {call: "engine/structure_grid.py:build", args: [Venus, null, [2218.1251654372177]], restore: true}   # one grid point (G1)
   1-mars:
     row: 1
     files: [engine/structure_grid/mars.json]
@@ -29,13 +40,18 @@ entries:
     # the build's run.load_body → transfers.check_body → load_others globs every body yaml (walk survey, note 1 §4)
     data: ["engine/bodies/*.yaml", engine/chain.yaml]
     derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json]
-    check: {kind: structure_table, table: engine/structure_grid/mars.json}
+    check: {kind: structure_table, table: engine/structure_grid/mars.json,
+             tolerance: "structure_grid._recheck within ε (C161; G4 «row 1 keeps ε»)",
+             reference_machine: "Linux-x86_64 (the PC landing suites, G5)"}
+    census: {call: "engine/structure_grid.py:build", args: [Mars, null, [2020.8472065056037]], restore: true}   # one grid point (G1)
   2-reference-adiabats:
     row: 2
     files: [engine/reference_adiabats.json]
     code: [engine/tools/reference_adiabats.py:build]
     data: [engine/chain.yaml]
-    check: {kind: command, argv: ["{python}", engine/tools/reference_adiabats.py, --check]}
+    check: {kind: command, argv: ["{python}", engine/tools/reference_adiabats.py, --check],
+             tolerance: "exact bytes (G4)",
+             reference_machine: "Linux-x86_64 (reference_adiabats.REFERENCE_MACHINE; off it the check only records, G5)"}
   3-ice-giant-anchor:
     row: 3
     files: [engine/ice_giant_anchor.json]
@@ -43,7 +59,9 @@ entries:
     # measured (trace_reads on the check, 68 n3): the listed reads are all it reads
     data: [engine/chain.yaml]
     derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json]
-    check: {kind: command, argv: ["{python}", engine/test_ice_giant.py]}
+    check: {kind: command, argv: ["{python}", engine/test_ice_giant.py],
+             tolerance: "exact frozen values (G4; the Mac drifts at 1e-14, note 1 §4)",
+             reference_machine: "Linux-x86_64 (the PC landing suites, G5)"}
   4-mars-sulphur-anchor:
     row: 4
     files: [engine/mars_sulphur_anchor.json]
@@ -51,7 +69,9 @@ entries:
     # measured (trace_reads on the check, 68 n3): every body yaml (a glob), the reference adiabats and one mantle table
     data: ["engine/bodies/*.yaml", engine/chain.yaml]
     derived: [engine/reference_adiabats.json, engine/mantle_tables/0663e6a031cae4dc.json]
-    check: {kind: command, argv: ["{python}", engine/test_mars_sulphur.py]}
+    check: {kind: command, argv: ["{python}", engine/test_mars_sulphur.py],
+             tolerance: "re-fit sulphur within test_mars_sulphur.SULPHUR_TOL_WT; data trigger files exact bytes",
+             reference_machine: "Linux-x86_64 (the PC landing suites, G5)"}
   5-c143-inventory:
     row: 5
     files: [engine/c143_sum_inventory.json]
@@ -63,13 +83,16 @@ entries:
     derived: [engine/reference_adiabats.json, engine/mantle_tables/0663e6a031cae4dc.json,
               engine/mantle_tables/c6bd588831fd8229.json, engine/hhe_table.py, engine/ice_melt_table.py,
               engine/water_table.py, engine/water2_table.py, engine/ammonia_table.py]
-    check: {kind: command, argv: ["{python}", engine/test_c143_guard.py]}
+    check: {kind: command, argv: ["{python}", engine/test_c143_guard.py],
+             tolerance: "bit-identical inventory (test_c143_guard)",
+             reference_machine: "Linux-x86_64 (the PC landing suites, G5)"}
   6-mantle-tables:
     row: 6
     files: [engine/mantle_tables/0663e6a031cae4dc.json, engine/mantle_tables/25cb82c1607ef8c7.json,
             engine/mantle_tables/7f2146ace4f965b1.json, engine/mantle_tables/c6bd588831fd8229.json]
     code: [engine/mantle_composition.py:build]
     packages: [burnman]
+    census: {call: "derived/census_targets.py:mantle_one_column", args: [mars], restore: true}   # build(), one P column (only mars.yaml declares a mantle composition)
   7-fall-sets:
     row: 7
     files: [solver/materials/fall_sets/silicate_slb_default_bse.json.gz,
@@ -87,18 +110,22 @@ entries:
               solver/materials/tables/silicate_slb_mars_khan2022.json.gz, solver/materials/h2o.yaml,
               solver/materials/fe_prem.yaml, solver/materials/fe_prem_legacy.yaml,
               solver/materials/silicate_prem_zeng2016.yaml, solver/materials/tables/silicate_prem_zeng2016.json.gz]
-    check: {kind: command, argv: ["{python}", -m, unittest, solver.tests.test_fall_set_stamp]}
+    check: {kind: command, argv: ["{python}", -m, unittest, solver.tests.test_fall_set_stamp],
+             tolerance: "exact stamp equality (test_fall_set_stamp)",
+             reference_machine: "Linux-x86_64 (the PC landing suites, G5)"}
   8a-h2o:
     row: 8a
     files: [solver/materials/h2o.yaml]
     code: [solver/material_library.py, solver/material_registry.py, solver/material_joins.py, solver/material_view.py]
     out_of_tree: [rewrite/phase2-records/gen_h2o.py]
     packages: [SeaFreeze]
+    census: {where: pc, how: "the go-live PC block runs the generator under derived/load_census.py (A-time)"}
   8b-fe-prem:
     row: 8b
     files: [solver/materials/fe_prem.yaml, solver/materials/fe_prem_legacy.yaml]
     derived: [engine/reference_adiabats.json]
     out_of_tree: [rewrite/phase2-records/gen_fe_prem.py]
+    census: {where: pc, how: "the go-live PC block runs the generator under derived/load_census.py (A-time)"}
   8c-prem-handover:
     row: 8c
     files: [solver/materials/silicate_prem_zeng2016.yaml, solver/materials/tables/silicate_prem_zeng2016.json.gz]
@@ -111,6 +138,7 @@ entries:
     # artifacts main at any path — extract it with `git -C $NEARSTARS_ARTIFACTS show
     # 9b8f406f:rewrite/phase2-records/build_assemblage.py` (origin/silicate-rebuild-9b8f406f; 68 n2 on R1)
     out_of_tree: [rewrite/phase2-records/gen_prem_handover.py]
+    census: {where: pc, how: "the go-live PC block runs the generator under derived/load_census.py (A-time)"}
   8d-silicate-slb:
     row: 8d
     files: [solver/materials/silicate_slb_default_bse.yaml, solver/materials/silicate_slb_earth_dmm_wh2005.yaml,
@@ -123,11 +151,13 @@ entries:
                   rewrite/phase2-records/slb2024/strict_report.py,
                   rewrite/phase2-records/slb2024/transition/transition_check.py]
     packages: [burnman]
+    census: {where: pc, how: "the go-live PC block runs the generator under derived/load_census.py (A-time)"}
   9-hhe-table:
     row: 9
     files: [engine/hhe_table.py]
     code: [engine/tools/make_hhe_table.py:main]
     external: {DirEOS2019: {env: NEARSTARS_EXTERNAL, path: DirTABLES-EOS2019/TABLEEOS_HHE_TP_IVL_Y0.275_v1}}
+    census: {argv: [engine/tools/make_hhe_table.py, "{external}/DirTABLES-EOS2019"], restore: true}
   9-ice-melt-table:
     row: 9
     files: [engine/ice_melt_table.py]
@@ -136,21 +166,25 @@ entries:
       liquid: {env: NEARSTARS_EXTERNAL, path: highP-ice/figs-1-and-S1/coex-line-liquid.dat}
       vii: {env: NEARSTARS_EXTERNAL, path: highP-ice/figs-1-and-S1/coex-line-superionic-ice.dat}
       direct: {env: NEARSTARS_EXTERNAL, path: highP-ice/figs-1-and-S1/coex-direct-coexistence.dat}
+    census: {argv: [engine/tools/make_ice_melt_table.py, "{external}/highP-ice"], restore: true}
   9-water-table:
     row: 9
     files: [engine/water_table.py]
     code: [engine/tools/make_water_table.py:main]
     packages: [SeaFreeze]
+    census: {argv: [engine/tools/make_water_table.py], restore: true}
   9-water2-table:
     row: 9
     files: [engine/water2_table.py]
     code: [engine/tools/make_water2_table.py:main]
     packages: [SeaFreeze]
+    census: {argv: [engine/tools/make_water2_table.py], restore: true}
   9-ammonia-table:
     row: 9
     files: [engine/ammonia_table.py]
     code: [engine/tools/make_ammonia_table.py:main]
     external: {Bethkenhagen2013: {env: NEARSTARS_PAPERS, path: 2013JChPh.138w4504B.pdf}}
+    census: {call: "derived/census_targets.py:ammonia_table", args: ["{papers}"], restore: true}   # PDF at the stamped path (note 1 §10)
   10-graph-page:
     row: 10
     files: [engine/chain-explorer.html]
@@ -158,7 +192,10 @@ entries:
     # measured (trace_reads on check_graph_page, 68 n3): bindings and the phase-4 yamls besides chain.yaml
     # (a glob: the page reads every phase4/*.yaml, so a new one moves the stamp)
     data: [engine/chain.yaml, engine/bindings.yaml, "phase4/*.yaml"]
-    check: {kind: command, argv: ["{python}", engine/tools/check_graph_page.py]}
+    check: {kind: command, argv: ["{python}", engine/tools/check_graph_page.py],
+             tolerance: "exact bytes (G4)",
+             reference_machine: "Linux-x86_64 (the PC landing suites, G5)"}
+    census: {call: "engine/build_graph_page.py:build", restore: true}   # its check builds in a subprocess, unseen
 
 # tracked files under engine/ and solver/ that are neither source, documents nor listed: regex → reason (prereg §0)
 exempt:
