@@ -6,7 +6,7 @@
     engine/.venv/bin/python engine/tools/make_hhe_table.py DirTABLES-EOS2019
 
 **This script is not a runtime dependency.** It runs once, in the development venv, and
-its output is a plain-Python module with no imports. `scripts/check.sh` never calls it;
+its output is a plain-Python module with no imports beyond `math`. `scripts/check.sh` never calls it;
 `engine/test_giant.py` re-runs it against the same distributed file when that file is
 present, and prints SKIP when it is not. Same discipline as ices III/V/VI and the Fermi
 integrals.

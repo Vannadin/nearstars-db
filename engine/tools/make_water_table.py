@@ -4,7 +4,8 @@
     engine/.venv/bin/python engine/tools/make_water_table.py
 
 **This script is not a runtime dependency.** It runs once in the development venv (the one
-that has SeaFreeze), and its output is a plain-Python module with no imports — the same
+that has SeaFreeze), and its output is a plain-Python module whose only import is the engine's own
+`smooth_table` (the PCHIP reads), no package from the venv — the same
 discipline as `make_hhe_table.py` and as the ice III/V/VI constants: SeaFreeze is read at
 build time and checked at test time, never imported by `scripts/check.sh`.
 

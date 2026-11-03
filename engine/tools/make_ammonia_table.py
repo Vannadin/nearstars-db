@@ -10,7 +10,8 @@ doi 10.1063/1.4810883).
 PDF `2013JChPh.138w4504B.pdf` in the paper cache, `gate_env.papers_dir()` (`$NEARSTARS_PAPERS`, else
 `docs/phase3/_papers`): the one path every other reader of a paper resolves and a stamp of this table hashes, so the
 bytes read and the bytes described are one file (AMMONIA-path). Its output is a plain-Python module
-with no imports, the same discipline as `make_hhe_table.py` and `make_water_table.py`.
+whose only imports are `math` and the engine's own `smooth_table` (the PCHIP reads) and `convergence` (the note), no
+package from a build venv: the same discipline as `make_hhe_table.py` and `make_water_table.py`.
 
 **The printed table is the distribution.** The paper has no repository, no data-availability
 statement and no analytic fit; Appendix B, Table I (four columns, ρ g/cm³ · T K · p GPa ·

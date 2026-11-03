@@ -4,7 +4,8 @@
     engine/.venv/bin/python engine/tools/make_water2_table.py
 
 **Not a runtime dependency** — the same discipline as `make_water_table.py`: SeaFreeze is read
-once here, the output is a plain-Python module with no imports beyond `math`, and
+once here, the output is a plain-Python module with no imports beyond `math` and the engine's own
+`smooth_table` (the PCHIP reads), and
 `scripts/check.sh` runs on system Python.
 
 `water2` is Brown 2018 (2018FlPEq.463...18B, *Local basis function representations of
