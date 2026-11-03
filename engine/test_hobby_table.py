@@ -142,8 +142,13 @@ def h_scope() -> None:
     import run
     import structure_grid as sg
     registry.load_all()
+    import interior
     body, _ = run.load_body(sg.BODIES_DIR / "mars.yaml")
-    solve, _how, _ = sg._solver(body, types.SimpleNamespace(values={"core_mass_fraction": 0.2779053215587793}))
+    # VR-base 6: the cmf comes from the body — its declared fixing's frozen sulphur fit, the composition structure_grid
+    #   holds fixed for Mars — not from a literal (the old 0.2779… was the pre-layer Mars's and went stale on 10-07).
+    pin = sg.anchor_fixings_read(body.inputs)[0]
+    cmf = json.loads(interior.SULPHUR_ANCHOR_FILE.read_text(encoding="utf-8"))["fixings"][pin]["core_mass_fraction"]
+    solve, _how, _ = sg._solver(body, types.SimpleNamespace(values={"core_mass_fraction": cmf}))
     keys = ("radius", "nmoi", "cmb_temperature", "core_pressure", "core_radius")
     got = []
     for prior in (1500.0, 2060.0):
