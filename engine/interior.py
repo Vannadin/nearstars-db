@@ -3159,7 +3159,9 @@ def _fold_answer(att: dict, cross, a: dict, extra_note: str = ""):
             "length": (w.points[-1][0] - w.points[0][0]) if w.points else 0.0, "evals": w.evals, "cpu": att["cpu"],
             "crossings": len(w.crossings), "states": len(att["states"]), "band": band, "e_ts": att["e_ts"],
             "seed": att["seed"], "extra": extra_note, "y": {k: f(st) for k, f in FOLD_FIELDS.items()}}
-    if not FOLD_DOUBLED[0]:
+    if TABLE_POINT[0]:                   # ES-f6 (a.1): a table point solve does not measure R2 (the band is not stored)
+        info["doubled_skipped"] = "table point (ES-f6 (a))"
+    elif not FOLD_DOUBLED[0]:
         dbl = _fold_doubled(a)
         info["doubled"] = dbl
         # 지휘석 10-19: 수렴한 두 배 풀이만 실어 보내는 띠에 들어간다 — 안 수렴한 y 는 «did not converge» 메모로만
@@ -3170,6 +3172,7 @@ def _fold_answer(att: dict, cross, a: dict, extra_note: str = ""):
 
 
 FOLD_DOUBLED = [False]          # R2 의 두 배 STEPS 풀이 안 — 그 안에서는 또 두 배로 풀지 않는다
+TABLE_POINT = [False]           # ES-f6 (a.1): structure_grid 의 표 점 풀이 안 — R2 두 배 풀이를 건너뛴다(호출자가 finally 에서 끔)
 
 
 def _fold_doubled(a: dict):
@@ -3184,7 +3187,9 @@ def _fold_doubled(a: dict):
     STEPS = 2 * saved
     _FOLD_DEPTH[0] = 0                  # 두 배 풀이는 가장 바깥 사격처럼 — 그 안의 접힘도 이어 걷는다(그 안에서 또 두 배는 안 함)
     try:
-        st2, ok2 = shoot(**a)
+        # ES-f6 (a.2): 두 배 풀이의 적분 · 직접 기록은 따로 연 기록에만 — 답의 수렴 기록(대체 길 · 시행 칸)에 안 섞인다
+        with convergence.isolated():
+            st2, ok2 = shoot(**a)
         return dict({"STEPS": STEPS, "converged": ok2}, **{k: f(st2) for k, f in FOLD_FIELDS.items()})
     except (ValueError, PhaseGap) as why:
         return {"STEPS": STEPS, "refused": str(why)[:160]}
@@ -3271,6 +3276,9 @@ def fold_note(info: dict) -> list:
         notes.append("core_fold_band — R1 b_y = |dy/ds|·e_s (e_Ts " + f"{info['e_ts']:g} K): "
                      + " · ".join(f"{k} ±{v:.4g}" for k, v in band.items())
                      + " — R2: 이 출력들에 다른 띠 항이 없어 b_y 가 지배 항, 답의 등급 한 단계 내림")
+    if "doubled_skipped" in info:
+        notes.append("core_fold_band — R2 not measured in a table point solve (ES-f6 (a)); b_y (R1) is a lower bound, "
+                     "not the shipped band")
     if "doubled" in info:
         notes.append(f"core_fold_band — R2 STEPS 두 배 풀이: {info['doubled']}")
     if "shipped" in info:

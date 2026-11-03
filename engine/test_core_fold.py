@@ -377,5 +377,84 @@ src_ans = inspect.getsource(interior._fold_answer)
 check("14d: _fold_answer builds «shipped» only from a converged doubled solve (the wiring)",
       'and dbl.get("converged"):' in src_ans and 'info["shipped"]' in src_ans)
 
+print("(15) ES-f6 (a): a table point solve skips the R2 doubled solve; the doubled shoot never writes the answer's trace")
+import types  # noqa: E402
+import convergence  # noqa: E402
+
+
+def _fake_att():
+    walk = types.SimpleNamespace(turning=[], points=[], evals=3, crossings=[(0, 0, 0, 0.0)], located={})
+    return {"walk": walk, "cpu": 0.0, "states": [1], "e_ts": 2.0, "seed": (3134.0, 39.6e9)}
+
+
+calls = []
+saved = {k: getattr(interior, k) for k in ("_fold_integrate", "_refuse_if_below_floor", "_refuse_if_water_filled",
+                                           "_fold_band", "_fold_doubled", "FOLD_FIELDS", "FREE_SOLVE_CONTRACT")}
+try:
+    interior._fold_integrate = lambda a, p, t: types.SimpleNamespace(t_surface=1.0)
+    interior._refuse_if_below_floor = lambda st, m: None
+    interior._refuse_if_water_filled = lambda st: None
+    interior._fold_band = lambda att, cross, a: {"T_c [K]": 0.05}
+    interior._fold_doubled = lambda a: calls.append(1) or {"STEPS": 2, "converged": True, "T_c [K]": 1.0}
+    interior.FOLD_FIELDS = {"T_c [K]": lambda st: 1.0}
+    interior.FREE_SOLVE_CONTRACT = False
+    a_ = {"potential_temperature": 1600.0, "core_material": "x"}
+    cross = (0.0, 0.0, 0.0, 0.0)
+    interior.TABLE_POINT[0] = True
+    try:
+        st_t, _ = interior._fold_answer(_fake_att(), cross, a_)
+    finally:
+        interior.TABLE_POINT[0] = False
+    info_t = interior._FOLD_INFO.pop(id(st_t))
+    check("15a: TABLE_POINT on — _fold_doubled is not called", calls == [], str(calls))
+    nt = interior.fold_note(info_t)
+    check("15a: the note set holds the one skip line and no R2 line",
+          len([n for n in nt if "R2 not measured in a table point solve (ES-f6 (a))" in n]) == 1
+          and not any("R2 STEPS 두 배 풀이" in n or "실어 보내는 띠" in n for n in nt), str(nt)[:200])
+    st_d, _ = interior._fold_answer(_fake_att(), cross, a_)
+    info_d2 = interior._FOLD_INFO.pop(id(st_d))
+    check("15b: TABLE_POINT off — the doubled solve runs and the R2 lines are as today",
+          calls == [1] and "doubled" in info_d2 and any("R2 STEPS 두 배 풀이" in n for n in interior.fold_note(info_d2)))
+finally:
+    for k, v in saved.items():
+        setattr(interior, k, v)
+
+src_sg = inspect.getsource(__import__("structure_grid")._solve_raw)
+check("15c: structure_grid._solve_raw's worker sets TABLE_POINT and clears it in finally (the wiring)",
+      "interior.TABLE_POINT[0] = True" in src_sg and src_sg.index("finally:") < src_sg.index("interior.TABLE_POINT[0] = False"))
+
+
+def noisy_shoot(**k):
+    """A fake doubled shoot that leaves a fall-back, a substitution, a False site and one integration."""
+    convergence.note_fallback("fake.fallback")
+    convergence.note_substituted("fake.sub", 2, 1e-3)
+    convergence.note("fake.site", False)
+    with convergence.shot() as h:
+        convergence.note("fake.shot_site", False)
+        if h is not None:
+            h[0] = 12345
+    return types.SimpleNamespace(), False
+
+
+saved_s = interior.shoot
+saved_ff = interior.FOLD_FIELDS
+try:
+    interior.shoot, interior.FOLD_FIELDS = noisy_shoot, {}
+    with convergence.start() as tr:
+        convergence.note("outer.site", True)
+        before = (dict(tr.sites), dict(tr.fallbacks), dict(tr.substituted), set(tr.trial_false), set(tr.trial_invalid),
+                  len(tr.shots), dict(tr.counts))
+        dbl = interior._fold_doubled({})
+        after = (dict(tr.sites), dict(tr.fallbacks), dict(tr.substituted), set(tr.trial_false), set(tr.trial_invalid),
+                 len(tr.shots), dict(tr.counts))
+finally:
+    interior.shoot, interior.FOLD_FIELDS = saved_s, saved_ff
+check("15d (a.2): the doubled shoot's fall-back, substitution, False sites and integration stay out of the outer trace",
+      before == after and dbl.get("converged") is False, f"{before} → {after}")
+with convergence.start() as tr2:
+    noisy_shoot()
+    leaked = bool(tr2.fallbacks) and bool(tr2.substituted) and len(tr2.shots) == 1
+check("15d control: run directly in a trace, the fake shoot writes fall-backs, substitutions and a shot", leaked)
+
 print(f"test_core_fold: {'모두 통과' if not fails else f'FAIL {fails}'}")
 sys.exit(1 if fails else 0)

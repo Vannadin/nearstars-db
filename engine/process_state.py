@@ -93,6 +93,7 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("interior", "FOLD_RUNS"): (COUNTER, "core-tc-fold: continuation walks run, a count outside values", None),
     ("interior", "_FOLD_DEPTH"): (FLAG, "core-tc-fold: outer-shoot depth, so only the outermost shoot continues; reset in finally", None),
     ("interior", "STEPS"): (FLAG, "the integrator's step count, a build setting; core-tc-fold R2 doubles it for one solve and restores it in finally", None),
+    ("interior", "TABLE_POINT"): (FLAG, "ES-f6 (a.1): inside a structure-grid table point solve, which skips the R2 doubled solve; set and cleared in finally by structure_grid._solve_raw", None),
     ("interior", "FOLD_DOUBLED"): (FLAG, "core-tc-fold R2: inside the doubled-STEPS solve, which does not double again; reset in finally", None),
     ("interior", "MELT_SEAM_CUTS"): (COUNTER, "window-edge registration §2.2: steps landed on a silicate melt-curve seam (eos.melt_curve_seams), a count outside values", None),
     ("interior", "PHASE_CUT_REWALKS"): (COUNTER, "C157 secant re-walks landing a step on a phase, seam or layer boundary, a count outside values", None),
