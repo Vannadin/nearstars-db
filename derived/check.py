@@ -460,6 +460,20 @@ def census_command(name: str, target: list, env_extra=None, flags=(), report=Non
     return r.returncode == 0 and verdict.startswith("[LOAD]"), f"rc {r.returncode} · {verdict[:400]} · {tail}"
 
 
+def census_tag(ok: bool, line: str) -> str:
+    """One census's tag from its own verdict (68 HOLD B2 on 5db3db7f): [LOAD-RED] when its loads are red;
+    [LOAD-INCOMPLETE] only when its loads are inside but its target exited non-zero (row 3's Mac drift); else [LOAD]."""
+    verdict = line.split(" · ", 2)[1] if line.count(" · ") >= 1 else line
+    if not verdict.startswith("[LOAD] "):
+        return "[LOAD-RED]"
+    return "[LOAD]" if ok else "[LOAD-INCOMPLETE]"
+
+
+def row_tag(tags: list) -> str:
+    """A row is red when any of its censuses is red, whatever the others say; INCOMPLETE only when none is red."""
+    return "[LOAD-RED]" if "[LOAD-RED]" in tags else "[LOAD-INCOMPLETE]" if "[LOAD-INCOMPLETE]" in tags else "[LOAD]"
+
+
 def run_census(name: str, e: dict) -> tuple[bool, str]:
     t = census_target(e)
     if t is None:
@@ -675,12 +689,13 @@ def main(argv=None) -> int:
                 continue
             rep, crep = [], []
             ok, line = census_command(n, t[0], {**((e.get("check") or {}).get("env") or {}), **t[2]}, t[1], rep)
+            tags = [census_tag(ok, line)]
             chk = e.get("check") or {}
             if e.get("census") and chk.get("kind") == "command":   # the check's own loads too, as at the landing
                 cok, cline = census_command(n, chk["argv"][1:], chk.get("env"), report=crep)
+                tags.append(census_tag(cok, cline))
                 ok, line = ok and cok, f"{line}; check: {cline}"
-            loads_ok = "· [LOAD] " in line
-            tag = "[LOAD]" if ok else "[LOAD-RED]" if not loads_ok else "[LOAD-INCOMPLETE]"
+            tag = row_tag(tags)
             print(f"{tag} {n} — {line}", flush=True)     # INCOMPLETE: loads inside, but the target exited non-zero
             for label, r_ in (("build", rep), ("check", crep)):
                 for ln in r_:

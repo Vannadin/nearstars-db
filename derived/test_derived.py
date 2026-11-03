@@ -514,6 +514,19 @@ class LoadCensus(unittest.TestCase):
         mods = json.loads(r.stdout.strip().splitlines()[-1])
         self.assertEqual([m for m in mods if m.split("/", 1)[0] in ("engine", "solver")], [])
 
+    def test_a_red_build_with_a_green_check_is_red(self):
+        """68 HOLD B2 on 5db3db7f: the row tag comes from each census's own verdict; a red build census is [LOAD-RED]
+        whatever the check census says, and INCOMPLETE stays «loads inside, target rc != 0»."""
+        red = (False, "rc 3 · [LOAD-RED] 7-fall-sets — loaded outside the static closure (1 of 57): engine/albedo_table.py"
+                      " (target rc 0) · x")
+        green = (True, "rc 0 · [LOAD] 7-fall-sets — 62 project modules loaded (children included), all inside (target rc 0) · x")
+        drift = (False, "rc 1 · [LOAD] 3-ice-giant-anchor — 22 project modules loaded, all inside (target rc 1) · x")
+        self.assertEqual(ck.row_tag([ck.census_tag(*red), ck.census_tag(*green)]), "[LOAD-RED]")
+        self.assertEqual(ck.row_tag([ck.census_tag(*green), ck.census_tag(*red)]), "[LOAD-RED]")
+        self.assertEqual(ck.row_tag([ck.census_tag(*drift)]), "[LOAD-INCOMPLETE]")
+        self.assertEqual(ck.row_tag([ck.census_tag(*drift), ck.census_tag(*red)]), "[LOAD-RED]")
+        self.assertEqual(ck.row_tag([ck.census_tag(*green), ck.census_tag(*green)]), "[LOAD]")
+
     def test_census_report_keeps_every_census_line(self):
         """`--load-census` evidence: the census's own lines reach the report whole (68 point 3), not the last three of
         the run's output, and the target's own prints stay out."""
