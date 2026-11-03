@@ -4,6 +4,7 @@
 Each control is a temp copy of engine/*.py, engine/bodies/ and scripts/ with one plant, checked in its own process
 (`check_mass_formula.py --root TMP`), so the plant's import of mantle_composition is fresh."""
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -77,7 +78,28 @@ CONTROLS = [
 ]
 
 
+def recorded_run(code):
+    """The suite record (r2 B1, directing (a)): run `code` in engine/ with the gate's hook on, then check the record."""
+    d = Path(tempfile.mkdtemp(prefix="m1rec-"))
+    log = d / "mass.log"
+    try:
+        env = dict(os.environ, GATE_MASS_LOG=str(log), GATE_STEP="test-plant",
+                   PYTHONPATH=str(ROOT / "scripts" / "gate_reads"))
+        env.pop("GATE_READS_LOG", None)
+        subprocess.run([sys.executable, "-c", code], cwd=ROOT / "engine", env=env, check=True, capture_output=True)
+        p = subprocess.run([sys.executable, str(CHECK), "--recorded", str(log)], capture_output=True, text=True,
+                           env={k: v for k, v in os.environ.items() if k not in ("GATE_MASS_LOG", "PYTHONPATH")})
+        return p.returncode, p.stdout, (log.read_text() if log.exists() else "")
+    finally:
+        shutil.rmtree(d)
+
+
 def main():
+    rc, rout, log = recorded_run("import mantle_composition as mc\nfor k in mc.SLB_NAMES: mc._phase(k)\n")
+    ok(rc == 0 and log.count("\n") > 0, f"suite record, engine routes only: rc {rc}, {log.count(chr(10))} lines")
+    rc, rout, log = recorded_run("from burnman.minerals import SLB_2011 as Q\nQ.periclase()\n")
+    hit = [ln for ln in rout.splitlines() if "suite record" in ln and "SLB_2011.periclase" in ln and "test-plant" in ln]
+    ok(rc == 1 and bool(hit), f"suite record, an alias-constructed class planted → red ({hit[0].strip()[:110] if hit else rout[-160:]})")
     rc, out = run(ROOT)
     ok(rc == 0 and out.strip().splitlines()[-1].startswith("M1: PASS"), f"the tree: {out.strip().splitlines()[-1]}")
     for label, plant, want in CONTROLS:

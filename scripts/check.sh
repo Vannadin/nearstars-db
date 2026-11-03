@@ -816,6 +816,10 @@ if [ "$lane" = "full" ]; then
   export GATE_READS_LOG GATE_READS_ROOT="$PWD"
   export PYTHONPATH="$PWD/scripts/gate_reads${PYTHONPATH:+:$PYTHONPATH}"
   echo "GATE READS log=$GATE_READS_LOG (C136 — 단계별 데이터 읽기 기록)"
+  # M1 런타임 기록(S3 D2 §2.0 «엔진 스위트 동안»): 같은 sitecustomize 가 단계가 만드는 BurnMan 광물 클래스를 적는다
+  GATE_MASS_LOG=$(mktemp "${TMPDIR:-/tmp}/gate-mass.XXXXXX")
+  export GATE_MASS_LOG
+  echo "GATE MASS log=$GATE_MASS_LOG (M1 — 단계가 만든 BurnMan 광물 클래스)"
 fi
 # ── 풀을 연다 (브리프 184). `GATE_POOL=1` 이면 예전과 같은 완전 직렬이다 (되돌릴 손잡이). ──
 if [ "$GATE_POOL" -gt 1 ] 2>/dev/null; then
@@ -1340,6 +1344,13 @@ step "dynamo_table" python3 engine/dynamo_table.py --check
 fi   # lane
 
 step_flush                    # ⚠ **집계 앞의 배리어** — 이 줄이 없으면 아직 도는 단계의 실패가 rc 에 안 든다
+
+if [ "$lane" = "full" ] && [ -n "${GATE_MASS_LOG:-}" ]; then
+  echo "── M1 런타임 기록 검사 (S3 D2 §2.0 — 스위트가 만든 BurnMan 광물 클래스가 목록 안인가) ──"
+  # ⚠ 검사기 자신은 기록하지 않는다 — 후크를 끄고 돈다
+  env -u GATE_MASS_LOG -u GATE_READS_LOG -u PYTHONPATH "$GATE_PY" scripts/check_mass_formula.py --recorded "$GATE_MASS_LOG" || fail=1
+  rm -f "$GATE_MASS_LOG"
+fi
 
 if [ "$lane" = "full" ] && [ -n "${GATE_READS_LOG:-}" ]; then
   echo "── C136 입력 선언 표류 검사 (gate_step_inputs.yaml 대 이번 판의 읽기) ──"

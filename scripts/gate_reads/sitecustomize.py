@@ -243,3 +243,10 @@ def _install():
 
 if _LOG:
     _install()
+
+# M1 runtime record (S3 D2 §2.0; r2 B1 on b2a6d1c3, directing ruling (a)): independent of GATE_READS_LOG
+if os.environ.get("GATE_MASS_LOG"):
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import gate_mass_record  # noqa: E402
+    sys.path.pop(0)
+    gate_mass_record.install()

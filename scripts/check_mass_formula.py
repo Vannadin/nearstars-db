@@ -1,5 +1,5 @@
 # 선언 질량 대 화학식 질량(M1, S3 D2 등록 §2.0) — 엔진이 만드는 BurnMan 광물의 끝성분마다 molar_mass 대 formula_mass 를 동결 허용 목록과 대조하고, 별칭·getattr 생성자까지 AST 묶음으로 훑음
-"""python3 scripts/check_mass_formula.py [--root DIR]      (the gate venv: BurnMan 2.1.0)
+"""python3 scripts/check_mass_formula.py [--root DIR] [--recorded GATE_MASS_LOG]      (the gate venv: BurnMan 2.1.0)
 
 S3 D2 registration §2.0 (frozen d65eb6c8), M1 «declared mass vs formula», engine side (directing ruling 11-04 on r2
 B4: wired in check.sh now, against the frozen allow-list; MARS-mass (b) empties the list in its own commit).
@@ -18,9 +18,20 @@ B4: wired in check.sh now, against the frozen allow-list; MARS-mass (b) empties 
 atomic_masses). Every end-member with r > 1e-9 must be in `scripts/mass_allowlist.json` with the same r (to 1e-12
 relative); one that is not STOPs, a listed one whose r changed STOPs, a listed one not found STOPs. If
 mantle_composition sets `MASS_FROM_FORMULA = True`, the list must be empty.
-**Runtime cross-check** (r2 n4). `Mineral.__init__` is wrapped while every key goes through `_phase`, every
-candidate through `_rock` and Mars's bulk through `select_all` at one node; a class created there that is neither a
-listed object nor one of its end-members is red. It covers the engine's construction routes, not every suite step.
+**Runtime cross-check** (§2.0 «during the engine suite»; r2 B1 on b2a6d1c3, directing ruling (a)).
+- In this check's own process, `Mineral.__init__` is wrapped while every key goes through `_phase`, every candidate
+  through `_rock` and Mars's bulk through `select_all` at one node.
+- Over the suite: in the full lane check.sh sets `GATE_MASS_LOG`, and `scripts/gate_reads/gate_mass_record.py` (loaded
+  by the gate's sitecustomize) appends every (module, class) any step's Python process constructs after BurnMan's own
+  import. `--recorded FILE` reads it after the pool barrier.
+- Either way, a class that is neither a listed object nor one of its end-members is red: those under
+  `burnman.minerals.*`, and any class outside `burnman.*` (a project subclass). BurnMan's machinery classes
+  (`burnman.classes.*`) are not objects of the list.
+**Stated limits** (r2 n1 on b2a6d1c3). The binding scan does not follow `from burnman.minerals import *`,
+`importlib.import_module`, or `Mineral(params)` / `Solution(...)` built from a parameter dict. The runtime record sees
+the first two (they construct dataset classes), and the third only if its class is outside `burnman.classes.*`. None
+is in the tree at this commit. solver/ is parsed by the 3.9 gate python here, so a 3.10+-only file there makes this
+step fail loudly (a SyntaxError), never silently (r2 n3).
 
 scripts/mass_allowlist.json is a byte copy of artifacts ea-d2 a6fca1801 `rewrite/phase2-records/mass_allowlist.json`
 (blob 29b0e33d), the frozen list. Last line «M1: PASS» (rc 0) or «M1: FAIL» (rc 1)."""
@@ -138,7 +149,7 @@ def endmembers(o):
     return [m for m, _ in o.endmembers] if isinstance(o, Solution) else [o]
 
 
-def check(root):
+def check(root, recorded=None):
     root = Path(root).resolve()
     fails, objects = [], []
     sys.path.insert(0, str(root / "engine"))
@@ -202,12 +213,20 @@ def check(root):
     for mod, c in sorted(seen_classes):
         if c not in known and not mod.startswith("burnman.classes."):
             fails.append(f"runtime: class {mod}.{c} created on the engine's routes is not on the list")
+    if recorded is not None:
+        rows = [json.loads(ln) for ln in Path(recorded).read_text(encoding="utf-8").splitlines() if ln.strip()] \
+            if Path(recorded).exists() else []
+        for mod, c in sorted({(r["module"], r["class"]) for r in rows}):
+            if c not in known and (mod.startswith("burnman.minerals.") or not mod.startswith("burnman.")):
+                steps = sorted({r["step"] for r in rows if (r["module"], r["class"]) == (mod, c)})
+                fails.append(f"runtime (suite record): class {mod}.{c} constructed by {steps} is not on the list")
+        print(f"  [기록] M1 suite record: {len(rows)} lines, {len({(r['module'], r['class']) for r in rows})} classes")
     return fails, len(objects)
 
 
 def main(argv):
     root = argv[argv.index("--root") + 1] if "--root" in argv else str(Path(__file__).resolve().parents[1])
-    fails, n = check(root)
+    fails, n = check(root, argv[argv.index("--recorded") + 1] if "--recorded" in argv else None)
     for f in fails:
         print(f"  [FAIL] M1 {f}")
     print(f"M1: {'FAIL' if fails else 'PASS'} — {n} objects")
