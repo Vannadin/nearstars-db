@@ -73,6 +73,39 @@ def test_no_cost_line_rejected():
     assert not run(log([f"    [어긋남] nmoi 엔진 0.3571 · 보드 0.3634", f"  [FAIL] {M} — 비0 종료 (이 단계가 fail=1 을 세웠다)"]))
 
 
+D = {"id": "SG-MARS-HOLD", "step": "derived 1-mars", "derived_entry": "1-mars", "triggers": ["x"]}
+DS = "derived 1-mars"
+
+
+def dbody(lines, fail=True):
+    out = [f"[RED] 1-mars — stamp unchanged, but the table's own read rules fail: data triggers moved ['x']"] + lines
+    if fail:
+        out.append(f"  [FAIL] {DS} — 비0 종료 (이 단계가 fail=1 을 세웠다)")
+    return out + [f"  [TIME] {DS} — 1 s", f"  [COST] {DS} — instr 1"]
+
+
+def test_derived_expected_line_accepted():
+    """sg-gate SG-MARS-HOLD: the derived step's red is accepted only with derived/check.py's EXPECTED RED line for its id."""
+    ok, notes = ld.expected_red_only(log(dbody(["  1-mars: EXPECTED RED, gate_expected_red.yaml id SG-MARS-HOLD — r"])),
+                                     T + [D])
+    assert ok, notes
+
+
+def test_derived_without_expected_line_rejected():
+    assert not ld.expected_red_only(log(dbody([])), T + [D])[0]
+    assert not ld.expected_red_only(log(dbody(["  1-mars: not the red gate_expected_red.yaml id SG-MARS-HOLD expects"])),
+                                    T + [D])[0]
+    # another id's EXPECTED line, or the line outside the step's range, does not count
+    assert not ld.expected_red_only(log(dbody(["  1-mars: EXPECTED RED, gate_expected_red.yaml id C59 — r"])), T + [D])[0]
+    assert not ld.expected_red_only(log(["  1-mars: EXPECTED RED, gate_expected_red.yaml id SG-MARS-HOLD — r",
+                                         "  [COST] other — instr 1"], dbody([])), T + [D])[0]
+
+
+def test_c59_row_still_read_beside_a_derived_row():
+    """the C59 form is unchanged when the table also holds a derived row (no KeyError on mismatch_keys)."""
+    assert ld.expected_red_only(log(body(M, [("nmoi", "0.3571", "0.3634")])), [D] + T)[0]
+
+
 if __name__ == "__main__":   # pytest 없는 게이트 venv 에서도 돈다
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_")]
     for n, f in tests:

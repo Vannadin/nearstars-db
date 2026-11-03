@@ -210,6 +210,38 @@ class ExpectedRed(unittest.TestCase):
         """own bytes edited, quick mode, the refusal cap, an unreadable input: data is None."""
         self.assertNotIn("EXPECTED RED", self._named(None)[0])
 
+    def test_an_eight_trigger_subset_stays_red(self):
+        """directing's registration 7aeef535: a smaller set changes the reason; the item is re-registered, not matched."""
+        for drop in self.NINE:
+            self.assertNotIn("EXPECTED RED", self._named([t for t in self.NINE if t != drop])[0])
+
+    def test_the_registered_item(self):
+        """the tree's item: exactly the nine, the registration blob, and no other entry cites it."""
+        import yaml
+        items = yaml.safe_load((ck.REPO / "scripts" / "gate_expected_red.yaml").read_text(encoding="utf-8"))
+        mine = [i for i in items if i.get("id") == "SG-MARS-HOLD"]
+        self.assertEqual(len(mine), 1)
+        self.assertEqual(sorted(mine[0]["triggers"]), self.NINE)
+        self.assertEqual(mine[0]["derived_entry"], "1-mars")
+        self.assertEqual(mine[0]["step"], "derived 1-mars")
+        self.assertEqual(mine[0]["registered"], "pc/sg-gate/sg-mars-hold-registration.md 7aeef535")
+        self.assertEqual([i["id"] for i in items if i.get("derived_entry")], ["SG-MARS-HOLD"])
+
+    def test_own_bytes_of_mars_json_stay_red(self):
+        """an own-bytes edit of mars.json under the item: red, never EXPECTED (the real item and entry, a planted stamp)."""
+        e = DOC["entries"]["1-mars"]
+        then = json.loads(json.dumps(ck.stamp("1-mars", e)))
+        then["files"]["engine/structure_grid/mars.json"] = "planted"
+        lines, keep = [], ck.read_stamp
+        ck.read_stamp = lambda name: then
+        try:
+            rc = ck.judge_entry("1-mars", e, out=lines.append)
+        finally:
+            ck.read_stamp = keep
+        self.assertEqual(rc, 1)
+        self.assertTrue(lines[0].startswith("[RED] 1-mars — its own bytes differ"), lines)
+        self.assertFalse(any("EXPECTED RED" in ln for ln in lines), lines)
+
     def test_the_tree_lists_every_compact_8c_reads(self):
         """68 B3: 8c's derived inputs are the three SLB compacts its generator reads (measured)."""
         self.assertEqual(sorted(DOC["entries"]["8c-prem-handover"]["derived"]),
