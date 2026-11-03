@@ -88,6 +88,9 @@ entries:
              reference_machine: "Linux-x86_64 (the PC landing suites, G5)"}
   6-mantle-tables:
     row: 6
+    # 25cb82c1607ef8c7 and 7f2146ace4f965b1 are superseded pre-C160 tables (no column_rule in their header, so today's
+    # build writes another key) with no reader in code; exempt and kept until the owner rules on deleting them
+    # (directing 11-04, post-solver cleanup list)
     files: [engine/mantle_tables/0663e6a031cae4dc.json, engine/mantle_tables/25cb82c1607ef8c7.json,
             engine/mantle_tables/7f2146ace4f965b1.json, engine/mantle_tables/c6bd588831fd8229.json]
     code: [engine/mantle_composition.py:build]
