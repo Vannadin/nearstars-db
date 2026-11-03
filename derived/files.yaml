@@ -113,6 +113,7 @@ entries:
     check: {kind: command, argv: ["{python}", -m, unittest, solver.tests.test_fall_set_stamp],
              tolerance: "exact stamp equality (test_fall_set_stamp)",
              reference_machine: "Linux-x86_64 (the PC landing suites, G5)"}
+    census: {call: "derived/census_targets.py:fall_sets_sweep"}   # the build's sweep child; the check runs none
   8a-h2o:
     row: 8a
     files: [solver/materials/h2o.yaml]
@@ -184,7 +185,7 @@ entries:
     files: [engine/ammonia_table.py]
     code: [engine/tools/make_ammonia_table.py:main]
     external: {Bethkenhagen2013: {env: NEARSTARS_PAPERS, path: 2013JChPh.138w4504B.pdf}}
-    census: {call: "derived/census_targets.py:ammonia_table", args: ["{papers}"], restore: true}   # PDF at the stamped path (note 1 §10)
+    census: {argv: [engine/tools/make_ammonia_table.py], restore: true}   # the builder as is: its PDF read is traced (note 1 §10)
   10-graph-page:
     row: 10
     files: [engine/chain-explorer.html]

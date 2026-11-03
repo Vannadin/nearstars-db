@@ -387,13 +387,123 @@ class LoadCensus(unittest.TestCase):
         self.assertIn("load census", str(cm.exception))
 
     def test_call_args_take_the_env_dirs(self):
-        e = {"census": {"call": "derived/census_targets.py:ammonia_table", "args": ["{papers}"]}}
+        e = {"census": {"call": "derived/census_targets.py:planted", "args": ["{papers}"]}}
         orig, ck.env_dir = ck.env_dir, lambda var, given=None: "/P"
         try:
             target, _, _ = ck.census_target(e)
         finally:
             ck.env_dir = orig
-        self.assertEqual(target, ["--call", "derived/census_targets.py:ammonia_table", '["/P"]'])
+        self.assertEqual(target, ["--call", "derived/census_targets.py:planted", '["/P"]'])
+
+    def test_external_reads(self):
+        """AMMONIA-path (directing): the census compares the file a build opens with the stamped path and bytes."""
+        import hashlib
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            (d / "stamped").mkdir()
+            (d / "tree").mkdir()
+            good = d / "stamped" / "paper.pdf"
+            good.write_bytes(b"pdf")
+            other = d / "tree" / "paper.pdf"
+            other.write_bytes(b"pdf")
+            sha = hashlib.sha256(b"pdf").hexdigest()
+            ext = {"P": (str(good), "paper.pdf")}
+            reds, notes = self.lc.external_reads(ext, {"P": sha}, [str(good)])
+            self.assertEqual(reds, [])
+            self.assertIn("= the stamp", notes[0])
+            reds, _ = self.lc.external_reads(ext, {"P": sha}, [str(other)])          # same bytes, another path
+            self.assertTrue(reds and str(other) in reds[0] and str(good) in reds[0] and "different path" in reds[0], reds)
+            reds, _ = self.lc.external_reads(ext, {"P": sha}, ["pdftotext", "-layout", str(d / "absent" / "paper.pdf")])
+            self.assertIn("absent", reds[0])                                         # a path handed to a subprocess
+            good.write_bytes(b"pdf altered")
+            reds, _ = self.lc.external_reads(ext, {"P": sha}, [str(good)])
+            self.assertIn("differ from the stamp", reds[0])
+            reds, _ = self.lc.external_reads(ext, {"P": sha}, [str(d / "unrelated.txt")])
+            self.assertIn("opened no file", reds[0])
+
+    def test_audit_hook_sees_subprocess_paths(self):
+        code = ("import sys, subprocess; sys.path.insert(0, %r); import load_census as lc; sys.addaudithook(lc._audit);"
+                "open(%r).close(); subprocess.run(['true', '/x/paper.pdf']); print(lc.OPENED)") % (str(HERE), str(HERE / "files.yaml"))
+        r = subprocess.run([sys.executable, "-B", "-c", code], capture_output=True, text=True)
+        self.assertIn("/x/paper.pdf", r.stdout)
+        self.assertIn("files.yaml", r.stdout)
+
+    CHILD = ("import importlib, subprocess, sys\n"
+             "sys.path.insert(0, {engine!r})\n"
+             "PLANT = \"import importlib, sys; sys.path.insert(0, {engine!r}); importlib.import_module(''.join(['albe', 'do_table']))\"\n"
+             "def _imp(_):\n"
+             "    importlib.import_module(''.join(['albe', 'do_table']))\n"
+             "def child():\n"
+             "    subprocess.run([sys.executable, '-B', '-c', PLANT], check=True, env={{'PATH': '/usr/bin'}})\n"
+             "def isolated():\n"
+             "    subprocess.run([sys.executable, '-I', '-c', 'pass'], check=True)\n"
+             "def executor():\n"
+             "    from concurrent.futures import ProcessPoolExecutor\n"
+             "    with ProcessPoolExecutor(2) as ex:\n"
+             "        list(ex.map(_imp, [0]))\n"
+             "def stray():\n"
+             "    sys.path.insert(0, {stray!r}); import stray_mod\n")
+
+    def _run_child(self, func):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "stray").mkdir()
+            (Path(d) / "stray" / "stray_mod.py").write_text("X = 1\n")
+            f = Path(d) / "plant_child.py"
+            f.write_text(self.CHILD.format(engine=str(ck.REPO / "engine"), stray=str(Path(d) / "stray")), encoding="utf-8")
+            return subprocess.run([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", "10-graph-page", "--",
+                                   "--call", f"{f}:{func}"], cwd=ck.REPO, capture_output=True, text=True)
+
+    def test_n18_in_a_python_child_with_its_own_env(self):
+        """68 on db1a128b: a lazy import in a subprocess child (env replaced, as fall_sets does) is seen and named."""
+        r = self._run_child("child")
+        self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
+        self.assertIn("engine/albedo_table.py", r.stdout)
+        self.assertIn("1 child report(s) over 1 started", r.stdout)
+
+    def test_a_child_that_cannot_report_is_red(self):
+        r = self._run_child("isolated")
+        self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
+        self.assertIn("wrote no census report", r.stdout)
+
+    def test_n18_in_a_process_pool_executor_worker(self):
+        r = self._run_child("executor")
+        self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
+        self.assertIn("engine/albedo_table.py", r.stdout)
+
+    def test_a_module_outside_every_judged_place_is_printed(self):
+        r = self._run_child("stray")
+        self.assertIn("stray_mod.py", r.stdout.split("unjudged module files")[1].splitlines()[0])
+
+    def test_a_mirror_copy_is_judged_as_its_tree_module(self):
+        """A child running a byte-identical copy of engine/albedo_table.py (a mirror, as check_graph_page does) is judged
+        as that module, even when the mirror is gone by the end: row 10's closure has no albedo_table, so red."""
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "mirror_run.py"
+            f.write_text("import shutil, subprocess, sys, tempfile\nfrom pathlib import Path\n"
+                         "def go():\n"
+                         "    with tempfile.TemporaryDirectory() as m:\n"
+                         "        (Path(m) / 'engine').mkdir()\n"
+                         f"        shutil.copy({str(ck.REPO / 'engine' / 'albedo_table.py')!r}, Path(m) / 'engine' / 'albedo_table.py')\n"
+                         "        subprocess.run([sys.executable, '-B', str(Path(m) / 'engine' / 'albedo_table.py')], check=True)\n",
+                         encoding="utf-8")
+            r = subprocess.run([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", "10-graph-page", "--",
+                                "--call", f"{f}:go"], cwd=ck.REPO, capture_output=True, text=True)
+        self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
+        self.assertIn("byte-identical copy of engine/albedo_table.py", r.stdout)
+        self.assertIn("[LOAD-RED] 10-graph-page", r.stdout)
+
+    def test_restore_writes_back_the_bytes_before_the_run(self):
+        """68 on db1a128b: an uncommitted rebuild of an entry file survives a census (not reset to HEAD)."""
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "a.json").write_bytes(b"seat's uncommitted rebuild")
+            snap = {"a.json": b"seat's uncommitted rebuild", "b.json": None}
+            (root / "a.json").write_bytes(b"census build")
+            (root / "b.json").write_bytes(b"census new file")
+            line = self.lc.restore_own("x", snap, root)
+            self.assertEqual((root / "a.json").read_bytes(), b"seat's uncommitted rebuild")
+            self.assertFalse((root / "b.json").exists())
+            self.assertIn("put back to the bytes before the run", line)
 
     def test_restore_removes_only_new_untracked(self):
         with tempfile.TemporaryDirectory() as d:

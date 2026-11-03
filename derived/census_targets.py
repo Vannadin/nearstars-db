@@ -16,12 +16,14 @@ def mantle_one_column(body: str) -> str:
     return str(mc.build(body, mc._body_wt(body), 1))
 
 
-def ammonia_table(papers: str) -> int:
-    """9-ammonia-table: make_ammonia_table.main with its PDF at the stamped path ($NEARSTARS_PAPERS/…). The builder
-    itself reads ROOT/docs/phase3/_papers (the tree's own cache); engine/ is not changed by the sg-gate prereg (§1.1),
-    so the census points the module's PDF constant at the file the stamp hashes (note 1 §10)."""
-    import os
-    sys.path.insert(0, str(ENGINE / "tools"))
-    import make_ammonia_table as m
-    m.PDF = os.path.join(papers, os.path.basename(m.PDF))
-    return m.main() or 0
+
+def fall_sets_sweep() -> int:
+    """7-fall-sets: the build's record × region sweep (fall_sets.engine_census, the `_CENSUS_MAIN` child) on the three
+    shipped records. The check (test_fall_set_stamp) re-hashes and never runs it, so without this the sweep's child
+    loads would go unjudged (68 on db1a128b)."""
+    sys.path.insert(0, str(ENGINE.parent))
+    from solver import fall_sets as fs
+    cen = fs.engine_census(("silicate_slb_default_bse", "silicate_slb_earth_dmm_wh2005", "silicate_slb_mars_khan2022"),
+                           fs.directory())
+    print(f"sweep: {len(cen['engine'])} engine files loaded in the child")
+    return 0
