@@ -153,15 +153,19 @@ entries:
             solver/materials/silicate_slb_mars_khan2022.yaml, solver/materials/tables/silicate_slb_default_bse.json.gz,
             solver/materials/tables/silicate_slb_earth_dmm_wh2005.json.gz,
             solver/materials/tables/silicate_slb_mars_khan2022.json.gz]
-    # the generator's measured import closure (regen8d PC trace, 6c1fd9664; loaded or read, sg-gate note 1 §2); the
-    # tables' builder ac974604 is read as bytes and pinned against the sidecar header, never loaded. The same trace shows
-    # it importing solver.material_assemblage from the engine root (gen_silicate_records `from solver import
-    # material_assemblage as ma`; 9 solver modules loaded), so that is its code; its in-tree reads are traced in the
-    # go-live PC block (the inputs are the PC's)
-    code: [solver/material_assemblage.py]
+    # the generator's reads, re-taken on the tip (go-live Mac DRY, artifacts pc/sg-gate/golive/dry/x8d2-*: load_census
+    # with every opened file, no extension filter, on f2293dd6 and on 93fc926e, the same 12 tree files on all three
+    # records). regen8d's trace (6c1fd9664) ran on engine root 16be158e, before solver/fall_sets.py existed, and kept .py
+    # files only, so it missed solver/__init__'s fall-sets hook (fall_sets.py, which loads material_registry and its
+    # schema.yaml) and the --transition table slb2022_table1.json. The tables' builder ac974604 is read as bytes and
+    # pinned against the sidecar header, never loaded. The trace runs without the term blocks (it ends at check_table's
+    # «no interp_terms block» STOP, the last check before the write); the go-live PC block traces the rest
+    code: [solver/material_assemblage.py, solver/fall_sets.py]
+    data: [solver/materials/schema.yaml]
     out_of_tree: [rewrite/phase2-records/gen_silicate_records.py, rewrite/phase2-records/slb2024/dtdp_eq.py,
                   rewrite/phase2-records/slb2024/strict_report.py,
-                  rewrite/phase2-records/slb2024/transition/transition_check.py]
+                  rewrite/phase2-records/slb2024/transition/transition_check.py,
+                  rewrite/phase2-records/slb2024/transition/slb2022_table1.json]
     packages: [burnman]
     census: {where: pc, how: "the go-live PC block runs the generator under derived/load_census.py (A-time)"}
   9-hhe-table:
