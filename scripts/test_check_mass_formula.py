@@ -1,4 +1,4 @@
-# check_mass_formula(M1 엔진 쪽)의 시험 — 실제 트리는 PASS, 대조 일곱(목록 r 변경 · 목록에서 빠진 불일치 · 고침 표지+비지 않은 목록 · 별칭 생성자 · getattr 생성자 · 데이터셋 둘 · 경로 위 목록 밖 클래스)은 각각 빨강
+# check_mass_formula(M1 엔진 쪽)의 시험 — 실제 트리는 PASS, 대조 아이가 게이트 질량 기록으로 새지 않음, 대조 일곱(목록 r 변경 · 목록에서 빠진 불일치 · 고침 표지+비지 않은 목록 · 별칭 생성자 · getattr 생성자 · 데이터셋 둘 · 경로 위 목록 밖 클래스)은 각각 빨강
 """python3 scripts/test_check_mass_formula.py     (the gate venv: BurnMan 2.1.0)
 
 Each control is a temp copy of engine/*.py, engine/bodies/ and scripts/ with one plant, checked in its own process
@@ -23,7 +23,9 @@ def ok(cond, label):
 
 
 def run(root):
-    p = subprocess.run([sys.executable, str(CHECK), "--root", str(root)], capture_output=True, text=True)
+    # the controls construct planted classes on purpose: keep them out of the gate's M1 suite record
+    env = {k: v for k, v in os.environ.items() if k != "GATE_MASS_LOG"}
+    p = subprocess.run([sys.executable, str(CHECK), "--root", str(root)], capture_output=True, text=True, env=env)
     return p.returncode, p.stdout
 
 
@@ -94,7 +96,35 @@ def recorded_run(code):
         shutil.rmtree(d)
 
 
+def leak_check():
+    """r2-style (2b, directing 11-04): a control child that constructs a planted class must not reach the parent's
+    GATE_MASS_LOG. run() strips it; the control runs the same child with the log kept and must leak."""
+    d = Path(tempfile.mkdtemp(prefix="m1leak-"))
+    saved = {k: os.environ.get(k) for k in ("GATE_MASS_LOG", "PYTHONPATH", "GATE_STEP")}
+    t = tree(CONTROLS[-1][1])                         # n4: constructs SLB_2022's periclase on the engine's route
+    try:
+        os.environ.update(GATE_MASS_LOG=str(d / "parent.log"), PYTHONPATH=str(ROOT / "scripts" / "gate_reads"),
+                          GATE_STEP="test-leak")
+        run(t)
+        stripped = (d / "parent.log").read_text() if (d / "parent.log").exists() else ""
+        subprocess.run([sys.executable, str(CHECK), "--root", str(t)], capture_output=True, text=True)
+        kept = (d / "parent.log").read_text() if (d / "parent.log").exists() else ""
+    finally:
+        for k, v in saved.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+        shutil.rmtree(t)
+        shutil.rmtree(d)
+    return stripped, kept
+
+
 def main():
+    stripped, kept = leak_check()
+    ok(stripped == "", f"(2b) a planted control child leaves the parent's mass log empty ({stripped.count(chr(10))} lines)")
+    ok('"pe"' in kept and "SLB_2022" in kept,
+       f"(2b) control: the same child with the log kept leaks its planted class ({kept.count(chr(10))} lines)")
     rc, rout, log = recorded_run("import mantle_composition as mc\nfor k in mc.SLB_NAMES: mc._phase(k)\n")
     ok(rc == 0 and log.count("\n") > 0, f"suite record, engine routes only: rc {rc}, {log.count(chr(10))} lines")
     rc, rout, log = recorded_run("from burnman.minerals import SLB_2011 as Q\nQ.periclase()\n")

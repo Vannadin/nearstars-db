@@ -15,8 +15,10 @@ B4: wired in check.sh now, against the frozen allow-list; MARS-mass (b) empties 
     reference) is a **dynamic** site. It STOPs unless its file's routes are enumerated here: only
     engine/mantle_composition.py, whose route is SLB_NAMES → `_phase`.
 **The rule.** r = |params molar_mass − formula_mass(formula)| / formula_mass(formula) per end-member (BurnMan
-atomic_masses). Every end-member with r > 1e-9 must be in `scripts/mass_allowlist.json` with the same r (to 1e-12
-relative); one that is not STOPs, a listed one whose r changed STOPs, a listed one not found STOPs. If
+atomic_masses). Every end-member with r > 1e-9 must be in `scripts/mass_allowlist.json` with the same r, to within
+|r − r_list| ≤ max(R_FLOOR, n·u·Σ|terms|·mm/fm²) per entry: the rounding bound of formula_mass's builtin `sum()`
+over its n terms (u = 2⁻⁵³), which Python 3.12 made compensated, so an exact match held on one interpreter only
+(the PC gate's mgts read 2.78e-10 relative off; ES-f6 landing, post-freeze note). One that is not STOPs, a listed one whose r changed STOPs, a listed one not found STOPs. If
 mantle_composition sets `MASS_FROM_FORMULA = True`, the list must be empty.
 **Runtime cross-check** (§2.0 «during the engine suite»; r2 B1 on b2a6d1c3, directing ruling (a)).
 - In this check's own process, `Mineral.__init__` is wrapped while every key goes through `_phase`, every candidate
@@ -43,7 +45,8 @@ import sys
 from pathlib import Path
 
 TOL = 1e-9
-R_MATCH = 1e-12
+R_FLOOR = 1e-15          # absolute floor on |r − r_list|; the per-entry rounding bound sits below it today
+U = 2.0 ** -53
 SCAN_DIRS = ("engine", "solver", "scripts")
 ENUMERATED = {"engine/mantle_composition.py"}
 
@@ -144,6 +147,16 @@ def r_of(m):
     return abs(m.params["molar_mass"] - fm) / fm
 
 
+def r_bound(m):
+    """The absolute bound on r's move between summation orders: n·u·Σ|terms|·mm/fm², floored at R_FLOOR."""
+    from burnman.utils.chemistry import atomic_masses
+    from burnman.tools.chemistry import formula_mass
+    f = m.params["formula"]
+    terms = [f[e] * atomic_masses[e] for e in f]
+    fm = formula_mass(f)
+    return max(R_FLOOR, len(terms) * U * sum(abs(x) for x in terms) * m.params["molar_mass"] / fm ** 2)
+
+
 def endmembers(o):
     from burnman import Solution
     return [m for m, _ in o.endmembers] if isinstance(o, Solution) else [o]
@@ -202,8 +215,11 @@ def check(root, recorded=None):
             found.add(k)
             if k not in listed:
                 fails.append(f"unlisted mismatch {k}: r = {r:.3e} ({o['source']})")
-            elif abs(r - listed[k]) > R_MATCH * listed[k]:
-                fails.append(f"listed {k}: r = {r:.6e}, list {listed[k]:.6e}")
+            else:
+                dr, bd = abs(r - listed[k]), r_bound(m)
+                print(f"  [r] {k}: r = {r!r}, list {listed[k]!r}, Δr {dr:.2e}, bound {bd:.2e}")
+                if dr > bd:
+                    fails.append(f"listed {k}: r = {r!r}, list {listed[k]!r}, Δr {dr:.2e} > bound {bd:.2e}")
     for k in sorted(set(listed) - found):
         if not any(str(k) in x for x in fails):
             fails.append(f"listed {k} not found among the objects the engine creates")

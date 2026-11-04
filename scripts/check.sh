@@ -1189,6 +1189,9 @@ step "test_process_state.py" bash -c 'cd engine && exec python3 test_process_sta
 # ES-f6 (a) §4.6 · §4.2 / (d) §3: 상태 조사 동결 목록과 표 점 깃발·일꾼 줄 시험 (r2 B2 on db4eab30). 각 ~2–4 s.
 step "test_state_survey.py" bash -c 'cd engine && exec python3 test_state_survey.py'
 step "test_esf6_pool.py" bash -c 'cd engine && exec python3 test_esf6_pool.py'
+# 핵 사격 접힘 이어 걷기(core-tc-fold, 64cee4b1)와 ES-f6 (a) 의 표 점 R2 건너뛰기 (15) — 10-19 부터 안 엮여 있었음
+#   (게이트 05eb977a «안 엮인 시험», 4188a62a 의 «tests wired» 는 이 파일에 대해 틀림; FIX2). ~1 s.
+step "test_core_fold.py" bash -c 'cd engine && exec python3 test_core_fold.py'
 step "test_rocky_roster.py" bash -c 'cd engine && exec python3 test_rocky_roster.py'
 # 조석 수송 축 (Brief 35). 이오 재현 실패가 측정 불변량으로 고정되어 있다 —
 # 이 테스트가 울리면 실패 서사 자체가 바뀐 것이니 멈추고 추적한다.
