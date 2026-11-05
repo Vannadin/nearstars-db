@@ -39,7 +39,8 @@ entries:
     code: [engine/structure_grid.py:build]
     # the build's run.load_body → transfers.check_body → load_others globs every body yaml (walk survey, note 1 §4)
     data: ["engine/bodies/*.yaml", engine/chain.yaml]
-    derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json]
+    # the structure build reads the mars mantle table (read survey at f2293dd6, sg-gate note 2 §13 (1))
+    derived: [engine/reference_adiabats.json, engine/mars_sulphur_anchor.json, engine/mantle_tables/0663e6a031cae4dc.json]
     check: {kind: structure_table, table: engine/structure_grid/mars.json,
              tolerance: "structure_grid._recheck within ε (C161; G4 «row 1 keeps ε»)",
              reference_machine: "Linux-x86_64 (the PC landing suites, G5)"}
@@ -94,6 +95,10 @@ entries:
     files: [engine/mantle_tables/0663e6a031cae4dc.json, engine/mantle_tables/25cb82c1607ef8c7.json,
             engine/mantle_tables/7f2146ace4f965b1.json, engine/mantle_tables/c6bd588831fd8229.json]
     code: [engine/mantle_composition.py:build]
+    # main builds from _body_wt(name), the body yaml's declared composition; eos (in the closure) loads
+    # reference_adiabats.json at import (read survey and import trace, sg-gate note 2 §13 (2), (3))
+    data: [engine/bodies/mars.yaml]
+    derived: [engine/reference_adiabats.json]
     packages: [burnman]
     census: {call: "derived/census_targets.py:mantle_one_column", args: [mars], restore: true}   # build(), one P column (only mars.yaml declares a mantle composition)
   7-fall-sets:
@@ -122,7 +127,9 @@ entries:
     files: [solver/materials/h2o.yaml]
     code: [solver/material_library.py, solver/material_registry.py, solver/material_joins.py, solver/material_view.py]
     # measured (trace_reads on gen_h2o 0b21821f against golive-c8 2aaf5615): the generator also reads these two
-    data: [solver/materials/schema.yaml, solver/materials/sources.yaml]
+    # closure modules load chain.yaml and reference_adiabats.json at import (import trace, sg-gate note 2 §13 (3))
+    data: [solver/materials/schema.yaml, solver/materials/sources.yaml, engine/chain.yaml]
+    derived: [engine/reference_adiabats.json]
     out_of_tree: [rewrite/phase2-records/gen_h2o.py]
     packages: [SeaFreeze]
     census: {where: pc, how: "the go-live PC block runs the generator under derived/load_census.py (A-time)"}
@@ -161,7 +168,9 @@ entries:
     # pinned against the sidecar header, never loaded. The trace runs without the term blocks (it ends at check_table's
     # «no interp_terms block» STOP, the last check before the write); the go-live PC block traces the rest
     code: [solver/material_assemblage.py, solver/fall_sets.py]
-    data: [solver/materials/schema.yaml]
+    # closure modules load chain.yaml and reference_adiabats.json at import (import trace, sg-gate note 2 §13 (3))
+    data: [solver/materials/schema.yaml, engine/chain.yaml]
+    derived: [engine/reference_adiabats.json]
     out_of_tree: [rewrite/phase2-records/gen_silicate_records.py, rewrite/phase2-records/slb2024/dtdp_eq.py,
                   rewrite/phase2-records/slb2024/strict_report.py,
                   rewrite/phase2-records/slb2024/transition/transition_check.py,
@@ -172,6 +181,8 @@ entries:
     row: 9
     files: [engine/hhe_table.py]
     code: [engine/tools/make_hhe_table.py:main]
+    # the builder copies this file's text into hhe_table.py: a .py read as data (sg-gate B1; note 2 §13 (4))
+    data: [engine/tools/hhe_table_tail.py]
     external: {DirEOS2019: {env: NEARSTARS_EXTERNAL, path: DirTABLES-EOS2019/TABLEEOS_HHE_TP_IVL_Y0.275_v1}}
     census: {argv: [engine/tools/make_hhe_table.py, "{external}/DirTABLES-EOS2019"], restore: true}
   9-ice-melt-table:
