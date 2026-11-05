@@ -56,6 +56,7 @@ tiers:
       engine/test_domain.py: 1
       engine/test_ice_fr2015.py: 1
       engine/test_paleos.py: 1
+      engine/test_ammonia.py: 1      # §6's generator-input check: a missing PDF or pdftotext is a FAIL in the gate (47b361fe, AMMONIA-path)
       derived/check.py: 4            # its own in_gate() (a direct GATE_RUNNING read), the B2 call, and the load census's B2 lane (2)
       derived/test_derived.py: 2     # the B2 lane control sets and clears it (a planted lane, no tier read)
 
@@ -88,5 +89,6 @@ names:
   GATE_READS_LOG: {class: internal, why: scripts/gate_reads bookkeeping}
   GATE_READS_RAW: {class: internal, why: scripts/gate_reads bookkeeping}
   GATE_READS_ROOT: {class: internal, why: scripts/gate_reads bookkeeping}
+  GATE_MASS_LOG: {class: internal, why: check.sh's M1 record file (scripts/gate_reads, ES-f6 FIX2); read by check_mass_formula --recorded}
   LOAD_CENSUS_REPORT: {class: internal, why: derived/load_census.py's child-report dir (sg-gate G1 load census)}
   ADS_API_TOKEN: {class: tool, why: the paper-fetch scripts under scripts/phase3 and scripts/refs}
