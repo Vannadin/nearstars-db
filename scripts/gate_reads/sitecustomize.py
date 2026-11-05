@@ -24,12 +24,14 @@ imported has import frames *below* it, and that read is data (audit HOLD 2). A s
 an imported module's source as text is recorded; its import of the same file is not.
 
 ⚠ **A warning's source-line reload is dropped (ES-f6 FIX4).** Printing a warning (a 3.12 SyntaxWarning at
-compile, a RuntimeWarning at run time, numpy's) makes `linecache` re-read the warned file through
+compile, a RuntimeWarning at run time, numpy's) or a traceback makes `linecache` re-read the file through
 `tokenize.open`. The landing gate's group 4 recorded that as a step reading its own source. The open is
 dropped only when (a) the frame calling `open` is `linecache`, or `tokenize.open` called from `linecache`
-(3.9–3.12 reload through it), and (b) the path is a `.py` that is some loaded module's `__file__`
-(`__main__` included). A data file read through linecache, or a `.py` that is not a loaded module's source,
-stays recorded, and so does any `open()` of a module's source as text (11-03: a `.py` read as text is a read).
+(3.9–3.12 reload through it); (b) walking outward from that frame, a stdlib `warnings` or `traceback` frame
+comes before any `inspect` frame (r2 B1: `inspect.getsource` reads through the same path, and that is a read);
+and (c) the path is a `.py` that is some loaded module's `__file__` (`__main__` included). Stdlib frames are
+matched by realpath, not basename. A data file read through linecache, `inspect.getsource`, and any `open()`
+of a module's source as text stay recorded (11-03: a `.py` read as text is a read).
 
 `GATE_READS_RAW=1` also writes the dropped events, with `"dropped": true` (fixture D-import).
 At exit, recorded `.py` paths that are also some loaded module's `__file__` are written as
@@ -115,11 +117,48 @@ def _opener(f):
     return "<none>"
 
 
-def _linecache_reload(f):
-    """The calling frame is linecache's own source reload: `linecache.*`, or `tokenize.open` called from it."""
-    if f is not None and os.path.basename(f.f_code.co_filename) == "tokenize.py" and f.f_code.co_name == "open":
+_STD = {}
+
+
+def _std(name):
+    """The realpath of a stdlib module's file, once it is loaded, and only if it lies under sysconfig's stdlib dir
+    (r2 n1 on FIX4, directing 11-06: by path, not by basename — a repo `warnings.py` is not the stdlib's)."""
+    if name not in _STD:
+        m = sys.modules.get(name)
+        fn = getattr(m, "__file__", None) if m is not None else None
+        if fn is None:
+            return None
+        import sysconfig
+        lib = os.path.realpath(sysconfig.get_paths()["stdlib"])
+        fn = os.path.realpath(fn)
+        _STD[name] = fn if fn.startswith(lib + os.sep) else None
+    return _STD[name]
+
+
+def _real(f):
+    return os.path.realpath(f.f_code.co_filename)
+
+
+def _warning_reload(f):
+    """The open is linecache reloading a source line **to display a warning or a traceback** (FIX4, r2 B1 on
+    ef0167d4): the calling frame is linecache (or tokenize.open called from it), and walking outward from the
+    linecache frame a stdlib `warnings` or `traceback` frame comes before any `inspect` frame. inspect.getsource
+    reads a module's source through the same linecache path, and that is a read of the source as text."""
+    if f is not None and _real(f) == _std("tokenize") and f.f_code.co_name == "open":
         f = f.f_back
-    return f is not None and os.path.basename(f.f_code.co_filename) == "linecache.py"
+    if f is None or _real(f) != _std("linecache"):
+        return False
+    shows = {p for p in (_std("warnings"), _std("traceback")) if p}
+    insp = _std("inspect")
+    g = f.f_back
+    while g is not None:
+        p = _real(g)
+        if p == insp:
+            return False
+        if p in shows:
+            return True
+        g = g.f_back
+    return False
 
 
 def _loaded_source(rel):
@@ -174,7 +213,7 @@ def _install():
                     if _RAW:
                         emit("open", rel, dropped=True)
                     return
-                if rel.endswith(".py") and _linecache_reload(sys._getframe(1)) and _loaded_source(rel):
+                if rel.endswith(".py") and _loaded_source(rel) and _warning_reload(sys._getframe(1)):
                     if _RAW:                            # FIX4: a warning's source-line reload, not data
                         emit("open", rel, dropped=True, by="linecache")
                     return

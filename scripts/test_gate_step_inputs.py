@@ -124,6 +124,107 @@ def test_fix4_a_data_file_named_as_a_modules_file_recorded():
     assert len(_kept(recs, "table.md")) == 1
 
 
+def test_fix4_inspect_getsource_of_a_loaded_module_recorded():
+    # FIX4 (r2 B1 on ef0167d4): inspect.getsource reads through linecache too — a source read as text, recorded
+    tmp = _scratch()
+    (tmp / "src_mod.py").write_text("def f():\n    return 1\n")
+    (tmp / "main_i.py").write_text("import inspect, src_mod\ninspect.getsource(src_mod.f)\n")
+    recs = _hooked_main(tmp, "main_i.py")
+    assert len(_kept(recs, "src_mod.py")) == 1
+    assert any(r["kind"] == "leak" and r["path"] == "src_mod.py" for r in recs)
+
+
+def test_fix4_a_traceback_print_reload_dropped():
+    # FIX4: traceback.print_stack shows source lines through linecache — display, not data
+    tmp = _scratch()
+    (tmp / "tb_mod.py").write_text("import traceback, io\ndef go():\n    traceback.print_stack(file=io.StringIO())\n")
+    (tmp / "main_t.py").write_text("import tb_mod\ntb_mod.go()\n")
+    recs = _hooked_main(tmp, "main_t.py")
+    assert not _kept(recs, "tb_mod.py")
+
+
+def test_fix4_a_traceback_format_exc_reload_dropped():
+    # FIX4 (c): traceback.format_exc after an exception in a repo module — the same display class as a warning
+    tmp = _scratch()
+    (tmp / "exc_mod.py").write_text("def go():\n    raise ValueError('x')\n")
+    (tmp / "main_e.py").write_text("import traceback, exc_mod\ntry:\n    exc_mod.go()\n"
+                                   "except ValueError:\n    traceback.format_exc()\n")
+    recs = _hooked_main(tmp, "main_e.py")
+    assert not _kept(recs, "exc_mod.py")
+
+
+def test_fix4_a_repo_file_named_warnings_or_traceback_is_not_the_stdlib():
+    # FIX4 (b): repo files named warnings.py / traceback.py calling linecache on a loaded module's source — recorded
+    tmp = _scratch()
+    (tmp / "fake").mkdir()
+    for name in ("warnings", "traceback"):
+        (tmp / "fake" / f"{name}.py").write_text("import linecache\ndef show(p):\n    linecache.getlines(p)\n")
+    (tmp / "plain_mod.py").write_text("Y = 2\n")        # no warnings of its own (loader_mod's open is a ResourceWarning)
+    (tmp / "main_n.py").write_text(
+        "import importlib.util, scratch_mod, plain_mod\n"
+        "def load(name, alias):\n"
+        "    spec = importlib.util.spec_from_file_location(alias, f'fake/{name}.py')\n"
+        "    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m\n"
+        "load('warnings', 'repo_warnings').show('scratch_mod.py')\n"
+        "load('traceback', 'repo_traceback').show('plain_mod.py')\n")
+    recs = _hooked_main(tmp, "main_n.py")
+    assert len(_kept(recs, "scratch_mod.py")) == 1 and len(_kept(recs, "plain_mod.py")) == 1
+
+
+def test_fix4_a_repo_warnings_installed_as_sys_modules_warnings_is_not_the_stdlib():
+    # FIX4: the stdlib frames are those under sysconfig's stdlib dir — a repo warnings.py put in sys.modules is not one
+    tmp = _scratch()
+    (tmp / "fake").mkdir()
+    (tmp / "fake" / "warnings.py").write_text("import linecache\ndef show(p):\n    linecache.getlines(p)\n")
+    (tmp / "main_m.py").write_text(
+        "import sys, importlib.util, scratch_mod\n"
+        "spec = importlib.util.spec_from_file_location('warnings', 'fake/warnings.py')\n"
+        "m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)\n"
+        "sys.modules['warnings'] = m\nm.show('scratch_mod.py')\n")
+    recs = _hooked_main(tmp, "main_m.py")
+    assert len(_kept(recs, "scratch_mod.py")) == 1
+
+
+def test_fix4_a_warning_naming_an_unloaded_py_recorded():
+    # FIX4: the dropped reload is of a loaded module's source — a warning pointing at another .py reads it
+    tmp = _scratch()
+    (tmp / "unl_mod.py").write_text("Z = 3\n")
+    (tmp / "main_x2.py").write_text("import warnings\nwarnings.warn_explicit('w', UserWarning, 'unl_mod.py', 1)\n")
+    recs = _hooked_main(tmp, "main_x2.py")
+    assert len(_kept(recs, "unl_mod.py")) == 1
+
+
+def test_fix4_a_warning_naming_a_data_file_as_a_modules_file_recorded():
+    # FIX4: only a .py is a source reload — a warning shown against a data file a module names as __file__ is a read
+    tmp = _scratch()
+    (tmp / "main_x3.py").write_text("import sys, types, warnings\nm = types.ModuleType('fake')\n"
+                                    "m.__file__ = 'table.md'\nsys.modules['fake'] = m\n"
+                                    "warnings.warn_explicit('w', UserWarning, 'table.md', 1)\n")
+    recs = _hooked_main(tmp, "main_x3.py")
+    assert len(_kept(recs, "table.md")) == 1
+
+
+def test_fix4_a_repo_showwarning_opening_a_source_recorded():
+    # FIX4: under a warnings frame, only linecache's reload is dropped — a repo showwarning that open()s a source reads it
+    tmp = _scratch()
+    (tmp / "main_x4.py").write_text("import warnings, scratch_mod\n"
+                                    "def show(*a, **k):\n    open('scratch_mod.py').read()\n"
+                                    "warnings.showwarning = show\nwarnings.warn('w')\n")
+    recs = _hooked_main(tmp, "main_x4.py")
+    assert len(_kept(recs, "scratch_mod.py")) == 1
+
+
+def test_fix4_inspect_getsource_under_a_warnings_frame_recorded():
+    # FIX4: walking out from linecache, an inspect frame before the warnings frame makes it a source read
+    tmp = _scratch()
+    (tmp / "src_mod2.py").write_text("def f():\n    return 2\n")
+    (tmp / "main_x5.py").write_text("import inspect, warnings, src_mod2\n"
+                                    "def show(*a, **k):\n    inspect.getsource(src_mod2.f)\n"
+                                    "warnings.showwarning = show\nwarnings.warn('w')\n")
+    recs = _hooked_main(tmp, "main_x5.py")
+    assert len(_kept(recs, "src_mod2.py")) == 1
+
+
 def test_fix4_linecache_on_an_unloaded_py_recorded():
     # FIX4: linecache on a .py that is no loaded module's source is not a warning reload: recorded
     tmp = _scratch()
