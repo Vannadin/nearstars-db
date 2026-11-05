@@ -71,6 +71,67 @@ def test_main_script_not_recorded():
     assert not _kept(recs, "main_x.py") and not _kept(recs, "scratch_mod.py")
 
 
+def _hooked_main(tmp: pathlib.Path, script: str) -> list[dict]:
+    log = tmp / "reads.jsonl"
+    log.unlink(missing_ok=True)
+    env = dict(os.environ, GATE_READS_LOG=str(log), GATE_READS_ROOT=str(tmp), GATE_READS_RAW="1",
+               GATE_STEP="fixture", PYTHONPATH=str(HERE / "gate_reads"), PYTHONDONTWRITEBYTECODE="1",
+               PYTHONWARNINGS="default")
+    subprocess.run([sys.executable, script], cwd=tmp, env=env, check=True, capture_output=True)
+    return [json.loads(l) for l in log.read_text().splitlines() if l.strip()]
+
+
+def test_fix4_a_runtime_warnings_source_reload_dropped():
+    # FIX4 (1): a repo module warning at run time — linecache reloads its source to print the line; not data
+    tmp = _scratch()
+    (tmp / "warn_mod.py").write_text("import warnings\ndef go():\n    warnings.warn('w', RuntimeWarning)\n")
+    (tmp / "main_w.py").write_text("import warn_mod\nwarn_mod.go()\n")
+    recs = _hooked_main(tmp, "main_w.py")
+    assert not _kept(recs, "warn_mod.py"), "a warning's source-line reload must not read as data"
+    assert any(r["path"] == "warn_mod.py" and r.get("by") == "linecache" and r.get("dropped") for r in recs)
+
+
+def test_fix4_a_compile_warning_in_the_main_script_dropped():
+    # FIX4: the landing's group 4 shape — `\|` in the main script's docstring, a 3.12 SyntaxWarning (3.9: hidden)
+    tmp = _scratch()
+    (tmp / "main_s.py").write_text('"""a `\\|` b"""\nX = 1\n')
+    recs = _hooked_main(tmp, "main_s.py")
+    assert not _kept(recs, "main_s.py")
+
+
+def test_fix4_a_data_file_through_linecache_recorded():
+    # FIX4 (2): linecache.getlines on a data file is a read, before and after FIX4
+    tmp = _scratch()
+    (tmp / "main_l.py").write_text("import linecache\nlinecache.getlines('table.md')\n")
+    recs = _hooked_main(tmp, "main_l.py")
+    assert len(_kept(recs, "table.md")) == 1
+
+
+def test_fix4_a_repo_py_opened_as_text_recorded():
+    # FIX4 (3): open() of another repo .py as text stays a read (11-03), loaded or not
+    tmp = _scratch()
+    (tmp / "main_o.py").write_text("import scratch_mod\nopen('scratch_mod.py').read()\nopen('loader_mod.py').read()\n")
+    recs = _hooked_main(tmp, "main_o.py")
+    assert len(_kept(recs, "scratch_mod.py")) == 1 and len(_kept(recs, "loader_mod.py")) == 1
+
+
+def test_fix4_a_data_file_named_as_a_modules_file_recorded():
+    # FIX4: only a .py source is a reload — a module whose __file__ names a data file does not hide that file's read
+    tmp = _scratch()
+    (tmp / "main_d.py").write_text("import sys, types, linecache\nm = types.ModuleType('fake')\n"
+                                   "m.__file__ = 'table.md'\nsys.modules['fake'] = m\nlinecache.getlines('table.md')\n")
+    recs = _hooked_main(tmp, "main_d.py")
+    assert len(_kept(recs, "table.md")) == 1
+
+
+def test_fix4_linecache_on_an_unloaded_py_recorded():
+    # FIX4: linecache on a .py that is no loaded module's source is not a warning reload: recorded
+    tmp = _scratch()
+    (tmp / "main_u.py").write_text("import linecache\nlinecache.getlines('loader_mod.py')\n")
+    recs = _hooked_main(tmp, "main_u.py")
+    assert len(_kept(recs, "loader_mod.py")) == 1
+
+
 def test_glob_pattern_recorded_not_its_walk():
     tmp = _scratch()
     (tmp / "sub").mkdir()

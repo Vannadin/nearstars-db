@@ -23,6 +23,14 @@ Ancestors are not looked at: a module whose top-level code opens a table while i
 imported has import frames *below* it, and that read is data (audit HOLD 2). A step that `open()`s
 an imported module's source as text is recorded; its import of the same file is not.
 
+⚠ **A warning's source-line reload is dropped (ES-f6 FIX4).** Printing a warning (a 3.12 SyntaxWarning at
+compile, a RuntimeWarning at run time, numpy's) makes `linecache` re-read the warned file through
+`tokenize.open`. The landing gate's group 4 recorded that as a step reading its own source. The open is
+dropped only when (a) the frame calling `open` is `linecache`, or `tokenize.open` called from `linecache`
+(3.9–3.12 reload through it), and (b) the path is a `.py` that is some loaded module's `__file__`
+(`__main__` included). A data file read through linecache, or a `.py` that is not a loaded module's source,
+stays recorded, and so does any `open()` of a module's source as text (11-03: a `.py` read as text is a read).
+
 `GATE_READS_RAW=1` also writes the dropped events, with `"dropped": true` (fixture D-import).
 At exit, recorded `.py` paths that are also some loaded module's `__file__` are written as
 `"kind": "leak"` — printed by the census, never dropped.
@@ -107,6 +115,22 @@ def _opener(f):
     return "<none>"
 
 
+def _linecache_reload(f):
+    """The calling frame is linecache's own source reload: `linecache.*`, or `tokenize.open` called from it."""
+    if f is not None and os.path.basename(f.f_code.co_filename) == "tokenize.py" and f.f_code.co_name == "open":
+        f = f.f_back
+    return f is not None and os.path.basename(f.f_code.co_filename) == "linecache.py"
+
+
+def _loaded_source(rel):
+    """`rel` is the `__file__` of a module in sys.modules (`__main__` included)."""
+    for m in list(sys.modules.values()):
+        fn = getattr(m, "__file__", None)
+        if fn and _rel(fn) == rel:
+            return True
+    return False
+
+
 def _install():
     seen = set()
     recorded_py = set()
@@ -149,6 +173,10 @@ def _install():
                 if caller.startswith(_IMPORT_FRAMES):
                     if _RAW:
                         emit("open", rel, dropped=True)
+                    return
+                if rel.endswith(".py") and _linecache_reload(sys._getframe(1)) and _loaded_source(rel):
+                    if _RAW:                            # FIX4: a warning's source-line reload, not data
+                        emit("open", rel, dropped=True, by="linecache")
                     return
                 if rel.endswith(".py"):
                     recorded_py.add(rel)
