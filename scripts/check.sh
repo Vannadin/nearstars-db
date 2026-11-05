@@ -848,6 +848,9 @@ step "scripts/check_verdict_reads.py" bash -c 'python3 scripts/check_verdict_rea
 # 게이트 자신: engine/·scripts/ 가 파이썬 3.9(맥 게이트 venv)에서 읽히는가 (solver/ 는 3.11 venv 전용) — 3.10+ 문법과 실행 때 평가되는 `X | None` (VR-base 7). AST, ~2 s.
 step "scripts/test_check_py39.py" bash -c 'python3 scripts/test_check_py39.py'
 step "scripts/check_py39.py" bash -c 'python3 scripts/check_py39.py'
+# 추적 .py 의 컴파일 경고(3.12 SyntaxWarning·3.9 DeprecationWarning) — 경고 출력의 linecache 재읽기가 읽기 감사를 흔든 ES-f6 착지 group 4 (FIX3)
+step "scripts/test_check_compile_warnings.py" bash -c 'python3 scripts/test_check_compile_warnings.py'
+step "scripts/check_compile_warnings.py" bash -c 'python3 scripts/check_compile_warnings.py'
 step "scripts/pipeline/validate.py" bash -c 'python3 scripts/pipeline/validate.py'
 step "scripts/refs/validate_plasma_temp.py" bash -c 'python3 scripts/refs/validate_plasma_temp.py'
 

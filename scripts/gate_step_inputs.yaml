@@ -35,6 +35,12 @@
 "scripts/test_check_py39.py":  # by hand: synthetic sources in memory, reads no tracked file as data
   globs: []
   hand: true
+"scripts/test_check_compile_warnings.py":  # by hand: synthetic sources in temp dirs and a temp git tree; runs the check on the real tree too (gate mode), so it reads what the check reads
+  globs: ["**.py"]
+  hand: true
+"scripts/check_compile_warnings.py":  # by hand: `git ls-files "*.py"` lists every tracked .py and compiles each (FIX3)
+  globs: ["**.py"]
+  hand: true
 "scripts/check_py39.py":  # by hand: `git ls-files` lists every tracked .py under engine/ and scripts/ and parses each
   globs: ["engine/**.py", "scripts/**.py"]
   hand: true

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # 마크다운 표가 실제로 표로 렌더되는지 본다 — 게이트 열 몇 개가 내용은 보면서 렌더는 안 봤다
-"""Find Markdown tables that will not render as tables.
+r"""Find Markdown tables that will not render as tables.
 
     python3 scripts/check_md_tables.py
 
