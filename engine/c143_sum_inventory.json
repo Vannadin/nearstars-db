@@ -665,6 +665,11 @@
 "sum((1 for c in text if c.isascii() and c.isalpha()))"
 ],
 [
+"scripts/check_mass_formula.py",
+"r_bound",
+"sum((abs(x) for x in terms))"
+],
+[
 "scripts/check_phase4_gate.py",
 "summarize_legacy",
 "sum((1 for r in rows if isinstance(r, dict) and r.get('axis') and ('.' not in str(r['axis']))))"

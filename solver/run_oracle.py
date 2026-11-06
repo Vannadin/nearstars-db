@@ -92,7 +92,10 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: parallel_points.py (per-job flushed worker lines), process_state.py (the TABLE_POINT FLAG row), plus tests. No
 #: oracle body enters a changed function (note 1 §6, fold_reach at 42f28876). Re-declared at this engine/ tree; read
 #: again by the oracle at this tip against R10's tip dump, all four identical required.
-ORACLE_ENGINE_TREE = "e33dc3306a86155ef56671a894a66fdf60cf0e3e"
+#: ES-f6 FIX2 follow-up (directing 11-06): engine/ changes only in c143_sum_inventory.json, the census row for FIX2's new
+#: sum() in scripts/check_mass_formula.py · r_bound. Only engine/test_c143_guard.py reads it; no solve does. Re-declared
+#: at this engine/ tree.
+ORACLE_ENGINE_TREE = "30d2ac91cd1573eb800be2ee5b224c77100da8ab"
 REPO = Path(lm._ENGINE).parent
 
 
