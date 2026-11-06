@@ -455,9 +455,25 @@ def census_command(name: str, target: list, env_extra=None, flags=(), report=Non
     lines = (r.stdout + r.stderr).strip().splitlines()
     verdict = next((ln for ln in lines if ln.startswith("[LOAD")), f"[LOAD-RED] {name} — no census line (rc {r.returncode})")
     tail = " | ".join(t[:160] for t in lines[-3:])
+    said = target_said(name, lines) if r.returncode != 0 else []
+    if said:       # 68 n3 on ba56bcf0d: a non-zero target names its own failure in the line, not only the census's
+        tail += " · target said: " + " | ".join(t[:200] for t in said)
     if report is not None:
         report += [ln for ln in lines if ln.startswith((f"  {name}: ", "[LOAD"))] or lines[-3:]
+        report += [f"  {name}: target said: {t}" for t in said]
     return r.returncode == 0 and verdict.startswith("[LOAD]"), f"rc {r.returncode} · {verdict[:400]} · {tail}"
+
+
+SAID = re.compile(r"^\s*\[?(FAIL|STOP|NOT OK)\b|^Traceback|^\s*\w*(Error|Exception)\b|:\s*(FAIL|RED)\s*$")
+
+
+def target_said(name: str, lines: list) -> list:
+    """The target's own lines from a census run (the census's lines removed): those that open with a failure (FAIL,
+    [FAIL], STOP, NOT OK, Traceback, …Error) or end in «: FAIL»/«: RED», else its last three; at most six either way.
+    A line that only mentions FAIL mid-text (a [PASS] control quoting «판정 FAIL») is not one."""
+    own = [ln for ln in lines if not ln.startswith((f"  {name}: ", "[LOAD")) and ln.strip()]
+    hit = [ln for ln in own if SAID.search(ln)]
+    return (hit or own[-3:])[-6:]
 
 
 def census_tag(ok: bool, line: str) -> str:

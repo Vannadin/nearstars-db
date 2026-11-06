@@ -544,6 +544,27 @@ class LoadCensus(unittest.TestCase):
             self.assertIn(part, text)
         self.assertNotIn("noise", text)
 
+    def test_a_failing_target_names_its_failure_in_the_line(self):
+        """68 n3 on ba56bcf0d: a target that exits non-zero with its loads inside ([LOAD-INCOMPLETE]) carries its own
+        FAIL line in the census line and the report; a green target adds nothing (control)."""
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "failing.py"
+            f.write_text("import sys\ndef go():\n    for i in range(8):\n        print('noise', i)\n"
+                         "    print('  [PASS] a control quoting 판정 FAIL mid-line')\n"
+                         "    print('FAIL planted: the inventory moved')\n    sys.exit(1)\n"
+                         "def fine():\n    print('noise')\n", encoding="utf-8")
+            rep, rep0 = [], []
+            ok, line = ck.census_command("10-graph-page", ["--call", f"{f}:go"], report=rep)
+            ok0, line0 = ck.census_command("10-graph-page", ["--call", f"{f}:fine"], report=rep0)
+        self.assertFalse(ok, line)
+        self.assertEqual(ck.row_tag([ck.census_tag(ok, line)]), "[LOAD-INCOMPLETE]", line)
+        self.assertIn("target said: FAIL planted: the inventory moved", line)
+        self.assertNotIn("noise", line.split("target said:", 1)[1])
+        self.assertNotIn("a control quoting", line)
+        self.assertIn("  10-graph-page: target said: FAIL planted: the inventory moved", rep)
+        self.assertTrue(ok0, line0)
+        self.assertNotIn("target said", line0 + "\n".join(rep0))
+
     def test_a_mirror_copy_is_judged_as_its_tree_module(self):
         """A child running a byte-identical copy of engine/albedo_table.py (a mirror, as check_graph_page does) is judged
         as that module, even when the mirror is gone by the end: row 10's closure has no albedo_table, so red."""
