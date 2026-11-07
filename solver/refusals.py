@@ -174,6 +174,10 @@ _INPUT = (
           "fe_core_light 의 가벼운 원소 S {S} · O {O} · C {C} (합 {total}) 가 맞지 않는다 — 각각 0 이상, 합은 1 미만이어야 Fe 가 남는다"),
     Entry("input.bulk_volatile_layer", ("h2o",),
           "bulk 의 H2O {h2o} 는 얼음·바다 층이 된다 — 이 솔버는 아직 그 층을 적분하지 못한다 (설계 §4.4)"),
+    # S1 division audit (68 B1 on 9c4ea96b; directing 11-07): the core draw leaves no CFMASNa cation for a mantle
+    Entry("input.bulk_no_mantle", ("core_mass", "mantle_mass", "missing"),
+          "핵이 가져간 뒤 맨틀에 CFMASNa 산화물이 하나도 남지 않는다 (핵 질량 {core_mass}, 남은 맨틀 질량 {mantle_mass}, 없는 것 "
+          "{missing}) — 규산염 맨틀을 만들 수 없어 0 으로 나누지 않고 거절한다"),
     Entry("input.bulk_needs_silicate_records", ("layer_id",),
           "층 '{layer_id}' 는 bulk 에서 나온 규산염 조성이라 silicate_records 스위치가 켜져 있어야 한다 — 꺼진 채로는 옛 경로로 "
           "가지 않는다 (설계 §3)"),

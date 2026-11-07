@@ -195,7 +195,7 @@ class TBulkIdsRegistered(unittest.TestCase):
                 self.assertEqual(sorted(i for i in ids if i not in rf.REGISTRY), [])
         for i in ("input.bulk_fractions", "input.bulk_core_draw_short", "input.bulk_oxygen_short",
                   "input.bulk_oxygen_excess", "input.bulk_core_light", "input.bulk_volatile_layer",
-                  "input.bulk_needs_silicate_records"):
+                  "input.bulk_needs_silicate_records", "input.bulk_no_mantle"):
             self.assertIn(i, rf.REGISTRY)
 
     def test_planted_unregistered_id_is_caught(self):

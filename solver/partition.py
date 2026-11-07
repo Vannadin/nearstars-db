@@ -193,7 +193,7 @@ def _core_composition(bulk_el, params, where):
     printed = {k: _printed(v) for k, v in BULK["fe_prem_core_printed"].items()}
     held = {k: v for k, v in printed.items() if k in bulk_el}
     s_all, s_held = math.fsum(printed.values()), math.fsum(held.values())
-    x = {k: v / s_held for k, v in held.items()}
+    x = {k: v / s_held for k, v in held.items()}           # s_held > 0: Fe is required and its column share 0.828 > 0
     undeclared = sorted(set(printed) - set(held))
     return mat, x, [{"text": "fe_prem core composition: Wang+ 2018 Table 1 core column, renormalised over the declared "
                              "elements", "data": {"column_sum": s_all, "declared_sum": s_held,
@@ -243,7 +243,7 @@ def _elements(bulk, params, where):
     def run(v, f):
         """Steps 1–3 on element values v: (core, rem, oxides, dropped, o_needed, o_rem, x)."""
         mat, x, disc = _core_composition(v, params, where)
-        core_mass = f * v["Fe"] / x["Fe"]
+        core_mass = f * v["Fe"] / x["Fe"]    # x_Fe > 0: fe_prem 0.828/s_held; fe_core_light 1 − (S+O+C), > 0 by the range check
         core = {k: xi * core_mass for k, xi in x.items()}
         rem = {}
         for k, m in v.items():
@@ -319,6 +319,15 @@ def _elements(bulk, params, where):
     volatile = None
     if h2o > BULK["volatile_threshold"]:
         volatile = {"H2O": h2o, "status": "refused at S1 (no ice/ocean integration)"}
+    # Division audit (directing 11-07): the mantle's mass and the CFMASNa normalisation divide by what the bulk keeps.
+    # A bulk the core leaves with none of the six oxides (pure Fe, Fe + H at fe_metal_fraction 1) would divide by zero;
+    # it refuses `input.bulk_no_mantle` (68 B1 on 9c4ea96b). Then mantle_mass ≥ the six's mass > 0, so both divisions
+    # below and validate's CFMASNa factor k = 100 / Σ six are safe.
+    six = math.fsum(oxide_mass[n] for n in CFMASNA if n in oxide_mass)
+    if not six > 0.0:
+        _no("input.bulk_no_mantle", where, "", core_mass=core_mass,
+            mantle_mass=math.fsum(oxide_mass.values()) + math.fsum(elemental.values()),
+            missing=[n for n in CFMASNA if not oxide_mass.get(n)])
     mantle_mass = math.fsum(oxide_mass.values()) + math.fsum(elemental.values())
     oxides_wt = {n: 100.0 * m / mantle_mass for n, m in oxide_mass.items()}
     cf = cfmasna({k: oxides_wt.get(k, 0.0) for k in CFMASNA})

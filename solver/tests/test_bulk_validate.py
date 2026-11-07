@@ -222,9 +222,15 @@ class Refusals(unittest.TestCase):
                 r = refused(self, vd.validate(mars_doc(core_light=cl), "x", mats()), "input.bulk_core_light")
                 self.assertAlmostEqual(r.evidence["total"], math.fsum(cl.values()))
 
+    def test_core_light_control_passes(self):
+        """Directing 11-07: S + O + C = 0.12 is inside the range and validates."""
+        b = vd.validate(mars_doc(core_light={"S": 0.08, "O": 0.03, "C": 0.01}), "x", mats())
+        self.assertIsInstance(b, vd.bd.Body, getattr(b, "text", ""))
+
     def test_mutant_without_the_core_light_check(self):
-        """With partition's range check removed, the S + O + C = 1.1 case is not named input.bulk_core_light: Fe goes
-        negative and some later check (or arithmetic) meets it instead. The check is what names the fault."""
+        """The range check runs first (in _core_composition, before `core_mass = f·Fe/x_Fe` and before the O balance).
+        With it removed (`if False:`), 1.0 divides by zero (x_Fe = 0) and 1.1 surfaces as bulk_oxygen_excess (a
+        negative core mass corrupts the draw): the check is the only guard, and it names the fault before either."""
         src = Path(pt.__file__).read_text()
         old = "        if tot >= 1.0 or any(v < 0.0 for v in x.values()):"
         self.assertEqual(src.count(old), 1)
@@ -236,12 +242,40 @@ class Refusals(unittest.TestCase):
             exec(compile(src.replace(old, "        if False:"), "partition_mutant", "exec"), mod.__dict__)
         finally:
             del sys.modules["partition_mutant"]
-        doc = mars_doc(core_light={"S": 0.6, "O": 0.3, "C": 0.2})
+        d = mars_doc(core_light={"S": 0.6, "O": 0.3, "C": 0.1})
+        with self.assertRaises(ZeroDivisionError):
+            mod.partition(d["bulk"], d["bulk"]["params"])
+        d = mars_doc(core_light={"S": 0.6, "O": 0.3, "C": 0.2})
+        self.assertEqual(mod.partition(d["bulk"], d["bulk"]["params"]).id, "input.bulk_oxygen_excess")
+
+    def test_no_cfmasna_left_refuses(self):
+        """Division audit (68 B1 on 9c4ea96b; directing 11-07): a bulk the core leaves with none of the CFMASNa six
+        refuses input.bulk_no_mantle before any division. Planted: pure Fe and Fe + H (68's two), and Fe + S, all at
+        fe_metal_fraction 1."""
+        for el in ({"Fe": 1.0}, {"Fe": 0.3, "H": 0.7}, {"Fe": 0.97, "S": 0.03}):
+            with self.subTest(elements=el):
+                d = earth_doc()
+                d["bulk"]["elements"] = dict(el)
+                d["bulk"]["params"] = {"fe_metal_fraction": 1.0}
+                r = refused(self, vd.validate(d, "x", mats()), "input.bulk_no_mantle")
+                self.assertEqual(sorted(r.evidence["missing"]), sorted(ma.CFMASNA))
+        d = earth_doc()
+        d["bulk"]["elements"] = {"Fe": 0.97, "S": 0.03}
+        d["bulk"]["params"] = {"fe_metal_fraction": 1.0}
+        src = Path(pt.__file__).read_text()                  # mutant: the guard removed → the division by zero
+        old = "    if not six > 0.0:"
+        self.assertEqual(src.count(old), 1)
+        mod = types.ModuleType("partition_mutant2")
+        mod.__file__ = pt.__file__
+        import sys
+        sys.modules["partition_mutant2"] = mod
         try:
-            got = mod.partition(doc["bulk"], doc["bulk"]["params"])
-            self.assertNotEqual(getattr(got, "id", None), "input.bulk_core_light")
-        except (ZeroDivisionError, ValueError):
-            pass
+            exec(compile(src.replace(old, "    if False:"), "partition_mutant2", "exec"), mod.__dict__)
+        finally:
+            del sys.modules["partition_mutant2"]
+        with self.assertRaises(ZeroDivisionError):
+            mod.partition({k: d["bulk"][k] for k in ("elements", "source", "source_kind", "grade",
+                                                      "counter_evidence_searched")}, d["bulk"]["params"])
 
     def test_volatile_layer_refuses(self):
         d = earth_doc()
