@@ -37,6 +37,9 @@ MAX_DEPTH = 6
 MIN_INTERVAL_K = 1.0
 JUMP_RATIO = 10.0            # 값 칸 뜀: 두 반쪽 변화의 큰 쪽 / 작은 쪽 (덧붙임 16)
 GRID_POOL = int(os.environ.get("GRID_POOL", "8"))   # 덧붙임 44 — 한 깊이의 가운데 점들을 동시에 푸는 프로세스 수
+#: pooled _recheck (prereg pc/recheck-pool, frozen 3e484a0c) — `_recheck` 의 풀 폭. 없거나 비면 1 = 예전 직렬 그대로.
+#: check.sh 는 `--check` 단계에만 넘긴다(게이트 자리: GATE_POOL × GATE_INNER_POOL + RECHECK_POOL + 1 ≤ 22).
+RECHECK_POOL = int(os.environ.get("RECHECK_POOL") or "1")
 SPEC_LEVELS = 2              # 덧붙임 55 — 이분 한 판에 미리 풀 나무 깊이. 풀 크기와 무관한 상수(판 · 풀이 집합이 풀과 무관)
 KINK_MIN_K = 0.25            # 폭 바닥의 꺾임 구간만 이분 두 번 더 (덧붙임 43) — 꺾임의 선형 보간 오차는 폭에 비례
 BELOW_K = 150.0              # 격자 아래 끝 = ⓐ 판 t_m 최저 − 150 K (prereg-structure-grid 덧붙임 7 ③)
@@ -1102,9 +1105,38 @@ def _recheck(doc: dict, body) -> tuple[float, str]:
     import cmb_flux as cf
     solve, _how, _cmf = _solver(body, types.SimpleNamespace(values={"core_mass_fraction": doc["points"][0]["core_mass_fraction"]}))
     m_kg = body.inputs["mass_earth"] * cf.M_EARTH_KG
+    if RECHECK_POOL > 1:
+        return _recheck_pooled(doc, solve, m_kg)
     worst, where = 0.0, ""
     for t, row in zip(doc["t_pot"], doc["points"]):
         r = solve(t)
+        if not r.applicable:
+            return math.inf, f"{t!r} K 에서 거절 — {(r.reason or '')[:80]}"
+        new = _params(r.values, t, m_kg)
+        for k in FIELDS:
+            d = abs(new[k] - row[k]) / abs(row[k])
+            if d > worst:
+                worst, where = d, f"{k} @ {t:.2f} K"
+    return worst, where
+
+
+def _recheck_pooled(doc: dict, solve, m_kg: float) -> tuple[float, str]:
+    """pooled _recheck (frozen 3e484a0c §2) — 점마다 힌트 없는 `solve(t)` 를 `solve_points` 풀(RECHECK_POOL)로 풀고,
+    결과를 T 순서로 직렬과 **같은 훑기**로 읽는다: 첫 거절에서 같은 문장, 엄격한 `>` 와 FIELDS 순서의 같은 동점 처리.
+    ⚠ 포크한 일꾼도 감사 훅(`_reads_hook`)을 물려받지만 일꾼의 `_READS` 는 일꾼이 끝나면 사라진다 — 그래서 일마다 새로
+    읽은 파일을 결과와 함께 돌려받아 부모의 `_READS` 에 합친다(읽기 가드가 일꾼의 읽기를 본다; F-a). 거절 뒤의 점도 풀리고
+    그 읽기도 합쳐지므로, 거절한 표에서 `_READS` 는 직렬의 상위 집합이다(더 엄격할 뿐 덜 보지 않는다)."""
+    import parallel_points
+
+    def one(t):
+        before = set(_READS)
+        r = _light(solve(t))
+        return r, sorted(_READS - before)
+    out = parallel_points.solve_points(one, [(t,) for t in doc["t_pot"]], RECHECK_POOL)
+    for _r, reads in out:
+        _READS.update(reads)
+    worst, where = 0.0, ""
+    for t, row, (r, _reads) in zip(doc["t_pot"], doc["points"], out):
         if not r.applicable:
             return math.inf, f"{t!r} K 에서 거절 — {(r.reason or '')[:80]}"
         new = _params(r.values, t, m_kg)

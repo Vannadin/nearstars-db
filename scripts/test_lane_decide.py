@@ -383,6 +383,16 @@ def test_c59_row_still_read_beside_a_derived_row():
     assert ld.expected_red_only(log(body(M, [("nmoi", "0.3571", "0.3634")])), [D] + T)[0]
 
 
+def test_hold_pooled_recheck_point_lines_do_not_change_the_verdict():
+    """pooled _recheck (frozen 3e484a0c T8, 68 n2): a pooled --check adds solve_points' «점 시작 / 점 끝» lines; the
+    table_triggers form reads only the mars.json line, so the verdict is the same with and without them."""
+    pooled = ["점 시작 — 2004.686159407071 · pid 91184 · 12:32:25", "점 끝 — 2004.686159407071 · 118.2 s"] * 3
+    blk = PC_BLOCKS[SG][:1] + pooled + PC_BLOCKS[SG][1:3] + pooled + PC_BLOCKS[SG][3:]
+    plain = _with([PC_BLOCKS[SG], PC_BLOCKS[TS], PC_BLOCKS[C59["step"]]])
+    withp = _with([blk, PC_BLOCKS[TS], PC_BLOCKS[C59["step"]]])
+    assert plain[0] and withp[0] and plain == withp, (plain, withp)
+
+
 if __name__ == "__main__":   # pytest 없는 게이트 venv 에서도 돈다
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_")]
     for n, f in tests:

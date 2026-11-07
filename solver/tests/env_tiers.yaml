@@ -71,6 +71,7 @@ names:
   GATE_MACHINE: {class: machine, why: picks the per-machine row of a recorded baseline}
   GATE_INNER_POOL: {class: machine, why: inner process pool size of a gate step}
   GRID_POOL: {class: machine, why: structure_grid's pool size (--refresh)}
+  RECHECK_POOL: {class: machine, why: "structure_grid._recheck's pool size (pooled _recheck, frozen 3e484a0c); unset or empty is 1, today's serial loop"}
   NEARSTARS_PAPERS: {class: path, why: the papers cache (gate_env.papers_dir, material_p4, check_paper_held)}
   NEARSTARS_PAPERS_ABSENT: {class: path, why: «declared» makes material_p4's missing-paper case a declared absence}
   NEARSTARS_ARTIFACTS: {class: path, why: the artifacts tree some tests read; derived/check.py's out-of-tree builders}

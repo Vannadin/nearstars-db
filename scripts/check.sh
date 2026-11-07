@@ -117,6 +117,19 @@ if [ -z "${GATE_INNER_POOL:-}" ] && [ "$GATE_MACHINE" = "Linux-x86_64" ]; then
   GATE_INNER_POOL=4
   export GATE_INNER_POOL
 fi
+# pooled _recheck (prereg pc/recheck-pool, frozen 3e484a0c) — `structure_grid.py --check` 단계에만 넘긴다. 그 단계는 직렬 칸에서
+#   풀 단계들과 **나란히** 돌므로 자리는 GATE_POOL × GATE_INNER_POOL + RECHECK_POOL + 1 이다(68 B1). 다른 단계(derived 포함)는 1.
+_RECHECK_POOL="${RECHECK_POOL:-1}"
+unset RECHECK_POOL
+case "$_RECHECK_POOL" in ''|*[!0-9]*|0) echo "STOP: RECHECK_POOL='${_RECHECK_POOL}' — 1 이상의 정수여야 한다"; exit 2 ;; esac
+if [ -n "${GATE_SLOTS:-}" ]; then
+  case "$GATE_SLOTS" in *[!0-9]*) echo "STOP: GATE_SLOTS='${GATE_SLOTS}' — 정수여야 한다"; exit 2 ;; esac
+  _slots_need=$(( GATE_POOL * ${GATE_INNER_POOL:-1} + _RECHECK_POOL + 1 ))
+  if [ "$_slots_need" -gt "$GATE_SLOTS" ]; then
+    echo "STOP: GATE_POOL ${GATE_POOL} × GATE_INNER_POOL ${GATE_INNER_POOL:-1} + RECHECK_POOL ${_RECHECK_POOL} + 1 = ${_slots_need} > GATE_SLOTS ${GATE_SLOTS}"
+    exit 2
+  fi
+fi
 # ⚠ **«게이트 안» 의 표지는 이것 하나다** (C134 개정 1, 지휘 결정). 데이터·도구·의존이 없어 SKIP 하던 시험은
 #   이 표지가 있으면 같은 문장으로 FAIL 한다(손으로 돌리면 예전의 이름 붙인 SKIP). `GATE_MACHINE` 은 사람이
 #   덮어쓰는 노브라 이 뜻을 싣지 않는다 — 게이트가 늘 켜고, 격리 재실행에도 환경으로 넘어간다.
@@ -695,7 +708,7 @@ if [ -n "$from_sha" ] && [ "${GATE_ISOLATED:-}" != "1" ]; then
   [ "$lane_req" = "wiring" ] && set -- --wiring
   [ "$lane_req" = "targeted" ] && set -- --targeted
   [ "$lane_req" = "quick" ] && set -- --quick
-  GATE_QUICK_ALSO="$_QUICK_ALSO" GATE_ISOLATED=1 GATE_TREE_SHA="$tree_sha" GATE_BASE_SHA="$base_sha" GATE_SCRATCH="$dest" GATE_PY="$GATE_PY" exec bash "$dest/scripts/check.sh" "$@"
+  RECHECK_POOL="$_RECHECK_POOL" GATE_QUICK_ALSO="$_QUICK_ALSO" GATE_ISOLATED=1 GATE_TREE_SHA="$tree_sha" GATE_BASE_SHA="$base_sha" GATE_SCRATCH="$dest" GATE_PY="$GATE_PY" exec bash "$dest/scripts/check.sh" "$@"
 fi
 
 gate_sha=$(git rev-parse --short HEAD)
@@ -1262,10 +1275,12 @@ step "test_interior_record.py" bash -c 'cd engine && exec python3 test_interior_
 # 재료 경계 온도 점프 (prereg-interface-jumps). 옛 얼음→외피 점프와 새 이름이 비트 같음 · 거절 여섯 · 지구 core/rock 방향. ~3 분.
 step "test_interface_jumps.py" bash -c 'cd engine && exec python3 test_interface_jumps.py'
 # 구조 표 (prereg-structure-grid). 굳힌 표의 방아쇠 대조(풀이 없음) · 거절 문구 · 보간 · 뜀 칸. ~수 초.
-step "structure_grid.py --check" bash -c 'cd engine && exec python3 structure_grid.py --check'
+step "structure_grid.py --check" bash -c "cd engine && exec env RECHECK_POOL=${_RECHECK_POOL} python3 structure_grid.py --check"
 step "test_structure_grid.py" bash -c 'cd engine && exec python3 test_structure_grid.py'
 # 구조 표 방아쇠가 러너가 읽는 것만 보는가 · 열진화 몸에 표가 없으면 FAIL (C159, prereg-c159-table-trigger-reads e0ab5682). 풀이 없음, 몇 초.
 step "test_table_triggers.py" bash -c 'cd engine && exec python3 test_table_triggers.py'
+# 풀 재검산 (prereg pc/recheck-pool, 동결 3e484a0c). 풀 1 대 3 비트 같음 · 동점 · 첫 거절 · 일꾼 읽기 · 자리 검사; 지구 세 점 실제 풀이 ~5–10 분.
+step "test_recheck_pool.py" bash -c 'cd engine && exec python3 test_recheck_pool.py'
 # 기준 단열선 표를 오늘의 엔진으로 다시 지어 바이트 대조 (C148 덧붙임 2) — 기준 기계(Linux-x86_64)만 판정, 그 밖은 [기록]. ~10 초.
 step "engine/tools/reference_adiabats.py --check" bash -c 'exec python3 engine/tools/reference_adiabats.py --check'
 step "test_reference_adiabats.py" bash -c 'cd engine && exec python3 test_reference_adiabats.py'
