@@ -17,7 +17,7 @@ from pathlib import Path
 import yaml
 
 from solver import context, material_assemblage as ma, material_registry as mr, result as rs
-from solver import run_oracle as ro, silicate_source as ss, solve as sv, validate as vd
+from solver import refusals as rf, run_oracle as ro, silicate_source as ss, solve as sv, validate as vd
 from solver.tests import test_a6_state as a6
 from solver.tests import test_bulk_validate as bv
 
@@ -187,6 +187,30 @@ class CallerWrites(unittest.TestCase):
         self.assertEqual([p.name for p in reqs], [f"bulk_earth__{req['composition_key']}.json"])
         self.assertEqual(reqs[0].read_text(encoding="utf-8"), ss.request_json(req))
         self.assertEqual(sorted(p.name for p in self.out.iterdir()), ["bulk_earth__declared.json"])
+
+    def test_control_resolving_body_writes_no_request(self):
+        """§4.4 control: a body whose mantle resolves writes no request. The bulk Mars body (MarsB2) runs through
+        run_oracle with sv.solve stubbed past the view build: the real _views resolves the Mars record, then the stub
+        returns a NoAnswer, so no integration runs and no refusal is made."""
+        body = self.d / "bulk_mars.yaml"
+        body.write_text(yaml.safe_dump(json.loads(json.dumps(bv.mars_doc())), sort_keys=False), encoding="utf-8")
+        seen, real = [], sv.solve
+
+        def stub(b, options, warm=None, registry=None):
+            views = sv._views(b, registry=registry, silicate=options.silicate_records)
+            mantle = next(l for l in b.layers if l.material == "silicate_decl")
+            seen.append(getattr(views.get(mantle.id), "material_id", views))
+            return rf.no_answer("unconverged", "stub", budget_name="CLOSE_ITERS", budget_value=0, last_residual=0.0), warm
+        sv.solve = stub
+        try:
+            rc = ro.main([str(body), "-", str(self.out), "--silicate-records", "on", "--sensitivity-dt", "0"])
+        finally:
+            sv.solve = real
+        self.assertEqual(rc, 0)
+        self.assertEqual(seen, ["silicate_slb_mars_khan2022"])
+        self.assertEqual([p.name for p in self.out.glob("*.json")], ["bulk_mars__declared.json"])
+        self.assertEqual(json.loads((self.out / "bulk_mars__declared.json").read_text())["outcome_kind"], "no_answer")
+        self.assertFalse(ro.requests_dir(self.out).exists())
 
     def test_failure_leg_leaves_neither(self):
         """A raise planted inside the run's try, after the request is written to tmp (68 n4: not the move loop)."""
