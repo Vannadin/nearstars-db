@@ -369,6 +369,30 @@ def test_c149_import_grep():
     assert len(fails) == 2 and all("engine/libbad.py imports" in f for f in fails)
 
 
+def test_derived_is_gate_only_and_never_imported_by_shipped_code():
+    # derived/ 는 게이트 전용: 출하 모듈(engine/·solver/·solver/materials/)이 derived 를 import 하면 FAIL
+    assert gsi.gate_only("derived/check.py") and gsi.gate_only("derived/census_site/sitecustomize.py")
+    assert not gsi.gate_only("solver/solve.py") and not gsi.gate_only("engine/payload.py")
+    tmp = _scratch()
+    for d in ("engine", "solver/materials", "derived"):
+        (tmp / d).mkdir(parents=True, exist_ok=True)
+    (tmp / "derived" / "check.py").write_text("X = 1\n")
+    (tmp / "solver" / "ok.py").write_text("from solver import result\n")
+    (tmp / "engine" / "test_x.py").write_text("import derived.check\n")      # 시험은 출하 아님
+    assert gsi.library_imports_gate_only(tmp) == []
+    (tmp / "solver" / "materials" / "bad.py").write_text("from derived import check\n")
+    (tmp / "engine" / "bad.py").write_text("import derived.check\n")
+    fails = gsi.library_imports_gate_only(tmp)
+    assert sorted(f.split(" — ")[1] for f in fails) == [
+        "engine/bad.py imports derived.check (a gate-only module)",
+        "solver/materials/bad.py imports derived (a gate-only module)"], fails
+
+
+def test_real_tree_has_no_shipped_import_of_gate_only_code():
+    # 실제 트리: 출하 모듈 111개 어디도 derived/·tools/·게이트 전용 모듈을 import 하지 않음
+    assert gsi.library_imports_gate_only() == []
+
+
 def test_c149_listed_path_is_pass_class():
     real = gsi.via_also
     gsi.via_also = lambda path=None: {"engine/tools/core_items_kind.yaml"}

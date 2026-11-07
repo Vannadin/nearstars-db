@@ -38,7 +38,7 @@ STEP_RE = re.compile(r'^\s*(?:step|_step_serial) "([^"]+)"', re.M)
 
 VIA_ALSO = HERE / "gate_data_via_also.txt"
 GATE_ONLY = re.compile(r"^(engine/tools/[^/]+\.py|engine/test_[^/]+\.py|engine/check_[^/]+\.py"
-                       r"|engine/build_graph_page\.py|scripts/.+\.py)$")
+                       r"|engine/build_graph_page\.py|scripts/.+\.py|derived/.+\.py)$")
 
 
 def via_also(path: pathlib.Path = VIA_ALSO) -> set[str]:
@@ -253,16 +253,18 @@ def via_also_drift(recs: list[dict], listed: set[str] | None = None) -> list[str
 
 
 def library_imports_gate_only(root: pathlib.Path = HERE.parent) -> list[str]:
-    """C149 rule 5 (K-census grep): no library module under engine/ imports a gate-only module — otherwise a
-    «gate-only» opener is reachable from shipped paths."""
+    """C149 rule 5 (K-census grep): no shipped module (engine/, solver/, solver/materials/) imports a gate-only
+    module — tools/, an engine test_/check_ module, or derived/ — otherwise a «gate-only» opener is reachable from
+    shipped paths."""
     import ast
     engine = root / "engine"
     gate_names = ({p.stem for p in engine.glob("*.py") if gate_only(f"engine/{p.name}")}
                   | {p.stem for p in (engine / "tools").glob("*.py")})     # `import core_items` via a path insert
+    shipped = [engine] + [root / d for d in ("solver", "solver/materials")]
     fails = []
-    for p in sorted(engine.glob("*.py")):
-        rel = f"engine/{p.name}"
-        if gate_only(rel):
+    for p in sorted(q for d in shipped for q in d.glob("*.py")):
+        rel = p.relative_to(root).as_posix()
+        if gate_only(rel) or p.name.startswith(("test_", "check_")):
             continue
         try:
             tree = ast.parse(p.read_text(encoding="utf-8"))
@@ -277,7 +279,7 @@ def library_imports_gate_only(root: pathlib.Path = HERE.parent) -> list[str]:
                          else "tools." + ",".join(a.name for a in node.names)]    # one line per statement
             for n in names:
                 head = n.split(".")[0]
-                if head == "tools" or head in gate_names:
+                if head in ("tools", "derived") or head in gate_names:
                     fails.append(f"[FAIL] gate_data_via_also — {rel} imports {n} (a gate-only module)")
     return fails
 
