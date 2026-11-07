@@ -158,6 +158,14 @@ GATE_BARRIER_MAX="${GATE_BARRIER_MAX:-4553}"
 case "$GATE_BARRIER_MAX" in
   ''|*[!0-9]*) echo "  [FAIL] gate_barrier_max_unset — 배리어 천장 «${GATE_BARRIER_MAX}» 이 숫자가 아니다."; exit 1 ;;
 esac
+# ⚠ **천장을 넘긴 워커는 죽이고 거둔다** (go-live s4r 2b, 2026-11-08). 예전에는 배리어가 그냥 돌아가고
+#   워커는 계속 돌다가 EXIT 트랩이 스풀을 지운 뒤에 끝났다 — rc 도 출력도 갈 곳이 없었다(PC
+#   test_hobby_table.py, 약 2 h 뒤 스스로 끝남, 기록 0 바이트). 이제 천장에서 워커의 잎 프로세스에 TERM 을
+#   보내 time·perf 가 제 파일을 쓰고 워커가 `.log`·`.rc` 를 남기게 하고, 이 유예가 지나도 살아 있으면 KILL 한다.
+GATE_REAP_GRACE="${GATE_REAP_GRACE:-30}"
+case "$GATE_REAP_GRACE" in
+  ''|*[!0-9]*) echo "  [FAIL] gate_reap_grace_unset — 거둠 유예 «${GATE_REAP_GRACE}» 이 숫자가 아니다."; exit 1 ;;
+esac
 _pool_dir=""
 _pool_seq=0
 # ⚠ **띄운 수와 거둔 수를 부모의 기억에 센다** (브리프 184 B). 디스크에만 세면 스풀이 사라질 때
@@ -231,6 +239,45 @@ _pool_drain() {               # 끝난 단계의 로그를 **완료 순서**로 
 #   읽기**에 있다. `.rc` 와 `.done` 은 서브셸 안에서 잇따른 문장이고 서브셸은 `.done` 뒤에야
 #   끝나므로, 그 사이에는 pid 가 살아 있어 «pid 가 없다» 가 거짓이다. 진짜 창은 부모가 `.done` 을
 #   먼저 보고 pid 를 나중에 보는 쪽이다 — 그 사이에 끝난 워커가 죽은 것처럼 보인다.
+_tree_leaves() {              # _tree_leaves <pid> — 그 pid 아래에서 자식이 없는 자손들 (자기 자신은 빼고)
+  local c
+  for c in $(pgrep -P "$1" 2>/dev/null); do
+    if [ -n "$(pgrep -P "$c" 2>/dev/null)" ]; then _tree_leaves "$c"; else echo "$c"; fi
+  done
+}
+
+_pool_reap_live() {           # 살아 있는 워커를 죽이고 그 워커가 `.done` 을 쓸 때까지 기다린다 (2b)
+  # ⚠ **잎에만 TERM 을 한 번 보낸다.** 사슬은 워커 서브셸 → time → (perf →) 시험 프로세스다. 잎(시험)이
+  #   죽으면 perf·time 은 정상으로 끝나며 제 `-o` 파일을 쓰고, 워커는 비0 rc 와 `[TIME]` 을 `.log` 에 남긴다.
+  #   잎을 반복해 치면 잎이 죽은 뒤 perf 가 잎이 되어 기록 전에 맞는다 — 그래서 워커마다 한 번(`.term`).
+  #   유예가 지나도 살아 있으면 그때의 잎을 KILL 한다(기록이 빠질 수 있다 — 그래도 고아는 안 남긴다).
+  [ -n "$_pool_dir" ] && [ -d "$_pool_dir" ] || return 0
+  local _t0=$SECONDS _pidf _pid _base _left
+  while :; do
+    _left=0
+    for _pidf in "$_pool_dir"/*.pid; do
+      [ -e "$_pidf" ] || continue
+      _base="${_pidf%.pid}"
+      _pid=$(cat "$_pidf" 2>/dev/null)
+      { [ -n "$_pid" ] && kill -0 "$_pid" 2>/dev/null; } || continue
+      [ -e "$_base.done" ] && continue
+      _left=$((_left + 1))
+      if [ ! -e "$_base.term" ]; then
+        : > "$_base.term"; kill -TERM $(_tree_leaves "$_pid") 2>/dev/null
+      elif [ $((SECONDS - _t0)) -ge "$GATE_REAP_GRACE" ]; then
+        kill -KILL $(_tree_leaves "$_pid") 2>/dev/null
+      fi
+    done
+    [ "$_left" -gt 0 ] || break
+    if [ $((SECONDS - _t0)) -ge $((GATE_REAP_GRACE * 2 + 5)) ]; then
+      echo "  [FAIL] pool_reap_stuck — 죽인 워커 $_left 개가 $((SECONDS - _t0)) s 안에 끝을 못 알렸다."
+      fail=1
+      break
+    fi
+    sleep 0.5
+  done
+}
+
 _pool_barrier() {             # 워커가 다 끝나거나, 죽은 워커를 이름 대어 실패시킬 때까지 폰다
   # ⚠ **스풀이 비었으면 아무것도 안 한다** (감사석, 2026-09-12). `_pool_alive` 가 실패해 `step()` 이
   #   `_pool_dir` 를 비우면 아래 글롭이 `"$_pool_dir"/*.pid` = `/*.pid` 가 되어 **파일시스템 루트**를
@@ -275,8 +322,11 @@ _pool_barrier() {             # 워커가 다 끝나거나, 죽은 워커를 이
       echo "  [FAIL] pool_barrier_deadline — 살아 있지만 조용한 워커 $_live 개를 ${_waited} s 기다렸다 (천장 ${GATE_BARRIER_MAX} s)."
       echo "         아직 살아 있는 이름:$_livenames"
       echo "         ⚠ 이 줄은 **아직 도는 워커**의 이름이다 — 띄운 전체 목록이 아니다."
-      # ⚠ 이 길로 나가면 자식이 **아직 돌고 있는 채로** 배리어가 돌아간다 — 게이트는 그 뒤에 끝나고
-      #   남은 자식은 EXIT 트랩이 스풀을 지울 때 갈 곳을 잃는다. FAIL 경로에서는 그게 옳다.
+      # ⚠ 예전 이 자리: «자식이 아직 돌고 있는 채로 배리어가 돌아가고, 남은 자식은 EXIT 트랩이 스풀을
+      #   지울 때 갈 곳을 잃는다 — FAIL 경로에서는 그게 옳다». 옳지 않았다 — 그 워커의 rc·출력이 영영
+      #   사라진다(2b). 이제 죽이고 거둔다 — 뒤따르는 `_pool_drain` 이 그 워커의 출력·비0 rc·`[TIME]` 을 붙인다.
+      echo "         → 그 워커들을 죽이고 거둔다 (유예 ${GATE_REAP_GRACE} s)."
+      _pool_reap_live
       fail=1
       break
     fi
@@ -479,7 +529,8 @@ _pool_launch() {              # _pool_launch <이름> <명령...> — 풀 워커
                               #   리다이렉션 실패는 쉘이 토하는 소음이고, 판정은 부모의 셈이 한다.
       _s0=$SECONDS; _k0=$(date "+%H:%M:%S")
       _st=$(mktemp "${TMPDIR:-/tmp}/gate-step.XXXXXX")
-      GATE_STEP="$name" PYTHONDONTWRITEBYTECODE=1 _measure "$_st" bash -c 'exec "$@" 2>&1' _ "$@" \
+      # ⚠ PYTHONUNBUFFERED (2b): 파이프·파일로 가는 stdout 은 블록 버퍼라, 죽은 시험의 출력은 버퍼째 사라진다.
+      GATE_STEP="$name" PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 _measure "$_st" bash -c 'exec "$@" 2>&1' _ "$@" \
         >"$_base.out"
       _rc=$?
       {
@@ -824,7 +875,7 @@ fi
 # ── 풀을 연다 (브리프 184). `GATE_POOL=1` 이면 예전과 같은 완전 직렬이다 (되돌릴 손잡이). ──
 if [ "$GATE_POOL" -gt 1 ] 2>/dev/null; then
   _pool_dir=$(mktemp -d "${TMPDIR:-/tmp}/gate-pool.XXXXXX")
-  trap 'rm -rf "$_pool_dir"' EXIT
+  trap '_pool_reap_live >/dev/null 2>&1; rm -rf "$_pool_dir"' EXIT   # 2b: 살아 있는 워커를 먼저 거둔다
 fi
 # ⚠ **어느 단계가 풀이었는지 로그에서 셀 수 있어야 한다** — 규칙을 여기 한 줄로 찍는다.
 echo "GATE POOL size=${GATE_POOL} rule=\"이름이 test_* 또는 run.py* 인 단계만 풀, 나머지는 직렬\" dir=${_pool_dir:-none}"
@@ -832,6 +883,8 @@ echo "GATE POOL size=${GATE_POOL} rule=\"이름이 test_* 또는 run.py* 인 단
 echo "── 1. 스키마 검증 (db/systems/*.json + curated) ──"
 # 게이트 자신: 시작의 옛 스크래치 정리가 도는 게이트의 풀 · 살아 있는 pid 디렉토리를 안 지우는가 (2026-09-26 버그). ~1 s.
 step "scripts/test_gate_cleanup.sh" bash scripts/test_gate_cleanup.sh
+# 게이트 자신: 천장을 넘긴 풀 워커를 죽이고 거두어 rc·출력·[TIME] 을 남기는가 (go-live s4r 2b). ~3 s.
+step "scripts/test_gate_pool_reap.sh" bash scripts/test_gate_pool_reap.sh
 # 게이트 자신: auto-lane 이 기대 빨강만 있는 full 을 인정하는 규칙(C128)의 합성 로그 시험. ~1 s.
 step "scripts/test_lane_decide.py" bash -c 'python3 scripts/test_lane_decide.py'
 # 게이트 자신: 입력 선언 차선(C136)의 픽스처 — 후크의 import 거르기 셋 · 표류 · 빠진 단계 · also. ~1 s.

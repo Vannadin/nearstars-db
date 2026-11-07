@@ -8,6 +8,9 @@
 "scripts/test_gate_cleanup.sh":  # shell; reads no tracked file as data
   globs: []
   hand: true
+"scripts/test_gate_pool_reap.sh":  # shell; reads scripts/check.sh's function text as test_gate_cleanup.sh does, no data file (go-live s4r 2b)
+  globs: []
+  hand: true
 "scripts/test_lane_decide.py":  # by hand: the row test reads scripts/gate_expected_red.yaml itself (SG-MARS-HOLD-ENGINE)
   globs: ["scripts/gate_expected_red.yaml"]
   hand: true
