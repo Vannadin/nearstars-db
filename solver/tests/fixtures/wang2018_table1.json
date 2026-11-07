@@ -2,6 +2,7 @@
  "source": "Wang, Lineweaver & Ireland 2018, Icarus 299, 460 (2018Icar..299..460W), arXiv 1708.08718 p. 7 Table 1",
  "pdf_sha256": "12e40de9b3e38ad077951ff39066571da49a571a2393f187cc6b3ae886491c46",
  "generator": "NearStars-artifacts rewrite/layers/s0/wang2018_table1.py (blob in the engine commit message)",
+ "poppler": "pdftotext version 26.04.0",
  "units": "mass fraction (Table 1's %, ppm, ppb scaled)",
  "column_sums": {
   "pm": 1.0003463039376013,

@@ -1,5 +1,5 @@
-# 원소·물질·프리셋 덩어리(bulk:)를 층 계획으로 나누는 순수 함수 — 상태 없음, 풀이 없음, 아직 아무도 부르지 않는다 (layers S0)
-"""`partition(bulk, params) -> LayerPlan | Refusal` (layers S0 registration f298b628; design 7a5c34ab §3–§4).
+# 원소·물질·프리셋 덩어리(bulk:)를 층 계획으로 나누는 순수 함수 — 상태 없음, 풀이 없음, validate 가 부른다 (layers S0·S1)
+"""`partition(bulk, params) -> LayerPlan | Refusal` (layers S0 registration f298b628, S1 1346ffc6; design 7a5c34ab §3–§4).
 
 Three forms of the `bulk:` block:
 - (M) `{"materials": [{material, mass_fraction, composition?}]}`: ordered by role (bulk.yaml `material_roles`); the
@@ -29,9 +29,9 @@ Three forms of the `bulk:` block:
 68 n3: no closure is set here. (b2), boundary_mass on the core fitted to the radius, is S1's; Venus's row
 (from_v1.py:165) is today's use of that closure kind, not earth_like's.
 
-The refusal ids `input.bulk_*` are S0's own and not yet in solver/refusals.py: S0 adds no id to the registry
-(nothing calls this); S1 registers them when it wires the partition. Out-of-vocabulary keys use the registry's
-`input.not_in_vocabulary` field set.
+S1 (1346ffc6): the vocabulary is schema.yaml's `bulk:` section (S0's bulk.yaml, moved verbatim); every refusal goes
+through `refusals.make` (the seven `input.bulk_*` ids are registered, §3); fe_core_light's core_light is range-checked
+(`input.bulk_core_light`, LAYERS-S1-NOTES n2); `fe_budget_misfit` is the (b2) misfit run_oracle records (§2.5).
 """
 from __future__ import annotations
 
@@ -40,11 +40,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping
 
+from solver import refusals as rf
 from solver.material_assemblage import CFMASNA, cfmasna
-from solver.result import Refusal, freeze
+from solver.result import freeze
 from solver.yamlio import load_data
 
-BULK = load_data(Path(__file__).resolve().parent / "data" / "bulk.yaml")
+BULK = load_data(Path(__file__).resolve().parent / "data" / "schema.yaml")["bulk"]
 PRESETS_PATH = Path(__file__).resolve().parent / "data" / "presets.yaml"
 UNIT_SCALE = freeze({"%": 1e-2, "ppm": 1e-6, "ppb": 1e-9})
 TRIO = ("grade", "source", "counter_evidence_searched")
@@ -70,13 +71,15 @@ class LayerPlan:
 
 
 class _Refuse(Exception):
-    def __init__(self, r: Refusal):
+    def __init__(self, r):
         super().__init__(r.id)
         self.refusal = r
 
 
-def _no(id_, where, text, **ev):
-    raise _Refuse(Refusal(id=id_, where=where, evidence=ev, text=text))
+def _no(id_, where, _text, **ev):
+    """A registered refusal (S1 §3). `_text` is S0's inline sentence, kept beside the call as a reading aid; the
+    refusal's text is the registry's template."""
+    raise _Refuse(rf.make(id_, where, **ev))
 
 
 def _val(x):
@@ -181,7 +184,10 @@ def _core_composition(bulk_el, params, where):
             if k not in ("S", "O", "C"):
                 _no("input.not_in_vocabulary", where, f"fe_core_light 의 가벼운 원소 '{k}' 는 S, O, C 밖이다",
                     key=f"params.core_light.{k}", got=k, allowed=["S", "O", "C"])
-        x["Fe"] = 1.0 - math.fsum(x.values())
+        tot = math.fsum(x.values())
+        if tot >= 1.0 or any(v < 0.0 for v in x.values()):
+            _no("input.bulk_core_light", where, "", S=x.get("S"), O=x.get("O"), C=x.get("C"), total=tot)
+        x["Fe"] = 1.0 - tot
         return mat, x, [{"text": "core composition declared on fe_core_light: Fe = 1 − (S + O + C)",
                          "data": dict(x)}]
     printed = {k: _printed(v) for k, v in BULK["fe_prem_core_printed"].items()}
@@ -332,9 +338,19 @@ def _elements(bulk, params, where):
     if volatile:
         layers.append({"id": "volatile", "role": "volatile", "material": "h2o", "extent": {"mass_fraction": h2o},
                        "refused": volatile["status"]})
-    ledger = {"total": total, "core": core, "core_mass": core_mass, "x_Fe": x["Fe"], "core_x": x,
+    ledger = {"total": total, "core": core, "core_mass": core_mass, "x_Fe": x["Fe"], "core_x": x, "bulk_Fe": vals["Fe"],
               "mantle_oxides": oxide_mass, "mantle_elemental": elemental, "mantle_mass": mantle_mass,
               "mantle_oxides_wt": oxides_wt, "volatile": h2o, "o_delta": delta, "fe_metal_fraction": f_metal,
               "ni_core_share": ni_share}
     return LayerPlan(form="elements", layers=layers, core_mass_fraction=core_total, ledger=ledger,
                      disclosures=disclosures, o_check=o_check, volatile=volatile, residual=residual)
+
+
+def fe_budget_misfit(x_fe, bulk_fe, fe_metal_fraction, fitted_core_mass_fraction) -> dict:
+    """(b2)'s disclosed Fe-budget misfit (design §4.6; S0 68 n1; S1 §2.5): the core Fe a fitted core mass implies,
+    x_Fe × fitted CMF, against the declared fe_metal_fraction × bulk Fe."""
+    implied = x_fe * fitted_core_mass_fraction
+    declared = fe_metal_fraction * bulk_fe
+    return {"implied_core_Fe": implied, "declared_core_Fe": declared, "misfit": implied - declared,
+            "fitted_core_mass_fraction": fitted_core_mass_fraction, "x_Fe": x_fe, "bulk_Fe": bulk_fe,
+            "fe_metal_fraction": fe_metal_fraction, "grade": "derived (partition plan × fitted core mass)"}

@@ -1218,6 +1218,9 @@ def solve(body, options: context.Options = context.Options(), warm=None, views=N
     not reachable from Body, options or the context. `registry`: a loaded material registry the caller owns and
     reuses across solves (switch-over note 5); without it the solve loads its own.
     A closure with two roots is answered by the owner's F12 rule (`_warm_root`)."""
+    for lay in body.layers:          # layers S1 §2.4 (design §3, 68 n5): a bulk mantle needs the silicate records
+        if lay.composition is not None and "bulk_plan" in lay.composition.extra and not options.silicate_records:
+            return refusals.make("input.bulk_needs_silicate_records", "solve", layer_id=lay.id), warm
     out, w = _solve(body, options, warm, views, registry)
     if isinstance(out, result.Refusal) and out.id == "solve.two_roots" and views is None \
             and body.surface.t_pot is not None:

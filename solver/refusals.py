@@ -159,6 +159,24 @@ _INPUT = (
     Entry("input.no_table_for_composition", ("layer_id", "composition_key", "built_keys"),
           "층 '{layer_id}' 의 조성 지문 {composition_key} 에 맞는 광물 집합 표가 없다 — 지어진 표 {built_keys} "
           "(옛 물질로 돌아가지 않는다, 규산염 기록 등록 §4)"),
+    # layers S1 registration (1346ffc6) §3: the `bulk:` block's partition and expansion (S0's four plus three)
+    Entry("input.bulk_fractions", ("total", "item", "value"),
+          "bulk 블록의 몫이 맞지 않는다 — 합 {total}, 항목 {item}, 값 {value} (합은 1, 각 몫은 [0, 1])"),
+    Entry("input.bulk_core_draw_short", ("element", "bulk", "core_draw", "core_mass"),
+          "핵이 원소 '{element}' 를 {core_draw} 만큼 가져가야 하는데 덩어리에 {bulk} 뿐이다 (핵 질량 {core_mass}) — 자르지 않는다"),
+    Entry("input.bulk_oxygen_short", ("o_needed", "o_remaining", "delta", "sigma_delta", "sigma_o_source"),
+          "선언 O {o_remaining} 이(가) 맨틀 산화물에 필요한 O {o_needed} 보다 {delta} 모자라 3σ_Δ ({sigma_delta} 의 3배) 를 넘는다 "
+          "(σ_O 출처: {sigma_o_source})"),
+    Entry("input.bulk_oxygen_excess", ("o_needed", "o_remaining", "delta", "sigma_delta", "sigma_o_source"),
+          "선언 O {o_remaining} 이(가) 맨틀 산화물에 필요한 O {o_needed} 보다 많아 차이 {delta} 가 3σ_Δ ({sigma_delta} 의 3배) 를 "
+          "넘는다 — 핵으로 몰래 넣지 않는다 (σ_O 출처: {sigma_o_source})"),
+    Entry("input.bulk_core_light", ("S", "O", "C", "total"),
+          "fe_core_light 의 가벼운 원소 S {S} · O {O} · C {C} (합 {total}) 가 맞지 않는다 — 각각 0 이상, 합은 1 미만이어야 Fe 가 남는다"),
+    Entry("input.bulk_volatile_layer", ("h2o",),
+          "bulk 의 H2O {h2o} 는 얼음·바다 층이 된다 — 이 솔버는 아직 그 층을 적분하지 못한다 (설계 §4.4)"),
+    Entry("input.bulk_needs_silicate_records", ("layer_id",),
+          "층 '{layer_id}' 는 bulk 에서 나온 규산염 조성이라 silicate_records 스위치가 켜져 있어야 한다 — 꺼진 채로는 옛 경로로 "
+          "가지 않는다 (설계 §3)"),
 )
 
 #: Chain-node refusals (rewrite/nodes/node-contract.frozen.md §2, prereg-t-eq-stellar.frozen.md §1). Their own group,

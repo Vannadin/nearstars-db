@@ -1,4 +1,4 @@
-# 덩어리(bulk:) → 층 계획 순수 함수 시험 — 지구(Wang 2018 표 1)·화성(Khan 2022 왕복)·O 점검·순수성·bulk.yaml 독자 (layers S0)
+# 덩어리(bulk:) → 층 계획 순수 함수 시험 — 지구(Wang 2018 표 1)·화성(Khan 2022 왕복)·O 점검·순수성·schema 의 bulk 칸 (layers S0·S1)
 """layers S0 registration f298b628 §3, tests 1–6, with 68's S0 notes and directing's 11-07 rulings.
 
 Run from the worktree root:  python -m unittest solver.tests.test_partition
@@ -280,27 +280,36 @@ class Purity(unittest.TestCase):
         self.assertEqual(pt.partition(b), pt.partition(b))
 
 
-class BulkYaml(unittest.TestCase):
-    """Post-freeze note 1 (directing 11-07): bulk.yaml's only reader is partition.py, and the census reads it as
-    exempt-class, so S0 moves no sg-gate input."""
+class SchemaBulk(unittest.TestCase):
+    """layers S1 §1 (1346ffc6): S0's bulk.yaml joined schema.yaml's top level as `bulk:`. The section equals ea3ae617's
+    bulk.yaml key by key; bulk.yaml is gone; schema.yaml's code readers are validate.py and partition.py; the census
+    stays PASS (S0's post-freeze note 1 tests, carried over)."""
 
-    def test_only_reader_is_partition(self):
-        out = subprocess.run(["git", "-C", str(ROOT), "grep", "--untracked", "-l", "-I", "-E", r"bulk\.yaml|\"bulk\"\s*[/+]", "--",
-                              "engine", "solver", "scripts", "derived", "tools"],
-                             capture_output=True, text=True).stdout.split()
-        self.assertEqual(sorted(set(out) - {"solver/tests/test_partition.py", "solver/data/bulk.yaml"}),
-                         ["solver/partition.py"])
+    def test_section_equals_s0_bulk_yaml(self):
+        old = subprocess.run(["git", "-C", str(ROOT), "show", "ea3ae617:solver/data/bulk.yaml"], capture_output=True,
+                             text=True)
+        self.assertEqual(old.returncode, 0, old.stderr)
+        import yaml
+        self.assertEqual(yaml.safe_load(old.stdout), thaw(pt.BULK))
+        self.assertFalse((ROOT / "solver" / "data" / "bulk.yaml").exists())
 
-    def test_census_reads_it_as_exempt(self):
+    def test_schema_readers(self):
+        out = subprocess.run(["git", "-C", str(ROOT), "grep", "--untracked", "-l", "-I", "-E",
+                              r"data\" / \"schema\.yaml\"|data/schema\.yaml|bulk\.yaml", "--", "engine", "solver",
+                              "scripts", "derived", "tools"], capture_output=True, text=True).stdout.split()
+        code = sorted(f for f in set(out) if f.endswith(".py") and "/tests/" not in f)
+        self.assertEqual(code, ["solver/partition.py", "solver/validate.py"])
+
+    def test_census_pass_on_the_join(self):
         sys.path.insert(0, str(ROOT))
         try:
             from derived import check as dc
         finally:
             sys.path.pop(0)
         doc = dc.load_list()
-        for f in ("solver/data/bulk.yaml", "solver/tests/fixtures/wang2018_table1.json"):
-            self.assertNotIn(f, set(dc.file_owner(doc)))                 # no entry lists it: no stamp input moves
-            self.assertTrue(any(re.fullmatch(p, f) for p in doc["exempt"]), f)
+        self.assertNotIn("solver/data/bulk.yaml", set(dc.file_owner(doc)))
+        for f in ("solver/data/schema.yaml", "solver/tests/fixtures/wang2018_table1.json",
+                  "solver/tests/fixtures/bulk_s1_body_canon.json"):
             self.assertEqual([x for x in dc.census(doc, files=[f], root=ROOT) if x.startswith(f)], [])
 
     def test_core_column_matches_the_fixture(self):

@@ -35,7 +35,8 @@ import sys
 import tempfile
 from pathlib import Path
 
-from solver import context, from_v1, legacy_view as lv, member as mb, result, solve as sv
+from solver import context, from_v1, legacy_view as lv, member as mb, partition as pt, result, solve as sv
+from solver import validate as vd
 from solver import legacy_materials as lm
 from solver import material_registry as mr
 
@@ -166,12 +167,49 @@ def one(body_yaml: str, state, options=context.Options(), chain: bool = True, me
     return rec
 
 
+def is_bulk_v2(body_yaml: str) -> bool:
+    """layers S1 §2.5: a body file whose top level holds `bulk:` is a v2 document (validate.load); every other file
+    keeps the v1 path (from_v1.load_v1) byte for byte."""
+    try:
+        doc = vd.parse(Path(body_yaml).read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, vd.LoadError):   # unreadable: the v1 loader names the refusal as today
+        return False
+    return isinstance(doc, dict) and "bulk" in doc
+
+
+def load_body(body_yaml: str, registry=None):
+    """The body of a run: v2 `bulk:` documents through validate.load, every other file through from_v1.load_v1."""
+    if is_bulk_v2(body_yaml):
+        return vd.load(body_yaml, vd.production_materials(vd.PRODUCTION, registry))
+    got = from_v1.load_v1(body_yaml, registry=registry)
+    return got[0] if isinstance(got, tuple) else got
+
+
+def fe_budget_record(body, answer):
+    """layers S1 §2.5 (design §4.6 (b2), S0 68 n1): the Fe-budget misfit as a recorded field, or None. Written only
+    when the body's mantle carries `bulk_plan` and the closure is boundary_mass (the conditional way `member` is
+    written), so every other record keeps exactly the contract's FIELDS."""
+    if body.closure.kind != "boundary_mass":
+        return None
+    plan = next((l.composition.extra["bulk_plan"] for l in body.layers
+                 if l.composition is not None and "bulk_plan" in l.composition.extra), None)
+    cmf = next((q.value for q in answer.quantities if q.key == "core_mass_fraction"), None)
+    if plan is None or cmf is None:
+        return None
+    return pt.fe_budget_misfit(plan["x_Fe"], plan["bulk_Fe"], plan["fe_metal_fraction"], cmf)
+
+
 def _one(body_yaml: str, state, options, chain: bool, member=None, registry=None) -> dict:
     stem = Path(body_yaml).stem
-    got = from_v1.load_v1(body_yaml, registry=registry)
-    body = got[0] if isinstance(got, tuple) else got
+    v2 = is_bulk_v2(body_yaml)
+    if v2:                                             # layers S1 §2.5: no v1 file, so no legacy chain to run
+        chain = False
+    body = load_body(body_yaml, registry)
     rec = {"header": None, "body": stem, "state": state, "outcome_kind": None, "quantities": [], "boundaries": [],
            "refusal": None, "no_answer": None, "legacy_nodes": {}, "table_read": False, "notes": []}
+    if v2:
+        rec["notes"].append({"kind": "bulk_v2_no_legacy_chain", "text": "a v2 bulk: body has no v1 file; the legacy "
+                             "chain is not run (layers S1 §2.5)"})
     t_pot = None if state == "declared" else float(state)
     if isinstance(body, result.Refusal):
         rec.update(header=_header(options, ""), outcome_kind="refusal",
@@ -203,7 +241,10 @@ def _one(body_yaml: str, state, options, chain: bool, member=None, registry=None
         rec.update(header=_header(options, _sid(body, options, out)), outcome_kind="answer",
                    quantities=[result.plain(q) for q in out.quantities],
                    boundaries=[result.plain(b) for b in out.boundaries],
-                   notes=[result.plain(n) for n in out.notes])        # switch-over §5 (Q2); comparator note 15: class R
+                   notes=rec["notes"] + [result.plain(n) for n in out.notes])   # switch-over §5 (Q2); comparator note 15: class R
+        fe = fe_budget_record(body, out)
+        if fe is not None:
+            rec["fe_budget_misfit"] = fe                     # layers S1 §2.5: optional, like rec["member"]
         chain and _legacy(rec, lv.run_chain(body_yaml, out, t_pot=t_pot))
     elif isinstance(out, result.NoAnswer):
         rec.update(header=_header(options, _sid(body, options)), outcome_kind="no_answer",
@@ -271,8 +312,7 @@ def main(argv=None) -> int:
         states = states_for(stem, points_json)
         member = None
         if len(states) > 1:                          # one declared solve per body for all its T_pot states
-            got = from_v1.load_v1(body_yaml, registry=registry)
-            body = got[0] if isinstance(got, tuple) else got
+            body = load_body(body_yaml, registry)
             if not isinstance(body, result.Refusal):
                 member = mb.member_of(body, options.materials, registry, options.silicate_records)
         for state in states:
@@ -280,6 +320,11 @@ def main(argv=None) -> int:
             name = f"{stem}__{'declared' if state == 'declared' else repr(state)}.json"
             (tmp / name).write_text(json.dumps(rec, ensure_ascii=False, allow_nan=False, indent=1) + "\n",
                                     encoding="utf-8")
+            if "fe_budget_misfit" in rec:            # layers S1 §2.5: printed from the record, not recomputed
+                fe = rec["fe_budget_misfit"]
+                print(f"{name}: fe_budget_misfit {fe['misfit']!r} (implied core Fe {fe['implied_core_Fe']!r} = "
+                      f"x_Fe {fe['x_Fe']!r} × fitted CMF {fe['fitted_core_mass_fraction']!r}; declared "
+                      f"{fe['declared_core_Fe']!r} = {fe['fe_metal_fraction']!r} × bulk Fe {fe['bulk_Fe']!r}; {fe['grade']})")
     except Exception as exc:                         # a STOP: nothing is written to OUT_DIR
         shutil.rmtree(tmp, ignore_errors=True)
         print(f"STOP: {type(exc).__name__}: {exc}")

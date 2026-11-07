@@ -19,8 +19,9 @@ top:
   kind:   {shape: enum, values: [planet, moon, brown_dwarf, star, fixture], required: true}
   parent: {shape: text}                 # optional; absent = free-floating (null is refused)
   inputs: {shape: mapping, required: true}
-  layers: {shape: list, required: true}
-  closure: {shape: mapping, required: true}
+  layers: {shape: list, required: true}       # required unless `bulk` is declared (layers S1 §1.2)
+  closure: {shape: mapping, required: true}    # likewise
+  bulk:   {shape: mapping}                    # layers S1: expanded by validate._expand_bulk; excludes layers/closure
   jumps:  {shape: mapping}
 
 inputs:
@@ -70,7 +71,7 @@ layer:
   t_declared:  {shape: number_or_block, unit: K, domain: {gt: 0}}
   system:      {shape: text}
   composition: {shape: block, value_shape: mapping, provenance: true,
-                extra_fields: [source_kind, deviation, preset, owner_direction, anchor]}   # phase-2 note 1 item 2, impl P1
+                extra_fields: [source_kind, deviation, preset, owner_direction, anchor, bulk_plan]}   # phase-2 note 1 item 2, impl P1; bulk_plan: layers S1 §2.3
   params:      {shape: mapping}                        # name → block with the trio
 
 # The closed layer `params` vocabulary (phase-1 design note 14 item 2, note 14a). `materials`: the layer materials a
@@ -143,6 +144,114 @@ tolerances:
 grades:
   input: [measured, literature, analog, derived, judgment, declared, inherited, authored]   # INPUT_GRADES (R-GV-1)
   forbidden: [owner-override, declared-default, contested, calibrated, guessed]              # R-GV-6
+
+# The `bulk:` block's vocabulary, constants and defaults (layers S1 registration 1346ffc6 §1; moved verbatim from S0's
+# solver/data/bulk.yaml at ea3ae617, which S1 deletes). Read by solver/partition.py; validate.py reads `top.bulk` only.
+bulk:
+  forms: [materials, elements, preset]
+
+  # (E) vocabulary: the 83 elements of Wang+ 2018 Table 1 (arXiv 1708.08718 p. 7), in Z order, plus the volatiles.
+  elements: [H, He, Li, Be, B, C, N, O, F, Ne, Na, Mg, Al, Si, P, S, Cl, Ar, K, Ca, Sc, Ti, V, Cr, Mn, Fe, Co, Ni, Cu, Zn, Ga, Ge, As, Se, Br, Kr, Rb, Sr, Y, Zr, Nb, Mo, Ru, Rh, Pd, Ag, Cd, In, Sn, Sb, Te, I, Xe, Cs, Ba, La, Ce, Pr, Nd, Sm, Eu, Gd, Tb, Dy, Ho, Er, Tm, Yb, Lu, Hf, Ta, W, Re, Os, Ir, Pt, Au, Hg, Tl, Pb, Bi, Th, U]
+  volatiles: [H2O]
+  volatile_threshold: 0.0            # H2O > 0 in the bulk makes a volatile layer, refused at S1 (registration §2.2 step 5)
+
+  # (M) material → role. The partition orders an (M) list by these roles; the last role carries no extent.
+  material_roles: {fe_prem: core, fe_core_light: core, silicate: mantle, silicate_decl: mantle}
+  role_order: [core, mantle]
+  fractions_tol: 1.0e-12             # (M) and (E) fractions sum to 1 within this (registration §2.1)
+
+  # Mantle oxides: the twelve oxides of McDonough & Sun 1995 Table 4 as solver/data/bse_ms95.yaml prints them.
+  # element: [oxide, cations per formula, O per formula]. Every other mantle element is listed as dropped, unoxidised.
+  oxides:
+    Si: [SiO2, 1, 2]
+    Ti: [TiO2, 1, 2]
+    Al: [Al2O3, 2, 3]
+    Cr: [Cr2O3, 2, 3]
+    Mn: [MnO, 1, 1]
+    Fe: [FeO, 1, 1]
+    Ni: [NiO, 1, 1]
+    Mg: [MgO, 1, 1]
+    Ca: [CaO, 1, 1]
+    Na: [Na2O, 2, 1]
+    K: [K2O, 2, 1]
+    P: [P2O5, 2, 5]
+  # The O check's σ_Δ takes the stated ± of these elements and of O (registration §2.2 step 3).
+  o_check_elements: [Fe, Mg, Si, Ca, Al, Na]
+  o_check_sigmas: 3.0
+
+  # Atomic masses (g/mol), copied from burnman 2.1.0 burnman/data/input_masses/atomic_masses.dat («Masses from NIST»,
+  # kg/mol there), sha256 df35fe789c9be269a4d54b85a1bf796ca736ad5ecccdd69ae7873b506df3d7af. test_partition checks
+  # them against that file when burnman is importable.
+  atomic_mass_g_mol: {O: 15.9994, Na: 22.9898, Mg: 24.305, Al: 26.9815, Si: 28.0855, P: 30.9738, K: 39.0983,
+                      Ca: 40.078, Ti: 47.867, Cr: 51.9961, Mn: 54.938, Fe: 55.845, Ni: 58.6934}
+
+  defaults:
+    fe_metal_fraction:
+      value: 0.8625
+      sigma: 0.042
+      grade: "default (Earth, Wang+ 2018)"
+      source: "2018Icar..299..460W arXiv p. 7 Table 1: 0.325 × core Fe 82.8 / bulk Fe 31.2 (registration §1)"
+      counter_evidence_searched: "Morard+ 2013 (cached) and MS95 (cached), registration §1; tests 2 and 3"
+    o_relative_sigma:
+      value: 0.022727272727272728
+      grade: "default from Wang 2018, not this body's"
+      source: "2018Icar..299..460W arXiv p. 7 Table 1 row «8 O (%)», bulk column «30.8 ±0.7»: 0.7 / 30.8"
+      counter_evidence_searched: "used only when an (E) block states no O uncertainty (registration §2.2 step 3)"
+
+  # The fe_prem core's composition for the draw: Table 1's core column (49 elements), as printed. The partition
+  # renormalises it over the elements a bulk declares (registration §2.2 step 1). Read with pdftotext -layout from the
+  # cached 2018Icar..299..460W.pdf (sha256 12e40de9b3e38ad077951ff39066571da49a571a2393f187cc6b3ae886491c46);
+  # solver/tests/fixtures/wang2018_table1.json is the full table.
+  fe_prem_core_printed:
+    H: "569 ppm"
+    Li: "1.57 ppm"
+    C: "7921 ppm"
+    N: "93 ppm"
+    O: "2.66 %"
+    Na: "1372 ppm"
+    Mg: "0.0588 %"
+    Si: "4.96 %"
+    P: "2774 ppm"
+    S: "18269 ppm"
+    Cl: "459 ppm"
+    K: "206 ppm"
+    V: "122 ppm"
+    Cr: "6590 ppm"
+    Mn: "3257 ppm"
+    Fe: "82.8 %"
+    Co: "2373 ppm"
+    Ni: "5.06 %"
+    Cu: "154 ppm"
+    Zn: "29 ppm"
+    Ga: "4.9 ppm"
+    Ge: "24 ppm"
+    As: "4.89 ppm"
+    Se: "8.63 ppm"
+    Br: "0.514 ppm"
+    Rb: "1.08 ppm"
+    Nb: "0.423 ppm"
+    Mo: "4.97 ppm"
+    Ru: "3939 ppb"
+    Rh: "684 ppb"
+    Pd: "2719 ppb"
+    Ag: "239 ppb"
+    Cd: "0.167 ppm"
+    Sn: "0.49 ppm"
+    Sb: "132 ppb"
+    Te: "1009 ppb"
+    I: "92.1 ppb"
+    Cs: "0.103 ppm"
+    Ta: "0.00799 ppm"
+    W: "0.502 ppm"
+    Re: "214 ppb"
+    Os: "2719 ppb"
+    Ir: "2611 ppb"
+    Pt: "5448 ppb"
+    Au: "481 ppb"
+    Hg: "32.3 ppb"
+    Tl: "29.4 ppb"
+    Pb: "1.715 ppm"
+    Bi: "19.1 ppb"
 
 # Where each layer-forming v1 key lands (r2 S2-B5; c8 note 1 §3). These keys are not v2 inputs: from_v1 consumes them.
 v1_layer_keys:
