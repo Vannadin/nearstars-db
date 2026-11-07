@@ -95,7 +95,11 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: ES-f6 FIX2 follow-up (directing 11-06): engine/ changes only in c143_sum_inventory.json, the census row for FIX2's new
 #: sum() in scripts/check_mass_formula.py · r_bound. Only engine/test_c143_guard.py reads it; no solve does. Re-declared
 #: at this engine/ tree.
-ORACLE_ENGINE_TREE = "30d2ac91cd1573eb800be2ee5b224c77100da8ab"
+#: pooled _recheck (artifacts pc/recheck-pool, frozen 3e484a0c): engine/ changes in structure_grid.py (RECHECK_POOL, 1
+#: when unset; _recheck branches to _recheck_pooled only above 1) and the new test_recheck_pool.py. No oracle body
+#: enters _recheck or check_all (they run under `--check` and derived/check.py only), and at the default the serial
+#: loop is byte-identical. Re-declared at this engine/ tree.
+ORACLE_ENGINE_TREE = "5162f77ff75c8627ccafa65d75e33a0b24a6454f"
 REPO = Path(lm._ENGINE).parent
 
 
