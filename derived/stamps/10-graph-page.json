@@ -1,0 +1,27 @@
+{
+ "code": {
+  "engine/build_graph_page.py": "4e262d3339628633"
+ },
+ "data": {
+  "engine/bindings.yaml": "9c98758203b13a9fbae05f51c7f5e3a6358b80e6",
+  "engine/chain.yaml": "47dbeede2cbb0fdcd122b441a05ed3529a69e3a0",
+  "phase4/40_eridani.yaml": "8d2c40675ea268f8fb5f2eba77df09d1be8dcba1",
+  "phase4/alpha_centauri.yaml": "9c6b38ceaf1993f99a29a3cc9e2c4fd1990c45f6",
+  "phase4/barnards_star.yaml": "710ed0827cad8d59369df3c97bc32682e9899929",
+  "phase4/fomalhaut.yaml": "d0967a641f70678b998ada0e1e951334e4d53448",
+  "phase4/luhman_16.yaml": "bbb85cf43e5d408c8aa1fbf4f3affbd737cd348f",
+  "phase4/proxima_cen.yaml": "0db0166c2123a8e2a65a2f94c44ea454c41c1f31",
+  "phase4/tau_cet.yaml": "9841544936d3d137022cf89a46f0bc7a557d107a"
+ },
+ "derived": {},
+ "entry": "10-graph-page",
+ "external": {},
+ "files": {
+  "engine/chain-explorer.html": "a04867945b97c739a4a4ecf5009e0a6d99dbff31"
+ },
+ "out_of_tree": {},
+ "packages": {},
+ "python": "3.12.3",
+ "stamp_rule": "source-v1",
+ "why": "first stamp (§3)"
+}

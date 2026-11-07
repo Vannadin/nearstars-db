@@ -1,0 +1,21 @@
+{
+ "code": {
+  "engine/tools/make_ice_melt_table.py": "f19cf05ecceb34a5"
+ },
+ "data": {},
+ "derived": {},
+ "entry": "9-ice-melt-table",
+ "external": {
+  "direct": "960adff12341605e1129a9d8520ad07ebb248c714e0f2e8b5fd03f86cdd00d6e",
+  "liquid": "e81d29320c23cce70823eb29b4423721db04fcabef6d12836ccbd4ce4213f649",
+  "vii": "aa32bd22f5bcee6f475459d2e55a488b92108a21aeaddc54bd2165937d2a7d57"
+ },
+ "files": {
+  "engine/ice_melt_table.py": "57ccacf104728ff23c9718a7c880c20bc486ebc6"
+ },
+ "out_of_tree": {},
+ "packages": {},
+ "python": "3.12.3",
+ "stamp_rule": "source-v1",
+ "why": "first stamp (§3)"
+}

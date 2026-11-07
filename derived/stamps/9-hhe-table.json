@@ -1,0 +1,21 @@
+{
+ "code": {
+  "engine/tools/make_hhe_table.py": "15687228eef31c9e"
+ },
+ "data": {
+  "engine/tools/hhe_table_tail.py": "1ccb4efc622a10437b5b82048ea8fd967340aa2e"
+ },
+ "derived": {},
+ "entry": "9-hhe-table",
+ "external": {
+  "DirEOS2019": "60c73f1fbed76e904b401e6736f044ebe0f0dabb3d942ce552f5ab3340caeefd"
+ },
+ "files": {
+  "engine/hhe_table.py": "d8f8e3940caf1b0026c68c66c292d7581923f3e5"
+ },
+ "out_of_tree": {},
+ "packages": {},
+ "python": "3.12.3",
+ "stamp_rule": "source-v1",
+ "why": "first stamp (§3)"
+}

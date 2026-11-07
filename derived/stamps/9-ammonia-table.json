@@ -1,0 +1,20 @@
+{
+ "code": {
+  "engine/gate_env.py": "f826ee5f282e9f74",
+  "engine/tools/make_ammonia_table.py": "f64510a125f5270a"
+ },
+ "data": {},
+ "derived": {},
+ "entry": "9-ammonia-table",
+ "external": {
+  "Bethkenhagen2013": "f02958acf4f5cbc0eb074817024b5bde96297b055eda7f2fe73ae05c6d5e8c2b"
+ },
+ "files": {
+  "engine/ammonia_table.py": "76de8c57398eb06fb20fc6fe9af563dad1459a66"
+ },
+ "out_of_tree": {},
+ "packages": {},
+ "python": "3.12.3",
+ "stamp_rule": "source-v1",
+ "why": "first stamp (§3)"
+}

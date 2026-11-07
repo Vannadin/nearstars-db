@@ -1,0 +1,40 @@
+{
+ "code": {
+  "engine/ammonia_table.py": "6a67964b3709905b",
+  "engine/convergence.py": "87a78355e9a9e37d",
+  "engine/eos.py": "a2fb1f63a8d495f2",
+  "engine/fe_liquid.py": "96fe2620398b9ef1",
+  "engine/fermi.py": "47d8d240661e977d",
+  "engine/hhe_table.py": "d905cfc7b7bd4252",
+  "engine/ice_fr2015.py": "add7f8f596ee0186",
+  "engine/ice_melt_table.py": "9f05f3f716b8e67b",
+  "engine/mantle_composition.py": "dd08294cc623f37b",
+  "engine/rootfind.py": "9566375bf0246a4d",
+  "engine/rtpress.py": "dda7d87281038bdc",
+  "engine/smooth_table.py": "79167410413c0b53",
+  "engine/water2_table.py": "6468f74651ac70d9",
+  "engine/water_hot.py": "abec89ba51d1c07e",
+  "engine/water_table.py": "f67aa03a481123a2"
+ },
+ "data": {
+  "engine/bodies/mars.yaml": "7bc60ab1f4f0be7c4df074d60e213d4e897ba723"
+ },
+ "derived": {
+  "engine/reference_adiabats.json": "511cd56e49beb39a02620f9a3f11f59c189fde39"
+ },
+ "entry": "6-mantle-tables",
+ "external": {},
+ "files": {
+  "engine/mantle_tables/0663e6a031cae4dc.json": "7e70c537710948357f498edbe96b4fdddb885f7e",
+  "engine/mantle_tables/25cb82c1607ef8c7.json": "ee7cc1372c9a0f1ae35abb2b1d438678047e207e",
+  "engine/mantle_tables/7f2146ace4f965b1.json": "f0493d70e2df63d171e6e1d497a1e7386173463e",
+  "engine/mantle_tables/c6bd588831fd8229.json": "68f1a9682849cc7e4f288c7e41fa4472b767288f"
+ },
+ "out_of_tree": {},
+ "packages": {
+  "burnman": "2.1.0"
+ },
+ "python": "3.12.3",
+ "stamp_rule": "source-v1",
+ "why": "first stamp (§3)"
+}

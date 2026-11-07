@@ -1,0 +1,23 @@
+{
+ "code": {},
+ "data": {},
+ "derived": {
+  "solver/materials/tables/silicate_slb_default_bse.json.gz": "a3a5b30e50e1644f042a712b47a9e6dc5d7c2810",
+  "solver/materials/tables/silicate_slb_earth_dmm_wh2005.json.gz": "41f71268edecfe326aec40e81226bf02e1f8e4ef",
+  "solver/materials/tables/silicate_slb_mars_khan2022.json.gz": "52cc41503769d0b4a3a8b5c7a39181408d9e8a61"
+ },
+ "entry": "8c-prem-handover",
+ "external": {},
+ "files": {
+  "solver/materials/silicate_prem_zeng2016.yaml": "48cc9972b3bcd36c7f6a4d052f81bf767d14ac76",
+  "solver/materials/tables/silicate_prem_zeng2016.json.gz": "14dd99d0c8d1f0de36539926c3dffa4a10db4422"
+ },
+ "out_of_tree": {
+  "_ref": "refs/remotes/origin-all/remotes/origin/main 2db62b49c041a015b53316d85cc3df8404a5bdba",
+  "rewrite/phase2-records/gen_prem_handover.py": "61a03ce46b554db8b6b727ee9a5a35da890796ba"
+ },
+ "packages": {},
+ "python": "3.12.3",
+ "stamp_rule": "source-v1",
+ "why": "first stamp (§3)"
+}

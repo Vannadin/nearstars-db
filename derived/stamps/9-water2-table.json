@@ -1,0 +1,20 @@
+{
+ "code": {
+  "engine/smooth_table.py": "79167410413c0b53",
+  "engine/tools/make_water2_table.py": "235867758c411b6e"
+ },
+ "data": {},
+ "derived": {},
+ "entry": "9-water2-table",
+ "external": {},
+ "files": {
+  "engine/water2_table.py": "9314b97ee3734f015a06ae8fa54870ba605feb4f"
+ },
+ "out_of_tree": {},
+ "packages": {
+  "SeaFreeze": "1.1.0"
+ },
+ "python": "3.12.3",
+ "stamp_rule": "source-v1",
+ "why": "first stamp (§3)"
+}

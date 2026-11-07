@@ -1,0 +1,23 @@
+{
+ "code": {},
+ "data": {
+  "engine/tools/reference_adiabats.py": "d4ef52c40f80b534d386ee6baf335cd6f4c667e6"
+ },
+ "derived": {
+  "engine/reference_adiabats.json": "511cd56e49beb39a02620f9a3f11f59c189fde39"
+ },
+ "entry": "8b-fe-prem",
+ "external": {},
+ "files": {
+  "solver/materials/fe_prem.yaml": "fe90ef864f75289e6f72b3920c19dc3bcafa1cc2",
+  "solver/materials/fe_prem_legacy.yaml": "0ea62c50c886ae104114936a14deca1be7e4a211"
+ },
+ "out_of_tree": {
+  "_ref": "refs/remotes/origin-all/remotes/origin/main 2db62b49c041a015b53316d85cc3df8404a5bdba",
+  "rewrite/phase2-records/gen_fe_prem.py": "1e3b7930521a8d26c5590e75e2df1121bd351b87"
+ },
+ "packages": {},
+ "python": "3.12.3",
+ "stamp_rule": "source-v1",
+ "why": "first stamp (§3)"
+}
