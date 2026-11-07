@@ -108,7 +108,15 @@ ADDED_AFTER_C1 = {"input.no_table_for_composition": "silicate step 4 aa48d1bf",
                   "solve.frozen_band_trapped": "s-read post-freeze note 3 §2.4 (engine ea-sA-note3)",
                   "solve.coexist_crossed": "coexistence post-freeze note 4 S6 (engine ea-coex-impl)",
                   "solve.coexist_reentered": "coexistence post-freeze note 4 S6 (engine ea-coex-impl)",
-                  "solve.coexist_unfinished": "coexistence post-freeze note 4 S6 (engine ea-coex-impl)"}
+                  "solve.coexist_unfinished": "coexistence post-freeze note 4 S6 (engine ea-coex-impl)",
+                  "input.bulk_fractions": "layers S1 §3 (engine/layers-s1-c8 9c4ea96b)",
+                  "input.bulk_core_draw_short": "layers S1 §3 (engine/layers-s1-c8 9c4ea96b)",
+                  "input.bulk_oxygen_short": "layers S1 §3 (engine/layers-s1-c8 9c4ea96b)",
+                  "input.bulk_oxygen_excess": "layers S1 §3 (engine/layers-s1-c8 9c4ea96b)",
+                  "input.bulk_core_light": "layers S1 §3, LAYERS-S1-NOTES n2 (engine/layers-s1-c8 9c4ea96b)",
+                  "input.bulk_volatile_layer": "layers S1 §3 (engine/layers-s1-c8 9c4ea96b)",
+                  "input.bulk_needs_silicate_records": "layers S1 §3 / design §3 (engine/layers-s1-c8 9c4ea96b)",
+                  "input.bulk_no_mantle": "layers S1 note 1 §7, 68 B1 on 9c4ea96b (engine/layers-s1-c8 42c1edfd)"}
 #: NoAnswer reasons added after C1, the same way; C1's PARENT_NO_ANSWER_IDS stay pinned.
 ADDED_NO_ANSWER_AFTER_C1 = {"core_fold_budget": "core-tc-fold C4 (engine/tc-fold-c8)"}
 
