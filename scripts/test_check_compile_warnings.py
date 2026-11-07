@@ -24,9 +24,9 @@ def run(*args, cwd=None):
     return subprocess.run([sys.executable, str(Path(cw.__file__)), *args], capture_output=True, text=True, cwd=cwd)
 
 
-DOC_BAD = '"""split on every unescaped `|`, where `\\|` is the only escape."""\n'      # check_md_tables.py:25's shape
+DOC_BAD = '"""split on every unescaped `|`, where `\\|` is the only escape."""\n'      # the shape of check_md_tables.py's docstring
 DOC_RAW = 'r' + DOC_BAD
-F_BAD = 'import re\np = "".join(f"(?P<p{i}>-?\\d+)" for i in range(2))\n'               # c1check.py:6's shape
+F_BAD = 'import re\np = "".join(f"(?P<p{i}>-?\\d+)" for i in range(2))\n'               # the shape of c1check.py's f-string pattern
 F_RAW = F_BAD.replace('f"(?P', 'rf"(?P')
 
 with tempfile.TemporaryDirectory() as td:
@@ -36,7 +36,7 @@ with tempfile.TemporaryDirectory() as td:
         (d / name).write_text(src)
     r = run(str(d / "bad.py"))
     check("(1) planted `\\|` in a non-raw docstring: rc 1 and a [FAIL] line naming line 1",
-          r.returncode == 1 and "bad.py:1 — " in r.stdout and "\\|" in r.stdout)
+          r.returncode == 1 and "bad.py" + ":1 — " in r.stdout and "\\|" in r.stdout)
     check("(2) the same docstring raw: rc 0", run(str(d / "raw.py")).returncode == 0)
     with warnings.catch_warnings():               # this test's own parse of the planted source prints nothing
         warnings.simplefilter("ignore")
@@ -44,7 +44,7 @@ with tempfile.TemporaryDirectory() as td:
         same_f = ast.dump(ast.parse(F_BAD)) == ast.dump(ast.parse(F_RAW))
     check("(3) raw leaves the docstring's value unchanged", same_doc)
     r = run(str(d / "fbad.py"))
-    check("(4) planted `\\d` in an f-string: rc 1", r.returncode == 1 and "fbad.py:2" in r.stdout)
+    check("(4) planted `\\d` in an f-string: rc 1", r.returncode == 1 and "fbad.py" + ":2" in r.stdout)
     check("(5) rf leaves the f-string's parts unchanged and rc 0",
           run(str(d / "fraw.py")).returncode == 0 and same_f)
     check("(6) a SyntaxError is a finding", "SyntaxError" in run(str(d / "syntax.py")).stdout)
@@ -59,7 +59,7 @@ with tempfile.TemporaryDirectory() as td:
     subprocess.run(["git", "-C", str(g), "add", "ok.py", "sub/bad.py"], check=True)
     r = run("--tree", str(g))
     check("(7) --tree reads the tracked files only: rc 1 on sub/bad.py, untracked.py not read",
-          r.returncode == 1 and "sub/bad.py:1" in r.stdout and "untracked.py" not in r.stdout)
+          r.returncode == 1 and "sub/bad.py" + ":1" in r.stdout and "untracked.py" not in r.stdout)
 r = run()
 check(f"(8) gate mode on this tree: rc 0 with a PASS line ({r.stdout.strip()[-60:]})",
       r.returncode == 0 and r.stdout.startswith("compile-warnings: PASS — "))
