@@ -16,7 +16,7 @@ import yaml
 
 from solver import context, from_v1 as fv, material_assemblage as ma, partition as pt, result as rs
 from solver import solve as sv, validate as vd
-from solver.tests.test_partition import Mars, wang_bulk
+from solver.tests import test_partition as tp   # the module, not its TestCase (S1 note 2 n1: no double collection)
 
 ROOT = Path(__file__).resolve().parents[2]
 CANON = Path(__file__).resolve().parent / "fixtures" / "bulk_s1_body_canon.json"
@@ -47,15 +47,15 @@ def khan_elements():
     """S0 test 3's construction: Khan 2022 Table 1 mantle × 0.75 + the core × 0.25 (mars.yaml's S/O/C split)."""
     mass = pt.BULK["atomic_mass_g_mol"]
     by = {v[0]: (k, v[1], v[2]) for k, v in pt.BULK["oxides"].items()}
-    s = math.fsum(Mars.MANTLE.values())
+    s = math.fsum(tp.Mars.MANTLE.values())
     el = {}
-    for ox, w in Mars.MANTLE.items():
+    for ox, w in tp.Mars.MANTLE.items():
         k, n_cat, n_o = by[ox]
         m = 0.75 * w / s
         cat = m * n_cat * mass[k] / (n_cat * mass[k] + n_o * mass["O"])
         el[k] = el.get(k, 0.0) + cat
         el["O"] = el.get("O", 0.0) + m - cat
-    for k, x in Mars.CORE.items():
+    for k, x in tp.Mars.CORE.items():
         el[k] = el.get(k, 0.0) + 0.25 * x
     return el
 
@@ -69,7 +69,7 @@ def mars_doc(radius=MARS_RADIUS, core_light=None):
 
 
 def earth_doc(**inputs):
-    b, _ = wang_bulk()
+    b, _ = tp.wang_bulk()
     b = {**b, **E_TRIO}
     return {"name": "bulk_earth", "kind": "planet", "inputs": {"mass_earth": 1.0, **inputs}, "bulk": b}
 

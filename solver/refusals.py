@@ -158,7 +158,8 @@ _INPUT = (
     Entry("input.class_out_of_scope", ("body_class", "why"), "'{body_class}' 는 이 내부구조 솔버 밖이다 — {why}"),
     Entry("input.no_table_for_composition", ("layer_id", "composition_key", "built_keys"),
           "층 '{layer_id}' 의 조성 지문 {composition_key} 에 맞는 광물 집합 표가 없다 — 지어진 표 {built_keys} "
-          "(옛 물질로 돌아가지 않는다, 규산염 기록 등록 §4)"),
+          "(옛 물질로 돌아가지 않는다, 규산염 기록 등록 §4)",
+          optional=("request",)),                   # layers S2 §2.3: the BuildRequest as data; the template is unchanged
     # layers S1 registration (1346ffc6) §3: the `bulk:` block's partition and expansion (S0's four plus three)
     Entry("input.bulk_fractions", ("total", "item", "value"),
           "bulk 블록의 몫이 맞지 않는다 — 합 {total}, 항목 {item}, 값 {value} (합은 1, 각 몫은 [0, 1])"),

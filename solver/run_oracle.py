@@ -177,6 +177,27 @@ def is_bulk_v2(body_yaml: str) -> bool:
     return isinstance(doc, dict) and "bulk" in doc
 
 
+def requests_dir(out) -> Path:
+    """layers S2 §3 (rev 1, 68 B2): build requests go beside OUT_DIR, never into it — OUT_DIR's readers (compare.py
+    load_rewrite, evc_acceptance, the evc-a5 scripts) take every .json or every entry there as a record."""
+    return Path(str(out).rstrip("/") + "-build-requests")
+
+
+def write_request(rec, stem: str, tmp: Path):
+    """layers S2 §3: the record's build request, if its refusal carries one, into the run's tmp (moved with the
+    records after the run; a STOP before that leaves neither). Returns the tmp path or None."""
+    from solver import silicate_source as ss
+    req = ((rec.get("refusal") or {}).get("evidence") or {}).get("request")
+    if rec.get("outcome_kind") != "refusal" or (rec.get("refusal") or {}).get("id") != "input.no_table_for_composition" \
+            or req is None:
+        return None
+    d = tmp / "requests"
+    d.mkdir(exist_ok=True)
+    f = d / f"{stem}__{req['composition_key']}.json"
+    f.write_text(ss.request_json(req), encoding="utf-8")
+    return f
+
+
 def load_body(body_yaml: str, registry=None):
     """The body of a run: v2 `bulk:` documents through validate.load, every other file through from_v1.load_v1."""
     if is_bulk_v2(body_yaml):
@@ -304,6 +325,10 @@ def main(argv=None) -> int:
     if out.exists() and any(out.iterdir()):
         print(f"STOP: {out} is not empty (stale files would mix into the comparison)")
         return 2
+    req_out = requests_dir(out)
+    if req_out.exists() and any(req_out.iterdir()):
+        print(f"STOP: {req_out} is not empty (stale build requests would mix in; layers S2 §3)")
+        return 2
     options = context.Options(sensitivity_dt=dt, materials=materials, silicate_records=silicate)
     registry = mr.load() if materials == "registry" else None     # switch-over note 5: one load per run, passed down
     stem = Path(body_yaml).stem
@@ -320,6 +345,7 @@ def main(argv=None) -> int:
             name = f"{stem}__{'declared' if state == 'declared' else repr(state)}.json"
             (tmp / name).write_text(json.dumps(rec, ensure_ascii=False, allow_nan=False, indent=1) + "\n",
                                     encoding="utf-8")
+            write_request(rec, stem, tmp)            # layers S2 §3: inside the try, so a STOP leaves neither file
             if "fe_budget_misfit" in rec:            # layers S1 §2.5: printed from the record, not recomputed
                 fe = rec["fe_budget_misfit"]
                 print(f"{name}: fe_budget_misfit {fe['misfit']!r} (implied core Fe {fe['implied_core_Fe']!r} = "
@@ -330,8 +356,15 @@ def main(argv=None) -> int:
         print(f"STOP: {type(exc).__name__}: {exc}")
         return 2
     out.mkdir(parents=True, exist_ok=True)
+    reqs = tmp / "requests"
     for f in sorted(tmp.iterdir()):
-        shutil.move(str(f), out / f.name)
+        if f != reqs:
+            shutil.move(str(f), out / f.name)
+    if reqs.is_dir():                                # layers S2 §3: beside OUT_DIR, as the records are moved (68 n4:
+        req_out.mkdir(parents=True, exist_ok=True)   # this loop is outside the try, as the records' is)
+        for f in sorted(reqs.iterdir()):
+            shutil.move(str(f), req_out / f.name)
+        reqs.rmdir()
     tmp.rmdir()
     return 0
 

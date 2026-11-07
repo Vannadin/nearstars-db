@@ -390,7 +390,6 @@ def _assemblage_view(body, layer, rid, p_stop, registry):
 def _silicate_route(body, layer, on_me, p_stop, registry):
     """Silicate registration §4 with the switch on: the assemblage view of a silicate layer, (None, why), or None for
     a layer the routes leave to legacy (Dante's porosity axis; any other material)."""
-    from solver import material_assemblage as ma
     if layer.material not in SILICATE_ROUTES:
         return None
     if on_me and body.closure.name in SILICATE_LEGACY_AXES:
@@ -403,18 +402,13 @@ def _silicate_route(body, layer, on_me, p_stop, registry):
         return None, ("closure_axis", f"no fit axis {body.closure.name!r} on material {layer.material!r}")
     if layer.material == "silicate":
         return _assemblage_view(body, layer, SILICATE_ROUTES["silicate"], p_stop, registry)
-    comp = _comp(layer)
-    try:
-        key = ma.composition_key(comp)
-    except (KeyError, TypeError, ValueError, ZeroDivisionError) as e:
-        return None, ("unknown_material", f"silicate_decl composition has no CFMASNa reduction: {e!r}")
-    hits = [rid for rid, r in registry.records.items() if r["kind"] == "assemblage" and r["composition_key"] == key]
-    if len(hits) > 1:                                # load refuses this; a hand-built registry must not pick one
-        return None, ("composition_key_ambiguous", f"records {sorted(hits)} share composition key {key}")
-    if not hits:
-        built = sorted(r["composition_key"] for r in registry.records.values() if r["kind"] == "assemblage")
-        return None, ("no_table_for_composition", (key, built))
-    return _assemblage_view(body, layer, hits[0], p_stop, registry)
+    from solver import silicate_source as ss       # layers S2 (106041ab): the match and the build request moved there
+    c = layer.composition
+    rid, why = ss.resolve(_comp(layer), registry, source_kind=c.extra.get("source_kind") if c is not None else None,
+                          grade=c.grade if c is not None else None, requested_by=f"{body.name}.{layer.id}")
+    if rid is None:
+        return None, why
+    return _assemblage_view(body, layer, rid, p_stop, registry)
 
 
 def _record_view(body, layer, on_me, p_stop, registry):
@@ -593,10 +587,10 @@ def _view_refusal(body, l, fail):
                              load_stop=stop.id, detail=result.plain(dict(stop.evidence)))
     if kind_ == "unknown_material":
         return refusals.make("input.unknown_material", where, layer_id=l.id, material=l.material)
-    if kind_ == "no_table_for_composition":
-        key, built = detail
+    if kind_ == "no_table_for_composition":          # layers S2 §2.1: the detail carries the build request third
+        key, built, req = detail
         return refusals.make("input.no_table_for_composition", where, layer_id=l.id, composition_key=key,
-                             built_keys=built)
+                             built_keys=built, request=result.plain(req))
     return refusals.make("input.cross_field", where, rule=kind_, detail=detail)
 
 
