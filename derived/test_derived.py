@@ -870,11 +870,29 @@ class LoadCensus(unittest.TestCase):
             root = Path(d)
             subprocess.run(["git", "init", "-q", str(root)], check=True)
             (root / "old.txt").write_text("x")
-            before = self.lc.untracked(root)
+            before = self.lc.untracked(root, ["."])
             (root / "new.part").write_text("y")
-            self.assertEqual(self.lc.remove_new(before, root), ["new.part"])
+            self.assertEqual(self.lc.remove_new(before, root, ["."]), ["new.part"])
             self.assertTrue((root / "old.txt").is_file())
             self.assertFalse((root / "new.part").exists())
+
+    def test_restore_sees_only_the_output_dirs(self):
+        """s4r l.5734, directing 11-08 (a): scoped to the entry's output directories, an untracked file there is listed
+        and removed, one elsewhere is neither. Mutant: the unscoped listing (no pathspec) lists and removes stray.txt."""
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            (root / "engine" / "out").mkdir(parents=True)
+            before = self.lc.untracked(root, ["engine/out"])
+            (root / "engine" / "out" / "new.part").write_text("y")
+            (root / "stray.txt").write_text("z")
+            self.assertEqual(self.lc.untracked(root, ["engine/out"]), {"engine/out/new.part"})
+            self.assertEqual(self.lc.remove_new(before, root, ["engine/out"]), ["engine/out/new.part"])
+            self.assertTrue((root / "stray.txt").is_file())
+
+    def test_output_specs_are_the_entrys_file_dirs(self):
+        self.assertEqual(self.lc.output_specs("7-fall-sets"), ["solver/materials/fall_sets"])
+        self.assertEqual(self.lc.output_specs("10-graph-page"), ["engine"])
 
 
 if __name__ == "__main__":

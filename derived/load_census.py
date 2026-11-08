@@ -335,16 +335,24 @@ def read_children(report_dir: str, root: Path = REPO) -> tuple:
     return sorted(project), sorted(unjudged), opened, spawned, len(reports)
 
 
-def untracked(root: Path = REPO) -> set:
+def output_specs(name: str) -> list:
+    """The directories of the entry's own files: the only places --restore looks for, and removes, untracked files."""
+    return sorted({os.path.dirname(f) or "." for f in entry_info(name)["files"]})
+
+
+def untracked(root: Path = REPO, specs=None) -> set:
+    """Untracked files under the git pathspecs SPECS (s4r GATE-INPUTS-DERIVED l.5734, directing 11-08 (a)): scoped to the
+    entry's output directories, so the read trace records those, not the whole tree, and --restore can neither see nor
+    touch a file outside them. SPECS None lists the whole tree (callers outside a census)."""
     import subprocess
-    out = subprocess.run(["git", "-C", str(root), "ls-files", "--others", "--exclude-standard", "-z"],
-                         capture_output=True, text=True, check=True).stdout
+    out = subprocess.run(["git", "-C", str(root), "ls-files", "--others", "--exclude-standard", "-z",
+                          *(["--", *specs] if specs else [])], capture_output=True, text=True, check=True).stdout
     return {x for x in out.split("\0") if x}
 
 
-def remove_new(before: set, root: Path = REPO) -> list:
-    """Untracked files the census run created (not there before it): removed, returned by name."""
-    new = sorted(untracked(root) - before)
+def remove_new(before: set, root: Path = REPO, specs=None) -> list:
+    """Untracked files under SPECS the census run created (not there before it): removed, returned by name."""
+    new = sorted(untracked(root, specs) - before)
     for f in new:
         (root / f).unlink()
     return new
@@ -504,7 +512,7 @@ def main(argv) -> int:
     restore = "--restore" in head
     own = target_files(target)
     entry_info(name)                                     # check.py runs in its own interpreter, never in this one
-    before = untracked() if restore else set()
+    before = untracked(specs=output_specs(name)) if restore else set()
     snap = snapshot_own(name) if restore else {}
     reports = tempfile.mkdtemp(prefix="load-census-")
     pre = set(module_files())                            # the census's own imports, before the run
@@ -528,7 +536,7 @@ def main(argv) -> int:
     sys.stdout.flush()
     if restore:                                          # a build census writes the entry's own files: put the pre-run bytes back
         print(restore_own(name, snap), flush=True)
-        new = remove_new(before)
+        new = remove_new(before, specs=output_specs(name))
         if new:
             print(f"  {name}: removed the untracked files the census run created: {', '.join(new)}", flush=True)
     for n in ext_notes:
