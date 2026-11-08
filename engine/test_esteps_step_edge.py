@@ -22,6 +22,9 @@ Under E-steps (T as an RK4 state) a last-step stage that lands within ~10 Pa of 
    carrying `value_bound_mixed` is refused by name (interior._refuse_if_value_bound_mixed, VALUE_BOUND_MIXED_HEAD).
    A water-free mixture (Mars table + silicate) crossing 1 bar is counted with no hot-water clamp, so C122 R1 does not
    cover it; the refusal does. Both answer sites that call the water refusal call it.
+7. r2 B1: `integrate` hangs a crossing on its own structure (outer stamped, a nested inner integrate not), and a
+   real Earth solve whose first (trial) integrate crosses once answers with the trial note «… 시행 사격에서 1 번, 답에서
+   0 번».
 3. Mars 1500 K, sulphur fixing box_ceiling with c8's probe cmf 0.2779053215587793 (a planted input, not the anchor's
    cmf), one fixed p_c, six T_c 2e-5 K apart across the old jump: on, every neighbour
    step in surface T is within 3× the median; off (control), one step is over 100× the median.
@@ -176,6 +179,59 @@ src = Path(interior.__file__).read_text()
 pair = "    _refuse_if_water_filled(st)\n    _refuse_if_value_bound_mixed(st)\n"
 row(src.count("_refuse_if_water_filled(st)\n") == 2 and src.count(pair) == 2,
     "물 거절을 부르는 두 답 자리 모두 혼합 거절을 부름")
+
+print("\n7. 적분 · 풀이 수준 — 구조 도장(value_bound_mixed)과 시행 메모(r2 B1)")
+# 7a. 감사석 가드 꼴(test_water_hot 의 겹친 적분): 바깥 적분 안에서 혼합 발판이 한 번 건너고, 안쪽 적분은 안 건넌다
+real_raw = interior._integrate_raw
+depth, inner = [0], []
+
+
+def nested_raw(*a, **k):
+    depth[0] += 1
+    try:
+        if depth[0] == 1:
+            eos.value_floor_stencil(mix2, FLOOR, FLOOR * (1 - 1e-4), FLOOR * (1 + 1e-4), FLOOR * 1e-4, math.inf, T)
+            inner.append(interior.integrate())
+        return interior.Structure(1.0, 1.0, 0.33, 0.5, 1.0, 1.0, 0.0, [])
+    finally:
+        depth[0] -= 1
+
+
+interior._integrate_raw = nested_raw
+try:
+    with switch(True):
+        outer = interior.integrate()
+finally:
+    interior._integrate_raw = real_raw
+stamp = outer.value_bound_mixed
+row(stamp is not None and stamp[0] == 1 and stamp[1][0] == "table_rock_note6" and stamp[1][1] == FLOOR
+    and inner and inner[0].value_bound_mixed is None,
+    f"integrate 가 건넘을 구조에 단다: 바깥 {stamp} · 안쪽 {inner[0].value_bound_mixed if inner else '?'}")
+# 7b. 실제 풀이(몸 파일 지구, 선언 없음): 첫 적분(시행)에서만 건넘을 심으면 답은 0 이고 메모가 셈을 든다
+import copy  # noqa: E402
+import registry  # noqa: E402
+import run  # noqa: E402
+registry.load_all()
+calls = [0]
+
+
+def first_raw(*a, **k):
+    calls[0] += 1
+    if calls[0] == 1:
+        eos.value_floor_stencil(mix2, FLOOR, FLOOR * (1 - 1e-4), FLOOR * (1 + 1e-4), FLOOR * 1e-4, math.inf, T)
+    return real_raw(*a, **k)
+
+
+plain, _ = run.load_body(Path(__file__).resolve().parent / "bodies" / "earth.yaml")
+interior._integrate_raw = first_raw
+try:
+    with contextlib.redirect_stdout(io.StringIO()):
+        got = interior._solve_from_state(copy.deepcopy(plain))
+finally:
+    interior._integrate_raw = real_raw
+want = f"{interior.VALUE_BOUND_MIXED_HEAD} — 시행 사격에서 1 번, 답에서 0 번"
+row(got.applicable and calls[0] > 1 and want in got.notes,
+    f"지구 풀이: 적분 {calls[0]} 번 중 첫 시행만 건넘 → 답이 나오고 메모 «… 시행 사격에서 1 번, 답에서 0 번»")
 
 print("\n3. 화성 1500 K (cmf 0.27790532, 심은 입력) — 고정 중심압에서 T_c 여섯 점(2e-5 K 간격, 옛 뜀을 가로지름)의 표면 T")
 TCS = [2487.84860 + 2e-5 * i for i in range(6)]
