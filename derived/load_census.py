@@ -14,7 +14,8 @@ not the build; also --allow). A module outside is printed by name on a [LOAD-RED
 concurrent.futures.ProcessPoolExecutor replaced by serial stand-ins). Every Python child process (subprocess) gets
 derived/census_site/ first on PYTHONPATH: it reports its own loads, opens and children at exit, and they are judged by the
 same rule; a child that writes no report (-I/-E, or killed) is a named red. Module files that are neither stdlib,
-site-packages nor engine/solver/scripts are printed as unjudged.
+site-packages nor engine/solver/scripts are printed as unjudged; one that the entry's `out_of_tree` does not declare
+(path equal, or ending in «/<declared path>») is a [LOAD-RED] (CENSUS-OOT-COVER).
 With --restore, the entry's own files go back to their bytes before the run and untracked files the run created are removed (each named).
 Every declared external input is traced: the files the run opens (and the paths handed to subprocesses) must include
 the stamped path, with the stamp's bytes; a different path, other bytes, or no open is a [LOAD-RED] naming both.
@@ -118,7 +119,8 @@ for x, s in (e.get("external") or {}).items():
     base = ck.env_dir(s["env"]) if s.get("env") else None
     ext[x] = [str(Path(base) / s["path"]) if base else s["path"], s["path"]]
 st = ck.read_stamp(name) or {}
-print(json.dumps({"files": e["files"], "inside": sorted(inside), "ext": ext, "ext_sha": dict(st.get("external") or {})}))
+print(json.dumps({"files": e["files"], "inside": sorted(inside), "ext": ext, "ext_sha": dict(st.get("external") or {}),
+                  "oot": list(e.get("out_of_tree") or [])}))
 """
 _INFO: dict = {}
 
@@ -135,6 +137,15 @@ def entry_info(name: str) -> dict:
             raise SystemExit(f"load census: reading entry {name} from derived/files.yaml failed: {r.stderr.strip()[-400:]}")
         _INFO[name] = json.loads(r.stdout.strip().splitlines()[-1])
     return _INFO[name]
+
+
+def oot_uncovered(name: str, unjudged: list) -> list:
+    """CENSUS-OOT-COVER (go-live s4r, directing 11-08): the unjudged module files no `out_of_tree` path of the entry
+    declares. A declared path covers a file whose path is it or ends in «/<it>», so a checkout of artifacts main at
+    any location (NEARSTARS_ARTIFACTS, or a fetched-main worktree) is matched. Undeclared foreign code reaching the
+    build was printed and passed; it is red now."""
+    oot = entry_info(name).get("oot") or []
+    return [u for u in unjudged if not any(str(u) == o or str(u).endswith("/" + o) for o in oot)]
 
 
 def outside(name: str, mods: list, allow=()) -> list:
@@ -360,10 +371,13 @@ def target_files(target: list) -> list:
             return out
         return []
     p = Path(target[1].rsplit(":", 1)[0] if target[0] == "--call" else target[0])
+    real = (p if p.is_absolute() else REPO / p).resolve()
     try:
-        return [(p if p.is_absolute() else REPO / p).resolve().relative_to(REPO).as_posix()]
+        return [real.relative_to(REPO).as_posix()]
     except ValueError:
-        return []                                        # an out-of-tree builder (8a–8d)
+        # an out-of-tree builder (8a–8d) or a scratch target: its resolved path, the form `classify` gives an unjudged
+        # file, so the thing run is not listed as a module the build loaded (CENSUS-OOT-COVER; it was, as [] here)
+        return [str(real)]
 
 
 OPENED: list = []                                       # every path the run opened or handed to a subprocess
@@ -507,6 +521,12 @@ def main(argv) -> int:
           f"over {spawned_n} started in all", flush=True)
     print(f"  {name}: unjudged module files (not stdlib, site-packages or engine/solver/scripts): "
           f"{', '.join(unjudged) if unjudged else 'none'}", flush=True)
+    undeclared = oot_uncovered(name, unjudged)
+    if unjudged:
+        print(f"  {name}: of those, not declared in the entry's out_of_tree: {', '.join(undeclared) or 'none'}",
+              flush=True)
+    oot_red = [f"unjudged module file(s) not declared in out_of_tree ({len(undeclared)}): {', '.join(undeclared)}"] \
+        if undeclared else []
     miss = [] if reports_n >= spawned_n else [f"{spawned_n - reports_n} of {spawned_n} Python child processes wrote no "
                                              f"census report (started with -I/-E, or killed): their loads are unseen"]
     over = path_overrides()
@@ -515,9 +535,9 @@ def main(argv) -> int:
           f"none the census tooling loaded): {', '.join(classify(sorted(pre))[0]) or 'none'}", flush=True)
     masked = [f"loaded into the census process before the target, so not judged (68 B1): {', '.join(before)}"] \
         if before else []
-    if out or ext_red or miss or over or masked:
+    if out or ext_red or miss or over or masked or oot_red:
         why = ([f"loaded outside the static closure ({len(out)} of {len(mods)} project modules): {', '.join(out)}"]
-               if out else []) + ext_red + miss + over + masked
+               if out else []) + ext_red + miss + over + masked + oot_red
         print(f"[LOAD-RED] {name} — {'; '.join(why)} (target rc {rc})", flush=True)
         return 3
     print(f"[LOAD] {name} — {len(mods)} project modules loaded (children included), all inside the static closure"
