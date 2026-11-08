@@ -193,6 +193,53 @@ def _table_trigger_rows(lines, table, notes):
     return claimed, None
 
 
+UNWIRED_LINE = re.compile(r"^\[FAIL\] 안 엮인 시험 (\S+)$")
+DEADLINE_LINE = re.compile(r"^\[FAIL\] pool_barrier_deadline — 살아 있지만 조용한 워커 (\d+) 개를 \d+ s 기다렸다 \(천장 \d+ s\)\.$")
+
+
+def _exact_rows(lines, table, notes):
+    """(claimed FAIL line indices, None) or (None, why) for the rows pinned to an exact set of lines (s4r ruling 3,
+    directing 11-08):
+    - kind `unwired_set` (`step`, `paths`): the «안 엮인 시험 <path>» lines must name exactly `paths` — a new unwired
+      test, or a listed one now wired, is 불인정 — and then the step's exit line is claimed too;
+    - kind `pool_deadline` (`live`): a pool_barrier_deadline line whose live names are exactly `live`, and each
+      reaped worker's exit line «<name> — 비0 종료», are claimed. No deadline at all is a note (the row may go).
+    Any other pool line (pool_incomplete, pool_reap_stuck, pool_orphan) stays unclaimed, so it is 불인정."""
+    claimed = set()
+    for row in (r for r in table if r.get("kind") == "unwired_set"):
+        got = {UNWIRED_LINE.match(l.strip()).group(1): i for i, l in enumerate(lines) if UNWIRED_LINE.match(l.strip())}
+        want = set(row["paths"])
+        if set(got) != want:
+            return None, (f"{row['id']} — 안 엮인 시험 {len(got)} 개 ≠ 등록 {len(want)} 개 · 새로 {sorted(set(got) - want)[:5]} · "
+                          f"이제 엮임 {sorted(want - set(got))[:5]} → 불인정")
+        exit_line = f"[FAIL] {row['step']} — 비0 종료 (이 단계가 fail=1 을 세웠다)"
+        exits = [i for i, l in enumerate(lines) if l.strip() == exit_line]
+        if want and len(exits) != 1:
+            return None, f"{row['id']} — {row['step']} 종료 줄 {len(exits)} 개 → 불인정"
+        claimed.update(got.values())
+        claimed.update(exits)
+        if want:
+            notes.append(f"기대 빨강 {row['id']} 만 있음 ({len(want)} 개 그대로) → 인정")
+    for row in (r for r in table if r.get("kind") == "pool_deadline"):
+        live = set(row["live"])
+        dl = [i for i, l in enumerate(lines) if DEADLINE_LINE.match(l.strip())]
+        if not dl:
+            notes.append(f"⚠ 기대 빨강 {row['id']} 가 초록 (천장에 걸린 워커 없음) — 목록에서 빼는 등록이 필요")
+            continue
+        for i in dl:
+            n = int(DEADLINE_LINE.match(lines[i].strip()).group(1))
+            nxt = lines[i + 1].strip() if i + 1 < len(lines) else ""
+            names = set(nxt.split(":", 1)[1].split()) if nxt.startswith("아직 살아 있는 이름:") else None
+            if names != live or n != len(live):
+                return None, f"{row['id']} — 천장에 걸린 워커 {sorted(names or [])} ≠ 등록 {sorted(live)} → 불인정"
+            claimed.add(i)
+        for name in live:
+            ex = [i for i, l in enumerate(lines) if l.strip() == f"[FAIL] {name} — 비0 종료 (이 단계가 fail=1 을 세웠다)"]
+            claimed.update(ex)
+        notes.append(f"기대 빨강 {row['id']} 만 있음 ({', '.join(sorted(live))}) → 인정")
+    return claimed, None
+
+
 def _value_notes(lines: list[str], table: list[dict]) -> list[str]:
     """기대 칸(step_mismatch, values 있음)마다 그 단계 구간의 `[어긋남]` 값이 등록 값 쌍(엔진 · 보드)과 다르면 한 줄
     알림 — 판정과 따로 센다 (s4r C59-NOTE-DROPPED, 지휘 11-08: 불인정 판에서도 알림은 찍힌다)."""
@@ -231,6 +278,10 @@ def _expected_red_only(text: str, table: list[dict]) -> tuple[bool, list[str]]:
     claimed, why = _table_trigger_rows(lines, table, notes)
     if why:
         return False, [why]
+    exact, why = _exact_rows(lines, table, notes)
+    if why:
+        return False, [why]
+    claimed |= exact
     fails = [l.strip() for i, l in enumerate(lines) if re.match(r"\s*\[FAIL\]", l) and i not in claimed]
     steps_rows = [r for r in table if r.get("kind", "step_mismatch") == "step_mismatch"]
     for f in fails:

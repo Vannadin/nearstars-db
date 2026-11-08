@@ -29,3 +29,117 @@
              declared.basal_layer_thickness_km, declared.core_light_elements, declared.mantle_composition,
              mantle_table, sulphur_fixings]
   registered: "pc/sg-gate/sg-mars-hold-registration.md 7aeef535"
+- id: UNWIRED
+  kind: unwired_set             # s4r ruling 3 (directing 11-08): the base red pinned to its exact set, so a new unwired test is red
+  # gate.log l.284–384 at s4r (artifacts sg-gate-golive-s4r 69882c2e2 extra/gate.log blob 507794b0) and check_unwired_tests
+  #   at the landing tip: the same 100 files, identical at base 910fd42c (68). Wiring one means removing it here (a registration).
+  step: "scripts/check_unwired_tests.py"
+  paths:
+    - engine/test_d2_nan.py
+    - engine/test_eid.py
+    - engine/test_esteps_t_state.py
+    - engine/test_fold_track.py
+    - engine/test_item_a_contract.py
+    - engine/test_melt_seams.py
+    - engine/test_nanbisect.py
+    - engine/test_window_edge.py
+    - nodes/tests/test_modularity.py
+    - nodes/tests/test_nodes.py
+    - nodes/tests/test_orbit_adopted.py
+    - solver/tests/test_a6_determinism.py
+    - solver/tests/test_a6_state.py
+    - solver/tests/test_a6_trace.py
+    - solver/tests/test_adapter.py
+    - solver/tests/test_adapter_stage.py
+    - solver/tests/test_assemblage_boundaries.py
+    - solver/tests/test_assemblage_c1.py
+    - solver/tests/test_assemblage_loop_terms.py
+    - solver/tests/test_assemblage_taper.py
+    - solver/tests/test_assemblage_terms.py
+    - solver/tests/test_assemblage_view.py
+    - solver/tests/test_b4_input.py
+    - solver/tests/test_band_sum.py
+    - solver/tests/test_centre_series.py
+    - solver/tests/test_closure.py
+    - solver/tests/test_closure_retry.py
+    - solver/tests/test_closure_root_choice.py
+    - solver/tests/test_coexist.py
+    - solver/tests/test_composition_decl.py
+    - solver/tests/test_core_two_anchor.py
+    - solver/tests/test_curve_scale.py
+    - solver/tests/test_edge_extension.py
+    - solver/tests/test_events.py
+    - solver/tests/test_fall_set_stamp.py
+    - solver/tests/test_fall_sets.py
+    - solver/tests/test_fe_prem_copy.py
+    - solver/tests/test_fix_a5_sid.py
+    - solver/tests/test_fix_a6.py
+    - solver/tests/test_fix_a6_b3.py
+    - solver/tests/test_fixed_grid.py
+    - solver/tests/test_from_v1.py
+    - solver/tests/test_gap_wall.py
+    - solver/tests/test_legacy_view.py
+    - solver/tests/test_lid.py
+    - solver/tests/test_material_assemblage.py
+    - solver/tests/test_material_checks.py
+    - solver/tests/test_material_evaluators.py
+    - solver/tests/test_material_field.py
+    - solver/tests/test_material_joins.py
+    - solver/tests/test_material_library.py
+    - solver/tests/test_material_registry.py
+    - solver/tests/test_material_schema.py
+    - solver/tests/test_material_view.py
+    - solver/tests/test_materials_cli.py
+    - solver/tests/test_materials_generated.py
+    - solver/tests/test_melt_window.py
+    - solver/tests/test_member.py
+    - solver/tests/test_method_term.py
+    - solver/tests/test_nan_signs.py
+    - solver/tests/test_node_additive.py
+    - solver/tests/test_noise_stop.py
+    - solver/tests/test_p1fix_a1.py
+    - solver/tests/test_p1fix_a2.py
+    - solver/tests/test_p1fix_a3.py
+    - solver/tests/test_p1fix_a4.py
+    - solver/tests/test_p1fix_a5.py
+    - solver/tests/test_p1fix_a7.py
+    - solver/tests/test_p1fix_b2.py
+    - solver/tests/test_p1fix_b3.py
+    - solver/tests/test_p1fix_l1.py
+    - solver/tests/test_p1fix_l2.py
+    - solver/tests/test_p1fix_l3.py
+    - solver/tests/test_p5_fe_prem.py
+    - solver/tests/test_p5_stages.py
+    - solver/tests/test_physics.py
+    - solver/tests/test_read_determinism.py
+    - solver/tests/test_refusals.py
+    - solver/tests/test_rho_net_fall.py
+    - solver/tests/test_rho_rev3d.py
+    - solver/tests/test_rho_row_steps.py
+    - solver/tests/test_rho_zero_height.py
+    - solver/tests/test_rowblend.py
+    - solver/tests/test_run_oracle.py
+    - solver/tests/test_s10.py
+    - solver/tests/test_s2.py
+    - solver/tests/test_s_read.py
+    - solver/tests/test_s_read_band.py
+    - solver/tests/test_silicate_routes.py
+    - solver/tests/test_skip_guards.py
+    - solver/tests/test_solve.py
+    - solver/tests/test_sr1.py
+    - solver/tests/test_stepper.py
+    - solver/tests/test_swap_extension.py
+    - solver/tests/test_switchover.py
+    - solver/tests/test_t_mars.py
+    - solver/tests/test_t_physics.py
+    - solver/tests/test_transition_check.py
+    - solver/tests/test_types.py
+    - solver/tests/test_validate.py
+  registered: "directing 2026-11-08 ruling 3 on the go-live s4r rerun (go-live README blob 757913f5 S4: every FAIL claimed)"
+- id: HOBBY-CEILING
+  kind: pool_deadline           # s4r ruling 3/4 (directing 11-08): until the slow lane lands (SLOW-LANE-HOBBY), not a widened ceiling
+  # test_hobby_table.py runs ~7240 s on the PC against GATE_BARRIER_MAX 4553 s (s4r gate.log l.5655; stuck-worker-402963.txt);
+  #   since 00570952 the barrier reaps it, so the gate prints the deadline line with this one live name and the worker's own exit line.
+  live: [test_hobby_table.py]
+  ends: "the slow-lane registration that takes test_hobby_table.py out of the pool (the same commit removes this row)"
+  registered: "directing 2026-11-08 rulings 3 and 4 on the go-live s4r rerun"

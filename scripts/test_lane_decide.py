@@ -397,6 +397,51 @@ def test_c59_row_still_read_beside_a_derived_row():
     assert ld.expected_red_only(log(body(M, [("nmoi", "0.3571", "0.3634")])), [D] + T)[0]
 
 
+# ── s4r ruling 3 (directing 11-08): UNWIRED pinned to its exact set, HOBBY-CEILING to its exact lines ──────────────
+UW = {"id": "UNWIRED", "kind": "unwired_set", "step": "scripts/check_unwired_tests.py", "paths": ["engine/test_a.py", "solver/tests/test_b.py"]}
+HB = {"id": "HOBBY-CEILING", "kind": "pool_deadline", "live": ["test_hobby_table.py"]}
+UW_EXIT = "  [FAIL] scripts/check_unwired_tests.py — 비0 종료 (이 단계가 fail=1 을 세웠다)"
+HB_LINES = ["  [FAIL] pool_barrier_deadline — 살아 있지만 조용한 워커 1 개를 4553 s 기다렸다 (천장 4553 s).",
+            "         아직 살아 있는 이름: test_hobby_table.py",
+            "  [FAIL] test_hobby_table.py — 비0 종료 (이 단계가 fail=1 을 세웠다)"]
+
+
+def _uw(paths):
+    return [f"  [FAIL] 안 엮인 시험 {x}" for x in paths] + [UW_EXIT]
+
+
+def test_unwired_exact_set_is_claimed():
+    ok, notes = ld.expected_red_only(log(_uw(UW["paths"])), [UW])
+    assert ok and any("UNWIRED 만 있음 (2 개 그대로)" in n for n in notes), notes
+
+
+def test_unwired_a_new_or_a_wired_test_is_rejected():
+    # mutant guard: a claim by prefix («안 엮인 시험» anything) would accept both of these
+    ok, why = ld.expected_red_only(log(_uw(UW["paths"] + ["engine/test_new.py"])), [UW])
+    assert not ok and "새로 ['engine/test_new.py']" in why[0], why
+    ok, why = ld.expected_red_only(log(_uw(UW["paths"][:1])), [UW])
+    assert not ok and "이제 엮임 ['solver/tests/test_b.py']" in why[0], why
+
+
+def test_hobby_deadline_and_its_exit_line_are_claimed():
+    ok, notes = ld.expected_red_only(log(HB_LINES), [HB])
+    assert ok and any("HOBBY-CEILING 만 있음" in n for n in notes), notes
+
+
+def test_hobby_another_live_worker_or_a_lost_worker_is_rejected():
+    other = [l.replace("test_hobby_table.py", "test_other.py") for l in HB_LINES]
+    ok, why = ld.expected_red_only(log(other), [HB])
+    assert not ok and "test_other.py" in why[0], why
+    lost = HB_LINES[:2] + ["  [FAIL] pool_incomplete — 1 단계가 끝을 못 알렸다 (띄움 100 · 거둠 99)."]
+    ok, why = ld.expected_red_only(log(lost), [HB])
+    assert not ok and "pool_incomplete" in why[0], why
+
+
+def test_hobby_green_is_a_note_not_a_claim():
+    ok, notes = ld.expected_red_only(log(_uw(UW["paths"])), [UW, HB])
+    assert ok and any("HOBBY-CEILING 가 초록" in n for n in notes), notes
+
+
 if __name__ == "__main__":   # pytest 없는 게이트 venv 에서도 돈다
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_")]
     for n, f in tests:
