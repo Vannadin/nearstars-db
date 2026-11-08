@@ -17,8 +17,19 @@ RID = "silicate_slb_mars_khan2022"
 class FallSetStamp(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        reg = mr.load()
-        cls.rec, cls.tab = reg.get(RID), reg.tables[RID]
+        # s4r N11: on a tree where a stamped module moved, the registry refuses the shipped sets (a LoadStop). That
+        # refusal is this check's red, so it fails by name in test_the_shipped_sets_load_on_this_tree; the rest skip.
+        cls.reg = mr.load()
+        loaded = not isinstance(cls.reg, mr.LoadStop)
+        cls.rec, cls.tab = (cls.reg.get(RID), cls.reg.tables[RID]) if loaded else (None, None)
+
+    def setUp(self):
+        if isinstance(self.reg, mr.LoadStop) and self._testMethodName != "test_the_shipped_sets_load_on_this_tree":
+            self.skipTest("the registry refused the shipped sets (see test_the_shipped_sets_load_on_this_tree)")
+
+    def test_the_shipped_sets_load_on_this_tree(self):
+        """The shipped fall-set files load on this tree: their stamps match it (rule 4). A refusal is named."""
+        self.assertNotIsInstance(self.reg, mr.LoadStop, f"the registry refused: {self.reg}")
 
     def load(self, edit):
         v = ma.view(thaw(self.rec), self.tab, 1600.0)
