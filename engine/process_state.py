@@ -84,6 +84,7 @@ REGISTRY: dict[tuple[str, str], tuple[str, str, object]] = {
     ("interior", "_GRAZE_INFO"): (MEMO, "C157 note 5 onset-graze tag keyed by id(structure), cleared at each solve", None),
     ("interior", "_LAST_GRAZE"): (FLAG, "C157 note 5 closest onset approach of the integration in progress, reset at each integration", None),
     ("interior", "_LOOP_TRIALS"): (FLAG, "C157 note 5 trial list of the outer temperature-loop call in progress, reset to None in finally", None),
+    ("eos", "VALUE_BOUND_MIXED"): (COUNTER, "E-steps note 6: mixture stencils that crossed a part's value bound (declared gap), a count outside values", None),
     ("interior", "SURF_RHO_FALLBACKS"): (COUNTER, "C164 rule 3 surface half-steps that fell back to the cold rho0, a count outside values", None),
     ("interior", "MELT_SEAMS_LANDED"): (FLAG, "window-edge registration N1: False restores the path before melt-seam landing (controls only)", None),
     ("interior", "STAGE_CLAMP_EVERY_STEP"): (FLAG, "window-edge note 1: False restores the landing-step-only stage clamp (controls only)", None),

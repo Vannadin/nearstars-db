@@ -238,17 +238,41 @@ def _c157_bounds_on() -> bool:
     return getattr(mod, "STENCIL_BOUNDS", True) if mod is not None else True
 
 
-def value_floor_stencil(mat, p: float, p_lo: float, p_hi: float, h: float, hi_b: float = math.inf) -> tuple[float, float]:
-    """E-steps note (step edge) — 차분 발판의 아래 끝을 `p` 의 상이 든 값 바닥(`p_value_floor`, 그 밑은 상수) 위로 올린다. 잘리면
-    폭 2h 의 한쪽 차분(`_phase_stencil` 과 같은 꼴), 바닥 밑의 `p` 도 바닥에서 한쪽으로 — 그래서 dT/dP 가 p 에 대해 이어진다.
+#: E-steps note 6 — 혼합 재료의 발판이 성분 하나의 값 경계(`value_bounds`, 그 밖은 그 성분이 상수)를 건넌 횟수 · 첫 자리(재료, p, 경계).
+#   이 노트는 혼합을 고치지 않는다(선언한 틈): 경계 밖의 성분이 상수인 채 다른 성분은 움직여, 단일 재료의 «바닥에서 한쪽» 이 맞지
+#   않는다. 셈은 값 밖(풀이 앞뒤 차로 읽음), 시험이 0 을 요구하는 자리(test_esteps_step_edge 행 5)에서 멈춘다.
+VALUE_BOUND_MIXED = {"n": 0, "first": None}
+
+
+def value_floor_stencil(mat, p: float, p_lo: float, p_hi: float, h: float, hi_b: float = math.inf,
+                        t: float | None = None) -> tuple[float, float]:
+    """E-steps note 6 (step edge) — 차분 발판을 재료의 값 경계(`value_bounds(p, t)` = (바닥, 천장), 그 밖은 값이 상수: 맨틀 표의
+    1 bar 첫 점 · 뜨거운 물의 RHO_MIN · RHO_MAX 클램프) 안으로 둔다. 바닥 밑으로 내려가면 바닥에서 위로, 천장 위로 올라가면
+    천장에서 아래로 폭 2h 의 한쪽 차분(`_phase_stencil` 과 같은 꼴) — 경계 밖의 `p` 도 경계에서 한쪽으로 읽으므로 dT/dP 가 p 에
+    대해 이어진다. 혼합(`parts`)은 고치지 않고 성분 경계를 건넌 발판을 센다(`VALUE_BOUND_MIXED`).
     스위치는 `interior.STENCIL_VALUE_FLOOR`(eos 는 실린 모듈에서 읽고, 없으면 True)."""
     mod = sys.modules.get("interior")
     if mod is not None and not getattr(mod, "STENCIL_VALUE_FLOOR", True):
         return p_lo, p_hi
-    vf = mat.value_floor(p) if isinstance(mat, Material) else 0.0
-    if vf > 0.0 and p_lo < vf:
-        p_lo = vf
-        p_hi = min(max(p_hi, vf + 2.0 * h), hi_b)
+    vb = getattr(mat, "value_bounds", None)
+    if vb is None:
+        for part, w in getattr(mat, "parts", ()):
+            pb = getattr(part, "value_bounds", None)
+            if w > 0.0 and pb is not None:
+                lo, hi = pb(p, t)
+                for b in (lo, hi):
+                    if 0.0 < b < math.inf and p_lo < b < p_hi:
+                        VALUE_BOUND_MIXED["n"] += 1
+                        if VALUE_BOUND_MIXED["first"] is None:
+                            VALUE_BOUND_MIXED["first"] = (getattr(mat, "name", "?"), p, b)
+        return p_lo, p_hi
+    lo, hi = vb(p, t)
+    if lo > 0.0 and p_lo < lo:
+        p_lo = lo
+        p_hi = min(max(p_hi, lo + 2.0 * h), hi_b)
+    if hi < math.inf and p_hi > hi:
+        p_hi = hi
+        p_lo = max(min(p_lo, hi - 2.0 * h), lo)
     return p_lo, p_hi
 
 
@@ -1122,6 +1146,10 @@ class Material:
                 return getattr(ph, "p_value_floor", 0.0)
         return 0.0
 
+    def value_bounds(self, p: float, t: float | None = None) -> tuple[float, float]:
+        """E-steps note 6 — (값 바닥, 값 천장) [Pa]: 바닥은 `value_floor`, 천장은 없음(상의 표는 위에서 상수로 막지 않는다)."""
+        return self.value_floor(p), math.inf
+
     def stencil_bounds(self, p: float) -> tuple[float, float]:
         """C157 메모 1 — `p` 를 담은 피적분 경계 구간 (lo, hi]: 상 경계와 각 상의 열 세트 이음매(γ·c_p 구간의 끝).
         0 · 무한은 경계가 아니다. 차분 발판은 이 구간을 넘지 않고(`k_t` · `interior._phase_stencil`), 걸음은 lo 에서 잘린다."""
@@ -1164,7 +1192,7 @@ class Material:
             if p_lo < lo_b:
                 p_lo = lo_b
                 p_hi = min(max(p_hi, p_lo + 2.0 * h), hi_b)
-            p_lo, p_hi = value_floor_stencil(self, p, p_lo, p_hi, h, hi_b)
+            p_lo, p_hi = value_floor_stencil(self, p, p_lo, p_hi, h, hi_b, t)
         if p_hi <= p_lo:
             return 0.0
         d_hi = self.solid_density(p_hi, t, t_pot)
@@ -1676,6 +1704,13 @@ class HotWater:
     def phase_at(self, p: float):
         """단열 기울기가 (∂P/∂T)_V 를 묻는다. 상이 아니라 닫힘 하나로 답한다."""
         return _HotWaterSlope(p)
+
+    def value_bounds(self, p: float, t: float | None = None) -> tuple[float, float]:
+        """E-steps note 6 — `water_hot.density` 가 RHO_MIN · RHO_MAX 로 막는 압력 [Pa]: P(RHO_MIN, T) 밑과 P(RHO_MAX, T) 위는
+        밀도가 상수(셈 `water_hot.CLAMPED`). T 가 없으면 경계 없음."""
+        if t is None or t <= 0.0:
+            return 0.0, math.inf
+        return water_hot.pressure(water_hot.RHO_MIN, t), water_hot.pressure(water_hot.RHO_MAX, t)
 
 
 @dataclass(frozen=True)

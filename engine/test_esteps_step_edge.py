@@ -11,6 +11,11 @@ Under E-steps (T as an RK4 state) a last-step stage that lands within ~10 Pa of 
 1. Real Mars table material: with the switch on, `_adiabatic_dtdp` and `Material.k_t` are positive and continuous
    (spread < 1e-3) across 0.5–1.0003 bar; off (control), dT/dP is 0 and K_T is 0 just under the floor.
 2. Above the floor's band (p ≥ floor · (1 + 3e-4)) on and off are bit-identical: the fix touches only the band.
+4. Hot water (h2o_hot): its value bounds are P(RHO_MIN, T) and P(RHO_MAX, T), where water_hot.density clamps. Across
+   RHO_MIN at 1500 K, on: dT/dP positive and continuous (spread < 1e-2); off (control): 0 far outside, about half 1e-5
+   outside; far inside, the stencil is the same on and off. RHO_MAX is not reachable: p_max ≤ P(RHO_MAX, T) from T_MIN on.
+5. A mixture whose stencil crosses a part's value bound is not fixed (declared gap): the stencil is returned as is and
+   eos.VALUE_BOUND_MIXED counts it.
 3. Mars 1500 K, sulphur fixing box_ceiling with c8's probe cmf 0.2779053215587793 (a planted input, not the anchor's
    cmf), one fixed p_c, six T_c 2e-5 K apart across the old jump: on, every neighbour
    step in surface T is within 3× the median; off (control), one step is over 100× the median.
@@ -19,6 +24,7 @@ from __future__ import annotations
 
 import contextlib
 import io
+import math
 import statistics
 import sys
 import types
@@ -86,6 +92,50 @@ with switch(True):
 with switch(False):
     b = [(dtdp(mat, p), mat.k_t(p, T, T_POT)) for p in ABOVE]
 row(a == b, f"on == off at {[f'{p:.4g}' for p in ABOVE]} Pa")
+
+print("\n4. 뜨거운 물(h2o_hot) — RHO_MIN · RHO_MAX 클램프 둘레, T 1500 K (값 경계가 T 에 달림)")
+import water_hot  # noqa: E402
+hot = eos.MATERIALS["h2o_hot"]
+TH = 1500.0
+for edge, rho_b in (("RHO_MIN", water_hot.RHO_MIN),):
+    pb = water_hot.pressure(rho_b, TH)
+    lo, hi = hot.value_bounds(pb, TH)
+    row(pb == (lo if edge == "RHO_MIN" else hi), f"value_bounds({edge}) = P({edge}, {TH} K) = {pb:.6e} Pa")
+    sign = 1.0 if edge == "RHO_MIN" else -1.0
+    ps = [pb * (1.0 + sign * f) for f in (-0.5, -1e-4, -1e-5, 0.0, 1e-5, 1e-4, 3e-4)]
+
+    def hd(pp):
+        return interior._adiabatic_dtdp(hot, pp, hot.density(pp, TH), TH, 0.0)
+    with switch(True):
+        on = [hd(pp) for pp in ps]
+    with switch(False):
+        off = [hd(pp) for pp in ps]
+    spread = max(on) / min(on) - 1.0 if min(on) > 0.0 else float("inf")
+    row(min(on) > 0.0 and spread < 1e-2, f"on: {edge} 둘레 dT/dP 양수 · 이어짐 (퍼짐 {spread:.2e} < 1e-2)")
+    row(off[0] == 0.0 and 0.0 < off[2] < 0.75 * on[2],
+        f"off (대조): {edge} 밖 0.5 에서 0 ({off[0]!r}), 밖 1e-5 에서 절반쯤 ({off[2] / on[2]:.3f} × on) — 시험이 결함을 본다")
+    # 안쪽 먼 자리: 발판이 같다(기울기 값은 water_hot.density 의 직전 해 출발점(_LAST_DENSITY) 때문에 호출 이력에 따라
+    #   마지막 비트가 달라질 수 있어, 같은 발판 → 같은 호출열이라는 것을 발판으로 본다)
+    pf = pb * 2.0 if edge == "RHO_MIN" else pb * 0.5
+    st = []
+    for sw in (True, False):
+        with switch(sw):
+            st.append(interior._phase_stencil(hot, pf, pf * (1 - 1e-4), pf * (1 + 1e-4), pf * 1e-4, TH))
+    row(st[0] == st[1], f"경계에서 먼 안쪽({pf:.3e} Pa)의 발판 on == off {st[0]}")
+
+# RHO_MAX 천장: 재료 상한 p_max 가 T_MIN 이상에서 P(RHO_MAX, T) 를 넘지 않아 발판이 못 닿는다(p_max 에서 자름) — 닿지 않음을 단언
+tops = [(tt, water_hot.pressure(water_hot.RHO_MAX, tt)) for tt in (water_hot.T_MIN, 2000.0, 5000.0, 20000.0, 50000.0)]
+row(all(hot.p_max <= pt * (1.0 + 1e-6) for _tt, pt in tops),
+    f"RHO_MAX 천장은 닿지 않음: p_max {hot.p_max:.6e} ≤ P(RHO_MAX, T) {[f'{pt:.4e}' for _t, pt in tops]} (T_MIN 부터)")
+
+print("\n5. 혼합의 성분 경계 — 선언한 틈: 고치지 않고 센다(VALUE_BOUND_MIXED)")
+pb = water_hot.pressure(water_hot.RHO_MIN, TH)
+mix = types.SimpleNamespace(name="planted_mix", parts=((hot, 0.5), (eos.MATERIALS["silicate"], 0.5)))
+n0 = eos.VALUE_BOUND_MIXED["n"]
+with switch(True):
+    got = eos.value_floor_stencil(mix, pb, pb * (1 - 1e-4), pb * (1 + 1e-4), pb * 1e-4, math.inf, TH)
+row(got == (pb * (1 - 1e-4), pb * (1 + 1e-4)) and eos.VALUE_BOUND_MIXED["n"] == n0 + 1,
+    f"혼합 발판은 그대로, 셈 +1 (n {n0} → {eos.VALUE_BOUND_MIXED['n']}, 첫 자리 {eos.VALUE_BOUND_MIXED['first']})")
 
 print("\n3. 화성 1500 K (cmf 0.27790532, 심은 입력) — 고정 중심압에서 T_c 여섯 점(2e-5 K 간격, 옛 뜀을 가로지름)의 표면 T")
 TCS = [2487.84860 + 2e-5 * i for i in range(6)]

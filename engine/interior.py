@@ -739,12 +739,14 @@ def _core_or_own_gamma(mat, p: float, rho: float, t: float, t_pot: float) -> flo
     return mat.gruneisen(p, rho, t, t_pot)
 
 
-def _phase_stencil(mat, p: float, p_lo: float, p_hi: float, h: float) -> tuple[float, float]:
+def _phase_stencil(mat, p: float, p_lo: float, p_hi: float, h: float, t: float | None = None) -> tuple[float, float]:
     """C157 ① — 차분 발판을 `p` 를 담은 경계 구간 (lo, hi] 안으로 자른다(재료 바닥 · 상한 자르기와 같은 꼴). 경계는
     상 경계와 열 세트 이음매(`eos.Material.stencil_bounds`, 메모 1 C). 발판이 경계를 넘으면 밀도 뜀(상) · γ 뜀(이음매)이
     K_T 에 들어가 dT/dP 가 튄다(지구 1900 K, 23.83 GPa en/PREM 에서 10 배). 경계 h 안에서는 폭 2h 의 한쪽 차분이 되고,
     그 차이는 측정 2.3–4.4e-5(상대)다."""
-    if not (STENCIL_BOUNDS and isinstance(mat, eos.Material)):
+    if not isinstance(mat, eos.Material):
+        return eos.value_floor_stencil(mat, p, p_lo, p_hi, h, math.inf, t)      # E-steps note 6: 뜨거운 물 · 혼합의 셈
+    if not STENCIL_BOUNDS:
         return p_lo, p_hi
     lo_b, hi_b = mat.stencil_bounds(p)
     lo_b = math.nextafter(lo_b, math.inf) if lo_b > 0.0 else lo_b
@@ -754,7 +756,7 @@ def _phase_stencil(mat, p: float, p_lo: float, p_hi: float, h: float) -> tuple[f
     if p_lo < lo_b:
         p_lo = lo_b
         p_hi = min(max(p_hi, p_lo + 2.0 * h), hi_b)
-    return eos.value_floor_stencil(mat, p, p_lo, p_hi, h, hi_b)
+    return eos.value_floor_stencil(mat, p, p_lo, p_hi, h, hi_b, t)
 
 
 def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:
@@ -800,7 +802,7 @@ def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:
     if ceiling and p_hi > ceiling:
         p_hi = ceiling
         p_lo = min(p_lo, p_hi - 2.0 * h)
-    p_lo, p_hi = _phase_stencil(mat, p, p_lo, p_hi, h)
+    p_lo, p_hi = _phase_stencil(mat, p, p_lo, p_hi, h, t)
     # C157 ① — 발판은 녹는 경계도 넘지 않는다: φ = 0 인 자리에서도 `density` 의 p − h 쪽이 고상선 위면(고상선은 p 와 함께
     #   내려간다) 녹은 몫이 섞여 K_T 가 튄다 — 0.05 M⊕ 시험체에서 g ∈ (−0.018, 0) K 띠의 dT/dP 가 +49 %. 고체 밀도로 잰다.
     dens = (getattr(mat, "solid_density", mat.density) if STENCIL_BOUNDS
