@@ -565,6 +565,28 @@ class LoadCensus(unittest.TestCase):
         self.assertTrue(ok0, line0)
         self.assertNotIn("target said", line0 + "\n".join(rep0))
 
+    def test_census_line_carries_start_and_wall(self):
+        """LOAD-CENSUS-TIME (1): a start line before the run and `· start HH:MM:SS · wall N s` at the end of the line;
+        the start line is not a `[LOAD` line, and the verdict field census_tag reads is unchanged."""
+        import contextlib
+        import io
+        import re
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "slowish.py"
+            f.write_text("import time\ndef go():\n    time.sleep(2.2)\n", encoding="utf-8")
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                ok, line = ck.census_command("10-graph-page", ["--call", f"{f}:go"])
+        self.assertTrue(ok, line)
+        started = [ln for ln in buf.getvalue().splitlines() if ln.startswith("[CENSUS-START] 10-graph-page — ")]
+        self.assertEqual(len(started), 1, buf.getvalue())
+        self.assertFalse(started[0].startswith("[LOAD"))
+        m = re.search(r" · start (\d\d:\d\d:\d\d) · wall (\d+) s$", line)
+        self.assertIsNotNone(m, line)
+        self.assertIn(m.group(1), started[0])
+        self.assertGreaterEqual(int(m.group(2)), 2, line)                # the 2.2 s sleep is in the wall
+        self.assertEqual(ck.census_tag(ok, line), "[LOAD]", line)       # the verdict field is still field 1
+
     def test_a_mirror_copy_is_judged_as_its_tree_module(self):
         """A child running a byte-identical copy of engine/albedo_table.py (a mirror, as check_graph_page does) is judged
         as that module, even when the mirror is gone by the end: row 10's closure has no albedo_table, so red."""

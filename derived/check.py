@@ -27,6 +27,7 @@ import platform
 import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -447,9 +448,14 @@ def census_command(name: str, target: list, env_extra=None, flags=(), report=Non
     """Run TARGET under derived/load_census.py for entry NAME. ok only when the census holds AND the target exit is 0
     (a build that failed is no census). The line names the [LOAD]/[LOAD-RED] verdict. REPORT, a list, gets every line
     the census itself printed (restore, externals, outside-tree reads, children, unjudged files, mirrors, verdict),
-    not only the tail: `--load-census` prints them whole, the A-time evidence."""
+    not only the tail: `--load-census` prints them whole, the A-time evidence.
+    LOAD-CENSUS-TIME (1) (go-live s4r, 11-08): a flushed `[CENSUS-START]` line before the run — not `[LOAD…`, which the
+    verdict finder and the taggers match — and `· start HH:MM:SS · wall N s` at the END of the line (census_tag reads
+    the verdict as field 1), so a slow entry can be told from a hung one. No budget yet: that is (2)–(3)."""
     env = dict(os.environ, **(env_extra or {}))
     env.setdefault("PYTHONPATH", str(REPO))
+    start, t0 = time.strftime("%H:%M:%S"), time.monotonic()
+    print(f"[CENSUS-START] {name} — {start} · {' '.join(str(x) for x in target[:2])[:160]}", flush=True)
     r = subprocess.run([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", name, *flags, "--", *target],
                        cwd=REPO, env=env, capture_output=True, text=True)
     lines = (r.stdout + r.stderr).strip().splitlines()
@@ -461,7 +467,8 @@ def census_command(name: str, target: list, env_extra=None, flags=(), report=Non
     if report is not None:
         report += [ln for ln in lines if ln.startswith((f"  {name}: ", "[LOAD"))] or lines[-3:]
         report += [f"  {name}: target said: {t}" for t in said]
-    return r.returncode == 0 and verdict.startswith("[LOAD]"), f"rc {r.returncode} · {verdict[:400]} · {tail}"
+    clock = f" · start {start} · wall {time.monotonic() - t0:.0f} s"
+    return r.returncode == 0 and verdict.startswith("[LOAD]"), f"rc {r.returncode} · {verdict[:400]} · {tail}{clock}"
 
 
 SAID = re.compile(r"^\s*\[?(FAIL|STOP|NOT OK)\b|^Traceback|^\s*\w*(Error|Exception)\b|:\s*(FAIL|RED)\s*$")
