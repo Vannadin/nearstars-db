@@ -889,6 +889,18 @@ class LoadCensus(unittest.TestCase):
             if row == "exception in the parent":
                 self.assertIn("planted in the parent", out, row)
 
+    def test_a_zombie_leader_is_reaped_by_the_kill(self):
+        """68 n1: a census leader that already exited (a zombie, its group answering EPERM on macOS) is still waited by
+        _kill_group, so the line reads its rc, never «rc None». Mutant: without the final wait, returncode stays None."""
+        import time as _t
+        p = subprocess.Popen([sys.executable, "-c", "import sys; sys.exit(7)"], start_new_session=True)
+        for _ in range(100):                                  # until it has exited but is not reaped (a zombie)
+            if subprocess.run(["ps", "-o", "stat=", "-p", str(p.pid)], capture_output=True, text=True).stdout.strip()[:1] == "Z":
+                break
+            _t.sleep(0.05)
+        ck._kill_group(p)
+        self.assertEqual(p.returncode, 7)
+
     def test_a_restore_that_cannot_put_a_file_back_is_named(self):
         """68 B1: restore_outputs names what it could not put back; census_command raises it as a RestoreStop (a
         SystemExit, so the run stops by name)."""

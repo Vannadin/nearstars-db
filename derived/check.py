@@ -532,6 +532,8 @@ def _kill_group(p) -> None:
             _signal_group(p.pid, signal.SIGKILL)
             p.wait()
     _signal_group(p.pid, signal.SIGKILL)
+    if p.returncode is None:      # 68 n1: a group whose only member is the zombie leader answers EPERM (macOS) or is
+        p.wait(timeout=CENSUS_KILL_GRACE_S)   # gone, so no wait ran above: reap it, the line never reads «rc None»
 
 
 def _kill_group_in_handler(p) -> None:
