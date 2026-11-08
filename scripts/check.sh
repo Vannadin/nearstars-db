@@ -885,6 +885,8 @@ echo "── 1. 스키마 검증 (db/systems/*.json + curated) ──"
 step "scripts/test_gate_cleanup.sh" bash scripts/test_gate_cleanup.sh
 # 게이트 자신: 천장을 넘긴 풀 워커를 죽이고 거두어 rc·출력·[TIME] 을 남기는가 (go-live s4r 2b). ~3 s.
 step "scripts/test_gate_pool_reap.sh" bash scripts/test_gate_pool_reap.sh
+# 게이트 자신: 트리에 쓰는 직렬 단계는 «풀이 다 빈 뒤» 묶음에만 있는가, 나머지 직렬 단계는 쓰지 않는다고 판정됐는가 (s4r 68 n5 판정 (b)). ~0 s.
+step "scripts/test_gate_serial_writes.py" bash -c 'python3 scripts/test_gate_serial_writes.py'
 # 게이트 자신: auto-lane 이 기대 빨강만 있는 full 을 인정하는 규칙(C128)의 합성 로그 시험. ~1 s.
 step "scripts/test_lane_decide.py" bash -c 'python3 scripts/test_lane_decide.py'
 # 게이트 자신: 입력 선언 차선(C136)의 픽스처 — 후크의 import 거르기 셋 · 표류 · 빠진 단계 · also. ~1 s.
@@ -1322,12 +1324,6 @@ step "test_table_triggers.py" bash -c 'cd engine && exec python3 test_table_trig
 # 기준 단열선 표를 오늘의 엔진으로 다시 지어 바이트 대조 (C148 덧붙임 2) — 기준 기계(Linux-x86_64)만 판정, 그 밖은 [기록]. ~10 초.
 step "engine/tools/reference_adiabats.py --check" bash -c 'exec python3 engine/tools/reference_adiabats.py --check'
 step "test_reference_adiabats.py" bash -c 'cd engine && exec python3 test_reference_adiabats.py'
-# 파생 파일 관문(sg-gate prereg 1765b55c G5) — 단계는 derived/files.yaml 에서 생성한다: 항목마다 하나(스탬프 대조, 움직였으면
-#   그 항목의 값·재빌드 검사) + 기본 거부 조사. 목록에서 빠진 항목은 조사가 잡는다(r2 N1). 위의 check_graph_page 단계는 그대로 둔다(quick 층이 이름으로 부른다).
-while IFS=$'\t' read -r _dn _dcmd; do
-  step "derived $_dn" bash -c "exec ${_dcmd//\{python\}/python3}"
-done < <(python3 derived/check.py --steps | grep -v '^#')
-step "derived/test_derived.py" bash -c 'exec python3 derived/test_derived.py'
 # 시험 계층 조사(HEAVY-onctl P2) — env 이름·계층·in_gate 자리의 기본 거부 조사. 소스만 읽으니 맥에서도 돈다(지휘석 11-03: 목록에 빼지 말고 엮음)
 step "solver/tests/test_env_tiers.py" bash -c 'exec python3 -m unittest solver/tests/test_env_tiers.py'
 step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
@@ -1360,7 +1356,7 @@ step "tools/c51_regimes.py" bash -c 'cd engine && exec python3 tools/c51_regimes
 #   `:415` 번호 겹침 · `:432` 대응표에 없는 문구 · `:449` KIND_FILE 과 표가 어긋남.
 # ⚠ **sha 는 게이트 자신의 트리 sha 다** — 리터럴이면 낡은 원장을 읽고 통과한다 (C90 의 결함이
 #   자리만 바꾼 꼴). 페이지는 격리 클론 안에 쓰고 버린다; 워크트리 밖으로 안 나간다.
-step "tools/core_items.py" bash -c 'cd engine && exec python3 tools/core_items.py "$0"' "$gate_sha"
+# (tools/core_items.py 는 engine/ 에 core-items-<MMDD>.html 을 쓰므로 아래 «풀이 다 빈 뒤» 묶음으로 옮겼다 — s4r gate.log l.4841)
 step "tools/c55_cells.py" bash -c 'cd engine && exec python3 tools/c55_cells.py' 
 # 페이로드 등급 계약 (2026-09-04 오너 결정). authored 는 두 표지(gap:, consistent-with:) 없이는 생성되지 않는다.
 step "test_payload.py" bash -c 'cd engine && exec python3 test_payload.py'
@@ -1410,6 +1406,20 @@ step "test_tectonic_regime.py" bash -c 'cd engine && exec python3 test_tectonic_
 # 암석 다이나모 사다리 (Brief 47). 문서 표 재현·RM22 Table 8 차이·게이트 라벨·격자 미선출이 앵커다.
 step "test_dynamo_rocky.py" bash -c 'cd engine && exec python3 test_dynamo_rocky.py'
 step "dynamo_table" python3 engine/dynamo_table.py --check
+
+# ── 풀이 다 빈 뒤에만 트리에 쓰는 직렬 단계 (s4r 68 n5 → 지휘 11-08 판정 (b)) ──
+# ⚠ **규칙: 풀 워커가 살아 있는 동안 게이트 트리에 쓰는 단계는 돌지 않는다.** 직렬 단계는 풀을 기다리지 않으므로
+#   (s4r gate.log l.3853–3966: 05:36 의 derived 단계 옆에서 05:36:00 에 띄운 풀 워커가 돌았다), restore 센서스가
+#   engine/ 표를 다시 쓰는 동안 그 표를 읽는 풀 시험이 돌 수 있었다. 그래서 쓰는 직렬 단계는 여기, 배리어 뒤에 모은다.
+#   이 묶음의 구성원은 scripts/test_gate_serial_writes.py 가 아래 목록과 대조한다(직렬 단계마다 쓰기 판정은 그 커밋 글).
+step_flush
+step "tools/core_items.py" bash -c 'cd engine && exec python3 tools/core_items.py "$0"' "$gate_sha"
+# 파생 파일 관문(sg-gate prereg 1765b55c G5) — 단계는 derived/files.yaml 에서 생성한다: 항목마다 하나(스탬프 대조, 움직였으면
+#   그 항목의 값·재빌드 검사) + 기본 거부 조사. 목록에서 빠진 항목은 조사가 잡는다(r2 N1). 위의 check_graph_page 단계는 그대로 둔다(quick 층이 이름으로 부른다).
+while IFS=$'\t' read -r _dn _dcmd; do
+  step "derived $_dn" bash -c "exec ${_dcmd//\{python\}/python3}"
+done < <(python3 derived/check.py --steps | grep -v '^#')
+step "derived/test_derived.py" bash -c 'exec python3 derived/test_derived.py'
 
 fi   # lane
 
