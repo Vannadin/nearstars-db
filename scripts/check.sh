@@ -1386,6 +1386,9 @@ step "test_c164_knives.py" bash -c 'cd engine && exec python3 test_c164_knives.p
 # E-steps note 6 판정 행 — 차분 발판이 맨틀 표의 값 바닥(1 bar)을 안 넘는가: 바닥 둘레 dT/dP · K_T 이어짐(끄면 0), 바닥 위 비트 동일,
 #   화성 1500 K 고정 p_c 여섯 T_c 에서 표면 T 뜀 소거(끄면 뜀). 풀이 둘(사격 하나씩에서 끊음) + 고정 p_c 적분 12 번.
 step "test_esteps_step_edge.py" bash -c 'cd engine && exec python3 test_esteps_step_edge.py'
+# E-steps 판정 행 — 고정 걸음 T 상태의 단계 밀도 한 길(브리지 · 표면 대체 · rho0)과 지구 고정 (p_c, T_c) 표면 T 의 band/10 문턱(끄면 444 배).
+#   01f82725 가 들였으나 이 단계가 없어 C129(check_unwired_tests)가 빨갛게 잡았다(지휘석 11-08). ~2 s.
+step "test_esteps_t_state.py" bash -c 'cd engine && exec python3 test_esteps_t_state.py'
 # 판정 한 읽기(verdict_of)의 네 종류 — 답(지구 풀이 한 번) · 답(속 미수렴) · 불수락 · 거절(심은 사본과 작은 Result) (착지 3).
 step "test_verdict_of.py" bash -c 'cd engine && exec python3 test_verdict_of.py'
 # 상 곁표 (2026-09-04, 오너 채택 패턴). 키 집합 = eos 가 내는 상, 채운 칸은 등급·출처, authored 는 두 표지, 채움/전체를 출력한다.
