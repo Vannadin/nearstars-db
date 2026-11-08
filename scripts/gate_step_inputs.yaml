@@ -285,6 +285,9 @@
 "test_c164_knives.py":  # by hand: solves and integrates through interior / eos modules (.py), reads no tracked data file (C164 notes 1, 5)
   globs: []
   hand: true
+"test_esteps_step_edge.py":  # by hand (E-steps note 6): Mars's body file, its mantle table and the sulphur anchor's cmf; solves through interior / eos / mantle_composition (.py)
+  globs: ["engine/bodies/mars.yaml", "engine/mantle_tables/*.json", "engine/mars_sulphur_anchor.json"]
+  hand: true
 "test_verdict_of.py":  # by hand: one Earth solve through interior / eos modules (.py), reads no tracked data file
   globs: []
   hand: true
