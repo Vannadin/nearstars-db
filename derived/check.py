@@ -25,8 +25,10 @@ import json
 import os
 import platform
 import re
+import signal
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -444,31 +446,89 @@ def census_target(e: dict):
     return target, (["--restore"] if c.get("restore") else []), env
 
 
-def census_command(name: str, target: list, env_extra=None, flags=(), report=None) -> tuple[bool, str]:
+CENSUS_MARGIN = 1.5            # LOAD-CENSUS-TIME (2): budget = last measured wall on this machine × 1.5 (the barrier's rule)
+CENSUS_KILL_GRACE_S = 10       # (3): TERM to the census's process group, then KILL after this many seconds
+
+
+def machine_key() -> str:
+    """The machine key budgets are kept under — the same `system-machine` form the gate's header prints."""
+    return f"{platform.system()}-{platform.machine()}"
+
+
+def census_budget(name: str, doc=None):
+    """(budget_s, measured_s, key) from the entry's `census.budget[<machine key>].measured_s` × CENSUS_MARGIN, or None
+    (unbudgeted: no measured time on this machine — named in the line, never guessed)."""
+    e = entries(doc if doc is not None else load_list()).get(name) or {}
+    b = ((e.get("census") or {}).get("budget") or {}).get(machine_key())
+    if not b:
+        return None
+    m = float(b["measured_s"])
+    return m * CENSUS_MARGIN, m, machine_key()
+
+
+def _kill_group(p) -> None:
+    """TERM the census's whole process group (its children too), KILL it after CENSUS_KILL_GRACE_S."""
+    for sig, wait in ((signal.SIGTERM, CENSUS_KILL_GRACE_S), (signal.SIGKILL, None)):
+        try:
+            os.killpg(p.pid, sig)
+        except ProcessLookupError:
+            return
+        try:
+            p.wait(timeout=wait)
+            return
+        except subprocess.TimeoutExpired:
+            continue
+
+
+def census_command(name: str, target: list, env_extra=None, flags=(), report=None, budget="entry") -> tuple[bool, str]:
     """Run TARGET under derived/load_census.py for entry NAME. ok only when the census holds AND the target exit is 0
     (a build that failed is no census). The line names the [LOAD]/[LOAD-RED] verdict. REPORT, a list, gets every line
     the census itself printed (restore, externals, outside-tree reads, children, unjudged files, mirrors, verdict),
     not only the tail: `--load-census` prints them whole, the A-time evidence.
     LOAD-CENSUS-TIME (1) (go-live s4r, 11-08): a flushed `[CENSUS-START]` line before the run — not `[LOAD…`, which the
     verdict finder and the taggers match — and `· start HH:MM:SS · wall N s` at the END of the line (census_tag reads
-    the verdict as field 1), so a slow entry can be told from a hung one. No budget yet: that is (2)–(3)."""
+    the verdict as field 1), so a slow entry can be told from a hung one.
+    (2)–(3): BUDGET is the entry's `census_budget` (default) or a (budget_s, measured_s, key) tuple or None. The census
+    runs in its own session with stdout/stderr to files (partial output survives a kill); past the budget its process
+    group is killed and the verdict is a named «[LOAD-RED] NAME — over budget …». The line names the budget or
+    «budget none on KEY» before the clock."""
     env = dict(os.environ, **(env_extra or {}))
     env.setdefault("PYTHONPATH", str(REPO))
     start, t0 = time.strftime("%H:%M:%S"), time.monotonic()
     print(f"[CENSUS-START] {name} — {start} · {' '.join(str(x) for x in target[:2])[:160]}", flush=True)
-    r = subprocess.run([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", name, *flags, "--", *target],
-                       cwd=REPO, env=env, capture_output=True, text=True)
-    lines = (r.stdout + r.stderr).strip().splitlines()
-    verdict = next((ln for ln in lines if ln.startswith("[LOAD")), f"[LOAD-RED] {name} — no census line (rc {r.returncode})")
+    bud = census_budget(name) if budget == "entry" else budget
+    over = False
+    with tempfile.TemporaryFile("w+") as fo, tempfile.TemporaryFile("w+") as fe:
+        p = subprocess.Popen([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", name, *flags, "--", *target],
+                             cwd=REPO, env=env, stdout=fo, stderr=fe, text=True, start_new_session=True)
+        try:
+            rc = p.wait(timeout=bud[0] if bud else None)
+        except subprocess.TimeoutExpired:
+            over = True
+            _kill_group(p)
+            rc = p.returncode
+        fo.seek(0)
+        fe.seek(0)
+        out_text, err_text = fo.read(), fe.read()
+    lines = (out_text + err_text).strip().splitlines()
+    if over:
+        verdict = (f"[LOAD-RED] {name} — over budget {bud[0]:.0f} s (measured {bud[1]:.0f} s on {bud[2]}, × {CENSUS_MARGIN}); "
+                   f"process group killed")
+    else:
+        verdict = next((ln for ln in lines if ln.startswith("[LOAD")), f"[LOAD-RED] {name} — no census line (rc {rc})")
     tail = " | ".join(t[:160] for t in lines[-3:])
-    said = target_said(name, lines) if r.returncode != 0 else []
+    said = target_said(name, lines) if rc != 0 else []
     if said:       # 68 n3 on ba56bcf0d: a non-zero target names its own failure in the line, not only the census's
         tail += " · target said: " + " | ".join(t[:200] for t in said)
     if report is not None:
         report += [ln for ln in lines if ln.startswith((f"  {name}: ", "[LOAD"))] or lines[-3:]
         report += [f"  {name}: target said: {t}" for t in said]
-    clock = f" · start {start} · wall {time.monotonic() - t0:.0f} s"
-    return r.returncode == 0 and verdict.startswith("[LOAD]"), f"rc {r.returncode} · {verdict[:400]} · {tail}{clock}"
+    if report is not None and over:
+        report.append(verdict)
+    budget_note = f"budget {bud[0]:.0f} s on {bud[2]}" if bud else f"budget none on {machine_key()}"
+    clock = f" · {budget_note} · start {start} · wall {time.monotonic() - t0:.0f} s"
+    return (not over and rc == 0 and verdict.startswith("[LOAD]"),
+            f"rc {rc} · {verdict[:400]} · {tail}{clock}")
 
 
 SAID = re.compile(r"^\s*\[?(FAIL|STOP|NOT OK)\b|^Traceback|^\s*\w*(Error|Exception)\b|:\s*(FAIL|RED)\s*$")

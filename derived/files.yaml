@@ -7,6 +7,8 @@
 # census (G1 load census, N18): what derived/load_census.py runs in-process before comparing sys.modules with the
 # closure — default the check command; `call` file:function with args; `argv`; `restore` puts the entry's own files
 # back after a build and removes the untracked files it created; `where: pc` runs in the go-live PC block.
+# `budget: {<system-machine>: {measured_s: N, source: <blob or log>}}` (LOAD-CENSUS-TIME): the census is killed and
+# named red past measured_s × 1.5 on that machine; an entry with no measured time there runs unbudgeted, named so.
 # {external}/{papers}/{artifacts} are the env dirs; the entry's `external` env vars are passed to the census run.
 # check.tolerance / check.reference_machine: G1 «the check … with its tolerance and reference machine» (census red if absent).
 

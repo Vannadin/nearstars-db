@@ -586,6 +586,45 @@ class LoadCensus(unittest.TestCase):
         self.assertIn(m.group(1), started[0])
         self.assertGreaterEqual(int(m.group(2)), 2, line)                # the 2.2 s sleep is in the wall
         self.assertEqual(ck.census_tag(ok, line), "[LOAD]", line)       # the verdict field is still field 1
+        self.assertIn(f" · budget none on {ck.machine_key()} · start ", line)   # 10-graph-page has no measured time
+
+    def test_census_over_budget_is_killed_and_named(self):
+        """LOAD-CENSUS-TIME (2)–(3): past its budget the census's whole process group (a child of the target too) is
+        killed within the grace; the verdict is a named over-budget red; the output printed before the kill is kept."""
+        import time as _t
+        mark = f"census-budget-probe-{os.getpid()}"
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "overrun.py"
+            f.write_text("import subprocess, sys, time\ndef go():\n"
+                         f"    print('partial-{mark}', flush=True)\n"
+                         f"    subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(25)  # {mark}'])\n"
+                         "    time.sleep(25)\n", encoding="utf-8")
+            t0 = _t.monotonic()
+            rep = []
+            ok, line = ck.census_command("10-graph-page", ["--call", f"{f}:go"], report=rep, budget=(2.0, 1.0, "test-key"))
+            took = _t.monotonic() - t0
+        _t.sleep(0.5)
+        left = subprocess.run(["pgrep", "-f", f"# {mark}"], capture_output=True, text=True).stdout.split()
+        for pid in left:                                    # never leave the probe behind, even on a red
+            subprocess.run(["kill", "-KILL", pid], capture_output=True)
+        self.assertFalse(ok, line)
+        self.assertIn("[LOAD-RED] 10-graph-page — over budget 2 s (measured 1 s on test-key, × 1.5)", line)
+        self.assertEqual(ck.census_tag(ok, line), "[LOAD-RED]", line)
+        self.assertIn(f"partial-{mark}", line)              # printed before the kill, kept (stdout went to a file)
+        self.assertIn(" · budget 2 s on test-key · start ", line)
+        self.assertLess(took, 2.0 + ck.CENSUS_KILL_GRACE_S + 5, line)
+        self.assertEqual(left, [], "a census child outlived the group kill")
+        self.assertTrue(any("over budget" in r for r in rep), rep)
+
+    def test_census_budget_reads_the_entry_on_this_machine(self):
+        """(2): the budget is measured_s × CENSUS_MARGIN under this machine's key; another machine's or none → None."""
+        key = ck.machine_key()
+        doc = {"entries": {"a": {"census": {"budget": {key: {"measured_s": 100, "source": "test"}}}},
+                           "b": {"census": {"budget": {"Other-machine": {"measured_s": 5, "source": "test"}}}},
+                           "c": {"census": {}}, "d": {}}}
+        self.assertEqual(ck.census_budget("a", doc), (150.0, 100.0, key))
+        for n in ("b", "c", "d", "missing"):
+            self.assertIsNone(ck.census_budget(n, doc), n)
 
     def test_a_mirror_copy_is_judged_as_its_tree_module(self):
         """A child running a byte-identical copy of engine/albedo_table.py (a mirror, as check_graph_page does) is judged
