@@ -778,8 +778,11 @@ class LoadCensus(unittest.TestCase):
         """Directing 11-08: SIGINT or SIGTERM to the process running a census kills the census's process group (its own
         session) before the parent goes; no census child survives. Each signal in its own parent."""
         import time as _t
-        for sig in (signal.SIGINT, signal.SIGTERM):
-            mark = f"census-intr-probe-{os.getpid()}-{int(sig)}"
+        # s4r 68 B2: also SIGINT inherited as ignored, as a non-interactive shell's `&` (the gate pool) starts a process
+        # — the case that exited 0. (`&` leaves SIGTERM alone.) Mutant: putting SIG_IGN back fails the SIG_IGN row.
+        for sig, inherited in ((signal.SIGINT, signal.SIG_DFL), (signal.SIGTERM, signal.SIG_DFL),
+                               (signal.SIGINT, signal.SIG_IGN)):
+            mark = f"census-intr-probe-{os.getpid()}-{int(sig)}-{int(inherited)}"
             with tempfile.TemporaryDirectory() as d:
                 f = Path(d) / "long.py"
                 f.write_text("import subprocess, sys, time\ndef go():\n"
@@ -790,7 +793,8 @@ class LoadCensus(unittest.TestCase):
                                   f"print(ck.census_command('10-graph-page', ['--call', {str(f)!r} + ':go'], budget=None))\n",
                                   encoding="utf-8")
                 pr = subprocess.Popen([sys.executable, "-B", str(parent)], cwd=ck.REPO, stdout=subprocess.PIPE,
-                                      stderr=subprocess.PIPE, text=True)
+                                      stderr=subprocess.PIPE, text=True,
+                                      preexec_fn=lambda: signal.signal(sig, inherited))
                 seen = False
                 for _ in range(100):                          # wait until the census's grandchild is up
                     if subprocess.run(["pgrep", "-f", f"# {mark}"], capture_output=True).returncode == 0:
@@ -809,8 +813,8 @@ class LoadCensus(unittest.TestCase):
                 left = subprocess.run(["pgrep", "-f", f"# {mark}"], capture_output=True, text=True).stdout.split()
                 for pid in left:
                     subprocess.run(["kill", "-KILL", pid], capture_output=True)
-            self.assertTrue(seen, f"{sig!r}: the census child never started")
-            self.assertNotEqual(pr.returncode, 0, f"{sig!r}: the parent should end by the signal")
+            self.assertTrue(seen, f"{sig!r} ({inherited!r} inherited): the census child never started")
+            self.assertEqual(pr.returncode, -sig, f"{sig!r} ({inherited!r} inherited): the parent should end by the signal")
             self.assertEqual(left, [], f"{sig!r}: a census child outlived the interrupted parent (it ignores TERM)")
             self.assertLess(took, ck.CENSUS_KILL_GRACE_S / 2, f"{sig!r}: the parent took {took:.1f} s to go")
 

@@ -560,8 +560,12 @@ def _group_dies_with_us(p):
 
     def handler(sig, _frame):
         _kill_group_in_handler(p)
-        signal.signal(sig, old[sig] if old[sig] is not None else signal.SIG_DFL)
-        os.kill(os.getpid(), sig)                     # re-raise with the original disposition
+        # s4r 68 B2 (11-08): the signal stays with this process. A Python handler (default_int_handler) is put back and
+        # gets the signal again. Anything else goes to SIG_DFL, so the process ends by the signal: a process started
+        # from a non-interactive shell's `&` (the gate pool) inherits SIGINT as SIG_IGN, and putting SIG_IGN back
+        # swallowed the re-raised SIGINT — the census was killed and the parent went on to exit 0.
+        signal.signal(sig, old[sig] if callable(old[sig]) else signal.SIG_DFL)
+        os.kill(os.getpid(), sig)
 
     for sig in (signal.SIGINT, signal.SIGTERM):
         old[sig] = signal.signal(sig, handler)
