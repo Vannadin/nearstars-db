@@ -243,7 +243,20 @@ class GlobPathspecs(unittest.TestCase):
                 (root / f).write_text("x = 1\n", encoding="utf-8")
                 subprocess.run(["git", "-C", d, "add", f], check=True)
             self.assertEqual(ck.expand(["engine/**/*.py"], root=root), ["engine/top.py", "engine/x/y/deep.py"])
-            self.assertEqual(ck.git_spec("engine/**/*.py"), "engine/*.py")
+            self.assertEqual(ck.git_spec("engine/**/*.py"), ":(glob)engine/**/*.py")
+            # 68 n3: the environment cannot change the listing — literal pathspecs would match nothing
+            old = os.environ.get("GIT_LITERAL_PATHSPECS")
+            os.environ["GIT_LITERAL_PATHSPECS"] = "1"
+            try:
+                self.assertEqual(ck.expand(["engine/**/*.py"], root=root), ["engine/top.py", "engine/x/y/deep.py"])
+            finally:
+                if old is None:
+                    del os.environ["GIT_LITERAL_PATHSPECS"]
+                else:
+                    os.environ["GIT_LITERAL_PATHSPECS"] = old
+            # 68 n3: a declared glob that matches no tracked file is a named red, not an empty input set
+            with self.assertRaisesRegex(LookupError, r"data glob engine/nothing/\*\.yaml matches no tracked file"):
+                ck.expand(["engine/nothing/*.yaml"], root=root)
 
     def test_the_gate_trace_records_the_glob_not_the_tree(self):
         """Run in a child under scripts/gate_reads (the full gate's PYTHONPATH): the only `gitlist` records are the

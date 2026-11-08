@@ -137,6 +137,7 @@ def probes(pattern: str, git: bool = False) -> list[str]:
     """이 패턴이 낼 수 있는 산문·코드 이름의 표본 — 와일드카드를 `__new__` 로 채운다.
     git pathspec 의 `*` 는 `/` 를 넘으므로 한 층과 세 층 깊이 둘로 채운다."""
     fills = ["__new__", "a/b/__new__"] if git else ["__new__"]
+    pattern = re.sub(r"^:\([^)]*\)", "", pattern)        # a pathspec's magic («:(glob)…», derived/check.py) is no name
     out = []
     for f in fills:
         s = re.sub(r"\*\*/?", "a/", pattern) if not git else pattern

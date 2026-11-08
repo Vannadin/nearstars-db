@@ -408,6 +408,16 @@ def test_derived_by_stem_or_by_sys_path_is_refused():
                      "solver/materials/path.py puts derived/ on sys.path"], fails
 
 
+def test_a_pathspecs_magic_is_not_part_of_its_probe_names():
+    # 68 n3: derived/check.py lists globs as «:(glob)<glob>»; the probes name files, so the magic is dropped, and a step
+    # whose globs cover the glob gives no drift line for it
+    assert all(not q.startswith(":") for q in gsi.probes(":(glob)engine/**/*.py", git=True))
+    assert gsi.probes(":(glob)engine/**/*.py", git=True) == gsi.probes("engine/**/*.py", git=True)
+    recs = [{"step": "derived 1-earth", "kind": "gitlist", "path": ":(glob)engine/**/*.py"}]
+    assert gsi.drift(recs, {"derived *": {"globs": ["engine/**.py"], "hand": True}}, ["derived *"]) == []
+    assert gsi.drift(recs, {"derived *": {"globs": ["solver/**.py"], "hand": True}}, ["derived *"]) != []
+
+
 def test_real_tree_has_no_shipped_import_of_gate_only_code():
     # 실제 트리: 출하 모듈 111개 어디도 derived/·tools/·게이트 전용 모듈을 import 하지 않음
     assert gsi.library_imports_gate_only() == []

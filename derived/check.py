@@ -120,7 +120,11 @@ def dag_order(doc) -> list:
             if p not in own:
                 raise SystemExit(f"STOP: {name}'s derived input {p} is not a listed derived file")
             ups.add(own[p])
-        for p in expand(e.get("data", [])):              # after expansion (68 n2): a glob match counts too
+        try:
+            matched = expand(e.get("data", []))
+        except LookupError as err:                       # 68 n3: named, not a traceback
+            raise SystemExit(f"STOP: {name}: {err}") from None
+        for p in matched:                                # after expansion (68 n2): a glob match counts too
             if p in own and p not in e.get("derived", []):
                 raise SystemExit(f"STOP: {name}'s data {'glob matches' if p not in e.get('data', []) else 'lists'} the "
                                  f"derived file {p}; name it under derived")
@@ -284,10 +288,11 @@ def glob_re(pat: str):
 def expand(paths, files=None, root=REPO) -> list:
     """Data paths with a glob expanded at check time over TRACKED files only (68 n1 on 2be90e97: an untracked stray on
     one machine is no input, and engine/.venv* is never swept); sorted, repo-relative. A new tracked match is a new input.
-    Without FILES each glob lists only what it can match: `git ls-files -- <spec>`, where spec is the glob with every
-    «**/» and «**» folded to one «*». A plain git pathspec's «*» crosses «/», so spec matches a superset of the glob
-    (engine/**/*.py → engine/*.py also lists engine/x.py, which «engine/**/*.py» means too), and glob_re narrows it.
-    The gate's read trace then records the spec, not the whole tree (s4r GATE-INPUTS-DERIVED (b), directing 11-08)."""
+    Without FILES each glob lists only what it can match: `git ls-files -- :(glob)<glob>`, the glob magic named
+    explicitly (git's «**/» and «*» then mean what glob_re means) and GIT_*_PATHSPECS unset for the call, so no
+    environment default changes the listing (68 n3). The gate's read trace records that spec, not the whole tree (s4r
+    GATE-INPUTS-DERIVED (b), directing 11-08). A glob that matches no tracked file is an input that cannot be read:
+    LookupError, a named red (68 n3)."""
     out = []
     for p in paths:
         if "*" not in p and "?" not in p:
@@ -295,19 +300,26 @@ def expand(paths, files=None, root=REPO) -> list:
             continue
         rx = glob_re(p)
         pool = files if files is not None else tracked_all(root, specs=[git_spec(p)])
-        out += sorted(f for f in pool if rx.match(f) and not any(s.startswith(".venv") for s in f.split("/")))
+        hit = sorted(f for f in pool if rx.match(f) and not any(s.startswith(".venv") for s in f.split("/")))
+        if not hit:
+            raise LookupError(f"data glob {p} matches no tracked file")
+        out += hit
     return out
 
 
 def git_spec(glob: str) -> str:
-    """A plain git pathspec matching a superset of GLOB (see expand)."""
-    return re.sub(r"\*+", "*", re.sub(r"\*\*/?", "*", glob))
+    """GLOB as a git pathspec with the glob magic named (see expand)."""
+    return ":(glob)" + glob
+
+
+PATHSPEC_ENV = ("GIT_LITERAL_PATHSPECS", "GIT_GLOB_PATHSPECS", "GIT_NOGLOB_PATHSPECS", "GIT_ICASE_PATHSPECS")
 
 
 def tracked_all(root=REPO, specs=None) -> list:
     """Tracked files, all of them, or only those the git pathspecs SPECS can match."""
+    env = {k: v for k, v in os.environ.items() if k not in PATHSPEC_ENV}
     r = subprocess.run(["git", "-C", str(root), "ls-files", *(["--", *specs] if specs else [])],
-                       capture_output=True, text=True, check=True)
+                       capture_output=True, text=True, check=True, env=env)
     return [ln for ln in r.stdout.splitlines() if ln]
 
 
