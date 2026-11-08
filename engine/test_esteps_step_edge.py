@@ -15,7 +15,9 @@ Under E-steps (T as an RK4 state) a last-step stage that lands within ~10 Pa of 
    RHO_MIN at 1500 K, on: dT/dP positive and continuous (spread < 1e-2); off (control): 0 far outside, about half 1e-5
    outside; far inside, the stencil is the same on and off. RHO_MAX is not reachable: p_max ≤ P(RHO_MAX, T) from T_MIN on.
 5. A mixture whose stencil crosses a part's value bound is not fixed (declared gap): the stencil is returned as is and
-   eos.VALUE_BOUND_MIXED counts it.
+   eos.VALUE_BOUND_MIXED counts it (integrate hangs the per-structure count on `value_bound_mixed`). For hot water the
+   crossing stencil's lower point reads the part under RHO_MIN, which water_hot.CLAMPED counts, so a converged answer
+   with it is refused by C122 R1 (`hot_water_clamped`).
 3. Mars 1500 K, sulphur fixing box_ceiling with c8's probe cmf 0.2779053215587793 (a planted input, not the anchor's
    cmf), one fixed p_c, six T_c 2e-5 K apart across the old jump: on, every neighbour
    step in surface T is within 3× the median; off (control), one step is over 100× the median.
@@ -128,14 +130,19 @@ tops = [(tt, water_hot.pressure(water_hot.RHO_MAX, tt)) for tt in (water_hot.T_M
 row(all(hot.p_max <= pt * (1.0 + 1e-6) for _tt, pt in tops),
     f"RHO_MAX 천장은 닿지 않음: p_max {hot.p_max:.6e} ≤ P(RHO_MAX, T) {[f'{pt:.4e}' for _t, pt in tops]} (T_MIN 부터)")
 
-print("\n5. 혼합의 성분 경계 — 선언한 틈: 고치지 않고 센다(VALUE_BOUND_MIXED)")
+print("\n5. 혼합의 성분 경계 — 선언한 틈: 고치지 않고 센다(VALUE_BOUND_MIXED, 구조의 value_bound_mixed)")
 pb = water_hot.pressure(water_hot.RHO_MIN, TH)
-mix = types.SimpleNamespace(name="planted_mix", parts=((hot, 0.5), (eos.MATERIALS["silicate"], 0.5)))
-n0 = eos.VALUE_BOUND_MIXED["n"]
+mix = eos.mix("h2o_hot_rock_note6", "시험 혼합", (hot, 0.5), (eos.MATERIALS["silicate"], 0.5))
+n0, c0 = eos.VALUE_BOUND_MIXED["n"], water_hot.CLAMPED["n"]
 with switch(True):
     got = eos.value_floor_stencil(mix, pb, pb * (1 - 1e-4), pb * (1 + 1e-4), pb * 1e-4, math.inf, TH)
-row(got == (pb * (1 - 1e-4), pb * (1 + 1e-4)) and eos.VALUE_BOUND_MIXED["n"] == n0 + 1,
+row(type(mix).__name__ == "Mixture" and got == (pb * (1 - 1e-4), pb * (1 + 1e-4)) and eos.VALUE_BOUND_MIXED["n"] == n0 + 1,
     f"혼합 발판은 그대로, 셈 +1 (n {n0} → {eos.VALUE_BOUND_MIXED['n']}, 첫 자리 {eos.VALUE_BOUND_MIXED['first']})")
+# 그 발판의 아래 끝은 뜨거운 물을 RHO_MIN 밑에서 읽는다 → water_hot.CLAMPED 가 늘고, 수렴한 답이면 C122 R1
+#   (`hot_water_clamped`, «혼합 · 외피 경로 포함»)이 이름 대고 거절한다 — 물이 낀 건넘은 답으로 나가지 않는다
+mix.density(pb * (1 - 1e-4), TH, 0.0)
+row(water_hot.CLAMPED["n"] > c0, f"건넌 발판의 아래 끝 읽기가 뜨거운 물 클램프를 센다 (CLAMPED {c0} → {water_hot.CLAMPED['n']}) "
+                                 "— 답이면 C122 R1 거절")
 
 print("\n3. 화성 1500 K (cmf 0.27790532, 심은 입력) — 고정 중심압에서 T_c 여섯 점(2e-5 K 간격, 옛 뜀을 가로지름)의 표면 T")
 TCS = [2487.84860 + 2e-5 * i for i in range(6)]

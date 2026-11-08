@@ -245,7 +245,7 @@ class Structure:
                  "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached",
                  "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void", "crust_blocked", "finish_subst",
                  "r_grad_base", "r_grad_top", "floor_truncated", "hot_water_filled", "boiling_flips", "hot_water_clamped",
-                 "onset_graze", "plateau_band", "shot_s", "contract_exit")
+                 "value_bound_mixed", "onset_graze", "plateau_band", "shot_s", "contract_exit")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
@@ -258,6 +258,7 @@ class Structure:
         #   hot_water_filled = (걸음 수, 질량 kg, 첫 (P, T)) · boiling_flips = (뒤집힘 수, 첫 (P, T, P_sat)).
         self.hot_water_filled = hot_water_filled
         self.hot_water_clamped = None    # (클램프 수, 끝, P, T) — 경로 무관 기록, `integrate` 가 단다
+        self.value_bound_mixed = None    # E-steps note 6 — (혼합 발판이 성분 값 경계를 건넌 수, (재료, p, 경계)), `integrate` 가 단다
         self.boiling_flips = boiling_flips
         # 어느 층이 **자기 적합의 바닥**에 걸려 질량 몫을 못 채우고 끝났는가 — 그 재료와 압력
         # (C60 (c), 브리프 181 B). 시행에서는 값이고(질량이 모자란 괄호 점), **답에서는 거절**이다.
@@ -1062,6 +1063,8 @@ def integrate(*args, **kw):
     #   안쪽이 바깥의 첫 칸을 지우지 않게. 오늘 겹치는 호출부는 없다 — C139 `convergence.shot` 이 겹침을 assert 로 막는다).
     hw_before, hw_saved = water_hot.CLAMPED["n"], water_hot.CLAMPED["first"]
     water_hot.CLAMPED["first"] = None
+    vb_before, vb_saved = eos.VALUE_BOUND_MIXED["n"], eos.VALUE_BOUND_MIXED["first"]
+    eos.VALUE_BOUND_MIXED["first"] = None
     # C139 — 이 적분의 수렴 기록은 하위 기록에 모인다. 끝나면 곧바로 AND 로 합쳐지고(오늘의 답), 답을 낸
     #   `solve` 만 `convergence.settle` 로 받아들인 적분 하나를 골라 나머지를 시행 칸으로 보낸다.
     with convergence.shot() as holder:
@@ -1074,6 +1077,11 @@ def integrate(*args, **kw):
         structure.hot_water_clamped = ((water_hot.CLAMPED["n"] - hw_before,)
                                        + (hw_first if hw_first is not None else ("?", float("nan"), float("nan"))))
     water_hot.CLAMPED["first"] = hw_saved if hw_saved is not None else hw_first
+    # E-steps note 6 — 이 적분 안에서 혼합 발판이 성분 값 경계를 건넌 수(선언한 틈; 클램프와 같은 꼴로 구조에 단다)
+    vb_first = eos.VALUE_BOUND_MIXED["first"]
+    if eos.VALUE_BOUND_MIXED["n"] > vb_before:
+        structure.value_bound_mixed = (eos.VALUE_BOUND_MIXED["n"] - vb_before, vb_first)
+    eos.VALUE_BOUND_MIXED["first"] = vb_saved if vb_saved is not None else vb_first
     _note_loop_trial(kw.get("t_center", args[11] if len(args) > 11 else 0.0), structure)
     _ICE_GRID_DELTA[id(structure)] = (ice_fr2015.STATS["extrapolated_rho"] - before[0],
                                       ice_fr2015.STATS["below_t_min"] - before[1])
