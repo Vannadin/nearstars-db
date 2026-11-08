@@ -260,6 +260,9 @@ def library_imports_gate_only(root: pathlib.Path = HERE.parent) -> list[str]:
     engine = root / "engine"
     gate_names = ({p.stem for p in engine.glob("*.py") if gate_only(f"engine/{p.name}")}
                   | {p.stem for p in (engine / "tools").glob("*.py")})     # `import core_items` via a path insert
+    # 68 n2 (s4r, directing 11-08): derived/ modules by stem too (`import check` after a path insert), read from the
+    # files, and any sys.path insert/append naming derived
+    derived_names = {p.stem for p in (root / "derived").rglob("*.py")} - {"__init__"}
     shipped = [engine] + [root / d for d in ("solver", "solver/materials")]
     fails = []
     for p in sorted(q for d in shipped for q in d.glob("*.py")):
@@ -279,8 +282,14 @@ def library_imports_gate_only(root: pathlib.Path = HERE.parent) -> list[str]:
                          else "tools." + ",".join(a.name for a in node.names)]    # one line per statement
             for n in names:
                 head = n.split(".")[0]
-                if head in ("tools", "derived") or head in gate_names:
+                if head in ("tools", "derived") or head in gate_names or head in derived_names:
                     fails.append(f"[FAIL] gate_data_via_also — {rel} imports {n} (a gate-only module)")
+            if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                    and node.func.attr in ("insert", "append", "extend") and ast.unparse(node.func.value) == "sys.path"
+                    and any(isinstance(c, ast.Constant) and isinstance(c.value, str) and "derived" in c.value
+                            for a in node.args for c in ast.walk(a))):
+                fails.append(f"[FAIL] gate_data_via_also — {rel} puts derived/ on sys.path "
+                             f"(l.{node.lineno}: {ast.unparse(node)[:80]})")
     return fails
 
 

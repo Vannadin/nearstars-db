@@ -388,6 +388,26 @@ def test_derived_is_gate_only_and_never_imported_by_shipped_code():
         "solver/materials/bad.py imports derived (a gate-only module)"], fails
 
 
+def test_derived_by_stem_or_by_sys_path_is_refused():
+    # 68 n2 (s4r, 지휘 11-08): derived/ 모듈을 줄기 이름으로 import 하거나 sys.path 에 derived 를 넣는 출하 모듈도 FAIL.
+    # 줄기 목록은 derived/ 파일에서 읽는다(손 목록 아님): 여기 scratch 의 derived/zz_new.py 도 잡힌다.
+    tmp = _scratch()
+    for d in ("engine", "solver/materials", "derived/sub"):
+        (tmp / d).mkdir(parents=True, exist_ok=True)
+    (tmp / "derived" / "zz_new.py").write_text("X = 1\n")
+    (tmp / "derived" / "sub" / "deep_mod.py").write_text("X = 1\n")
+    (tmp / "engine" / "ok.py").write_text("import sys\nsys.path.insert(0, 'engine')\nimport json\n")
+    assert gsi.library_imports_gate_only(tmp) == []
+    (tmp / "engine" / "stem.py").write_text("import zz_new\n")
+    (tmp / "solver" / "deep.py").write_text("from deep_mod import X\n")
+    (tmp / "solver" / "materials" / "path.py").write_text(
+        "import sys\nfrom pathlib import Path\nsys.path.insert(0, str(Path(__file__).parent / 'derived'))\n")
+    fails = sorted(f.split(" — ")[1].split(" (l.")[0] for f in gsi.library_imports_gate_only(tmp))
+    assert fails == ["engine/stem.py imports zz_new (a gate-only module)",
+                     "solver/deep.py imports deep_mod (a gate-only module)",
+                     "solver/materials/path.py puts derived/ on sys.path"], fails
+
+
 def test_real_tree_has_no_shipped_import_of_gate_only_code():
     # 실제 트리: 출하 모듈 111개 어디도 derived/·tools/·게이트 전용 모듈을 import 하지 않음
     assert gsi.library_imports_gate_only() == []
