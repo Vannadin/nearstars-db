@@ -112,6 +112,10 @@ INTERPOLATE_LAYERS = True
 #   함께 꺼진다(대조 시험만 끔). **C157 의 모든 코드 길이 이 하나를 읽는다** — interior 의 발판 · 자르기 · 착지 · 사격 뒷받침(③)과
 #   eos 의 `Material.k_t` 자르기(`eos._c157_bounds_on`). PC 가 잡음: k_t 가 밖에 있어 규칙 3 대상 416 이 False 에서도 달랐다.
 STENCIL_BOUNDS = True
+#: E-steps note (step edge) — 차분 발판(`_phase_stencil` · `eos.Material.k_t`)이 상의 값 바닥(`p_value_floor`, 맨틀 표의 1 bar
+#   첫 점) 밑을 읽지 않는다: 그 밑은 상수라 걸친 발판의 K_T 가 두 배 · 무한이 되어 dT/dP 가 절반 · 0 이 됐다(화성 1500 K 마지막
+#   걸음의 단계가 1 bar 양쪽에 떨어지는 데 따라 표면 T 가 0.08 K 뜀). False 는 그 앞(음성 대조만).
+STENCIL_VALUE_FLOOR = True
 # C157 셈(값 밖) — 경계 착지(할선) 재걷기 수
 PHASE_CUT_REWALKS = [0]
 # 창 가장자리 등록 §2.2 — 규산염 녹는 곡선 이음매(eos.melt_curve_seams)에 착지한 걸음 수(값 밖, 상 경계 착지와 따로 센다)
@@ -750,7 +754,7 @@ def _phase_stencil(mat, p: float, p_lo: float, p_hi: float, h: float) -> tuple[f
     if p_lo < lo_b:
         p_lo = lo_b
         p_hi = min(max(p_hi, p_lo + 2.0 * h), hi_b)
-    return p_lo, p_hi
+    return eos.value_floor_stencil(mat, p, p_lo, p_hi, h, hi_b)
 
 
 def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:

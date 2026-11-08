@@ -238,6 +238,20 @@ def _c157_bounds_on() -> bool:
     return getattr(mod, "STENCIL_BOUNDS", True) if mod is not None else True
 
 
+def value_floor_stencil(mat, p: float, p_lo: float, p_hi: float, h: float, hi_b: float = math.inf) -> tuple[float, float]:
+    """E-steps note (step edge) — 차분 발판의 아래 끝을 `p` 의 상이 든 값 바닥(`p_value_floor`, 그 밑은 상수) 위로 올린다. 잘리면
+    폭 2h 의 한쪽 차분(`_phase_stencil` 과 같은 꼴), 바닥 밑의 `p` 도 바닥에서 한쪽으로 — 그래서 dT/dP 가 p 에 대해 이어진다.
+    스위치는 `interior.STENCIL_VALUE_FLOOR`(eos 는 실린 모듈에서 읽고, 없으면 True)."""
+    mod = sys.modules.get("interior")
+    if mod is not None and not getattr(mod, "STENCIL_VALUE_FLOOR", True):
+        return p_lo, p_hi
+    vf = mat.value_floor(p) if isinstance(mat, Material) else 0.0
+    if vf > 0.0 and p_lo < vf:
+        p_lo = vf
+        p_hi = min(max(p_hi, vf + 2.0 * h), hi_b)
+    return p_lo, p_hi
+
+
 @dataclass(frozen=True)
 class ThermalSet:
     """γ·c_p 를 공급하는 **한 압력 구간**의 열 세트 (C58, 브리프 180 C, 결정 (A)).
@@ -1100,6 +1114,14 @@ class Material:
         _below_t_window(self.name, p, t)   # C133 — 창 밑이면 이름 댄 PhaseGap
         return self.phase_at(p).gruneisen(rho, t, t_pot, p)
 
+    def value_floor(self, p: float) -> float:
+        """E-steps note (step edge) — `p` 를 덮는 상(바닥 밑이면 첫 상)의 값 바닥 [Pa]: 그 밑의 값이 상수인 압력(맨틀 표의
+        1 bar 첫 점). 없으면 0. 차분 발판만 읽는다(`value_floor_stencil`) — 걸음 자르기 경계(`stencil_bounds`)가 아니다."""
+        for ph in self.phases:
+            if p <= ph.p_max:
+                return getattr(ph, "p_value_floor", 0.0)
+        return 0.0
+
     def stencil_bounds(self, p: float) -> tuple[float, float]:
         """C157 메모 1 — `p` 를 담은 피적분 경계 구간 (lo, hi]: 상 경계와 각 상의 열 세트 이음매(γ·c_p 구간의 끝).
         0 · 무한은 경계가 아니다. 차분 발판은 이 구간을 넘지 않고(`k_t` · `interior._phase_stencil`), 걸음은 lo 에서 잘린다."""
@@ -1142,6 +1164,7 @@ class Material:
             if p_lo < lo_b:
                 p_lo = lo_b
                 p_hi = min(max(p_hi, p_lo + 2.0 * h), hi_b)
+            p_lo, p_hi = value_floor_stencil(self, p, p_lo, p_hi, h, hi_b)
         if p_hi <= p_lo:
             return 0.0
         d_hi = self.solid_density(p_hi, t, t_pot)

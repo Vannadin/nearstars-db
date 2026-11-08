@@ -456,6 +456,8 @@ def _table_phase_class():
     class TablePhase(eos.Phase):
         """상부 맨틀 창의 광물 집합 — 밀도 · (∂P/∂T)_V · c_V · γ 를 표에서 읽는다. 냉각 곡선 · 열압력 경로를 안 탄다."""
         table_key: str = ""
+        #: E-steps note (step edge) — 이 압력 밑의 값은 격자 첫 점 그대로(`at` 의 max(p, P_FLOOR)) — 차분 발판이 넘지 않는 값 바닥
+        p_value_floor = P_FLOOR
 
         old: object = None                # 원 상 `mgsio3_en` — 표 밖 · 섞임 띠의 짝 (덧붙임 6)
 
