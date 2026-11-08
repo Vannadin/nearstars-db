@@ -818,6 +818,86 @@ class LoadCensus(unittest.TestCase):
             self.assertEqual(left, [], f"{sig!r}: a census child outlived the interrupted parent (it ignores TERM)")
             self.assertLess(took, ck.CENSUS_KILL_GRACE_S / 2, f"{sig!r}: the parent took {took:.1f} s to go")
 
+    def _restore_row(self, mode, sig=None, budget=None, patch_wait=False):
+        """68 B1 (11-08): one census exit path on a --restore entry (10-graph-page, own file engine/chain-explorer.html).
+        The target rewrites that file, changes its mode and leaves a new untracked file in engine/, then ends as MODE
+        says. Returns (parent rc, parent output, file back byte-equal, mode back, new file gone)."""
+        import time as _t
+        own = ck.REPO / "engine" / "chain-explorer.html"
+        stray = ck.REPO / "engine" / "zz_census_restore_probe.tmp"
+        data, fmode = own.read_bytes(), os.stat(own).st_mode & 0o777
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                marker = Path(d) / "wrote"
+                f = Path(d) / "writer.py"
+                f.write_text("import os, signal, time\n"
+                             "def go(mode):\n"
+                             f"    p = {str(own)!r}\n"
+                             "    open(p, 'wb').write(b'planted by the census')\n"
+                             "    os.chmod(p, 0o600)\n"
+                             f"    open({str(stray)!r}, 'w').write('new')\n"
+                             f"    open({str(marker)!r}, 'w').close()\n"
+                             "    if mode == 'rc1':\n        raise RuntimeError('planted failure')\n"
+                             "    if mode == 'ok':\n        return\n"
+                             "    if mode == 'ignore_term':\n        signal.signal(signal.SIGTERM, signal.SIG_IGN)\n"
+                             "    time.sleep(30)\n", encoding="utf-8")
+                parent = Path(d) / "parent.py"
+                pre = ("import subprocess, time\n_w = subprocess.Popen.wait\n"
+                       "def _boom(self, timeout=None):\n    if 'load_census.py' not in str(self.args):\n        return _w(self, timeout)\n"
+                       "    time.sleep(3)\n    raise RuntimeError('planted in the parent')\n"
+                       "subprocess.Popen.wait = _boom\n") if patch_wait else ""
+                parent.write_text(f"import json, sys\nsys.path.insert(0, {str(HERE)!r})\nimport check as ck\n{pre}"
+                                  f"print(ck.census_command('10-graph-page', ['--call', {str(f)!r} + ':go', json.dumps([{mode!r}])], "
+                                  f"flags=['--restore'], budget={budget!r}))\n", encoding="utf-8")
+                pr = subprocess.Popen([sys.executable, "-B", str(parent)], cwd=ck.REPO, stdout=subprocess.PIPE,
+                                      stderr=subprocess.STDOUT, text=True)
+                if sig is not None:
+                    for _ in range(200):
+                        if marker.exists():
+                            break
+                        _t.sleep(0.05)
+                    pr.send_signal(sig)
+                out, _ = pr.communicate(timeout=120)
+                back = own.read_bytes() == data
+                mback = (os.stat(own).st_mode & 0o777) == fmode
+                gone = not stray.exists()
+                wrote = marker.exists()
+            self.assertTrue(wrote, f"{mode}: the target never wrote: {out}")
+            return pr.returncode, out, back, mback, gone
+        finally:
+            own.write_bytes(data)
+            os.chmod(own, fmode)
+            if stray.exists():
+                stray.unlink()
+
+    def test_every_census_exit_path_puts_a_restore_entrys_outputs_back(self):
+        """68 B1 / directing 11-08: every exit path of census_command on a restore entry leaves the entry's file
+        byte-equal (and its mode), and no new untracked file under its directory. Mutant: without the parent's
+        put_back the kill rows keep «planted by the census» (and every row keeps mode 0600)."""
+        rows = {"rc 0": dict(mode="ok"), "rc != 0": dict(mode="rc1"),
+                "exception in the parent": dict(mode="sleep", patch_wait=True),
+                "budget kill": dict(mode="sleep", budget=(2.0, 1.0, "test")),
+                "budget kill + KILL sweep (TERM ignored)": dict(mode="ignore_term", budget=(2.0, 1.0, "test")),
+                "SIGINT": dict(mode="sleep", sig=signal.SIGINT), "SIGTERM": dict(mode="sleep", sig=signal.SIGTERM)}
+        for row, kw in rows.items():
+            rc, out, back, mback, gone = self._restore_row(**kw)
+            self.assertEqual((back, mback, gone), (True, True, True), f"{row}: rc {rc}: {out}")
+            if row.startswith("budget"):
+                self.assertIn("outputs put back byte-equal by the parent", out, row)
+            if row in ("SIGINT", "SIGTERM"):
+                self.assertEqual(rc, -kw["sig"], f"{row}: {out}")
+            if row == "exception in the parent":
+                self.assertIn("planted in the parent", out, row)
+
+    def test_a_restore_that_cannot_put_a_file_back_is_named(self):
+        """68 B1: restore_outputs names what it could not put back; census_command raises it as a RestoreStop (a
+        SystemExit, so the run stops by name)."""
+        snap = {"name": "x", "files": {"engine/__no_such_dir__/out.json": (b"x", 0o644)}, "dirs": ["engine/__no_such_dir__"],
+                "untracked": set()}
+        probs = ck.restore_outputs(snap)
+        self.assertTrue(probs and all("engine/__no_such_dir__/out.json" in q for q in probs), probs)
+        self.assertTrue(issubclass(ck.RestoreStop, SystemExit))
+
     def test_census_budget_reads_the_entry_on_this_machine(self):
         """(2): the budget is measured_s × CENSUS_MARGIN under this machine's key; another machine's or none → None."""
         key = ck.machine_key()

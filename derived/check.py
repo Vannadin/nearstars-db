@@ -27,6 +27,7 @@ import os
 import platform
 import re
 import signal
+import stat
 import subprocess
 import sys
 import tempfile
@@ -548,8 +549,62 @@ def _kill_group_in_handler(p) -> None:
     _signal_group(p.pid, signal.SIGKILL)
 
 
+class RestoreStop(SystemExit):
+    """A census's outputs could not be put back byte-equal: a named STOP, never a quiet continue (68 B1, 11-08)."""
+
+
+def _untracked_under(dirs) -> set:
+    r = subprocess.run(["git", "-C", str(REPO), "ls-files", "--others", "--exclude-standard", "-z", "--", *dirs],
+                       capture_output=True, text=True, check=True)
+    return {x for x in r.stdout.split("\0") if x}
+
+
+def outputs_snapshot(name: str) -> dict:
+    """Before a --restore census starts: bytes and mode of every file the entry writes (None when absent), and the
+    untracked files under their directories (ruling (a)'s scope). The parent holds it, so a killed child cannot lose it."""
+    files = entries(load_list())[name]["files"]
+    snap = {}
+    for f in files:
+        q = REPO / f
+        snap[f] = (q.read_bytes(), stat.S_IMODE(q.stat().st_mode)) if q.is_file() else None
+    dirs = sorted({os.path.dirname(f) or "." for f in files})
+    return {"name": name, "files": snap, "dirs": dirs, "untracked": _untracked_under(dirs)}
+
+
+def restore_outputs(snap: dict) -> list:
+    """Put every snapshotted file back (bytes, mode; removed when it was absent), remove the untracked files that
+    appeared under the output directories, then verify both; the problems that remain, [] when byte-equal."""
+    probs = []
+    for f, v in snap["files"].items():
+        q = REPO / f
+        try:
+            if v is None:
+                if q.exists():
+                    q.unlink()
+            else:
+                if not q.is_file() or q.read_bytes() != v[0]:
+                    q.write_bytes(v[0])
+                if stat.S_IMODE(q.stat().st_mode) != v[1]:
+                    os.chmod(q, v[1])
+        except OSError as err:
+            probs.append(f"{f}: {err}")
+    try:
+        for f in sorted(_untracked_under(snap["dirs"]) - snap["untracked"]):
+            (REPO / f).unlink()
+        extra = sorted(_untracked_under(snap["dirs"]) - snap["untracked"])
+    except (OSError, subprocess.CalledProcessError) as err:
+        extra = [f"(untracked listing: {err})"]
+    for f, v in snap["files"].items():
+        q = REPO / f
+        now = (q.read_bytes(), stat.S_IMODE(q.stat().st_mode)) if q.is_file() else None
+        if now != v:
+            probs.append(f"{f}: not byte-equal to the snapshot after the restore")
+    probs += [f"{f}: new untracked file left" for f in extra]
+    return probs
+
+
 @contextlib.contextmanager
-def _group_dies_with_us(p):
+def _group_dies_with_us(p, on_kill=None):
     """While a census runs in its own session, a SIGINT/SIGTERM to this process kills the census's process group first,
     then restores the previous handler and re-delivers the signal — an interrupted gate leaves no census running (the
     402963 orphan class; directing 11-08). Handlers only install on the main thread; elsewhere this does nothing."""
@@ -560,6 +615,11 @@ def _group_dies_with_us(p):
 
     def handler(sig, _frame):
         _kill_group_in_handler(p)
+        if on_kill is not None:                       # 68 B1: the parent puts the outputs back before it goes
+            try:
+                on_kill()
+            except SystemExit as err:
+                print(err, file=sys.stderr, flush=True)
         # s4r 68 B2 (11-08): the signal stays with this process. A Python handler (default_int_handler) is put back and
         # gets the signal again. Anything else goes to SIG_DFL, so the process ends by the signal: a process started
         # from a non-interactive shell's `&` (the gate pool) inherits SIGINT as SIG_IGN, and putting SIG_IGN back
@@ -595,23 +655,44 @@ def census_command(name: str, target: list, env_extra=None, flags=(), report=Non
     print(f"[CENSUS-START] {name} — {start} · {' '.join(str(x) for x in target[:2])[:160]}", flush=True)
     bud = census_budget(name) if budget == "entry" else budget
     over = False
+    # 68 B1 (11-08): a --restore census's outputs are snapshotted HERE, and put back and verified on every exit path —
+    # rc 0, rc ≠ 0, an exception, the budget kill (with its KILL sweep), SIGINT, SIGTERM — not only by the child,
+    # which a kill stops before its own restore. A failed restore is a RestoreStop.
+    snap = outputs_snapshot(name) if "--restore" in flags else None
+    done = []
+
+    def put_back():
+        if snap is None or done:
+            return
+        done.append(True)
+        probs = restore_outputs(snap)
+        if probs:
+            raise RestoreStop(f"STOP: {name} — the census's outputs were not put back byte-equal: {'; '.join(probs)}")
+
     with tempfile.TemporaryFile("w+") as fo, tempfile.TemporaryFile("w+") as fe:
         p = subprocess.Popen([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", name, *flags, "--", *target],
                              cwd=REPO, env=env, stdout=fo, stderr=fe, text=True, start_new_session=True)
         try:
-            with _group_dies_with_us(p):
-                rc = p.wait(timeout=bud[0] if bud else None)
-        except subprocess.TimeoutExpired:
-            over = True
-            _kill_group(p)
-            rc = p.returncode
+            try:
+                with _group_dies_with_us(p, put_back):
+                    rc = p.wait(timeout=bud[0] if bud else None)
+            except subprocess.TimeoutExpired:
+                over = True
+                _kill_group(p)
+                rc = p.returncode
+        finally:
+            try:
+                if p.poll() is None:                  # an exception left the census running: it must not write after
+                    _kill_group_in_handler(p)         # (polls os.waitpid: the p.wait that raised is not trusted)
+            finally:
+                put_back()
         fo.seek(0)
         fe.seek(0)
         out_text, err_text = fo.read(), fe.read()
     lines = (out_text + err_text).strip().splitlines()
     if over:
         verdict = (f"[LOAD-RED] {name} — over budget {bud[0]:.0f} s (measured {bud[1]:.0f} s on {bud[2]}, × {CENSUS_MARGIN}); "
-                   f"process group killed")
+                   f"process group killed{'; outputs put back byte-equal by the parent' if snap is not None else ''}")
     else:
         verdict = next((ln for ln in lines if ln.startswith("[LOAD")), f"[LOAD-RED] {name} — no census line (rc {rc})")
     tail = " | ".join(t[:160] for t in lines[-3:])
