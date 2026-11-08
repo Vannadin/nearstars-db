@@ -163,8 +163,58 @@ class Globs(unittest.TestCase):
         e = DOC["entries"]["5-c143-inventory"]
         st = ck.stamp("5-c143-inventory", e)
         have = set(st["data"]) | set(st["derived"]) | set(st["code"])
-        want = {f for f in ck.tracked_all() if f.endswith(".py") and f.split("/")[0] in ("engine", "scripts")}
+        want = {f for f in ck.tracked_all(specs=["engine", "scripts"]) if f.endswith(".py")}
         self.assertEqual(want - have, set())
+
+
+class GlobPathspecs(unittest.TestCase):
+    """s4r GATE-INPUTS-DERIVED (b), directing 11-08: a data glob lists only what it can match (`git ls-files -- <glob>`),
+    never the whole tree, so the gate's read trace records the glob and a new file elsewhere is no input."""
+
+    def _repo(self, d):
+        root = Path(d)
+        for f in ("engine/bodies/a.yaml", "engine/other/b.yaml", "README.md"):
+            (root / f).parent.mkdir(parents=True, exist_ok=True)
+            (root / f).write_text("x: 1\n", encoding="utf-8")
+        for argv in (["init", "-q"], ["add", "-A"], ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "t"]):
+            subprocess.run(["git", "-C", d, *argv], check=True, capture_output=True)
+        return root
+
+    def test_a_new_file_under_the_glob_is_an_input_and_an_unrelated_one_is_not(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self._repo(d)
+            self.assertEqual(ck.expand(["engine/bodies/*.yaml"], root=root), ["engine/bodies/a.yaml"])
+            for f in ("engine/bodies/new.yaml", "engine/other/new.yaml", "docs/new.md"):
+                (root / f).parent.mkdir(parents=True, exist_ok=True)
+                (root / f).write_text("x: 2\n", encoding="utf-8")
+                subprocess.run(["git", "-C", d, "add", f], check=True)
+            self.assertEqual(ck.expand(["engine/bodies/*.yaml"], root=root),
+                             ["engine/bodies/a.yaml", "engine/bodies/new.yaml"])
+            # «**/» means zero or more directories: the top level and a subdirectory both match, nothing else does
+            for f in ("engine/top.py", "engine/x/y/deep.py"):
+                (root / f).parent.mkdir(parents=True, exist_ok=True)
+                (root / f).write_text("x = 1\n", encoding="utf-8")
+                subprocess.run(["git", "-C", d, "add", f], check=True)
+            self.assertEqual(ck.expand(["engine/**/*.py"], root=root), ["engine/top.py", "engine/x/y/deep.py"])
+            self.assertEqual(ck.git_spec("engine/**/*.py"), "engine/*.py")
+
+    def test_the_gate_trace_records_the_glob_not_the_tree(self):
+        """Run in a child under scripts/gate_reads (the full gate's PYTHONPATH): the only `gitlist` records are the
+        entries' globs; e4b94d98's `git ls-files` with no pathspec recorded «*» (s4r gate.log l.5690 …)."""
+        with tempfile.TemporaryDirectory() as d:
+            log = Path(d) / "reads.jsonl"
+            env = dict(os.environ, PYTHONPATH=str(ck.REPO / "scripts" / "gate_reads"), GATE_READS_LOG=str(log),
+                       GATE_STEP="derived probe")
+            code = ("import sys; sys.path.insert(0, 'derived'); import check as ck; "
+                    "ck.dag_order(ck.load_list()); ck.data_inputs(ck.entries(ck.load_list())['5-c143-inventory'])")
+            r = subprocess.run([sys.executable, "-B", "-c", code], cwd=ck.REPO, env=env, capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            specs = {json.loads(ln)["path"] for ln in log.read_text(encoding="utf-8").splitlines()
+                     if ln.strip() and json.loads(ln)["kind"] == "gitlist"}
+        globs = {ck.git_spec(p) for e in ck.entries(ck.load_list()).values() for p in e.get("data", []) if "*" in p or "?" in p}
+        self.assertNotIn("*", specs)
+        self.assertTrue(specs, "no gitlist record: the trace did not run")
+        self.assertLessEqual(specs - {"engine", "solver"}, globs)
 
 
 class DynamicImports(unittest.TestCase):

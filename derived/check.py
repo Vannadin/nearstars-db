@@ -119,8 +119,7 @@ def dag_order(doc) -> list:
             if p not in own:
                 raise SystemExit(f"STOP: {name}'s derived input {p} is not a listed derived file")
             ups.add(own[p])
-        files = tracked_all() if any("*" in p or "?" in p for p in e.get("data", [])) else None
-        for p in expand(e.get("data", []), files):        # after expansion (68 n2): a glob match counts too
+        for p in expand(e.get("data", [])):              # after expansion (68 n2): a glob match counts too
             if p in own and p not in e.get("derived", []):
                 raise SystemExit(f"STOP: {name}'s data {'glob matches' if p not in e.get('data', []) else 'lists'} the "
                                  f"derived file {p}; name it under derived")
@@ -281,23 +280,33 @@ def glob_re(pat: str):
     return re.compile(out + r"\Z")
 
 
-def expand(paths, files=None) -> list:
+def expand(paths, files=None, root=REPO) -> list:
     """Data paths with a glob expanded at check time over TRACKED files only (68 n1 on 2be90e97: an untracked stray on
-    one machine is no input, and engine/.venv* is never swept); sorted, repo-relative. A new tracked match is a new input."""
+    one machine is no input, and engine/.venv* is never swept); sorted, repo-relative. A new tracked match is a new input.
+    Without FILES each glob lists only what it can match: `git ls-files -- <spec>`, where spec is the glob with every
+    «**/» and «**» folded to one «*». A plain git pathspec's «*» crosses «/», so spec matches a superset of the glob
+    (engine/**/*.py → engine/*.py also lists engine/x.py, which «engine/**/*.py» means too), and glob_re narrows it.
+    The gate's read trace then records the spec, not the whole tree (s4r GATE-INPUTS-DERIVED (b), directing 11-08)."""
     out = []
     for p in paths:
         if "*" not in p and "?" not in p:
             out.append(p)
             continue
-        if files is None:
-            files = tracked_all()
         rx = glob_re(p)
-        out += sorted(f for f in files if rx.match(f) and not any(s.startswith(".venv") for s in f.split("/")))
+        pool = files if files is not None else tracked_all(root, specs=[git_spec(p)])
+        out += sorted(f for f in pool if rx.match(f) and not any(s.startswith(".venv") for s in f.split("/")))
     return out
 
 
-def tracked_all(root=REPO) -> list:
-    r = subprocess.run(["git", "-C", str(root), "ls-files"], capture_output=True, text=True, check=True)
+def git_spec(glob: str) -> str:
+    """A plain git pathspec matching a superset of GLOB (see expand)."""
+    return re.sub(r"\*+", "*", re.sub(r"\*\*/?", "*", glob))
+
+
+def tracked_all(root=REPO, specs=None) -> list:
+    """Tracked files, all of them, or only those the git pathspecs SPECS can match."""
+    r = subprocess.run(["git", "-C", str(root), "ls-files", *(["--", *specs] if specs else [])],
+                       capture_output=True, text=True, check=True)
     return [ln for ln in r.stdout.splitlines() if ln]
 
 
