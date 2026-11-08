@@ -46,7 +46,9 @@ entries:
     check: {kind: structure_table, table: engine/structure_grid/mars.json,
              tolerance: "structure_grid._recheck within ε (C161; G4 «row 1 keeps ε»)",
              reference_machine: "Linux-x86_64 (the PC landing suites, G5)"}
-    census: {call: "engine/structure_grid.py:build", args: [Mars, null, [2020.8472065056037]], restore: true}   # one grid point (G1)
+    census: {call: "engine/structure_grid.py:build", args: [Mars, null, [2020.8472065056037]], restore: true,   # one grid point (G1)
+             # s4r S5 on the PC: pid start 10:01:36, gone by 10:33:14 on a 30 s poll, so 1898 s is the upper bound
+             budget: {Linux-x86_64: {measured_s: 1898, source: "artifacts sg-gate-golive-s4r 69882c2e2 pc/sg-gate/golive/out-e4b94d98-s4r/extra/census-1-mars-time.log blob 6fc4500de24b5224028926833232686b257bc3f3"}}}
   2-reference-adiabats:
     row: 2
     files: [engine/reference_adiabats.json]
