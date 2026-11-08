@@ -317,6 +317,40 @@ def data_inputs(e: dict, files=None) -> list:
     return [p for p in expand(e.get("data", []), files) if p not in der]
 
 
+# Note, 2026-11-08 (s4r DERIVED-COMMENT-VS-RUNTIME-BLOB, directing ruling 1): the frozen digest rule (prereg
+# pc/sg-gate/prereg-sg-gate.frozen.md 1765b55c §2, STAMP_RULE «source-v1») hashes code without comments and docstrings,
+# so a comment edit reads «stamp unchanged». Two runtime stamps compare raw git blobs instead, and refuse that edit:
+# solver.fall_sets.check_stamp and material_assemblage.s_monotone_load_check. The runtime is the authority, so for an
+# entry whose own files carry such a stamp, every file it names is stamped here by raw blob too (`runtime_blob`), on
+# top of §2's digest. Measured on s4r's control N15: its bands.py comment left 7-fall-sets «stamp unchanged» while
+# material_registry.load() refused all three SLB records. The digest rule is unchanged for every other file.
+def runtime_blob_inputs(e: dict, root=REPO) -> list:
+    """The files a runtime stamp on one of the entry's own files compares by raw git blob, read from those stamps:
+    - a fall-set file (solver/materials/fall_sets/*.json.gz): fall_sets.check_stamp compares blob(solver/<m>.py) for
+      every key of stamp.read_closure.solver, and blob(p) for every key of its `engine` and `solver_data`;
+    - a compact table carrying closure_terms.monotone: s_monotone_load_check compares material_assemblage.module_blob(),
+      the git blob of solver/material_assemblage.py, with monotone.material_assemblage_blob.
+    (material_assemblage's legacy read_blob check reads only an uncompressed fall-set .json; none is shipped.) Raises
+    LookupError when an own file carrying such a stamp cannot be read."""
+    import gzip
+    out = set()
+    for f in e.get("files", []):
+        is_set, is_table = f.startswith("solver/materials/fall_sets/"), f.startswith("solver/materials/tables/")
+        if not (is_set or is_table) or not f.endswith(".json.gz"):
+            continue
+        try:
+            d = json.loads(gzip.decompress((Path(root) / f).read_bytes()))
+        except (OSError, ValueError) as err:
+            raise LookupError(f"{f}: its runtime stamp cannot be read ({err})") from None
+        if is_set:
+            rc = (d.get("stamp") or {}).get("read_closure") or {}
+            out |= {f"solver/{m}.py" for m in rc.get("solver") or {}}
+            out |= set(rc.get("engine") or {}) | set(rc.get("solver_data") or {})
+        elif ((d.get("closure_terms") or {}).get("monotone") or {}).get("material_assemblage_blob"):
+            out.add("solver/material_assemblage.py")
+    return sorted(out)
+
+
 def stamp(name: str, e: dict, art_env=None) -> dict:
     """The stamp of one entry at this tree. Raises LookupError for an input it cannot read (the entry is then red)."""
     mods = closure(e["code"]) if e.get("code") else []
@@ -331,6 +365,7 @@ def stamp(name: str, e: dict, art_env=None) -> dict:
         "out_of_tree": out_of_tree_blobs(e.get("out_of_tree", []), art_env),
         "packages": {p: importlib.metadata.version(p) for p in e.get("packages", [])},
         "external": external_sha(e.get("external")),
+        "runtime_blob": {p: git_blob(REPO / p) for p in runtime_blob_inputs(e)},
     }
     return st
 
@@ -343,13 +378,13 @@ def moved(then: dict | None, now: dict) -> list[str]:
     if then.get("stamp_rule") != dg.STAMP_RULE:
         return [f"stamp_rule {then.get('stamp_rule')!r} is not {dg.STAMP_RULE!r}"]
     out = []
-    for part in ("code", "data", "derived", "out_of_tree", "packages", "external"):
+    for part in ("code", "data", "derived", "out_of_tree", "packages", "external", "runtime_blob"):
         a, b = then.get(part, {}), now.get(part, {})
         for k in sorted(set(a) | set(b)):
             if k == "_ref":
                 continue
             if a.get(k) != b.get(k):
-                tag = {"derived": "input"}.get(part, part)
+                tag = {"derived": "input", "runtime_blob": "runtime-blob"}.get(part, part)
                 out.append(f"{tag} {k} " + ("added" if k not in a else "dropped" if k not in b else "moved"))
     return out
 

@@ -167,6 +167,53 @@ class Globs(unittest.TestCase):
         self.assertEqual(want - have, set())
 
 
+class RuntimeBlob(unittest.TestCase):
+    """s4r DERIVED-COMMENT-VS-RUNTIME-BLOB, directing ruling 1 (11-08): a file a runtime stamp compares by raw blob is
+    stamped by raw blob here too, so a comment edit the runtime refuses never reads «stamp unchanged»."""
+
+    def test_the_list_is_read_from_the_runtime_stamps(self):
+        es = ck.entries(ck.load_list())
+        got = {n: ck.runtime_blob_inputs(e) for n, e in es.items() if ck.runtime_blob_inputs(e)}
+        self.assertEqual(sorted(got), ["7-fall-sets", "8d-silicate-slb"])
+        self.assertIn("engine/bands.py", got["7-fall-sets"])
+        self.assertIn("solver/material_view.py", got["7-fall-sets"])
+        self.assertEqual(got["8d-silicate-slb"], ["solver/material_assemblage.py"])
+        # every name the shipped fall-set stamps compare, and nothing else
+        import gzip
+        want = set()
+        for f in es["7-fall-sets"]["files"]:
+            rc = json.loads(gzip.decompress((ck.REPO / f).read_bytes()))["stamp"]["read_closure"]
+            want |= {f"solver/{m}.py" for m in rc["solver"]} | set(rc["engine"]) | set(rc.get("solver_data") or {})
+        self.assertEqual(set(got["7-fall-sets"]), want)
+
+    def test_n15s_comment_edit_moves_7_fall_sets(self):
+        """N15's exact plant (controls.py comment_edit: the first comment token after line 1 of engine/bands.py gets
+        «  (N15 control)»), applied to a copy the stamp reads in place of the tree file. §2's digest does not move;
+        the runtime blob does, so 7-fall-sets is «stamp moved». Mutant: without the runtime_blob part, moved() is []."""
+        import io
+        import tokenize
+        e = ck.entries(ck.load_list())["7-fall-sets"]
+        then = ck.stamp("7-fall-sets", e)
+        src = (ck.REPO / "engine" / "bands.py").read_text(encoding="utf-8")
+        i = next(t.start[0] - 1 for t in tokenize.generate_tokens(io.StringIO(src).readline)
+                 if t.type == tokenize.COMMENT and t.start[0] > 1)
+        lines = src.split("\n")
+        lines[i] += "  (N15 control)"
+        with tempfile.TemporaryDirectory() as d:
+            planted = Path(d) / "bands.py"
+            planted.write_text("\n".join(lines), encoding="utf-8")
+            real = (ck.REPO / "engine" / "bands.py").resolve()
+            swap = lambda q: planted if Path(q).resolve() == real else q          # noqa: E731
+            blob0, dig0 = ck.git_blob, dg.digest
+            ck.git_blob, dg.digest = (lambda q: blob0(swap(q))), (lambda q: dig0(swap(q)))
+            try:
+                now = ck.stamp("7-fall-sets", e)
+            finally:
+                ck.git_blob, dg.digest = blob0, dig0
+        self.assertEqual(now["code"], then["code"])                              # the digest rule: unchanged
+        self.assertEqual(ck.moved(then, now), ["runtime-blob engine/bands.py moved"])
+
+
 class GlobPathspecs(unittest.TestCase):
     """s4r GATE-INPUTS-DERIVED (b), directing 11-08: a data glob lists only what it can match (`git ls-files -- <glob>`),
     never the whole tree, so the gate's read trace records the glob and a new file elsewhere is no input."""
