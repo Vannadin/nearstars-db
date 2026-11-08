@@ -550,8 +550,14 @@ def main(argv) -> int:
                                              f"census report (started with -I/-E, or killed): their loads are unseen"]
     over = path_overrides()
     before = sorted(set(early) | set(tool_loaded))
+    # s4r item (1): the line names the judged set (`before`); other project modules the interpreter loaded at start
+    # (the gate's PYTHONPATH puts scripts/gate_reads/sitecustomize.py there) are allowed and listed apart, not as «none»'s
+    # replacement
+    startup = [m for m in classify(sorted(pre))[0] if m not in before]
+    # no «): » in this clause: pc-golive.sh's S5 summary cuts the line at its last «): »
+    allowed = f" · also loaded at interpreter start, allowed — {', '.join(startup)}" if startup else ""
     print(f"  {name}: project modules loaded before the target (not judged; must be none from engine/ or solver/, and "
-          f"none the census tooling loaded): {', '.join(classify(sorted(pre))[0]) or 'none'}", flush=True)
+          f"none the census tooling loaded): {', '.join(before) or 'none'}{allowed}", flush=True)
     masked = [f"loaded into the census process before the target, so not judged (68 B1): {', '.join(before)}"] \
         if before else []
     if out or ext_red or miss or over or masked or oot_red:

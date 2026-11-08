@@ -520,9 +520,9 @@ class LoadCensus(unittest.TestCase):
         self.assertEqual(wt.returncode, 0, wt.stdout + wt.stderr)                       # the target's own checkout
         self.assertIn("not declared in the entry's out_of_tree: none", wt.stdout)
 
-    def _run_p1(self, mod, restore):
+    def _run_p1(self, mod, restore, env=None):
         """68's P1 / P1b: a computed-name import of MOD from inside the target, for row 10 (its closure holds neither
-        solver/fall_sets.py nor engine/albedo_table.py), with and without --restore."""
+        solver/fall_sets.py nor engine/albedo_table.py), with and without --restore. ENV: the census's environment."""
         self.assertNotIn("solver/fall_sets.py", self.row10)
         with tempfile.TemporaryDirectory() as d:
             f = Path(d) / "plant_p1.py"
@@ -531,7 +531,22 @@ class LoadCensus(unittest.TestCase):
                          f"def p1():\n    importlib.import_module(''.join({[mod[:5], mod[5:]]!r}))\n", encoding="utf-8")
             flags = ["--restore"] if restore else []
             return subprocess.run([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", "10-graph-page",
-                                   *flags, "--", "--call", f"{f}:p1"], cwd=ck.REPO, capture_output=True, text=True)
+                                   *flags, "--", "--call", f"{f}:p1"], cwd=ck.REPO, capture_output=True, text=True,
+                                  env=env)
+
+    def test_p1_under_the_gates_pythonpath_still_says_none(self):
+        """s4r item (1): in the full gate, check.sh puts scripts/gate_reads first on PYTHONPATH, so the census process
+        loads its sitecustomize at start. That module is neither engine/ nor solver/ nor the tooling's: the judged set
+        stays «none», and the module is listed apart. Mutant: the line printing every startup project module (the
+        e4b94d98 form) prints «…loaded): scripts/gate_reads/sitecustomize.py» here and this test goes red."""
+        with tempfile.TemporaryDirectory() as d:
+            env = dict(os.environ, PYTHONPATH=str(ck.REPO / "scripts" / "gate_reads"),
+                       GATE_READS_LOG=str(Path(d) / "reads.jsonl"), GATE_STEP="derived/test_derived.py")
+            r = self._run_p1("solver.fall_sets", False, env)
+        self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
+        self.assertIn("solver/fall_sets.py", r.stdout.split("[LOAD-RED]")[1])
+        self.assertIn("(not judged; must be none from engine/ or solver/, and none the census tooling loaded): none · "
+                      "also loaded at interpreter start, allowed — scripts/gate_reads/sitecustomize.py", r.stdout)
 
     def test_p1_a_module_check_py_imports_is_still_judged(self):
         """68 HOLD B1 on 5db3db7f: check.py imports solver.fall_sets; when the census tooling imported check in-process,
