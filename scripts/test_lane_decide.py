@@ -77,6 +77,20 @@ def test_size_change_noted():
     assert ok and any("크기 바뀜" in n for n in notes)
 
 
+def test_size_change_noted_on_a_rejected_log():
+    """s4r C59-NOTE-DROPPED (지휘 11-08): the s4r shape — an unexpected FAIL first (the unwired list), then C59's step
+    with a moved engine value. The verdict is False, and the value note still comes back, after the reason. Mutant: the
+    old return (`return False, [why]` with the notes dropped) gives no «크기 바뀜» here."""
+    first = ["  [FAIL] 안 엮인 시험 engine/test_d2_nan.py"]
+    ok, why = ld.expected_red_only(log(first, PC_BLOCKS[C59["step"]]), [C59])
+    assert not ok
+    assert why[0].startswith("기대 밖 FAIL: [FAIL] 안 엮인 시험 engine/test_d2_nan.py"), why
+    assert "참고: ⚠ C59 core_radius_fraction 엔진 0.5003 · 보드 0.5398 (옛 0.5002 · 0.5398) — 크기 바뀜" in why, why
+    # an unmoved value gives no note on a rejected log either
+    same = _edit(PC_BLOCKS[C59["step"]], "엔진    0.5003", "엔진    0.5002")
+    assert not any("크기 바뀜" in w for w in ld.expected_red_only(log(first, same), [C59])[1])
+
+
 def test_no_cost_line_rejected():
     assert not run(log([f"    [어긋남] nmoi 엔진 0.3571 · 보드 0.3634", f"  [FAIL] {M} — 비0 종료 (이 단계가 fail=1 을 세웠다)"]))
 

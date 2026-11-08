@@ -193,10 +193,36 @@ def _table_trigger_rows(lines, table, notes):
     return claimed, None
 
 
+def _value_notes(lines: list[str], table: list[dict]) -> list[str]:
+    """기대 칸(step_mismatch, values 있음)마다 그 단계 구간의 `[어긋남]` 값이 등록 값 쌍(엔진 · 보드)과 다르면 한 줄
+    알림 — 판정과 따로 센다 (s4r C59-NOTE-DROPPED, 지휘 11-08: 불인정 판에서도 알림은 찍힌다)."""
+    out = []
+    for row in table:
+        if row.get("kind", "step_mismatch") != "step_mismatch" or not row.get("values"):
+            continue
+        rng = _step_range(lines, row["step"])
+        if rng is None:
+            continue
+        for l in rng:
+            m = re.match(r"\s*\[어긋남\]\s+(\S+)\s+엔진\s+(\S+)\s+·\s+보드\s+(\S+)", l)
+            old = (row["values"] or {}).get(m.group(1)) if m else None
+            if m and old and (float(m.group(2)), float(m.group(3))) != (float(old[0]), float(old[1])):
+                out.append(f"⚠ {row['id']} {m.group(1)} 엔진 {m.group(2)} · 보드 {m.group(3)} (옛 {old[0]} · {old[1]}) — 크기 바뀜")
+    return out
+
+
 def expected_red_only(text: str, table: list[dict]) -> tuple[bool, list[str]]:
     """`rc≠0` 로그의 **모든** `[FAIL]` 줄이 기대 칸의 단계 FAIL 줄이고, 그 단계 구간의 `[어긋남]` 키
     집합이 칸의 `mismatch_keys` 와 정확히 같을 때만 참. ⚠ `[FAIL]` 이 0 줄이면 불인정 — 빈 집합에서
-    «전부가 기대 줄» 이 참이 되는 꼴을 막는다 (합성 ④)."""
+    «전부가 기대 줄» 이 참이 되는 꼴을 막는다 (합성 ④). 불인정이면 이유 뒤에 값 알림(`_value_notes`)을 «참고:» 로
+    붙인다 — 다른 빨강 뒤에서 등록 값이 말없이 바뀌지 않게 (s4r C59-NOTE-DROPPED)."""
+    ok, why = _expected_red_only(text, table)
+    if not ok:
+        why = why + [f"참고: {n}" for n in _value_notes(text.split("\n"), table)]
+    return ok, why
+
+
+def _expected_red_only(text: str, table: list[dict]) -> tuple[bool, list[str]]:
     lines = text.split("\n")
     fails = [l.strip() for l in lines if re.match(r"\s*\[FAIL\]", l)]
     if not fails:
