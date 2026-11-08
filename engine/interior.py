@@ -3167,6 +3167,7 @@ def _fold_answer(att: dict, cross, a: dict, extra_note: str = ""):
         _contract_tag(st, {"exit": "fold", "g": cross[3], "pin": loc.get("pin", 0.0 if cross[3] == 0.0 else None)})
     _refuse_if_below_floor(st, a["core_material"])
     _refuse_if_water_filled(st)
+    _refuse_if_value_bound_mixed(st)
     w = att["walk"]
     band = _fold_band(att, cross, a)
     info = {"turning": [(math.exp(t[2]), math.exp(t[1]) / 1e9, t_pot * math.exp(t[3])) for t in w.turning],
@@ -3995,6 +3996,7 @@ def _shoot_body_raw(mass_kg: float, cmf: float, imf: float,
               + " · ".join("고체" if f is None else f"[{f[0]:.2f}, {f[1]:.2f}] GPa" for f in reps))
     _refuse_if_below_floor(st, core_material)
     _refuse_if_water_filled(st)
+    _refuse_if_value_bound_mixed(st)
     met = _surface_temperature_met(st, t_pot)
     if not met and reps is None and st.t_surface > 0.0 and not st.crust_blocked:
         # C152 메모 8 — 괄호도 연장도 없이 예산이 끝나 표면 온도가 허용 밖: 이름 없는 converged=False 대신 이름 댄 거절.
@@ -4141,6 +4143,27 @@ def _refuse_if_water_filled(st) -> None:
             _HOT_WATER_PREAMBLE
             + f"물기둥이 끓는곡선을 건넘 — {p0 / 1e6:.4g} MPa · {t0:.0f} K{sat}, 액체 ↔ 증기가 {n} 번 뒤집힌다. "
               "두 상 섞임을 다루는 표현이 없다. 시험값이 아니라 **수렴한 답**이 그렇다.", t0)
+
+
+#: E-steps note 6 — 혼합 발판 값 경계 거절 문구의 앞머리(지휘석 11-08: 닿는 몸이 없으면 이름 댄 거절).
+VALUE_BOUND_MIXED_HEAD = "혼합 발판이 성분의 값 경계를 건넘(E-steps note 6, 선언한 틈)"
+
+
+def _refuse_if_value_bound_mixed(st) -> None:
+    """**시행은 값, 답은 거절** (E-steps note 6, 지휘석 11-08) — `_refuse_if_water_filled` 와 같은 꼴.
+
+    순수 재료의 발판은 값 경계(바닥 · 천장)에서 한쪽으로 접혀 기울기가 이어진다(`eos.value_floor_stencil`). 혼합
+    (`eos.mix`)은 접지 않는다 — 성분마다 경계가 달라 한쪽 발판이 정의되지 않는다. 그런 발판은 경계 너머 성분을
+    끝값으로 읽어 기울기가 반이거나 0 이 될 수 있다. 출하 · 검증 · 시험 몸 어느 것도 이 자리에 닿지 않으므로
+    (노트 6 §6.2 측정), 수렴한 답이 이 건넘을 들고 있으면 값 대신 거절한다. 시행 사격은 이 칸을 읽지 않는다."""
+    if getattr(st, "value_bound_mixed", None) is not None:
+        n, first = st.value_bound_mixed
+        name, p0, bound = first if first is not None else ("?", float("nan"), float("nan"))
+        raise PhaseGap(
+            name, p0,
+            f"{VALUE_BOUND_MIXED_HEAD} — 혼합 재료 {name} 의 발판이 {p0 / 1e9:.4g} GPa 에서 성분 값 경계 "
+            f"{bound / 1e9:.4g} GPa 를 건넌 읽기가 이 답에 {n} 번 있다. 혼합 발판은 경계에서 접히지 않아 그 자리 "
+            "단열 기울기가 반이거나 0 일 수 있다. 시험값이 아니라 **수렴한 답**이 그렇다.")
 
 
 def _refuse_if_below_floor(st, core_material: str) -> None:
@@ -5244,6 +5267,7 @@ def solve(mass_earth: float,
     _BASAL_INFO.clear()
     _FAMILY_INFO.clear()
     surf_fallbacks0 = SURF_RHO_FALLBACKS[0]     # C164 규칙 3 — 이 풀이의 표면 반 걸음 rho0 물러남 셈의 시작점
+    vb_mixed0 = eos.VALUE_BOUND_MIXED["n"]     # E-steps note 6 — 이 풀이(시행 포함)의 혼합 발판 값 경계 건넘 셈의 시작점
     _GRAZE_INFO.clear()
     if _SOLVE_DEPTH[0] <= 1:
         _FOLD_INFO.clear()               # 핵 접힘 — 이어 걷기의 사실은 가장 바깥 풀이마다 비운다(R2 의 두 배 풀이는 안쪽)
@@ -5407,6 +5431,8 @@ def solve(mass_earth: float,
         notes.extend(fold_note(fold_info))
     if st.plateau_band:                # C152 메모 8 ③ — 답에 평탄 띠(바깥 끝 가운데의 구조가 들고 온 메모 한 줄)
         notes.append(st.plateau_band)
+    if eos.VALUE_BOUND_MIXED["n"] > vb_mixed0:    # E-steps note 6 — 답은 0 이어야 나온다(위 거절); 시행의 건넘은 셈을 메모로
+        notes.append(f"{VALUE_BOUND_MIXED_HEAD} — 시행 사격에서 {eos.VALUE_BOUND_MIXED['n'] - vb_mixed0} 번, 답에서 0 번")
     if SURF_RHO_FALLBACKS[0] > surf_fallbacks0:   # C164 규칙 3 — 조용한 차가운 표면은 없다: 셈을 메모로
         notes.append(f"표면 반 걸음이 그 온도의 1 bar 밀도를 못 내 차가운 rho0 로 물러남 {SURF_RHO_FALLBACKS[0] - surf_fallbacks0} 번 "
                      "(C164 규칙 3) — 이 풀이의 반지름에 옛 표면 톱니가 남을 수 있다")

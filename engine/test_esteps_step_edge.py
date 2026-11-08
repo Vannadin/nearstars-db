@@ -18,6 +18,10 @@ Under E-steps (T as an RK4 state) a last-step stage that lands within ~10 Pa of 
    eos.VALUE_BOUND_MIXED counts it (integrate hangs the per-structure count on `value_bound_mixed`). For hot water the
    crossing stencil's lower point reads the part under RHO_MIN, which water_hot.CLAMPED counts, so a converged answer
    with it is refused by C122 R1 (`hot_water_clamped`).
+6. Directing 11-08: no shipped, validation or test body reaches a mixture crossing (note 6 §6.2), so a converged answer
+   carrying `value_bound_mixed` is refused by name (interior._refuse_if_value_bound_mixed, VALUE_BOUND_MIXED_HEAD).
+   A water-free mixture (Mars table + silicate) crossing 1 bar is counted with no hot-water clamp, so C122 R1 does not
+   cover it; the refusal does. Both answer sites that call the water refusal call it.
 3. Mars 1500 K, sulphur fixing box_ceiling with c8's probe cmf 0.2779053215587793 (a planted input, not the anchor's
    cmf), one fixed p_c, six T_c 2e-5 K apart across the old jump: on, every neighbour
    step in surface T is within 3× the median; off (control), one step is over 100× the median.
@@ -143,6 +147,35 @@ row(type(mix).__name__ == "Mixture" and got == (pb * (1 - 1e-4), pb * (1 + 1e-4)
 mix.density(pb * (1 - 1e-4), TH, 0.0)
 row(water_hot.CLAMPED["n"] > c0, f"건넌 발판의 아래 끝 읽기가 뜨거운 물 클램프를 센다 (CLAMPED {c0} → {water_hot.CLAMPED['n']}) "
                                  "— 답이면 C122 R1 거절")
+
+print("\n6. 혼합 건넘은 답이면 이름 댄 거절(지휘석 11-08: 출하 · 검증 · 시험 몸 어느 것도 안 닿음 → STOP)")
+# 물 없는 혼합(맨틀 표 + 규산염)은 C122 R1 이 못 잡는다 — 바닥 1 bar 를 건넌 발판은 VALUE_BOUND_MIXED 만 센다
+mix2 = eos.mix("table_rock_note6", "시험 혼합 2", (mat, 0.5), (eos.MATERIALS["silicate"], 0.5))
+n0, c0 = eos.VALUE_BOUND_MIXED["n"], water_hot.CLAMPED["n"]
+with switch(True):
+    eos.value_floor_stencil(mix2, FLOOR, FLOOR * (1 - 1e-4), FLOOR * (1 + 1e-4), FLOOR * 1e-4, math.inf, T)
+row(eos.VALUE_BOUND_MIXED["n"] == n0 + 1 and water_hot.CLAMPED["n"] == c0,
+    f"물 없는 혼합의 바닥 건넘: 셈 +1, 뜨거운 물 클램프 그대로({c0}) — C122 R1 밖")
+first = eos.VALUE_BOUND_MIXED["first"]
+try:
+    interior._refuse_if_value_bound_mixed(types.SimpleNamespace(value_bound_mixed=(3, ("table_rock_note6", FLOOR, FLOOR))))
+    got = None
+except eos.PhaseGap as e:
+    got = e
+row(got is not None and got.material == "table_rock_note6" and got.pressure_pa == FLOOR
+    and str(got).startswith(interior.VALUE_BOUND_MIXED_HEAD) and "3 번" in str(got),
+    f"value_bound_mixed 가 있는 답 → PhaseGap «{interior.VALUE_BOUND_MIXED_HEAD}» (재료 · 압력 · 셈)")
+try:
+    interior._refuse_if_value_bound_mixed(types.SimpleNamespace(value_bound_mixed=None))
+    clean = True
+except eos.PhaseGap:
+    clean = False
+row(clean, "value_bound_mixed 없음(None) → 거절 없음")
+# 답을 내는 두 자리(사격 답 · 접힘 답)가 물 거절 바로 뒤에서 부른다 — 소스에서 셈
+src = Path(interior.__file__).read_text()
+pair = "    _refuse_if_water_filled(st)\n    _refuse_if_value_bound_mixed(st)\n"
+row(src.count("_refuse_if_water_filled(st)\n") == 2 and src.count(pair) == 2,
+    "물 거절을 부르는 두 답 자리 모두 혼합 거절을 부름")
 
 print("\n3. 화성 1500 K (cmf 0.27790532, 심은 입력) — 고정 중심압에서 T_c 여섯 점(2e-5 K 간격, 옛 뜀을 가로지름)의 표면 T")
 TCS = [2487.84860 + 2e-5 * i for i in range(6)]
