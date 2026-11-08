@@ -214,6 +214,37 @@ class RuntimeBlob(unittest.TestCase):
         self.assertEqual(ck.moved(then, now), ["runtime-blob engine/bands.py moved"])
 
 
+class MissingInputs(unittest.TestCase):
+    """s4r 68 n4 (directing 11-08): a path a stamp part names but the tree lacks is a named red, not a traceback."""
+
+    def test_a_missing_runtime_blob_file_is_named(self):
+        e = ck.entries(ck.load_list())["7-fall-sets"]
+        real = ck.runtime_blob_inputs
+        ck.runtime_blob_inputs = lambda e, root=ck.REPO: real(e, root) + ["solver/zz_gone_module.py"]
+        try:
+            with self.assertRaisesRegex(LookupError, r"^runtime-blob solver/zz_gone_module\.py missing$"):
+                ck.stamp("7-fall-sets", e)
+        finally:
+            ck.runtime_blob_inputs = real
+
+    def test_missing_files_data_and_derived_are_named(self):
+        e = ck.entries(ck.load_list())["9-hhe-table"]
+        for part, edit in (("files", lambda x: x.update(files=x["files"] + ["engine/zz_gone.py"])),
+                           ("data", lambda x: x.update(data=list(x.get("data", [])) + ["engine/zz_gone.yaml"])),
+                           ("derived", lambda x: x.update(derived=list(x.get("derived", [])) + ["engine/zz_gone.json"]))):
+            x = json.loads(json.dumps(e))
+            edit(x)
+            with self.assertRaisesRegex(LookupError, rf"^{part} engine/zz_gone\.\w+ missing$"):
+                ck.stamp("9-hhe-table", x)
+
+    def test_the_judge_names_it_red(self):
+        e = json.loads(json.dumps(ck.entries(ck.load_list())["9-ammonia-table"]))
+        e["data"] = list(e.get("data", [])) + ["engine/zz_gone.yaml"]
+        out = []
+        self.assertEqual(ck.judge_entry("9-ammonia-table", e, out=out.append), 1)
+        self.assertTrue(any("an input cannot be read: data engine/zz_gone.yaml missing" in ln for ln in out), out)
+
+
 class GlobPathspecs(unittest.TestCase):
     """s4r GATE-INPUTS-DERIVED (b), directing 11-08: a data glob lists only what it can match (`git ls-files -- <glob>`),
     never the whole tree, so the gate's read trace records the glob and a new file elsewhere is no input."""

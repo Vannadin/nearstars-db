@@ -364,6 +364,18 @@ def runtime_blob_inputs(e: dict, root=REPO) -> list:
     return sorted(out)
 
 
+def _blobs(part: str, paths) -> dict:
+    """{path: git blob} for one stamp part; a path missing from the tree is LookupError «<part> <path> missing», the
+    entry's named red, never a FileNotFoundError traceback (s4r 68 n4, directing 11-08)."""
+    out = {}
+    for p in paths:
+        q = REPO / p
+        if not q.is_file():
+            raise LookupError(f"{part} {p} missing")
+        out[p] = git_blob(q)
+    return out
+
+
 def stamp(name: str, e: dict, art_env=None) -> dict:
     """The stamp of one entry at this tree. Raises LookupError for an input it cannot read (the entry is then red)."""
     mods = closure(e["code"]) if e.get("code") else []
@@ -371,14 +383,14 @@ def stamp(name: str, e: dict, art_env=None) -> dict:
         "entry": name,
         "stamp_rule": dg.STAMP_RULE,
         "python": platform.python_version(),
-        "files": {f: git_blob(REPO / f) for f in e["files"]},
+        "files": _blobs("files", e["files"]),
         "code": {m: dg.digest(REPO / m) for m in mods},
-        "data": {p: git_blob(REPO / p) for p in data_inputs(e)},
-        "derived": {p: git_blob(REPO / p) for p in e.get("derived", [])},
+        "data": _blobs("data", data_inputs(e)),
+        "derived": _blobs("derived", e.get("derived", [])),
         "out_of_tree": out_of_tree_blobs(e.get("out_of_tree", []), art_env),
         "packages": {p: importlib.metadata.version(p) for p in e.get("packages", [])},
         "external": external_sha(e.get("external")),
-        "runtime_blob": {p: git_blob(REPO / p) for p in runtime_blob_inputs(e)},
+        "runtime_blob": _blobs("runtime-blob", runtime_blob_inputs(e)),
     }
     return st
 
