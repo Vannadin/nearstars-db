@@ -124,7 +124,8 @@ try:
 except ck.NotRun:
     art = None
 print(json.dumps({"files": e["files"], "inside": sorted(inside), "ext": ext, "ext_sha": dict(st.get("external") or {}),
-                  "oot": list(e.get("out_of_tree") or []), "art": art, "out_only": ck.output_only_dirs(name, e)}))
+                  "oot": list(e.get("out_of_tree") or []), "art": art, "out_only": ck.output_only_dirs(name, e),
+                  "scratch": ck.scratch_paths(name, e)}))
 """
 _INFO: dict = {}
 
@@ -350,13 +351,14 @@ def untracked(root: Path = REPO, specs=None) -> set:
     return {x for x in out.split("\0") if x}
 
 
-def remove_new(before: set, root: Path = REPO, specs=None, out_only=()) -> tuple:
+def remove_new(before: set, root: Path = REPO, specs=None, out_only=(), scratch=()) -> tuple:
     """Untracked files under SPECS the census run created (not there before it): (removed, strays). Only a file inside
     a declared output-only dir (OUT_ONLY, check.output_only_dirs) is removed; any other is left in place and returned
-    as a stray, the census's named red (s4r n5: a mixed dir such as engine/ is never a delete scope)."""
+    as a stray, the census's named red (s4r n5: a mixed dir such as engine/ is never a delete scope). A declared
+    scratch path (SCRATCH, check.scratch_paths) is removed wherever it sits (68 B1 on dcafe69b)."""
     removed, strays = [], []
     for f in sorted(untracked(root, specs) - before):
-        if any(f.startswith(d.rstrip("/") + "/") for d in out_only):
+        if f in scratch or any(f.startswith(d.rstrip("/") + "/") for d in out_only):
             (root / f).unlink()
             removed.append(f)
         else:
@@ -542,7 +544,8 @@ def main(argv) -> int:
     sys.stdout.flush()
     if restore:                                          # a build census writes the entry's own files: put the pre-run bytes back
         print(restore_own(name, snap), flush=True)
-        new, strays = remove_new(before, specs=output_specs(name), out_only=entry_info(name)["out_only"])
+        info = entry_info(name)
+        new, strays = remove_new(before, specs=output_specs(name), out_only=info["out_only"], scratch=info["scratch"])
         if new:
             print(f"  {name}: removed the untracked files the census run created: {', '.join(new)}", flush=True)
         for f in strays:

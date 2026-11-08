@@ -971,6 +971,45 @@ class LoadCensus(unittest.TestCase):
                 if q.exists():
                     q.unlink()
 
+    def test_a_declared_scratch_path_is_removed_and_an_undeclared_sibling_is_a_stray(self):
+        """68 B1 on dcafe69b: 9-hhe-table declares engine/hhe_table.py.part (make_hhe_table.py writes it), so the restore
+        removes it in mixed engine/; an undeclared sibling stays, named. Mutant (no scratch list): the .part is a stray."""
+        e = ck.entries(ck.load_list())["9-hhe-table"]
+        self.assertEqual(ck.scratch_paths("9-hhe-table", e), ["engine/hhe_table.py.part"])
+        part = ck.REPO / "engine" / "hhe_table.py.part"
+        sib = ck.REPO / "engine" / "hhe_table.py.zz_other"
+        self.assertFalse(part.exists() or sib.exists(), "leftover from another run")
+        snap = {"name": "t", "files": {}, "dirs": ["engine"], "untracked": ck._untracked_under(["engine"]),
+                "out_only": ck.output_only_dirs("9-hhe-table", e), "scratch": ck.scratch_paths("9-hhe-table", e)}
+        try:
+            part.write_text("body")
+            sib.write_text("x")
+            probs, strays = ck.restore_outputs(snap)
+            self.assertEqual((probs, strays), ([], ["engine/hhe_table.py.zz_other"]))
+            self.assertFalse(part.exists())
+            self.assertTrue(sib.is_file())
+        finally:
+            for q in (part, sib):
+                if q.exists():
+                    q.unlink()
+
+    def test_the_childs_sweep_removes_a_declared_scratch_path(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            (root / "engine").mkdir()
+            before = self.lc.untracked(root, ["engine"])
+            (root / "engine" / "t.py.part").write_text("body")
+            (root / "engine" / "t.py.other").write_text("x")
+            got = self.lc.remove_new(before, root, ["engine"], [], ["engine/t.py.part"])
+            self.assertEqual(got, (["engine/t.py.part"], ["engine/t.py.other"]))
+
+    def test_a_tracked_path_cannot_be_declared_scratch(self):
+        e = json.loads(json.dumps(ck.entries(ck.load_list())["9-hhe-table"]))
+        e["census"]["scratch"] = ["engine/hhe_table.py"]
+        with self.assertRaisesRegex(SystemExit, r"^STOP: 9-hhe-table: census.scratch .* covers tracked files: engine/hhe_table.py"):
+            ck.scratch_paths("9-hhe-table", e)
+
     def test_a_mixed_dir_cannot_be_declared_output_only(self):
         e = json.loads(json.dumps(ck.entries(ck.load_list())["10-graph-page"]))
         e.setdefault("census", {})["output_dirs"] = ["engine"]

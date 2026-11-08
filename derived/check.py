@@ -591,12 +591,32 @@ def output_only_dirs(name: str, e: dict) -> list:
     is a named STOP — a mixed dir is never a delete scope."""
     dirs = list((e.get("census") or {}).get("output_dirs") or [])
     if dirs:
-        r = subprocess.run(["git", "-C", str(REPO), "ls-files", "--", *dirs], capture_output=True, text=True, check=True)
-        other = sorted(set(r.stdout.split()) - set(e["files"]))
+        r = subprocess.run(["git", "-C", str(REPO), "ls-files", "-z", "--", *dirs], capture_output=True, text=True,
+                           check=True)
+        other = sorted({x for x in r.stdout.split("\0") if x} - set(e["files"]))
         if other:
             raise SystemExit(f"STOP: {name}: census.output_dirs {dirs} holds tracked files that are not its own: "
                              f"{', '.join(other[:5])}")
     return sorted(dirs)
+
+
+def scratch_paths(name: str, e: dict) -> list:
+    """The entry's declared census.scratch: exact paths its build writes and leaves (make_hhe_table.py's
+    engine/hhe_table.py.part), which a --restore census may delete wherever they sit (68 B1 on dcafe69b). Each must be
+    untracked and cover no tracked path; otherwise a named STOP."""
+    paths = list((e.get("census") or {}).get("scratch") or [])
+    if paths:
+        r = subprocess.run(["git", "-C", str(REPO), "ls-files", "-z", "--", *paths], capture_output=True, text=True,
+                           check=True)
+        hit = sorted(x for x in r.stdout.split("\0") if x)
+        if hit:
+            raise SystemExit(f"STOP: {name}: census.scratch {paths} covers tracked files: {', '.join(hit[:5])}")
+    return sorted(paths)
+
+
+def deletable(f: str, out_only, scratch) -> bool:
+    """A new untracked file a --restore census may delete: a declared scratch path, or inside an output-only dir."""
+    return f in scratch or any(f.startswith(d.rstrip("/") + "/") for d in out_only)
 
 
 def stray_note(strays) -> str:
@@ -614,8 +634,10 @@ def outputs_snapshot(name: str) -> dict:
         q = REPO / f
         snap[f] = (q.read_bytes(), stat.S_IMODE(q.stat().st_mode)) if q.is_file() else None
     dirs = sorted({os.path.dirname(f) or "." for f in files})
-    return {"name": name, "files": snap, "dirs": dirs, "untracked": _untracked_under(dirs),
-            "out_only": output_only_dirs(name, e)}
+    scratch = scratch_paths(name, e)
+    return {"name": name, "files": snap, "dirs": sorted(set(dirs) | {os.path.dirname(f) or "." for f in scratch}),
+            "untracked": _untracked_under(sorted(set(dirs) | {os.path.dirname(f) or "." for f in scratch})),
+            "out_only": output_only_dirs(name, e), "scratch": scratch}
 
 
 def restore_outputs(snap: dict) -> tuple:
@@ -636,7 +658,7 @@ def restore_outputs(snap: dict) -> tuple:
                     os.chmod(q, v[1])
         except OSError as err:
             probs.append(f"{f}: {err}")
-    inside = lambda f: any(f.startswith(d.rstrip("/") + "/") for d in snap.get("out_only") or [])   # noqa: E731
+    inside = lambda f: deletable(f, snap.get("out_only") or [], snap.get("scratch") or [])   # noqa: E731
     try:
         new = sorted(_untracked_under(snap["dirs"]) - snap["untracked"])
         for f in new:

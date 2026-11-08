@@ -9,6 +9,8 @@
 # back after a build and removes the untracked files it created (only under `output_dirs`, s4r n5); `where: pc` runs in the go-live PC block.
 # `output_dirs: [dir]` (s4r n5): directories that hold nothing tracked but this entry's own files; a --restore census
 # deletes new untracked files only there, and names any other new untracked file beside its outputs as a stray.
+# `scratch: [path]` (68 B1 on dcafe69b): exact untracked paths the build writes and leaves; a --restore census deletes
+# them wherever they sit. From a grep of every builder (.part/.tmp/tempfile/rename): only make_hhe_table.py today.
 # `budget: {<system-machine>: {measured_s: N, source: <blob or log>}}` (LOAD-CENSUS-TIME): the census is killed and
 # named red past measured_s × 1.5 on that machine; an entry with no measured time there runs unbudgeted, named so.
 # {external}/{papers}/{artifacts} are the env dirs; the entry's `external` env vars are passed to the census run.
@@ -191,7 +193,8 @@ entries:
     # the builder copies this file's text into hhe_table.py: a .py read as data (sg-gate B1; note 2 §13 (4))
     data: [engine/tools/hhe_table_tail.py]
     external: {DirEOS2019: {env: NEARSTARS_EXTERNAL, path: DirTABLES-EOS2019/TABLEEOS_HHE_TP_IVL_Y0.275_v1}}
-    census: {argv: [engine/tools/make_hhe_table.py, "{external}/DirTABLES-EOS2019"], restore: true}
+    census: {argv: [engine/tools/make_hhe_table.py, "{external}/DirTABLES-EOS2019"], restore: true,
+             scratch: [engine/hhe_table.py.part]}   # make_hhe_table.py writes path + ".part" (68 B1 on dcafe69b)
   9-ice-melt-table:
     row: 9
     files: [engine/ice_melt_table.py]
