@@ -83,6 +83,7 @@ names:
   NS_FREE_SOLVE_CONTRACT: {class: behaviour, why: the free-solve contract, default on; the census's FLAG-off run}
   NEARSTARS_REFERENCE_BUILD: {class: behaviour, why: set only by engine/tools/reference_adiabats.py while it builds}
   NS_NAN_AUDIT: {class: behaviour, why: a NaN-audit log file (rootfind, signs); logging only}
+  GIT_LITERAL_PATHSPECS: {class: behaviour, why: git's pathspec mode; derived/check.py drops it and the other three GIT_*_PATHSPECS from its own git calls (PATHSPEC_ENV), and derived/test_derived.py sets it to prove the listing ignores it (68 n3); a landing runs unset}
   NEARSTARS_LOOKUP_LOG: {class: behaviour, why: state lookup logging, default on}
   BELT_FIT_DIAG: {class: tool, why: scripts/viz/fit_belts.py diagnostics directory}
   GATE_STEP: {class: internal, why: scripts/gate_reads bookkeeping}
