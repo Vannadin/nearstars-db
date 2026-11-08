@@ -475,35 +475,50 @@ class LoadCensus(unittest.TestCase):
         r = self._run_child("stray")
         self.assertIn("stray_mod.py", r.stdout.split("unjudged module files")[1].splitlines()[0])
 
-    def _run_oot(self, helper_rel):
-        """CENSUS-OOT-COVER: a --call target for row 8d that imports one helper placed at <tmp>/HELPER_REL."""
-        d = tempfile.mkdtemp()
-        h = Path(d) / helper_rel
-        h.parent.mkdir(parents=True)
+    SLB = "rewrite/phase2-records/slb2024"
+
+    def _run_oot(self, base, helper_rel, art, target_rel="oot_target.py"):
+        """CENSUS-OOT-COVER: a row 8d census, NEARSTARS_ARTIFACTS=ART, whose --call target BASE/TARGET_REL imports one
+        helper placed at BASE/HELPER_REL."""
+        h = Path(base) / helper_rel
+        h.parent.mkdir(parents=True, exist_ok=True)
         h.write_text("X = 1\n", encoding="utf-8")
-        f = Path(d) / "oot_target.py"
+        f = Path(base) / target_rel
+        f.parent.mkdir(parents=True, exist_ok=True)
         f.write_text(f"import sys\ndef go():\n    sys.path.insert(0, {str(h.parent)!r})\n    import {h.stem}\n",
                      encoding="utf-8")
-        try:
-            return subprocess.run([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", "8d-silicate-slb", "--",
-                                   "--call", f"{f}:go"], cwd=ck.REPO, capture_output=True, text=True)
-        finally:
-            import shutil
-            shutil.rmtree(d, ignore_errors=True)
+        env = dict(os.environ, NEARSTARS_ARTIFACTS=str(art))
+        return subprocess.run([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", "8d-silicate-slb", "--",
+                               "--call", f"{f}:go"], cwd=ck.REPO, capture_output=True, text=True, env=env)
 
     def test_an_undeclared_foreign_module_is_red(self):
-        """CENSUS-OOT-COVER (go-live s4r, directing 11-08): a module outside every judged place that the entry's
-        out_of_tree does not declare is a named [LOAD-RED]; one at a declared path (any checkout location) is not."""
-        bad = self._run_oot("rewrite/phase2-records/slb2024/stray_helper.py")
+        """CENSUS-OOT-COVER (go-live s4r, directing 11-08): an unjudged module is covered only when its resolved path is
+        exactly a declared out_of_tree path under the resolved NEARSTARS_ARTIFACTS or under the out-of-tree target's
+        own checkout; an undeclared one, or a same-relative-path file in another checkout, is a named [LOAD-RED]."""
+        import shutil
+        roots = [tempfile.mkdtemp() for _ in range(4)]
+        try:
+            art, other, gw, elsewhere = roots
+            bad = self._run_oot(art, f"{self.SLB}/stray_helper.py", art)                 # undeclared, under the root
+            ok = self._run_oot(art, f"{self.SLB}/dtdp_eq.py", art)                       # declared, under the root
+            twin = self._run_oot(other, f"{self.SLB}/dtdp_eq.py", art)                   # declared path, other checkout
+            # row8.py's layout: the generator runs from a worktree of the artifacts checkout, not from ART itself
+            wt = self._run_oot(gw, f"{self.SLB}/dtdp_eq.py", elsewhere,
+                               target_rel="rewrite/phase2-records/gen_silicate_records.py")
+        finally:
+            for r in roots:
+                shutil.rmtree(r, ignore_errors=True)
         self.assertEqual(bad.returncode, 3, bad.stdout + bad.stderr)
         self.assertIn("[LOAD-RED] 8d-silicate-slb", bad.stdout)
-        self.assertIn("not declared in out_of_tree (1):", bad.stdout)
         self.assertIn("slb2024/stray_helper.py", bad.stdout.split("not declared in out_of_tree (1):")[1].splitlines()[0])
-        ok = self._run_oot("rewrite/phase2-records/slb2024/dtdp_eq.py")         # declared in 8d's out_of_tree
         self.assertEqual(ok.returncode, 0, ok.stdout + ok.stderr)
         self.assertIn("[LOAD] 8d-silicate-slb", ok.stdout)
         self.assertIn("slb2024/dtdp_eq.py", ok.stdout.split("unjudged module files")[1].splitlines()[0])  # still printed
         self.assertIn("not declared in the entry's out_of_tree: none", ok.stdout)
+        self.assertEqual(twin.returncode, 3, twin.stdout + twin.stderr)                 # a same-named file elsewhere
+        self.assertIn("slb2024/dtdp_eq.py", twin.stdout.split("not declared in out_of_tree (1):")[1].splitlines()[0])
+        self.assertEqual(wt.returncode, 0, wt.stdout + wt.stderr)                       # the target's own checkout
+        self.assertIn("not declared in the entry's out_of_tree: none", wt.stdout)
 
     def _run_p1(self, mod, restore):
         """68's P1 / P1b: a computed-name import of MOD from inside the target, for row 10 (its closure holds neither

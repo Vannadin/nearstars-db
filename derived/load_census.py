@@ -14,8 +14,8 @@ not the build; also --allow). A module outside is printed by name on a [LOAD-RED
 concurrent.futures.ProcessPoolExecutor replaced by serial stand-ins). Every Python child process (subprocess) gets
 derived/census_site/ first on PYTHONPATH: it reports its own loads, opens and children at exit, and they are judged by the
 same rule; a child that writes no report (-I/-E, or killed) is a named red. Module files that are neither stdlib,
-site-packages nor engine/solver/scripts are printed as unjudged; one that the entry's `out_of_tree` does not declare
-(path equal, or ending in «/<declared path>») is a [LOAD-RED] (CENSUS-OOT-COVER).
+site-packages nor engine/solver/scripts are printed as unjudged; one that is not exactly a declared `out_of_tree` path
+under the resolved NEARSTARS_ARTIFACTS or under the out-of-tree target's own checkout is a [LOAD-RED] (CENSUS-OOT-COVER).
 With --restore, the entry's own files go back to their bytes before the run and untracked files the run created are removed (each named).
 Every declared external input is traced: the files the run opens (and the paths handed to subprocesses) must include
 the stamped path, with the stamp's bytes; a different path, other bytes, or no open is a [LOAD-RED] naming both.
@@ -119,8 +119,12 @@ for x, s in (e.get("external") or {}).items():
     base = ck.env_dir(s["env"]) if s.get("env") else None
     ext[x] = [str(Path(base) / s["path"]) if base else s["path"], s["path"]]
 st = ck.read_stamp(name) or {}
+try:
+    art = str(Path(ck.env_dir("NEARSTARS_ARTIFACTS")).resolve())
+except ck.NotRun:
+    art = None
 print(json.dumps({"files": e["files"], "inside": sorted(inside), "ext": ext, "ext_sha": dict(st.get("external") or {}),
-                  "oot": list(e.get("out_of_tree") or [])}))
+                  "oot": list(e.get("out_of_tree") or []), "art": art}))
 """
 _INFO: dict = {}
 
@@ -139,13 +143,28 @@ def entry_info(name: str) -> dict:
     return _INFO[name]
 
 
-def oot_uncovered(name: str, unjudged: list) -> list:
+def oot_roots(info: dict, own) -> list:
+    """The checkout roots an out_of_tree path is anchored at: the resolved NEARSTARS_ARTIFACTS, and the out-of-tree
+    target's own checkout (the target is itself a declared path: its resolved path minus that path) — the go-live
+    row8.py runs each generator from a worktree of the artifacts checkout, not from NEARSTARS_ARTIFACTS itself."""
+    oot = info.get("oot") or []
+    roots = [info["art"]] if info.get("art") else []
+    for t in own:
+        for o in oot:
+            if os.path.isabs(str(t)) and str(t).endswith("/" + o):
+                roots.append(str(t)[: -len(o) - 1])
+    return sorted(set(roots))
+
+
+def oot_uncovered(name: str, unjudged: list, own=()) -> list:
     """CENSUS-OOT-COVER (go-live s4r, directing 11-08): the unjudged module files no `out_of_tree` path of the entry
-    declares. A declared path covers a file whose path is it or ends in «/<it>», so a checkout of artifacts main at
-    any location (NEARSTARS_ARTIFACTS, or a fetched-main worktree) is matched. Undeclared foreign code reaching the
-    build was printed and passed; it is red now."""
-    oot = entry_info(name).get("oot") or []
-    return [u for u in unjudged if not any(str(u) == o or str(u).endswith("/" + o) for o in oot)]
+    declares. Covered means the file's resolved path equals resolve(root / path) for a declared path and an anchor root
+    (oot_roots): a same-named file in any other checkout stays red. Undeclared foreign code reaching the build was
+    printed and passed; it is red now."""
+    info = entry_info(name)
+    oot, roots = info.get("oot") or [], oot_roots(info, own)
+    covered = {os.path.realpath(os.path.join(r, o)) for r in roots for o in oot}
+    return [u for u in unjudged if os.path.realpath(str(u)) not in covered or not os.path.isabs(str(u))]
 
 
 def outside(name: str, mods: list, allow=()) -> list:
@@ -521,7 +540,7 @@ def main(argv) -> int:
           f"over {spawned_n} started in all", flush=True)
     print(f"  {name}: unjudged module files (not stdlib, site-packages or engine/solver/scripts): "
           f"{', '.join(unjudged) if unjudged else 'none'}", flush=True)
-    undeclared = oot_uncovered(name, unjudged)
+    undeclared = oot_uncovered(name, unjudged, own)
     if unjudged:
         print(f"  {name}: of those, not declared in the entry's out_of_tree: {', '.join(undeclared) or 'none'}",
               flush=True)
