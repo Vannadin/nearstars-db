@@ -124,7 +124,7 @@ try:
 except ck.NotRun:
     art = None
 print(json.dumps({"files": e["files"], "inside": sorted(inside), "ext": ext, "ext_sha": dict(st.get("external") or {}),
-                  "oot": list(e.get("out_of_tree") or []), "art": art}))
+                  "oot": list(e.get("out_of_tree") or []), "art": art, "out_only": ck.output_only_dirs(name, e)}))
 """
 _INFO: dict = {}
 
@@ -350,12 +350,18 @@ def untracked(root: Path = REPO, specs=None) -> set:
     return {x for x in out.split("\0") if x}
 
 
-def remove_new(before: set, root: Path = REPO, specs=None) -> list:
-    """Untracked files under SPECS the census run created (not there before it): removed, returned by name."""
-    new = sorted(untracked(root, specs) - before)
-    for f in new:
-        (root / f).unlink()
-    return new
+def remove_new(before: set, root: Path = REPO, specs=None, out_only=()) -> tuple:
+    """Untracked files under SPECS the census run created (not there before it): (removed, strays). Only a file inside
+    a declared output-only dir (OUT_ONLY, check.output_only_dirs) is removed; any other is left in place and returned
+    as a stray, the census's named red (s4r n5: a mixed dir such as engine/ is never a delete scope)."""
+    removed, strays = [], []
+    for f in sorted(untracked(root, specs) - before):
+        if any(f.startswith(d.rstrip("/") + "/") for d in out_only):
+            (root / f).unlink()
+            removed.append(f)
+        else:
+            strays.append(f)
+    return removed, strays
 
 
 def run_target(target: list) -> int:
@@ -536,9 +542,13 @@ def main(argv) -> int:
     sys.stdout.flush()
     if restore:                                          # a build census writes the entry's own files: put the pre-run bytes back
         print(restore_own(name, snap), flush=True)
-        new = remove_new(before, specs=output_specs(name))
+        new, strays = remove_new(before, specs=output_specs(name), out_only=entry_info(name)["out_only"])
         if new:
             print(f"  {name}: removed the untracked files the census run created: {', '.join(new)}", flush=True)
+        for f in strays:
+            print(f"  {name}: stray untracked {f} after census, not removed", flush=True)
+    else:
+        strays = []
     for n in ext_notes:
         print(f"  {name}: {n}", flush=True)
     outer = reads_outside(opened + c_opened, {os.path.realpath(v[0]) for v in ext.values()})
@@ -568,9 +578,10 @@ def main(argv) -> int:
           f"none the census tooling loaded): {', '.join(before) or 'none'}{allowed}", flush=True)
     masked = [f"loaded into the census process before the target, so not judged (68 B1): {', '.join(before)}"] \
         if before else []
-    if out or ext_red or miss or over or masked or oot_red:
+    stray_red = [f"stray untracked {f} after census, not removed" for f in strays]
+    if out or ext_red or miss or over or masked or oot_red or stray_red:
         why = ([f"loaded outside the static closure ({len(out)} of {len(mods)} project modules): {', '.join(out)}"]
-               if out else []) + ext_red + miss + over + masked + oot_red
+               if out else []) + ext_red + miss + over + masked + oot_red + stray_red
         print(f"[LOAD-RED] {name} — {'; '.join(why)} (target rc {rc})", flush=True)
         return 3
     print(f"[LOAD] {name} — {len(mods)} project modules loaded (children included), all inside the static closure"

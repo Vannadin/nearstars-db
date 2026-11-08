@@ -585,22 +585,44 @@ def _untracked_under(dirs) -> set:
     return {x for x in r.stdout.split("\0") if x}
 
 
+def output_only_dirs(name: str, e: dict) -> list:
+    """The entry's declared census.output_dirs, each checked to hold no tracked file but the entry's own (s4r n5):
+    only there may a --restore census delete a new untracked file. A declared dir that holds another tracked file
+    is a named STOP — a mixed dir is never a delete scope."""
+    dirs = list((e.get("census") or {}).get("output_dirs") or [])
+    if dirs:
+        r = subprocess.run(["git", "-C", str(REPO), "ls-files", "--", *dirs], capture_output=True, text=True, check=True)
+        other = sorted(set(r.stdout.split()) - set(e["files"]))
+        if other:
+            raise SystemExit(f"STOP: {name}: census.output_dirs {dirs} holds tracked files that are not its own: "
+                             f"{', '.join(other[:5])}")
+    return sorted(dirs)
+
+
+def stray_note(strays) -> str:
+    return "; ".join(f"stray untracked {f} after census, not removed" for f in strays)
+
+
 def outputs_snapshot(name: str) -> dict:
     """Before a --restore census starts: bytes and mode of every file the entry writes (None when absent), and the
-    untracked files under their directories (ruling (a)'s scope). The parent holds it, so a killed child cannot lose it."""
-    files = entries(load_list())[name]["files"]
+    untracked files beside them (their directories, ruling (a)'s scope). The parent holds it, so a killed child cannot
+    lose it. `out_only` is where a new untracked file may be deleted (output_only_dirs)."""
+    e = entries(load_list())[name]
+    files = e["files"]
     snap = {}
     for f in files:
         q = REPO / f
         snap[f] = (q.read_bytes(), stat.S_IMODE(q.stat().st_mode)) if q.is_file() else None
     dirs = sorted({os.path.dirname(f) or "." for f in files})
-    return {"name": name, "files": snap, "dirs": dirs, "untracked": _untracked_under(dirs)}
+    return {"name": name, "files": snap, "dirs": dirs, "untracked": _untracked_under(dirs),
+            "out_only": output_only_dirs(name, e)}
 
 
-def restore_outputs(snap: dict) -> list:
-    """Put every snapshotted file back (bytes, mode; removed when it was absent), remove the untracked files that
-    appeared under the output directories, then verify both; the problems that remain, [] when byte-equal."""
-    probs = []
+def restore_outputs(snap: dict) -> tuple:
+    """Put every snapshotted file back (bytes, mode; removed when it was absent) and verify it. A new untracked file
+    beside the outputs is deleted only inside a declared output-only dir (s4r n5); anywhere else (a mixed dir such as
+    engine/, where a concurrent pool step may write) it stays and is returned as a stray. (problems, strays)."""
+    probs, strays = [], []
     for f, v in snap["files"].items():
         q = REPO / f
         try:
@@ -614,10 +636,15 @@ def restore_outputs(snap: dict) -> list:
                     os.chmod(q, v[1])
         except OSError as err:
             probs.append(f"{f}: {err}")
+    inside = lambda f: any(f.startswith(d.rstrip("/") + "/") for d in snap.get("out_only") or [])   # noqa: E731
     try:
-        for f in sorted(_untracked_under(snap["dirs"]) - snap["untracked"]):
-            (REPO / f).unlink()
-        extra = sorted(_untracked_under(snap["dirs"]) - snap["untracked"])
+        new = sorted(_untracked_under(snap["dirs"]) - snap["untracked"])
+        for f in new:
+            if inside(f):
+                (REPO / f).unlink()
+            else:
+                strays.append(f)
+        extra = [f for f in sorted(_untracked_under(snap["dirs"]) - snap["untracked"]) if inside(f)]
     except (OSError, subprocess.CalledProcessError) as err:
         extra = [f"(untracked listing: {err})"]
     for f, v in snap["files"].items():
@@ -626,7 +653,7 @@ def restore_outputs(snap: dict) -> list:
         if now != v:
             probs.append(f"{f}: not byte-equal to the snapshot after the restore")
     probs += [f"{f}: new untracked file left" for f in extra]
-    return probs
+    return probs, strays
 
 
 @contextlib.contextmanager
@@ -685,13 +712,16 @@ def census_command(name: str, target: list, env_extra=None, flags=(), report=Non
     # rc 0, rc ≠ 0, an exception, the budget kill (with its KILL sweep), SIGINT, SIGTERM — not only by the child,
     # which a kill stops before its own restore. A failed restore is a RestoreStop.
     snap = outputs_snapshot(name) if "--restore" in flags else None
-    done = []
+    done, strays = [], []
 
     def put_back():
         if snap is None or done:
             return
         done.append(True)
-        probs = restore_outputs(snap)
+        probs, left = restore_outputs(snap)
+        strays.extend(left)
+        if left:                                      # on the signal path this is the only place it is said
+            print(f"[LOAD-RED] {name} — {stray_note(left)}", file=sys.stderr, flush=True)
         if probs:
             raise RestoreStop(f"STOP: {name} — the census's outputs were not put back byte-equal: {'; '.join(probs)}")
 
@@ -730,6 +760,10 @@ def census_command(name: str, target: list, env_extra=None, flags=(), report=Non
         report += [f"  {name}: target said: {t}" for t in said]
     if report is not None and over:
         report.append(verdict)
+    if strays:                                        # s4r n5: a named red, the files left in place
+        verdict = f"[LOAD-RED] {name} — {stray_note(strays)}; the census said: {verdict}"
+        if report is not None:
+            report.append(verdict)
     budget_note = f"budget {bud[0]:.0f} s on {bud[2]}" if bud else f"budget none on {machine_key()}"
     clock = f" · {budget_note} · start {start} · wall {time.monotonic() - t0:.0f} s"
     return (not over and rc == 0 and verdict.startswith("[LOAD]"),

@@ -6,7 +6,9 @@
 # (sha256 of the file; a missing env or file is red). check: the value or rebuild check run when the stamp moved.
 # census (G1 load census, N18): what derived/load_census.py runs in-process before comparing sys.modules with the
 # closure — default the check command; `call` file:function with args; `argv`; `restore` puts the entry's own files
-# back after a build and removes the untracked files it created; `where: pc` runs in the go-live PC block.
+# back after a build and removes the untracked files it created (only under `output_dirs`, s4r n5); `where: pc` runs in the go-live PC block.
+# `output_dirs: [dir]` (s4r n5): directories that hold nothing tracked but this entry's own files; a --restore census
+# deletes new untracked files only there, and names any other new untracked file beside its outputs as a stray.
 # `budget: {<system-machine>: {measured_s: N, source: <blob or log>}}` (LOAD-CENSUS-TIME): the census is killed and
 # named red past measured_s × 1.5 on that machine; an entry with no measured time there runs unbudgeted, named so.
 # {external}/{papers}/{artifacts} are the env dirs; the entry's `external` env vars are passed to the census run.
@@ -104,7 +106,8 @@ entries:
     data: [engine/bodies/mars.yaml]
     derived: [engine/reference_adiabats.json]
     packages: [burnman]
-    census: {call: "derived/census_targets.py:mantle_one_column", args: [mars], restore: true}   # build(), one P column (only mars.yaml declares a mantle composition)
+    census: {call: "derived/census_targets.py:mantle_one_column", args: [mars], restore: true,   # build(), one P column (only mars.yaml declares a mantle composition)
+             output_dirs: [engine/mantle_tables]}   # s4r n5: only this entry's tables are tracked there
   7-fall-sets:
     row: 7
     files: [solver/materials/fall_sets/silicate_slb_default_bse.json.gz,

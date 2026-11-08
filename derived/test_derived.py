@@ -925,7 +925,9 @@ class LoadCensus(unittest.TestCase):
                 "SIGINT": dict(mode="sleep", sig=signal.SIGINT), "SIGTERM": dict(mode="sleep", sig=signal.SIGTERM)}
         for row, kw in rows.items():
             rc, out, back, mback, gone = self._restore_row(**kw)
-            self.assertEqual((back, mback, gone), (True, True, True), f"{row}: rc {rc}: {out}")
+            # s4r n5: engine/ is a mixed dir, so the target's new file is a named stray, never deleted
+            self.assertEqual((back, mback, gone), (True, True, False), f"{row}: rc {rc}: {out}")
+            self.assertIn("stray untracked engine/zz_census_restore_probe.tmp after census, not removed", out, row)
             if row.startswith("budget"):
                 self.assertIn("outputs put back byte-equal by the parent", out, row)
             if row in ("SIGINT", "SIGTERM"):
@@ -945,12 +947,42 @@ class LoadCensus(unittest.TestCase):
         ck._kill_group(p)
         self.assertEqual(p.returncode, 7)
 
+    def test_the_parent_deletes_only_in_output_only_dirs(self):
+        """s4r n5 (directing 11-08), the parent's restore: a new untracked file in a declared output-only dir
+        (6-mantle-tables' engine/mantle_tables) is removed; one in a mixed dir (engine/) survives as a named stray.
+        Mutant (the old whole-dir sweep) deletes the survivor."""
+        mixed = ck.REPO / "engine" / "zz_n5_pool_step_file.tmp"
+        only = ck.REPO / "engine" / "mantle_tables" / "zz_n5_new_table.json"
+        e = ck.entries(ck.load_list())["6-mantle-tables"]
+        self.assertEqual(ck.output_only_dirs("6-mantle-tables", e), ["engine/mantle_tables"])
+        snap = {"name": "t", "files": {}, "dirs": ["engine", "engine/mantle_tables"],
+                "untracked": ck._untracked_under(["engine", "engine/mantle_tables"]), "out_only": ["engine/mantle_tables"]}
+        try:
+            mixed.write_text("x")
+            only.write_text("{}")
+            probs, strays = ck.restore_outputs(snap)
+            self.assertEqual((probs, strays), ([], ["engine/zz_n5_pool_step_file.tmp"]))
+            self.assertTrue(mixed.is_file())
+            self.assertFalse(only.exists())
+            self.assertEqual(ck.stray_note(strays),
+                             "stray untracked engine/zz_n5_pool_step_file.tmp after census, not removed")
+        finally:
+            for q in (mixed, only):
+                if q.exists():
+                    q.unlink()
+
+    def test_a_mixed_dir_cannot_be_declared_output_only(self):
+        e = json.loads(json.dumps(ck.entries(ck.load_list())["10-graph-page"]))
+        e.setdefault("census", {})["output_dirs"] = ["engine"]
+        with self.assertRaisesRegex(SystemExit, r"^STOP: 10-graph-page: census.output_dirs \['engine'\] holds tracked files"):
+            ck.output_only_dirs("10-graph-page", e)
+
     def test_a_restore_that_cannot_put_a_file_back_is_named(self):
         """68 B1: restore_outputs names what it could not put back; census_command raises it as a RestoreStop (a
         SystemExit, so the run stops by name)."""
         snap = {"name": "x", "files": {"engine/__no_such_dir__/out.json": (b"x", 0o644)}, "dirs": ["engine/__no_such_dir__"],
                 "untracked": set()}
-        probs = ck.restore_outputs(snap)
+        probs, _ = ck.restore_outputs(snap)
         self.assertTrue(probs and all("engine/__no_such_dir__/out.json" in q for q in probs), probs)
         self.assertTrue(issubclass(ck.RestoreStop, SystemExit))
 
@@ -1009,12 +1041,29 @@ class LoadCensus(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             subprocess.run(["git", "init", "-q", str(root)], check=True)
-            (root / "old.txt").write_text("x")
-            before = self.lc.untracked(root, ["."])
-            (root / "new.part").write_text("y")
-            self.assertEqual(self.lc.remove_new(before, root, ["."]), ["new.part"])
-            self.assertTrue((root / "old.txt").is_file())
-            self.assertFalse((root / "new.part").exists())
+            (root / "out").mkdir()
+            (root / "out" / "old.txt").write_text("x")
+            before = self.lc.untracked(root, ["out"])
+            (root / "out" / "new.part").write_text("y")
+            self.assertEqual(self.lc.remove_new(before, root, ["out"], ["out"]), (["out/new.part"], []))
+            self.assertTrue((root / "out" / "old.txt").is_file())
+            self.assertFalse((root / "out" / "new.part").exists())
+
+    def test_a_new_file_in_a_mixed_dir_is_a_stray_never_removed(self):
+        """s4r n5 (directing 11-08): the child's sweep deletes only inside a declared output-only dir; a new untracked
+        file in a mixed dir (engine/ holds tracked sources) stays and is returned as a stray. Mutant (the old sweep
+        over the whole listed dir) deletes engine/zz.part."""
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            (root / "engine" / "tables").mkdir(parents=True)
+            before = self.lc.untracked(root, ["engine"])
+            (root / "engine" / "zz.part").write_text("a pool step's file")
+            (root / "engine" / "tables" / "new.json").write_text("{}")
+            got = self.lc.remove_new(before, root, ["engine"], ["engine/tables"])
+            self.assertEqual(got, (["engine/tables/new.json"], ["engine/zz.part"]))
+            self.assertTrue((root / "engine" / "zz.part").is_file())
+            self.assertFalse((root / "engine" / "tables" / "new.json").exists())
 
     def test_restore_sees_only_the_output_dirs(self):
         """s4r l.5734, directing 11-08 (a): scoped to the entry's output directories, an untracked file there is listed
@@ -1027,7 +1076,7 @@ class LoadCensus(unittest.TestCase):
             (root / "engine" / "out" / "new.part").write_text("y")
             (root / "stray.txt").write_text("z")
             self.assertEqual(self.lc.untracked(root, ["engine/out"]), {"engine/out/new.part"})
-            self.assertEqual(self.lc.remove_new(before, root, ["engine/out"]), ["engine/out/new.part"])
+            self.assertEqual(self.lc.remove_new(before, root, ["engine/out"], ["engine/out"]), (["engine/out/new.part"], []))
             self.assertTrue((root / "stray.txt").is_file())
 
     def test_output_specs_are_the_entrys_file_dirs(self):
