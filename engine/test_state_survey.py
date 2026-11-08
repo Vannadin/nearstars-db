@@ -224,9 +224,11 @@ def keyed(rows, ENG):
 
 
 
-FROZEN_LISTS = {  # 42f28876's survey, keyed (no line numbers), plus ES-f6's two TABLE_POINT sites
+FROZEN_LISTS = {  # 42f28876's survey, keyed (no line numbers), plus ES-f6's two TABLE_POINT sites and E-steps note 6's two VALUE_BOUND_MIXED sites
     'other_module_attr': [
         'ammonia_table.py · _iso_smooth · smooth_table.EXTRAPOLATED_READS[0] += 1 · smooth_table.EXTRAPOLATED_READS (smooth_table)',
+        'interior.py · integrate · eos.VALUE_BOUND_MIXED["first"] = None · eos.VALUE_BOUND_MIXED (eos)',
+        'interior.py · integrate · eos.VALUE_BOUND_MIXED["first"] = vb_saved if vb_saved is not None else vb_first · eos.VALUE_BOUND_MIXED (eos)',
         'interior.py · integrate · water_hot.CLAMPED["first"] = None · water_hot.CLAMPED (water_hot)',
         'interior.py · integrate · water_hot.CLAMPED["first"] = hw_saved if hw_saved is not None else hw_first · water_hot.CLAMPED (water_hot)',
         'mantle_composition.py · swap · eos.MATERIALS.update(saved) · eos.MATERIALS (eos)',
@@ -320,9 +322,15 @@ FROZEN_LISTS = {  # 42f28876's survey, keyed (no line numbers), plus ES-f6's two
 
 rows, summary = survey(HERE)
 # ES-f6 (a.1) adds interior.TABLE_POINT, written only from structure_grid._solve_raw (two sites, set and cleared): the
-# «another module's attribute» row grows by exactly those two, named below; every other row is the frozen survey
-expect = FROZEN.replace("other_module_attr 21", "other_module_attr 23")
-check("the survey's SUMMARY equals the frozen line, with ES-f6's two named TABLE_POINT sites", summary == expect, summary)
+# «another module's attribute» row grows by exactly those two, named below; every other row is the frozen survey.
+# E-steps note 6 (rev 4) adds the counter eos.VALUE_BOUND_MIXED (census and counter +1, registered in test_process_state)
+# and its two save/restore sites in interior.integrate, the same pair water_hot.CLAMPED has there (+2, named below)
+expect = FROZEN.replace("other_module_attr 21", "other_module_attr 25").replace("census 76 (counter 31,", "census 77 (counter 32,")
+check("the survey's SUMMARY equals the frozen line, with ES-f6's two named TABLE_POINT sites and note 6's VALUE_BOUND_MIXED",
+      summary == expect, summary)
+vb_sites = sorted(e for e in rows["other_module_attr"] if "VALUE_BOUND_MIXED" in e)
+check("note 6's two added sites are interior.integrate's VALUE_BOUND_MIXED save and restore", len(vb_sites) == 2
+      and all(e.split(":", 1)[0] == "interior.py" and "eos.VALUE_BOUND_MIXED (eos)" in e for e in vb_sites), str(vb_sites))
 new_sites = sorted(e for e in rows["other_module_attr"] if "TABLE_POINT" in e)
 check("the two added sites are structure_grid's TABLE_POINT set and clear", len(new_sites) == 2
       and all(e.split(":", 1)[0] == "structure_grid.py" and "interior.TABLE_POINT (interior)" in e for e in new_sites), str(new_sites))
