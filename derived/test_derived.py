@@ -3,6 +3,7 @@
 census step's companion). Planted controls run on strings and scratch dicts; nothing in the tree is changed."""
 import json
 import os
+import signal
 import subprocess
 import sys
 import tempfile
@@ -597,7 +598,7 @@ class LoadCensus(unittest.TestCase):
             f = Path(d) / "overrun.py"
             f.write_text("import subprocess, sys, time\ndef go():\n"
                          f"    print('partial-{mark}', flush=True)\n"
-                         f"    subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(25)  # {mark}'])\n"
+                         f"    subprocess.Popen([sys.executable, '-c', 'import signal, time; signal.signal(signal.SIGTERM, signal.SIG_IGN); time.sleep(25)  # {mark}'])\n"
                          "    time.sleep(25)\n", encoding="utf-8")
             t0 = _t.monotonic()
             rep = []
@@ -615,6 +616,46 @@ class LoadCensus(unittest.TestCase):
         self.assertLess(took, 2.0 + ck.CENSUS_KILL_GRACE_S + 5, line)
         self.assertEqual(left, [], "a census child outlived the group kill")
         self.assertTrue(any("over budget" in r for r in rep), rep)
+
+    def test_an_interrupted_census_leaves_no_child(self):
+        """Directing 11-08: SIGINT or SIGTERM to the process running a census kills the census's process group (its own
+        session) before the parent goes; no census child survives. Each signal in its own parent."""
+        import time as _t
+        for sig in (signal.SIGINT, signal.SIGTERM):
+            mark = f"census-intr-probe-{os.getpid()}-{int(sig)}"
+            with tempfile.TemporaryDirectory() as d:
+                f = Path(d) / "long.py"
+                f.write_text("import subprocess, sys, time\ndef go():\n"
+                             f"    subprocess.Popen([sys.executable, '-c', 'import signal, time; signal.signal(signal.SIGTERM, signal.SIG_IGN); time.sleep(30)  # {mark}'])\n"
+                             "    time.sleep(30)\n", encoding="utf-8")
+                parent = Path(d) / "parent.py"
+                parent.write_text(f"import sys\nsys.path.insert(0, {str(HERE)!r})\nimport check as ck\n"
+                                  f"print(ck.census_command('10-graph-page', ['--call', {str(f)!r} + ':go'], budget=None))\n",
+                                  encoding="utf-8")
+                pr = subprocess.Popen([sys.executable, "-B", str(parent)], cwd=ck.REPO, stdout=subprocess.PIPE,
+                                      stderr=subprocess.PIPE, text=True)
+                seen = False
+                for _ in range(100):                          # wait until the census's grandchild is up
+                    if subprocess.run(["pgrep", "-f", f"# {mark}"], capture_output=True).returncode == 0:
+                        seen = True
+                        break
+                    _t.sleep(0.1)
+                t_sig = _t.monotonic()
+                pr.send_signal(sig)
+                try:
+                    pr.wait(timeout=ck.CENSUS_KILL_GRACE_S + 10)
+                finally:
+                    if pr.poll() is None:
+                        pr.kill()
+                took = _t.monotonic() - t_sig
+                _t.sleep(0.5)
+                left = subprocess.run(["pgrep", "-f", f"# {mark}"], capture_output=True, text=True).stdout.split()
+                for pid in left:
+                    subprocess.run(["kill", "-KILL", pid], capture_output=True)
+            self.assertTrue(seen, f"{sig!r}: the census child never started")
+            self.assertNotEqual(pr.returncode, 0, f"{sig!r}: the parent should end by the signal")
+            self.assertEqual(left, [], f"{sig!r}: a census child outlived the interrupted parent (it ignores TERM)")
+            self.assertLess(took, ck.CENSUS_KILL_GRACE_S / 2, f"{sig!r}: the parent took {took:.1f} s to go")
 
     def test_census_budget_reads_the_entry_on_this_machine(self):
         """(2): the budget is measured_s × CENSUS_MARGIN under this machine's key; another machine's or none → None."""

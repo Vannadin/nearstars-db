@@ -19,6 +19,7 @@ unchanged; when it moved, an entry with a check runs it and takes its verdict, a
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import importlib.metadata
 import json
@@ -29,6 +30,7 @@ import signal
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 from pathlib import Path
 
@@ -466,18 +468,65 @@ def census_budget(name: str, doc=None):
     return m * CENSUS_MARGIN, m, machine_key()
 
 
+def _signal_group(pgid: int, sig) -> bool:
+    """Signal a process group; False when it is gone. macOS answers EPERM for a group whose only member is a zombie."""
+    try:
+        os.killpg(pgid, sig)
+        return True
+    except (ProcessLookupError, PermissionError):
+        return False
+
+
 def _kill_group(p) -> None:
-    """TERM the census's whole process group (its children too), KILL it after CENSUS_KILL_GRACE_S."""
-    for sig, wait in ((signal.SIGTERM, CENSUS_KILL_GRACE_S), (signal.SIGKILL, None)):
+    """TERM the census's whole process group (its children too); KILL the leader after CENSUS_KILL_GRACE_S; then KILL
+    whatever is left in the group (a child that ignored TERM outlives its leader otherwise)."""
+    if _signal_group(p.pid, signal.SIGTERM):
         try:
-            os.killpg(p.pid, sig)
-        except ProcessLookupError:
-            return
-        try:
-            p.wait(timeout=wait)
-            return
+            p.wait(timeout=CENSUS_KILL_GRACE_S)
         except subprocess.TimeoutExpired:
-            continue
+            _signal_group(p.pid, signal.SIGKILL)
+            p.wait()
+    _signal_group(p.pid, signal.SIGKILL)
+
+
+def _kill_group_in_handler(p) -> None:
+    """The same, from a signal handler that interrupted `p.wait`: Popen's wait lock is held by the interrupted frame,
+    so a nested `p.wait` cannot reap and would sleep out the whole grace — poll `os.waitpid` instead."""
+    if _signal_group(p.pid, signal.SIGTERM):
+        end = time.monotonic() + CENSUS_KILL_GRACE_S
+        while time.monotonic() < end:
+            try:
+                if os.waitpid(p.pid, os.WNOHANG)[0]:
+                    break
+            except ChildProcessError:
+                break
+            time.sleep(0.05)
+    _signal_group(p.pid, signal.SIGKILL)
+
+
+@contextlib.contextmanager
+def _group_dies_with_us(p):
+    """While a census runs in its own session, a SIGINT/SIGTERM to this process kills the census's process group first,
+    then restores the previous handler and re-delivers the signal — an interrupted gate leaves no census running (the
+    402963 orphan class; directing 11-08). Handlers only install on the main thread; elsewhere this does nothing."""
+    if threading.current_thread() is not threading.main_thread():
+        yield
+        return
+    old = {}
+
+    def handler(sig, _frame):
+        _kill_group_in_handler(p)
+        signal.signal(sig, old[sig] if old[sig] is not None else signal.SIG_DFL)
+        os.kill(os.getpid(), sig)                     # re-raise with the original disposition
+
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        old[sig] = signal.signal(sig, handler)
+    try:
+        yield
+    finally:
+        for sig, h in old.items():
+            if signal.getsignal(sig) is handler:
+                signal.signal(sig, h if h is not None else signal.SIG_DFL)
 
 
 def census_command(name: str, target: list, env_extra=None, flags=(), report=None, budget="entry") -> tuple[bool, str]:
@@ -502,7 +551,8 @@ def census_command(name: str, target: list, env_extra=None, flags=(), report=Non
         p = subprocess.Popen([sys.executable, "-B", str(HERE / "load_census.py"), "--entry", name, *flags, "--", *target],
                              cwd=REPO, env=env, stdout=fo, stderr=fe, text=True, start_new_session=True)
         try:
-            rc = p.wait(timeout=bud[0] if bud else None)
+            with _group_dies_with_us(p):
+                rc = p.wait(timeout=bud[0] if bud else None)
         except subprocess.TimeoutExpired:
             over = True
             _kill_group(p)
