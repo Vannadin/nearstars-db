@@ -95,7 +95,15 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: ES-f6 FIX2 follow-up (directing 11-06): engine/ changes only in c143_sum_inventory.json, the census row for FIX2's new
 #: sum() in scripts/check_mass_formula.py · r_bound. Only engine/test_c143_guard.py reads it; no solve does. Re-declared
 #: at this engine/ tree.
-ORACLE_ENGINE_TREE = "30d2ac91cd1573eb800be2ee5b224c77100da8ab"
+#: E-steps post-landing note 6 (value-bound stencils, directing 11-08): engine/ changes in eos.py (value_floor,
+#: value_bounds, value_floor_stencil, VALUE_BOUND_MIXED, Material.k_t, HotWater.value_bounds), interior.py
+#: (_phase_stencil, STENCIL_VALUE_FLOOR, Structure.value_bound_mixed), mantle_composition.py (TablePhase.p_value_floor), process_state.py, plus
+#: test_esteps_step_edge.py and test_state_survey.py. Only a material with a value bound takes the new branch: the declared-mantle table (Mars)
+#: and hot water (no oracle body carries water). Mars's leaves move; every other oracle body's solve never reaches it
+#: (note 6's measured reach). interior.py also gains the named refusal of a converged answer carrying a mixture's
+#: value-bound crossing (_refuse_if_value_bound_mixed) and a solve note for trial crossings; no oracle body crosses.
+#: Re-declared at this engine/ tree; read by the round's oracle at this tip.
+ORACLE_ENGINE_TREE = "90ee09f03876a093de98c719c4619c10d8b50eef"
 REPO = Path(lm._ENGINE).parent
 
 
