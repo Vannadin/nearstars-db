@@ -7,6 +7,7 @@ output goes into the landing note.
 
     <python> -m solver.landing.zones_identity record OUT.json [state …]   # from the engine tree root, at base and at tip
     <python> -m solver.landing.zones_identity compare BASE.json TIP.json
+    <python> -m solver.landing.zones_identity control note|ulp OUT.json [state …]   # §4.1.2's two controls, at the tip
 
 Per state (§4.1.1), `record` writes:
 - (a) `digest`: sha256 of canonical plain((outcome, warm)) with every `solve_id` and every `zones` key removed;
@@ -20,6 +21,9 @@ Per state (§4.1.1), `record` writes:
 - at a tree whose Answer has `zones`, `rows`: the rows' plain form, and `row_checks`: §4.3 (a), (b) and (d) on them
   (68's note on the frozen text: Earth 1600 K on's row checks run here, not in the suite). (d) compares the rows of the
   direct solve with the rows run_oracle's own solve wrote, so a second solve is not added.
+`control note` records with the zoned Answer built with one extra Note; `control ulp` with one node's T moved by one
+ulp in the profiles. Each is a mutant of the answer as built, so its compare against the base record must be RED
+naming the state (§4.1.2's controls, 68 B1 on the code package).
 `compare` prints one line per state and «zones identity: PASS» only when (a), (b) and (d) are equal on every state and
 every tip row check holds; else «RED» with the states named. rc 0 / 1.
 (c) derived --all is run beside it by the landing round (derived/check.py), not here.
@@ -106,6 +110,38 @@ def record_state(name, path, state, switch) -> dict:
     return got
 
 
+def _plant(kind):
+    """Replace phase_zones.Answer (what solve.py builds) with a mutant builder for this process: «note» appends one
+    Note, «ulp» moves the last node's T of the first profiled layer by one ulp."""
+    import math
+    from solver import phase_zones, result
+    real = phase_zones.Answer
+
+    def build(qs, lbs, profiles, missing, notes, zones=()):
+        if kind == "note":
+            notes = tuple(notes) + (result.Note("planted_control", "zones §4.1.2 control: one appended note", {}),)
+        elif kind == "ulp":
+            prof = {lid: dict(cols) for lid, cols in dict(profiles).items()}
+            lid = next(iter(prof))
+            t = list(prof[lid]["T"] if "T" in prof[lid] else prof[lid]["P"])
+            col = "T" if "T" in prof[lid] else "P"
+            t[-1] = math.nextafter(t[-1], math.inf)
+            prof[lid][col] = tuple(t)
+            profiles = prof
+        else:
+            raise ValueError(kind)
+        return real(qs, lbs, profiles, missing, notes, zones)
+    phase_zones.Answer = build
+
+
+def _tree() -> dict:
+    import subprocess
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[2]
+    git = lambda *a: subprocess.run(["git", "-C", str(root), *a], capture_output=True, text=True).stdout.strip()
+    return {"head": git("rev-parse", "HEAD"), "dirty": bool(git("status", "--porcelain", "--", "solver", "engine"))}
+
+
 def record(path_out, names=None) -> int:
     from solver import context
     code = hashlib.sha256(context.solver_code_bytes()).hexdigest()
@@ -116,7 +152,7 @@ def record(path_out, names=None) -> int:
         print(f"STOP: unknown states {sorted(unknown)}")
         return 2
     out = {"python": sys.version.split()[0], "options_default": dataclasses.asdict(context.Options()),
-           "solver_code": code, "states": {}}
+           "solver_code": code, "tree": _tree(), "states": {}}
     for name, path, state, switch in STATES:
         if name not in names:
             continue
@@ -158,6 +194,9 @@ if __name__ == "__main__":
     a = sys.argv[1:]
     if a[:1] == ["record"] and len(a) >= 2:
         sys.exit(record(a[1], a[2:]))
+    if a[:1] == ["control"] and len(a) >= 3 and a[1] in ("note", "ulp"):
+        _plant(a[1])
+        sys.exit(record(a[2], a[3:]))
     if a[:1] == ["compare"] and len(a) == 3:
         sys.exit(compare(a[1], a[2]))
     print(__doc__)
