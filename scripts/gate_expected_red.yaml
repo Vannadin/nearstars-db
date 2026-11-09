@@ -33,11 +33,11 @@
   kind: unwired_set             # s4r ruling 3 (directing 11-08): the base red pinned to its exact set, so a new unwired test is red
   # gate.log l.284–384 at s4r (artifacts sg-gate-golive-s4r 69882c2e2 extra/gate.log blob 507794b0) and check_unwired_tests
   #   at the landing tip: the same 100 files, identical at base 910fd42c (68). Wiring one means removing it here (a registration).
+  # E-steps (bebb1aee, note 6 §7 rows; directing 11-10) wires engine/test_esteps_t_state.py: removed here, 99 files.
   step: "scripts/check_unwired_tests.py"
   paths:
     - engine/test_d2_nan.py
     - engine/test_eid.py
-    - engine/test_esteps_t_state.py
     - engine/test_fold_track.py
     - engine/test_item_a_contract.py
     - engine/test_melt_seams.py
