@@ -11,6 +11,9 @@
 "scripts/test_gate_pool_reap.sh":  # shell; reads scripts/check.sh's function text as test_gate_cleanup.sh does, no data file (go-live s4r 2b)
   globs: []
   hand: true
+"scripts/test_gate_keep_evidence.sh":  # shell; reads scripts/check.sh's _keep_evidence text and its two call lines (s4r2 EVIDENCE-SURVIVAL); writes only in a mktemp dir
+  globs: ["scripts/check.sh"]
+  hand: true
 "scripts/test_gate_serial_writes.py":  # by hand: reads scripts/check.sh's step lines as text (s4r ruling (b))
   globs: ["scripts/check.sh"]
   hand: true

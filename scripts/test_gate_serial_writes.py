@@ -23,6 +23,7 @@ WRITERS = [
 NO_WRITE = {
     # scripts/ guards and their tests: scratch dirs only (tempfile/mktemp), or read-only scans
     "scripts/test_gate_cleanup.sh", "scripts/test_gate_pool_reap.sh", "scripts/test_gate_serial_writes.py",
+    "scripts/test_gate_keep_evidence.sh",          # a mktemp dir only (s4r2 EVIDENCE-SURVIVAL)
     "scripts/test_lane_decide.py",
     "scripts/test_gate_step_inputs.py", "scripts/test_interface_side_labels.py", "scripts/test_check_unwired_tests.py",
     "scripts/check_unwired_tests.py", "scripts/test_check_verdict_reads.py",
