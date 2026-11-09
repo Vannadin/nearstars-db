@@ -103,7 +103,10 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: (note 6's measured reach). interior.py also gains the named refusal of a converged answer carrying a mixture's
 #: value-bound crossing (_refuse_if_value_bound_mixed) and a solve note for trial crossings; no oracle body crosses.
 #: Re-declared at this engine/ tree; read by the round's oracle at this tip.
-ORACLE_ENGINE_TREE = "90ee09f03876a093de98c719c4619c10d8b50eef"
+#: E-steps on the landed PROTO (directing 11-10): engine/ changes only in test_esteps_step_edge.py, whose row 7b reads
+#: the answer by interior.is_answer instead of `.applicable` (check_verdict_reads). No solve reads it. Re-declared at
+#: this engine/ tree.
+ORACLE_ENGINE_TREE = "a8939ce0ecc748dfb3a247fdbfd86b22a8217218"
 REPO = Path(lm._ENGINE).parent
 
 

@@ -230,7 +230,7 @@ try:
 finally:
     interior._integrate_raw = real_raw
 want = f"{interior.VALUE_BOUND_MIXED_HEAD} — 시행 사격에서 1 번, 답에서 0 번"
-row(got.applicable and calls[0] > 1 and want in got.notes,
+row(interior.is_answer(got) and calls[0] > 1 and want in got.notes,
     f"지구 풀이: 적분 {calls[0]} 번 중 첫 시행만 건넘 → 답이 나오고 메모 «… 시행 사격에서 1 번, 답에서 0 번»")
 
 print("\n3. 화성 1500 K (cmf 0.27790532, 심은 입력) — 고정 중심압에서 T_c 여섯 점(2e-5 K 간격, 옛 뜀을 가로지름)의 표면 T")
