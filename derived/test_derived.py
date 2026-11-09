@@ -679,15 +679,23 @@ class LoadCensus(unittest.TestCase):
         """s4r item (1): in the full gate, check.sh puts scripts/gate_reads first on PYTHONPATH, so the census process
         loads its sitecustomize at start. That module is neither engine/ nor solver/ nor the tooling's: the judged set
         stays «none», and the module is listed apart. Mutant: the line printing every startup project module (the
-        e4b94d98 form) prints «…loaded): scripts/gate_reads/sitecustomize.py» here and this test goes red."""
-        with tempfile.TemporaryDirectory() as d:
-            env = dict(os.environ, PYTHONPATH=str(ck.REPO / "scripts" / "gate_reads"),
-                       GATE_READS_LOG=str(Path(d) / "reads.jsonl"), GATE_STEP="derived/test_derived.py")
-            r = self._run_p1("solver.fall_sets", False, env)
-        self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
-        self.assertIn("solver/fall_sets.py", r.stdout.split("[LOAD-RED]")[1])
-        self.assertIn("(not judged; must be none from engine/ or solver/, and none the census tooling loaded): none · "
-                      "also loaded at interpreter start, allowed — scripts/gate_reads/sitecustomize.py", r.stdout)
+        e4b94d98 form) prints «…loaded): scripts/gate_reads/sitecustomize.py» here and this test goes red.
+        s4r2 S4: the full gate also exports GATE_MASS_LOG, so sitecustomize loads gate_mass_record.py too. The env is
+        pinned both ways (never inherited), and each shape's startup list is asserted."""
+        gr = "scripts/gate_reads/"
+        for mass, startup in ((False, gr + "sitecustomize.py"),
+                              (True, gr + "gate_mass_record.py, " + gr + "sitecustomize.py")):
+            with self.subTest(gate_mass_log=mass), tempfile.TemporaryDirectory() as d:
+                env = {k: v for k, v in os.environ.items() if k not in ("GATE_MASS_LOG", "GATE_READS_LOG")}
+                env.update(PYTHONPATH=str(ck.REPO / "scripts" / "gate_reads"),
+                           GATE_READS_LOG=str(Path(d) / "reads.jsonl"), GATE_STEP="derived/test_derived.py")
+                if mass:
+                    env["GATE_MASS_LOG"] = str(Path(d) / "mass.jsonl")
+                r = self._run_p1("solver.fall_sets", False, env)
+                self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
+                self.assertIn("solver/fall_sets.py", r.stdout.split("[LOAD-RED]")[1])
+                self.assertIn("(not judged; must be none from engine/ or solver/, and none the census tooling loaded): "
+                              "none · also loaded at interpreter start, allowed — " + startup + "\n", r.stdout)
 
     def test_p1_a_module_check_py_imports_is_still_judged(self):
         """68 HOLD B1 on 5db3db7f: check.py imports solver.fall_sets; when the census tooling imported check in-process,
