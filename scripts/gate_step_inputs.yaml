@@ -17,8 +17,8 @@
 "scripts/test_lane_decide.py":  # by hand: the row test reads scripts/gate_expected_red.yaml itself (SG-MARS-HOLD-ENGINE)
   globs: ["scripts/gate_expected_red.yaml"]
   hand: true
-"scripts/test_gate_step_inputs.py":
-  globs: []
+"scripts/test_gate_step_inputs.py":  # test_real_tree_has_no_shipped_import_of_gate_only_code (e1784f93, 2cceafc2) runs library_imports_gate_only on the real tree: it reads every shipped engine/, solver/, solver/materials/ .py and lists engine/*.py, engine/tools/*.py and derived/**/*.py by glob (s4r2 gate-0ba38e35.log, 116 lines; reproduced on the Mac under the full-lane exports)
+  globs: ["engine/*.py", "engine/tools/*.py", "solver/*.py", "solver/materials/*.py", "derived/**.py"]
 "scripts/test_interface_side_labels.py":  # C153; declared by hand at landing, the next census confirms
   globs: ["engine/*.py", "engine/chain.yaml", "scripts/interface_side_labels.txt"]
   hand: true
