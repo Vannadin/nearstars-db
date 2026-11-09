@@ -1425,19 +1425,31 @@ fi   # lane
 
 step_flush                    # ⚠ **집계 앞의 배리어** — 이 줄이 없으면 아직 도는 단계의 실패가 rc 에 안 든다
 
+# ── 게이트 증거(읽기·질량 기록)는 게이트 뒤에도 남는다 — 모든 기계에서 (s4r2: PC 에서 `cp … || true` 가 조용히 실패해 둘 다 지워졌다) ──
+# ⚠ **못 남기면 이름 붙은 FAIL 이고, 임시 파일은 지우지 않는다.** GATE_LOGS_DIR 는 이미 있어야 한다(만들지 않음 —
+#   기본값은 맥 경로라, 만들면 PC 홈에 엉뚱한 폴더가 생긴다). 남긴 뒤에만 임시 파일을 지운다.
+_keep_evidence() {   # _keep_evidence <temp log> <file name>
+  if [ -d "$GATE_LOGS_DIR" ] && cp "$1" "$GATE_LOGS_DIR/$2"; then
+    echo "  [기록] 게이트 증거 보존 — $GATE_LOGS_DIR/$2"
+    rm -f "$1"
+  else
+    echo "  [FAIL] gate_evidence — $2 not kept: GATE_LOGS_DIR=$GATE_LOGS_DIR is not a writable directory; the log stays at $1"
+    fail=1
+  fi
+}
+
 if [ "$lane" = "full" ] && [ -n "${GATE_MASS_LOG:-}" ]; then
   echo "── M1 런타임 기록 검사 (S3 D2 §2.0 — 스위트가 만든 BurnMan 광물 클래스가 목록 안인가) ──"
   # ⚠ 검사기 자신은 기록하지 않는다 — 후크를 끄고 돈다
   env -u GATE_MASS_LOG -u GATE_READS_LOG -u PYTHONPATH "$GATE_PY" scripts/check_mass_formula.py --recorded "$GATE_MASS_LOG" || fail=1
-  rm -f "$GATE_MASS_LOG"
+  _keep_evidence "$GATE_MASS_LOG" "mass-$gate_sha.jsonl"
 fi
 
 if [ "$lane" = "full" ] && [ -n "${GATE_READS_LOG:-}" ]; then
   echo "── C136 입력 선언 표류 검사 (gate_step_inputs.yaml 대 이번 판의 읽기) ──"
   # ⚠ 검사기 자신은 기록하지 않는다 — 후크를 끄고 돈다
   env -u GATE_READS_LOG -u PYTHONPATH "$GATE_PY" scripts/gate_step_inputs.py check "$GATE_READS_LOG" || fail=1
-  cp "$GATE_READS_LOG" "${GATE_LOGS_DIR}/reads-$gate_sha.jsonl" 2>/dev/null || true
-  rm -f "$GATE_READS_LOG"
+  _keep_evidence "$GATE_READS_LOG" "reads-$gate_sha.jsonl"
 fi
 
 echo ""
