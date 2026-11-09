@@ -1264,8 +1264,8 @@ def _warm_root(body, options, registry, refusal):
             "closure": {"kind": body.closure.kind, "layer": body.closure.layer, "name": body.closure.name,
                         "range": [lo, hi], "solved_in": [half_lo, half_hi]},
             "warm_sweep": [[t, list(r)] for t, r in trace], "step_k": step})
-    return result.Answer(ans.quantities, ans.boundaries, ans.profiles, ans.missing, tuple(ans.notes) + (note,),
-                         ans.zones), x_half
+    return phase_zones.Answer(ans.quantities, ans.boundaries, ans.profiles, ans.missing, tuple(ans.notes) + (note,),
+                              getattr(ans, "zones", ())), x_half
 
 
 def _with_first(outcome, first):
@@ -1507,7 +1507,7 @@ def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
             from solver import coexist as cx             # curve's SWAP_NOTE dropped (68 B4, keyed by curve)
             notes = cx.filter_notes(list(notes), acc.coexist, views)
         zones = phase_zones.collect(body, views, acc)   # zones-prereg §3.1: after every value and note, accepted pass only
-        ans = result.Answer(qs, lbs, profiles, (), tuple(notes), zones)
+        ans = phase_zones.Answer(qs, lbs, profiles, (), tuple(notes), zones)
         return ans, x
     if out.kind == "two_roots":
         return refusals.make("solve.two_roots", where, x=None, closure_kind=kind, pass_kind="scan",

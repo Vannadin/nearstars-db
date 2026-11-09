@@ -3,7 +3,7 @@
 
 `collect(body, views, acc)` runs once, on the accepted pass only, after every value of the answer is made (as
 material_notes.collect does). It reads each entered layer's accepted nodes and that layer's landed events, and
-returns a tuple of `result.PhaseZone`. It never calls `state()`, touches no counter, no warm start and no notes, so
+returns a tuple of `PhaseZone`. It never calls `state()`, touches no counter, no warm start and no notes, so
 it cannot change a value (§3.2). Every label read goes through `_read`, the one function §4.3 (e) spies on.
 
 Labels (§2.2): a record view's `phase_read(p, t)` (a Stop reads `stop:<kind>`); a legacy view's
@@ -17,9 +17,76 @@ is the common read of the nodes strictly inside it; interior reads that disagree
 """
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 from solver import material_view as mv
 from solver import result
 from solver import stepper as st
+
+#: what may end a phase zone (zones-prereg §2.1); `layer:` and `event:` carry a name after the colon
+ZONE_END_KINDS = ("surface", "layer:", "event:", "centre", "r_floor", "between_nodes")
+#: the label of a zone with no interior node (zones-prereg §2.3)
+ZONE_UNREAD = "unread"
+
+
+def _zone_end(name: str, by: str) -> None:
+    if not any(by == k if not k.endswith(":") else (by.startswith(k) and len(by) > len(k)) for k in ZONE_END_KINDS):
+        raise ValueError(f"PhaseZone.{name} {by!r} is not one of {ZONE_END_KINDS}")
+
+
+@dataclass(frozen=True)
+class PhaseZone:
+    """One contiguous run of one phase label inside one entered layer of the accepted pass (zones-prereg §2.1).
+    `top` / `base` are the pass's node values (m, r, p, t) at the zone's ends; `crossings` lists an assemblage layer's
+    landed transition and coexistence events as (name, m, p, t), reported and not chained (§2.2)."""
+    layer: str
+    material: str
+    label: str
+    top: tuple
+    base: tuple
+    top_by: str
+    base_by: str
+    record_phases: int
+    single_phase_why: str | None = None
+    crossings: tuple = ()
+
+    def __post_init__(self):
+        for n in ("top", "base"):
+            v = tuple(getattr(self, n))
+            if len(v) != 4:
+                raise ValueError(f"PhaseZone.{n} must be (m, r, p, t), got {v!r}")
+            object.__setattr__(self, n, tuple(result.check_finite(f"PhaseZone.{n}", x) for x in v))
+        _zone_end("top_by", self.top_by)
+        _zone_end("base_by", self.base_by)
+        if not self.label:
+            raise ValueError("PhaseZone.label is empty")
+        if int(self.record_phases) != self.record_phases or self.record_phases < 1:
+            raise ValueError(f"PhaseZone.record_phases {self.record_phases!r} is not a positive int")
+        cr = []
+        for c in self.crossings:
+            name, *nums = tuple(c)
+            if not name or len(nums) != 3:
+                raise ValueError(f"PhaseZone crossing {c!r} is not (name, m, p, t)")
+            cr.append((str(name), *(result.check_finite("PhaseZone crossing", x) for x in nums)))
+        object.__setattr__(self, "crossings", tuple(cr))
+
+
+@dataclass(frozen=True)
+class Answer(result.Answer):
+    """`result.Answer` with the accepted pass's phase-zone rows (zones-prereg §2.4 Z1, post-freeze note 1).
+
+    A subclass here, not a field in solver/result.py: result.py is in the shipped fall sets' read closure
+    (fall_sets.closure(), pinned by blob at load), so editing it makes every set refuse until rebuilt — the same reason
+    nodes/types.py subclasses Provenance. The class keeps the name «Answer», so result.plain's «type» is unchanged and
+    its bytes are frozen Z1's: result.Answer's fields, then «zones». Readers use getattr(answer, "zones", ())."""
+    zones: tuple = ()
+
+    def __post_init__(self):
+        super().__post_init__()
+        object.__setattr__(self, "zones", tuple(self.zones))
+        for z in self.zones:
+            if not isinstance(z, PhaseZone):
+                raise ValueError(f"Answer.zones holds {z!r}, not a PhaseZone")
 
 #: event-name prefixes listed as an assemblage layer's crossings (transitions and walked coexistence segments)
 CROSSING_PREFIXES = ("phase:", "coexist-")
@@ -98,7 +165,7 @@ def _segments(labels, cuts):
     for a, b in zip(bounds, bounds[1:]):
         inner = labels[a + 1:b]
         if not inner:
-            raw.append([a, b, result.ZONE_UNREAD])
+            raw.append([a, b, ZONE_UNREAD])
             continue
         start, cur = a, inner[0]
         for k in range(a + 1, b):
@@ -109,7 +176,7 @@ def _segments(labels, cuts):
     out = []
     for i, z in enumerate(raw):
         kind = z[3] if len(z) > 3 else ("end" if z[1] == n - 1 else "cut")
-        if out and out[-1][2] == z[2] and z[2] != result.ZONE_UNREAD and out[-1][3] == "cut":
+        if out and out[-1][2] == z[2] and z[2] != ZONE_UNREAD and out[-1][3] == "cut":
             out[-1][1], out[-1][3] = z[1], kind        # a landed event with no label change ends no zone
         else:
             out.append([z[0], z[1], z[2], kind])
@@ -154,7 +221,7 @@ def collect(body, views, acc) -> tuple:
                 b_by = "between_nodes"
             else:
                 b_by = f"event:{first_event[b]}"
-            rows.append(result.PhaseZone(layer.id, mid, label, _node(path[a]), _node(path[b]), t_by, b_by, n_ph,
+            rows.append(PhaseZone(layer.id, mid, label, _node(path[a]), _node(path[b]), t_by, b_by, n_ph,
                                          why, tuple(crossings) if k == 0 else ()))
     return tuple(rows)
 
@@ -176,7 +243,7 @@ def check_rows(answer) -> list:
             for end in (z.top_by, z.base_by):
                 if end.startswith("layer:") and end[len("layer:"):] not in located:
                     bad.append(f"(a) {lid}: {end} is not a located boundary")
-            if z.base_by == "between_nodes" or z.label == result.ZONE_UNREAD:
+            if z.base_by == "between_nodes" or z.label == ZONE_UNREAD:
                 bad.append(f"(b) {lid}: {z.label} ends {z.base_by}")
         if zs[0].top_by.startswith("event:") or zs[-1].base_by.startswith("event:"):
             bad.append(f"(a) {lid}: the layer's own ends are events")

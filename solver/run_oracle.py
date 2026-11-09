@@ -204,7 +204,7 @@ def _one(body_yaml: str, state, options, chain: bool, member=None, registry=None
                    quantities=[result.plain(q) for q in out.quantities],
                    boundaries=[result.plain(b) for b in out.boundaries],
                    notes=[result.plain(n) for n in out.notes],        # switch-over §5 (Q2); comparator note 15: class R
-                   zones=[result.plain(z) for z in out.zones])        # zones-prereg §2.4: class R
+                   zones=[result.plain(z) for z in getattr(out, "zones", ())])        # zones-prereg §2.4: class R
         chain and _legacy(rec, lv.run_chain(body_yaml, out, t_pot=t_pot))
     elif isinstance(out, result.NoAnswer):
         rec.update(header=_header(options, _sid(body, options)), outcome_kind="no_answer",
