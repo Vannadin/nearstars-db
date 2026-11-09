@@ -326,17 +326,67 @@ class LocatedBoundary:
         _num(self, "m", "r", "p", "t")
 
 
+#: what may end a phase zone (zones-prereg §2.1); `layer:` and `event:` carry a name after the colon
+ZONE_END_KINDS = ("surface", "layer:", "event:", "centre", "r_floor", "between_nodes")
+#: the label of a zone with no interior node (zones-prereg §2.3)
+ZONE_UNREAD = "unread"
+
+
+def _zone_end(name: str, by: str) -> None:
+    if not any(by == k if not k.endswith(":") else (by.startswith(k) and len(by) > len(k)) for k in ZONE_END_KINDS):
+        raise ValueError(f"PhaseZone.{name} {by!r} is not one of {ZONE_END_KINDS}")
+
+
+@dataclass(frozen=True)
+class PhaseZone:
+    """One contiguous run of one phase label inside one entered layer of the accepted pass (zones-prereg §2.1).
+    `top` / `base` are the pass's node values (m, r, p, t) at the zone's ends; `crossings` lists an assemblage layer's
+    landed transition and coexistence events as (name, m, p, t), reported and not chained (§2.2)."""
+    layer: str
+    material: str
+    label: str
+    top: tuple
+    base: tuple
+    top_by: str
+    base_by: str
+    record_phases: int
+    single_phase_why: str | None = None
+    crossings: tuple = ()
+
+    def __post_init__(self):
+        for n in ("top", "base"):
+            v = tuple(getattr(self, n))
+            if len(v) != 4:
+                raise ValueError(f"PhaseZone.{n} must be (m, r, p, t), got {v!r}")
+            object.__setattr__(self, n, tuple(check_finite(f"PhaseZone.{n}", x) for x in v))
+        _zone_end("top_by", self.top_by)
+        _zone_end("base_by", self.base_by)
+        if not self.label:
+            raise ValueError("PhaseZone.label is empty")
+        if int(self.record_phases) != self.record_phases or self.record_phases < 1:
+            raise ValueError(f"PhaseZone.record_phases {self.record_phases!r} is not a positive int")
+        cr = []
+        for c in self.crossings:
+            name, *nums = tuple(c)
+            if not name or len(nums) != 3:
+                raise ValueError(f"PhaseZone crossing {c!r} is not (name, m, p, t)")
+            cr.append((str(name), *(check_finite("PhaseZone crossing", x) for x in nums)))
+        object.__setattr__(self, "crossings", tuple(cr))
+
+
 @dataclass(frozen=True)
 class Answer:
-    """An answer (D-A3-2): quantities by where, located boundaries, profiles, and what could not be made."""
+    """An answer (D-A3-2): quantities by where, located boundaries, profiles, and what could not be made; `zones` holds
+    the accepted pass's phase-zone rows (zones-prereg §2.4), () where none were collected."""
     quantities: tuple
     boundaries: tuple = ()
     profiles: Mapping = field(default_factory=dict)   # layer id → {column name → tuple of floats}
     missing: tuple = ()                               # ((key, Refusal | NoAnswer), …)
     notes: tuple = ()
+    zones: tuple = ()
 
     def __post_init__(self):
-        for n in ("quantities", "boundaries", "missing", "notes"):
+        for n in ("quantities", "boundaries", "missing", "notes", "zones"):
             object.__setattr__(self, n, tuple(getattr(self, n)))
         prof = {}
         for lid, cols in dict(self.profiles).items():
@@ -360,6 +410,9 @@ class Answer:
         for n in self.notes:
             if not isinstance(n, Note):
                 raise ValueError(f"Answer.notes holds {n!r}, not a Note")
+        for z in self.zones:
+            if not isinstance(z, PhaseZone):
+                raise ValueError(f"Answer.zones holds {z!r}, not a PhaseZone")
 
     @property
     def grade(self) -> str:
