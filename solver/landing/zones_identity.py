@@ -10,7 +10,10 @@ output goes into the landing note.
 
 Per state (§4.1.1), `record` writes:
 - (a) `digest`: sha256 of canonical plain((outcome, warm)) with every `solve_id` and every `zones` key removed;
-- (b) `solve_ids`: the solve_id values the outcome carries (they hash the body, material bytes and options);
+- (b) `solve_ids`: the solve_id values the outcome carries, computed with `context.solver_code_bytes` replaced by
+  b"" for the whole run (post-freeze note 1: solve_id also hashes the solver's own code, note 17 §5, so it moves with
+  any solver edit by design; without the code bytes it hashes the body, material bytes, options and SOLVER_VERSION,
+  which must not move), and `solver_code`: sha256 of the real code bytes, which does move;
 - (d) `oracle_digest`: sha256 of run_oracle.one's record with `solve_id`, `zones` and the header's tree, dirty, venv
   and engine_identical_to_oracle_tree removed (those name the checkout, not the physics);
 - `outcome`: the outcome kind and, for a refusal or no-answer, its id or reason;
@@ -105,12 +108,15 @@ def record_state(name, path, state, switch) -> dict:
 
 def record(path_out, names=None) -> int:
     from solver import context
+    code = hashlib.sha256(context.solver_code_bytes()).hexdigest()
+    context.solver_code_bytes = lambda: b""                 # (b): solve_id without the code digest, this process only
     names = set(names or [s[0] for s in STATES])
     unknown = names - {s[0] for s in STATES}
     if unknown:
         print(f"STOP: unknown states {sorted(unknown)}")
         return 2
-    out = {"python": sys.version.split()[0], "options_default": dataclasses.asdict(context.Options()), "states": {}}
+    out = {"python": sys.version.split()[0], "options_default": dataclasses.asdict(context.Options()),
+           "solver_code": code, "states": {}}
     for name, path, state, switch in STATES:
         if name not in names:
             continue
@@ -142,6 +148,8 @@ def compare(base_path, tip_path) -> int:
               + (f" · tip rows {len(t['rows'])} · checks {'ok' if not checks else checks}" if "rows" in t else ""))
         if diff or checks:
             bad.append(name)
+    print(f"solver code digest {base['solver_code'][:12]} → {tip['solver_code'][:12]} "
+          f"({'moved, as any solver edit moves it' if base['solver_code'] != tip['solver_code'] else 'equal'})")
     print("zones identity: " + ("PASS" if not bad else "RED — " + "; ".join(bad)))
     return 0 if not bad else 1
 
