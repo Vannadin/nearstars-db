@@ -886,7 +886,8 @@ step "scripts/test_gate_cleanup.sh" bash scripts/test_gate_cleanup.sh
 # 게이트 자신: 천장을 넘긴 풀 워커를 죽이고 거두어 rc·출력·[TIME] 을 남기는가 (go-live s4r 2b). ~3 s.
 step "scripts/test_gate_pool_reap.sh" bash scripts/test_gate_pool_reap.sh
 # 게이트 자신: 읽기·질량 기록이 게이트 뒤에도 남는가 — 있는 GATE_LOGS_DIR 엔 사본, 없으면 이름 붙은 FAIL·임시 파일 보존 (s4r2 EVIDENCE-SURVIVAL). ~0 s.
-step "scripts/test_gate_keep_evidence.sh" bash scripts/test_gate_keep_evidence.sh
+#   이름이 test_* 라 풀 단계다(mktemp 안에만 씀). scripts/ 의 .py 를 안 건드려 5-c143-inventory 스탬프(data scripts/**/*.py)가 그대로다.
+step "test_gate_keep_evidence.sh" bash scripts/test_gate_keep_evidence.sh
 # 게이트 자신: 트리에 쓰는 직렬 단계는 «풀이 다 빈 뒤» 묶음에만 있는가, 나머지 직렬 단계는 쓰지 않는다고 판정됐는가 (s4r 68 n5 판정 (b)). ~0 s.
 step "scripts/test_gate_serial_writes.py" bash -c 'python3 scripts/test_gate_serial_writes.py'
 # 게이트 자신: auto-lane 이 기대 빨강만 있는 full 을 인정하는 규칙(C128)의 합성 로그 시험. ~1 s.
