@@ -1331,6 +1331,10 @@ step "test_reference_adiabats.py" bash -c 'cd engine && exec python3 test_refere
 step "solver/tests/test_env_tiers.py" bash -c 'exec python3 -m unittest solver/tests/test_env_tiers.py'
 # 상 구간 행(zones-prereg, 사후 노트 1) — 지구 1700 K·화성·금성·단테·판도라(전환 끔)의 층별 행·대조군·h2o·집합표 고정장치. 맥 ~260 초
 step "test_phase_zones.py" bash -c 'exec python3 -m unittest solver/tests/test_phase_zones.py'
+# 덩어리(bulk:) 층 계획(layers S0·S1·S2) — partition 순수 함수·bulk: 검증기·규산염 표 인터페이스 자리표시. 맥 각 1–30 초
+step "test_partition.py" bash -c 'exec python3 -m unittest solver/tests/test_partition.py'
+step "test_bulk_validate.py" bash -c 'exec python3 -m unittest solver/tests/test_bulk_validate.py'
+step "test_silicate_source.py" bash -c 'exec python3 -m unittest solver/tests/test_silicate_source.py'
 step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
 step "test_convergence_meaning.py" bash -c 'cd engine && exec python3 test_convergence_meaning.py'
 step "test_rootfind.py" bash -c 'cd engine && exec python3 test_rootfind.py'

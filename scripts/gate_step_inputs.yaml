@@ -321,6 +321,15 @@
 "test_phase_zones.py":  # pool step (test_*); zones-prereg §4.2–§4.3, note 1: the fall-set closure test walks solver/ (fall_sets.closure, a listing of solver/) and engine/*.py (engine_static) as text; measured with the full-lane exports on the Mac
   globs: ["solver/*", "solver/*.py", "engine/*.py"]
   hand: true
+"test_partition.py":  # pool step (test_*); layers S0–S2: the mutants read solver/partition.py as text, and SchemaBulk's census call globs engine/tools/make_*.py (derived/check.py); measured with the full-lane exports on the Mac
+  globs: ["solver/partition.py", "engine/tools/make_*.py"]
+  hand: true
+"test_bulk_validate.py":  # pool step (test_*); layers S1: the division-audit mutant reads solver/partition.py as text; measured as above
+  globs: ["solver/partition.py"]
+  hand: true
+"test_silicate_source.py":  # pool step (test_*); layers S2: fall_sets.check_stamp hashes its solver/engine closure as text, and the test reads material_assemblage.py, silicate_source.py and engine/test_mantle_composition.py as text; measured as above
+  globs: ["solver/*.py", "engine/*.py"]
+  hand: true
 "solver/tests/test_env_tiers.py":  # HEAVY-onctl P2 census: reads every engine/, solver/, scripts/ and derived/ .py as text (env names, tier sites); measured with sg-gate trace_reads on the Mac
   globs: ["engine/**.py", "solver/**.py", "scripts/**.py", "derived/**.py"]   # s4r l.5735–5736: derived/census_site/ too
   hand: true
