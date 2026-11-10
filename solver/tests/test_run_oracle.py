@@ -13,8 +13,9 @@ from solver import context, run_oracle as ro
 FIELDS = {"header", "body", "state", "outcome_kind", "quantities", "boundaries", "refusal", "no_answer",
           "legacy_nodes", "table_read", "notes"}   # notes: switch-over §5 (Q2), comparator note 15
 FAST = context.Options(sensitivity_dt=0.0)
-#: keys an answer record may carry beyond FIELDS, each written only on an answer (zones-prereg post-freeze note 1, 68 B1)
-ANSWER_ONLY = {"zones"}
+#: keys an answer record may carry beyond FIELDS, each written only on an answer (zones-prereg post-freeze note 1, 68 B1;
+#: fe_budget_misfit: layers S1 §2.5, written in the answer branch for a bulk_plan body only)
+ANSWER_ONLY = {"zones", "fe_budget_misfit"}
 
 
 def contract_problems(rec) -> list:
@@ -191,6 +192,13 @@ class ContractControls(unittest.TestCase):
 
     def test_zones_on_a_refusal_is_red(self):
         self.assertEqual(contract_problems({**self._rec("refusal"), "zones": []}), ["unknown ['zones']"])
+
+    def test_answer_with_fe_budget_misfit_holds(self):
+        self.assertEqual(contract_problems({**self._rec("answer"), "zones": [], "fe_budget_misfit": {}}), [])
+
+    def test_fe_budget_misfit_on_a_refusal_is_red(self):
+        self.assertEqual(contract_problems({**self._rec("refusal"), "fe_budget_misfit": {}}),
+                         ["unknown ['fe_budget_misfit']"])
 
     def test_missing_field_is_red(self):
         rec = self._rec("answer")
