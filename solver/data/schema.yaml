@@ -188,9 +188,9 @@ bulk:
   defaults:
     fe_metal_fraction:
       value: 0.8625
-      sigma: 0.042
+      sigma: 0.0046
       grade: "default (Earth, Wang+ 2018)"
-      source: "2018Icar..299..460W arXiv p. 7 Table 1: 0.325 × core Fe 82.8 / bulk Fe 31.2 (registration §1)"
+      source: "2018Icar..299..460W arXiv p. 7 Table 1: 0.325 × core Fe 82.8 / bulk Fe 31.2 (registration §1); σ: Wang+ 2018 eq. A.5 dependence kept (3f, artifacts e38928ebe; S0 post-freeze note 3)"
       counter_evidence_searched: "Morard+ 2013 (cached) and MS95 (cached), registration §1; tests 2 and 3"
     o_relative_sigma:
       value: 0.022727272727272728

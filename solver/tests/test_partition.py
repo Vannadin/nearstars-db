@@ -104,9 +104,14 @@ class Earth(unittest.TestCase):
         self.assertLessEqual(abs(self.plan.residual), 1e-12)
 
     def _mantle_check(self, plan, el, oxide, hand):
-        """Mantle `el` per unit mantle (1 − CMF) against Wang's PM row, within the propagated ± of the rows used:
-        σ = √(σ_bulk² + (CMF σ_core)²) / (1 − CMF), with σ_PM added in quadrature. `hand` is the oxide wt % from the
-        PM row by hand (quoted in the caller), checked through the same oxide factor."""
+        """Mantle `el` per unit mantle (1 − CMF) against Wang's PM row, within the correlated band (S0 post-freeze
+        note 3): σ = √(σ_PM² + ε²), ε = |bulk − (0.325·core + 0.675·PM)| / 0.675, the printed table's own closure
+        residual for the row. Wang build the bulk column from the core and PM columns (eq. A.5), so bulk ± and core ±
+        are not independent; the old √(σ_bulk² + (CMF σ_core)²)/(1 − CMF) ⊕ σ_PM counted the core's ± twice.
+        By that construction the partition's mantle is the PM row up to ε, so this band mainly checks arithmetic.
+        Its power to catch a wrong partition is the mutant (test_mutant_without_the_light_draw_is_red_on_si), which
+        stays in this test for good (68 n1, directing). `hand` is the oxide wt % from the PM row by hand (quoted in
+        the caller), checked through the same oxide factor."""
         r = self.rows[el]
         cmf = plan.core_mass_fraction
         ox = plan.ledger["mantle_oxides"][oxide]
@@ -115,8 +120,10 @@ class Earth(unittest.TestCase):
         factor = (n_cat * mass[el] + n_o * mass["O"]) / (n_cat * mass[el])
         self.assertLess(abs(r["pm"]["value"] * 100 * factor - hand), 5e-4)            # the quoted hand value
         got = ox / (1 - cmf) / factor
-        s_core = r["core"]["plus"] if r["core"] else 0.0
-        sigma = math.hypot(math.hypot(r["bulk"]["plus"], cmf * s_core) / (1 - cmf), r["pm"]["plus"])
+        core = r["core"]["value"] if r["core"] else 0.0
+        eps = abs(r["bulk"]["value"] - (0.325 * core + 0.675 * r["pm"]["value"])) / 0.675
+        sigma = math.hypot(r["pm"]["plus"], eps)
+        print(f"\n{el}: got {got!r} · PM {r['pm']['value']} · σ_PM {r['pm']['plus']} · ε {eps!r} · σ {sigma!r}")
         return got, r["pm"]["value"], sigma
 
     def test_mantle_against_the_primitive_mantle(self):
@@ -132,13 +139,42 @@ class Earth(unittest.TestCase):
 
     def test_mutant_without_the_light_draw_is_red_on_si(self):
         """Directing's mutant: only Fe and Ni drawn (rev 0's rule) → mantle Si from all 16.0 % bulk Si, ≈ 11 %
-        relative high per unit mantle, outside the band."""
+        relative high per unit mantle, outside the band. This mutant carries test 2's power (the correlated band
+        alone checks arithmetic, see _mantle_check); never drop it (S0 note 3, 68 n1)."""
         m = mutant("d = m - core.get(k, 0.0)", "d = m - (core.get(k, 0.0) if k in ('Fe', 'Ni') else 0.0)")
         plan = m.partition(self.bulk)
         got, want, sigma = self._mantle_check(plan, "Si", "SiO2", 45.568)
         self.assertGreater(abs(got - want), sigma)
         self.assertGreater(got / want - 1, 0.10)
         self.assertGreater(abs(plan.residual), 1e-3)                    # and the light shares are counted twice
+
+    def _default_text(self, mod, sigma=None):
+        """The fe_metal_fraction default disclosure `mod.partition` writes for Wang's bulk, with the yaml's σ replaced
+        by `sigma` for that call when given (the BULK dict is copied, never edited in place)."""
+        saved = mod.BULK
+        if sigma is not None:
+            d = dict(saved["defaults"])
+            d["fe_metal_fraction"] = {**d["fe_metal_fraction"], "sigma": sigma}
+            mod.BULK = {**saved, "defaults": d}
+        try:
+            plan = mod.partition(self.bulk)
+        finally:
+            mod.BULK = saved
+        return next(x["text"] for x in plan.disclosures if x["text"].startswith("fe_metal_fraction default"))
+
+    def test_default_disclosure_reads_the_yaml_sigma(self):
+        """S0 note 3: the disclosure names schema.yaml's σ (0.0046), and a yaml σ of 0.1 prints «± 0.1»."""
+        d = pt.BULK["defaults"]["fe_metal_fraction"]
+        self.assertEqual(d["sigma"], 0.0046)
+        self.assertEqual(self._default_text(pt), f"fe_metal_fraction default 0.8625 ± 0.0046 — {d['grade']}")
+        self.assertIn("± 0.1 — ", self._default_text(pt, 0.1))
+
+    def test_planted_sigma_literal_is_caught(self):
+        """Guard control: partition.py with the σ written as a literal reads right at the default and wrong under the
+        yaml σ 0.1, so the check above goes red on it."""
+        m = mutant("± {fm['sigma']} — ", "± 0.0046 — ")
+        self.assertIn("± 0.0046 — ", self._default_text(m))
+        self.assertNotIn("± 0.1 — ", self._default_text(m, 0.1))
 
     def test_control_fe_metal_fraction_half_leaves_the_band(self):
         """With 0.5 the O check refuses first (more FeO: `input.bulk_oxygen_short`), so the control widens O's ± to 1
@@ -282,7 +318,7 @@ class Purity(unittest.TestCase):
 
 class SchemaBulk(unittest.TestCase):
     """layers S1 §1 (1346ffc6): S0's bulk.yaml joined schema.yaml's top level as `bulk:`. The section equals ea3ae617's
-    bulk.yaml key by key; bulk.yaml is gone; schema.yaml's code readers are validate.py and partition.py; the census
+    bulk.yaml key by key, but for S0 post-freeze note 3's σ and its source; bulk.yaml is gone; schema.yaml's code readers are validate.py and partition.py; the census
     stays PASS (S0's post-freeze note 1 tests, carried over)."""
 
     def test_section_equals_s0_bulk_yaml(self):
@@ -290,7 +326,13 @@ class SchemaBulk(unittest.TestCase):
                              text=True)
         self.assertEqual(old.returncode, 0, old.stderr)
         import yaml
-        self.assertEqual(yaml.safe_load(old.stdout), thaw(pt.BULK))
+        want = yaml.safe_load(old.stdout)
+        # S0 post-freeze note 3 changes exactly fe_metal_fraction's sigma (0.042 → 0.0046) and adds the σ's source
+        fm = want["defaults"]["fe_metal_fraction"]
+        self.assertEqual(fm["sigma"], 0.042)
+        fm["sigma"] = 0.0046
+        fm["source"] += "; σ: Wang+ 2018 eq. A.5 dependence kept (3f, artifacts e38928ebe; S0 post-freeze note 3)"
+        self.assertEqual(want, thaw(pt.BULK))
         self.assertFalse((ROOT / "solver" / "data" / "bulk.yaml").exists())
 
     def test_schema_readers(self):
