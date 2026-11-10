@@ -237,8 +237,9 @@ def _elements(bulk, params, where):
                    where)
     disclosures = []
     if "fe_metal_fraction" not in params:
-        disclosures.append({"text": "fe_metal_fraction default 0.8625 ± 0.042 — " + dflt["fe_metal_fraction"]["grade"],
-                            "data": {"value": f_metal, "source": dflt["fe_metal_fraction"]["source"]}})
+        fm = dflt["fe_metal_fraction"]                  # S0 note 3: the text reads the yaml, no number in the code
+        disclosures.append({"text": f"fe_metal_fraction default {fm['value']} ± {fm['sigma']} — {fm['grade']}",
+                            "data": {"value": f_metal, "source": fm["source"]}})
 
     def run(v, f):
         """Steps 1–3 on element values v: (core, rem, oxides, dropped, o_needed, o_rem, x)."""

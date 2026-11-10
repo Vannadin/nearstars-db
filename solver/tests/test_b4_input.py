@@ -108,7 +108,7 @@ class T05BoundaryTableIndependent(unittest.TestCase):
         ("mass_earth", 1e-6, 0.0), ("potential_temperature", 1.0, 0.0), ("surface_pressure_pa", 0.0, -1.0),
         ("basal_iron_number", 100.0, 100.5), ("eccentricity", 0.99, 1.0), ("eccentricity_forced", 0.0, 1.0),
     ]
-    PINS = {"schema.yaml": "2361d193b6e409131d555c0318efd36f6da03956",   # layers S1 §1.4: the bulk: join (was f33d84ce)
+    PINS = {"schema.yaml": "4a794517d5d5ea5a3e058b6808d5c1bf66f481d6",   # S0 note 3 σ 0.0046 (was 2361d193, the bulk: join; f33d84ce)
             "roles.yaml": "7c7796d359b86112db75c4745ba849dd3a9d268a",
             "presets.yaml": "c2c366ccb236941452fcf93a13fc14f17007f8ef"}
 
