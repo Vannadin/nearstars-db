@@ -261,6 +261,56 @@ class NoRead(unittest.TestCase):
             pz._has_read = real
 
 
+#: shipped bodies that from_v1 refuses by design (giant without a declared composition; brown dwarfs out of scope)
+REFUSED_AT_LOAD = {"alpha_centauri_a_b", "luhman_16_a", "luhman_16_b"}
+
+
+class ShippedViewsHaveARead(unittest.TestCase):
+    """Zones note 2, 68 n2: «no shipped view hits the no-read branch» as a guard. Every view solve builds for a shipped
+    body (switch off and on, and a composition closure's rebuilt layer at lo and hi), and every engine MATERIALS entry a
+    LegacyView can hold, has a phase read by phase_zones' own predicate."""
+
+    def test_every_engine_material_has_phase_at(self):
+        from solver import legacy_materials as lm
+        mats = dict(lm.interior.MATERIALS)
+        self.assertGreater(len(mats), 0)
+        self.assertEqual([k for k, m in mats.items() if not pz._has_read(SimpleNamespace(mat=m))], [])
+        self.assertTrue(pz._has_read(SimpleNamespace(mat=lm.interior.BasalConstDensity(4050.0))))
+
+    def test_every_shipped_body_view_has_a_read(self):
+        from solver import legacy_materials as lm
+        stems = sorted(p.stem for p in (REPO / "engine" / "bodies").glob("*.yaml"))
+        refused, seen = set(), 0
+        for stem in stems:
+            got = from_v1.load_v1(str(REPO / "engine" / "bodies" / f"{stem}.yaml"))
+            body = got[0] if isinstance(got, tuple) else got
+            if isinstance(body, result.Refusal):
+                refused.add(stem)
+                continue
+            for sil in (False, True):
+                lm.reset_engine_state()
+                reg = sv.registry_for(body, context.Options(silicate_records=sil), None)
+                self.assertNotIsInstance(reg, result.Refusal, (stem, sil))
+                views = sv._views(body, registry=reg, silicate=sil)
+                self.assertNotIsInstance(views, result.Refusal, (stem, sil, getattr(views, "text", "")))
+                sets = [views]
+                if body.closure.kind == "composition":
+                    sets += [sv._views_at(body, views, x) for x in (body.closure.lo, body.closure.hi)]
+                for vs in sets:
+                    for lid, v in vs.items():
+                        seen += 1
+                        self.assertTrue(pz._has_read(v), (stem, sil, lid, type(v).__name__))
+        self.assertEqual(refused, REFUSED_AT_LOAD)          # a new shipped body is checked, not silently skipped
+        self.assertGreater(seen, 0)
+
+    def test_control_a_material_without_phase_at_has_no_read(self):
+        from solver import legacy_materials as lm
+        mat = lm.interior.MATERIALS["silicate"]
+        self.assertTrue(pz._has_read(SimpleNamespace(mat=mat)))
+        self.assertFalse(pz._has_read(SimpleNamespace(mat=SimpleNamespace(phases=getattr(mat, "phases", ())))))
+        self.assertFalse(pz._has_read(SimpleNamespace(mat=None)))
+
+
 def _fixture_acc(layer_id, path, events):
     return SimpleNamespace(profiles={layer_id: path}, boundaries=[], floor_end=False,
                            events_at=[(layer_id, name, m, y) for name, m, y in events])
