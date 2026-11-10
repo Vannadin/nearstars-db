@@ -189,6 +189,78 @@ class Checks(unittest.TestCase):
         self.assertEqual(calls[0], interior)
 
 
+class _NoReadView:
+    """A duck-typed view the solver accepts with state() alone (test_solve's Uniform): no phase_read, no mat.phase_at."""
+
+    def __init__(self, rho, mat=None):
+        self.rho, self.mat, self.p_floor = rho, mat, 0.0
+
+    def state(self, p, t, guess):
+        return (self.rho, 0.0, ())
+
+
+def _two_layer(mantle_mat=None):
+    from solver import body as b
+    layers = (b.Layer("core", "core", "x", b.Extent("mass_fraction", 0.5)), b.Layer("mantle", "mantle", "y"))
+    body = b.Body("fixture", "planet", b.SurfaceState(5.0e24, t_pot=0.0), layers, b.Closure("R", 1e5, 1e8))
+    return body, {"core": _NoReadView(6000.0), "mantle": _NoReadView(3000.0, mantle_mat)}
+
+
+class NoRead(unittest.TestCase):
+    """Zones note 2: a view with no phase read gives one disclosed row per entered layer, never a raise and never a _read
+    call; §4.3 (b) counts that row as a finding. Engine 55794a9f raised TypeError here (30 suite errors on the PC)."""
+
+    def _solve(self, views_body):
+        body, views = views_body
+        real, calls = pz._read, [0]
+
+        def spy(*a):
+            calls[0] += 1
+            return real(*a)
+        pz._read = spy
+        try:
+            ans, _w = sv.solve(body, views=views)
+        finally:
+            pz._read = real
+        return ans, calls[0]
+
+    def test_no_read_layers_give_one_disclosed_row_each(self):
+        ans, calls = self._solve(_two_layer())
+        self.assertIsInstance(ans, pz.Answer, getattr(ans, "text", ans))
+        self.assertEqual(calls, 0)
+        self.assertEqual(set(ans.profiles), {"core", "mantle"})
+        for lid in ("mantle", "core"):
+            rows = _rows(ans, lid)
+            self.assertEqual(len(rows), 1, rows)
+            z, cols = rows[0], ans.profiles[lid]
+            self.assertEqual((z.label, z.record_phases, z.single_phase_why, z.crossings),
+                             (pz.ZONE_NO_READ, 1, pz.NO_READ_WHY, ()))
+            self.assertEqual(z.top[0], cols["m"][0])
+            self.assertEqual(z.base[0], cols["m"][-1])
+        self.assertEqual([z.layer for z in ans.zones], ["mantle", "core"])
+        self.assertEqual(_rows(ans, "mantle")[0].base_by, _rows(ans, "core")[0].top_by)
+        bad = pz.check_rows(ans)
+        self.assertEqual(sorted(x.split(":")[0] for x in bad), ["(b) core", "(b) mantle"], bad)
+
+    def test_control_a_view_with_phase_at_is_read(self):
+        ph = SimpleNamespace(name="y_ph", p_min=0.0, p_max=float("inf"), gamma_sets=None)
+        mat = SimpleNamespace(phases=(ph,), phase_at=lambda p: ph)
+        ans, calls = self._solve(_two_layer(mat))
+        self.assertIsInstance(ans, pz.Answer, getattr(ans, "text", ans))
+        self.assertGreater(calls, 0)
+        self.assertEqual({z.label for z in _rows(ans, "mantle")}, {"y_ph"})
+        self.assertEqual({z.label for z in _rows(ans, "core")}, {pz.ZONE_NO_READ})
+
+    def test_control_planted_always_read_raises_as_55794a9f(self):
+        real = pz._has_read
+        pz._has_read = lambda view: True
+        try:
+            with self.assertRaisesRegex(TypeError, "has no phase read"):
+                sv.solve(*_two_layer()[:1], views=_two_layer()[1])
+        finally:
+            pz._has_read = real
+
+
 def _fixture_acc(layer_id, path, events):
     return SimpleNamespace(profiles={layer_id: path}, boundaries=[], floor_end=False,
                            events_at=[(layer_id, name, m, y) for name, m, y in events])

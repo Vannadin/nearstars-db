@@ -27,6 +27,10 @@ from solver import stepper as st
 ZONE_END_KINDS = ("surface", "layer:", "event:", "centre", "r_floor", "between_nodes")
 #: the label of a zone with no interior node (zones-prereg §2.3)
 ZONE_UNREAD = "unread"
+#: the label of a layer whose view declares no phase read (neither phase_read nor mat.phase_at): a duck-typed view the
+#: solver accepts with state() alone. One row tiles the layer; §4.3 (b) counts it as a finding (zones note 2)
+ZONE_NO_READ = "no_phase_read"
+NO_READ_WHY = "the view declares no phase read (neither phase_read nor mat.phase_at); one row, not read"
 
 
 def _zone_end(name: str, by: str) -> None:
@@ -118,6 +122,14 @@ def _read(view, material_id, p, t) -> str:
     raise TypeError(f"{material_id}: {type(view).__name__} has no phase read (phase_read or mat.phase_at)")
 
 
+def _has_read(view) -> bool:
+    """True when _read can read this view: a RecordView, or a view whose mat has phase_at."""
+    if isinstance(view, mv.RecordView):
+        return True
+    mat = getattr(view, "mat", None)
+    return mat is not None and hasattr(mat, "phase_at")
+
+
 def _record_phases(view) -> int:
     if _assemblage_family(view):
         return 1
@@ -198,6 +210,11 @@ def collect(body, views, acc) -> tuple:
         for i, (m, _y, _k) in enumerate(path):
             node_of.setdefault(m, i)
         top_by, base_by = _ends(body, acc, j)
+        if not _has_read(view):
+            # zones note 2: no read, so no _read call; one disclosed row over the whole layer
+            rows.append(PhaseZone(layer.id, mid, ZONE_NO_READ, _node(path[0]), _node(path[-1]), top_by, base_by, 1,
+                                  NO_READ_WHY, ()))
+            continue
         n_ph = _record_phases(view)
         why = _why(view, mid, n_ph)
         # the nodes strictly inside the layer are read; its two end nodes are never a zone's interior (§2.3)
@@ -243,7 +260,7 @@ def check_rows(answer) -> list:
             for end in (z.top_by, z.base_by):
                 if end.startswith("layer:") and end[len("layer:"):] not in located:
                     bad.append(f"(a) {lid}: {end} is not a located boundary")
-            if z.base_by == "between_nodes" or z.label == ZONE_UNREAD:
+            if z.base_by == "between_nodes" or z.label in (ZONE_UNREAD, ZONE_NO_READ):
                 bad.append(f"(b) {lid}: {z.label} ends {z.base_by}")
         if zs[0].top_by.startswith("event:") or zs[-1].base_by.startswith("event:"):
             bad.append(f"(a) {lid}: the layer's own ends are events")
