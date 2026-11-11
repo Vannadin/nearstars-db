@@ -318,6 +318,9 @@
 "derived/test_derived.py":  # sg-gate: its census control copies every tracked engine/ and solver/ file (the .md too); measured as above. s4r gate.log l.5731–5733 (gate_reads): it also opens rows 3 and 10's outputs and core_items_kind.yaml
   globs: ["engine/**.py", "solver/**.py", "scripts/**.py", "engine/**.md", "solver/**.md", "engine/ice_giant_anchor.json", "engine/chain-explorer.html", "engine/tools/core_items_kind.yaml"]
   hand: true
+"test_phase_zones.py":  # pool step (test_*); zones-prereg §4.2–§4.3, note 1: the fall-set closure test walks solver/ (fall_sets.closure, a listing of solver/) and engine/*.py (engine_static) as text; measured with the full-lane exports on the Mac
+  globs: ["solver/*", "solver/*.py", "engine/*.py"]
+  hand: true
 "solver/tests/test_env_tiers.py":  # HEAVY-onctl P2 census: reads every engine/, solver/, scripts/ and derived/ .py as text (env names, tier sites); measured with sg-gate trace_reads on the Mac
   globs: ["engine/**.py", "solver/**.py", "scripts/**.py", "derived/**.py"]   # s4r l.5735–5736: derived/census_site/ too
   hand: true

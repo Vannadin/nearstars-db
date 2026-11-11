@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 
 from solver import body as bd
 from solver import closure as cl
-from solver import context, events, legacy_materials as lm, lid, material_notes, refusals, result, rhs
+from solver import context, events, legacy_materials as lm, lid, material_notes, phase_zones, refusals, result, rhs
 from solver import material_registry as mr, material_view as mv
 from solver import fixed_grid
 from solver import stepper as st
@@ -45,6 +45,7 @@ class PassOut:
     dtdp_end: float = float("nan")                       # the bottom view's dT/dP at the end state (the T centre series)
     entered: list = field(default_factory=list)          # layer ids the pass integrated, top to bottom
     events: list = field(default_factory=list)           # every landed event name, in order (phase, seam, onset, …)
+    events_at: list = field(default_factory=list)        # zones-prereg §3.1: (layer id, name, m, y) of each landed event
     band_grazes: list = field(default_factory=list)      # notes 13 §1 / 13a: steps accepted at the band floor
     coexist: list = field(default_factory=list)          # coexistence note 4: segments and records (values, not names)
     counters: dict = field(default_factory=dict)
@@ -214,6 +215,7 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
         out.entered.append(lt.id)
         out.profiles[lt.id] = got.path
         out.events += [e[0] for e in got.events]
+        out.events_at += [(lt.id, e[0], e[1], e[2]) for e in got.events]
         out.graze = got.graze
         out.band_grazes += list(got.band_grazes)
         for k, v in got.counters.items():                # G2-C-05: the accepted lid pass's steps only enter N_acc
@@ -264,6 +266,7 @@ def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> Pas
         res = _segment(view, M, m, y, end, rs, opt, graze_mon)
         out.profiles[layer.id] = res.path
         out.events += [e[0] for e in res.events]
+        out.events_at += [(layer.id, e[0], e[1], e[2]) for e in res.events]
         out.band_grazes += list(res.band_grazes)
         out.coexist += [dict(c, layer=layer.id) for c in getattr(res, "coexist", ())]
         if graze_mon is not None and graze_mon.best is not None and (out.graze is None
@@ -1261,7 +1264,8 @@ def _warm_root(body, options, registry, refusal):
             "closure": {"kind": body.closure.kind, "layer": body.closure.layer, "name": body.closure.name,
                         "range": [lo, hi], "solved_in": [half_lo, half_hi]},
             "warm_sweep": [[t, list(r)] for t, r in trace], "step_k": step})
-    return result.Answer(ans.quantities, ans.boundaries, ans.profiles, ans.missing, tuple(ans.notes) + (note,)), x_half
+    return phase_zones.Answer(ans.quantities, ans.boundaries, ans.profiles, ans.missing, tuple(ans.notes) + (note,),
+                              getattr(ans, "zones", ())), x_half
 
 
 def _with_first(outcome, first):
@@ -1502,7 +1506,8 @@ def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
         if acc.coexist:                                  # coexistence note 4 S6: segments, findings, restarts; a walked
             from solver import coexist as cx             # curve's SWAP_NOTE dropped (68 B4, keyed by curve)
             notes = cx.filter_notes(list(notes), acc.coexist, views)
-        ans = result.Answer(qs, lbs, profiles, (), tuple(notes))
+        zones = phase_zones.collect(body, views, acc)   # zones-prereg §3.1: after every value and note, accepted pass only
+        ans = phase_zones.Answer(qs, lbs, profiles, (), tuple(notes), zones)
         return ans, x
     if out.kind == "two_roots":
         return refusals.make("solve.two_roots", where, x=None, closure_kind=kind, pass_kind="scan",

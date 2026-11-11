@@ -13,6 +13,16 @@ from solver import context, run_oracle as ro
 FIELDS = {"header", "body", "state", "outcome_kind", "quantities", "boundaries", "refusal", "no_answer",
           "legacy_nodes", "table_read", "notes"}   # notes: switch-over §5 (Q2), comparator note 15
 FAST = context.Options(sensitivity_dt=0.0)
+#: keys an answer record may carry beyond FIELDS, each written only on an answer (zones-prereg post-freeze note 1, 68 B1)
+ANSWER_ONLY = {"zones"}
+
+
+def contract_problems(rec) -> list:
+    """The record's key set against the contract FIELDS ∪ (ANSWER_ONLY on an answer): [] when it holds."""
+    keys = set(rec)
+    out = [f"missing {sorted(FIELDS - keys)}"] if FIELDS - keys else []
+    extra = keys - FIELDS - (ANSWER_ONLY if rec.get("outcome_kind") == "answer" else set())
+    return out + ([f"unknown {sorted(extra)}"] if extra else [])
 
 
 class Earth(unittest.TestCase):
@@ -21,7 +31,7 @@ class Earth(unittest.TestCase):
         cls.rec = ro.one("engine/bodies/earth.yaml", "declared", FAST)
 
     def test_contract_fields(self):
-        self.assertEqual(set(self.rec), FIELDS)
+        self.assertEqual(contract_problems(self.rec), [])
         self.assertEqual(self.rec["outcome_kind"], "answer")
         self.assertTrue(self.rec["header"]["engine_identical_to_oracle_tree"])
         self.assertEqual(len(self.rec["header"]["solve_id"]), 64)
@@ -161,10 +171,31 @@ class RefusingBody(unittest.TestCase):
     def test_structure_readers_decline(self):
         """The nodes that read the structure decline on the injected refusal, as in the old chain."""
         rec = ro.one("engine/bodies/alpha_centauri_a_b.yaml", "declared", FAST)
-        self.assertEqual(set(rec), FIELDS)
+        self.assertEqual(contract_problems(rec), [])
         for node in ("core_state", "cmb_heat_flux", "core_energy_balance"):
             if node in rec["legacy_nodes"]:
                 self.assertFalse(rec["legacy_nodes"][node]["applicable"], node)
+
+
+class ContractControls(unittest.TestCase):
+    """contract_problems' own controls (68 B1 on zones note 1): no solve."""
+
+    def _rec(self, kind):
+        return {**{k: None for k in FIELDS}, "outcome_kind": kind}
+
+    def test_answer_with_zones_holds(self):
+        self.assertEqual(contract_problems({**self._rec("answer"), "zones": []}), [])
+
+    def test_unknown_extra_key_is_red(self):
+        self.assertEqual(contract_problems({**self._rec("answer"), "zones": [], "bogus": 1}), ["unknown ['bogus']"])
+
+    def test_zones_on_a_refusal_is_red(self):
+        self.assertEqual(contract_problems({**self._rec("refusal"), "zones": []}), ["unknown ['zones']"])
+
+    def test_missing_field_is_red(self):
+        rec = self._rec("answer")
+        del rec["table_read"]
+        self.assertEqual(contract_problems(rec), ["missing ['table_read']"])
 
 
 class NoChainForPoints(unittest.TestCase):
@@ -175,7 +206,7 @@ class NoChainForPoints(unittest.TestCase):
         rec = ro.one("engine/bodies/earth.yaml", 2093.0, context.Options(sensitivity_dt=0.0), chain=False)
         self.assertEqual((rec["outcome_kind"], rec["legacy_nodes"], rec["table_read"], rec["header"]["chain"]),
                          ("answer", {}, False, False))
-        self.assertEqual(set(rec), FIELDS)
+        self.assertEqual(contract_problems(rec), [])
 
     def test_control_declared_keeps_the_chain(self):
         rec = ro.one("engine/bodies/dante_fixture.yaml", "declared", context.Options(sensitivity_dt=0.0), chain=False)
