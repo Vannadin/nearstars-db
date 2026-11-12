@@ -377,8 +377,10 @@ class FetchRace(unittest.TestCase):
                 lock.write_text(ref.read_text())
                 b = subprocess.Popen([sys.executable, "-B", "-c",
                                       "import sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import check;"
-                                      " print(check.artifacts_ref(Path(sys.argv[2]))[1])", str(HERE), str(art)],
+                                      " print('ready', flush=True); print(check.artifacts_ref(Path(sys.argv[2]))[1])",
+                                      str(HERE), str(art)],
                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                self.assertEqual(b.stdout.readline().strip(), "ready")       # 68 n1: the 5 s start at the call, not at Popen
                 try:
                     out, err = b.communicate(timeout=5)
                 except subprocess.TimeoutExpired:
