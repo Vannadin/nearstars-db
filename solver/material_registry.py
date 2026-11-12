@@ -127,6 +127,10 @@ STOPS = MappingProxyType({
     "material.kind_rule": (("file", "why"),
                            "Match the record kind: single = one phase; branched = one boundary per adjacent phase "
                            "pair; hand_over = joins; a library form names its pinned library."),
+    "material.handover_stale": (("file", "block", "block_compact_sha256", "record_sha256"),
+                                "Regenerate the hand-over with rewrite/phase2-records/bmcpp/gen_handover.py from the "
+                                "records' current compacts, then --emit (prereg-bmcpp note 8 §3.4): a block's "
+                                "source.compact_sha256 must be its loaded record's assemblage.sha256."),
 })
 
 
@@ -920,6 +924,25 @@ def _handover_table(rec: Mapping, file, directory: Path):
     return freeze(table)
 
 
+def handover_stale(records: Mapping, tables: Mapping):
+    """prereg-bmcpp note 8 §3.4: every hand-over block whose id is a loaded assemblage record must carry that record's
+    compact as its source (`source.compact_sha256` == the record's `assemblage.sha256`), else the load refuses with
+    material.handover_stale. A block whose record is not loaded (a fixture id) is not checked. → LoadStop or None."""
+    for hid, rec in records.items():
+        if "handover_table" not in rec or hid not in tables:
+            continue
+        for bid, b in sorted(tables[hid]["blocks"].items()):
+            tapering = records.get(bid)
+            if tapering is None or tapering.get("kind") != "assemblage":
+                continue
+            got = (b.get("source") or {}).get("compact_sha256")
+            want = tapering["assemblage"]["sha256"]
+            if got != want:
+                return LoadStop("material.handover_stale", MappingProxyType({
+                    "file": f"{hid}.yaml", "block": bid, "block_compact_sha256": got, "record_sha256": want}))
+    return None
+
+
 def _is_sha(x) -> bool:
     return isinstance(x, str) and _SHA.match(x) is not None
 
@@ -1085,6 +1108,9 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None,
         if conflict is not None:
             return conflict
         out[rec["id"]] = rec
+    stale = handover_stale(out, tables)
+    if stale is not None:
+        return stale
     keys = {}
     for rid, rec in out.items():                     # one assemblage record per composition (silicate registration
         if rec["kind"] == "assemblage":              # §2.1): the resolver matches exactly one (68 R4 on aa48d1bf)

@@ -5,6 +5,7 @@ Records are synthetic and live in a temporary directory; the roster bodies are t
 Run from the worktree root:  <solver venv>/python -m unittest solver.tests.test_silicate_routes
 """
 import dataclasses
+import gzip
 import hashlib
 import json
 import tempfile
@@ -29,6 +30,9 @@ def body(name):
     return got[0] if isinstance(got, tuple) else got
 
 
+HANDOVER = "silicate_prem_zeng2016"
+
+
 def copy_shipped(d, skip=()):
     """The shipped records, the manifest and the records' own tables into d (on a TIP every shipped record that
     carries a table, the assemblage records and the hand-over, loads only with it; ea on 4d9661b8)."""
@@ -42,9 +46,33 @@ def copy_shipped(d, skip=()):
         (Path(d) / "tables" / f.name).write_bytes(f.read_bytes())
 
 
+def restamp_handover(d, rid, compact_sha):
+    """prereg-bmcpp note 8 §3.4 (r2 B2.2): the copied hand-over table's block `rid` takes the synthetic record's compact
+    as its source, re-gzipped with mtime 0, and the copied yaml re-pins the table's sha256, so §3.4's load check
+    (material.handover_stale) sees the pairing the synthetic record makes. A block the table lacks is left alone."""
+    hy = Path(d) / f"{HANDOVER}.yaml"
+    if not hy.is_file():
+        return
+    rec = yaml.safe_load(hy.read_text(encoding="utf-8"))
+    tp = Path(d) / rec["handover_table"]["file"]
+    table = json.loads(gzip.decompress(tp.read_bytes()))
+    if rid not in table["blocks"]:
+        return
+    table["blocks"][rid]["source"]["compact_sha256"] = compact_sha
+    raw = gzip.compress(json.dumps(table, sort_keys=True).encode(), mtime=0)
+    tp.write_bytes(raw)
+    text = hy.read_text(encoding="utf-8")
+    old = rec["handover_table"]["sha256"]
+    if text.count(old) != 1:
+        raise AssertionError(f"{hy.name}: the handover_table sha256 {old} is not written once")
+    hy.write_text(text.replace(old, hashlib.sha256(raw).hexdigest()), encoding="utf-8")
+
+
 def registry(d, keys=(("silicate_slb_default_bse", "14f8758a7681f418"), ("silicate_slb_mars_khan2022", MARS_KEY)),
-             status="pinned", allow_development=False):
-    """A registry holding the shipped records plus synthetic assemblage records under the given ids and keys."""
+             status="pinned", allow_development=False, restamp=True):
+    """A registry holding the shipped records plus synthetic assemblage records under the given ids and keys. With
+    `restamp` (the default) the copied hand-over's blocks are re-stamped to the synthetic compacts (note 8 §3.4);
+    without it, the old pairing, which §3.4's check refuses by name."""
     copy_shipped(d)
     tb = T.table()
     body_ = (json.dumps(tb, sort_keys=True, separators=(",", ":")) + "\n").encode()
@@ -54,7 +82,11 @@ def registry(d, keys=(("silicate_slb_default_bse", "14f8758a7681f418"), ("silica
         rec.update(id=rid, composition_key=key, requires_switch="silicate_records")
         rec["assemblage"]["file"] = f"tables/{rid}.json"
         (Path(d) / f"{rid}.yaml").write_text(yaml.safe_dump(rec, sort_keys=False), encoding="utf-8")
+        if restamp:
+            restamp_handover(d, rid, hashlib.sha256(body_).hexdigest())
     got = mr.load(Path(d), allow_development=allow_development)
+    if not restamp:
+        return got
     assert isinstance(got, mr.Registry), got
     return got
 
@@ -833,6 +865,37 @@ class SurfaceFloor(unittest.TestCase):
         self.assertEqual(sv.surface_floor(SimpleNamespace(layers=[SimpleNamespace(material="none")]),
                                           SimpleNamespace()), 0.0)
 
+
+
+class HandoverStale(unittest.TestCase):
+    """prereg-bmcpp note 8 §3.4: the load check material.handover_stale, planted and unplanted, and the old helper's
+    pairing refused by name (r2 B2.2: without the re-stamp, the synthetic records' blocks keep the shipped compacts)."""
+
+    def test_the_old_pairing_refuses_by_name(self):
+        with tempfile.TemporaryDirectory() as d:
+            got = registry(d, restamp=False, allow_development=True)
+        self.assertIsInstance(got, mr.LoadStop)
+        self.assertEqual(got.id, "material.handover_stale")
+        self.assertEqual(got.evidence["file"], f"{HANDOVER}.yaml")
+        self.assertIn(got.evidence["block"], ("silicate_slb_default_bse", "silicate_slb_mars_khan2022"))
+        self.assertNotEqual(got.evidence["block_compact_sha256"], got.evidence["record_sha256"])
+
+    def test_the_restamped_pairing_loads(self):
+        with tempfile.TemporaryDirectory() as d:
+            got = registry(d, allow_development=True)
+        self.assertIsInstance(got, mr.Registry)
+
+    def test_the_check_on_planted_records(self):
+        recs = {"h": {"id": "h", "handover_table": {}}, "a": {"kind": "assemblage", "assemblage": {"sha256": "1" * 64}},
+                "s": {"kind": "single"}}
+        tables = {"h": {"blocks": {"a": {"source": {"compact_sha256": "1" * 64}},
+                                   "x": {"source": {"compact_sha256": "9" * 64}},      # not a loaded record: skipped
+                                   "s": {"source": {"compact_sha256": "9" * 64}}}}}    # not an assemblage: skipped
+        self.assertIsNone(mr.handover_stale(recs, tables))
+        tables["h"]["blocks"]["a"]["source"]["compact_sha256"] = "2" * 64
+        got = mr.handover_stale(recs, tables)
+        self.assertEqual((got.id, dict(got.evidence)), ("material.handover_stale", {
+            "file": "h.yaml", "block": "a", "block_compact_sha256": "2" * 64, "record_sha256": "1" * 64}))
 
 if __name__ == "__main__":
     unittest.main()
