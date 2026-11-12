@@ -1331,6 +1331,8 @@ step "test_reference_adiabats.py" bash -c 'cd engine && exec python3 test_refere
 step "solver/tests/test_env_tiers.py" bash -c 'exec python3 -m unittest solver/tests/test_env_tiers.py'
 # 상 구간 행(zones-prereg, 사후 노트 1) — 지구 1700 K·화성·금성·단테·판도라(전환 끔)의 층별 행·대조군·h2o·집합표 고정장치. 맥 ~260 초
 step "test_phase_zones.py" bash -c 'exec python3 -m unittest solver/tests/test_phase_zones.py'
+# 인계 블록 ↔ 그 SLB 기록 압축표 짝(prereg-bmcpp 노트 8 §3.4, L-needs C6a) — 파일만 읽음(yaml·gz 표), 레지스트리 적재 없음. ~1 s.
+step "test_handover_blocks.py" bash -c 'exec python3 -m unittest solver/tests/test_handover_blocks.py'
 step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
 step "test_convergence_meaning.py" bash -c 'cd engine && exec python3 test_convergence_meaning.py'
 step "test_rootfind.py" bash -c 'cd engine && exec python3 test_rootfind.py'

@@ -315,6 +315,8 @@
 "test_phase_zones.py":  # pool step (test_*); zones-prereg §4.2–§4.3, note 1: the fall-set closure test walks solver/ (fall_sets.closure, a listing of solver/) and engine/*.py (engine_static) as text; measured with the full-lane exports on the Mac
   globs: ["solver/*", "solver/*.py", "engine/*.py"]
   hand: true
+"test_handover_blocks.py":  # pool step (test_*); prereg-bmcpp note 8 §3.4 (L-needs C6a): the hand-over record and table, and each assemblage record a block names; the planted control writes only in a temp dir. Measured with the full-lane read hook on the Mac (gate venv 3.12)
+  globs: ["solver/materials/silicate_prem_zeng2016.yaml", "solver/materials/silicate_slb_*.yaml", "solver/materials/tables/silicate_prem_zeng2016.json.gz"]
 "solver/tests/test_env_tiers.py":  # HEAVY-onctl P2 census: reads every engine/, solver/, scripts/ and derived/ .py as text (env names, tier sites); measured with sg-gate trace_reads on the Mac
   globs: ["engine/**.py", "solver/**.py", "scripts/**.py", "derived/**.py"]   # s4r l.5735–5736: derived/census_site/ too
   hand: true
