@@ -352,6 +352,55 @@ class OutOfTree(unittest.TestCase):
             self.assertIn("fetch failed", str(cm.exception))
 
 
+class FetchRace(unittest.TestCase):
+    """The artifacts fetch race (Fable's rehearsal 11-12, directing): two stamp writers on one NEARSTARS_ARTIFACTS clone,
+    a ref moved on its origin. Writer A is mid-fetch: it holds the fetch lock and the moved ref's `.lock`, as git does
+    while it updates the ref. Writer B is a second process calling artifacts_ref. B must wait for A, then pass. Unlocked,
+    B meets A's `.lock` and fails «cannot lock ref», which is what the controls precheck hit."""
+
+    def test_second_writer_waits_for_the_first_then_passes(self):
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            run = lambda c, *a: subprocess.run(["git", "-C", str(c), *a], capture_output=True, text=True, check=True)  # noqa
+            origin, art = d / "origin", d / "art"
+            run(d, "init", "-q", str(origin))
+            run(origin, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "--allow-empty", "-m", "one")
+            run(d, "clone", "-q", str(origin), str(art))
+            ck.artifacts_ref(art)                                           # the clone's mirror is current
+            run(origin, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "--allow-empty", "-m", "two")
+            moved = run(origin, "rev-parse", "HEAD").stdout.strip()         # origin's branch moved after that fetch
+            branch = run(origin, "symbolic-ref", "--short", "HEAD").stdout.strip()
+            ref = art / ".git" / "refs" / "remotes" / "origin-all" / "heads" / branch
+            self.assertTrue(ref.is_file(), ref)
+            lock = Path(str(ref) + ".lock")
+            with ck.fetch_lock(art):                                        # writer A, mid-fetch
+                lock.write_text(ref.read_text())
+                b = subprocess.Popen([sys.executable, "-B", "-c",
+                                      "import sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); import check;"
+                                      " print(check.artifacts_ref(Path(sys.argv[2]))[1])", str(HERE), str(art)],
+                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                try:
+                    out, err = b.communicate(timeout=5)
+                except subprocess.TimeoutExpired:
+                    out = err = None                                         # B waits on the lock, as it must
+                lock.unlink()                                               # writer A's update ends, then its lock
+            self.assertIsNone(out, f"writer B did not wait for writer A: rc {b.returncode} · {err}")
+            out, err = b.communicate(timeout=60)
+            self.assertEqual(b.returncode, 0, err)
+            self.assertEqual(ref.read_text().strip(), moved)               # B's fetch took the moved ref
+
+    def test_lock_file_is_in_the_common_git_dir(self):
+        """A linked worktree of the clone shares its refs, so it must share the lock."""
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            run = lambda c, *a: subprocess.run(["git", "-C", str(c), *a], capture_output=True, text=True, check=True)  # noqa
+            run(d, "init", "-q", str(d / "art"))
+            run(d / "art", "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "--allow-empty", "-m", "x")
+            run(d / "art", "worktree", "add", "-q", "--detach", str(d / "wt"))
+            self.assertEqual(ck.fetch_lock_path(d / "wt").resolve(), ck.fetch_lock_path(d / "art").resolve())
+            self.assertEqual(ck.fetch_lock_path(d / "art").resolve(), (d / "art" / ".git" / "nearstars-fetch.lock").resolve())
+
+
 class NotRunLane(unittest.TestCase):
     """Directing's B2 ruling: an unset input var is «NOT RUN» outside the gate lane, red inside it."""
     E = {"files": ["engine/hhe_table.py"], "external": {"x": {"env": "NEARSTARS_EXTERNAL", "path": "nope"}}}
