@@ -1,0 +1,60 @@
+{
+ "bodies": {
+  "alpha_centauri_a_b.yaml": {
+   "kind": "Refusal",
+   "sha256": "d15f7596797d21d1132db0ce2b54e5a7198c4e0f3d47575b2efc9a18f901a3a8"
+  },
+  "dante_fixture.yaml": {
+   "kind": "Body",
+   "sha256": "fc39e7b228f1e8a524cbf7091082eb93d38a9388661ab42214bb9a0d91558eb4"
+  },
+  "earth.yaml": {
+   "kind": "Body",
+   "sha256": "f861081e6f153357c73e0fcb053bd3127a8341697f253b1078fcb99dfeca58a2"
+  },
+  "luhman_16_a.yaml": {
+   "kind": "Refusal",
+   "sha256": "e052908d145da4318a1c847aca4fa8ff5db9da3ef0a648196210a5e8707e242c"
+  },
+  "luhman_16_b.yaml": {
+   "kind": "Refusal",
+   "sha256": "25bd2d5100617cbc89f9936bf73846b590cf605f2f729b3575ababc6644e7838"
+  },
+  "mars.yaml": {
+   "kind": "Body",
+   "sha256": "4e1fac104679247edd275e74663501be7752cd907d3e6b4750377b93d0925fa3"
+  },
+  "pandora.yaml": {
+   "kind": "Body",
+   "sha256": "3dc5547cd0f47eb01d527db9770cf2e44c65a162d90c1ea9fa61b9a685b4b409"
+  },
+  "venus.yaml": {
+   "kind": "Body",
+   "sha256": "ca9c275969cb10d0a601ca7527e9632c69d8a589b98afac078a9fcc447edb4cc"
+  }
+ },
+ "docs": {
+  "test_b4_input": {
+   "kind": "Body",
+   "sha256": "bea4dcd79edd33408587b93c70269daf82841b2391215410263ade7378627d82"
+  },
+  "test_fix_a5_sid": {
+   "kind": "Body",
+   "sha256": "bea4dcd79edd33408587b93c70269daf82841b2391215410263ade7378627d82"
+  },
+  "test_fix_a6": {
+   "kind": "Body",
+   "sha256": "bea4dcd79edd33408587b93c70269daf82841b2391215410263ade7378627d82"
+  },
+  "test_fix_a6_b3": {
+   "kind": "Body",
+   "sha256": "bea4dcd79edd33408587b93c70269daf82841b2391215410263ade7378627d82"
+  },
+  "test_validate": {
+   "kind": "Body",
+   "sha256": "bea4dcd79edd33408587b93c70269daf82841b2391215410263ade7378627d82"
+  }
+ },
+ "python": "3.12.16",
+ "tree": "ea3ae6173987352ab33537dd0143793df937e901"
+}

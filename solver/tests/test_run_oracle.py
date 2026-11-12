@@ -311,5 +311,41 @@ class SilicateFlag(unittest.TestCase):
         self.assertEqual(seen, [True, False])
 
 
+
+
+class BulkRecord(unittest.TestCase):
+    """layers S1 §2.5 (1346ffc6): `fe_budget_misfit` is written only for a bulk_plan body under boundary_mass, with
+    its inputs and grade; every other record keeps exactly FIELDS (the contract becomes FIELDS ∪ optional {member,
+    fe_budget_misfit}). No solve: a planted answer carries the fitted core mass."""
+
+    def test_builder_and_its_absence(self):
+        import types
+        from solver import validate as vd
+        from solver.tests.test_bulk_validate import mars_doc
+        b = vd.validate(mars_doc(), "bulk_mars", vd.production_materials(vd.PRODUCTION))
+        ans = types.SimpleNamespace(quantities=[types.SimpleNamespace(key="core_mass_fraction", value=0.251)])
+        fe = ro.fe_budget_record(b, ans)
+        plan = b.layers[1].composition.extra["bulk_plan"]
+        self.assertEqual(set(fe), {"implied_core_Fe", "declared_core_Fe", "misfit", "fitted_core_mass_fraction",
+                                   "x_Fe", "bulk_Fe", "fe_metal_fraction", "grade"})
+        self.assertAlmostEqual(fe["implied_core_Fe"], plan["x_Fe"] * 0.251, places=15)
+        self.assertAlmostEqual(fe["declared_core_Fe"], plan["fe_metal_fraction"] * plan["bulk_Fe"], places=15)
+        self.assertAlmostEqual(fe["misfit"], plan["x_Fe"] * 0.001, places=12)    # declared = x_Fe × 0.250
+        earth = from_v1_body("earth")
+        self.assertIsNone(ro.fe_budget_record(earth, ans))           # no bulk_plan: nothing written
+
+    def test_v2_branch_keyed_on_top_level_bulk(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "x.yaml"
+            p.write_text("name: x\nkind: planet\ninputs: {mass_earth: 1.0}\nbulk: {preset: earth_like}\n")
+            self.assertTrue(ro.is_bulk_v2(str(p)))
+        self.assertFalse(ro.is_bulk_v2(str(Path(ro.REPO) / "engine" / "bodies" / "earth.yaml")))
+
+
+def from_v1_body(stem):
+    from solver import from_v1
+    return from_v1.load_v1(str(Path(ro.REPO) / "engine" / "bodies" / f"{stem}.yaml"))[0]
+
 if __name__ == "__main__":
     unittest.main()

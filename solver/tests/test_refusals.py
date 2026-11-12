@@ -4,6 +4,7 @@
 Run from the worktree root:  solver/.venv/bin/python -m unittest solver.tests.test_refusals
 """
 import ast
+from pathlib import Path
 import math
 import string
 import unittest
@@ -165,6 +166,41 @@ class TRegistry(unittest.TestCase):
         self.assertEqual(r.at.id, "core")
         n = rf.no_answer("unconverged", "solve", budget_name="CLOSE_ITERS", budget_value=1, last_residual=math.inf)
         self.assertIn("inf", rs.canonical(n))
+
+
+class TBulkIdsRegistered(unittest.TestCase):
+    """layers S1 §3 (1346ffc6): every refusal id partition.py, validate.py and solve.py name as the first string
+    argument of `_no(`, `make(` (rf./refusals.) is registered. An AST scan; no such scan existed before S1."""
+
+    MODULES = ("partition.py", "validate.py", "solve.py")
+
+    @staticmethod
+    def named_ids(source: str) -> set:
+        out = set()
+        for node in ast.walk(ast.parse(source)):
+            if isinstance(node, ast.Call) and node.args and isinstance(node.args[0], ast.Constant) \
+                    and isinstance(node.args[0].value, str):
+                f = node.func
+                name = f.id if isinstance(f, ast.Name) else f.attr if isinstance(f, ast.Attribute) else None
+                if name in ("_no", "make") and "." in node.args[0].value:
+                    out.add(node.args[0].value)
+        return out
+
+    def test_every_named_id_is_registered(self):
+        base = Path(rf.__file__).resolve().parent
+        for m in self.MODULES:
+            ids = self.named_ids((base / m).read_text(encoding="utf-8"))
+            with self.subTest(module=m):
+                self.assertTrue(ids)
+                self.assertEqual(sorted(i for i in ids if i not in rf.REGISTRY), [])
+        for i in ("input.bulk_fractions", "input.bulk_core_draw_short", "input.bulk_oxygen_short",
+                  "input.bulk_oxygen_excess", "input.bulk_core_light", "input.bulk_volatile_layer",
+                  "input.bulk_needs_silicate_records", "input.bulk_no_mantle"):
+            self.assertIn(i, rf.REGISTRY)
+
+    def test_planted_unregistered_id_is_caught(self):
+        self.assertEqual(self.named_ids('_no("input.not_a_real_id", w)\nrf.make("solve.nope", w)\n'),
+                         {"input.not_a_real_id", "solve.nope"})
 
 
 class TNoReasonParsing(unittest.TestCase):

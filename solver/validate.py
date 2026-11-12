@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Mapping, Protocol
 
 from solver import body as bd
+from solver import partition as pt
 from solver import refusals as rf
 from solver.result import Refusal
 from solver.yamlio import LoadError, load_data, parse
@@ -643,6 +644,102 @@ def _cross_inputs(got, where):
                 detail=repr(c)[:80])
 
 
+# ── bulk: (layers S1 registration 1346ffc6 §2) ──────────────────────────────────────────────────────────────
+#: The top-level keys a `bulk:` block replaces; with `bulk`, declaring either refuses (§1.2).
+BULK_REPLACES = ("layers", "closure")
+BULK_FORMS = ("materials", "elements", "preset")
+BULK_E_KEYS = ("source_kind", "grade", "source", "counter_evidence_searched", "owner_direction", "anchor", "params")
+BULK_KEYS = BULK_FORMS + BULK_E_KEYS + ("lithosphere_thickness_km",)
+BULK_PARAMS = ("fe_metal_fraction", "core_material", "core_light")
+#: The twelve silicate components the (E) mantle declares (schema composition_systems.silicate; LAYERS-S1-NOTES n3).
+SILICATE_COMPONENTS = tuple(SCHEMA["composition_systems"]["silicate"]["components"])
+CFMASNA_SIX = tuple(SCHEMA["composition_systems"]["silicate"]["required"])
+
+
+def _plain(x):
+    """A frozen plan value as plain lists and dicts (the layer list `_layers` reads is plain data)."""
+    if isinstance(x, Mapping):
+        return {k: _plain(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [_plain(v) for v in x]
+    return x
+
+
+def _expand_bulk(raw, got, where):
+    """§2.2–§2.3: a `bulk:` block → (layers, closure) in today's v2 form, or a refusal. (M) and (P): the plan's layers
+    and closure R (today's declared branch). (E): core + silicate_decl mantle; closure (b2) boundary_mass on the core
+    iff `radius_earth` is a block graded `measured` (rev 1, 68 B1: the grade alone), else (a) R with the core's extent
+    at the plan's CMF. The lid, if declared, is from_v1._lid's rule: a conductive layer of the mantle material."""
+    w = f"{where}.bulk"
+    _mapping(raw, "bulk", where)
+    _keys(raw, BULK_KEYS, w)
+    forms = [f for f in BULK_FORMS if f in raw]
+    if len(forms) != 1:
+        _no("input.not_in_vocabulary", w, key="bulk", got=sorted(raw), allowed=list(BULK_FORMS))
+    form = forms[0]
+    if form != "elements":
+        stray = [k for k in BULK_E_KEYS if k in raw]
+        if stray:
+            _no("input.cross_field", w, rule="source_kind, the trio and params belong to the (E) form", detail=", ".join(stray))
+    params = dict(_mapping(raw.get("params", {}), "bulk.params", w))
+    _keys(params, BULK_PARAMS, f"{w}.params")
+    fmf = params.get("fe_metal_fraction")
+    if isinstance(fmf, Mapping):                     # a block carries its trio, as every block does (§2.2)
+        _keys(fmf, BLOCK_FIELDS, f"{w}.params.fe_metal_fraction")
+        if "value" not in fmf:
+            _no("input.value_missing", w, key="bulk.params.fe_metal_fraction")
+        if "grade" in fmf:
+            _grade(fmf["grade"], "bulk.params.fe_metal_fraction", w)
+        _provenance(fmf, "bulk.params.fe_metal_fraction", w, "trio")
+        params["fe_metal_fraction"] = fmf["value"]
+    if form == "elements":
+        sk = raw.get("source_kind")
+        if sk in SCHEMA["source_kinds"]["not_built"]:
+            _no("input.source_kind_not_built", w, layer_id="bulk", source_kind=str(sk))
+        if "grade" in raw:
+            _grade(raw["grade"], "bulk", w)
+    plan = pt.partition({k: raw[k] for k in (form,) + TRIO + ("source_kind",) if k in raw}, params, w)
+    if isinstance(plan, Refusal):
+        raise _Refuse(plan)
+    if form != "elements":
+        layers, closure = _plain(plan.layers), {"kind": "R"}
+    else:
+        if plan.volatile is not None:
+            _no("input.bulk_volatile_layer", w, h2o=plan.volatile["H2O"])
+        layers, closure = _bulk_e_layers(raw, params, plan, got)
+    if "lithosphere_thickness_km" in raw:
+        layers.append({"id": "lithosphere", "role": "lid", "material": layers[-1]["material"], "thermal": "conductive",
+                       "extent": {"depth_from_surface": raw["lithosphere_thickness_km"]}})
+    return layers, closure
+
+
+def _bulk_e_layers(raw, params, plan, got):
+    led = plan.ledger
+    trio = {k: raw[k] for k in TRIO if k in raw}
+    by_role = {l["role"]: l for l in plan.layers}           # by role, never by stack index (W-L15-01/-02)
+    mat = by_role["core"]["material"]
+    core = {"id": "core", "role": "core", "material": mat}
+    if mat == "fe_core_light":
+        core.update(system="iron_alloy", composition={"value": dict(params["core_light"]), **trio})
+    wt = led["mantle_oxides_wt"]
+    k = 100.0 / math.fsum(wt[c] for c in CFMASNA_SIX)          # the CFMASNa six to 100, the other six by the same k
+    cf = by_role["mantle"]["composition"]["oxides_wt"]
+    oxides = {c: (cf[c] if c in CFMASNA_SIX else wt[c] * k) for c in SILICATE_COMPONENTS if c in wt}
+    bulk_plan = {"x_Fe": led["x_Fe"], "bulk_Fe": led["bulk_Fe"], "fe_metal_fraction": led["fe_metal_fraction"],
+                 "core_mass_fraction": plan.core_mass_fraction, "residual": plan.residual,
+                 "elemental_wt": {e: x * k for e, x in by_role["mantle"]["composition"]["dropped_wt"].items()
+                                  if e not in SILICATE_COMPONENTS},
+                 "o_check": _plain(plan.o_check) if plan.o_check is not None else "O not declared: computed"}
+    comp = {"value": oxides, **trio, "source_kind": raw["source_kind"], "bulk_plan": _plain(bulk_plan)}
+    comp.update({f: raw[f] for f in ("owner_direction", "anchor") if f in raw})
+    mantle = {"id": "mantle", "role": "mantle", "material": "silicate_decl", "system": "silicate", "composition": comp}
+    r = got.get("radius_earth")
+    if isinstance(r, bd.Declared) and r.grade == "measured":          # (b2), frozen §4.6; rev 1 (68 B1)
+        return [core, mantle], {"kind": "boundary_mass", "layer": "core"}
+    core["extent"] = {"mass_fraction": plan.core_mass_fraction}       # (a): fully forward
+    return [core, mantle], {"kind": "R"}
+
+
 # ── entry points ──────────────────────────────────────────────────────────────────────────────────────────────
 def validate(raw, where: str = "<body>", materials: Materials | None = None) -> bd.Body | Refusal:
     """§X1: a raw mapping → a frozen `Body`, or the first named refusal in a fixed check order. Never raises on input."""
@@ -666,7 +763,7 @@ def _validate(raw, where, materials):
     top = SCHEMA["top"]
     _keys(raw, tuple(top), where)
     for k, s in top.items():
-        if s.get("required") and k not in raw:
+        if s.get("required") and k not in raw and not ("bulk" in raw and k in BULK_REPLACES):
             _no("input.missing_key", where, key=k)
     name = _text(raw["name"], "name", where)
     kind = _enum(raw["kind"], "kind", where, top["kind"]["values"])
@@ -682,8 +779,16 @@ def _validate(raw, where, materials):
     if cls in ispec["body_class"]["out_of_scope"]:
         _no("input.class_out_of_scope", where, body_class=cls, why=ispec["body_class"]["out_of_scope"][cls])
     _cross_inputs(got, where)
-    layers = _layers(raw["layers"], where, materials)
-    closure = _closure(raw["closure"], layers, "radius_earth" in got, where)
+    if "bulk" in raw:                                       # layers S1 §2.1: bulk → today's layers and closure
+        both = [k for k in BULK_REPLACES if k in raw]
+        if both:
+            _no("input.cross_field", where, rule="a body declares bulk: or layers:/closure:, not both (layers S1 §1.2)",
+                detail=", ".join(both))
+        layers_raw, closure_raw = _expand_bulk(raw["bulk"], got, where)
+    else:
+        layers_raw, closure_raw = raw["layers"], raw["closure"]
+    layers = _layers(layers_raw, where, materials)
+    closure = _closure(closure_raw, layers, "radius_earth" in got, where)
     _remainders(layers, closure, where)
     _extent_rules(layers, closure, where)
     jumps = _jumps(raw.get("jumps", {}), layers, where)
