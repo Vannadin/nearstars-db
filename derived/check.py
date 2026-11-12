@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import fcntl
 import hashlib
 import importlib.metadata
 import json
@@ -224,17 +225,40 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def fetch_lock_path(art: Path) -> Path:
+    """The fetch lock of an artifacts checkout: one file in its common git dir, so linked worktrees share it."""
+    r = subprocess.run(["git", "-C", str(art), "rev-parse", "--git-common-dir"], capture_output=True, text=True)
+    if r.returncode != 0:
+        raise LookupError(f"NEARSTARS_ARTIFACTS={str(art)!r} is not a git checkout ({(r.stderr or '').strip()[-160:]})")
+    gd = Path(r.stdout.strip())
+    return (gd if gd.is_absolute() else Path(art) / gd) / "nearstars-fetch.lock"
+
+
+@contextlib.contextmanager
+def fetch_lock(art: Path):
+    """Concurrent stamp writers on one checkout (the controls' plants, S3's derived units) each fetch here; when a ref
+    on origin has moved, two overlapping fetches race for the same ref lock and one fails «cannot lock ref» (Fable's
+    rehearsal 11-12). The fetch and the reads after it run under an exclusive flock, so they take turns."""
+    fd = os.open(fetch_lock_path(art), os.O_CREAT | os.O_RDWR, 0o644)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        yield
+    finally:
+        os.close(fd)                                        # closing the descriptor releases the lock
+
+
 def artifacts_ref(art: Path) -> tuple[str, str]:
     """(ref, sha) of artifacts origin/main as fetched now; the suite run fetches it itself (68 n2, rev-4 n1)."""
-    f = subprocess.run(["git", "-C", str(art), "fetch", "-q", "origin", "+refs/*:refs/remotes/origin-all/*"],
-                       capture_output=True, text=True)
-    if f.returncode != 0:                                   # frozen §1: a failed fetch is red, never a stale main (68 B1)
-        raise LookupError(f"the artifacts fetch failed (rc {f.returncode}: {(f.stderr or '').strip()[-160:]}); "
-                          "main is not compared stale")
-    for ref in ARTIFACTS_REFS:
-        r = subprocess.run(["git", "-C", str(art), "rev-parse", "--verify", "-q", ref], capture_output=True, text=True)
-        if r.returncode == 0:
-            return ref, r.stdout.strip()
+    with fetch_lock(art):
+        f = subprocess.run(["git", "-C", str(art), "fetch", "-q", "origin", "+refs/*:refs/remotes/origin-all/*"],
+                           capture_output=True, text=True)
+        if f.returncode != 0:                               # frozen §1: a failed fetch is red, never a stale main (68 B1)
+            raise LookupError(f"the artifacts fetch failed (rc {f.returncode}: {(f.stderr or '').strip()[-160:]}); "
+                              "main is not compared stale")
+        for ref in ARTIFACTS_REFS:
+            r = subprocess.run(["git", "-C", str(art), "rev-parse", "--verify", "-q", ref], capture_output=True, text=True)
+            if r.returncode == 0:
+                return ref, r.stdout.strip()
     raise LookupError(f"no artifacts main ref in {art} ({', '.join(ARTIFACTS_REFS)})")
 
 
