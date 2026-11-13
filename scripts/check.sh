@@ -27,6 +27,14 @@ if [ "$_resolved" != "$GATE_PY" ]; then
   echo "  [FAIL] gate interpreter not pinned — python3 가 $_resolved 로 풀린다 (기대 $GATE_PY)"
   exit 2
 fi
+# ⚠ **게이트는 3.12 이상에서만 돈다** (오너 2026-11-13, artifacts directing-owner-1113 f075fa770: 3.9 는 점검 대상에서
+#   뺀다). 맥의 옛 .venv-gate 는 3.9 였고, 이름이 같은 PC 의 것은 3.12 였다 — 같은 경로가 기계마다 다른 판정을 냈다.
+_gate_ver=$("$GATE_PY" -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2>/dev/null || echo unknown)
+case "$_gate_ver" in
+  3.1[2-9]|3.[2-9][0-9]) ;;
+  *) echo "  [FAIL] gate interpreter $_gate_ver is older than 3.12 — $GATE_PY (scripts/venv-gate.sh 로 3.12 venv 를 짓는다)"
+     exit 2 ;;
+esac
 # ⚠ **핀이 걸렸다 ≠ 이 트리의 선언으로 지은 핀이다.** 위 두 검사는 `GATE_PY` 가 어디를
 #   가리키든 **구성상 통과**한다 — 경로가 있고, PATH 를 앞에 끼웠으니 `command -v` 도 그것을
 #   낸다. 그래서 오늘까지 «빌려 쓴 venv 가 같은 선언으로 지어졌나» 는 사람이 눈으로만 봤다.
@@ -905,6 +913,7 @@ step "scripts/test_check_verdict_reads.py" bash -c 'python3 scripts/test_check_v
 step "scripts/check_verdict_reads.py" bash -c 'python3 scripts/check_verdict_reads.py'
 # 게이트 자신: engine/·scripts/ 가 파이썬 3.9(맥 게이트 venv)에서 읽히는가 (solver/ 는 3.11 venv 전용) — 3.10+ 문법과 실행 때 평가되는 `X | None` (VR-base 7). AST, ~2 s.
 step "scripts/test_check_py39.py" bash -c 'python3 scripts/test_check_py39.py'
+step "scripts/test_gate_python_version.py" bash -c 'python3 scripts/test_gate_python_version.py'
 step "scripts/check_py39.py" bash -c 'python3 scripts/check_py39.py'
 # 추적 .py 의 컴파일 경고(3.12 SyntaxWarning·3.9 DeprecationWarning) — 경고 출력의 linecache 재읽기가 읽기 감사를 흔든 ES-f6 착지 group 4 (FIX3)
 step "scripts/test_check_compile_warnings.py" bash -c 'python3 scripts/test_check_compile_warnings.py'

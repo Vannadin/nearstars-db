@@ -1,9 +1,21 @@
-# 파이썬 3.9 호환 점검 — engine/·scripts/ 의 추적 .py 가 3.9 문법으로 읽히고, 실행 때 평가되는 PEP 604 합집합(`X | None`)이 없는가 (VR-base 7)
-"""python3 scripts/check_py39.py            gate mode: every tracked .py under engine/ and scripts/
+# 파이썬 3.9 호환 점검 — 시스템 python3(맥 3.9)으로 손으로 돌리는 scripts/ 도구(pipeline·phase4·refs·viz)가 3.9 문법으로 읽히고 실행 때 평가되는 PEP 604 합집합이 없는가
+"""python3 scripts/check_py39.py            gate mode: every tracked .py under the system-python dirs (DIRS)
    python3 scripts/check_py39.py FILE...   the named files only (tests)
 
-The Mac gate venv is Python 3.9, and the gate runs engine/ and scripts/ under it. solver/ is out of scope: it runs
-only in the 3.11 solver venv, never under the gate python (no check.sh step runs solver code; directing ruling (A)).
+**Scope since 2026-11-13** (owner, artifacts directing-owner-1113 f075fa770: engine, solver and scripts code runs and
+gates under 3.12 only; check.sh refuses an older gate interpreter by name). What still runs on the Mac's system
+python3 (3.9.6) by design is the hand-run tooling below, which imports no engine/ or solver/ code and is not a gate step:
+- scripts/pipeline/: the owner's DB pipeline, invoked as `python3 scripts/pipeline/<tool>.py` (the settings
+  allow-list); not changed by the owner's decision (directing 11-13);
+- scripts/phase4/, scripts/refs/, scripts/viz/: hand-run report, reference and render tools with a `python3` shebang.
+Every other `python3`-shebang file under scripts/ (build_sitemap, check_citation_links, check_compile_warnings,
+check_md_dupes, check_md_tables, check_phase4_gate, test_check_compile_warnings) is a gate step and runs under the gate
+python (3.12); direct invocation under 3.9 is unsupported.
+History: engine/ and scripts/ were the scope (VR-base 7); solver/ was excluded by directing ruling (A) on two premises
+(no check.sh step runs solver code under the gate python; solver runs only in its own venv) that stopped holding, so
+solver/signs.py's `str | None` (2075a4ee, 10-23) left the 3.9 solver discover at 81 import errors unflagged; the
+3.12-only rule retires the question for engine/, solver/ and the gate's scripts.
+
 Two things break a module there and not on 3.10+:
 1. **3.10+ syntax** (`match`, parenthesized context managers, …): `ast.parse(src, feature_version=(3, 9))` refuses it.
    `feature_version` is best-effort in CPython; the second rule is the one that caught VR-base 7.
@@ -22,7 +34,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DIRS = ("engine/", "scripts/")          # solver/: 3.11-venv only (see the docstring)
+DIRS = ("scripts/pipeline/", "scripts/phase4/", "scripts/refs/", "scripts/viz/")   # the system-python tools (docstring)
 
 
 def _has_union(node) -> bool:
