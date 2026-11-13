@@ -21,7 +21,7 @@ from solver.from_v1 import thaw
 ROOT = Path(__file__).resolve().parents[2]
 RECORDS = ("silicate_slb_default_bse", "silicate_slb_earth_dmm_wh2005", "silicate_slb_mars_khan2022")
 PINNED_BLOB = "a21205fa634a7d0910e257f051d2eb7108eb45fd"     # the tables' closure_terms.monotone pin (P1)
-EXPECTED = Path(__file__).resolve().parent / "data" / "d2_store_shared_fixtures_expected.json"
+EXPECTED = Path(__file__).resolve().parent / "fixtures" / "d2_store_shared_fixtures_expected.json"
 _REG = None
 
 
