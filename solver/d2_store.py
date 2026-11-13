@@ -73,7 +73,7 @@ def coincident(cut_runs):
 
 
 def curve_kinds(block, ts):
-    """{(kind after the merge, phase, row T tuple, row P_b tuple)} of a block's cut runs: what a view built on the
+    """{(kind after the merge, phase, row T tuple, row p_lo tuple)} of a block's cut runs: what a view built on the
     block reads as steps and edges, for comparing two blocks' curve kinds."""
     runs = ma._cut_runs(ma.build_curves(block, ts))
     _n, ids = coincident(runs)
@@ -363,16 +363,31 @@ def _is_today(src, curve, row):
     return got == "today"
 
 
-def _pieces(curve, ts, rch):
-    """(a, b, end_is_today_index, where): the curve's straight pieces — between consecutive rows, and past each end
-    that does not stop, to `rch`, broken at the table's T rows. a, b are (T, P_b)."""
+def _holder(view, row, hi):
+    """The run of the initialised view's `_events` (init's merged cut runs and the runs read across) whose own end is
+    `row` (a lower end if not `hi`): it carries that end's stop and kind after init. Runs share the curve's row dicts,
+    so the match is by identity."""
+    for r in view._events:
+        if (r.rows[-1] if hi else r.rows[0]) is row:
+            return r
+    raise StoreRefusal("material.d2_store_edges_rows", f"no event run ends at the curve row of {row['t']!r} K")
+
+
+def _pieces(view, curve, ts, rch):
+    """(a, b, end indices, where): the straight pieces of one full curve of the view (`_curves`: rev 7 §5b (2b) «every
+    curve … on every T interval of its domain»; 68 B1 on 039c875b) — between its consecutive rows, whether a row pair
+    is cut or read across, and past each of its two true ends that does not stop, to `rch`, broken at the table's T
+    rows. Each end's stop and extension are those of the event run holding it (`_holder`): there init's coincident
+    merge and reach-0 stops live, and at a true end no run has the interior-end flat stub (note 8 (b′)). a, b are
+    (T, P_b)."""
     rows = curve.rows
     for i in range(len(rows) - 1):
         yield (rows[i]["t"], rows[i]["p_b"]), (rows[i + 1]["t"], rows[i + 1]["p_b"]), (i, i + 1), "rows"
     if not rch:
         return
     for hi in (False, True):
-        if curve.stop_hi if hi else curve.stop_lo:
+        h = _holder(view, rows[-1] if hi else rows[0], hi)
+        if h.stop_hi if hi else h.stop_lo:
             continue
         t_end = rows[-1]["t"] if hi else rows[0]["t"]
         far = t_end + rch if hi else t_end - rch
@@ -382,7 +397,7 @@ def _pieces(curve, ts, rch):
         end_i = len(rows) - 1 if hi else 0
         prev = None
         for t in knots:
-            p = curve.p_b_ext(t, rch)
+            p = h.p_b_ext(t, rch)
             if p is None:
                 break
             if prev is not None:
@@ -447,8 +462,8 @@ def _sliver_miss(cell, ps, ts, j, k, a, b):
 
 
 def today_segments(store_doc, view):
-    """§5b (2b) and (S1) on the view built on the store's block (its `_events`: init's merged cut runs and the runs
-    read across). → {"stops": [(id, text)], "s1": [...]}; the stops are d2_store_today_row (a «today» segment through
+    """§5b (2b) and (S1) on the view built on the store's block: every full curve (`_curves`) row to row, and past its
+    true ends with the stops and extensions of the event runs holding them (`_events`, after init's merge). → {"stops": [(id, text)], "s1": [...]}; the stops are d2_store_today_row (a «today» segment through
     a d2 or cut cell) and d2_store_sliver (outside a kept subgrid cell's sliver by more than P_TOL)."""
     ps, ts = store_doc["grid"]["ps"], store_doc["grid"]["ts"]
     if list(view.ts) != list(ts):
@@ -456,9 +471,9 @@ def today_segments(store_doc, view):
     src, cells = _unit_sources(store_doc["edges"]), store_doc["cells"]
     rch = view._reach
     stops, s1, seen = [], [], set()
-    for c in view._events:
+    for c in view._curves:
         today = [_is_today(src, c, r) for r in c.rows]
-        for a, b, ends, where in _pieces(c, ts, rch):
+        for a, b, ends, where in _pieces(view, c, ts, rch):
             if not any(today[i] for i in ends):
                 continue
             for j, k in _cells_through(ps, ts, a, b):

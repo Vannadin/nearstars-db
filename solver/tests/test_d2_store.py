@@ -152,7 +152,61 @@ def _store(cells, curves, source="today"):
 
 
 def _view(curves, ts=TS):
-    return types.SimpleNamespace(ts=ts, _reach=REACH, _events=curves)
+    """A planted view whose full curves are their own event runs (no cut / across split, no merge)."""
+    return types.SimpleNamespace(ts=ts, _reach=REACH, _curves=curves, _events=curves)
+
+
+# ── fixtures through ma.view on a planted block (68 n1 on 039c875b): init's own curves, runs, merge and stops ─────
+KHAN = "silicate_slb_mars_khan2022"
+
+
+def _edge(t, p_lo, p_hi, pb, phases, across):
+    return {"t": t, "p_lo": p_lo, "p_hi": p_hi, "left": "a+b", "right": "a+c", "class": "edge_in", "converged": True,
+            "edges": [{"phase": ph, "p_b": pb, "converged": True, "delta_rho": 1e-4 if across else None,
+                       "over_tolerance": False if across else True, "p_b_source": "today"} for ph in phases]}
+
+
+def real_view(rows, extension):
+    """(store, view): the khan compact with its boundaries replaced by `rows`, the view built by ma.view (init runs),
+    and a store on the compact's grid with no cells yet (each fixture plants its own)."""
+    compact = thaw(reg().tables[KHAN])
+    block = {"status": "exported", "rows": rows, "source": {}}
+    if extension:
+        block["extension"] = {"rows": [], "rule": {"ext_rows": 2}}
+    compact["boundaries"] = block
+    v = ma.view(thaw(reg().get(KHAN)), compact, 1600.0)
+    ps, ts = ds.nodes(compact)
+    return {"grid": {"ps": ps, "ts": ts}, "cells": {}, "edges": block}, v
+
+
+def joining_segment_fixture():
+    """68 B1: one edge curve over four T rows, cut on the first two and read across on the last two; the segment that
+    joins row 1 (cut) to row 2 (across) climbs three P columns, and a d2 cell sits on a column it crosses strictly
+    between its ends. The full-curve walk STOPs there; a walk of the event runs (their own rows, and flat stubs at the
+    interior run ends) does not."""
+    ps, ts = ds.nodes(thaw(reg().tables[KHAN]))
+    k, j = 2, 10
+    def pb(jj): return 0.5 * (ps[jj] + ps[jj + 1])
+    rows = [_edge(ts[k - 1], ps[j], ps[j + 1], pb(j), ("x",), False),
+            _edge(ts[k], ps[j], ps[j + 1], pb(j), ("x",), False),
+            _edge(ts[k + 1], ps[j + 3], ps[j + 4], pb(j + 3), ("x",), True),
+            _edge(ts[k + 2], ps[j + 3], ps[j + 4], pb(j + 3), ("x",), True)]
+    st, v = real_view(rows, extension=False)
+    st["cells"] = {f"{j + 1},{k}": {"class": "d2"}}
+    return st, v, (j + 1, k)
+
+
+def coincident_fixture(extension):
+    """Two edges of one row, cut, at one P_b, over two T rows: init merges them into swaps, with reach-0 ends when the
+    block has `extension`. d2 cells at the rows' interval and one interval past each end."""
+    ps, ts = ds.nodes(thaw(reg().tables[KHAN]))
+    k, j = 3, 12
+    pb = 0.5 * (ps[j] + ps[j + 1])
+    rows = [_edge(ts[k], ps[j], ps[j + 1], pb, ("x", "y"), False),
+            _edge(ts[k + 1], ps[j], ps[j + 1], pb, ("x", "y"), False)]
+    st, v = real_view(rows, extension)
+    st["cells"] = {f"{j},{kk}": {"class": "d2"} for kk in (k - 1, k, k + 1)}
+    return st, v, (j, k)
 
 
 def _d2(*cells):
@@ -194,13 +248,51 @@ def shared_fixtures():
     return out
 
 
+def real_fixtures():
+    """name → (store, view) for the fixtures built through ma.view (68 n1, B1)."""
+    j_st, j_v, _c = joining_segment_fixture()
+    c_on, v_on, _c = coincident_fixture(True)
+    c_off, v_off, _c = coincident_fixture(False)
+    return {"real_joining_segment_cut_to_across": (j_st, j_v), "real_coincident_pair_extension": (c_on, v_on),
+            "real_coincident_pair_no_extension": (c_off, v_off)}
+
+
 def stop_sets():
     """name → sorted [(refusal id, cell or reason)]: the engine side's decisions on the shared fixtures."""
     out = {}
-    for name, (st, v) in shared_fixtures().items():
+    for name, (st, v) in {**shared_fixtures(), **real_fixtures()}.items():
         got = ds.today_segments(st, v)
         out[name] = sorted([rid, text.split("cell ")[-1] if "cell (" in text else text] for rid, text in got["stops"])
     return out
+
+
+class RealViewFixtures(unittest.TestCase):
+    """68 B1 and n1 on 039c875b: the walk is every full curve, row to row, with extensions only at true ends."""
+
+    def cells(self, st, v):
+        return {t.split("cell ")[-1] for _i, t in ds.today_segments(st, v)["stops"]}
+
+    def test_the_joining_segment_of_a_cut_and_an_across_run_is_walked(self):
+        st, v, (j, k) = joining_segment_fixture()
+        self.assertEqual({c.kind for c in v._curves}, {"edge"})
+        self.assertEqual(len(v._curves), 1)
+        self.assertEqual(len(v._events), 2)                       # one cut run, one across run
+        self.assertIn(f"({j}, {k})", self.cells(st, v))
+        # the mutant: walking the event runs instead of the full curves misses that cell
+        runs = types.SimpleNamespace(ts=v.ts, _reach=v._reach, _curves=v._events, _events=v._events)
+        self.assertNotIn(f"({j}, {k})", self.cells(st, runs))
+
+    def test_a_coincident_pair_with_extension_stops_at_its_rows_only(self):
+        st, v, (j, k) = coincident_fixture(True)
+        self.assertEqual(v.coincident, 2)
+        self.assertEqual({c.kind for c in v._cut}, {"swap"})
+        self.assertEqual(self.cells(st, v), {f"({j}, {k})"})
+
+    def test_the_same_pair_without_extension_stops_past_its_ends(self):
+        st, v, (j, k) = coincident_fixture(False)
+        got = self.cells(st, v)
+        self.assertIn(f"({j}, {k})", got)
+        self.assertTrue({f"({j}, {k - 1})", f"({j}, {k + 1})"} & got, got)
 
 
 class SharedFixtures(unittest.TestCase):
