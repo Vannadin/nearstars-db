@@ -173,7 +173,9 @@ class BulkMarsEndToEnd(unittest.TestCase):
         opt = dataclasses.replace(FAST, silicate_records=True)
         with tempfile.TemporaryDirectory() as d:
             path = Path(d) / "bulk_mars.yaml"
-            path.write_text(yaml.safe_dump(mars_doc(), sort_keys=False), encoding="utf-8")
+            doc = mars_doc()
+            doc["inputs"]["potential_temperature"] = 1600.0     # mars.yaml's declared T_pot: the read needs a T path
+            path.write_text(yaml.safe_dump(doc, sort_keys=False), encoding="utf-8")
             body = ro.load_body(str(path))
             rec = ro.one(str(path), "declared", opt)
         self.assertEqual(rec["outcome_kind"], "answer", rec.get("refusal") or rec.get("no_answer"))
