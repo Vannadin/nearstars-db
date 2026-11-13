@@ -327,6 +327,9 @@
 "test_bulk_validate.py":  # pool step (test_*); layers S1: the division-audit mutant reads solver/partition.py as text; measured as above
   globs: ["solver/partition.py"]
   hand: true
+"test_run_oracle.py":  # pool step (test_*); run_oracle.one solves bodies through the registry (fall_sets.check_stamp hashes its solver/engine closure as text) and runs the legacy chain from engine/; by hand at wiring (directing 11-13), the next census confirms
+  globs: ["solver/*.py", "engine/*.py"]
+  hand: true
 "test_silicate_source.py":  # pool step (test_*); layers S2: fall_sets.check_stamp hashes its solver/engine closure as text, and the test reads material_assemblage.py, silicate_source.py and engine/test_mantle_composition.py as text; measured as above
   globs: ["solver/*.py", "engine/*.py"]
   hand: true

@@ -34,6 +34,8 @@
   # gate.log l.284–384 at s4r (artifacts sg-gate-golive-s4r 69882c2e2 extra/gate.log blob 507794b0) and check_unwired_tests
   #   at the landing tip: the same 100 files, identical at base 910fd42c (68). Wiring one means removing it here (a registration).
   # E-steps (bebb1aee, note 6 §7 rows; directing 11-10) wires engine/test_esteps_t_state.py: removed here, 99 files.
+  # post-S1/S2 stack (directing 11-13): wires solver/tests/test_run_oracle.py, whose UNWIRED state let S1's run_oracle
+  #   regression on boundary_mass bodies (9c4ea96b) land with a green gate: removed here, 98 files.
   step: "scripts/check_unwired_tests.py"
   paths:
     - engine/test_d2_nan.py
@@ -118,7 +120,6 @@
     - solver/tests/test_rho_row_steps.py
     - solver/tests/test_rho_zero_height.py
     - solver/tests/test_rowblend.py
-    - solver/tests/test_run_oracle.py
     - solver/tests/test_s10.py
     - solver/tests/test_s2.py
     - solver/tests/test_s_read.py
