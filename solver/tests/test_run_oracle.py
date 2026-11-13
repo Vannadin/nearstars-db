@@ -147,6 +147,18 @@ class CoreBalanceGuard(unittest.TestCase):
         self.assertEqual(ro.lv.balance_guard(band, roots[:2]), (band, None))
 
 
+class Venus(unittest.TestCase):
+    def test_boundary_mass_body_writes_a_record_without_the_fe_budget(self):
+        """68 51c3a7658 (ii): at ab5287970 run_oracle.one raised on every boundary_mass body (fe_budget_record read
+        `q.value` before its plan check, S1 9c4ea96b); venus (from_v1: fe_prem core, plain silicate mantle, closure
+        boundary_mass) now writes its record, with no fe_budget_misfit since it carries no bulk_plan."""
+        rec = ro.one("engine/bodies/venus.yaml", "declared", FAST)
+        self.assertEqual(contract_problems(rec), [])
+        self.assertEqual(rec["outcome_kind"], "answer")
+        self.assertNotIn("fe_budget_misfit", rec)
+        self.assertIn("core_mass_fraction", {q["key"] for q in rec["quantities"]})
+
+
 class Dante(unittest.TestCase):
     def test_coreless_body_writes_a_record(self):
         """B2: no crash; the absent core / temperature keys reach the old chain as the old engine's zeros."""
