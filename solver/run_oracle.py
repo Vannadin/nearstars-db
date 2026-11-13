@@ -225,8 +225,10 @@ def fe_budget_record(body, answer):
         return None
     plan = next((l.composition.extra["bulk_plan"] for l in body.layers
                  if l.composition is not None and "bulk_plan" in l.composition.extra), None)
-    cmf = next((q.value for q in answer.quantities if q.key == "core_mass_fraction"), None)
-    if plan is None or cmf is None:
+    if plan is None:                                    # no bulk_plan: nothing read from the answer (68 51c3a7658)
+        return None
+    cmf = next((q.point for q in answer.quantities if q.key == "core_mass_fraction"), None)   # result.Quantity.point
+    if cmf is None:
         return None
     return pt.fe_budget_misfit(plan["x_Fe"], plan["bulk_Fe"], plan["fe_metal_fraction"], cmf)
 
