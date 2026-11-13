@@ -964,6 +964,32 @@ def _cut_runs(curves, across=False):
     return out
 
 
+#: the keys of a certified extension row that the load path reads (curve_groups, row_across, the by lookup; 68 n1)
+_EXT_ROW_KEYS = ("t", "class", "p_lo", "p_hi", "left", "right", "p_b")
+
+
+def _check_row(r, where, by, nxt, pbs):
+    """H6 on one boundary row (scope note §3 (d)): an adjacent non-frozen column pair with exactly the cells' labels,
+    the across-gap cut_reason rule, and every P_b of `pbs(r)` finite and strictly inside the pair (`pbs` is called
+    after the other checks, in today's order)."""
+    lo, hi = by.get((r["p_lo"], r["t"])), by.get((r["p_hi"], r["t"]))
+    if nxt.get(r["p_lo"]) != r["p_hi"] or lo is None or hi is None:
+        raise TableStop(f"{where}: not a pair of adjacent columns of the table at that T", check="boundaries")
+    if lo["assemblage"] != r["left"] or hi["assemblage"] != r["right"]:
+        raise TableStop(f"{where}: labels {r['left']!r}/{r['right']!r} are not the cells' "
+                        f"{lo['assemblage']!r}/{hi['assemblage']!r}", check="boundaries")
+    if lo["kind"] == "frozen" or hi["kind"] == "frozen":
+        raise TableStop(f"{where}: a frozen cell is not a boundary side (r2 H6)", check="boundaries")
+    if r.get("cut_reason") is not None and (r.get("cut_reason") != "gap" or r.get("node_resolved")
+                                             or r["class"] == "swap"):
+        raise TableStop(f"{where}: cut_reason {r.get('cut_reason')!r} on a {'node-resolved ' if r.get('node_resolved') else ''}"
+                        f"{r['class']} row: the across-gap rows note marks edge rows only (r2 C1 on 50055cb2)",
+                        check="boundaries")
+    for pb in pbs(r):
+        if not (_finite(pb) and r["p_lo"] < pb < r["p_hi"]):
+            raise TableStop(f"{where}: P_b {pb!r} is not strictly inside its pair", check="boundaries")
+
+
 def check_boundaries(table, by, ps):
     """The load checks of an exported block (scope note §3 (d)): every row is an adjacent non-frozen column pair of
     the table with exactly its labels (the label/geometry agreement on the row's own pair, 68 M2), every P_b lies
@@ -975,23 +1001,22 @@ def check_boundaries(table, by, ps):
     nxt = {a: c for a, c in zip(ps, ps[1:])}
     for r in b.get("rows", ()):
         where = f"exported boundary row ({r.get('t')!r} K, {r.get('p_lo')!r}–{r.get('p_hi')!r} Pa)"
-        lo, hi = by.get((r["p_lo"], r["t"])), by.get((r["p_hi"], r["t"]))
-        if nxt.get(r["p_lo"]) != r["p_hi"] or lo is None or hi is None:
-            raise TableStop(f"{where}: not a pair of adjacent columns of the table at that T", check="boundaries")
-        if lo["assemblage"] != r["left"] or hi["assemblage"] != r["right"]:
-            raise TableStop(f"{where}: labels {r['left']!r}/{r['right']!r} are not the cells' "
-                            f"{lo['assemblage']!r}/{hi['assemblage']!r}", check="boundaries")
-        if lo["kind"] == "frozen" or hi["kind"] == "frozen":
-            raise TableStop(f"{where}: a frozen cell is not a boundary side (r2 H6)", check="boundaries")
-        if r.get("cut_reason") is not None and (r.get("cut_reason") != "gap" or r.get("node_resolved")
-                                                 or r["class"] == "swap"):
-            raise TableStop(f"{where}: cut_reason {r.get('cut_reason')!r} on a {'node-resolved ' if r.get('node_resolved') else ''}"
-                            f"{r['class']} row: the across-gap rows note marks edge rows only (r2 C1 on 50055cb2)",
-                            check="boundaries")
-        pbs = [r["p_b"]] if r.get("node_resolved") or r["class"] == "swap" else [e["p_b"] for e in r["edges"]]
-        for pb in pbs:
-            if not (_finite(pb) and r["p_lo"] < pb < r["p_hi"]):
-                raise TableStop(f"{where}: P_b {pb!r} is not strictly inside its pair", check="boundaries")
+        _check_row(r, where, by, nxt, lambda r: [r["p_b"]] if r.get("node_resolved") or r["class"] == "swap"
+                   else [e["p_b"] for e in r["edges"]])
+    # D2-read §5b (2c) (r2 41e66214; 68, directing 11-13): curve_groups reads certified extension rows as swap rows, so
+    # they pass the same H6 checks; a row that is not certified is an end record curve_groups never reads
+    for r in (b.get("extension") or {}).get("rows", ()):
+        if not r.get("certified"):
+            continue
+        where = f"certified extension row ({r.get('t')!r} K, {r.get('p_lo')!r}–{r.get('p_hi')!r} Pa)"
+        missing = [k for k in _EXT_ROW_KEYS if k not in r]
+        if missing:
+            raise TableStop(f"{where}: missing {', '.join(missing)} (the keys the load path reads)", check="boundaries")
+        if r["class"] != "swap" or r.get("node_resolved"):
+            raise TableStop(f"{where}: a certified extension row must be a swap row, not "
+                            f"{'node-resolved ' if r.get('node_resolved') else ''}{r['class']} (curve_groups files it "
+                            f"as a swap; 68 n2)", check="boundaries")
+        _check_row(r, where, by, nxt, lambda r: [r["p_b"]])
     ts = sorted({c["t"] for c in by.values()})
     return build_curves(b, ts)
 
