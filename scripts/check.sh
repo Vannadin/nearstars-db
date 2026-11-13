@@ -1335,6 +1335,8 @@ step "test_phase_zones.py" bash -c 'exec python3 -m unittest solver/tests/test_p
 step "test_partition.py" bash -c 'exec python3 -m unittest solver/tests/test_partition.py'
 step "test_bulk_validate.py" bash -c 'exec python3 -m unittest solver/tests/test_bulk_validate.py'
 step "test_silicate_source.py" bash -c 'exec python3 -m unittest solver/tests/test_silicate_source.py'
+# D2 저장소 적재 검사(D2 읽기 사후 노트 2 의 잠든 조각) — 적재 거절 이름·edges 검사·공유 고정 입력의 STOP 집합·핀 시험. 맥 ~10 초
+step "test_d2_store.py" bash -c 'exec python3 -m unittest solver/tests/test_d2_store.py'
 step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
 step "test_convergence_meaning.py" bash -c 'cd engine && exec python3 test_convergence_meaning.py'
 step "test_rootfind.py" bash -c 'cd engine && exec python3 test_rootfind.py'
