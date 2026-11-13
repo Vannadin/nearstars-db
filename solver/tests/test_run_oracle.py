@@ -331,7 +331,10 @@ class BulkRecord(unittest.TestCase):
         from solver import validate as vd
         from solver.tests.test_bulk_validate import mars_doc
         b = vd.validate(mars_doc(), "bulk_mars", vd.production_materials(vd.PRODUCTION))
-        ans = types.SimpleNamespace(quantities=[types.SimpleNamespace(key="core_mass_fraction", value=0.251)])
+        # a real result.Quantity (68 51c3a7658: the SimpleNamespace double with `.value` hid that a Quantity has `point`)
+        import dataclasses
+        from solver.tests.test_types import _q
+        ans = types.SimpleNamespace(quantities=[dataclasses.replace(_q(point=0.251), key="core_mass_fraction", unit="1")])
         fe = ro.fe_budget_record(b, ans)
         plan = b.layers[1].composition.extra["bulk_plan"]
         self.assertEqual(set(fe), {"implied_core_Fe", "declared_core_Fe", "misfit", "fitted_core_mass_fraction",
@@ -341,6 +344,10 @@ class BulkRecord(unittest.TestCase):
         self.assertAlmostEqual(fe["misfit"], plan["x_Fe"] * 0.001, places=12)    # declared = x_Fe × 0.250
         earth = from_v1_body("earth")
         self.assertIsNone(ro.fe_budget_record(earth, ans))           # no bulk_plan: nothing written
+        venus = from_v1_body("venus")                                # boundary_mass, no bulk_plan: nothing read
+        self.assertEqual(venus.closure.kind, "boundary_mass")
+        unreadable = types.SimpleNamespace(quantities=[types.SimpleNamespace(key="core_mass_fraction")])
+        self.assertIsNone(ro.fe_budget_record(venus, unreadable))   # the plan check comes before the answer's read
 
     def test_v2_branch_keyed_on_top_level_bulk(self):
         import tempfile
