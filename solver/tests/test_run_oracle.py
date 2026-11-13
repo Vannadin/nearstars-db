@@ -159,6 +159,36 @@ class Venus(unittest.TestCase):
         self.assertIn("core_mass_fraction", {q["key"] for q in rec["quantities"]})
 
 
+class BulkMarsEndToEnd(unittest.TestCase):
+    """Directing 11-13 (iii): S1 §2.5's (b2) Fe-budget record had only the planted test; this is one real run.
+    The fixture is S1's bulk Mars (test_bulk_validate.mars_doc: Khan 2022 bulk, a measured radius, so (E) gives
+    closure boundary_mass on the core), written to a body file and run through run_oracle.one with silicate_records
+    on (its composition key is the khan record's). Wang's bulk Earth cannot be the fixture: its solve refuses
+    no_table_for_composition (S1 test 4's note)."""
+
+    def test_the_record_carries_the_fe_budget_by_hand(self):
+        import dataclasses
+        import yaml
+        from solver.tests.test_bulk_validate import mars_doc
+        opt = dataclasses.replace(FAST, silicate_records=True)
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "bulk_mars.yaml"
+            path.write_text(yaml.safe_dump(mars_doc(), sort_keys=False), encoding="utf-8")
+            body = ro.load_body(str(path))
+            rec = ro.one(str(path), "declared", opt)
+        self.assertEqual(rec["outcome_kind"], "answer", rec.get("refusal") or rec.get("no_answer"))
+        fe = rec["fe_budget_misfit"]
+        plan = body.layers[1].composition.extra["bulk_plan"]
+        cmf = next(q["point"] for q in rec["quantities"] if q["key"] == "core_mass_fraction")
+        # by hand: implied = x_Fe × fitted CMF, declared = fe_metal_fraction × bulk Fe (partition.fe_budget_misfit)
+        self.assertEqual(fe["fitted_core_mass_fraction"], cmf)
+        self.assertEqual(fe["implied_core_Fe"], plan["x_Fe"] * cmf)
+        self.assertEqual(fe["declared_core_Fe"], plan["fe_metal_fraction"] * plan["bulk_Fe"])
+        self.assertEqual(fe["misfit"], plan["x_Fe"] * cmf - plan["fe_metal_fraction"] * plan["bulk_Fe"])
+        print(f"\n  bulk Mars: fitted CMF {cmf!r}, implied core Fe {fe['implied_core_Fe']!r}, declared "
+              f"{fe['declared_core_Fe']!r}, misfit {fe['misfit']!r}")
+
+
 class Dante(unittest.TestCase):
     def test_coreless_body_writes_a_record(self):
         """B2: no crash; the absent core / temperature keys reach the old chain as the old engine's zeros."""
