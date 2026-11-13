@@ -1347,6 +1347,8 @@ step "test_silicate_source.py" bash -c 'exec python3 -m unittest solver/tests/te
 # 비교기 기록(run_oracle) — 지구·단테·금성(boundary_mass)의 기록과 덩어리 화성(bulk) 끝까지 한 번. S1 9c4ea96b 의 금성 회귀가
 #   이 시험이 안 엮여(UNWIRED) 초록 게이트로 착지했다(지휘석 11-13: 이 묶음에서 엮는다). 맥 ~4 분 + 금성·화성 풀이
 step "test_run_oracle.py" bash -c 'exec python3 -m unittest solver/tests/test_run_oracle.py'
+# D2 저장소 적재 검사(D2 읽기 사후 노트 2 의 잠든 조각) — 적재 거절 이름·edges 검사·공유 고정 입력의 STOP 집합·핀 시험. 맥 ~10 초
+step "test_d2_store.py" bash -c 'exec python3 -m unittest solver/tests/test_d2_store.py'
 step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
 step "test_convergence_meaning.py" bash -c 'cd engine && exec python3 test_convergence_meaning.py'
 step "test_rootfind.py" bash -c 'cd engine && exec python3 test_rootfind.py'
