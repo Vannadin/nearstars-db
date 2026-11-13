@@ -44,14 +44,17 @@
 "scripts/test_check_py39.py":  # by hand: synthetic sources in memory, reads no tracked file as data
   globs: []
   hand: true
+"scripts/test_gate_python_version.py":  # by hand: reads scripts/check.sh's head as text and runs it with a planted stub interpreter
+  globs: ["scripts/check.sh"]
+  hand: true
 "scripts/test_check_compile_warnings.py":  # by hand: synthetic sources in temp dirs and a temp git tree; runs the check on the real tree too (gate mode), so it reads what the check reads
   globs: ["**.py"]
   hand: true
 "scripts/check_compile_warnings.py":  # by hand: `git ls-files "*.py"` lists every tracked .py and compiles each (FIX3)
   globs: ["**.py"]
   hand: true
-"scripts/check_py39.py":  # by hand: `git ls-files` lists every tracked .py under engine/ and scripts/ and parses each
-  globs: ["engine/**.py", "scripts/**.py"]
+"scripts/check_py39.py":  # by hand: `git ls-files` lists every tracked .py under the system-python dirs (scripts/pipeline/, phase4/, refs/, viz/) and parses each
+  globs: ["scripts/pipeline/**.py", "scripts/phase4/**.py", "scripts/refs/**.py", "scripts/viz/**.py"]
   hand: true
 "scripts/pipeline/validate.py":
   globs: []

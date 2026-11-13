@@ -40,6 +40,10 @@ def main() -> int:
         ok = got == []
         bad += not ok
         print(f"  [{'PASS' if ok else 'FAIL'}] green fixture «{name}» → {got}")
+    # 11-13 (owner f075fa770): the scope is the system-python tools only; engine/ and solver/ gate under 3.12
+    ok = set(c.DIRS) == {"scripts/pipeline/", "scripts/phase4/", "scripts/refs/", "scripts/viz/"}
+    bad += not ok
+    print(f"  [{'PASS' if ok else 'FAIL'}] scope is the system-python tools → {c.DIRS}")
     print("모두 통과" if not bad else f"{bad} 실패")
     return 1 if bad else 0
 

@@ -19,7 +19,17 @@ REQ="engine/requirements.txt"
 
 [ -f "$REQ" ] || { echo "  [FAIL] $REQ 가 없다"; exit 2; }
 
-/usr/bin/python3 -m venv "$VENV"
+# ⚠ **3.12 이상으로만 짓는다** (오너 2026-11-13 f075fa770). 맥의 /usr/bin/python3 은 3.9 라 예전 venv 가 3.9 였다.
+#   PY312 로 줄 수 있고, 없으면 아래 후보를 차례로 묻는다; 어느 것도 3.12 이상이 아니면 이름 붙은 거절.
+_py=""
+for c in "${PY312:-}" python3.12 /opt/homebrew/opt/python@3.12/bin/python3.12 /usr/local/bin/python3.12 /usr/bin/python3 python3; do
+  [ -n "$c" ] || continue
+  command -v "$c" >/dev/null 2>&1 || continue
+  if "$c" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 12) else 1)' 2>/dev/null; then _py=$(command -v "$c"); break; fi
+done
+[ -n "$_py" ] || { echo "  [FAIL] no Python 3.12 or newer found (PY312, python3.12, /usr/bin/python3) — the gate venv is 3.12 only"; exit 2; }
+echo "  building $VENV from $_py ($("$_py" --version 2>&1))"
+"$_py" -m venv "$VENV"
 "$VENV/bin/python3" -m pip install --disable-pip-version-check --quiet -r "$REQ"
 
 "$VENV/bin/python3" - <<'PY'

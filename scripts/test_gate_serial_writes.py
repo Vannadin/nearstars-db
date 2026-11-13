@@ -28,6 +28,7 @@ NO_WRITE = {
     "scripts/check_unwired_tests.py", "scripts/test_check_verdict_reads.py",
     "scripts/check_verdict_reads.py",               # writes its baseline only with --write-baseline (not the gate's argv)
     "scripts/test_check_py39.py", "scripts/check_py39.py", "scripts/test_check_compile_warnings.py",
+    "scripts/test_gate_python_version.py",          # runs check.sh's head copy in a tempfile dir with a stub interpreter
     "scripts/check_compile_warnings.py", "scripts/pipeline/validate.py", "scripts/refs/validate_plasma_temp.py",
     "scripts/check_dead_links.py", "scripts/check_site_links.py", "scripts/check_citation_links.py", "경로 잔여물 grep",
     "scripts/check_language.py", "scripts/check_md_tables.py", "scripts/check_md_dupes.py",
