@@ -189,6 +189,14 @@ class CertifiedExtensionRowsAreChecked(unittest.TestCase):
         self.assertIn("a frozen cell is not a boundary side", str(cm.exception))
         self.assertIn("(H6)", str(cm.exception))
         ds.check_extension_h6({"extension": {"rows": [_ext_row()]}}, {"cells": _cells()}, "x")     # control: loads
+        for row, why in ((_ext_row(left=R, right=L), "are not the cells'"),
+                         (_ext_row(p_hi=P_HI + 1e8), "not a pair of adjacent columns"),
+                         (_ext_row(p_b=P_LO), "is not strictly inside its pair"),
+                         (_ext_row(**{"class": "edge_in"}), "must be a swap row"),
+                         ({k: v for k, v in _ext_row().items() if k != "p_b"}, "missing p_b")):
+            with self.subTest(why=why), self.assertRaises(ds.StoreRefusal) as cm:
+                ds.check_extension_h6({"extension": {"rows": [row]}}, {"cells": _cells()}, "x")
+            self.assertIn(why, str(cm.exception))
 
 
 def _shipped_tables():
