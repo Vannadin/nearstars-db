@@ -51,7 +51,7 @@ with tempfile.TemporaryDirectory() as td:
     # --tree: a planted tracked file in a fresh git tree is read by the tree mode (the artifacts tree's path)
     g = d / "tree"
     g.mkdir()
-    subprocess.run(["git", "init", "-q", str(g)], check=True)
+    subprocess.run(["git", "init", "-q", "-b", "main", str(g)], check=True)
     (g / "ok.py").write_text("x = 1\n")
     (g / "sub").mkdir()
     (g / "sub" / "bad.py").write_text(DOC_BAD)

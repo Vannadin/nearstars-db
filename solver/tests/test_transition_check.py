@@ -83,7 +83,7 @@ def _repo(d, files: dict, message="ruling"):
     review 2 T-13 (b))."""
     run = lambda *a: subprocess.run(["git", "-C", str(d), *a], capture_output=True, text=True, check=True)   # noqa: E731
     if not (Path(d) / ".git").exists():
-        run("init", "-q")
+        run("init", "-q", "-b", "main")
     for name, text in files.items():
         (Path(d) / name).write_text(text, encoding="utf-8")
         run("add", name)

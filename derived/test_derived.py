@@ -254,7 +254,7 @@ class GlobPathspecs(unittest.TestCase):
         for f in ("engine/bodies/a.yaml", "engine/other/b.yaml", "README.md"):
             (root / f).parent.mkdir(parents=True, exist_ok=True)
             (root / f).write_text("x: 1\n", encoding="utf-8")
-        for argv in (["init", "-q"], ["add", "-A"], ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "t"]):
+        for argv in (["init", "-q", "-b", "main"], ["add", "-A"], ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "t"]):
             subprocess.run(["git", "-C", d, *argv], check=True, capture_output=True)
         return root
 
@@ -343,7 +343,7 @@ class OutOfTree(unittest.TestCase):
         """68 B1: a checkout whose fetch fails is red (named), even though an old main ref is there to read."""
         with tempfile.TemporaryDirectory() as d:
             run = lambda *a: subprocess.run(["git", "-C", d, *a], capture_output=True, text=True, check=True)  # noqa
-            run("init", "-q")
+            run("init", "-q", "-b", "main")
             run("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "--allow-empty", "-m", "x")
             run("update-ref", "refs/remotes/origin/main", "HEAD")              # a stale main is present
             run("remote", "add", "origin", "/nonexistent/remote.git")         # and the fetch must fail
@@ -363,7 +363,7 @@ class FetchRace(unittest.TestCase):
             d = Path(d)
             run = lambda c, *a: subprocess.run(["git", "-C", str(c), *a], capture_output=True, text=True, check=True)  # noqa
             origin, art = d / "origin", d / "art"
-            run(d, "init", "-q", str(origin))
+            run(d, "init", "-q", "-b", "main", str(origin))
             run(origin, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "--allow-empty", "-m", "one")
             run(d, "clone", "-q", str(origin), str(art))
             ck.artifacts_ref(art)                                           # the clone's mirror is current
@@ -396,7 +396,7 @@ class FetchRace(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             d = Path(d)
             run = lambda c, *a: subprocess.run(["git", "-C", str(c), *a], capture_output=True, text=True, check=True)  # noqa
-            run(d, "init", "-q", str(d / "art"))
+            run(d, "init", "-q", "-b", "main", str(d / "art"))
             run(d / "art", "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "--allow-empty", "-m", "x")
             run(d / "art", "worktree", "add", "-q", "--detach", str(d / "wt"))
             self.assertEqual(ck.fetch_lock_path(d / "wt").resolve(), ck.fetch_lock_path(d / "art").resolve())
@@ -1055,7 +1055,7 @@ class LoadCensus(unittest.TestCase):
     def test_the_childs_sweep_removes_a_declared_scratch_path(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
-            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True)
             (root / "engine").mkdir()
             before = self.lc.untracked(root, ["engine"])
             (root / "engine" / "t.py.part").write_text("body")
@@ -1138,7 +1138,7 @@ class LoadCensus(unittest.TestCase):
     def test_restore_removes_only_new_untracked(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
-            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True)
             (root / "out").mkdir()
             (root / "out" / "old.txt").write_text("x")
             before = self.lc.untracked(root, ["out"])
@@ -1153,7 +1153,7 @@ class LoadCensus(unittest.TestCase):
         over the whole listed dir) deletes engine/zz.part."""
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
-            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True)
             (root / "engine" / "tables").mkdir(parents=True)
             before = self.lc.untracked(root, ["engine"])
             (root / "engine" / "zz.part").write_text("a pool step's file")
@@ -1168,7 +1168,7 @@ class LoadCensus(unittest.TestCase):
         and removed, one elsewhere is neither. Mutant: the unscoped listing (no pathspec) lists and removes stray.txt."""
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
-            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True)
             (root / "engine" / "out").mkdir(parents=True)
             before = self.lc.untracked(root, ["engine/out"])
             (root / "engine" / "out" / "new.part").write_text("y")
