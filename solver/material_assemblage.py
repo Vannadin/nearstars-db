@@ -990,6 +990,20 @@ def _check_row(r, where, by, nxt, pbs):
             raise TableStop(f"{where}: P_b {pb!r} is not strictly inside its pair", check="boundaries")
 
 
+def check_extension_row(r, where, by, nxt):
+    """H6 on one certified extension row (D2-read §5b (2c)): the seven keys the load path reads, the swap shape
+    curve_groups files it under (68 n2), then `_check_row` with its own P_b. The one H6 code for extension rows: the
+    table's block (check_boundaries) and the store's (d2_store.check_extension_h6) both call it (D2-read note 3 (5))."""
+    missing = [k for k in _EXT_ROW_KEYS if k not in r]
+    if missing:
+        raise TableStop(f"{where}: missing {', '.join(missing)} (the keys the load path reads)", check="boundaries")
+    if r["class"] != "swap" or r.get("node_resolved"):
+        raise TableStop(f"{where}: a certified extension row must be a swap row, not "
+                        f"{'node-resolved ' if r.get('node_resolved') else ''}{r['class']} (curve_groups files it "
+                        f"as a swap; 68 n2)", check="boundaries")
+    _check_row(r, where, by, nxt, lambda r: [r["p_b"]])
+
+
 def check_boundaries(table, by, ps):
     """The load checks of an exported block (scope note §3 (d)): every row is an adjacent non-frozen column pair of
     the table with exactly its labels (the label/geometry agreement on the row's own pair, 68 M2), every P_b lies
@@ -1008,15 +1022,8 @@ def check_boundaries(table, by, ps):
     for r in (b.get("extension") or {}).get("rows", ()):
         if not r.get("certified"):
             continue
-        where = f"certified extension row ({r.get('t')!r} K, {r.get('p_lo')!r}–{r.get('p_hi')!r} Pa)"
-        missing = [k for k in _EXT_ROW_KEYS if k not in r]
-        if missing:
-            raise TableStop(f"{where}: missing {', '.join(missing)} (the keys the load path reads)", check="boundaries")
-        if r["class"] != "swap" or r.get("node_resolved"):
-            raise TableStop(f"{where}: a certified extension row must be a swap row, not "
-                            f"{'node-resolved ' if r.get('node_resolved') else ''}{r['class']} (curve_groups files it "
-                            f"as a swap; 68 n2)", check="boundaries")
-        _check_row(r, where, by, nxt, lambda r: [r["p_b"]])
+        check_extension_row(r, f"certified extension row ({r.get('t')!r} K, {r.get('p_lo')!r}–{r.get('p_hi')!r} Pa)",
+                            by, nxt)
     ts = sorted({c["t"] for c in by.values()})
     return build_curves(b, ts)
 

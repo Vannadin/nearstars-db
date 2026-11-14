@@ -152,10 +152,8 @@ class CertifiedExtensionRowsAreChecked(unittest.TestCase):
         self.assertEqual([(c.kind, c.t0, c.t1, c.p_b(T_X)) for c in cs], [("swap", T_X, T_X, PB_X)])
 
     def test_7_shipped_tables_pass_and_have_no_certified_extension_rows(self):
-        from solver import material_registry as mr
-        reg = mr.load()
         seen = 0
-        for tid, tb in reg.tables.items():
+        for tid, (_a, tb) in _shipped_tables().items():
             b = tb.get("boundaries") or {}
             if b.get("status") != "exported":
                 continue
@@ -164,6 +162,50 @@ class CertifiedExtensionRowsAreChecked(unittest.TestCase):
                 ma.check_boundaries(tb, {(c["p"], c["t"]): c for c in tb["cells"]}, sorted({c["p"] for c in tb["cells"]}))
                 self.assertEqual(sum(bool(r.get("certified")) for r in (b.get("extension") or {}).get("rows", ())), 0)
         self.assertGreater(seen, 0)
+
+    def test_8_inert_on_the_shipped_records_and_live_on_a_planted_row(self):
+        """Directing 11-15 condition 3: while no record carries a certified extension row (every part-1 record), the
+        table load never calls the extension check; the planted counterpart shows the spy can count."""
+        with mock.patch.object(ma, "check_extension_row", wraps=ma.check_extension_row) as spy:
+            tables = _shipped_tables()
+            for tid, (a, tb) in tables.items():
+                with self.subTest(table=tid):
+                    ma.check_table(a, tb)
+            self.assertGreater(len(tables), 0)
+            self.assertEqual(spy.call_count, 0)
+            _check([_ext_row()])
+            self.assertEqual(spy.call_count, 1)
+
+    def test_9_the_store_side_runs_the_same_helper(self):
+        """D2-read note 3 (5): d2_store.check_extension_h6 calls check_extension_row, one H6 code; its TableStop
+        becomes the store's refusal by name."""
+        from solver import d2_store as ds
+        compact = {"cells": _cells({P_LO: "frozen"})}
+        with mock.patch.object(ma, "check_extension_row", wraps=ma.check_extension_row) as spy:
+            with self.assertRaises(ds.StoreRefusal) as cm:
+                ds.check_extension_h6({"extension": {"rows": [_ext_row()]}}, compact, "x")
+        self.assertEqual(spy.call_count, 1)
+        self.assertEqual(cm.exception.id, "material.d2_store_edges_rows")
+        self.assertIn("a frozen cell is not a boundary side", str(cm.exception))
+        self.assertIn("(H6)", str(cm.exception))
+        ds.check_extension_h6({"extension": {"rows": [_ext_row()]}}, {"cells": _cells()}, "x")     # control: loads
+
+
+def _shipped_tables():
+    """{record id: (assemblage block, compact table)} for every shipped assemblage record, read and sha-checked as
+    the registry reads them, without the registry's closure-term pins (which this commit's module blob moves until
+    part 2's re-pin)."""
+    from solver import material_registry as mr
+    out = {}
+    for f in sorted(mr.MATERIALS_DIR.glob("*.yaml")):
+        if f.name in mr.NOT_RECORDS:
+            continue
+        rec = mr.parse(f.read_text(encoding="utf-8"))
+        a = rec.get("assemblage") if isinstance(rec, dict) else None
+        if a:
+            out[f.stem] = (a, ma.read_table(mr.MATERIALS_DIR / a["file"], a["sha256"]))
+    return out
+
 
 BSE = "silicate_slb_default_bse"
 T_STEP = 1568.5                      # in the cell [1550, 1600], next to swap277's reach-0 end at 1600 K
