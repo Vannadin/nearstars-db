@@ -428,14 +428,20 @@ def producer_pin(text: str) -> tuple[str, dict]:
 
 
 def _read_doc(root: Path, f: str):
+    """The parsed content of one file; an unreadable or corrupt file is LookupError (the entry red, named), never a
+    traceback (68 n1 on cd438008: the yamls and 8c's derived compacts are read only here)."""
     import gzip
-    b = (Path(root) / f).read_bytes()
-    if f.endswith(".gz"):
-        b = gzip.decompress(b)
-    if f.endswith((".yaml", ".yml")):
-        import yaml
-        return yaml.safe_load(b.decode("utf-8"))
-    return json.loads(b)
+    import zlib
+    import yaml
+    try:
+        b = (Path(root) / f).read_bytes()
+        if f.endswith(".gz"):
+            b = gzip.decompress(b)
+        if f.endswith((".yaml", ".yml")):
+            return yaml.safe_load(b.decode("utf-8"))
+        return json.loads(b)
+    except (OSError, EOFError, zlib.error, ValueError, yaml.YAMLError) as err:
+        raise LookupError(f"producer: {f} cannot be read ({type(err).__name__}: {err})") from None
 
 
 def _at(doc, path: str):

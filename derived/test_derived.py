@@ -1263,11 +1263,12 @@ class Producer(unittest.TestCase):
         self.assertEqual(len(ck.producer_check(self.e8d, PIN_TEXT, self.root)), 6)
         self.assertEqual(len(ck.producer_check(self.e8c, PIN_TEXT, self.root)), 6)
 
-    def test_real_pair_568ccfa1(self):
-        """The landed products and pool_cpp.py 96641e44 (read from NEARSTARS_ARTIFACTS by blob): both entries hold, and
-        every identity reads 0.21.0 on the linux wheel. A checkout without that blob fails here by name, never skips."""
-        art = os.environ.get("NEARSTARS_ARTIFACTS")
-        self.assertTrue(art, "NEARSTARS_ARTIFACTS unset: the real pair needs pool_cpp.py's blob")
+    def test_real_pair_on_the_trees_products(self):
+        """The tree's own 8c/8d products (568ccfa1's at this commit, the re-pinned ones after A1) and pool_cpp.py
+        96641e44, read by blob from the artifacts checkout check.py itself finds (env_dir: the variable, else the checked
+        sibling default; 68 B1 on cd438008). Both entries hold, every identity reads 0.21.0 on the linux wheel. No
+        checkout, or one without that blob, fails here by name (NotRun is a LookupError), never skips."""
+        art = ck.env_dir("NEARSTARS_ARTIFACTS")
         r = subprocess.run(["git", "-C", art, "cat-file", "blob", PIN_BLOB], capture_output=True, text=True)
         self.assertEqual(r.returncode, 0, f"pool_cpp.py {PIN_BLOB} not in {art}: {r.stderr.strip()}")
         for spec, files, derived in ((SPEC_8D, _files_8d(), ()), (SPEC_8C, [T8C], [T8D.format(rec=x) for x in RECS])):
@@ -1342,6 +1343,14 @@ class Producer(unittest.TestCase):
     def test_10_path_outside_files_and_derived(self):
         e = dict(self.e8c, derived=[])
         self._red(e, "neither one of the entry's files nor a declared derived input")
+
+    def test_11_unreadable_input_is_red_not_a_traceback(self):
+        """68 n1: a corrupt compact (8c's derived input) and a corrupt yaml are LookupError, named."""
+        (self.root / T8D.format(rec=RECS[0])).write_bytes(b"not gzip")
+        self._red(self.e8c, "cannot be read", T8D.format(rec=RECS[0]))
+        self.tearDown(); self.setUp()
+        (self.root / Y8D.format(rec=RECS[1])).write_text("a: [unclosed\n")
+        self._red(self.e8d, "cannot be read", Y8D.format(rec=RECS[1]))
 
     def test_restamp_cannot_accept_an_unpinned_identity(self):
         """Controls 1, 3 and 8 raise in producer_check, which stamp() calls, and restamp() calls stamp()."""
