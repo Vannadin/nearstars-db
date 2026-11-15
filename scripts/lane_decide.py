@@ -240,9 +240,55 @@ def _exact_rows(lines, table, notes):
     return claimed, None
 
 
+#: run.py's full-precision line under a `[어긋남]` line (C59 re-registration, 68 (a)): `repr` of both floats
+_FULL = re.compile(r"\s*전체 정밀도:\s+엔진\s+(\S+)\s+·\s+보드\s+(\S+)\s*$")
+
+
+def _full_pairs(rng: list[str]) -> dict:
+    """{key: (engine, board) | None}: each `[어긋남] key` line with the `전체 정밀도:` line that follows it before the next
+    `[…]` line; None when that line is missing (a log from before the print, or a key printed without it)."""
+    out, key = {}, None
+    for l in rng:
+        m = re.match(r"\s*\[어긋남\]\s+(\S+)", l)
+        if m:
+            key = m.group(1)
+            out[key] = None
+            continue
+        if re.match(r"\s*\[", l):
+            key = None
+            continue
+        f = _FULL.match(l)
+        if f and key is not None and out[key] is None:
+            out[key] = (float(f.group(1)), float(f.group(2)))
+    return out
+
+
+def _value_check(row: dict, rng: list[str]) -> str | None:
+    """C59 re-registration (68's sweep f2b42b3bc; directing 11-13): a step_mismatch row with `values` is accepted only
+    when every registered key's full-precision engine and board values lie within the row's `rtol` (relative, the
+    registered noise) of the registered pair. A changed value is a non-acceptance until the row is re-registered,
+    never a note: the print-resolution note let C59's engine value move from 10-16 to 11-13 with no record. None = ok."""
+    vals = row.get("values") or {}
+    if not vals:
+        return None
+    rtol = row.get("rtol")
+    if isinstance(rtol, bool) or not isinstance(rtol, (int, float)) or rtol < 0:
+        return f"{row['id']} — values 가 있는 칸에 rtol(등록한 잡음 폭)이 없다 → 불인정"
+    full = _full_pairs(rng)
+    for k, old in sorted(vals.items()):
+        got = full.get(k)
+        if got is None:
+            return f"{row['id']} {k} — 전체 정밀도 줄(run.py «전체 정밀도:») 없음 → 불인정"
+        for side, a, b in (("엔진", got[0], float(old[0])), ("보드", got[1], float(old[1]))):
+            if abs(a - b) > rtol * abs(b):
+                return (f"{row['id']} {k} {side} {a!r} ≠ 등록 {b!r} (rtol {rtol:g}) — 값 바뀜, 칸을 다시 등록하기 "
+                        f"전엔 → 불인정")
+    return None
+
+
 def _value_notes(lines: list[str], table: list[dict]) -> list[str]:
-    """기대 칸(step_mismatch, values 있음)마다 그 단계 구간의 `[어긋남]` 값이 등록 값 쌍(엔진 · 보드)과 다르면 한 줄
-    알림 — 판정과 따로 센다 (s4r C59-NOTE-DROPPED, 지휘 11-08: 불인정 판에서도 알림은 찍힌다)."""
+    """불인정 판에서도 값 판정을 따로 찍는다 (s4r C59-NOTE-DROPPED, 지휘 11-08): 다른 빨강 뒤에서 등록 값이 말없이
+    바뀌지 않게. 칸마다 `_value_check` 의 이유 한 줄."""
     out = []
     for row in table:
         if row.get("kind", "step_mismatch") != "step_mismatch" or not row.get("values"):
@@ -250,11 +296,9 @@ def _value_notes(lines: list[str], table: list[dict]) -> list[str]:
         rng = _step_range(lines, row["step"])
         if rng is None:
             continue
-        for l in rng:
-            m = re.match(r"\s*\[어긋남\]\s+(\S+)\s+엔진\s+(\S+)\s+·\s+보드\s+(\S+)", l)
-            old = (row["values"] or {}).get(m.group(1)) if m else None
-            if m and old and (float(m.group(2)), float(m.group(3))) != (float(old[0]), float(old[1])):
-                out.append(f"⚠ {row['id']} {m.group(1)} 엔진 {m.group(2)} · 보드 {m.group(3)} (옛 {old[0]} · {old[1]}) — 크기 바뀜")
+        why = _value_check(row, rng)
+        if why:
+            out.append(why)
     return out
 
 
@@ -265,7 +309,7 @@ def expected_red_only(text: str, table: list[dict]) -> tuple[bool, list[str]]:
     붙인다 — 다른 빨강 뒤에서 등록 값이 말없이 바뀌지 않게 (s4r C59-NOTE-DROPPED)."""
     ok, why = _expected_red_only(text, table)
     if not ok:
-        why = why + [f"참고: {n}" for n in _value_notes(text.split("\n"), table)]
+        why = why + [f"참고: {n}" for n in _value_notes(text.split("\n"), table) if n not in why]   # the reason itself once
     return ok, why
 
 
@@ -310,10 +354,9 @@ def _expected_red_only(text: str, table: list[dict]) -> tuple[bool, list[str]]:
                 mis[re.match(r"\s*\[어긋남\]\s+(\S+)", l).group(1)] = None
         if set(mis) != set(row["mismatch_keys"]):
             return False, [f"{row['id']} — 어긋남 키 {sorted(mis)} ≠ 기대 {sorted(row['mismatch_keys'])} → 불인정"]
-        for k, v in mis.items():
-            old = (row.get("values") or {}).get(k)
-            if v and old and (float(v[0]), float(v[1])) != (float(old[0]), float(old[1])):
-                notes.append(f"⚠ {row['id']} {k} 엔진 {v[0]} · 보드 {v[1]} (옛 {old[0]} · {old[1]}) — 크기 바뀜")
+        why = _value_check(row, rng)
+        if why:
+            return False, [why]
         notes.append(f"기대 빨강 {row['id']} 만 있음 → 인정")
     return True, notes
 
