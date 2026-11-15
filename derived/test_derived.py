@@ -1182,5 +1182,196 @@ class LoadCensus(unittest.TestCase):
         self.assertEqual(self.lc.output_specs("10-graph-page"), ["engine"])
 
 
+# ── the producer pin (producer-pin.md rev 2 c5d8998d, 68 CLEAR 08354939e) ─────────────────────────────────────────
+RECS = ["default_bse", "earth_dmm_wh2005", "mars_khan2022"]
+PIN = "rewrite/phase2-records/bmcpp/pool_cpp.py"
+PIN_BLOB = "96641e44e3772836c76147f6995ff3222a1cbec5"          # pool_cpp.py on artifacts ea-l1-post (WHEELS 11-15)
+T8D = "solver/materials/tables/silicate_slb_{rec}.json.gz"
+Y8D = "solver/materials/silicate_slb_{rec}.yaml"
+T8C = "solver/materials/tables/silicate_prem_zeng2016.json.gz"
+SPEC_8D = {"package": "burnman_cpp", "pin": PIN, "records": RECS,
+           "identities": [f"{T8D}:dtdp_eq_source.burnman_cpp", f"{Y8D}:assemblage.dtdp.sidecar.burnman_cpp"],
+           "ties": [[f"{Y8D}:assemblage.pins.table_blob", f"{Y8D}:assemblage.dtdp.sidecar.table_blob",
+                     f"{T8D}:dtdp_eq_source.table_blob"]]}
+SPEC_8C = {"package": "burnman_cpp", "pin": PIN, "records": RECS,
+           "identities": [f"{T8C}:blocks.silicate_slb_{{rec}}.source.burnman_cpp", f"{T8D}:dtdp_eq_source.burnman_cpp"],
+           "ties": [[f"{T8C}:blocks.silicate_slb_{{rec}}.source.table_blob", f"{T8D}:dtdp_eq_source.table_blob"]]}
+LINUX = {"wheel_sha256": "579a12119c75fb9264cd2b258448f8176cd707b6a681ad20d3c55c7b48d8fdd2",
+         "record_digest": "009248225487ccdcd5ae03b59a47986372533b35c1868e2c81fd02544a82d5ed"}
+DARWIN = {"wheel_sha256": "6dcd7c0818489672939b643feb444bd1a7807cb455db50a7602af55e2640ad97",
+          "record_digest": "1ee251b27ea64d40b3a654e7e954c3808b98e82838dda710ee9157e007ae3764"}
+PIN_TEXT = ('VERSION = "0.21.0"\nWHEELS = {"darwin-arm64": {"wheel_sha256": "%s", "record_digest": "%s", "record_rows": 141},\n'
+            '          "linux-x86_64": {"wheel_sha256": "%s", "record_digest": "%s", "record_rows": 140}}\n'
+            % (DARWIN["wheel_sha256"], DARWIN["record_digest"], LINUX["wheel_sha256"], LINUX["record_digest"]))
+
+
+def _entry(spec, files, derived=()):
+    return {"files": list(files), "derived": list(derived), "out_of_tree": [PIN], "producer": spec}
+
+
+def _files_8d():
+    return [x.format(rec=r) for x in (T8D, Y8D) for r in RECS]
+
+
+class Producer(unittest.TestCase):
+    """The 8c/8d producer pin: the identity the build wrote, against pool_cpp.WHEELS, every copy tied (controls 1–10)."""
+
+    def setUp(self):
+        import gzip
+        import yaml
+        self.gzip, self.yaml = gzip, yaml
+        self.td = tempfile.TemporaryDirectory()
+        self.root = Path(self.td.name)
+        (self.root / "solver/materials/tables").mkdir(parents=True)
+        idn = {"version": "0.21.0", "platform": "linux-x86_64", **LINUX, "settings": {"tol": 1e-10}}
+        blocks = {}
+        for i, r in enumerate(RECS):
+            tb = f"{i}" * 40
+            self._put(T8D.format(rec=r), {"dtdp_eq_source": {"table_blob": tb, "burnman_cpp": dict(idn)}})
+            self._put(Y8D.format(rec=r), {"assemblage": {"pins": {"table_blob": tb},
+                                                         "dtdp": {"sidecar": {"table_blob": tb, "burnman_cpp": dict(idn)}}}})
+            blocks[f"silicate_slb_{r}"] = {"source": {"table_blob": tb, "burnman_cpp": {
+                "version": "0.21.0", "wheel_sha256": LINUX["wheel_sha256"]}}}
+        self._put(T8C, {"blocks": blocks})
+        self.e8d = _entry(SPEC_8D, _files_8d())
+        self.e8c = _entry(SPEC_8C, [T8C], [T8D.format(rec=r) for r in RECS])
+
+    def tearDown(self):
+        self.td.cleanup()
+
+    def _put(self, f, doc):
+        p = self.root / f
+        if f.endswith(".yaml"):
+            p.write_text(self.yaml.safe_dump(doc))
+        else:
+            p.write_bytes(self.gzip.compress(json.dumps(doc).encode()))
+
+    def _get(self, f):
+        return ck._read_doc(self.root, f)
+
+    def _edit(self, f, fn):
+        d = self._get(f); fn(d); self._put(f, d)
+
+    def _red(self, e, *words, pin=PIN_TEXT):
+        with self.assertRaises(LookupError) as cm:
+            ck.producer_check(e, pin, self.root)
+        for w in words:
+            self.assertIn(w, str(cm.exception))
+        return str(cm.exception)
+
+    def test_fixture_passes(self):
+        self.assertEqual(len(ck.producer_check(self.e8d, PIN_TEXT, self.root)), 6)
+        self.assertEqual(len(ck.producer_check(self.e8c, PIN_TEXT, self.root)), 6)
+
+    def test_real_pair_568ccfa1(self):
+        """The landed products and pool_cpp.py 96641e44 (read from NEARSTARS_ARTIFACTS by blob): both entries hold, and
+        every identity reads 0.21.0 on the linux wheel. A checkout without that blob fails here by name, never skips."""
+        art = os.environ.get("NEARSTARS_ARTIFACTS")
+        self.assertTrue(art, "NEARSTARS_ARTIFACTS unset: the real pair needs pool_cpp.py's blob")
+        r = subprocess.run(["git", "-C", art, "cat-file", "blob", PIN_BLOB], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, f"pool_cpp.py {PIN_BLOB} not in {art}: {r.stderr.strip()}")
+        for spec, files, derived in ((SPEC_8D, _files_8d(), ()), (SPEC_8C, [T8C], [T8D.format(rec=x) for x in RECS])):
+            got = ck.producer_check(_entry(spec, files, derived), r.stdout, ck.REPO)
+            self.assertEqual(len(got), 6)
+            for v in got.values():
+                self.assertIn(LINUX["wheel_sha256"], v)
+                self.assertTrue(v.startswith("0.21.0 "), v)
+
+    def test_files_yaml_matches_the_design_once_declared(self):
+        """When B4 declares `producer:` in files.yaml, it must be this design's spec (this test then reads the tree's)."""
+        for name, spec in (("8d-silicate-slb", SPEC_8D), ("8c-prem-handover", SPEC_8C)):
+            got = ck.entries(DOC)[name].get("producer")
+            if got is not None:
+                self.assertEqual(got, spec, name)
+                self.assertIn(PIN, ck.entries(DOC)[name].get("out_of_tree") or [], name)
+
+    # planted controls (each red, named)
+    def test_1_record_digest_changed(self):
+        self._edit(T8D.format(rec=RECS[2]), lambda d: d["dtdp_eq_source"]["burnman_cpp"].update(record_digest="f" * 64))
+        self._red(self.e8d, "RECORD digest")
+
+    def test_2_other_pinned_wheel_moves_the_stamp(self):
+        """The darwin pin on all of 8d's copies (wheel changed with platform and record, 68's nit): 8d builds and its
+        producer part moves; 8c, left on linux, is red on the shared-key disagreement."""
+        before = ck.producer_check(self.e8d, PIN_TEXT, self.root)
+        for r in RECS:
+            dar = {"platform": "darwin-arm64", **DARWIN}
+            self._edit(T8D.format(rec=r), lambda d: d["dtdp_eq_source"]["burnman_cpp"].update(dar))
+            self._edit(Y8D.format(rec=r), lambda d: d["assemblage"]["dtdp"]["sidecar"]["burnman_cpp"].update(dar))
+        after = ck.producer_check(self.e8d, PIN_TEXT, self.root)
+        then = {"producer": before}
+        for k in ("code", "data", "derived", "out_of_tree", "packages", "external", "runtime_blob"):
+            then[k] = {}
+        then["stamp_rule"] = dg.STAMP_RULE
+        now = dict(then, producer=after)
+        self.assertTrue(any(m.startswith("producer ") and m.endswith(" moved") for m in ck.moved(then, now)), ck.moved(then, now))
+        self._red(self.e8c, "disagree", "wheel_sha256")
+
+    def test_3_version_not_pinned(self):
+        self._edit(Y8D.format(rec=RECS[0]), lambda d: d["assemblage"]["dtdp"]["sidecar"]["burnman_cpp"].update(version="0.20.0"))
+        self._red(self.e8d, "version", "0.20.0")
+
+    def test_4_identity_missing_in_one_yaml(self):
+        self._edit(Y8D.format(rec=RECS[1]), lambda d: d["assemblage"]["dtdp"]["sidecar"].pop("burnman_cpp"))
+        self._red(self.e8d, "no burnman_cpp identity", Y8D.format(rec=RECS[1]))
+
+    def test_5_8c_block_disagrees_with_its_compact(self):
+        """8c's wheel set to the darwin pin (itself a pinned wheel, so only the tie to the compact catches it)."""
+        self._edit(T8C, lambda d: d["blocks"][f"silicate_slb_{RECS[0]}"]["source"]["burnman_cpp"].update(
+            wheel_sha256=DARWIN["wheel_sha256"]))
+        self._red(self.e8c, "disagree", "wheel_sha256")
+
+    def test_6_8c_table_blob_tie_broken(self):
+        self._edit(T8C, lambda d: d["blocks"][f"silicate_slb_{RECS[2]}"]["source"].update(table_blob="e" * 40))
+        self._red(self.e8c, "tie not one value")
+
+    def test_7_sidecar_table_blob_is_not_the_pinned_table(self):
+        self._edit(Y8D.format(rec=RECS[0]), lambda d: d["assemblage"]["dtdp"]["sidecar"].update(table_blob="d" * 40))
+        self._red(self.e8d, "tie not one value", "sidecar.table_blob")
+
+    def test_8_wheel_removed_from_the_pin(self):
+        pin = PIN_TEXT.replace('"linux-x86_64"', '"linux-aarch64"')
+        self._red(self.e8d, "platform 'linux-x86_64' has no pinned wheel", pin=pin)
+
+    def test_9_pin_not_in_out_of_tree(self):
+        e = dict(self.e8d, out_of_tree=[])
+        with self.assertRaises(LookupError) as cm:
+            ck.producer_identity(e, ("/nonexistent", "ref", "0" * 40))
+        self.assertIn("not in the entry's out_of_tree", str(cm.exception))
+
+    def test_10_path_outside_files_and_derived(self):
+        e = dict(self.e8c, derived=[])
+        self._red(e, "neither one of the entry's files nor a declared derived input")
+
+    def test_restamp_cannot_accept_an_unpinned_identity(self):
+        """Controls 1, 3 and 8 raise in producer_check, which stamp() calls, and restamp() calls stamp()."""
+        import inspect
+        self.assertIn("stamp(name, e, art_env)", inspect.getsource(ck.restamp))
+        self.assertIn('producer_identity(e, resolved) if e.get("producer")', inspect.getsource(ck.stamp))
+
+    def test_one_artifacts_resolution_per_stamp(self):
+        """68 N3: stamp() fetches once and hands the same sha to out_of_tree and producer. A ref that moves between two
+        fetches (the fake returns a new sha per call) must not reach the two readers as two shas."""
+        calls, seen = [], {}
+        orig = (ck.artifacts_ref, ck.out_of_tree_blobs, ck.producer_identity, ck.env_dir)
+        try:
+            ck.env_dir = lambda var, given=None: str(self.root)
+            ck.artifacts_ref = lambda art: (calls.append(1) or ("ref", f"{len(calls):040d}"))
+            ck.out_of_tree_blobs = lambda specs, art_env=None, resolved=None: seen.setdefault("oot", resolved) and {}
+            ck.producer_identity = lambda e, resolved: seen.setdefault("producer", resolved) and {}
+            e = {"files": [], "out_of_tree": [PIN], "producer": SPEC_8D}
+            ck.stamp("x", e)
+        finally:
+            ck.artifacts_ref, ck.out_of_tree_blobs, ck.producer_identity, ck.env_dir = orig
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(seen["oot"], seen["producer"])
+
+    def test_pin_is_read_as_literals_never_imported(self):
+        v, w = ck.producer_pin("import burnman_cpp as bm\n" + PIN_TEXT)
+        self.assertEqual((v, sorted(w)), ("0.21.0", ["darwin-arm64", "linux-x86_64"]))
+        with self.assertRaises(LookupError):
+            ck.producer_pin('VERSION = "0.21.0"\n')
+
+
 if __name__ == "__main__":
     unittest.main()
