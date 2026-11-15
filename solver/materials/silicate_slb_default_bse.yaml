@@ -1,4 +1,4 @@
-# silicate_slb_default_bse — 규산염 맨틀, SLB 2024 광물 집합 표 (default_bse) (phase-2 규산염 기록 등록 §2); rewrite/phase2-records/gen_silicate_records.py 가 썼다, 손으로 고치지 않는다
+# silicate_slb_default_bse — 규산염 맨틀, SLB 2024 광물 집합 표 (default_bse) (phase-2 규산염 기록 등록 §2); rewrite/phase2-records/bmcpp/gen_silicate_records.py 가 썼다, 손으로 고치지 않는다
 id: silicate_slb_default_bse
 label: Silicate mantle, SLB 2024 assemblage table (default_bse)
 kind: assemblage
@@ -13,32 +13,33 @@ primary_family:
   - 2011GeoJI.184.1180S
   - 2022GeoJI.228.1119S
   - 2024GeoJI.237.1699S
-  - BurnMan@2.1.0
+  - burnman_cpp@0.21.0
   reason: frozen S1
 assemblage:
   file: tables/silicate_slb_default_bse.json.gz
-  sha256: 1bd2a2eb85e420d79e35cc019c0a4e14f3e53d3ad8cefe96a14024e34f0cc7bd
+  sha256: 9afe83cb29d0c2569ee84794e00be8d3f53f6a4755444062ae72787379e0078c
   p_dataset: 136000000000.0
   interpolation: c1_lnp_t
   melt_variant: peridotitic
   frozen_classes:
-  - S5-F3 corundum, corundum, high band
-  - S5-F3 corundum, corundum, low band
-  - convergence edge
-  - ruling (e) bounds, quartz
-  - ruling (e) bounds, ruling (e)
-  - winner does not re-converge
-  dataset: BurnMan@2.1.0 SLB_2024 with fixtures S1-F2, S1-F3 (phase-2 silicate impl note 3) and S1-F4 (declaration note, r2
-    50150ec7); S1-F1 disclosed, not applied
+  - X3
+  - 'model limit: Na in fp'
+  - outside the S3 list
+  dataset: burnman_cpp@0.21.0 SLB_2024 with fixtures S1-F2, S1-F3 (phase-2 silicate impl note 3) and S1-F4 (declaration note,
+    r2 50150ec7); S1-F1 disclosed, not applied
   disclosures:
-  - 'dataset: BurnMan@2.1.0 SLB_2024 with fixtures S1-F2, S1-F3 (phase-2 silicate impl note 3) and S1-F4 (declaration note,
-    r2 50150ec7); S1-F1 disclosed, not applied'
+  - 'dataset: burnman_cpp@0.21.0 SLB_2024 with fixtures S1-F2, S1-F3 (phase-2 silicate impl note 3) and S1-F4 (declaration
+    note, r2 50150ec7); S1-F1 disclosed, not applied'
   - 'S1-F1: st without SLB 2024 Table C3''s Landau term (S1-F1): the printed TC0 < 0 leaves eq. A10 undefined below Tc; where
     defined, ≤ 8.2e-5 in st ρ'
   - 'st-PcQ: st shear modulus: PcQ from HeFESTo stishtran.f (T-dependent), not the paper''s fixed 102.3 GPa; not patched'
   - 'fe3_over_fe = 0.0 (header fe3_over_fe; build declaration §2: an Fe3+-free model)'
   - 'S1-F4: -T*S_conf added for Fe-NAL_Phase (22.477 J/mol/K), Lime_Tschermak'' (11.526 J/mol/K), Mg-NAL_Phase (22.477 J/mol/K),
     Na-Majorite (15.877 J/mol/K), Na-NAL_Phase (34.579 J/mol/K) (header s1f4_sconf; declaration note S1-F4, r2 50150ec7)'
+  - 'X3: a third copy of one solution (three near-pure fp copies on khan), frozen in the window (T ≤ 1100 K, P ≥ 4.4 GPa)
+    from the last good node (post-result note 13); 58 cells, T [200, 750], P [5.96758e+10, 7.99713e+10]'
+  - 'model limit: Na in fp (returned split): 460 members in table 4a6f1bf58ba465dededb1c13029487f7fdc89c55, T [200, 1300],
+    P [7.61631e+10, 2.04e+11]; Na in fp beyond the model''s range (SLB_2024 fp–anao W 120 ± 40 kJ; Δρ/ρ = [3.861e-06, 0.000885])'
   - 'oxides dropped from the default_bse composition (wt %, before normalising to CFMASNa): Cr2O3 0.384, K2O 0.029, MnO 0.135,
     NiO 0.25, P2O5 0.021, TiO2 0.201'
   - the dT/dP band is the A/G model-consistency band; it excludes the stencil's step spread. On re-solved nodes that spread
@@ -47,26 +48,25 @@ assemblage:
   - 'the read''s band carries a per-cell «read interpolation» term (compact interp_terms): |C¹ − C⁰| over the cell''s 9 points
     relative to max(|v|, F_f), F_f the table''s p05 |v| per field, raised to the class''s p90 truth error where the class
     × field covered < 90 % of its truth points: T slope only (rho, dtdp, c_p); empty region (rho, dtdp, c_p); gap bridge (rho,
-    c_p); run end (rho, dtdp, c_p); window blend (rho, dtdp, c_p); |C¹ − C⁰| alone: gap bridge (dtdp); 47 cells whose every
+    c_p); run end (rho, dtdp, c_p); window blend (rho, dtdp, c_p); |C¹ − C⁰| alone: gap bridge (dtdp); 75 cells whose every
     point holds a cut swap take their classes'' floors (registration reg-interp-term §1)'
   - 'the read''s band carries a per-cell «under-resolved loop» term (compact loop_terms) where a divariant loop is narrower
     than the grid (census k 3, W 3, 1 % floor): the 9-point truth error of the read in the loop''s cells less the cell''s
-    «read interpolation» term, max(0, e_truth − e_interp), relative to max(|v|, F_f) as interp_terms; 16 of its cells have
-    no ok truth point and take the census variant''s 9-point |v − v_variant| (the loop alone) less e_interp instead: 10.3–10.8
-    GPa × 750–800 K; 10.8–11.4 GPa × 750–800 K; 10.8–11.4 GPa × 800–850 K; 21.4–22.5 GPa × 800–850 K; 22.5–23.6 GPa × 800–850
-    K; 22.5–23.6 GPa × 850–900 K; 0.815–0.856 GPa × 900–950 K; 0.856–0.899 GPa × 900–950 K; 22.5–23.6 GPa × 900–950 K; 23.6–24.8
-    GPa × 900–950 K; 23.6–24.8 GPa × 950–1000 K; 24.8–26 GPa × 1050–1100 K; 24.8–26 GPa × 1100–1150 K; 102–107 GPa × 1200–1250
-    K; 107–113 GPa × 1200–1250 K; 107–113 GPa × 1250–1300 K (registration §7)'
+    «read interpolation» term, max(0, e_truth − e_interp), relative to max(|v|, F_f) as interp_terms; 9 of its cells have
+    no ok truth point and take the census variant''s 9-point |v − v_variant| (the loop alone) less e_interp instead: 18.5–19.4
+    GPa × 450–500 K; 20.4–21.4 GPa × 450–500 K; 22.5–23.6 GPa × 800–850 K; 22.5–23.6 GPa × 850–900 K; 0.815–0.856 GPa × 900–950
+    K; 0.856–0.899 GPa × 900–950 K; 22.5–23.6 GPa × 900–950 K; 23.6–24.8 GPa × 900–950 K; 23.6–24.8 GPa × 1050–1100 K (registration
+    §7)'
   - 'the solid dT/dP is read from the record''s stored s, −(∂s/∂P)_T/(∂s/∂T)_P of the s read (s-read registration, frozen
     327b4f73); its per-cell «isentrope closure» term (compact closure_terms) lists 0 cell(s) whose contour departs from the
-    read''s own s map by more than 0.1 K (tool e1f7a139; integrations skipped: contour enters a frozen stencil 28, contour
-    enters the switch band 191, contour leaves the P_b_ext reach inside the cell 809, input.material_above_solid_window 258,
-    input.material_out_of_data 20, swap root not converged 1)'
+    read''s own s map by more than 0.1 K (tool e1f7a139; integrations skipped: contour enters a frozen stencil 58, contour
+    enters the switch band 235, contour leaves the P_b_ext reach inside the cell 847, input.material_above_solid_window 258,
+    input.material_out_of_data 38, swap root not converged 1)'
   - with the s read, the dT/dP and c_P terms of interp_terms and loop_terms are retired (s-read registration §3.5); their
     ρ terms stand
   - 'c_P: no band after the s-read registration (c_P is T·(∂s/∂T)_P of the s read; §3.4)'
-  - '(∂s/∂T)_P > 0 of the s read checked at build time on 151452 of 220905 sample points (minimum 0.08724 J/kg/K² at 131.6
-    GPa, 3125.0 K; 69453 skipped: frozen stencil or refusing read), and on 400 of them at load (seed in the block): sample
+  - '(∂s/∂T)_P > 0 of the s read checked at build time on 155236 of 222879 sample points (minimum 0.08724 J/kg/K² at 131.6
+    GPa, 3125.0 K; 67643 skipped: frozen stencil or refusing read), and on 400 of them at load (seed in the block): sample
     evidence, not a proof (s-read §3.4)'
   floor_band:
     origin: 'the floor node''s own compressibility: |dρ|/ρ ≤ (1e5 Pa)/K_T, K_T = ρ·∂P/∂ρ over the first two P nodes at fixed
@@ -87,11 +87,40 @@ assemblage:
     band_origin: 'per cell: the model-consistency band (S-based against G-based isentrope from the same solver), max(floor,
       |A − G|/max(|A|, dtdp_s)); not an accuracy bound against the true G minimum (the solver''s envelope gap, registration
       post-freeze note 3). Floor: the δ/10 check''s maximum on the declared 34-cell sample, 2.47e-4'
-    refused_count: 0
+    refused_count: 4
     sidecar:
-      builder_blob: ac9746041f83d08b80fd42e26df4cad6d59ac4d0
-      builder_sha256: a920db596415d90972f40c81c6905e6e884dccb738611f2e6491e3ebb3501a3c
-      burnman: 2.1.0
+      builder_blob: 585e6e8580ac862923f3af7816f2b5cbd8b87583
+      builder_sha256: 41162bafb4c6bbe65e9278d28f1aa91dbf480416c8998b6966aa759df82b3d10
+      burnman_cpp:
+        S_node: solve_node.S_NODE = settings(1.0)
+        platform: linux-x86_64
+        record_digest: 009248225487ccdcd5ae03b59a47986372533b35c1868e2c81fd02544a82d5ed
+        settings:
+          active_solution_faces: true
+          affinity_tolerance: 0.2
+          amount_tolerance: 1.0e-10
+          composition_seeds: 7
+          composition_tolerance: 1.0e-10
+          entropy_seeds: 7
+          exclude_invalid_eos: true
+          mass_balance_tolerance: 1.0e-12
+          max_lines: 1000
+          max_phase_instances: 3
+          max_recovery_passes: 2
+          max_refinement_iterations: 150
+          max_trace_steps: 500
+          min_step: 1.0e-07
+          minimization_starts: 10
+          node_tolerance: 0.0002
+          pressure_seeds: 7
+          required_eos_phases: []
+          required_thermal_phases: []
+          step: 0.025
+          temperature_seeds: 7
+          verbose: false
+          volume_seeds: 7
+        version: 0.21.0
+        wheel_sha256: 579a12119c75fb9264cd2b258448f8176cd707b6a681ad20d3c55c7b48d8fdd2
       composition: default_bse
       dp_rel: 0.001
       dt: 1.0
@@ -112,7 +141,7 @@ assemblage:
             f_pair:
             - 0.25
             - 0.1
-            spread: 3.9467647108318525e-07
+            spread: 3.789914994036183e-07
             status: checked
           t: 2250.0
         - f: 0.25
@@ -128,7 +157,7 @@ assemblage:
             f_pair:
             - 0.25
             - 0.1
-            spread: 1.2658620660317546e-08
+            spread: 4.000720959024196e-09
             status: checked
           t: 2200.0
         - f: 0.5
@@ -144,7 +173,7 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 0.00029791964639865704
+            spread: 0.0002978988485502328
             status: checked
           t: 1000.0
         - f: 0.1
@@ -160,7 +189,7 @@ assemblage:
             f_pair:
             - 0.1
             - 0.05
-            spread: 3.018465541325218e-08
+            spread: 1.4906213547842991e-09
             status: checked
           t: 1050.0
         - f: 0.1
@@ -176,7 +205,7 @@ assemblage:
             f_pair:
             - 0.1
             - 0.05
-            spread: 6.120151564754499e-09
+            spread: 6.400894153448092e-09
             status: checked
           t: 2600.0
         - f: 0.5
@@ -192,7 +221,7 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 1.819892290743923e-07
+            spread: 1.811270265672117e-07
             status: checked
           t: 1350.0
         - f: 0.5
@@ -208,7 +237,7 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 1.1463892368348913e-07
+            spread: 1.1410436700758717e-07
             status: checked
           t: 1400.0
         - f: 0.25
@@ -224,189 +253,43 @@ assemblage:
             f_pair:
             - 0.25
             - 0.1
-            spread: 2.4485915186405336e-07
+            spread: 1.762237508672436e-07
             status: checked
           t: 1550.0
         - f: 1.0
           from:
-            p: 5464148877.619396
-            t: 600.0
-          p: 5737356321.500366
+            p: 3522239086.054931
+            t: 350.0
+          p: 3522239086.054931
           replaces: null
           scheme:
             corner: null
             p: central
             t: central
-          start: neighbour (-1, +0)
+          start: neighbour (+0, -1)
           step:
             f_pair:
             - 1.0
             - 0.5
-            spread: 9.643116340964256e-06
+            spread: 2.5272786025703425e-07
             status: checked
-          t: 600.0
-        - f: 1.0
-          from:
-            p: 7322482090.623741
-            t: 650.0
-          p: 7688606195.154928
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (-1, +0)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 0.00018118794529937008
-            status: checked
-          t: 650.0
-        - f: 1.0
-          from:
-            p: 8476688330.158309
-            t: 750.0
-          p: 8900522746.666225
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (-1, +1)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 0.00011183455238845708
-            status: checked
-          t: 700.0
-        - f: 1.0
-          from:
-            p: 8900522746.666225
-            t: 700.0
-          p: 9345548883.999537
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (-1, +0)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 0.0001002860122236049
-            status: checked
-          t: 700.0
-        - f: 1.0
-          from:
-            p: 9345548883.999537
-            t: 800.0
-          p: 9812826328.199514
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (-1, +1)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 5.64923995230334e-05
-            status: checked
-          t: 750.0
-        - f: 1.0
-          from:
-            p: 10818641026.839966
-            t: 800.0
-          p: 10303467644.609491
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (+1, +1)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 1.080184050174877e-05
-            status: checked
-          t: 750.0
-        - f: 1.0
-          from:
-            p: 11927551732.091064
-            t: 850.0
-          p: 11927551732.091064
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (+0, +1)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 7.0241897226318216e-06
-            status: checked
-          t: 800.0
-        - f: 1.0
-          from:
-            p: 11927551732.091064
-            t: 800.0
-          p: 12523929318.695618
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (-1, +0)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 2.0978651369385104e-05
-            status: checked
-          t: 800.0
-        - f: 1.0
+          t: 400.0
+        - f: 0.1
           from: null
-          p: 12523929318.695618
+          p: 8476688330.158309
           replaces: null
           scheme:
-            corner:
-            - -1
-            - -1
-            p: '-'
-            t: '-'
+            corner: null
+            p: central
+            t: central
           start: stored
           step:
             f_pair:
-            - 1.0
-            - 0.5
-            spread: 2.0895208131618486e-05
+            - 0.1
+            - 0.05
+            spread: 1.1408970324314352e-08
             status: checked
-          t: 3650.0
-        - f: 1.0
-          from:
-            p: 13807632073.86192
-            t: 800.0
-          p: 13150125784.6304
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (+1, +1)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 7.111351941185361e-05
-            status: checked
-          t: 750.0
+          t: 400.0
         - f: 0.5
           from: null
           p: 13150125784.6304
@@ -420,45 +303,9 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 5.510580678415971e-05
+            spread: 5.510409141014742e-05
             status: checked
           t: 1650.0
-        - f: 1.0
-          from:
-            p: 13807632073.86192
-            t: 850.0
-          p: 13807632073.86192
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (+0, +2)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 0.0007318148328478753
-            status: checked
-          t: 750.0
-        - f: 1.0
-          from: null
-          p: 13807632073.86192
-          replaces: null
-          scheme:
-            corner:
-            - -1
-            - -1
-            p: '-'
-            t: '-'
-          start: stored
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 3.8750738540664144e-05
-            status: checked
-          t: 3350.0
         - f: 0.5
           from: null
           p: 14498013677.555016
@@ -472,7 +319,7 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 4.700787620999057e-05
+            spread: 4.4737563134325055e-05
             status: checked
           t: 1550.0
         - f: 0.5
@@ -488,7 +335,7 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 8.921048554338314e-05
+            spread: 8.920926250105971e-05
             status: checked
           t: 2050.0
         - f: 0.25
@@ -504,117 +351,9 @@ assemblage:
             f_pair:
             - 0.25
             - 0.1
-            spread: 1.1805591872467429e-05
+            spread: 1.1702233251277841e-05
             status: checked
           t: 2150.0
-        - f: 1.0
-          from:
-            p: 15222914361.432768
-            t: 700.0
-          p: 15222914361.432768
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (+0, +1)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 1.667750797725177e-05
-            status: checked
-          t: 650.0
-        - f: 1.0
-          from:
-            p: 15222914361.432768
-            t: 750.0
-          p: 15222914361.432768
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (+0, +1)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 1.507338254237155e-06
-            status: checked
-          t: 700.0
-        - f: 1.0
-          from:
-            p: 15222914361.432768
-            t: 800.0
-          p: 15222914361.432768
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (+0, +1)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 2.610619029865115e-06
-            status: checked
-          t: 750.0
-        - f: 1.0
-          from:
-            p: 17622426237.65361
-            t: 650.0
-          p: 15984060079.504408
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (+2, +1)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 5.903877684801258e-06
-            status: checked
-          t: 600.0
-        - f: 1.0
-          from:
-            p: 15984060079.504408
-            t: 600.0
-          p: 15984060079.504408
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (+0, -1)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 2.8193613155506748e-05
-            status: checked
-          t: 650.0
-        - f: 1.0
-          from:
-            p: 15984060079.504408
-            t: 650.0
-          p: 15984060079.504408
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (+0, -1)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 6.596480196877634e-07
-            status: checked
-          t: 700.0
         - f: 0.5
           from: null
           p: 15984060079.504408
@@ -628,12 +367,12 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 4.658108128424414e-07
+            spread: 6.367466458181658e-07
             status: checked
           t: 2200.0
         - f: 0.25
           from: null
-          p: 17622426237.65361
+          p: 19428724927.013107
           replaces: null
           scheme:
             corner: null
@@ -644,27 +383,9 @@ assemblage:
             f_pair:
             - 0.25
             - 0.1
-            spread: 0.0002070188529544253
+            spread: 2.843893296071205e-06
             status: checked
-          t: 550.0
-        - f: 1.0
-          from:
-            p: 17622426237.65361
-            t: 600.0
-          p: 19428724927.013107
-          replaces: null
-          scheme:
-            corner: null
-            p: central
-            t: central
-          start: neighbour (-2, +0)
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 3.22820768086536e-05
-            status: checked
-          t: 600.0
+          t: 400.0
         - f: 0.1
           from: null
           p: 19428724927.013107
@@ -678,7 +399,7 @@ assemblage:
             f_pair:
             - 0.1
             - 0.05
-            spread: 1.065314726836116e-07
+            spread: 2.487868760320464e-07
             status: checked
           t: 1200.0
         - f: 0.25
@@ -694,7 +415,7 @@ assemblage:
             f_pair:
             - 0.25
             - 0.1
-            spread: 1.7788376048485464e-08
+            spread: 5.893903941601785e-07
             status: checked
           t: 2350.0
         - f: 0.5
@@ -710,7 +431,7 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 1.3105043203582382e-06
+            spread: 9.157883430238004e-07
             status: checked
           t: 850.0
         - f: 0.25
@@ -726,7 +447,7 @@ assemblage:
             f_pair:
             - 0.25
             - 0.1
-            spread: 4.91592793486748e-05
+            spread: 2.9696766083096286e-06
             status: checked
           t: 600.0
         - f: 0.1
@@ -742,7 +463,7 @@ assemblage:
             f_pair:
             - 0.1
             - 0.05
-            spread: 1.6291997202131603e-06
+            spread: 1.6544357980665629e-06
             status: checked
           t: 800.0
         - f: 0.25
@@ -758,9 +479,41 @@ assemblage:
             f_pair:
             - 0.25
             - 0.1
-            spread: 1.3947964023488789e-05
+            spread: 1.392016759823759e-05
             status: checked
           t: 1450.0
+        - f: 0.1
+          from: null
+          p: 23615736578.315228
+          replaces: null
+          scheme:
+            corner: null
+            p: central
+            t: central
+          start: stored
+          step:
+            f_pair:
+            - 0.1
+            - 0.05
+            spread: 1.7937714597575568e-06
+            status: checked
+          t: 1050.0
+        - f: 0.5
+          from: null
+          p: 23615736578.315228
+          replaces: null
+          scheme:
+            corner: null
+            p: central
+            t: central
+          start: stored
+          step:
+            f_pair:
+            - 0.5
+            - 0.25
+            spread: 0.0001550078227673248
+            status: checked
+          t: 1100.0
         - f: 0.5
           from: null
           p: 24796523407.23099
@@ -774,7 +527,7 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 9.084019557022926e-05
+            spread: 9.093628379378513e-05
             status: checked
           t: 2950.0
         - f: 0.5
@@ -790,7 +543,7 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 2.9402217255899784e-05
+            spread: 2.8690156944207808e-05
             status: checked
           t: 3200.0
         - f: 0.5
@@ -806,27 +559,9 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 0.0001249360148854324
+            spread: 0.00012486511450530386
             status: checked
           t: 3800.0
-        - f: 1.0
-          from: null
-          p: 27338167056.472168
-          replaces: null
-          scheme:
-            corner:
-            - -1
-            - 1
-            p: '-'
-            t: central
-          start: stored
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 7.19546808069928e-05
-            status: checked
-          t: 3700.0
         - f: 0.5
           from: null
           p: 107169145270.12706
@@ -840,7 +575,7 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 6.1622226639740275e-06
+            spread: 6.12015952332008e-06
             status: checked
           t: 1350.0
         - f: 0.5
@@ -856,7 +591,7 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 0.0004155852498465914
+            spread: 0.0004155931879795698
             status: checked
           t: 1450.0
         - f: 0.5
@@ -872,7 +607,7 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 0.00016478698585354145
+            spread: 0.00016479197393763235
             status: checked
           t: 3600.0
         - f: 0.5
@@ -888,60 +623,42 @@ assemblage:
             f_pair:
             - 0.5
             - 0.25
-            spread: 0.00017850066363166771
+            spread: 0.00017850588818170055
             status: checked
           t: 4150.0
-        - f: 1.0
-          from: null
-          p: 142800000000.0
-          replaces: null
-          scheme:
-            corner:
-            - 1
-            - -1
-            p: +
-            t: '-'
-          start: stored
-          step:
-            f_pair:
-            - 1.0
-            - 0.5
-            spread: 0.0010852298525888657
-            status: checked
-          t: 4200.0
         factors:
         - 1.0
         - 0.5
         - 0.25
         - 0.1
-        input_sidecar_blob: 7586cee86333ff67dae060cfb2c134b07537d939
+        input_sidecar_blob: a7da1e9cfffe707c2c89b16b1f1de8673969f9a1
         neighbours: 8
         overwrites: []
         step_floor: 0.01
-        tool_blob: 1d33a79d3f8345f5a0856cbc45189350ec2106e1
+        tool_blob: a80eeaebc6795f4ba77892d4d35df97bd8f14cbf
       shard: null
-      table_blob: c82f42b268a34e8bb9d18edbde70fb1cbc19a814
+      table_blob: 4a6f1bf58ba465dededb1c13029487f7fdc89c55
       table_builders:
-      - a920db596415d90972f40c81c6905e6e884dccb738611f2e6491e3ebb3501a3c
-      tool_sha256: dee8fb899abcede4c26a2a2d638369f24e897dbd5127f99a23ddc02cf25553ee
+      - 41162bafb4c6bbe65e9278d28f1aa91dbf480416c8998b6966aa759df82b3d10
+      tool_sha256: b83635712d47db8fa6523337d2f2671537fc56a2d65da087799db25915704121
     read: entropy
   pins:
     status: pinned
-    table_blob: c82f42b268a34e8bb9d18edbde70fb1cbc19a814
+    table_blob: 4a6f1bf58ba465dededb1c13029487f7fdc89c55
     builders:
     - role: strict
-      blob: ac9746041f83d08b80fd42e26df4cad6d59ac4d0
-      sha256: a920db596415d90972f40c81c6905e6e884dccb738611f2e6491e3ebb3501a3c
+      blob: 585e6e8580ac862923f3af7816f2b5cbd8b87583
+      sha256: 41162bafb4c6bbe65e9278d28f1aa91dbf480416c8998b6966aa759df82b3d10
     - role: above_cap
-      blob: ac9746041f83d08b80fd42e26df4cad6d59ac4d0
-      sha256: a920db596415d90972f40c81c6905e6e884dccb738611f2e6491e3ebb3501a3c
+      blob: 585e6e8580ac862923f3af7816f2b5cbd8b87583
+      sha256: 41162bafb4c6bbe65e9278d28f1aa91dbf480416c8998b6966aa759df82b3d10
     boundary_tool:
-      blob: 0b5299e498698a23a8ef40a816415998b4ada015
-      sha256: 9ab86ebaf77f4141e9a832e95347db8f88bbf13807169bc5bcbabd7acc0c33b9
+      blob: bdcba39107642e738b24be999423bf15c0d45aa6
+      sha256: 218635c86f90f5cfe763a33d5b4ea368110473d1356eab9345a3bd54344ff33c
     extension_tool:
-      blob: 1867138f1675f3c2472b14e71472a20713882301
-      sha256: 8dd7def13e8456675837727dcbfd16c30a0136018af697802b7748dc0435c8dc
-    compact_sha256: 1bd2a2eb85e420d79e35cc019c0a4e14f3e53d3ad8cefe96a14024e34f0cc7bd
+      blob: bdcba39107642e738b24be999423bf15c0d45aa6
+      sha256: 218635c86f90f5cfe763a33d5b4ea368110473d1356eab9345a3bd54344ff33c
+    compact_sha256: 9afe83cb29d0c2569ee84794e00be8d3f53f6a4755444062ae72787379e0078c
     rebuilt: []
 phases:
 - id: slb_assemblage
@@ -980,10 +697,10 @@ formula_checks:
   state:
     p: 100000.0
     t: 1150.0
-  expected: 0.9140529370007047
+  expected: 0.9140529370121797
   unit: '1'
   tolerance: 1.0e-09
   tolerance_reason: the table's own identity γ = αK_T/(ρc_V), cell fields recomputed (§2.3)
   expression: alpha_k_t / (rho * c_v)
   source:
-    formula: SLB 2024 via BurnMan@2.1.0, table blob c82f42b268a34e8bb9d18edbde70fb1cbc19a814
+    formula: SLB 2024 via burnman_cpp@0.21.0, table blob 4a6f1bf58ba465dededb1c13029487f7fdc89c55
