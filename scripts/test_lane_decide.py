@@ -90,6 +90,20 @@ def test_value_within_rtol_accepted_and_beyond_rejected():
     assert not ld.expected_red_only(log(body(M, [("nmoi", outside, "0.3634")])), row)[0]
 
 
+def test_nan_is_never_inside_the_band():
+    """68 B1: NaN fails every comparison, so the band is an acceptance test with both values finite. An engine NaN,
+    a board NaN, a NaN registration and a NaN rtol are each refused; inf too."""
+    for eng, board in (("nan", "0.3634"), ("0.3571", "nan"), ("inf", "0.3634"), ("-inf", "0.3634")):
+        ok, why = ld.expected_red_only(log(body(M, [("nmoi", eng, board)])), T)
+        assert not ok and "값 바뀜" in why[0], (eng, board, why)
+    for reg in ([float("nan"), 0.3634], [float("inf"), 0.3634]):        # an inf registration with rtol > 0: inf ≤ inf
+        row = [dict(T[0], values={"nmoi": reg}, rtol=1e-12)]
+        assert not ld.expected_red_only(log(body(M, [("nmoi", "0.3571", "0.3634")])), row)[0], reg
+    for bad in (float("nan"), float("inf")):
+        ok, why = ld.expected_red_only(log(body(M, [("nmoi", "0.6", "0.3634")])), [dict(T[0], rtol=bad)])
+        assert not ok and "rtol" in why[0], (bad, why)
+
+
 def test_full_line_missing_rejected():
     """a log from before the print (the 10-18 and 11-02 gates' shape) has no full-precision line: rejected by name."""
     old = [l for l in body(M, [("nmoi", "0.3571", "0.3634")]) if "전체 정밀도" not in l]

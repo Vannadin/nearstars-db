@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import datetime
 import hashlib
+import math
 import pathlib
 import re
 import subprocess
@@ -272,7 +273,7 @@ def _value_check(row: dict, rng: list[str]) -> str | None:
     if not vals:
         return None
     rtol = row.get("rtol")
-    if isinstance(rtol, bool) or not isinstance(rtol, (int, float)) or rtol < 0:
+    if isinstance(rtol, bool) or not isinstance(rtol, (int, float)) or not math.isfinite(rtol) or rtol < 0:
         return f"{row['id']} — values 가 있는 칸에 rtol(등록한 잡음 폭)이 없다 → 불인정"
     full = _full_pairs(rng)
     for k, old in sorted(vals.items()):
@@ -280,7 +281,9 @@ def _value_check(row: dict, rng: list[str]) -> str | None:
         if got is None:
             return f"{row['id']} {k} — 전체 정밀도 줄(run.py «전체 정밀도:») 없음 → 불인정"
         for side, a, b in (("엔진", got[0], float(old[0])), ("보드", got[1], float(old[1]))):
-            if abs(a - b) > rtol * abs(b):
+            # accept only inside the band and finite on both sides: NaN fails every comparison, so a refusal written as
+            # «> band» would let a NaN value (or a NaN registration) through (68 B1)
+            if not (math.isfinite(a) and math.isfinite(b) and abs(a - b) <= rtol * abs(b)):
                 return (f"{row['id']} {k} {side} {a!r} ≠ 등록 {b!r} (rtol {rtol:g}) — 값 바뀜, 칸을 다시 등록하기 "
                         f"전엔 → 불인정")
     return None
