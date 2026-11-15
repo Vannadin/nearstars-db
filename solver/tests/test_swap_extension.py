@@ -201,8 +201,8 @@ class CertifiedExtensionRowsAreChecked(unittest.TestCase):
 
 def _shipped_tables():
     """{record id: (assemblage block, compact table)} for every shipped assemblage record, read and sha-checked as
-    the registry reads them, without the registry's closure-term pins (which this commit's module blob moves until
-    part 2's re-pin)."""
+    the registry reads them, not through the registry. Test 7 then needs no closure-term pin. Test 8's ma.check_table
+    reads P1 (s_monotone_load_check), so until part 2's re-pin it runs under the measurement double only (68)."""
     from solver import material_registry as mr
     out = {}
     for f in sorted(mr.MATERIALS_DIR.glob("*.yaml")):
