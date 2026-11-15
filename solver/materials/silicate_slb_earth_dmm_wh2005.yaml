@@ -625,68 +625,81 @@ assemblage:
     rows:
     - transition: ol=wa
       disclosures:
-      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via BurnMan 2.1.0 SLB_2024
-        with fixtures S1-F2, S1-F3'
+      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via burnman_cpp@0.21.0
+        SLB_2024 with fixtures S1-F2, S1-F3 (phase-2 silicate impl note 3) and S1-F4 (declaration note, r2 50150ec7); S1-F1
+        disclosed, not applied'
       - 'composition gap: CFMASNa reduction of Workman & Hart (2005) with Fe³⁺ = 0 and 1.095 wt % dropped'
       status_by_t:
         t_a_K: ok
         t_min_K: ok
         t_max_K: not_located
       verdict: NOT LOCATED
+      ruling: b30bb0946dfc9357e31b58c390c23c7c01d25b33
     - transition: ak=bg (fp)
       disclosures:
-      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via BurnMan 2.1.0 SLB_2024
-        with fixtures S1-F2, S1-F3'
+      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via burnman_cpp@0.21.0
+        SLB_2024 with fixtures S1-F2, S1-F3 (phase-2 silicate impl note 3) and S1-F4 (declaration note, r2 50150ec7); S1-F1
+        disclosed, not applied'
       - 'composition gap: CFMASNa reduction of Workman & Hart (2005) with Fe³⁺ = 0 and 1.095 wt % dropped'
       status_by_t:
         t_a_K: not_located
         t_min_K: not_located
         t_max_K: not_located
       verdict: NOT LOCATED
+      ruling: b30bb0946dfc9357e31b58c390c23c7c01d25b33
     - transition: ak=bg (ri)
       disclosures:
-      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via BurnMan 2.1.0 SLB_2024
-        with fixtures S1-F2, S1-F3'
+      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via burnman_cpp@0.21.0
+        SLB_2024 with fixtures S1-F2, S1-F3 (phase-2 silicate impl note 3) and S1-F4 (declaration note, r2 50150ec7); S1-F1
+        disclosed, not applied'
       - 'composition gap: CFMASNa reduction of Workman & Hart (2005) with Fe³⁺ = 0 and 1.095 wt % dropped'
       status_by_t:
         t_a_K: ok
         t_min_K: not_located
         t_max_K: ok
       verdict: NOT LOCATED
+      ruling: b30bb0946dfc9357e31b58c390c23c7c01d25b33
     - transition: ri=bg+fp (bg)
       disclosures:
-      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via BurnMan 2.1.0 SLB_2024
-        with fixtures S1-F2, S1-F3'
+      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via burnman_cpp@0.21.0
+        SLB_2024 with fixtures S1-F2, S1-F3 (phase-2 silicate impl note 3) and S1-F4 (declaration note, r2 50150ec7); S1-F1
+        disclosed, not applied'
       - 'composition gap: CFMASNa reduction of Workman & Hart (2005) with Fe³⁺ = 0 and 1.095 wt % dropped'
       status_by_t:
         t_a_K: not_located
         t_min_K: not_located
         t_max_K: ok
       verdict: NOT LOCATED
+      ruling: b30bb0946dfc9357e31b58c390c23c7c01d25b33
     - transition: ri=bg+fp (fp)
       disclosures:
-      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via BurnMan 2.1.0 SLB_2024
-        with fixtures S1-F2, S1-F3'
+      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via burnman_cpp@0.21.0
+        SLB_2024 with fixtures S1-F2, S1-F3 (phase-2 silicate impl note 3) and S1-F4 (declaration note, r2 50150ec7); S1-F1
+        disclosed, not applied'
       - 'composition gap: CFMASNa reduction of Workman & Hart (2005) with Fe³⁺ = 0 and 1.095 wt % dropped'
       status_by_t:
         t_a_K: ok
         t_min_K: not_located
         t_max_K: not_located
       verdict: NOT LOCATED
+      ruling: b30bb0946dfc9357e31b58c390c23c7c01d25b33
     - transition: wa=gt+fp
       disclosures:
-      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via BurnMan 2.1.0 SLB_2024
-        with fixtures S1-F2, S1-F3'
+      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via burnman_cpp@0.21.0
+        SLB_2024 with fixtures S1-F2, S1-F3 (phase-2 silicate impl note 3) and S1-F4 (declaration note, r2 50150ec7); S1-F1
+        disclosed, not applied'
       - 'composition gap: CFMASNa reduction of Workman & Hart (2005) with Fe³⁺ = 0 and 1.095 wt % dropped'
       status_by_t:
         t_a_K: ok
         t_min_K: ok
         t_max_K: not_located
       verdict: NOT LOCATED
+      ruling: b30bb0946dfc9357e31b58c390c23c7c01d25b33
     - transition: fp+st=bg
       disclosures:
-      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via BurnMan 2.1.0 SLB_2024
-        with fixtures S1-F2, S1-F3'
+      - 'version gap: Table 1 from the 2021/22 HeFESTo parameters; ours from HeFESTo_parameters_010123 via burnman_cpp@0.21.0
+        SLB_2024 with fixtures S1-F2, S1-F3 (phase-2 silicate impl note 3) and S1-F4 (declaration note, r2 50150ec7); S1-F1
+        disclosed, not applied'
       - 'composition gap: CFMASNa reduction of Workman & Hart (2005) with Fe³⁺ = 0 and 1.095 wt % dropped'
       status_by_t:
         t_a_K: 'not_evaluable: frozen region (declaration §5 (a))'
