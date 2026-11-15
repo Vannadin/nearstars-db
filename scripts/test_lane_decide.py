@@ -378,6 +378,15 @@ def test_hold_p3_c59_only_with_the_row_present():
     assert ok, notes
 
 
+def test_the_trees_c59_row():
+    """the tree's own row (scripts/gate_expected_red.yaml): accepted on the PC value it registers and on the Mac's
+    (0.5003435557823132, 928a8344, relative 1.4e-12), refused on the value before 60e5e98e (37d2b80f's 0.5003431442146036)."""
+    row = [r for r in ld._load_expected_red() if r["id"] == "C59"]
+    assert len(row) == 1 and row[0]["rtol"] == 1e-11, row
+    for eng, ok in (("0.5003435557816109", True), ("0.5003435557823132", True), ("0.5003431442146036", False)):
+        assert ld.expected_red_only(log(_full(PC_BLOCKS[C59["step"]], eng, "0.5398")), row)[0] is ok, eng
+
+
 def test_c59_pc_block_of_record_without_the_full_line_rejected():
     """the verbatim PC block (vr-base 05eb977a) predates the print: under the re-registered row it is not accepted."""
     ok, why = _with([PC_BLOCKS[C59["step"]]])

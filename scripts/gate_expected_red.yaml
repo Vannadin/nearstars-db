@@ -1,15 +1,28 @@
 # 게이트 기대 빨강 목록 — 여기 칸과 정확히 같은 빨강만 있는 오늘 full 은 auto-lane 이 «오늘 full 있었음» 으로 인정 (C128)
 # 칸을 더하거나 빼는 것은 등록(원장 줄 + 9f 클리어 → 지휘 동결). 이 파일이 바뀐 판은 lane_decide 의 ALWAYS_FULL 로 full.
-# values 는 등록 때의 어긋남 값(엔진 · 보드) — 값이 바뀌면 인정하되 한 줄 알림.
+# values 는 등록 때의 어긋남 값(엔진 · 보드)을 전체 정밀도로, rtol 은 등록한 잡음 폭(상대) — run.py 의 «전체 정밀도:» 줄이
+#   rtol 밖으로 움직이거나 그 줄이 없으면 불인정(C59 재등록, 68 의 기대 빨강 점검 f2b42b3bc · 지휘 11-13). 값이 움직이면 칸을
+#   다시 등록한다: 움직인 커밋을 moved_by 에 더하고 새 값과 로그 줄을 적는다.
 - id: C59
   step: "run.py bodies/mars.yaml (출하값 대조)"
   # 재등록(오너 2026-10-07 «철 핵을 계속 비교»): 층 있는 화성(db3c73b4 · c5db582b, 착지 2 전 55ae0a7e · 0963d0f1)이 핵 위에
   #   150 km 녹은 규산염 층(Khan+ 2023)을 얹어 철 핵이 1695 km 가 됐다(핵 + 층 1845 km). 보드 1830 km 는 Stähler+ 2021 의
-  #   지진파 «핵» 반지름이라 층 있는 해석에선 층 꼭대기다 — 빨강이 nmoi(이제 0.3626 대 0.3634, 허용 안)에서 이 칸으로 옮겼다.
+  #   지진파 «핵» 반지름이라 층 있는 해석에선 층 꼭대기다 — 빨강이 nmoi(등록 때 0.3626 대 0.3634, 허용 안)에서 이 칸으로 옮겼다.
   #   비교 대상(핵 대 핵 + 층)은 정리 목록 B9 에서 정한다. 옛 칸: [nmoi] {nmoi: [0.3571, 0.3634]}, registered f47fc14b.
+  # 재등록(C59 / lane_decide, 지휘 11-13; L 2부): 값은 전체 정밀도. 커밋별 화성 풀이(맥, run.py 그대로, 전체 정밀도 탐침;
+  #   artifacts c59-lane-c8 pc/c59/solves.txt)가 엔진 값의 이동을 셋으로 나눈다 —
+  #   097a8aa3 0.5001842349415292 → d43c8735 0.5003219467386 (+1.377e-4, 핵 EOS 두 닻) → 3705b6a7 0.5003431442146036 (+2.12e-5,
+  #   E-steps R10) → 60e5e98e 0.5003435557823132 (+4.12e-7, E-steps note 6 의 걸음 가장자리; 부모 1a2cbe93 는 3705b6a7 값 그대로,
+  #   714aca18 · 3fb048c7 · 15a12abc · 552352fd · 928a8344 는 60e5e98e 값 그대로).
+  #   nmoi(이 칸의 키 아님, [일치]): 0.36262656 → d43c8735 0.36283486 → 3705b6a7 0.36283349 → 60e5e98e 0.36283348.
+  #   잡음: 같은 맥 · 같은 트리 두 번은 비트까지 같다(928a8344). 맥 대 PC 는 928a8344 에서 상대 1.4e-12, 37d2b80f 에서 1.0e-13 —
+  #   rtol 1e-11 은 그 일곱 배다. 보드 0.5398 은 mars.yaml 의 글자값(1830/3390 = 0.53982… 와 4.3e-5 다름, 바꾸지 않음).
+  #   옛 칸의 인용 «line 4252» 는 4251 이었다(4252 는 출처 줄, 68).
   mismatch_keys: [core_radius_fraction]
-  values: {core_radius_fraction: [0.5002, 0.5398]}
-  registered: "owner 2026-10-07 via directing; artifacts 37824fc pc/landing3/final/gate-c8a2cbb7.log (blob cbfb5136) line 4252"
+  values: {core_radius_fraction: [0.5003435557816109, 0.5398]}
+  rtol: 1.0e-11
+  moved_by: [d43c8735, 3705b6a7, 60e5e98e]
+  registered: "C59 re-registration (directing 11-13; 68's sweep f2b42b3bc): the PC value at engine 928a8344, artifacts b79d75bf2 pc/sg-gate/golive/out-928a8344-s12c/gate-logs/gate-82419621.log (blob 0696ab3f) line 948, Mars BodyState core_radius_fraction; first registered owner 2026-10-07 via directing, gate-c8a2cbb7.log (blob cbfb5136) line 4251"
 - id: SG-MARS-HOLD-ENGINE
   kind: table_triggers          # a new row kind (below); the existing rows are kind step_mismatch by default
   steps: ["structure_grid.py --check", "test_structure_grid.py"]
