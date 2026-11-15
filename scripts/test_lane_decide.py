@@ -4,12 +4,15 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 import lane_decide as ld
 
 T = [{"id": "C59", "step": "run.py bodies/mars.yaml (출하값 대조)", "mismatch_keys": ["nmoi"],
-      "values": {"nmoi": [0.3571, 0.3634]}}]
+      "values": {"nmoi": [0.3571, 0.3634]}, "rtol": 0}]
 M = "run.py bodies/mars.yaml (출하값 대조)"
 
 
 def body(step, mis, fail=True):
-    out = [f"    [어긋남] {k:<14} 엔진    {a} · 보드   {b}   (1.7% / 허용 1%)" for k, a, b in mis]
+    out = []
+    for k, a, b in mis:                     # run.py's two lines: the 4-digit print, then the full-precision one (C59)
+        out += [f"    [어긋남] {k:<14} 엔진    {a} · 보드   {b}   (1.7% / 허용 1%)",
+                f"             전체 정밀도: 엔진 {a} · 보드 {b}", "             출처: x"]
     if fail:
         out.append(f"  [FAIL] {step} — 비0 종료 (이 단계가 fail=1 을 세웠다)")
     out += [f"  [TIME] {step} — 1 s", f"  [COST] {step} — instr 1"]
@@ -72,9 +75,61 @@ def test_5_neighbour_mismatch_not_counted():
     assert not run(log(body(M, [("nmoi", "0.3571", "0.3634"), ("radius", "1", "2")])))
 
 
-def test_size_change_noted():
-    ok, notes = ld.expected_red_only(log(body(M, [("nmoi", "0.3580", "0.3634")])), T)
-    assert ok and any("크기 바뀜" in n for n in notes)
+def test_value_change_rejected():
+    """C59 re-registration: a moved value is a non-acceptance, not a note (the old «크기 바뀜» path accepted it)."""
+    ok, why = ld.expected_red_only(log(body(M, [("nmoi", "0.3580", "0.3634")])), T)
+    assert not ok and why[0].startswith("C59 nmoi 엔진 0.358 ≠ 등록 0.3571"), why
+    ok, why = ld.expected_red_only(log(body(M, [("nmoi", "0.3571", "0.3635")])), T)
+    assert not ok and why[0].startswith("C59 nmoi 보드 0.3635 ≠ 등록 0.3634"), why
+
+
+def test_value_within_rtol_accepted_and_beyond_rejected():
+    row = [dict(T[0], values={"nmoi": [0.5, 0.3634]}, rtol=1e-12)]
+    inside, outside = repr(0.5 * (1 + 5e-13)), repr(0.5 * (1 + 5e-12))
+    assert ld.expected_red_only(log(body(M, [("nmoi", inside, "0.3634")])), row)[0]
+    assert not ld.expected_red_only(log(body(M, [("nmoi", outside, "0.3634")])), row)[0]
+
+
+def test_nan_is_never_inside_the_band():
+    """68 B1: NaN fails every comparison, so the band is an acceptance test with both values finite. An engine NaN,
+    a board NaN, a NaN registration and a NaN rtol are each refused; inf too."""
+    for eng, board in (("nan", "0.3634"), ("0.3571", "nan"), ("inf", "0.3634"), ("-inf", "0.3634")):
+        ok, why = ld.expected_red_only(log(body(M, [("nmoi", eng, board)])), T)
+        assert not ok and "값 바뀜" in why[0], (eng, board, why)
+    for reg in ([float("nan"), 0.3634], [float("inf"), 0.3634]):        # an inf registration with rtol > 0: inf ≤ inf
+        row = [dict(T[0], values={"nmoi": reg}, rtol=1e-12)]
+        assert not ld.expected_red_only(log(body(M, [("nmoi", "0.3571", "0.3634")])), row)[0], reg
+    for bad in (float("nan"), float("inf")):
+        ok, why = ld.expected_red_only(log(body(M, [("nmoi", "0.6", "0.3634")])), [dict(T[0], rtol=bad)])
+        assert not ok and "rtol" in why[0], (bad, why)
+
+
+def test_full_line_missing_rejected():
+    """a log from before the print (the 10-18 and 11-02 gates' shape) has no full-precision line: rejected by name."""
+    old = [l for l in body(M, [("nmoi", "0.3571", "0.3634")]) if "전체 정밀도" not in l]
+    ok, why = ld.expected_red_only(log(old), T)
+    assert not ok and why == ["C59 nmoi — 전체 정밀도 줄(run.py «전체 정밀도:») 없음 → 불인정"], why
+
+
+def test_values_without_rtol_rejected():
+    row = [{k: v for k, v in T[0].items() if k != "rtol"}]
+    ok, why = ld.expected_red_only(log(body(M, [("nmoi", "0.3571", "0.3634")])), row)
+    assert not ok and "rtol" in why[0], why
+    assert not ld.expected_red_only(log(body(M, [("nmoi", "0.3571", "0.3634")])), [dict(T[0], rtol=True)])[0]
+
+
+def test_full_line_belongs_to_its_own_key():
+    """a full line is read only for the [어긋남] line directly above it: not across another key's [어긋남] line, and not
+    across any other [...] line (here an [일치] line) that ends the key's block."""
+    a = "    [어긋남] radius         엔진    1 · 보드   2   (1% / 허용 1%)"
+    row = [dict(T[0], mismatch_keys=["nmoi", "radius"], values={"radius": [1.0, 2.0]})]
+    for between in (body(M, [("nmoi", "0.3571", "0.3634")])[:3],
+                    ["    [일치] mass           엔진    1 · 보드   1   (0% / 허용 1%)",
+                     "             전체 정밀도: 엔진 1.0 · 보드 2.0", "    [어긋남] nmoi           엔진    0.3571 · 보드   0.3634"]):
+        text = log([a] + between + [f"  [FAIL] {M} — 비0 종료 (이 단계가 fail=1 을 세웠다)", f"  [TIME] {M} — 1 s",
+                                    f"  [COST] {M} — instr 1"])
+        ok, why = ld.expected_red_only(text, row)
+        assert not ok and why == ["C59 radius — 전체 정밀도 줄(run.py «전체 정밀도:») 없음 → 불인정"], why
 
 
 def test_size_change_noted_on_a_rejected_log():
@@ -82,13 +137,16 @@ def test_size_change_noted_on_a_rejected_log():
     with a moved engine value. The verdict is False, and the value note still comes back, after the reason. Mutant: the
     old return (`return False, [why]` with the notes dropped) gives no «크기 바뀜» here."""
     first = ["  [FAIL] 안 엮인 시험 engine/test_d2_nan.py"]
-    ok, why = ld.expected_red_only(log(first, PC_BLOCKS[C59["step"]]), [C59])
+    ok, why = ld.expected_red_only(log(first, C59_BLOCK), [C59])
     assert not ok
     assert why[0].startswith("기대 밖 FAIL: [FAIL] 안 엮인 시험 engine/test_d2_nan.py"), why
-    assert "참고: ⚠ C59 core_radius_fraction 엔진 0.5003 · 보드 0.5398 (옛 0.5002 · 0.5398) — 크기 바뀜" in why, why
+    moved = _edit(C59_BLOCK, "엔진 0.5003435557816109", "엔진 0.5003431442145514")
+    ok, why = ld.expected_red_only(log(first, moved), [C59])
+    assert not ok
+    assert ("참고: C59 core_radius_fraction 엔진 0.5003431442145514 ≠ 등록 0.5003435557816109 (rtol 0) — 값 바뀜, "
+            "칸을 다시 등록하기 전엔 → 불인정") in why, why
     # an unmoved value gives no note on a rejected log either
-    same = _edit(PC_BLOCKS[C59["step"]], "엔진    0.5003", "엔진    0.5002")
-    assert not any("크기 바뀜" in w for w in ld.expected_red_only(log(first, same), [C59])[1])
+    assert not any(w.startswith("참고:") for w in ld.expected_red_only(log(first, C59_BLOCK), [C59])[1])
 
 
 def test_no_cost_line_rejected():
@@ -296,7 +354,16 @@ NINE = ["declared.basal_layer_density", "declared.basal_layer_thickness_km", "de
         "sulphur_fixings", "mantle_table"]
 HOLD = {"id": "SG-MARS-HOLD-ENGINE", "kind": "table_triggers", "steps": [SG, TS], "table": "mars.json", "triggers": NINE}
 C59 = {"id": "C59", "step": "run.py bodies/mars.yaml (출하값 대조)", "mismatch_keys": ["core_radius_fraction"],
-       "values": {"core_radius_fraction": [0.5002, 0.5398]}}
+       "values": {"core_radius_fraction": [0.5003435557816109, 0.5398]}, "rtol": 0}
+
+
+def _full(block, eng, board):
+    """the PC block with run.py's full-precision line under its [어긋남] line (the print this package adds)."""
+    i = next(n for n, l in enumerate(block) if l.lstrip().startswith("[어긋남]"))
+    return block[:i + 1] + [f"             전체 정밀도: 엔진 {eng} · 보드 {board}"] + block[i + 1:]
+
+
+C59_BLOCK = _full(PC_BLOCKS[C59["step"]], "0.5003435557816109", "0.5398")
 
 
 def _with(blocks, table=(C59, HOLD)):
@@ -310,7 +377,7 @@ def _edit(block, a, b):
 
 
 def test_hold_p1_pc_gate_of_record_accepted():
-    ok, notes = _with([PC_BLOCKS[SG], PC_BLOCKS[TS], PC_BLOCKS[C59["step"]]])
+    ok, notes = _with([PC_BLOCKS[SG], PC_BLOCKS[TS], C59_BLOCK])
     assert ok, notes
     assert any("SG-MARS-HOLD-ENGINE 만 있음" in n for n in notes) and any("C59 만 있음" in n for n in notes)
 
@@ -321,8 +388,23 @@ def test_hold_p2_test_structure_grid_alone_accepted():
 
 
 def test_hold_p3_c59_only_with_the_row_present():
-    ok, notes = _with([PC_BLOCKS[C59["step"]]])
+    ok, notes = _with([C59_BLOCK])
     assert ok, notes
+
+
+def test_the_trees_c59_row():
+    """the tree's own row (scripts/gate_expected_red.yaml): accepted on the PC value it registers and on the Mac's
+    (0.5003435557823132, 928a8344, relative 1.4e-12), refused on the value before 60e5e98e (37d2b80f's 0.5003431442146036)."""
+    row = [r for r in ld._load_expected_red() if r["id"] == "C59"]
+    assert len(row) == 1 and row[0]["rtol"] == 1e-11, row
+    for eng, ok in (("0.5003435557816109", True), ("0.5003435557823132", True), ("0.5003431442146036", False)):
+        assert ld.expected_red_only(log(_full(PC_BLOCKS[C59["step"]], eng, "0.5398")), row)[0] is ok, eng
+
+
+def test_c59_pc_block_of_record_without_the_full_line_rejected():
+    """the verbatim PC block (vr-base 05eb977a) predates the print: under the re-registered row it is not accepted."""
+    ok, why = _with([PC_BLOCKS[C59["step"]]])
+    assert not ok and why == ["C59 core_radius_fraction — 전체 정밀도 줄(run.py «전체 정밀도:») 없음 → 불인정"], why
 
 
 def test_hold_n1_tenth_trigger_rejected():

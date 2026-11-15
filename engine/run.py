@@ -163,6 +163,8 @@ def compare(body: BodyState, expected: dict, default_tol: float = 0.02) -> int:
         if ok and spec.get("tol_reason"):
             print(f"             허용 사유: {spec['tol_reason']}")
         if not ok:
+            # C59 (68 (a) on the expected-red sweep): the values at full precision, read by scripts/lane_decide.py
+            print(f"             전체 정밀도: 엔진 {float(got)!r} · 보드 {float(want)!r}")
             print(f"             출처: {spec.get('source','?')}")
     return bad
 

@@ -107,7 +107,10 @@ ORACLE_TREE = "097a8aa3cfaf0b42f0b8c3a451a391095cc5c6cc"
 #: E-steps on the landed PROTO (directing 11-10): engine/ changes only in test_esteps_step_edge.py, whose row 7b reads
 #: the answer by interior.is_answer instead of `.applicable` (check_verdict_reads). No solve reads it. Re-declared at
 #: this engine/ tree.
-ORACLE_ENGINE_TREE = "a8939ce0ecc748dfb3a247fdbfd86b22a8217218"
+#: C59 / lane_decide (directing 11-13; L part 2): engine/ changes only in run.py, one print under its `[어긋남]` line (the
+#: values at full precision, read by scripts/lane_decide.py). The comparison's verdict and the solve are unchanged; no
+#: solve reads it. Re-declared at this engine/ tree.
+ORACLE_ENGINE_TREE = "2115b137df450d96c4cd94ec71dfeaa12d31426f"
 REPO = Path(lm._ENGINE).parent
 
 
