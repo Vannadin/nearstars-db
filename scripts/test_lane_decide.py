@@ -105,13 +105,17 @@ def test_values_without_rtol_rejected():
 
 
 def test_full_line_belongs_to_its_own_key():
-    """the full line under another key's [어긋남] line is not read for this key."""
-    two = body(M, [("nmoi", "0.3571", "0.3634")])
-    two = [l.replace("전체 정밀도: 엔진 0.3571", "전체 정밀도: 엔진 0.3571") for l in two]
+    """a full line is read only for the [어긋남] line directly above it: not across another key's [어긋남] line, and not
+    across any other [...] line (here an [일치] line) that ends the key's block."""
+    a = "    [어긋남] radius         엔진    1 · 보드   2   (1% / 허용 1%)"
     row = [dict(T[0], mismatch_keys=["nmoi", "radius"], values={"radius": [1.0, 2.0]})]
-    text = log(two[:3] + ["    [어긋남] radius         엔진    1 · 보드   2   (1% / 허용 1%)"] + two[3:])
-    ok, why = ld.expected_red_only(text, row)
-    assert not ok and why == ["C59 radius — 전체 정밀도 줄(run.py «전체 정밀도:») 없음 → 불인정"], why
+    for between in (body(M, [("nmoi", "0.3571", "0.3634")])[:3],
+                    ["    [일치] mass           엔진    1 · 보드   1   (0% / 허용 1%)",
+                     "             전체 정밀도: 엔진 1.0 · 보드 2.0", "    [어긋남] nmoi           엔진    0.3571 · 보드   0.3634"]):
+        text = log([a] + between + [f"  [FAIL] {M} — 비0 종료 (이 단계가 fail=1 을 세웠다)", f"  [TIME] {M} — 1 s",
+                                    f"  [COST] {M} — instr 1"])
+        ok, why = ld.expected_red_only(text, row)
+        assert not ok and why == ["C59 radius — 전체 정밀도 줄(run.py «전체 정밀도:») 없음 → 불인정"], why
 
 
 def test_size_change_noted_on_a_rejected_log():
