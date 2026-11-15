@@ -1,4 +1,4 @@
-# silicate_prem_zeng2016 — 136 GPa 위 인계 기록: ρ 는 Zeng 2016 하부 맨틀 BM2, dT/dP·c_P 는 넘겨주는 SLB 기록의 204 GPa 고정 상태 (규산염 기록 등록 §3.4, note 2·7); rewrite/phase2-records/gen_prem_handover.py 가 썼다, 손으로 고치지 않는다
+# silicate_prem_zeng2016 — 136 GPa 위 인계 기록: ρ 는 Zeng 2016 하부 맨틀 BM2, dT/dP·c_P 는 넘겨주는 SLB 기록의 204 GPa 고정 상태 (규산염 기록 등록 §3.4, note 2·7); rewrite/phase2-records/bmcpp/gen_handover.py 가 burnman_cpp 로 썼다(prereg-bmcpp note 8 §3), 손으로 고치지 않는다
 id: silicate_prem_zeng2016
 label: 'SLB-to-PREM hand-over above SLB''s dataset top: Zeng 2016 lower-mantle BM2 ρ, the tapering record''s SLB composite
   for dT/dP and c_P'
@@ -15,7 +15,7 @@ primary_family:
     (Zeng ignores T, note 2 item 2)'
 handover_table:
   file: tables/silicate_prem_zeng2016.json.gz
-  sha256: 75bc34b42e08136b436295b0b7f41d093a2c035a69497a2918ac03d5a5dfd158
+  sha256: 358a72975bc7225e284be5e1a5b009b6f20e4f3396e40dd0b81795ddc373924d
   blocks:
   - silicate_slb_default_bse
   - silicate_slb_earth_dmm_wh2005
