@@ -310,8 +310,9 @@ def check_coincident(edges, boundaries, ts, rid="?"):
 
 
 def check_extension_h6(edges, compact, rid="?"):
-    """H6 on the store block's certified extension rows (note 2 (1); the store side of §5b (2c)): an adjacent
-    non-frozen column pair with exactly the cells' labels, a swap row, P_b strictly inside."""
+    """H6 on the store block's certified extension rows (note 2 (1); the store side of §5b (2c)): the table loader's
+    own per-row check, material_assemblage.check_extension_row, so H6 has one code (note 3 (5)); its TableStop
+    becomes this registration's refusal."""
     ps, _ts = nodes(compact)
     nxt = dict(zip(ps, ps[1:]))
     by = {(c["p"], c["t"]): c for c in compact["cells"]}
@@ -319,23 +320,10 @@ def check_extension_h6(edges, compact, rid="?"):
         if not r.get("certified"):
             continue
         where = f"record {rid}: certified extension row {i} ({r.get('t')!r} K)"
-        miss = [k for k in ("t", "class", "p_lo", "p_hi", "left", "right", "p_b") if k not in r]
-        if miss:
-            raise StoreRefusal("material.d2_store_edges_rows", f"{where}: missing {miss}")
-        lo, hi = by.get((r["p_lo"], r["t"])), by.get((r["p_hi"], r["t"]))
-        why = None
-        if r["class"] != "swap" or r.get("node_resolved"):
-            why = "not a swap row"
-        elif nxt.get(r["p_lo"]) != r["p_hi"] or lo is None or hi is None:
-            why = "not a pair of adjacent columns"
-        elif lo["assemblage"] != r["left"] or hi["assemblage"] != r["right"]:
-            why = "labels are not the cells'"
-        elif lo["kind"] == "frozen" or hi["kind"] == "frozen":
-            why = "a frozen cell is a side"
-        elif not (ma._finite(r["p_b"]) and r["p_lo"] < r["p_b"] < r["p_hi"]):
-            why = "P_b not strictly inside its pair"
-        if why:
-            raise StoreRefusal("material.d2_store_edges_rows", f"{where}: {why} (H6)")
+        try:
+            ma.check_extension_row(r, where, by, nxt)
+        except ma.TableStop as e:
+            raise StoreRefusal("material.d2_store_edges_rows", f"{e} (H6)") from None
 
 
 # ── §5b (2b) and (S1): the «today» segments of the view built on the store's block ─────────────────────────────────

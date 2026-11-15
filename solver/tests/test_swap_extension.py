@@ -84,6 +84,137 @@ class SwapExtensionRead(unittest.TestCase):
 
 
 
+
+# D2-read §5b (2c) (design 7939346ba; 68 n1–n3): check_boundaries runs H6 on every certified extension row
+T_X, PB_X = 850.0, 5.6e9
+P_LO, P_HI = PB_X - 1e8, PB_X + 1e8
+PS_X = [P_LO - 1e8, P_LO, P_HI, P_HI + 1e8]          # P_LO and P_HI adjacent; P_HI + 1e8 for the non-adjacent case
+
+
+def _cells(kinds=None):
+    """One T row of cells at T_X: L below and at P_LO, R at P_HI and above; `kinds` overrides a cell's kind by P."""
+    kinds = kinds or {}
+    return [{"p": p, "t": T_X, "assemblage": L if p <= P_LO else R, "kind": kinds.get(p, "solved")} for p in PS_X]
+
+
+def _ext_row(**over):
+    r = {**swap_row(T_X, PB_X), "extension": True, "k": 1, "certified": True}
+    r.update(over)
+    return r
+
+
+def _check(rows, kinds=None):
+    tb = {"boundaries": {"status": "exported", "rows": [], "extension": {"rows": rows, "rule": {"ext_rows": 2}}}}
+    cells = _cells(kinds)
+    return ma.check_boundaries(tb, {(c["p"], c["t"]): c for c in cells}, PS_X)
+
+
+class CertifiedExtensionRowsAreChecked(unittest.TestCase):
+    def stops(self, rows, why, kinds=None):
+        with self.assertRaises(ma.TableStop) as cm:
+            _check(rows, kinds)
+        self.assertEqual(cm.exception.check, "boundaries")
+        self.assertIn("certified extension row", str(cm.exception))
+        self.assertIn(why, str(cm.exception))
+
+    def test_1_a_frozen_side_is_refused(self):
+        for p in (P_LO, P_HI):
+            self.stops([_ext_row()], "a frozen cell is not a boundary side", kinds={p: "frozen"})
+
+    def test_2_labels_other_than_the_cells_are_refused(self):
+        self.stops([_ext_row(left=R, right=L)], f"labels {R!r}/{L!r} are not the cells'")
+
+    def test_3_a_non_adjacent_pair_is_refused(self):
+        self.stops([_ext_row(p_hi=P_HI + 1e8)], "not a pair of adjacent columns")
+
+    def test_4_p_b_on_the_pair_end_is_refused(self):
+        for pb in (P_LO, P_HI):
+            self.stops([_ext_row(p_b=pb)], "is not strictly inside its pair")
+        self.stops([_ext_row(p_b=float("nan"))], "is not strictly inside its pair")
+
+    def test_5_each_read_key_missing_is_refused_by_name(self):
+        for k in ma._EXT_ROW_KEYS:
+            with self.subTest(key=k):
+                r = _ext_row()
+                del r[k]
+                self.stops([r], f"missing {k} (the keys the load path reads)")
+
+    def test_5b_a_certified_row_must_be_a_swap_row(self):
+        self.stops([_ext_row(**{"class": "edge_in"})], "must be a swap row, not edge_in")
+        self.stops([_ext_row(node_resolved=True)], "must be a swap row, not node-resolved swap")
+
+    def test_6_uncertified_rows_are_not_checked_and_a_good_certified_row_loads(self):
+        bad = [_ext_row(p_b=P_LO, left=R, p_hi=P_HI + 1e8, certified=False),
+               {"t": 650.0, "left": L, "right": R, "class": "swap", "extension": True, "k": 1, "certified": False,
+                "reason": "cells_disagree"}]
+        self.assertEqual(_check(bad, kinds={P_LO: "frozen"}), [])
+        cs = _check(bad + [_ext_row()])
+        self.assertEqual([(c.kind, c.t0, c.t1, c.p_b(T_X)) for c in cs], [("swap", T_X, T_X, PB_X)])
+
+    def test_7_shipped_tables_pass_and_have_no_certified_extension_rows(self):
+        seen = 0
+        for tid, (_a, tb) in _shipped_tables().items():
+            b = tb.get("boundaries") or {}
+            if b.get("status") != "exported":
+                continue
+            seen += 1
+            with self.subTest(table=tid):
+                ma.check_boundaries(tb, {(c["p"], c["t"]): c for c in tb["cells"]}, sorted({c["p"] for c in tb["cells"]}))
+                self.assertEqual(sum(bool(r.get("certified")) for r in (b.get("extension") or {}).get("rows", ())), 0)
+        self.assertGreater(seen, 0)
+
+    def test_8_inert_on_the_shipped_records_and_live_on_a_planted_row(self):
+        """Directing 11-15 condition 3: while no record carries a certified extension row (every part-1 record), the
+        table load never calls the extension check; the planted counterpart shows the spy can count."""
+        with mock.patch.object(ma, "check_extension_row", wraps=ma.check_extension_row) as spy:
+            tables = _shipped_tables()
+            for tid, (a, tb) in tables.items():
+                with self.subTest(table=tid):
+                    ma.check_table(a, tb)
+            self.assertGreater(len(tables), 0)
+            self.assertEqual(spy.call_count, 0)
+            _check([_ext_row()])
+            self.assertEqual(spy.call_count, 1)
+
+    def test_9_the_store_side_runs_the_same_helper(self):
+        """D2-read note 3 (5): d2_store.check_extension_h6 calls check_extension_row, one H6 code; its TableStop
+        becomes the store's refusal by name."""
+        from solver import d2_store as ds
+        compact = {"cells": _cells({P_LO: "frozen"})}
+        with mock.patch.object(ma, "check_extension_row", wraps=ma.check_extension_row) as spy:
+            with self.assertRaises(ds.StoreRefusal) as cm:
+                ds.check_extension_h6({"extension": {"rows": [_ext_row()]}}, compact, "x")
+        self.assertEqual(spy.call_count, 1)
+        self.assertEqual(cm.exception.id, "material.d2_store_edges_rows")
+        self.assertIn("a frozen cell is not a boundary side", str(cm.exception))
+        self.assertIn("(H6)", str(cm.exception))
+        ds.check_extension_h6({"extension": {"rows": [_ext_row()]}}, {"cells": _cells()}, "x")     # control: loads
+        for row, why in ((_ext_row(left=R, right=L), "are not the cells'"),
+                         (_ext_row(p_hi=P_HI + 1e8), "not a pair of adjacent columns"),
+                         (_ext_row(p_b=P_LO), "is not strictly inside its pair"),
+                         (_ext_row(**{"class": "edge_in"}), "must be a swap row"),
+                         ({k: v for k, v in _ext_row().items() if k != "p_b"}, "missing p_b")):
+            with self.subTest(why=why), self.assertRaises(ds.StoreRefusal) as cm:
+                ds.check_extension_h6({"extension": {"rows": [row]}}, {"cells": _cells()}, "x")
+            self.assertIn(why, str(cm.exception))
+
+
+def _shipped_tables():
+    """{record id: (assemblage block, compact table)} for every shipped assemblage record, read and sha-checked as
+    the registry reads them, not through the registry. Test 7 then needs no closure-term pin. Test 8's ma.check_table
+    reads P1 (s_monotone_load_check), so until part 2's re-pin it runs under the measurement double only (68)."""
+    from solver import material_registry as mr
+    out = {}
+    for f in sorted(mr.MATERIALS_DIR.glob("*.yaml")):
+        if f.name in mr.NOT_RECORDS:
+            continue
+        rec = mr.parse(f.read_text(encoding="utf-8"))
+        a = rec.get("assemblage") if isinstance(rec, dict) else None
+        if a:
+            out[f.stem] = (a, ma.read_table(mr.MATERIALS_DIR / a["file"], a["sha256"]))
+    return out
+
+
 BSE = "silicate_slb_default_bse"
 T_STEP = 1568.5                      # in the cell [1550, 1600], next to swap277's reach-0 end at 1600 K
 
