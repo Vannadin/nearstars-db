@@ -262,14 +262,22 @@ def artifacts_ref(art: Path) -> tuple[str, str]:
     raise LookupError(f"no artifacts main ref in {art} ({', '.join(ARTIFACTS_REFS)})")
 
 
-def out_of_tree_blobs(specs, art_env=None) -> dict:
-    """{path: blob} of artifacts builder files at artifacts origin/main; a missing checkout or file raises LookupError."""
-    if not specs:
-        return {}
+def resolve_artifacts(art_env=None) -> tuple[str, str, str]:
+    """(checkout, ref, sha) of artifacts origin/main, fetched once. stamp() resolves it once per entry and hands the same
+    triple to every reader (out_of_tree, producer), so two readers cannot see two shas (68 N3 on producer-pin rev 1)."""
     art = env_dir("NEARSTARS_ARTIFACTS", art_env)
     if not Path(art).is_dir():
         raise LookupError(f"NEARSTARS_ARTIFACTS={art!r} is not a checkout (out-of-tree builders are red, not skipped)")
     ref, sha = artifacts_ref(Path(art))
+    return art, ref, sha
+
+
+def out_of_tree_blobs(specs, art_env=None, resolved=None) -> dict:
+    """{path: blob} of artifacts builder files at artifacts origin/main; a missing checkout or file raises LookupError.
+    `resolved` is resolve_artifacts()'s triple when the caller has already fetched (stamp() does)."""
+    if not specs:
+        return {}
+    art, ref, sha = resolved or resolve_artifacts(art_env)
     out = {"_ref": f"{ref} {sha}"}
     for p in specs:
         r = subprocess.run(["git", "-C", str(art), "rev-parse", "--verify", "-q", f"{sha}:{p}"],
@@ -400,9 +408,122 @@ def _blobs(part: str, paths) -> dict:
     return out
 
 
+# ── the producer pin (L part 2 B4; artifacts pc/c8-part2/producer-pin.md rev 2 c5d8998d, 68 CLEAR 08354939e) ────────
+# 8c and 8d are built by the bmcpp chain on burnman_cpp, which the gate never imports and nothing installs (owner 11-16).
+# The products carry the identity the build wrote: version, platform and record_digest measured from the installed
+# RECORD (pool_cpp.stamps), wheel_sha256 copied from the pin (export_table l.95; 8c's blocks copy version and wheel).
+# The gate checks those against pool_cpp.WHEELS, read as literals at the artifacts ref, and ties every copy together.
+
+def producer_pin(text: str) -> tuple[str, dict]:
+    """(VERSION, WHEELS) from the pin file's text by ast literal; the file is never imported (it imports burnman_cpp)."""
+    import ast
+    got = {}
+    for n in ast.parse(text).body:
+        t = n.targets[0] if isinstance(n, ast.Assign) and len(n.targets) == 1 else getattr(n, "target", None)
+        if isinstance(t, ast.Name) and t.id in ("VERSION", "WHEELS") and getattr(n, "value", None) is not None:
+            got[t.id] = ast.literal_eval(n.value)
+    if set(got) != {"VERSION", "WHEELS"}:
+        raise LookupError(f"producer pin: VERSION and WHEELS not both found as literals (found {sorted(got)})")
+    return got["VERSION"], got["WHEELS"]
+
+
+def _read_doc(root: Path, f: str):
+    """The parsed content of one file; an unreadable or corrupt file is LookupError (the entry red, named), never a
+    traceback (68 n1 on cd438008: the yamls and 8c's derived compacts are read only here)."""
+    import gzip
+    import zlib
+    import yaml
+    try:
+        b = (Path(root) / f).read_bytes()
+        if f.endswith(".gz"):
+            b = gzip.decompress(b)
+        if f.endswith((".yaml", ".yml")):
+            return yaml.safe_load(b.decode("utf-8"))
+        return json.loads(b)
+    except (OSError, EOFError, zlib.error, ValueError, yaml.YAMLError) as err:
+        raise LookupError(f"producer: {f} cannot be read ({type(err).__name__}: {err})") from None
+
+
+def _at(doc, path: str):
+    """The value at a dotted path, or None when any step is missing."""
+    for k in path.split("."):
+        if not isinstance(doc, dict) or k not in doc:
+            return None
+        doc = doc[k]
+    return doc
+
+
+def producer_check(e: dict, pin_text: str, root: Path = REPO) -> dict:
+    """{«file:path»: «version platform record_digest wheel»} for every declared identity; LookupError (named) when one is
+    missing, unpinned, or disagrees with another copy of the same record, or a tie group is not one value."""
+    pr = e["producer"]
+    version, wheels = producer_pin(pin_text)
+    allowed = set(e.get("files", [])) | set(e.get("derived", []))
+    pinned = {w["wheel_sha256"] for w in wheels.values()}
+    docs, out = {}, {}
+
+    def value(spec, rec):
+        f, _, path = spec.replace("{rec}", rec).partition(":")
+        if f not in allowed:
+            raise LookupError(f"producer: {f} is neither one of the entry's files nor a declared derived input")
+        if f not in docs:
+            docs[f] = _read_doc(root, f)
+        return f, path, _at(docs[f], path)
+
+    for rec in pr.get("records") or [""]:
+        ids = []
+        for spec in pr["identities"]:
+            f, path, idn = value(spec, rec)
+            where = f"{f}:{path}"
+            if not isinstance(idn, dict):
+                raise LookupError(f"producer: no {pr['package']} identity at {where}")
+            if idn.get("version") != version:
+                raise LookupError(f"producer: {where} version {idn.get('version')!r} is not the pinned {version!r}")
+            plat = idn.get("platform")
+            if plat is not None or "record_digest" in idn:
+                w = wheels.get(plat)
+                if w is None:
+                    raise LookupError(f"producer: {where} platform {plat!r} has no pinned wheel")
+                if idn.get("record_digest") != w["record_digest"]:
+                    raise LookupError(f"producer: {where} RECORD digest {idn.get('record_digest')!r} is not the pinned "
+                                      f"{plat} wheel's {w['record_digest']!r}")
+                if idn.get("wheel_sha256") != w["wheel_sha256"]:
+                    raise LookupError(f"producer: {where} wheel {idn.get('wheel_sha256')!r} is not {plat}'s pinned wheel")
+            elif idn.get("wheel_sha256") not in pinned:
+                raise LookupError(f"producer: {where} wheel {idn.get('wheel_sha256')!r} is not a pinned wheel")
+            ids.append((where, idn))
+            out[where] = (f"{idn['version']} {plat or '-'} {idn.get('record_digest') or '-'} "
+                          f"{idn.get('wheel_sha256')}")
+        for i, (wa, a) in enumerate(ids):
+            for wb, b in ids[i + 1:]:
+                bad = sorted(k for k in set(a) & set(b) if a[k] != b[k])
+                if bad:
+                    raise LookupError(f"producer: {wa} and {wb} disagree on {', '.join(bad)}")
+        for group in pr.get("ties", []):
+            vals = [value(spec, rec) for spec in group]
+            got = {v for _, _, v in vals}
+            if None in got or len(got) != 1:
+                raise LookupError("producer: tie not one value — " + "; ".join(f"{f}:{p} = {v!r}" for f, p, v in vals))
+    return out
+
+
+def producer_identity(e: dict, resolved) -> dict:
+    """producer_check with the pin file's text at the resolved artifacts ref; the pin must be one of the entry's
+    out_of_tree builders, so a WHEELS edit also moves its out_of_tree blob."""
+    pin = e["producer"]["pin"]
+    if pin not in (e.get("out_of_tree") or []):
+        raise LookupError(f"producer: the pin {pin} is not in the entry's out_of_tree")
+    art, ref, sha = resolved
+    r = subprocess.run(["git", "-C", str(art), "show", f"{sha}:{pin}"], capture_output=True, text=True)
+    if r.returncode != 0:
+        raise LookupError(f"producer: the pin {pin} is not in artifacts {sha[:12]} ({ref})")
+    return producer_check(e, r.stdout)
+
+
 def stamp(name: str, e: dict, art_env=None) -> dict:
     """The stamp of one entry at this tree. Raises LookupError for an input it cannot read (the entry is then red)."""
     mods = closure(e["code"]) if e.get("code") else []
+    resolved = resolve_artifacts(art_env) if (e.get("out_of_tree") or e.get("producer")) else None
     st = {
         "entry": name,
         "stamp_rule": dg.STAMP_RULE,
@@ -411,10 +532,11 @@ def stamp(name: str, e: dict, art_env=None) -> dict:
         "code": {m: dg.digest(REPO / m) for m in mods},
         "data": _blobs("data", data_inputs(e)),
         "derived": _blobs("derived", e.get("derived", [])),
-        "out_of_tree": out_of_tree_blobs(e.get("out_of_tree", []), art_env),
+        "out_of_tree": out_of_tree_blobs(e.get("out_of_tree", []), art_env, resolved),
         "packages": {p: importlib.metadata.version(p) for p in e.get("packages", [])},
         "external": external_sha(e.get("external")),
         "runtime_blob": _blobs("runtime-blob", runtime_blob_inputs(e)),
+        "producer": producer_identity(e, resolved) if e.get("producer") else {},
     }
     return st
 
@@ -427,7 +549,7 @@ def moved(then: dict | None, now: dict) -> list[str]:
     if then.get("stamp_rule") != dg.STAMP_RULE:
         return [f"stamp_rule {then.get('stamp_rule')!r} is not {dg.STAMP_RULE!r}"]
     out = []
-    for part in ("code", "data", "derived", "out_of_tree", "packages", "external", "runtime_blob"):
+    for part in ("code", "data", "derived", "out_of_tree", "packages", "external", "runtime_blob", "producer"):
         a, b = then.get(part, {}), now.get(part, {})
         for k in sorted(set(a) | set(b)):
             if k == "_ref":
