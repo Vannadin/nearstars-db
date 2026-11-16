@@ -51,7 +51,11 @@ MUTANTS = (
      [("solver/d2_store.py", "    if sorted(doc) != list(TOP_KEYS):\n", "    if False:\n")], [STORE_TEST]),
     ("M05", "S2", "the lower-cell tie switched to upper;", [], []),
     ("M06", "S2", "the subgrid side 1 not reversed;", [], []),
-    ("M07", "S2", "s_path on subgrid taking the blend's own derivative;", [], []),
+    ("M07", "S2", "s_path on subgrid taking the blend's own derivative;",
+     [("solver/d2_store.py", '        return ("sliver", v["s"], v["rho"], v["alpha"], v["c_p"])\n',
+       '        return ("sliver", v["s"], v["rho"], -v["rho"] * (read_point(doc, p * (1 + 1e-6), t)["values"]["s"]\n'
+       '                - read_point(doc, p * (1 - 1e-6), t)["values"]["s"]) / (2e-6 * p), v["c_p"])\n')],
+     [STORE_TEST]),                       # the blend's own ∂s/∂P for α; the Q8 test holds the ruled ≤ 8 ulp (note 7 (1))
     ("M08", "S1", "d2_read off opening the store;", [], []),
     ("M09", "S1", "global off × eligible routed to D2;", [], []),
     ("M10a", "S3", "the table-regardless mode on by default, or ignored by the dispatch, or with its note dropped;", [], []),
