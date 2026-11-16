@@ -1359,6 +1359,8 @@ step "test_d2_added_recount.py" bash -c 'exec python3 -m unittest solver/tests/t
 step "test_handover_blocks.py" bash -c 'exec python3 -m unittest solver/tests/test_handover_blocks.py'
 # D2 읽기 독자 조사(D2 읽기 등록 §7) — 추적 .py 전부를 ast 로 훑은 목록 = 커밋된 목록, 종류별 허용 목록, 임시 사본에 심은 대조군. 맥 ~15 초
 step "test_d2_read_census.py" bash -c 'exec python3 -m unittest solver/landing/test_d2_read_census.py'
+# D2 읽기 변형 시험 실행기(D2 읽기 등록 §10) — 행이 §10 을 덮는지·채운 앵커가 트리에 한 번씩인지·합성 트리에서 잡힘/못 잡힘/기준 빨강/STOP. 실행기 자체는 조각마다 따로. ~2 s
+step "test_d2_read_mutants.py" bash -c 'exec python3 -m unittest solver/landing/test_d2_read_mutants.py'
 step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
 step "test_convergence_meaning.py" bash -c 'cd engine && exec python3 test_convergence_meaning.py'
 step "test_rootfind.py" bash -c 'cd engine && exec python3 test_rootfind.py'
