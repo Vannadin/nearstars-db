@@ -900,7 +900,8 @@ class ReadPieceS2(unittest.TestCase):
 
     def test_q8_ratio_on_the_fixture_subgrid_stores(self):
         """Q8: −(∂s/∂P)/(∂s/∂T) from s_path's parts against the read's dT/dP on ea's subgrid fixture stores. Registered
-        «bit for bit»; measured ≤ 3 ulp (two roundings in the Dual's slopes), raised with 68 (S2). Held at 3 ulp here."""
+        «bit for bit», voided by D2-read note 7 (1): ≤ 8 ulp, derived from the operation count of this formula,
+        −(∂s/∂lnP / P) / (∂s/∂T) against T·α/(ρ·c_P) (3 + 3 + 2 roundings); measured ≤ 3."""
         import random
         import struct
         ulp = lambda a, b: abs(struct.unpack("<q", struct.pack("<d", a))[0] - struct.unpack("<q", struct.pack("<d", b))[0])  # noqa: E731
@@ -916,7 +917,7 @@ class ReadPieceS2(unittest.TestCase):
                     continue
                 _k, s_, rho, a, cp = ds.s_parts(doc, p_, t_)
                 self.assertEqual(s_, r["values"]["s"])
-                self.assertLessEqual(ulp(-(-p_ * a / rho / p_) / (cp / t_), r["values"]["dtdp"]), 3)
+                self.assertLessEqual(ulp(-(-p_ * a / rho / p_) / (cp / t_), r["values"]["dtdp"]), 8)
                 n += 1
             self.assertGreater(n, 10, name)
 
