@@ -2698,8 +2698,8 @@ class AssemblageView(mv.RecordView):
         # the read's own cell (_table_read): on a P node the cell below, on a T node the cell above (c8 on d2977f99)
         ia = min(max(bisect.bisect_left(self.ps, max(p, self.ps[0]), 1) - 1, 0), len(self.ps) - 2)
         ib = min(max(bisect.bisect_right(self.ts, t) - 1, 0), len(self.ts) - 2)
-        if self._d2 is not None and ib > 0 and self.ts[ib] == t:   # D2-read §5 (Q9): a D2-routed view takes the
-            ib -= 1                                                  # dispatch's lower-cell tie at a T node
+        # D2-read note 7 (68 on d3b7efda): the term notes describe the table read's own cell on every view, routed or
+        # not — a D2 answer drops them (Q9), and a table answer's value comes from today's cell, upper at a T node
         for key, (edge, grade, lead) in TERM_NOTES.items():
             cells, floor, src = self._terms[key]
             e = cells.get((ia, ib))

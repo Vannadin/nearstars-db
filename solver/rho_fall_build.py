@@ -242,7 +242,10 @@ def _edge_tol(rid, store=None):
     through the switch (D2-read §5b (2a)) with `store`, the view's `block_store`: the store's `edges` block on a
     D2-routed view, else the compact's. The store is the one solve routed to the view, never reloaded here, so a
     refused store cannot reach this read (solve refuses the record, record_unavailable) and the switch's §4 gate is
-    solve's (68 B3 on 54dd5042: the S1 reload turned a refusal into the compact's value)."""
+    solve's (68 B3 on 54dd5042: the S1 reload turned a refusal into the compact's value).
+    Disclosed (68 n on 96a9ec57): the fall-set build's own views are unrouted (_view), so there τ_e is the
+    compact's even on a D2 record; routing them would also send their values through the dispatch, which is E1's open
+    owner question. The writer carries τ_e from 8d's block, and the equality test guards the value meanwhile."""
     from solver import material_assemblage as ma, material_registry as mr
     if isinstance(store, mr.LoadStop):
         raise TypeError(f"_edge_tol({rid!r}): a refused store {store.id} is not a store")
