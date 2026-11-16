@@ -87,6 +87,7 @@ class Rule(unittest.TestCase):
         self.assertEqual(rc, 0)
         self.assertEqual(out["forecast_upper_bound"], {"accepted": 20, "unmatched": 501})
         self.assertEqual(len(out["store_sha256"]) + len(out["edges_sha256"]), 128)
+        self.assertEqual(len(out["store_git_blob"]) + len(out["edges_git_blob"]), 80)          # 68 n on d33c5921
 
     def test_a_bad_input_stops(self):
         with contextlib.redirect_stdout(io.StringIO()) as o:

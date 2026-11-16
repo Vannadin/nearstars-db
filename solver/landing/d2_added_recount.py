@@ -17,7 +17,7 @@ What differs from the forecast, by part 2's inputs (c8 11-16):
 - p_dataset is the store header's and the columns are the store grid's.
 A second count is printed beside it, not judged: the points named by a row edge's own `match.record` (the writer's
 record of which point it took). Points the rule counts as used but no match names, and the reverse, are listed.
-OUT holds per record the counts, the forecast's upper bound, both inputs' sha256 and the cross-check. rc 2 on a bad
+OUT holds per record the counts, the forecast's upper bound, both inputs' sha256 and git blob, and the cross-check. rc 2 on a bad
 input; the counts are a disclosure, so no count STOPs."""
 import argparse
 import gzip
@@ -98,7 +98,9 @@ def main(argv=None):
         except Exception as e:
             print(f"STOP: {arg}: {type(e).__name__}: {e}")
             return 2
+        blob = lambda b: hashlib.sha1(b"blob %d\0" % len(b) + b).hexdigest()      # noqa: E731 (rows cite git blobs)
         r.update(store_sha256=hashlib.sha256(raw).hexdigest(), edges_sha256=hashlib.sha256(eraw).hexdigest(),
+                 store_git_blob=blob(raw), edges_git_blob=blob(eraw),
                  forecast_upper_bound=FORECAST.get(rid))
         res["records"][rid] = r
         f = FORECAST.get(rid) or {}
