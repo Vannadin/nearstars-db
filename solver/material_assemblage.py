@@ -3126,7 +3126,7 @@ def boundary_block(record, table, store, use):
         raise ValueError(f"boundary_block: use {use!r} is not one of {BLOCK_USES}")
     if store is not None and use == "position":
         return getattr(store, "doc", store)["edges"]
-    return table["boundaries"]
+    return table.get("boundaries")              # absent on a table with no boundaries block: None, as today's `.get`
 
 
 def module_blob() -> str:
