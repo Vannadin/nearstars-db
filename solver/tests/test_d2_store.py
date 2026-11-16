@@ -732,43 +732,118 @@ class ReadPieceS1(unittest.TestCase):
         self.assertFalse(any(abs(p / 7.77e9 - 1.0) < 1e-2 for p, _t in fall_sets._region_points(v0, comp)["swap_extension"]))
 
     def test_routing_off_never_opens_the_store_and_reads_today(self):
-        """§4: d2_read off (or absent) reads today's answer and never opens a store; a planted unreadable store file
-        under fields/ stays unread. Registry.d2_store is None for it."""
+        """§4's registered control, read with §2: an off record carries no d2 keys (§2 refuses them there), so
+        «a record carrying a valid store and d2_read off» is the store's file present under fields/ while the record
+        is off (68 B4 on 54dd5042). The file is planted unreadable: opening it would raise. d2_read off and absent
+        both read today's answer, d2_store.load and Registry.d2_store return None, nothing is opened."""
+        import dataclasses
+        import os
+        import tempfile
+        from types import MappingProxyType
+        with tempfile.TemporaryDirectory() as tmp:
+            planted = Path(tmp) / "fields" / f"{KHAN}.d2.json.gz"
+            planted.parent.mkdir()
+            planted.write_bytes(b"\x00")
+            os.chmod(planted, 0)
+            try:
+                with self.assertRaises(PermissionError):    # the control: this path cannot be read
+                    planted.read_bytes()
+                for rec in ({**self.rec, "d2_read": "off"}, self.rec):          # off, and absent (read as off)
+                    self.assertIsNone(ds.load(rec, self.compact, tmp))
+                    r = dataclasses.replace(reg(), records=MappingProxyType({**reg().records, KHAN: rec}),
+                                            directory=Path(tmp), _d2={})
+                    self.assertIsNone(r.d2_store(KHAN))
+                a = ma.view({**self.rec, "d2_read": "off"}, self.compact, 1600.0)
+                b = ma.view(self.rec, self.compact, 1600.0)
+                for p_, t_ in ((5e9, 1600.0), (2e10, 2100.0)):
+                    self.assertEqual(repr(a.state(p_, t_)), repr(b.state(p_, t_)))
+            finally:
+                os.chmod(planted, 0o600)
+
+    def test_d2_keys_on_an_off_or_absent_record_refuse_through_the_registry(self):
+        """68 B1 on 54dd5042: a record with d2_store or d2_read_basis and no d2_read key (absent = off) is refused by
+        Registry.d2_store, which now always calls the loader."""
+        import dataclasses
+        from types import MappingProxyType
+        pin = {"path": f"fields/{KHAN}.d2.json.gz", "sha256": "0" * 64}
+        for extra, code in (({"d2_store": pin}, "material.d2_store_missing"),
+                            ({"d2_read_basis": {"x": 1}}, "material.d2_read_basis")):
+            for state in ({}, {"d2_read": "off"}):
+                rec = {**self.rec, **state, **extra}
+                r = dataclasses.replace(reg(), records=MappingProxyType({**reg().records, KHAN: rec}), _d2={})
+                got = r.d2_store(KHAN)
+                self.assertIsInstance(got, mr.LoadStop, (extra, state))
+                self.assertEqual(got.id, code)
+
+    def test_record_keys_are_checked_at_registry_load_whatever_the_switch(self):
+        """68 B2 on 54dd5042: §7 «a missing or unknown value is a named load refusal, never a fallback»; §4 forbids
+        opening the store with the switch off, not checking the record's keys. Registry load runs check_keys on
+        every assemblage record (no switch is read at load), and each key refusal is a LoadStop naming the file."""
         from unittest import mock
-        rec_off = {**self.rec, "d2_read": "off"}
-        opened = []
-        real = Path.read_bytes
-        with mock.patch.object(Path, "read_bytes", lambda self_: opened.append(str(self_)) or real(self_)):
-            self.assertIsNone(ds.load(rec_off, self.compact, ROOT / "solver" / "materials"))
-        self.assertFalse([f for f in opened if "/fields/" in f], opened)
-        self.assertIsNone(reg().d2_store(KHAN))                 # no d2_read key: off, store never asked
-        a, b = ma.view(rec_off, self.compact, 1600.0), ma.view(self.rec, self.compact, 1600.0)
-        for p_, t_ in ((5e9, 1600.0), (2e10, 2100.0)):
-            self.assertEqual(repr(a.state(p_, t_)), repr(b.state(p_, t_)))
+        pin = {"path": f"fields/{KHAN}.d2.json.gz", "sha256": "0" * 64}
+        basis = {k: "x" for k in ds.BASIS_KEYS["eligible"]}
+        cases = (({"d2_read": "bogus"}, "material.d2_read_unknown"),
+                 ({"d2_read": None}, "material.d2_read_unknown"),
+                 ({"d2_read": "eligible", "d2_store": pin}, "material.d2_read_basis"),
+                 ({"d2_read": "eligible", "d2_read_basis": {**basis, "extra": 1}, "d2_store": pin}, "material.d2_read_basis"),
+                 ({"d2_read": "eligible", "d2_read_basis": basis}, "material.d2_store_missing"),
+                 ({"d2_read": "eligible", "d2_read_basis": basis, "d2_store": {"path": "../x.gz", "sha256": "0"}},
+                  "material.d2_store_missing"),
+                 ({"d2_store": pin}, "material.d2_store_missing"))
+        for extra, code in cases:
+            got = mr._d2_keys({**self.rec, **extra}, f"{KHAN}.yaml")
+            self.assertIsInstance(got, mr.LoadStop, extra)
+            self.assertEqual((got.id, got.evidence["file"]), (code, f"{KHAN}.yaml"))
+        self.assertIsNone(mr._d2_keys(self.rec, f"{KHAN}.yaml"))                       # absent: off, nothing to refuse
+        self.assertIsNone(mr._d2_keys({**self.rec, "d2_read": "eligible", "d2_read_basis": basis, "d2_store": pin},
+                                      f"{KHAN}.yaml"))                                 # well-formed: nothing opened
+        seen = []
+        stop = mr.LoadStop("material.d2_read_unknown", {"file": f"{KHAN}.yaml", "why": "planted"})
+        with mock.patch.object(mr, "_d2_keys", lambda rec, file: seen.append(rec["id"]) or stop):
+            got = mr.load(only=[KHAN])
+        self.assertIs(got, stop)                                                       # the load refuses on it
+        self.assertEqual(seen, [KHAN])
 
     def test_global_off_never_asks_for_a_store(self):
-        """§4's first row: global off × eligible stays legacy and the store is not even asked for."""
-        from unittest import mock
-        from solver import solve as sv
+        """§4's first row on the switch-over's own fixture (68 n4): Earth through solve._views / _view_for with the
+        registry solve builds for it and silicate_records off (the default): no store is asked for, the record views
+        are today's."""
+        from solver import solve as sv, context, from_v1
+        earth, _aside = from_v1.load_v1("engine/bodies/earth.yaml")
+        real = sv.registry_for(earth, context.Options())
         asked = []
 
-        class R:
-            development = False
-            tables = {KHAN: self.compact}
-
-            def get(self_, rid):
-                return reg().get(rid)
+        class Spy:
+            def __getattr__(self_, k):
+                return getattr(real, k)
 
             def d2_store(self_, rid):
                 asked.append(rid)
-                raise AssertionError("asked")
-        body = mock.Mock()
-        body.surface.t_pot = 1600.0
-        layer = mock.Mock(material="silicate", composition=None)
-        with mock.patch.object(sv.lm.interior, "MATERIALS", {}):
-            got = sv._assemblage_view(body, layer, KHAN, 0.0, R(), silicate=False)
+                raise AssertionError(f"store asked for {rid} with the switch off")
+        got = sv._views(earth, registry=Spy())
         self.assertEqual(asked, [])
-        self.assertIsNone(got[1])
+        self.assertEqual({k: type(v).__name__ for k, v in got.items()},
+                         {k: type(v).__name__ for k, v in sv._views(earth, registry=real).items()})
+
+    def test_edge_tol_reads_through_the_switch_and_never_reloads_a_store(self):
+        """§5b (2a) for rho_fall_build (68 B3 on 54dd5042): τ_e is read from the block the view's switch gives — the
+        store's on a D2-routed view, the compact's otherwise and in table-regardless mode — with the store solve routed
+        to the view, never a registry reload. The writer carries the value from 8d's block, so on a store built from
+        the compact it equals the compact's; a planted store value shows the read really takes the store's block. A
+        refused store is not a store here."""
+        from solver import rho_fall_build as rb
+        tol = self.compact["boundaries"]["source"]["edge_drho_tol"]
+        same = ds.Loaded("eligible", {"edges": copy.deepcopy(self.compact["boundaries"]), "grid": {"ps": [], "ts": []},
+                                      "cells": {}}, "0" * 64)
+        other = copy.deepcopy(same.doc)
+        other["edges"]["source"]["edge_drho_tol"] = tol * 3
+        other = ds.Loaded("eligible", other, "0" * 64)
+        self.assertEqual(rb._view_tol(ma.view(self.rec, self.compact, 1600.0)), tol)
+        self.assertEqual(rb._view_tol(ma.view(self.rec, self.compact, 1600.0, store=same)), tol)
+        self.assertEqual(rb._view_tol(ma.view(self.rec, self.compact, 1600.0, store=other)), tol * 3)
+        self.assertEqual(rb._view_tol(ma.view(self.rec, self.compact, 1600.0, store=other, table_regardless="t")), tol)
+        with self.assertRaises(TypeError):
+            rb._edge_tol(KHAN, mr.LoadStop("material.d2_store_chain", {"file": "x", "why": "planted"}))
 
 
 class ReadPieceS2(unittest.TestCase):

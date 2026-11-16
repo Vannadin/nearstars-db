@@ -1470,7 +1470,7 @@ class AssemblageView(mv.RecordView):
     table (68 S1). RecordView's own branches (sets, γ windows, joins, the K_T stencil) are never entered."""
 
     def __init__(self, record, table, t_pot: float, p_stop: float = 0.0, p_floor: float = 0.0, handover=None,
-                 store=None, *, table_regardless=None):
+                 store=None, table_regardless=None):          # positional from view(): §7 counts keyword sites
         self.material_id = record["id"]
         self.name = record["id"]                 # solve._pass keys its GrazeMonitor on this (68)
         #: the hand-over above p_dataset (a HandOver, note 7 §3), or None: then a read above p_dataset refuses (§3.4)
@@ -1502,6 +1502,9 @@ class AssemblageView(mv.RecordView):
         self.store = store
         self.table_regardless = table_regardless
         sw = None if table_regardless else store
+        #: the store the boundary switch is asked with (None unrouted or in table-regardless mode): every reader of a
+        #: block off this view's record asks boundary_block with it (rho_fall_build's τ_e, §5b (2a))
+        self.block_store = sw
         read_block = boundary_block(record, table, sw, "read")
         pos_block = boundary_block(record, table, sw, "position")
         ts = self.ts
@@ -1804,7 +1807,9 @@ class AssemblageView(mv.RecordView):
         memo on the view. `force` {curve: side}: a swap's side read (§3.1).
         On a D2-routed view the class dispatch comes first (D2-read Q6, Q8): d2 and cut give Dual(s, −P·G_PT, −G_TT) of
         the field's consistent-G surface; inside a subgrid sliver Dual(s, −P·α/ρ, c_P/T) of the read's own blend; every
-        other class reads the table's s path below."""
+        other class reads the table's s path below. A D2 answer stands whatever frozen nodes the table's stencil holds:
+        §3.2's «None» guards the table read's own stencil, and D2-read §5 «the s read included where the record
+        declares it» with Q6 «s_path through the same dispatch» puts the dispatch before it (68 n on e901a8ac)."""
         if self._d2 is not None:
             from solver import d2_store as ds
             if force and ds.class_at(self._d2, p, t) == "cut":      # §5b (5): a forced side on a D2 cut cell, counted
@@ -3177,7 +3182,7 @@ def view(record, table, t_pot, p_stop=0.0, p_floor=0.0, handover=None, store=Non
     HandOver above p_dataset (note 7), or None; `store` the record's loaded D2 store (registry.stores[id]) when the
     record is D2-routed, else None (D2-read §4); `table_regardless` the setting tool's name in §5a's mode (S3 records
     and refuses it; only the re-read tool passes it)."""
-    return AssemblageView(record, table, t_pot, p_stop, p_floor, handover, store, table_regardless=table_regardless)
+    return AssemblageView(record, table, t_pot, p_stop, p_floor, handover, store, table_regardless)
 
 
 class HandOver:

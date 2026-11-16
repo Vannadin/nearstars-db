@@ -116,10 +116,12 @@ def state_of(record_doc):
     return v
 
 
-def load(record_doc, compact, materials_dir, compact_sha256=None):
-    """§2 and §3. d2_read off (or absent) → None, and the store is never opened (a `d2_store` key is then a refusal:
-    the writer never writes it there). Else the store is read, its contract and classes checked, its grid compared to
-    the compact's nodes and the six links of the chain checked."""
+def check_keys(record_doc):
+    """§2's record-key refusals, with nothing opened: the state (absent → off; unknown → refusal), a `d2_read_basis` or
+    `d2_store` key on an off or absent record, the basis's exact keys, and the pin's shape and fields/ path. Returns
+    (state, the pin's relative path) — (\"off\", None) when off. The registry runs it on every assemblage record at load,
+    whatever the global switch (68 B1, B2 on 54dd5042: §4 forbids opening the store with the switch off, not checking
+    the record's own keys); `load` runs it again before opening."""
     rid = record_doc.get("id")
     state = state_of(record_doc)
     if state == "off":
@@ -127,7 +129,7 @@ def load(record_doc, compact, materials_dir, compact_sha256=None):
             if k in record_doc:
                 raise StoreRefusal("material.d2_store_missing" if k == "d2_store" else "material.d2_read_basis",
                                    f"record {rid}: {k} on a record whose d2_read is off")
-        return None
+        return state, None
     basis = record_doc.get("d2_read_basis")
     if not isinstance(basis, dict):
         raise StoreRefusal("material.d2_read_basis", f"record {rid}: d2_read {state} without d2_read_basis")
@@ -141,6 +143,17 @@ def load(record_doc, compact, materials_dir, compact_sha256=None):
     rel = Path(pin["path"])
     if rel.is_absolute() or ".." in rel.parts or rel.parts[:1] != ("fields",):
         raise StoreRefusal("material.d2_store_missing", f"record {rid}: d2_store path {pin['path']!r} is not under fields/")
+    return state, rel
+
+
+def load(record_doc, compact, materials_dir, compact_sha256=None):
+    """§2 and §3. d2_read off (or absent) → None, and the store is never opened (a `d2_store` key is then a refusal:
+    the writer never writes it there). Else the store is read, its contract and classes checked, its grid compared to
+    the compact's nodes and the six links of the chain checked."""
+    rid = record_doc.get("id")
+    state, rel = check_keys(record_doc)
+    if state == "off":
+        return None
     path = Path(materials_dir) / rel
     if not path.is_file():
         raise StoreRefusal("material.d2_store_missing", f"record {rid}: no file {rel}")

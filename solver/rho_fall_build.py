@@ -237,22 +237,25 @@ def _bisect(f, a, b, fa, n=60):
     return 0.5 * (a + b)
 
 
-def _edge_tol(rid):
-    """τ_e: the table's own boundaries.source.edge_drho_tol from the registry (rev3c §2; never re-derived), or None."""
+def _edge_tol(rid, store=None):
+    """τ_e: the boundaries block's own source.edge_drho_tol (rev3c §2; never re-derived), or None. The block comes
+    through the switch (D2-read §5b (2a)) with `store`, the view's `block_store`: the store's `edges` block on a
+    D2-routed view, else the compact's. The store is the one solve routed to the view, never reloaded here, so a
+    refused store cannot reach this read (solve refuses the record, record_unavailable) and the switch's §4 gate is
+    solve's (68 B3 on 54dd5042: the S1 reload turned a refusal into the compact's value)."""
     from solver import material_assemblage as ma, material_registry as mr
-    reg = mr.load()
-    tb = reg.tables.get(rid) or {}
+    if isinstance(store, mr.LoadStop):
+        raise TypeError(f"_edge_tol({rid!r}): a refused store {store.id} is not a store")
+    tb = mr.load().tables.get(rid) or {}
     if not tb:
         return None
-    store = reg.d2_store(rid) if hasattr(reg, "d2_store") else None      # D2-read §5b (2a): the store block's source
-    store = None if isinstance(store, mr.LoadStop) else store
     return ((ma.boundary_block(None, tb, store, "position") or {}).get("source") or {}).get("edge_drho_tol")
 
 
 def _view_tol(v):
-    """_edge_tol for v's record, read once per view (kept on the view, not in module state)."""
+    """_edge_tol for v's record through v's switch, read once per view (kept on the view, not in module state)."""
     if not hasattr(v, "_rev3c_tol"):
-        v._rev3c_tol = (_edge_tol(v.material_id),)
+        v._rev3c_tol = (_edge_tol(v.material_id, getattr(v, "block_store", None)),)
     return v._rev3c_tol[0]
 
 
