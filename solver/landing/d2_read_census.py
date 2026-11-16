@@ -27,6 +27,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from types import MappingProxyType
 
 SITE_KEYS = ("path", "line", "kind", "function", "use")
 KINDS = ("option", "record_key", "view", "solid", "boundaries", "table_regardless", "switch")
@@ -53,7 +54,7 @@ RECORD_KEY_ALLOW = frozenset()                                # the loader's fun
 VIEW_ALLOW = frozenset()                                      # the direct view builders, as ea's store_node_exact note
 TABLE_REGARDLESS_ALLOW = frozenset()                          # §5a: zero sites in the walk (the mode's own tests are
                                                               # under solver/tests/; the one real setter is in artifacts)
-SWITCH_USES = {}                                              # {(path, function): {use, …}}: §5b's table, one entry per
+SWITCH_USES = MappingProxyType({})                            # {(path, function): frozenset({use, …})}: §5b's table, one per
                                                               # routed reader; a non-literal use always fails
 
 
@@ -203,6 +204,41 @@ def census(root):
     sites = [dict(zip(SITE_KEYS, r)) for r in sorted(rows, key=lambda r: r[:4] + (r[4] or "",))]
     return {"sites": sites, "schema_keys": schema_keys(root)}
 
+
+#: §7 «Each kind has its rule» on the real tree (68 B2 on e59a6739; directing 11-16: routed, or named as the finding):
+#: the (kind, path, function) of every site outside its allow-list before the read piece routes it. The real tree must
+#: equal this list exactly: a new unrouted site fails, and a routed one must leave the list (it only shrinks). Empty at
+#: the final pass, when the real-tree test's expectedFailure marker goes.
+UNROUTED_KNOWN = frozenset({
+    ('boundaries', 'solver/coexist.py', 'check_table'),
+    ('boundaries', 'solver/coexist.py', 'cut_census'),
+    ('boundaries', 'solver/d2_store.py', 'check_edges'),
+    ('boundaries', 'solver/fall_sets.py', '_region_points'),
+    ('boundaries', 'solver/material_assemblage.py', 'AssemblageView.__init__'),
+    ('boundaries', 'solver/material_assemblage.py', 'boundary_disclosures'),
+    ('boundaries', 'solver/material_assemblage.py', 'check_boundaries'),
+    ('boundaries', 'solver/material_assemblage.py', 'check_table'),
+    ('boundaries', 'solver/material_checks.py', 'view_record_fns.curve'),
+    ('boundaries', 'solver/material_registry.py', '_curve_ends'),
+    ('boundaries', 'solver/material_registry.py', '_curves'),
+    ('boundaries', 'solver/material_registry.py', '_field_record'),
+    ('boundaries', 'solver/material_registry.py', '_kind'),
+    ('boundaries', 'solver/material_registry.py', 'triple_point_misses'),
+    ('boundaries', 'solver/material_view.py', 'RecordView.__init__'),
+    ('boundaries', 'solver/rho_fall_build.py', '_edge_tol'),
+    ('boundaries', 'solver/solve.py', '_assemblage_view'),
+    ('record_key', 'solver/d2_store.py', 'chain'),
+    ('record_key', 'solver/d2_store.py', 'load'),
+    ('record_key', 'solver/d2_store.py', 'state_of'),
+    ('view', 'solver/d2_store.py', 'check_edges'),
+    ('view', 'solver/fall_sets.py', 'check_record'),
+    ('view', 'solver/material_assemblage.py', 'boundary_disclosures'),
+    ('view', 'solver/material_assemblage.py', 'check_table'),
+    ('view', 'solver/material_assemblage.py', 's_monotone_build'),
+    ('view', 'solver/material_assemblage.py', 'view'),
+    ('view', 'solver/rho_fall_build.py', '_view'),
+    ('view', 'solver/solve.py', '_assemblage_view'),
+})
 
 RULES = (
     ("boundaries", BOUNDARIES_ALLOW, "a boundaries read outside boundary_block and the switch's allow-list (§7, §5b)"),

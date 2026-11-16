@@ -151,6 +151,23 @@ class Tree(unittest.TestCase):
         self.assertEqual([list(s) for s in committed["sites"]], [list(c.SITE_KEYS)] * len(committed["sites"]))
         self.assertEqual({s["use"] for s in committed["sites"] if s["kind"] != "switch"} - {None}, set())
 
+    @unittest.expectedFailure
+    def test_each_kind_holds_its_rule_on_the_real_tree(self):
+        """§7: every site obeys its kind's rule. Red until the read piece routes its readers and fills the allow-lists;
+        c8 drops the marker at the final pass (an unexpected success fails the run, so the marker cannot be forgotten)"""
+        self.assertEqual(c.violations(self.data), [])
+
+    def test_the_unrouted_sites_are_exactly_the_named_finding(self):
+        got = {(s["kind"], s["path"], s["function"]) for _, s in c.violations(self.data)}
+        self.assertEqual(sorted(got - c.UNROUTED_KNOWN), [], "a new site outside its kind's rule")
+        self.assertEqual(sorted(c.UNROUTED_KNOWN - got), [], "routed: remove it from UNROUTED_KNOWN (the list only shrinks)")
+
+    def test_the_allow_lists_are_immutable(self):
+        """phase1-design §A6 (68 B1 on e59a6739): no mutable module state"""
+        self.assertIsInstance(c.SWITCH_USES, type(__import__("types").MappingProxyType({})))
+        for allow in (c.BOUNDARIES_ALLOW, c.RECORD_KEY_ALLOW, c.VIEW_ALLOW, c.TABLE_REGARDLESS_ALLOW, c.UNROUTED_KNOWN):
+            self.assertIsInstance(allow, frozenset)
+
     def test_schema_keys_are_the_record_keys(self):
         import yaml
         rec = yaml.safe_load((ROOT / c.SCHEMA).read_text(encoding="utf-8"))["record"]
