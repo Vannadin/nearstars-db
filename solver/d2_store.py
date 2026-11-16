@@ -549,6 +549,20 @@ def _sliver_miss(cell, ps, ts, j, k, a, b):
     return worst, offs
 
 
+def event_pb(view, curve, t, rch):
+    """The P_b at t that the events place for `curve` (note 11): the curve's own p_b(t) between its rows, and past its
+    ends the p_b_ext of the event run holding that end (`_holder`, where init's coincident merge and reach-0 stops
+    live), which is what _pieces draws the walk's extensions with; None where that run stops or the reach ends.
+    `view` carries `_events` and `_reach` (a routed view passes its position set)."""
+    if curve.t0 <= t <= curve.t1:
+        return curve.p_b(t)
+    hi = t > curve.t1
+    h = _holder(view, curve.rows[-1] if hi else curve.rows[0], hi)
+    if h.stop_hi if hi else h.stop_lo:
+        return None
+    return h.p_b_ext(t, rch)
+
+
 def today_cells(store_doc, view, curves=None):
     """note 11 / 68 on S5: {(j, k): {curve ids}} of the cells a «today» piece passes through, by today_segments' own
     walk (`_pieces`, `_cells_through`) over `curves` (default the view's `_curves`; a routed view passes its position
@@ -842,6 +856,8 @@ def _marked_choice(doc, p, t, crossing, side=None):
 def read_marked(doc, p, t, crossing, view=None, side=None):
     """read_point in a marked cell (note 10 §3): today's side's field over the whole cell; «not covered» is a table
     answer, counted ARB_TABLE on `view`. With no crossing curve, the ordinary read."""
+    if marked_at(doc, p, t) is None:             # not a marked cell: the ordinary read
+        return read_point(doc, p, t, view)
     ch = _marked_choice(doc, p, t, crossing, side)
     if ch[0] == "ordinary":
         return read_point(doc, p, t, view)
@@ -856,6 +872,8 @@ def read_marked(doc, p, t, crossing, view=None, side=None):
 def s_slopes_marked(doc, p, t, crossing, side=None):
     """s_slopes in a marked cell (note 10 §3): the Q6 Dual's numbers on the chosen surface, None where the table's s
     path applies (not covered), or the ordinary s_slopes with no crossing curve"""
+    if marked_at(doc, p, t) is None:
+        return s_slopes(doc, p, t)
     ch = _marked_choice(doc, p, t, crossing, side)
     if ch[0] == "ordinary":
         return s_slopes(doc, p, t)

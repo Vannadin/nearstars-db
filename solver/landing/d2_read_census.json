@@ -65,14 +65,14 @@
   },
   {
    "path": "solver/d2_store.py",
-   "line": 607,
+   "line": 621,
    "kind": "switch",
    "function": "check_edges",
    "use": "read"
   },
   {
    "path": "solver/d2_store.py",
-   "line": 613,
+   "line": 627,
    "kind": "view",
    "function": "check_edges",
    "use": null
