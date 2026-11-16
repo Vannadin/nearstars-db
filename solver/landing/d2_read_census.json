@@ -51,28 +51,28 @@
   },
   {
    "path": "solver/d2_store.py",
-   "line": 194,
+   "line": 202,
    "kind": "record_key",
    "function": "arbitration",
    "use": null
   },
   {
    "path": "solver/d2_store.py",
-   "line": 275,
+   "line": 332,
    "kind": "record_key",
    "function": "chain",
    "use": null
   },
   {
    "path": "solver/d2_store.py",
-   "line": 652,
+   "line": 709,
    "kind": "switch",
    "function": "check_edges",
    "use": "read"
   },
   {
    "path": "solver/d2_store.py",
-   "line": 658,
+   "line": 715,
    "kind": "view",
    "function": "check_edges",
    "use": null
@@ -156,77 +156,77 @@
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 2797,
+   "line": 2804,
    "kind": "solid",
    "function": "AssemblageView.state",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 2848,
+   "line": 2855,
    "kind": "solid",
    "function": "AssemblageView.phase_read",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 2990,
+   "line": 2997,
    "kind": "view",
    "function": "boundary_disclosures",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 2992,
+   "line": 2999,
    "kind": "switch",
    "function": "boundary_disclosures",
    "use": "read"
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 2994,
+   "line": 3001,
    "kind": "switch",
    "function": "boundary_disclosures",
    "use": "read"
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 3048,
+   "line": 3055,
    "kind": "solid",
    "function": "boundary_disclosures",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 3077,
+   "line": 3084,
    "kind": "switch",
    "function": "boundary_disclosures",
    "use": "read"
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 3144,
+   "line": 3151,
    "kind": "solid",
    "function": "s_monotone_check",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 3160,
+   "line": 3167,
    "kind": "view",
    "function": "s_monotone_build",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 3193,
+   "line": 3200,
    "kind": "boundaries",
    "function": "boundary_block",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 3232,
+   "line": 3239,
    "kind": "view",
    "function": "view",
    "use": null

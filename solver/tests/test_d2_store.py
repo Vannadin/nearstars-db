@@ -1267,6 +1267,88 @@ def _marked_doc():
             "header": {}}
 
 
+def _sets_store(record_cells, cells):
+    """(doc, record_doc, dir): a store whose cells are `cells` (over _marked_doc's fields and grid), an arbitration file
+    with `record_cells` pinned by link 7 in a temp dir (note 11 (d))."""
+    doc = _marked_doc()
+    doc["cells"] = cells
+    tmp = tempfile.mkdtemp(prefix="d2-sets-")
+    raw = json.dumps({"record": "x", "store_sha256": "s" * 64, "cells": record_cells}).encode()
+    (Path(tmp) / "a.json").write_bytes(raw)
+    sha = hashlib.sha256(raw).hexdigest()
+    doc["header"] = {"arbitration_sha256": sha, "arbitration_store_sha256": "s" * 64}
+    return doc, {"id": "x", "d2_store": {"arbitration": {"path": "a.json", "sha256": sha}}}, tmp
+
+
+def _fb(reason):
+    return {"class": "fallback", "source": "arbitration", "was": "d2", "reasons": [reason]}
+
+
+SET1_LINE = f"{ds.ARB_REASON}: neither"
+
+
+class S5Sets(unittest.TestCase):
+    """D2-read note 11 (d): set 2 in the loader's contract — set and verdict, the «arbitration» fallback's `was` and
+    one reason line, set membership against the walk, and the counts apart."""
+
+    GOOD_RECORD = {"0,0": {"verdict": "keep_d2"}, "0,1": {"set": 1, "verdict": "neither"},
+                   "1,0": {"set": 2, "verdict": "screen_table"}, "1,1": {"set": 2, "verdict": "screen_stays"}}
+
+    def _cells(self, **over):
+        cells = {"0,0": {"class": "d2", "surfaces": ["L", "R"], "arbitrated": {"verdict": "keep_d2"}},
+                 "0,1": _fb(SET1_LINE), "1,0": _fb(ds.ARB_SCREEN_REASON), "1,1": {"class": "d2", "surfaces": ["L"]}}
+        cells.update(over)
+        return cells
+
+    def refused(self, record_cells, cells):
+        doc, rec, d = _sets_store(record_cells, cells)
+        with self.assertRaises(ds.StoreRefusal) as e:
+            ds.arbitration(doc, rec, d)
+        return e.exception.id
+
+    def test_a_good_two_set_store_loads_its_record(self):
+        doc, rec, d = _sets_store(self.GOOD_RECORD, self._cells())
+        self.assertEqual(ds.arbitration(doc, rec, d)["cells"], self.GOOD_RECORD)
+
+    def test_the_arbitration_fallback_carries_was_and_its_one_line(self):
+        no_was = {k: v for k, v in _fb(SET1_LINE).items() if k != "was"}
+        for bad in (no_was, _fb(ds.ARB_SCREEN_REASON),                                   # set 1 with set 2's line
+                    {**_fb(SET1_LINE), "reasons": [SET1_LINE, SET1_LINE]},              # two lines
+                    {**_fb(SET1_LINE), "reasons": ["something else"]}):                 # none
+            self.assertEqual(self.refused(self.GOOD_RECORD, self._cells(**{"0,1": bad})), "material.d2_store_class")
+        self.assertEqual(self.refused(self.GOOD_RECORD, self._cells(**{"1,0": _fb(SET1_LINE)})),
+                         "material.d2_store_class")                                     # screen_table, set 1's line
+        stays_moved = self._cells(**{"1,1": _fb(ds.ARB_SCREEN_REASON)})
+        self.assertEqual(self.refused(self.GOOD_RECORD, stays_moved), "material.d2_store_class")
+
+    def test_set_and_verdict_agree(self):
+        for k, v in (("0,1", {"set": 2, "verdict": "neither"}), ("1,1", {"set": 1, "verdict": "screen_stays"}),
+                     ("1,1", {"set": 3, "verdict": "screen_stays"})):
+            self.assertEqual(self.refused({**self.GOOD_RECORD, k: v}, self._cells()), "material.d2_store_arbitration_set")
+        unmoved = self._cells(**{"1,0": {"class": "d2", "surfaces": ["L"]}})             # screen_table left as d2
+        self.assertEqual(self.refused(self.GOOD_RECORD, unmoved), "material.d2_store_arbitration_set")
+        marked2 = self._cells(**{"1,1": {"class": "d2", "surfaces": ["L"], "arbitrated": {"verdict": "keep_d2"}}})
+        self.assertEqual(self.refused(self.GOOD_RECORD, marked2), "material.d2_store_chain")   # set 2 never marked
+
+    def test_set_membership_against_the_walk(self):
+        walk = {(0, 0): {("event", 0)}, (0, 1): {("event", 0)}}
+        ds.check_arbitration_sets({"cells": self.GOOD_RECORD | {"1,0": {"set": 2, "verdict": "screen_table"}}}, walk)
+        for cells in ({"1,0": {"set": 1, "verdict": "neither"}},                          # set 1 outside the walk
+                      {"0,1": {"set": 2, "verdict": "screen_table"}}):                    # set 2 inside it
+            with self.assertRaises(ds.StoreRefusal) as e:
+                ds.check_arbitration_sets({"cells": {**self.GOOD_RECORD, **cells}}, walk)
+            self.assertEqual(e.exception.id, "material.d2_store_arbitration_set")
+
+    def test_the_two_fallbacks_are_counted_apart(self):
+        doc, _rec, _d = _sets_store(self.GOOD_RECORD, self._cells())
+        doc["grid"] = {"ps": [1e9, 3e9, 5e9], "ts": [1000.0, 1100.0, 1200.0]}
+        v = types.SimpleNamespace(d2_counts={}, _arb_screen=frozenset({"1,0"}))
+        ds.read_point(doc, 2e9, 1150.0, v)                                               # cell 0,1: set 1
+        ds.read_point(doc, 4e9, 1050.0, v)                                               # cell 1,0: set 2
+        ds.read_point(doc, 4e9, 1050.0, v)
+        self.assertEqual((v.d2_counts[ds.ARB_FALLBACK], v.d2_counts[ds.ARB_SCREEN]), (1, 2))
+
+
 class S5Marked(unittest.TestCase):
     """D2-read note 10 §2–§3 on a planted store (the real marked stores are pc/c8-part2/realstore's guard)."""
 

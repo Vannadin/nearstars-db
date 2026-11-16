@@ -177,6 +177,14 @@ def load(record_doc, compact, materials_dir, compact_sha256=None):
 
 
 ARBITRATED = MappingProxyType({"verdict": "keep_d2"})   # note 10 §2: the one mark
+#: note 10 §2's reason line on a set-1 cell the truth did not keep (the writer appends «: <verdict>»), and note 11 (d)'s
+#: on a set-2 screen_table cell; a fallback with source «arbitration» carries exactly one of them, and `was`
+ARB_REASON = "S5 arbitration (D2-read note 10): a STOP-touched cell the truth did not keep on D2"
+ARB_SCREEN_REASON = ("S5 screen (D2-read note 9 rule (d), A4 set 2): the table is nearer than g_solved at the cell's "
+                     "truth points")
+SCREEN_VERDICTS = ("screen_stays", "screen_table")      # note 11 (d): set 2's only verdicts
+ARB_FALLBACK = "d2: arbitration fallback (set 1) → table read"   # note 11 (d) 4: counted apart
+ARB_SCREEN = "d2: screen fallback (set 2) → table read"
 
 
 def is_arbitrated(doc):
@@ -216,7 +224,56 @@ def arbitration(doc, record_doc, materials_dir):
     if marked != keep:
         raise StoreRefusal("material.d2_store_chain", f"record {rid}: link 7 marks ≠ keep_d2: marked only "
                            f"{sorted(marked - keep)[:5]}, kept only {sorted(keep - marked)[:5]}")
+    check_arbitration_cells(doc, rec, rid)
     return rec
+
+
+def _arb_set(v):
+    """a record cell's set (note 11 (d)): 1 where the record carries none"""
+    return (v or {}).get("set", 1)
+
+
+def check_arbitration_cells(doc, rec, rid="?"):
+    """note 11 (d) 1 and 3 on the store's cells against the record: a set is 1 or 2, and set 2 takes only the screen's
+    verdicts (set 1 never does); a screen_table cell is written fallback with source «arbitration»; every fallback
+    with source «arbitration» carries `was` and exactly one arbitration reason line, the one its record cell names
+    (ARB_REASON: <verdict> on a set-1 cell not kept, ARB_SCREEN_REASON on set 2's screen_table)."""
+    cells = rec.get("cells") or {}
+    for k, v in cells.items():
+        s_, verdict = _arb_set(v), (v or {}).get("verdict")
+        if s_ not in (1, 2) or (s_ == 2) != (verdict in SCREEN_VERDICTS):
+            raise StoreRefusal("material.d2_store_arbitration_set", f"record {rid}: arbitration cell {k}: set {s_!r} "
+                               f"with verdict {verdict!r} (set 2 takes {SCREEN_VERDICTS} only, set 1 never)")
+        if verdict == "screen_table" and doc["cells"].get(k, {}).get("source") != "arbitration":
+            raise StoreRefusal("material.d2_store_arbitration_set", f"record {rid}: cell {k} is screen_table in the "
+                               "record but not an «arbitration» fallback in the store")
+    for k, c in doc["cells"].items():
+        if c.get("source") != "arbitration":
+            continue
+        v = cells.get(k)
+        s_, verdict = _arb_set(v), (v or {}).get("verdict")
+        if v is None or verdict == "keep_d2" or verdict == "screen_stays":
+            want = None
+        elif s_ == 2:
+            want = ARB_SCREEN_REASON
+        else:
+            want = f"{ARB_REASON}: {verdict}"
+        lines = [x for x in c.get("reasons") or ()
+                 if x.startswith((ARB_REASON, ARB_SCREEN_REASON[:30]))]   # the store's own reason lines, not a refusal
+        if want is None or "was" not in c or lines != [want]:
+            raise StoreRefusal("material.d2_store_class", f"record {rid}: «arbitration» fallback {k}: record verdict "
+                               f"{verdict!r} (set {s_!r}), `was` {'present' if 'was' in c else 'absent'}, arbitration "
+                               f"reason lines {lines!r}, not [{want!r}]")
+
+
+def check_arbitration_sets(rec, walk, rid="?"):
+    """note 11 (d) 2: every set-1 cell lies in the walk (today_cells' cells, whatever its class: `was` for a fallback,
+    a subgrid sliver cell too), every set-2 cell outside it — so no mark lies outside the walk (68 n1 on S5)."""
+    for k, v in (rec.get("cells") or {}).items():
+        inside = tuple(map(int, k.split(","))) in walk
+        if (_arb_set(v) == 1) != inside:
+            raise StoreRefusal("material.d2_store_arbitration_set", f"record {rid}: arbitration cell {k} is set "
+                               f"{_arb_set(v)} but {'inside' if inside else 'outside'} the walk")
 
 
 def check_contract(doc, rid="?"):
@@ -660,6 +717,8 @@ def check_edges(loaded, compact, record_doc):
     if got["stops"]:
         rid0, text = got["stops"][0]
         raise StoreRefusal(rid0, f"record {rid}: {text} ({len(got['stops'])} in all)")
+    if getattr(loaded, "arbitration", None):
+        check_arbitration_sets(loaded.arbitration, today_cells(doc, v), rid)
     return got
 
 
@@ -686,6 +745,9 @@ def read_point(doc, p, t, view=None):
     u, v = (p - box[0]) / (box[1] - box[0]), (t - box[2]) / (box[3] - box[2])
     cls = cell["class"]
     if cls in ("fallback", "limit"):
+        if cell.get("source") == "arbitration" and view is not None and hasattr(view, "d2_counts"):
+            key = ARB_SCREEN if f"{j},{k}" in getattr(view, "_arb_screen", ()) else ARB_FALLBACK
+            view.d2_counts[key] = view.d2_counts.get(key, 0) + 1
         return {"read": "table", "why": cls, "notes": ()}
     if cls in ("d2", "cut"):
         got = _surface(doc, cell, j, k, u, v, box, p, t)

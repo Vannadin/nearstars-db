@@ -36,12 +36,16 @@ SECTION_10 = (
     "rule 4 removed must fail a fixture coincident group with each edge covered by its own point.",
 )
 
-# D2-read post-freeze note 11's mutants of the old walk geometry, quoted (its «Mutants» list)
+# D2-read post-freeze notes 9 and 11: note 11's mutants (the old walk geometry; (d) set 2) and note 9's READ_G
 NOTE_11 = (
     "note 11: the (b′) stubs past interior run ends left out of the walk (the old walk extended only at true ends);",
     "note 11: the row steps left out of the walk;",
     "note 11: a run read across extended past its ends (the old walk's over-reach at a true end held by a run read "
     "across);",
+    "note 11 (d): a set-2 cell accepted inside the walk;",
+    "note 11 (d): a set-1 cell accepted outside the walk;",
+    "note 11 (d): an «arbitration» fallback accepted without `was` or its reason line.",
+    "note 9: form (ii)'s read back on the consistent G (READ_G «cons»);",
 )
 
 

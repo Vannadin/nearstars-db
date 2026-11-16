@@ -1532,6 +1532,12 @@ class AssemblageView(mv.RecordView):
         self.d2_counts["table_regardless_reads"] = 0
         self.d2_counts[_ds.FORCED_TABLE] = 0     # note 7: §5b (5) (iii)'s forced table reads
         self.d2_counts[_ds.ARB_TABLE] = 0        # note 10 §3: «not covered» in a marked cell
+        self.d2_counts[_ds.ARB_FALLBACK] = 0     # note 11 (d) 4: set 1's and set 2's «arbitration» fallbacks, apart
+        self.d2_counts[_ds.ARB_SCREEN] = 0
+        arb = getattr(store, "arbitration", None) if self._d2 is not None else None
+        #: note 11 (d): the set-2 screen_table cells of the store's arbitration record, for the counts' split
+        self._arb_screen = frozenset(k for k, c in ((arb or {}).get("cells") or {}).items()
+                                     if (c or {}).get("set", 1) == 2 and c.get("verdict") == "screen_table")
         self._parts, self._runcache = {}, {}
         #: PROTOTYPE: the highest frozen node T (rows above it hold no frozen run; _flag_reads' precheck)
         self._t_frozen_max = max((c["t"] for c in table["cells"] if c["kind"] == "frozen"), default=-math.inf)
@@ -1809,7 +1815,8 @@ class AssemblageView(mv.RecordView):
         «today» piece meets the store cell of (p, t) (d2_store.today_cells: the loader's own set, every event as
         boundary_pressure places it, row steps included), each with boundary_pressure's P_b at t wherever that lies. So
         the side follows the P_b the events use, and the events are the ones the loader's exemption counted. An event
-        with no P_b at t is left out."""
+        with no P_b at t is left out. The cell → events map is built once per view, lazily, on the first call
+        (`_today_cells`; the store and the position set are fixed for the view's life; 68 n3 on S5)."""
         from solver import d2_store as ds
         g = self._d2["grid"]
         j, k = ds._lower_cell(g["ps"], p), ds._lower_cell(g["ts"], t)
