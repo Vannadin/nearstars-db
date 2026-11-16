@@ -991,6 +991,13 @@ class ReadPieceS3(unittest.TestCase):
         self.assertEqual(v.d2_counts["table_regardless_reads"], 2)
         self.assertIsNone(v._d2)                                             # the dispatch is not entered
 
+    def test_the_run_record_header_lines(self):
+        """§5a: a run record built on a view in the mode carries `table_regardless: <tool>`; off, nothing."""
+        v = ma.view(self.rec, self.compact, 1600.0, store=self.store, table_regardless="note 33 re-read")
+        v.state(2e10, 2000.0)
+        self.assertEqual(ma.mode_header(v), {"table_regardless": "note 33 re-read", "table_regardless_reads": 1})
+        self.assertEqual(ma.mode_header(ma.view(self.rec, self.compact, 1600.0, store=self.store)), {})
+
     def test_counts_are_restored_by_quiet(self):
         v = ma.view(self.rec, self.compact, 1600.0, store=self.store)
         v.d2_counts[ds.NO_FIELD] = 3

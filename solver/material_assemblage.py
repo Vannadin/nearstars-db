@@ -3139,6 +3139,17 @@ def s_monotone_build(record, table):
 BLOCK_USES = ("position", "read")
 
 
+def mode_header(v):
+    """D2-read §5a «A run record built on such a view carries `table_regardless: <tool>` in its header»: the header
+    lines a run record writes for view `v`, {} when the mode is off. solve and run_oracle refuse a view in the mode
+    («material.table_regardless_in_solve»), so the one run record built on such a view is the re-read tool's (the
+    artifacts repo's bmcpp table_step, §5a), which writes these lines into its own header."""
+    tool = getattr(v, "table_regardless", None)
+    if not tool:
+        return {}
+    return {"table_regardless": tool, "table_regardless_reads": v.d2_counts["table_regardless_reads"]}
+
+
 def boundary_block(record, table, store, use):
     """The one switch over a record's boundaries (D2-read §5b (2); S0 stub, S1 routes it): `use` is «position» or
     «read». It returns the store's `edges` block only for «position» on a D2-routed record, and the compact's
