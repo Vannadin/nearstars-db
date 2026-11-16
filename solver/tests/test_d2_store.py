@@ -634,7 +634,7 @@ class ReadPieceS1(unittest.TestCase):
                     if e.get("p_b") == cut.rows[0]["p_b"]:
                         e["p_b"] = e["p_b"] + 0.1 * (r["p_hi"] - e["p_b"])
                         cls.moved = True
-        cls.store = ds.Loaded("eligible", {"edges": cls.edges}, "0" * 64)
+        cls.store = ds.Loaded("eligible", {"edges": cls.edges, "grid": {"ps": [], "ts": []}, "cells": {}}, "0" * 64)
 
     def routed(self, **kw):
         return ma.view(self.rec, self.compact, 1600.0, store=self.store, **kw)
@@ -715,7 +715,7 @@ class ReadPieceS1(unittest.TestCase):
         t_last = max(r["t"] for r in edges["rows"])
         edges["rows"] = [r for r in edges["rows"] if r["t"] != t_last]
         with self.assertRaises(ma.TableStop) as cm:
-            ma.view(self.rec, self.compact, 1600.0, store=ds.Loaded("eligible", {"edges": edges}, "0" * 64))
+            ma.view(self.rec, self.compact, 1600.0, store=ds.Loaded("eligible", {"edges": edges, "grid": {"ps": [], "ts": []}, "cells": {}}, "0" * 64))
         self.assertIn("curve id in one set only", str(cm.exception))
 
     def test_fall_sets_reads_the_store_blocks_extension_rows(self):
@@ -725,7 +725,7 @@ class ReadPieceS1(unittest.TestCase):
         comp["boundaries"]["extension"] = {"rows": [], "rule": {"ext_rows": 2}}
         t = self.compact["cells"][0]["t"]
         edges["extension"] = {"rows": [{"t": t, "curve_end_t": -1.0, "p_b": 7.77e9}], "rule": {"ext_rows": 2}}
-        v = ma.view(self.rec, comp, 1600.0, store=ds.Loaded("eligible", {"edges": edges}, "0" * 64))
+        v = ma.view(self.rec, comp, 1600.0, store=ds.Loaded("eligible", {"edges": edges, "grid": {"ps": [], "ts": []}, "cells": {}}, "0" * 64))
         pts = fall_sets._region_points(v, comp)["swap_extension"]
         self.assertTrue(any(abs(p / 7.77e9 - 1.0) < 1e-2 for p, _t in pts), pts[:4])
         v0 = ma.view(self.rec, comp, 1600.0)
@@ -769,6 +769,93 @@ class ReadPieceS1(unittest.TestCase):
             got = sv._assemblage_view(body, layer, KHAN, 0.0, R(), silicate=False)
         self.assertEqual(asked, [])
         self.assertIsNone(got[1])
+
+
+class ReadPieceS2(unittest.TestCase):
+    """S2 (D2-read §5, Q6, Q8, Q9): the class dispatch at the read's answer, s_path through it, the notes swapped."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.rec = thaw(reg().get(KHAN))
+        cls.compact = thaw(reg().tables[KHAN])
+        cls.store = ds.Loaded("eligible", {"edges": copy.deepcopy(cls.compact["boundaries"]), "grid": {}, "cells": {}},
+                              "0" * 64)
+        cls.pt = (2.0e10, 2000.0)
+
+    def routed(self):
+        return ma.view(self.rec, self.compact, 1600.0, store=self.store)
+
+    def test_a_table_answer_reads_today_bit_for_bit(self):
+        from unittest import mock
+        plain = ma.view(self.rec, self.compact, 1600.0)
+        v = self.routed()
+        with mock.patch.object(ds, "read_point", lambda doc, p, t, view=None: {"read": "table", "why": "fallback", "notes": ()}):
+            self.assertEqual(repr(v.state(*self.pt)), repr(plain.state(*self.pt)))
+            self.assertEqual(repr(v.s_path(*self.pt)), repr(plain.s_path(*self.pt)))
+
+    def test_a_d2_answer_is_the_read_and_carries_its_class_note_not_the_tables_bands(self):
+        from unittest import mock
+        v = self.routed()
+        ans = {"read": "d2", "field": "f", "values": {"rho": 4321.0, "s": 2500.0, "c_p": 1200.0, "dtdp": 2.5e-8},
+               "notes": (("d2", ds.D2_NOTE),)}
+        with mock.patch.object(ds, "read_point", lambda doc, p, t, view=None: ans):
+            got = v._solid(*self.pt)
+            self.assertEqual(got[:3], (4321.0, 2.5e-8, 1200.0))
+            self.assertEqual(len(got[3]), 4)                  # Q9: the table's four corner cells stay
+            out = v.state(*self.pt)
+        texts = [getattr(n, "text", None) or str(n) for n in out[2]]
+        self.assertTrue(any(ds.D2_NOTE in t for t in texts), texts)
+        self.assertFalse(any("dT/dP model consistency" in t for t in texts), texts)
+
+    def test_s_path_on_a_surface_and_inside_a_sliver(self):
+        """Q6: Dual(s, −P·G_PT, −G_TT); Q8: Dual(s, −P·α/ρ, c_P/T)."""
+        from unittest import mock
+        v = self.routed()
+        p_, t_ = self.pt
+        with mock.patch.object(ds, "s_parts", lambda doc, p, t: ("surface", 2500.0, -3e-12, -0.6)):
+            d = v.s_path(p_, t_)
+            self.assertEqual((d.v, d.dx, d.dt) if hasattr(d, "dx") else tuple(d), (2500.0, -p_ * -3e-12, 0.6))
+        with mock.patch.object(ds, "s_parts", lambda doc, p, t: ("sliver", 2500.0, 4000.0, 3e-5, 1200.0)):
+            d = v.s_path(p_, t_)
+            self.assertEqual((d.v, d.dx, d.dt) if hasattr(d, "dx") else tuple(d),
+                             (2500.0, -p_ * 3e-5 / 4000.0, 1200.0 / t_))
+
+    def test_q8_ratio_on_the_fixture_subgrid_stores(self):
+        """Q8: −(∂s/∂P)/(∂s/∂T) from s_path's parts against the read's dT/dP on ea's subgrid fixture stores. Registered
+        «bit for bit»; measured ≤ 3 ulp (two roundings in the Dual's slopes), raised with 68 (S2). Held at 3 ulp here."""
+        import random
+        import struct
+        ulp = lambda a, b: abs(struct.unpack("<q", struct.pack("<d", a))[0] - struct.unpack("<q", struct.pack("<d", b))[0])  # noqa: E731
+        base = Path(__file__).resolve().parent / "fixtures" / "d2_reference" / "stores"
+        for name in ("subgrid", "subgrid_reversed"):
+            doc = json.loads(gzip.decompress((base / f"{name}.json.gz").read_bytes()))
+            ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
+            rnd, n = random.Random(1), 0
+            for _ in range(4000):
+                p_, t_ = rnd.uniform(ps[0], ps[-1]), rnd.uniform(ts[0], ts[-1])
+                r = ds.read_point(doc, p_, t_)
+                if r["read"] != "subgrid":
+                    continue
+                _k, s_, rho, a, cp = ds.s_parts(doc, p_, t_)
+                self.assertEqual(s_, r["values"]["s"])
+                self.assertLessEqual(ulp(-(-p_ * a / rho / p_) / (cp / t_), r["values"]["dtdp"]), 3)
+                n += 1
+            self.assertGreater(n, 10, name)
+
+    def test_the_no_field_count(self):
+        base = Path(__file__).resolve().parent / "fixtures" / "d2_reference" / "stores"
+        doc = json.loads(gzip.decompress((base / "d2_fieldless.json.gz").read_bytes()))
+        v = types.SimpleNamespace(d2_counts={ds.NO_FIELD: 0})
+        ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
+        hits = 0
+        for j in range(len(ps) - 1):
+            for k in range(len(ts) - 1):
+                for a in (0.05, 0.25, 0.5, 0.75, 0.95):
+                    for b in (0.05, 0.25, 0.5, 0.75, 0.95):
+                        r = ds.read_point(doc, ps[j] + a * (ps[j + 1] - ps[j]), ts[k] + b * (ts[k + 1] - ts[k]), v)
+                        hits += r.get("why") == ds.NO_FIELD
+        self.assertGreater(hits, 0)
+        self.assertEqual(v.d2_counts[ds.NO_FIELD], hits)
 
 if __name__ == "__main__":
     unittest.main()

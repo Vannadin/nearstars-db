@@ -542,31 +542,15 @@ def read_point(doc, p, t, view=None):
     cls = cell["class"]
     if cls in ("fallback", "limit"):
         return {"read": "table", "why": cls, "notes": ()}
-    if cls == "d2":
-        ok = {}
-        for f in cell["surfaces"]:
-            cs = _corners(doc, f, j, k)
-            if _lowest_mode(cs, u, v) >= 0.0:
-                ok[f] = cs
-        if not ok:
+    if cls in ("d2", "cut"):
+        got = _surface(doc, cell, j, k, u, v, box, p, t)
+        if got is None:
             if view is not None and hasattr(view, "d2_counts"):
                 view.d2_counts[NO_FIELD] = view.d2_counts.get(NO_FIELD, 0) + 1
             return {"read": "table", "why": NO_FIELD, "notes": ()}
-        f = min(ok, key=lambda x: _hermite_g(ok[x], *box, p, t, 0, 0, "solved"))
-        return {"read": "d2", "field": f, "values": _g_values(ok[f], box, p, t), "notes": (("d2", D2_NOTE),)}
-    if cls == "cut":
-        c = cell["cut"]
-        (x1, y1), (x2, y2) = c["points"]
-        cross = lambda uu, vv: (x2 - x1) * (vv - y1) - (y2 - y1) * (uu - x1)  # noqa: E731
-        a0 = c["a_corners"][0]
-        if cross(u, v) * math.copysign(1.0, cross(*a0)) > 0:      # A's side: A's nodes, A's virtual nodes at B's corners
-            f = c["a"]
-            nodes = doc["fields"][f]["nodes"]
-            cs = [_corner(c["a_virtual"].get(f"{j + i},{k + l}") or nodes[f"{j + i},{k + l}"]) for i, l in CORNERS]
-        else:
-            f = c["b"]
-            cs = _corners(doc, f, j, k)
-        return {"read": "cut", "field": f, "values": _g_values(cs, box, p, t), "notes": (("cut", CUT_NOTE),)}
+        f, cs = got
+        return {"read": cls, "field": f, "values": _g_values(cs, box, p, t),
+                "notes": ((cls, D2_NOTE if cls == "d2" else CUT_NOTE),)}
     # subgrid (note 17 §2.5 as note 19 amends it): u along the sides, w across; lines linear in w; inside the sliver
     # the w-blend of the two sides' Lagrange quadratics; outside it the table
     s0, s1 = sorted(cell["sides"], key=lambda sd: min(map(tuple, sd["nodes"])))
@@ -586,6 +570,62 @@ def read_point(doc, p, t, view=None):
     vals["dtdp"] = t * vals["alpha"] / (vals["rho"] * vals["c_p"])        # T·α/(ρ·c_P), never differentiated
     return {"read": "subgrid", "field": s0["C"], "values": vals, "notes": (("subgrid", SUBGRID_NOTE),)}
 
+
+def _surface(doc, cell, j, k, u, v, box, p, t):
+    """(field, corners) of a d2 or cut cell at (u, v), or None for a d2 cell with no field left (§5, the reference's
+    order): d2 — among `surfaces` with every bilinear mode ≥ 0, the lowest solved G; cut — the cross product's side,
+    A's nodes with A's virtual nodes at B's corners on A's side, B's own nodes on B's."""
+    if cell["class"] == "d2":
+        ok = {}
+        for f in cell["surfaces"]:
+            cs = _corners(doc, f, j, k)
+            if _lowest_mode(cs, u, v) >= 0.0:
+                ok[f] = cs
+        if not ok:
+            return None
+        f = min(ok, key=lambda x: _hermite_g(ok[x], *box, p, t, 0, 0, "solved"))
+        return f, ok[f]
+    c = cell["cut"]
+    (x1, y1), (x2, y2) = c["points"]
+    cross = lambda uu, vv: (x2 - x1) * (vv - y1) - (y2 - y1) * (uu - x1)  # noqa: E731
+    a0 = c["a_corners"][0]
+    if cross(u, v) * math.copysign(1.0, cross(*a0)) > 0:
+        f = c["a"]
+        nodes = doc["fields"][f]["nodes"]
+        return f, [_corner(c["a_virtual"].get(f"{j + i},{k + l}") or nodes[f"{j + i},{k + l}"]) for i, l in CORNERS]
+    return c["b"], _corners(doc, c["b"], j, k)
+
+
+def s_parts(doc, p, t):
+    """The s read's parts at (p, t) through the same dispatch (Q6, Q8), or None where the table's s_path applies:
+    ("surface", s, G_PT, G_TT) on d2 and cut (consistent-G form (ii)); ("sliver", s, rho, alpha, c_p) inside a subgrid
+    sliver (the read's own blend, Q8). The view builds Dual(s, −P·G_PT, −G_TT) or Dual(s, −P·α/ρ, c_P/T) from them."""
+    r = read_point(doc, p, t)
+    if r["read"] == "table":
+        return None
+    if r["read"] == "subgrid":
+        v = r["values"]
+        return ("sliver", v["s"], v["rho"], v["alpha"], v["c_p"])
+    ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
+    j, k = _lower_cell(ps, p), _lower_cell(ts, t)
+    box = (ps[j], ps[j + 1], ts[k], ts[k + 1])
+    u, v = (p - box[0]) / (box[1] - box[0]), (t - box[2]) / (box[3] - box[2])
+    _f, cs = _surface(doc, doc["cells"][f"{j},{k}"], j, k, u, v, box, p, t)
+    return ("surface", -_hermite_g(cs, *box, p, t, 0, 1, "cons"), _hermite_g(cs, *box, p, t, 1, 1, "cons"),
+            _hermite_g(cs, *box, p, t, 0, 2, "cons"))
+
+
+
+def s_slopes(doc, p, t):
+    """(s, ∂s/∂lnP, ∂s/∂T) at (p, t) through the dispatch, load-free, or None where the table's s path applies: the
+    numbers the view's s_path puts in its Dual (Q6: −P·G_PT, −G_TT; Q8: −P·α/ρ, c_P/T)."""
+    sp = s_parts(doc, p, t)
+    if sp is None:
+        return None
+    if sp[0] == "surface":
+        return sp[1], -p * sp[2], -sp[3]
+    _k, s_, rho, alpha, cp = sp
+    return s_, -p * alpha / rho, cp / t
 
 # ── the port's arithmetic (the reference reader's, in its order) ─────────────────────────────────────────────────────
 CORNERS = ((0, 0), (1, 0), (0, 1), (1, 1))

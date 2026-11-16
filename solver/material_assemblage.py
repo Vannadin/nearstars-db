@@ -1518,6 +1518,11 @@ class AssemblageView(mv.RecordView):
         #: T span, so a `force` {curve: side} given on position curves (coexist's side reads, from transitions' ids)
         #: forces the read's own curve. None when unrouted (one set). A run in one set only is a refusal by name.
         self._pos_read = None if self._pos is rs else _pos_to_read(self._pos.events, rs.events)
+        #: the class dispatch's store document (D2-read §5): set only on a D2-routed view outside table-regardless mode
+        self._d2 = None if (table_regardless or store is None) else getattr(store, "doc", store)
+        self._d2_last = None                     # the last _solid's D2 answer (state() swaps the notes, Q9), or None
+        from solver import d2_store as _ds
+        self.d2_counts = {n: 0 for n in _ds.COUNT_NAMES}    # §6's run-time counts (S3 fills the other three)
         self._parts, self._runcache = {}, {}
         #: PROTOTYPE: the highest frozen node T (rows above it hold no frozen run; _flag_reads' precheck)
         self._t_frozen_max = max((c["t"] for c in table["cells"] if c["kind"] == "frozen"), default=-math.inf)
@@ -1582,7 +1587,32 @@ class AssemblageView(mv.RecordView):
                                 f"above the table's last T node {self.ts[-1]:g} K (grid_end)")
         if p > self.p_dataset:
             return self._taper(p, t)
+        if self._d2 is not None:                 # D2-read §5: the class dispatch at the read's answer
+            got = self._d2_read(p, t)
+            if got is not None:
+                return got
         return self._table_read(p, t)
+
+    def _d2_read(self, p, t):
+        """(ρ, dT/dP, c_P, cells) from the store's class at (P, T), or None where the class reads the table (fallback,
+        limit, no entry, outside the grid, a d2 cell with no field left, a subgrid read outside its sliver). `cells`
+        stays the table's four corner cells (Q9: the above_solidus note is the state's, not the read's)."""
+        from solver import d2_store as ds
+        r = ds.read_point(self._d2, p, t, self)
+        self._d2_last = None
+        if r["read"] == "table":
+            return None
+        v = r["values"]
+        pr = max(p, self.ps[0])
+        ia = min(max(bisect.bisect_left(self.ps, pr, 1) - 1, 0), len(self.ps) - 2)
+        ib = min(max(int((t - self.ts[0]) // (self.ts[1] - self.ts[0])), 0), len(self.ts) - 2)
+        while self.ts[ib] > t:
+            ib -= 1
+        while self.ts[ib + 1] < t:
+            ib += 1
+        corners = [self._cell(a, b) for a in (ia, ia + 1) for b in (ib, ib + 1)]
+        self._d2_last = r
+        return v["rho"], v["dtdp"], v["c_p"], [c for c in corners if c is not None]
 
     def _lifted(self, p, t):
         """The SLB-extrapolated read in the taper zone: the same read with the column cut lifted to the zone's end
@@ -1765,7 +1795,15 @@ class AssemblageView(mv.RecordView):
     def s_path(self, p, t, force=None):
         """The s read at (p, t) with its exact derivatives (s-read §3.0): a Dual (s, ∂s/∂lnP, ∂s/∂T); None when the
         read's stencil holds a frozen node (§3.2: today's read stands there); or a Stop. Leaves no note, count, mark or
-        memo on the view. `force` {curve: side}: a swap's side read (§3.1)."""
+        memo on the view. `force` {curve: side}: a swap's side read (§3.1).
+        On a D2-routed view the class dispatch comes first (D2-read Q6, Q8): d2 and cut give Dual(s, −P·G_PT, −G_TT) of
+        the field's consistent-G surface; inside a subgrid sliver Dual(s, −P·α/ρ, c_P/T) of the read's own blend; every
+        other class reads the table's s path below."""
+        if self._d2 is not None:
+            from solver import d2_store as ds
+            got = ds.s_slopes(self._d2, p, t)
+            if got is not None:
+                return Dual(*got)
         pr = max(p, self.ps[0])
         ia = min(max(bisect.bisect_left(self.ps, pr, 1) - 1, 0), len(self.ps) - 2)
         ib = min(max(bisect.bisect_right(self.ts, t) - 1, 0), len(self.ts) - 2)
@@ -2700,13 +2738,19 @@ class AssemblageView(mv.RecordView):
                 rho, g, _ = _lm().silicate_melt_mix(pe, t, self.variant, None, None, None)
                 self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID, LIQUID_ALONE_NOTE))
                 return (rho, g, tuple(self.notes))
+            self._d2_last = None
             got = self._solid(pe, t)
             if isinstance(got, st.Stop):            # the refusal names the solver's P, not the clamped read (ea F4)
                 r = got.record
                 return self._refuse(p, t, r.refusal, r.why if pe == p else f"{r.why} (read at {pe:g} Pa)")
             rho_s, g_s, cp_s, cells = got
-            self._cell_notes(cells, p, t, band=pe <= self.p_dataset)
-            self._term_notes(pe, t, rho_s, g_s, cp_s)
+            d2 = self._d2_last                       # Q9: a D2 answer carries its class's note, not the table's bands
+            self._cell_notes(cells, p, t, band=pe <= self.p_dataset and d2 is None)
+            if d2 is None:
+                self._term_notes(pe, t, rho_s, g_s, cp_s)
+            else:
+                for _code, text in d2["notes"]:
+                    self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID, text))
             rho, g, _ = _lm().silicate_melt_mix(pe, t, self.variant, rho_s, g_s, cp_s)
             seam = _lm().window_seam_note(self.material_id, pe, t, self.variant)   # melt-window registration B2/B4
             if seam is not None:
