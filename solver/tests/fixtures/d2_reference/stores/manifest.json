@@ -2,7 +2,7 @@
  "contract_test_blob": "ea8438d7bf6d54b3c69653c7f62ff51a334e76b3",
  "generator": "rewrite/phase2-records/bmcpp/gen_d2read_fixtures.py",
  "generator_blob": "c2766b25840f1a4fc6136411d57e61de742c17c5",
- "reference_reader_blob": "11e4430838459417454a87fc2d8ec27775007fd7",
+ "reference_reader_blob": "59b2f27e7d11178f1fbd90eb116370925f2bc054",
  "stores": {
   "cut": {
    "classes": [

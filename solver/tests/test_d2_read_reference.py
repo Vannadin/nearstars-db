@@ -2,7 +2,7 @@
 """python -B -m unittest solver.tests.test_d2_read_reference   (gate Python, engine root)
 
 D2-read rev 7 §9 item 1 and the deferred corners/centre check (map rows c8-12, c8-14). Inputs, pinned here:
-- the reference reader, vendored from artifacts rewrite/phase2-records/bmcpp/d2_store_reader.py at blob 11e44308;
+- the reference reader, vendored from artifacts rewrite/phase2-records/bmcpp/d2_store_reader.py at blob 59b2f27e (the g_solved amendment, artifacts ea-gsolved-reader 282a4f871);
 - the contract test's fixture stores, written by artifacts gen_d2read_fixtures.py (manifest.json names its blob, the
   contract test's and the reader's), each pinned by sha256.
 The engine's own comparison (`test_engine_read_equals_the_reference`) is an expected failure while read_point is S0's
@@ -20,7 +20,7 @@ from solver.landing import d2_read_compare as dc
 FIX = Path(__file__).resolve().parent / "fixtures" / "d2_reference"
 READER = FIX / "d2_store_reader.py"
 STORES = FIX / "stores"
-READER_BLOB = "11e4430838459417454a87fc2d8ec27775007fd7"
+READER_BLOB = "59b2f27e7d11178f1fbd90eb116370925f2bc054"
 SHA256 = {                                    # gen_d2read_fixtures.py's output, as committed
     "d2": "d398b8c61b3e2107", "d2_fieldless": "f825de28807ec5b4", "fallback": "874f52f54539ded1",
     "cut": "c0074fc059cecff2", "cut_a_virtual": "2f4ab0006ab7eb89", "subgrid": "84f48ac867abc1ab",

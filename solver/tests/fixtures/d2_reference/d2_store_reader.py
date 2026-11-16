@@ -92,9 +92,15 @@ def _min_mode(cs, u, v):
     return min(sum(wi * c["amounts"][q] for wi, c in zip(w, cs)) for q in range(len(cs[0]["amounts"])))
 
 
+#: form (ii)'s corner G for the read's values (the g_solved amendment, owner's decision pending; c8 76899fb0's READ_G):
+#: the corners' solved G. The consistent set's offsets between corners bend the bicubic near label changes (A4, 11-17);
+#: the field choice was already on the solved G
+READ_G = "solved"
+
+
 def _values(cs, box, p, t):
-    gp, gt = _g(cs, *box, p, t, 1, 0, "cons"), _g(cs, *box, p, t, 0, 1, "cons")
-    gpp, gtt, gpt = _g(cs, *box, p, t, 2, 0, "cons"), _g(cs, *box, p, t, 0, 2, "cons"), _g(cs, *box, p, t, 1, 1, "cons")
+    gp, gt = _g(cs, *box, p, t, 1, 0, READ_G), _g(cs, *box, p, t, 0, 1, READ_G)
+    gpp, gtt, gpt = _g(cs, *box, p, t, 2, 0, READ_G), _g(cs, *box, p, t, 0, 2, READ_G), _g(cs, *box, p, t, 1, 1, READ_G)
     return {"rho": 1.0 / gp, "s": -gt, "c_p": -t * gtt, "dtdp": -gpt / gtt if gtt else math.nan}
 
 
