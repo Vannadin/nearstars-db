@@ -642,8 +642,8 @@ def s_parts(doc, p, t, forced=None):
         _f, cs = _cut_corners(doc, doc["cells"][f"{j},{k}"], j, k, fs[0])
     else:
         _f, cs = _surface(doc, doc["cells"][f"{j},{k}"], j, k, u, v, box, p, t)
-    return ("surface", -_hermite_g(cs, *box, p, t, 0, 1, "cons"), _hermite_g(cs, *box, p, t, 1, 1, "cons"),
-            _hermite_g(cs, *box, p, t, 0, 2, "cons"))
+    return ("surface", -_hermite_g(cs, *box, p, t, 0, 1, READ_G), _hermite_g(cs, *box, p, t, 1, 1, READ_G),
+            _hermite_g(cs, *box, p, t, 0, 2, READ_G))
 
 
 
@@ -770,10 +770,16 @@ def _lowest_mode(cs, u, v):
     return min(sum(wi * c["amounts"][q] for wi, c in zip(w, cs)) for q in range(len(cs[0]["amounts"])))
 
 
+#: form (ii)'s corner G for the read's values and s slopes (s3-d2 §4 and D2-read §5 as amended by the g_solved note):
+#: the corners' solved G. The consistent set's per-run anchors and row offsets jump between corners near label changes
+#: and bend the bicubic (ea, 11-16: 540 non-STOP cells past a band); the field choice was already on the solved G
+READ_G = "solved"
+
+
 def _g_values(cs, box, p, t):
-    gp, gt = _hermite_g(cs, *box, p, t, 1, 0, "cons"), _hermite_g(cs, *box, p, t, 0, 1, "cons")
-    gpp, gtt, gpt = (_hermite_g(cs, *box, p, t, 2, 0, "cons"), _hermite_g(cs, *box, p, t, 0, 2, "cons"),
-                     _hermite_g(cs, *box, p, t, 1, 1, "cons"))
+    gp, gt = _hermite_g(cs, *box, p, t, 1, 0, READ_G), _hermite_g(cs, *box, p, t, 0, 1, READ_G)
+    gpp, gtt, gpt = (_hermite_g(cs, *box, p, t, 2, 0, READ_G), _hermite_g(cs, *box, p, t, 0, 2, READ_G),
+                     _hermite_g(cs, *box, p, t, 1, 1, READ_G))
     return {"rho": 1.0 / gp, "s": -gt, "c_p": -t * gtt, "dtdp": -gpt / gtt if gtt else math.nan}
 
 
