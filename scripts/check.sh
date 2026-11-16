@@ -1351,6 +1351,8 @@ step "test_run_oracle.py" bash -c 'exec python3 -m unittest solver/tests/test_ru
 step "test_d2_store.py" bash -c 'exec python3 -m unittest solver/tests/test_d2_store.py'
 # 인계 블록 ↔ 그 SLB 기록 압축표 짝(prereg-bmcpp 노트 8 §3.4, L-needs C6a) — 파일만 읽음(yaml·gz 표), 레지스트리 적재 없음. ~1 s.
 step "test_handover_blocks.py" bash -c 'exec python3 -m unittest solver/tests/test_handover_blocks.py'
+# 표 무관 읽기 방식의 정상 경로 거절(D2 읽기 등록 §5a) — 그 방식의 view 가 solve·run_oracle 에 닿으면 이름 대어 거절, 끈 경로는 그대로. 맥 ~3 초
+step "test_d2_table_regardless.py" bash -c 'exec python3 -m unittest solver/tests/test_d2_table_regardless.py'
 step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
 step "test_convergence_meaning.py" bash -c 'cd engine && exec python3 test_convergence_meaning.py'
 step "test_rootfind.py" bash -c 'cd engine && exec python3 test_rootfind.py'

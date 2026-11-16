@@ -209,6 +209,14 @@ _CORE = (
           "핵 사격 접힘의 상태가 둘 이상이고 F12 훑기가 못 골랐다 — T_pot {t_pot} K, 상태 {states}: {why} (훑기 {sweep})"),
 )
 
+#: The read's own lane refusals (D2-read rev 7 §5a): a view in the table-regardless mode reaching a normal lane. Their
+#: own group, after _CORE.
+_MATERIAL = (
+    Entry("material.table_regardless_in_solve", ("layer_id", "material_id", "tool"),
+          "층 '{layer_id}' 의 물질 기록 '{material_id}' 을(를) 표 무관 읽기 방식(«{tool}»)의 view 로 풀려 한다 — 그 방식은 "
+          "재읽기 도구만 켜고, 정상 경로는 이름 대어 거절한다 (D2 읽기 등록 §5a)"),
+)
+
 #: NoAnswer evidence sets (D-A3-2). `unconverged`: b9's set; GridExceeded maps to MAX_STEPS_SOLVE (r2 N3).
 #: NODE_ITERATE_PASSES: `iterate.max_passes` of a chain node on a cycle (node-contract.frozen.md §3). Appended at the end.
 NO_ANSWER_BUDGETS = ("CLOSE_ITERS", "MAX_STEPS_SOLVE", "WALL_SHOTS", "MAX_SPLITS", "NODE_ITERATE_PASSES")
@@ -246,7 +254,7 @@ def _solve_entry(e):
                  tuple(f for f in SOLVE_OPTIONAL if not (req and f == "state")) + e.optional, e.preamble, solve=True)
 
 
-REGISTRY = _index(tuple(_solve_entry(e) for e in _SOLVE) + _INPUT + _NODE + _CORE)
+REGISTRY = _index(tuple(_solve_entry(e) for e in _SOLVE) + _INPUT + _NODE + _CORE + _MATERIAL)
 NO_ANSWER_REGISTRY = _index(_NO_ANSWER)
 if tuple(NO_ANSWER_REGISTRY) != NO_ANSWER_REASONS:      # not an assert: it must hold under python -O too
     raise ImportError("NoAnswer registry and NO_ANSWER_REASONS disagree")

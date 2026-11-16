@@ -116,7 +116,8 @@ ADDED_AFTER_C1 = {"input.no_table_for_composition": "silicate step 4 aa48d1bf",
                   "input.bulk_core_light": "layers S1 §3, LAYERS-S1-NOTES n2 (engine/layers-s1-c8 9c4ea96b)",
                   "input.bulk_volatile_layer": "layers S1 §3 (engine/layers-s1-c8 9c4ea96b)",
                   "input.bulk_needs_silicate_records": "layers S1 §3 / design §3 (engine/layers-s1-c8 9c4ea96b)",
-                  "input.bulk_no_mantle": "layers S1 note 1 §7, 68 B1 on 9c4ea96b (engine/layers-s1-c8 42c1edfd)"}
+                  "input.bulk_no_mantle": "layers S1 note 1 §7, 68 B1 on 9c4ea96b (engine/layers-s1-c8 42c1edfd)",
+                  "material.table_regardless_in_solve": "D2-read §5a, read piece S3 (engine/d2-trsolve-fable)"}
 #: NoAnswer reasons added after C1, the same way; C1's PARENT_NO_ANSWER_IDS stay pinned.
 ADDED_NO_ANSWER_AFTER_C1 = {"core_fold_budget": "core-tc-fold C4 (engine/tc-fold-c8)"}
 

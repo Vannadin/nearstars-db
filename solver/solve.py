@@ -393,7 +393,14 @@ def _assemblage_view(body, layer, rid, p_stop, registry, silicate=True):
     store = registry.d2_store(rid) if (silicate and hasattr(registry, "d2_store")) else None
     if isinstance(store, mr.LoadStop):
         return None, ("record_unavailable", (rid, store))
-    return ma.view(thaw(got), table, body.surface.t_pot or 0.0, p_stop, floor, ho, store), None
+    return _refuse_table_regardless(ma.view(thaw(got), table, body.surface.t_pot or 0.0, p_stop, floor, ho, store), rid)
+
+
+def _refuse_table_regardless(v, rid):
+    """(v, None), or (None, why) for a view in the table-regardless mode (D2-read §5a): the mode is the re-read tool's
+    alone, so a normal lane refuses it by name («material.table_regardless_in_solve»), never reads through it."""
+    tool = getattr(v, "table_regardless", None)
+    return (None, ("table_regardless_in_solve", (rid, tool))) if tool else (v, None)
 
 
 def _silicate_route(body, layer, on_me, p_stop, registry):
@@ -596,6 +603,9 @@ def _view_refusal(body, l, fail):
                              load_stop=stop.id, detail=result.plain(dict(stop.evidence)))
     if kind_ == "unknown_material":
         return refusals.make("input.unknown_material", where, layer_id=l.id, material=l.material)
+    if kind_ == "table_regardless_in_solve":         # D2-read §5a
+        rid, tool = detail
+        return refusals.make("material.table_regardless_in_solve", where, layer_id=l.id, material_id=rid, tool=tool)
     if kind_ == "no_table_for_composition":          # layers S2 §2.1: the detail carries the build request third
         key, built, req = detail
         return refusals.make("input.no_table_for_composition", where, layer_id=l.id, composition_key=key,
