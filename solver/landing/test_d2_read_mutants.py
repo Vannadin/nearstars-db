@@ -146,6 +146,21 @@ class Runner(unittest.TestCase):
         self.assertEqual(rc, 2, lines)
         self.assertEqual(lines[-1], "STOP: baseline solver.test_mod: setUpClass red, which masks every test under it")
 
+    def test_a_mutant_caught_only_by_a_fixture_fails(self):
+        (self.root / "solver/test_mod.py").write_text(TEST + "\n\nclass U(unittest.TestCase):\n    @classmethod\n"
+                                                       "    def setUpClass(cls):\n        assert mod.f() is not None\n\n"
+                                                       "    def test_u(self):\n        pass\n")
+        subprocess.run(["git", "-C", str(self.root), "add", "--", "solver"], check=True)
+        breaks = ("X6", "S0", "f raises", [("solver/mod.py", "return 1", "raise RuntimeError('x')")], ["solver.test_mod"])
+        rc, lines = self.run_with((breaks,))                        # a named test with the fixture: caught by the name
+        self.assertEqual(rc, 0, lines)
+        self.assertIn("X6 (S0): rc 1 · caught by test_f_is_one — f raises", lines)
+        fix_only = ("X7", "S0", "only the fixture", [("solver/mod.py", "return 1", "return None")], ["solver.test_mod.U"])
+        rc, lines = self.run_with((fix_only,))
+        self.assertEqual(rc, 1, lines)
+        self.assertEqual([ln for ln in lines if ln.startswith("X7 ")][0].split(" · ", 1)[1],
+                         "caught only by a fixture: setUpClass — only the fixture")   # rc 5: no test ran
+
     def test_an_anchor_not_found_once_stops(self):
         gone = ("X5", "S0", "no anchor", [("solver/mod.py", "return 9", "return 2")], ["solver.test_mod"])
         rc, lines = self.run_with((gone,))

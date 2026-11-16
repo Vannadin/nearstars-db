@@ -9,7 +9,8 @@ under this interpreter, and the failing tests are printed by name. The copy is r
 Baseline control: each distinct module set is first run unmutated on the copy. A mutant is caught only by tests that
 pass there and fail mutated; tests already red at baseline are printed once («baseline red») and never count. A class
 or module fixture red at baseline (setUpClass, setUpModule and their tear-downs) masks every test under it, so it is a
-STOP, never «caught by nothing» (68 on 337151ac).
+STOP, never «caught by nothing» (68 on 337151ac). A mutant whose only new failures are such fixtures is caught by no
+named test: printed «caught only by a fixture» and failed (68 n2 on 09e425c9).
 
 --python-wrapper SCRIPT (c8 11-16): each module set runs as `python -B SCRIPT <modules>` instead of `python -B -m
 unittest <modules>`, baseline and mutants alike; the script is a named double that ends in unittest.main (e.g. c8's
@@ -191,9 +192,13 @@ def main(argv, root=".", mutants=MUTANTS, out=print):
                 for f, text in saved.items():
                     (work / f).write_text(text, encoding="utf-8")
             new = [t for t in failed if t not in base[tuple(modules)]]
-            if new:
+            named = [t for t in new if t not in FIXTURES]
+            if named:
                 caught += 1
-                out(f"{mid} ({slice_}): rc {rc} · caught by {', '.join(new)} — {item}")
+                out(f"{mid} ({slice_}): rc {rc} · caught by {', '.join(named)} — {item}")
+            elif new:
+                missed += 1
+                out(f"{mid} ({slice_}): rc {rc} · caught only by a fixture: {', '.join(new)} — {item}")
             else:
                 missed += 1
                 out(f"{mid} ({slice_}): rc {rc} · caught by NOTHING — {item}")
