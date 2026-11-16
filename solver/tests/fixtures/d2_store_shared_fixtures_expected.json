@@ -1,5 +1,5 @@
 {
- "fixtures": "solver/tests/test_d2_store.py shared_fixtures(), the planted inputs of ea-bmcpp-l eb7888474 test_d2_store_checks.py (blob 100a9061); and real_fixtures(): three fixtures built through ma.view on a planted block over the khan compact (68 B1 and n1 on 039c875b)",
+ "fixtures": "solver/tests/test_d2_store.py shared_fixtures(), the planted inputs of ea-bmcpp-l eb7888474 test_d2_store_checks.py (blob 100a9061); and real_fixtures(): three fixtures built through ma.view on a planted block over the khan compact (68 B1 and n1 on 039c875b; the joining-segment and coincident-extension verdicts as D2-read post-freeze note 11's walk gives them: the events boundary_pressure places, row steps included)",
  "how": "python -B -c \"from solver.tests import test_d2_store as t; print(t.stop_sets())\"",
  "stop_sets": {
   "coincident_pair_split_next_to_d2": [
@@ -59,11 +59,43 @@
   "real_coincident_pair_extension": [
    [
     "material.d2_store_today_row",
+    "(12, 2)"
+   ],
+   [
+    "material.d2_store_today_row",
+    "(12, 2)"
+   ],
+   [
+    "material.d2_store_today_row",
+    "(12, 2)"
+   ],
+   [
+    "material.d2_store_today_row",
+    "(12, 2)"
+   ],
+   [
+    "material.d2_store_today_row",
     "(12, 3)"
    ],
    [
     "material.d2_store_today_row",
     "(12, 3)"
+   ],
+   [
+    "material.d2_store_today_row",
+    "(12, 4)"
+   ],
+   [
+    "material.d2_store_today_row",
+    "(12, 4)"
+   ],
+   [
+    "material.d2_store_today_row",
+    "(12, 4)"
+   ],
+   [
+    "material.d2_store_today_row",
+    "(12, 4)"
    ]
   ],
   "real_coincident_pair_no_extension": [
@@ -95,7 +127,7 @@
   "real_joining_segment_cut_to_across": [
    [
     "material.d2_store_today_row",
-    "(11, 2)"
+    "(10, 2)"
    ]
   ],
   "rev3_three_columns_between_two_rows": [

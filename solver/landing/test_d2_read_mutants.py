@@ -36,11 +36,19 @@ SECTION_10 = (
     "rule 4 removed must fail a fixture coincident group with each edge covered by its own point.",
 )
 
+# D2-read post-freeze note 11's mutants of the old walk geometry, quoted (its «Mutants» list)
+NOTE_11 = (
+    "note 11: the (b′) stubs past interior run ends left out of the walk (the old walk extended only at true ends);",
+    "note 11: the row steps left out of the walk;",
+    "note 11: a run read across extended past its ends (the old walk's over-reach at a true end held by a run read "
+    "across);",
+)
+
 
 class Rows(unittest.TestCase):
     def test_the_rows_cover_section_10_and_nothing_else(self):
         items = [m[2] for m in dm.MUTANTS]
-        self.assertEqual(set(items), set(SECTION_10))
+        self.assertEqual(set(items), set(SECTION_10) | set(NOTE_11))
         self.assertEqual(len({m[0] for m in dm.MUTANTS}), len(dm.MUTANTS))
         self.assertEqual(len([m for m in dm.MUTANTS if m[2] == SECTION_10[2]]), 6)   # one per §3 link
         self.assertEqual(len([m for m in dm.MUTANTS if m[2] == SECTION_10[9]]), 3)   # default, ignored, note dropped

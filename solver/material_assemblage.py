@@ -1805,24 +1805,21 @@ class AssemblageView(mv.RecordView):
         return got if not self.s_read else self._with_s(p, t, pr, ia, ib, got)
 
     def crossing(self, p, t):
-        """D2-read note 10 §3 with note 11: [(P_b(t), left label, right label)] of the position curves whose «today»
-        piece passes through the store cell of (p, t) by the loader's own walk (d2_store.today_cells on the position
-        set), each with its event P_b at t (d2_store.event_pb: the curve between its rows, the holder event run's
-        p_b_ext past its ends, as the walk draws it), wherever that lies. So the side follows the P_b the events use,
-        and the curves are the ones the loader's exemption counted. A curve with no P_b at t is left out."""
+        """D2-read note 10 §3 with note 11: [(P_b(t), left label, right label)] of the position set's events whose
+        «today» piece meets the store cell of (p, t) (d2_store.today_cells: the loader's own set, every event as
+        boundary_pressure places it, row steps included), each with boundary_pressure's P_b at t wherever that lies. So
+        the side follows the P_b the events use, and the events are the ones the loader's exemption counted. An event
+        with no P_b at t is left out."""
         from solver import d2_store as ds
         g = self._d2["grid"]
         j, k = ds._lower_cell(g["ps"], p), ds._lower_cell(g["ts"], t)
         if not hasattr(self, "_today_cells"):
-            self._pos_ns = types.SimpleNamespace(_curves=self._pos.curves, _events=self._pos.events, _reach=self._reach)
-            self._today_cells = ds.today_cells(self._d2, self._pos_ns)   # the walk on the position set's curves, runs
-        ids = self._today_cells.get((j, k), set())
+            self._today_cells = ds.today_cells(self._d2, self)      # the position set's events, as the loader walks them
         out = []
-        for c in self._pos.curves:
-            if c.id in ids:
-                pb = ds.event_pb(self._pos_ns, c, t, self._reach)   # the events' P_b, as the walk draws it
-                if pb is not None:
-                    out.append((pb, c.rows[0]["left_label"], c.rows[0]["right_label"]))
+        for key in sorted(self._today_cells.get((j, k), ())):
+            got = ds.event_labels(self, key, t)
+            if got is not None:
+                out.append(got)
         return out
 
     def forced_pbs(self, force, t):

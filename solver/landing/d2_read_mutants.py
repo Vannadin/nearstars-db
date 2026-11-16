@@ -108,8 +108,8 @@ MUTANTS = (
       ("solver/d2_store.py", '    if c.get("name") != CONTRACT_NAME or c.get("version") != 2:\n',
        '    if c.get("name") != CONTRACT_NAME or c.get("version") not in (1, 2):\n')], [STORE_TEST]),
     ("M13", "view", "a «today» row through a `d2` cell accepted;",
-     [("solver/d2_store.py", '                if cell["class"] in ("d2", "cut") and "arbitrated" not in cell:',
-       '                if cell["class"] in ("cut",) and "arbitrated" not in cell:')], [STORE_TEST]),
+     [("solver/d2_store.py", '            if cell["class"] in ("d2", "cut") and "arbitrated" not in cell:',
+       '            if cell["class"] in ("cut",) and "arbitrated" not in cell:')], [STORE_TEST]),
     ("M14", "view", "a swap taking a traced P_b;",
      [("solver/d2_store.py", "        point = kind in (\"accepted\", \"unmatched\")\n",
        "        point = kind in (\"accepted\", \"unmatched\", \"swap\")\n")], [STORE_TEST]),
@@ -125,6 +125,22 @@ MUTANTS = (
                     "refused.",
      [("solver/d2_store.py", '            if not (ma._finite(pb) and r["p_lo"] < pb < r["p_hi"]):\n',
        '            if not (ma._finite(pb) and r["p_lo"] <= pb <= r["p_hi"]):\n')], [STORE_TEST]),
+    # D2-read post-freeze note 11 (directing 11-16): the walk is the events boundary_pressure places; three mutants
+    # of the old geometry (the full curves' walk), each one of its departures
+    ("M20", "S5", "note 11: the (b′) stubs past interior run ends left out of the walk (the old walk extended only at "
+                  "true ends);",
+     [("solver/d2_store.py", "        lo, hi = (c.t0 - rch, c.t1 + rch) if cut and rch else (c.t0, c.t1)\n",
+       "        lo, hi = ((c.t0 - (0 if getattr(c, 'interior_lo', False) else rch), c.t1 + (0 if getattr(c, 'interior_hi', "
+       "False) else rch)) if cut and rch else (c.t0, c.t1))\n")], [STORE_TEST]),
+    ("M21", "S5", "note 11: the row steps left out of the walk;",
+     [("solver/d2_store.py", "    for i, (c, kr) in enumerate(pos.row_steps):\n",
+       "    for i, (c, kr) in enumerate(pos.row_steps[:0]):\n")], [STORE_TEST]),
+    ("M22", "S5", "note 11: a run read across extended past its ends (the old walk's over-reach at a true end held by "
+                  "a run read across);",
+     [("solver/d2_store.py", "        lo, hi = (c.t0 - rch, c.t1 + rch) if cut and rch else (c.t0, c.t1)\n",
+       "        lo, hi = (c.t0 - rch, c.t1 + rch) if rch else (c.t0, c.t1)\n"),
+      ("solver/d2_store.py", "            p = bp(curve, t)\n", "            p = bp(curve, t) if cut else c.p_b_ext(t, rch)\n")],
+     [STORE_TEST]),
     ("M18", "writer", "rule 5/6 taking the first point in file order instead of the nearest", [], []),
     ("M19", "writer", "rule 4 removed must fail a fixture coincident group with each edge covered by its own point.",
      [], []),

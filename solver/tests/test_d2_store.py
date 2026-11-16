@@ -1,6 +1,7 @@
 # D2 저장소 적재 검사(d2_store.py) 시험 — 잠든 조각의 핀(모듈 blob·closure), coincident·_reach 재구현의 동등, 적재 거절의 이름, edges 블록 검사, ea 와 함께 쓰는 고정 입력의 (2b)·(S1) STOP 집합
 """The view piece's tests (D2-read rev 7 §2, §3, §5b; post-freeze note 2 (1) conditions 1–4 and (3)'s shared
 fixtures). Run under the gate's Python from the engine root:  python -B -m unittest solver.tests.test_d2_store"""
+import bisect
 import copy
 import gzip
 import hashlib
@@ -156,8 +157,12 @@ def _store(cells, curves, source="today"):
 
 
 def _view(curves, ts=TS):
-    """A planted view whose full curves are their own event runs (no cut / across split, no merge)."""
-    return types.SimpleNamespace(ts=ts, _reach=REACH, _curves=curves, _events=curves)
+    """A planted view whose full curves are their own cut event runs (no cut / across split, no merge, no row steps),
+    each placed by its own p_b_ext as boundary_pressure places a cut run (note 11)."""
+    pos = types.SimpleNamespace(curves=curves, events=curves, cut=curves, row_steps=[])
+    v = types.SimpleNamespace(ts=ts, _reach=REACH, _curves=curves, _events=curves, _pos=pos)
+    v.boundary_pressure = lambda curve, t: curves[curve["id"]].p_b_ext(t, REACH)
+    return v
 
 
 # ── fixtures through ma.view on a planted block (68 n1 on 039c875b): init's own curves, runs, merge and stops ─────
@@ -184,10 +189,11 @@ def real_view(rows, extension):
 
 
 def joining_segment_fixture():
-    """68 B1: one edge curve over four T rows, cut on the first two and read across on the last two; the segment that
-    joins row 1 (cut) to row 2 (across) climbs three P columns, and a d2 cell sits on a column it crosses strictly
-    between its ends. The full-curve walk STOPs there; a walk of the event runs (their own rows, and flat stubs at the
-    interior run ends) does not."""
+    """One edge curve over four T rows, cut on the first two and read across on the last two (68 B1's fixture; note 11
+    turns its verdict). d2 cells: (j + 1, k) on a column the segment joining row 1 (cut) to row 2 (across) crosses
+    strictly between its ends, where no event lies (boundary_pressure places none between a cut run's interior end and
+    the next run); (j, k) under the cut run's (b′) flat stub past that end; (j + 3, k + 2) past the run read across's
+    true end, which has no extension. The note-11 walk STOPs at (j, k) only."""
     ps, ts = ds.nodes(thaw(reg().tables[KHAN]))
     k, j = 2, 10
     def pb(jj): return 0.5 * (ps[jj] + ps[jj + 1])
@@ -196,7 +202,7 @@ def joining_segment_fixture():
             _edge(ts[k + 1], ps[j + 3], ps[j + 4], pb(j + 3), ("x",), True),
             _edge(ts[k + 2], ps[j + 3], ps[j + 4], pb(j + 3), ("x",), True)]
     st, v = real_view(rows, extension=False)
-    st["cells"] = {f"{j + 1},{k}": {"class": "d2"}}
+    st["cells"] = {f"{jj},{kk}": {"class": "d2"} for jj, kk in ((j + 1, k), (j, k), (j + 3, k + 2))}
     return st, v, (j + 1, k)
 
 
@@ -276,27 +282,118 @@ class RealViewFixtures(unittest.TestCase):
     def cells(self, st, v):
         return {t.split("cell ")[-1] for _i, t in ds.today_segments(st, v)["stops"]}
 
-    def test_the_joining_segment_of_a_cut_and_an_across_run_is_walked(self):
+    def test_the_walk_takes_the_events_boundary_pressure_places(self):
+        """note 11: the (b′) stub past the cut run's interior end STOPs its cell; the segment joining the cut row to the
+        across row is no event; the run read across has no extension past its true end (the old walk's over-reach)."""
         st, v, (j, k) = joining_segment_fixture()
         self.assertEqual({c.kind for c in v._curves}, {"edge"})
         self.assertEqual(len(v._curves), 1)
         self.assertEqual(len(v._events), 2)                       # one cut run, one across run
-        self.assertIn(f"({j}, {k})", self.cells(st, v))
-        # the mutant: walking the event runs instead of the full curves misses that cell
-        runs = types.SimpleNamespace(ts=v.ts, _reach=v._reach, _curves=v._events, _events=v._events)
-        self.assertNotIn(f"({j}, {k})", self.cells(st, runs))
+        self.assertEqual(self.cells(st, v), {f"({j - 1}, {k})"})
 
-    def test_a_coincident_pair_with_extension_stops_at_its_rows_only(self):
+    def test_a_coincident_pair_with_extension_stops_at_its_rows_and_row_steps(self):
+        """reach-0 swap ends: no extension, and their row steps (boundary_pressure's «assemblage_row_step») meet the
+        cells one interval past each end (note 11)."""
         st, v, (j, k) = coincident_fixture(True)
         self.assertEqual(v.coincident, 2)
         self.assertEqual({c.kind for c in v._cut}, {"swap"})
-        self.assertEqual(self.cells(st, v), {f"({j}, {k})"})
+        self.assertTrue(v._pos.row_steps)
+        got = ds.today_segments(st, v)["stops"]
+        by = {}
+        for _i, t in got:
+            by.setdefault(t.split("cell ")[-1], set()).add(t.split("cell: ")[1].split(" ")[0])
+        self.assertEqual(set(by), {f"({j}, {k - 1})", f"({j}, {k})", f"({j}, {k + 1})"})
+        self.assertEqual(by[f"({j}, {k - 1})"], {"row_step"})
+        self.assertEqual(by[f"({j}, {k + 1})"], {"row_step"})
 
     def test_the_same_pair_without_extension_stops_past_its_ends(self):
         st, v, (j, k) = coincident_fixture(False)
         got = self.cells(st, v)
         self.assertIn(f"({j}, {k})", got)
         self.assertTrue({f"({j}, {k - 1})", f"({j}, {k + 1})"} & got, got)
+
+
+def sampled_today_cells(st, v, n=64, only_k=None):
+    """68's scan (evscan-68, record 93d023bcd) as a check independent of d2_store.event_pieces: every transitions()
+    event's boundary_pressure sampled at n + 1 points of each open T interval of its domain, today by its governing
+    rows (the row pair at t, the end row past an end; a row step's own row), each sample's cells by the tie ruling (P
+    closed, _lower_cell in T on the open interval) → {(j, k)}. `only_k`: those T intervals only."""
+    ps, ts = st["grid"]["ps"], st["grid"]["ts"]
+    src = ds._unit_sources(st["edges"])
+    today = {id(r): ds._is_today(src, c, r) for c in v._pos.curves for r in c.rows}
+    out = set()
+
+    def put(pb, t):
+        k = ds._lower_cell(ts, t)
+        for j in range(len(ps) - 1):
+            if k is not None and ps[j] <= pb <= ps[j + 1]:
+                out.add((j, k))
+    for _names, _kind, curve in v.transitions():
+        i = curve["id"]
+        if curve["form"] == "assemblage_curve":
+            c = v._pos.events[i]
+            rts = [r["t"] for r in c.rows]
+        else:
+            c, kr = v._pos.row_steps[i]
+            row = next((r for r in c.rows if r["t"] == v.ts[kr]), None) or c.nearest(v.ts[kr])
+        for k in (range(len(ts) - 1) if only_k is None else only_k):
+            for m in range(1, n):
+                t = ts[k] + (ts[k + 1] - ts[k]) * m / n
+                pb = v.boundary_pressure(curve, t)
+                if pb is None:
+                    continue
+                if curve["form"] == "assemblage_curve":
+                    if t < c.t0:
+                        gov = c.rows[:1]
+                    elif t > c.t1:
+                        gov = c.rows[-1:]
+                    else:
+                        q = min(max(bisect.bisect_left(rts, t) - 1, 0), max(len(c.rows) - 2, 0))
+                        gov = c.rows[q:q + 2]
+                else:
+                    gov = [row]
+                if any(today[id(r)] for r in gov):
+                    put(pb, t)
+    return out
+
+
+def scan_against_walk(st, v, n=64, dense=20000):
+    """(inverse, forward): cells the sampled scan finds and the walk does not; cells the walk finds that the scan does
+    not even resampled densely (n = `dense`) over their own T interval — a steep piece clipping a corner within less
+    than one coarse step (bse (11, 41): 12.5 → 86 MPa over 50 K, inside the cell for 0.3 K) is confirmed, not excused."""
+    walk = set(ds.today_cells(st, v))
+    scan = sampled_today_cells(st, v, n)
+    rest = walk - scan
+    if rest:
+        scan |= sampled_today_cells(st, v, dense, only_k=sorted({k for _j, k in rest}))
+    return scan - walk, walk - scan
+
+
+class EventGeometry(unittest.TestCase):
+    """note 11: the walk is the events boundary_pressure places — checked against an independent sampled scan both
+    ways on the fixtures built through ma.view, with a planted control (the row steps dropped from the walk's view)."""
+
+    def test_the_walk_equals_the_sampled_scan(self):
+        for name, (st, v, _jk) in {"joining": joining_segment_fixture(), "coincident ext": coincident_fixture(True),
+                                    "coincident": coincident_fixture(False)}.items():
+            self.assertEqual(scan_against_walk(st, v), (set(), set()), name)
+
+    def test_the_planted_control_is_seen(self):
+        st, v, (j, k) = coincident_fixture(True)
+        bare = types.SimpleNamespace(**{a: getattr(v, a) for a in ("ts", "_reach", "boundary_pressure")})
+        bare._pos = types.SimpleNamespace(curves=v._pos.curves, events=v._pos.events, cut=v._pos.cut, row_steps=[])
+        missed = sampled_today_cells(st, v) - set(ds.today_cells(st, bare))
+        self.assertEqual(missed, {(j, k - 2), (j, k - 1), (j, k + 1), (j, k + 2)})   # the stencil's two rows each side
+
+    def test_a_row_step_takes_its_own_rows_labels(self):
+        st, v, (j, k) = coincident_fixture(True)
+        c, kr = v._pos.row_steps[0]
+        row = next(r for r in c.rows if r["t"] == v.ts[kr])
+        t = 0.5 * (v.ts[kr - 2] + v.ts[kr - 1]) if kr >= 2 else 0.5 * (v.ts[kr + 1] + v.ts[kr + 2])
+        got = ds.event_labels(v, ("row_step", 0), t)
+        self.assertEqual(got, (v.boundary_pressure({"form": "assemblage_row_step", "id": 0}, t),
+                               row["left_label"], row["right_label"]))
+        self.assertIsNotNone(got[0])
 
 
 class SharedFixtures(unittest.TestCase):
@@ -330,7 +427,16 @@ class SharedFixtures(unittest.TestCase):
         c = Curve(0, [(1100.0, 3e9, 2e9), (1200.0, 3e9, 2e9)], stop_lo=True, stop_hi=True)
         got = ds.today_segments(_store(_d2((1, 1)), [c]), _view([c]))["stops"]
         self.assertEqual([t.split("cell ")[-1] for _i, t in got], ["(1, 1)"])
-        self.assertEqual(ds._cells_through(PS, TS, (1100.0, 3e9), (1200.0, 3e9)), [(1, 1), (2, 1)])
+        self.assertEqual(ds._event_cells(PS, TS, (1100.0, 3e9), (1200.0, 3e9)), [(1, 1), (2, 1)])
+
+    def test_the_tie_ruling(self):
+        """note 11 (directing's tie ruling): T open — a piece of no T length meets no cell, and over an open T interval
+        the cell is _lower_cell's; P closed — a flat piece on a column line meets both cells, a monotone piece only the
+        cells its open P range enters (not the one it touches at an end)."""
+        self.assertEqual(ds._event_cells(PS, TS, (1200.0, 2.5e9), (1200.0, 2.5e9)), [])
+        self.assertEqual(ds._event_cells(PS, TS, (1100.0, 2.5e9), (1200.0, 3e9)), [(1, 1)])
+        self.assertEqual(ds._event_cells(PS, TS, (1100.0, 2.5e9), (1200.0, 3.5e9)), [(1, 1), (2, 1)])
+        self.assertEqual(ds._event_cells(PS, TS, (1100.0, 3e9), (1200.0, 3e9)), [(1, 1), (2, 1)])
 
     def test_p_tol_is_boundary_pass_own(self):
         self.assertEqual(ds.P_TOL, 1e5)

@@ -451,63 +451,123 @@ def _is_today(src, curve, row):
     return got == "today"
 
 
-def _holder(view, row, hi):
-    """The run of the initialised view's `_events` (init's merged cut runs and the runs read across) whose own end is
-    `row` (a lower end if not `hi`): it carries that end's stop and kind after init. Runs share the curve's row dicts,
-    so the match is by identity."""
-    for r in view._events:
-        if (r.rows[-1] if hi else r.rows[0]) is row:
-            return r
-    raise StoreRefusal("material.d2_store_edges_rows", f"no event run ends at the curve row of {row['t']!r} K")
+def _event_cells(ps, ts, a, b):
+    """The store cells an event piece a–b meets (note 11, directing's tie ruling): a, b are (T, P_b) within one T
+    interval, P_b monotone between them. T open: over the piece's open T interval the cell is the one read_point's D2
+    dispatch (`_lower_cell`) serves there; a piece of no T length (an isolated T on a row line) meets none, since no
+    crossing lies on a positive T interval there. P closed: a piece lying on a column line over its interval meets
+    both bordering cells (reads from either side border it); a monotone piece meets every cell its open P range
+    enters, not the one it only touches at an end."""
+    (ta, pa), (tb, pb) = (a, b) if a[0] <= b[0] else (b, a)
+    if not tb > ta:
+        return []
+    k = _lower_cell(ts, 0.5 * (ta + tb))
+    if k is None:
+        return []
+    n = len(ps) - 1
+    if pa == pb:
+        js = [j for j in range(n) if ps[j] <= pa <= ps[j + 1]]
+    else:
+        lo, hi = min(pa, pb), max(pa, pb)
+        js = [j for j in range(n) if ps[j] < hi and lo < ps[j + 1]]
+    return [(j, k) for j in js]
 
 
-def _pieces(view, curve, ts, rch):
-    """(a, b, end indices, where): the straight pieces of one full curve of the view (`_curves`: rev 7 §5b (2b) «every
-    curve … on every T interval of its domain»; 68 B1 on 039c875b) — between its consecutive rows, whether a row pair
-    is cut or read across, and past each of its two true ends that does not stop, to `rch`, broken at the table's T
-    rows. Each end's stop and extension are those of the event run holding it (`_holder`): there init's coincident
-    merge and reach-0 stops live, and at a true end no run has the interior-end flat stub (note 8 (b′)). a, b are
-    (T, P_b)."""
-    rows = curve.rows
-    for i in range(len(rows) - 1):
-        yield (rows[i]["t"], rows[i]["p_b"]), (rows[i + 1]["t"], rows[i + 1]["p_b"]), (i, i + 1), "rows"
-    if not rch:
-        return
-    for hi in (False, True):
-        h = _holder(view, rows[-1] if hi else rows[0], hi)
-        if h.stop_hi if hi else h.stop_lo:
-            continue
-        t_end = rows[-1]["t"] if hi else rows[0]["t"]
-        far = t_end + rch if hi else t_end - rch
-        mid = [t for t in ts if (t_end < t < far if hi else far < t < t_end)]
-        knots = [t_end] + (mid if hi else mid[::-1]) + [far]
-        knots = [t for t in knots if ts[0] <= t <= ts[-1]]
-        end_i = len(rows) - 1 if hi else 0
+def _today_of(store_doc, view):
+    """{id(row): today?} over the position set's full curves (runs share their curve's row dicts), by the edges
+    block's unit sources (curve_groups' key)."""
+    src = _unit_sources(store_doc["edges"])
+    return {id(r): _is_today(src, c, r) for c in view._pos.curves for r in c.rows}
+
+
+def event_pieces(store_doc, view):
+    """note 11 (directing 11-16: the guard sees exactly what the event consumers see): (key, a, b, today) for every
+    straight piece of every event of the view's position set as `view.boundary_pressure` places it, broken at the
+    table's T rows, so each lies in one T interval with P_b monotone along it.
+    - An event run (transitions' «assemblage_curve» i): between its rows; a cut run (i < len(cut)) also past each
+      end to the view's reach where boundary_pressure answers (p_b_ext: a true end's extension, an interior end's
+      (b′) flat stub, nothing at a stopped end), knotted at an edge end's Δ_c, where g(τ) turns flat; a run read
+      across has no extension. Today: either row of the pair, or the end row past an end.
+    - A row step (transitions' «assemblage_row_step» i): its row's own P_b over the T intervals where
+      boundary_pressure answers (no P_b for the curve at T, the stencil holding the row). Today: that row.
+    key is ("event", i) or ("row_step", i); a, b are (T, P_b)."""
+    ts = list(store_doc["grid"]["ts"])
+    pos, rch, bp = view._pos, view._reach, view.boundary_pressure
+    today = _today_of(store_doc, view)
+    src = None
+
+    def tod(c, r):
+        nonlocal src
+        got = today.get(id(r))
+        if got is None:                                  # a row no full curve holds: by the run's own phase
+            src = src if src is not None else _unit_sources(store_doc["edges"])
+            got = _is_today(src, c, r)
+        return got
+    for i, c in enumerate(pos.events):
+        cut = i < len(pos.cut)
+        lo, hi = (c.t0 - rch, c.t1 + rch) if cut and rch else (c.t0, c.t1)
+        lo, hi = max(lo, ts[0]), min(hi, ts[-1])
+        knots = {lo, hi} | {r["t"] for r in c.rows} | set(ts)
+        if cut and c.kind == "edge":
+            knots |= {c.t1 + (getattr(c, "dc_hi", None) or rch / ma.EXT_ROWS),
+                      c.t0 - (getattr(c, "dc_lo", None) or rch / ma.EXT_ROWS)}
+        knots = sorted(t for t in knots if lo <= t <= hi)
+        curve = {"form": "assemblage_curve", "id": i}
+        rows, rts = c.rows, [r["t"] for r in c.rows]
         prev = None
         for t in knots:
-            p = h.p_b_ext(t, rch)
+            p = bp(curve, t)
             if p is None:
-                break
+                prev = None
+                continue
             if prev is not None:
-                yield prev, (t, p), (end_i,), "extension " + ("hi" if hi else "lo")
+                m = 0.5 * (prev[0] + t)
+                if m < c.t0:
+                    gov = rows[:1]
+                elif m > c.t1:
+                    gov = rows[-1:]
+                else:
+                    q = min(max(bisect.bisect_left(rts, m) - 1, 0), max(len(rows) - 2, 0))
+                    gov = rows[q:q + 2]
+                yield ("event", i), prev, (t, p), any(tod(c, r) for r in gov)
             prev = (t, p)
+    for i, (c, kr) in enumerate(pos.row_steps):
+        curve = {"form": "assemblage_row_step", "id": i}
+        knots = sorted({t for t in set(ts) | {c.t0, c.t1, c.t0 - rch, c.t1 + rch} if ts[0] <= t <= ts[-1]})
+        row = next((r for r in c.rows if r["t"] == view.ts[kr]), None) or c.nearest(view.ts[kr])
+        for ta, tb in zip(knots, knots[1:]):
+            p = bp(curve, 0.5 * (ta + tb))               # constant presence and P between knots
+            if p is not None:
+                yield ("row_step", i), (ta, p), (tb, p), tod(c, row)
 
 
-def _cells_through(ps, ts, a, b):
-    """Every cell (j, k) the straight piece a–b passes through: one T cell (the piece lies between adjacent T rows),
-    every P cell from the lower P_b's to the higher's; a P_b exactly on a column line belongs to both cells."""
-    (ta, pa), (tb, pb) = (a, b) if a[0] <= b[0] else (b, a)
-    k = max(0, min(bisect.bisect_right(ts, ta) - 1, len(ts) - 2))
-    if tb > ts[k + 1]:
-        raise ValueError(f"a piece spans more than one T cell: {ta}–{tb}")
-    lo, hi = min(pa, pb), max(pa, pb)
-    j0 = bisect.bisect_right(ps, lo) - 1
-    if j0 >= 0 and ps[j0] == lo:
-        j0 -= 1                                      # on a column line: the cell below too
-    j1 = bisect.bisect_left(ps, hi)                 # the first node ≥ hi; cells up to j1 − 1, and j1 if hi is on it
-    if j1 < len(ps) and ps[j1] == hi:
-        j1 += 1
-    return [(j, k) for j in range(max(j0, 0), min(j1, len(ps) - 1))]
+def event_labels(view, key, t):
+    """(P_b at t, left label, right label) of one event key of event_pieces, or None where it has no P_b at t: a run's
+    labels as transitions() names it, a row step's from its own row (directing's ruling, note 11)."""
+    kind, i = key
+    pos = view._pos
+    if kind == "event":
+        c = pos.events[i]
+        pb = view.boundary_pressure({"form": "assemblage_curve", "id": i}, t)
+        r = c.rows[0]
+    else:
+        c, kr = pos.row_steps[i]
+        pb = view.boundary_pressure({"form": "assemblage_row_step", "id": i}, t)
+        ts = view.ts
+        r = next((r for r in c.rows if r["t"] == ts[kr]), None) or c.nearest(ts[kr])
+    return None if pb is None else (pb, r["left_label"], r["right_label"])
+
+
+def today_cells(store_doc, view):
+    """note 11: {(j, k): {event keys}} of the cells a «today» event piece meets (event_pieces, _event_cells), the
+    one set the loader's exemption and the marked read's crossing both use."""
+    ps, ts = store_doc["grid"]["ps"], store_doc["grid"]["ts"]
+    out = {}
+    for key, a, b, tod in event_pieces(store_doc, view):
+        if tod:
+            for jk in _event_cells(ps, ts, a, b):
+                out.setdefault(jk, set()).add(key)
+    return out
 
 
 def _sliver(cell, ps, ts, j, k, w):
@@ -549,67 +609,38 @@ def _sliver_miss(cell, ps, ts, j, k, a, b):
     return worst, offs
 
 
-def event_pb(view, curve, t, rch):
-    """The P_b at t that the events place for `curve` (note 11): the curve's own p_b(t) between its rows, and past its
-    ends the p_b_ext of the event run holding that end (`_holder`, where init's coincident merge and reach-0 stops
-    live), which is what _pieces draws the walk's extensions with; None where that run stops or the reach ends.
-    `view` carries `_events` and `_reach` (a routed view passes its position set)."""
-    if curve.t0 <= t <= curve.t1:
-        return curve.p_b(t)
-    hi = t > curve.t1
-    h = _holder(view, curve.rows[-1] if hi else curve.rows[0], hi)
-    if h.stop_hi if hi else h.stop_lo:
-        return None
-    return h.p_b_ext(t, rch)
-
-
-def today_cells(store_doc, view, curves=None):
-    """note 11 / 68 on S5: {(j, k): {curve ids}} of the cells a «today» piece passes through, by today_segments' own
-    walk (`_pieces`, `_cells_through`) over `curves` (default the view's `_curves`; a routed view passes its position
-    set). The marked read takes its curves from here, so «a today segment through the cell» means one thing in the
-    loader's exemption and in the read (ea's finding: five marked cells that no p_b_ext enters at any T)."""
-    ps, ts = store_doc["grid"]["ps"], store_doc["grid"]["ts"]
-    src = _unit_sources(store_doc["edges"])
-    out = {}
-    for c in (view._curves if curves is None else curves):
-        today = [_is_today(src, c, r) for r in c.rows]
-        for a, b, ends, _where in _pieces(view, c, ts, view._reach):
-            if any(today[i] for i in ends):
-                for j, k in _cells_through(ps, ts, a, b):
-                    out.setdefault((j, k), set()).add(c.id)
-    return out
-
-
 def today_segments(store_doc, view):
-    """§5b (2b) and (S1) on the view built on the store's block: every full curve (`_curves`) row to row, and past its
-    true ends with the stops and extensions of the event runs holding them (`_events`, after init's merge). → {"stops": [(id, text)], "s1": [...]}; the stops are d2_store_today_row (a «today» segment through
-    a d2 or cut cell) and d2_store_sliver (outside a kept subgrid cell's sliver by more than P_TOL)."""
+    """§5b (2b) and (S1) on the view built on the store's block, over every event of its position set as
+    boundary_pressure places it (event_pieces; note 11 amends (2b)'s domain: the (b′) stubs and the row steps in, no
+    extension of a run read across). → {"stops": [(id, text)], "s1": [...]}; the stops are d2_store_today_row (a «today»
+    piece meeting a d2 or cut cell that carries no note-10 mark) and d2_store_sliver (outside a kept subgrid cell's
+    sliver by more than P_TOL)."""
     ps, ts = store_doc["grid"]["ps"], store_doc["grid"]["ts"]
     if list(view.ts) != list(ts):
         return {"stops": [("material.d2_store_grid", "the view's T rows are not the store's")], "s1": []}
-    src, cells = _unit_sources(store_doc["edges"]), store_doc["cells"]
-    rch = view._reach
+    cells = store_doc["cells"]
     stops, s1, seen = [], [], set()
-    for c in view._curves:
-        today = [_is_today(src, c, r) for r in c.rows]
-        for a, b, ends, where in _pieces(view, c, ts, rch):
-            if not any(today[i] for i in ends):
+    for key, a, b, tod in event_pieces(store_doc, view):
+        if not tod:
+            continue
+        kind, i = key
+        c = view._pos.events[i] if kind == "event" else view._pos.row_steps[i][0]
+        where = f"{kind} {i} ({c.kind}{'' if c.phase is None else ' ' + c.phase})"
+        for j, k in _event_cells(ps, ts, a, b):
+            cell = cells.get(f"{j},{k}")
+            if cell is None:
                 continue
-            for j, k in _cells_through(ps, ts, a, b):
-                cell = cells.get(f"{j},{k}")
-                if cell is None:
-                    continue
-                name = f"curve {c.id} ({c.kind}{'' if c.phase is None else ' ' + c.phase}) {where} {a[0]:g}–{b[0]:g} K, cell ({j}, {k})"
-                if cell["class"] in ("d2", "cut") and "arbitrated" not in cell:   # note 10: a marked cell keeps D2
-                    if (c.id, a, b, j, k) not in seen:
-                        seen.add((c.id, a, b, j, k))
-                        stops.append(("material.d2_store_today_row", f"«today» segment through a {cell['class']} cell: {name}"))
-                elif cell["class"] == "subgrid":
-                    worst, offs = _sliver_miss(cell, ps, ts, j, k, a, b)
-                    s1.append({"curve": c.id, "cell": [j, k], "where": where, "offsets": offs})
-                    if worst:
-                        stops.append(("material.d2_store_sliver", f"outside the sliver by {worst[1]:.6g} "
-                                      f"{'Pa' if cell['direction'] == 'P' else 'K'} > {worst[2]:.6g} at w {worst[0]}: {name}"))
+            name = f"{where} {a[0]:g}–{b[0]:g} K, cell ({j}, {k})"
+            if cell["class"] in ("d2", "cut") and "arbitrated" not in cell:   # note 10: a marked cell keeps D2
+                if (key, a, b, j, k) not in seen:
+                    seen.add((key, a, b, j, k))
+                    stops.append(("material.d2_store_today_row", f"«today» piece through a {cell['class']} cell: {name}"))
+            elif cell["class"] == "subgrid":
+                worst, offs = _sliver_miss(cell, ps, ts, j, k, a, b)
+                s1.append({"event": list(key), "cell": [j, k], "offsets": offs})
+                if worst:
+                    stops.append(("material.d2_store_sliver", f"outside the sliver by {worst[1]:.6g} "
+                                  f"{'Pa' if cell['direction'] == 'P' else 'K'} > {worst[2]:.6g} at w {worst[0]}: {name}"))
     return {"stops": stops, "s1": s1}
 
 
