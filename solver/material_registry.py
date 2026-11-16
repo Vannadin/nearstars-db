@@ -211,10 +211,13 @@ class Registry:
         """The D2 store of assemblage record `rid` for a D2-routed read (D2-read §2–§4): d2_store.Loaded when its
         d2_read is eligible or ruled, loaded, chained and edge-checked; None when off or absent (the store is never
         opened); a LoadStop naming the refusal. Asked only on the silicate_records route, so with the switch off no
-        store is loaded or read (§4's first row). Computed once per registry, before any read («Load, not read»)."""
+        store is loaded or read (§4's first row). Computed once per registry, before any read («Load, not read»).
+        The record's own d2 keys are checked at registry load for every assemblage record (d2_store.check_keys); the
+        store itself is opened lazily here, at the first routed view, so a registry-level load (the derived load
+        census, map tools) sees a key refusal but never a store refusal (68 n3 on 54dd5042)."""
         if rid not in self._d2:
             rec = self.records.get(rid)
-            if rec is None or rec.get("kind") != "assemblage" or "d2_read" not in rec:
+            if rec is None or rec.get("kind") != "assemblage":
                 self._d2[rid] = None
             else:
                 self._d2[rid] = _d2_store(rec, self.tables[rid], self.directory or MATERIALS_DIR)
@@ -1137,6 +1140,9 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None,
                 tables[rec["id"]] = _assemblage_table(rec, f.name, Path(directory), allow_development)
             except _Stop as s:
                 return s.stop
+            ks = _d2_keys(rec, f.name)               # D2-read §2's key refusals, whatever the switch (68 B2)
+            if ks is not None:
+                return ks
         if "handover_table" in rec:
             try:
                 tables[rec["id"]] = _handover_table(rec, f.name, Path(directory))
@@ -1165,6 +1171,17 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None,
     warns = tuple(w for rec in out.values() for w in multi_source_warnings(rec, f"{rec['id']}.yaml"))
     return Registry(MappingProxyType(out), MappingProxyType(unavailable), warns, allow_development,
                     MappingProxyType(tables), tuple(sorted(absent)), Path(directory))
+
+
+def _d2_keys(rec, file):
+    """d2_store.check_keys on an assemblage record at load: None, or the refusal as a LoadStop naming the file."""
+    from solver import d2_store as ds
+    from solver.material_view import thaw_plain
+    try:
+        ds.check_keys(thaw_plain(rec))
+    except ds.StoreRefusal as e:
+        return LoadStop(e.id, MappingProxyType({"file": file, "why": str(e)[:400]}))
+    return None
 
 
 def _d2_store(rec, table, directory):

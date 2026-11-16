@@ -1470,7 +1470,7 @@ class AssemblageView(mv.RecordView):
     table (68 S1). RecordView's own branches (sets, γ windows, joins, the K_T stencil) are never entered."""
 
     def __init__(self, record, table, t_pot: float, p_stop: float = 0.0, p_floor: float = 0.0, handover=None,
-                 store=None, *, table_regardless=None):
+                 store=None, table_regardless=None):          # positional from view(): §7 counts keyword sites
         self.material_id = record["id"]
         self.name = record["id"]                 # solve._pass keys its GrazeMonitor on this (68)
         #: the hand-over above p_dataset (a HandOver, note 7 §3), or None: then a read above p_dataset refuses (§3.4)
@@ -1502,6 +1502,9 @@ class AssemblageView(mv.RecordView):
         self.store = store
         self.table_regardless = table_regardless
         sw = None if table_regardless else store
+        #: the store the boundary switch is asked with (None unrouted or in table-regardless mode): every reader of a
+        #: block off this view's record asks boundary_block with it (rho_fall_build's τ_e, §5b (2a))
+        self.block_store = sw
         read_block = boundary_block(record, table, sw, "read")
         pos_block = boundary_block(record, table, sw, "position")
         ts = self.ts
@@ -1522,7 +1525,12 @@ class AssemblageView(mv.RecordView):
         self._d2 = None if (table_regardless or store is None) else getattr(store, "doc", store)
         self._d2_last = None                     # the last _solid's D2 answer (state() swaps the notes, Q9), or None
         from solver import d2_store as _ds
-        self.d2_counts = {n: 0 for n in _ds.COUNT_NAMES}    # §6's run-time counts (S3 fills the other three)
+        #: §6's run-time counts, per view: the no-field and (S1) sliver reads (read_point), the forced side on a cut
+        #: cell (s_path with a force over a cut cell), swap segments through a d2 or cut cell (0 on a loaded store: they
+        #: are exactly (2b)'s STOPs for swaps, refused at load, §5b (4)); §5a's `table_regardless_reads`
+        self.d2_counts = {n: 0 for n in _ds.COUNT_NAMES}
+        self.d2_counts["table_regardless_reads"] = 0
+        self.d2_counts[_ds.FORCED_TABLE] = 0     # note 7: §5b (5) (iii)'s forced table reads
         self._parts, self._runcache = {}, {}
         #: PROTOTYPE: the highest frozen node T (rows above it hold no frozen run; _flag_reads' precheck)
         self._t_frozen_max = max((c["t"] for c in table["cells"] if c["kind"] == "frozen"), default=-math.inf)
@@ -1664,13 +1672,15 @@ class AssemblageView(mv.RecordView):
         are not the answer's reads, so a cold view's first zone read carries the same notes as a warm one's (68 N1 on
         7582ff4a). The s path's counts are restored too (r2 n2 on 677f85d0..0d7732d3: the 136 GPa match's two reads
         counted as s reads)."""
-        n, sc = len(self.notes), dict(self.s_counts)
+        n, sc, dc = len(self.notes), dict(self.s_counts), dict(self.d2_counts)
         try:
             return fn(*args)
         finally:
             del self.notes[n:]
             self.s_counts.clear()
             self.s_counts.update(sc)
+            self.d2_counts.clear()                   # D2-read §6: cleared and restored by _quiet like s_counts
+            self.d2_counts.update(dc)
 
     def _rise_ok(self, kb):
         """Note 7 §5: None if the zone's ρ rises with P along T row kb, else the refusal text; found once per row, at
@@ -1792,16 +1802,31 @@ class AssemblageView(mv.RecordView):
         got = out["rho"], out["dtdp_eq"], out["c_p"], [c for c in corners if c is not None]
         return got if not self.s_read else self._with_s(p, t, pr, ia, ib, got)
 
+    def forced_pbs(self, force, t):
+        """[(P_b(t), side)] of a force's curves (coexist's {curve: side}, on the position set, transitions' ids) for the
+        D2 forced read (§5b (5), D2-read note 7 (ii)); P_b by each curve's own p_b_ext with the view's reach."""
+        return [(c.p_b_ext(t, self._reach), s_) for c, s_ in force.items()]
+
     def s_path(self, p, t, force=None):
         """The s read at (p, t) with its exact derivatives (s-read §3.0): a Dual (s, ∂s/∂lnP, ∂s/∂T); None when the
         read's stencil holds a frozen node (§3.2: today's read stands there); or a Stop. Leaves no note, count, mark or
-        memo on the view. `force` {curve: side}: a swap's side read (§3.1).
+        memo on the view, except D2-read §6's registered counts on a D2-routed view: a forced read on a cut cell adds
+        to d2_counts (§5b (5), note 7 (3)), which _quiet and a run's counts keep (68 n on 751aa92f). `force`
+        {curve: side}: a swap's side read (§3.1).
         On a D2-routed view the class dispatch comes first (D2-read Q6, Q8): d2 and cut give Dual(s, −P·G_PT, −G_TT) of
         the field's consistent-G surface; inside a subgrid sliver Dual(s, −P·α/ρ, c_P/T) of the read's own blend; every
-        other class reads the table's s path below."""
+        other class reads the table's s path below. A D2 answer stands whatever frozen nodes the table's stencil holds:
+        §3.2's «None» guards the table read's own stencil, and D2-read §5 «the s read included where the record
+        declares it» with Q6 «s_path through the same dispatch» puts the dispatch before it (68 n on e901a8ac)."""
         if self._d2 is not None:
             from solver import d2_store as ds
-            got = ds.s_slopes(self._d2, p, t)
+            forced = self.forced_pbs(force, t) if force else None
+            fs = ds.forced_side(self._d2, p, t, forced) if forced else None
+            if fs is not None:                       # §5b (5), note 7: a forced side on a D2 cut cell, counted
+                self.d2_counts[ds.FORCED] += 1
+                if fs[0] is None:
+                    self.d2_counts[ds.FORCED_TABLE] += 1
+            got = ds.s_slopes(self._d2, p, t, forced)
             if got is not None:
                 return Dual(*got)
         pr = max(p, self.ps[0])
@@ -2685,6 +2710,8 @@ class AssemblageView(mv.RecordView):
         # the read's own cell (_table_read): on a P node the cell below, on a T node the cell above (c8 on d2977f99)
         ia = min(max(bisect.bisect_left(self.ps, max(p, self.ps[0]), 1) - 1, 0), len(self.ps) - 2)
         ib = min(max(bisect.bisect_right(self.ts, t) - 1, 0), len(self.ts) - 2)
+        # D2-read note 7 (68 on d3b7efda): the term notes describe the table read's own cell on every view, routed or
+        # not — a D2 answer drops them (Q9), and a table answer's value comes from today's cell, upper at a T node
         for key, (edge, grade, lead) in TERM_NOTES.items():
             cells, floor, src = self._terms[key]
             e = cells.get((ia, ib))
@@ -2739,6 +2766,10 @@ class AssemblageView(mv.RecordView):
                 self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID, LIQUID_ALONE_NOTE))
                 return (rho, g, tuple(self.notes))
             self._d2_last = None
+            if self.table_regardless:                # D2-read §5a: recorded whenever the mode is on
+                self.d2_counts["table_regardless_reads"] += 1
+                self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID,
+                                                  f"table-regardless read: {self.table_regardless}"))
             got = self._solid(pe, t)
             if isinstance(got, st.Stop):            # the refusal names the solver's P, not the clamped read (ea F4)
                 r = got.record
@@ -3110,6 +3141,17 @@ def s_monotone_build(record, table):
 BLOCK_USES = ("position", "read")
 
 
+def mode_header(v):
+    """D2-read §5a «A run record built on such a view carries `table_regardless: <tool>` in its header»: the header
+    lines a run record writes for view `v`, {} when the mode is off. solve and run_oracle refuse a view in the mode
+    («material.table_regardless_in_solve»), so the one run record built on such a view is the re-read tool's (the
+    artifacts repo's bmcpp table_step, §5a), which writes these lines into its own header."""
+    tool = getattr(v, "table_regardless", None)
+    if not tool:
+        return {}
+    return {"table_regardless": tool, "table_regardless_reads": v.d2_counts["table_regardless_reads"]}
+
+
 def boundary_block(record, table, store, use):
     """The one switch over a record's boundaries (D2-read §5b (2); S0 stub, S1 routes it): `use` is «position» or
     «read». It returns the store's `edges` block only for «position» on a D2-routed record, and the compact's
@@ -3124,7 +3166,7 @@ def boundary_block(record, table, store, use):
         raise ValueError(f"boundary_block: use {use!r} is not one of {BLOCK_USES}")
     if store is not None and use == "position":
         return getattr(store, "doc", store)["edges"]
-    return table["boundaries"]
+    return table.get("boundaries")              # absent on a table with no boundaries block: None, as today's `.get`
 
 
 def module_blob() -> str:
@@ -3163,7 +3205,7 @@ def view(record, table, t_pot, p_stop=0.0, p_floor=0.0, handover=None, store=Non
     HandOver above p_dataset (note 7), or None; `store` the record's loaded D2 store (registry.stores[id]) when the
     record is D2-routed, else None (D2-read §4); `table_regardless` the setting tool's name in §5a's mode (S3 records
     and refuses it; only the re-read tool passes it)."""
-    return AssemblageView(record, table, t_pot, p_stop, p_floor, handover, store, table_regardless=table_regardless)
+    return AssemblageView(record, table, t_pot, p_stop, p_floor, handover, store, table_regardless)
 
 
 class HandOver:

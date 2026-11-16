@@ -116,10 +116,12 @@ def state_of(record_doc):
     return v
 
 
-def load(record_doc, compact, materials_dir, compact_sha256=None):
-    """§2 and §3. d2_read off (or absent) → None, and the store is never opened (a `d2_store` key is then a refusal:
-    the writer never writes it there). Else the store is read, its contract and classes checked, its grid compared to
-    the compact's nodes and the six links of the chain checked."""
+def check_keys(record_doc):
+    """§2's record-key refusals, with nothing opened: the state (absent → off; unknown → refusal), a `d2_read_basis` or
+    `d2_store` key on an off or absent record, the basis's exact keys, and the pin's shape and fields/ path. Returns
+    (state, the pin's relative path) — (\"off\", None) when off. The registry runs it on every assemblage record at load,
+    whatever the global switch (68 B1, B2 on 54dd5042: §4 forbids opening the store with the switch off, not checking
+    the record's own keys); `load` runs it again before opening."""
     rid = record_doc.get("id")
     state = state_of(record_doc)
     if state == "off":
@@ -127,7 +129,7 @@ def load(record_doc, compact, materials_dir, compact_sha256=None):
             if k in record_doc:
                 raise StoreRefusal("material.d2_store_missing" if k == "d2_store" else "material.d2_read_basis",
                                    f"record {rid}: {k} on a record whose d2_read is off")
-        return None
+        return state, None
     basis = record_doc.get("d2_read_basis")
     if not isinstance(basis, dict):
         raise StoreRefusal("material.d2_read_basis", f"record {rid}: d2_read {state} without d2_read_basis")
@@ -141,6 +143,17 @@ def load(record_doc, compact, materials_dir, compact_sha256=None):
     rel = Path(pin["path"])
     if rel.is_absolute() or ".." in rel.parts or rel.parts[:1] != ("fields",):
         raise StoreRefusal("material.d2_store_missing", f"record {rid}: d2_store path {pin['path']!r} is not under fields/")
+    return state, rel
+
+
+def load(record_doc, compact, materials_dir, compact_sha256=None):
+    """§2 and §3. d2_read off (or absent) → None, and the store is never opened (a `d2_store` key is then a refusal:
+    the writer never writes it there). Else the store is read, its contract and classes checked, its grid compared to
+    the compact's nodes and the six links of the chain checked."""
+    rid = record_doc.get("id")
+    state, rel = check_keys(record_doc)
+    if state == "off":
+        return None
     path = Path(materials_dir) / rel
     if not path.is_file():
         raise StoreRefusal("material.d2_store_missing", f"record {rid}: no file {rel}")
@@ -566,6 +579,8 @@ def read_point(doc, p, t, view=None):
     if not (min(la, lb) <= uu <= max(la, lb)):
         return {"read": "table", "why": "subgrid cell outside the sliver", "notes": ()}
     sfr = (uu - la) / (lb - la)
+    if view is not None and hasattr(view, "d2_counts"):               # §6: (S1)'s per-read count
+        view.d2_counts["d2: (S1) read inside a subgrid sliver"] = view.d2_counts.get("d2: (S1) read inside a subgrid sliver", 0) + 1
     vals = {n: (1 - w) * _lagrange(k0, sfr, n) + w * _lagrange(k1, sfr, n) for n in ("rho", "c_p", "alpha", "s")}
     vals["dtdp"] = t * vals["alpha"] / (vals["rho"] * vals["c_p"])        # T·α/(ρ·c_P), never differentiated
     return {"read": "subgrid", "field": s0["C"], "values": vals, "notes": (("subgrid", SUBGRID_NOTE),)}
@@ -596,11 +611,13 @@ def _surface(doc, cell, j, k, u, v, box, p, t):
     return c["b"], _corners(doc, c["b"], j, k)
 
 
-def s_parts(doc, p, t):
+def s_parts(doc, p, t, forced=None):
     """The s read's parts at (p, t) through the same dispatch (Q6, Q8), or None where the table's s_path applies:
     ("surface", s, G_PT, G_TT) on d2 and cut (consistent-G form (ii)); ("sliver", s, rho, alpha, c_p) inside a subgrid
-    sliver (the read's own blend, Q8). The view builds Dual(s, −P·G_PT, −G_TT) or Dual(s, −P·α/ρ, c_P/T) from them."""
-    r = read_point(doc, p, t)
+    sliver (the read's own blend, Q8). The view builds Dual(s, −P·G_PT, −G_TT) or Dual(s, −P·α/ρ, c_P/T) from them.
+    `forced` (§5b (5), note 7): a cut cell reads the forced side's surface; (iii)'s cases give None (today's forced
+    table s path). Nothing is counted here (the view counts, s_path)."""
+    r = read_forced(doc, p, t, forced) if forced else read_point(doc, p, t)
     if r["read"] == "table":
         return None
     if r["read"] == "subgrid":
@@ -610,16 +627,92 @@ def s_parts(doc, p, t):
     j, k = _lower_cell(ps, p), _lower_cell(ts, t)
     box = (ps[j], ps[j + 1], ts[k], ts[k + 1])
     u, v = (p - box[0]) / (box[1] - box[0]), (t - box[2]) / (box[3] - box[2])
-    _f, cs = _surface(doc, doc["cells"][f"{j},{k}"], j, k, u, v, box, p, t)
+    fs = forced_side(doc, p, t, forced) if forced else None
+    if fs is not None:
+        _f, cs = _cut_corners(doc, doc["cells"][f"{j},{k}"], j, k, fs[0])
+    else:
+        _f, cs = _surface(doc, doc["cells"][f"{j},{k}"], j, k, u, v, box, p, t)
     return ("surface", -_hermite_g(cs, *box, p, t, 0, 1, "cons"), _hermite_g(cs, *box, p, t, 1, 1, "cons"),
             _hermite_g(cs, *box, p, t, 0, 2, "cons"))
 
 
 
-def s_slopes(doc, p, t):
+
+FORCED = "d2: forced side on a cut cell"
+#: note 7 (§5b (5) (iii)): a forced read on a cut cell with no forced curve in the cell, two or more, or a cut line
+#: with no P side, reads today's forced table read, counted here (and in FORCED), never refused
+FORCED_TABLE = "d2: forced side on a cut cell → table read"
+
+
+def forced_side(doc, p, t, forced):
+    """§5b (5) with D2-read note 7 (ii)/(iii): the side a force picks on the cut cell at (p, t). `forced` is
+    [(P_b(t), side)] of the force's curves on the position set, side −1 (P below P_b) or +1. None when (p, t) is not
+    on a cut cell (the force does not change a d2, subgrid or table answer); else ("A" | "B", None), or
+    (None, why) for (iii)'s cases. The forced curve is the one whose P_b lies in the cell's P span by the lower-cell
+    tie (a P_b on the cell's upper P node is in the cell, on its lower node in the cell below); −1 / +1 name the
+    field on the low / high P side of the cut line, by the sign of ∂cross/∂u = −(y2 − y1) against A's first corner."""
+    ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
+    j, k = _lower_cell(ps, p), _lower_cell(ts, t)
+    if j is None or k is None:
+        return None
+    cell = doc["cells"].get(f"{j},{k}")
+    if cell is None or cell["class"] != "cut":
+        return None
+    mine = [sd for pb, sd in forced if pb is not None and sd in (-1, 1) and _lower_cell(ps, pb) == j]
+    if len(mine) != 1:
+        return None, ("no forced curve in the cell" if not mine else "two or more forced curves in the cell")
+    c = cell["cut"]
+    (x1, y1), (x2, y2) = c["points"]
+    if y1 == y2:
+        return None, "the cut line has no P side"
+    a0 = c["a_corners"][0]
+    a_sign = math.copysign(1.0, (x2 - x1) * (a0[1] - y1) - (y2 - y1) * (a0[0] - x1))
+    low = "A" if math.copysign(1.0, y2 - y1) == a_sign else "B"       # u → −∞: cross → sign(y2 − y1)·∞
+    return (low if mine[0] == -1 else ("B" if low == "A" else "A")), None
+
+
+def _cut_corners(doc, cell, j, k, which):
+    """§5b (5): A — A's virtual-corner surface over the whole cell; B — B's four-corner surface."""
+    c = cell["cut"]
+    if which == "A":
+        nodes = doc["fields"][c["a"]]["nodes"]
+        return c["a"], [_corner(c["a_virtual"].get(f"{j + i},{k + l}") or nodes[f"{j + i},{k + l}"]) for i, l in CORNERS]
+    return c["b"], _corners(doc, c["b"], j, k)
+
+
+def read_forced(doc, p, t, forced, view=None):
+    """read_point under a force (§5b (5), note 7): off a cut cell the unforced read; on a cut cell the forced side's
+    surface, or a «table» answer for (iii)'s cases (the view then reads today's forced table read). `view` takes the
+    counts: FORCED per forced read on a cut cell, FORCED_TABLE for (iii)."""
+    fs = forced_side(doc, p, t, forced)
+    if fs is None:
+        return read_point(doc, p, t, view)
+    which, why = fs
+    if view is not None and hasattr(view, "d2_counts"):
+        view.d2_counts[FORCED] = view.d2_counts.get(FORCED, 0) + 1
+        if which is None:
+            view.d2_counts[FORCED_TABLE] = view.d2_counts.get(FORCED_TABLE, 0) + 1
+    if which is None:
+        return {"read": "table", "why": f"forced side: {why}", "notes": ()}
+    ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
+    j, k = _lower_cell(ps, p), _lower_cell(ts, t)
+    box = (ps[j], ps[j + 1], ts[k], ts[k + 1])
+    f, cs = _cut_corners(doc, doc["cells"][f"{j},{k}"], j, k, which)
+    return {"read": "cut", "field": f, "values": _g_values(cs, box, p, t), "notes": (("cut", CUT_NOTE),)}
+
+
+def class_at(doc, p, t):
+    """The store's class at (p, t) by the dispatch's lower-cell tie, or None (outside the grid, no entry)."""
+    ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
+    j, k = _lower_cell(ps, p), _lower_cell(ts, t)
+    if j is None or k is None:
+        return None
+    return (doc["cells"].get(f"{j},{k}") or {}).get("class")
+
+def s_slopes(doc, p, t, forced=None):
     """(s, ∂s/∂lnP, ∂s/∂T) at (p, t) through the dispatch, load-free, or None where the table's s path applies: the
     numbers the view's s_path puts in its Dual (Q6: −P·G_PT, −G_TT; Q8: −P·α/ρ, c_P/T)."""
-    sp = s_parts(doc, p, t)
+    sp = s_parts(doc, p, t, forced)
     if sp is None:
         return None
     if sp[0] == "surface":
