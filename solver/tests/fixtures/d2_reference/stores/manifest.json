@@ -1,0 +1,85 @@
+{
+ "contract_test_blob": "ea8438d7bf6d54b3c69653c7f62ff51a334e76b3",
+ "generator": "rewrite/phase2-records/bmcpp/gen_d2read_fixtures.py",
+ "generator_blob": "c2766b25840f1a4fc6136411d57e61de742c17c5",
+ "reference_reader_blob": "11e4430838459417454a87fc2d8ec27775007fd7",
+ "stores": {
+  "cut": {
+   "classes": [
+    "cut",
+    "d2"
+   ],
+   "file": "cut.json.gz",
+   "sha256": "c0074fc059cecff2d18322645b4adfecfc87bdce4a72c521f203df6ab47e547f"
+  },
+  "cut_a_virtual": {
+   "classes": [
+    "cut",
+    "d2"
+   ],
+   "file": "cut_a_virtual.json.gz",
+   "sha256": "2f4ab0006ab7eb894641c8c1d989c6e25feb93e4bc577700c7456ed78fa51ff0"
+  },
+  "d2": {
+   "classes": [
+    "d2"
+   ],
+   "file": "d2.json.gz",
+   "sha256": "d398b8c61b3e21076a30ec5771354ce44bd1373ec70a7596cbf7bcfe99a1ce23"
+  },
+  "d2_fieldless": {
+   "classes": [
+    "d2"
+   ],
+   "file": "d2_fieldless.json.gz",
+   "sha256": "f825de28807ec5b49a90a29a743aca7688aa920e54aebbe53c7ed8e57dddb632"
+  },
+  "fallback": {
+   "classes": [
+    "d2",
+    "fallback"
+   ],
+   "file": "fallback.json.gz",
+   "sha256": "874f52f54539ded1cf51557863dc50ea11c0dc9fd241d5a12c0e7a769fcfb34e"
+  },
+  "grid136": {
+   "classes": [
+    "d2"
+   ],
+   "file": "grid136.json.gz",
+   "sha256": "508b5198a63acbedaeae0b5c6fea8ed2fc9bd1f54f95b40a4c5cb4f833e01091"
+  },
+  "limit": {
+   "classes": [
+    "d2",
+    "limit"
+   ],
+   "file": "limit.json.gz",
+   "sha256": "310b6114cff4fdae4a37097061e74a7cb940f0f11f847aa49f91ff8a3d30c463"
+  },
+  "subgrid": {
+   "classes": [
+    "d2",
+    "subgrid"
+   ],
+   "file": "subgrid.json.gz",
+   "sha256": "84f48ac867abc1ababb58773e31396cc1a1c8f4e13f0b45583cb5d5e7ac42dee"
+  },
+  "subgrid_c_fallback": {
+   "classes": [
+    "d2",
+    "fallback"
+   ],
+   "file": "subgrid_c_fallback.json.gz",
+   "sha256": "a821b417ecbc2d756c86da292ffeb73c02d3b444e3c05cddbdca9b109c1552d7"
+  },
+  "subgrid_reversed": {
+   "classes": [
+    "d2",
+    "subgrid"
+   ],
+   "file": "subgrid_reversed.json.gz",
+   "sha256": "0207bc03c40be944f7ed5e9d844f249f9d9e95697a9286617033903b905d0271"
+  }
+ }
+}
