@@ -6,8 +6,8 @@ check, never as the gate», and Q8's subgrid relation (map row c8-12). d2_store.
 ∂s/∂T) or None (c8, e901a8ac).
 - d2 and cut: s equals the reference's s bit for bit (the same port); the slopes agree with centred differences of the
   reference's s at a relative step of 1e-5 of the cell, to FD_REL, at interior points away from the cell's edges.
-- subgrid, inside the sliver: −(∂s/∂lnP / P) / (∂s/∂T) equals the read's dT/dP to SUBGRID_ULP ulp (c8 measured ≤ 3 ulp,
-  not bitwise; raised with 68, and this bound stays until 68 rules). FD of s does not apply there: Q8's slopes are the
+- subgrid, inside the sliver: −(∂s/∂lnP / P) / (∂s/∂T) equals the read's dT/dP to SUBGRID_ULP ulp, D2-read note 7 (1)'s
+  bound from the operation count (≤ 8 ulp; c8 measured ≤ 3). FD of s does not apply there: Q8's slopes are the
   read's own α and c_P, not s's derivative.
 - a table answer (fallback, limit, no entry, outside the sliver) gives None."""
 import math
@@ -20,7 +20,7 @@ from solver.landing import d2_read_compare as dc
 FIX = Path(__file__).resolve().parent / "fixtures" / "d2_reference"
 READER = FIX / "d2_store_reader.py"
 FD_REL = 1e-6
-SUBGRID_ULP = 3
+SUBGRID_ULP = 8                       # D2-read note 7 (1): the bound from the operation count (68 d06b8ba22)
 STEP = 1e-5
 
 
