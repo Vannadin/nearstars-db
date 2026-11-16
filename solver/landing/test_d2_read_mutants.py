@@ -109,6 +109,43 @@ class Runner(unittest.TestCase):
         self.assertIn("X1 (S0): rc 1 · caught by test_f_is_one — returns two", lines)
         self.assertIn("X2 (S0): rc 1 · caught by NOTHING — comment only", lines)
 
+    def test_a_wrapper_launches_every_run_and_sees_the_source_objects(self):
+        """c8 11-16: under a named double the baseline is green, so the mutant counts as caught; the double reads a
+        blob of the source commit through the copy's borrowed objects"""
+        (self.root / "solver/mod.py").write_text(MOD + "def pin():\n    return 'stale'\n")
+        (self.root / "solver/test_mod.py").write_text(TEST + "\n    def test_pin(self):\n        self.assertEqual(mod.pin(), 'base')\n")
+        subprocess.run(["git", "-C", str(self.root), "add", "--", "solver"], check=True)
+        subprocess.run(["git", "-C", str(self.root), "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "base"],
+                       check=True)
+        sha = subprocess.run(["git", "-C", str(self.root), "rev-parse", "HEAD"], capture_output=True, text=True,
+                             check=True).stdout.strip()
+        wrapper = self.root.parent / f"{self.root.name}-double.py"
+        wrapper.write_text("import subprocess, sys, unittest\nsys.path.insert(0, '.')\nfrom solver import mod\n"
+                           f"b = subprocess.run(['git', 'rev-parse', '{sha}:solver/mod.py'], capture_output=True, "
+                           "text=True).stdout.strip()\n"
+                           "mod.pin = (lambda: 'base') if len(b) == 40 else mod.pin\n"
+                           "unittest.main(module=None, argv=['unittest'] + sys.argv[1:])\n")
+        try:
+            rc, lines = self.run_with((self.CAUGHT,))
+            self.assertIn("baseline solver.test_mod: red test_pin", lines)
+            rc, lines = self.run_with((self.CAUGHT,), ["--python-wrapper", str(wrapper)])
+            self.assertEqual(rc, 0, lines)
+            self.assertTrue(lines[0].startswith(f"launcher: python -B {wrapper.resolve()} (blob "), lines)
+            self.assertIn("baseline solver.test_mod: green", lines)
+            self.assertIn("X1 (S0): rc 1 · caught by test_f_is_one — returns two", lines)
+            self.assertEqual(self.run_with((self.CAUGHT,), ["--python-wrapper", str(wrapper) + ".absent"])[0], 2)
+        finally:
+            wrapper.unlink()
+
+    def test_a_class_fixture_red_at_baseline_stops(self):
+        (self.root / "solver/test_mod.py").write_text(TEST + "\n\nclass U(unittest.TestCase):\n    @classmethod\n"
+                                                       "    def setUpClass(cls):\n        raise RuntimeError('pin')\n\n"
+                                                       "    def test_masked(self):\n        pass\n")
+        subprocess.run(["git", "-C", str(self.root), "add", "--", "solver"], check=True)
+        rc, lines = self.run_with((self.CAUGHT,))
+        self.assertEqual(rc, 2, lines)
+        self.assertEqual(lines[-1], "STOP: baseline solver.test_mod: setUpClass red, which masks every test under it")
+
     def test_an_anchor_not_found_once_stops(self):
         gone = ("X5", "S0", "no anchor", [("solver/mod.py", "return 9", "return 2")], ["solver.test_mod"])
         rc, lines = self.run_with((gone,))

@@ -1,5 +1,5 @@
 # D2 읽기 변형 시험 실행기 — 등록 §10 의 변형마다 앵커 한 곳을 바꾼 임시 사본에서 지정 시험을 돌려 어느 시험이 잡는지 인쇄, 못 잡거나 앵커가 한 번이 아니면 실패(D2 읽기 등록 §10; 앵커는 조각마다 채움)
-"""python3 -B -m solver.landing.d2_read_mutants [ID …]      (D2-read rev 7 §10; run from the engine tree root)
+"""python3 -B -m solver.landing.d2_read_mutants [--python-wrapper SCRIPT] [ID …]      (D2-read rev 7 §10; from the tree root)
 
 One row per §10 item (the item's text quoted). A row with anchors is applied to a temp copy of the tree (the tracked
 files under COPY_DIRS, git-initialised so tools that list tracked files see the same tree), one mutant at a time:
@@ -7,7 +7,15 @@ each anchor must occur exactly once in its file (else STOP), the replacement is 
 under this interpreter, and the failing tests are printed by name. The copy is restored before the next mutant.
 
 Baseline control: each distinct module set is first run unmutated on the copy. A mutant is caught only by tests that
-pass there and fail mutated; tests already red at baseline are printed once («baseline red») and never count.
+pass there and fail mutated; tests already red at baseline are printed once («baseline red») and never count. A class
+or module fixture red at baseline (setUpClass, setUpModule and their tear-downs) masks every test under it, so it is a
+STOP, never «caught by nothing» (68 on 337151ac).
+
+--python-wrapper SCRIPT (c8 11-16): each module set runs as `python -B SCRIPT <modules>` instead of `python -B -m
+unittest <modules>`, baseline and mutants alike; the script is a named double that ends in unittest.main (e.g. c8's
+pinned_double4.py before A1's re-pin). It is printed with its git blob. Without it the run needs nothing. The copy's
+git borrows the source repository's objects (objects/info/alternates), so `git rev-parse <commit>:<path>` answers
+there as in the tree; the copy's own index and work tree are its own.
 
 A row whose anchors are empty is pending: its slice fills them (S1–S4, or «writer» for ea's side in the artifacts
 repo) and it is printed as pending, never as caught.
@@ -24,6 +32,7 @@ from pathlib import Path
 
 COPY_DIRS = ("solver", "engine", "derived", "scripts")
 STORE_TEST = "solver.tests.test_d2_store"
+FIXTURES = frozenset({"setUpClass", "setUpModule", "tearDownClass", "tearDownModule"})
 
 # (id, slice, §10 item quoted, [(file, anchor, replacement)], [test modules])
 MUTANTS = (
@@ -103,6 +112,9 @@ def copy_tree(root, dest, dirs=COPY_DIRS):
         (dest / n).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(Path(root) / n, dest / n)
     subprocess.run(["git", "-C", str(dest), "init", "-q"], check=True)
+    src = subprocess.run(["git", "-C", str(root), "rev-parse", "--path-format=absolute", "--git-common-dir"],
+                         capture_output=True, text=True, check=True).stdout.strip()
+    (dest / ".git/objects/info/alternates").write_text(str(Path(src) / "objects") + "\n")
     for i in range(0, len(names), 500):
         subprocess.run(["git", "-C", str(dest), "add", "--", *names[i:i + 500]], check=True)
 
@@ -121,14 +133,30 @@ def apply(work, edits):
     return saved
 
 
-def run_tests(work, modules, py=sys.executable):
+def run_tests(work, modules, py=sys.executable, wrapper=None):
     env = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}
-    r = subprocess.run([py, "-B", "-m", "unittest", *modules], cwd=work, capture_output=True, text=True, env=env)
+    cmd = [py, "-B", str(wrapper), *modules] if wrapper else [py, "-B", "-m", "unittest", *modules]
+    r = subprocess.run(cmd, cwd=work, capture_output=True, text=True, env=env)
     failed = sorted(set(re.findall(r"^(?:FAIL|ERROR): (\w+)", r.stderr, re.M)))
     return r.returncode, failed
 
 
+def _blob(path):
+    import hashlib
+    data = Path(path).read_bytes()
+    return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+
+
 def main(argv, root=".", mutants=MUTANTS, out=print):
+    argv, wrapper = list(argv), None
+    if "--python-wrapper" in argv:
+        i = argv.index("--python-wrapper")
+        if i + 1 >= len(argv) or not Path(argv[i + 1]).is_file():
+            out("STOP: --python-wrapper needs an existing script")
+            return 2
+        wrapper = Path(argv[i + 1]).resolve()
+        del argv[i:i + 2]
+        out(f"launcher: python -B {wrapper} (blob {_blob(wrapper)[:8]})")
     ids = {m[0] for m in mutants}
     unknown = [a for a in argv if a not in ids]
     if unknown:
@@ -141,8 +169,12 @@ def main(argv, root=".", mutants=MUTANTS, out=print):
         copy_tree(Path(root), work)
         base = {}
         for mods in sorted({tuple(m[4]) for m in chosen if m[3]}):
-            base[mods] = set(run_tests(work, list(mods))[1])
+            base[mods] = set(run_tests(work, list(mods), wrapper=wrapper)[1])
             out(f"baseline {' '.join(mods)}: " + (f"red {', '.join(sorted(base[mods]))}" if base[mods] else "green"))
+            masked = sorted(base[mods] & FIXTURES)
+            if masked:
+                out(f"STOP: baseline {' '.join(mods)}: {', '.join(masked)} red, which masks every test under it")
+                return 2
         for mid, slice_, item, edits, modules in chosen:
             if not edits:
                 pending += 1
@@ -154,7 +186,7 @@ def main(argv, root=".", mutants=MUTANTS, out=print):
                 out(f"STOP: {mid}: {e}")
                 return 2
             try:
-                rc, failed = run_tests(work, modules)
+                rc, failed = run_tests(work, modules, wrapper=wrapper)
             finally:
                 for f, text in saved.items():
                     (work / f).write_text(text, encoding="utf-8")
