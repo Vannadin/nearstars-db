@@ -319,12 +319,17 @@ def check_units(edges, boundaries, rid="?"):
         if src == "traced":
             r = owner[where]
             pb = u.get("p_b")
+            if not (ma._finite(r.get("p_lo")) and ma._finite(r.get("p_hi"))):   # an uncertified extension row has no
+                raise StoreRefusal("material.d2_store_edges_rows",              # pair: «traced» there is refused by id
+                                   f"record {rid}: {where} is «traced» on a row without p_lo/p_hi")
             if not (ma._finite(pb) and r["p_lo"] < pb < r["p_hi"]):
                 raise StoreRefusal("material.d2_store_edges_rows", f"record {rid}: {where} is «traced» with p_b {pb!r} "
                                    f"not strictly inside ({r['p_lo']!r}, {r['p_hi']!r})")
             over += m["gap_cells"] > 0.1 and kind == "unmatched"
             multi += m["n_candidates"] > 1
-        counts[kind] += 1
+        if not (where.startswith("row ") and " edge " not in where and owner[where].get("node_resolved")):
+            counts[kind] += 1                    # the writer's count (d2_edges_v2 rule 2): a node-resolved row's
+                                                 # edges are counted, the row itself is marked but not counted
     mine = {**counts, "unmatched_over_0p1_cell": over, "multi_candidate": multi}
     got = dict((edges.get("source") or {}).get("counts") or {})
     got.pop("coincident_created", None)          # the writer's own per-row flag (§5b: not an engine mismatch)
@@ -370,6 +375,8 @@ def _unit_sources(edges):
             for e in r.get("edges") or ():
                 out[key + (e["phase"],)] = e.get("p_b_source")
     for r in (edges.get("extension") or {}).get("rows", ()):
+        if not r.get("certified"):               # only certified extension rows are curve rows (curve_groups; the
+            continue                             # writer's d2_store_checks.sources): uncertified ones carry no p_lo/p_hi
         out[(r["t"], r["p_lo"], r["p_hi"], r["left"], r["right"], None)] = r.get("p_b_source")
     return out
 

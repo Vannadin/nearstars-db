@@ -342,12 +342,12 @@ def _synthetic_edges(boundaries):
     e = copy.deepcopy(boundaries)
     counts = {k: 0 for k in ds.MATCH_KINDS}
 
-    def mark(u, kind):
+    def mark(u, kind, count=True):
         u["p_b_source"], u["p_b_today"], u["match"] = "today", u.get("p_b"), {"kind": kind}
-        counts[kind] += 1
+        counts[kind] += count
     for r in e.get("rows", ()):
         if r.get("node_resolved"):
-            mark(r, "node")
+            mark(r, "node", count=False)         # as the writer (d2_edges_v2 rule 2): the row marked, its edges counted
             for x in r.get("edges") or ():
                 mark(x, "node")
         elif r.get("class") == "swap":
@@ -1102,6 +1102,39 @@ class ForcedSide(unittest.TestCase):
             want = ds.read_forced(self.doc, *self.b_pt, [(self.pb, side)])["values"]["rho"]
             self.assertEqual(coexist.side_rho(v, *self.b_pt, {c: side}), want)
         self.assertEqual(v.d2_counts[ds.FORCED], 2)
+
+
+class RealStoreShapes(unittest.TestCase):
+    """Shapes the real stores carry that the first fixtures did not (ea's A10 stand-in, 11-16; directing: fix the
+    class): uncertified extension rows with no p_lo/p_hi, and the writer's node count."""
+
+    def test_uncertified_extension_rows_are_not_curve_units(self):
+        edges = {"rows": [], "extension": {"rows": [
+            {"t": 1500.0, "left": "a", "right": "b", "certified": False, "pass_rows": [], "guess": 1e10,
+             "p_b_source": "today", "p_b_today": None, "match": {"kind": "extension"}},
+            {"t": 1600.0, "p_lo": 1e10, "p_hi": 2e10, "left": "a", "right": "b", "certified": True,
+             "p_b_source": "today"}]}}
+        self.assertEqual(ds._unit_sources(edges), {(1600.0, 1e10, 2e10, "a", "b", None): "today"})
+
+    def test_traced_on_a_row_without_its_pair_is_refused_by_id(self):
+        edges = {"rows": [], "extension": {"rows": [{"t": 1500.0, "left": "a", "right": "b", "certified": False,
+                                                     "p_b": 1.5e10, "p_b_source": "traced", "p_b_today": None,
+                                                     "match": {"kind": "accepted", **{k: 0 for k in ds.MATCH_POINT_KEYS}}}]}}
+        boundaries = {"rows": [], "extension": {"rows": [{"t": 1500.0, "p_b": None}]}}
+        with self.assertRaises(ds.StoreRefusal) as e:
+            ds.check_units(edges, boundaries, "x")
+        self.assertEqual(e.exception.id, "material.d2_store_edges_rows")
+        self.assertIn("without p_lo/p_hi", str(e.exception))
+
+    def test_a_node_resolved_row_counts_its_edges_not_itself(self):
+        row = {"t": 1500.0, "p_lo": 1e10, "p_hi": 2e10, "left": "a", "right": "b", "node_resolved": True,
+               "class": "edge", "p_b": 1.5e10, "edges": [{"phase": "x", "p_b": 1.5e10}, {"phase": "y", "p_b": 1.5e10}]}
+        e = _synthetic_edges({"rows": [row]})
+        self.assertEqual(e["source"]["counts"]["node"], 2)
+        ds.check_units(e, {"rows": [row]}, "x")                            # the loader's count is the writer's
+        e["source"]["counts"]["node"] = 3                                  # the row counted too: refused
+        with self.assertRaises(ds.StoreRefusal):
+            ds.check_units(e, {"rows": [row]}, "x")
 
 if __name__ == "__main__":
     unittest.main()
