@@ -890,10 +890,10 @@ class ReadPieceS2(unittest.TestCase):
         from unittest import mock
         v = self.routed()
         p_, t_ = self.pt
-        with mock.patch.object(ds, "s_parts", lambda doc, p, t: ("surface", 2500.0, -3e-12, -0.6)):
+        with mock.patch.object(ds, "s_parts", lambda doc, p, t, forced=None: ("surface", 2500.0, -3e-12, -0.6)):
             d = v.s_path(p_, t_)
             self.assertEqual((d.v, d.dx, d.dt) if hasattr(d, "dx") else tuple(d), (2500.0, -p_ * -3e-12, 0.6))
-        with mock.patch.object(ds, "s_parts", lambda doc, p, t: ("sliver", 2500.0, 4000.0, 3e-5, 1200.0)):
+        with mock.patch.object(ds, "s_parts", lambda doc, p, t, forced=None: ("sliver", 2500.0, 4000.0, 3e-5, 1200.0)):
             d = v.s_path(p_, t_)
             self.assertEqual((d.v, d.dx, d.dt) if hasattr(d, "dx") else tuple(d),
                              (2500.0, -p_ * 3e-5 / 4000.0, 1200.0 / t_))
@@ -1016,11 +1016,84 @@ class ReadPieceS3(unittest.TestCase):
     def test_the_forced_side_on_a_cut_cell_is_counted(self):
         from unittest import mock
         v = ma.view(self.rec, self.compact, 1600.0, store=self.store)
-        with mock.patch.object(ds, "class_at", lambda doc, p, t: "cut"), \
-                mock.patch.object(ds, "s_slopes", lambda doc, p, t: (1.0, 0.0, 1.0)):
-            v.s_path(2e10, 2000.0, force={object(): 1})
-            v.s_path(2e10, 2000.0)
-        self.assertEqual(v.d2_counts["d2: forced side on a cut cell"], 1)
+        class C:
+            def p_b_ext(self_, t, reach):
+                return 2.5e10
+        c = C()
+        with mock.patch.object(ds, "s_slopes", lambda doc, p, t, forced=None: (1.0, 0.0, 1.0)):
+            with mock.patch.object(ds, "forced_side", lambda doc, p, t, forced: ("A", None)):
+                v.s_path(2e10, 2000.0, force={c: 1})
+                v.s_path(2e10, 2000.0)                                   # no force: nothing counted
+            with mock.patch.object(ds, "forced_side", lambda doc, p, t, forced: (None, "planted")):
+                v.s_path(2e10, 2000.0, force={c: 1})
+            with mock.patch.object(ds, "forced_side", lambda doc, p, t, forced: None):
+                v.s_path(2e10, 2000.0, force={c: 1})                     # off a cut cell: not counted
+        self.assertEqual((v.d2_counts[ds.FORCED], v.d2_counts[ds.FORCED_TABLE]), (2, 1))
+
+
+class ForcedSide(unittest.TestCase):
+    """§5b (5) with D2-read note 7 (ii)/(iii): a force {curve: ±1} on a D2 cut cell picks A's virtual-corner surface or
+    B's four-corner surface by the forced curve's P_b in the cell's P span and the cut line's low/high P side; the
+    degenerate cases read today's forced table read, counted. On ea's cut fixture: cell 1,1 (P 2–3 GPa, T 1400–1500 K),
+    line (0.4, 0)–(0.6, 1), A's corners at u = 0, so A is the low-P side."""
+
+    @classmethod
+    def setUpClass(cls):
+        base = Path(__file__).resolve().parent / "fixtures" / "d2_reference" / "stores"
+        cls.doc = json.loads(gzip.decompress((base / "cut.json.gz").read_bytes()))
+        cls.a_pt, cls.b_pt = (2.1e9, 1450.0), (2.9e9, 1450.0)          # on A's side, on B's side
+        cls.pb = 2.5e9
+
+    def test_the_side_picks_a_or_b(self):
+        for pt in (self.a_pt, self.b_pt):
+            self.assertEqual(ds.forced_side(self.doc, *pt, [(self.pb, -1)]), ("A", None))
+            self.assertEqual(ds.forced_side(self.doc, *pt, [(self.pb, 1)]), ("B", None))
+
+    def test_a_forced_side_reads_that_sides_surface_bit_for_bit(self):
+        """Forced A on A's side and forced B on B's side are the unforced read itself (the same surface)."""
+        for pt, side in ((self.a_pt, -1), (self.b_pt, 1)):
+            self.assertEqual(ds.read_forced(self.doc, *pt, [(self.pb, side)]), ds.read_point(self.doc, *pt))
+            self.assertEqual(ds.s_slopes(self.doc, *pt, [(self.pb, side)]), ds.s_slopes(self.doc, *pt))
+        across = ds.read_forced(self.doc, *self.b_pt, [(self.pb, -1)])       # A continued onto B's side (disclosed)
+        self.assertEqual(across["field"], self.doc["cells"]["1,1"]["cut"]["a"])
+        self.assertNotEqual(across["values"], ds.read_point(self.doc, *self.b_pt)["values"])
+
+    def test_p_b_on_the_cells_p_nodes_follows_the_lower_cell_tie(self):
+        ps = self.doc["grid"]["ps"]
+        self.assertEqual(ds.forced_side(self.doc, *self.a_pt, [(ps[2], -1)]), ("A", None))   # upper node: this cell
+        self.assertEqual(ds.forced_side(self.doc, *self.a_pt, [(ps[1], -1)]),
+                         (None, "no forced curve in the cell"))                               # lower node: the cell below
+
+    def test_the_degenerate_cases_read_the_table_and_are_counted(self):
+        v = types.SimpleNamespace(d2_counts={})
+        flat = copy.deepcopy(self.doc)
+        flat["cells"]["1,1"]["cut"]["points"] = [[0.0, 0.5], [1.0, 0.5]]
+        cases = ((self.doc, [(1.5e9, -1)], "no forced curve in the cell"),
+                 (self.doc, [(self.pb, -1), (2.6e9, 1)], "two or more forced curves in the cell"),
+                 (self.doc, [(None, -1)], "no forced curve in the cell"),
+                 (flat, [(self.pb, -1)], "the cut line has no P side"))
+        for doc, forced, why in cases:
+            self.assertEqual(ds.forced_side(doc, *self.a_pt, forced), (None, why))
+            self.assertEqual(ds.read_forced(doc, *self.a_pt, forced, v)["read"], "table")
+            self.assertIsNone(ds.s_slopes(doc, *self.a_pt, forced))
+        ds.read_forced(self.doc, *self.a_pt, [(self.pb, -1)], v)
+        self.assertEqual((v.d2_counts[ds.FORCED], v.d2_counts[ds.FORCED_TABLE]), (5, 4))
+
+    def test_off_a_cut_cell_the_force_changes_nothing(self):
+        pt = (1.5e9, 1350.0)                                                  # a d2 cell
+        self.assertIsNone(ds.forced_side(self.doc, *pt, [(1.5e9, -1)]))
+        self.assertEqual(ds.read_forced(self.doc, *pt, [(1.5e9, 1)]), ds.read_point(self.doc, *pt))
+
+    def test_side_rho_goes_through_the_dispatch(self):
+        """§5b (5) (i): coexist's side_rho reads the forced side on a D2 view (side_s does through s_path)."""
+        from solver import coexist
+        c = object()
+        v = types.SimpleNamespace(_d2=self.doc, p_dataset=136e9, d2_counts={}, ps=self.doc["grid"]["ps"],
+                                  ts=self.doc["grid"]["ts"], forced_pbs=lambda force, t: [(self.pb, force[c])])
+        for side in (-1, 1):
+            want = ds.read_forced(self.doc, *self.b_pt, [(self.pb, side)])["values"]["rho"]
+            self.assertEqual(coexist.side_rho(v, *self.b_pt, {c: side}), want)
+        self.assertEqual(v.d2_counts[ds.FORCED], 2)
 
 if __name__ == "__main__":
     unittest.main()

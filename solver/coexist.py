@@ -208,6 +208,11 @@ def side_rho(v, p, t, force):
     pr = max(p, v.ps[0])
     ia = min(max(bisect.bisect_left(v.ps, pr, 1) - 1, 0), len(v.ps) - 2)
     ib = min(max(bisect.bisect_right(v.ts, t) - 1, 0), len(v.ts) - 2)
+    if getattr(v, "_d2", None) is not None and p <= v.p_dataset:   # §5b (5) (i): through the dispatch, as side_s
+        from solver import d2_store as ds
+        r = ds.read_forced(v._d2, p, t, v.forced_pbs(force, t), v)
+        if r["read"] != "table":                 # a cut cell's forced side (note 7), or a d2 / subgrid answer
+            return float(r["values"]["rho"])
     n, counts, marks, memo = len(v.notes), dict(v.cut_counts), v._marks, v._read_memo
     v._in_bridge = True
     try:

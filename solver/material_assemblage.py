@@ -1530,6 +1530,7 @@ class AssemblageView(mv.RecordView):
         #: are exactly (2b)'s STOPs for swaps, refused at load, §5b (4)); §5a's `table_regardless_reads`
         self.d2_counts = {n: 0 for n in _ds.COUNT_NAMES}
         self.d2_counts["table_regardless_reads"] = 0
+        self.d2_counts[_ds.FORCED_TABLE] = 0     # note 7: §5b (5) (iii)'s forced table reads
         self._parts, self._runcache = {}, {}
         #: PROTOTYPE: the highest frozen node T (rows above it hold no frozen run; _flag_reads' precheck)
         self._t_frozen_max = max((c["t"] for c in table["cells"] if c["kind"] == "frozen"), default=-math.inf)
@@ -1801,6 +1802,11 @@ class AssemblageView(mv.RecordView):
         got = out["rho"], out["dtdp_eq"], out["c_p"], [c for c in corners if c is not None]
         return got if not self.s_read else self._with_s(p, t, pr, ia, ib, got)
 
+    def forced_pbs(self, force, t):
+        """[(P_b(t), side)] of a force's curves (coexist's {curve: side}, on the position set, transitions' ids) for the
+        D2 forced read (§5b (5), D2-read note 7 (ii)); P_b by each curve's own p_b_ext with the view's reach."""
+        return [(c.p_b_ext(t, self._reach), s_) for c, s_ in force.items()]
+
     def s_path(self, p, t, force=None):
         """The s read at (p, t) with its exact derivatives (s-read §3.0): a Dual (s, ∂s/∂lnP, ∂s/∂T); None when the
         read's stencil holds a frozen node (§3.2: today's read stands there); or a Stop. Leaves no note, count, mark or
@@ -1812,9 +1818,13 @@ class AssemblageView(mv.RecordView):
         declares it» with Q6 «s_path through the same dispatch» puts the dispatch before it (68 n on e901a8ac)."""
         if self._d2 is not None:
             from solver import d2_store as ds
-            if force and ds.class_at(self._d2, p, t) == "cut":      # §5b (5): a forced side on a D2 cut cell, counted
-                self.d2_counts["d2: forced side on a cut cell"] += 1
-            got = ds.s_slopes(self._d2, p, t)
+            forced = self.forced_pbs(force, t) if force else None
+            fs = ds.forced_side(self._d2, p, t, forced) if forced else None
+            if fs is not None:                       # §5b (5), note 7: a forced side on a D2 cut cell, counted
+                self.d2_counts[ds.FORCED] += 1
+                if fs[0] is None:
+                    self.d2_counts[ds.FORCED_TABLE] += 1
+            got = ds.s_slopes(self._d2, p, t, forced)
             if got is not None:
                 return Dual(*got)
         pr = max(p, self.ps[0])
