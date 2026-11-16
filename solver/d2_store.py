@@ -154,6 +154,7 @@ def load(record_doc, compact, materials_dir, compact_sha256=None):
     state, rel = check_keys(record_doc)
     if state == "off":
         return None
+    compact = ma.mv.thaw_plain(compact)          # plain, as check_edges (the registry's table is frozen)
     path = Path(materials_dir) / rel
     if not path.is_file():
         raise StoreRefusal("material.d2_store_missing", f"record {rid}: no file {rel}")
@@ -524,6 +525,8 @@ def today_segments(store_doc, view):
 def check_edges(loaded, compact, record_doc):
     """All of §5b's load checks on a loaded store, in order; raises the first StoreRefusal."""
     rid, doc = record_doc.get("id"), loaded.doc
+    compact = ma.mv.thaw_plain(compact)          # the registry hands its frozen table (MappingProxy, tuples): every
+                                                 # comparison below is against the store's plain JSON (ea's B7)
     b = ma.boundary_block(None, compact, None, "read") or {}      # the compact's block (§5b load checks)
     ps, ts = nodes(compact)
     check_edges_rows(doc["edges"], b, rid)

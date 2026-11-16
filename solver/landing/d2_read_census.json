@@ -51,21 +51,21 @@
   },
   {
    "path": "solver/d2_store.py",
-   "line": 214,
+   "line": 215,
    "kind": "record_key",
    "function": "chain",
    "use": null
   },
   {
    "path": "solver/d2_store.py",
-   "line": 520,
+   "line": 530,
    "kind": "switch",
    "function": "check_edges",
    "use": "read"
   },
   {
    "path": "solver/d2_store.py",
-   "line": 526,
+   "line": 536,
    "kind": "view",
    "function": "check_edges",
    "use": null

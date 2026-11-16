@@ -407,6 +407,15 @@ class Loader(unittest.TestCase):
         got = self.load()
         self.assertEqual(got.state, "eligible")
 
+    def test_the_registrys_frozen_table_gives_the_plain_tables_verdict(self):
+        """ea's B7 (A10 stand-in, 11-16): Registry hands the loader its frozen table (MappingProxy, tuples); every
+        comparison against the store's plain JSON must give the plain table's answer"""
+        from solver.result import freeze
+        rec = thaw(reg().get(self.RID)) | {k: self.record[k] for k in ("id",)}
+        for comp in (self.compact, freeze(self.compact)):
+            got = ds.load(self.record, comp, self.dir.name, compact_sha256="c" * 64)
+            ds.check_edges(got, comp, rec)                                 # passes on both forms
+
     def test_off_never_opens_the_store_and_absent_is_off(self):
         rec = {"id": self.RID}
         self.assertIsNone(ds.load(rec, self.compact, "/nonexistent"))
