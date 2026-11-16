@@ -39,6 +39,11 @@ record:
   assemblage:      {shape: record, of: assemblage}         # assemblage: its compact table and what rides with it (§2.2)
   handover_table:  {shape: record, of: handover_table}     # a handover-form record: its thermal blocks, one per SLB
                                                            # record it takes over from (silicate reg. §3.4, note 7 §3)
+  d2_read:         {shape: text}                           # assemblage: the D2 read's state, off / eligible / ruled;
+                                                           # absent = off (D2-read §2). Text, not an enum, so an
+                                                           # unknown value is d2_store's named refusal d2_read_unknown
+  d2_read_basis:   {shape: mapping}                        # its basis, checked by d2_store.load (material.d2_read_basis)
+  d2_store:        {shape: mapping}                        # {path, sha256} of the store under fields/ (d2_store.load)
 
 phase:
   id:          {shape: text, required: true}

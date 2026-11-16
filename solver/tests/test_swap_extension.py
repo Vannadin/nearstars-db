@@ -362,10 +362,10 @@ class CoincidentEdgeSwapsReachZero(unittest.TestCase):
         from solver import material_registry as mr
         from solver.from_v1 import thaw
         src = open(ma.__file__, encoding="utf-8").read()
-        self.assertEqual(src.count("                        if extension:\n"), 1)
+        self.assertEqual(src.count("                    if extension:\n"), 1)
         mut = types.ModuleType("material_assemblage_flags_before_rekind")
         mut.__file__ = ma.__file__
-        exec(compile(src.replace("                        if extension:\n", "                        if False:\n"),
+        exec(compile(src.replace("                    if extension:\n", "                    if False:\n"),
                      ma.__file__, "exec"), mut.__dict__)
         reg = mr.load()
         if "extension" not in reg.tables[BSE].get("boundaries", {}):

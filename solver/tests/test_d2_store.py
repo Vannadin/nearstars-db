@@ -32,7 +32,7 @@ def reg():
     return _REG
 
 
-# ── note 2 (1) condition 1: no pinned module changed, and this module is outside the read closure ──────────────────
+# ── note 2 (1) condition 1 (view piece), and S1's closure change (read piece) ───────────────────────────────────────
 class Dormant(unittest.TestCase):
     def test_material_assemblage_is_the_blob_the_tables_pin(self):
         self.assertEqual(ma.module_blob(), PINNED_BLOB)
@@ -50,9 +50,13 @@ class Dormant(unittest.TestCase):
             out = subprocess.run(["git", "hash-object", str(f)], capture_output=True, text=True, check=True).stdout
             self.assertEqual(out.strip(), planted)
 
-    def test_d2_store_is_not_in_the_read_closure(self):
-        self.assertNotIn("d2_store", fall_sets.closure(ROOT))
-        self.assertIn("material_assemblage", fall_sets.closure(ROOT))
+    def test_d2_store_enters_the_read_closure_with_the_read_piece(self):
+        """View piece: d2_store was outside closure() (note 2 (1) condition 1). Read piece S1: material_registry loads
+        the store (Registry.d2_store), so d2_store enters the closure, 13 → 14 modules (note 2 «Hence»; row c8-12)."""
+        got = fall_sets.closure(ROOT)
+        self.assertIn("d2_store", got)
+        self.assertIn("material_assemblage", got)
+        self.assertEqual(len(got), 14, got)
 
 
 # ── conditions 2 and 3: the coincident set and _reach, re-implemented, equal to init's ────────────────────────────
@@ -608,6 +612,162 @@ class ReadPieceInterface(unittest.TestCase):
         from solver.landing import d2_read_census as c
         self.assertEqual(c.SITE_KEYS, ("path", "line", "kind", "function"))
         self.assertEqual(c.KINDS, ("option", "record_key", "view", "solid", "boundaries", "table_regardless"))
+
+
+class ReadPieceS1(unittest.TestCase):
+    """S1 (D2-read §4, §5b (2), (2a), (6)): the switch, the two curve sets on a D2-routed view, the routing, the force
+    map and the curve identity refusal. A routed view is built with a fixture store whose `edges` block is the khan
+    compact's block with one cut run's P_b moved inside its pair (a «traced» row); the read set stays the compact's."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.rec = thaw(reg().get(KHAN))
+        cls.compact = thaw(reg().tables[KHAN])
+        cls.edges = copy.deepcopy(cls.compact["boundaries"])
+        v0 = ma.view(cls.rec, cls.compact, 1600.0)
+        cut = next(c for c in v0._cut if c.kind == "edge" and len(c.rows) >= 2)
+        cls.moved_t = cut.rows[0]["t"]
+        for r in cls.edges["rows"]:                       # move that run's first row's P_b by a tenth of its pair
+            if r["t"] == cls.moved_t and abs(r["p_lo"] - cut.rows[0]["p_lo"]) == 0.0:
+                for e in r["edges"]:
+                    if e.get("p_b") == cut.rows[0]["p_b"]:
+                        e["p_b"] = e["p_b"] + 0.1 * (r["p_hi"] - e["p_b"])
+                        cls.moved = True
+        cls.store = ds.Loaded("eligible", {"edges": cls.edges}, "0" * 64)
+
+    def routed(self, **kw):
+        return ma.view(self.rec, self.compact, 1600.0, store=self.store, **kw)
+
+    def test_fixture_moves_a_position(self):
+        self.assertTrue(getattr(self, "moved", False))
+
+    def test_the_switch(self):
+        """§5b (2): the store's block only for «position» on a routed record; the compact's for «read», unrouted, and
+        in table-regardless mode (the view passes store=None then)."""
+        self.assertIs(ma.boundary_block(self.rec, self.compact, self.store, "position"), self.edges)
+        self.assertIs(ma.boundary_block(self.rec, self.compact, self.store, "read"), self.compact["boundaries"])
+        self.assertIs(ma.boundary_block(self.rec, self.compact, None, "position"), self.compact["boundaries"])
+        v = self.routed(table_regardless="test")
+        self.assertIs(v._pos, v._read_set)
+
+    def test_unrouted_is_one_set_object_for_object(self):
+        v = ma.view(self.rec, self.compact, 1600.0)
+        self.assertIs(v._pos, v._read_set)
+        self.assertIsNone(v._pos_read)
+
+    def test_positions_from_the_store_reads_from_the_compact(self):
+        """§5b (2) test: on the routed view, transitions and boundary_pressure equal those of a view whose table block
+        IS the store's block, bit for bit; the read curves equal the unrouted view's."""
+        v = self.routed()
+        as_table = ma.view(self.rec, {**self.compact, "boundaries": self.edges}, 1600.0)
+        plain = ma.view(self.rec, self.compact, 1600.0)
+        self.assertEqual(v.transitions(), as_table.transitions())
+        for i, (_n, _k, cv) in enumerate(v.transitions()):
+            for t in (self.moved_t, self.moved_t + 25.0):
+                self.assertEqual(repr(v.boundary_pressure(cv, t)), repr(as_table.boundary_pressure(cv, t)), (i, t))
+        self.assertEqual([[r["p_b"] for r in c.rows] for c in v._curves], [[r["p_b"] for r in c.rows] for c in plain._curves])
+        moved = [c for c in v._pos.curves if any(r["t"] == self.moved_t for r in c.rows)]
+        self.assertNotEqual([[r["p_b"] for r in c.rows] for c in v._pos.curves],
+                            [[r["p_b"] for r in c.rows] for c in v._curves], moved)
+
+    def test_mutant_position_reader_left_on_the_compact(self):
+        """§5b's mutant «a position reader left on the compact's block» must fail the test above."""
+        from unittest import mock
+        with mock.patch.object(ma, "boundary_block", lambda rec, table, store, use: table["boundaries"]):
+            v = self.routed()
+        as_table = ma.view(self.rec, {**self.compact, "boundaries": self.edges}, 1600.0)
+        self.assertNotEqual([c.rows[0]["p_b"] for c in v._pos.events], [c.rows[0]["p_b"] for c in as_table._events])
+
+    def test_mutant_read_curves_from_the_store(self):
+        """§5b (6)'s mutant «the read curves taken from the store» must change the read set."""
+        from unittest import mock
+        real = ma.boundary_block
+        with mock.patch.object(ma, "boundary_block",
+                               lambda rec, table, store, use: real(rec, table, store, "position")):
+            v = self.routed()
+        plain = ma.view(self.rec, self.compact, 1600.0)
+        self.assertNotEqual([[r["p_b"] for r in c.rows] for c in v._curves],
+                            [[r["p_b"] for r in c.rows] for c in plain._curves])
+
+    def test_force_on_a_position_curve_forces_its_read_curve(self):
+        """§5b (6) «Curve identity across the two sets»: a {curve: side} on a position run is the same force as on the
+        read run with its id and T span."""
+        v = self.routed()
+        pos = next(c for c in v._pos.cut if c.kind == "swap") if any(c.kind == "swap" for c in v._pos.cut) else v._pos.cut[0]
+        rd = v._pos_read[pos]
+        self.assertIsNot(pos, rd)
+        self.assertEqual((pos.id, pos.t0, pos.t1), (rd.id, rd.t0, rd.t1))
+        t = 0.5 * (pos.t0 + pos.t1) if pos.t1 > pos.t0 else pos.t0
+        p = rd.p_b(t)
+        got = {}
+        for side in (-1, 1):
+            a = v.s_path(p * (1 + 1e-9), t, force={pos: side})
+            b = v.s_path(p * (1 + 1e-9), t, force={rd: side})
+            self.assertEqual(repr(a), repr(b), side)
+            got[side] = repr(a)
+        self.assertNotEqual(got[-1], got[1])               # not vacuous: the force decides the answer here
+        v._pos_read = None                                   # the mutant: no map, a position curve's force is dropped
+        self.assertNotEqual({repr(v.s_path(p * (1 + 1e-9), t, force={pos: s_})) for s_ in (-1, 1)}, set(got.values()))
+
+    def test_a_curve_in_one_set_only_is_refused_by_name(self):
+        edges = copy.deepcopy(self.edges)
+        t_last = max(r["t"] for r in edges["rows"])
+        edges["rows"] = [r for r in edges["rows"] if r["t"] != t_last]
+        with self.assertRaises(ma.TableStop) as cm:
+            ma.view(self.rec, self.compact, 1600.0, store=ds.Loaded("eligible", {"edges": edges}, "0" * 64))
+        self.assertIn("curve id in one set only", str(cm.exception))
+
+    def test_fall_sets_reads_the_store_blocks_extension_rows(self):
+        """§5b (2a): planted different extension rows in the table's block and the store's; the store's are read."""
+        comp = copy.deepcopy(self.compact)
+        edges = copy.deepcopy(self.edges)
+        comp["boundaries"]["extension"] = {"rows": [], "rule": {"ext_rows": 2}}
+        t = self.compact["cells"][0]["t"]
+        edges["extension"] = {"rows": [{"t": t, "curve_end_t": -1.0, "p_b": 7.77e9}], "rule": {"ext_rows": 2}}
+        v = ma.view(self.rec, comp, 1600.0, store=ds.Loaded("eligible", {"edges": edges}, "0" * 64))
+        pts = fall_sets._region_points(v, comp)["swap_extension"]
+        self.assertTrue(any(abs(p / 7.77e9 - 1.0) < 1e-2 for p, _t in pts), pts[:4])
+        v0 = ma.view(self.rec, comp, 1600.0)
+        self.assertFalse(any(abs(p / 7.77e9 - 1.0) < 1e-2 for p, _t in fall_sets._region_points(v0, comp)["swap_extension"]))
+
+    def test_routing_off_never_opens_the_store_and_reads_today(self):
+        """§4: d2_read off (or absent) reads today's answer and never opens a store; a planted unreadable store file
+        under fields/ stays unread. Registry.d2_store is None for it."""
+        from unittest import mock
+        rec_off = {**self.rec, "d2_read": "off"}
+        opened = []
+        real = Path.read_bytes
+        with mock.patch.object(Path, "read_bytes", lambda self_: opened.append(str(self_)) or real(self_)):
+            self.assertIsNone(ds.load(rec_off, self.compact, ROOT / "solver" / "materials"))
+        self.assertFalse([f for f in opened if "/fields/" in f], opened)
+        self.assertIsNone(reg().d2_store(KHAN))                 # no d2_read key: off, store never asked
+        a, b = ma.view(rec_off, self.compact, 1600.0), ma.view(self.rec, self.compact, 1600.0)
+        for p_, t_ in ((5e9, 1600.0), (2e10, 2100.0)):
+            self.assertEqual(repr(a.state(p_, t_)), repr(b.state(p_, t_)))
+
+    def test_global_off_never_asks_for_a_store(self):
+        """§4's first row: global off × eligible stays legacy and the store is not even asked for."""
+        from unittest import mock
+        from solver import solve as sv
+        asked = []
+
+        class R:
+            development = False
+            tables = {KHAN: self.compact}
+
+            def get(self_, rid):
+                return reg().get(rid)
+
+            def d2_store(self_, rid):
+                asked.append(rid)
+                raise AssertionError("asked")
+        body = mock.Mock()
+        body.surface.t_pot = 1600.0
+        layer = mock.Mock(material="silicate", composition=None)
+        with mock.patch.object(sv.lm.interior, "MATERIALS", {}):
+            got = sv._assemblage_view(body, layer, KHAN, 0.0, R(), silicate=False)
+        self.assertEqual(asked, [])
+        self.assertIsNone(got[1])
 
 if __name__ == "__main__":
     unittest.main()

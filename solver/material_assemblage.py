@@ -17,6 +17,7 @@ import bisect
 import itertools
 import math
 import os
+import types
 from collections.abc import Sequence
 from types import MappingProxyType
 
@@ -1387,6 +1388,80 @@ def _lm():
     return legacy_materials
 
 
+def _curve_set(b, ts):
+    """One curve set of an AssemblageView, built from one `boundaries`-shaped block (the compact's, or on a D2-routed
+    record the store's `edges` block for positions; D2-read §5b (2), (6)): the full curves, the cut runs with init's
+    coincident merge, the event runs, the swap row steps and the note-8 Δ_c of every curve. The body is today's
+    AssemblageView init, moved here unchanged so the two sets are built by one code."""
+    cs = types.SimpleNamespace()
+    b = b or {}
+    exported = b.get("status") == "exported"
+    #: every exported curve: the seam events (transitions) and the disclosures
+    cs.curves = build_curves(b, ts) if exported else []
+    #: the curves that cut the stencil: each full curve split into its maximal runs of rows (A″) does not read
+    #: across (row_across), so a cut curve's links are always links of the full set (68 B1 on 2453b935)
+    cs.cut = _cut_runs(cs.curves)
+    #: cut runs that coincide with another at every row (P_b equal to 1e-9; e.g. dmm's cpx and wa edges at
+    #: 16.280025 GPa, 1450 K) are a step, not two edges: read as a swap, no (c′) blend, with SWAP_NOTE (68 N2,
+    #: r2's Q1 degenerate limit); both land as events at one P, and the first landed leaves the other on its new side
+    cs.coincident = 0
+    extension = b.get("extension") is not None
+    by_ts = {}
+    for c in cs.cut:
+        by_ts.setdefault(tuple(r["t"] for r in c.rows), []).append(c)
+    for group in by_ts.values():
+        for a in group:
+            if any(b is not a and all(abs(ra["p_b"] - rb["p_b"]) <= 1e-9 * ra["p_b"] for ra, rb in zip(a.rows, b.rows))
+                   for b in group):
+                if a.kind == "edge":
+                    cs.coincident += 1
+                    a.was_edge = True
+                    a.kind = "swap"
+                    if extension:
+                        # r2 6c6c1e94 (swap-extension post-freeze note 2): past a coincident pair's rows the same
+                        # edges exist as their own runs, read as edges, so an extrapolated step there is a second,
+                        # unlocated representation of one transition — reach 0 at both ends, as a swap curve's
+                        # true ends; set here, before the row steps are listed, so its ends are row-step sources
+                        a.rows[0]["reach0_lo"] = a.rows[-1]["reach0_hi"] = True
+                        a.stop_lo = a.stop_hi = True
+                a.kind = "swap"
+    #: the event curves (transitions): the cut runs, landed at their extended P_b ((R1) §4), then the runs read
+    #: across, at their own P_b; indices are the ids the event names carry
+    cs.events = cs.cut + _cut_runs(cs.curves, across=True)
+    # swap extension note 1 (r2 addendum 4 143d0a96): past a reach-0 swap end the read takes no side for the curve,
+    # and each stencil row holding it splits at its own P_b(T_k) (_region's own geometry): a step weighted by that
+    # row's T weight, landed as an event while the read's cell holds the row (_row_step_p). (curve, row) pairs: the
+    # end row and the next row inside, each end
+    cs.row_steps = []
+    for c in cs.cut:
+        if c.kind != "swap":
+            continue
+        for lo, te in ((True, c.t0), (False, c.t1)):
+            if not (c.stop_lo if lo else c.stop_hi):
+                continue
+            j = ts.index(te)
+            for k in ((j, j + 1) if lo else (j - 1, j)):
+                if 0 <= k < len(ts) and c.p_b(ts[k]) is not None and (c, k) not in cs.row_steps:
+                    cs.row_steps.append((c, k))
+    for c in cs.cut + cs.curves:              # note 8: Δ_c, the next table T row past each end
+        j0, j1 = ts.index(c.t0), ts.index(c.t1)
+        c.dc_lo = c.t0 - ts[j0 - 1] if j0 > 0 else None
+        c.dc_hi = ts[j1 + 1] - c.t1 if j1 + 1 < len(ts) else None
+    return cs
+
+
+def _pos_to_read(pos_events, read_events):
+    """{position run: read run} by (curve id, T span) (D2-read §5b (6)); TableStop when a run is in one set only."""
+    key = lambda c: (c.id, c.t0, c.t1)                    # noqa: E731
+    rd = {key(c): c for c in read_events}
+    pd = {key(c): c for c in pos_events}
+    only = sorted(set(rd) ^ set(pd), key=repr)
+    if only:
+        raise TableStop(f"curve id in one set only (store block vs compact block): {only[:4]} (D2-read §5b (6))",
+                        check="d2 curve identity")
+    return {pd[k]: rd[k] for k in pd}
+
+
 class AssemblageView(mv.RecordView):
     """An assemblage record as the integrator reads it (registration §3). A RecordView subclass so the notes
     collector reads it (68 S2), answering every attribute the solver reads (§3.1's class sweep): density, dtdp and
@@ -1394,7 +1469,8 @@ class AssemblageView(mv.RecordView):
     names as legacy silicate's; the record id as `name`; `.record` with the compact sha, so solve_id binds the
     table (68 S1). RecordView's own branches (sets, γ windows, joins, the K_T stencil) are never entered."""
 
-    def __init__(self, record, table, t_pot: float, p_stop: float = 0.0, p_floor: float = 0.0, handover=None):
+    def __init__(self, record, table, t_pot: float, p_stop: float = 0.0, p_floor: float = 0.0, handover=None,
+                 store=None, *, table_regardless=None):
         self.material_id = record["id"]
         self.name = record["id"]                 # solve._pass keys its GrazeMonitor on this (68)
         #: the hand-over above p_dataset (a HandOver, note 7 §3), or None: then a read above p_dataset refuses (§3.4)
@@ -1418,61 +1494,30 @@ class AssemblageView(mv.RecordView):
         self.ts = sorted({c["t"] for c in table["cells"]})
         self.lnps = [math.log(p) for p in self.ps]
         self.columns = {c["p"]: c for c in table["columns"]}
-        b = table.get("boundaries") or {}
-        exported = b.get("status") == "exported"
-        #: every exported curve: the seam events (transitions) and the disclosures
-        self._curves = build_curves(b, self.ts) if exported else []
-        #: the curves that cut the stencil: each full curve split into its maximal runs of rows (A″) does not read
-        #: across (row_across), so a cut curve's links are always links of the full set (68 B1 on 2453b935)
-        self._cut = _cut_runs(self._curves)
-        #: cut runs that coincide with another at every row (P_b equal to 1e-9; e.g. dmm's cpx and wa edges at
-        #: 16.280025 GPa, 1450 K) are a step, not two edges: read as a swap, no (c′) blend, with SWAP_NOTE (68 N2,
-        #: r2's Q1 degenerate limit); both land as events at one P, and the first landed leaves the other on its new side
-        self.coincident = 0
-        extension = b.get("extension") is not None
-        by_ts = {}
-        for c in self._cut:
-            by_ts.setdefault(tuple(r["t"] for r in c.rows), []).append(c)
-        for group in by_ts.values():
-            for a in group:
-                if any(b is not a and all(abs(ra["p_b"] - rb["p_b"]) <= 1e-9 * ra["p_b"] for ra, rb in zip(a.rows, b.rows))
-                       for b in group):
-                    if a.kind == "edge":
-                        self.coincident += 1
-                        a.was_edge = True
-                        a.kind = "swap"
-                        if extension:
-                            # r2 6c6c1e94 (swap-extension post-freeze note 2): past a coincident pair's rows the same
-                            # edges exist as their own runs, read as edges, so an extrapolated step there is a second,
-                            # unlocated representation of one transition — reach 0 at both ends, as a swap curve's
-                            # true ends; set here, before the row steps are listed, so its ends are row-step sources
-                            a.rows[0]["reach0_lo"] = a.rows[-1]["reach0_hi"] = True
-                            a.stop_lo = a.stop_hi = True
-                    a.kind = "swap"
-        #: the event curves (transitions): the cut runs, landed at their extended P_b ((R1) §4), then the runs read
-        #: across, at their own P_b; indices are the ids the event names carry
-        self._events = self._cut + _cut_runs(self._curves, across=True)
-        # swap extension note 1 (r2 addendum 4 143d0a96): past a reach-0 swap end the read takes no side for the curve,
-        # and each stencil row holding it splits at its own P_b(T_k) (_region's own geometry): a step weighted by that
-        # row's T weight, landed as an event while the read's cell holds the row (_row_step_p). (curve, row) pairs: the
-        # end row and the next row inside, each end
-        self._row_steps = []
-        for c in self._cut:
-            if c.kind != "swap":
-                continue
-            for lo, te in ((True, c.t0), (False, c.t1)):
-                if not (c.stop_lo if lo else c.stop_hi):
-                    continue
-                j = self.ts.index(te)
-                for k in ((j, j + 1) if lo else (j - 1, j)):
-                    if 0 <= k < len(self.ts) and c.p_b(self.ts[k]) is not None and (c, k) not in self._row_steps:
-                        self._row_steps.append((c, k))
+        #: the D2 read's routing (D2-read §4, §5b (2), (6)): `store` is the record's loaded D2 store (d2_store.Loaded)
+        #: on a D2-routed record (global silicate_records on × d2_read eligible or ruled), else None. On a D2-routed
+        #: record the **position curves** come from the store's `edges` block and the **read curves** from the compact's;
+        #: otherwise both are the compact's, one set (today's read, object for object). In table-regardless mode (§5a)
+        #: the switch is asked as for an unrouted record, so both are the compact's.
+        self.store = store
+        self.table_regardless = table_regardless
+        sw = None if table_regardless else store
+        read_block = boundary_block(record, table, sw, "read")
+        pos_block = boundary_block(record, table, sw, "position")
+        ts = self.ts
         #: (R1) §4: a cut curve's side reach past its ends, two T rows (the stencil's reach)
-        self._reach = EXT_ROWS * (self.ts[1] - self.ts[0]) if len(self.ts) > 1 else 0.0
-        for c in self._cut + self._curves:              # note 8: Δ_c, the next table T row past each end
-            j0, j1 = self.ts.index(c.t0), self.ts.index(c.t1)
-            c.dc_lo = c.t0 - self.ts[j0 - 1] if j0 > 0 else None
-            c.dc_hi = self.ts[j1 + 1] - c.t1 if j1 + 1 < len(self.ts) else None
+        self._reach = EXT_ROWS * (ts[1] - ts[0]) if len(ts) > 1 else 0.0
+        self._read_set = _curve_set(read_block, ts)
+        #: the position set: the same object as the read set unless the record is D2-routed
+        self._pos = self._read_set if pos_block is read_block else _curve_set(pos_block, ts)
+        rs = self._read_set
+        #: every exported curve: the seam events (transitions) and the disclosures
+        self._curves, self._cut, self._events, self._row_steps = rs.curves, rs.cut, rs.events, rs.row_steps
+        self.coincident = rs.coincident
+        #: §5b (6) «Curve identity across the two sets»: a position event run maps to the read run with its curve id and
+        #: T span, so a `force` {curve: side} given on position curves (coexist's side reads, from transitions' ids)
+        #: forces the read's own curve. None when unrouted (one set). A run in one set only is a refusal by name.
+        self._pos_read = None if self._pos is rs else _pos_to_read(self._pos.events, rs.events)
         self._parts, self._runcache = {}, {}
         #: PROTOTYPE: the highest frozen node T (rows above it hold no frozen run; _flag_reads' precheck)
         self._t_frozen_max = max((c["t"] for c in table["cells"] if c["kind"] == "frozen"), default=-math.inf)
@@ -1781,6 +1826,8 @@ class AssemblageView(mv.RecordView):
         for c in rel:
             pb = c.p_b_ext(t, self._reach)
             sides[c] = None if pb is None else (-1 if pr < pb else 1)
+        if force and self._pos_read is not None:     # §5b (6): a position curve forces its read curve
+            force = {self._pos_read.get(c, c): s_ for c, s_ in force.items()}
         if force:
             sides.update({c: s_ for c, s_ in force.items() if c in sides})
         for k in rows:
@@ -2223,6 +2270,8 @@ class AssemblageView(mv.RecordView):
                      key=lambda c: c.id)
         pbs = {c: c.p_b_ext(t, self._reach) for c in rel}
         sides = {c: (None if pb is None else (-1 if pr < pb else 1)) for c, pb in pbs.items()}
+        if force and self._pos_read is not None:     # §5b (6): a position curve forces its read curve
+            force = {self._pos_read.get(c, c): s_ for c, s_ in force.items()}
         if force:
             sides.update({c: s_ for c, s_ in force.items() if c in sides})
         near = []                                        # the edges whose (c′) window holds x: (curve, x_b, w), per read
@@ -2709,17 +2758,28 @@ class AssemblageView(mv.RecordView):
     def transitions(self) -> tuple:
         """Exported curves as solid_solid seams (§3.3): the cut runs at their extended P_b ((R1) §4: a swap steps
         there, fading past its end with the partitioned rows' T weight, not monotonically), then the runs read across
-        at their own P_b (no step); pending boundaries give none. Ids index self._events."""
+        at their own P_b (no step); pending boundaries give none. Ids index the position set's events (self._pos;
+        D2-read §5b (2): on a D2-routed record the store's curves, else the compact's, the same objects as the read's)."""
         return tuple(((f"{c.kind}{i}:{c.rows[0]['left_label']}", f"{c.rows[0]['right_label']}"), "solid_solid",
-                      {"form": "assemblage_curve", "id": i}) for i, c in enumerate(self._events)) + \
+                      {"form": "assemblage_curve", "id": i}) for i, c in enumerate(self._pos.events)) + \
             tuple(((f"rowstep{i}:{c.rows[0]['left_label']}@{self.ts[k]:g}", f"{c.rows[0]['right_label']}"), "solid_solid",
-                   {"form": "assemblage_row_step", "id": i}) for i, (c, k) in enumerate(self._row_steps))
+                   {"form": "assemblage_row_step", "id": i}) for i, (c, k) in enumerate(self._pos.row_steps))
 
     def _row_step_p(self, i, t, ib=None):
         """Row step i's P (its row's own P_b of the curve) while the read at T has no P_b for the curve and the
         stencil (ib − 1 … ib + 2) holds the row, else None (note 1, r2 addendum 4 (2)). `ib` None: the cell holding T
         (the read's own events: boundary_pressure, the stepper); rev3d D2: the bridge passes its s_k."""
-        c, k = self._row_steps[i]
+        return self._row_step_p_of(self._row_steps, i, t, ib)
+
+    def _pos_row_step_p(self, i, t):
+        """boundary_pressure's row step i on the position set (D2-read §5b (2)). Unrouted, the position set is the read
+        set and this is _row_step_p itself, call for call."""
+        if self._pos is self._read_set:
+            return self._row_step_p(i, t)
+        return self._row_step_p_of(self._pos.row_steps, i, t, None)
+
+    def _row_step_p_of(self, steps, i, t, ib):
+        c, k = steps[i]
         if c.p_b_ext(t, self._reach) is not None or not self.ts[0] <= t <= self.ts[-1]:
             return None
         if ib is None:
@@ -2728,11 +2788,11 @@ class AssemblageView(mv.RecordView):
 
     def boundary_pressure(self, curve, t):
         if curve.get("form") == "assemblage_row_step":
-            return self._row_step_p(curve["id"], t)
+            return self._pos_row_step_p(curve["id"], t)
         if curve.get("form") == "assemblage_curve":
             i = curve["id"]
-            c = self._events[i]
-            return c.p_b_ext(t, self._reach) if i < len(self._cut) else c.p_b(t)
+            c = self._pos.events[i]
+            return c.p_b_ext(t, self._reach) if i < len(self._pos.cut) else c.p_b(t)
         return super().boundary_pressure(curve, t)
 
     def curve_slope_points(self, curve) -> tuple:
@@ -2745,18 +2805,18 @@ class AssemblageView(mv.RecordView):
         if curve.get("form") != "assemblage_curve":
             return ()
         i = curve["id"]
-        c = self._events[i]
+        c = self._pos.events[i]
         rs = c.rows
         out = []
         for a, b in zip(rs, rs[1:]):
             s = abs((b["p_b"] - a["p_b"]) / (b["t"] - a["t"]))
             out += [(a["t"], a["p_b"], s), (b["t"], b["p_b"], s)]
-        if i < len(self._cut) and c.kind == "edge":     # silicate post-freeze note 8 §3: a bound over the extension
+        if i < len(self._pos.cut) and c.kind == "edge":     # silicate post-freeze note 8 §3: a bound over the extension
             for hi in (True, False):
                 got = c.edge_slope_entry(hi, self._reach)
                 if got is not None:
                     out.append(got)
-        elif i < len(self._cut) and len(rs) > 1:
+        elif i < len(self._pos.cut) and len(rs) > 1:
             for t_e, e, o in ((c.t1 + self._reach, rs[-1], rs[-2]), (c.t0 - self._reach, rs[0], rs[1])):
                 pb = c.p_b_ext(t_e, self._reach)
                 if pb is None:
@@ -3012,9 +3072,14 @@ def boundary_block(record, table, store, use):
     `boundaries` block otherwise; in table-regardless mode (§5a) the compact's for both. Every reader calls it with its
     `use` stated, and §7's census checks each site's `use`.
 
-    Until S1 routes records, no record is D2-routed, so this returns the compact's block for both uses (today's read)."""
+    `store` is the record's loaded D2 store (d2_store.Loaded, or its document) on a D2-routed record, else None: a
+    record is D2-routed exactly when the caller holds a store for it (the registry loads one only on an eligible or
+    ruled record, and solve reads it only with silicate_records on, §4). Table-regardless mode reaches the switch as
+    `store=None` from the view (§5a): the mode is not an argument here, so no `table_regardless=` site is added (§7)."""
     if use not in BLOCK_USES:
         raise ValueError(f"boundary_block: use {use!r} is not one of {BLOCK_USES}")
+    if store is not None and use == "position":
+        return getattr(store, "doc", store)["edges"]
     return table["boundaries"]
 
 
@@ -3049,10 +3114,12 @@ def s_monotone_load_check(v, block):
                         "proof)", check="s monotone")
 
 
-def view(record, table, t_pot, p_stop=0.0, p_floor=0.0, handover=None):
+def view(record, table, t_pot, p_stop=0.0, p_floor=0.0, handover=None, store=None, *, table_regardless=None):
     """An AssemblageView of a loaded record and its compact table (registry.tables[id]); `handover` is the record's
-    HandOver above p_dataset (note 7), or None."""
-    return AssemblageView(record, table, t_pot, p_stop, p_floor, handover)
+    HandOver above p_dataset (note 7), or None; `store` the record's loaded D2 store (registry.stores[id]) when the
+    record is D2-routed, else None (D2-read §4); `table_regardless` the setting tool's name in §5a's mode (S3 records
+    and refuses it; only the re-read tool passes it)."""
+    return AssemblageView(record, table, t_pot, p_stop, p_floor, handover, store, table_regardless=table_regardless)
 
 
 class HandOver:

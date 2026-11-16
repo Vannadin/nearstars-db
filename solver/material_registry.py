@@ -131,6 +131,31 @@ STOPS = MappingProxyType({
                                 "Regenerate the hand-over with rewrite/phase2-records/bmcpp/gen_handover.py from the "
                                 "records' current compacts, then --emit (prereg-bmcpp note 8 §3.4): a block's "
                                 "source.compact_sha256 must be its loaded record's assemblage.sha256."),
+    # the D2 read's load refusals (D2-read rev 7 §2, §3, §5b; d2_store.StoreRefusal ids, one fix text)
+    "material.d2_read_unknown": (("file", "why"),
+                     "D2-read §2/§3/§5b: rewrite the record and its store with gen_silicate_records / gen_d2_store (the writer, never by hand); the refusal names what the loader read."),
+    "material.d2_read_basis": (("file", "why"),
+                     "D2-read §2/§3/§5b: rewrite the record and its store with gen_silicate_records / gen_d2_store (the writer, never by hand); the refusal names what the loader read."),
+    "material.d2_store_missing": (("file", "why"),
+                     "D2-read §2/§3/§5b: rewrite the record and its store with gen_silicate_records / gen_d2_store (the writer, never by hand); the refusal names what the loader read."),
+    "material.d2_store_keys": (("file", "why"),
+                     "D2-read §2/§3/§5b: rewrite the record and its store with gen_silicate_records / gen_d2_store (the writer, never by hand); the refusal names what the loader read."),
+    "material.d2_store_contract": (("file", "why"),
+                     "D2-read §2/§3/§5b: rewrite the record and its store with gen_silicate_records / gen_d2_store (the writer, never by hand); the refusal names what the loader read."),
+    "material.d2_store_class": (("file", "why"),
+                     "D2-read §2/§3/§5b: rewrite the record and its store with gen_silicate_records / gen_d2_store (the writer, never by hand); the refusal names what the loader read."),
+    "material.d2_store_grid": (("file", "why"),
+                     "D2-read §2/§3/§5b: rewrite the record and its store with gen_silicate_records / gen_d2_store (the writer, never by hand); the refusal names what the loader read."),
+    "material.d2_store_chain": (("file", "why"),
+                     "D2-read §2/§3/§5b: rewrite the record and its store with gen_silicate_records / gen_d2_store (the writer, never by hand); the refusal names what the loader read."),
+    "material.d2_store_edges_rows": (("file", "why"),
+                     "D2-read §2/§3/§5b: rewrite the record and its store with gen_silicate_records / gen_d2_store (the writer, never by hand); the refusal names what the loader read."),
+    "material.d2_store_today_row": (("file", "why"),
+                     "D2-read §2/§3/§5b: rewrite the record and its store with gen_silicate_records / gen_d2_store (the writer, never by hand); the refusal names what the loader read."),
+    "material.d2_store_coincident": (("file", "why"),
+                     "D2-read §2/§3/§5b: rewrite the record and its store with gen_silicate_records / gen_d2_store (the writer, never by hand); the refusal names what the loader read."),
+    "material.d2_store_sliver": (("file", "why"),
+                     "D2-read §2/§3/§5b: rewrite the record and its store with gen_silicate_records / gen_d2_store (the writer, never by hand); the refusal names what the loader read."),
 })
 
 
@@ -167,6 +192,9 @@ class Registry:
     tables: Mapping = field(default_factory=lambda: MappingProxyType({}))   # id → an assemblage record's compact table
                                                                               # (read-only by convention; its sha256 is
                                                                               # in the record, so solve_id binds it)
+    d2_absent: tuple = ()       # assemblage records with no d2_read key, read as off (D2-read §2's load-report line)
+    directory: Path | None = None   # the materials dir this registry was loaded from (the D2 stores sit under fields/)
+    _d2: dict = field(default_factory=dict, compare=False, repr=False)   # rid → d2_store(rid)'s answer, once
 
     def declared(self) -> tuple:
         """Ids of records carrying a user-declared source anywhere (impl note 3 B2): counted on boards and gates."""
@@ -178,6 +206,19 @@ class Registry:
         if material_id in self.records:
             return self.records[material_id]
         return self.unavailable.get(material_id)
+
+    def d2_store(self, rid: str):
+        """The D2 store of assemblage record `rid` for a D2-routed read (D2-read §2–§4): d2_store.Loaded when its
+        d2_read is eligible or ruled, loaded, chained and edge-checked; None when off or absent (the store is never
+        opened); a LoadStop naming the refusal. Asked only on the silicate_records route, so with the switch off no
+        store is loaded or read (§4's first row). Computed once per registry, before any read («Load, not read»)."""
+        if rid not in self._d2:
+            rec = self.records.get(rid)
+            if rec is None or rec.get("kind") != "assemblage" or "d2_read" not in rec:
+                self._d2[rid] = None
+            else:
+                self._d2[rid] = _d2_store(rec, self.tables[rid], self.directory or MATERIALS_DIR)
+        return self._d2[rid]
 
     def known(self, material_id: str) -> bool:
         return material_id in self.records
@@ -1111,6 +1152,7 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None,
     stale = handover_stale(out, tables)
     if stale is not None:
         return stale
+    absent = [rid for rid, rec in out.items() if rec["kind"] == "assemblage" and "d2_read" not in rec]
     keys = {}
     for rid, rec in out.items():                     # one assemblage record per composition (silicate registration
         if rec["kind"] == "assemblage":              # §2.1): the resolver matches exactly one (68 R4 on aa48d1bf)
@@ -1122,7 +1164,23 @@ def load(directory: Path = MATERIALS_DIR, manifest: Path | None = None,
             keys[rec["composition_key"]] = rid
     warns = tuple(w for rec in out.values() for w in multi_source_warnings(rec, f"{rec['id']}.yaml"))
     return Registry(MappingProxyType(out), MappingProxyType(unavailable), warns, allow_development,
-                    MappingProxyType(tables))
+                    MappingProxyType(tables), tuple(sorted(absent)), Path(directory))
+
+
+def _d2_store(rec, table, directory):
+    """The record's D2 store, loaded, chained and edge-checked (d2_store.load, check_edges), or None (d2_read off: the
+    store is never opened), or the refusal as a LoadStop naming the record's file. d2_store is imported here, not at
+    the top: it imports material_assemblage, which imports material_view, which imports this module."""
+    from solver import d2_store as ds
+    from solver.material_view import thaw_plain
+    doc = thaw_plain(rec)
+    try:
+        loaded = ds.load(doc, table, directory, rec["assemblage"]["sha256"])
+        if loaded is not None:
+            ds.check_edges(loaded, table, doc)
+    except ds.StoreRefusal as e:
+        return LoadStop(e.id, MappingProxyType({"file": f"{rec['id']}.yaml", "why": str(e)[:400]}))
+    return loaded
 
 
 def _source_key(cite) -> str | None:

@@ -14,6 +14,7 @@ and the exit is s_new(P, T_b(P)) = s_L: the read's own s is conserved (note 3 §
 from __future__ import annotations
 
 import math
+import types
 
 from solver import rhs as rh, stepper as st
 
@@ -281,6 +282,16 @@ def curve_inverse(v, c):
     return p_b, t_b, dpb_dt
 
 
+def _pos(v):
+    """The view's position curve set (D2-read §5b (2)): `_pos` on an AssemblageView (the read set itself unless the
+    record is D2-routed); a view without one (planted test views) answers with its own runs."""
+    got = getattr(v, "_pos", None)
+    if got is not None:
+        return got
+    return types.SimpleNamespace(cut=getattr(v, "_cut", ()), events=getattr(v, "_events", ()),
+                                 row_steps=getattr(v, "_row_steps", ()), curves=getattr(v, "_curves", ()))
+
+
 def view_hook(v, curve, name):
     """The stepper hook of one transitions() curve of an assemblage view (note 4 S4–S5):
     - a cut swap run → Segment (the read's own Δs carried, note 3 §2);
@@ -288,22 +299,25 @@ def view_hook(v, curve, name):
     - a row step (a curve end) → CutFinding «restart» (its Δs; r2 v2; the curve dict stays {form, id});
     - a run read across (i ≥ len(_cut)) or any other form → None."""
     form = curve.get("form")
-    if not hasattr(v, "_cut"):
+    if not hasattr(v, "_cut") and not hasattr(v, "_pos"):
         # a view that forwards another's curves (BasalView, review 2 R-M-03): its dT/dP is the overlying read but its ρ
         # is its own, and neither the registration nor note 4 covers a segment there — a cut swap takes the named sharp
         # step; edges and row steps record nothing (reported as a departure with the code)
         ov = getattr(v, "overlying", None)
-        if ov is not None and hasattr(ov, "_cut") and form == "assemblage_curve" and curve["id"] < len(ov._cut) \
-                and ov._events[curve["id"]].kind == "swap":
+        op = _pos(ov) if ov is not None and hasattr(ov, "_cut") else None
+        if op is not None and form == "assemblage_curve" and curve["id"] < len(op.cut) \
+                and op.events[curve["id"]].kind == "swap":
             return SharpOnly(name, "basal layer: coexistence segment not built here")
         return None
+    ps_ = _pos(v)                                     # transitions' ids index the position set (D2-read §5b (2))
     if form == "assemblage_row_step":
-        c, _k = v._row_steps[curve["id"]]
-        return CutFinding(name, (lambda p, t: side_s(v, p, t, None)), (lambda t: v._row_step_p(curve["id"], t)),
+        c, _k = ps_.row_steps[curve["id"]]
+        rsp = getattr(v, "_pos_row_step_p", v._row_step_p)
+        return CutFinding(name, (lambda p, t: side_s(v, p, t, None)), (lambda t: rsp(curve["id"], t)),
                           kind="restart")
-    if form != "assemblage_curve" or curve["id"] >= len(v._cut):
+    if form != "assemblage_curve" or curve["id"] >= len(ps_.cut):
         return None
-    c = v._events[curve["id"]]
+    c = ps_.events[curve["id"]]
 
     def s_side(side, p, t):
         return side_s(v, p, t, {c: side})
@@ -341,7 +355,7 @@ def check_table(table):
       sign(delta_s) = −sign(dP_b/dT) on its segment (r2 B1′).
     A table without an exported block has no curves and passes."""
     from solver import material_assemblage as ma
-    b = table.get("boundaries") or {}
+    b = ma.boundary_block(None, table, None, "read") or {}
     if b.get("status") != "exported":
         return
     ts = sorted({c["t"] for c in table["cells"]})
@@ -398,7 +412,8 @@ def cut_reason(r):
 
 def cut_census(table):
     """{reason: number of exported cut edge rows} of an assemblage table (r2 R3); {} without an exported block."""
-    b = table.get("boundaries") or {}
+    from solver import material_assemblage as ma
+    b = ma.boundary_block(None, table, None, "read") or {}
     out = {}
     if b.get("status") == "exported":
         for r in b.get("rows", ()):
@@ -429,8 +444,8 @@ def notes_of(records, views):
                 "projection": rc.get("projection")}))
             v = views.get(layer) if hasattr(views, "get") else None
             i = _run_id(rc["curve"])
-            if v is not None and hasattr(v, "_events") and i is not None and i < len(v._events):
-                a, b = v._events[i].p_range
+            if v is not None and hasattr(v, "_events") and i is not None and i < len(_pos(v).events):
+                a, b = _pos(v).events[i].p_range
                 drop.add((layer, f"{ma.SWAP_NOTE}; P {a / 1e9:.4g}–{b / 1e9:.4g} GPa"))
         elif kind == "finding":
             out.append(result.Note("coexistence_cut_finding", f"non-swap cut {rc['curve']}: the read's s steps by "

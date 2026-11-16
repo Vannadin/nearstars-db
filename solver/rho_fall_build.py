@@ -239,9 +239,14 @@ def _bisect(f, a, b, fa, n=60):
 
 def _edge_tol(rid):
     """τ_e: the table's own boundaries.source.edge_drho_tol from the registry (rev3c §2; never re-derived), or None."""
-    from solver import material_registry as mr
-    tb = mr.load().tables.get(rid) or {}
-    return ((tb.get("boundaries") or {}).get("source") or {}).get("edge_drho_tol")
+    from solver import material_assemblage as ma, material_registry as mr
+    reg = mr.load()
+    tb = reg.tables.get(rid) or {}
+    if not tb:
+        return None
+    store = reg.d2_store(rid) if hasattr(reg, "d2_store") else None      # D2-read §5b (2a): the store block's source
+    store = None if isinstance(store, mr.LoadStop) else store
+    return ((ma.boundary_block(None, tb, store, "position") or {}).get("source") or {}).get("edge_drho_tol")
 
 
 def _view_tol(v):

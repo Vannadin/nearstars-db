@@ -369,15 +369,16 @@ BASAL_PARAMS = ("density", "thickness_km")
 SILICATE_LEGACY_AXES = ("initial_porosity",)
 
 
-def _assemblage_view(body, layer, rid, p_stop, registry):
-    """(AssemblageView, None) or (None, why) for record `rid` (silicate registration §3; 68 S1–S3)."""
+def _assemblage_view(body, layer, rid, p_stop, registry, silicate=True):
+    """(AssemblageView, None) or (None, why) for record `rid` (silicate registration §3; 68 S1–S3). `silicate`: the
+    global silicate_records switch; with it off no D2 store is asked for, loaded or read (D2-read §4's first row)."""
     from solver import material_assemblage as ma
     got = registry.get(rid)
     if got is None or isinstance(got, mr.LoadStop):
         return None, ("record_unavailable", (rid, got if got is not None else mr.LoadStop(
             "material.assemblage_table", MappingProxyType({"file": f"{rid}.yaml", "why": "no such record"}))))
     table = registry.tables[rid]
-    if table["boundaries"]["status"] == "pending" and not registry.development:    # 68 S3
+    if ma.boundary_block(got, table, None, "read")["status"] == "pending" and not registry.development:    # 68 S3
         return None, ("record_boundaries_pending", f"the assemblage record {rid!r} has its phase boundaries pending "
                                                    "(registration §3.3); it is read only in development")
     from solver.from_v1 import thaw
@@ -387,7 +388,12 @@ def _assemblage_view(body, layer, rid, p_stop, registry):
     hrec = registry.get(hid) if hid else None
     if hrec is not None and not isinstance(hrec, mr.LoadStop) and rid in registry.tables.get(hid, {}).get("blocks", {}):
         ho = ma.HandOver(thaw(hrec), registry.tables[hid], rid, 1.5 * float(got["assemblage"]["p_dataset"]))
-    return ma.view(thaw(got), table, body.surface.t_pot or 0.0, p_stop, floor, ho), None
+    # D2-read §4: the record's D2 store, asked only here, on the silicate_records route (global off × eligible never
+    # loads it): None for d2_read off or absent (today's read, the store unopened), a LoadStop for a refused store
+    store = registry.d2_store(rid) if (silicate and hasattr(registry, "d2_store")) else None
+    if isinstance(store, mr.LoadStop):
+        return None, ("record_unavailable", (rid, store))
+    return ma.view(thaw(got), table, body.surface.t_pot or 0.0, p_stop, floor, ho, store), None
 
 
 def _silicate_route(body, layer, on_me, p_stop, registry):
@@ -414,7 +420,7 @@ def _silicate_route(body, layer, on_me, p_stop, registry):
     return _assemblage_view(body, layer, rid, p_stop, registry)
 
 
-def _record_view(body, layer, on_me, p_stop, registry):
+def _record_view(body, layer, on_me, p_stop, registry, silicate=False):
     """(view, None), (None, why), or None when the registry holds no record for this layer (legacy resolves it)."""
     rid = layer.material                                      # switch-over step 2: fe_prem reads fe_prem
     got = registry.get(rid)
@@ -446,7 +452,7 @@ def _record_view(body, layer, on_me, p_stop, registry):
             if key != got["composition_key"]:
                 return None, ("record_composition", f"layer {layer.id!r} declares composition key {key} on the record "
                                                     f"{rid!r}, built for composition key {got['composition_key']}")
-        return _assemblage_view(body, layer, rid, p_stop, registry)
+        return _assemblage_view(body, layer, rid, p_stop, registry, silicate)
     if layer.composition is not None:                          # G4-C-01's class on the record path (r2, p1review)
         return None, ("record_composition", f"layer {layer.id!r} declares a composition on the record {rid!r}, "
                                             "which takes none (records with compositions: c8's silicate registration)")
@@ -469,7 +475,7 @@ def _view_for(body, layer, x, p_stop, registry=None, silicate=False):
         if got is not None:
             return got
     if registry is not None and (silicate or not _requires_switch(registry, layer.material)):
-        got = _record_view(body, layer, on_me, p_stop, registry)
+        got = _record_view(body, layer, on_me, p_stop, registry, silicate)
         if got is not None:
             return got
     if layer.material == "fe_core_light":                       # note 5 item 3b

@@ -179,11 +179,13 @@ def _region_points(v, table=None):
     # the swap-extension registration's rows (frozen 8402255e): past a swap curve's true end the read settles each side
     # at the extension row's T; read there around the curve's end P (and the row's own P_b where it has one)
     ends = {}
-    for c in v._curves:
+    pos = getattr(v, "_pos", None)                   # D2-read §5b (2a): swap curves and extension rows, one block
+    for c in (pos.curves if pos is not None else v._curves):
         if c.kind == "swap":
             ends.setdefault(c.t0, []).append(c.rows[0]["p_b"])
             ends.setdefault(c.t1, []).append(c.rows[-1]["p_b"])
-    for r in ((table or {}).get("boundaries") or {}).get("extension", {}).get("rows", ()):
+    blk = ma.boundary_block(None, table, getattr(v, "store", None), "position") if table else {}
+    for r in ((blk or {}).get("extension") or {}).get("rows", ()):
         for pb in ends.get(r.get("curve_end_t"), []) + ([r["p_b"]] if r.get("p_b") else []):
             out["swap_extension"] += [(pb * (1 + s * e), r["t"]) for e in (1e-6, 1e-3) for s in (-1, 1)]
     lm = ma._lm()
@@ -230,7 +232,10 @@ def _sweep(records, sets_dir, seen):
         raise SystemExit(f"STOP: the registry does not load: {reg!r}")
     counts = {}
     for rid in records:
-        v = ma.view(ma.mv.thaw_plain(reg.records[rid]), reg.tables[rid], 1600.0)
+        store = reg.d2_store(rid) if hasattr(reg, "d2_store") else None    # D2-read §5b (2a): positions from the
+        if isinstance(store, mr.LoadStop):                                  # store's block on a D2 record
+            raise SystemExit(f"STOP: {rid}'s D2 store is refused: {store!r}")
+        v = ma.view(ma.mv.thaw_plain(reg.records[rid]), reg.tables[rid], 1600.0, store=store)
         pts = _region_points(v, reg.tables[rid])
         counts[rid] = {k: (len(x) if x else "none in this record") for k, x in pts.items()}
         reads = [getattr(v, n) for n in ("state", "dtdp", "s_path", "phase_read", "thermal", "onset_curves")
