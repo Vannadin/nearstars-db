@@ -6,6 +6,7 @@ import copy
 import gzip
 import hashlib
 import json
+import math
 import os
 import subprocess
 import tempfile
@@ -1347,6 +1348,49 @@ class S5Sets(unittest.TestCase):
         ds.read_point(doc, 4e9, 1050.0, v)                                               # cell 1,0: set 2
         ds.read_point(doc, 4e9, 1050.0, v)
         self.assertEqual((v.d2_counts[ds.ARB_FALLBACK], v.d2_counts[ds.ARB_SCREEN]), (1, 2))
+
+
+class ServedSurface(unittest.TestCase):
+    """D2-read note 13: served_surface follows the read's own dispatch — its kind and field are read_point's /
+    read_marked's, and its G_TT gives their c_P bit for bit (c_P = −T·G_TT), on every reference fixture store at five
+    points per cell and on a marked cell with and without a crossing."""
+    REF = Path(__file__).resolve().parent / "fixtures" / "d2_reference" / "stores"
+
+    def check(self, doc, p, t, r, got):
+        kind, field, gpp, gtt = got
+        self.assertEqual(kind, r["read"], (p, t))
+        if kind in ("d2", "cut"):
+            self.assertEqual(field, r["field"], (p, t))
+            self.assertEqual(-t * gtt, r["values"]["c_p"], (p, t))
+            self.assertTrue(math.isfinite(gpp))
+        elif kind == "subgrid":
+            self.assertEqual((field, gpp, gtt), (r["field"], None, None))
+        else:
+            self.assertEqual((field, gpp, gtt), (None, None, None))
+
+    def test_equals_read_point_on_every_reference_store(self):
+        kinds = set()
+        for path in sorted(self.REF.glob("*.json.gz")):
+            doc = json.loads(gzip.decompress(path.read_bytes()))
+            ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
+            for key in doc["cells"]:
+                j, k = map(int, key.split(","))
+                for a, b in ((0.5, 0.5), (0.25, 0.75), (0.8, 0.2), (0.1, 0.1), (0.9, 0.9)):
+                    p, t = ps[j] + a * (ps[j + 1] - ps[j]), ts[k] + b * (ts[k + 1] - ts[k])
+                    got = ds.served_surface(doc, p, t)
+                    self.check(doc, p, t, ds.read_point(doc, p, t), got)
+                    kinds.add(got[0])
+        self.assertEqual(kinds, {"d2", "cut", "subgrid", "table"})
+
+    def test_equals_read_marked_on_a_marked_cell(self):
+        doc = _marked_doc()
+        for crossing in ([(2.2e9, "L", "R")], [], [(2.2e9, "L", "R"), (2.4e9, "L", "R")]):
+            v = types.SimpleNamespace(crossing=lambda p, t, c=crossing: c)
+            for p in (1.5e9, 2.0e9, 2.6e9):
+                self.check(doc, p, 1050.0, ds.read_marked(doc, p, 1050.0, crossing), ds.served_surface(doc, p, 1050.0, v))
+        v = types.SimpleNamespace(crossing=lambda p, t: [(2.2e9, "L", "R")])
+        self.assertEqual(ds.served_surface(doc, 2.0e9, 1050.0, v)[1], "L")                    # today's side, not lowest G
+        self.assertEqual(ds.served_surface(doc, 2.0e9, 1050.0)[1], "R")                       # no view: the ordinary read
 
 
 class S5Marked(unittest.TestCase):

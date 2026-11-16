@@ -46,6 +46,7 @@ NOTE_11 = (
     "note 11 (d): a set-1 cell accepted outside the walk;",
     "note 11 (d): an «arbitration» fallback accepted without `was` or its reason line.",
     "note 9: form (ii)'s read back on the consistent G (READ_G «cons»);",
+    "note 13: served_surface ignoring a marked cell's side (the lowest-G read where the read serves today's side).",
 )
 
 

@@ -977,6 +977,37 @@ def s_slopes_marked(doc, p, t, crossing, side=None):
             -_hermite_g(cs, *box, p, t, 0, 2, READ_G))
 
 
+def served_surface(doc, p, t, view=None):
+    """(kind, field, G_PP, G_TT) of the surface the engine's read serves at (p, t) (D2-read note 13: s7 judges Y4 on
+    it), through read_point's and read_marked's own dispatch helpers (_marked_choice, _surface), so s7 never re-implements
+    the dispatch: kind is read_point's / read_marked's «read» and field its «field»; G_PP and G_TT are form (ii)'s on
+    READ_G at (p, t). A marked cell takes its crossing from `view.crossing` (a view routed to this store; no view: no
+    crossing, the ordinary read, as read_marked with []). A table answer gives ("table", None, None, None); a subgrid
+    sliver ("subgrid", field, None, None), its blend having no G surface. Nothing is counted."""
+    ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
+    j, k = _lower_cell(ps, p), _lower_cell(ts, t)
+    cell = None if j is None or k is None else doc["cells"].get(f"{j},{k}")
+    if cell is None:
+        return ("table", None, None, None)
+    box = (ps[j], ps[j + 1], ts[k], ts[k + 1])
+    if "arbitrated" in cell:
+        ch = _marked_choice(doc, p, t, view.crossing(p, t) if view is not None else [])
+        if ch[0] == "table":
+            return ("table", None, None, None)
+        if ch[0] != "ordinary":
+            cls, f, cs, box = ch
+            return (cls, f, _hermite_g(cs, *box, p, t, 2, 0, READ_G), _hermite_g(cs, *box, p, t, 0, 2, READ_G))
+    if cell["class"] in ("d2", "cut"):
+        u, v = (p - box[0]) / (box[1] - box[0]), (t - box[2]) / (box[3] - box[2])
+        got = _surface(doc, cell, j, k, u, v, box, p, t)
+        if got is None:
+            return ("table", None, None, None)
+        f, cs = got
+        return (cell["class"], f, _hermite_g(cs, *box, p, t, 2, 0, READ_G), _hermite_g(cs, *box, p, t, 0, 2, READ_G))
+    r = read_point(doc, p, t)                       # subgrid (inside or outside its sliver), fallback, limit
+    return ("subgrid", r["field"], None, None) if r["read"] == "subgrid" else ("table", None, None, None)
+
+
 def class_at(doc, p, t):
     """The store's class at (p, t) by the dispatch's lower-cell tie, or None (outside the grid, no entry)."""
     ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
