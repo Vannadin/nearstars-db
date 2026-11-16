@@ -566,6 +566,8 @@ def read_point(doc, p, t, view=None):
     if not (min(la, lb) <= uu <= max(la, lb)):
         return {"read": "table", "why": "subgrid cell outside the sliver", "notes": ()}
     sfr = (uu - la) / (lb - la)
+    if view is not None and hasattr(view, "d2_counts"):               # §6: (S1)'s per-read count
+        view.d2_counts["d2: (S1) read inside a subgrid sliver"] = view.d2_counts.get("d2: (S1) read inside a subgrid sliver", 0) + 1
     vals = {n: (1 - w) * _lagrange(k0, sfr, n) + w * _lagrange(k1, sfr, n) for n in ("rho", "c_p", "alpha", "s")}
     vals["dtdp"] = t * vals["alpha"] / (vals["rho"] * vals["c_p"])        # T·α/(ρ·c_P), never differentiated
     return {"read": "subgrid", "field": s0["C"], "values": vals, "notes": (("subgrid", SUBGRID_NOTE),)}
@@ -615,6 +617,15 @@ def s_parts(doc, p, t):
             _hermite_g(cs, *box, p, t, 0, 2, "cons"))
 
 
+
+
+def class_at(doc, p, t):
+    """The store's class at (p, t) by the dispatch's lower-cell tie, or None (outside the grid, no entry)."""
+    ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
+    j, k = _lower_cell(ps, p), _lower_cell(ts, t)
+    if j is None or k is None:
+        return None
+    return (doc["cells"].get(f"{j},{k}") or {}).get("class")
 
 def s_slopes(doc, p, t):
     """(s, ∂s/∂lnP, ∂s/∂T) at (p, t) through the dispatch, load-free, or None where the table's s path applies: the

@@ -899,5 +899,56 @@ class ReadPieceS2b(unittest.TestCase):
         self.assertEqual(seen["routed"], {4})                         # routed: the dispatch's lower cell
 
 
+class ReadPieceS3(unittest.TestCase):
+    """S3 (c8's part): §5a's note and count on every answer in the mode, §6's counts and their _quiet restore."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.rec, cls.compact = thaw(reg().get(KHAN)), thaw(reg().tables[KHAN])
+        cls.store = ds.Loaded("eligible", {"edges": copy.deepcopy(cls.compact["boundaries"]),
+                                           "grid": {"ps": [], "ts": []}, "cells": {}}, "0" * 64)
+
+    def test_the_mode_is_recorded_on_every_answer_and_counted(self):
+        v = ma.view(self.rec, self.compact, 1600.0, store=self.store, table_regardless="note 33 re-read")
+        plain = ma.view(self.rec, self.compact, 1600.0)
+        for pt in ((2e10, 2000.0), (5e9, 1500.0)):
+            got = v.state(*pt)
+            texts = [str(getattr(n, "text", n)) for n in got[2]]
+            self.assertTrue(any("table-regardless read: note 33 re-read" in x for x in texts), texts)
+            self.assertEqual(repr(got[:2]), repr(plain.state(*pt)[:2]))      # the table's answer, bit for bit
+        self.assertEqual(v.d2_counts["table_regardless_reads"], 2)
+        self.assertIsNone(v._d2)                                             # the dispatch is not entered
+
+    def test_counts_are_restored_by_quiet(self):
+        v = ma.view(self.rec, self.compact, 1600.0, store=self.store)
+        v.d2_counts[ds.NO_FIELD] = 3
+
+        def bump():
+            v.d2_counts[ds.NO_FIELD] += 5
+        v._quiet(bump)
+        self.assertEqual(v.d2_counts[ds.NO_FIELD], 3)
+
+    def test_the_s1_per_read_count(self):
+        base = Path(__file__).resolve().parent / "fixtures" / "d2_reference" / "stores"
+        doc = json.loads(gzip.decompress((base / "subgrid.json.gz").read_bytes()))
+        v = types.SimpleNamespace(d2_counts={})
+        ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
+        n = 0
+        for a in range(1, 40):
+            for b in range(1, 40):
+                r = ds.read_point(doc, ps[0] + a / 40 * (ps[-1] - ps[0]), ts[0] + b / 40 * (ts[-1] - ts[0]), v)
+                n += r["read"] == "subgrid"
+        self.assertGreater(n, 0)
+        self.assertEqual(v.d2_counts["d2: (S1) read inside a subgrid sliver"], n)
+
+    def test_the_forced_side_on_a_cut_cell_is_counted(self):
+        from unittest import mock
+        v = ma.view(self.rec, self.compact, 1600.0, store=self.store)
+        with mock.patch.object(ds, "class_at", lambda doc, p, t: "cut"), \
+                mock.patch.object(ds, "s_slopes", lambda doc, p, t: (1.0, 0.0, 1.0)):
+            v.s_path(2e10, 2000.0, force={object(): 1})
+            v.s_path(2e10, 2000.0)
+        self.assertEqual(v.d2_counts["d2: forced side on a cut cell"], 1)
+
 if __name__ == "__main__":
     unittest.main()

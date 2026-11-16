@@ -1522,7 +1522,11 @@ class AssemblageView(mv.RecordView):
         self._d2 = None if (table_regardless or store is None) else getattr(store, "doc", store)
         self._d2_last = None                     # the last _solid's D2 answer (state() swaps the notes, Q9), or None
         from solver import d2_store as _ds
-        self.d2_counts = {n: 0 for n in _ds.COUNT_NAMES}    # §6's run-time counts (S3 fills the other three)
+        #: §6's run-time counts, per view: the no-field and (S1) sliver reads (read_point), the forced side on a cut
+        #: cell (s_path with a force over a cut cell), swap segments through a d2 or cut cell (0 on a loaded store: they
+        #: are exactly (2b)'s STOPs for swaps, refused at load, §5b (4)); §5a's `table_regardless_reads`
+        self.d2_counts = {n: 0 for n in _ds.COUNT_NAMES}
+        self.d2_counts["table_regardless_reads"] = 0
         self._parts, self._runcache = {}, {}
         #: PROTOTYPE: the highest frozen node T (rows above it hold no frozen run; _flag_reads' precheck)
         self._t_frozen_max = max((c["t"] for c in table["cells"] if c["kind"] == "frozen"), default=-math.inf)
@@ -1664,13 +1668,15 @@ class AssemblageView(mv.RecordView):
         are not the answer's reads, so a cold view's first zone read carries the same notes as a warm one's (68 N1 on
         7582ff4a). The s path's counts are restored too (r2 n2 on 677f85d0..0d7732d3: the 136 GPa match's two reads
         counted as s reads)."""
-        n, sc = len(self.notes), dict(self.s_counts)
+        n, sc, dc = len(self.notes), dict(self.s_counts), dict(self.d2_counts)
         try:
             return fn(*args)
         finally:
             del self.notes[n:]
             self.s_counts.clear()
             self.s_counts.update(sc)
+            self.d2_counts.clear()                   # D2-read §6: cleared and restored by _quiet like s_counts
+            self.d2_counts.update(dc)
 
     def _rise_ok(self, kb):
         """Note 7 §5: None if the zone's ρ rises with P along T row kb, else the refusal text; found once per row, at
@@ -1801,6 +1807,8 @@ class AssemblageView(mv.RecordView):
         other class reads the table's s path below."""
         if self._d2 is not None:
             from solver import d2_store as ds
+            if force and ds.class_at(self._d2, p, t) == "cut":      # §5b (5): a forced side on a D2 cut cell, counted
+                self.d2_counts["d2: forced side on a cut cell"] += 1
             got = ds.s_slopes(self._d2, p, t)
             if got is not None:
                 return Dual(*got)
@@ -2741,6 +2749,10 @@ class AssemblageView(mv.RecordView):
                 self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID, LIQUID_ALONE_NOTE))
                 return (rho, g, tuple(self.notes))
             self._d2_last = None
+            if self.table_regardless:                # D2-read §5a: recorded whenever the mode is on
+                self.d2_counts["table_regardless_reads"] += 1
+                self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID,
+                                                  f"table-regardless read: {self.table_regardless}"))
             got = self._solid(pe, t)
             if isinstance(got, st.Stop):            # the refusal names the solver's P, not the clamped read (ea F4)
                 r = got.record
