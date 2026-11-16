@@ -1810,7 +1810,9 @@ class AssemblageView(mv.RecordView):
     def s_path(self, p, t, force=None):
         """The s read at (p, t) with its exact derivatives (s-read §3.0): a Dual (s, ∂s/∂lnP, ∂s/∂T); None when the
         read's stencil holds a frozen node (§3.2: today's read stands there); or a Stop. Leaves no note, count, mark or
-        memo on the view. `force` {curve: side}: a swap's side read (§3.1).
+        memo on the view, except D2-read §6's registered counts on a D2-routed view: a forced read on a cut cell adds
+        to d2_counts (§5b (5), note 7 (3)), which _quiet and a run's counts keep (68 n on 751aa92f). `force`
+        {curve: side}: a swap's side read (§3.1).
         On a D2-routed view the class dispatch comes first (D2-read Q6, Q8): d2 and cut give Dual(s, −P·G_PT, −G_TT) of
         the field's consistent-G surface; inside a subgrid sliver Dual(s, −P·α/ρ, c_P/T) of the read's own blend; every
         other class reads the table's s path below. A D2 answer stands whatever frozen nodes the table's stencil holds:
