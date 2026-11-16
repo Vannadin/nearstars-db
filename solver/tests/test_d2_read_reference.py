@@ -24,7 +24,7 @@ READER_BLOB = "11e4430838459417454a87fc2d8ec27775007fd7"
 SHA256 = {                                    # gen_d2read_fixtures.py's output, as committed
     "d2": "d398b8c61b3e2107", "d2_fieldless": "f825de28807ec5b4", "fallback": "874f52f54539ded1",
     "cut": "c0074fc059cecff2", "cut_a_virtual": "2f4ab0006ab7eb89", "subgrid": "84f48ac867abc1ab",
-    "subgrid_reversed": "0207bc03c40be944", "subgrid_c_fallback": "a821b417ecbc2d75"}
+    "subgrid_reversed": "0207bc03c40be944", "subgrid_c_fallback": "a821b417ecbc2d75", "limit": "310b6114cff4fdae"}
 
 
 def git_blob(path):
@@ -52,6 +52,15 @@ class Inputs(unittest.TestCase):
             r = dc.compare_store(raw, ref, ref.read, item1=True)        # the reference against itself
             seen.update(r["by_read"])
         self.assertEqual(seen, {"table", "d2", "cut", "subgrid"})
+
+    def test_every_store_class_is_present_limit_included(self):
+        classes = set()
+        for name in SHA256:
+            classes.update(json.loads((STORES / "manifest.json").read_text())["stores"][name]["classes"])
+        self.assertEqual(classes, {"d2", "cut", "subgrid", "fallback", "limit"})
+        ref = dc.load_reference(READER)
+        doc = ref.load((STORES / "limit.json.gz").read_bytes())
+        self.assertEqual(ref.read(doc, 1.5e9, 1350.0), {"read": "table", "why": "limit"})     # cell (0, 0)
 
 
 class Driver(unittest.TestCase):
