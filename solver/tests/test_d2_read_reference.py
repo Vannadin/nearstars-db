@@ -24,7 +24,8 @@ READER_BLOB = "11e4430838459417454a87fc2d8ec27775007fd7"
 SHA256 = {                                    # gen_d2read_fixtures.py's output, as committed
     "d2": "d398b8c61b3e2107", "d2_fieldless": "f825de28807ec5b4", "fallback": "874f52f54539ded1",
     "cut": "c0074fc059cecff2", "cut_a_virtual": "2f4ab0006ab7eb89", "subgrid": "84f48ac867abc1ab",
-    "subgrid_reversed": "0207bc03c40be944", "subgrid_c_fallback": "a821b417ecbc2d75", "limit": "310b6114cff4fdae"}
+    "subgrid_reversed": "0207bc03c40be944", "subgrid_c_fallback": "a821b417ecbc2d75", "limit": "310b6114cff4fdae",
+    "grid136": "508b5198a63acbed"}
 
 
 def git_blob(path):
@@ -62,6 +63,27 @@ class Inputs(unittest.TestCase):
         doc = ref.load((STORES / "limit.json.gz").read_bytes())
         self.assertEqual(ref.read(doc, 1.5e9, 1350.0), {"read": "table", "why": "limit"})     # cell (0, 0)
 
+
+    def test_item1_cases_are_all_reached_by_the_fixtures(self):
+        """68 B1 on 270edf72: every registered case of §9 item 1 has a reference answer somewhere in the fixtures"""
+        ref = dc.load_reference(READER)
+        cover = set()
+        for name in SHA256:
+            cover.update(dc.compare_store((STORES / f"{name}.json.gz").read_bytes(), ref, ref.read, item1=True)["covered"])
+        self.assertEqual([c for c in dc.ITEM1_CASES if c not in cover], [])
+
+    def test_the_cli_names_a_case_no_store_reaches(self):
+        import contextlib
+        import io
+        import tempfile
+        with tempfile.TemporaryDirectory() as t, contextlib.redirect_stdout(io.StringIO()) as o:
+            rc = dc.main(["--item1", "--reference", str(READER), "--out", str(Path(t) / "o.json"),
+                          str(STORES / "d2.json.gz")])
+            out = json.loads((Path(t) / "o.json").read_text())
+        self.assertEqual(rc, 2)
+        self.assertIn("point p136", out["item1_missing"])
+        self.assertIn("why limit", out["item1_missing"])
+        self.assertIn("§9 item 1's cases with no reference answer", o.getvalue())
 
 class Driver(unittest.TestCase):
     """the comparison itself: identical answers pass, every planted difference is found"""

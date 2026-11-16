@@ -13,6 +13,8 @@ D2-read rev 7 §9: «Engine read = reference reader, `==` bit for bit», class b
     bit for bit (IEEE-754 binary64 packing, so a NaN equals only a NaN with the same bits, and 0.0 is not -0.0);
   - no other key, except the engine's «notes», which the reference does not carry and which is not compared.
 - An engine exception at a point is a difference, by its type and message (NotImplementedError until S2).
+- With --item1 the stores together must reach every case in ITEM1_CASES (each class, each table «why», the 136e9 node,
+  a non-integer T grid), or the run STOPs naming the missing ones: a case that never runs is not a pass.
 OUT holds per store: the store's sha256, the counts of points and of answers by «read», the number of differences and
 the first 50. rc 0 when every store agrees, rc 2 otherwise or on a bad input."""
 import argparse
@@ -27,6 +29,11 @@ import struct
 import sys
 from pathlib import Path
 
+#: §9 item 1's registered cases (68 B1 on 270edf72): with --item1 the run STOPs, naming them, unless the stores together
+#: give the reference answer of every class (the table answers by their «why»), read the 136e9 node, and include a grid
+#: whose T steps are not whole numbers
+ITEM1_CASES = ("read d2", "read cut", "read subgrid", "why fallback", "why limit",
+               "why no entry (frozen corner or above p_dataset)", "point p136", "grid non-integer T step")
 NOT_COMPARED = ("notes",)                     # the engine's own (code, text) pairs; the reference has none
 P_TIE = 136e9                                 # Q3: the taper's match at p_dataset is a column node
 
@@ -113,7 +120,10 @@ def compare_store(raw, ref_mod, engine_read, item1=False, seed=0, per_cell=4):
     pts = list(cell_points(doc))
     if item1:
         pts += list(item1_points(doc, seed, per_cell))
-    by_read, diffs = {}, []
+    by_read, diffs, cover = {}, [], set()
+    ts = doc["grid"]["ts"]
+    if any(b - a != int(b - a) for a, b in zip(ts, ts[1:])):
+        cover.add("grid non-integer T step")
     for where, lab, p, t in pts:
         ref = ref_mod.read(doc, p, t)
         try:
@@ -121,6 +131,9 @@ def compare_store(raw, ref_mod, engine_read, item1=False, seed=0, per_cell=4):
         except Exception as e:                          # a raise is a difference, named
             eng = {"raised": f"{type(e).__name__}: {e}"}
         by_read[ref["read"]] = by_read.get(ref["read"], 0) + 1
+        cover.add(f"read {ref['read']}" if ref["read"] != "table" else f"why {ref['why']}")
+        if lab == "p136":
+            cover.add("point p136")
         if not isinstance(eng, dict):
             d = [f"engine answer is a {type(eng).__name__}, not a dict"]
         else:
@@ -128,7 +141,8 @@ def compare_store(raw, ref_mod, engine_read, item1=False, seed=0, per_cell=4):
         if d:
             diffs.append({"where": where, "point": lab, "p": p, "t": t, "why": d})
     return {"store_sha256": hashlib.sha256(raw).hexdigest(), "cells": len(doc["cells"]), "points": len(pts),
-            "by_read": dict(sorted(by_read.items())), "n_differences": len(diffs), "differences": diffs[:50]}
+            "by_read": dict(sorted(by_read.items())), "covered": sorted(cover), "n_differences": len(diffs),
+            "differences": diffs[:50]}
 
 
 def main(argv=None):
@@ -161,7 +175,12 @@ def main(argv=None):
         res["stores"][s] = r
         bad += r["n_differences"]
         print(f"{s}: {r['cells']} cells, {r['points']} points {r['by_read']}, differences {r['n_differences']}")
+    covered = set().union(*(set(r["covered"]) for r in res["stores"].values()))
+    res["item1_missing"] = [c for c in ITEM1_CASES if c not in covered] if a.item1 else []
     Path(a.out).write_text(json.dumps(res, indent=1, sort_keys=True, default=repr) + "\n")
+    if res["item1_missing"]:
+        print(f"STOP: §9 item 1's cases with no reference answer in these stores: {res['item1_missing']}")
+        return 2
     if bad:
         print(f"STOP: {bad} points where the engine read differs from the reference reader")
         return 2
