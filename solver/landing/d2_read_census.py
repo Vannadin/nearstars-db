@@ -50,14 +50,9 @@ GET_LIKE = frozenset({"get", "pop", "setdefault"})
 _REASONS = MappingProxyType({
     # boundaries: raw reads of a `boundaries` block that stay off the switch, each with its reason (68 n2 on 54dd5042)
     ("boundaries", MA_PATH, "boundary_block"): "the switch itself",
-    ("boundaries", MA_PATH, "check_table"): "the compact's own validation at load, before any view or store",
-    ("boundaries", MA_PATH, "check_boundaries"): "the compact's own validation at load (check_table's call)",
-    ("boundaries", MA_PATH, "boundary_disclosures"): "the compact's boundaries report (status, rows, edge_drho_tol): "
-                                                     "a property of the table, not of a read",
-    ("boundaries", "solver/d2_store.py", "check_edges"): "the load check that compares the store's edges with the "
-                                                         "compact's block: it must read both (§5b load checks)",
-    ("boundaries", "solver/material_checks.py", "view_record_fns.curve"): "a field record's phase-boundary list, not an "
-                                                                          "assemblage compact's block",
+    # a field record's own phase-boundary list (kind «field»), not an assemblage compact's block: outside §7's
+    # boundaries rule, which is about the compact's block and its switch (c8 at S4; for 68's reading)
+    ("boundaries", "solver/material_checks.py", "view_record_fns.curve"): "a field record's phase-boundary list",
     ("boundaries", "solver/material_registry.py", "_curve_ends"): "a field record's phase-boundary list",
     ("boundaries", "solver/material_registry.py", "_curves"): "a field record's phase-boundary list",
     ("boundaries", "solver/material_registry.py", "_field_record"): "a field record's phase-boundary list",
@@ -95,6 +90,12 @@ SWITCH_USES = MappingProxyType({
     ("solver/rho_fall_build.py", "_edge_tol"): frozenset({"position"}),
     ("solver/solve.py", "_assemblage_view"): frozenset({"read"}),
     ("solver/fall_sets.py", "_region_points"): frozenset({"position"}),
+    # the compact's own checks and report read the compact's block through the switch (§7: check_boundaries' callers
+    # go through it; S4 routed boundary_disclosures and d2_store.check_edges' compact read the same way)
+    (MA_PATH, "check_table"): frozenset({"read"}),
+    (MA_PATH, "check_boundaries"): frozenset({"read"}),
+    (MA_PATH, "boundary_disclosures"): frozenset({"read"}),
+    ("solver/d2_store.py", "check_edges"): frozenset({"read"}),
 })
 
 

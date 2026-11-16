@@ -59,9 +59,9 @@
   {
    "path": "solver/d2_store.py",
    "line": 520,
-   "kind": "boundaries",
+   "kind": "switch",
    "function": "check_edges",
-   "use": null
+   "use": "read"
   },
   {
    "path": "solver/d2_store.py",
@@ -101,23 +101,23 @@
   {
    "path": "solver/material_assemblage.py",
    "line": 245,
-   "kind": "boundaries",
+   "kind": "switch",
    "function": "check_table",
-   "use": null
+   "use": "read"
   },
   {
    "path": "solver/material_assemblage.py",
    "line": 246,
-   "kind": "boundaries",
+   "kind": "switch",
    "function": "check_table",
-   "use": null
+   "use": "read"
   },
   {
    "path": "solver/material_assemblage.py",
    "line": 361,
-   "kind": "boundaries",
+   "kind": "switch",
    "function": "check_table",
-   "use": null
+   "use": "read"
   },
   {
    "path": "solver/material_assemblage.py",
@@ -129,9 +129,9 @@
   {
    "path": "solver/material_assemblage.py",
    "line": 1013,
-   "kind": "boundaries",
+   "kind": "switch",
    "function": "check_boundaries",
-   "use": null
+   "use": "read"
   },
   {
    "path": "solver/material_assemblage.py",
@@ -171,16 +171,16 @@
   {
    "path": "solver/material_assemblage.py",
    "line": 2968,
-   "kind": "boundaries",
+   "kind": "switch",
    "function": "boundary_disclosures",
-   "use": null
+   "use": "read"
   },
   {
    "path": "solver/material_assemblage.py",
    "line": 2970,
-   "kind": "boundaries",
+   "kind": "switch",
    "function": "boundary_disclosures",
-   "use": null
+   "use": "read"
   },
   {
    "path": "solver/material_assemblage.py",
@@ -192,9 +192,9 @@
   {
    "path": "solver/material_assemblage.py",
    "line": 3053,
-   "kind": "boundaries",
+   "kind": "switch",
    "function": "boundary_disclosures",
-   "use": null
+   "use": "read"
   },
   {
    "path": "solver/material_assemblage.py",

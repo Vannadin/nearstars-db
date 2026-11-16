@@ -242,8 +242,8 @@ def check_table(asm, table) -> dict:
     # P node, so the one-sided cut falls on a node and a read below it never extrapolates past the grid
     if ts[0] != T_FLOOR:
         raise TableStop(f"the grid's first T node is {ts[0]:g} K, not the view's floor {T_FLOOR:g} K", check="structure")
-    if (table.get("boundaries") or {}).get("status") not in BOUNDARY_STATUS:     # read by the resolver (68 S3)
-        raise TableStop(f"boundaries.status is {(table.get('boundaries') or {}).get('status')!r}, not one of "
+    if (boundary_block(None, table, None, "read") or {}).get("status") not in BOUNDARY_STATUS:  # the resolver (68 S3)
+        raise TableStop(f"boundaries.status is {(boundary_block(None, table, None, 'read') or {}).get('status')!r}, not one of "
                         f"{BOUNDARY_STATUS}", check="structure")
     if table.get("p_dataset") not in ps:
         raise TableStop(f"p_dataset {table.get('p_dataset')!r} is not a P node of the table", check="structure")
@@ -358,7 +358,7 @@ def check_table(asm, table) -> dict:
                         f"{len(refused)}", check="dT/dP field rule")
     if table.get("interp_terms") is not None:            # registration reg-interp-term §4: the per-cell term
         check_term_block(table, "interp_terms", sparse=False)
-    elif (table.get("boundaries") or {}).get("status") == "exported":
+    elif (boundary_block(None, table, None, "read") or {}).get("status") == "exported":
         raise TableStop("an exported table carries no interp_terms block (registration reg-interp-term §4)",
                         check="term block")
     if table.get("closure_terms") is not None:           # s-read registration §4: the sparse «isentrope closure» block
@@ -1010,7 +1010,7 @@ def check_boundaries(table, by, ps):
     the table with exactly its labels (the label/geometry agreement on the row's own pair, 68 M2), every P_b lies
     strictly inside its pair's P interval, and each curve group is single-valued in T (via build_curves). ρ rising
     with P on each side is the existing one-state check (r2 H6): a pair across a boundary is never one state."""
-    b = table.get("boundaries") or {}
+    b = boundary_block(None, table, None, "read") or {}
     if b.get("status") != "exported":
         return None
     nxt = {a: c for a, c in zip(ps, ps[1:])}
@@ -2965,9 +2965,9 @@ def boundary_disclosures(record, table) -> dict:
       admissions across an edge-type label change (the |Δρ|/ρ each carries, _label_step) and swap-type rejections."""
     v = view(record, table, 1600.0)
     if not v._curves:
-        return {"status": (table.get("boundaries") or {}).get("status")}
+        return {"status": (boundary_block(None, table, None, "read") or {}).get("status")}
     ts, ps = v.ts, v.ps
-    rows = table["boundaries"]["rows"]
+    rows = boundary_block(None, table, None, "read")["rows"]
     modes = [{"t": r["t"], "p_lo": r["p_lo"], "class": r["class"], "left": r["left"], "right": r["right"],
               "mode": ("node" if r.get("node_resolved") else "across") if row_across(r) else "cut"} for r in rows]
     deltas, over, unreadable = [], [], []
@@ -3050,7 +3050,7 @@ def boundary_disclosures(record, table) -> dict:
                            "max": rels[-1] if rels else None,
                            "over_1e-2": [d for d in deltas if d["rel"] > 1e-2], "unreadable": unreadable},
             "over_tolerance": over,
-            "edge_drho_tol": (table["boundaries"].get("source") or {}).get("edge_drho_tol"),
+            "edge_drho_tol": (boundary_block(None, table, None, "read").get("source") or {}).get("edge_drho_tol"),
             "multi_curve_cells": multi,
             "t_changes": {"located": located, "unlocated": unlocated, "unlocated_count": len(unlocated)},
             "curve_ends": ends, "sweep": dict(v.cut_counts), "past_end_read_across": past}

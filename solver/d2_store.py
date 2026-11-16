@@ -517,7 +517,7 @@ def today_segments(store_doc, view):
 def check_edges(loaded, compact, record_doc):
     """All of §5b's load checks on a loaded store, in order; raises the first StoreRefusal."""
     rid, doc = record_doc.get("id"), loaded.doc
-    b = compact.get("boundaries") or {}
+    b = ma.boundary_block(None, compact, None, "read") or {}      # the compact's block (§5b load checks)
     ps, ts = nodes(compact)
     check_edges_rows(doc["edges"], b, rid)
     check_units(doc["edges"], b, rid)
