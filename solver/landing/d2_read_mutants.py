@@ -38,7 +38,9 @@ FIXTURES = frozenset({"setUpClass", "setUpModule", "tearDownClass", "tearDownMod
 
 # (id, slice, §10 item quoted, [(file, anchor, replacement)], [test modules])
 MUTANTS = (
-    ("M01", "S2", "precedence reordered (`d2` before `fallback`);", [], []),
+    ("M01", "writer", "precedence reordered (`d2` before `fallback`);", [], []),   # D2-read note 8 (2): the reader
+                                         # dispatches on one stored class, so its branch order is equivalent; the
+                                         # precedence is note 17's, in the writer's classify (68)
     ("M02", "S2", "a `fallback` cell read as `d2`;",
      [("solver/d2_store.py", '    if cls in ("fallback", "limit"):\n        return {"read": "table", "why": cls, "notes": ()}\n    if cls in ("d2", "cut"):\n',
        '    if cls in ("limit",):\n        return {"read": "table", "why": cls, "notes": ()}\n    if cls in ("d2", "cut", "fallback"):\n')],
