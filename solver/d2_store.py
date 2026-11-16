@@ -33,6 +33,22 @@ TOL_COINCIDENT = 1e-9           # AssemblageView init's own test, relative (l.14
 P_TOL = 1e5                     # Pa: boundary_pass.P_TOL (frozen §3.3), (S1)'s tolerance
 S1_WS = (0.0, 0.25, 0.5, 0.75, 1.0)
 
+# ── the read piece's interface (S0 stubs, D2-read note 2 (1); frozen here so ea's driver and harness can be written
+#    against it; 68 checks the shape against the frozen text, not the logic) ─────────────────────────────────────────
+#: §6 and d2_store_reader.NO_FIELD, verbatim: a d2 cell whose fields all miss the point reads the record's table
+NO_FIELD = "d2: no field at the point → table read"
+#: §6's run-time counts, per view (cleared and restored by `_quiet` like `s_counts`). NO_FIELD is §6's own name; the
+#: other three name §5b's part-2 counts: (4) swap segments through a d2 or cut cell, (S1)'s per-read count, and
+#: (5) forced reads on cut cells
+COUNT_NAMES = (NO_FIELD, "d2: swap segment through a d2 or cut cell", "d2: (S1) read inside a subgrid sliver",
+               "d2: forced side on a cut cell")
+#: §6's proposed run-record line, one per record in material_notes: «<count name>: N of M reads»
+RUN_RECORD_LINE = "{name}: {n} of {m} reads"
+#: the reference reader's answer keys (d2_store_reader.read): «read» is table | d2 | cut | subgrid; a table answer
+#: carries «why», a D2 answer «field» and «values» with these four quantities
+READ_CLASSES = ("table", "d2", "cut", "subgrid")
+VALUE_KEYS = ("c_p", "dtdp", "rho", "s")
+
 
 class StoreRefusal(Exception):
     """A named load refusal (§2, §3, §5b)."""
@@ -497,3 +513,19 @@ def check_edges(loaded, compact, record_doc):
         rid0, text = got["stops"][0]
         raise StoreRefusal(rid0, f"record {rid}: {text} ({len(got['stops'])} in all)")
     return got
+
+
+def read_point(doc, p, t, view=None):
+    """The engine's read at one point of a D2-routed record, in the reference reader's shape (S0 stub; S2 fills it):
+
+        read_point(doc, p, t, view=None) → {"read": "table", "why": str, "notes": ()}
+                                          | {"read": "d2" | "cut" | "subgrid", "field": str,
+                                             "values": {"rho", "s", "c_p", "dtdp": float}, "notes": ((code, text), …)}
+
+    `doc` is the store as d2_store_reader.load returns it (the same dict), `p` in Pa, `t` in K. The keys and their
+    meanings are d2_store_reader.read's (note 17 §4.1), so §9 item 1 compares the two answers key for key: «read»,
+    «why» or «field», and «values» bit for bit. `notes` is the engine's own (BandNote code, text) pairs around the
+    answer (Q9); the reference reader has none, so the comparison leaves it out. `view` is the record's
+    AssemblageView when the caller has one (the subgrid side and the table fallthrough read it); None reads the store
+    alone, as the reference reader does."""
+    raise NotImplementedError("read piece S2: the class dispatch (D2-read §5)")

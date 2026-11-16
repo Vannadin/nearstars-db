@@ -580,5 +580,34 @@ class Edges(unittest.TestCase):
         self.assertIn("(H6)", str(cm.exception))
 
 
+
+class ReadPieceInterface(unittest.TestCase):
+    """S0: the read piece's frozen interface (D2-read note 2 (1); §5b (2), §6, §7). Shape only: the logic is S1–S4's."""
+
+    def test_count_names_and_the_no_field_line_match_the_reference_reader(self):
+        self.assertEqual(ds.NO_FIELD, "d2: no field at the point → table read")
+        self.assertEqual(ds.COUNT_NAMES[0], ds.NO_FIELD)
+        self.assertEqual(len(set(ds.COUNT_NAMES)), 4)
+        self.assertEqual(ds.RUN_RECORD_LINE.format(name=ds.NO_FIELD, n=3, m=10),
+                         "d2: no field at the point → table read: 3 of 10 reads")
+
+    def test_read_point_is_the_reference_readers_shape(self):
+        self.assertEqual(ds.READ_CLASSES, ("table", "d2", "cut", "subgrid"))
+        self.assertEqual(ds.VALUE_KEYS, ("c_p", "dtdp", "rho", "s"))
+        with self.assertRaises(NotImplementedError):
+            ds.read_point({}, 1e9, 1000.0)
+
+    def test_boundary_block_returns_todays_block_until_routing_and_names_its_use(self):
+        table = {"boundaries": {"status": "exported", "rows": []}}
+        for use in ma.BLOCK_USES:
+            self.assertIs(ma.boundary_block({}, table, None, use), table["boundaries"])
+        with self.assertRaises(ValueError):
+            ma.boundary_block({}, table, None, "both")
+
+    def test_census_keys(self):
+        from solver.landing import d2_read_census as c
+        self.assertEqual(c.SITE_KEYS, ("path", "line", "kind", "function"))
+        self.assertEqual(c.KINDS, ("option", "record_key", "view", "solid", "boundaries", "table_regardless"))
+
 if __name__ == "__main__":
     unittest.main()

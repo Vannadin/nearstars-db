@@ -3003,6 +3003,21 @@ def s_monotone_build(record, table):
     return s_monotone_check(v)
 
 
+BLOCK_USES = ("position", "read")
+
+
+def boundary_block(record, table, store, use):
+    """The one switch over a record's boundaries (D2-read §5b (2); S0 stub, S1 routes it): `use` is «position» or
+    «read». It returns the store's `edges` block only for «position» on a D2-routed record, and the compact's
+    `boundaries` block otherwise; in table-regardless mode (§5a) the compact's for both. Every reader calls it with its
+    `use` stated, and §7's census checks each site's `use`.
+
+    Until S1 routes records, no record is D2-routed, so this returns the compact's block for both uses (today's read)."""
+    if use not in BLOCK_USES:
+        raise ValueError(f"boundary_block: use {use!r} is not one of {BLOCK_USES}")
+    return table["boundaries"]
+
+
 def module_blob() -> str:
     """The git blob id of this module's bytes as loaded (sha1 of «blob <n>\\0» + bytes, as `git hash-object`): the
     identity the generator writes into closure_terms.monotone (gen engine_identity). Read per call (once per table
