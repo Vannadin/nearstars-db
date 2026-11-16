@@ -598,8 +598,9 @@ class ReadPieceInterface(unittest.TestCase):
     def test_read_point_is_the_reference_readers_shape(self):
         self.assertEqual(ds.READ_CLASSES, ("table", "d2", "cut", "subgrid"))
         self.assertEqual(ds.VALUE_KEYS, ("c_p", "dtdp", "rho", "s"))
-        with self.assertRaises(NotImplementedError):
-            ds.read_point({}, 1e9, 1000.0)
+        self.assertEqual(ds.SUBGRID_VALUE_KEYS, ("alpha", "c_p", "dtdp", "rho", "s"))
+        doc = {"grid": {"ps": [1e9, 2e9], "ts": [1000.0, 1100.0]}, "cells": {}}
+        self.assertEqual(ds.read_point(doc, 3e9, 1000.0)["read"], "table")          # S2: outside the grid → table
 
     def test_boundary_block_returns_todays_block_until_routing_and_names_its_use(self):
         table = {"boundaries": {"status": "exported", "rows": []}}

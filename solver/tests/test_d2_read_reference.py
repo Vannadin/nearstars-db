@@ -157,16 +157,25 @@ class Driver(unittest.TestCase):
         import contextlib
         import io
         import tempfile
-        with tempfile.TemporaryDirectory() as t, contextlib.redirect_stdout(io.StringIO()) as o:
+        import math
+        from unittest import mock
+        from solver import d2_store as ds
+        real = ds.read_point
+
+        def one_ulp_off(doc, p, t, view=None):                          # S2 (c8): a planted 1-ulp engine difference
+            got = real(doc, p, t, view)
+            if got["read"] != "table":
+                got = {**got, "values": {**got["values"], "rho": math.nextafter(got["values"]["rho"], math.inf)}}
+            return got
+        with tempfile.TemporaryDirectory() as t, contextlib.redirect_stdout(io.StringIO()) as o, \
+                mock.patch.object(ds, "read_point", one_ulp_off):
             rc = dc.main(["--reference", str(READER), "--out", str(Path(t) / "o.json"), str(STORES / "d2.json.gz")])
             out = json.loads((Path(t) / "o.json").read_text())
-        self.assertEqual(rc, 2, o.getvalue())                           # S0's stub raises at every point
-        first = next(iter(out["stores"].values()))["differences"][0]["why"][0]
-        self.assertIn("NotImplementedError", first)
+        self.assertEqual(rc, 2, o.getvalue())
+        self.assertTrue(next(iter(out["stores"].values()))["differences"])
 
 
 class EngineRead(unittest.TestCase):
-    @unittest.expectedFailure                                          # S0: read_point is a stub; S2 removes this
     def test_engine_read_equals_the_reference(self):
         ref = dc.load_reference(READER)
         for name in SHA256:

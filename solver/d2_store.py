@@ -14,6 +14,7 @@ import bisect
 import gzip
 import hashlib
 import json
+import math
 from pathlib import Path
 from types import MappingProxyType
 
@@ -48,6 +49,8 @@ RUN_RECORD_LINE = "{name}: {n} of {m} reads"
 #: carries «why», a D2 answer «field» and «values» with these four quantities
 READ_CLASSES = ("table", "d2", "cut", "subgrid")
 VALUE_KEYS = ("c_p", "dtdp", "rho", "s")
+#: a subgrid answer also carries alpha (dT/dP is T·α/(ρ·c_P) from it), as the reference reader's does
+SUBGRID_VALUE_KEYS = ("alpha", "c_p", "dtdp", "rho", "s")
 
 
 class StoreRefusal(Exception):
@@ -516,16 +519,131 @@ def check_edges(loaded, compact, record_doc):
 
 
 def read_point(doc, p, t, view=None):
-    """The engine's read at one point of a D2-routed record, in the reference reader's shape (S0 stub; S2 fills it):
+    """The engine's read at one point of a D2-routed record (D2-read §5): a port of the reference reader's `read`
+    (d2_store_reader, note 17 §4.1), floating-point order kept expression for expression so §9 item 1's `==` holds.
 
         read_point(doc, p, t, view=None) → {"read": "table", "why": str, "notes": ()}
-                                          | {"read": "d2" | "cut" | "subgrid", "field": str,
-                                             "values": {"rho", "s", "c_p", "dtdp": float}, "notes": ((code, text), …)}
+                                          | {"read": "d2" | "cut", "field": str, "values": {rho, s, c_p, dtdp}, "notes": …}
+                                          | {"read": "subgrid", "field": str, "values": {rho, c_p, alpha, s, dtdp}, "notes": …}
 
-    `doc` is the store as d2_store_reader.load returns it (the same dict), `p` in Pa, `t` in K. The keys and their
-    meanings are d2_store_reader.read's (note 17 §4.1), so §9 item 1 compares the two answers key for key: «read»,
-    «why» or «field», and «values» bit for bit. `notes` is the engine's own (BandNote code, text) pairs around the
-    answer (Q9); the reference reader has none, so the comparison leaves it out. `view` is the record's
-    AssemblageView when the caller has one (the subgrid side and the table fallthrough read it); None reads the store
-    alone, as the reference reader does."""
-    raise NotImplementedError("read piece S2: the class dispatch (D2-read §5)")
+    `doc` is the store document, `p` in Pa, `t` in K. Value keys per class: d2 and cut give VALUE_KEYS; subgrid gives
+    SUBGRID_VALUE_KEYS (alpha too, as the reference does). A «table» answer names why; the view then reads its table
+    as with d2_read off. Cells by the lower-cell rule on both axes (§5's registered tie). `notes` are the engine's own
+    (code, text) pairs (Q9); the comparison leaves them out. `view`, when given, takes the «no field» count (§6)."""
+    ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
+    j, k = _lower_cell(ps, p), _lower_cell(ts, t)
+    if j is None or k is None:
+        return {"read": "table", "why": "outside the store's grid", "notes": ()}
+    cell = doc["cells"].get(f"{j},{k}")
+    if cell is None:
+        return {"read": "table", "why": "no entry (frozen corner or above p_dataset)", "notes": ()}
+    box = (ps[j], ps[j + 1], ts[k], ts[k + 1])
+    u, v = (p - box[0]) / (box[1] - box[0]), (t - box[2]) / (box[3] - box[2])
+    cls = cell["class"]
+    if cls in ("fallback", "limit"):
+        return {"read": "table", "why": cls, "notes": ()}
+    if cls == "d2":
+        ok = {}
+        for f in cell["surfaces"]:
+            cs = _corners(doc, f, j, k)
+            if _lowest_mode(cs, u, v) >= 0.0:
+                ok[f] = cs
+        if not ok:
+            if view is not None and hasattr(view, "d2_counts"):
+                view.d2_counts[NO_FIELD] = view.d2_counts.get(NO_FIELD, 0) + 1
+            return {"read": "table", "why": NO_FIELD, "notes": ()}
+        f = min(ok, key=lambda x: _hermite_g(ok[x], *box, p, t, 0, 0, "solved"))
+        return {"read": "d2", "field": f, "values": _g_values(ok[f], box, p, t), "notes": (("d2", D2_NOTE),)}
+    if cls == "cut":
+        c = cell["cut"]
+        (x1, y1), (x2, y2) = c["points"]
+        cross = lambda uu, vv: (x2 - x1) * (vv - y1) - (y2 - y1) * (uu - x1)  # noqa: E731
+        a0 = c["a_corners"][0]
+        if cross(u, v) * math.copysign(1.0, cross(*a0)) > 0:      # A's side: A's nodes, A's virtual nodes at B's corners
+            f = c["a"]
+            nodes = doc["fields"][f]["nodes"]
+            cs = [_corner(c["a_virtual"].get(f"{j + i},{k + l}") or nodes[f"{j + i},{k + l}"]) for i, l in CORNERS]
+        else:
+            f = c["b"]
+            cs = _corners(doc, f, j, k)
+        return {"read": "cut", "field": f, "values": _g_values(cs, box, p, t), "notes": (("cut", CUT_NOTE),)}
+    # subgrid (note 17 §2.5 as note 19 amends it): u along the sides, w across; lines linear in w; inside the sliver
+    # the w-blend of the two sides' Lagrange quadratics; outside it the table
+    s0, s1 = sorted(cell["sides"], key=lambda sd: min(map(tuple, sd["nodes"])))
+    uu, w = (u, v) if cell["direction"] == "P" else (v, u)
+    lo, hi = (box[0], box[1]) if cell["direction"] == "P" else (box[2], box[3])
+    pos = lambda pt: ((pt[0] if cell["direction"] == "P" else pt[1]) - lo) / (hi - lo)  # noqa: E731
+    rev = s1["A"] != s0["A"]
+    ua = [pos(s0["lines"][0]), pos(s1["lines"][1] if rev else s1["lines"][0])]
+    ub = [pos(s0["lines"][1]), pos(s1["lines"][0] if rev else s1["lines"][1])]
+    k0 = s0["knots"]
+    k1 = {"A": s1["knots"]["B"], "C": s1["knots"]["C"], "B": s1["knots"]["A"]} if rev else s1["knots"]
+    la, lb = (1 - w) * ua[0] + w * ua[1], (1 - w) * ub[0] + w * ub[1]
+    if not (min(la, lb) <= uu <= max(la, lb)):
+        return {"read": "table", "why": "subgrid cell outside the sliver", "notes": ()}
+    sfr = (uu - la) / (lb - la)
+    vals = {n: (1 - w) * _lagrange(k0, sfr, n) + w * _lagrange(k1, sfr, n) for n in ("rho", "c_p", "alpha", "s")}
+    vals["dtdp"] = t * vals["alpha"] / (vals["rho"] * vals["c_p"])        # T·α/(ρ·c_P), never differentiated
+    return {"read": "subgrid", "field": s0["C"], "values": vals, "notes": (("subgrid", SUBGRID_NOTE),)}
+
+
+# ── the port's arithmetic (the reference reader's, in its order) ─────────────────────────────────────────────────────
+CORNERS = ((0, 0), (1, 0), (0, 1), (1, 1))
+D2_NOTE = "D2 read (s3-d2 §4): the field's own surface, gated by s3-d2 §7, not the table's band"
+CUT_NOTE = "D2 cut read (note 17 §2.4): the side's own field, gated by s3-d2 §7, not the table's band"
+SUBGRID_NOTE = "D2 subgrid read (note 17 §2.5): the sliver blend, checkpoints against band/10, not the table's band"
+
+
+def _lower_cell(xs, x):
+    """The lower cell at a node (§5's registered tie): the first i with xs[i] ≤ x ≤ xs[i + 1], else None."""
+    for i in range(len(xs) - 1):
+        if xs[i] <= x <= xs[i + 1]:
+            return i
+    return None
+
+
+def _hermite_basis(u, d):
+    if d == 0:
+        return (2 * u**3 - 3 * u**2 + 1, u**3 - 2 * u**2 + u, -2 * u**3 + 3 * u**2, u**3 - u**2)
+    if d == 1:
+        return (6 * u**2 - 6 * u, 3 * u**2 - 4 * u + 1, -6 * u**2 + 6 * u, 3 * u**2 - 2 * u)
+    return (12 * u - 6, 6 * u - 4, -12 * u + 6, 6 * u - 2)
+
+
+def _hermite_g(cs, p0, p1, t0, t1, p, t, dp, dt, which):
+    """Form (ii) (s3-d2 §2.4): bicubic Hermite on G with V, −S and ∂V/∂T at the four corners, CORNERS order."""
+    hp, ht = p1 - p0, t1 - t0
+    bu, bv = _hermite_basis((p - p0) / hp, dp), _hermite_basis((t - t0) / ht, dt)
+    tot = 0.0
+    for (i, l), c in zip(CORNERS, cs):
+        f = c["g_cons"] if which == "cons" else c["g"]
+        a0, a1, b0, b1 = bu[2 * i], bu[2 * i + 1], bv[2 * l], bv[2 * l + 1]
+        tot += f * a0 * b0 + c["v"] * hp * a1 * b0 + (-c["s"]) * ht * a0 * b1 + c["w"] * hp * ht * a1 * b1
+    return tot / (hp ** dp * ht ** dt)
+
+
+def _lowest_mode(cs, u, v):
+    w = ((1 - u) * (1 - v), u * (1 - v), (1 - u) * v, u * v)
+    return min(sum(wi * c["amounts"][q] for wi, c in zip(w, cs)) for q in range(len(cs[0]["amounts"])))
+
+
+def _g_values(cs, box, p, t):
+    gp, gt = _hermite_g(cs, *box, p, t, 1, 0, "cons"), _hermite_g(cs, *box, p, t, 0, 1, "cons")
+    gpp, gtt, gpt = (_hermite_g(cs, *box, p, t, 2, 0, "cons"), _hermite_g(cs, *box, p, t, 0, 2, "cons"),
+                     _hermite_g(cs, *box, p, t, 1, 1, "cons"))
+    return {"rho": 1.0 / gp, "s": -gt, "c_p": -t * gtt, "dtdp": -gpt / gtt if gtt else math.nan}
+
+
+def _corner(n):
+    return {"g": n["g_solved"], "g_cons": n["g_consistent"], "v": n["v"], "s": n["s"], "w": n["dv_dt_eq"],
+            "amounts": n["amounts"]}
+
+
+def _corners(doc, field, j, k):
+    nodes = doc["fields"][field]["nodes"]
+    return [_corner(nodes[f"{j + i},{k + l}"]) for i, l in CORNERS]
+
+
+def _lagrange(kn, x, name):
+    a, m, b = kn["A"][name], kn["C"][name], kn["B"][name]
+    return 2 * (x - 0.5) * (x - 1) * a - 4 * x * (x - 1) * m + 2 * x * (x - 0.5) * b   # Lagrange, as note 15 §2
