@@ -857,5 +857,38 @@ class ReadPieceS2(unittest.TestCase):
         self.assertGreater(hits, 0)
         self.assertEqual(v.d2_counts[ds.NO_FIELD], hits)
 
+
+class ReadPieceS2b(unittest.TestCase):
+    """S2b: Q3's read at exactly 136e9, and _term_notes' T cell under the dispatch's tie (§5, Q9)."""
+
+    def test_a_read_at_exactly_136e9_dispatches_to_its_lower_population_cell(self):
+        base = Path(__file__).resolve().parent / "fixtures" / "d2_reference" / "stores"
+        doc = json.loads(gzip.decompress((base / "grid136.json.gz").read_bytes()))
+        ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
+        j = ps.index(136e9)
+        t_ = 0.5 * (ts[0] + ts[1])
+        self.assertEqual(ds._lower_cell(ps, 136e9), j - 1)                 # the cell at or below p_dataset
+        r = ds.read_point(doc, 136e9, t_)
+        cls = doc["cells"].get(f"{j - 1},0", {}).get("class")
+        self.assertEqual(r["read"], cls if cls in ("d2", "cut", "subgrid") else "table")
+
+    def test_term_notes_take_the_lower_t_cell_at_a_node_on_a_routed_view(self):
+        rec, compact = thaw(reg().get(KHAN)), thaw(reg().tables[KHAN])
+        store = ds.Loaded("eligible", {"edges": copy.deepcopy(compact["boundaries"]), "grid": {"ps": [], "ts": []},
+                                       "cells": {}}, "0" * 64)
+        seen = {}
+        for name, v in (("plain", ma.view(rec, compact, 1600.0)), ("routed", ma.view(rec, compact, 1600.0, store=store))):
+            keys = []
+
+            class Spy(dict):
+                def get(self_, k, d=None):
+                    keys.append(k)
+                    return dict.get(self_, k, d)
+            v._terms = {k: (Spy(c), fl, nm) for k, (c, fl, nm) in v._terms.items()}
+            v._term_notes(2e10, v.ts[5], 4000.0, 2e-8, 1200.0)
+            seen[name] = {k[1] for k in keys}
+        self.assertEqual(seen["plain"], {5})                          # unrouted: bisect_right's upper cell, as today
+        self.assertEqual(seen["routed"], {4})                         # routed: the dispatch's lower cell
+
 if __name__ == "__main__":
     unittest.main()
