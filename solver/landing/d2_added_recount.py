@@ -26,10 +26,13 @@ import json
 import re
 import sys
 from pathlib import Path
+from types import MappingProxyType
 
 EDGE_ROWS = ("edge_in", "edge_out")
-FORECAST = {"mars_khan2022": {"accepted": 22, "unmatched": 560}, "default_bse": {"accepted": 20, "unmatched": 501},
-            "earth_dmm_wh2005": {"accepted": 12, "unmatched": 504}}     # D2-read §5b (6), stand-ins (khan / bse / dmm)
+FORECAST = MappingProxyType({                                       # D2-read §5b (6), stand-ins (khan / bse / dmm);
+    r: MappingProxyType(v) for r, v in (                                # read-only all the way down (A6 guard 1)
+        ("mars_khan2022", {"accepted": 22, "unmatched": 560}), ("default_bse", {"accepted": 20, "unmatched": 501}),
+        ("earth_dmm_wh2005", {"accepted": 12, "unmatched": 504}))})
 
 
 def base(x):
@@ -101,7 +104,7 @@ def main(argv=None):
         blob = lambda b: hashlib.sha1(b"blob %d\0" % len(b) + b).hexdigest()      # noqa: E731 (rows cite git blobs)
         r.update(store_sha256=hashlib.sha256(raw).hexdigest(), edges_sha256=hashlib.sha256(eraw).hexdigest(),
                  store_git_blob=blob(raw), edges_git_blob=blob(eraw),
-                 forecast_upper_bound=FORECAST.get(rid))
+                 forecast_upper_bound=dict(FORECAST[rid]) if rid in FORECAST else None)
         res["records"][rid] = r
         f = FORECAST.get(rid) or {}
         print(f"{rid}: added accepted {r['added']['accepted']} (forecast ≤ {f.get('accepted')}), unmatched "
