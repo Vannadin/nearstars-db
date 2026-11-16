@@ -33,12 +33,16 @@ from pathlib import Path
 
 COPY_DIRS = ("solver", "engine", "derived", "scripts")
 STORE_TEST = "solver.tests.test_d2_store"
+REF_TEST = "solver.tests.test_d2_read_reference"
 FIXTURES = frozenset({"setUpClass", "setUpModule", "tearDownClass", "tearDownModule"})
 
 # (id, slice, §10 item quoted, [(file, anchor, replacement)], [test modules])
 MUTANTS = (
     ("M01", "S2", "precedence reordered (`d2` before `fallback`);", [], []),
-    ("M02", "S2", "a `fallback` cell read as `d2`;", [], []),
+    ("M02", "S2", "a `fallback` cell read as `d2`;",
+     [("solver/d2_store.py", '    if cls in ("fallback", "limit"):\n        return {"read": "table", "why": cls, "notes": ()}\n    if cls in ("d2", "cut"):\n',
+       '    if cls in ("limit",):\n        return {"read": "table", "why": cls, "notes": ()}\n    if cls in ("d2", "cut", "fallback"):\n')],
+     [REF_TEST]),
     ("M03a", "view", "a chain link removed (one per link);",
      [("solver/d2_store.py", '    links = (("pins.compact_sha256", pins.get("compact_sha256"), compact_sha256),\n',
        '    links = (\n')], [STORE_TEST]),
@@ -59,19 +63,43 @@ MUTANTS = (
        "             )\n")], [STORE_TEST]),
     ("M04", "view", "the closed-key check removed;",
      [("solver/d2_store.py", "    if sorted(doc) != list(TOP_KEYS):\n", "    if False:\n")], [STORE_TEST]),
-    ("M05", "S2", "the lower-cell tie switched to upper;", [], []),
-    ("M06", "S2", "the subgrid side 1 not reversed;", [], []),
+    ("M05", "S2", "the lower-cell tie switched to upper;",
+     [("solver/d2_store.py", "    for i in range(len(xs) - 1):\n        if xs[i] <= x <= xs[i + 1]:",
+       "    for i in reversed(range(len(xs) - 1)):\n        if xs[i] <= x <= xs[i + 1]:")],
+     [STORE_TEST, REF_TEST]),
+    ("M06", "S2", "the subgrid side 1 not reversed;",
+     [("solver/d2_store.py", '    rev = s1["A"] != s0["A"]\n', "    rev = False\n")], [REF_TEST]),
     ("M07", "S2", "s_path on subgrid taking the blend's own derivative;",
      [("solver/d2_store.py", '        return ("sliver", v["s"], v["rho"], v["alpha"], v["c_p"])\n',
        '        return ("sliver", v["s"], v["rho"], -v["rho"] * (read_point(doc, p * (1 + 1e-6), t)["values"]["s"]\n'
        '                - read_point(doc, p * (1 - 1e-6), t)["values"]["s"]) / (2e-6 * p), v["c_p"])\n')],
      [STORE_TEST]),                       # the blend's own ∂s/∂P for α; the Q8 test holds the ruled ≤ 8 ulp (note 7 (1))
-    ("M08", "S1", "d2_read off opening the store;", [], []),
-    ("M09", "S1", "global off × eligible routed to D2;", [], []),
-    ("M10a", "S3", "the table-regardless mode on by default, or ignored by the dispatch, or with its note dropped;", [], []),
-    ("M10b", "S3", "the table-regardless mode on by default, or ignored by the dispatch, or with its note dropped;", [], []),
-    ("M10c", "S3", "the table-regardless mode on by default, or ignored by the dispatch, or with its note dropped;", [], []),
-    ("M11", "S1", "a `boundaries` reader left on the table's block (fall_sets' extension rows in particular);", [], []),
+    ("M08", "S1", "d2_read off opening the store;",
+     [("solver/d2_store.py", '    state, rel = check_keys(record_doc)\n    if state == "off":\n        return None\n',
+       '    state, rel = check_keys(record_doc)\n    if state == "off":\n'
+       '        [q.read_bytes() for q in sorted((Path(materials_dir) / "fields").glob("*"))]\n        return None\n')],
+     [STORE_TEST]),                       # the planted unreadable store under fields/ (68 B4) raises when opened
+    ("M09", "S1", "global off × eligible routed to D2;",
+     [("solver/solve.py", "    if registry is not None and silicate:             # silicate registration §4",
+       "    if registry is not None:             # silicate registration §4")],
+     [STORE_TEST]),                       # the route itself; test_global_off_never_asks_for_a_store (Earth, 68 n4)
+    ("M10a", "S3", "the table-regardless mode on by default, or ignored by the dispatch, or with its note dropped;",
+     [("solver/material_assemblage.py", "def view(record, table, t_pot, p_stop=0.0, p_floor=0.0, handover=None, store=None, *, table_regardless=None):",
+       "def view(record, table, t_pot, p_stop=0.0, p_floor=0.0, handover=None, store=None, *, table_regardless=\"on\"):")],
+     [STORE_TEST]),                       # on by default
+    ("M10b", "S3", "the table-regardless mode on by default, or ignored by the dispatch, or with its note dropped;",
+     [("solver/material_assemblage.py", "self._d2 = None if (table_regardless or store is None) else",
+       "self._d2 = None if (store is None) else")],
+     [STORE_TEST]),                       # ignored by the dispatch
+    ("M10c", "S3", "the table-regardless mode on by default, or ignored by the dispatch, or with its note dropped;",
+     [("solver/material_assemblage.py", '''                self.notes.append(mv.DeclaredNote(self.material_id, PHASE_ID,
+                                                  f"table-regardless read: {self.table_regardless}"))
+''', "")],
+     [STORE_TEST]),                       # the note dropped
+    ("M11", "S1", "a `boundaries` reader left on the table's block (fall_sets' extension rows in particular);",
+     [("solver/fall_sets.py", 'ma.boundary_block(None, table, getattr(v, "store", None), "position")',
+       'ma.boundary_block(None, table, None, "position")')],
+     [STORE_TEST]),
     ("M12", "view", "a v1 store accepted for positions;",
      [("solver/d2_store.py", '    if c.get("name") == CONTRACT_NAME and c.get("version") == 1:\n',
        "    if False:\n"),
