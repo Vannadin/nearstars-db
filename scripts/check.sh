@@ -1349,7 +1349,7 @@ step "test_silicate_source.py" bash -c 'exec python3 -m unittest solver/tests/te
 step "test_run_oracle.py" bash -c 'exec python3 -m unittest solver/tests/test_run_oracle.py'
 # D2 저장소 적재 검사(D2 읽기 사후 노트 2 의 잠든 조각) — 적재 거절 이름·edges 검사·공유 고정 입력의 STOP 집합·핀 시험. 맥 ~10 초
 step "test_d2_store.py" bash -c 'exec python3 -m unittest solver/tests/test_d2_store.py'
-# D2 읽기 §6 셈(«마당 없음»을 기준 읽기기와 같은 점에서 대조, S3 의 셋은 기대된 실패)·§9 항목 5 의 s 기울기 점검(d2·cut 차분, sub-grid Q8 ≤ 3 ulp) — 고정 저장 파일만, 레지스트리 적재 없음. 맥 ~1 초
+# D2 읽기 §6 셈(«마당 없음»과 S3 의 (S1) 띠 읽기를 기준 읽기기와 같은 점에서 대조, 뒤집기·강제 쪽은 0)·§9 항목 5 의 s 기울기 점검(d2·cut 차분, sub-grid Q8 ≤ 8 ulp, note 7 (1)) — 고정 저장 파일만, 레지스트리 적재 없음. 맥 ~1 초
 step "test_d2_read_counts.py" bash -c 'exec python3 -m unittest solver/tests/test_d2_read_counts.py'
 step "test_d2_read_s_path.py" bash -c 'exec python3 -m unittest solver/tests/test_d2_read_s_path.py'
 # D2 읽기 §9 항목 1(엔진 읽기 = 기준 읽기기, 비트까지; 고정 저장 파일 10 개)과 §5b (6) «추가된 곡선» 재계수 도구의 시험 — 고정물만, 레지스트리 적재 없음. 맥 ~1 초

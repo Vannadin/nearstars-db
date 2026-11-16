@@ -1,12 +1,11 @@
-# D2 읽기 §6 실행 시 셈 시험 — 고정 저장 파일들의 점(칸 꼭짓점·가운데·§9 항목 1 점)에서 엔진 read_point 가 세는 «마당 없음» 수가 기준 읽기기의 수와 같은지, 이름·줄 형식이 고정값인지; S3 의 나머지 셋은 기대된 실패
+# D2 읽기 §6 실행 시 셈 시험 — 고정 저장 파일들의 점(칸 꼭짓점·가운데·§9 항목 1 점)에서 엔진 read_point 가 세는 «마당 없음»·(S1) 띠 읽기 수가 기준 읽기기와 같은지, 이름·줄 형식이 고정값인지, 뒤집기·강제 쪽은 0
 """python -B -m unittest solver.tests.test_d2_read_counts   (gate Python, engine root; no registry load)
 
 D2-read rev 7 §6 and §9 (map rows c8-12, c8-15). The counts are per view (`view.d2_counts`, keyed by
 d2_store.COUNT_NAMES); read_point(doc, p, t, view) raises NO_FIELD on any view carrying `d2_counts`, so a namespace
 stands for the view here (c8, e901a8ac). Expected values come from the reference reader on the same points (its
-COUNTS[NO_FIELD]). The three other counts are S3's: the (S1) sliver count is expected to equal the reference's subgrid
-answers, and stays an expected failure until S3 counts it; the swap and forced-side counts need curves and forced reads,
-which the fixture stores do not carry, so here they must stay 0."""
+COUNTS[NO_FIELD]). The (S1) sliver count equals the reference's subgrid answers (S3 counts it in read_point, c8 07806dc8); the swap and
+forced-side counts need curves and forced reads, which the fixture stores do not carry, so here they must stay 0."""
 import types
 import unittest
 from pathlib import Path
@@ -71,7 +70,6 @@ class NoField(unittest.TestCase):
 
 
 class S3(unittest.TestCase):
-    @unittest.expectedFailure                                              # S3 counts (S1)'s sliver reads
     def test_the_sliver_count_equals_the_references_subgrid_answers(self):
         ref = dc.load_reference(READER)
         for name in ("subgrid", "subgrid_reversed"):
