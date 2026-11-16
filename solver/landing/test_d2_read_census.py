@@ -123,16 +123,30 @@ class Kinds(unittest.TestCase):
         self.assertEqual({u for *_, u in c.sites_of("solver/x.py", "x = t['boundaries']\n")}, {None})
 
 
+class Getters(unittest.TestCase):
+    def test_a_module_getters_answer_is_the_module(self):
+        """c8 at S4: «ma = _ma()» (rho_fall_build's import form, fall_sets' sys.modules form) and «_ma().x(...)» bind
+        the module, so the switch and view calls through them are census sites; a function that never names the module
+        is no getter"""
+        for body in ("    from solver import material_assemblage as ma\n    return ma\n",
+                     "    return sys.modules.get('solver.material_assemblage')\n"):
+            src = ("import sys\ndef _ma():\n" + body + "def other():\n    return 1\n"
+                   "def f(t):\n    ma = _ma()\n    ma.boundary_block(None, t, None, 'position')\n    _ma().view(1, 2, 3)\n"
+                   "def g(t):\n    m = other()\n    m.boundary_block(None, t, None, 'read')\n")
+            got = {(k, fn, u) for _p, _l, k, fn, u in c.sites_of("solver/x.py", src)}
+            self.assertEqual(got, {("switch", "f", "position"), ("view", "f", None)}, body)
+
+
 class Rules(unittest.TestCase):
     def test_each_kind_is_held_to_its_allow_list(self):
         site = lambda kind, fn, use=None: {"path": c.MA_PATH, "line": 1, "kind": kind, "function": fn, "use": use}  # noqa: E731
-        data = {"sites": [site("boundaries", "boundary_block"), site("boundaries", "check_table"),
+        data = {"sites": [site("boundaries", "boundary_block"), site("boundaries", "unlisted_reader"),
                           site("table_regardless", "x"), site("solid", "anything"), site("option", "anything"),
                           site("switch", "fall", "position"), site("switch", "fall", "read"),
                           site("switch", "fall", None), site("switch", "unlisted", "read")]}
         got = [(s["kind"], s["function"], s["use"]) for _, s in
                c.violations(data, switch_uses={(c.MA_PATH, "fall"): {"position"}})]
-        self.assertEqual(got, [("boundaries", "check_table", None), ("table_regardless", "x", None),
+        self.assertEqual(got, [("boundaries", "unlisted_reader", None), ("table_regardless", "x", None),
                                ("switch", "fall", "read"), ("switch", "fall", None), ("switch", "unlisted", "read")])
 
 
@@ -151,10 +165,9 @@ class Tree(unittest.TestCase):
         self.assertEqual([list(s) for s in committed["sites"]], [list(c.SITE_KEYS)] * len(committed["sites"]))
         self.assertEqual({s["use"] for s in committed["sites"] if s["kind"] != "switch"} - {None}, set())
 
-    @unittest.expectedFailure
     def test_each_kind_holds_its_rule_on_the_real_tree(self):
-        """§7: every site obeys its kind's rule. Red until the read piece routes its readers and fills the allow-lists;
-        c8 drops the marker at the final pass (an unexpected success fails the run, so the marker cannot be forgotten)"""
+        """§7: every site obeys its kind's rule. S4 (c8) routed the readers and filled the allow-lists, each entry with
+        its reason, so the expectedFailure marker is gone"""
         self.assertEqual(c.violations(self.data), [])
 
     def test_the_unrouted_sites_are_exactly_the_named_finding(self):
@@ -225,7 +238,11 @@ class Tree(unittest.TestCase):
             p.write_text("".join(lines), encoding="utf-8")
             rc, out = check(root)
         self.assertEqual(rc, 1)
-        self.assertIn("- sites: " + json.dumps(gone, sort_keys=True), out)
+        # anchored on (kind, path, function), not on the row's line, so moved lines do not break it (68 n on ed0a21d3)
+        import re
+        removed = [json.loads(m) for m in re.findall(r"- sites: (\{[^}]*\})", out)]
+        self.assertIn((gone["kind"], gone["path"], gone["function"]),
+                      {(s["kind"], s["path"], s["function"]) for s in removed}, out)
 
     def test_the_real_tree_is_untouched_by_the_plants(self):
         self.assertFalse((ROOT / "solver/planted_reader.py").exists())

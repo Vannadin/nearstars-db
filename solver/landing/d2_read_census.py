@@ -47,15 +47,55 @@ GET_LIKE = frozenset({"get", "pop", "setdefault"})
 
 # Each kind's rule (§7 «Each kind has its rule»), as (path, function) allow-lists. The read piece fills them as it
 # routes (S1–S3); a site outside its list is a violation, so a new reader cannot land unlisted.
-BOUNDARIES_ALLOW = frozenset({(MA_PATH, "boundary_block")})   # boundary_block itself; check_boundaries' callers go
-                                                              # through it (§7) and are added here by name when routed
-RECORD_KEY_ALLOW = frozenset()                                # the loader's functions (§7: «every record_key site is
-                                                              # in the loader»)
-VIEW_ALLOW = frozenset()                                      # the direct view builders, as ea's store_node_exact note
+_REASONS = MappingProxyType({
+    # boundaries: raw reads of a `boundaries` block that stay off the switch, each with its reason (68 n2 on 54dd5042)
+    ("boundaries", MA_PATH, "boundary_block"): "the switch itself",
+    ("boundaries", MA_PATH, "check_table"): "the compact's own validation at load, before any view or store",
+    ("boundaries", MA_PATH, "check_boundaries"): "the compact's own validation at load (check_table's call)",
+    ("boundaries", MA_PATH, "boundary_disclosures"): "the compact's boundaries report (status, rows, edge_drho_tol): "
+                                                     "a property of the table, not of a read",
+    ("boundaries", "solver/d2_store.py", "check_edges"): "the load check that compares the store's edges with the "
+                                                         "compact's block: it must read both (§5b load checks)",
+    ("boundaries", "solver/material_checks.py", "view_record_fns.curve"): "a field record's phase-boundary list, not an "
+                                                                          "assemblage compact's block",
+    ("boundaries", "solver/material_registry.py", "_curve_ends"): "a field record's phase-boundary list",
+    ("boundaries", "solver/material_registry.py", "_curves"): "a field record's phase-boundary list",
+    ("boundaries", "solver/material_registry.py", "_field_record"): "a field record's phase-boundary list",
+    ("boundaries", "solver/material_registry.py", "_kind"): "a field record's phase-boundary list",
+    ("boundaries", "solver/material_registry.py", "triple_point_misses"): "a field record's phase-boundary list",
+    ("boundaries", "solver/material_view.py", "RecordView.__init__"): "a field record's phase-boundary list",
+    # record_key: the loader (§7 «every record_key site is in the loader»)
+    ("record_key", "solver/d2_store.py", "state_of"): "the loader",
+    ("record_key", "solver/d2_store.py", "check_keys"): "the loader (68 B1, B2 on 54dd5042)",
+    ("record_key", "solver/d2_store.py", "chain"): "the loader's chain link (the record's pin against the store)",
+    # view: the direct view builders, each correct as it is (§5a «Direct view builders that do not pass the argument
+    # are listed and are correct as they are»)
+    ("view", "solver/solve.py", "_assemblage_view"): "the solve route: passes the store only on silicate_records (§4)",
+    ("view", MA_PATH, "view"): "the builder itself",
+    ("view", "solver/fall_sets.py", "_sweep"): "the fall-set sweep: passes the registry's store on a D2 record (S1)",
+    ("view", "solver/fall_sets.py", "check_record"): "the fall-set stamp check: a view of the table only, no read",
+    ("view", "solver/rho_fall_build.py", "_view"): "the fall-set build's views: unrouted, disclosed (68 n on "
+                                                   "96a9ec57; E1's owner question)",
+    ("view", MA_PATH, "check_table"): "the compact's own validation at load: table reads only",
+    ("view", MA_PATH, "boundary_disclosures"): "the compact's boundaries report: table reads only",
+    ("view", MA_PATH, "s_monotone_build"): "the s-monotone build over the table: table reads only",
+    ("view", "solver/d2_store.py", "check_edges"): "the store's load check over the compact's view (§5b)",
+})
+_allow = lambda kind: frozenset((p, fn) for (k, p, fn) in _REASONS if k == kind)  # noqa: E731
+BOUNDARIES_ALLOW = _allow("boundaries")
+RECORD_KEY_ALLOW = _allow("record_key")
+VIEW_ALLOW = _allow("view")
 TABLE_REGARDLESS_ALLOW = frozenset()                          # §5a: zero sites in the walk (the mode's own tests are
                                                               # under solver/tests/; the one real setter is in artifacts)
-SWITCH_USES = MappingProxyType({})                            # {(path, function): frozenset({use, …})}: §5b's table, one per
-                                                              # routed reader; a non-literal use always fails
+#: §5b's table, one entry per routed reader, {(path, function): frozenset({use, …})}; a non-literal use always fails
+SWITCH_USES = MappingProxyType({
+    ("solver/coexist.py", "check_table"): frozenset({"read"}),
+    ("solver/coexist.py", "cut_census"): frozenset({"read"}),
+    (MA_PATH, "AssemblageView.__init__"): frozenset({"read", "position"}),
+    ("solver/rho_fall_build.py", "_edge_tol"): frozenset({"position"}),
+    ("solver/solve.py", "_assemblage_view"): frozenset({"read"}),
+    ("solver/fall_sets.py", "_region_points"): frozenset({"position"}),
+})
 
 
 def py_files(root):
@@ -72,10 +112,11 @@ def _const_str(node):
 
 
 class _Walker(ast.NodeVisitor):
-    def __init__(self, path):
+    def __init__(self, path, getters=frozenset()):
         self.path = path
         self.stack = []
-        self.ma_aliases = set()          # names bound to the material_assemblage module
+        self.getters = set(getters)      # this file's functions that return the material_assemblage module (_ma())
+        self.ma_aliases = {"<material_assemblage>"}   # names bound to the material_assemblage module (and a getter call)
         self.view_names = set()          # names bound to material_assemblage.view
         self.switch_names = set()        # names bound to material_assemblage.boundary_block
         if path == MA_PATH:
@@ -145,7 +186,21 @@ class _Walker(ast.NodeVisitor):
                 self.add(node, "option")
         self.generic_visit(node)
 
+    def visit_Assign(self, node):
+        # «ma = _ma()»: a name bound to a getter's answer is the module (c8 at S4: fall_sets' and rho_fall_build's
+        # _ma() aliases hid fall_sets' boundary_block and view calls)
+        if self._getter_call(node.value):
+            for t in node.targets:
+                if isinstance(t, ast.Name):
+                    self.ma_aliases.add(t.id)
+        self.generic_visit(node)
+
+    def _getter_call(self, node):
+        return isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in self.getters
+
     def _dotted(self, node):
+        if self._getter_call(node):                  # «_ma().view(...)»: the getter's answer is the module
+            return "<material_assemblage>"
         if isinstance(node, ast.Name):
             return node.id
         if isinstance(node, ast.Attribute):
@@ -184,10 +239,26 @@ class _Walker(ast.NodeVisitor):
         self.add(node, "switch", _const_str(use[0]) if use else None)
 
 
+def ma_getters(tree):
+    """the module-level functions of a file that hand back the material_assemblage module: a body that names the module
+    (an import of it, or its dotted name as a string, as fall_sets' sys.modules / __import__ lookup) and returns"""
+    out = set()
+    for fn in tree.body:
+        if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        names = any((isinstance(n, ast.ImportFrom) and any(a.name == MA_MODULE for a in n.names))
+                    or (isinstance(n, ast.Import) and any(a.name.split(".")[-1] == MA_MODULE for a in n.names))
+                    or (_const_str(n) or "").split(".")[-1] == MA_MODULE for n in ast.walk(fn))
+        if names and any(isinstance(n, ast.Return) and n.value is not None for n in ast.walk(fn)):
+            out.add(fn.name)
+    return out
+
+
 def sites_of(path, source):
     """the census rows of one file's source text, as tuples (path, line, kind, function, use)"""
-    w = _Walker(path)
-    w.visit(ast.parse(source, filename=path))
+    tree = ast.parse(source, filename=path)
+    w = _Walker(path, ma_getters(tree))
+    w.visit(tree)
     return w.sites
 
 
@@ -209,36 +280,7 @@ def census(root):
 #: the (kind, path, function) of every site outside its allow-list before the read piece routes it. The real tree must
 #: equal this list exactly: a new unrouted site fails, and a routed one must leave the list (it only shrinks). Empty at
 #: the final pass, when the real-tree test's expectedFailure marker goes.
-UNROUTED_KNOWN = frozenset({
-    ('boundaries', 'solver/coexist.py', 'check_table'),
-    ('boundaries', 'solver/coexist.py', 'cut_census'),
-    ('boundaries', 'solver/d2_store.py', 'check_edges'),
-    ('boundaries', 'solver/fall_sets.py', '_region_points'),
-    ('boundaries', 'solver/material_assemblage.py', 'AssemblageView.__init__'),
-    ('boundaries', 'solver/material_assemblage.py', 'boundary_disclosures'),
-    ('boundaries', 'solver/material_assemblage.py', 'check_boundaries'),
-    ('boundaries', 'solver/material_assemblage.py', 'check_table'),
-    ('boundaries', 'solver/material_checks.py', 'view_record_fns.curve'),
-    ('boundaries', 'solver/material_registry.py', '_curve_ends'),
-    ('boundaries', 'solver/material_registry.py', '_curves'),
-    ('boundaries', 'solver/material_registry.py', '_field_record'),
-    ('boundaries', 'solver/material_registry.py', '_kind'),
-    ('boundaries', 'solver/material_registry.py', 'triple_point_misses'),
-    ('boundaries', 'solver/material_view.py', 'RecordView.__init__'),
-    ('boundaries', 'solver/rho_fall_build.py', '_edge_tol'),
-    ('boundaries', 'solver/solve.py', '_assemblage_view'),
-    ('record_key', 'solver/d2_store.py', 'chain'),
-    ('record_key', 'solver/d2_store.py', 'load'),
-    ('record_key', 'solver/d2_store.py', 'state_of'),
-    ('view', 'solver/d2_store.py', 'check_edges'),
-    ('view', 'solver/fall_sets.py', 'check_record'),
-    ('view', 'solver/material_assemblage.py', 'boundary_disclosures'),
-    ('view', 'solver/material_assemblage.py', 'check_table'),
-    ('view', 'solver/material_assemblage.py', 's_monotone_build'),
-    ('view', 'solver/material_assemblage.py', 'view'),
-    ('view', 'solver/rho_fall_build.py', '_view'),
-    ('view', 'solver/solve.py', '_assemblage_view'),
-})
+UNROUTED_KNOWN = frozenset()                                 # S4 (c8): every site routed or listed with its reason
 
 RULES = (
     ("boundaries", BOUNDARIES_ALLOW, "a boundaries read outside boundary_block and the switch's allow-list (§7, §5b)"),
