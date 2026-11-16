@@ -64,8 +64,9 @@ class StoreRefusal(Exception):
 class Loaded:
     """A D2 record's store, loaded and chained: the state, the document and the store's sha256."""
 
-    def __init__(self, state, doc, sha256):
+    def __init__(self, state, doc, sha256, arbitration=None):
         self.state, self.doc, self.sha256 = state, doc, sha256
+        self.arbitration = arbitration           # D2-read note 10: the arbitration record, when the store is arbitrated
 
 
 # ── the primitives' arithmetic, re-stated (note 2 (1), conditions 2 and 3) ─────────────────────────────────────────
@@ -143,6 +144,14 @@ def check_keys(record_doc):
     rel = Path(pin["path"])
     if rel.is_absolute() or ".." in rel.parts or rel.parts[:1] != ("fields",):
         raise StoreRefusal("material.d2_store_missing", f"record {rid}: d2_store path {pin['path']!r} is not under fields/")
+    if "arbitration" in pin:                    # note 10 §2: the arbitration record's pin, shaped as the store's
+        a = pin["arbitration"]
+        if not isinstance(a, dict) or not isinstance(a.get("path"), str) or not isinstance(a.get("sha256"), str):
+            raise StoreRefusal("material.d2_store_missing", f"record {rid}: d2_store.arbitration {{path, sha256}} missing")
+        ar = Path(a["path"])
+        if ar.is_absolute() or ".." in ar.parts or ar.parts[:1] != ("fields",):
+            raise StoreRefusal("material.d2_store_missing", f"record {rid}: d2_store.arbitration path {a['path']!r} "
+                               "is not under fields/")
     return state, rel
 
 
@@ -164,7 +173,50 @@ def load(record_doc, compact, materials_dir, compact_sha256=None):
     check_contract(doc, rid)
     check_grid(doc, compact, rid)
     chain(doc, sha, record_doc, compact, compact_sha256)
-    return Loaded(state, doc, sha)
+    return Loaded(state, doc, sha, arbitration(doc, record_doc, materials_dir))
+
+
+ARBITRATED = {"verdict": "keep_d2"}            # note 10 §2: the one mark
+
+
+def is_arbitrated(doc):
+    """note 10 §2: any cell marked, or fallback with source «arbitration»"""
+    return any("arbitrated" in c or c.get("source") == "arbitration" for c in doc["cells"].values())
+
+
+def arbitration(doc, record_doc, materials_dir):
+    """note 10 §2's chain link 7 and mark ⇔ keep_d2, or None for a store with no arbitration at all. The header keys
+    are present exactly when any cell is arbitrated, and the record pins the file exactly then. Link 7: the record's
+    pin sha256 = header.arbitration_sha256 = sha256 of the file read; file.record = the record's id; file.store_sha256 =
+    header.arbitration_store_sha256 (the pre-arbitration store, which the loader never sees: the writer's run 2
+    checks the final store against it, note 10 §4.4)."""
+    rid, h = record_doc.get("id"), doc["header"]
+    pin = (record_doc.get("d2_store") or {}).get("arbitration")
+    keys = [k for k in ("arbitration_sha256", "arbitration_store_sha256") if k in h]
+    arb = is_arbitrated(doc)
+    if not (arb or keys or pin):
+        return None
+    if not (arb and len(keys) == 2 and pin):
+        raise StoreRefusal("material.d2_store_chain", f"record {rid}: link 7: arbitrated cells {arb}, header keys "
+                           f"{keys}, record pin {'present' if pin else 'absent'}: all three or none")
+    path = Path(materials_dir) / pin["path"]
+    if not path.is_file():
+        raise StoreRefusal("material.d2_store_missing", f"record {rid}: no file {pin['path']}")
+    raw = path.read_bytes()
+    sha = hashlib.sha256(raw).hexdigest()
+    rec = json.loads(raw)
+    for name, want, got in (("arbitration.sha256", pin["sha256"], sha),
+                            ("header.arbitration_sha256", h["arbitration_sha256"], sha),
+                            ("arbitration record", rid, rec.get("record")),
+                            ("arbitration store_sha256", h["arbitration_store_sha256"], rec.get("store_sha256"))):
+        if want != got:
+            raise StoreRefusal("material.d2_store_chain", f"record {rid}: link 7 {name}: {want!r} ≠ {got!r}")
+    marked = {k for k, c in doc["cells"].items() if "arbitrated" in c}
+    keep = {k for k, v in (rec.get("cells") or {}).items() if (v or {}).get("verdict") == "keep_d2"}
+    if marked != keep:
+        raise StoreRefusal("material.d2_store_chain", f"record {rid}: link 7 marks ≠ keep_d2: marked only "
+                           f"{sorted(marked - keep)[:5]}, kept only {sorted(keep - marked)[:5]}")
+    return rec
 
 
 def check_contract(doc, rid="?"):
@@ -180,6 +232,14 @@ def check_contract(doc, rid="?"):
         if not isinstance(cell, dict) or cell.get("class") not in CLASSES:
             raise StoreRefusal("material.d2_store_class", f"record {rid}: cell {key} class "
                                f"{(cell or {}).get('class') if isinstance(cell, dict) else cell!r}")
+        # note 10 §2's two cell-key changes: `arbitrated` on d2 / cut only, keep_d2 only; `was` and source
+        # «arbitration» on fallback only
+        if "arbitrated" in cell and (cell["class"] not in ("d2", "cut") or cell["arbitrated"] != ARBITRATED):
+            raise StoreRefusal("material.d2_store_class", f"record {rid}: cell {key} arbitrated {cell['arbitrated']!r} "
+                               f"on a {cell['class']} cell (only {ARBITRATED} on d2 or cut)")
+        if ("was" in cell or cell.get("source") == "arbitration") and cell["class"] != "fallback":
+            raise StoreRefusal("material.d2_store_class", f"record {rid}: cell {key} carries the arbitration fallback "
+                               f"keys on a {cell['class']} cell")
 
 
 def nodes(compact):
@@ -509,7 +569,7 @@ def today_segments(store_doc, view):
                 if cell is None:
                     continue
                 name = f"curve {c.id} ({c.kind}{'' if c.phase is None else ' ' + c.phase}) {where} {a[0]:g}–{b[0]:g} K, cell ({j}, {k})"
-                if cell["class"] in ("d2", "cut"):
+                if cell["class"] in ("d2", "cut") and "arbitrated" not in cell:   # note 10: a marked cell keeps D2
                     if (c.id, a, b, j, k) not in seen:
                         seen.add((c.id, a, b, j, k))
                         stops.append(("material.d2_store_today_row", f"«today» segment through a {cell['class']} cell: {name}"))
@@ -709,6 +769,84 @@ def read_forced(doc, p, t, forced, view=None):
     box = (ps[j], ps[j + 1], ts[k], ts[k + 1])
     f, cs = _cut_corners(doc, doc["cells"][f"{j},{k}"], j, k, which)
     return {"read": "cut", "field": f, "values": _g_values(cs, box, p, t), "notes": (("cut", CUT_NOTE),)}
+
+
+ARB_TABLE = "d2: arbitrated cell → table read"   # note 10 §3: «not covered» in a marked cell
+ARB_NOTE = "D2 arbitrated read (D2-read note 10): today's side's field, judged on this read against truth"
+
+
+def marked_at(doc, p, t):
+    """(j, k, cell) when (p, t) is in a cell carrying note 10's mark, else None"""
+    g = doc.get("grid") or {}
+    ps, ts = g.get("ps") or [], g.get("ts") or []
+    j, k = _lower_cell(ps, p), _lower_cell(ts, t)
+    if j is None or k is None:
+        return None
+    cell = doc["cells"].get(f"{j},{k}")
+    return (j, k, cell) if cell is not None and "arbitrated" in cell else None
+
+
+def _marked_choice(doc, p, t, crossing, side=None):
+    """note 10 §3 in a marked cell: ("ordinary",) when no position curve crosses it at t; ("table", why) when not
+    covered; else (class, field, corners, box). `crossing` is [(P_b(t), left label, right label)] of the position curves
+    whose P_b lies in the cell's P span by the lower-cell tie; `side` (−1 / +1) overrides the read's own side of it
+    (§5b (5)'s forced side)."""
+    j, k, cell = marked_at(doc, p, t)
+    if not crossing:
+        return ("ordinary",)
+    if len(crossing) > 1:
+        return ("table", "two or more position curves in the cell")
+    pb, left, right = crossing[0]
+    sd = side if side in (-1, 1) else (-1 if p < pb else 1)
+    ps, ts = doc["grid"]["ps"], doc["grid"]["ts"]
+    box = (ps[j], ps[j + 1], ts[k], ts[k + 1])
+    if cell["class"] == "cut":
+        fs = forced_side(doc, p, t, [(pb, sd)])
+        if fs is None or fs[0] is None:
+            return ("table", f"cut side: {fs[1] if fs else 'not a cut cell'}")
+        try:
+            f, cs = _cut_corners(doc, cell, j, k, fs[0])
+        except KeyError:
+            return ("table", "a missing virtual corner")
+        return ("cut", f, cs, box)
+    label = left if sd == -1 else right
+    if label not in (doc.get("fields") or {}) or label not in (cell.get("surfaces") or ()):
+        return ("table", f"today's side {label!r} is not a surface of the cell")
+    try:
+        cs = _corners(doc, label, j, k)
+    except KeyError:
+        return ("table", f"today's side {label!r} has no node at a corner")
+    u, v = (p - box[0]) / (box[1] - box[0]), (t - box[2]) / (box[3] - box[2])
+    if _lowest_mode(cs, u, v) < 0.0:
+        return ("table", f"today's side {label!r} has a negative mode at the point")
+    return ("d2", label, cs, box)
+
+
+def read_marked(doc, p, t, crossing, view=None, side=None):
+    """read_point in a marked cell (note 10 §3): today's side's field over the whole cell; «not covered» is a table
+    answer, counted ARB_TABLE on `view`. With no crossing curve, the ordinary read."""
+    ch = _marked_choice(doc, p, t, crossing, side)
+    if ch[0] == "ordinary":
+        return read_point(doc, p, t, view)
+    if ch[0] == "table":
+        if view is not None and hasattr(view, "d2_counts"):
+            view.d2_counts[ARB_TABLE] = view.d2_counts.get(ARB_TABLE, 0) + 1
+        return {"read": "table", "why": f"arbitrated: {ch[1]}", "notes": ()}
+    cls, f, cs, box = ch
+    return {"read": cls, "field": f, "values": _g_values(cs, box, p, t), "notes": (("arbitrated", ARB_NOTE),)}
+
+
+def s_slopes_marked(doc, p, t, crossing, side=None):
+    """s_slopes in a marked cell (note 10 §3): the Q6 Dual's numbers on the chosen surface, None where the table's s
+    path applies (not covered), or the ordinary s_slopes with no crossing curve"""
+    ch = _marked_choice(doc, p, t, crossing, side)
+    if ch[0] == "ordinary":
+        return s_slopes(doc, p, t)
+    if ch[0] == "table":
+        return None
+    _c, _f, cs, box = ch
+    return (-_hermite_g(cs, *box, p, t, 0, 1, READ_G), -p * _hermite_g(cs, *box, p, t, 1, 1, READ_G),
+            -_hermite_g(cs, *box, p, t, 0, 2, READ_G))
 
 
 def class_at(doc, p, t):

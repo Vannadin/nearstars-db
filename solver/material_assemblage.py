@@ -1531,6 +1531,7 @@ class AssemblageView(mv.RecordView):
         self.d2_counts = {n: 0 for n in _ds.COUNT_NAMES}
         self.d2_counts["table_regardless_reads"] = 0
         self.d2_counts[_ds.FORCED_TABLE] = 0     # note 7: §5b (5) (iii)'s forced table reads
+        self.d2_counts[_ds.ARB_TABLE] = 0        # note 10 §3: «not covered» in a marked cell
         self._parts, self._runcache = {}, {}
         #: PROTOTYPE: the highest frozen node T (rows above it hold no frozen run; _flag_reads' precheck)
         self._t_frozen_max = max((c["t"] for c in table["cells"] if c["kind"] == "frozen"), default=-math.inf)
@@ -1606,7 +1607,8 @@ class AssemblageView(mv.RecordView):
         limit, no entry, outside the grid, a d2 cell with no field left, a subgrid read outside its sliver). `cells`
         stays the table's four corner cells (Q9: the above_solidus note is the state's, not the read's)."""
         from solver import d2_store as ds
-        r = ds.read_point(self._d2, p, t, self)
+        r = (ds.read_marked(self._d2, p, t, self.crossing(p, t), self) if ds.marked_at(self._d2, p, t)
+             else ds.read_point(self._d2, p, t, self))         # D2-read note 10 §3: a marked cell by today's side
         self._d2_last = None
         if r["read"] == "table":
             return None
@@ -1802,6 +1804,19 @@ class AssemblageView(mv.RecordView):
         got = out["rho"], out["dtdp_eq"], out["c_p"], [c for c in corners if c is not None]
         return got if not self.s_read else self._with_s(p, t, pr, ia, ib, got)
 
+    def crossing(self, p, t):
+        """D2-read note 10 §3: [(P_b(t), left label, right label)] of the position curves whose P_b at t lies in the
+        store cell of (p, t) by the dispatch's lower-cell tie in P; P_b by each curve's p_b_ext with the view's reach"""
+        from solver import d2_store as ds
+        ps = self._d2["grid"]["ps"]
+        j = ds._lower_cell(ps, p)
+        out = []
+        for c in self._pos.curves:
+            pb = c.p_b_ext(t, self._reach)
+            if pb is not None and ds._lower_cell(ps, pb) == j:
+                out.append((pb, c.rows[0]["left_label"], c.rows[0]["right_label"]))
+        return out
+
     def forced_pbs(self, force, t):
         """[(P_b(t), side)] of a force's curves (coexist's {curve: side}, on the position set, transitions' ids) for the
         D2 forced read (§5b (5), D2-read note 7 (ii)); P_b by each curve's own p_b_ext with the view's reach."""
@@ -1826,7 +1841,11 @@ class AssemblageView(mv.RecordView):
                 self.d2_counts[ds.FORCED] += 1
                 if fs[0] is None:
                     self.d2_counts[ds.FORCED_TABLE] += 1
-            got = ds.s_slopes(self._d2, p, t, forced)
+            if ds.marked_at(self._d2, p, t):         # note 10 §3; a force picks its side the same way (§5b (5))
+                side = next((s_ for _pb, s_ in forced), None) if forced and len(forced) == 1 else None
+                got = ds.s_slopes_marked(self._d2, p, t, self.crossing(p, t), side)
+            else:
+                got = ds.s_slopes(self._d2, p, t, forced)
             if got is not None:
                 return Dual(*got)
         pr = max(p, self.ps[0])

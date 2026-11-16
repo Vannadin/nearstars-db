@@ -211,7 +211,11 @@ def side_rho(v, p, t, force):
     # §5b (5) (i): through the dispatch, as side_s; its d2_counts are §6's registered counts, kept outside the restore
     if getattr(v, "_d2", None) is not None and p <= v.p_dataset:
         from solver import d2_store as ds
-        r = ds.read_forced(v._d2, p, t, v.forced_pbs(force, t), v)
+        forced = v.forced_pbs(force, t)
+        if ds.marked_at(v._d2, p, t):            # note 10 §3: a marked cell by the forced side of its crossing curve
+            r = ds.read_marked(v._d2, p, t, v.crossing(p, t), v, forced[0][1] if len(forced) == 1 else None)
+        else:
+            r = ds.read_forced(v._d2, p, t, forced, v)
         if r["read"] != "table":                 # a cut cell's forced side (note 7), or a d2 / subgrid answer
             return float(r["values"]["rho"])
     n, counts, marks, memo = len(v.notes), dict(v.cut_counts), v._marks, v._read_memo
