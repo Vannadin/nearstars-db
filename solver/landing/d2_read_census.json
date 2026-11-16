@@ -1,0 +1,525 @@
+{
+ "sites": [
+  {
+   "path": "solver/coexist.py",
+   "line": 231,
+   "kind": "solid",
+   "function": "side_s",
+   "use": null
+  },
+  {
+   "path": "solver/coexist.py",
+   "line": 344,
+   "kind": "boundaries",
+   "function": "check_table",
+   "use": null
+  },
+  {
+   "path": "solver/coexist.py",
+   "line": 401,
+   "kind": "boundaries",
+   "function": "cut_census",
+   "use": null
+  },
+  {
+   "path": "solver/context.py",
+   "line": 45,
+   "kind": "option",
+   "function": "Options",
+   "use": null
+  },
+  {
+   "path": "solver/d2_store.py",
+   "line": 110,
+   "kind": "record_key",
+   "function": "state_of",
+   "use": null
+  },
+  {
+   "path": "solver/d2_store.py",
+   "line": 128,
+   "kind": "record_key",
+   "function": "load",
+   "use": null
+  },
+  {
+   "path": "solver/d2_store.py",
+   "line": 135,
+   "kind": "record_key",
+   "function": "load",
+   "use": null
+  },
+  {
+   "path": "solver/d2_store.py",
+   "line": 198,
+   "kind": "record_key",
+   "function": "chain",
+   "use": null
+  },
+  {
+   "path": "solver/d2_store.py",
+   "line": 504,
+   "kind": "boundaries",
+   "function": "check_edges",
+   "use": null
+  },
+  {
+   "path": "solver/d2_store.py",
+   "line": 510,
+   "kind": "view",
+   "function": "check_edges",
+   "use": null
+  },
+  {
+   "path": "solver/fall_sets.py",
+   "line": 186,
+   "kind": "boundaries",
+   "function": "_region_points",
+   "use": null
+  },
+  {
+   "path": "solver/fall_sets.py",
+   "line": 569,
+   "kind": "view",
+   "function": "check_record",
+   "use": null
+  },
+  {
+   "path": "solver/landing/zones_identity.py",
+   "line": 89,
+   "kind": "option",
+   "function": "record_state",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 244,
+   "kind": "boundaries",
+   "function": "check_table",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 245,
+   "kind": "boundaries",
+   "function": "check_table",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 360,
+   "kind": "boundaries",
+   "function": "check_table",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 366,
+   "kind": "view",
+   "function": "check_table",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 1012,
+   "kind": "boundaries",
+   "function": "check_boundaries",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 1421,
+   "kind": "boundaries",
+   "function": "AssemblageView.__init__",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 2654,
+   "kind": "solid",
+   "function": "AssemblageView.state",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 2700,
+   "kind": "solid",
+   "function": "AssemblageView.phase_read",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 2831,
+   "kind": "view",
+   "function": "boundary_disclosures",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 2833,
+   "kind": "boundaries",
+   "function": "boundary_disclosures",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 2835,
+   "kind": "boundaries",
+   "function": "boundary_disclosures",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 2889,
+   "kind": "solid",
+   "function": "boundary_disclosures",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 2918,
+   "kind": "boundaries",
+   "function": "boundary_disclosures",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 2985,
+   "kind": "solid",
+   "function": "s_monotone_check",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 3001,
+   "kind": "view",
+   "function": "s_monotone_build",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 3018,
+   "kind": "boundaries",
+   "function": "boundary_block",
+   "use": null
+  },
+  {
+   "path": "solver/material_assemblage.py",
+   "line": 3055,
+   "kind": "view",
+   "function": "view",
+   "use": null
+  },
+  {
+   "path": "solver/material_checks.py",
+   "line": 279,
+   "kind": "boundaries",
+   "function": "view_record_fns.curve",
+   "use": null
+  },
+  {
+   "path": "solver/material_registry.py",
+   "line": 572,
+   "kind": "boundaries",
+   "function": "_curve_ends",
+   "use": null
+  },
+  {
+   "path": "solver/material_registry.py",
+   "line": 618,
+   "kind": "boundaries",
+   "function": "_curves",
+   "use": null
+  },
+  {
+   "path": "solver/material_registry.py",
+   "line": 799,
+   "kind": "boundaries",
+   "function": "_field_record",
+   "use": null
+  },
+  {
+   "path": "solver/material_registry.py",
+   "line": 821,
+   "kind": "boundaries",
+   "function": "_kind",
+   "use": null
+  },
+  {
+   "path": "solver/material_registry.py",
+   "line": 1260,
+   "kind": "boundaries",
+   "function": "triple_point_misses",
+   "use": null
+  },
+  {
+   "path": "solver/material_view.py",
+   "line": 561,
+   "kind": "boundaries",
+   "function": "RecordView.__init__",
+   "use": null
+  },
+  {
+   "path": "solver/member.py",
+   "line": 32,
+   "kind": "option",
+   "function": "member_of",
+   "use": null
+  },
+  {
+   "path": "solver/member.py",
+   "line": 42,
+   "kind": "option",
+   "function": "member_of",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 93,
+   "kind": "option",
+   "function": "_body_at",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 103,
+   "kind": "option",
+   "function": "_body_at",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 113,
+   "kind": "option",
+   "function": "one_state",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 116,
+   "kind": "option",
+   "function": "one_state",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 126,
+   "kind": "option",
+   "function": "one_state",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 136,
+   "kind": "option",
+   "function": "one_state",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 147,
+   "kind": "option",
+   "function": "one_state",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 171,
+   "kind": "option",
+   "function": "run",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 184,
+   "kind": "option",
+   "function": "run",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 185,
+   "kind": "option",
+   "function": "run",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 191,
+   "kind": "option",
+   "function": "run",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 194,
+   "kind": "option",
+   "function": "run",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 240,
+   "kind": "option",
+   "function": "controls",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 244,
+   "kind": "option",
+   "function": "controls",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 245,
+   "kind": "option",
+   "function": "controls",
+   "use": null
+  },
+  {
+   "path": "solver/method_term.py",
+   "line": 320,
+   "kind": "option",
+   "function": "main",
+   "use": null
+  },
+  {
+   "path": "solver/rho_fall_build.py",
+   "line": 244,
+   "kind": "boundaries",
+   "function": "_edge_tol",
+   "use": null
+  },
+  {
+   "path": "solver/rho_fall_build.py",
+   "line": 843,
+   "kind": "view",
+   "function": "_view",
+   "use": null
+  },
+  {
+   "path": "solver/run_oracle.py",
+   "line": 264,
+   "kind": "option",
+   "function": "_one",
+   "use": null
+  },
+  {
+   "path": "solver/run_oracle.py",
+   "line": 322,
+   "kind": "option",
+   "function": "main",
+   "use": null
+  },
+  {
+   "path": "solver/run_oracle.py",
+   "line": 349,
+   "kind": "option",
+   "function": "main",
+   "use": null
+  },
+  {
+   "path": "solver/run_oracle.py",
+   "line": 359,
+   "kind": "option",
+   "function": "main",
+   "use": null
+  },
+  {
+   "path": "solver/solve.py",
+   "line": 334,
+   "kind": "option",
+   "function": "registry_for",
+   "use": null
+  },
+  {
+   "path": "solver/solve.py",
+   "line": 342,
+   "kind": "option",
+   "function": "registry_for",
+   "use": null
+  },
+  {
+   "path": "solver/solve.py",
+   "line": 344,
+   "kind": "option",
+   "function": "registry_for",
+   "use": null
+  },
+  {
+   "path": "solver/solve.py",
+   "line": 380,
+   "kind": "boundaries",
+   "function": "_assemblage_view",
+   "use": null
+  },
+  {
+   "path": "solver/solve.py",
+   "line": 390,
+   "kind": "view",
+   "function": "_assemblage_view",
+   "use": null
+  },
+  {
+   "path": "solver/solve.py",
+   "line": 571,
+   "kind": "option",
+   "function": "_file_requires_switch",
+   "use": null
+  },
+  {
+   "path": "solver/solve.py",
+   "line": 580,
+   "kind": "option",
+   "function": "_requires_switch",
+   "use": null
+  },
+  {
+   "path": "solver/solve.py",
+   "line": 890,
+   "kind": "option",
+   "function": "_with_sensitivity",
+   "use": null
+  },
+  {
+   "path": "solver/solve.py",
+   "line": 1219,
+   "kind": "option",
+   "function": "solve",
+   "use": null
+  },
+  {
+   "path": "solver/solve.py",
+   "line": 1362,
+   "kind": "option",
+   "function": "_solve",
+   "use": null
+  }
+ ],
+ "schema_keys": [
+  "assemblage",
+  "boundaries",
+  "choice",
+  "composition_key",
+  "field_probe",
+  "field_probes",
+  "fit_composition",
+  "formula_checks",
+  "handover_table",
+  "id",
+  "joins",
+  "kind",
+  "label",
+  "note",
+  "phases",
+  "primary_family",
+  "refusals",
+  "requires_switch",
+  "role_hint",
+  "source_seams",
+  "system",
+  "triple_points"
+ ]
+}

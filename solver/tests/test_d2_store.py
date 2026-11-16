@@ -606,8 +606,8 @@ class ReadPieceInterface(unittest.TestCase):
 
     def test_census_keys(self):
         from solver.landing import d2_read_census as c
-        self.assertEqual(c.SITE_KEYS, ("path", "line", "kind", "function"))
-        self.assertEqual(c.KINDS, ("option", "record_key", "view", "solid", "boundaries", "table_regardless"))
+        self.assertEqual(c.SITE_KEYS, ("path", "line", "kind", "function", "use"))   # «use»: c8 11-16, §5b's switch
+        self.assertEqual(c.KINDS, ("option", "record_key", "view", "solid", "boundaries", "table_regardless", "switch"))
 
 if __name__ == "__main__":
     unittest.main()

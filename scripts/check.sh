@@ -1351,6 +1351,8 @@ step "test_run_oracle.py" bash -c 'exec python3 -m unittest solver/tests/test_ru
 step "test_d2_store.py" bash -c 'exec python3 -m unittest solver/tests/test_d2_store.py'
 # 인계 블록 ↔ 그 SLB 기록 압축표 짝(prereg-bmcpp 노트 8 §3.4, L-needs C6a) — 파일만 읽음(yaml·gz 표), 레지스트리 적재 없음. ~1 s.
 step "test_handover_blocks.py" bash -c 'exec python3 -m unittest solver/tests/test_handover_blocks.py'
+# D2 읽기 독자 조사(D2 읽기 등록 §7) — 추적 .py 전부를 ast 로 훑은 목록 = 커밋된 목록, 종류별 허용 목록, 임시 사본에 심은 대조군. 맥 ~15 초
+step "test_d2_read_census.py" bash -c 'exec python3 -m unittest solver/landing/test_d2_read_census.py'
 step "test_answer_verdict.py" bash -c 'cd engine && exec python3 test_answer_verdict.py'
 step "test_convergence_meaning.py" bash -c 'cd engine && exec python3 test_convergence_meaning.py'
 step "test_rootfind.py" bash -c 'cd engine && exec python3 test_rootfind.py'
