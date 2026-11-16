@@ -63,6 +63,7 @@ _REASONS = MappingProxyType({
     ("record_key", "solver/d2_store.py", "state_of"): "the loader",
     ("record_key", "solver/d2_store.py", "check_keys"): "the loader (68 B1, B2 on 54dd5042)",
     ("record_key", "solver/d2_store.py", "chain"): "the loader's chain link (the record's pin against the store)",
+    ("record_key", "solver/d2_store.py", "arbitration"): "the loader's chain link 7 (D2-read note 10 §2)",
     # view: the direct view builders, each correct as it is (§5a «Direct view builders that do not pass the argument
     # are listed and are correct as they are»)
     ("view", "solver/solve.py", "_assemblage_view"): "the solve route: passes the store only on silicate_records (§4)",

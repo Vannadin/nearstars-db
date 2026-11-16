@@ -176,7 +176,7 @@ def load(record_doc, compact, materials_dir, compact_sha256=None):
     return Loaded(state, doc, sha, arbitration(doc, record_doc, materials_dir))
 
 
-ARBITRATED = {"verdict": "keep_d2"}            # note 10 §2: the one mark
+ARBITRATED = MappingProxyType({"verdict": "keep_d2"})   # note 10 §2: the one mark
 
 
 def is_arbitrated(doc):
@@ -234,7 +234,7 @@ def check_contract(doc, rid="?"):
                                f"{(cell or {}).get('class') if isinstance(cell, dict) else cell!r}")
         # note 10 §2's two cell-key changes: `arbitrated` on d2 / cut only, keep_d2 only; `was` and source
         # «arbitration» on fallback only
-        if "arbitrated" in cell and (cell["class"] not in ("d2", "cut") or cell["arbitrated"] != ARBITRATED):
+        if "arbitrated" in cell and (cell["class"] not in ("d2", "cut") or cell["arbitrated"] != dict(ARBITRATED)):
             raise StoreRefusal("material.d2_store_class", f"record {rid}: cell {key} arbitrated {cell['arbitrated']!r} "
                                f"on a {cell['class']} cell (only {ARBITRATED} on d2 or cut)")
         if ("was" in cell or cell.get("source") == "arbitration") and cell["class"] != "fallback":
