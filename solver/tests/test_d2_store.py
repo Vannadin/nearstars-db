@@ -789,8 +789,16 @@ class ReadPieceS2(unittest.TestCase):
         from unittest import mock
         plain = ma.view(self.rec, self.compact, 1600.0)
         v = self.routed()
+        p_, t_ = self.pt
+        off = (p_, t_ + 0.5)                        # off a T node: the whole answer, notes included, is today's
         with mock.patch.object(ds, "read_point", lambda doc, p, t, view=None: {"read": "table", "why": "fallback", "notes": ()}):
-            self.assertEqual(repr(v.state(*self.pt)), repr(plain.state(*self.pt)))
+            self.assertEqual(repr(v.state(*off)), repr(plain.state(*off)))
+            self.assertEqual(repr(v.s_path(*off)), repr(plain.s_path(*off)))
+            # at a T node (2000 K is one): the values are today's bit for bit (§5b «table-read cells ... bit for bit»);
+            # the term notes take the dispatch's lower T cell (§5 Q9 «it must use the dispatch's cell»), so only
+            # their cell may differ from the unrouted view's upper cell
+            self.assertIn(t_, plain.ts)
+            self.assertEqual(repr(v.state(*self.pt)[:2]), repr(plain.state(*self.pt)[:2]))
             self.assertEqual(repr(v.s_path(*self.pt)), repr(plain.s_path(*self.pt)))
 
     def test_a_d2_answer_is_the_read_and_carries_its_class_note_not_the_tables_bands(self):
@@ -889,6 +897,7 @@ class ReadPieceS2b(unittest.TestCase):
             seen[name] = {k[1] for k in keys}
         self.assertEqual(seen["plain"], {5})                          # unrouted: bisect_right's upper cell, as today
         self.assertEqual(seen["routed"], {4})                         # routed: the dispatch's lower cell
+
 
 if __name__ == "__main__":
     unittest.main()
