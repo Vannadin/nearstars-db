@@ -549,6 +549,23 @@ def _sliver_miss(cell, ps, ts, j, k, a, b):
     return worst, offs
 
 
+def today_cells(store_doc, view, curves=None):
+    """note 11 / 68 on S5: {(j, k): {curve ids}} of the cells a «today» piece passes through, by today_segments' own
+    walk (`_pieces`, `_cells_through`) over `curves` (default the view's `_curves`; a routed view passes its position
+    set). The marked read takes its curves from here, so «a today segment through the cell» means one thing in the
+    loader's exemption and in the read (ea's finding: five marked cells that no p_b_ext enters at any T)."""
+    ps, ts = store_doc["grid"]["ps"], store_doc["grid"]["ts"]
+    src = _unit_sources(store_doc["edges"])
+    out = {}
+    for c in (view._curves if curves is None else curves):
+        today = [_is_today(src, c, r) for r in c.rows]
+        for a, b, ends, _where in _pieces(view, c, ts, view._reach):
+            if any(today[i] for i in ends):
+                for j, k in _cells_through(ps, ts, a, b):
+                    out.setdefault((j, k), set()).add(c.id)
+    return out
+
+
 def today_segments(store_doc, view):
     """§5b (2b) and (S1) on the view built on the store's block: every full curve (`_curves`) row to row, and past its
     true ends with the stops and extensions of the event runs holding them (`_events`, after init's merge). → {"stops": [(id, text)], "s1": [...]}; the stops are d2_store_today_row (a «today» segment through

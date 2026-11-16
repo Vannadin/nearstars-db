@@ -1805,16 +1805,24 @@ class AssemblageView(mv.RecordView):
         return got if not self.s_read else self._with_s(p, t, pr, ia, ib, got)
 
     def crossing(self, p, t):
-        """D2-read note 10 §3: [(P_b(t), left label, right label)] of the position curves whose P_b at t lies in the
-        store cell of (p, t) by the dispatch's lower-cell tie in P; P_b by each curve's p_b_ext with the view's reach"""
+        """D2-read note 10 §3 with note 11: [(P_b(t), left label, right label)] of the position curves whose «today»
+        piece passes through the store cell of (p, t) by the loader's own walk (d2_store.today_cells on the position
+        set), each with its event P_b at t, p_b_ext with the view's reach, wherever that lies. So the side follows the
+        P_b every event consumer uses, and the curves are the ones the loader's exemption counted. A curve with no
+        P_b at t is left out."""
         from solver import d2_store as ds
-        ps = self._d2["grid"]["ps"]
-        j = ds._lower_cell(ps, p)
+        g = self._d2["grid"]
+        j, k = ds._lower_cell(g["ps"], p), ds._lower_cell(g["ts"], t)
+        if not hasattr(self, "_today_cells"):
+            pos = types.SimpleNamespace(_curves=self._pos.curves, _events=self._pos.events, _reach=self._reach)
+            self._today_cells = ds.today_cells(self._d2, pos)    # the walk on the position set's curves and runs
+        ids = self._today_cells.get((j, k), set())
         out = []
         for c in self._pos.curves:
-            pb = c.p_b_ext(t, self._reach)
-            if pb is not None and ds._lower_cell(ps, pb) == j:
-                out.append((pb, c.rows[0]["left_label"], c.rows[0]["right_label"]))
+            if c.id in ids:
+                pb = c.p_b_ext(t, self._reach)
+                if pb is not None:
+                    out.append((pb, c.rows[0]["left_label"], c.rows[0]["right_label"]))
         return out
 
     def forced_pbs(self, force, t):

@@ -65,14 +65,14 @@
   },
   {
    "path": "solver/d2_store.py",
-   "line": 590,
+   "line": 607,
    "kind": "switch",
    "function": "check_edges",
    "use": "read"
   },
   {
    "path": "solver/d2_store.py",
-   "line": 596,
+   "line": 613,
    "kind": "view",
    "function": "check_edges",
    "use": null
@@ -156,77 +156,77 @@
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 2792,
+   "line": 2800,
    "kind": "solid",
    "function": "AssemblageView.state",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 2843,
+   "line": 2851,
    "kind": "solid",
    "function": "AssemblageView.phase_read",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 2985,
+   "line": 2993,
    "kind": "view",
    "function": "boundary_disclosures",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 2987,
+   "line": 2995,
    "kind": "switch",
    "function": "boundary_disclosures",
    "use": "read"
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 2989,
+   "line": 2997,
    "kind": "switch",
    "function": "boundary_disclosures",
    "use": "read"
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 3043,
+   "line": 3051,
    "kind": "solid",
    "function": "boundary_disclosures",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 3072,
+   "line": 3080,
    "kind": "switch",
    "function": "boundary_disclosures",
    "use": "read"
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 3139,
+   "line": 3147,
    "kind": "solid",
    "function": "s_monotone_check",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 3155,
+   "line": 3163,
    "kind": "view",
    "function": "s_monotone_build",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 3188,
+   "line": 3196,
    "kind": "boundaries",
    "function": "boundary_block",
    "use": null
   },
   {
    "path": "solver/material_assemblage.py",
-   "line": 3227,
+   "line": 3235,
    "kind": "view",
    "function": "view",
    "use": null
