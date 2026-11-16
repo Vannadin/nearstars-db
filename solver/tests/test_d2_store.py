@@ -1349,6 +1349,17 @@ class S5Sets(unittest.TestCase):
         ds.read_point(doc, 4e9, 1050.0, v)
         self.assertEqual((v.d2_counts[ds.ARB_FALLBACK], v.d2_counts[ds.ARB_SCREEN]), (1, 2))
 
+    def test_reads_through_former_subgrid_cells_are_counted(self):
+        doc = _marked_doc()
+        doc["grid"] = {"ps": [1e9, 3e9, 5e9], "ts": [1000.0, 1100.0]}
+        doc["cells"] = {"0,0": {"class": "fallback", "was": "subgrid", "reasons": ["subgrid: reaction term not carried"]},
+                        "1,0": {"class": "fallback", "reasons": ["note 14"]}}
+        v = types.SimpleNamespace(d2_counts={})
+        for p in (2e9, 2.5e9, 4e9):
+            self.assertEqual(ds.read_point(doc, p, 1050.0, v)["read"], "table")
+        self.assertEqual(v.d2_counts.get(ds.SUBGRID_FALLBACK), 2)
+        self.assertNotIn(ds.ARB_FALLBACK, v.d2_counts)
+
 
 class ServedSurface(unittest.TestCase):
     """D2-read note 13: served_surface follows the read's own dispatch — its kind and field are read_point's /

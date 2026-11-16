@@ -1534,6 +1534,7 @@ class AssemblageView(mv.RecordView):
         self.d2_counts[_ds.ARB_TABLE] = 0        # note 10 §3: «not covered» in a marked cell
         self.d2_counts[_ds.ARB_FALLBACK] = 0     # note 11 (d) 4: set 1's and set 2's «arbitration» fallbacks, apart
         self.d2_counts[_ds.ARB_SCREEN] = 0
+        self.d2_counts[_ds.SUBGRID_FALLBACK] = 0  # directing 11-16: reads through former subgrid cells
         arb = getattr(store, "arbitration", None) if self._d2 is not None else None
         #: note 11 (d): the set-2 screen_table cells of the store's arbitration record, for the counts' split
         self._arb_screen = frozenset(k for k, c in ((arb or {}).get("cells") or {}).items()

@@ -185,6 +185,9 @@ ARB_SCREEN_REASON = ("S5 screen (D2-read note 9 rule (d), A4 set 2): the table i
 SCREEN_VERDICTS = ("screen_stays", "screen_table")      # note 11 (d): set 2's only verdicts
 ARB_FALLBACK = "d2: arbitration fallback (set 1) → table read"   # note 11 (d) 4: counted apart
 ARB_SCREEN = "d2: screen fallback (set 2) → table read"
+#: directing 11-16 (the sliver finding): reads of a fallback cell the writer moved from subgrid (`was` «subgrid»),
+#: whatever its source, so a run states how many of its reads went through former-sliver cells
+SUBGRID_FALLBACK = "d2: former subgrid cell (fallback) → table read"
 
 
 def is_arbitrated(doc):
@@ -748,6 +751,8 @@ def read_point(doc, p, t, view=None):
         if cell.get("source") == "arbitration" and view is not None and hasattr(view, "d2_counts"):
             key = ARB_SCREEN if f"{j},{k}" in getattr(view, "_arb_screen", ()) else ARB_FALLBACK
             view.d2_counts[key] = view.d2_counts.get(key, 0) + 1
+        if cell.get("was") == "subgrid" and view is not None and hasattr(view, "d2_counts"):
+            view.d2_counts[SUBGRID_FALLBACK] = view.d2_counts.get(SUBGRID_FALLBACK, 0) + 1
         return {"read": "table", "why": cls, "notes": ()}
     if cls in ("d2", "cut"):
         got = _surface(doc, cell, j, k, u, v, box, p, t)
