@@ -1145,5 +1145,86 @@ class RealStoreShapes(unittest.TestCase):
         with self.assertRaises(ds.StoreRefusal):
             ds.check_units(e, {"rows": [row]}, "x")
 
+
+def _marked_doc():
+    """A one-cell d2 store for note 10's read: fields L and R, linear in P, whose lowest-G edge lies at 1.8 GPa inside
+    the cell; the cell marked keep_d2."""
+    def node(g0, v, p):
+        g = g0 + v * (p - 1e9)
+        return {"g_solved": g, "g_consistent": g, "v": v, "s": 0.0, "dv_dt_eq": 0.0, "amounts": [1.0]}
+    ps, ts = [1e9, 3e9], [1000.0, 1100.0]
+    fields = {}
+    for name, g0, v in (("L", 0.0, 3.0e-4), ("R", 80.0, 2.0e-4)):       # equal G at 1 GPa + 80/1e-4 = 1.8 GPa
+        fields[name] = {"nodes": {f"{i},{k}": node(g0, v, ps[i]) for i in (0, 1) for k in (0, 1)}}
+    return {"grid": {"ps": ps, "ts": ts}, "fields": fields,
+            "cells": {"0,0": {"class": "d2", "surfaces": ["L", "R"], "arbitrated": {"verdict": "keep_d2"}}},
+            "header": {}}
+
+
+class S5Marked(unittest.TestCase):
+    """D2-read note 10 §2–§3 on a planted store (the real marked stores are pc/c8-part2/realstore's guard)."""
+
+    def test_the_side_of_todays_p_b_picks_the_field_not_the_lowest_g(self):
+        doc, pb = _marked_doc(), 2.2e9                                     # today's P_b right of D2's 1.8 GPa
+        lo, mid, hi = 1.5e9, 2.0e9, 2.6e9
+        self.assertEqual(ds.read_point(doc, mid, 1050.0)["field"], "R")    # lowest G there: R (past 1.8)
+        for p, want in ((lo, "L"), (mid, "L"), (hi, "R")):
+            r = ds.read_marked(doc, p, 1050.0, [(pb, "L", "R")])
+            self.assertEqual((r["read"], r["field"]), ("d2", want), p)
+            self.assertEqual(r["values"], ds._g_values(ds._corners(doc, want, 0, 0), (1e9, 3e9, 1000.0, 1100.0),
+                                                       p, 1050.0))
+        self.assertEqual(ds.read_marked(doc, mid, 1050.0, [(pb, "L", "R")], side=1)["field"], "R")   # a forced side
+
+    def test_not_covered_reads_the_table_and_is_counted(self):
+        doc, v = _marked_doc(), types.SimpleNamespace(d2_counts={})
+        for crossing in ([(2.2e9, "L", "R"), (2.4e9, "L", "R")],           # two curves at this T
+                         [(2.2e9, "L", "Q")]):                             # a label that is no field / surface
+            r = ds.read_marked(doc, 2.5e9, 1050.0, crossing, v)
+            self.assertEqual(r["read"], "table", crossing)
+            self.assertIsNone(ds.s_slopes_marked(doc, 2.5e9, 1050.0, crossing))
+        self.assertEqual(v.d2_counts[ds.ARB_TABLE], 2)
+
+    def test_no_crossing_curve_is_the_ordinary_read(self):
+        doc = _marked_doc()
+        self.assertEqual(ds.read_marked(doc, 2.0e9, 1050.0, []), ds.read_point(doc, 2.0e9, 1050.0))
+        self.assertEqual(ds.s_slopes_marked(doc, 2.0e9, 1050.0, []), ds.s_slopes(doc, 2.0e9, 1050.0))
+
+    def test_the_cell_key_changes_are_closed(self):
+        base = {"contract": {"name": ds.CONTRACT_NAME, "version": 2}, **{k: {} for k in ds.TOP_KEYS if k != "contract"}}
+        for cell in ({"class": "fallback", "arbitrated": {"verdict": "keep_d2"}},
+                     {"class": "subgrid", "arbitrated": {"verdict": "keep_d2"}},
+                     {"class": "d2", "arbitrated": {"verdict": "neither"}},
+                     {"class": "d2", "was": "cut"},
+                     {"class": "cut", "source": "arbitration"}):
+            doc = {**base, "cells": {"0,0": cell}}
+            with self.assertRaises(ds.StoreRefusal) as e:
+                ds.check_contract(doc, "x")
+            self.assertEqual(e.exception.id, "material.d2_store_class", cell)
+        for cell in ({"class": "d2", "arbitrated": {"verdict": "keep_d2"}}, {"class": "cut", "arbitrated": {"verdict": "keep_d2"}},
+                     {"class": "fallback", "was": "d2", "source": "arbitration"}):
+            ds.check_contract({**base, "cells": {"0,0": cell}}, "x")       # allowed
+
+    def test_link_7_is_all_three_or_none(self):
+        doc = _marked_doc()
+        with self.assertRaises(ds.StoreRefusal) as e:                      # marks, no header keys, no pin
+            ds.arbitration(doc, {"id": "x", "d2_store": {}}, "/nonexistent")
+        self.assertEqual(e.exception.id, "material.d2_store_chain")
+        plain = {"cells": {"0,0": {"class": "d2"}}, "header": {"arbitration_sha256": "0" * 64}}
+        with self.assertRaises(ds.StoreRefusal):                           # a header key, nothing arbitrated
+            ds.arbitration(plain, {"id": "x", "d2_store": {}}, "/nonexistent")
+        self.assertIsNone(ds.arbitration({"cells": {"0,0": {"class": "d2"}}, "header": {}}, {"id": "x"}, "/x"))
+        fb = {"cells": {"0,0": {"class": "fallback", "source": "arbitration", "was": "d2"}}, "header": {}}
+        with self.assertRaises(ds.StoreRefusal):                           # arbitrated by a fallback cell alone (68 n)
+            ds.arbitration(fb, {"id": "x", "d2_store": {}}, "/nonexistent")
+
+    def test_the_pin_shape_is_checked_with_the_record_keys(self):
+        basis = {k: "x" for k in ds.BASIS_KEYS["eligible"]}
+        pin = {"path": "fields/x.json.gz", "sha256": "0" * 64}
+        for a in ({"path": "../a.json", "sha256": "0"}, {"path": "fields/a.json"}, "fields/a.json"):
+            with self.assertRaises(ds.StoreRefusal):
+                ds.check_keys({"id": "x", "d2_read": "eligible", "d2_read_basis": basis, "d2_store": {**pin, "arbitration": a}})
+        ds.check_keys({"id": "x", "d2_read": "eligible", "d2_read_basis": basis,
+                       "d2_store": {**pin, "arbitration": {"path": "fields/a.json", "sha256": "0" * 64}}})
+
 if __name__ == "__main__":
     unittest.main()
