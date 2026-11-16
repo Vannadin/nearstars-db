@@ -172,7 +172,7 @@ def apply(work, edits):
     for f, a, b in edits:
         p = work / f
         text = p.read_text(encoding="utf-8")
-        n = text.count(a)
+        n = text.count(a)  # x3-ok: counts a mutant's anchor in a source file's text, not a refusal
         if n != 1:
             raise Stop(f"anchor in {f} found {n} times: {a[:80]!r}")
         saved.setdefault(f, text)

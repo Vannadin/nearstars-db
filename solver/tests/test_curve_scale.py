@@ -9,6 +9,7 @@ import contextlib
 import math
 import os
 import struct
+import types
 import unittest
 from unittest import mock
 
@@ -262,6 +263,8 @@ class PlantedMaxima(unittest.TestCase):
         v = _view("silicate_slb_default_bse")
         c = ma._Curve(0, "edge", "x", [{"t": t, "p_b": p} for t, p in rows])
         v._events, v._cut = [c], ([c] if cut else [])
+        # D2-read §5b (2): boundary_pressure and curve_slope_points read the position set, so the plant goes there too
+        v._pos = types.SimpleNamespace(**{**vars(v._pos), "events": [c], "cut": ([c] if cut else [])})
         return v, {"form": "assemblage_curve", "id": 0}
 
     def test_segment_upper_end(self):

@@ -70,7 +70,7 @@ def diff(ref, eng):
         out.append(f"read: reference {ref.get('read')!r}, engine {eng.get('read')!r}")
         return out
     if ref.get("read") == "table":
-        if ref.get("why") != eng.get("why"):
+        if ref.get("why") != eng.get("why"):  # x3-ok: compares two readers' outputs for §9 agreement, no refusal's control flow
             out.append(f"why: reference {ref.get('why')!r}, engine {eng.get('why')!r}")
         return out
     if ref.get("field") != eng.get("field"):

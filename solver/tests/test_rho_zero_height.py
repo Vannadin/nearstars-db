@@ -124,7 +124,7 @@ class Mutants(_Base):
     """Each mutant of §5 red on its named plant."""
 
     def test_m1_tol_zero(self):
-        with mock.patch.object(rfb, "_edge_tol", lambda rid: 0.0):
+        with mock.patch.object(rfb, "_edge_tol", lambda rid, store=None: 0.0):
             _ivs, stops, _mine = self.p1()
             self.assertEqual(sorted(s_["curve"] for s_ in stops if "curve" in s_), self.pair)
             self.assertTrue(all(s_["gate"] == "coincident-edge downstep above EDGE_DRHO_TOL" for s_ in stops))
