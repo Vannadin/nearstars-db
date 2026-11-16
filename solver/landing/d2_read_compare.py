@@ -32,8 +32,12 @@ from pathlib import Path
 #: §9 item 1's registered cases (68 B1 on 270edf72): with --item1 the run STOPs, naming them, unless the stores together
 #: give the reference answer of every class (the table answers by their «why»), read the 136e9 node, and include a grid
 #: whose T steps are not whole numbers
-ITEM1_CASES = ("read d2", "read cut", "read subgrid", "why fallback", "why limit",
-               "why no entry (frozen corner or above p_dataset)", "point p136", "grid non-integer T step")
+ITEM1_CASES = ("read d2", "read cut", "cut both sides", "read subgrid", "why fallback", "why limit",
+               "why no entry (frozen corner or above p_dataset)", "why d2: no field at the point → table read",
+               "why subgrid cell outside the sliver", "point p136", "grid non-integer T step")
+#: cases a case list cannot see in the answers, so the fixtures' manifest must name them (68 n1): A's virtual corners on a
+#: cut cell, and a subgrid cell whose side 1 is reversed
+ITEM1_STORES = ("cut_a_virtual", "subgrid_reversed")
 NOT_COMPARED = ("notes",)                     # the engine's own (code, text) pairs; the reference has none
 P_TIE = 136e9                                 # Q3: the taper's match at p_dataset is a column node
 
@@ -120,7 +124,7 @@ def compare_store(raw, ref_mod, engine_read, item1=False, seed=0, per_cell=4):
     pts = list(cell_points(doc))
     if item1:
         pts += list(item1_points(doc, seed, per_cell))
-    by_read, diffs, cover = {}, [], set()
+    by_read, diffs, cover, cut_fields = {}, [], set(), {}
     ts = doc["grid"]["ts"]
     if any(b - a != int(b - a) for a, b in zip(ts, ts[1:])):
         cover.add("grid non-integer T step")
@@ -132,6 +136,8 @@ def compare_store(raw, ref_mod, engine_read, item1=False, seed=0, per_cell=4):
             eng = {"raised": f"{type(e).__name__}: {e}"}
         by_read[ref["read"]] = by_read.get(ref["read"], 0) + 1
         cover.add(f"read {ref['read']}" if ref["read"] != "table" else f"why {ref['why']}")
+        if ref["read"] == "cut":
+            cut_fields.setdefault(where, set()).add(ref["field"])
         if lab == "p136":
             cover.add("point p136")
         if not isinstance(eng, dict):
@@ -140,6 +146,10 @@ def compare_store(raw, ref_mod, engine_read, item1=False, seed=0, per_cell=4):
             d = [f"engine raised {eng['raised']}"] if "raised" in eng else diff(ref, eng)
         if d:
             diffs.append({"where": where, "point": lab, "p": p, "t": t, "why": d})
+    for key, seen in cut_fields.items():                 # both of a cut cell's fields answered: A's side and B's
+        c = doc["cells"].get(key, {}).get("cut") or {}
+        if c.get("a") != c.get("b") and {c.get("a"), c.get("b")} <= seen:
+            cover.add("cut both sides")
     return {"store_sha256": hashlib.sha256(raw).hexdigest(), "cells": len(doc["cells"]), "points": len(pts),
             "by_read": dict(sorted(by_read.items())), "covered": sorted(cover), "n_differences": len(diffs),
             "differences": diffs[:50]}

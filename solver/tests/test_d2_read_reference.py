@@ -71,6 +71,19 @@ class Inputs(unittest.TestCase):
         for name in SHA256:
             cover.update(dc.compare_store((STORES / f"{name}.json.gz").read_bytes(), ref, ref.read, item1=True)["covered"])
         self.assertEqual([c for c in dc.ITEM1_CASES if c not in cover], [])
+        man = json.loads((STORES / "manifest.json").read_text())
+        self.assertEqual([n for n in dc.ITEM1_STORES if n not in man["stores"]], [])   # 68 n1
+
+    def test_cut_both_sides_needs_both_fields_answered(self):
+        import gzip
+        ref = dc.load_reference(READER)
+        raw = (STORES / "cut.json.gz").read_bytes()
+        self.assertIn("cut both sides", dc.compare_store(raw, ref, ref.read, item1=True)["covered"])
+        doc = json.loads(gzip.decompress(raw))
+        cell = next(c for c in doc["cells"].values() if c["class"] == "cut")
+        cell["cut"]["b"] = cell["cut"]["a"]                    # one field on both sides: B's side is never a second field
+        raw2 = gzip.compress(json.dumps(doc).encode(), mtime=0)
+        self.assertNotIn("cut both sides", dc.compare_store(raw2, ref, ref.read, item1=True)["covered"])
 
     def test_the_cli_names_a_case_no_store_reaches(self):
         import contextlib
