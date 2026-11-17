@@ -42,11 +42,20 @@ class Segment:
         g0 = s_n - s_l
         if abs(g0) <= self.entry_tol * max(abs(s_l), 1.0):
             return st.CoexistRecord("sharp", {"reason": "zero_length", "ds_read": g0})
-        # the exit exists along the walk (P moving away from the old side) only if g moves toward 0 there (§2.2)
+        # the exit exists along the walk (P moving away from the old side) only if g moves toward 0 there (§2.2, «The
+        # exit exists along increasing P when g moves toward 0»). One probe dp = 1e-6·|P| along the curve: g moving
+        # toward 0 is |g2| < |g0|, or g2 past 0 (the exit lies inside the probe: a real segment shorter than dp, not a
+        # disagreement). A probe whose T_b(P + dp) is off the curve's stored domain (rows plus reach) is its own named
+        # refusal, never read as «toward»; a side read refused at the probe likewise.
         dp = new * 1e-6 * abs(p)
         t2 = self.t_b(p + dp)
-        s2 = None if t2 is None else self.s_side(new, p + dp, t2)
-        if s2 is None or isinstance(s2, st.Stop) or abs(s2 - s_l) >= abs(g0):
+        if t2 is None:
+            return st.CoexistRecord("sharp", {"reason": "probe_past_curve_end", "ds_read": g0})
+        s2 = self.s_side(new, p + dp, t2)
+        if s2 is None or isinstance(s2, st.Stop):
+            return st.CoexistRecord("sharp", {"reason": "side_read_refused", "ds_read": g0})
+        g2 = s2 - s_l
+        if not (g2 * g0 < 0.0 or abs(g2) < abs(g0)):
             return st.CoexistRecord("sharp", {"reason": "clapeyron_read", "ds_read": g0})
         dm = self.ds_model(t) if self.ds_model is not None else None
         tok = st.CoexistToken({"curve": self.name, "old": old, "new": new, "s_L": s_l, "ds_read": g0, "ds_model": dm,
