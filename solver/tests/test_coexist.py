@@ -560,3 +560,74 @@ class FilterNotes(unittest.TestCase):
                  "P": 9.85e9, "T": 1740.0}
         out = cx.filter_notes(notes, [sharp], views)
         self.assertEqual(len([n for n in out if n.kind == "material_declared_note"]), 2)
+
+
+class ShortSegmentProbe(unittest.TestCase):
+    """reg-coexistence §2.2 («The exit exists along increasing P when g moves toward 0»): a segment shorter than the
+    entry probe (dp = 1e-6·P) is a real segment, not a Clapeyron disagreement (18 fable-harness d6c5d2acb, runs/
+    probe-rule: exits 2.1 kPa and 206 Pa past entry at the invariant tip w0.1). The zero-length rule and a probe off
+    the curve's stored domain keep their own named outcomes."""
+
+    def _seg(self, ds, t_b_=t_b):
+        side = lambda s, p, t: A_ + C_ * math.log(t) - B_ * math.log(p) + (ds if s == 1 else 0.0)
+        return cx.Segment("phase:planted|swap", side, rho_side, p_b, t_b_, lambda t: K), side
+
+    def _y(self):
+        return (5.0e6, p_b(T0), T0, T0, 0.0, 0.0)          # on the curve, the new side (P ≥ P_b)
+
+    def _exit_ref(self, side, p_e, t_e):
+        s_l = side(-1, p_e, t_e)
+        g = lambda p: side(1, p, t_b(p)) - s_l
+        lo, hi = p_e, p_e + 1.0e6
+        for _ in range(200):
+            mid = 0.5 * (lo + hi)
+            if (g(mid) > 0.0) == (g(lo) > 0.0):
+                lo = mid
+            else:
+                hi = mid
+        return 0.5 * (lo + hi)
+
+    def test_exit_inside_the_probe_is_a_segment(self):
+        for ds, near in ((-2.0e-4, 2.1e3), (-2.0e-5, 2.1e2)):
+            seg, side = self._seg(ds)
+            m, y = 3.9e24, self._y()
+            p, t = y[1], y[3]
+            p2 = p + 1e-6 * abs(p)
+            g0, g2 = ds, side(1, p2, t_b(p2)) - side(-1, p, t)
+            self.assertGreaterEqual(abs(g2), abs(g0))          # the old rule (|g2| ≥ |g0| ⇒ sharp) would refuse it
+            tok = seg.enter(m, y)
+            self.assertIsInstance(tok, st.CoexistToken, (ds, getattr(tok, "kind", None)))
+            p_x = self._exit_ref(side, p, t)
+            self.assertLess(abs((p_x - p) - near) / near, 0.05, p_x - p)   # the planted exit is that close
+
+    def test_exit_inside_the_probe_walks_to_the_exact_exit(self):
+        seg, side = self._seg(-2.0e-4)
+        m0, y0 = _start()
+        res = st.run(rh.make_rhs(_View()), m0, y0, 3.95e24, _opt(), _events(seg))
+        tok = [c for c in res.coexist if c.get("kind") == "segment"]
+        self.assertEqual(len(tok), 1, [c.get("reason") for c in res.coexist])
+        _m, p_e, t_e = tok[0]["entry"]
+        got_p, _got_t = tok[0]["exit"]
+        self.assertLess(abs(got_p - self._exit_ref(side, p_e, t_e)), 1.0)    # Pa: 18 measured 0.0034
+
+    def test_wrong_sign_short_stays_clapeyron(self):
+        seg, _side = self._seg(+2.0e-4)
+        rec = seg.enter(3.9e24, self._y())
+        self.assertEqual((rec.kind, rec.values["reason"]), ("sharp", "clapeyron_read"))
+
+    def test_zero_length_is_not_swallowed_by_the_sign_rule(self):
+        seg, side = self._seg(0.0)
+        tol = seg.entry_tol * max(abs(side(-1, p_b(T0), T0)), 1.0)
+        for ds in (0.5 * tol, -0.5 * tol):
+            seg, _ = self._seg(ds)
+            rec = seg.enter(3.9e24, self._y())
+            self.assertEqual((rec.kind, rec.values["reason"]), ("sharp", "zero_length"), ds)
+
+    def test_probe_past_the_curve_end_is_its_own_refusal(self):
+        p_end = p_b(T0) + 0.5e4                              # the curve's stored domain ends inside the probe
+
+        def t_b_cut(p):
+            return None if p > p_end else t_b(p)
+        seg, _side = self._seg(-2.0e-4, t_b_=t_b_cut)
+        rec = seg.enter(3.9e24, self._y())
+        self.assertEqual((rec.kind, rec.values["reason"]), ("sharp", "probe_past_curve_end"))

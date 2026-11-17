@@ -2,21 +2,21 @@
  "sites": [
   {
    "path": "solver/coexist.py",
-   "line": 242,
+   "line": 251,
    "kind": "solid",
    "function": "side_s",
    "use": null
   },
   {
    "path": "solver/coexist.py",
-   "line": 368,
+   "line": 377,
    "kind": "switch",
    "function": "check_table",
    "use": "read"
   },
   {
    "path": "solver/coexist.py",
-   "line": 426,
+   "line": 435,
    "kind": "switch",
    "function": "cut_census",
    "use": "read"
