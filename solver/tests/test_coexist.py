@@ -631,3 +631,33 @@ class ShortSegmentProbe(unittest.TestCase):
         seg, _side = self._seg(-2.0e-4, t_b_=t_b_cut)
         rec = seg.enter(3.9e24, self._y())
         self.assertEqual((rec.kind, rec.values["reason"]), ("sharp", "probe_past_curve_end"))
+
+    def test_side_read_refused_at_the_probe_is_named(self):
+        """r2 (b47ae141 audit, M3): a side read that refuses at P + dp is side_read_refused, never «toward»."""
+        seg0, side = self._seg(-2.0e-4)
+        p_e = p_b(T0)
+
+        def side_stop(s, p, t):
+            return st.Stop("coexist_side_read", {"p": p}) if p > p_e + 1.0 else side(s, p, t)
+        seg = cx.Segment("phase:planted|swap", side_stop, rho_side, p_b, t_b, lambda t: K)
+        rec = seg.enter(3.9e24, self._y())
+        self.assertEqual((rec.kind, rec.values["reason"]), ("sharp", "side_read_refused"))
+
+    def test_jump_past_zero_without_a_root_is_never_a_silent_exit(self):
+        """r2 (b47ae141 audit): a new-side s that jumps past 0 inside dp with no root gets a token at entry; the walk
+        cannot land the exit (|g| ≤ event_tol·scale) and refuses by name (the event's chatter cap), never records an
+        exit. The jump sits 3 kPa past the entry the smooth read gives; the smooth exit would be ~20 kPa on."""
+        m0, y0 = _start()
+        smooth, _ = self._seg(-2.0e-3)
+        r0 = st.run(rh.make_rhs(_View()), m0, y0, 3.95e24, _opt(), _events(smooth))
+        p_e = [c for c in r0.coexist if c.get("kind") == "segment"][0]["entry"][1]
+
+        def side(s_, p, t):
+            j = 0.0 if p < p_e + 3.0e3 else 4.0e-3
+            return A_ + C_ * math.log(t) - B_ * math.log(p) + ((-2.0e-3 + j) if s_ == 1 else 0.0)
+        seg = cx.Segment("phase:planted|swap", side, rho_side, p_b, t_b, lambda t: K)
+        res = st.run(rh.make_rhs(_View()), m0, y0, 3.95e24, _opt(), _events(seg))
+        self.assertEqual(res.stop.kind, "chatter")
+        self.assertEqual(res.stop.record["event"], "coexist-out:phase:planted|swap")
+        self.assertNotIn("coexist-out:phase:planted|swap", [e[0] for e in res.events])
+        self.assertEqual([c.get("exit") for c in res.coexist if c.get("kind") == "segment"], [None])
