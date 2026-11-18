@@ -1131,6 +1131,9 @@ class CommittedRead(unittest.TestCase):
                                  for q in (getattr(pc[2], "folds", None) or [])))
                 for d, sgn in (("up", 1.0), ("down", -1.0)):
                     lo, hi = (float(x) for x in f[f"walk_t_served_{d}"])
+                    z0, z1 = (float(x) for x in rd.zones[f["zone"]][:2])      # the curve lives in its zone's T range
+                    lo, hi = max(lo, z0), min(hi, z1)
+                    self.assertLess(lo, hi, "served T and the fold zone do not overlap")
                     t = 0.5 * (lo + hi)
                     pb = self.p_on_curve(view, f["zone"], f["curve"], t, piece[0], piece[1])
                     p = pb + sgn * min(1e5, 0.5 * float(f[f"walk_reach_pa_{d}"]))   # on that direction's new side
