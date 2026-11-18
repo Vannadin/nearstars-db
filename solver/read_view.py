@@ -52,7 +52,9 @@ def _dir(up) -> str:
 class PinGuard:
     """Note 3 §3 at run time (68 B2 on 5d3f3679): the read as the engine holds it. Every attribute is the read's own,
     except that `state` refuses, as a code error, any call with a field (keyword or positional) and no pin, however the
-    call is spelled (an alias, getattr, a helper in a subpackage). Equality and hash are the read's."""
+    call is spelled (an alias, getattr, a helper in a subpackage). Equality and hash are the read's; copy, deepcopy and
+    pickle rebuild the guard around the read (68 on 1ec44fee). `isinstance(view.read, <the read's class>)` is False:
+    engine code does not test the read's type (grep, 68 on 1ec44fee). Reaching past it (`._read`) is a lint error."""
     __slots__ = ("_read",)
 
     def __init__(self, read):
@@ -71,6 +73,9 @@ class PinGuard:
 
     def __hash__(self):
         return hash(self._read)
+
+    def __reduce__(self):
+        return (PinGuard, (self._read,))
 
     def state(self, p, t, *args, **kw):
         if (args or kw.get("field") is not None) and kw.get("pin") is None:

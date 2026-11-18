@@ -1002,6 +1002,8 @@ class SourceGuard(unittest.TestCase):
                     bad.append((name, call))
             if re.search(r"def props\([^)]*field", text):
                 bad.append((name, "props(field=)"))
+            if name != "read_view.py" and re.search(r"\bread\._read\b", text):   # 68: reaching past PinGuard
+                bad.append((name, "._read"))
         return bad
 
     def sources(self):
@@ -1019,6 +1021,8 @@ class SourceGuard(unittest.TestCase):
         restored = dict(src, **{"read_view.py": src["read_view.py"].replace("def props(self, p, t):",
                                                                              "def props(self, p, t, field=None):")})
         self.assertEqual(self.offenders(restored), [("read_view.py", "props(field=)")])
+        reach = dict(src, **{"solve.py": src["solve.py"] + "\nx = v.read._read.state(p, t, field=to)\n"})
+        self.assertIn(("solve.py", "._read"), self.offenders(reach))
 
 
 class PinGuardRunTime(unittest.TestCase):
@@ -1049,6 +1053,18 @@ class PinGuardRunTime(unittest.TestCase):
         v = rv.ReadView(toy, 0.0, "toy")
         self.assertIs(v.read.folds, toy.folds)
         self.assertEqual(v.read, toy)
+
+    def test_copy_deepcopy_pickle_round_trip(self):
+        """68 on 1ec44fee: a copied or pickled guard is the guard around the same read, still refusing."""
+        import copy
+        import pickle
+        g = self.view().read
+        for h in (copy.copy(g), copy.deepcopy(g), pickle.loads(pickle.dumps(g))):
+            with self.subTest(kind=type(h).__name__):
+                self.assertIsInstance(h, rv.PinGuard)
+                self.assertEqual(h.state(P0 - 1.0, T0)["field"], "A")
+                with self.assertRaisesRegex(TypeError, "without pin"):
+                    h.state(P0, T0, field="B")
 
     def test_mutant_no_guard(self):
         v = self.view()
