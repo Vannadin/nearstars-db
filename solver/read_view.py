@@ -49,6 +49,35 @@ def _dir(up) -> str:
     return "up" if up else "down"
 
 
+class PinGuard:
+    """Note 3 §3 at run time (68 B2 on 5d3f3679): the read as the engine holds it. Every attribute is the read's own,
+    except that `state` refuses, as a code error, any call with a field (keyword or positional) and no pin, however the
+    call is spelled (an alias, getattr, a helper in a subpackage). Equality and hash are the read's."""
+    __slots__ = ("_read",)
+
+    def __init__(self, read):
+        object.__setattr__(self, "_read", read)
+
+    def __getattr__(self, name):
+        if name == "_read":
+            raise AttributeError(name)
+        return getattr(self._read, name)
+
+    def __setattr__(self, name, value):
+        setattr(self._read, name, value)
+
+    def __eq__(self, other):
+        return self._read == (other._read if isinstance(other, PinGuard) else other)
+
+    def __hash__(self):
+        return hash(self._read)
+
+    def state(self, p, t, *args, **kw):
+        if (args or kw.get("field") is not None) and kw.get("pin") is None:
+            raise TypeError("a forced-field read without pin (read-view note 3 §3): an engine code error")
+        return self._read.state(p, t, *args, **kw)
+
+
 class ReadUnavailable(Exception):
     """A record names a read that cannot be served: a missing file or a stale stamp (selector, A7)."""
 
@@ -108,7 +137,7 @@ class ReadView:
     """A record's read as the engine's view (registration §1). Built per solve; its counters and pins are per pass."""
 
     def __init__(self, read, p_stop: float, record_id: str, stamp: str | None = None):
-        self.read, self.p_stop, self.material_id, self.stamp = read, p_stop, record_id, stamp
+        self.read, self.p_stop, self.material_id, self.stamp = PinGuard(read), p_stop, record_id, stamp
         self.pins = {}                      # curve name → field label (§4.5; filled by the T-jump hook, C3)
         self.reset_pass()
 

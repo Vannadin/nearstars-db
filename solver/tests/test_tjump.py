@@ -1019,3 +1019,105 @@ class SourceGuard(unittest.TestCase):
         restored = dict(src, **{"read_view.py": src["read_view.py"].replace("def props(self, p, t):",
                                                                              "def props(self, p, t, field=None):")})
         self.assertEqual(self.offenders(restored), [("read_view.py", "props(field=)")])
+
+
+class PinGuardRunTime(unittest.TestCase):
+    """68 B2 on 5d3f3679: the source scan misses aliases, positional fields, getattr and subpackages, so the read view
+    holds the read behind PinGuard, which refuses any forced-field call without a pin at run time."""
+
+    def view(self):
+        return rv.ReadView(Toy(0.5), 0.0, "toy")
+
+    def test_every_spelling_refused(self):
+        v = self.view()
+        s_ = v.read.state
+        for call in (lambda: s_(P0, T0, field="B"),                                   # an alias
+                     lambda: v.read.state(P0, T0, "B"),                               # a positional field
+                     lambda: getattr(v.read, "state")(P0, T0, field="B"),             # getattr
+                     lambda: dict(x=[v.read.state(P0, T0, field=str("B"))])):         # nested two levels
+            with self.subTest():
+                with self.assertRaisesRegex(TypeError, "without pin"):
+                    call()
+
+    def test_pinned_and_plain_pass(self):
+        v = self.view()
+        self.assertEqual(v.read.state(P0 - 1.0, T0)["field"], "A")
+        self.assertEqual(v.read.state(P0 - 1.0, T0, field="B", pin=(0, "c0", "up"))["field"], "B")
+
+    def test_attributes_and_equality_are_the_reads(self):
+        toy = Toy(0.5)
+        v = rv.ReadView(toy, 0.0, "toy")
+        self.assertIs(v.read.folds, toy.folds)
+        self.assertEqual(v.read, toy)
+
+    def test_mutant_no_guard(self):
+        v = self.view()
+        with mock.patch.object(rv.PinGuard, "state", lambda self, p, t, *a, **kw: self._read.state(p, t, *a, **kw)):
+            self.assertEqual(v.read.state(P0, T0, field="B")["field"], "B")      # the unguarded read serves it
+
+
+class CommittedRead(unittest.TestCase):
+    """Directing on 68 B1 (5d3f3679): the engine on c8's COMMITTED Pandora read, not a toy. NEARSTARS_C8_PROTO names a
+    checkout of c8's pc/c8-part2/proto at a named commit (its read_pandora_1600.pkl and the modules that unpickle it).
+    For each tagged fold of the read's top-level `folds`: the note-3 keys, the two to_field labels distinct, and one
+    pinned read per direction inside walk_t_served_<dir> served by that direction's to-field. Red until c8's PRead
+    carries top-level folds with the keys (ruled (a), directing 11-18); never faked."""
+    KEYS = ("zone", "curve", "dPb_dT_max_Pa_per_K", "walk_reach_pa_up", "walk_reach_pa_down", "to_field_up",
+            "to_field_down", "walk_t_served_up", "walk_t_served_down")
+
+    def read(self):
+        import os
+        import pickle
+        import sys
+        d = os.environ.get("NEARSTARS_C8_PROTO")
+        if not d:
+            raise unittest.SkipTest("NEARSTARS_C8_PROTO not set: c8's committed Pandora read is not on this machine")
+        if d not in sys.path:
+            sys.path.insert(0, d)
+        with open(os.path.join(d, "read_pandora_1600.pkl"), "rb") as f:
+            return pickle.load(f)
+
+    @staticmethod
+    def p_on_curve(view, zone, curve, t, p_lo, p_hi):
+        """P_b(t) of the tagged curve (zone, curve), by bisection of its own event g over a piece's P range."""
+        ev = next(e for e in view.events() if (e.tag or {}).get("tagged") and (e.tag["zone"], e.tag["curve"]) ==
+                  (zone, curve))
+
+        def g(p):
+            return ev.g(0.0, (1.0, p, t, t, 0.0, 0.0))
+        a, b = p_lo, p_hi
+        ga, gb = g(a), g(b)
+        if ga is None or gb is None or ga * gb > 0:
+            raise AssertionError(f"curve {(zone, curve)} not bracketed at T {t} on [{a}, {b}] Pa: g {ga}, {gb}")
+        for _ in range(200):
+            m = 0.5 * (a + b)
+            gm = g(m)
+            if gm is None:
+                raise AssertionError(f"curve {(zone, curve)} g None at ({m}, {t})")
+            a, b, ga = (m, b, gm) if gm * ga > 0 else (a, m, ga)
+            if b - a < 1.0:
+                break
+        return 0.5 * (a + b)
+
+    def test_folds_keys_direction_and_pinned_read(self):
+        rd = self.read()
+        folds = getattr(rd, "folds", None)
+        self.assertTrue(folds, "the committed read has no top-level folds (68 B1; c8's fix pending)")
+        view = rv.ReadView(rd, 0.0, "pandora_committed")
+        pieces = [(float(pc[0]), float(pc[1]), pc[2]) for pc in getattr(rd, "pieces", ())]
+        for f in folds:
+            with self.subTest(fold=(f.get("zone"), f.get("curve"))):
+                self.assertEqual([k for k in self.KEYS if k not in f], [])
+                self.assertIs(view.fold(f["zone"], f["curve"]), f)
+                self.assertNotEqual(f["to_field_up"], f["to_field_down"])
+                piece = next(pc for pc in pieces if f in (getattr(pc[2], "folds", None) or []) or
+                             any(q.get("zone") == f["zone"] and q.get("curve") == f["curve"]
+                                 for q in (getattr(pc[2], "folds", None) or [])))
+                for d, sgn in (("up", 1.0), ("down", -1.0)):
+                    lo, hi = (float(x) for x in f[f"walk_t_served_{d}"])
+                    t = 0.5 * (lo + hi)
+                    pb = self.p_on_curve(view, f["zone"], f["curve"], t, piece[0], piece[1])
+                    p = pb + sgn * min(1e5, 0.5 * float(f[f"walk_reach_pa_{d}"]))   # on that direction's new side
+                    got = view.pinned_state(p, t, f[f"to_field_{d}"], (f["zone"], f["curve"], d))
+                    self.assertEqual(got["field"], f[f"to_field_{d}"])
+        self.assertEqual(view.pinned_reads, 2 * len(folds))
