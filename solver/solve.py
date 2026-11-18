@@ -54,7 +54,7 @@ class PassOut:
     counters: dict = field(default_factory=dict)
     R: float = 0.0
     r_scale: float = 0.0
-    read_counts: dict | None = None                     # read-view registration §1: read_retried, curve_end_steps
+    read_counts: dict | None = None                     # read-view §1: read_retried, curve_end_steps; note 3: pinned_*
 
 
 def _value(d):
@@ -737,7 +737,9 @@ def _to_refusal(stop: st.Stop, where: str, x, kind: str, pass_kind: str, scan=No
         return refusals.make("solve.read_refusal", where, material_id=rec.get("material_id"), p=rec.get("p"),
                              t=rec.get("t"), kind=rec.get("kind"), why=rec.get("why"),
                              read_retried=dict(cnt.get("read_retried", {})),
-                             curve_end_steps=list(cnt.get("curve_end_steps", [])), **common)
+                             curve_end_steps=list(cnt.get("curve_end_steps", [])),
+                             pinned_reads=cnt.get("pinned_reads", 0), pinned_continued=cnt.get("pinned_continued", 0),
+                             **common)
     if type(rec).__name__ == "RecordRefusal":            # switch-over §2: a phase-2 record view refuses by its id
         return refusals.make("solve.material_record", where, material_id=rec.material_id, p=rec.p, t=rec.t,
                              refusal=rec.refusal, why=rec.why, **common)
@@ -1585,10 +1587,13 @@ def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
                                      "(phase-1 design notes 13 §1, 13a)", dict(bg)))
         notes += material_notes.collect(body, views, acc)   # switch-over §4: after every value, accepted pass only
         if acc.read_counts is not None:                  # read-view registration §1, A9 (68 B2 on C1): the accepted
-            notes.append(result.Note("read_counts", "the read view's retried refusals by kind and curve-end steps "
-                                     "of the accepted pass", {"read_retried": dict(acc.read_counts["read_retried"]),
-                                                              "curve_end_steps": [list(c) for c in
-                                                                                  acc.read_counts["curve_end_steps"]]}))
+            notes.append(result.Note("read_counts", "the read view's retried refusals by kind, curve-end steps and "
+                                     "pinned reads (all, and those served by a declared T continuation) of the "
+                                     "accepted pass", {"read_retried": dict(acc.read_counts["read_retried"]),
+                                                       "curve_end_steps": [list(c) for c in
+                                                                           acc.read_counts["curve_end_steps"]],
+                                                       "pinned_reads": acc.read_counts["pinned_reads"],
+                                                       "pinned_continued": acc.read_counts["pinned_continued"]}))
         if acc.coexist:                                  # coexistence note 4 S6: segments, findings, restarts; a walked
             from solver import coexist as cx             # curve's SWAP_NOTE dropped (68 B4, keyed by curve)
             notes = cx.filter_notes(list(notes), acc.coexist, views)

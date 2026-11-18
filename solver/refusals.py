@@ -66,7 +66,8 @@ _SOLVE = (
           "T 점프 뒤 곡선 '{curve}' 를 새 쪽에서 풀지 못했다 ({reason}) — P {P}, P_m {P_m}, 띠 {band_pa} Pa, g {g}"),
     Entry("solve.tjump_in_conductive_T", ("curve", "m", "P", "T"),
           "전도층 온도가 쐐기 끝 곡선 '{curve}' 를 건넜다 (P {P}, T {T}) — 전도층의 잠열 처리는 등록되지 않았다 (note 6 1b)"),
-    Entry("solve.read_refusal", ("material_id", "p", "t", "kind", "why", "read_retried", "curve_end_steps"),
+    Entry("solve.read_refusal", ("material_id", "p", "t", "kind", "why", "read_retried", "curve_end_steps",
+                                 "pinned_reads", "pinned_continued"),
           "물질 기록 '{material_id}' 의 매끄러운 읽기가 ({p} Pa, {t} K) 에서 답하지 않는다 — {kind}: {why} "
           "(read-view 등록 §4.4)"),
     Entry("solve.material_record", ("material_id", "p", "t", "refusal", "why"),

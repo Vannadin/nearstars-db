@@ -24,19 +24,28 @@ class ReadRefusal(ValueError):
         self.kind = kind
 
 
+def fold(zone, curve, k, reach, up_to, down_to, served=(-math.inf, math.inf), reach_down=None):
+    """A stored fold in read-view note 3's shape: per crossing direction its walk reach, to-field and served T."""
+    return {"zone": zone, "curve": curve, "dPb_dT_max_Pa_per_K": k,
+            "walk_reach_pa_up": reach, "walk_reach_pa_down": reach if reach_down is None else reach_down,
+            "to_field_up": up_to, "to_field_down": down_to,
+            "walk_t_served_up": list(served), "walk_t_served_down": list(served)}
+
+
 class Toy:
-    """Fields A (P < P_b(T)) and B. t_jump: T → T + dtj, A → B upward. folds: dPb_dT_max = K, walk_reach_pa."""
+    """Fields A (P < P_b(T)) and B. t_jump: T → T + dtj, A → B upward. folds: dPb_dT_max = K, the walk
+    reach, to-field and served T per crossing direction (read-view note 3)."""
 
     def __init__(self, ratio_b=1.2, dtj=DT_JUMP, reach=1e9, t_hi=math.inf, t_edges=()):
         self.dtdp = {"A": 1e-8, "B": ratio_b / K}
         self.dtj, self.t_hi, self.t_edges = dtj, t_hi, list(t_edges)
-        self.folds = [{"zone": 0, "curve": "c0", "dPb_dT_max_Pa_per_K": K, "walk_reach_pa": reach}]
+        self.folds = [fold(0, "c0", K, reach, "B", "A")]
         self.jumps = []
 
     def p_b(self, t):
         return None if t > self.t_hi else P0 + K * (t - T0)
 
-    def state(self, p, t, field=None):
+    def state(self, p, t, field=None, pin=None):
         pb = self.p_b(t)
         f = field or ("A" if pb is None or p < pb else "B")
         return {"rho": 3500.0, "dtdp": self.dtdp[f], "s": 0.0, "c_p": 1200.0, "alpha": 1e-5, "K_T": 1e11, "field": f}
@@ -100,7 +109,7 @@ class Recross(unittest.TestCase):
         toy = Toy(0.5, dtj=+0.01)
         orig, base = toy.state, {}
 
-        def state(p, t, field=None):
+        def state(p, t, field=None, pin=None):
             d = orig(p, t, field)
             if d["field"] == "B" and toy.jumps and p - toy.jumps[0] > 0.6 * 2e4:
                 d = dict(d, dtdp=2.0 * d["dtdp"])
@@ -117,10 +126,10 @@ class Recross(unittest.TestCase):
         j = jumps(r)[0]
         pm, band = j["P"], j["band_pa"]
         t_a = (pm + 0.5 * band - P0) / K + T0 + 1.0             # a T where the point is on A by position
-        view.pins["c0"] = ("A", "B", pm, band, True)
+        view.pins["c0"] = ("A", "B", pm, band, True, 0)
         self.assertEqual(view.props(pm + 0.5 * band, t_a)["field"], "B")     # pinned inside the window
         self.assertEqual(view.props(pm + 2.5 * band, t_a + 2.0 * band / K)["field"], "A")   # outside: by position
-        view.pins["c0"] = ("A", "B", pm - 2e4, 1e9, True)                   # stale from an earlier pass
+        view.pins["c0"] = ("A", "B", pm - 2e4, 1e9, True, 0)                   # stale from an earlier pass
         r2, _ = run(toy, view=view)
         self.assertEqual([n[:2] for n in r2.path], [n[:2] for n in r.path])  # run_start cleared it
 
@@ -151,7 +160,7 @@ class Recross(unittest.TestCase):
         toy = Toy(0.5, dtj=+0.01)
         orig = toy.state
 
-        def state(p, t, field=None):
+        def state(p, t, field=None, pin=None):
             d = orig(p, t, field)
             if d["field"] == "B" and toy.jumps and p - toy.jumps[0] > 6e4:
                 d = dict(d, dtdp=3.0 * d["dtdp"])
@@ -368,7 +377,7 @@ class HoldOnC3(unittest.TestCase):
         toy = Toy(0.5)
         orig = toy.state
 
-        def state(p, t, field=None):
+        def state(p, t, field=None, pin=None):
             if field == "B":
                 raise ReadRefusal("extent", "planted extent at T_new")
             return orig(p, t, field)
@@ -382,7 +391,7 @@ class HoldOnC3(unittest.TestCase):
         toy = Toy(0.5, dtj=+0.01)
         orig = toy.state
 
-        def state(p, t, field=None):
+        def state(p, t, field=None, pin=None):
             d = orig(p, t, field)
             if d["field"] == "B" and toy.jumps and p - toy.jumps[0] > 0.6 * 2e4:
                 d = dict(d, dtdp=1.5 * d["dtdp"])            # q 0.5 → 0.75 past 1.2e4
@@ -435,7 +444,7 @@ class SegmentedToy(Toy):
     """As Toy, but the curve's T range ends by zone segmentation only (w0.1's shape, c8 11-18): past t_hi the curve's
     g is None while the fields stay as they were, so the path's rhs is smooth across the curve's end."""
 
-    def state(self, p, t, field=None):
+    def state(self, p, t, field=None, pin=None):
         pb = P0 + K * (t - T0)
         f = field or ("A" if p < pb else "B")
         return {"rho": 3500.0, "dtdp": self.dtdp[f], "s": 0.0, "c_p": 1200.0, "alpha": 1e-5, "K_T": 1e11, "field": f}
@@ -605,7 +614,7 @@ class LidTJump(unittest.TestCase):
         class LidToy(V.FixtureRead):
             def __init__(self):
                 super().__init__([V.Curve("c_ad", 5.0e8, k=1e6, t0=1600.0, t_lo=1500.0, t_hi=1800.0)], drho=10.0)
-                self.folds = [{"zone": 0, "curve": "c_ad", "dPb_dT_max_Pa_per_K": 1e6, "walk_reach_pa": 1e9}]
+                self.folds = [fold(0, "c_ad", 1e6, 1e9, "f1", "f1")]   # this toy returns «to» f1 either way
 
             def events(self, t_index=2):
                 return [dataclasses.replace(e, tag={"curve": "c_ad", "zone": 0, "tagged": True})
@@ -743,3 +752,270 @@ class PathConsumers(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── read-view post-freeze note 3: directional reach and to-field, every forced-field read pinned and served ─────────
+REACH_KEY = '    reach = fold.get(f"walk_reach_pa_{d}")'
+DIR_CHECK = '    if to_f is None or to_f != got.get("to"):\n'
+NO_FOLD = '    if f is None:\n        raise ReadRefusal("pin_unserved", f"pin names no tagged fold ({zone!r}, {curve!r})")\n'
+SERVED = '    if not lo <= t <= hi:\n'
+Y_AT = (5.0e6, P0 + 2.0e4, T0 + 0.02, T0 + 0.02, 0.0, 0.0)     # P_b(T) = P0 + 2e4: on the curve
+
+
+class Note3(unittest.TestCase):
+    def hook(self, toy):
+        return rv.TJumpHook(rv.ReadView(toy, 0.0, "toy"), 0, "c0")
+
+    def jump(self, toy, upward):
+        return self.hook(toy).t_jump(4.0e24, Y_AT, upward)
+
+    def test_old_single_key_refuses(self):
+        """§1: a read carrying only the old single walk_reach_pa has no directional key: «walk reach short»."""
+        toy = Toy(0.5, dtj=+0.01)
+        toy.folds = [{"zone": 0, "curve": "c0", "dPb_dT_max_Pa_per_K": K, "walk_reach_pa": 1e9,
+                      "to_field_up": "B", "to_field_down": "A",
+                      "walk_t_served_up": [-math.inf, math.inf], "walk_t_served_down": [-math.inf, math.inf]}]
+        r, _ = run(toy)
+        self.assertEqual(r.stop.record.kind, "tjump_refused")
+        self.assertIn("walk reach short", r.stop.record.record["why"])
+
+    def case_asymmetric_reach(self):
+        """§1: up short (1 Pa), down long: an upward jump refuses «walk reach short», a downward one is accepted."""
+        toy = Toy(0.5, dtj=+0.01)
+        toy.folds = [fold(0, "c0", K, 1.0, "B", "A", reach_down=1e9)]
+        with self.assertRaisesRegex(st.TJumpRefusal, "walk reach short, crossing up"):
+            self.jump(toy, True)
+        self.assertGreater(self.jump(toy, False)["band_pa"], 1.0)
+
+    def test_asymmetric_reach(self):
+        self.case_asymmetric_reach()
+
+    def test_mutant_wrong_direction_key(self):
+        with mock.patch.object(rv.TJumpHook, "t_jump", variant(rv.TJumpHook.t_jump)):
+            self.case_asymmetric_reach()
+        bad = variant(rv.TJumpHook.t_jump, REACH_KEY, '    reach = fold.get(f"walk_reach_pa_{_dir(not upward)}")')
+        with mock.patch.object(rv.TJumpHook, "t_jump", bad):
+            with self.assertRaises(AssertionError):
+                self.case_asymmetric_reach()
+
+    def case_swapped_labels(self):
+        """§1: the fold's to_field labels swapped against what t_jump returns: «fold direction mismatch» both ways;
+        an absent to_field_<dir> refuses the same way."""
+        toy = Toy(0.5, dtj=+0.01)
+        toy.folds = [fold(0, "c0", K, 1e9, "A", "B")]
+        for up in (True, False):
+            with self.assertRaisesRegex(st.TJumpRefusal, "fold direction mismatch"):
+                self.jump(toy, up)
+        toy.folds = [{k: v for k, v in fold(0, "c0", K, 1e9, "B", "A").items() if k != "to_field_up"}]
+        with self.assertRaisesRegex(st.TJumpRefusal, "fold direction mismatch"):
+            self.jump(toy, True)
+
+    def test_swapped_labels(self):
+        self.case_swapped_labels()
+
+    def test_mutant_no_direction_check(self):
+        with mock.patch.object(rv.TJumpHook, "t_jump", variant(rv.TJumpHook.t_jump)):
+            self.case_swapped_labels()
+        with mock.patch.object(rv.TJumpHook, "t_jump", variant(rv.TJumpHook.t_jump, DIR_CHECK, "    if False:\n")):
+            with self.assertRaises(AssertionError):
+                self.case_swapped_labels()
+
+    def substituting(self, served):
+        """A toy read that, past the to-field's served T, serves X from «another zone» (dtdp ×10) without refusing."""
+        toy = Toy(0.5, dtj=+0.01)
+        toy.folds = [fold(0, "c0", K, 1e9, "B", "A", served=served)]
+        orig = toy.state
+
+        def state(p, t, field=None, pin=None):
+            d = orig(p, t, field)
+            if field is not None and not served[0] <= t <= served[1]:
+                d = dict(d, dtdp=10.0 * d["dtdp"], zone="other")
+            return d
+        toy.state = state
+        return toy
+
+    def case_q_read_unserved(self):
+        """§3: T_new outside the served T: t_jump refuses «pin_unserved at T_new» and computes no band."""
+        toy = self.substituting([-math.inf, T0 + 0.025])           # T_new = T0 + 0.03
+        with self.assertRaisesRegex(st.TJumpRefusal, "pin_unserved at T_new"):
+            self.jump(toy, True)
+
+    def test_q_read_unserved(self):
+        self.case_q_read_unserved()
+
+    def case_window_read_unserved(self):
+        """§3: a window re-read at a T outside the served range refuses pin_unserved (retryable), never the
+        substituted state; inside, the pinned read is the read's own."""
+        toy = self.substituting([-math.inf, T0 + 0.025])
+        view = rv.ReadView(toy, 0.0, "toy")
+        pm = P0 + 2.0e4
+        view.pins["c0"] = ("A", "B", pm, 2e4, True, 0)
+        got = view.props(pm + 1e3, T0 + 0.03)                      # A by position, outside served
+        self.assertIsInstance(got, st.Stop)
+        self.assertEqual((got.record["kind"], got.record["retryable"]), ("pin_unserved", True))
+        self.assertEqual(view.read_retried, {"pin_unserved": 1})
+        inside = view.props(pm + 1e3, T0 + 0.021)
+        self.assertEqual((inside["field"], inside["dtdp"]), ("B", toy.dtdp["B"]))
+        self.assertNotIn("zone", inside)
+
+    def test_window_read_unserved(self):
+        self.case_window_read_unserved()
+
+    def test_mutant_no_served_guard(self):
+        """Without the served check the substituted state comes back: both cases fail."""
+        with mock.patch.object(rv.ReadView, "pinned_state", variant(rv.ReadView.pinned_state)):
+            self.case_q_read_unserved()
+            self.case_window_read_unserved()
+        bad = variant(rv.ReadView.pinned_state, SERVED, "    if False:\n")
+        for case in (self.case_q_read_unserved, self.case_window_read_unserved):
+            with mock.patch.object(rv.ReadView, "pinned_state", bad):
+                with self.assertRaises(AssertionError):
+                    case()
+
+    def case_no_fold(self):
+        """§3 (directing): a pin naming no fold refuses pin_unserved and makes no read call."""
+        toy = Toy(0.5)
+        calls = []
+        toy.state = lambda p, t, field=None, pin=None: calls.append((p, t, field)) or {"dtdp": 1.0}
+        view = rv.ReadView(toy, 0.0, "toy")
+        with self.assertRaisesRegex(rv.ReadRefusal, "pin names no tagged fold") as cm:
+            view.pinned_state(P0, T0, "B", (7, "c9", "up"))
+        self.assertEqual((cm.exception.kind, calls), ("pin_unserved", []))
+
+    def test_no_fold(self):
+        self.case_no_fold()
+
+    def test_mutant_no_fold_pass_through(self):
+        with mock.patch.object(rv.ReadView, "pinned_state", variant(rv.ReadView.pinned_state)):
+            self.case_no_fold()
+        bad = variant(rv.ReadView.pinned_state, NO_FOLD,
+                      "    if f is None:\n        return self.read.state(p, t, field=field, pin=pin)\n")
+        with mock.patch.object(rv.ReadView, "pinned_state", bad):
+            with self.assertRaises(AssertionError):
+                self.case_no_fold()
+
+    def test_accepted_node_k1_surfaces_at_once(self):
+        """68's wording note on note 3: a retryable pin_unserved met by an accepted node's k1 read surfaces at once
+        (§4.4), not after retries: the window read at the node itself is outside the served T."""
+        toy = Toy(0.5, dtj=+0.01)
+        r0, _ = run(toy)
+        pm, t_new = jumps(r0)[0]["P"], jumps(r0)[0]["T_new"]
+        toy = Toy(0.5, dtj=+0.01)
+        toy.folds = [fold(0, "c0", K, 1e9, "B", "A", served=(-math.inf, t_new + 1e-6))]
+        r, view = run(toy)
+        self.assertEqual(r.stop.kind, "refused", r.stop)
+        self.assertEqual(r.stop.record.record["kind"], "pin_unserved")
+        self.assertGreater(r.stop.record.record["t"], t_new)
+
+
+class RetryToy(Toy):
+    """Toy(0.5, dtj=+0.01) whose to-field B has dT/dP = +a up to X = P_m + 1e4 and −a beyond: along the path T peaks at
+    T(X) = T_new + a·1e4 and falls after it; the curve is released at P_m + 1e4 + 1e4/3. A trial step straddling X
+    extrapolates T past the peak (its stages beyond X still use the rising slope), while every node stays ≤ T(X)."""
+    X = 1.0e4
+
+    def state(self, p, t, field=None, pin=None):
+        d = super().state(p, t, field, pin)
+        if d["field"] == "B" and self.jumps and p > self.jumps[0] + self.X:
+            d = dict(d, dtdp=-d["dtdp"])
+        return d
+
+
+class RetryBack(unittest.TestCase):
+    """B4 (i) on note 3: an overshooting trial stage refuses pin_unserved, is retried at h/4 and comes back inside the
+    served T; the run releases as with no served bound. With pin_unserved not retryable it ends «refused» there."""
+
+    def served_hi(self):
+        r0, _ = run(RetryToy(0.5, dtj=+0.01))
+        j = jumps(r0)[0]
+        return r0, j["T_new"] + (0.5 / K) * RetryToy.X * 1.0002   # just above the path's peak
+
+    def case_retry_comes_back(self):
+        r0, hi = self.served_hi()
+        toy = RetryToy(0.5, dtj=+0.01)
+        toy.folds = [fold(0, "c0", K, 1e9, "B", "A", served=(-math.inf, hi))]
+        r, view = run(toy)
+        self.assertEqual(r.stop.kind, r0.stop.kind, r.stop)
+        self.assertEqual(r.stop.kind, "end", r.stop)
+        self.assertEqual(len(jumps(r)), 1)
+        self.assertEqual(view.pins, {})
+        self.assertGreaterEqual(view.read_retried.get("pin_unserved", 0), 1)
+        self.assertLessEqual(max(n[1][2] for n in r.path), hi)
+
+    def test_retry_comes_back(self):
+        self.case_retry_comes_back()
+
+    def test_mutant_not_retryable(self):
+        with mock.patch.object(rv, "RETRYABLE", frozenset({"extent", "past_deepest", "pin_unserved"})):
+            self.case_retry_comes_back()
+        with mock.patch.object(rv, "RETRYABLE", frozenset({"extent", "past_deepest"})):
+            with self.assertRaises(AssertionError):
+                self.case_retry_comes_back()
+
+
+class PinnedCounts(unittest.TestCase):
+    """Note 3 engine commit (directing, 68): per pass, the pinned reads and those the read served by its declared T
+    continuation (`t_continuation` in the state dict), counted by the engine and carried on PassOut / Stop."""
+
+    def toy(self, continued_above):
+        toy = Toy(0.5, dtj=+0.01)
+        toy.folds = [fold(0, "c0", K, 1e9, "B", "A")]
+        orig = toy.state
+
+        def state(p, t, field=None, pin=None):
+            d = orig(p, t, field)
+            return dict(d, t_continuation=t > continued_above) if pin is not None else d
+        toy.state = state
+        return toy
+
+    def test_counts_on_pass_and_reset(self):
+        r, view = run(self.toy(-math.inf))
+        self.assertEqual(r.stop.kind, "end", r.stop)
+        self.assertGreater(view.pinned_reads, 0)
+        self.assertEqual(view.pinned_continued, view.pinned_reads)       # every pinned read continued
+        out = rv.with_counts(dataclasses.make_dataclass("P", [("read_counts", object, None)])(), {"m": view})
+        self.assertEqual((out.read_counts["pinned_reads"], out.read_counts["pinned_continued"]),
+                         (view.pinned_reads, view.pinned_reads))
+        stop = rv.with_counts(st.Stop("x", None), {"m": view})
+        self.assertEqual(stop.state["pinned_continued"], view.pinned_reads)
+        view.reset_pass()
+        self.assertEqual((view.pinned_reads, view.pinned_continued), (0, 0))
+
+    def test_none_continued(self):
+        r, view = run(self.toy(math.inf))
+        self.assertGreater(view.pinned_reads, 0)
+        self.assertEqual(view.pinned_continued, 0)
+
+
+class SourceGuard(unittest.TestCase):
+    """Note 3 §3: every forced-field `.state(` call in the engine's solver modules passes `pin=`, and no engine function
+    forwards a `field` parameter to the read; a planted unpinned call, or props(…, field=None) restored, fails it."""
+
+    @staticmethod
+    def offenders(sources):
+        import re
+        bad = []
+        for name, text in sources.items():
+            for m in re.finditer(r"\.state\(([^()]|\([^()]*\))*\)", text):
+                call = m.group(0)
+                if "field=" in call and "pin=" not in call:
+                    bad.append((name, call))
+            if re.search(r"def props\([^)]*field", text):
+                bad.append((name, "props(field=)"))
+        return bad
+
+    def sources(self):
+        from pathlib import Path
+        d = Path(rv.__file__).parent
+        return {p.name: p.read_text(encoding="utf-8") for p in sorted(d.glob("*.py"))}
+
+    def test_engine_clean(self):
+        self.assertEqual(self.offenders(self.sources()), [])
+
+    def test_planted_unpinned_call_fails(self):
+        src = self.sources()
+        planted = dict(src, **{"read_view.py": src["read_view.py"] + "\nx = r.read.state(p, t, field=to)\n"})
+        self.assertEqual(len(self.offenders(planted)), 1)
+        restored = dict(src, **{"read_view.py": src["read_view.py"].replace("def props(self, p, t):",
+                                                                             "def props(self, p, t, field=None):")})
+        self.assertEqual(self.offenders(restored), [("read_view.py", "props(field=)")])

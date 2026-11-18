@@ -13,7 +13,12 @@ main 99df438b8, post-freeze note 1 at 9ff9ecaf6).
 - `ReadView(read, p_stop, record_id)`: `state(p, t, guess_rho) → (ρ, dT/dP, ())` or `Stop("read_refusal", …)`;
   `events(t_index)`; per-pass counters `read_retried` (by kind) and `curve_end_steps`; the T-jump pin table (§4.5).
   A refusal is an exception whose class is named ReadRefusal and that carries `.kind` (c8's proto/inv.py); only
-  "extent" and "past_deepest" are retryable (§4.4). Any other exception escaping the read propagates: an engine error.
+  "extent", "past_deepest" and "pin_unserved" are retryable (§4.4; note 3 §2). A retryable refusal surfaces at h_min, or
+  at once when it is met by an accepted node's k1 read (§4.4). Any other exception escaping the read propagates: an
+  engine error.
+- Post-freeze note 3 (artifacts main 037775429): every forced-field read carries `pin=(zone, curve, dir)` and goes
+  through `pinned_state`, which refuses «pin_unserved» itself (never forwarding the call) at a T outside the pinning
+  fold's `walk_t_served_<dir>` or for a pin naming no tagged fold; `props` takes no `field`.
 
 Imported by solver/solve.py only, so it stays outside `fall_sets.closure()` (registration §1, A2)."""
 from __future__ import annotations
@@ -27,8 +32,21 @@ from pathlib import Path
 from solver import stepper as st
 
 Q_MAX = 0.9                                                 # reg-coexistence note 6 step 3 (68 GO, 5b9dfac53)
-RETRYABLE = frozenset({"extent", "past_deepest"})          # §4.4: a trial stage outside the read's built extent
-KINDS = frozenset({"extent", "past_deepest", "cut", "invalid_state", "tjump_untagged", "p_negative", "field_unknown"})
+RETRYABLE = frozenset({"extent", "past_deepest", "pin_unserved"})  # §4.4 + note 3 §2: a trial stage outside what is built
+KINDS = frozenset({"extent", "past_deepest", "cut", "invalid_state", "tjump_untagged", "p_negative", "field_unknown",
+                   "pin_unserved"})
+
+
+class ReadRefusal(Exception):
+    """The read view's own refusal (note 3 §3: «pin_unserved» is raised here, before any call to the read)."""
+
+    def __init__(self, kind: str, why: str):
+        super().__init__(why)
+        self.kind = kind
+
+
+def _dir(up) -> str:
+    return "up" if up else "down"
 
 
 class ReadUnavailable(Exception):
@@ -98,10 +116,13 @@ class ReadView:
     def reset_pass(self):
         self.read_retried = {}              # kind → count of refusals returned for a stage (retried or surfaced)
         self.curve_end_steps = []           # (curve, P) of accepted steps with g None at exactly one end (§4.8)
+        self.pinned_reads = 0               # note 3/4: forced-field reads served (every stage, trial ones included)
+        self.pinned_continued = 0           # of them, served by the to-field's declared T continuation (t_continuation)
         self.pins = {}
 
     def counts(self) -> dict:
-        return {"read_retried": dict(self.read_retried), "curve_end_steps": list(self.curve_end_steps)}
+        return {"read_retried": dict(self.read_retried), "curve_end_steps": list(self.curve_end_steps),
+                "pinned_reads": self.pinned_reads, "pinned_continued": self.pinned_continued}
 
     # ── the read, as the engine's view ──────────────────────────────────────────────────────────────────────────
     def _refusal(self, p, t, e, kind):
@@ -111,17 +132,40 @@ class ReadView:
 
     def _pinned(self, p, t, d):
         """note 6 step 3 / read-view §4.5: inside a jump's walk-side window [P_m, P_m + 2·band], a read whose own field
-        is the jump's old field is re-read on the new field (the read serves it inside its built box, else refuses)."""
-        for curve, (frm, to, pm, band, up) in self.pins.items():
+        is the jump's old field is re-read on the new field, pinned (note 3: served T only, else pin_unserved)."""
+        for curve, (frm, to, pm, band, up, zone) in self.pins.items():
             if (0.0 <= p - pm <= 2.0 * band) if up else (0.0 <= pm - p <= 2.0 * band):
                 if d.get("field") == frm:
-                    return self.read.state(p, t, field=to)
+                    return self.pinned_state(p, t, to, (zone, curve, _dir(up)))
         return d
 
-    def props(self, p, t, field=None):
+    def fold(self, zone, curve):
+        for f in (getattr(self.read, "folds", None) or []):
+            if f.get("zone") == zone and f.get("curve") == curve:
+                return f
+        return None
+
+    def pinned_state(self, p, t, field, pin):
+        """Note 3 §2–§3: the only forced-field read. `pin` = (zone, curve, dir); the read is called only at a T inside
+        the fold's walk_t_served_<dir>, else ReadRefusal «pin_unserved» (retryable), also for a pin naming no fold."""
+        zone, curve, d = pin
+        f = self.fold(zone, curve)
+        if f is None:
+            raise ReadRefusal("pin_unserved", f"pin names no tagged fold ({zone!r}, {curve!r})")
+        served = f.get(f"walk_t_served_{d}")
+        if served is None:
+            raise ReadRefusal("pin_unserved", f"fold ({zone!r}, {curve!r}) stores no walk_t_served_{d}")
+        lo, hi = float(served[0]), float(served[1])
+        if not lo <= t <= hi:
+            raise ReadRefusal("pin_unserved", f"pinned field {field} served only on [{lo!r}, {hi!r}] K, t {t!r}")
+        got = self.read.state(p, t, field=field, pin=(zone, curve, d))
+        self.pinned_reads += 1                  # counted by the engine, not taken from the read's own log (directing)
+        if isinstance(got, dict) and got.get("t_continuation"):
+            self.pinned_continued += 1
+        return got
+
+    def props(self, p, t):
         try:
-            if field is not None:
-                return self.read.state(p, t, field=field)
             d = self.read.state(p, t)
             return self._pinned(p, t, d) if self.pins else d
         except Exception as e:                                  # noqa: BLE001 — classified below, others re-raised
@@ -173,10 +217,10 @@ class TJumpHook:
         self.view, self.zone, self.curve, self.conductive = view, zone, curve, conductive
 
     def _fold(self):
-        for f in (getattr(self.view.read, "folds", None) or []):
-            if f.get("zone") == self.zone and f.get("curve") == self.curve:
-                return f
-        raise st.TJumpRefusal(f"refused: no stored fold for tagged curve {self.curve!r} in zone {self.zone!r}")
+        f = self.view.fold(self.zone, self.curve)
+        if f is None:
+            raise st.TJumpRefusal(f"refused: no stored fold for tagged curve {self.curve!r} in zone {self.zone!r}")
+        return f
 
     def t_jump(self, m, y, upward):
         p, t_ad = y[1], y[2]
@@ -187,24 +231,32 @@ class TJumpHook:
                 raise
             raise st.TJumpRefusal(f"refused: read t_jump {_kind(e)}: {e}") from e
         fold = self._fold()
+        d = _dir(upward)
+        to_f = fold.get(f"to_field_{d}")            # note 3 §1: the direction convention checked at every jump
+        if to_f is None or to_f != got.get("to"):
+            raise st.TJumpRefusal(f"refused: fold direction mismatch, crossing {d}: fold to_field_{d} {to_f!r}, "
+                                  f"t_jump to {got.get('to')!r}")
         k = fold.get("dPb_dT_max_Pa_per_K")
         if k is None:
             raise st.TJumpRefusal(f"refused: fold {self.curve!r} stores no dPb_dT_max_Pa_per_K")
         k = abs(float(k))
         moved = abs(got["dT"]) * k
         try:
-            q = k * abs(self.view.read.state(p, got["T_new"], field=got["to"])["dtdp"])
+            q = k * abs(self.view.pinned_state(p, got["T_new"], got["to"], (self.zone, self.curve, d))["dtdp"])
         except Exception as e:                                  # noqa: BLE001 — as above
             if _kind(e) is None:
                 raise
+            if _kind(e) == "pin_unserved":                       # note 3 §3: the open residual class (note 7a)
+                raise st.TJumpRefusal(f"refused: pin_unserved at T_new: {e}") from e
             raise st.TJumpRefusal(f"refused: read state at T_new {_kind(e)}: {e}") from e
         if not q < Q_MAX:
             raise st.TJumpRefusal(f"refused: path near-tangent to tip curve, q {q:.4g} ≥ {Q_MAX}")
         band = moved / (1.0 - q)
-        reach = fold.get("walk_reach_pa")
+        reach = fold.get(f"walk_reach_pa_{d}")           # note 3 §1: per crossing direction, no single key
         if reach is None or not 2.0 * band <= float(reach):
-            raise st.TJumpRefusal(f"refused: walk reach short, 2·band {2.0 * band:.6g} Pa > walk_reach_pa {reach!r}")
-        self.view.pins[self.curve] = (got["from"], got["to"], p, band, upward)
+            raise st.TJumpRefusal(f"refused: walk reach short, crossing {d}: 2·band {2.0 * band:.6g} Pa > "
+                                  f"walk_reach_pa_{d} {reach!r}")
+        self.view.pins[self.curve] = (got["from"], got["to"], p, band, upward, self.zone)
         got.update(dpb_dt_max=k, moved_pa=moved, path_curve_ratio=q, band_pa=band,
                    shift=(2,) if self.conductive else (2, 3))
         return got
@@ -229,8 +281,10 @@ def with_counts(out_or_stop, views):
     rvs = [v for v in views.values() if isinstance(v, ReadView)]
     if not rvs:
         return out_or_stop
-    tot = {"read_retried": {}, "curve_end_steps": []}
+    tot = {"read_retried": {}, "curve_end_steps": [], "pinned_reads": 0, "pinned_continued": 0}
     for v in rvs:
+        tot["pinned_reads"] += v.pinned_reads
+        tot["pinned_continued"] += v.pinned_continued
         for k, n in v.read_retried.items():
             tot["read_retried"][k] = tot["read_retried"].get(k, 0) + n
         tot["curve_end_steps"] += v.curve_end_steps

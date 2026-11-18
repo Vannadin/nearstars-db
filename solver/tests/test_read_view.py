@@ -46,7 +46,7 @@ class FixtureRead:
         self.curves, self.rho, self.drho, self.dtdp, self.refuse = curves, rho, drho, dtdp, refuse
         self.calls = []
 
-    def state(self, p, t, field=None):
+    def state(self, p, t, field=None, pin=None):
         self.calls.append((p, t))
         if self.refuse is not None:
             k = self.refuse(p, t)
@@ -158,7 +158,7 @@ class Refusals(unittest.TestCase):
         read = FixtureRead([])
         read.refuse = None
         orig = read.state
-        read.state = lambda p, t, field=None: (boom(p, t), orig(p, t, field))[1]
+        read.state = lambda p, t, field=None, pin=None: (boom(p, t), orig(p, t, field))[1]
         with self.assertRaises(ZeroDivisionError):
             _pass(read)
 
@@ -516,7 +516,7 @@ class Filter(unittest.TestCase):
         OffPathExtent("test_retried_and_same_answer").test_retried_and_same_answer()
 
     def test_retryable_set(self):
-        self.assertEqual(rv.RETRYABLE, frozenset({"extent", "past_deepest"}))
+        self.assertEqual(rv.RETRYABLE, frozenset({"extent", "past_deepest", "pin_unserved"}))   # read-view note 3 §2
         view = rv.ReadView(FixtureRead([]), 0.0, "fixture_read")
         for kind in sorted(rv.KINDS):
             self.assertIs(view._refusal(1.0, 1.0, ValueError("x"), kind).record["retryable"], kind in rv.RETRYABLE)
