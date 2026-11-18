@@ -8,7 +8,8 @@ main 99df438b8, post-freeze note 1 at 9ff9ecaf6).
   files' absolute paths and returns the read. A missing file or a stale stamp is `ReadUnavailable`, never a fallback.
   A module the loader newly imports from inside the repo must be one of the stamped files, or an engine module under
   solver/ outside solver/tests/ (those are bound by solve_id's solver_code_bytes). The guard sees only modules new to
-  sys.modules during the load: one already imported is not re-checked.
+  sys.modules during the load: one already imported is not re-checked. A git-ignored .py under solver/ is outside solver_code_bytes
+  and so bound by neither the read stamp nor solve_id (68 on a5de93a4).
 - `ReadView(read, p_stop, record_id)`: `state(p, t, guess_rho) → (ρ, dT/dP, ())` or `Stop("read_refusal", …)`;
   `events(t_index)`; per-pass counters `read_retried` (by kind) and `curve_end_steps`; the T-jump pin table (§4.5).
   A refusal is an exception whose class is named ReadRefusal and that carries `.kind` (c8's proto/inv.py); only

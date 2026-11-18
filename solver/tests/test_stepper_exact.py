@@ -250,20 +250,27 @@ class FsalReread(unittest.TestCase):
         res = rhs.inward_pass(view, M, R, 0.0, tp, 4500.0, events=evs)
         return res, rhs.make_rhs(view), evs
 
-    def case(self):
+    REL_K1, REL_F = 1e-9, 1e-12                       # identity max |k1 − f|/|f| 1.5e-11 (68); F: Mac pin, Linux
+
+    def k1_mismatch(self, res, f):
+        """The largest |k1 − f(x, y)| / |f| over every path node (none skipped: 68 on a5de93a4, the mutant moves a
+        node at |g|/scale 4.8e-16)."""
+        worst = 0.0
+        for x, y, k1 in res.path:
+            k = f(x, y)
+            if isinstance(k, st.Stop):
+                continue
+            num = max(abs(a - b) for a, b in zip(k1, k))
+            den = max(max(abs(b) for b in k), 1e-300)
+            worst = max(worst, num / den)
+        return worst
+
+    def case(self, check_f=True):
         res, f, evs = self.leg()
         self.assertGreater(res.counters.exact_replaced, 0)
-        checked = 0
-        for x, y, k1 in res.path:
-            gs = [ev.g(x, y) for ev in evs if ev.seam]
-            if any(g is not None and abs(g) <= 1e-6 * ev.scale for g, ev in zip(gs, [e for e in evs if e.seam])):
-                continue
-            k = f(x, y)
-            if not isinstance(k, st.Stop):
-                self.assertEqual(tuple(k1), tuple(k), f"path k1 at m {x} is not f's unclamped read")
-                checked += 1
-        self.assertGreater(checked, 10)
-        self.assertEqual(res.F, self.F_BASE)
+        self.assertLessEqual(self.k1_mismatch(res, f), self.REL_K1)
+        if check_f:
+            self.assertLessEqual(abs(res.F - self.F_BASE), self.REL_F * abs(self.F_BASE))
 
     def test_fsal_reread(self):
         self.case()
@@ -276,6 +283,22 @@ class FsalReread(unittest.TestCase):
         with mock.patch.object(st, "run", mut):
             with self.assertRaises(AssertionError):
                 self.case()
+
+    def test_structural_check_alone_kills_the_mutant(self):
+        """68 on a5de93a4: the pair with the F check off — identity passes, the mutant fails on k1 alone."""
+        with mock.patch.object(st, "run", variant(st.run)):
+            self.case(check_f=False)
+        mut = variant(st.run, "                    h, out = x_e - x, (o2[0], o2[1], k7n)\n",
+                      "                    h, out = x_e - x, o2\n")
+        with mock.patch.object(st, "run", mut):
+            with self.assertRaises(AssertionError) as cm:
+                self.case(check_f=False)
+        print(f"\nFsalReread structural pair: identity max {self._identity_max():.3g}; mutant {cm.exception}")
+
+    def _identity_max(self):
+        with mock.patch.object(st, "run", variant(st.run)):
+            res, f, _ = self.leg()
+        return self.k1_mismatch(res, f)
 
 
 if __name__ == "__main__":
