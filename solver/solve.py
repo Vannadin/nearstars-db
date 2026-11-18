@@ -28,6 +28,7 @@ from solver import closure as cl
 from solver import context, events, legacy_materials as lm, lid, material_notes, phase_zones, refusals, result, rhs
 from solver import material_registry as mr, material_view as mv
 from solver import fixed_grid
+from solver import read_view as rv
 from solver import stepper as st
 
 
@@ -51,6 +52,7 @@ class PassOut:
     counters: dict = field(default_factory=dict)
     R: float = 0.0
     r_scale: float = 0.0
+    read_counts: dict | None = None                     # read-view registration §1: read_retried, curve_end_steps
 
 
 def _value(d):
@@ -104,6 +106,9 @@ def _plan(view):
     per solve (or per trial on a composition closure), so nothing outlives the solve that owns it. Events are frozen
     and their g functions pure; the cap's table constant is per phase. A view that takes no attribute is rebuilt."""
     got = getattr(view, "_s1_plan", None)
+    if got is None and rv.is_read_view(view):         # read-view registration §1: the read's own events, no table cap
+        got = (view.events(), None)
+        view._s1_plan = got
     if got is None:
         got = (tuple(events.layer_events(view, getattr(view, "p_stop", 0.0))),
                events.step_cap(getattr(view, "mat", None) or view))
@@ -116,7 +121,9 @@ def _plan(view):
 
 def _band(view):
     """Notes 13 §1 / 13a / 13b: the view's band test factory (None without a legacy table phase), kept on the view as
-    _plan; each stepper run takes a fresh test from it."""
+    _plan; each stepper run takes a fresh test from it. A read view has none (read-view registration §1)."""
+    if rv.is_read_view(view):
+        return None
     got = getattr(view, "_a4_band", None)
     if got is None:
         got = (events.band_check(getattr(view, "mat", None) or view),)
@@ -137,6 +144,8 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
         m_end = end[1]
     layer_evs, h_cap = _plan(view)
     evs += list(layer_evs) + list(extra_events)
+    if rv.is_read_view(view):                           # §4.8: steps with a curve's g None at one end, counted per pass
+        monitor = _curve_end_monitor(view, layer_evs, monitor)
     if opt.fixed_dr > 0.0:
         r_end, name = (end[1], "layer_end") if end is not None and end[0] == "r" else \
             (opt.r_floor_frac * r_scale, "r_floor")
@@ -154,11 +163,30 @@ def _segment(view, mass, m0, y0, end, r_scale, opt, monitor, extra_events=()):
     return st.run(rhs.make_rhs(view), m0, y0, m_end, sopt, evs, on_accept=monitor)
 
 
+def _curve_end_monitor(view, evs, inner):
+    """§4.8: an on_accept that records, per accepted step, a read event whose g is None at exactly one end, then calls
+    the inner monitor (the graze monitor, whose `best` solve reads from the monitor object itself)."""
+    prev = {}
+
+    def mon(x, y):
+        if "xy" in prev:
+            view.note_step(evs, *prev["xy"], x, y)
+        prev["xy"] = (x, y)
+        if inner is not None:
+            inner(x, y)
+    return mon
+
+
 def _lid_wiring(lv_, want_graze: bool = True) -> dict:
     """The lid pass's events, step cap, band test and graze monitor for its view `lv_` (G1-C-04: the lid is the
     mantle material, with the same note-12 step cap and band test read at the lid's own T, y[3], note 13a item 4;
     G1-R-02 = G2-R-01: its landed events and its graze reach the pass record; the monitor reads T_ad, y[2], which the
     lid's onset events watch)."""
+    if rv.is_read_view(lv_):
+        # read-view registration §1, r2 B2: the lid reads ρ at its own T (y[3]) and dT/dP_ad at T_ad (y[2]) every
+        # stage, so both event sets are live; the T_ad set is renamed «:ad». No table cap, no band test, no graze
+        ad = tuple(dataclasses.replace(e, name=f"{e.name}:ad") for e in lv_.events(t_index=2))
+        return {"events": tuple(lv_.events(t_index=3)) + ad, "h_cap": None, "step_check": None, "monitor": None}
     mat = getattr(lv_, "mat", None) or lv_      # review 2 S-C-02: a record view (no .mat) is its own source, as in _plan
     return {"events": events.layer_events(lv_, getattr(lv_, "p_stop", 0.0), t_index=3),
             "h_cap": events.step_cap(mat, t_index=3),
@@ -178,6 +206,15 @@ def surface_floor(body, top_view) -> float:
 
 
 def inward(body, views, x, opt: context.Options, want_graze: bool = True) -> PassOut | st.Stop:
+    """One pass at closure value x (see _inward). Read views' per-pass counters are reset before it and carried on its
+    PassOut or its Stop after it (read-view registration §1, r2 B3/B6)."""
+    for v in views.values():
+        if rv.is_read_view(v):
+            v.reset_pass()
+    return rv.with_counts(_inward(body, views, x, opt, want_graze), views)
+
+
+def _inward(body, views, x, opt: context.Options, want_graze: bool = True) -> PassOut | st.Stop:
     """One pass at closure value x. `want_graze` False skips the graze monitor: a trial pass whose graze record no
     one reads (S1: G2-SP-02, G1-SP-03); the accepted and the sensitivity pass keep it."""
     M = body.mass
@@ -376,6 +413,13 @@ def _assemblage_view(body, layer, rid, p_stop, registry):
     if got is None or isinstance(got, mr.LoadStop):
         return None, ("record_unavailable", (rid, got if got is not None else mr.LoadStop(
             "material.assemblage_table", MappingProxyType({"file": f"{rid}.yaml", "why": "no such record"}))))
+    rd_decl = got["assemblage"].get("read")
+    if rd_decl is not None:                             # read-view registration §1: the record names its smooth read
+        try:
+            read = rv.load(rd_decl["files"], rd_decl["stamp"], mr.MATERIALS_DIR.parent.parent)
+        except rv.ReadUnavailable as e:                 # never a silent fallback to the table (A7)
+            return None, ("read_unavailable", (rid, e.reason, e.detail))
+        return rv.ReadView(read, p_stop, rid), None
     table = registry.tables[rid]
     if table["boundaries"]["status"] == "pending" and not registry.development:    # 68 S3
         return None, ("record_boundaries_pending", f"the assemblage record {rid!r} has its phase boundaries pending "
@@ -588,6 +632,10 @@ def _view_refusal(body, l, fail):
         rid, stop = detail
         return refusals.make("input.material_record_unavailable", where, layer_id=l.id, material_id=rid,
                              load_stop=stop.id, detail=result.plain(dict(stop.evidence)))
+    if kind_ == "read_unavailable":                    # read-view registration §1, A7: material.read_unavailable
+        rid, why, det = detail
+        return refusals.make("input.material_read_unavailable", where, layer_id=l.id, material_id=rid, reason=why,
+                             detail=det)
     if kind_ == "unknown_material":
         return refusals.make("input.unknown_material", where, layer_id=l.id, material=l.material)
     if kind_ == "no_table_for_composition":          # layers S2 §2.1: the detail carries the build request third
@@ -656,6 +704,12 @@ def _to_refusal(stop: st.Stop, where: str, x, kind: str, pass_kind: str, scan=No
     rec = stop.record
     if stop.kind == "refused" and isinstance(rec, st.Stop):
         stop, rec = rec, rec.record
+    if stop.kind == "read_refusal":                   # read-view registration §1, §4.4
+        cnt = common.get("state") or {}
+        return refusals.make("solve.read_refusal", where, material_id=rec.get("material_id"), p=rec.get("p"),
+                             t=rec.get("t"), kind=rec.get("kind"), why=rec.get("why"),
+                             read_retried=dict(cnt.get("read_retried", {})),
+                             curve_end_steps=list(cnt.get("curve_end_steps", [])), **common)
     if type(rec).__name__ == "RecordRefusal":            # switch-over §2: a phase-2 record view refuses by its id
         return refusals.make("solve.material_record", where, material_id=rec.material_id, p=rec.p, t=rec.t,
                              refusal=rec.refusal, why=rec.why, **common)

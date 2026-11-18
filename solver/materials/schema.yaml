@@ -106,12 +106,17 @@ assemblage:
   disclosures:   {shape: list, required: true, min: 1}     # the declaration's disclosures, on every answer
   floor_band:    {shape: record, of: assemblage_floor, required: true}   # below the 1 bar grid floor (§3.1)
   handover:      {shape: text, required: true}             # the hand-over record above p_dataset (§3.4)
+  read:          {shape: record, of: assemblage_read}       # read-view registration §1: the record's smooth read
   b3:            {shape: record, of: assemblage_b3, required: true}
   dtdp:          {shape: record, of: assemblage_dtdp, required: true}
   pins:          {shape: record, of: assemblage_pins, required: true}
   transition_check: {shape: record, of: assemblage_transition_check}   # earth_dmm_wh2005 only: S3 (registration
                                                            # §2.4, boundary-export scope note §2, r2 Q5); judged by the
                                                            # suite (test_transition_check), never at load
+
+assemblage_read:                                           # read-view registration §1 (frozen, artifacts 99df438b8)
+  files:         {shape: list, required: true, min: 1}     # repo paths; the first is the read's loader module
+  stamp:         {shape: text, required: true}             # sha256 over (path NUL bytes NUL) per file, in order
 
 assemblage_transition_check:
   tool:            {shape: record, of: assemblage_tool, required: true}    # transition_check.py, pinned

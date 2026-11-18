@@ -60,6 +60,9 @@ _SOLVE = (
     Entry("solve.closure_discontinuous", ("check", "F_root", "tol_F", "n_acc", "rtol", "bracket", "probes"),
           "닫힘 잔차가 근 x {x} 에서 연속이 아니다 ({check}) — F {F_root}, 허용 {tol_F}, 마지막 괄호 {bracket}, 탐침 {probes}",
           preamble="잔차가 끊긴 자리에 근이 걸려 답을 믿을 수 없다."),
+    Entry("solve.read_refusal", ("material_id", "p", "t", "kind", "why", "read_retried", "curve_end_steps"),
+          "물질 기록 '{material_id}' 의 매끄러운 읽기가 ({p} Pa, {t} K) 에서 답하지 않는다 — {kind}: {why} "
+          "(read-view 등록 §4.4)"),
     Entry("solve.material_record", ("material_id", "p", "t", "refusal", "why"),
           "물질 기록 '{material_id}' 이(가) ({p} Pa, {t} K) 에서 답하지 않는다 — {refusal}: {why}"),
     Entry("solve.melting_not_in_phase2", ("material_id", "boundary", "p", "t"),
@@ -122,6 +125,9 @@ _INPUT = (
     Entry("input.material_record_unavailable", ("layer_id", "material_id", "load_stop", "detail"),
           "층 '{layer_id}' 의 물질 기록 '{material_id}' 을(를) 쓸 수 없다 — {load_stop}: {detail} (옛 물질로 돌아가지 "
           "않는다, switch-over §1)"),
+    Entry("input.material_read_unavailable", ("layer_id", "material_id", "reason", "detail"),
+          "층 '{layer_id}' 의 물질 기록 '{material_id}' 이(가) 이름 붙인 매끄러운 읽기를 쓸 수 없다 — {reason}: {detail} "
+          "(material.read_unavailable; 표로 돌아가지 않는다, read-view 등록 A7)"),
     Entry("input.material_registry", ("load_stop", "detail"),
           "물질 레지스트리가 열리지 않았다 — {load_stop}: {detail} (반쯤 열린 레지스트리로는 풀지 않는다, switch-over §1)"),
     Entry("input.declared_grade_not_wired", ("layer_id", "material_id"),
@@ -234,7 +240,7 @@ def _index(entries: tuple) -> MappingProxyType:
 
 #: Phase-1 note 13 §3: refusals that a pass always reaches carry `state` (the last accepted node), required. Kinds
 #: that may also fire before any pass (layer_order) keep it optional; a pass-time one fills it.
-STATE_REQUIRED = ("solve.material_domain", "solve.material_record", "solve.melting_not_in_phase2",
+STATE_REQUIRED = ("solve.material_domain", "solve.material_record", "solve.read_refusal", "solve.melting_not_in_phase2",
                   "solve.coexist_crossed", "solve.coexist_reentered", "solve.coexist_unfinished",
                   "solve.event_chatter", "solve.unlocated_discontinuity", "solve.lid_unconverged",
                   "solve.basal_unconverged", "solve.closure_discontinuous")
