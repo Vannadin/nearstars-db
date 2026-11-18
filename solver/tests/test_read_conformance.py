@@ -85,24 +85,28 @@ def check(read, probe):
             y3 = (1.0, probe["p_fold"], tz + 50.0, tz, 0.0, 0.0)
             row("§4.3 t_index=3 reads y[3], t_index=2 reads y[2]", ev3 is not None and ev.g(0.0, y2) is not None
                 and ev.g(0.0, y2) == ev3.g(0.0, y3), "")
-            j = _refusal(lambda: read.t_jump(probe["p_fold"], tz, f["zone"], f["curve"], True))
-            j = read.t_jump(probe["p_fold"], tz, f["zone"], f["curve"], True) if j is None else j
-            row("§4.5 t_jump(P, T, zone, curve, upward) → {T_new, ds, dT, from, to}", isinstance(j, dict) and all(
-                k in j for k in TJUMP_KEYS), repr(j)[:200])
-            row("note 3 §1 t_jump «to» upward == fold to_field_up", isinstance(j, dict) and j.get("to") == f["to_field_up"],
-                f"{j.get('to') if isinstance(j, dict) else j} vs {f['to_field_up']}")
+            for d, up in (("up", True), ("down", False)):                    # directing 11-18: both directions
+                j = _refusal(lambda: read.t_jump(probe["p_fold"], tz, f["zone"], f["curve"], up))
+                j = read.t_jump(probe["p_fold"], tz, f["zone"], f["curve"], up) if j is None else j
+                row(f"§4.5 t_jump(P, T, zone, curve, upward={up}) → {{T_new, ds, dT, from, to}}", isinstance(j, dict)
+                    and all(k in j for k in TJUMP_KEYS), repr(j)[:200])
+                row(f"note 3 §1 t_jump «to» {d} == fold to_field_{d}", isinstance(j, dict)
+                    and j.get("to") == f[f"to_field_{d}"], f"{j.get('to') if isinstance(j, dict) else j} vs {f[f'to_field_{d}']}")
             un = probe.get("untagged")
             if un is not None:
                 e = _refusal(lambda: read.t_jump(probe["p_fold"], tz, un[0], un[1], True))
                 row("§4.4 «tjump_untagged» at an untagged curve", _is_refusal(e, "tjump_untagged"), repr(e))
-            lo, hi = (float(x) for x in f["walk_t_served_up"])
+            for d in ("up", "down"):
+                lo, hi = (float(x) for x in f[f"walk_t_served_{d}"])
+                pin = (f["zone"], f["curve"], d)
+                ins = read.state(probe["p_fold"], tz, field=f[f"to_field_{d}"], pin=pin)
+                row(f"note 3 §2 pinned state {d} → the to-field, with t_continuation (note 4)",
+                    ins.get("field") == f[f"to_field_{d}"] and isinstance(ins.get("t_continuation"), bool),
+                    repr({k: ins.get(k) for k in ("field", "t_continuation")}))
+                out_t = hi + 10.0 if math.isfinite(hi) else lo - 10.0
+                e = _refusal(lambda: read.state(probe["p_fold"], out_t, field=f[f"to_field_{d}"], pin=pin))
+                row(f"note 3 §2 «pin_unserved» {d} outside walk_t_served", _is_refusal(e, "pin_unserved"), repr(e))
             pin = (f["zone"], f["curve"], "up")
-            ins = read.state(probe["p_fold"], tz, field=f["to_field_up"], pin=pin)
-            row("note 3 §2 pinned state → the to-field, with t_continuation (note 4)", ins.get("field") == f["to_field_up"]
-                and isinstance(ins.get("t_continuation"), bool), repr({k: ins.get(k) for k in ("field", "t_continuation")}))
-            out_t = hi + 10.0 if math.isfinite(hi) else lo - 10.0
-            e = _refusal(lambda: read.state(probe["p_fold"], out_t, field=f["to_field_up"], pin=pin))
-            row("note 3 §2 «pin_unserved» outside walk_t_served", _is_refusal(e, "pin_unserved"), repr(e))
             e = _refusal(lambda: read.state(probe["p_fold"], tz, field="__no_such_field__", pin=pin))
             row("§4.4 «field_unknown» for a field the fold does not have", _is_refusal(e, "field_unknown"), repr(e))
             e = _refusal(lambda: read.state(probe["p_fold"], tz, field=f["to_field_up"], pin=(10 ** 6, 0, "up")))
@@ -207,15 +211,19 @@ class Conformance(unittest.TestCase):
         tz = 0.5 * (z0 + z1)
         ev = next(e for e in rd.events(t_index=2) if (e.tag or {}).get("tagged")
                   and (e.tag["zone"], e.tag["curve"]) == (f0["zone"], f0["curve"]))
-        lo_p, hi_p = 1e9, 1e11
+        def g(p_):
+            return ev.g(0.0, (1.0, p_, tz, tz, 0.0, 0.0))
+        grid = [1e9 * k for k in range(1, 101)]                # 1–100 GPa: the bracket must be found, never assumed
+        vals = [(p_, g(p_)) for p_ in grid]
+        br = next(((a, b) for (a, ga), (b, gb) in zip(vals, vals[1:])
+                   if ga is not None and gb is not None and ga < 0.0 <= gb), None)
+        self.assertIsNotNone(br, f"no P_b bracket for fold {(f0['zone'], f0['curve'])} at T {tz} on 1–100 GPa")
+        lo_p, hi_p = br
         for _ in range(200):                                  # P_b(tz) by bisection on the event's own g
             mid = 0.5 * (lo_p + hi_p)
-            g = ev.g(0.0, (1.0, mid, tz, tz, 0.0, 0.0))
-            if g is None:
-                lo_p = mid if mid < 1.3e10 else lo_p
-                hi_p = mid if mid >= 1.3e10 else hi_p
-                continue
-            lo_p, hi_p = (mid, hi_p) if g < 0 else (lo_p, mid)
+            gm = g(mid)
+            self.assertIsNotNone(gm, f"g None inside the bracket at {mid} Pa")
+            lo_p, hi_p = (mid, hi_p) if gm < 0 else (lo_p, mid)
         untagged = next(((e.tag["zone"], e.tag["curve"]) for e in rd.events(t_index=2)
                          if e.tag.get("zone") == f0["zone"] and e.tag.get("curve") is not None
                          and not e.tag.get("tagged")), None)
