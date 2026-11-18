@@ -1090,8 +1090,13 @@ class CommittedRead(unittest.TestCase):
             raise unittest.SkipTest("NEARSTARS_C8_PROTO not set: c8's committed Pandora read is not on this machine")
         if d not in sys.path:
             sys.path.insert(0, d)
+        import hashlib
         with open(os.path.join(d, "read_pandora_1600.pkl"), "rb") as f:
-            return pickle.load(f)
+            raw = f.read()
+        # the kept collapsed read (blob c547e187; part2-c8-reroot fb1d3990c), the one committed read with tagged folds
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),
+                         "49c2abfd51b42e1a9528ee20920e2a5e91cfcec263435814ef98ed7225553bd2", "not the kept collapsed read")
+        return pickle.loads(raw)
 
     @staticmethod
     def p_on_curve(view, zone, curve, t, p_lo, p_hi):

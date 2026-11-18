@@ -2,13 +2,12 @@
 """Every row is one sentence of the frozen read-view registration (§4) or its notes 1–4 that requires something of «the
 read». `check(read)` returns [(row, ok, detail)]. Run on:
 - ConformingToy: a minimal read written to the rows here, so every row can pass (and each row's mutant fails);
-- c8's committed read (NEARSTARS_C8_PROTO = a checkout of pc/c8-part2/proto, NEARSTARS_BMCPP for its loader), red
+- c8's final reads (NEARSTARS_C8_PROTO = a checkout of pc/c8-part2/proto at part2-c8-reroot fb1d3990c), loaded by its loader, red
   until it carries every row; skipped by name where NEARSTARS_C8_PROTO is unset.
 Rows not exercisable on an arbitrary read («cut», «invalid_state»: they need the read's own excluded region or a
 continuation that fails) are listed in ROWS_NOT_EXERCISED, by name."""
 import math
 import os
-import pickle
 import sys
 import unittest
 
@@ -58,8 +57,9 @@ def check(read, probe):
     e = _refusal(lambda: read.state(probe["p_deep"], t))
     row("§4.4 «past_deepest» past the last piece", _is_refusal(e, "past_deepest"), repr(e))
     folds = getattr(read, "folds", None)
-    row("§4.5 / note 3 §1 rd.folds: a list of dicts with the directional keys", isinstance(folds, list) and folds and all(
-        all(k in f for k in FOLD_KEYS) for f in folds), "" if folds else "no folds attribute or empty")
+    row("§4.5 / note 3 §1 rd.folds: a list (empty on a read with no tagged fold) of dicts with the directional keys",
+        isinstance(folds, list) and all(all(k in f for k in FOLD_KEYS) for f in folds),
+        "" if isinstance(folds, list) else "no folds list")
     row("note 4 §1 rd.continuations: a list", isinstance(getattr(read, "continuations", None), list))
     evs = _refusal(lambda: read.events(t_index=2))
     evs = read.events(t_index=2) if evs is None else evs
@@ -177,6 +177,16 @@ TOY_PROBE = {"p": 5e9, "t": 2000.0, "p_deep": 2e11, "t_cold": 500.0, "p_fold": 1
              "untagged": (0, 1)}
 
 
+# c8's final reads, part2-c8-reroot fb1d3990c (directing 11-19): sha256 and a probe each ({p, t} served; p_deep past
+# the deepest piece; t_cold below the T box)
+C8_FINAL_READS = {
+    "read_pandora_1600_r1pb.pkl": ("85de217771c5571ec5c02e54c0ceff79a85793e4c2bc5ca1f1f166cbba079bf0",
+                                   {"p": 13.0e9, "t": 1755.0, "p_deep": 1e13, "t_cold": 500.0}),
+    "read_earth_1769_r1pa.pkl": ("189619b3e87a0c62e65825b987ecdb09ac9387535eb9479047d2d3da2b4f2a36",
+                                 {"p": 60.0e9, "t": 2300.0, "p_deep": 1e13, "t_cold": 500.0}),
+}
+
+
 class Conformance(unittest.TestCase):
     def assert_rows(self, rows):
         bad = [(n, d) for n, ok, d in rows if not ok]
@@ -198,14 +208,31 @@ class Conformance(unittest.TestCase):
                 mutate(r)
                 self.assertTrue(any(not ok for _, ok, _ in check(r, TOY_PROBE)), name)
 
-    def test_c8_committed_read(self):
+    def test_c8_final_reads(self):
+        """c8's final reads (part2-c8-reroot fb1d3990c; directing 11-19: pinned to these, not bpr2 or earlier), each
+        loaded through c8's loader `readload.load_read` and checked by sha256 first. Neither carries a tagged fold (the
+        Pandora folds are rebuilt as wedges), so the fold rows run only where a read has folds; the folds row and «the
+        tagged Events are exactly the folds» still run (both empty)."""
         d = os.environ.get("NEARSTARS_C8_PROTO")
         if not d:
-            raise unittest.SkipTest("NEARSTARS_C8_PROTO not set: c8's committed Pandora read is not on this machine")
+            raise unittest.SkipTest("NEARSTARS_C8_PROTO not set: c8's committed reads are not on this machine")
         if d not in sys.path:
             sys.path.insert(0, d)
-        with open(os.path.join(d, "read_pandora_1600.pkl"), "rb") as f:
-            rd = pickle.load(f)
+        import hashlib
+        import readload
+        for name, (sha, probe) in C8_FINAL_READS.items():
+            with self.subTest(read=name):
+                path = os.path.join(d, name)
+                with open(path, "rb") as f:
+                    self.assertEqual(hashlib.sha256(f.read()).hexdigest(), sha, f"{name}: not the pinned read")
+                rd, files = readload.load_read([path])
+                self.assertEqual([os.path.basename(x) for x in files[1:]], list(readload.SERVING))
+                probe = dict(probe)
+                if rd.folds:
+                    probe.update(self.fold_probe(rd))
+                self.assert_rows(check(rv.PinGuard(rd), probe))
+
+    def fold_probe(self, rd):
         f0 = rd.folds[0]
         z0, z1 = (float(x) for x in rd.zones[f0["zone"]][:2])
         tz = 0.5 * (z0 + z1)
@@ -233,6 +260,4 @@ class Conformance(unittest.TestCase):
         untagged = next(((e.tag["zone"], e.tag["curve"]) for e in rd.events(t_index=2)
                          if e.tag.get("zone") == f0["zone"] and e.tag.get("curve") is not None
                          and not e.tag.get("tagged")), None)
-        probe = {"p": 13.0e9, "t": 1755.0, "p_deep": 1e13, "t_cold": 500.0, "p_fold": 0.5 * (lo_p + hi_p),
-                 "t_fold": tz, "untagged": untagged}
-        self.assert_rows(check(rv.PinGuard(rd), probe))
+        return {"p_fold": 0.5 * (lo_p + hi_p), "t_fold": tz, "untagged": untagged}
