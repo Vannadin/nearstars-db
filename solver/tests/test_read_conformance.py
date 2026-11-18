@@ -213,17 +213,23 @@ class Conformance(unittest.TestCase):
                   and (e.tag["zone"], e.tag["curve"]) == (f0["zone"], f0["curve"]))
         def g(p_):
             return ev.g(0.0, (1.0, p_, tz, tz, 0.0, 0.0))
-        grid = [1e9 * k for k in range(1, 101)]                # 1–100 GPa: the bracket must be found, never assumed
-        vals = [(p_, g(p_)) for p_ in grid]
-        br = next(((a, b) for (a, ga), (b, gb) in zip(vals, vals[1:])
-                   if ga is not None and gb is not None and ga < 0.0 <= gb), None)
-        self.assertIsNotNone(br, f"no P_b bracket for fold {(f0['zone'], f0['curve'])} at T {tz} on 1–100 GPa")
-        lo_p, hi_p = br
+        # the bracket must be found, never assumed: 1–100 GPa plus 64 interior points of each piece's own P range
+        # (a piece edge gives g None; 68 11-18), either sign change accepted (no rising g assumed)
+        grid = {1e9 * k for k in range(1, 101)}
+        for pc in getattr(rd, "pieces", ()):
+            p0, p1 = float(pc[0]), float(pc[1])
+            grid.update(p0 + (p1 - p0) * (i + 0.5) / 64 for i in range(64))
+        vals = [(p_, g(p_)) for p_ in sorted(grid)]
+        br = next(((a, b, ga) for (a, ga), (b, gb) in zip(vals, vals[1:])
+                   if ga is not None and gb is not None and (ga < 0.0) != (gb < 0.0)), None)
+        self.assertIsNotNone(br, f"no P_b bracket (sign change of g) for fold {(f0['zone'], f0['curve'])} at T {tz} "
+                             "on 1–100 GPa and the pieces' own P ranges")
+        lo_p, hi_p, ga = br
         for _ in range(200):                                  # P_b(tz) by bisection on the event's own g
             mid = 0.5 * (lo_p + hi_p)
             gm = g(mid)
             self.assertIsNotNone(gm, f"g None inside the bracket at {mid} Pa")
-            lo_p, hi_p = (mid, hi_p) if gm < 0 else (lo_p, mid)
+            lo_p, hi_p = (mid, hi_p) if (gm < 0.0) == (ga < 0.0) else (lo_p, mid)
         untagged = next(((e.tag["zone"], e.tag["curve"]) for e in rd.events(t_index=2)
                          if e.tag.get("zone") == f0["zone"] and e.tag.get("curve") is not None
                          and not e.tag.get("tagged")), None)
