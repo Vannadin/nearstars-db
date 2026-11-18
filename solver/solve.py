@@ -201,7 +201,7 @@ def _lid_wiring(lv_, want_graze: bool = True) -> dict:
     if rv.is_read_view(lv_):
         # read-view registration §1, r2 B2: the lid reads ρ at its own T (y[3]) and dT/dP_ad at T_ad (y[2]) every
         # stage, so both event sets are live; the T_ad set is renamed «:ad». No table cap, no band test, no graze
-        ad = tuple(dataclasses.replace(e, name=f"{e.name}:ad") for e in lv_.events(t_index=2))
+        ad = tuple(dataclasses.replace(e, name=f"{e.name}:ad") for e in lv_.events(t_index=2, conductive=True))
         evs = tuple(lv_.events(t_index=3)) + ad
         return {"events": evs, "h_cap": None, "step_check": None,
                 "monitor": lambda: _LidCurveEnds(lv_, evs)}     # 68 n2 on C1: lid steps are counted too
@@ -722,6 +722,16 @@ def _to_refusal(stop: st.Stop, where: str, x, kind: str, pass_kind: str, scan=No
     rec = stop.record
     if stop.kind == "refused" and isinstance(rec, st.Stop):
         stop, rec = rec, rec.record
+    if stop.kind in ("tjump_refused", "tjump_no_band"):     # reg-coexistence note 6
+        return refusals.make("solve.tjump_refused", where, curve=rec.get("curve"), m=rec.get("m"),
+                             why=rec.get("why", "the hook returned no finite band (an engine bug made visible)"),
+                             **common)
+    if stop.kind == "tjump_not_cleared":
+        return refusals.make("solve.tjump_not_cleared", where, **{k: rec.get(k) for k in (
+            "curve", "m", "P", "T", "P_m", "band_pa", "g", "reason")}, **common)
+    if stop.kind == "tjump_in_conductive_T":
+        return refusals.make("solve.tjump_in_conductive_T", where, curve=rec["curve"], m=rec["m"], P=rec["P"],
+                             T=rec["T"], **common)
     if stop.kind == "read_refusal":                   # read-view registration §1, §4.4
         cnt = common.get("state") or {}
         return refusals.make("solve.read_refusal", where, material_id=rec.get("material_id"), p=rec.get("p"),

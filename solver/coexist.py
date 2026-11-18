@@ -448,6 +448,10 @@ def notes_of(records, views):
         elif kind == "restart":
             out.append(result.Note("coexistence_restart", f"curve end {rc['curve']}: restart, the read's s steps by "
                                    f"{rc.get('ds')!r} J/kg/K at P {rc['P'] / 1e9:.6g} GPa (no segment)", dict(rc)))
+        elif kind == "tjump":                           # reg-coexistence note 6 step 2: a wedge-tip T jump
+            out.append(result.Note("coexistence_tjump", f"{rc['curve']}: s-conserving T jump {rc.get('dT')!r} K "
+                                   f"({rc.get('from')} → {rc.get('to')}) at P {rc['P'] / 1e9:.6g} GPa, band "
+                                   f"{rc.get('band_pa')!r} Pa", dict(rc)))
         elif kind == "sharp":
             out.append(result.Note("coexistence_sharp_step", f"{rc['curve']}: sharp step, no coexistence segment "
                                    f"({rc.get('reason')}) at P {rc['P'] / 1e9:.6g} GPa", dict(rc)))

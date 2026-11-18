@@ -60,6 +60,12 @@ _SOLVE = (
     Entry("solve.closure_discontinuous", ("check", "F_root", "tol_F", "n_acc", "rtol", "bracket", "probes"),
           "닫힘 잔차가 근 x {x} 에서 연속이 아니다 ({check}) — F {F_root}, 허용 {tol_F}, 마지막 괄호 {bracket}, 탐침 {probes}",
           preamble="잔차가 끊긴 자리에 근이 걸려 답을 믿을 수 없다."),
+    Entry("solve.tjump_refused", ("curve", "m", "why"),
+          "쐐기 끝 곡선 '{curve}' 에서 T 점프를 할 수 없다 (m {m}) — {why} (reg-coexistence note 6)"),
+    Entry("solve.tjump_not_cleared", ("curve", "m", "P", "T", "P_m", "band_pa", "g", "reason"),
+          "T 점프 뒤 곡선 '{curve}' 를 새 쪽에서 풀지 못했다 ({reason}) — P {P}, P_m {P_m}, 띠 {band_pa} Pa, g {g}"),
+    Entry("solve.tjump_in_conductive_T", ("curve", "m", "P", "T"),
+          "전도층 온도가 쐐기 끝 곡선 '{curve}' 를 건넜다 (P {P}, T {T}) — 전도층의 잠열 처리는 등록되지 않았다 (note 6 1b)"),
     Entry("solve.read_refusal", ("material_id", "p", "t", "kind", "why", "read_retried", "curve_end_steps"),
           "물질 기록 '{material_id}' 의 매끄러운 읽기가 ({p} Pa, {t} K) 에서 답하지 않는다 — {kind}: {why} "
           "(read-view 등록 §4.4)"),
@@ -240,7 +246,8 @@ def _index(entries: tuple) -> MappingProxyType:
 
 #: Phase-1 note 13 §3: refusals that a pass always reaches carry `state` (the last accepted node), required. Kinds
 #: that may also fire before any pass (layer_order) keep it optional; a pass-time one fills it.
-STATE_REQUIRED = ("solve.material_domain", "solve.material_record", "solve.read_refusal", "solve.melting_not_in_phase2",
+STATE_REQUIRED = ("solve.material_domain", "solve.material_record", "solve.read_refusal", "solve.tjump_refused",
+                  "solve.tjump_not_cleared", "solve.tjump_in_conductive_T", "solve.melting_not_in_phase2",
                   "solve.coexist_crossed", "solve.coexist_reentered", "solve.coexist_unfinished",
                   "solve.event_chatter", "solve.unlocated_discontinuity", "solve.lid_unconverged",
                   "solve.basal_unconverged", "solve.closure_discontinuous")

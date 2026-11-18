@@ -26,6 +26,7 @@ from pathlib import Path
 
 from solver import stepper as st
 
+Q_MAX = 0.9                                                 # reg-coexistence note 6 step 3 (68 GO, 5b9dfac53)
 RETRYABLE = frozenset({"extent", "past_deepest"})          # §4.4: a trial stage outside the read's built extent
 KINDS = frozenset({"extent", "past_deepest", "cut", "invalid_state", "tjump_untagged", "p_negative", "field_unknown"})
 
@@ -108,9 +109,21 @@ class ReadView:
         return st.Stop("read_refusal", {"p": p, "t": t, "material_id": self.material_id, "kind": kind,
                                         "why": str(e), "retryable": kind in RETRYABLE})
 
+    def _pinned(self, p, t, d):
+        """note 6 step 3 / read-view §4.5: inside a jump's walk-side window [P_m, P_m + 2·band], a read whose own field
+        is the jump's old field is re-read on the new field (the read serves it inside its built box, else refuses)."""
+        for curve, (frm, to, pm, band, up) in self.pins.items():
+            if (0.0 <= p - pm <= 2.0 * band) if up else (0.0 <= pm - p <= 2.0 * band):
+                if d.get("field") == frm:
+                    return self.read.state(p, t, field=to)
+        return d
+
     def props(self, p, t, field=None):
         try:
-            return self.read.state(p, t) if field is None else self.read.state(p, t, field=field)
+            if field is not None:
+                return self.read.state(p, t, field=field)
+            d = self.read.state(p, t)
+            return self._pinned(p, t, d) if self.pins else d
         except Exception as e:                                  # noqa: BLE001 — classified below, others re-raised
             kind = _kind(e)
             if kind is None:
@@ -128,11 +141,20 @@ class ReadView:
     def porosity(self, p):
         return 0.0
 
-    def events(self, t_index: int = 2):
-        """The read's curve and seam events (§4.3). The lid's T_ad set (t_index 2 inside a conductive layer) is renamed
-        «:ad» by the caller; every Event built here records its t_index (note 6 step 1b, C3)."""
+    def events(self, t_index: int = 2, conductive: bool = False):
+        """The read's curve and seam events (§4.3), each recording its t_index (note 6 step 1b). A tagged curve (its
+        Event.tag {curve, zone, tagged: True}) gets the engine's T-jump hook, built here from the tag and rd.folds
+        (§4.5): the read constructs no protocol object. `conductive`: the lid's T_ad set (renamed «:ad» by the caller),
+        whose jump shifts T_ad only."""
         evs = list(self.read.events(t_index=t_index)) if t_index != 2 else list(self.read.events())
-        return tuple(evs)
+        out = []
+        for ev in evs:
+            ev = dataclasses.replace(ev, t_index=t_index)
+            tag = ev.tag or {}
+            if tag.get("tagged"):
+                ev = dataclasses.replace(ev, coexist=TJumpHook(self, tag.get("zone"), tag.get("curve"), conductive))
+            out.append(ev)
+        return tuple(out)
 
     def note_step(self, live, x0, y0, x1, y1):
         """§4.8: an accepted step at which a live curve's g is None at exactly one end."""
@@ -140,6 +162,51 @@ class ReadView:
             g0, g1 = ev.g(x0, y0), ev.g(x1, y1)
             if (g0 is None) != (g1 is None):
                 self.curve_end_steps.append((ev.name, y1[1]))
+
+
+class TJumpHook:
+    """The engine's T-jump hook on a tagged curve (read-view §4.5, reg-coexistence note 6): the read gives the jump
+    (rd.t_jump) and the stored max|dP_b/dT| and walk reach (rd.folds); the engine computes the band, checks q and the
+    reach, and pins the new field in the view until the stepper releases it (curve's own g) or a run starts."""
+
+    def __init__(self, view, zone, curve, conductive=False):
+        self.view, self.zone, self.curve, self.conductive = view, zone, curve, conductive
+
+    def _fold(self):
+        for f in (getattr(self.view.read, "folds", None) or []):
+            if f.get("zone") == self.zone and f.get("curve") == self.curve:
+                return f
+        raise ValueError(f"refused: no stored fold for tagged curve {self.curve!r} in zone {self.zone!r}")
+
+    def t_jump(self, m, y, upward):
+        p, t_ad = y[1], y[2]
+        got = dict(self.view.read.t_jump(p, t_ad, self.zone, self.curve, upward))     # ReadRefusal is a ValueError
+        fold = self._fold()
+        k = fold.get("dPb_dT_max_Pa_per_K")
+        if k is None:
+            raise ValueError(f"refused: fold {self.curve!r} stores no dPb_dT_max_Pa_per_K")
+        k = abs(float(k))
+        moved = abs(got["dT"]) * k
+        q = k * abs(self.view.read.state(p, got["T_new"], field=got["to"])["dtdp"])
+        if not q < Q_MAX:
+            raise ValueError(f"refused: path near-tangent to tip curve, q {q:.4g} ≥ {Q_MAX}")
+        band = moved / (1.0 - q)
+        reach = fold.get("walk_reach_pa")
+        if reach is None or not 2.0 * band <= float(reach):
+            raise ValueError(f"refused: walk reach short, 2·band {2.0 * band:.6g} Pa > walk_reach_pa {reach!r}")
+        self.view.pins[self.curve] = (got["from"], got["to"], p, band, upward)
+        got.update(dpb_dt_max=k, moved_pa=moved, path_curve_ratio=q, band_pa=band,
+                   shift=(2,) if self.conductive else (2, 3))
+        return got
+
+    def release(self):
+        self.view.pins.pop(self.curve, None)
+
+    def run_start(self):
+        self.view.pins.pop(self.curve, None)
+
+    def enter(self, m, y):                              # never reached: the stepper decides the jump before enter
+        return st.CoexistRecord("sharp", {"reason": "tjump_hook_enter"})
 
 
 def is_read_view(view) -> bool:

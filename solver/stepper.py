@@ -78,6 +78,10 @@ class Event:
     coexist: object = None        # coexistence segment (reg-coexistence §3.1, note 4 S1): the view's hook for a cut
                                   # curve — enter(x, y) → CoexistToken | CoexistRecord | None; rhs(token, f), exit_g(token), exit_scale(token), row_events(token),
                                   # project(token, y). None: today's behaviour, bit for bit
+    t_index: int = 2              # reg-coexistence note 6 step 1b: the state component T the curve reads (3: a
+                                  # conductive layer's own T); a tagged crossing at 3 is the named Stop tjump_in_conductive_T
+    tag: object = None            # read-view registration §4.3: {curve, zone, tagged} from a read; None for table events
+
 
 
 @dataclass(frozen=True)
@@ -330,6 +334,11 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
     live = list(events)                             # note 4 S2: the events in force (a segment swaps its curve's out)
     seg = None                                      # (curve event, token, material f, exit name, old-side g sign)
     h_restart = None                                # A1 impl note 9: the rejected trial's h, used after the landing
+    retired = {}                                    # note 6: name → (event, P_m, band_pa, hook, new-side sign of g)
+    for ev in events:                               # note 6 step 5: one stepper run = one mantle pass; no pin carries
+        rs_ = getattr(ev.coexist, "run_start", None)
+        if rs_ is not None:
+            rs_()
     reenter = None                                  # (curve name, x of its exit): a re-fire before min progress refuses
     segs = []                                       # the segments' tokens, for Result.coexist
     direction = 1.0 if x1 >= x0 else -1.0
@@ -534,7 +543,7 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
                 landed[-1] = (f"coexist-out:{cev.name}", x, y)
                 y = cev.coexist.project(tok, y)
                 f = f_mat
-                live = list(events)
+                live = [ev for ev in events if ev.name not in retired]     # note 6 step 3: a retired curve stays out
                 c = cev.component
                 toward = math.inf if g0c < 0.0 else -math.inf
                 yy = y
@@ -560,7 +569,31 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
                 seg = None
                 h = direction * min(abs(h), opt.h_max)
                 continue
-            if seg is None and fired.coexist is not None:
+            tj = getattr(fired.coexist, "t_jump", None) if seg is None and fired.coexist is not None else None
+            if tj is not None and fired.t_index == 3:  # note 6 step 1b: the conductive T crossing a wedge tip
+                return stop("refused", Stop("tjump_in_conductive_T", {"curve": fired.name, "m": x, "P": y[1],
+                                                                       "T": y[3]}))
+            if tj is not None:                         # note 6 §1: the fourth outcome, before enter: an s-conserving
+                try:                                   # T jump at the landed node, no segment, the curve retired
+                    jmp = tj(x, y, g0_fired < 0.0)
+                except ValueError as e:                # the read's ReadRefusal (a ValueError), q ≥ 0.9, reach short
+                    return stop("refused", Stop("tjump_refused", {"curve": fired.name, "m": x, "why": str(e)}))
+                b_ = jmp.get("band_pa")
+                if not (b_ is not None and math.isfinite(b_)):
+                    return stop("refused", Stop("tjump_no_band", {"curve": fired.name, "m": x}))
+                d_t, t_old = jmp["dT"], y[3]
+                shift = tuple(jmp.get("shift", (2, 3)))    # (2, 3) adiabatic; (2,) a lid «:ad» crossing (step 1b)
+                y = tuple(w + d_t if j in shift else w for j, w in enumerate(y))
+                retired[fired.name] = (fired, y[1], b_, fired.coexist, 1.0 if g0_fired < 0.0 else -1.0)
+                live = [ev for ev in live if ev.name != fired.name]
+                landed.append((f"coexist-tjump:{fired.name}", x, y))
+                segs.append({"kind": "tjump", "curve": fired.name, "m": x, "P": y[1], "T": t_old,
+                             **{k: v for k, v in jmp.items() if k != "shift"}})
+                k1 = f(x, y)
+                if isinstance(k1, Stop):
+                    return stop("refused", k1)
+                path.append((x, y, k1))                # the jump's second node, same m (note 6 step 2)
+            elif seg is None and fired.coexist is not None:
                 got = fired.coexist.enter(x, y)
                 if isinstance(got, CoexistToken):
                     tok = got
@@ -571,7 +604,7 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
                     if hasattr(fired.coexist, "note_entry"):
                         fired.coexist.note_entry(tok, x, y, k1)     # the material's own k1 at the landed node
                     f = fired.coexist.rhs(tok, f)
-                    live = [ev for ev in events if ev.name != fired.name] + \
+                    live = [ev for ev in events if ev.name != fired.name and ev.name not in retired] + \
                         [Event(exit_name, fired.coexist.exit_g(tok), scale=fired.coexist.exit_scale(tok), terminal=False,
                                seam=True)] + list(fired.coexist.row_events(tok))
                     landed[-1] = (f"coexist-in:{fired.name}", x, y)
@@ -600,6 +633,24 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
         if on_accept is not None:
             on_accept(x, y)
         g_prev = g_new
+        if retired:                                     # note 6 step 4: released once the state is on the new side by
+            for name in list(retired):                  # the curve's own g; another event never releases; g None
+                rev, pm, b_, hk, sg = retired[name]     # (the curve ended inside the band) stops at once; past
+                gv = rev.g(x, y)                        # 2 × band on the old side stops
+                if gv is None:
+                    return stop("refused", Stop("tjump_not_cleared", {"curve": name, "m": x, "P": y[1], "T": y[3],
+                                                                      "P_m": pm, "band_pa": b_, "g": None,
+                                                                      "reason": "curve_ended"}))
+                if gv * sg > 0.0:
+                    del retired[name]
+                    hk.release()
+                    if seg is None:
+                        live.append(rev)
+                        g_prev[name] = gv
+                elif abs(y[1] - pm) > 2.0 * b_:
+                    return stop("refused", Stop("tjump_not_cleared", {"curve": name, "m": x, "P": y[1], "T": y[3],
+                                                                      "P_m": pm, "band_pa": b_, "g": gv,
+                                                                      "reason": "not_cleared"}))
         if reenter is not None:                         # 68 B1: re-entry = the curve's g back on the old side at an
             rc, rx, rg0 = reenter                       # accepted node before |x − x_exit| ≥ event_min_progress
             if abs(x - rx) >= opt.event_min_progress:
