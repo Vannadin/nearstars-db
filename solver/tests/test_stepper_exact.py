@@ -253,16 +253,15 @@ class FsalReread(unittest.TestCase):
     REL_K1, REL_F = 1e-9, 1e-12                       # identity max |k1 − f|/|f| 1.5e-11 (68); F: Mac pin, Linux
 
     def k1_mismatch(self, res, f):
-        """The largest |k1 − f(x, y)| / |f| over every path node (none skipped: 68 on a5de93a4, the mutant moves a
+        """The largest per-component |k1 − f(x, y)| / |f| over every path node (none skipped: 68 on a5de93a4, the mutant moves a
         node at |g|/scale 4.8e-16)."""
         worst = 0.0
         for x, y, k1 in res.path:
             k = f(x, y)
             if isinstance(k, st.Stop):
                 continue
-            num = max(abs(a - b) for a, b in zip(k1, k))
-            den = max(max(abs(b) for b in k), 1e-300)
-            worst = max(worst, num / den)
+            for a, b in zip(k1, k):                    # per component: a large component must not mask a small one
+                worst = max(worst, abs(a - b) / abs(b) if b != 0.0 else (0.0 if a == 0.0 else math.inf))
         return worst
 
     def case(self, check_f=True):
