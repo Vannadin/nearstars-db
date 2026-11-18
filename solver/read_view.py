@@ -6,6 +6,9 @@ main 99df438b8, post-freeze note 1 at 9ff9ecaf6).
   for each file in the order written, its repo path, a NUL, its bytes, a NUL (registration §1, 68 n1). The first file
   is the read's loader module (a .py inside the repo, stamped with the rest); its `load_read(paths)` gets the other
   files' absolute paths and returns the read. A missing file or a stale stamp is `ReadUnavailable`, never a fallback.
+  A module the loader newly imports from inside the repo must be one of the stamped files, or an engine module under
+  solver/ outside solver/tests/ (those are bound by solve_id's solver_code_bytes). The guard sees only modules new to
+  sys.modules during the load: one already imported is not re-checked.
 - `ReadView(read, p_stop, record_id)`: `state(p, t, guess_rho) → (ρ, dT/dP, ())` or `Stop("read_refusal", …)`;
   `events(t_index)`; per-pass counters `read_retried` (by kind) and `curve_end_steps`; the T-jump pin table (§4.5).
   A refusal is an exception whose class is named ReadRefusal and that carries `.kind` (c8's proto/inv.py); only
@@ -67,7 +70,8 @@ def load(files, stamp: str, root):
     for name in set(sys.modules) - before:          # 68 n1: a module the loader pulled in from inside the root must
         fn = getattr(sys.modules[name], "__file__", None)    # be one of the stamped files
         if fn and Path(fn).resolve().is_relative_to(base) and Path(fn).resolve() not in named \
-                and not Path(fn).resolve().is_relative_to(base / "solver"):
+                and not (Path(fn).resolve().is_relative_to(base / "solver")
+                         and not Path(fn).resolve().is_relative_to(base / "solver" / "tests")):
             raise ReadUnavailable("unstamped_module", str(Path(fn).resolve().relative_to(base)))
     return read
 

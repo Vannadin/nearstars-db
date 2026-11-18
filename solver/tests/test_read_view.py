@@ -438,6 +438,34 @@ class SelectorEndToEnd(unittest.TestCase):
 class LoaderImports(unittest.TestCase):
     """n1 on C1: a module the loader pulls in from inside the root must be a stamped file."""
 
+    def test_solver_tests_module_is_not_exempt(self):
+        """68 on e0fb28eb: a module under solver/tests/ is bound by neither the read stamp nor solve_id."""
+        tmp = Path(tempfile.mkdtemp())
+        (tmp / "reads").mkdir()
+        (tmp / "solver" / "tests").mkdir(parents=True)
+        (tmp / "solver" / "tests" / "planted_mod_y.py").write_text("# 시험용 심은 모듈\nVALUE = 2\n")
+        (tmp / "reads" / "loader.py").write_text(
+            "# 시험용 읽기 적재기\nimport sys\nsys.path.insert(0, __file__.rsplit('/', 2)[0] + '/solver/tests')\n"
+            "import planted_mod_y\n\ndef load_read(paths):\n    return planted_mod_y.VALUE\n")
+        files = ["reads/loader.py"]
+        import sys
+        try:
+            with self.assertRaises(rv.ReadUnavailable) as cm:
+                rv.load(files, rv.stamp_of(files, tmp), tmp)
+            self.assertEqual(cm.exception.reason, "unstamped_module")
+        finally:
+            sys.modules.pop("planted_mod_y", None)
+
+    def test_mutant_old_exemption_fails(self):
+        with mock.patch.object(rv, "load", variant(rv.load)):
+            self.test_solver_tests_module_is_not_exempt()
+        old = variant(rv.load, '                and not (Path(fn).resolve().is_relative_to(base / "solver")\n'
+                               '                         and not Path(fn).resolve().is_relative_to(base / "solver" / "tests")):',
+                      '                and not Path(fn).resolve().is_relative_to(base / "solver"):')
+        with mock.patch.object(rv, "load", old):
+            with self.assertRaises(AssertionError):
+                self.test_solver_tests_module_is_not_exempt()
+
     def test_unstamped_import_refuses(self):
         tmp = Path(tempfile.mkdtemp())
         (tmp / "reads").mkdir()

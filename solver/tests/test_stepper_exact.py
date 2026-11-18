@@ -234,5 +234,49 @@ class StagesOneSided(unittest.TestCase):
                 one_sided(self, stages, lambda y, ev=ev: ev.g(0.0, y), 1e-9 * ev.scale)
 
 
+# ── note 9 §1: the replacement's FSAL k7 is re-read unclamped at the root (68 on e0fb28eb) ────────────────────────────
+class FsalReread(unittest.TestCase):
+    """On the legacy silicate table leg: every path node off the seams carries k1 = f(x, y) as read unclamped (the
+    structural check), and F is pinned to the identity copy's value (the answer check). A mutant that keeps the
+    replacement's old-side k7 fails."""
+    F_BASE = 0.0966013118349986                          # identity copy on bc71db0a + C1/C2 (68's figure)
+
+    def leg(self):
+        mat = lm.interior.MATERIALS["silicate"]
+        tp, M = 1800.0, 3.0 * 5.972e24
+        R = (3 * M / (4 * math.pi * 4500.0)) ** (1 / 3)
+        evs = events.layer_events(mat)
+        view = lm.LegacyView("silicate", mat, tp)
+        res = rhs.inward_pass(view, M, R, 0.0, tp, 4500.0, events=evs)
+        return res, rhs.make_rhs(view), evs
+
+    def case(self):
+        res, f, evs = self.leg()
+        self.assertGreater(res.counters.exact_replaced, 0)
+        checked = 0
+        for x, y, k1 in res.path:
+            gs = [ev.g(x, y) for ev in evs if ev.seam]
+            if any(g is not None and abs(g) <= 1e-6 * ev.scale for g, ev in zip(gs, [e for e in evs if e.seam])):
+                continue
+            k = f(x, y)
+            if not isinstance(k, st.Stop):
+                self.assertEqual(tuple(k1), tuple(k), f"path k1 at m {x} is not f's unclamped read")
+                checked += 1
+        self.assertGreater(checked, 10)
+        self.assertEqual(res.F, self.F_BASE)
+
+    def test_fsal_reread(self):
+        self.case()
+
+    def test_mutant_keeping_the_old_side_k7_fails(self):
+        with mock.patch.object(st, "run", variant(st.run)):
+            self.case()
+        mut = variant(st.run, "                    h, out = x_e - x, (o2[0], o2[1], k7n)\n",
+                      "                    h, out = x_e - x, o2\n")
+        with mock.patch.object(st, "run", mut):
+            with self.assertRaises(AssertionError):
+                self.case()
+
+
 if __name__ == "__main__":
     unittest.main()
