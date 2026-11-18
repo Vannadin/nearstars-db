@@ -113,6 +113,14 @@ class Counters:
     events: int = 0
     band_halved: int = 0          # notes 13 §1 / 13a: steps retried at h/2 by step_check (not error rejections)
     rewalks: int = 0
+    # A1 impl note 9 (EXACT) E7: rejected trials whose end shows a live seam's sign change (tried); of them, no root
+    # found by _land (unlanded), the old-side replacement refused or above the error test (failed), accepted
+    # (replaced); of those, accepted with no event firing on the accurate end (no_landing: the crossing was the error)
+    exact_tried: int = 0
+    exact_unlanded: int = 0
+    exact_failed: int = 0
+    exact_replaced: int = 0
+    exact_no_landing: int = 0
 
 
 @dataclass(frozen=True)
@@ -321,6 +329,7 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
     stepf = _stepper(opt)
     live = list(events)                             # note 4 S2: the events in force (a segment swaps its curve's out)
     seg = None                                      # (curve event, token, material f, exit name, old-side g sign)
+    h_restart = None                                # A1 impl note 9: the rejected trial's h, used after the landing
     reenter = None                                  # (curve name, x of its exit): a re-fire before min progress refuses
     segs = []                                       # the segments' tokens, for Result.coexist
     direction = 1.0 if x1 >= x0 else -1.0
@@ -373,6 +382,39 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             h = direction * max(abs(h) * 0.25, opt.h_min)
             continue
         en = 0.0 if opt.fixed else err_norm(err, y, y_new, opt.rtol, opt.floors)
+        if en > 1.0 and not opt.fixed and seg is None and h_restart is None:
+            # A1 impl note 9 (EXACT): a rejected trial whose end shows a live seam's sign change. The seam's root on
+            # that trial (the engine's own _land) is the target; the step to it, every stage (k7 included) read on the
+            # old side, replaces the trial if it passes the error test, and goes through the ordinary accepted-step
+            # path (events, guards, landing, coexist). After a landing the run restarts at the rejected trial's h; a
+            # replacement that lands nothing is a plain step, its own error norm feeding the controller (68 n1)
+            best_l, tried = None, False
+            for ev in live:
+                if ev.seam and _crossed(g_prev[ev.name], ev.g(x + h, y_new)):
+                    tried = True
+                    got = _land(f, ev, x, y, k1, h, out, g_prev[ev.name], opt, cnt)
+                    if not isinstance(got, Stop) and (best_l is None or abs(got[0][0] - x) < abs(best_l[1] - x)):
+                        best_l = (ev, got[0][0])
+            if tried:
+                cnt.exact_tried += 1
+                if best_l is None:
+                    cnt.exact_unlanded += 1
+            if best_l is not None:
+                ev, x_e = best_l
+                o2 = _stepper(opt, None)(_old_side(f, ev, g_prev[ev.name]), x, y, x_e - x, k1)
+                en2 = None if isinstance(o2, Stop) else err_norm(o2[1], y, o2[0], opt.rtol, opt.floors)
+                if en2 is None or en2 > 1.0:
+                    cnt.exact_failed += 1
+                else:
+                    cnt.exact_replaced += 1
+                    cnt.rejected += 1                   # the replaced trial
+                    h_restart = h
+                    k7n = f(x_e, o2[0])                 # the FSAL k7 re-read unclamped at the root
+                    if isinstance(k7n, Stop):
+                        return stop("refused", k7n)
+                    h, out = x_e - x, (o2[0], o2[1], k7n)
+                    y_new, err, k7 = out
+                    en = en2
         if en > 1.0:
             cnt.rejected += 1
             rejected_in_row += 1
@@ -538,9 +580,13 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
                     landed.append((f"coexist-{got.kind}:{fired.name}", x, y))     # 68 B2: a fixed name; values below
                     segs.append({"kind": got.kind, "curve": fired.name, "m": x, "P": y[1], "T": y[3], **got.values})
             g_prev = {ev.name: ev.g(x, y) for ev in live}
-            h = direction * min(abs(h), opt.h_max)
+            h = direction * min(abs(h_restart if h_restart is not None else h), opt.h_max)    # A1 impl note 9
+            h_restart = None
             continue
         in_row.clear()
+        if h_restart is not None:                     # A1 impl note 9: a replacement accepted with nothing landed
+            cnt.exact_no_landing += 1
+        h_restart = None
         cnt.accepted += 1
         if chk is not None:
             got = chk.commit(x, y, x_new, y_new)
