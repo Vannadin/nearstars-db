@@ -471,14 +471,47 @@ class LidTJump(unittest.TestCase):
                 self.case_lid_jump_shifts_t_ad_only()
 
 
+    def case_seed_pass_keeps_y3_on_t_ad(self):
+        """68 n on 23b8c826: in the T_b⁰ pass y[3] is stepped as T_ad; after the «:ad» jump it still equals y[2]."""
+        from solver import lid
+        V, read = self.read()
+        view = rv.ReadView(read, 0.0, "lid_toy")
+        w = sv._lid_wiring(view)
+        runs, real = [], st.run
+
+        def rec(*args, **kw):
+            got = real(*args, **kw)
+            runs.append(got)
+            return got
+        with mock.patch.object(st, "run", rec):
+            res = lid.lid_pass(view, V.M_E, V.R_E, V.D, 0.0, V.T_S, V.T_POT, V.RS, **w)
+        self.assertNotIsInstance(res, st.Stop, res)
+        seed = runs[0]
+        names = [e[0] for e in seed.events]
+        self.assertIn("coexist-tjump:c_ad:ad", names, names)
+        y_b = [e[2] for e in seed.events if e[0] == "coexist-tjump:c_ad:ad"][0]
+        self.assertEqual(y_b[3], y_b[2])
+        self.assertEqual(seed.y[3], seed.y[2])
+
+    def test_seed_pass_keeps_y3_on_t_ad(self):
+        self.case_seed_pass_keeps_y3_on_t_ad()
+
+    def test_seed_shift_mutant(self):
+        from solver import lid
+        with mock.patch.object(lid._SeedShift, "t_jump", variant(lid._SeedShift.t_jump)):
+            self.case_seed_pass_keeps_y3_on_t_ad()
+        with mock.patch.object(lid._SeedShift, "t_jump", variant(lid._SeedShift.t_jump,
+                                                                  '    got["shift"] = (2, 3)\n', "")):
+            with self.assertRaises(AssertionError):
+                self.case_seed_pass_keeps_y3_on_t_ad()
+
     def test_seed_pass_filter_mutant(self):
         """The T_b⁰ pass steps y[3] = T_ad: without the filter the tagged t_index 3 copy refuses (conductive T)."""
         from solver import lid
-        old = ('            evs = [e for e in events if not (a is None and e.t_index == 3 and '
-               'getattr(e.coexist, "t_jump", None))]\n')
+        old = '                   if not (a is None and e.t_index == 3 and getattr(e.coexist, "t_jump", None))]\n'
         with mock.patch.object(lid, "lid_pass", variant(lid.lid_pass)):
             self.case_lid_jump_shifts_t_ad_only()
-        with mock.patch.object(lid, "lid_pass", variant(lid.lid_pass, old, "            evs = list(events)\n")):
+        with mock.patch.object(lid, "lid_pass", variant(lid.lid_pass, old, "                   ]\n")):
             with self.assertRaises(AssertionError):
                 self.case_lid_jump_shifts_t_ad_only()
 

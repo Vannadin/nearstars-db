@@ -63,6 +63,28 @@ def _lid_rhs(view, a: float | None, b: float | None):
     return f
 
 
+class _SeedShift:
+    """A tagged «:ad» hook in the lid's T_b⁰ pass: y[3] is stepped as T_ad there, so the jump shifts (2, 3), not (2,)
+    (68 n on C3's D1). Every other call goes to the hook."""
+
+    def __init__(self, hook):
+        self.hook = hook
+
+    def __getattr__(self, name):
+        return getattr(self.hook, name)
+
+    def t_jump(self, m, y, upward):
+        got = dict(self.hook.t_jump(m, y, upward))
+        got["shift"] = (2, 3)
+        return got
+
+    @staticmethod
+    def wrap(e):
+        if getattr(e.coexist, "t_jump", None) is None:
+            return e
+        return dataclasses.replace(e, coexist=_SeedShift(e.coexist))
+
+
 def _coeffs(radius: float, r_b: float, t_s: float, t_b: float):
     a = (t_s - t_b) / (1.0 / radius - 1.0 / r_b)
     return a, t_s - a / radius
@@ -109,8 +131,10 @@ def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_
             sopt_ = sopt if step_check is None else dataclasses.replace(sopt, step_check=step_check())   # fresh per pass
             # the T_b⁰ pass (a None) steps y[3] = T_ad, so a tagged curve's t_index 3 copy would meet the same crossing
             # as its «:ad» copy and refuse as a conductive-T crossing; there the «:ad» copy alone takes the jump
-            # (reg-coexistence note 6 step 1b; found by 68 B4's lid test on C3). Untagged events are kept as before
-            evs = [e for e in events if not (a is None and e.t_index == 3 and getattr(e.coexist, "t_jump", None))]
+            # (reg-coexistence note 6 step 1b; found by 68 B4's lid test on C3), and it shifts y[3] with y[2], so y[3]
+            # stays T_ad there (68 n on 23b8c826). Untagged events are kept as before
+            evs = [_SeedShift.wrap(e) if a is None else e for e in events
+                   if not (a is None and e.t_index == 3 and getattr(e.coexist, "t_jump", None))]
             res = st.run(_lid_rhs(view, a, b), mass, (radius, p_s, t_pot, t0, 0.0, 0.0), 0.0, sopt_,
                          [base, *evs], on_accept=on_accept)
         last["graze"] = None if mon is None else mon.best

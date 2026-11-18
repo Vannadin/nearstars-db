@@ -521,6 +521,35 @@ class Filter(unittest.TestCase):
         for kind in sorted(rv.KINDS):
             self.assertIs(view._refusal(1.0, 1.0, ValueError("x"), kind).record["retryable"], kind in rv.RETRYABLE)
 
+    def case_other_stops_retried(self):
+        """68 on C4: an off-path Stop that is not a read refusal (a dict record without «retryable», or record None)
+        is retried as before, and the run ends normally."""
+        g = OffPathExtent()
+        pmax = 2 * g.A / g.W
+        for rec in ({"why": "a material refusal"}, None):
+            opt = st.Options(rtol=1e-8, floors=(1.0, 1e-9, 1.0, 1.0, 1.0, 1.0), h0=3.0, h_min=1e-12, h_max=50.0,
+                             max_steps=100000, event_tol=1e-12, event_rewalks=32, event_min_progress=1e-9)
+
+            def f(x, y, rec=rec):
+                if y[1] > 1.5 * pmax:
+                    return st.Stop("material", rec)
+                return (0.0, g.A * math.sin(g.W * x), 0.0, 0.0, 0.0, 0.0)
+            r = st.run(f, 0.0, (1.0, 0.0, 1.0, 1.0, 0.0, 0.0), 4.0, opt)
+            self.assertEqual(r.stop.kind, "end", (rec, r.stop))
+            self.assertGreaterEqual(r.counters.refused_stage, 1, rec)
+
+    def test_other_stops_retried(self):
+        self.case_other_stops_retried()
+
+    def test_mutant_is_not_true(self):
+        old = 'out.record.get("retryable") is False'
+        with mock.patch.object(st, "run", variant(st.run)):
+            self.case_other_stops_retried()
+        for new in ('out.record.get("retryable") is not True', 'True'):
+            with mock.patch.object(st, "run", variant(st.run, old, new)):
+                with self.assertRaises(AssertionError):
+                    self.case_other_stops_retried()
+
     def test_mutant_without_the_line(self):
         for case in (self.case_off_path_cut, self.case_on_path_cut_unretried):
             with mock.patch.object(st, "run", variant(st.run)):
