@@ -141,18 +141,26 @@ class Checks(unittest.TestCase):
         self.assertTrue(pz.check_rows(dataclasses.replace(ans, zones=zones)))
 
     def test_b_control_label_from_the_event_node_is_red(self):
-        # 68 B2 on rev 0: the landed node reads the upper side (mgsio3_en at 2.383e10); taking it as interior is red
+        # 68 B2 on rev 0: the landed node reads one side's phase; taking it as interior is red. Before EXACT (C2) the
+        # 2.383e10 seam node read the upper side (mgsio3_en), after it the lower (mgsio3_prem), so the node's label is
+        # pushed into both neighbours: whichever side it reads, the other neighbour is mislabelled
         ans, _w, body, views, acc = _solve("earth", 1700.0)
         real = pz._segments
+        differs = []                                   # premise, over all layers: some landed node reads one side
 
         def with_event_node(labels, cuts):
-            return real([labels[0]] + [labels[i - 1] if i - 1 in cuts and i - 1 > 0 else labels[i]
-                                       for i in range(1, len(labels))], cuts)
+            inner = [c for c in cuts if 0 < c < len(labels) - 1]
+            differs.extend(c for c in inner if labels[c] != labels[c - 1] or labels[c] != labels[c + 1])
+            out = list(labels)
+            for c in inner:
+                out[c - 1] = out[c + 1] = labels[c]
+            return real(out, cuts)
         pz._segments = with_event_node
         try:
             zones = pz.collect(body, views, acc)
         finally:
             pz._segments = real
+        self.assertTrue(differs)
         self.assertTrue(pz.check_rows(dataclasses.replace(ans, zones=zones)))
 
     def test_c_event_node_either_side_gives_equal_rows(self):
