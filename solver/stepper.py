@@ -429,7 +429,8 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
         if chk is not None and chk.verdict(x, y, x_new, y_new, k1, k7) == "halve":
             cnt.band_halved += 1
             h = h * 0.5
-            continue
+            h_restart = None                          # 68 B2 on C2: a halved replacement is abandoned (counted
+            continue                                  # replaced and band_halved); the next trial is a plain one
         g_new = {ev.name: ev.g(x_new, y_new) for ev in live}
         crossing = [ev for ev in live if _crossed(g_prev[ev.name], g_new[ev.name])]
         if crossing:
