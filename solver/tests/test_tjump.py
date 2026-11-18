@@ -64,10 +64,10 @@ def opt():
                       max_steps=100000, event_tol=1e-13, event_rewalks=32, event_min_progress=1e12)
 
 
-def run(toy, dm=2e19, view=None):
+def run(toy, dm=2e19, view=None, o=None):
     view = view or rv.ReadView(toy, 0.0, "toy")
     y0 = (5.0e6, P0 - 3.0e4, T0 - 1e-3, T0 - 1e-3, 0.0, 0.0)
-    return st.run(rhs.make_rhs(view), 4.0e24, y0, 4.0e24 - dm, opt(), list(view.events())), view
+    return st.run(rhs.make_rhs(view), 4.0e24, y0, 4.0e24 - dm, o or opt(), list(view.events())), view
 
 
 def jumps(r):
@@ -206,7 +206,8 @@ class CurveEnded(unittest.TestCase):
         self.case()
 
     def test_mutants(self):
-        a = ('            if gv is None:\n                return stop("refused", Stop("tjump_not_cleared", '
+        a = ('            if gv is None:                              # note 7 item 1: a curve end only inside 2 × band\n'
+             '                return stop("refused", Stop("tjump_not_cleared", '
              '{"curve": name, "m": xa, "P": ya[1], "T": ya[3],\n')
         with mock.patch.object(st, "run", variant(st.run)):
             self.case()
@@ -425,6 +426,176 @@ class HoldOnC3(unittest.TestCase):
                 self.case_released_reads_own_field()
 
 
+# ── reg-coexistence note 7 item 1: after a jump the step is capped at the band until release ──────────────────────
+STEP_CAP = ('        if retired and not opt.fixed and k1[1] != 0.0:   # reg-coexistence note 7 item 1: from a jump to its '
+            'release\n')
+
+
+class SegmentedToy(Toy):
+    """As Toy, but the curve's T range ends by zone segmentation only (w0.1's shape, c8 11-18): past t_hi the curve's
+    g is None while the fields stay as they were, so the path's rhs is smooth across the curve's end."""
+
+    def state(self, p, t, field=None):
+        pb = P0 + K * (t - T0)
+        f = field or ("A" if p < pb else "B")
+        return {"rho": 3500.0, "dtdp": self.dtdp[f], "s": 0.0, "c_p": 1200.0, "alpha": 1e-5, "K_T": 1e11, "field": f}
+
+
+class StoredMaxToy(SegmentedToy):
+    """SegmentedToy whose stored max|dP_b/dT| is 1.25 K, above the curve's own K (r2 B1 on note 7): q = 0.625 at the
+    jump, band = 0.01·1.25e6 / 0.375 = 33333.3 Pa, while the path's own q′ = 0.5 clears the curve at ΔP = 2e4 Pa,
+    strictly inside the band. A node at the band is then strictly on the new side (g = +6667 Pa), never on a tie."""
+
+    def __init__(self, *a, **kw):
+        super().__init__(*a, **kw)
+        self.folds = [dict(self.folds[0], dPb_dT_max_Pa_per_K=1.25 * K)]
+
+
+class StepCap(unittest.TestCase):
+    """reg-coexistence note 7 item 1. Toy(0.5, dtj=+0.01): past the jump T = T_new + (0.5 / K)·ΔP. With the stored max
+    equal to K (q′ = q), g reaches 0 at ΔP = band = 2e4 exactly; StoredMaxToy separates the two (band 33333.3 Pa,
+    release point D = 2e4 Pa)."""
+    BAND = 2e4          # Toy / SegmentedToy (q′ = q)
+    D = 2e4             # the path's own release point, both toys
+
+    @staticmethod
+    def o():
+        """h_max raised so the smooth toy's natural steps after the jump are many bands long, as on w0.1."""
+        return dataclasses.replace(opt(), h_max=1e20)
+
+    def t_new(self):
+        r0, _ = run(Toy(0.5, dtj=+0.01), o=self.o())
+        return jumps(r0)[0]["T_new"], jumps(r0)[0]["P"]
+
+    def t_at(self, t_new, dp):
+        return t_new + 0.5 * dp / K
+
+    def first_after_jump(self, r, pm):
+        i = [k for k, n in enumerate(r.path) if n[1][1] == pm][-1]          # the jump's second node
+        return r.path[i + 1][1][1] - pm
+
+    def case_a_end_before_release(self):
+        """(a) q′ = q: the curve ends at 0.9·band, before the release point at 1·band (68: at 1·band the end would race
+        the release); the first capped node is past the end, inside 2·band: curve_ended."""
+        t_new, _ = self.t_new()
+        r, _ = run(SegmentedToy(0.5, dtj=+0.01, t_hi=self.t_at(t_new, 0.9 * self.BAND)), o=self.o())
+        self.assertEqual((r.stop.kind, getattr(r.stop.record, "kind", None)), ("refused", "tjump_not_cleared"), r.stop)
+        self.assertEqual(r.stop.record.record["reason"], "curve_ended")
+
+    def case_b_end_after_release(self):
+        """(b) q′ < q: the curve ends at 3·band; the first node after the jump is the capped one, at band to first
+        order (|h| = band/|dP/dm| at k1), strictly on the new side: released there, and the run ends normally."""
+        t_new, pm = self.t_new()
+        toy = StoredMaxToy(0.5, dtj=+0.01, t_hi=self.t_at(t_new, 3.0 * 33333.33))
+        r, view = run(toy, o=self.o())
+        self.assertEqual(r.stop.kind, "end", r.stop)
+        self.assertEqual(len(jumps(r)), 1)
+        band = jumps(r)[0]["band_pa"]
+        self.assertAlmostEqual(band, 1e4 * 1.25 / 0.375, delta=1e-6)
+        self.assertEqual(view.pins, {})
+        dp1 = self.first_after_jump(r, pm)
+        self.assertLessEqual(dp1, band * (1 + 1e-6))
+        self.assertGreater(dp1, self.D)                                      # past the release point: no tie
+
+    def case_w01_shape(self):
+        """w0.1's shape: the curve ends 4.5·D past P_m and the uncapped first step would reach 5.3·D (past the end,
+        g None); with the cap the curve is released at the first node and the run ends normally."""
+        t_new, pm = self.t_new()
+        r, view = run(StoredMaxToy(0.5, dtj=+0.01, t_hi=self.t_at(t_new, 4.5 * self.D)), o=self.o())
+        self.assertEqual(r.stop.kind, "end", r.stop)
+        self.assertEqual(view.pins, {})
+
+    def case_d_event_past_window(self):
+        """(d) an untagged T event 1.5·band past P_m: the first node after the jump is the capped one, not its landing."""
+        t_new, pm = self.t_new()
+        band = 1e4 * 1.25 / 0.375
+        toy = StoredMaxToy(0.5, dtj=+0.01, t_edges=[self.t_at(t_new, 1.5 * band)])
+        r, view = run(toy, o=self.o())
+        self.assertEqual(r.stop.kind, "end", r.stop)
+        self.assertIn("tedge:0", [e[0] for e in r.events])
+        dp1 = self.first_after_jump(r, pm)
+        self.assertLessEqual(dp1, band * (1 + 1e-6))
+        tedge_p = [yy[1] for n, _m, yy in r.events if n == "tedge:0"][0]
+        self.assertLess(pm + dp1, tedge_p)
+
+    def test_a_end_before_release_stops(self):
+        self.case_a_end_before_release()
+
+    def test_b_end_after_release_releases(self):
+        self.case_b_end_after_release()
+
+    def test_w01_shape_releases(self):
+        self.case_w01_shape()
+
+    def test_d_event_past_window_not_first(self):
+        self.case_d_event_past_window()
+
+    def test_c_no_cap_mutant(self):
+        for case in (self.case_b_end_after_release, self.case_d_event_past_window, self.case_w01_shape):
+            with mock.patch.object(st, "run", variant(st.run)):
+                case()
+            with mock.patch.object(st, "run", variant(st.run, STEP_CAP, "        if False:\n")):
+                with self.assertRaises(AssertionError):
+                    case()
+
+    def test_none_beyond_window_is_not_cleared(self):
+        """Without the cap (the mutant run), the first node after the jump lies at 5.3·D = 106 kPa, past 2·band
+        (66.7 kPa) and past the curve's end: g None there is reason not_cleared, not curve_ended (note 7's scope)."""
+        t_new, pm = self.t_new()
+        with mock.patch.object(st, "run", variant(st.run, STEP_CAP, "        if False:\n")):
+            r, _ = run(StoredMaxToy(0.5, dtj=+0.01, t_hi=self.t_at(t_new, 4.5 * self.D)), o=self.o())
+        self.assertEqual((r.stop.kind, getattr(r.stop.record, "kind", None)), ("refused", "tjump_not_cleared"), r.stop)
+        rec = r.stop.record.record
+        self.assertIsNone(rec["g"])
+        self.assertGreater(abs(rec["P"] - rec["P_m"]), 2.0 * rec["band_pa"])
+        self.assertEqual(rec["reason"], "not_cleared")
+
+
+class HminFloor(unittest.TestCase):
+    """note 7 item 1, the h_min floor (r2 B2): where h_min·|dP/dm| ≥ 2·band the cap cannot place a node inside the
+    window. The node the floor gives is judged like any: here it is still on the old side past 2·band, so the run stops
+    tjump_not_cleared with reason not_cleared, a named outcome. A linear stepper problem, P = x, with a hand-made hook
+    whose band is set directly."""
+
+    class Hook:
+        def __init__(self, band):
+            self.band, self.released = band, 0
+
+        def t_jump(self, m, y, upward):
+            return {"T_new": y[2] + 1e-3, "ds": 0.0, "dT": 1e-3, "from": "A", "to": "B", "band_pa": self.band}
+
+        def release(self):
+            self.released += 1
+
+        def run_start(self):
+            pass
+
+    def run_floor(self, band, h_min):
+        hook = self.Hook(band)
+
+        def g(m, y):                          # P_b(T) = 5 + 100 (T − 1000); the curve absent past P 6
+            return None if y[1] > 6.0 else y[1] - (5.0 + 100.0 * (y[2] - 1000.0))
+        ev = st.Event("c", g, scale=5.0, terminal=False, seam=True, component=1, coexist=hook,
+                      tag={"curve": "c", "zone": 0, "tagged": True})
+        o = st.Options(rtol=1e-10, floors=(1.0,) * 6, h0=0.5, h_min=h_min, h_max=1.0, max_steps=10000,
+                       event_tol=1e-13, event_rewalks=32, event_min_progress=1e-9)
+        f = lambda x, y: (0.0, 1.0, 0.0, 0.0, 0.0, 0.0)
+        return st.run(f, 0.0, (1.0, 0.0, 1000.0, 1000.0, 0.0, 0.0), 10.0, o, [ev]), hook
+
+    def test_floor_beyond_window_is_named(self):
+        r, hook = self.run_floor(band=1e-4, h_min=1e-3)            # 2·band = 2e-4 < h_min·dP/dm = 1e-3
+        self.assertEqual((r.stop.kind, getattr(r.stop.record, "kind", None)), ("refused", "tjump_not_cleared"), r.stop)
+        rec = r.stop.record.record
+        self.assertEqual(rec["reason"], "not_cleared")
+        self.assertGreater(abs(rec["P"] - rec["P_m"]), 2.0 * rec["band_pa"])
+        self.assertLess(rec["g"], 0.0)
+
+    def test_control_band_above_floor_releases(self):
+        r, hook = self.run_floor(band=0.2, h_min=1e-6)             # the curve moved 0.1: released inside the band
+        self.assertEqual(r.stop.kind, "end", r.stop)
+        self.assertEqual(hook.released, 1)
+
+
 class LidTJump(unittest.TestCase):
     """B4: a tagged curve crossed by T_ad in a lid pass, through the real solve._lid_wiring and lid.lid_pass."""
 
@@ -506,14 +677,19 @@ class LidTJump(unittest.TestCase):
                 self.case_seed_pass_keeps_y3_on_t_ad()
 
     def test_seed_pass_filter_mutant(self):
-        """The T_b⁰ pass steps y[3] = T_ad: without the filter the tagged t_index 3 copy refuses (conductive T)."""
+        """The T_b⁰ pass steps y[3] = T_ad: without the filter the tagged t_index 3 copy stops tjump_in_conductive_T."""
         from solver import lid
         old = '                   if not (a is None and e.t_index == 3 and getattr(e.coexist, "t_jump", None))]\n'
         with mock.patch.object(lid, "lid_pass", variant(lid.lid_pass)):
             self.case_lid_jump_shifts_t_ad_only()
         with mock.patch.object(lid, "lid_pass", variant(lid.lid_pass, old, "                   ]\n")):
-            with self.assertRaises(AssertionError):
-                self.case_lid_jump_shifts_t_ad_only()
+            V, read = self.read()
+            view = rv.ReadView(read, 0.0, "lid_toy")
+            res = lid.lid_pass(view, V.M_E, V.R_E, V.D, 0.0, V.T_S, V.T_POT, V.RS, **sv._lid_wiring(view))
+        self.assertIsInstance(res, st.Stop)
+        inner = res.record if isinstance(res.record, st.Stop) else res
+        self.assertEqual(inner.kind, "tjump_in_conductive_T", res)
+
 
 class FixedGrid(unittest.TestCase):
     """C3 class sweep (on 68 B4): the r-form run rebuilt its events positionally (t_index, tag dropped) and wrapped the

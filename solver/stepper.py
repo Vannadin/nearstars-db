@@ -378,10 +378,11 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
         for name in list(retired):
             rev, pm, b_, hk, sg = retired[name]
             gv = rev.g(xa, ya)
-            if gv is None:
+            if gv is None:                              # note 7 item 1: a curve end only inside 2 × band
                 return stop("refused", Stop("tjump_not_cleared", {"curve": name, "m": xa, "P": ya[1], "T": ya[3],
                                                                   "P_m": pm, "band_pa": b_, "g": None,
-                                                                  "reason": "curve_ended"}))
+                                                                  "reason": "curve_ended"
+                                                                  if abs(ya[1] - pm) <= 2.0 * b_ else "not_cleared"}))
             if gv * sg > 0.0:
                 del retired[name]
                 hk.release()
@@ -401,6 +402,10 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             cap = opt.h_cap(x, y, k1)
             if cap is not None and abs(h) > cap:
                 h = direction * max(cap, opt.h_min)
+        if retired and not opt.fixed and k1[1] != 0.0:   # reg-coexistence note 7 item 1: from a jump to its release
+            capj = min(r_[2] for r_ in retired.values()) / abs(k1[1])     # each trial advances |ΔP| ≤ band (the
+            if abs(h) > capj:                                               # smallest band), before event location,
+                h = direction * max(capj, opt.h_min)                        # EXACT's h_restart included
         if direction * (x + h - x1) > 0.0:
             h = x1 - x
         out = stepf(f, x, y, h, k1)
