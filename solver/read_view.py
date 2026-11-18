@@ -17,6 +17,7 @@ from __future__ import annotations
 import dataclasses
 import hashlib
 import importlib.util
+import sys
 from pathlib import Path
 
 from solver import stepper as st
@@ -56,11 +57,19 @@ def load(files, stamp: str, root):
     got = stamp_of(files, root)
     if got != stamp:
         raise ReadUnavailable("stale_stamp", f"declared {stamp}, files give {got}")
-    path = Path(root) / files[0]
+    path = base / files[0]
+    before = set(sys.modules)
     spec = importlib.util.spec_from_file_location(f"_read_loader_{got[:12]}", path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    return mod.load_read([str(Path(root) / f) for f in files[1:]])
+    read = mod.load_read([str(base / f) for f in files[1:]])
+    named = {(base / f).resolve() for f in files}
+    for name in set(sys.modules) - before:          # 68 n1: a module the loader pulled in from inside the root must
+        fn = getattr(sys.modules[name], "__file__", None)    # be one of the stamped files
+        if fn and Path(fn).resolve().is_relative_to(base) and Path(fn).resolve() not in named \
+                and not Path(fn).resolve().is_relative_to(base / "solver"):
+            raise ReadUnavailable("unstamped_module", str(Path(fn).resolve().relative_to(base)))
+    return read
 
 
 def _kind(e) -> str | None:
@@ -74,8 +83,8 @@ def _kind(e) -> str | None:
 class ReadView:
     """A record's read as the engine's view (registration §1). Built per solve; its counters and pins are per pass."""
 
-    def __init__(self, read, p_stop: float, record_id: str):
-        self.read, self.p_stop, self.material_id = read, p_stop, record_id
+    def __init__(self, read, p_stop: float, record_id: str, stamp: str | None = None):
+        self.read, self.p_stop, self.material_id, self.stamp = read, p_stop, record_id, stamp
         self.pins = {}                      # curve name → field label (§4.5; filled by the T-jump hook, C3)
         self.reset_pass()
 

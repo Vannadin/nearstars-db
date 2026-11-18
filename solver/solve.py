@@ -29,6 +29,8 @@ from solver import context, events, legacy_materials as lm, lid, material_notes,
 from solver import material_registry as mr, material_view as mv
 from solver import fixed_grid
 from solver import read_view as rv
+
+REPO_ROOT = mr.MATERIALS_DIR.parent.parent       # read-view registration §1: assemblage.read paths are repo-relative
 from solver import stepper as st
 
 
@@ -177,6 +179,20 @@ def _curve_end_monitor(view, evs, inner):
     return mon
 
 
+class _LidCurveEnds:
+    """§4.8 in the lid: the curve-end count per accepted step; no graze (a read's onset curves are its events), so the
+    pass's graze record and the mantle's monitor hand-over see none (best None, no material)."""
+    best, mat, t_index = None, None, 2
+
+    def __init__(self, view, evs):
+        self.view, self.evs, self.prev = view, evs, None
+
+    def __call__(self, x, y):
+        if self.prev is not None:
+            self.view.note_step(self.evs, *self.prev, x, y)
+        self.prev = (x, y)
+
+
 def _lid_wiring(lv_, want_graze: bool = True) -> dict:
     """The lid pass's events, step cap, band test and graze monitor for its view `lv_` (G1-C-04: the lid is the
     mantle material, with the same note-12 step cap and band test read at the lid's own T, y[3], note 13a item 4;
@@ -186,7 +202,9 @@ def _lid_wiring(lv_, want_graze: bool = True) -> dict:
         # read-view registration §1, r2 B2: the lid reads ρ at its own T (y[3]) and dT/dP_ad at T_ad (y[2]) every
         # stage, so both event sets are live; the T_ad set is renamed «:ad». No table cap, no band test, no graze
         ad = tuple(dataclasses.replace(e, name=f"{e.name}:ad") for e in lv_.events(t_index=2))
-        return {"events": tuple(lv_.events(t_index=3)) + ad, "h_cap": None, "step_check": None, "monitor": None}
+        evs = tuple(lv_.events(t_index=3)) + ad
+        return {"events": evs, "h_cap": None, "step_check": None,
+                "monitor": lambda: _LidCurveEnds(lv_, evs)}     # 68 n2 on C1: lid steps are counted too
     mat = getattr(lv_, "mat", None) or lv_      # review 2 S-C-02: a record view (no .mat) is its own source, as in _plan
     return {"events": events.layer_events(lv_, getattr(lv_, "p_stop", 0.0), t_index=3),
             "h_cap": events.step_cap(mat, t_index=3),
@@ -413,17 +431,17 @@ def _assemblage_view(body, layer, rid, p_stop, registry):
     if got is None or isinstance(got, mr.LoadStop):
         return None, ("record_unavailable", (rid, got if got is not None else mr.LoadStop(
             "material.assemblage_table", MappingProxyType({"file": f"{rid}.yaml", "why": "no such record"}))))
-    rd_decl = got["assemblage"].get("read")
-    if rd_decl is not None:                             # read-view registration §1: the record names its smooth read
-        try:
-            read = rv.load(rd_decl["files"], rd_decl["stamp"], mr.MATERIALS_DIR.parent.parent)
-        except rv.ReadUnavailable as e:                 # never a silent fallback to the table (A7)
-            return None, ("read_unavailable", (rid, e.reason, e.detail))
-        return rv.ReadView(read, p_stop, rid), None
     table = registry.tables[rid]
     if table["boundaries"]["status"] == "pending" and not registry.development:    # 68 S3
         return None, ("record_boundaries_pending", f"the assemblage record {rid!r} has its phase boundaries pending "
                                                    "(registration §3.3); it is read only in development")
+    rd_decl = got["assemblage"].get("read")
+    if rd_decl is not None:                             # read-view registration §1: the record names its smooth read
+        try:                                            # (after the pending guard, 68 B3 on C1)
+            read = rv.load(rd_decl["files"], rd_decl["stamp"], REPO_ROOT)
+        except rv.ReadUnavailable as e:                 # never a silent fallback to the table (A7)
+            return None, ("read_unavailable", (rid, e.reason, e.detail))
+        return rv.ReadView(read, p_stop, rid, rd_decl["stamp"]), None
     from solver.from_v1 import thaw
     floor = getattr(lm.interior.MATERIALS.get(layer.material), "p_floor", 0.0) or 0.0    # legacy's, by name (§3.1)
     ho = None                                     # §3.4, note 7: the hand-over above p_dataset, where its record loads
@@ -918,7 +936,9 @@ def _material_bytes(views) -> bytes:
     for lid in sorted(views):
         v = views[lid]
         h.update(lid.encode())
-        if getattr(v, "record", None) is not None:      # a record view: its record, canonical (never a repr: addresses)
+        if rv.is_read_view(v):                          # 68 B1 on C1: a read view is its record id and its read's stamp
+            h.update(b"read\0" + str(v.material_id).encode() + b"\0" + str(v.stamp).encode())
+        elif getattr(v, "record", None) is not None:    # a record view: its record, canonical (never a repr: addresses)
             h.update(json.dumps(result.plain(v.record), sort_keys=True, separators=(",", ":")).encode())
             ho = getattr(v, "handover", None)
             if ho is not None:                          # a hand-over without its record is not hashable: fail loudly
@@ -1554,6 +1574,11 @@ def _solve(body, options, warm, views, registry, _first=None, _id_options=None):
                                      "still near a band edge: accepted there, the band's entry or exit may be a graze "
                                      "(phase-1 design notes 13 §1, 13a)", dict(bg)))
         notes += material_notes.collect(body, views, acc)   # switch-over §4: after every value, accepted pass only
+        if acc.read_counts is not None:                  # read-view registration §1, A9 (68 B2 on C1): the accepted
+            notes.append(result.Note("read_counts", "the read view's retried refusals by kind and curve-end steps "
+                                     "of the accepted pass", {"read_retried": dict(acc.read_counts["read_retried"]),
+                                                              "curve_end_steps": [list(c) for c in
+                                                                                  acc.read_counts["curve_end_steps"]]}))
         if acc.coexist:                                  # coexistence note 4 S6: segments, findings, restarts; a walked
             from solver import coexist as cx             # curve's SWAP_NOTE dropped (68 B4, keyed by curve)
             notes = cx.filter_notes(list(notes), acc.coexist, views)

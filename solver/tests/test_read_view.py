@@ -231,14 +231,6 @@ class Selector(unittest.TestCase):
         self.assertEqual(ref.id, "input.material_read_unavailable")
         self.assertEqual(dict(ref.evidence)["reason"], "stale_stamp")
 
-    def test_N4_fallback_mutant_fails(self):
-        """The selector in solve._assemblage_view refuses on ReadUnavailable; a mutant that falls back to the table
-        would not return the read_unavailable kind."""
-        src = inspect.getsource(sv._assemblage_view)
-        self.assertIn('return None, ("read_unavailable", (rid, e.reason, e.detail))', src)
-        mutant = src.replace('return None, ("read_unavailable", (rid, e.reason, e.detail))', "pass")
-        self.assertNotIn("read_unavailable", mutant.split("except rv.ReadUnavailable")[1].split("return rv.ReadView")[0])
-
 
 # ── A8: the lid carries both event sets (r2 B2) ─────────────────────────────────────────────────────────────────
 M_E, R_E, T_S, T_POT, D = 5.972e24, 6.371e6, 293.0, 1600.0, 135e3
@@ -334,6 +326,161 @@ class CurveEndsAndGraze(unittest.TestCase):
         for i in range(5):
             mon(float(i), (1.0, 1e9 * i, 1600.0, 1600.0, 0.0, 0.0))
         self.assertIsNone(mon.best)
+
+
+# ── B1/B2 on C1 (68): solve_id binds the read and is deterministic; a successful Answer carries the counts ─────────
+def _solve(stamp="s" * 64, read=None):
+    view = rv.ReadView(read or FixtureRead([Curve("c0", 2.0e10, 1e6)]), 0.0, "fixture_read", stamp)
+    return sv.solve(_body(), views={"core": Uniform(9000.0), "mantle": view})
+
+
+def _sid(ans):
+    return next(iter(ans.quantities)).provenance.solver.solve_id
+
+
+class SolveIdAndNotes(unittest.TestCase):
+    def test_solve_id_deterministic_and_binds_the_stamp(self):
+        a1, _ = _solve()
+        a2, _ = _solve()
+        self.assertEqual(_sid(a1), _sid(a2))             # two fresh views, one answer id (no addresses, no counters)
+        a3, _ = _solve(stamp="t" * 64)
+        self.assertNotEqual(_sid(a1), _sid(a3))          # the read's stamp is bound
+
+    def test_material_bytes_ignore_mutable_state(self):
+        v = rv.ReadView(FixtureRead([Curve("c0", 2.0e10)]), 0.0, "fixture_read", "s" * 64)
+        b0 = sv._material_bytes({"m": v})
+        v.read_retried["extent"] = 5
+        v.pins["c0"] = "f1"
+        sv._plan(v)
+        self.assertEqual(b0, sv._material_bytes({"m": v}))
+
+    def test_successful_answer_carries_read_counts(self):
+        ans, _ = _solve()
+        notes = [n for n in ans.notes if n.kind == "read_counts"]
+        self.assertEqual(len(notes), 1)
+        self.assertIn("read_retried", notes[0].fields)
+        self.assertIn("curve_end_steps", notes[0].fields)
+
+
+# ── B3, B4 on C1: the selector end to end through _assemblage_view, with the pending guard first ────────────────
+class FakeRegistry:
+    def __init__(self, rec, status="built", development=False):
+        self.rec, self.tables, self.development = rec, {"r_x": {"boundaries": {"status": status}}}, development
+
+    def get(self, rid):
+        return self.rec if rid == "r_x" else None
+
+
+class SelectorEndToEnd(unittest.TestCase):
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        (self.tmp / "reads").mkdir()
+        (self.tmp / "reads" / "loader.py").write_text(
+            "# 시험용 읽기 적재기\nimport json\n\ndef load_read(paths):\n    with open(paths[0]) as f:\n"
+            "        return json.load(f)\n")
+        (self.tmp / "reads" / "data.json").write_text('{"ok": 1}\n')
+        self.files = ["reads/loader.py", "reads/data.json"]
+        self.stamp = rv.stamp_of(self.files, self.tmp)
+
+    def call(self, stamp=None, status="built", files=None, read=True):
+        asm = {"read": {"files": files or self.files, "stamp": stamp or self.stamp}} if read else {}
+        reg = FakeRegistry({"assemblage": asm}, status=status)
+        with mock.patch.object(sv, "REPO_ROOT", self.tmp):
+            return sv._assemblage_view(_body(), _body().layers[1], "r_x", 0.0, reg)
+
+    def test_matching_stamp_gives_a_read_view(self):
+        v, fail = self.call()
+        self.assertIsNone(fail)
+        self.assertIsInstance(v, rv.ReadView)
+        self.assertEqual((v.material_id, v.stamp, v.read), ("r_x", self.stamp, {"ok": 1}))
+
+    def test_stale_and_missing_refuse_with_the_record_id(self):
+        v, fail = self.call(stamp="0" * 64)
+        self.assertIsNotNone(fail, f"no refusal: {v!r}")
+        self.assertEqual((v, fail[0], fail[1][0], fail[1][1]), (None, "read_unavailable", "r_x", "stale_stamp"))
+        v, fail = self.call(files=["reads/loader.py", "reads/gone.json"])
+        self.assertEqual((fail[0], fail[1][1]), ("read_unavailable", "missing_file"))
+
+    def test_pending_boundaries_refuse_before_the_read(self):
+        v, fail = self.call(status="pending")
+        self.assertEqual((v, fail[0]), (None, "record_boundaries_pending"))
+
+    def test_no_read_goes_to_todays_path(self):
+        with mock.patch("solver.material_assemblage.view", return_value="TABLE_VIEW") as mv, \
+                mock.patch("solver.from_v1.thaw", side_effect=lambda r: r):
+            v, fail = self.call(read=False)
+        self.assertEqual(v, "TABLE_VIEW")
+        self.assertTrue(mv.called)
+
+    def test_N4_a_falling_back_selector_fails(self):
+        """N4 as registered: a patched _assemblage_view that falls back to the table on ReadUnavailable."""
+        src = textwrap.dedent(inspect.getsource(sv._assemblage_view))
+        a = '            return None, ("read_unavailable", (rid, e.reason, e.detail))\n'
+        self.assertIn(a, src)
+        mut = src.replace(a, "            rd_decl = None\n").replace(
+            "        return rv.ReadView(read, p_stop, rid, rd_decl[\"stamp\"]), None\n",
+            "        if rd_decl is not None:\n            return rv.ReadView(read, p_stop, rid, rd_decl[\"stamp\"]), None\n")
+        ns = dict(vars(sv))
+        exec(mut, ns)
+        with mock.patch.object(sv, "_assemblage_view", ns["_assemblage_view"]), \
+                mock.patch("solver.material_assemblage.view", return_value="TABLE_VIEW"), \
+                mock.patch("solver.from_v1.thaw", side_effect=lambda r: r):
+            with self.assertRaises(AssertionError):
+                self.test_stale_and_missing_refuse_with_the_record_id()
+
+
+class LoaderImports(unittest.TestCase):
+    """n1 on C1: a module the loader pulls in from inside the root must be a stamped file."""
+
+    def test_unstamped_import_refuses(self):
+        tmp = Path(tempfile.mkdtemp())
+        (tmp / "reads").mkdir()
+        (tmp / "reads" / "helper_mod_x.py").write_text("# 시험용 도움 모듈\nVALUE = 1\n")
+        (tmp / "reads" / "loader.py").write_text(
+            "# 시험용 읽기 적재기\nimport sys\nsys.path.insert(0, __file__.rsplit('/', 1)[0])\nimport helper_mod_x\n\n"
+            "def load_read(paths):\n    return helper_mod_x.VALUE\n")
+        files = ["reads/loader.py"]
+        with self.assertRaises(rv.ReadUnavailable) as cm:
+            rv.load(files, rv.stamp_of(files, tmp), tmp)
+        self.assertEqual(cm.exception.reason, "unstamped_module")
+        import sys
+        sys.modules.pop("helper_mod_x", None)
+        files2 = ["reads/loader.py", "reads/helper_mod_x.py"]
+        self.assertEqual(rv.load(files2, rv.stamp_of(files2, tmp), tmp), 1)
+        sys.modules.pop("helper_mod_x", None)
+
+
+# ── n3 on C1: Collect through real passes ──────────────────────────────────────────────────────────────────────
+class CollectThroughPasses(unittest.TestCase):
+    def once_then(self, p1, then=None):
+        """An extent refusal the first time a stage passes p1 (a trial stage, retried shorter), then `then`."""
+        seen = {"n": 0}
+
+        def refuse(p, t):
+            if p > p1 and seen["n"] == 0:
+                seen["n"] += 1
+                return "extent"
+            return then(p, t) if then is not None else None
+        return refuse
+
+    def test_two_runs_one_pass_one_total(self):
+        core = rv.ReadView(FixtureRead([], rho=9000.0, refuse=self.once_then(1.0e11)), 0.0, "core_read")
+        mantle = rv.ReadView(FixtureRead([], refuse=self.once_then(1.0e10)), 0.0, "mantle_read")
+        out = sv.inward(_body(), {"core": core, "mantle": mantle}, R0, OPT)
+        self.assertIsInstance(out, sv.PassOut, out)
+        self.assertEqual(out.read_counts["read_retried"], {"extent": 2})
+        out2 = sv.inward(_body(), {"core": core, "mantle": mantle}, R0, OPT)
+        self.assertEqual(out2.read_counts["read_retried"], {})     # reset per pass
+
+    def test_retries_then_refuses_keeps_the_counts(self):
+        mantle = rv.ReadView(FixtureRead([], refuse=self.once_then(
+            1.0e10, then=lambda p, t: "past_deepest" if p > 4.0e10 else None)), 0.0, "mantle_read")
+        out = sv.inward(_body(), {"core": Uniform(9000.0), "mantle": mantle}, R0, OPT)
+        self.assertIsInstance(out, st.Stop)
+        ref = sv._to_refusal(out, "fixture", R0, "R", "scan")
+        rr = dict(ref.evidence)["read_retried"]
+        self.assertEqual(rr.get("extent"), 1)
+        self.assertGreaterEqual(rr.get("past_deepest", 0), 1)
 
 
 if __name__ == "__main__":
