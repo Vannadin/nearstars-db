@@ -4,6 +4,7 @@ split by a tagged Mid P_b(T) = P0 + K (T − T0), K = 1e6 Pa/K; field B's dT/dP 
 
 Run from the worktree root:  PY -B -m unittest solver.tests.test_tjump
 """
+import dataclasses
 import math
 import unittest
 from unittest import mock
@@ -179,12 +180,12 @@ class Recross(unittest.TestCase):
                           "            landed.append((fired.name, x, y))\n")
 
     def test_mutant_release_by_band(self):
-        self.check_mutant(self.case_q07_no_refire, "                if gv * sg > 0.0:\n",
-                          "                if gv * sg > 0.0 or abs(y[1] - pm) > 1.0 * b_ / 3.0:\n")
+        self.check_mutant(self.case_q07_no_refire, "            if gv * sg > 0.0:\n",
+                          "            if gv * sg > 0.0 or abs(ya[1] - pm) > 1.0 * b_ / 3.0:\n")
 
     def test_mutant_no_refusal(self):
-        self.check_mutant(self.case_not_cleared_refused, "                elif abs(y[1] - pm) > 2.0 * b_:\n",
-                          "                elif False:\n")
+        self.check_mutant(self.case_not_cleared_refused, "            elif abs(ya[1] - pm) > 2.0 * b_:\n",
+                          "            elif False:\n")
 
     def test_mutant_no_run_start(self):
         self.check_mutant(self.case_pin_and_run_start, "        if rs_ is not None:\n            rs_()\n",
@@ -205,16 +206,16 @@ class CurveEnded(unittest.TestCase):
         self.case()
 
     def test_mutants(self):
-        a = ('                if gv is None:\n                    return stop("refused", Stop("tjump_not_cleared", '
-             '{"curve": name, "m": x, "P": y[1], "T": y[3],\n')
+        a = ('            if gv is None:\n                return stop("refused", Stop("tjump_not_cleared", '
+             '{"curve": name, "m": xa, "P": ya[1], "T": ya[3],\n')
         with mock.patch.object(st, "run", variant(st.run)):
             self.case()
-        for new in ("                if gv is None:\n                    gv = sg\n"        # None as release
-                    "                if False:\n                    return stop(\"refused\", Stop(\"tjump_not_cleared\", "
-                    "{\"curve\": name, \"m\": x, \"P\": y[1], \"T\": y[3],\n",
-                    "                if gv is None:\n                    continue\n"        # stays retired
-                    "                if False:\n                    return stop(\"refused\", Stop(\"tjump_not_cleared\", "
-                    "{\"curve\": name, \"m\": x, \"P\": y[1], \"T\": y[3],\n"):
+        for new in ("            if gv is None:\n                gv = sg\n"        # None as release
+                    "            if False:\n                return stop(\"refused\", Stop(\"tjump_not_cleared\", "
+                    "{\"curve\": name, \"m\": xa, \"P\": ya[1], \"T\": ya[3],\n",
+                    "            if gv is None:\n                continue\n"        # stays retired
+                    "            if False:\n                return stop(\"refused\", Stop(\"tjump_not_cleared\", "
+                    "{\"curve\": name, \"m\": xa, \"P\": ya[1], \"T\": ya[3],\n"):
             with mock.patch.object(st, "run", variant(st.run, a, new)):
                 with self.assertRaises(AssertionError):
                     self.case()
@@ -317,6 +318,204 @@ class Conductive(unittest.TestCase):
                                                   "if tj is not None and False:")):
             with self.assertRaises(AssertionError):
                 self.case_conductive_t_stops()
+
+
+# ── 68 HOLD on C3 (8055a60d): B1 landed nodes, B2 engine errors, B3 band factor and release, B4 the lid wiring ──────
+RETIRED_CALL_AT_LANDING = ('            if retired:                                 # 68 B1 on C3: the landed node too, '
+                           'before a terminal return\n                got = check_retired(x, y)\n'
+                           '                if got is not None:\n                    return got\n')
+
+
+class HoldOnC3(unittest.TestCase):
+    def case_terminal_landing_past_curve_end(self):
+        """B1 (68's probe): the curve ends 2 mK past the jump; a terminal T_ad event δ past that end lands first.
+        The landed node is past the curve's end while it is retired, so the run refuses (curve_ended)."""
+        r0, _ = run(Toy(0.5, dtj=+0.01))
+        t_hi = jumps(r0)[0]["T_new"] + 2e-3
+        for d in (2e-7, 1e-5, 1e-3):
+            toy = Toy(0.5, dtj=+0.01, t_hi=t_hi)
+            view = rv.ReadView(toy, 0.0, "toy")
+            stop_ev = st.Event("t_stop", (lambda m, y, te=t_hi + d: y[2] - te), scale=T0, terminal=True, seam=True)
+            y0 = (5.0e6, P0 - 3.0e4, T0 - 1e-3, T0 - 1e-3, 0.0, 0.0)
+            r = st.run(rhs.make_rhs(view), 4.0e24, y0, 4.0e24 - 2e19, opt(), list(view.events()) + [stop_ev])
+            self.assertEqual(r.stop.kind, "refused", (d, r.stop, r.event))
+            self.assertEqual(r.stop.record.kind, "tjump_not_cleared", d)
+            self.assertEqual(r.stop.record.record["reason"], "curve_ended", d)
+
+    def test_terminal_landing_past_curve_end_refused(self):
+        self.case_terminal_landing_past_curve_end()
+
+    def test_B1_mutant_no_check_at_landing(self):
+        with mock.patch.object(st, "run", variant(st.run)):
+            self.case_terminal_landing_past_curve_end()
+        with mock.patch.object(st, "run", variant(st.run, RETIRED_CALL_AT_LANDING, "")):
+            with self.assertRaises(AssertionError):
+                self.case_terminal_landing_past_curve_end()
+
+    def test_B2_plain_value_error_propagates(self):
+        """A hook-side bug (a plain ValueError, e.g. a math domain error in the read) is an engine error."""
+        toy = Toy(0.5)
+
+        def t_jump(p, t, zone, curve, upward=True):
+            return {"T_new": math.sqrt(-1.0)}
+        toy.t_jump = t_jump
+        with self.assertRaisesRegex(ValueError, "math domain error"):
+            run(toy)
+
+    def test_B2_read_refusal_in_state_is_named(self):
+        """A ReadRefusal from the read inside the hook (the state at T_new) is the hook's named refusal."""
+        toy = Toy(0.5)
+        orig = toy.state
+
+        def state(p, t, field=None):
+            if field == "B":
+                raise ReadRefusal("extent", "planted extent at T_new")
+            return orig(p, t, field)
+        toy.state = state
+        r, _ = run(toy)
+        self.assertEqual(r.stop.record.kind, "tjump_refused")
+        self.assertIn("extent", r.stop.record.record["why"])
+
+    def case_clears_between_band_and_twice(self):
+        """B3: the path clears the curve at ΔP ≈ 2.8e4, between band (2e4) and 2·band (4e4): released, no refusal."""
+        toy = Toy(0.5, dtj=+0.01)
+        orig = toy.state
+
+        def state(p, t, field=None):
+            d = orig(p, t, field)
+            if d["field"] == "B" and toy.jumps and p - toy.jumps[0] > 0.6 * 2e4:
+                d = dict(d, dtdp=1.5 * d["dtdp"])            # q 0.5 → 0.75 past 1.2e4
+            return d
+        toy.state = state
+        r, view = run(toy)
+        self.assertEqual(r.stop.kind, "end", r.stop)
+        self.assertEqual(len(jumps(r)), 1)
+        self.assertAlmostEqual(jumps(r)[0]["band_pa"], 2e4, delta=5.0)
+        self.assertEqual(view.pins, {})
+
+    def test_clears_between_band_and_twice(self):
+        self.case_clears_between_band_and_twice()
+
+    def test_B3_mutant_one_band(self):
+        a = "            elif abs(ya[1] - pm) > 2.0 * b_:\n"
+        with mock.patch.object(st, "run", variant(st.run)):
+            self.case_clears_between_band_and_twice()
+        with mock.patch.object(st, "run", variant(st.run, a, "            elif abs(ya[1] - pm) > 1.0 * b_:\n")):
+            with self.assertRaises(AssertionError):
+                self.case_clears_between_band_and_twice()
+
+    def case_released_reads_own_field(self):
+        """B3: after the release, a read inside the old window on the old side by position reads its own field."""
+        r, view = run(Toy(0.5, dtj=+0.01))
+        self.assertEqual(r.stop.kind, "end", r.stop)
+        j = jumps(r)[0]
+        pm, band = j["P"], j["band_pa"]
+        t_a = (pm + 0.5 * band - P0) / K + T0 + 1.0             # P < P_b(t_a): field A by position
+        self.assertEqual(view.pins, {})
+        self.assertEqual(view.props(pm + 0.5 * band, t_a)["field"], "A")
+
+    def test_released_reads_own_field(self):
+        self.case_released_reads_own_field()
+
+    def test_B3_mutant_no_release(self):
+        with mock.patch.object(st, "run", variant(st.run)):
+            self.case_released_reads_own_field()
+        with mock.patch.object(st, "run", variant(st.run, "                hk.release()\n", "")):
+            with self.assertRaises(AssertionError):
+                self.case_released_reads_own_field()
+
+
+class LidTJump(unittest.TestCase):
+    """B4: a tagged curve crossed by T_ad in a lid pass, through the real solve._lid_wiring and lid.lid_pass."""
+
+    def read(self):
+        from solver.tests import test_read_view as V
+
+        class LidToy(V.FixtureRead):
+            def __init__(self):
+                super().__init__([V.Curve("c_ad", 5.0e8, k=1e6, t0=1600.0, t_lo=1500.0, t_hi=1800.0)], drho=10.0)
+                self.folds = [{"zone": 0, "curve": "c_ad", "dPb_dT_max_Pa_per_K": 1e6, "walk_reach_pa": 1e9}]
+
+            def events(self, t_index=2):
+                return [dataclasses.replace(e, tag={"curve": "c_ad", "zone": 0, "tagged": True})
+                        for e in super().events(t_index)]
+
+            def t_jump(self, p, t, zone, curve, upward=True):
+                d = 0.01 if upward else -0.01
+                return {"T_new": t + d, "ds": 0.0, "dT": d, "from": "f0", "to": "f1"}
+        return V, LidToy()
+
+    def case_lid_jump_shifts_t_ad_only(self):
+        from solver import lid
+        V, read = self.read()
+        view = rv.ReadView(read, 0.0, "lid_toy")
+        w = sv._lid_wiring(view)
+        res = lid.lid_pass(view, V.M_E, V.R_E, V.D, 0.0, V.T_S, V.T_POT, V.RS, **w)
+        self.assertNotIsInstance(res, st.Stop, res)
+        names = [e[0] for e in res.events]
+        self.assertIn("coexist-tjump:c_ad:ad", names, names)
+        y_a = [e[2] for e in res.events if e[0] == "c_ad:ad"][0]
+        y_b = [e[2] for e in res.events if e[0] == "coexist-tjump:c_ad:ad"][0]
+        self.assertAlmostEqual(y_b[2] - y_a[2], 0.01, delta=1e-12)
+        self.assertEqual(y_b[3], y_a[3])                          # the lid's own T is not shifted
+
+    def test_lid_jump_shifts_t_ad_only(self):
+        self.case_lid_jump_shifts_t_ad_only()
+
+    def test_B4_mutant_conductive_false(self):
+        a = "lv_.events(t_index=2, conductive=True)"
+        with mock.patch.object(sv, "_lid_wiring", variant(sv._lid_wiring)):
+            self.case_lid_jump_shifts_t_ad_only()
+        with mock.patch.object(sv, "_lid_wiring", variant(sv._lid_wiring, a, "lv_.events(t_index=2, conductive=False)")):
+            with self.assertRaises(AssertionError):
+                self.case_lid_jump_shifts_t_ad_only()
+
+
+    def test_seed_pass_filter_mutant(self):
+        """The T_b⁰ pass steps y[3] = T_ad: without the filter the tagged t_index 3 copy refuses (conductive T)."""
+        from solver import lid
+        old = ('            evs = [e for e in events if not (a is None and e.t_index == 3 and '
+               'getattr(e.coexist, "t_jump", None))]\n')
+        with mock.patch.object(lid, "lid_pass", variant(lid.lid_pass)):
+            self.case_lid_jump_shifts_t_ad_only()
+        with mock.patch.object(lid, "lid_pass", variant(lid.lid_pass, old, "            evs = list(events)\n")):
+            with self.assertRaises(AssertionError):
+                self.case_lid_jump_shifts_t_ad_only()
+
+class FixedGrid(unittest.TestCase):
+    """C3 class sweep (on 68 B4): the r-form run rebuilt its events positionally (t_index, tag dropped) and wrapped the
+    hook without t_jump, so a tagged crossing reached enter() as a silent «sharp» record. Now a named refusal."""
+
+    def run_r(self, t_index=2):
+        from solver import fixed_grid
+        view = rv.ReadView(Toy(0.5), 0.0, "toy")
+        y0 = (5.0e6, P0 - 3.0e4, T0 - 1e-3, T0 - 1e-3, 0.0, 0.0)
+        return fixed_grid.run_r(rhs.make_rhs(view), 4.0e24, y0, 0.0, 5.0e6 - 100.0, "r_end", 0.05,
+                                list(view.events(t_index=t_index)), m_scale=4.0e24)
+
+    def case_refused_by_name(self):
+        r = self.run_r()
+        self.assertEqual((r.stop.kind, getattr(r.stop.record, "kind", None)), ("refused", "tjump_refused"), r.stop)
+        self.assertIn("fixed-grid", r.stop.record.record["why"])
+        r3 = self.run_r(t_index=3)
+        self.assertEqual(getattr(r3.stop.record, "kind", None), "tjump_in_conductive_T", r3.stop)
+
+    def test_refused_by_name(self):
+        self.case_refused_by_name()
+
+    def test_mutants(self):
+        from solver import fixed_grid
+        with mock.patch.object(fixed_grid, "run_r", variant(fixed_grid.run_r)):
+            self.case_refused_by_name()
+        old = ("    evs = [dataclasses.replace(ev, g=(lambda r, z, g=ev.g: g(z[0], _y_of(r, z))), "
+               "coexist=_r_hook(ev.coexist, f))\n")
+        for new in ("    evs = [dataclasses.replace(ev, g=(lambda r, z, g=ev.g: g(z[0], _y_of(r, z))), "      # old wrapper
+                    "coexist=None if ev.coexist is None else _RHook(ev.coexist, f))\n",
+                    "    evs = [st.Event(ev.name, (lambda r, z, g=ev.g: g(z[0], _y_of(r, z))), ev.scale, ev.terminal, "
+                    "ev.seam, ev.component, _r_hook(ev.coexist, f))\n"):                              # fields dropped
+            with mock.patch.object(fixed_grid, "run_r", variant(fixed_grid.run_r, old, new)):
+                with self.assertRaises(AssertionError):
+                    self.case_refused_by_name()
 
 
 # ── J8: a jump runs through solve.inward and every path consumer ─────────────────────────────────────────────────────

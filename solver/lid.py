@@ -107,8 +107,12 @@ def lid_pass(view, mass: float, radius: float, depth: float, p_s: float, t_s, t_
                                    event_restarts_run=opt.event_restarts_run, m_scale=mass)
         else:
             sopt_ = sopt if step_check is None else dataclasses.replace(sopt, step_check=step_check())   # fresh per pass
+            # the T_b⁰ pass (a None) steps y[3] = T_ad, so a tagged curve's t_index 3 copy would meet the same crossing
+            # as its «:ad» copy and refuse as a conductive-T crossing; there the «:ad» copy alone takes the jump
+            # (reg-coexistence note 6 step 1b; found by 68 B4's lid test on C3). Untagged events are kept as before
+            evs = [e for e in events if not (a is None and e.t_index == 3 and getattr(e.coexist, "t_jump", None))]
             res = st.run(_lid_rhs(view, a, b), mass, (radius, p_s, t_pot, t0, 0.0, 0.0), 0.0, sopt_,
-                         [base, *events], on_accept=on_accept)
+                         [base, *evs], on_accept=on_accept)
         last["graze"] = None if mon is None else mon.best
         last["monitor"] = mon
         for k, v in last.get("counters", {}).items():         # the previous pass is now a discarded one

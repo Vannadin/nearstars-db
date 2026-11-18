@@ -40,6 +40,11 @@ _E = tuple(float(b5 - b4) for b5, b4 in zip(B5, B4))   # 5th − 4th order weigh
 Vec = tuple
 
 
+class TJumpRefusal(ValueError):
+    """A T-jump hook's named refusal (reg-coexistence note 6): the stepper turns it into Stop("tjump_refused"). The
+    only exception the stepper catches around a hook's t_jump; anything else propagates (read-view §4.4)."""
+
+
 @dataclass(frozen=True)
 class Stop:
     """A typed reason the integration (or one derivative evaluation) cannot go on. `kind` is a short tag;
@@ -364,6 +369,29 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
         return Result(x, y, Stop(kind, record), h_last=h, path=tuple(path), events=tuple(landed), counters=cnt,
                       band_grazes=tuple(grazes), coexist=tuple(segs))
 
+    def check_retired(xa, ya):
+        """note 6 step 4, at every accepted node, a landed one included (68 B1 on C3): a retired curve is released
+        once the state is on the new side by the curve's own g; another event never releases; g None (the curve
+        ended inside the band) stops at once; past 2 × band on the old side stops. Returns the stop, or None."""
+        for name in list(retired):
+            rev, pm, b_, hk, sg = retired[name]
+            gv = rev.g(xa, ya)
+            if gv is None:
+                return stop("refused", Stop("tjump_not_cleared", {"curve": name, "m": xa, "P": ya[1], "T": ya[3],
+                                                                  "P_m": pm, "band_pa": b_, "g": None,
+                                                                  "reason": "curve_ended"}))
+            if gv * sg > 0.0:
+                del retired[name]
+                hk.release()
+                if seg is None:
+                    live.append(rev)
+                    g_prev[name] = gv
+            elif abs(ya[1] - pm) > 2.0 * b_:
+                return stop("refused", Stop("tjump_not_cleared", {"curve": name, "m": xa, "P": ya[1], "T": ya[3],
+                                                                  "P_m": pm, "band_pa": b_, "g": gv,
+                                                                  "reason": "not_cleared"}))
+        return None
+
     while True:
         if cnt.accepted + cnt.rejected >= opt.max_steps:
             return stop("max_steps", {"budget": opt.max_steps})
@@ -532,6 +560,10 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             if on_accept is not None:
                 on_accept(x, y)
             last_fire[fired.name] = x
+            if retired:                                 # 68 B1 on C3: the landed node too, before a terminal return
+                got = check_retired(x, y)
+                if got is not None:
+                    return got
             if fired.terminal:
                 return Result(x, y, Stop("event"), event=fired.name, h_last=h, path=tuple(path),
                               events=tuple(landed), counters=cnt, band_grazes=tuple(grazes), coexist=tuple(segs))
@@ -576,7 +608,8 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             if tj is not None:                         # note 6 §1: the fourth outcome, before enter: an s-conserving
                 try:                                   # T jump at the landed node, no segment, the curve retired
                     jmp = tj(x, y, g0_fired < 0.0)
-                except ValueError as e:                # the read's ReadRefusal (a ValueError), q ≥ 0.9, reach short
+                except TJumpRefusal as e:              # the hook's named refusals only (q ≥ 0.9, reach short, no fold,
+                    # a ReadRefusal the hook classified by kind); any other exception is an engine error (68 B2 on C3)
                     return stop("refused", Stop("tjump_refused", {"curve": fired.name, "m": x, "why": str(e)}))
                 b_ = jmp.get("band_pa")
                 if not (b_ is not None and math.isfinite(b_)):
@@ -633,24 +666,10 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
         if on_accept is not None:
             on_accept(x, y)
         g_prev = g_new
-        if retired:                                     # note 6 step 4: released once the state is on the new side by
-            for name in list(retired):                  # the curve's own g; another event never releases; g None
-                rev, pm, b_, hk, sg = retired[name]     # (the curve ended inside the band) stops at once; past
-                gv = rev.g(x, y)                        # 2 × band on the old side stops
-                if gv is None:
-                    return stop("refused", Stop("tjump_not_cleared", {"curve": name, "m": x, "P": y[1], "T": y[3],
-                                                                      "P_m": pm, "band_pa": b_, "g": None,
-                                                                      "reason": "curve_ended"}))
-                if gv * sg > 0.0:
-                    del retired[name]
-                    hk.release()
-                    if seg is None:
-                        live.append(rev)
-                        g_prev[name] = gv
-                elif abs(y[1] - pm) > 2.0 * b_:
-                    return stop("refused", Stop("tjump_not_cleared", {"curve": name, "m": x, "P": y[1], "T": y[3],
-                                                                      "P_m": pm, "band_pa": b_, "g": gv,
-                                                                      "reason": "not_cleared"}))
+        if retired:
+            got = check_retired(x, y)
+            if got is not None:
+                return got
         if reenter is not None:                         # 68 B1: re-entry = the curve's g back on the old side at an
             rc, rx, rg0 = reenter                       # accepted node before |x − x_exit| ≥ event_min_progress
             if abs(x - rx) >= opt.event_min_progress:

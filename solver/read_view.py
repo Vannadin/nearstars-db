@@ -176,24 +176,34 @@ class TJumpHook:
         for f in (getattr(self.view.read, "folds", None) or []):
             if f.get("zone") == self.zone and f.get("curve") == self.curve:
                 return f
-        raise ValueError(f"refused: no stored fold for tagged curve {self.curve!r} in zone {self.zone!r}")
+        raise st.TJumpRefusal(f"refused: no stored fold for tagged curve {self.curve!r} in zone {self.zone!r}")
 
     def t_jump(self, m, y, upward):
         p, t_ad = y[1], y[2]
-        got = dict(self.view.read.t_jump(p, t_ad, self.zone, self.curve, upward))     # ReadRefusal is a ValueError
+        try:
+            got = dict(self.view.read.t_jump(p, t_ad, self.zone, self.curve, upward))
+        except Exception as e:                                  # noqa: BLE001 — a ReadRefusal by kind; others re-raised
+            if _kind(e) is None:
+                raise
+            raise st.TJumpRefusal(f"refused: read t_jump {_kind(e)}: {e}") from e
         fold = self._fold()
         k = fold.get("dPb_dT_max_Pa_per_K")
         if k is None:
-            raise ValueError(f"refused: fold {self.curve!r} stores no dPb_dT_max_Pa_per_K")
+            raise st.TJumpRefusal(f"refused: fold {self.curve!r} stores no dPb_dT_max_Pa_per_K")
         k = abs(float(k))
         moved = abs(got["dT"]) * k
-        q = k * abs(self.view.read.state(p, got["T_new"], field=got["to"])["dtdp"])
+        try:
+            q = k * abs(self.view.read.state(p, got["T_new"], field=got["to"])["dtdp"])
+        except Exception as e:                                  # noqa: BLE001 — as above
+            if _kind(e) is None:
+                raise
+            raise st.TJumpRefusal(f"refused: read state at T_new {_kind(e)}: {e}") from e
         if not q < Q_MAX:
-            raise ValueError(f"refused: path near-tangent to tip curve, q {q:.4g} ≥ {Q_MAX}")
+            raise st.TJumpRefusal(f"refused: path near-tangent to tip curve, q {q:.4g} ≥ {Q_MAX}")
         band = moved / (1.0 - q)
         reach = fold.get("walk_reach_pa")
         if reach is None or not 2.0 * band <= float(reach):
-            raise ValueError(f"refused: walk reach short, 2·band {2.0 * band:.6g} Pa > walk_reach_pa {reach!r}")
+            raise st.TJumpRefusal(f"refused: walk reach short, 2·band {2.0 * band:.6g} Pa > walk_reach_pa {reach!r}")
         self.view.pins[self.curve] = (got["from"], got["to"], p, band, upward)
         got.update(dpb_dt_max=k, moved_pa=moved, path_curve_ratio=q, band_pa=band,
                    shift=(2,) if self.conductive else (2, 3))

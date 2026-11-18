@@ -16,6 +16,7 @@ z = (m, P, T_ad, T, I, V_p); events g(m, y) are read at (z[0], (r, *z[1:])).
 """
 from __future__ import annotations
 
+import dataclasses
 import math
 
 from solver import stepper as st
@@ -74,6 +75,29 @@ class _RHook:
         return self.hook.project(tok, z)              # P, T_ad, T sit at the same indices in z as in y
 
 
+class _RTJumpRefused:
+    """A tagged curve's T-jump hook seen in the r-form: the jump is built for the mass-form stepper only (note 6), so a
+    fixed-grid crossing refuses by name (tjump_refused) instead of reaching enter() as a «sharp» record (C3 class
+    sweep on 68 B4). run_start still clears the view's pins."""
+
+    def __init__(self, hook):
+        self.hook = hook
+
+    def t_jump(self, r, z, upward):
+        raise st.TJumpRefusal("refused: fixed-grid run: the T jump is not built in the r-form")
+
+    def run_start(self):
+        rs_ = getattr(self.hook, "run_start", None)
+        if rs_ is not None:
+            rs_()
+
+
+def _r_hook(hook, f):
+    if hook is None:
+        return None
+    return _RTJumpRefused(hook) if getattr(hook, "t_jump", None) is not None else _RHook(hook, f)
+
+
 def run_r(f, m0: float, y0: tuple, m_end: float, r_end: float, r_end_name: str, dr: float, events=(),
           on_accept=None, max_steps: int = 200000, event_min_progress: float = 0.0, event_restarts_step: int = 4,
           event_restarts_run: int = 2000, m_scale: float = 1.0) -> st.Result:
@@ -87,9 +111,8 @@ def run_r(f, m0: float, y0: tuple, m_end: float, r_end: float, r_end_name: str, 
             return st.Stop("refused", {"reason": "dr/dm = 0", "m": z[0], "r": r})
         return (1.0 / k[0], *(c / k[0] for c in k[1:]))
 
-    evs = [st.Event(ev.name, (lambda r, z, g=ev.g: g(z[0], _y_of(r, z))), ev.scale, ev.terminal, ev.seam,
-                     ev.component, None if ev.coexist is None else _RHook(ev.coexist, f))
-           for ev in events]
+    evs = [dataclasses.replace(ev, g=(lambda r, z, g=ev.g: g(z[0], _y_of(r, z))), coexist=_r_hook(ev.coexist, f))
+           for ev in events]                          # t_index and tag carried (note 6 step 1b; C3 class sweep)
     evs.append(st.Event("_m_end", lambda r, z: z[0] - m_end, scale=m_scale))
     opt = st.Options(rtol=1.0, floors=tuple(math.inf for _ in y0), h0=dr, h_min=0.0, h_max=dr, max_steps=max_steps,
                      event_min_progress=event_min_progress, event_restarts_step=event_restarts_step,
