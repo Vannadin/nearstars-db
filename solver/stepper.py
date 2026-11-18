@@ -401,7 +401,9 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
                     cnt.exact_unlanded += 1
             if best_l is not None:
                 ev, x_e = best_l
-                o2 = _stepper(opt, None)(_old_side(f, ev, g_prev[ev.name]), x, y, x_e - x, k1)
+                g0e = g_prev[ev.name]                   # every stage, k7 included, on the old side (note 9 §1),
+                fo = _old_side(f, ev, g0e) if ev.component is not None and g0e else f    # under _land's guard (68 n1)
+                o2 = _stepper(opt, None)(fo, x, y, x_e - x, k1)
                 en2 = None if isinstance(o2, Stop) else err_norm(o2[1], y, o2[0], opt.rtol, opt.floors)
                 if en2 is None or en2 > 1.0:
                     cnt.exact_failed += 1

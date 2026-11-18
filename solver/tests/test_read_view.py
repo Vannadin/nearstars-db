@@ -17,6 +17,7 @@ from solver import body as b
 from solver import context, events, lid, read_view as rv, refusals, rhs
 from solver import solve as sv
 from solver import stepper as st
+from solver.tests._mutants import variant
 
 
 class ReadRefusal(ValueError):
@@ -110,11 +111,17 @@ class PlanWiring(unittest.TestCase):
         t_land = [y[2] for (_l, n, _m, y) in out.events_at if n == "c0"][0]
         self.assertLessEqual(abs(p_land - (2.0e10 + 1e6 * (t_land - 1600.0))), 1e-12 * 2.0e10 * 10)
 
-    def test_N2_plan_ignoring_events_fails(self):
-        with mock.patch.object(rv, "is_read_view", lambda v: False):
-            with self.assertRaises(Exception):
-                self.check()
+    PLAN_ANCHOR = ("    if got is None and rv.is_read_view(view):         # read-view registration §1: the read's own events, "
+                   "no table cap\n")
 
+    def test_N2_identity_passes_mutant_fails(self):
+        """N2: _plan rebuilt from source (identity) passes A3's check; without the read branch it fails."""
+        with mock.patch.object(sv, "_plan", variant(sv._plan)):
+            self.check()
+        mut = variant(sv._plan, self.PLAN_ANCHOR, "    if False:\n")
+        with mock.patch.object(sv, "_plan", mut):
+            with self.assertRaises((AssertionError, AttributeError, TypeError)):
+                self.check()
 
 # ── A4 (a) at C1, and N3: a refusal the path reaches surfaces as solve.read_refusal ─────────────────────────────
 class Refusals(unittest.TestCase):
@@ -134,15 +141,15 @@ class Refusals(unittest.TestCase):
         self.assertGreaterEqual(ev["read_retried"].get("cut", 0), 1)   # r2 B6: the refused pass keeps its count
         self.assertIn("state", ev)
 
-    def test_N3_unmapped_branch_fails(self):
-        src = textwrap.dedent(inspect.getsource(sv._to_refusal))
-        i = src.index('    if stop.kind == "read_refusal":')
-        j = src.index('    if type(rec).__name__ == "RecordRefusal":')
-        ns = dict(vars(sv))
-        exec(src[:i] + src[j:], ns)                   # the mutant: no read_refusal branch
+    def test_N3_identity_passes_mutant_fails(self):
+        """N3: _to_refusal rebuilt from source maps the read refusal; without its branch it raises «unmapped»."""
         out, _ = self.run_cut()
+        self.assertEqual(variant(sv._to_refusal)(out, "fixture", R0, "R", "scan").id, "solve.read_refusal")
+        src = inspect.getsource(sv._to_refusal)
+        a = src[src.index('    if stop.kind == "read_refusal":'):src.index('    if type(rec).__name__ == "RecordRefusal":')]
+        mut = variant(sv._to_refusal, a, "")
         with self.assertRaisesRegex(RuntimeError, "unmapped solver stop"):
-            ns["_to_refusal"](out, "fixture", R0, "R", "scan")
+            mut(out, "fixture", R0, "R", "scan")
 
     def test_other_exception_is_an_engine_error(self):
         def boom(p, t):
@@ -412,22 +419,21 @@ class SelectorEndToEnd(unittest.TestCase):
         self.assertEqual(v, "TABLE_VIEW")
         self.assertTrue(mv.called)
 
-    def test_N4_a_falling_back_selector_fails(self):
-        """N4 as registered: a patched _assemblage_view that falls back to the table on ReadUnavailable."""
-        src = textwrap.dedent(inspect.getsource(sv._assemblage_view))
-        a = '            return None, ("read_unavailable", (rid, e.reason, e.detail))\n'
-        self.assertIn(a, src)
-        mut = src.replace(a, "            rd_decl = None\n").replace(
-            "        return rv.ReadView(read, p_stop, rid, rd_decl[\"stamp\"]), None\n",
-            "        if rd_decl is not None:\n            return rv.ReadView(read, p_stop, rid, rd_decl[\"stamp\"]), None\n")
-        ns = dict(vars(sv))
-        exec(mut, ns)
-        with mock.patch.object(sv, "_assemblage_view", ns["_assemblage_view"]), \
-                mock.patch("solver.material_assemblage.view", return_value="TABLE_VIEW"), \
-                mock.patch("solver.from_v1.thaw", side_effect=lambda r: r):
+    def test_N4_identity_passes_mutant_fails(self):
+        """N4 as registered: _assemblage_view rebuilt from source (identity) passes the stale/missing test; a version
+        that falls back to the table on ReadUnavailable fails it."""
+        patches = (mock.patch("solver.material_assemblage.view", return_value="TABLE_VIEW"),
+                   mock.patch("solver.from_v1.thaw", side_effect=lambda r: r))
+        with mock.patch.object(sv, "_assemblage_view", variant(sv._assemblage_view)), patches[0], patches[1]:
+            self.test_stale_and_missing_refuse_with_the_record_id()
+        mut = variant(sv._assemblage_view, '            return None, ("read_unavailable", (rid, e.reason, e.detail))\n',
+                      "            rd_decl = None\n",
+                      more=[("        return rv.ReadView(read, p_stop, rid, rd_decl[\"stamp\"]), None\n",
+                             "        if rd_decl is not None:\n"
+                             "            return rv.ReadView(read, p_stop, rid, rd_decl[\"stamp\"]), None\n")])
+        with mock.patch.object(sv, "_assemblage_view", mut), patches[0], patches[1]:
             with self.assertRaises(AssertionError):
                 self.test_stale_and_missing_refuse_with_the_record_id()
-
 
 class LoaderImports(unittest.TestCase):
     """n1 on C1: a module the loader pulls in from inside the root must be a stamped file."""
