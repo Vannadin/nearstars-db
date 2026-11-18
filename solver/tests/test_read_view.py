@@ -484,6 +484,52 @@ class LoaderImports(unittest.TestCase):
         sys.modules.pop("helper_mod_x", None)
 
 
+# ── A10 at C4: the retry filter; a non-retryable kind stops at once, extent is retried, the line's mutant fails ──
+FILTER_LINE = ('            if isinstance(out.record, dict) and out.record.get("retryable") is False:\n'
+               '                return stop("refused", out)             # read-view §4.4 (C4): the read said invalid, not unbuilt\n')
+
+
+class Filter(unittest.TestCase):
+    def case_off_path_cut(self):
+        """A «cut» only a trial stage reaches (p above 1.5 × the path's maximum): the run ends at once, refused."""
+        g = OffPathExtent()
+        r, v, _ = g.run_with(lambda p, t: "cut" if p > 1.5 * 2 * g.A / g.W else None)
+        self.assertEqual(r.stop.kind, "refused", r.stop)
+        self.assertEqual(r.stop.record.kind, "read_refusal")
+        self.assertEqual(r.stop.record.record["kind"], "cut")
+        self.assertIs(r.stop.record.record["retryable"], False)
+        self.assertEqual(r.counters.refused_stage, 1)
+        self.assertEqual(v.read_retried, {"cut": 1})
+
+    def case_on_path_cut_unretried(self):
+        """A4 (a): the planted on-path «cut» surfaces with no retry counted."""
+        out, ref = Refusals().run_cut()
+        self.assertEqual(dict(ref.evidence)["read_retried"], {"cut": 1})
+
+    def test_off_path_cut_ends_at_once(self):
+        self.case_off_path_cut()
+
+    def test_on_path_cut_unretried(self):
+        self.case_on_path_cut_unretried()
+
+    def test_off_path_extent_retried(self):
+        OffPathExtent("test_retried_and_same_answer").test_retried_and_same_answer()
+
+    def test_retryable_set(self):
+        self.assertEqual(rv.RETRYABLE, frozenset({"extent", "past_deepest"}))
+        view = rv.ReadView(FixtureRead([]), 0.0, "fixture_read")
+        for kind in sorted(rv.KINDS):
+            self.assertIs(view._refusal(1.0, 1.0, ValueError("x"), kind).record["retryable"], kind in rv.RETRYABLE)
+
+    def test_mutant_without_the_line(self):
+        for case in (self.case_off_path_cut, self.case_on_path_cut_unretried):
+            with mock.patch.object(st, "run", variant(st.run)):
+                case()
+            with mock.patch.object(st, "run", variant(st.run, FILTER_LINE, "")):
+                with self.assertRaises(AssertionError):
+                    case()
+
+
 # ── n3 on C1: Collect through real passes ──────────────────────────────────────────────────────────────────────
 class CollectThroughPasses(unittest.TestCase):
     def once_then(self, p1, then=None):

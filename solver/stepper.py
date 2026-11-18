@@ -8,6 +8,8 @@ The stepper knows nothing about planets. It integrates dy/dx = f(x, y) for a tup
 and stops at the end point, at an event, or with a typed stop record. It never raises for a physical reason:
 - `f` may return a `Stop` (e.g. a material refusal from the adapter) instead of a derivative tuple. The step is
   then rejected and h shrinks; if it still refuses at h_min, the run stops with that record (kind "refused").
+  One exception (read-view §4.4, C4): a Stop whose record is a dict with `retryable: False` (a read refusal of a
+  kind other than extent / past_deepest) stops the run at once, unretried.
 - Exceptions mean bugs only (design A3).
 
 Coefficients: Dormand & Prince 1980, J. Comput. Appl. Math. 6, 19–26, Table 2 «RK5(4)7M», as carried by
@@ -406,6 +408,8 @@ def run(f, x0: float, y0: Vec, x1: float, opt: Options, events: Sequence[Event] 
             cnt.refused_stage += 1
             if opt.fixed or abs(h) <= opt.h_min:
                 return stop("refused", out)
+            if isinstance(out.record, dict) and out.record.get("retryable") is False:
+                return stop("refused", out)             # read-view §4.4 (C4): the read said invalid, not unbuilt
             h = direction * max(abs(h) * 0.25, opt.h_min)
             continue
         y_new, err, k7 = out
