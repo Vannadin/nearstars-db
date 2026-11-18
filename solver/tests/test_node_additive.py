@@ -116,7 +116,12 @@ ADDED_AFTER_C1 = {"input.no_table_for_composition": "silicate step 4 aa48d1bf",
                   "input.bulk_core_light": "layers S1 §3, LAYERS-S1-NOTES n2 (engine/layers-s1-c8 9c4ea96b)",
                   "input.bulk_volatile_layer": "layers S1 §3 (engine/layers-s1-c8 9c4ea96b)",
                   "input.bulk_needs_silicate_records": "layers S1 §3 / design §3 (engine/layers-s1-c8 9c4ea96b)",
-                  "input.bulk_no_mantle": "layers S1 note 1 §7, 68 B1 on 9c4ea96b (engine/layers-s1-c8 42c1edfd)"}
+                  "input.bulk_no_mantle": "layers S1 note 1 §7, 68 B1 on 9c4ea96b (engine/layers-s1-c8 42c1edfd)",
+                  "solve.read_refusal": "read-view C1 (engine/fable-readview 8eec8c0a)",
+                  "input.material_read_unavailable": "read-view C1 (engine/fable-readview 8eec8c0a)",
+                  "solve.tjump_refused": "reg-coexistence note 6, read-view C3 (engine/fable-readview 8055a60d)",
+                  "solve.tjump_not_cleared": "reg-coexistence note 6, read-view C3 (engine/fable-readview 8055a60d)",
+                  "solve.tjump_in_conductive_T": "reg-coexistence note 6, read-view C3 (engine/fable-readview 8055a60d)"}
 #: NoAnswer reasons added after C1, the same way; C1's PARENT_NO_ANSWER_IDS stay pinned.
 ADDED_NO_ANSWER_AFTER_C1 = {"core_fold_budget": "core-tc-fold C4 (engine/tc-fold-c8)"}
 
@@ -175,6 +180,21 @@ class N2Registry(unittest.TestCase):
         parent_only = {k: v for k, v in rf.REGISTRY.items() if k in PARENT_IDS}
         render = hashlib.sha256(repr(sorted(_render_all(parent_only).items())).encode()).hexdigest()
         self.assertEqual(render, PARENT_RENDER)
+
+    def test_added_entries_render(self):
+        """Every id added after C1 makes a Refusal through refusals.make, every field given, vocabularies respected, and
+        renders non-empty text (68 on e83433e9: C1 and C3's five ids were added without this check)."""
+        from solver import refusals as rf
+        vocab = {"pass_kind": sorted(rf.PASS_KINDS)[0], "closure_kind": sorted(rf.CLOSURE_KINDS)[0],
+                 "cap_name": sorted(rf.EVENT_CAPS)[0], "budget_name": sorted(rf.NO_ANSWER_BUDGETS)[0]}
+        for rid in sorted(ADDED_AFTER_C1):
+            e = rf.REGISTRY[rid]
+            ev = {f: vocab.get(f, f) for f in e.fields + e.optional}
+            if "walls" in ev:
+                ev["walls"] = []                       # a list of wall dicts; empty is a valid list
+            got = rf.make(rid, "where", **ev)
+            self.assertEqual(got.id, rid)
+            self.assertTrue(got.text, rid)
 
     def test_methods_appended(self):
         from solver import result

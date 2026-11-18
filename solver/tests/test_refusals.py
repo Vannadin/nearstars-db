@@ -17,7 +17,9 @@ from solver.tests.test_types import solver_sources
 SOLVE_IDS = ("solve.no_bracket", "solve.two_roots", "solve.material_domain", "solve.unlocated_discontinuity",
              "solve.event_chatter", "solve.layer_order", "solve.lid_unconverged", "solve.basal_unconverged",
              "solve.basal_not_attached", "solve.closure_discontinuous", "solve.material_record",
-             "solve.melting_not_in_phase2", "solve.frozen_band_trapped")
+             "solve.melting_not_in_phase2", "solve.frozen_band_trapped",
+             "solve.read_refusal", "solve.tjump_refused", "solve.tjump_not_cleared",      # read-view C1, C3 (68 on e83433e9)
+             "solve.tjump_in_conductive_T")
 #: Names that hold reason text. X3: no consumer decides control flow from them.
 TEXT_NAMES = ("text", "reason", "message_old", "why")
 TEXT_KEYS = ("message_old", "why", "detail", "error", "rule")          # evidence fields that hold prose

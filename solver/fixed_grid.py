@@ -68,8 +68,8 @@ class _RHook:
         return self.hook.exit_scale(tok)
 
     def row_events(self, tok):
-        return [st.Event(ev.name, (lambda r, z, g=ev.g: g(z[0], _y_of(r, z))), ev.scale, ev.terminal, ev.seam,
-                         ev.component) for ev in self.hook.row_events(tok)]
+        return [dataclasses.replace(ev, g=(lambda r, z, g=ev.g: g(z[0], _y_of(r, z))))   # every field kept, t_index
+                for ev in self.hook.row_events(tok)]                                     # and tag included (68 on e83433e9)
 
     def project(self, tok, z):
         return self.hook.project(tok, z)              # P, T_ad, T sit at the same indices in z as in y
