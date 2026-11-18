@@ -43,7 +43,14 @@ def stamp_of(files, root) -> str:
 def load(files, stamp: str, root):
     """The read a record names, or ReadUnavailable (never a fallback to the table)."""
     files = [str(f) for f in files]
-    missing = [f for f in files if not (Path(root) / f).is_file()]
+    base = Path(root).resolve()
+    bad = [f for f in files if Path(f).is_absolute() or ".." in Path(f).parts
+           or not (base / f).resolve().is_relative_to(base)]
+    if bad:                                     # a data-named path never leaves the repo (directing on C1)
+        raise ReadUnavailable("path_outside_repo", ", ".join(bad))
+    if not files[0].endswith(".py"):
+        raise ReadUnavailable("loader_not_python", files[0])
+    missing = [f for f in files if not (base / f).is_file()]
     if missing:
         raise ReadUnavailable("missing_file", ", ".join(missing))
     got = stamp_of(files, root)

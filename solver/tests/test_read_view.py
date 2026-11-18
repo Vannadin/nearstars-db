@@ -211,6 +211,17 @@ class Selector(unittest.TestCase):
             rv.load(self.files, stamp, self.tmp)
         self.assertEqual(cm.exception.reason, "missing_file")
 
+    def test_paths_outside_the_repo_refuse(self):
+        for files in (["../x.py"], [str(self.tmp / "reads" / "loader.py")], ["reads/data.json"]):
+            with self.assertRaises(rv.ReadUnavailable) as cm:
+                rv.load(files, "0" * 64, self.tmp)
+            self.assertIn(cm.exception.reason, ("path_outside_repo", "loader_not_python"))
+
+    def test_nothing_is_imported_before_the_stamp_matches(self):
+        (self.tmp / "reads" / "loader.py").write_text("raise SystemExit('imported')\n")
+        with self.assertRaises(rv.ReadUnavailable):
+            rv.load(self.files, "0" * 64, self.tmp)
+
     def test_order_and_rename_move_the_stamp(self):
         self.assertNotEqual(rv.stamp_of(self.files, self.tmp), rv.stamp_of(self.files[::-1], self.tmp))
 
