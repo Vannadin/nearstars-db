@@ -1073,7 +1073,8 @@ class PinGuardRunTime(unittest.TestCase):
 
 
 class CommittedRead(unittest.TestCase):
-    """Directing on 68 B1 (5d3f3679): the engine on c8's COMMITTED Pandora read, not a toy. NEARSTARS_C8_PROTO names a
+    """Superseded read, kept for fold machinery (directing 11-19): not acceptance of c8's final reads (r1pb, r1pa).
+    Directing on 68 B1 (5d3f3679): the engine on c8's COMMITTED Pandora read, not a toy. NEARSTARS_C8_PROTO names a
     checkout of c8's pc/c8-part2/proto at a named commit (its read_pandora_1600.pkl and the modules that unpickle it).
     For each tagged fold of the read's top-level `folds`: the note-3 keys, the two to_field labels distinct, and one
     pinned read per direction inside walk_t_served_<dir> served by that direction's to-field. Red until c8's PRead
@@ -1093,7 +1094,8 @@ class CommittedRead(unittest.TestCase):
         import hashlib
         with open(os.path.join(d, "read_pandora_1600.pkl"), "rb") as f:
             raw = f.read()
-        # the kept collapsed read (blob c547e187; part2-c8-reroot fb1d3990c), the one committed read with tagged folds
+        # a superseded read, kept for fold machinery (directing 11-19): the collapsed read (blob c547e187; part2-c8-reroot
+        # fb1d3990c), the one committed read with tagged folds. A pass here is not acceptance of c8's final reads.
         self.assertEqual(hashlib.sha256(raw).hexdigest(),
                          "49c2abfd51b42e1a9528ee20920e2a5e91cfcec263435814ef98ed7225553bd2", "not the kept collapsed read")
         return pickle.loads(raw)
