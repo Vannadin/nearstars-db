@@ -154,6 +154,7 @@ REGISTRY = {
     "test_melt_window:SeamNoteAnswers:skipUnless": ("tier", "NEARSTARS_HEAVY"),
     "test_member:OldMember.test_venus_point:skipUnless": ("env", "NEARSTARS_ARTIFACTS (the oracle capture beside the worktree)"),
     "test_read_conformance:Conformance.test_c8_final_reads:raise": ("env", "NEARSTARS_C8_PROTO (c8's final reads)"),
+    "test_read_conformance:Conformance.test_c8_superseded_fold_read:raise": ("env", "NEARSTARS_C8_PROTO (c8's kept collapsed read)"),
     "test_read_determinism:Determinism.test_reads_do_not_depend_on_addresses:skipUnless": ("data", ("expr", "_shipped()")),
     "test_read_determinism:Determinism.test_reads_do_not_depend_on_read_order:skipUnless": ("data", ("expr", "_shipped()")),
     "test_read_determinism:Determinism.test_solve_answer_sha:skipUnless": ("tier", "NEARSTARS_HEAVY (its data half, _shipped(), is checked here)"),

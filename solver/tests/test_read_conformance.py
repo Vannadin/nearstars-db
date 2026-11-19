@@ -232,6 +232,29 @@ class Conformance(unittest.TestCase):
                     probe.update(self.fold_probe(rd))
                 self.assert_rows(check(rv.PinGuard(rd), probe))
 
+    def test_c8_superseded_fold_read(self):
+        """Superseded read, kept for fold machinery (directing 11-19; 68's note): c8's collapsed Pandora read (blob
+        c547e187), the one committed read with tagged folds, so the fold, t_jump and pin rows run on a real read. A pass
+        here is not acceptance of c8's final reads."""
+        d = os.environ.get("NEARSTARS_C8_PROTO")
+        if not d:
+            raise unittest.SkipTest("NEARSTARS_C8_PROTO not set: c8's committed reads are not on this machine")
+        if d not in sys.path:
+            sys.path.insert(0, d)
+        import hashlib
+        import readload
+        path = os.path.join(d, "read_pandora_1600.pkl")
+        with open(path, "rb") as f:
+            self.assertEqual(hashlib.sha256(f.read()).hexdigest(),
+                             "49c2abfd51b42e1a9528ee20920e2a5e91cfcec263435814ef98ed7225553bd2", "not the kept collapsed read")
+        rd, _ = readload.load_read([path])
+        self.assertTrue(rd.folds, "the kept collapsed read has no folds")
+        probe = {"p": 13.0e9, "t": 1755.0, "p_deep": 1e13, "t_cold": 500.0}
+        probe.update(self.fold_probe(rd))
+        rows = check(rv.PinGuard(rd), probe)
+        self.assertEqual(len(rows), 23, [n for n, _, _ in rows])        # every fold row ran
+        self.assert_rows(rows)
+
     def fold_probe(self, rd):
         f0 = rd.folds[0]
         z0, z1 = (float(x) for x in rd.zones[f0["zone"]][:2])
