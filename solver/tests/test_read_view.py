@@ -232,6 +232,19 @@ class Selector(unittest.TestCase):
     def test_order_and_rename_move_the_stamp(self):
         self.assertNotEqual(rv.stamp_of(self.files, self.tmp), rv.stamp_of(self.files[::-1], self.tmp))
 
+    def test_registry_reaches_a_loader_that_takes_it(self):     # 11-21: the solve's registry, the same object
+        (self.tmp / "reads" / "loader.py").write_text(
+            "# 시험용 읽기 적재기\nimport json\n\ndef load_read(paths, registry=None):\n"
+            "    with open(paths[0]) as f:\n        return {**json.load(f), 'reg': registry}\n")
+        stamp = rv.stamp_of(self.files, self.tmp)
+        reg = object()
+        self.assertIs(rv.load(self.files, stamp, self.tmp, registry=reg)["reg"], reg)
+        self.assertIsNone(rv.load(self.files, stamp, self.tmp)["reg"])
+
+    def test_registry_not_passed_to_a_loader_without_it(self):  # an older read package still loads
+        stamp = rv.stamp_of(self.files, self.tmp)
+        self.assertEqual(rv.load(self.files, stamp, self.tmp, registry=object()), {"ok": 1})
+
     def test_view_refusal_is_named(self):
         layer = _body().layers[1]
         ref = sv._view_refusal(_body(), layer, ("read_unavailable", ("rec_x", "stale_stamp", "declared a, files b")))
@@ -407,6 +420,18 @@ class SelectorEndToEnd(unittest.TestCase):
         self.assertEqual((v, fail[0], fail[1][0], fail[1][1]), (None, "read_unavailable", "r_x", "stale_stamp"))
         v, fail = self.call(files=["reads/loader.py", "reads/gone.json"])
         self.assertEqual((fail[0], fail[1][1]), ("read_unavailable", "missing_file"))
+
+    def test_the_solve_registry_is_handed_to_the_read(self):   # 11-21: _assemblage_view passes its own registry
+        seen = {}
+        real = rv.load
+        def spy(*a, **k):
+            seen["registry"] = k.get("registry")
+            return real(*a, **k)
+        reg = FakeRegistry({"assemblage": {"read": {"files": self.files, "stamp": self.stamp}}}, status="built")
+        with mock.patch.object(sv, "REPO_ROOT", self.tmp), mock.patch.object(rv, "load", spy):
+            v, fail = sv._assemblage_view(_body(), _body().layers[1], "r_x", 0.0, reg)
+        self.assertIsNone(fail)
+        self.assertIs(seen["registry"], reg)
 
     def test_pending_boundaries_refuse_before_the_read(self):
         v, fail = self.call(status="pending")

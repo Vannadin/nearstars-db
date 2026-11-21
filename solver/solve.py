@@ -438,7 +438,7 @@ def _assemblage_view(body, layer, rid, p_stop, registry):
     rd_decl = got["assemblage"].get("read")
     if rd_decl is not None:                             # read-view registration §1: the record names its smooth read
         try:                                            # (after the pending guard, 68 B3 on C1)
-            read = rv.load(rd_decl["files"], rd_decl["stamp"], REPO_ROOT)
+            read = rv.load(rd_decl["files"], rd_decl["stamp"], REPO_ROOT, registry=registry)   # the solve's own (11-21)
         except rv.ReadUnavailable as e:                 # never a silent fallback to the table (A7)
             return None, ("read_unavailable", (rid, e.reason, e.detail))
         return rv.ReadView(read, p_stop, rid, rd_decl["stamp"]), None

@@ -26,6 +26,7 @@ from __future__ import annotations
 import dataclasses
 import hashlib
 import importlib.util
+import inspect
 import sys
 from pathlib import Path
 
@@ -98,8 +99,11 @@ def stamp_of(files, root) -> str:
     return h.hexdigest()
 
 
-def load(files, stamp: str, root):
-    """The read a record names, or ReadUnavailable (never a fallback to the table)."""
+def load(files, stamp: str, root, registry=None):
+    """The read a record names, or ReadUnavailable (never a fallback to the table). `registry`: the caller's engine
+    registry, handed to the loader's load_read when its signature takes it, so a read that builds a view of a shipped
+    record uses the solve's own registry rather than loading another (directing 11-21: «caller's registry first»). A
+    loader without the parameter is called as before."""
     files = [str(f) for f in files]
     base = Path(root).resolve()
     bad = [f for f in files if Path(f).is_absolute() or ".." in Path(f).parts
@@ -119,7 +123,9 @@ def load(files, stamp: str, root):
     spec = importlib.util.spec_from_file_location(f"_read_loader_{got[:12]}", path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    read = mod.load_read([str(base / f) for f in files[1:]])
+    paths = [str(base / f) for f in files[1:]]
+    takes = registry is not None and "registry" in inspect.signature(mod.load_read).parameters
+    read = mod.load_read(paths, registry=registry) if takes else mod.load_read(paths)
     named = {(base / f).resolve() for f in files}
     for name in set(sys.modules) - before:          # 68 n1: a module the loader pulled in from inside the root must
         fn = getattr(sys.modules[name], "__file__", None)    # be one of the stamped files
